@@ -2,157 +2,118 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE214C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81300C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EE6720772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7A320855
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvjKs12h"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNxAKNkP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726640AbgHSEXQ (ORCPT
+        id S1726414AbgHSE1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:23:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41074 "EHLO
+        Wed, 19 Aug 2020 00:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSEXP (ORCPT
+        with ESMTP id S1725275AbgHSE1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:23:15 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDDCC061389;
-        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id h12so10753793pgm.7;
-        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
+        Wed, 19 Aug 2020 00:27:01 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92310C061389;
+        Tue, 18 Aug 2020 21:27:01 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id x69so20536122qkb.1;
+        Tue, 18 Aug 2020 21:27:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
+        h=subject:from:to:cc:date:message-id:user-agent:mime-version
          :content-transfer-encoding;
-        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
-        b=UvjKs12h9DQKYGQRS1toiyg8jpbgB/8nWdastjYJyhssofp6FGxo18MSWkuH0QDrwd
-         siZVLO/1UJDEU+s5+LyT+g+t2VLvL6JqUBYARntwh3hZjzJCWz5Mv8W6XwAaJWpSvcik
-         YR/+H8WC0WYRgp9Y4rSD+qEicdkVKDxxu6DuYVI2zpuV5p+qHoe11O7UBoU6hhGE8izQ
-         Z3mkaCnpA592d3lX2Vgv+5K4fbKsIpF7asJwTh7yhxfe8n4AqQ5hgxwEdf9c/Y9y5rxQ
-         7jW3s013pIaxCiW46KfTfmRSc74jNDwlIGMBQ4ATLFIgKuktPHekhV5ctVel0WL5w4nu
-         MVlw==
+        bh=6h612JI2s0g5y4Ra24/kFs/yiArKTc1sB1o5qgaZ/yA=;
+        b=LNxAKNkPYb4d+9N1/y9oUHLhX61kCIDjUBthQJ7A+5jMmKKB0C+Lv50He4t5SJQZTy
+         L2JVj53G4ItXbzZAJpmXd2RUU4bNLcRG7dT4aMeHwMd/LhrckJ4LxNKRoNAYQNchSUrd
+         ngQlflwv1GSSfQiAmYTIwGlUiHdbt1Y9eyam0cCfh5xO756GrdchR4hinz2jWLBHHwMy
+         UPZCJp2C9hGe5uxoIyI39NAt1X8qOQu7qibpJ+lfUO4DsinFdI3vOgjN0pBE1U8ZYXAS
+         tD7jnvOY6pm6XVJFFrpNdi28Jgihb4pRUESe4xonX7brqf6enMEk4Xy5GJgPavb/eEZT
+         8G6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Gs2moho+8LLh/szOeFyTur0O43lNxC9IiDOCEh8TM9E=;
-        b=iVUOL9Vsft+WU9JIalL1FL/g+tyYgNQTtnC5O0hyx36xXHWeedk79VETcYv2fyJy0S
-         xgCLmm0Z0dgzqCB+V2y1NlnckL8H75d6cuKXwWpBrTVJQ/URBfn+vkej9eJkK+h94OD0
-         5O82AUPFzKruLJRdGyW3tQYlV5HosffYy78aRnaOa8hTfHrUVdwF6cZT1nyUvNJitrH3
-         0t530xVPUUAAwbMukvakv+JbXqB28ntp7IHAnCoxhwDtg1eDsiGcSYMNCvkkqd5cDx1E
-         8XDYYXWUdXzi78N85Uh5b1nO9PQhmnW8YBvHcHyxnx7xIC9BDM1yJAb7QVL7yy6U2bjF
-         5GbQ==
-X-Gm-Message-State: AOAM531EJ1tYkd7Lzg/Ny7HG+Bh3aN/UPtPic6+31GLsCENhwULhuJOX
-        47LkpjoWRAzZ99Kwp4cPhQA=
-X-Google-Smtp-Source: ABdhPJz9/1ooO+46V/DifjOQSnAS8Pt2MsME2bhXJp+E69XSJuk0FgwL2E0diO6Usx/r2k+Hg2D1rw==
-X-Received: by 2002:a63:5515:: with SMTP id j21mr15011312pgb.31.1597810994235;
-        Tue, 18 Aug 2020 21:23:14 -0700 (PDT)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id x11sm10723336pgl.65.2020.08.18.21.23.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Aug 2020 21:23:13 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Christian Lamparter <chunkeey@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com (maintainer:BROADCOM BCM5301X ARM
-        ARCHITECTURE), Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] ARM: dts: BCM5301X: Fix pin controller node
-Date:   Tue, 18 Aug 2020 21:23:07 -0700
-Message-Id: <20200819042308.19043-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=6h612JI2s0g5y4Ra24/kFs/yiArKTc1sB1o5qgaZ/yA=;
+        b=iL9B/h0IMpy5+os/KyvZdVg4rgm3LHaFhld52VbYo4a76Lnv6NFx7lAwnm26hi+yrg
+         4HDedM3V9uz50rSzR3y/v0lMrRKMPF3irpbz/0ARXPkrcih5Z6fJ3uKnObHJTgBUV5AP
+         8ejr6NyRC1Ha4neCbLyxxm9MXs2qxMPR6j0Ohs7cIaaTYuTuBrryEOKIsxWj/qe1YsSt
+         qM6HIr+V0JvBov3WR7gWNOhECkzL7QxMwVMBFYkwWPZpsF3H5UHlbCEb/zUNrR+8Ap7U
+         6b/iITKgJqg071tiWHjGYE10DMbfpLOJ1Re9BwIwTYXnz+Q8SQtaoY2M56uV6A/vbZOX
+         ATSA==
+X-Gm-Message-State: AOAM533PutsdK0K9TFrVKSoYgelHVx6lLgsbE0ZPKBRKo/MBEgDUTvkf
+        3csmaNq3WZhI2fo6Jb3ZFPk=
+X-Google-Smtp-Source: ABdhPJylEsOCdjZdF2eeYykig8JI40Wf/lz3GHwFqsez2w2N902LfrVnwird2UDZxzuMrxfmvnRANw==
+X-Received: by 2002:a37:68c1:: with SMTP id d184mr20369324qkc.62.1597811220457;
+        Tue, 18 Aug 2020 21:27:00 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id q68sm22892666qke.123.2020.08.18.21.26.58
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Aug 2020 21:27:00 -0700 (PDT)
+Subject: [RFC PATCH v2 0/5] Minor cleanups and performance optimizations for
+ LRU rework
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     alex.shi@linux.alibaba.com
+Cc:     yang.shi@linux.alibaba.com, lkp@intel.com, rong.a.chen@intel.com,
+        khlebnikov@yandex-team.ru, kirill@shutemov.name, hughd@google.com,
+        linux-kernel@vger.kernel.org, alexander.duyck@gmail.com,
+        daniel.m.jordan@oracle.com, linux-mm@kvack.org,
+        shakeelb@google.com, willy@infradead.org, hannes@cmpxchg.org,
+        tj@kernel.org, cgroups@vger.kernel.org, akpm@linux-foundation.org,
+        richard.weiyang@gmail.com, mgorman@techsingularity.net,
+        iamjoonsoo.kim@lge.com
+Date:   Tue, 18 Aug 2020 21:26:57 -0700
+Message-ID: <20200819041852.23414.95939.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pin controller resources start at 0xc0 from the CRU base which is at
-0x100 from th DMU base, for a final address of 0x1800_c1c0, whereas we
-are currently off by 0x100. The resource size of the CRU is also
-incorrect and should end at 0x248 bytes from 0x100 which is the start
-address. Finally, the compatibility strings defined for the
-pin-controller node should reflect the SoC being used.
+So this patch set addresses a few minor issues I have found and is based on
+the lrunext branch of the tree at:
+https://github.com/alexshi/linux.git
 
-Fixes: 9994241ac97c ("ARM: dts: BCM5301X: Describe Northstar pins mux controller")
-Reported-by: Christian Lamparter <chunkeey@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+The first three patches address various issues if ound with the patch set
+such as the fact that we were skipping non-LRU compound pages one 4K page
+at a time, the fact that test_and_set_skip had been made redundant by the
+fact that the LRU bit made the setting of the bit exclusive per pageblock,
+and the fact that we were using put_page while holding the LRU lock.
+
+The last two patches are some patches I have been experimenting with.
+Basically trying to reduce the number of times the LRU lock has to be
+released and reacquired by batching LRU work together, or deferring the
+freeing/returning of pages to LRU in the case of move_pages_to_lru. I am
+still working on generating data but for the fourth patch I have seen an
+improvement of about 5% on the will-it-scale/page_fault2 test with THP
+enabled by default, however that is just some preliminary data and I still
+have a number of tests left to run.
+
 ---
-Christian, can you test this as a preliminary patch for your Cisco
-Meraki MR32 series? Thanks!
 
- arch/arm/boot/dts/bcm4708.dtsi  | 4 ++++
- arch/arm/boot/dts/bcm4709.dtsi  | 4 ++++
- arch/arm/boot/dts/bcm5301x.dtsi | 8 ++++----
- 3 files changed, 12 insertions(+), 4 deletions(-)
+Alexander Duyck (5):
+      mm: Identify compound pages sooner in isolate_migratepages_block
+      mm: Drop use of test_and_set_skip in favor of just setting skip
+      mm: Add explicit page decrement in exception path for isolate_lru_pages
+      mm: Split release_pages work into 3 passes
+      mm: Split move_pages_to_lru into 3 separate passes
 
-diff --git a/arch/arm/boot/dts/bcm4708.dtsi b/arch/arm/boot/dts/bcm4708.dtsi
-index 1a19e97a987d..5064fe51e402 100644
---- a/arch/arm/boot/dts/bcm4708.dtsi
-+++ b/arch/arm/boot/dts/bcm4708.dtsi
-@@ -43,6 +43,10 @@ cpu@1 {
- 
- };
- 
-+&pinctrl {
-+	compatible = "brcm,bcm4708-pinmux";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/bcm4709.dtsi b/arch/arm/boot/dts/bcm4709.dtsi
-index e1bb8661955f..7417c275ea9d 100644
---- a/arch/arm/boot/dts/bcm4709.dtsi
-+++ b/arch/arm/boot/dts/bcm4709.dtsi
-@@ -5,6 +5,10 @@
- 
- #include "bcm4708.dtsi"
- 
-+&pinctrl {
-+	compatible = "brcm,bcm4709-pinmux";
-+};
-+
- &uart0 {
- 	clock-frequency = <125000000>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 2d9b4dd05830..bf49943f504a 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -402,14 +402,14 @@ dmu@1800c000 {
- 
- 		cru@100 {
- 			compatible = "simple-bus";
--			reg = <0x100 0x1a4>;
-+			reg = <0x100 0x248>;
- 			ranges;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
--			pin-controller@1c0 {
--				compatible = "brcm,bcm4708-pinmux";
--				reg = <0x1c0 0x24>;
-+			pinctrl: pin-controller@c0 {
-+				compatible = "brcm,bcm53012-pinmux";
-+				reg = <0xc0 0x24>;
- 				reg-names = "cru_gpio_control";
- 
- 				spi-pins {
--- 
-2.25.1
 
+ mm/compaction.c |   84 +++++++++++++++---------------------------
+ mm/swap.c       |  109 ++++++++++++++++++++++++++++++++++---------------------
+ mm/vmscan.c     |   77 +++++++++++++++++++++++----------------
+ 3 files changed, 142 insertions(+), 128 deletions(-)
+
+--
