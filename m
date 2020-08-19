@@ -2,169 +2,117 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A1DC433E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C70AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D765A20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BBE2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:21:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5f9Bcpy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OV7Kyua9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHSWV3 (ORCPT
+        id S1727977AbgHSWVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:21:29 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57382 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727936AbgHSWVV (ORCPT
+        Wed, 19 Aug 2020 18:21:40 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59956 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727915AbgHSWVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:21:21 -0400
+        Wed, 19 Aug 2020 18:21:15 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597875679;
+        s=mimecast20190719; t=1597875672;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RVpkWZgoV/McsG5/jmbAEgGEb94GIerA/7gyN/jgusE=;
-        b=R5f9BcpyYzh0wLqULRDxukQxyr2hI7m0KR7SAy8pdiA90IHRQ47aAX86bYLg4VAZm8iSc/
-        5MQoicXblMrcEmguUQFyJQKPh5xbbLh82LAWBmsHoLVXWoEW4d6jkuKlnjrJxs3H6xfL2g
-        wpqVUtx+hWaiqQHhnSFkeJL27+x76g0=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Mul6xYMxBSgZ+hw59Zt3uye6OAmruS4cZeubQ0rXxgM=;
+        b=OV7Kyua9NmYVT4IFZrSWji0DuMULCAHmnphFoO3qHuXbRRyBvJr4jaemYLM6GaXP9drSxf
+        RMPyEvvQ7SJ/dBaph0Cz+8ocmgkhhSNhEptBU1KybCJje7mBHiPbVb231SY+1Rj5tZAiIw
+        7YUXaMxVYP2fZkKZY/AtBxcOkYGv6Zg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-Vhl7GqQLPZ6PGB3isPPanQ-1; Wed, 19 Aug 2020 18:21:02 -0400
-X-MC-Unique: Vhl7GqQLPZ6PGB3isPPanQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-535-dmD4I7AnOHuEHQVyL9Tchw-1; Wed, 19 Aug 2020 18:21:08 -0400
+X-MC-Unique: dmD4I7AnOHuEHQVyL9Tchw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F3A88807332;
-        Wed, 19 Aug 2020 22:21:00 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72E668030B0;
+        Wed, 19 Aug 2020 22:21:07 +0000 (UTC)
 Received: from horse.redhat.com (ovpn-115-197.rdu2.redhat.com [10.10.115.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C85E5C893;
-        Wed, 19 Aug 2020 22:20:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 85FBD5D9E8;
+        Wed, 19 Aug 2020 22:21:01 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id BC4D3223C69; Wed, 19 Aug 2020 18:20:53 -0400 (EDT)
+        id 10D3E2256EA; Wed, 19 Aug 2020 18:20:54 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org, virtio-fs@redhat.com
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, dan.j.williams@intel.com,
-        Jan Kara <jack@suse.cz>, Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Vishal L Verma <vishal.l.verma@intel.com>
-Subject: [PATCH v3 00/18] virtiofs: Add DAX support
-Date:   Wed, 19 Aug 2020 18:19:38 -0400
-Message-Id: <20200819221956.845195-1-vgoyal@redhat.com>
+        Peng Tao <tao.peng@linux.alibaba.com>
+Subject: [PATCH v3 12/18] fuse: Introduce setupmapping/removemapping commands
+Date:   Wed, 19 Aug 2020 18:19:50 -0400
+Message-Id: <20200819221956.845195-13-vgoyal@redhat.com>
+In-Reply-To: <20200819221956.845195-1-vgoyal@redhat.com>
+References: <20200819221956.845195-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Introduce two new fuse commands to setup/remove memory mappings. This
+will be used to setup/tear down file mapping in dax window.
 
-This is V3 of patches. I had posted version v2 version here.
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Peng Tao <tao.peng@linux.alibaba.com>
+---
+ include/uapi/linux/fuse.h | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-https://lore.kernel.org/linux-fsdevel/20200807195526.426056-1-vgoyal@redhat.com/
-
-I have taken care of comments from V2. Changes from V2 are.
-
-- Rebased patches on top of 5.9-rc1
-
-- Renamed couple of functions to get rid of iomap prefix. (Dave Chinner)
-
-- Modified truncate/punch_hole paths to serialize with dax fault
-  path. For now did this only for dax paths. May be non-dax path
-  can benefit from this too. But that is an option for a different
-  day. (Dave Chinner).
-
-- Took care of comments by Jan Kara in dax_layout_busy_page_range()
-  implementation patch.
-
-- Dropped one of the patches which forced sync release in
-  fuse_file_put() path for DAX files. It was redundant now as virtiofs
-  already sets fs_context->destroy which forces sync release. (Miklos)
-
-- Took care of some of the errors flagged by checkpatch.pl.
-
-Description from previous post
-------------------------------
-
-This patch series adds DAX support to virtiofs filesystem. This allows
-bypassing guest page cache and allows mapping host page cache directly
-in guest address space.
-
-When a page of file is needed, guest sends a request to map that page
-(in host page cache) in qemu address space. Inside guest this is
-a physical memory range controlled by virtiofs device. And guest
-directly maps this physical address range using DAX and hence gets
-access to file data on host.
-
-This can speed up things considerably in many situations. Also this
-can result in substantial memory savings as file data does not have
-to be copied in guest and it is directly accessed from host page
-cache.
-
-Most of the changes are limited to fuse/virtiofs. There are couple
-of changes needed in generic dax infrastructure and couple of changes
-in virtio to be able to access shared memory region.
-
-Thanks
-Vivek
-
-Sebastien Boeuf (3):
-  virtio: Add get_shm_region method
-  virtio: Implement get_shm_region for PCI transport
-  virtio: Implement get_shm_region for MMIO transport
-
-Stefan Hajnoczi (2):
-  virtio_fs, dax: Set up virtio_fs dax_device
-  fuse,dax: add DAX mmap support
-
-Vivek Goyal (13):
-  dax: Modify bdev_dax_pgoff() to handle NULL bdev
-  dax: Create a range version of dax_layout_busy_page()
-  virtiofs: Provide a helper function for virtqueue initialization
-  fuse: Get rid of no_mount_options
-  fuse,virtiofs: Add a mount option to enable dax
-  fuse,virtiofs: Keep a list of free dax memory ranges
-  fuse: implement FUSE_INIT map_alignment field
-  fuse: Introduce setupmapping/removemapping commands
-  fuse, dax: Implement dax read/write operations
-  fuse,virtiofs: Define dax address space operations
-  fuse, dax: Serialize truncate/punch_hole and dax fault path
-  fuse,virtiofs: Maintain a list of busy elements
-  fuse,virtiofs: Add logic to free up a memory range
-
- drivers/dax/super.c                |    3 +-
- drivers/virtio/virtio_mmio.c       |   31 +
- drivers/virtio/virtio_pci_modern.c |   95 +++
- fs/dax.c                           |   29 +-
- fs/fuse/dir.c                      |   32 +-
- fs/fuse/file.c                     | 1198 +++++++++++++++++++++++++++-
- fs/fuse/fuse_i.h                   |  114 ++-
- fs/fuse/inode.c                    |  146 +++-
- fs/fuse/virtio_fs.c                |  279 ++++++-
- include/linux/dax.h                |    6 +
- include/linux/virtio_config.h      |   17 +
- include/uapi/linux/fuse.h          |   34 +-
- include/uapi/linux/virtio_fs.h     |    3 +
- include/uapi/linux/virtio_mmio.h   |   11 +
- include/uapi/linux/virtio_pci.h    |   11 +-
- 15 files changed, 1933 insertions(+), 76 deletions(-)
-
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dave Chinner <david@fromorbit.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: Vishal L Verma <vishal.l.verma@intel.com>
+diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
+index 5b85819e045f..60a7bfc787ce 100644
+--- a/include/uapi/linux/fuse.h
++++ b/include/uapi/linux/fuse.h
+@@ -894,4 +894,33 @@ struct fuse_copy_file_range_in {
+ 	uint64_t	flags;
+ };
+ 
++#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
++struct fuse_setupmapping_in {
++	/* An already open handle */
++	uint64_t	fh;
++	/* Offset into the file to start the mapping */
++	uint64_t	foffset;
++	/* Length of mapping required */
++	uint64_t	len;
++	/* Flags, FUSE_SETUPMAPPING_FLAG_* */
++	uint64_t	flags;
++	/* Offset in Memory Window */
++	uint64_t	moffset;
++};
++
++struct fuse_removemapping_in {
++	/* number of fuse_removemapping_one follows */
++	uint32_t        count;
++};
++
++struct fuse_removemapping_one {
++	/* Offset into the dax window start the unmapping */
++	uint64_t        moffset;
++	/* Length of mapping required */
++	uint64_t	len;
++};
++
++#define FUSE_REMOVEMAPPING_MAX_ENTRY   \
++		(PAGE_SIZE / sizeof(struct fuse_removemapping_one))
++
+ #endif /* _LINUX_FUSE_H */
 -- 
 2.25.4
 
