@@ -2,128 +2,84 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13711C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B65C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E71D02078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597864684;
-	bh=ja9zTGvas8+5tbhcgcma7CyTxxBOwXM64Fyi2BLBCTo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AJUpEydUpeSCvfMJNasnJegLJxWTLgKomJAWcuGMNBTMpCTWAVzgNP/3c3N9FzuzJ
-	 Xh32xYbFQBv4INLKLQaCEnUqRC+KC7z0ZlxikFFkAKhl8lpND21in2VsgAWJ1CEB8/
-	 5FF2nMuFIe22bKq/N1jHic71z5UVu5vWXaA+oFHo=
+	by mail.kernel.org (Postfix) with ESMTP id A2D722078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:18:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="MTL94uuG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgHSTSD (ORCPT
+        id S1727084AbgHSTSQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726870AbgHSTRy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:17:54 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 323312078D;
-        Wed, 19 Aug 2020 19:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597864673;
-        bh=ja9zTGvas8+5tbhcgcma7CyTxxBOwXM64Fyi2BLBCTo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j+F1qKX+o3xFhR8SHLgmObhhLP6ZPWEEV3vRBu8SRkLCYEn4lYrxP5NjcauFwMQY+
-         XND3i9GRBsU25re0GRwg2yw9z6Km3T0zpp2YRP757LbvI4HBsnrxxvzbrvIk5fX+If
-         MT0yayqEf+I0eU/F7u3C0A7Sm6/B+NxPZrNOV4Qs=
-Date:   Wed, 19 Aug 2020 20:17:22 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 01/41] ARM: s3c: Remove unneeded machine header
- includes
-Message-ID: <20200819191722.GA38371@sirena.org.uk>
-References: <20200806181932.2253-1-krzk@kernel.org>
- <20200806182059.2431-1-krzk@kernel.org>
- <159783932455.55025.7979458249415199743.b4-ty@kernel.org>
- <20200819190232.GA18183@kozik-lap>
+        Wed, 19 Aug 2020 15:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbgHSTSN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 15:18:13 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C1A8C061757;
+        Wed, 19 Aug 2020 12:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Oai+oxzNPuIfgriKFZ7IPO9e3XuWOzJ6eg1UgB7h7Gc=; b=MTL94uuGp7VWO1sIxU/Kyr7fZh
+        +e35aZqq/1xl3ZdqcbyhO/pOOdXpNkMqJmOi9pFpOAy+sqUjLX/GnUpqd3YZT8wQ//qKk+BehM0gp
+        F6QQomcAlhyITzvIsT1L07XVqW29a5Gqi0oX5Sp8Efbn8ujGxFks/ROebwoAwG6Lboaw=;
+Received: from p200300ccff0e87001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0e:8700:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k8Tas-0007ns-Kv; Wed, 19 Aug 2020 21:17:54 +0200
+Received: from andi by aktux with local (Exim 4.92)
+        (envelope-from <andreas@kemnade.info>)
+        id 1k8TYk-0008UT-TE; Wed, 19 Aug 2020 21:15:42 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     tony@atomide.com, linux@armlinux.org.uk,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] ARM: omap2plus_defconfig: enable twl4030_madc as a loadable module
+Date:   Wed, 19 Aug 2020 21:15:24 +0200
+Message-Id: <20200819191524.32581-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
-In-Reply-To: <20200819190232.GA18183@kozik-lap>
-X-Cookie: Absence makes the heart grow frantic.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The ADC is used by twl4030_charger to read voltages. If a dtb contains
+the ADC but the module is not build, probing twl4030_charger will be
+endlessly deferred, so just enable CONFIG_TWL4030_MADC in the config.
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ arch/arm/configs/omap2plus_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Wed, Aug 19, 2020 at 09:02:32PM +0200, Krzysztof Kozlowski wrote:
+diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
+index fe383f5a92fb..c9a32000f1d4 100644
+--- a/arch/arm/configs/omap2plus_defconfig
++++ b/arch/arm/configs/omap2plus_defconfig
+@@ -510,6 +510,7 @@ CONFIG_IIO_ST_ACCEL_3AXIS=m
+ CONFIG_CPCAP_ADC=m
+ CONFIG_INA2XX_ADC=m
+ CONFIG_TI_AM335X_ADC=m
++CONFIG_TWL4030_MADC=m
+ CONFIG_SENSORS_ISL29028=m
+ CONFIG_BMP280=m
+ CONFIG_PWM=y
+-- 
+2.20.1
 
-> Thanks Mark.  Could you provide me with a tag/branch with these to pull
-> into samsung-soc?
-
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
-
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tags/samsung-platdrv-boards
-
-for you to fetch changes up to dcacbc0f9bb89ac48d5b602d27a8630e641294cc:
-
-  ASoC: samsung: s3c2412-i2s: avoid hardcoded S3C2410_PA_IIS (2020-08-19 20:15:45 +0100)
-
-----------------------------------------------------------------
-ASoC: Convert Samsung drivers to platform drivers
-
-----------------------------------------------------------------
-Arnd Bergmann (4):
-      ASoC: samsung: h1940: turn into platform driver
-      ASoC: samsung: neo1973: turn into platform driver
-      ASoC: samsung: rx1950: turn into platform driver
-      ASoC: samsung: s3c2412-i2s: avoid hardcoded S3C2410_PA_IIS
-
- arch/arm/mach-s3c24xx/mach-gta02.c  | 17 ++++++++
- arch/arm/mach-s3c24xx/mach-h1940.c  | 18 ++++++++
- arch/arm/mach-s3c24xx/mach-rx1950.c | 16 +++++++
- sound/soc/samsung/h1940_uda1380.c   | 71 ++++++++++---------------------
- sound/soc/samsung/neo1973_wm8753.c  | 85 ++++++++++++-------------------------
- sound/soc/samsung/rx1950_uda1380.c  | 72 ++++++++++---------------------
- sound/soc/samsung/s3c-i2s-v2.c      |  3 +-
- sound/soc/samsung/s3c-i2s-v2.h      |  3 +-
- sound/soc/samsung/s3c2412-i2s.c     |  2 +-
- 9 files changed, 126 insertions(+), 161 deletions(-)
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl89esEACgkQJNaLcl1U
-h9Dkwwf/W8mvyfntwp5cuKoybqCa0Ov7tbgr3EOc/YKmnIEHA3IAqAGldEFbc314
-kN/6CKhvm49l+Xven7KJmbXDBoEvDe+N96Ejvw/5Mihu3voTChdK/waoxbCAomCl
-+o3hIjuj6X+qbfUVO5HyHiklFJoRTRd2i87dJ8dOxeqfrxR+JQAgkTWciQlGrF4x
-sxAVUyJHzNFvy+vaRyiTzY7hRMuST1i5ciBlABm4EsMjWJ59rOW3hCrFAvQ5dZyP
-LGck2oVKyfHdcNll2lLCcUSJ0plO4iPG4Gg1wxrA6Bi7ZSbvM9HWd6iMG1elca0B
-dXmCebRsD0xYBH2xgdLlW/wdfolaXw==
-=Wokk
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
