@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ED8C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD6FE206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E3B2206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h4rOtRbK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Px2voPJM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgHSKM5 (ORCPT
+        id S1728008AbgHSKNH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:12:57 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46963 "EHLO
+        Wed, 19 Aug 2020 06:13:07 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31612 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727906AbgHSKMf (ORCPT
+        with ESMTP id S1727901AbgHSKMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:12:35 -0400
+        Wed, 19 Aug 2020 06:12:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597831954;
+        s=mimecast20190719; t=1597831951;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IdguOjkQ24qzjm7ZRgHqOO4YkZqbDqwdE1w1x77wlyM=;
-        b=h4rOtRbKI3uTyP+mdrY1QsDuqCG8qMhaMGJ3dmX6bgnFkgEZ7LaDit15mD2bRhtz9lhQ9O
-        wVYrt3Qy1MvhwFHfko/rpRY63yTGhYrZ2GWCApW/ZTe1lD3nLbiglZcFOA/R933egTHVXZ
-        8817MJsSQeWmwn88opt1JyBXJGizbF4=
+        bh=DXpQgXtPCtA3XAl6RXZ6J9mfBUjPvtMXLXOf7p6EKhA=;
+        b=Px2voPJMmowHpSrGXuk1FIvJlcBC3lp1NpVqRM7GSSA7WWawSvUuAgDSXNgknQJokfr7yf
+        oNnObFjNOIKXKr2pGWomczfBEFm06A7NgorCmJc+yKU4icKytcq4BCtf6oftiVMZv47+bp
+        0PhFEhwNgEyH7zKwM+A+T7IHigtLnnE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-RrJ7PefaNlWb0v9vZUwEag-1; Wed, 19 Aug 2020 06:12:30 -0400
-X-MC-Unique: RrJ7PefaNlWb0v9vZUwEag-1
+ us-mta-35-WGkPFn9LPGGV5gDWBEYP-Q-1; Wed, 19 Aug 2020 06:12:27 -0400
+X-MC-Unique: WGkPFn9LPGGV5gDWBEYP-Q-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8B99F1006701;
-        Wed, 19 Aug 2020 10:12:28 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 87F5416597;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 37C1110066FB;
         Wed, 19 Aug 2020 10:12:26 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-114-11.ams2.redhat.com [10.36.114.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6081A2639D;
+        Wed, 19 Aug 2020 10:12:24 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
@@ -53,11 +53,10 @@ Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Wei Yang <richard.weiyang@linux.alibaba.com>,
         Baoquan He <bhe@redhat.com>,
         Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Mel Gorman <mgorman@suse.de>
-Subject: [PATCH v1 09/11] mm/page_alloc: drop stale pageblock comment in memmap_init_zone*()
-Date:   Wed, 19 Aug 2020 12:11:55 +0200
-Message-Id: <20200819101157.12723-10-david@redhat.com>
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v1 08/11] mm/memory_hotplug: simplify page onlining
+Date:   Wed, 19 Aug 2020 12:11:54 +0200
+Message-Id: <20200819101157.12723-9-david@redhat.com>
 In-Reply-To: <20200819101157.12723-1-david@redhat.com>
 References: <20200819101157.12723-1-david@redhat.com>
 MIME-Version: 1.0
@@ -68,11 +67,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ac5d2539b238 ("mm: meminit: reduce number of times pageblocks are
-set during struct page init") moved the actual zone range check, leaving
-only the alignment check for pageblocks.
+We don't allow to offline memory with holes, all boot memory is online,
+and all hotplugged memory cannot have holes.
 
-Let's drop the stale comment and make the pageblock check easier to read.
+We can now simplify onlining of pages. As we only allow to online/offline
+full sections and sections always span full MAX_ORDER_NR_PAGES, we can just
+process MAX_ORDER - 1 pages without further special handling.
+
+The number of onlined pages simply corresponds to the number of pages we
+were requested to online.
+
+While at it, refine the comment regarding the callback not exposing all
+pages to the buddy.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -80,48 +86,85 @@ Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
 Cc: Baoquan He <bhe@redhat.com>
 Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Mel Gorman <mgorman@suse.de>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- mm/page_alloc.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ mm/memory_hotplug.c | 38 ++++++++++----------------------------
+ 1 file changed, 10 insertions(+), 28 deletions(-)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 848664352dfe2..5db0b35f95e20 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6022,13 +6022,8 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
- 		 * to reserve their blocks rather than leaking throughout
- 		 * the address space during boot when many long-lived
- 		 * kernel allocations are made.
--		 *
--		 * bitmap is created for zone's valid pfn range. but memmap
--		 * can be created for invalid pages (for alignment)
--		 * check here not to call set_pageblock_migratetype() against
--		 * pfn out of zone.
- 		 */
--		if (!(pfn & (pageblock_nr_pages - 1))) {
-+		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
- 			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
- 			cond_resched();
- 		}
-@@ -6091,15 +6086,10 @@ void __ref memmap_init_zone_device(struct zone *zone,
- 		 * the address space during boot when many long-lived
- 		 * kernel allocations are made.
- 		 *
--		 * bitmap is created for zone's valid pfn range. but memmap
--		 * can be created for invalid pages (for alignment)
--		 * check here not to call set_pageblock_migratetype() against
--		 * pfn out of zone.
--		 *
- 		 * Please note that MEMMAP_HOTPLUG path doesn't clear memmap
- 		 * because this is done early in section_activate()
- 		 */
--		if (!(pfn & (pageblock_nr_pages - 1))) {
-+		if (IS_ALIGNED(pfn, pageblock_nr_pages)) {
- 			set_pageblock_migratetype(page, MIGRATE_MOVABLE);
- 			cond_resched();
- 		}
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 0011a1115381c..3aba0d956f9b1 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -617,31 +617,22 @@ void generic_online_page(struct page *page, unsigned int order)
+ }
+ EXPORT_SYMBOL_GPL(generic_online_page);
+ 
+-static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
+-			void *arg)
++static void online_pages_range(unsigned long start_pfn, unsigned long nr_pages)
+ {
+ 	const unsigned long end_pfn = start_pfn + nr_pages;
+ 	unsigned long pfn;
+-	int order;
+ 
+ 	/*
+-	 * Online the pages. The callback might decide to keep some pages
+-	 * PG_reserved (to add them to the buddy later), but we still account
+-	 * them as being online/belonging to this zone ("present").
++	 * Online the pages in MAX_ORDER - 1 aligned chunks. The callback might
++	 * decide to not expose all pages to the buddy (e.g., expose them
++	 * later). We account all pages as being online and belonging to this
++	 * zone ("present").
+ 	 */
+-	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
+-		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
+-		/* __free_pages_core() wants pfns to be aligned to the order */
+-		if (WARN_ON_ONCE(!IS_ALIGNED(pfn, 1ul << order)))
+-			order = 0;
+-		(*online_page_callback)(pfn_to_page(pfn), order);
+-	}
++	for (pfn = start_pfn; pfn < end_pfn; pfn += MAX_ORDER_NR_PAGES)
++		(*online_page_callback)(pfn_to_page(pfn), MAX_ORDER - 1);
+ 
+ 	/* mark all involved sections as online */
+ 	online_mem_sections(start_pfn, end_pfn);
+-
+-	*(unsigned long *)arg += nr_pages;
+-	return 0;
+ }
+ 
+ /* check which state of node_states will be changed when online memory */
+@@ -795,7 +786,6 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+ 		       int online_type, int nid)
+ {
+ 	unsigned long flags;
+-	unsigned long onlined_pages = 0;
+ 	struct zone *zone;
+ 	int need_zonelists_rebuild = 0;
+ 	int ret;
+@@ -831,19 +821,11 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
+ 		setup_zone_pageset(zone);
+ 	}
+ 
+-	ret = walk_system_ram_range(pfn, nr_pages, &onlined_pages,
+-		online_pages_range);
+-	if (ret) {
+-		/* not a single memory resource was applicable */
+-		if (need_zonelists_rebuild)
+-			zone_pcp_reset(zone);
+-		goto failed_addition;
+-	}
+-
+-	zone->present_pages += onlined_pages;
++	online_pages_range(pfn, nr_pages);
++	zone->present_pages += nr_pages;
+ 
+ 	pgdat_resize_lock(zone->zone_pgdat, &flags);
+-	zone->zone_pgdat->node_present_pages += onlined_pages;
++	zone->zone_pgdat->node_present_pages += nr_pages;
+ 	pgdat_resize_unlock(zone->zone_pgdat, &flags);
+ 
+ 	/*
 -- 
 2.26.2
 
