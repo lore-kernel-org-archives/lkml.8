@@ -2,99 +2,106 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A01C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFAA2C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB957207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D3C420578
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mpxwSwSB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7KYxRkk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHSStw (ORCPT
+        id S1726957AbgHSSui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:49:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34088 "EHLO
+        Wed, 19 Aug 2020 14:50:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726685AbgHSStG (ORCPT
+        with ESMTP id S1726211AbgHSSug (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:49:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2E5C061383;
-        Wed, 19 Aug 2020 11:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=6FEH2RzEKpeGkw1ry8PIMFPV7YWAJWwmC36GZdEh8I8=; b=mpxwSwSBY6UqYCwG+sE65V35BB
-        J8yzFZhDe0QRMl1ZP/nlpb2+WKDQLYNkDnz76pIkiUTqTr189msFIwBJ8Mr8+Fb5eKxFjMBlC264q
-        MFMM2mcRXQAZBJw4EqOpTiDhiJTFSkQjlg6ucjHSbR1dPWYPrVqiLTTEa+IgaEziprwqMjqE/2vJN
-        8HJKcVy+CFy9D2tDrJzoPrvYKkIeAngzZupTTfRif0cbwdr6/FFFFOSjbC7q0zK/5WOG5hKulHIBH
-        VFCsPpPgHZOLoqSynTDkWtpsghEfDw6rADRHNjdQRwN5rhOkDtE0OXzWVqUtA/fsw+CJSKW2WX9+8
-        OaTNPKkg==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8T8o-0006TI-Gl; Wed, 19 Aug 2020 18:48:54 +0000
-From:   "Matthew Wilcox (Oracle)" <willy@infradead.org>
-To:     linux-mm@kvack.org
-Cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        William Kucharski <william.kucharski@oracle.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 4/8] proc: Optimise smaps for shmem entries
-Date:   Wed, 19 Aug 2020 19:48:46 +0100
-Message-Id: <20200819184850.24779-5-willy@infradead.org>
-X-Mailer: git-send-email 2.21.3
-In-Reply-To: <20200819184850.24779-1-willy@infradead.org>
-References: <20200819184850.24779-1-willy@infradead.org>
+        Wed, 19 Aug 2020 14:50:36 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA354C061757;
+        Wed, 19 Aug 2020 11:50:36 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id o13so11847244pgf.0;
+        Wed, 19 Aug 2020 11:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qKUSdz5ggJgCypvtvcoqf17QPlT56IKgrCYcfygaIN8=;
+        b=R7KYxRkk71vLqZDlr39ocA+2OcxdE0vDd8Tj8OVtAPw7SX/ewu8C/4QQFDGAR+b57v
+         OVcbkV6Fs5gGVrJLPFpPSs9FyKHcgIECnDATyhPNJC49qyfmV/6bWOJ1NRwpKVU9Rkj/
+         DI4osLbC2V50gbrSmgY7+XOplCo4ehHkvTai3l8z9ycX81bNOQAGrMEP1lMZb2oG8tu8
+         j/W+rfwMiXaTYKd32wJAXlB/8T7SySab3v4xtXnYmWBMJpwZpXl18JajmuYxKgZtqaq8
+         3mR9dVZGeulmGkTppTpWRA33QnU78xUc5MF1Y9yvDtUThNjDpVMQCvQvJntcyu4q4tXm
+         l8ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qKUSdz5ggJgCypvtvcoqf17QPlT56IKgrCYcfygaIN8=;
+        b=MJq/3ExoEvNg84rESRaAA7PiAOKcX4iUq0tnoilmQyWO+RKqs90u3EtQfJ2wT63KBi
+         QQQ9XeFhD222fPSC4/sJWXKY6KtXk/KuVCm3EFgXhu/yzRb2fytBuNSbLAbfMXs6dNYw
+         GKBrHtsQ7/8vIIC211s3wx+V+eb+LVD236EcKnFzfzJHZhFlIOhqzINQowCGrHqgFbXj
+         Msop+bv2tpSb6uu3BEKOeSL0lP7Ili2q5dhgEoF+xaM61yEybhwgLLb2F1FAQ7K5msxW
+         eQeGPyfil3s8DqZjGV0Fcho+0AWj23wT+mlLEDAIIIK/tygQK50WmdgGPnFeIhyiKKbf
+         i9SA==
+X-Gm-Message-State: AOAM533SDc23xYA54cgs2Lsc879eNWMo5foi1QrthYB2TYVMFutvtZM4
+        BaKQNqbPUNxUYo00ZyCVltqHPnNciTvRZ39yhT4=
+X-Google-Smtp-Source: ABdhPJyuiEsn1JK6nAvJdb0jwvTaK4WDrHiuuH7K+3u8kFAw0ttV27uqoXwuzhjKL0T+613XCm8a3SOn3811MvIfX8U=
+X-Received: by 2002:a63:9dc2:: with SMTP id i185mr295542pgd.203.1597863036114;
+ Wed, 19 Aug 2020 11:50:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200721144832.750728-1-abanoubsameh@protonmail.com>
+ <CAHp75VdFvAYR+z8c6R2J9Q2JK-WpHS4LU_-cWvsOa2g8+Gfk9w@mail.gmail.com> <CAMpxmJVW0yXdVVxYYiNjHw5XsKx+cyb6hV7KTeOQBxgFJWWx4w@mail.gmail.com>
+In-Reply-To: <CAMpxmJVW0yXdVVxYYiNjHw5XsKx+cyb6hV7KTeOQBxgFJWWx4w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 21:50:19 +0300
+Message-ID: <CAHp75Vfc_5rS+MOL=WtvEpQ45RT5tHXe4aUiH1oMJn4Re4q3gg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: gpio-crystalcove.c: changed every 'unsigned' to
+ 'unsigned int'
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Abanoub Sameh <abanoubsameh8@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abanoub Sameh <abanoubsameh@protonmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid bumping the refcount on pages when we're only interested in the
-swap entries.
+On Wed, Aug 19, 2020 at 8:56 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+>
+> On Tue, Jul 21, 2020 at 6:05 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Tue, Jul 21, 2020 at 5:49 PM Abanoub Sameh <abanoubsameh8@gmail.com> wrote:
+> > >
+> > > Changed 'unsigned' to 'unsigned int'.
+> > > This makes the code more uniform, and compliant with the kernel coding style.
+> >
+> > In all patches you wrongly added 'gpio-' and '.c' parts. Also you
+> > missed the version of the patches (I have told you about) and
+> > changelog.
+> >
+> > No need to resend, I fixed that this time for you. Be careful in the future.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/proc/task_mmu.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+> I was going through pending patches and noticed those from Abanoub:
+> are you also the maintainer for gpio-crystalcove and gpio-msic? The
+> MAINTAINERS entry for Intel GPIO drivers doesn't include those - do
+> you want me to send a patch that adds them?
 
-diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-index 5066b0251ed8..e42d9e5e9a3c 100644
---- a/fs/proc/task_mmu.c
-+++ b/fs/proc/task_mmu.c
-@@ -520,16 +520,10 @@ static void smaps_pte_entry(pte_t *pte, unsigned long addr,
- 			page = device_private_entry_to_page(swpent);
- 	} else if (unlikely(IS_ENABLED(CONFIG_SHMEM) && mss->check_shmem_swap
- 							&& pte_none(*pte))) {
--		page = find_get_entry(vma->vm_file->f_mapping,
-+		page = xa_load(&vma->vm_file->f_mapping->i_pages,
- 						linear_page_index(vma, addr));
--		if (!page)
--			return;
--
- 		if (xa_is_value(page))
- 			mss->swap += PAGE_SIZE;
--		else
--			put_page(page);
--
- 		return;
- 	}
- 
+Hmm...
+https://elixir.bootlin.com/linux/latest/source/MAINTAINERS#L8833
+
+
 -- 
-2.28.0
-
+With Best Regards,
+Andy Shevchenko
