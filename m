@@ -2,29 +2,30 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C3FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C7FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67FAF206B5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB5B82076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:48:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHSKsA (ORCPT
+        id S1727968AbgHSKsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:48:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53968 "EHLO
+        Wed, 19 Aug 2020 06:48:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54001 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726919AbgHSKra (ORCPT
+        with ESMTP id S1727884AbgHSKrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:47:30 -0400
+        Wed, 19 Aug 2020 06:47:37 -0400
 Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8Lco-0006IE-NK; Wed, 19 Aug 2020 10:47:22 +0000
+        id 1k8Ld0-0006IE-I5; Wed, 19 Aug 2020 10:47:34 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -57,10 +58,12 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         Christoph Hewllig <hch@infradead.org>,
         Matthew Wilcox <willy@infradead.org>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH v2 00/11] Introduce kernel_clone(), kill _do_fork()
-Date:   Wed, 19 Aug 2020 12:46:44 +0200
-Message-Id: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+Subject: [PATCH v2 08/11] kprobes: switch to kernel_clone()
+Date:   Wed, 19 Aug 2020 12:46:52 +0200
+Message-Id: <20200819104655.436656-9-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -68,78 +71,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
+The latter adheres to naming conventions for kernel internal syscall helpers.
 
-This is a follow-up to the fork-related cleanup. It's based on a brief
-discussion after the initial series was merged.
-Last cycle we removed copy_thread_tls() and the associated Kconfig
-option for each architecture. Now we are only left with copy_thread().
-Part of this work was removing the old do_fork() legacy clone()-style
-calling convention in favor of the new struct kernel_clone args calling
-convention.
-The only remaining function callable outside of kernel/fork.c is
-_do_fork(). It doesn't really follow the naming of kernel-internal
-syscall helpers as Christoph righly pointed out. Switch all callers and
-references to kernel_clone() and remove _do_fork() once and for all also
-switching the return value for kernel_clone() from long to pid_t since
-that's what we use in all other places where we're dealing with process
-identifiers.
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Alexandre Chartre <alexandre.chartre@oracle.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+/* v2 */
+unchanged
+---
+ samples/kprobes/kprobe_example.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-For all architectures I have done a full git rebase v5.9-rc1 -x "make
--j31". There were no built failures and the changes were fairly
-mechanical.
-
-The only helpers we have left now are kernel_thread() and kernel_clone()
-where kernel_thread() just calls kernel_clone().
-
-Thanks!
-Christian
-
-Christian Brauner (11):
-  fork: introduce kernel_clone()
-  h8300: switch to kernel_clone()
-  ia64: switch to kernel_clone()
-  m68k: switch to kernel_clone()
-  nios2: switch to kernel_clone()
-  sparc: switch to kernel_clone()
-  x86: switch to kernel_clone()
-  kprobes: switch to kernel_clone()
-  kgdbts: switch to kernel_clone()
-  tracing: switch to kernel_clone()
-  sched: remove _do_fork()
-
- Documentation/trace/histogram.rst             |  4 +-
- arch/h8300/kernel/process.c                   |  2 +-
- arch/ia64/kernel/process.c                    |  4 +-
- arch/m68k/kernel/process.c                    | 10 ++--
- arch/nios2/kernel/process.c                   |  2 +-
- arch/sparc/kernel/process.c                   |  6 +--
- arch/x86/kernel/sys_ia32.c                    |  2 +-
- drivers/misc/kgdbts.c                         | 48 +++++++++----------
- include/linux/sched/task.h                    |  2 +-
- kernel/fork.c                                 | 16 +++----
- samples/kprobes/kprobe_example.c              |  6 +--
- samples/kprobes/kretprobe_example.c           |  4 +-
- .../test.d/dynevent/add_remove_kprobe.tc      |  2 +-
- .../test.d/dynevent/clear_select_events.tc    |  2 +-
- .../test.d/dynevent/generic_clear_event.tc    |  2 +-
- .../test.d/ftrace/func-filter-stacktrace.tc   |  4 +-
- .../ftrace/test.d/kprobe/add_and_remove.tc    |  2 +-
- .../ftrace/test.d/kprobe/busy_check.tc        |  2 +-
- .../ftrace/test.d/kprobe/kprobe_args.tc       |  4 +-
- .../ftrace/test.d/kprobe/kprobe_args_comm.tc  |  2 +-
- .../test.d/kprobe/kprobe_args_string.tc       |  4 +-
- .../test.d/kprobe/kprobe_args_symbol.tc       | 10 ++--
- .../ftrace/test.d/kprobe/kprobe_args_type.tc  |  2 +-
- .../ftrace/test.d/kprobe/kprobe_ftrace.tc     | 14 +++---
- .../ftrace/test.d/kprobe/kprobe_multiprobe.tc |  2 +-
- .../test.d/kprobe/kprobe_syntax_errors.tc     | 12 ++---
- .../ftrace/test.d/kprobe/kretprobe_args.tc    |  4 +-
- .../selftests/ftrace/test.d/kprobe/profile.tc |  2 +-
- 28 files changed, 88 insertions(+), 88 deletions(-)
-
-
-base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+diff --git a/samples/kprobes/kprobe_example.c b/samples/kprobes/kprobe_example.c
+index 240f2435ce6f..a02f53836ee1 100644
+--- a/samples/kprobes/kprobe_example.c
++++ b/samples/kprobes/kprobe_example.c
+@@ -2,13 +2,13 @@
+ /*
+  * NOTE: This example is works on x86 and powerpc.
+  * Here's a sample kernel module showing the use of kprobes to dump a
+- * stack trace and selected registers when _do_fork() is called.
++ * stack trace and selected registers when kernel_clone() is called.
+  *
+  * For more information on theory of operation of kprobes, see
+  * Documentation/staging/kprobes.rst
+  *
+  * You will see the trace data in /var/log/messages and on the console
+- * whenever _do_fork() is invoked to create a new process.
++ * whenever kernel_clone() is invoked to create a new process.
+  */
+ 
+ #include <linux/kernel.h>
+@@ -16,7 +16,7 @@
+ #include <linux/kprobes.h>
+ 
+ #define MAX_SYMBOL_LEN	64
+-static char symbol[MAX_SYMBOL_LEN] = "_do_fork";
++static char symbol[MAX_SYMBOL_LEN] = "kernel_clone";
+ module_param_string(symbol, symbol, sizeof(symbol), 0644);
+ 
+ /* For each probe you need to allocate a kprobe structure */
 -- 
 2.28.0
 
