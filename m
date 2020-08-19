@@ -2,126 +2,163 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0899C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38994C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A96B2067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:11:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ent9lxsg"
+	by mail.kernel.org (Postfix) with ESMTP id 1735F2067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbgHSILe (ORCPT
+        id S1726806AbgHSILp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:11:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgHSIL0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:11:26 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3F8C061389
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:11:26 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f7so20588299wrw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=RW+DAA6feyP/FiHoBpI4e2XS7e1awJ4EyauOZLhTca0=;
-        b=ent9lxsgR8B25Us1IxxrVoCxUZkujlohpoSFC35rQ5YqhG+sVG52IQm65m2uJyjHdK
-         qOpJ/EtShKh8zp3DurcTKs/t03tAt65pQP6U98Sq3tn/AwOEN40ilzWofb2ANh3vXhNC
-         Xm58+jUsXFJ5f8AfmQGkaKvkguqtHx+3aicTgS8B1P218+UovGqHC0VqKHGutsj0pBAQ
-         ek8KeEtaudqryCXg1ZnIUDUJvmt0IQH1z6oIEa/k8O0Wmb0+otzrdCBKEK2LflqPnUWP
-         B4BUxp1SVecYHfqRi3SuQo3i6Yk/hRha8kaMQCecq46eUhJgtt/9kx3foJdTLwgSDHuU
-         faLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=RW+DAA6feyP/FiHoBpI4e2XS7e1awJ4EyauOZLhTca0=;
-        b=Ok51ySYJwYxXlYMf7gGEUhjz4QuwD2Ur/NL3BIIveB5rkjeJN4g6kHVMNlLpiG+mEe
-         4cmTVYVdMatcuKF2L0TrDtuDwHP2U4JHLG7MPW6DZV0E/BSs9NxdrpBpUjqBUodYO4/F
-         qgBlToB7iMOHrVS5iXsaivWZBhXO0Gc8IzpQekgSLF6gEMIPpaI2s6WXz5nYJBkTGG2+
-         kNzc/t7+ey0iuUqypBNDWYorgw5XKb6f2kuq6KuZCK5UJfROGDnC8zspgKj3UpeW8Ve2
-         Xc/kolyN3K/fJKDXayAfj7r3LSJSylJ70aN0HNTdSFpvReDN1f0Y4ml3AyzrIFo8bh5x
-         w+og==
-X-Gm-Message-State: AOAM530KTxu0+bwr0eJAGj6TYqk/VHJGs/CnVYtZRcwvzHpjXsocn8x0
-        5ESX8XLkx6hjCrNKC0/xwP/ZINYyVoP0Sg==
-X-Google-Smtp-Source: ABdhPJyGdL/sFSIVJskE89ixIODXNR42VHxIMZaaOc18/vGEAYbnYCF6tYdHVzE89lifDbZPksBwwg==
-X-Received: by 2002:a5d:420b:: with SMTP id n11mr23384750wrq.11.1597824685187;
-        Wed, 19 Aug 2020 01:11:25 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id z8sm3498020wmf.10.2020.08.19.01.11.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 01:11:24 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 09:11:22 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: core: Fix handle of OF disabled MFD cells
-Message-ID: <20200819081122.GB4354@dell>
-References: <20200801070130.3323112-1-icenowy@aosc.io>
+        Wed, 19 Aug 2020 04:11:45 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41893 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgHSILo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 04:11:44 -0400
+IronPort-SDR: LsiHm9uPnCT031TueHu3RcAByriBCoLlCzGXCtk7IhtLn0JIuMCbpmWV5nEtE0owFl08Io0b1T
+ dcy8GNhTzSfQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="219370985"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="219370985"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 01:11:43 -0700
+IronPort-SDR: Z49Pch4lxOJzp3iUslwLCb8yl1WixJSdDwf+46h89vYah7xh4AOWplzcjfLtdXlQRCnaj1ZKHC
+ q3FE/Iv7gkYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="497674177"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Aug 2020 01:11:41 -0700
+Date:   Wed, 19 Aug 2020 16:07:54 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     "Wu, Hao" <hao.wu@intel.com>
+Cc:     "mdf@kernel.org" <mdf@kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "trix@redhat.com" <trix@redhat.com>,
+        "lgoncalv@redhat.com" <lgoncalv@redhat.com>,
+        Matthew Gerlach <matthew.gerlach@linux.intel.com>,
+        "Weight, Russell H" <russell.h.weight@intel.com>
+Subject: Re: [PATCH v6 3/3] fpga: dfl: add support for N3000 Nios private
+  feature
+Message-ID: <20200819080754.GB11659@yilunxu-OptiPlex-7050>
+References: <1597653612-5064-1-git-send-email-yilun.xu@intel.com>
+ <1597653612-5064-4-git-send-email-yilun.xu@intel.com>
+ <DM6PR11MB3819D440AA27D2BC466B61E5855F0@DM6PR11MB3819.namprd11.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200801070130.3323112-1-icenowy@aosc.io>
+In-Reply-To: <DM6PR11MB3819D440AA27D2BC466B61E5855F0@DM6PR11MB3819.namprd11.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 01 Aug 2020, Icenowy Zheng wrote:
+Thanks for your review, I'll fix them. Only one comment inline.
 
-> When rewriting the OF match code of MFD core, addition of cells disabled
-> in OF will result in a failure with error -ENODEV. This is an unexpected
-> behavior, as the previous behavior is silently ignore the cell. On
-> SBCs with AXP20x PMICs, this leads to boot failure if AXP20x PMIC
-> support is built-in and some cells (especially power supply ones) are
-> disabled.
-
-Thanks for reporting this.
-
-Do you mind if I fix this another way?  I plan to reinstate the old
-code that was removed as part of the offending patch.  I will of
-course add your Reported-by tag.
-
-> Silently ignore the cell when -ENODEV occurs.
+On Mon, Aug 17, 2020 at 05:43:51PM +0800, Wu, Hao wrote:
+> > Subject: [PATCH v6 3/3] fpga: dfl: add support for N3000 Nios private feature
+> >
+> > This patch adds support for the Nios handshake private feature on Intel
+> > PAC (Programmable Acceleration Card) N3000.
+> >
+> > The Nios is the embedded processor on the FPGA card. This private feature
+> > provides a handshake interface to FPGA Nois firmware, which receives
+> > retimer configuration command from host and executes via an internal SPI
+> > master (spi-altera). When Nios finishes the configuration, host takes over
+> > the ownership of the SPI master to control an Intel MAX10 BMC (Board
+> > Management Controller) Chip on the SPI bus.
+> >
+> > For Nios firmware handshake part, this driver requests the retimer
+> > configuration for Nios with parameters from module param, and adds some
+> > sysfs nodes for user to query the onboard retimer's working mode and
+> > Nios firmware version.
+> >
+> > For SPI part, this driver adds a spi-altera platform device as well as
+> > the MAX10 BMC spi slave info. A spi-altera driver will be matched to
+> > handle the following SPI work.
+> >
+> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> > Signed-off-by: Wu Hao <hao.wu@intel.com>
+> > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> > Reviewed-by: Tom Rix <trix@redhat.com>
 > 
-> Fixes: e49aa9a9bd22 ("mfd: core: Make a best effort attempt to match devices with the correct of_nodes")
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  drivers/mfd/mfd-core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> With some minor fixings below,
 > 
-> diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-> index c3ef58a802bee..31b363c64f4b4 100644
-> --- a/drivers/mfd/mfd-core.c
-> +++ b/drivers/mfd/mfd-core.c
-> @@ -215,8 +215,13 @@ static int mfd_add_device(struct device *parent, int id,
->  				ret = mfd_match_of_node_to_dev(pdev, np, cell);
->  				if (ret == -EAGAIN)
->  					continue;
-> -				if (ret)
-> +				if (ret) {
-> +					if (ret == -ENODEV) {
-> +						/* Ignore disabled devices error free */
-> +						ret = 0;
-> +					}
->  					goto fail_alias;
-> +				}
->  
->  				break;
->  			}
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> 
+> Thanks
+> Hao
+> 
+> > ---
+> > v3: Add the doc for this driver
+> >     Minor fixes for comments from Tom
+> > v4: Move the err log in regmap implementation, and delete
+> >      n3000_nios_writel/readl(), they have nothing to wrapper now.
+> >     Some minor fixes and comments improvement.
+> > v5: Fix the output of fec_mode sysfs inf to "no" on 10G configuration,
+> >      cause no FEC mode could be configured for 10G.
+> >     Rename the dfl_n3000_nios_* to n3000_nios_*
+> >     Improves comments.
+> > v6: Fix the output of fec_mode sysfs inf to "not supported" if in 10G,
+> >      or the firmware version major < 3.
+> >     Minor fixes and improves comments.
+> > ---
+> >  .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  21 +
+> >  Documentation/fpga/dfl-n3000-nios.rst              |  79 +++
+> >  Documentation/fpga/index.rst                       |   1 +
+> >  drivers/fpga/Kconfig                               |  11 +
+> >  drivers/fpga/Makefile                              |   2 +
+> >  drivers/fpga/dfl-n3000-nios.c                      | 539 +++++++++++++++++++++
+> >  6 files changed, 653 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-
+> > n3000-nios
+> >  create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+> >  create mode 100644 drivers/fpga/dfl-n3000-nios.c
+> >
+> > diff --git a/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > b/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > new file mode 100644
+> > index 0000000..ce5b474
+> > --- /dev/null
+> > +++ b/Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+> > @@ -0,0 +1,21 @@
+> > +What:/sys/bus/dfl/devices/dfl_dev.X/fec_mode
+> > +Date:Aug 2020
+> > +KernelVersion:5.10
+> > +Contact:Xu Yilun <yilun.xu@intel.com>
+> > +Description:Read-only. It returns the FEC mode of the 25G links of the
+> > +ethernet retimers configured by NIOS firmware. "rs" for Reed
+> > +Solomon FEC, "kr" for Fire Code FEC, "no" for NO FEC.
+> > +"not supported" if the FEC mode setting is not supported,
+> > this
+> > +happens when the Nios firmware version major < 3, or no
+> > link is
+> > +configured to 25G. The FEC mode could be set by module
+> 
+> or all links are configured to 10G.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I think "no link is configured to 25G" may be better.
+
+1. At the start of the description of the fec_mode, I wrote "It returns
+the FEC mode of the 25G links ..." So it may be better we say "no link
+is configured to 25G" as the condition of "not supported". I'm not sure
+if in future there are 40G, 50G ... links, and if the 40G, 50G links have
+the fec mode setting. So I just say we limit the scope of this node to
+25G.
+
+2. If some links are configured to reset and some are configured to 10G,
+or all links are in reset. The output of fec_mode is still "not
+supported".
+
+Thanks,
+Yilun.
