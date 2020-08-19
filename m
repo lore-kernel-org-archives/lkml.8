@@ -2,126 +2,91 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87961C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9EE820738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=xen0n.name header.i=@xen0n.name header.b="tPi4mYXH"
+	by mail.kernel.org (Postfix) with ESMTP id 6C56820738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgHSFsM (ORCPT
+        id S1726676AbgHSFs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 01:48:12 -0400
-Received: from [115.28.160.31] ([115.28.160.31]:58282 "EHLO
-        mailbox.box.xen0n.name" rhost-flags-FAIL-FAIL-OK-OK)
-        by vger.kernel.org with ESMTP id S1725883AbgHSFsK (ORCPT
+        Wed, 19 Aug 2020 01:48:28 -0400
+Received: from out30-43.freemail.mail.aliyun.com ([115.124.30.43]:40044 "EHLO
+        out30-43.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726531AbgHSFs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 01:48:10 -0400
-Received: from hanazono.local (unknown [140.206.66.42])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailbox.box.xen0n.name (Postfix) with ESMTPSA id 203536009E;
-        Wed, 19 Aug 2020 13:47:48 +0800 (CST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=xen0n.name; s=mail;
-        t=1597816068; bh=KRrHwfUQuKjAb85/oLK3ZUF0M9g04e+91BLM9g/wlMs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=tPi4mYXHmiuOAuKaFwBNtsdr5U02fwW3w1htFvAszZB68OljMlR04sbip5fMIv8Y7
-         jFdHvcKj2WihUyCSoBgtKpkd3ZtUUiQo3oCzFhkMguYlK0DbUm9Pp2qDBu/73tj3CS
-         ny1O4WJ1Y0YIWB+2yg1eJ/1IdVhNMBaf++j8c+yQ=
-Subject: Re: [PATCH] MIPS: Loongson64: Fix build error about redeclaration of
- enumerator 'VIRTUAL' and "CONFIG_DM_THIN_PROVISIONING"
-To:     Youling Tang <tangyouling@loongson.cn>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
-From:   WANG Xuerui <kernel@xen0n.name>
-Message-ID: <a3a3dfc1-1148-e6db-9ea3-2405c3fe5329@xen0n.name>
-Date:   Wed, 19 Aug 2020 13:47:47 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:81.0)
- Gecko/20100101 Thunderbird/81.0a1
-MIME-Version: 1.0
-In-Reply-To: <1597750368-14086-1-git-send-email-tangyouling@loongson.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 19 Aug 2020 01:48:27 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U6CFft4_1597816103;
+Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6CFft4_1597816103)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 19 Aug 2020 13:48:24 +0800
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH v2 2/2] mm/pageblock: remove false sharing in pageblock_flags
+Date:   Wed, 19 Aug 2020 13:47:55 +0800
+Message-Id: <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
+References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Youling,
+Current pageblock_flags is only 4 bits, so it has to share a char size
+in cmpxchg when get set, the false sharing cause perf drop.
 
+If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
+the only cost is half char per pageblock, which is half char per 128MB
+on x86, 4 chars in 1 GB.
 
-On 2020/8/18 19:32, Youling Tang wrote:
-> After commit 39c1485c8baa (MIPS: KVM: Add kvm guestsupport for Loongson-3)
->
-> Fix the following build error:
->
-> drivers/md/dm-thin.c:116:2: error: redeclaration of enumerator ‘VIRTUAL’
->   VIRTUAL,
->   ^
-> In file included from ./arch/mips/include/asm/mach-loongson64/mmzone.h:12:0,
->                  from ./arch/mips/include/asm/mmzone.h:12,
->                  from ./include/linux/mmzone.h:962,
->                  from ./include/linux/gfp.h:6,
->                  from ./include/linux/slab.h:15,
->                  from ./include/linux/genhd.h:16,
->                  from ./include/linux/blkdev.h:8,
->                  from drivers/md/persistent-data/dm-block-manager.h:11,
->                  from drivers/md/dm-thin-metadata.h:10,
->                  from drivers/md/dm-thin.c:7:
-> ./arch/mips/include/asm/mach-loongson64/boot_param.h:198:2: note: previous
-> definition of ‘VIRTUAL’ was here VIRTUAL = 3
->                                  ^
-> scripts/Makefile.build:283: recipe for target 'drivers/md/dm-thin.o' failed
-> make[2]: *** [drivers/md/dm-thin.o] Error 1
->
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  arch/mips/include/asm/mach-loongson64/boot_param.h | 2 +-
->  arch/mips/loongson64/env.c                         | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h b/arch/mips/include/asm/mach-loongson64/boot_param.h
-> index afc92b7..a4ef4ac 100644
-> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
-> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
-> @@ -195,7 +195,7 @@ struct boot_params {
->  enum loongson_bridge_type {
->  	LS7A = 1,
->  	RS780E = 2,
-> -	VIRTUAL = 3
-> +	VIRT = 3
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org
+---
+ include/linux/pageblock-flags.h | 2 +-
+ mm/page_alloc.c                 | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-I believe this is only masking the root cause, which is redundant
-#include directives inside mach-specific headers. I'll send my version
-of fix shortly.
+diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
+index d189441568eb..f785c9d6d68c 100644
+--- a/include/linux/pageblock-flags.h
++++ b/include/linux/pageblock-flags.h
+@@ -25,7 +25,7 @@ enum pageblock_bits {
+ 	 * Assume the bits will always align on a word. If this assumption
+ 	 * changes then get/set pageblock needs updating.
+ 	 */
+-	NR_PAGEBLOCK_BITS
++	NR_PAGEBLOCK_BITS = BITS_PER_BYTE
+ };
+ 
+ #ifdef CONFIG_HUGETLB_PAGE
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index f60071e8a4e1..65f692c762d5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -517,7 +517,7 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
+ 	unsigned long bitidx, byte_bitidx;
+ 	unsigned char old_byte, byte;
+ 
+-	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
++	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
+ 	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
+ 
+ 	bitmap = get_pageblock_bitmap(page, pfn);
+-- 
+1.8.3.1
 
-Anyway, thanks for your help!
-
->  };
->  
->  struct loongson_system_configuration {
-> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
-> index 134cb8e..623b3f1 100644
-> --- a/arch/mips/loongson64/env.c
-> +++ b/arch/mips/loongson64/env.c
-> @@ -180,8 +180,8 @@ void __init prom_init_env(void)
->  		loongson_sysconf.early_config = rs780e_early_config;
->  		break;
->  	default:
-> -		pr_info("The bridge chip is VIRTUAL\n");
-> -		loongson_sysconf.bridgetype = VIRTUAL;
-> +		pr_info("The bridge chip is VIRT\n");
-> +		loongson_sysconf.bridgetype = VIRT;
->  		loongson_sysconf.early_config = virtual_early_config;
->  		loongson_fdt_blob = __dtb_loongson64v_4core_virtio_begin;
->  		break;
