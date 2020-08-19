@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EC4C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA9E620897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB7A20897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbgHSP0v (ORCPT
+        id S1728745AbgHSP1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:26:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38868 "EHLO huawei.com"
+        Wed, 19 Aug 2020 11:27:08 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9851 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726747AbgHSP0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:26:42 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 73BF6DEDDFE7CC69C53B;
-        Wed, 19 Aug 2020 23:24:58 +0800 (CST)
+        id S1726894AbgHSPZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:25:16 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 97823174EF24E6297F9B;
+        Wed, 19 Aug 2020 23:25:03 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.58) by
  DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 19 Aug 2020 23:24:48 +0800
+ 14.3.487.0; Wed, 19 Aug 2020 23:24:54 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <axboe@kernel.dk>, <jejb@linux.ibm.com>,
         <martin.petersen@oracle.com>, <don.brace@microsemi.com>,
@@ -37,9 +37,9 @@ CC:     <sumit.saxena@broadcom.com>, <linux-block@vger.kernel.org>,
         <esc.storagedev@microsemi.com>, <megaraidlinux.pdl@broadcom.com>,
         <chenxiang66@hisilicon.com>, <luojiaxing@huawei.com>,
         John Garry <john.garry@huawei.com>
-Subject: [PATCH v8 03/18] blk-mq: Free tags in blk_mq_init_tags() upon error
-Date:   Wed, 19 Aug 2020 23:20:21 +0800
-Message-ID: <1597850436-116171-4-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v8 18/18] smartpqi: enable host tagset
+Date:   Wed, 19 Aug 2020 23:20:36 +0800
+Message-ID: <1597850436-116171-19-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
 References: <1597850436-116171-1-git-send-email-john.garry@huawei.com>
@@ -54,64 +54,114 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hannes Reinecke <hare@suse.de>
 
-Since the tags are allocated in blk_mq_init_tags(), it's better practice
-to free in that same function upon error, rather than a callee which is to
-init the bitmap tags (blk_mq_init_tags()).
+Enable host tagset for smartpqi; with this we can use the request
+tag to look command from the pool avoiding the list iteration in
+the hot path.
 
 Signed-off-by: Hannes Reinecke <hare@suse.de>
-[jpg: Split from an earlier patch with a new commit message]
+[jpg: Mod ctrl_info->next_io_request_slot calc]
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- block/blk-mq-tag.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/scsi/smartpqi/smartpqi_init.c | 45 ++++++++++++++++++---------
+ 1 file changed, 31 insertions(+), 14 deletions(-)
 
-diff --git a/block/blk-mq-tag.c b/block/blk-mq-tag.c
-index 32d82e23b095..c2c9f369d777 100644
---- a/block/blk-mq-tag.c
-+++ b/block/blk-mq-tag.c
-@@ -429,24 +429,22 @@ static int bt_alloc(struct sbitmap_queue *bt, unsigned int depth,
- 				       node);
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index bd38c8cea56e..870ed1400a9e 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -575,22 +575,33 @@ static inline void pqi_reinit_io_request(struct pqi_io_request *io_request)
  }
  
--static struct blk_mq_tags *blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
--						   int node, int alloc_policy)
-+static int blk_mq_init_bitmap_tags(struct blk_mq_tags *tags,
-+				   int node, int alloc_policy)
+ static struct pqi_io_request *pqi_alloc_io_request(
+-	struct pqi_ctrl_info *ctrl_info)
++	struct pqi_ctrl_info *ctrl_info, struct scsi_cmnd *scmd)
  {
- 	unsigned int depth = tags->nr_tags - tags->nr_reserved_tags;
- 	bool round_robin = alloc_policy == BLK_TAG_ALLOC_RR;
+ 	struct pqi_io_request *io_request;
+-	u16 i = ctrl_info->next_io_request_slot;	/* benignly racy */
++	unsigned int limit = PQI_RESERVED_IO_SLOTS;
++	u16 i;
  
- 	if (bt_alloc(&tags->bitmap_tags, depth, round_robin, node))
--		goto free_tags;
-+		return -ENOMEM;
- 	if (bt_alloc(&tags->breserved_tags, tags->nr_reserved_tags, round_robin,
- 		     node))
- 		goto free_bitmap_tags;
+-	while (1) {
++	if (scmd) {
++		u32 blk_tag = blk_mq_unique_tag(scmd->request);
++
++		i = blk_mq_unique_tag_to_tag(blk_tag) + limit;
+ 		io_request = &ctrl_info->io_request_pool[i];
+-		if (atomic_inc_return(&io_request->refcount) == 1)
+-			break;
+-		atomic_dec(&io_request->refcount);
+-		i = (i + 1) % ctrl_info->max_io_slots;
++		if (WARN_ON(atomic_inc_return(&io_request->refcount) > 1)) {
++			atomic_dec(&io_request->refcount);
++			return NULL;
++		}
++	} else {
++		i = ctrl_info->next_io_request_slot;	/* benignly racy */
++		while (1) {
++			io_request = &ctrl_info->io_request_pool[i];
++			if (atomic_inc_return(&io_request->refcount) == 1)
++				break;
++			atomic_dec(&io_request->refcount);
++			i = (i + 1) % limit;
++		}
++		ctrl_info->next_io_request_slot = (i + 1) % limit;
+ 	}
  
--	return tags;
-+	return 0;
- free_bitmap_tags:
- 	sbitmap_queue_free(&tags->bitmap_tags);
--free_tags:
--	kfree(tags);
--	return NULL;
-+	return -ENOMEM;
- }
+-	/* benignly racy */
+-	ctrl_info->next_io_request_slot = (i + 1) % ctrl_info->max_io_slots;
+-
+ 	pqi_reinit_io_request(io_request);
  
- struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
-@@ -467,7 +465,11 @@ struct blk_mq_tags *blk_mq_init_tags(unsigned int total_tags,
- 	tags->nr_tags = total_tags;
- 	tags->nr_reserved_tags = reserved_tags;
+ 	return io_request;
+@@ -4075,7 +4086,7 @@ static int pqi_submit_raid_request_synchronous(struct pqi_ctrl_info *ctrl_info,
  
--	return blk_mq_init_bitmap_tags(tags, node, alloc_policy);
-+	if (blk_mq_init_bitmap_tags(tags, node, alloc_policy) < 0) {
-+		kfree(tags);
-+		return NULL;
-+	}
-+	return tags;
- }
+ 	atomic_inc(&ctrl_info->sync_cmds_outstanding);
  
- void blk_mq_free_tags(struct blk_mq_tags *tags)
+-	io_request = pqi_alloc_io_request(ctrl_info);
++	io_request = pqi_alloc_io_request(ctrl_info, NULL);
+ 
+ 	put_unaligned_le16(io_request->index,
+ 		&(((struct pqi_raid_path_request *)request)->request_id));
+@@ -5032,7 +5043,9 @@ static inline int pqi_raid_submit_scsi_cmd(struct pqi_ctrl_info *ctrl_info,
+ {
+ 	struct pqi_io_request *io_request;
+ 
+-	io_request = pqi_alloc_io_request(ctrl_info);
++	io_request = pqi_alloc_io_request(ctrl_info, scmd);
++	if (!io_request)
++		return SCSI_MLQUEUE_HOST_BUSY;
+ 
+ 	return pqi_raid_submit_scsi_cmd_with_io_request(ctrl_info, io_request,
+ 		device, scmd, queue_group);
+@@ -5230,7 +5243,10 @@ static int pqi_aio_submit_io(struct pqi_ctrl_info *ctrl_info,
+ 	struct pqi_io_request *io_request;
+ 	struct pqi_aio_path_request *request;
+ 
+-	io_request = pqi_alloc_io_request(ctrl_info);
++	io_request = pqi_alloc_io_request(ctrl_info, scmd);
++	if (!io_request)
++		return SCSI_MLQUEUE_HOST_BUSY;
++
+ 	io_request->io_complete_callback = pqi_aio_io_complete;
+ 	io_request->scmd = scmd;
+ 	io_request->raid_bypass = raid_bypass;
+@@ -5657,7 +5673,7 @@ static int pqi_lun_reset(struct pqi_ctrl_info *ctrl_info,
+ 	DECLARE_COMPLETION_ONSTACK(wait);
+ 	struct pqi_task_management_request *request;
+ 
+-	io_request = pqi_alloc_io_request(ctrl_info);
++	io_request = pqi_alloc_io_request(ctrl_info, NULL);
+ 	io_request->io_complete_callback = pqi_lun_reset_complete;
+ 	io_request->context = &wait;
+ 
+@@ -6504,6 +6520,7 @@ static struct scsi_host_template pqi_driver_template = {
+ 	.map_queues = pqi_map_queues,
+ 	.sdev_attrs = pqi_sdev_attrs,
+ 	.shost_attrs = pqi_shost_attrs,
++	.host_tagset = 1,
+ };
+ 
+ static int pqi_register_scsi(struct pqi_ctrl_info *ctrl_info)
 -- 
 2.26.2
 
