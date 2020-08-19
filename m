@@ -2,133 +2,193 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0621FC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B528C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD33A2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2372083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="ampZ/g+q"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bZSlKJ1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHSQWv (ORCPT
+        id S1726918AbgHSQXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:22:51 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:58076 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726731AbgHSQWl (ORCPT
+        Wed, 19 Aug 2020 12:23:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43236 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725275AbgHSQXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:22:41 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JGJYrj024027;
-        Wed, 19 Aug 2020 09:22:33 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0220; bh=SIEBDEqt+TndDR3Oy+gr+t//mT7+V83M7R6Yny4slA4=;
- b=ampZ/g+qX8BWqKuw717DyS1h/uNtYLJD3LkVfbrgZGh/q+ktw3FYLizulrfI02VqFYCY
- hp1uKwNhOmsG6JcfYhQzfsZfZDHg5jdMiFiOPLAde5PwGHG2vqklEkdv6+k2ki/aQFkt
- pFHa3gSnyxZLSIjzJcW+dIiryo1NMYvzzt7pL1DgISMFdi4CicrFZiPKPsXdr/hPr7Jb
- MIudtlYxyV612XKcKlIHkrvksR2eS5wSS3QjWkG8qwuvDsCJa4/k84YPJNHWXGPNCX9S
- cfEYz6SH0WL0y0BxwTsh3Ze1Y3Dsqgy1EqW1yiNeq11LmLKzcWL9AJVpwgFGrbvOX9zL 9Q== 
-Received: from sc-exch03.marvell.com ([199.233.58.183])
-        by mx0a-0016f401.pphosted.com with ESMTP id 3304fhrw4g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 09:22:32 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH03.marvell.com
- (10.93.176.83) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
- 2020 09:22:32 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
- 2020 09:22:31 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 09:22:31 -0700
-Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
-        by maili.marvell.com (Postfix) with ESMTP id D39773F703F;
-        Wed, 19 Aug 2020 09:22:28 -0700 (PDT)
-From:   George Cherian <george.cherian@marvell.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC:     <bhelgaas@google.com>, <arnd@arndb.de>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCH] PCI: Add pci_iounmap
-Date:   Wed, 19 Aug 2020 21:52:08 +0530
-Message-ID: <20200819162208.1965707-1-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Wed, 19 Aug 2020 12:23:34 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JG3O8D054851;
+        Wed, 19 Aug 2020 12:23:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id; s=pp1;
+ bh=uu1KxyVc4kHFi1gkZn4wAfBW3iiu2CMXNeV7oFLjvfs=;
+ b=bZSlKJ1kFW8HKwqlHAJBbQgIcEjCElwmEjtpwguNFyrHo3ZLLF0CQcf0EUnDLjFUGBP3
+ dVk97udHXG/OqxGbouKupRxWpmn2rdlo/F8kr246fBH8MmwEoIt/ZipI3DOq3AGI3DHR
+ kOw+npFgyCw7j9BOUSiotmCelbiQgS9xCQjP/twKDjdE4p7IYT8lgev7wFYn9ZxyxaEr
+ VGRL6cyvW0ors62iqW2pz0zPrYbEco/Y7XRUF0RlbgXRfT4Kgd6cZ37WoK5J9orhCDkG
+ B+kGvhmpmWHn+80D1AtWt00w8dKb4vh7JyidXzS8osHpusX036CvMIIosFNKvhecobfF MQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3313kxrvqb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 12:23:27 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07JG3l9T057245;
+        Wed, 19 Aug 2020 12:23:26 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3313kxrvp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 12:23:26 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07JGMOd3003321;
+        Wed, 19 Aug 2020 16:23:23 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 330tbvrt3y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Aug 2020 16:23:23 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07JGNKYJ29688272
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Aug 2020 16:23:20 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A57D5204F;
+        Wed, 19 Aug 2020 16:23:20 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.33.131])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D6EED52051;
+        Wed, 19 Aug 2020 16:23:19 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
+        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+Subject: [PATCH v9 0/2] s390: virtio: let arch validate VIRTIO features
+Date:   Wed, 19 Aug 2020 18:23:16 +0200
+Message-Id: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-19_09:2020-08-19,2020-08-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=956 malwarescore=0 suspectscore=1 phishscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
-CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
-function. Due to this the managed release variants or even the explicit
-pci_iounmap calls doesn't really remove the mappings.
+Hi all,
 
-This issue is seen on an arm64 based system. arm64 by default selects
-only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
-'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
+The goal of the series is to give a chance to the architecture
+to validate VIRTIO device features.
 
-Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
-would lead to the following error message after long hour tests
+in this respin:
 
-"allocation failed: out of vmalloc space - use vmalloc=<size> to
-increase size."
+The tests are back to virtio_finalize_features.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
- include/asm-generic/io.h | 4 ++++
- lib/pci_iomap.c          | 9 +++++++++
- 2 files changed, 13 insertions(+)
+No more argument for the architecture callback which only reports
+if the architecture needs guest memory access restrictions for
+VIRTIO.
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index dabf8cb7203b..5986b37226b7 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
- struct pci_dev;
- extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
- 
-+#ifdef CONFIG_GENERIC_PCI_IOMAP
-+extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
-+#else
- #ifndef pci_iounmap
- #define pci_iounmap pci_iounmap
- static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
- {
- }
- #endif
-+#endif /* CONFIG_GENERIC_PCI_IOMAP */
- #endif /* CONFIG_GENERIC_IOMAP */
- 
- /*
-diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-index 2d3eb1cb73b8..36128af05e1c 100644
---- a/lib/pci_iomap.c
-+++ b/lib/pci_iomap.c
-@@ -134,4 +134,13 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
- }
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
-+
-+#ifndef CONFIG_GENERIC_IOMAP
-+#define pci_iounmap pci_iounmap
-+void pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-+{
-+	iounmap(addr);
-+}
-+EXPORT_SYMBOL(pci_iounmap);
-+#endif
- #endif /* CONFIG_PCI */
+
+I renamed the callback to arch_has_restricted_virtio_memory_access,
+and the config option to ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS.
+
+Regards,
+Pierre
+
+Pierre Morel (2):
+  virtio: let arch advertise guest's memory access restrictions
+  s390: virtio: PV needs VIRTIO I/O device protection
+
+ arch/s390/Kconfig             |  1 +
+ arch/s390/mm/init.c           | 11 +++++++++++
+ drivers/virtio/Kconfig        |  6 ++++++
+ drivers/virtio/virtio.c       | 15 +++++++++++++++
+ include/linux/virtio_config.h |  9 +++++++++
+ 5 files changed, 42 insertions(+)
+
 -- 
 2.25.1
+
+Changelog
+
+to v9:
+
+- move virtio tests back to virtio_finalize_features
+  (Connie)
+
+- remove virtio device argument
+
+to v8:
+
+- refactoring by using an optional callback
+  (Connie)
+
+to v7:
+
+- typo in warning message
+  (Connie)
+to v6:
+
+- rewording warning messages
+  (Connie, Halil)
+
+to v5:
+
+- return directly from S390 arch_validate_virtio_features()
+  when the guest is not protected.
+  (Connie)
+
+- Somme rewording
+  (Connie, Michael)
+
+- moved back code from arch/s390/ ...kernel/uv.c to ...mm/init.c
+  (Christian)
+
+to v4:
+
+- separate virtio and arch code
+  (Pierre)
+
+- moved code from arch/s390/mm/init.c to arch/s390/kernel/uv.c
+  (as interpreted from Heiko's comment)
+
+- moved validation inside the arch code
+  (Connie)
+
+- moved the call to arch validation before VIRTIO_F_1 test
+  (Michael)
+
+to v3:
+
+- add warning
+  (Connie, Christian)
+
+- add comment
+  (Connie)
+
+- change hook name
+  (Halil, Connie)
+
+to v2:
+
+- put the test in virtio_finalize_features()
+  (Connie)
+
+- put the test inside VIRTIO core
+  (Jason)
+
+- pass a virtio device as parameter
+  (Halil)
+
 
