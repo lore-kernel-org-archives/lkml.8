@@ -2,128 +2,118 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C310C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B405D20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C91D206B5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:01:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="YimcZxgG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHECsKjI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgHSJxU (ORCPT
+        id S1727061AbgHSKBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:53:20 -0400
-Received: from mailgw01.mediatek.com ([216.200.240.184]:41900 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726634AbgHSJxT (ORCPT
+        Wed, 19 Aug 2020 06:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgHSKBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:53:19 -0400
-X-UUID: 3d9f66e13b7e40ffa8561b343d60f52a-20200819
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kQXoKdKVpI5uaXNaEF7rubWxdg60fBjIip1atnVNx4w=;
-        b=YimcZxgGzFRVHMuCF/1++lAbAs6pvMpBzF+FP/5HaxoW8aRy22AvuDuJtdfkRtssyteU6W7g0oGHGy4cum6VcyXxyvq8TH49+SEocIl6Cc8ktX7mwNSz8exXyCCMzI9j16bcAtuvtEHfxQ2RWURmw/PefF6gWBvpaGwfdBg5XfQ=;
-X-UUID: 3d9f66e13b7e40ffa8561b343d60f52a-20200819
-Received: from mtkcas66.mediatek.inc [(172.29.193.44)] by mailgw01.mediatek.com
-        (envelope-from <landen.chao@mediatek.com>)
-        (musrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1431888830; Wed, 19 Aug 2020 01:53:15 -0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS62N1.mediatek.inc (172.29.193.41) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 19 Aug 2020 02:44:08 -0700
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 17:44:06 +0800
-Message-ID: <1597830248.31846.78.camel@mtksdccf07>
-Subject: Re: [PATCH net-next v2 5/7] net: dsa: mt7530: Add the support of
- MT7531 switch
-From:   Landen Chao <landen.chao@mediatek.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "vivien.didelot@savoirfairelinux.com" 
-        <vivien.didelot@savoirfairelinux.com>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Sean Wang <Sean.Wang@mediatek.com>,
-        "opensource@vdorst.com" <opensource@vdorst.com>,
-        "frank-w@public-files.de" <frank-w@public-files.de>,
-        "dqfext@gmail.com" <dqfext@gmail.com>
-Date:   Wed, 19 Aug 2020 17:44:08 +0800
-In-Reply-To: <20200818160901.GF2330298@lunn.ch>
-References: <cover.1597729692.git.landen.chao@mediatek.com>
-         <e980fda45e0fb478f55e72765643bb641f352c65.1597729692.git.landen.chao@mediatek.com>
-         <20200818160901.GF2330298@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Wed, 19 Aug 2020 06:01:44 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37FD8C061757;
+        Wed, 19 Aug 2020 03:01:44 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id i10so24716193ljn.2;
+        Wed, 19 Aug 2020 03:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sQDKTE/Nz4WEhS9Fa2pyUugVDwsfCPrw0tdUrr5Zp5g=;
+        b=jHECsKjIw+tx7Wr+WDaBV99aduF3sQ9B6agAyxteRQwRRXAZHVQ21Ua1yxmUezLytH
+         CcwBqt7PEI0dyOw5iXCkKiknURmmf0y/nXqHedvqnN5UfeT2s72PZtnuVAFskURPOLFb
+         M9moqGDQPsu3NKjQ90KOW/ylDFtJwkGJHmgb1Uu2lFA8yQ12QZcJAg1pqrWuYY9qzfeX
+         mZET1Ad4KaH2eRBbS4Xqy6bRc7BQVRUZ6xfjFOTaeokTs5F0hYlhhK2DHL/oZfF8TAsq
+         qAx2ulFFqb44DKb7v5GbMS0RTUoyRafHVUMRvitHbVnUgexaVRZ6Y3ZJaRyRQBjtN4Cl
+         CpxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sQDKTE/Nz4WEhS9Fa2pyUugVDwsfCPrw0tdUrr5Zp5g=;
+        b=pNg9MoIrDmQ5sNBfGwYkWnMTeot+b66fhkwlfPK72Zlp6vyWkcYoZX+Xy/h8kbIIO0
+         KH/SXP7pNW1A3OfKpco0bOO1NXjedIK/GREH0vfNMBr6swdq9D5LRGtapU7QjyYmySuZ
+         4hzd9xMRp23Zqb35bwNl2O4B6S1z2cf/ebFHXl7y2pjWkgUlZd6WrMoiXALsU/aIs/CN
+         AX5PgJOKwNybuUVU2Coildp6dCukQiNeHMKe68Srn3JY8OL6T6PMziCDd+zPx3Q/5cMK
+         pO9RedhW2sB0l9ld0nejBwFZNXjq2626gb0iXYsZXpZ/GqhZJNmo78QkrRq2vYegWppN
+         bHWQ==
+X-Gm-Message-State: AOAM533PDZtLeNWfbfJ+wwUZiLwaBDVyKhO9lBNk/+MwFBOEMbLM/USZ
+        +8rmxCnqvKUV2q1m/KQ9qBR8gsi/cwT17LYXXFI=
+X-Google-Smtp-Source: ABdhPJxjYBFNhpF22ClmBNTISHG3m2+1dC7F3jcxlxyNsMHe+zRmyGe2c4IrTBXNaOCF2j0z9Cl2lmffpaATx36J1/0=
+X-Received: by 2002:a2e:9b08:: with SMTP id u8mr11205523lji.208.1597831302269;
+ Wed, 19 Aug 2020 03:01:42 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <1597418824-15906-1-git-send-email-u0084500@gmail.com> <159776976828.56451.5989906126815444846.b4-ty@kernel.org>
+In-Reply-To: <159776976828.56451.5989906126815444846.b4-ty@kernel.org>
+From:   =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
+Date:   Wed, 19 Aug 2020 18:01:30 +0800
+Message-ID: <CADiBU382qDg8sA7t1QEqY5jGr1F1VqpWN5VH6Tm6wZw3jKd0LQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] regulator: rt4801: Add support for RT4801 Display
+ Bias regulator driver
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        cy_huang <cy_huang@richtek.com>, gene_chen@richtek.com,
+        =?UTF-8?B?5ZWf5Y6f6buD?= <u0084500@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTA4LTE5IGF0IDAwOjA5ICswODAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
-T24gVHVlLCBBdWcgMTgsIDIwMjAgYXQgMDM6MTQ6MTBQTSArMDgwMCwgTGFuZGVuIENoYW8gd3Jv
-dGU6DQo+ID4gQWRkIG5ldyBzdXBwb3J0IGZvciBNVDc1MzE6DQo+ID4gDQo+ID4gTVQ3NTMxIGlz
-IHRoZSBuZXh0IGdlbmVyYXRpb24gb2YgTVQ3NTMwLiBJdCBpcyBhbHNvIGEgNy1wb3J0cyBzd2l0
-Y2ggd2l0aA0KPiA+IDUgZ2lnYSBlbWJlZGRlZCBwaHlzLCAyIGNwdSBwb3J0cywgYW5kIHRoZSBz
-YW1lIE1BQyBsb2dpYyBvZiBNVDc1MzAuIENwdQ0KPiA+IHBvcnQgNiBvbmx5IHN1cHBvcnRzIFNH
-TUlJIGludGVyZmFjZS4gQ3B1IHBvcnQgNSBzdXBwb3J0cyBlaXRoZXIgUkdNSUkNCj4gPiBvciBT
-R01JSSBpbiBkaWZmZXJlbnQgSFcgc2t1LiBEdWUgdG8gU0dNSUkgaW50ZXJmYWNlIHN1cHBvcnQs
-IHBsbCwgYW5kDQo+ID4gcGFkIHNldHRpbmcgYXJlIGRpZmZlcmVudCBmcm9tIE1UNzUzMC4gVGhp
-cyBwYXRjaCBhZGRzIGRpZmZlcmVudCBpbml0aWFsDQo+ID4gc2V0dGluZywgYW5kIFNHTUlJIHBo
-eWxpbmsgaGFuZGxlcnMgb2YgTVQ3NTMxLg0KPiA+IA0KPiA+IE1UNzUzMSBTR01JSSBpbnRlcmZh
-Y2UgY2FuIGJlIGNvbmZpZ3VyZWQgaW4gZm9sbG93aW5nIG1vZGU6DQo+ID4gLSAnU0dNSUkgQU4g
-bW9kZScgd2l0aCBpbi1iYW5kIG5lZ290aWF0aW9uIGNhcGFiaWxpdHkNCj4gPiAgICAgd2hpY2gg
-aXMgY29tcGF0aWJsZSB3aXRoIFBIWV9JTlRFUkZBQ0VfTU9ERV9TR01JSS4NCj4gPiAtICdTR01J
-SSBmb3JjZSBtb2RlJyB3aXRob3V0IGluLWJuYWQgbmVnb3RpYXRpb24NCj4gDQo+IGJhbmQNClNv
-cnJ5LCBJJ2xsIGZpeCBpdC4NCj4gDQo+ID4gICAgIHdoaWNoIGlzIGNvbXBhdGlibGUgd2l0aCAx
-MEIvOEIgZW5jb2Rpbmcgb2YNCj4gPiAgICAgUEhZX0lOVEVSRkFDRV9NT0RFXzEwMDBCQVNFWCB3
-aXRoIGZpeGVkIGZ1bGwtZHVwbGV4IGFuZCBmaXhlZCBwYXVzZS4NCj4gPiAtIDIuNSB0aW1lcyBm
-YXN0ZXIgY2xvY2tlZCAnU0dNSUkgZm9yY2UgbW9kZScgd2l0aG91dCBpbi1ibmFkIG5lZ290aWF0
-aW9uDQo+IA0KPiBiYW5kDQpTb3JyeSwgSSdsbCBmaXggaXQuDQo+IA0KPiA+ICtzdGF0aWMgaW50
-IG10NzUzMV9yZ21paV9zZXR1cChzdHJ1Y3QgbXQ3NTMwX3ByaXYgKnByaXYsIHUzMiBwb3J0LA0K
-PiA+ICsJCQkgICAgICBwaHlfaW50ZXJmYWNlX3QgaW50ZXJmYWNlKQ0KPiA+ICt7DQo+ID4gKwl1
-MzIgdmFsOw0KPiA+ICsNCj4gPiArCWlmICghbXQ3NTMxX2lzX3JnbWlpX3BvcnQocHJpdiwgcG9y
-dCkpIHsNCj4gPiArCQlkZXZfZXJyKHByaXYtPmRldiwgIlJHTUlJIG1vZGUgaXMgbm90IGF2YWls
-YWJsZSBmb3IgcG9ydCAlZFxuIiwNCj4gPiArCQkJcG9ydCk7DQo+ID4gKwkJcmV0dXJuIC1FSU5W
-QUw7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJdmFsID0gbXQ3NTMwX3JlYWQocHJpdiwgTVQ3NTMx
-X0NMS0dFTl9DVFJMKTsNCj4gPiArCXZhbCB8PSBHUF9DTEtfRU47DQo+ID4gKwl2YWwgJj0gfkdQ
-X01PREVfTUFTSzsNCj4gPiArCXZhbCB8PSBHUF9NT0RFKE1UNzUzMV9HUF9NT0RFX1JHTUlJKTsN
-Cj4gPiArCXZhbCAmPSB+KFRYQ0xLX05PX1JFVkVSU0UgfCBSWENMS19OT19ERUxBWSk7DQo+ID4g
-Kwlzd2l0Y2ggKGludGVyZmFjZSkgew0KPiA+ICsJY2FzZSBQSFlfSU5URVJGQUNFX01PREVfUkdN
-SUk6DQo+ID4gKwkJdmFsIHw9IFRYQ0xLX05PX1JFVkVSU0U7DQo+ID4gKwkJdmFsIHw9IFJYQ0xL
-X05PX0RFTEFZOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBQSFlfSU5URVJGQUNFX01PREVf
-UkdNSUlfUlhJRDoNCj4gPiArCQl2YWwgfD0gVFhDTEtfTk9fUkVWRVJTRTsNCj4gPiArCQlicmVh
-azsNCj4gPiArCWNhc2UgUEhZX0lOVEVSRkFDRV9NT0RFX1JHTUlJX1RYSUQ6DQo+ID4gKwkJdmFs
-IHw9IFJYQ0xLX05PX0RFTEFZOw0KPiA+ICsJCWJyZWFrOw0KPiA+ICsJY2FzZSBQSFlfSU5URVJG
-QUNFX01PREVfUkdNSUlfSUQ6DQo+ID4gKwkJYnJlYWs7DQo+ID4gKwlkZWZhdWx0Og0KPiA+ICsJ
-CXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiANCj4gWW91IG5lZWQgdG8gYmUgY2FyZWZ1bCBo
-ZXJlLiBJZiB0aGUgTUFDIGlzIGRvaW5nIHRoZSBSR01JSSBkZWxheXMsIHlvdQ0KPiBuZWVkIHRv
-IGVuc3VyZSB0aGUgUEhZIGlzIG5vdC4gV2hhdCBpbnRlcmZhY2UgbW9kZSBpcyBwYXNzZWQgdG8g
-dGhlDQo+IFBIWT8NCkhpIEFuZHJldywNCg0KbXQ3NTMxIFJHTUlJIHBvcnQgaXMgYSBNQUMtb25s
-eSBwb3J0LCBpdCBjYW4gYmUgY29ubmVjdGVkIHRvIENQVSBNQUMgb3INCmV4dGVybmFsIHBoeS4g
-SW4gYnBpLXI2NCBib2FyZCwgbXQ3NTMxIFJHTUlJIGlzIGNvbm5lY3RlZCB0byBDUFUgTUFDLCBz
-bw0KSSB0ZW5kIHRvIGltcGxlbWVudCBSR01JSSBsb2dpYyBmb3IgdXNlIGNhc2Ugb2YgYnBpLXI2
-NC4NCg0KSW4gZ2VuZXJhbCwgYWNjb3JkaW5nIHRvIHBoeS5yc3QsIFJHTUlJIGRlbGF5IHNob3Vs
-ZCBiZSBkb25lIGJ5IHBoeSwgYnV0DQpzb21lIE1vQ0EgcHJvZHVjdCBuZWVkIFJHTUlJIGRlbGF5
-IGluIE1BQy4gVGhlc2UgdHdvIHJlcXVpcmVtZW50cw0KY29uZmxpY3QuIElzIHRoZXJlIGFueSBz
-dWdnZXN0aW9uIHRvIHNvbHZlIHRoZSBjb25mbGljdD8NCg0KSWYgbXQ3NTMxIFJHTUlJIGltcGxl
-bWVudGF0aW9uIG5lZWRzIHRvIHNhdGlzZnkgZWl0aGVyIHBoeS5yc3Qgb3INCnNwZWNpYWwgTW9D
-QSBwcm9kdWN0LCBJIHdvdWxkIGxpa2UgdG8gc2F0aXNmeSBwaHkucnN0IGFuZCByZW1vdmUgTUFD
-DQpSR01JSSBkZWxheSBpbiB2My4gRm9yIHNwZWNpYWwgcHJvZHVjdCBuZWVkcyBNQUMgUkdNSUkg
-ZGVsYXksIHRoaXMgcGF0Y2gNCmNhbiBiZSB1c2VkIGluIGl0cyBsb2NhbCBjb2RlYmFzZS4NCg0K
-TGFuZGVuDQo+IA0KPiAJQW5kcmV3DQoNCg==
-
+Mark Brown <broonie@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=8819=E6=97=
+=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=8812:57=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On Fri, 14 Aug 2020 23:27:03 +0800, cy_huang wrote:
+> > Adds support for the RT4801 DSV. It has two regulators (DSVP/DSVN) with
+> > an I2C interface. DSVP/DSVN can provide the display panel module for th=
+e
+> > positive/negative voltage range from (+/-)4V to (+/-)6V.
+>
+> Applied to
+>
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git =
+for-next
+>
+> Thanks!
+>
+> [1/2] regulator: rt4801: Add support for RT4801 Display Bias regulator dr=
+iver
+>       commit: 5bbbfc7f7f0a44b7a85ab3872dd2ccce7019f7b1
+> [2/2] regulator: rt4801: Add DT binding documentation
+>       commit: fd6b928db8a05fcd8629320c52eae214a8615aae
+>
+> All being well this means that it will be integrated into the linux-next
+> tree (usually sometime in the next 24 hours) and sent to Linus during
+> the next merge window (or sooner if it is a bug fix), however if
+> problems are discovered then the patch may be dropped or reverted.
+>
+> You may get further e-mails resulting from automated or manual testing
+> and review of the tree, please engage with people reporting problems and
+> send followup patches addressing any issues that are reported if needed.
+>
+> If any updates are required or you are submitting further changes they
+> should be sent as incremental updates against current git, existing
+> patches will not be replaced.
+>
+> Please add any relevant lists and maintainers to the CCs when replying
+> to this mail.
+Thx.
+Add u0084500@gmail.com into cc list for the future maintenance.
+>
+> Thanks,
+> Mark
