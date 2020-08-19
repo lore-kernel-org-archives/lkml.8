@@ -2,133 +2,140 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39625C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 179B42078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:25:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27A02078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="nR7G5SwF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpSfvOra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHSTZz (ORCPT
+        id S1726844AbgHST0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39912 "EHLO
+        Wed, 19 Aug 2020 15:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHSTZy (ORCPT
+        with ESMTP id S1726732AbgHST0j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:25:54 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1032EC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:25:54 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id kr4so1558069pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:25:54 -0700 (PDT)
+        Wed, 19 Aug 2020 15:26:39 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A343CC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:26:38 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id 77so21662891ilc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uIHy/4+dOTIzbxPNc7n6E/xZy0w8cFL8jWiQ0sl5YxQ=;
-        b=nR7G5SwFp2JNr6fuvAhbEb1o7xKTXFbeB+0VOd0exvnNhw75pIp+ZO987UkhaH7KCl
-         kt1OPnfzX8XXOQntKZrAGq3pqfKbPDeKB4RyDO/DBvTuEIq3gwsuXc9J1yqb82gXjhr4
-         jPaPFV/gvbpptAaLLv3YEznM/o1wZjgGklS6dY52+sTfbOS9zYUi2owz1OQqd7f9Vn/v
-         B2DwrK73+KEfTU3mWrj68bpX71UhgsCbVXK1aFFeFTHJ0kOMzZVHeG1bYX25Pgfy9LPe
-         5D5UmMGCQp9rJ2Txbw97Nz+dmPiqGWjC7//2sslnuoM5Jwz8xmO9fDin91pG11CTB6Ge
-         KXLg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y5BGtZ5BwqTPokae+tJqoDxjKYZ/7jxyi3A6FMN4E2E=;
+        b=QpSfvOraCUWInnVwbf3MKR/NLu0NRKWHSeAg3qqfODo4RvhX/fwn9+lgH6IQ3tYNz4
+         m3w4S3CJPicgeglnKYKmB8I4U3vEqYPhxemXhR9MY1tIJLteXyBSePGHhjjzttuYzkHZ
+         WyUewGmFKBM1qE0mDlYoOTbfc1QabnpTKb30+dbqheGBEG/mrm/KvBNC7aYU/lRiSWk6
+         vlSxRv+hhUTAk7PuYl9KmNiKC7Huv3mnOcJEhUJHFnUPujmS1BUMSR+7PEJzWsz/XQyY
+         C9E4X9e1+nnpvqbAvK/tnZzg+Un1js7MP5axCs6lMUgkQhppoZh8k5OZw/2goHV888Sd
+         NVOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uIHy/4+dOTIzbxPNc7n6E/xZy0w8cFL8jWiQ0sl5YxQ=;
-        b=Q0++qxXCyX/duTZmiCCYRbWVg+ipe7rF4jPZ/gw5osN/EvnsLKs+An83X5uqeMafWY
-         A2wtBRduGp4WziU554mZo8dRdg521Y+k+7yjeSxQfZxyMLd7SsfIoyvx8Hvqv2Son9KK
-         7GjY+u5YRTgHHFGs9xA29/WAAFc5GYqFthrc9t2nEWHsY3uy1PqUh3c3RdrzqgB3pZZM
-         AqMbcI42YkgDIp4lK893V3Ii+4KGuY2QJJRXnVxeXyQyeZfCrY1oOSzJfIdaqTf/bxXq
-         L7YGdzRqY0+saJErZZtsoRNc/ZG2Au9YXU7O3Vo/yRzRbCm/zWQf7NR/+7MFsX2Dqnep
-         Y21Q==
-X-Gm-Message-State: AOAM533NHI79RLHlQ5h9fEobWsJW0RUA9jjpr9N8V5EJL80jxgyZr4w3
-        F2XT4oFhnuxq0FkLkZx17ioXDw==
-X-Google-Smtp-Source: ABdhPJz1lVEXLMArBIyCI0+M+EFSrZu0FfBjeeBhrzI2UstOIY8JV80nnGdwZefu7jVKH0RReO6PnA==
-X-Received: by 2002:a17:902:7245:: with SMTP id c5mr1136646pll.317.1597865153509;
-        Wed, 19 Aug 2020 12:25:53 -0700 (PDT)
-Received: from [192.168.1.182] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id s185sm26735618pgc.18.2020.08.19.12.25.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Aug 2020 12:25:52 -0700 (PDT)
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-To:     david.fugate@linux.intel.com, Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>
-Cc:     "kbusch@kernel.org" <kbusch@kernel.org>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de>
- <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
-Date:   Wed, 19 Aug 2020 13:25:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y5BGtZ5BwqTPokae+tJqoDxjKYZ/7jxyi3A6FMN4E2E=;
+        b=ZBUE/hJh/PCOU15Xvl4GMe98KkBpm4/c5M3rlddJzcP5XAu4M6vSR4tIGjsCnuq016
+         FcXsjS31oJ34UPtdx+6sjX0v6nMCKjinVPolGZtnYhmwqL51+sLWXDpoXKth7FhVIn3o
+         coTg7JsGy04wmgazngca6yQupoiAL5sOqKUQ8Hwkrvwhp1uWBvM7ZWlZJE11y+pJUblt
+         /3JkqNImHva74+8QGG7sire/APsg/zlnYeez/sbI+kCSCkLI13rn3Oqui9mCs2uVmInK
+         /LE/E1EZSTwrLfreUdPOCuuoxK0bYBuUNGB/mFlgkSbxAqY75quanXysk5zMMF6Mz8JK
+         WmFQ==
+X-Gm-Message-State: AOAM533cM7Hr/MisYW4tDVDpdKoBu8EOVFI9O5ILgtUHM2UxWSQ8i0w6
+        kjUmp21Q0UU8+uUm7eJikDo1WbjPY3qUeTKoZOJMmA==
+X-Google-Smtp-Source: ABdhPJyhMn6q6v7MlLQpkx4Nfd3hJdOKCYH6ftQHmVsP5ZCCgztT91KpYuNinLcOgLhFQaKni7bw9wlukfnbcwbd5Sk=
+X-Received: by 2002:a92:a008:: with SMTP id e8mr2004066ili.140.1597865197748;
+ Wed, 19 Aug 2020 12:26:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200817193140.3659956-1-mathieu.poirier@linaro.org>
+ <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com> <CANLsYkw2aBJmrHV+8_bDUtgD-Jfvndqz2kOfNNcBBMM+vztkug@mail.gmail.com>
+ <20200819173050.GA18091@willie-the-truck>
+In-Reply-To: <20200819173050.GA18091@willie-the-truck>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 19 Aug 2020 13:26:26 -0600
+Message-ID: <CANLsYkzn2yuhVzZD0p-C156qi28ukHQDa83F8pezESsptG4d1Q@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entries for CoreSight and Arm SPE
+To:     Will Deacon <will@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 12:11 PM, David Fugate wrote:
-> On Tue, 2020-08-18 at 07:12 +0000, Christoph Hellwig wrote:
->> On Tue, Aug 18, 2020 at 10:59:36AM +0530, Kanchan Joshi wrote:
->>> If drive does not support zone-append natively, enable emulation
->>> using
->>> regular write.
->>> Make emulated zone-append cmd write-lock the zone, preventing
->>> concurrent append/write on the same zone.
->>
->> I really don't think we should add this.  ZNS and the Linux support
->> were all designed with Zone Append in mind, and then your company did
->> the nastiest possible move violating the normal NVMe procedures to
->> make
->> it optional.  But that doesn't change the fact the Linux should keep
->> requiring it, especially with the amount of code added here and how
->> it
->> hooks in the fast path.
-> 
-> Intel does not support making *optional* NVMe spec features *required*
-> by the NVMe driver.
+On Wed, 19 Aug 2020 at 11:30, Will Deacon <will@kernel.org> wrote:
+>
+> On Wed, Aug 19, 2020 at 11:01:38AM -0600, Mathieu Poirier wrote:
+> > On Tue, 18 Aug 2020 at 11:56, John Garry <john.garry@huawei.com> wrote:
+> > > On 17/08/2020 20:31, Mathieu Poirier wrote:
+> > > > diff --git a/MAINTAINERS b/MAINTAINERS
+> > > > index 4e2698cc7e23..f9bb76baeec9 100644
+> > > > --- a/MAINTAINERS
+> > > > +++ b/MAINTAINERS
+> > > > @@ -13427,8 +13427,18 @@ F:   tools/perf/
+> > > >   PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
+> > > >   R:  John Garry <john.garry@huawei.com>
+> > > >   R:  Will Deacon <will@kernel.org>
+> > > > +R:   Mathieu Poirier <mathieu.poirier@linaro.org>
+> > > > +R:   Leo Yan <leo.yan@linaro.org>
+> > > >   L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > > >   S:  Supported
+> > > > +F:   tools/build/feature/test-libopencsd.c
+> > > > +F:   tools/perf/arch/arm/util/auxtrace.c
+> > > > +F:   tools/perf/arch/arm/util/cs-etm.*
+> > > > +F:   tools/perf/arch/arm/util/pmu.c
+> > > > +F:   tools/perf/arch/arm64/util/arm-spe.c
+> > > > +F:   tools/perf/util/arm-spe.h
+> > > > +F:   tools/perf/util/cs-etm-decoder/*
+> > > > +F:   tools/perf/util/cs-etm.*
+> > >
+> > > But from the previous discussion, I thought that we wanted an entry to
+> > > cover all tools/perf/arch/arm64/ and other related folders. Or was it
+> > > just put all special interest parts (like SPE support) under one entry
+> > > and leave the other arm/arm64 parts to be caught by "PERFORMANCE EVENTS
+> > > SUBSYSTEM" entry?
+> >
+> > I do not have the time to maintain anything outside of coresight -
+> > listing individual files as I did removes any ambiguity on that front.
+> > I'm happy to add tools/perf/arch/arm and tools/perf/arch/arm64/ if you
+> > agree to maintain them.  In that case you will have to be more
+> > specific about the "other related folders" you are referring to above.
+>
+> None of us have time for this, hence why I think putting us all in one entry
+> with all of the files listed there makes the most sense; then people do
+> whatever they can and try to help each other out based on how much time they
+> have. I think that's much better than fine-grained maintainership where a
+> given file has a single point of failure.
 
-It's not required, the driver will function quite fine without it. If you
-want to use ZNS it's required. The Linux driver thankfully doesn't need
-any vendor to sign off on what it can or cannot do, or what features
-are acceptable.
+Thanks for the clarification - just wanted to make sure I don't sign
+you guys up for something you didn't agree to.
 
-> It's forgivable WDC's accepted contribution didn't work with other
-> vendors' devices choosing not to implement the optional Zone Append,
-> but it's not OK to reject contributions remedying this.  Provided
-> there's no glaring technical issues, Samsung's contribution should be
-> accepted to maintain both spec compliance as well as vendor neutrality.
-
-It's *always* ok to reject contributions, if those contributions cause
-maintainability issues, unacceptable slowdowns, or whatever other issue
-that the maintainers of said driver don't want to deal with. Any
-contribution should be judged on merit, not based on political decisions
-or opinions. Obviously this thread reeks of it.
-
--- 
-Jens Axboe
-
+>
+> So I think it should include:
+>
+>   tools/perf/arch/arm64/
+>   tools/pmu-events/arch/arm64/
+>
+> along with the SPE and Coresight files.
+>
+> Arnaldo would still handle the patches, so this is really about giving us a
+> chance to review incoming patches without having to fish them out from the
+> lists.
+>
+> Will
