@@ -2,147 +2,137 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D358BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0383C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A73FF20758
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD34B20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 23:05:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kOsX/kv0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZSmHS4s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgHSXD7 (ORCPT
+        id S1727070AbgHSXFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 19:03:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28280 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726209AbgHSXD7 (ORCPT
+        Wed, 19 Aug 2020 19:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45662 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgHSXFB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 19:03:59 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JN1gKs148416;
-        Wed, 19 Aug 2020 19:03:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=4s6ipMZo3PZmhZJSQMcgq/OpgKjCrEZX8FoVbwMjgJU=;
- b=kOsX/kv0YYOvZ/xidjKLiZkp31HfVUWkaPlQiclr+9X5wNn9EFNzuOd0dghk8fVhFjCZ
- 3bQY+y8YL7P/Z/y3VRa6L0b6snKNkzdKnjd1nOYrM9mNiatKGbEk5/2+GVhxOI1ZgT4I
- t0Htj7/N4Vs4LwFG6uJrVeTI2sMHAfW8kCppi7+/SwZwbDIwCV0e8TFQW9HVAzFhS4im
- TimpU/s1ZaS8DIZ1BCQQLnsLOqJKkVuqQ5MMz3gVLbVw+6Lg4FqL0rm8xcpQiyyInVkZ
- TGjgbLpDx4N5UQle18SnnnZnu2qV1ODcoPAKEDyhpxfYLMzjOczVLIm7vKDCfX6gFyDD CA== 
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 330yctarr8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 19:03:53 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07JN0GTQ013674;
-        Wed, 19 Aug 2020 23:03:52 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02wdc.us.ibm.com with ESMTP id 3304scygqe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 23:03:52 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07JN3pA430277992
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Aug 2020 23:03:51 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FC6B6A05D;
-        Wed, 19 Aug 2020 23:03:51 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 195466A04D;
-        Wed, 19 Aug 2020 23:03:49 +0000 (GMT)
-Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Aug 2020 23:03:49 +0000 (GMT)
-Subject: Re: [PATCH v3] docs: trusted-encrypted.rst: update parameters for
- command examples
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Coly Li <colyli@suse.de>
-Cc:     keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-References: <20200818170002.38145-1-colyli@suse.de>
- <20200819210234.GB9942@linux.intel.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-Message-ID: <ec431164-21ae-8019-a9c0-b1e15004e4b9@linux.ibm.com>
-Date:   Wed, 19 Aug 2020 19:03:49 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 19 Aug 2020 19:05:01 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A8EC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 16:05:00 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id a14so159573edx.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 16:05:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bvQtPoZORjN9LSo3BZs0SVbBGr5W+CxKyp0VPJwa6A0=;
+        b=qZSmHS4sO/ZGrvttBIvLzipAMFOquz4Zqw/AkbbrSiWDp8ebhZEbNsRun+QLs5RzW8
+         UuH/zowE2waML75yRWyD/AOgYN40Drg+zRIQSRShMZFpBK3H5qrK2kh0s83hutMOss4e
+         Cbe2ToHcwoLyp3LrwRMu2LGsi13u2yFkYIVn6f97+HIxEz8PCSep0YfvOfUooGBdrvrZ
+         ETdyv60upWe7lFEs3UkKfoWgT654paG3bZFFK0yUmDDQZiSwjatyrECNt/g4kRoHCSon
+         mJybiLctGWBfWSuAHBMvbwGDSK2GwP+OJXr/SyBMrO3IeKBmczF5ULQmADr8T2oUr8f7
+         rX5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bvQtPoZORjN9LSo3BZs0SVbBGr5W+CxKyp0VPJwa6A0=;
+        b=ZfA7QoESxXn0pBkPqJNruar64YGhAREsuie3VZ03pN3OfdGyJUdArczLoVDMB3g4N9
+         FFIJFMIh4i7hGY46CS5PJ3Q0c/QijXEQ7D/J2oth4MsF+2LNukssR3GRNxYGCbumTO6L
+         WBL1pbTAefVXU+UM1UGVQmzF5iZnnDTfX7INULwg2K+YkoS1Bum66nm98ct847M/dZbL
+         YTbl52EIHtQcNVEfYjH31CAarOarriGOGeXQGBizWRbONF5l+h1+6pONvW6/DlahFYU4
+         QhxJJjIc5lPJBg6eiyCw127CaHVZB+eOn5fSUyo3wLAi9yLwTVtnofgsssc2FA39agA3
+         nujQ==
+X-Gm-Message-State: AOAM532MpAiJ+iRuusSnBW4rD5r7Sl7K+6MLAKgR/VKCNP+46j0xVsmi
+        8Ozl026aTYTEkDiGFrvASTUn35+BgcroO8Il624=
+X-Google-Smtp-Source: ABdhPJxRbtnGrPQQXQAlbTTU4Qe7MeN3M0rqgblk7edh9EXRmGlfvOQtZOOznLOoNL/71rRzYI6Gj1NgnkVHOWPrJvY=
+X-Received: by 2002:a50:e844:: with SMTP id k4mr279877edn.237.1597878299120;
+ Wed, 19 Aug 2020 16:04:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200819210234.GB9942@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_13:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 adultscore=0 bulkscore=0 clxscore=1015 suspectscore=0
- priorityscore=1501 mlxscore=0 spamscore=0 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008190182
+References: <20200818184704.3625199-1-yuzhao@google.com> <20200818184704.3625199-2-yuzhao@google.com>
+In-Reply-To: <20200818184704.3625199-2-yuzhao@google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 19 Aug 2020 16:04:47 -0700
+Message-ID: <CAHbLzkrLK3gkeA2_B7jyf99jmA0yvV0fQE53sqOLHyocaCGDSw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] mm: remove superfluous __ClearPageActive()
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/19/20 5:02 PM, Jarkko Sakkinen wrote:
-> On Wed, Aug 19, 2020 at 01:00:02AM +0800, Coly Li wrote:
->> The parameters in command examples for tpm2_createprimary and
->> tpm2_evictcontrol are outdated, people (like me) are not able to create
->> trusted key by these command examples.
->>
->> This patch updates the parameters of command example tpm2_createprimary
->> and tpm2_evictcontrol in trusted-encrypted.rst. With Linux kernel v5.8
->> and tpm2-tools-4.1, people can create a trusted key by following the
->> examples in this document.
->>
->> Signed-off-by: Coly Li <colyli@suse.de>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: James Bottomley <jejb@linux.ibm.com>
->> Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
->> Cc: Mimi Zohar <zohar@linux.ibm.com>
->> Cc: Stefan Berger <stefanb@linux.ibm.com>
-> OK, now it is clear. Thank you.
+On Tue, Aug 18, 2020 at 11:47 AM Yu Zhao <yuzhao@google.com> wrote:
 >
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> To activate a page, mark_page_accessed() always holds a reference
+> on it. It either gets a new reference when adding a page to
+> lru_pvecs.activate_page or reuses an existing one it previously
+> got when it added a page to lru_pvecs.lru_add. So it doesn't call
+> SetPageActive() on a page that doesn't have any reference left.
+> Therefore, the race is impossible these days (I didn't brother to
+> dig into its history).
 >
-> /Jarkko
+> For other paths, namely reclaim and migration, a reference count is
+> always held while calling SetPageActive() on a page.
 >
->> ---
->> Changelog:
->> v3: update commit log with review comments from Jarkko Sakkinen.
->> v2: remove the change of trusted key related operation.
->> v1: initial version.
->>
->>   Documentation/security/keys/trusted-encrypted.rst | 5 ++---
->>   1 file changed, 2 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/security/keys/trusted-encrypted.rst b/Documentation/security/keys/trusted-encrypted.rst
->> index 9483a7425ad5..1da879a68640 100644
->> --- a/Documentation/security/keys/trusted-encrypted.rst
->> +++ b/Documentation/security/keys/trusted-encrypted.rst
->> @@ -39,10 +39,9 @@ With the IBM TSS 2 stack::
->>   
->>   Or with the Intel TSS 2 stack::
->>   
->> -  #> tpm2_createprimary --hierarchy o -G rsa2048 -o key.ctxt
->> +  #> tpm2_createprimary --hierarchy o -G rsa2048 -c key.ctxt
->>     [...]
->> -  handle: 0x800000FF
->> -  #> tpm2_evictcontrol -c key.ctxt -p 0x81000001
->> +  #> tpm2_evictcontrol -c key.ctxt 0x81000001
->>     persistentHandle: 0x81000001
->>   
->>   Usage::
->> -- 
->> 2.26.2
->>
+> SetPageSlabPfmemalloc() also uses SetPageActive(), but it's irrelevant
+> to LRU pages.
 
+Seems fine to me. Reviewed-by: Yang Shi <shy828301@gmail.com>
+
+>
+> Signed-off-by: Yu Zhao <yuzhao@google.com>
+> ---
+>  mm/memremap.c | 2 --
+>  mm/swap.c     | 2 --
+>  2 files changed, 4 deletions(-)
+>
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03e38b7a38f1..3a06eb91cb59 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -451,8 +451,6 @@ void free_devmap_managed_page(struct page *page)
+>                 return;
+>         }
+>
+> -       /* Clear Active bit in case of parallel mark_page_accessed */
+> -       __ClearPageActive(page);
+>         __ClearPageWaiters(page);
+>
+>         mem_cgroup_uncharge(page);
+> diff --git a/mm/swap.c b/mm/swap.c
+> index 25c4043491b3..999a84dbe12c 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -900,8 +900,6 @@ void release_pages(struct page **pages, int nr)
+>                         del_page_from_lru_list(page, lruvec, page_off_lru(page));
+>                 }
+>
+> -               /* Clear Active bit in case of parallel mark_page_accessed */
+> -               __ClearPageActive(page);
+>                 __ClearPageWaiters(page);
+>
+>                 list_add(&page->lru, &pages_to_free);
+> --
+> 2.28.0.220.ged08abb693-goog
+>
+>
