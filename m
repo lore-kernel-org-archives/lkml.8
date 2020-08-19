@@ -2,69 +2,118 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1B0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE17EC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAD26204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:37:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C322E204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:37:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qp4+Gar0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgHSNh0 (ORCPT
+        id S1728654AbgHSNhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:37:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54588 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728654AbgHSNf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:35:28 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0BD7B6E4E73F1F088A22;
-        Wed, 19 Aug 2020 21:35:25 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Wed, 19 Aug 2020
- 21:35:21 +0800
-Subject: Re: [PATCH v2 3/4] libnvdimm/bus: simplify walk_to_nvdimm_bus()
-To:     Markus Elfring <Markus.Elfring@web.de>, <linux-nvdimm@lists.01.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Wed, 19 Aug 2020 09:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728504AbgHSNhX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:37:23 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CD1C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:37:22 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id s189so24749789iod.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CU9Zr4LI/GfTl7S1ltjLtLw+xp0kyM6bHpT8zYvnkMs=;
+        b=Qp4+Gar0fMdYytsOSyLZpqrBgkqBGvWD+9KS4ZseGwKtZ3UNmsfFLNqHnKKNBmCoZV
+         VARg7fHPutGJvnweVdaTrqVHR3DUOOkFWStxpx3Y63I+tBqS6YS6Whn5p44SkING9Xey
+         jMsdKlHmr+gt1sww85jiljC8v/OQ6dIgR1gB5BtoxUWWqd6D7hYjfSH2OsfemNl330Gh
+         FTCdcIJnFsbkaUiBTIYu+tdSoyGJYWao8pll33WUuAV+LiPLKPNim1p4Ogdx0H667C6s
+         n+R0e1LADuy/Sbwfo2l5FUqtxfn4As7rZ22hCCEHGhA5yza/Ksn0i4BcGwSq+8rXJZBH
+         Q2wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CU9Zr4LI/GfTl7S1ltjLtLw+xp0kyM6bHpT8zYvnkMs=;
+        b=maAxK/CWZSkP/B9aBDO3esnynWKV+dJVvFFfuFygjyi2dLMz18YQO6kOpkrY/oA2Y+
+         N1ekD12ZkkBH2RGl58zsh8+x370bRvIPlNBbzyztojKcMnvaSDbyZzAk3ys1usdleJS0
+         4IXx+oV+UqJ4OHA9Hyn3V7djVS3tMxMHqdMdxpzyORSWcSfrrZYPwuBH4Rnw966JKtu4
+         Z6nCKFTW7b0AIBXcL7joB2YXVmIkwEZc2b+Zf/X1pjSTQO2cQKu7nnUCEOoW8lzPAqO9
+         niOeLMp1pPNA5EHipVYDZu3DyAcAmL0MeLwRqv4BV6paCYtfEWVWnUZxqOoasVQH2pIu
+         AAlA==
+X-Gm-Message-State: AOAM533YUhCxUV5zmnEy9KXOfIc5RDK7HbJ9TJ+kKG+Ng8aaR/8Kh3Zc
+        e+TurtlpFXJQnbVWlg7mS1NGZEHdNKI3y5uePps=
+X-Google-Smtp-Source: ABdhPJwRz5ptWi9jU0zOEyttOJM97RGMZUNDEZDD+TTNv3kZGB1W0K4Y0G6nj8hodta9E7UzclSOD+POhpFtBVP+fjc=
+X-Received: by 2002:a02:6066:: with SMTP id d38mr24198724jaf.105.1597844241987;
+ Wed, 19 Aug 2020 06:37:21 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200819020503.3079-1-thunder.leizhen@huawei.com> <20200819020503.3079-2-thunder.leizhen@huawei.com>
+In-Reply-To: <20200819020503.3079-2-thunder.leizhen@huawei.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Wed, 19 Aug 2020 23:37:11 +1000
+Message-ID: <CAOSf1CGvtX6FjYXy-mGxoEx4B6ZQ-LUZDMi-503JtECLu93faw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] libnvdimm: fix memmory leaks in of_pmem.c
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Dave Jiang <dave.jiang@intel.com>,
         Ira Weiny <ira.weiny@intel.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Vishal Verma <vishal.l.verma@intel.com>
-References: <20200819020503.3079-1-thunder.leizhen@huawei.com>
- <20200819020503.3079-4-thunder.leizhen@huawei.com>
- <ff1333cb-9917-6a2c-4454-325d161d8650@web.de>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <ee3b1538-b19f-5dd9-d023-90eca4bfd9b7@huawei.com>
-Date:   Wed, 19 Aug 2020 21:35:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <ff1333cb-9917-6a2c-4454-325d161d8650@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 19, 2020 at 12:05 PM Zhen Lei <thunder.leizhen@huawei.com> wrote:
+>
+> The memory priv->bus_desc.provider_name allocated by kstrdup() is not
+> freed correctly.
+>
+> Fixes: 49bddc73d15c ("libnvdimm/of_pmem: Provide a unique name for bus provider")
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
+Yep, that's a bug.
 
-On 8/19/2020 8:40 PM, Markus Elfring wrote:
->> … when is_nvdimm_bus(dev) successed.
-> 
-> I imagine that that an other wording will be more appropriate here.
+Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
 
-OK, I will rewrite it.
-
-> 
-> Regards,
-> Markus
-> 
-> 
-
+> ---
+>  drivers/nvdimm/of_pmem.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
+> index 10dbdcdfb9ce913..1292ffca7b2ecc0 100644
+> --- a/drivers/nvdimm/of_pmem.c
+> +++ b/drivers/nvdimm/of_pmem.c
+> @@ -36,6 +36,7 @@ static int of_pmem_region_probe(struct platform_device *pdev)
+>
+>         priv->bus = bus = nvdimm_bus_register(&pdev->dev, &priv->bus_desc);
+>         if (!bus) {
+> +               kfree(priv->bus_desc.provider_name);
+>                 kfree(priv);
+>                 return -ENODEV;
+>         }
+> @@ -83,6 +84,7 @@ static int of_pmem_region_remove(struct platform_device *pdev)
+>         struct of_pmem_private *priv = platform_get_drvdata(pdev);
+>
+>         nvdimm_bus_unregister(priv->bus);
+> +       kfree(priv->bus_desc.provider_name);
+>         kfree(priv);
+>
+>         return 0;
+> --
+> 1.8.3
+>
+>
