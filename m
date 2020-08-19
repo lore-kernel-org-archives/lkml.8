@@ -2,212 +2,136 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA33B20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0E62067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="u3oU6dNp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Il4mUn2K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726854AbgHSQ7g (ORCPT
+        id S1726675AbgHSRCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:59:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:42012 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgHSQ7Z (ORCPT
+        Wed, 19 Aug 2020 13:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45842 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgHSRCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:59:25 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07JGwK0C031096;
-        Wed, 19 Aug 2020 16:58:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=6pLb/h0CV327//KVUAS9lIFwkTuGnu3mrBkQ5d32t7I=;
- b=u3oU6dNpCvXrI5mUqoC05u45d5VW6lwqlvMaV0FwwtkZvpXmsBsfAtO4PpR6xG+SYDda
- G+PY38RnCfPmCwxN1cACApeEM3/FUEtEtCd1jmtshzX2M26mHb1bcZm7YsS3e50V/XZm
- sPXrncfTLevUjAUqkJUGQfy5UoYGBf4pwWwLvdoGNtj7/G6ECAiRIwSEfk/ud2NiUMwQ
- w8MH7rMm1LFQ0rzu1/trHuruYfI2KJnn/sMUMTK04hIt73FOh/MyfC7/Xpf+lOoP1Yj4
- Nkz+dwMW3KAGVxvcDzUmSmDzQTO6sgz4x4C7b9bf894qQwqwvwJI/UzUIBST/mqiZOR4 xA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 32x74rbtr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Aug 2020 16:58:52 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07JGwLr8058475;
-        Wed, 19 Aug 2020 16:58:52 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 32xs9pg6js-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Aug 2020 16:58:52 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07JGwlQK007545;
-        Wed, 19 Aug 2020 16:58:47 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Aug 2020 09:58:47 -0700
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 90AEB6A0109; Wed, 19 Aug 2020 13:00:01 -0400 (EDT)
-Date:   Wed, 19 Aug 2020 13:00:01 -0400
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] powerpc/pseries/svm: Allocate SWIOTLB buffer anywhere
- in memory
-Message-ID: <20200819170001.GC25497@char.us.oracle.com>
-References: <20200818221126.391073-1-bauerman@linux.ibm.com>
+        Wed, 19 Aug 2020 13:02:06 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5069AC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:02:05 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id g13so11184699ioo.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:02:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c5R0bKLD4IQJAxbXV/MHy5oB2ZKOef13BK1brjzJ63Q=;
+        b=Il4mUn2KElTQdKcXtaNWURCYaRHxLSwjgiUP5m1oe7/nNMPk3by8+5BUYv52G22R9c
+         g7BTGrNNW6WBMf2aIXKP7uTyJRrgbLDQ0lIW4dFwtp8SoIAY0vpZkh/TlqIe4o73ye0a
+         0yWWxkBtp0WUT6dGO855eUjmVjnJRQXI6MjENle0kyb0I1c9uWSatRY1Zd8J1J3CAr5z
+         dsnJgvWWdcRSbry8lnt4BaRfwbuWX046gwBGDd0HHZlUBjr7fXlZgCSGjgAeJLNbyS0p
+         hVFvhgK+gTr3jXAMqfr5n+Sxezdk4w7HEVfDJYClNLuM0ZZLsFXRSgtzWNIy6wXApI6X
+         A9gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c5R0bKLD4IQJAxbXV/MHy5oB2ZKOef13BK1brjzJ63Q=;
+        b=dZkinArVfJvg6KGUaPJhfZl7V4zEUBerxDAaMi+gTiioXxXsTlZya1HweqKaeVP/rV
+         bOplle05o9jULuQIRcLyQUqloVybAK+wv5cee/egw9f8OEshqxCeaYl794vqJjMo8Ji3
+         FuZSCIk2tTcIEFdxkE0nzwrw4mPP/d3XioqHQH/o6zF0V2H4hGLF/sKaOxBD4u8/DX4i
+         uplU/r6UmWAg06Gvmmryg69SKEjjLLCy/EUPvNkaFyFVXo+8Lx8iXS1PuKB7xqWfgLaw
+         NCmPmcZwacNnwlh4eV86CG7tVZs/YYvwLL3y9muXmwxIaQDrracY0qISit/uhDulYjki
+         UxOw==
+X-Gm-Message-State: AOAM531kJrOlTe8iiRMEf2P8Mxz7YYVnioLtDOJx1YR9o5GYn8T5vS3n
+        eYmJGo/EU9z/0Z2fwNdltEBZieW5qjbPLaFDN2kPRA==
+X-Google-Smtp-Source: ABdhPJz6U3qxfQY7FyyjwoYDmcSIZxEIGX20jsPbcikmWABU8VgSxQUtwLuL76KK7Ncz4aahl8skE/4PZ2aPsssIy2c=
+X-Received: by 2002:a05:6638:d95:: with SMTP id l21mr23962229jaj.98.1597856524486;
+ Wed, 19 Aug 2020 10:02:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818221126.391073-1-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 spamscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=2 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008190141
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=2 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008190141
+References: <20200817193140.3659956-1-mathieu.poirier@linaro.org> <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com>
+In-Reply-To: <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 19 Aug 2020 11:01:38 -0600
+Message-ID: <CANLsYkw2aBJmrHV+8_bDUtgD-Jfvndqz2kOfNNcBBMM+vztkug@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entries for CoreSight and Arm SPE
+To:     John Garry <john.garry@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 07:11:26PM -0300, Thiago Jung Bauermann wrote:
-> POWER secure guests (i.e., guests which use the Protection Execution
-> Facility) need to use SWIOTLB to be able to do I/O with the hypervisor, but
-> they don't need the SWIOTLB memory to be in low addresses since the
-> hypervisor doesn't have any addressing limitation.
-> 
-> This solves a SWIOTLB initialization problem we are seeing in secure guests
-> with 128 GB of RAM: they are configured with 4 GB of crashkernel reserved
-> memory, which leaves no space for SWIOTLB in low addresses.
-> 
-> To do this, we use mostly the same code as swiotlb_init(), but allocate the
-> buffer using memblock_alloc() instead of memblock_alloc_low().
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+On Tue, 18 Aug 2020 at 11:56, John Garry <john.garry@huawei.com> wrote:
+>
+> On 17/08/2020 20:31, Mathieu Poirier wrote:
+> > Add entries for perf tools elements related to the support of
+> > Arm CoreSight and Arm SPE.
+>
+> Thanks for doing this...
+>
+> >
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > ---
+> >   MAINTAINERS | 10 ++++++++++
+> >   1 file changed, 10 insertions(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 4e2698cc7e23..f9bb76baeec9 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13427,8 +13427,18 @@ F:   tools/perf/
+> >   PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
+> >   R:  John Garry <john.garry@huawei.com>
+> >   R:  Will Deacon <will@kernel.org>
+> > +R:   Mathieu Poirier <mathieu.poirier@linaro.org>
+> > +R:   Leo Yan <leo.yan@linaro.org>
+> >   L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> >   S:  Supported
+> > +F:   tools/build/feature/test-libopencsd.c
+> > +F:   tools/perf/arch/arm/util/auxtrace.c
+> > +F:   tools/perf/arch/arm/util/cs-etm.*
+> > +F:   tools/perf/arch/arm/util/pmu.c
+> > +F:   tools/perf/arch/arm64/util/arm-spe.c
+> > +F:   tools/perf/util/arm-spe.h
+> > +F:   tools/perf/util/cs-etm-decoder/*
+> > +F:   tools/perf/util/cs-etm.*
+>
+> But from the previous discussion, I thought that we wanted an entry to
+> cover all tools/perf/arch/arm64/ and other related folders. Or was it
+> just put all special interest parts (like SPE support) under one entry
+> and leave the other arm/arm64 parts to be caught by "PERFORMANCE EVENTS
+> SUBSYSTEM" entry?
 
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+I do not have the time to maintain anything outside of coresight -
+listing individual files as I did removes any ambiguity on that front.
+I'm happy to add tools/perf/arch/arm and tools/perf/arch/arm64/ if you
+agree to maintain them.  In that case you will have to be more
+specific about the "other related folders" you are referring to above.
 
+Thanks,
+Mathieu
 
-> ---
->  arch/powerpc/include/asm/svm.h       |  4 ++++
->  arch/powerpc/mm/mem.c                |  6 +++++-
->  arch/powerpc/platforms/pseries/svm.c | 26 ++++++++++++++++++++++++++
->  3 files changed, 35 insertions(+), 1 deletion(-)
-> 
-> Changes from v2:
-> - Panic if unable to allocate buffer, as suggested by Christoph.
-> 
-> Changes from v1:
-> - Open-code swiotlb_init() in arch-specific code, as suggested by
->   Christoph.
-> 
-> diff --git a/arch/powerpc/include/asm/svm.h b/arch/powerpc/include/asm/svm.h
-> index 85580b30aba4..7546402d796a 100644
-> --- a/arch/powerpc/include/asm/svm.h
-> +++ b/arch/powerpc/include/asm/svm.h
-> @@ -15,6 +15,8 @@ static inline bool is_secure_guest(void)
->  	return mfmsr() & MSR_S;
->  }
->  
-> +void __init svm_swiotlb_init(void);
-> +
->  void dtl_cache_ctor(void *addr);
->  #define get_dtl_cache_ctor()	(is_secure_guest() ? dtl_cache_ctor : NULL)
->  
-> @@ -25,6 +27,8 @@ static inline bool is_secure_guest(void)
->  	return false;
->  }
->  
-> +static inline void svm_swiotlb_init(void) {}
-> +
->  #define get_dtl_cache_ctor() NULL
->  
->  #endif /* CONFIG_PPC_SVM */
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index c2c11eb8dcfc..0f21bcb16405 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -50,6 +50,7 @@
->  #include <asm/swiotlb.h>
->  #include <asm/rtas.h>
->  #include <asm/kasan.h>
-> +#include <asm/svm.h>
->  
->  #include <mm/mmu_decl.h>
->  
-> @@ -290,7 +291,10 @@ void __init mem_init(void)
->  	 * back to to-down.
->  	 */
->  	memblock_set_bottom_up(true);
-> -	swiotlb_init(0);
-> +	if (is_secure_guest())
-> +		svm_swiotlb_init();
-> +	else
-> +		swiotlb_init(0);
->  #endif
->  
->  	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
-> diff --git a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
-> index 40c0637203d5..81085eb8f225 100644
-> --- a/arch/powerpc/platforms/pseries/svm.c
-> +++ b/arch/powerpc/platforms/pseries/svm.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/mm.h>
-> +#include <linux/memblock.h>
->  #include <asm/machdep.h>
->  #include <asm/svm.h>
->  #include <asm/swiotlb.h>
-> @@ -34,6 +35,31 @@ static int __init init_svm(void)
->  }
->  machine_early_initcall(pseries, init_svm);
->  
-> +/*
-> + * Initialize SWIOTLB. Essentially the same as swiotlb_init(), except that it
-> + * can allocate the buffer anywhere in memory. Since the hypervisor doesn't have
-> + * any addressing limitation, we don't need to allocate it in low addresses.
-> + */
-> +void __init svm_swiotlb_init(void)
-> +{
-> +	unsigned char *vstart;
-> +	unsigned long bytes, io_tlb_nslabs;
-> +
-> +	io_tlb_nslabs = (swiotlb_size_or_default() >> IO_TLB_SHIFT);
-> +	io_tlb_nslabs = ALIGN(io_tlb_nslabs, IO_TLB_SEGSIZE);
-> +
-> +	bytes = io_tlb_nslabs << IO_TLB_SHIFT;
-> +
-> +	vstart = memblock_alloc(PAGE_ALIGN(bytes), PAGE_SIZE);
-> +	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, false))
-> +		return;
-> +
-> +	if (io_tlb_start)
-> +		memblock_free_early(io_tlb_start,
-> +				    PAGE_ALIGN(io_tlb_nslabs << IO_TLB_SHIFT));
-> +	panic("SVM: Cannot allocate SWIOTLB buffer");
-> +}
-> +
->  int set_memory_encrypted(unsigned long addr, int numpages)
->  {
->  	if (!PAGE_ALIGNED(addr))
+>
+> Cheers,
+> John
+>
+> >   F:  tools/perf/pmu-events/arch/arm64/
+> >
+> >   PERSONALITY HANDLING
+> >
+>
