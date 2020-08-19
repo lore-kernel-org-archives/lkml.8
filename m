@@ -2,146 +2,120 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FACEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C915C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1BF82083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139D72083B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 16:24:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XF/FOeN8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HlZ9h/mQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgHSQYA (ORCPT
+        id S1727837AbgHSQYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 12:24:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58462 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726973AbgHSQXm (ORCPT
+        Wed, 19 Aug 2020 12:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgHSQYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 12:23:42 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JG1rX8005630;
-        Wed, 19 Aug 2020 12:23:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=K1juP4O56OpR+1pGnhU0wOY9m5Yds3UI4Ybc3g8AT94=;
- b=XF/FOeN8v7PK4DNs3MQDP3eP9tCMMgHxWH1l9q37pPHXfB3fOuAfH3+yHolodg5t+eVq
- xhQBB+4ChC1xOrDCQWNw+Uagq81HYn/bLEa71BfGelAdrUt8kfF0EgvElGhFjRF5B0wf
- OkcRNhevwliTdHoOTWaize1O1PrZoZz5ua2pOGzzITcmHl6Imqyn5SPiCkfQ7VeCnaDW
- CnhtERrg0TdXHMfTJHoD6Yyrpa1icOOzEj2TI+SUY+Fx7Sk32BYQWQ2GUBtXA+iPp8TP
- wF03sYji/KW9RpDi1o7JLVu98j/a9s53bobVZ8W+H3d2ZajaOI4d1+D3/vbzt7o0FMp5 JA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304ruew8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 12:23:36 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07JG1vxh005752;
-        Wed, 19 Aug 2020 12:23:36 -0400
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304ruew45-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 12:23:36 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07JGGtcx019296;
-        Wed, 19 Aug 2020 16:23:24 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03fra.de.ibm.com with ESMTP id 3304c919t3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 16:23:24 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07JGNLX323527920
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Aug 2020 16:23:21 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB7175204E;
-        Wed, 19 Aug 2020 16:23:21 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.33.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 28F2652051;
-        Wed, 19 Aug 2020 16:23:21 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v9 2/2] s390: virtio: PV needs VIRTIO I/O device protection
-Date:   Wed, 19 Aug 2020 18:23:18 +0200
-Message-Id: <1597854198-2871-3-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
-References: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_09:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=959 priorityscore=1501 suspectscore=1 phishscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxscore=0 clxscore=1015 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190133
+        Wed, 19 Aug 2020 12:24:11 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62D5C061343;
+        Wed, 19 Aug 2020 09:24:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0qj0NgMXE9N5E+k0q9ljNMUsiRWKFkmPnIi16FDMGEc=; b=HlZ9h/mQIGWHSczZdWzzLw8l+9
+        Jb7IErUxYlL78RPZ71SMSGS/HV3yVvuUiIK/YrwfyvTC10O8KcRT6VMnYVL0aU6CO/PcKoxUKjbEg
+        FMPh3GoEkEasFRBXmnoogUTGVM8X1nLXrNJ16FeiPqu6ZKF55STetGuo6F7oJDkb7OFe+PK4ovJbA
+        LbxobzPdOK8V+J3D2xXSgj1M/Gi/FLJ8k0qHIh30NkHE5oScUHkA9+e2lUTAXyQG8c7I3ipBoYqQG
+        U0zEH7NCWDF7DOH+DTnpfm8m7ACzQHtRlw8IFMlAy1bIPMlB4/FKC98szZaxVo3aceR5NEss3m70T
+        PvKLLcqw==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8Qsd-0004c3-7w; Wed, 19 Aug 2020 16:24:03 +0000
+Date:   Wed, 19 Aug 2020 17:24:03 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "'Eric W. Biederman'" <ebiederm@xmission.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Christoph Hewllig <hch@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "x86@kernel.org" <x86@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Xiao Yang <yangx.jy@cn.fujitsu.com>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "uclinux-h8-devel@lists.sourceforge.jp" 
+        <uclinux-h8-devel@lists.sourceforge.jp>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "kgdb-bugreport@lists.sourceforge.net" 
+        <kgdb-bugreport@lists.sourceforge.net>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 00/11] Introduce kernel_clone(), kill _do_fork()
+Message-ID: <20200819162403.GF17456@casper.infradead.org>
+References: <20200818174447.GV17456@casper.infradead.org>
+ <20200819074340.GW2674@hirez.programming.kicks-ass.net>
+ <20200819084556.im5zfpm2iquzvzws@wittgenstein>
+ <20200819111851.GY17456@casper.infradead.org>
+ <87a6yq222c.fsf@x220.int.ebiederm.org>
+ <20200819134629.mvd4nupme7q2hmtz@wittgenstein>
+ <87mu2qznlv.fsf@x220.int.ebiederm.org>
+ <df7f7e17a730405ea182ec778eec22e1@AcuMS.aculab.com>
+ <20200819154521.GE17456@casper.infradead.org>
+ <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee30fecfbd534c19a6bfd11d2c4b8263@AcuMS.aculab.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If protected virtualization is active on s390, VIRTIO has retricted
-access to the guest memory.
-Define CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS and export
-arch_has_restricted_virtio_memory_access to advertize VIRTIO if that's
-the case, preventing a host error on access attempt.
+On Wed, Aug 19, 2020 at 03:55:47PM +0000, David Laight wrote:
+> From: Matthew Wilcox
+> > Sent: 19 August 2020 16:45
+> > 
+> > On Wed, Aug 19, 2020 at 03:41:48PM +0000, David Laight wrote:
+> > > Does linux have an O(1) (or do I mean o(1)) pid allocator?
+> > > Or does it have to do a linear scan to find a gap??
+> > 
+> > O(log(n)).  It uses the IDR allocator, so 'n' in this case is the
+> > number of PIDs currently allocated, and it's log_64 rather than log_2
+> > (which makes no difference to O() but does make a bit of a difference
+> > to performance)
+> 
+> Still worse that O(1) - when that is just replacing a variable
+> with a value read out of an array.
+> Made pid lookup a trivial O(1) as well.
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- arch/s390/Kconfig   |  1 +
- arch/s390/mm/init.c | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+You'd be surprised.  We replaced the custom PID allocator with the
+generic IDR allocator a few years ago and got a pretty decent speedup.
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 9cfd8de907cb..c12422c26389 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -820,6 +820,7 @@ menu "Virtualization"
- config PROTECTED_VIRTUALIZATION_GUEST
- 	def_bool n
- 	prompt "Protected virtualization guest support"
-+	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
- 	help
- 	  Select this option, if you want to be able to run this
- 	  kernel as a protected virtualization KVM guest.
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 6dc7c3b60ef6..8febd73ed6ca 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -45,6 +45,7 @@
- #include <asm/kasan.h>
- #include <asm/dma-mapping.h>
- #include <asm/uv.h>
-+#include <linux/virtio_config.h>
- 
- pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
- 
-@@ -161,6 +162,16 @@ bool force_dma_unencrypted(struct device *dev)
- 	return is_prot_virt_guest();
- }
- 
-+#ifdef CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-+
-+int arch_has_restricted_virtio_memory_access(void)
-+{
-+	return is_prot_virt_guest();
-+}
-+EXPORT_SYMBOL(arch_has_restricted_virtio_memory_access);
-+
-+#endif
-+
- /* protected virtualization */
- static void pv_init(void)
- {
--- 
-2.25.1
-
+If you think you can do better, then submit patches.  You have to support
+all the existing use cases, of course.
