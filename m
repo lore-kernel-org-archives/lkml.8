@@ -2,143 +2,154 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FDEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A45FC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C01C320888
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hf88cTNZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZZUocbmv"
+	by mail.kernel.org (Postfix) with ESMTP id 3417820897
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:33:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgHSNdg (ORCPT
+        id S1728563AbgHSNdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Aug 2020 09:33:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:36922 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728496AbgHSNdg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 09:33:36 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39322 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728477AbgHSNdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:33:24 -0400
-Date:   Wed, 19 Aug 2020 15:33:20 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597844001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j26P1hmMzhjjiQWadqBC++aWmgqGQBIpscfoookHO7c=;
-        b=hf88cTNZ1SOB3MaTW01c8emUFzoah0YdeFMG/8cV/LEODUBIeo3Qd+vjeBXJGfjyk/Mnx0
-        YnVyb1ms3B8gG1aEGlYvyntvLsIk1LZGaWrx4Ibf8fX/LpyF9PkqHe/gdR8DAMjB9QaVu9
-        kUk7ZSVf8757vmPHfipJZ81z9gVQ4ZDNIBKfGP9RH8SfrWT/MtozhHHzgc+VEWIVDdmg6r
-        Df4Zx4EgWutcPWWZFay/EIeP8K9hd9Lll6HLcNMsSyzcol6maG4F/zCkfGnykgdCOkf8Ze
-        NdqpPtyzyfgjKpMKZ9Di5lCesYXOCK83mPtTnxDOAuvr3erbpBjZHRuROhqKEQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597844001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j26P1hmMzhjjiQWadqBC++aWmgqGQBIpscfoookHO7c=;
-        b=ZZUocbmvcwrAvDla1gFf7SNVdsVvxiO2q9egKN5TAEkys7fV0dn7MTVc4cWNIcmkYA86h3
-        nqQo3FccIQ6Cf8Aw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45D5B1FB;
+        Wed, 19 Aug 2020 06:33:35 -0700 (PDT)
+Received: from monolith.localdoman (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 325C73F71F;
+        Wed, 19 Aug 2020 06:33:33 -0700 (PDT)
+From:   Alexandru Elisei <alexandru.elisei@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mark.rutland@arm.com, maz@kernel.org, will@kernel.org,
+        catalin.marinas@arm.com, swboyd@chromium.org,
+        sumit.garg@linaro.org, Julien Thierry <julien.thierry@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Jens Axboe <axboe@kernel.dk>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
- preemption
-Message-ID: <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
-References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
- <20200819131507.GC2674@hirez.programming.kicks-ass.net>
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: [PATCH v6 3/7] arm64: perf: Remove PMU locking
+Date:   Wed, 19 Aug 2020 14:34:15 +0100
+Message-Id: <20200819133419.526889-4-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200819133419.526889-1-alexandru.elisei@arm.com>
+References: <20200819133419.526889-1-alexandru.elisei@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200819131507.GC2674@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-19 15:15:07 [+0200], peterz@infradead.org wrote:
+From: Julien Thierry <julien.thierry@arm.com>
 
-> > -	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
-> > +	if (tsk->flags & PF_WQ_WORKER) {
-> >  		preempt_disable();
-> > -		if (tsk->flags & PF_WQ_WORKER)
-> > -			wq_worker_sleeping(tsk);
-> > -		else
-> > -			io_wq_worker_sleeping(tsk);
-> > +		wq_worker_sleeping(tsk);
-> >  		preempt_enable_no_resched();
-> >  	}
-> > =20
-> >  	if (tsk_is_pi_blocked(tsk))
-> >  		return;
-> > =20
-> > +	if (tsk->flags & PF_IO_WORKER)
-> > +		io_wq_worker_sleeping(tsk);
-> > +
->=20
-> Urgh, so this adds a branch in what is normally considered a fairly hot
-> path.
->=20
-> I'm thinking that the raw_spinlock_t option would permit leaving that
-> single:
->=20
-> 	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER))
->=20
-> branch intact?
+The PMU is disabled and enabled, and the counters are programmed from
+contexts where interrupts or preemption is disabled.
 
-The compiler generates code to test for both flags at once. If none of
-both possible flags are set then there is one branch (get out and bring
-me to tst_is_pi=E2=80=A6).
-And yes, with raw_spinlock_t we could keep that one branch.
+The functions to toggle the PMU and to program the PMU counters access the
+registers directly and don't access data modified by the interrupt handler.
+That, and the fact that they're always called from non-preemptible
+contexts, means that we don't need to disable interrupts or use a spinlock.
 
-If you want to optimize further, we could move PF_IO_WORKER to an lower
-bit. x86 can test for both via
-(gcc-10)
-|         testl   $536870944, 44(%rbp)    #, _11->flags
-|         jne     .L1635  #,
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Julien Thierry <julien.thierry@arm.com>
+[Explained why locking is not needed, removed WARN_ONs]
+Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
+---
+ arch/arm64/kernel/perf_event.c | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
 
-(clang-9)
-|         testl   $536870944, 44(%rbx)    # imm =3D 0x20000020
-|         je      .LBB112_6
+diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+index ac818abd65b6..80744c2f1454 100644
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -672,15 +672,10 @@ static inline u32 armv8pmu_getreset_flags(void)
+ 
+ static void armv8pmu_enable_event(struct perf_event *event)
+ {
+-	unsigned long flags;
+-	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
+-	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
+-
+ 	/*
+ 	 * Enable counter and interrupt, and set the counter to count
+ 	 * the event that we're interested in.
+ 	 */
+-	raw_spin_lock_irqsave(&events->pmu_lock, flags);
+ 
+ 	/*
+ 	 * Disable counter
+@@ -708,21 +703,10 @@ static void armv8pmu_enable_event(struct perf_event *event)
+ 	 */
+ 	isb();
+ 	armv8pmu_enable_event_counter(event);
+-
+-	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+ }
+ 
+ static void armv8pmu_disable_event(struct perf_event *event)
+ {
+-	unsigned long flags;
+-	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
+-	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
+-
+-	/*
+-	 * Disable counter and interrupt
+-	 */
+-	raw_spin_lock_irqsave(&events->pmu_lock, flags);
+-
+ 	/*
+ 	 * Disable counter
+ 	 */
+@@ -732,30 +716,18 @@ static void armv8pmu_disable_event(struct perf_event *event)
+ 	 * Disable interrupt for this counter
+ 	 */
+ 	armv8pmu_disable_event_irq(event);
+-
+-	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+ }
+ 
+ static void armv8pmu_start(struct arm_pmu *cpu_pmu)
+ {
+-	unsigned long flags;
+-	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
+-
+-	raw_spin_lock_irqsave(&events->pmu_lock, flags);
+ 	/* Enable all counters */
+ 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() | ARMV8_PMU_PMCR_E);
+-	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+ }
+ 
+ static void armv8pmu_stop(struct arm_pmu *cpu_pmu)
+ {
+-	unsigned long flags;
+-	struct pmu_hw_events *events = this_cpu_ptr(cpu_pmu->hw_events);
+-
+-	raw_spin_lock_irqsave(&events->pmu_lock, flags);
+ 	/* Disable all counters */
+ 	armv8pmu_pmcr_write(armv8pmu_pmcr_read() & ~ARMV8_PMU_PMCR_E);
+-	raw_spin_unlock_irqrestore(&events->pmu_lock, flags);
+ }
+ 
+ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+-- 
+2.28.0
 
-
-but ARM can't and does
-|          ldr     r1, [r5, #16]   @ tsk_3->flags, tsk_3->flags
-|         mov     r2, #32 @ tmp157,
-|         movt    r2, 8192        @ tmp157,
-|         tst     r2, r1  @ tmp157, tsk_3->flags
-|         beq     .L998           @,
-
-same ARM64
-|         ldr     w0, [x20, 60]   //, _11->flags
-|         and     w0, w0, 1073741792      // tmp117, _11->flags,
-|         and     w0, w0, -536870849      // tmp117, tmp117,
-|         cbnz    w0, .L453       // tmp117,
-
-using 0x10 for PF_IO_WORKER instead will turn this into:
-|         ldr     w0, [x20, 60]   //, _11->flags
-|         tst     w0, 48  // _11->flags,
-|         bne     .L453           //,
-
-ARM:
-|         ldr     r2, [r5, #16]   @ tsk_3->flags, tsk_3->flags
-|         tst     r2, #48 @ tsk_3->flags,
-|         beq     .L998           @,
-
-Sebastian
