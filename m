@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDAC3207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F52207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:54:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="16f10lr0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hdIr0AVX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cdGLe4LN";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fv1EjGd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgHSIx6 (ORCPT
+        id S1726875AbgHSIyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        Wed, 19 Aug 2020 04:54:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbgHSIwI (ORCPT
+        with ESMTP id S1726970AbgHSIwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 04:52:08 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92FF1C061757;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E346BC061342;
         Wed, 19 Aug 2020 01:52:07 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 08:52:04 -0000
+Date:   Wed, 19 Aug 2020 08:52:05 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597827125;
+        s=2020; t=1597827126;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2tvoU8qnbQgMjeDxvf/H0rSKhfAc8cpvsPslYm1nEcg=;
-        b=16f10lr0CEykN4O7Jx+I5kDtIvX11h+dQzkvHsqprsqfQ33uUsh31zXSEgKJ2xL1jjCf4c
-        XFZKzZPIo21HvOx7FA3+FiccyoGPuWBzmK+GdimEoaGaANPAxY06sW1anT4KPHguzbdhiq
-        5kY4qU639+JFEXBkYIKmFrC0XkS8apNXWEI9Ip0Jkfafs56yfd8pJFYjKATGpMfHJult/h
-        TrJeLRrE4Az3qUI+f0f81Yf6hErHmnKJkKSVNDawmSpOSVfaO+sXPYlwOWklju27wfX7Q1
-        zS9MjTP3gQAwm7y4tX3oCLstKSAE/tQLYnZsAGvBfUO53G+HzKpVa9s4qDXDfg==
+        bh=m8E33wM0eUdDn/MICinTlKvrKptSaccIvivyRPmOpvU=;
+        b=cdGLe4LNPFcTaPxs8JojP2XfGT/pQWKS8Df9YbAmAYg1L3F1Mws8H0efLPKUG3HiYnU0VH
+        utlRhxbsBPPAAo3slgDPThxMjJQMd1UdQmeubp0ggFNuJCz2fPGgBhSouGRtAFxxzqB+QA
+        pJUrjqkcE7MypsrI/iuCIfyeCYluiWzgw+InFnsfFOcJQbaCLg2AuQrwOAR4G8jLsl/Nlp
+        BG+YFHqw+vN1ICS3Rdien2AUGccvEFaeokyw+xmUdwwUAKDKZgptDjRzVNRm/NsjNkwjAK
+        vJIUs02HG7SwbXT/WxJdPQk9nRtxzKOBIryDFCPqDamrGrhgxIhIOHeHYmZrmQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597827125;
+        s=2020e; t=1597827126;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2tvoU8qnbQgMjeDxvf/H0rSKhfAc8cpvsPslYm1nEcg=;
-        b=hdIr0AVXuHQ7HtSDkhhz60t/yurBNKm4lAlwx46+Wp+npggH5HN+Rj/ScIATEfaVkAh1GT
-        gjV6VDzAKXjZcnAA==
+        bh=m8E33wM0eUdDn/MICinTlKvrKptSaccIvivyRPmOpvU=;
+        b=Fv1EjGd8iYfvBNscu+2i5jkHYv1xqi/eAlbeB6ArDhenFykcJ4FC1vp3Ag7ToDwAzsmEHM
+        9MKDU36sOE58FABw==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/x86/intel: Support per-thread RDPMC TopDown metrics
+Subject: [tip: perf/core] perf/x86/intel: Support TopDown metrics on Ice Lake
 Cc:     Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200723171117.9918-12-kan.liang@linux.intel.com>
-References: <20200723171117.9918-12-kan.liang@linux.intel.com>
+In-Reply-To: <20200723171117.9918-11-kan.liang@linux.intel.com>
+References: <20200723171117.9918-11-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159782712493.3192.8387434810923551640.tip-bot2@tip-bot2>
+Message-ID: <159782712567.3192.16278278933877251116.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -73,235 +73,266 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     2cb5383b30d47c446ec7d884cd80f93ffcc31817
-Gitweb:        https://git.kernel.org/tip/2cb5383b30d47c446ec7d884cd80f93ffcc31817
+Commit-ID:     59a854e2f3b90ad2cc7368ae392de40b981ad51d
+Gitweb:        https://git.kernel.org/tip/59a854e2f3b90ad2cc7368ae392de40b981ad51d
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 23 Jul 2020 10:11:14 -07:00
+AuthorDate:    Thu, 23 Jul 2020 10:11:13 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
 CommitterDate: Tue, 18 Aug 2020 16:34:37 +02:00
 
-perf/x86/intel: Support per-thread RDPMC TopDown metrics
+perf/x86/intel: Support TopDown metrics on Ice Lake
 
-Starts from Ice Lake, the TopDown metrics are directly available as
-fixed counters and do not require generic counters. Also, the TopDown
-metrics can be collected per thread. Extend the RDPMC usage to support
-per-thread TopDown metrics.
+Ice Lake supports the hardware TopDown metrics feature, which can free
+up the scarce GP counters.
 
-The RDPMC index of the PERF_METRICS will be output if RDPMC users ask
-for the RDPMC index of the metrics events.
+Update the event constraints for the metrics events. The metric counters
+do not exist, which are mapped to a dummy offset. The sharing between
+multiple users of the same metric without multiplexing is not allowed.
 
-To support per thread RDPMC TopDown, the metrics and slots counters have
-to be saved/restored during the context switching.
+Implement set_topdown_event_period for Ice Lake. The values in
+PERF_METRICS MSR are derived from the fixed counter 3. Both registers
+should start from zero.
 
-The last_period and period_left are not used in the counting mode. Use
-the fields for saved_metric and saved_slots.
+Implement update_topdown_event for Ice Lake. The metric is reported by
+multiplying the metric (fraction) with slots. To maintain accurate
+measurements, both registers are cleared for each update. The fixed
+counter 3 should always be cleared before the PERF_METRICS.
+
+Implement td_attr for the new metrics events and the new slots fixed
+counter. Make them visible to the perf user tools.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200723171117.9918-12-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/20200723171117.9918-11-kan.liang@linux.intel.com
 ---
- arch/x86/events/core.c       |  5 +-
- arch/x86/events/intel/core.c | 90 ++++++++++++++++++++++++++++++-----
- include/linux/perf_event.h   | 29 +++++++----
- 3 files changed, 102 insertions(+), 22 deletions(-)
+ arch/x86/events/intel/core.c      | 118 +++++++++++++++++++++++++++++-
+ arch/x86/events/perf_event.h      |  13 +++-
+ arch/x86/include/asm/msr-index.h  |   2 +-
+ arch/x86/include/asm/perf_event.h |   2 +-
+ 4 files changed, 135 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index ebf723f..0f3d015 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2257,7 +2257,10 @@ static int x86_pmu_event_idx(struct perf_event *event)
- 	if (!(hwc->flags & PERF_X86_EVENT_RDPMC_ALLOWED))
- 		return 0;
- 
--	return hwc->event_base_rdpmc + 1;
-+	if (is_metric_idx(hwc->idx))
-+		return INTEL_PMC_FIXED_RDPMC_METRICS + 1;
-+	else
-+		return hwc->event_base_rdpmc + 1;
- }
- 
- static ssize_t get_attr_rdpmc(struct device *cdev,
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index db83334..c72e490 100644
+index 4a43668..db83334 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2258,7 +2258,13 @@ static int icl_set_topdown_event_period(struct perf_event *event)
- 	if (left == x86_pmu.max_period) {
- 		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
- 		wrmsrl(MSR_PERF_METRICS, 0);
--		local64_set(&hwc->period_left, 0);
-+		hwc->saved_slots = 0;
-+		hwc->saved_metric = 0;
-+	}
-+
-+	if ((hwc->saved_slots) && is_slots_event(event)) {
-+		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, hwc->saved_slots);
-+		wrmsrl(MSR_PERF_METRICS, hwc->saved_metric);
- 	}
+@@ -247,6 +247,10 @@ static struct event_constraint intel_icl_event_constraints[] = {
+ 	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
+ 	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* CPU_CLK_UNHALTED.REF */
+ 	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_RETIRING, 0),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BAD_SPEC, 1),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_FE_BOUND, 2),
++	METRIC_EVENT_CONSTRAINT(INTEL_TD_METRIC_BE_BOUND, 3),
+ 	INTEL_EVENT_CONSTRAINT_RANGE(0x03, 0x0a, 0xf),
+ 	INTEL_EVENT_CONSTRAINT_RANGE(0x1f, 0x28, 0xf),
+ 	INTEL_EVENT_CONSTRAINT(0x32, 0xf),	/* SW_PREFETCH_ACCESS.* */
+@@ -309,6 +313,12 @@ EVENT_ATTR_STR_HT(topdown-recovery-bubbles, td_recovery_bubbles,
+ EVENT_ATTR_STR_HT(topdown-recovery-bubbles.scale, td_recovery_bubbles_scale,
+ 	"4", "2");
  
- 	perf_event_update_userpage(event);
-@@ -2279,7 +2285,7 @@ static inline u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
- 	return  mul_u64_u32_div(slots, val, 0xff);
++EVENT_ATTR_STR(slots,			slots,		"event=0x00,umask=0x4");
++EVENT_ATTR_STR(topdown-retiring,	td_retiring,	"event=0x00,umask=0x80");
++EVENT_ATTR_STR(topdown-bad-spec,	td_bad_spec,	"event=0x00,umask=0x81");
++EVENT_ATTR_STR(topdown-fe-bound,	td_fe_bound,	"event=0x00,umask=0x82");
++EVENT_ATTR_STR(topdown-be-bound,	td_be_bound,	"event=0x00,umask=0x83");
++
+ static struct attribute *snb_events_attrs[] = {
+ 	EVENT_PTR(td_slots_issued),
+ 	EVENT_PTR(td_slots_retired),
+@@ -2232,6 +2242,99 @@ static void intel_pmu_del_event(struct perf_event *event)
+ 		intel_pmu_pebs_del(event);
  }
  
--static void __icl_update_topdown_event(struct perf_event *event,
-+static u64 icl_get_topdown_value(struct perf_event *event,
- 				       u64 slots, u64 metrics)
- {
- 	int idx = event->hw.idx;
-@@ -2290,7 +2296,50 @@ static void __icl_update_topdown_event(struct perf_event *event,
- 	else
- 		delta = slots;
- 
--	local64_add(delta, &event->count);
-+	return delta;
++static int icl_set_topdown_event_period(struct perf_event *event)
++{
++	struct hw_perf_event *hwc = &event->hw;
++	s64 left = local64_read(&hwc->period_left);
++
++	/*
++	 * The values in PERF_METRICS MSR are derived from fixed counter 3.
++	 * Software should start both registers, PERF_METRICS and fixed
++	 * counter 3, from zero.
++	 * Clear PERF_METRICS and Fixed counter 3 in initialization.
++	 * After that, both MSRs will be cleared for each read.
++	 * Don't need to clear them again.
++	 */
++	if (left == x86_pmu.max_period) {
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
++		wrmsrl(MSR_PERF_METRICS, 0);
++		local64_set(&hwc->period_left, 0);
++	}
++
++	perf_event_update_userpage(event);
++
++	return 0;
++}
++
++static inline u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
++{
++	u32 val;
++
++	/*
++	 * The metric is reported as an 8bit integer fraction
++	 * suming up to 0xff.
++	 * slots-in-metric = (Metric / 0xff) * slots
++	 */
++	val = (metric >> ((idx - INTEL_PMC_IDX_METRIC_BASE) * 8)) & 0xff;
++	return  mul_u64_u32_div(slots, val, 0xff);
 +}
 +
 +static void __icl_update_topdown_event(struct perf_event *event,
-+				       u64 slots, u64 metrics,
-+				       u64 last_slots, u64 last_metrics)
++				       u64 slots, u64 metrics)
 +{
-+	u64 delta, last = 0;
++	int idx = event->hw.idx;
++	u64 delta;
 +
-+	delta = icl_get_topdown_value(event, slots, metrics);
-+	if (last_slots)
-+		last = icl_get_topdown_value(event, last_slots, last_metrics);
++	if (is_metric_idx(idx))
++		delta = icl_get_metrics_event_value(metrics, slots, idx);
++	else
++		delta = slots;
 +
-+	/*
-+	 * The 8bit integer fraction of metric may be not accurate,
-+	 * especially when the changes is very small.
-+	 * For example, if only a few bad_spec happens, the fraction
-+	 * may be reduced from 1 to 0. If so, the bad_spec event value
-+	 * will be 0 which is definitely less than the last value.
-+	 * Avoid update event->count for this case.
-+	 */
-+	if (delta > last) {
-+		delta -= last;
-+		local64_add(delta, &event->count);
-+	}
++	local64_add(delta, &event->count);
 +}
 +
-+static void update_saved_topdown_regs(struct perf_event *event,
-+				      u64 slots, u64 metrics)
++/*
++ * Update all active Topdown events.
++ *
++ * The PERF_METRICS and Fixed counter 3 are read separately. The values may be
++ * modify by a NMI. PMU has to be disabled before calling this function.
++ */
++static u64 icl_update_topdown_event(struct perf_event *event)
 +{
 +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
 +	struct perf_event *other;
++	u64 slots, metrics;
 +	int idx;
 +
-+	event->hw.saved_slots = slots;
-+	event->hw.saved_metric = metrics;
++	/* read Fixed counter 3 */
++	rdpmcl((3 | INTEL_PMC_FIXED_RDPMC_BASE), slots);
++	if (!slots)
++		return 0;
++
++	/* read PERF_METRICS */
++	rdpmcl(INTEL_PMC_FIXED_RDPMC_METRICS, metrics);
 +
 +	for_each_set_bit(idx, cpuc->active_mask, INTEL_PMC_IDX_TD_BE_BOUND + 1) {
 +		if (!is_topdown_idx(idx))
 +			continue;
 +		other = cpuc->events[idx];
-+		other->hw.saved_slots = slots;
-+		other->hw.saved_metric = metrics;
-+	}
- }
- 
- /*
-@@ -2304,6 +2353,7 @@ static u64 icl_update_topdown_event(struct perf_event *event)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct perf_event *other;
- 	u64 slots, metrics;
-+	bool reset = true;
- 	int idx;
- 
- 	/* read Fixed counter 3 */
-@@ -2318,19 +2368,39 @@ static u64 icl_update_topdown_event(struct perf_event *event)
- 		if (!is_topdown_idx(idx))
- 			continue;
- 		other = cpuc->events[idx];
--		__icl_update_topdown_event(other, slots, metrics);
-+		__icl_update_topdown_event(other, slots, metrics,
-+					   event ? event->hw.saved_slots : 0,
-+					   event ? event->hw.saved_metric : 0);
- 	}
- 
- 	/*
- 	 * Check and update this event, which may have been cleared
- 	 * in active_mask e.g. x86_pmu_stop()
- 	 */
--	if (event && !test_bit(event->hw.idx, cpuc->active_mask))
--		__icl_update_topdown_event(event, slots, metrics);
-+	if (event && !test_bit(event->hw.idx, cpuc->active_mask)) {
-+		__icl_update_topdown_event(event, slots, metrics,
-+					   event->hw.saved_slots,
-+					   event->hw.saved_metric);
- 
--	/* The fixed counter 3 has to be written before the PERF_METRICS. */
--	wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
--	wrmsrl(MSR_PERF_METRICS, 0);
-+		/*
-+		 * In x86_pmu_stop(), the event is cleared in active_mask first,
-+		 * then drain the delta, which indicates context switch for
-+		 * counting.
-+		 * Save metric and slots for context switch.
-+		 * Don't need to reset the PERF_METRICS and Fixed counter 3.
-+		 * Because the values will be restored in next schedule in.
-+		 */
-+		update_saved_topdown_regs(event, slots, metrics);
-+		reset = false;
++		__icl_update_topdown_event(other, slots, metrics);
 +	}
 +
-+	if (reset) {
-+		/* The fixed counter 3 has to be written before the PERF_METRICS. */
-+		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
-+		wrmsrl(MSR_PERF_METRICS, 0);
-+		if (event)
-+			update_saved_topdown_regs(event, 0, 0);
-+	}
++	/*
++	 * Check and update this event, which may have been cleared
++	 * in active_mask e.g. x86_pmu_stop()
++	 */
++	if (event && !test_bit(event->hw.idx, cpuc->active_mask))
++		__icl_update_topdown_event(event, slots, metrics);
++
++	/* The fixed counter 3 has to be written before the PERF_METRICS. */
++	wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
++	wrmsrl(MSR_PERF_METRICS, 0);
++
++	return slots;
++}
++
+ static void intel_pmu_read_topdown_event(struct perf_event *event)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+@@ -4480,6 +4583,15 @@ static struct attribute *icl_events_attrs[] = {
+ 	NULL,
+ };
  
- 	return slots;
++static struct attribute *icl_td_events_attrs[] = {
++	EVENT_PTR(slots),
++	EVENT_PTR(td_retiring),
++	EVENT_PTR(td_bad_spec),
++	EVENT_PTR(td_fe_bound),
++	EVENT_PTR(td_be_bound),
++	NULL,
++};
++
+ static struct attribute *icl_tsx_events_attrs[] = {
+ 	EVENT_PTR(tx_start),
+ 	EVENT_PTR(tx_abort),
+@@ -5264,10 +5376,13 @@ __init int intel_pmu_init(void)
+ 			hsw_format_attr : nhm_format_attr;
+ 		extra_skl_attr = skl_format_attr;
+ 		mem_attr = icl_events_attrs;
++		td_attr = icl_td_events_attrs;
+ 		tsx_attr = icl_tsx_events_attrs;
+ 		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
+ 		x86_pmu.lbr_pt_coexist = true;
+ 		intel_pmu_pebs_data_source_skl(pmem);
++		x86_pmu.update_topdown_event = icl_update_topdown_event;
++		x86_pmu.set_topdown_event_period = icl_set_topdown_event_period;
+ 		pr_cont("Icelake events, ");
+ 		name = "icelake";
+ 		break;
+@@ -5387,6 +5502,9 @@ __init int intel_pmu_init(void)
+ 	if (x86_pmu.counter_freezing)
+ 		x86_pmu.handle_irq = intel_pmu_handle_irq_v4;
+ 
++	if (x86_pmu.intel_cap.perf_metrics)
++		x86_pmu.intel_ctrl |= 1ULL << GLOBAL_CTRL_EN_PERF_METRICS;
++
+ 	return 0;
  }
-@@ -3578,8 +3648,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 			 */
- 			leader->hw.flags |= PERF_X86_EVENT_TOPDOWN;
- 			event->hw.flags  |= PERF_X86_EVENT_TOPDOWN;
--
--			event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
- 		}
- 	}
  
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 6048650..46a3974 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -212,17 +212,26 @@ struct hw_perf_event {
- 	 */
- 	u64				sample_period;
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index dea009c..3454424 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -407,6 +407,19 @@ struct cpu_hw_events {
+ 	EVENT_CONSTRAINT(c, (1ULL << (32+n)), FIXED_EVENT_FLAGS)
  
--	/*
--	 * The period we started this sample with.
--	 */
--	u64				last_period;
-+	union {
-+		struct { /* Sampling */
-+			/*
-+			 * The period we started this sample with.
-+			 */
-+			u64				last_period;
+ /*
++ * The special metric counters do not actually exist. They are calculated from
++ * the combination of the FxCtr3 + MSR_PERF_METRICS.
++ *
++ * The special metric counters are mapped to a dummy offset for the scheduler.
++ * The sharing between multiple users of the same metric without multiplexing
++ * is not allowed, even though the hardware supports that in principle.
++ */
++
++#define METRIC_EVENT_CONSTRAINT(c, n)					\
++	EVENT_CONSTRAINT(c, (1ULL << (INTEL_PMC_IDX_METRIC_BASE + n)),	\
++			 INTEL_ARCH_EVENT_MASK)
++
++/*
+  * Constraint on the Event code + UMask
+  */
+ #define INTEL_UEVENT_CONSTRAINT(c, n)	\
+diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
+index fabb61c..dc131b8 100644
+--- a/arch/x86/include/asm/msr-index.h
++++ b/arch/x86/include/asm/msr-index.h
+@@ -863,6 +863,8 @@
+ #define MSR_CORE_PERF_GLOBAL_CTRL	0x0000038f
+ #define MSR_CORE_PERF_GLOBAL_OVF_CTRL	0x00000390
  
--	/*
--	 * However much is left of the current period; note that this is
--	 * a full 64bit value and allows for generation of periods longer
--	 * than hardware might allow.
--	 */
--	local64_t			period_left;
-+			/*
-+			 * However much is left of the current period;
-+			 * note that this is a full 64bit value and
-+			 * allows for generation of periods longer
-+			 * than hardware might allow.
-+			 */
-+			local64_t			period_left;
-+		};
-+		struct { /* Topdown events counting for context switch */
-+			u64				saved_metric;
-+			u64				saved_slots;
-+		};
-+	};
++#define MSR_PERF_METRICS		0x00000329
++
+ /* PERF_GLOBAL_OVF_CTL bits */
+ #define MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI_BIT	55
+ #define MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI		(1ULL << MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI_BIT)
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 964ba31..e20aa58 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -198,6 +198,7 @@ struct x86_pmu_capability {
  
- 	/*
- 	 * State for throttling the event, see __perf_event_overflow() and
+ /* RDPMC offset for Fixed PMCs */
+ #define INTEL_PMC_FIXED_RDPMC_BASE		(1 << 30)
++#define INTEL_PMC_FIXED_RDPMC_METRICS		(1 << 29)
+ 
+ /*
+  * All the fixed-mode PMCs are configured via this single MSR:
+@@ -305,6 +306,7 @@ static inline bool is_topdown_idx(int idx)
+ #define GLOBAL_STATUS_TRACE_TOPAPMI		BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
+ #define GLOBAL_STATUS_PERF_METRICS_OVF_BIT	48
+ 
++#define GLOBAL_CTRL_EN_PERF_METRICS		48
+ /*
+  * We model guest LBR event tracing as another fixed-mode PMC like BTS.
+  *
