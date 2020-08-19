@@ -2,94 +2,190 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3A1C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC159C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F22892076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE16B2076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgHSCz6 (ORCPT
+        id S1727818AbgHSC4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 22:55:58 -0400
-Received: from smtp23.cstnet.cn ([159.226.251.23]:39748 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726632AbgHSCz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:55:57 -0400
-Received: from localhost (unknown [159.226.5.99])
-        by APP-03 (Coremail) with SMTP id rQCowADHzhozlDxffb5EAw--.5934S2;
-        Wed, 19 Aug 2020 10:53:39 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com,
-        john.fastabend@gmail.com, kpsingh@chromium.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
-Subject: [PATCH bpf-next] libbpf: simplify the return expression of build_map_pin_path()
-Date:   Wed, 19 Aug 2020 02:53:24 +0000
-Message-Id: <20200819025324.14680-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: rQCowADHzhozlDxffb5EAw--.5934S2
-X-Coremail-Antispam: 1UD129KBjvdXoWruF47GF4DJFy3Jr4xXr1DKFg_yoWfWFg_C3
-        48XFWxGrWUGFWak3sYkrZ0vr97AFyDGr1DuF4vqrnxGFyj9ay5CrZrAFZ5JF90gw4fKF1x
-        AF9avrWUZF47ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-        Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-        0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-        628vn2kIc2xKxwCY02Avz4vE14v_Gr1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-        AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0D
-        MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
-        VFxhVjvjDU0xZFpf9x0JUJrcfUUUUU=
-X-Originating-IP: [159.226.5.99]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAwkNA13qZTxtpwAAsg
+        Tue, 18 Aug 2020 22:56:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:43428 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726632AbgHSC4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:56:32 -0400
+IronPort-SDR: zJleodv+xZ+tVpGsXngaWQ32dkISCe5AxQ7CyVyNOOPELDQGTdwJpJ6/oatQLruOu37PMcCW4Z
+ XUbsHyNUXAZA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="135106737"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="135106737"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 19:56:31 -0700
+IronPort-SDR: ng+0GnSwZtNStmcFLtv97VjoNKEJxocKOJgEA9boxO9NLXOtzA1R2DFXJ/Rdgbfq+haLqfrYxI
+ IxEzL8gee49g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="334543216"
+Received: from lkp-server01.sh.intel.com (HELO 4cedd236b688) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Aug 2020 19:56:30 -0700
+Received: from kbuild by 4cedd236b688 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k8EH8-00004o-4l; Wed, 19 Aug 2020 02:56:30 +0000
+Date:   Wed, 19 Aug 2020 10:56:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:auto-latest] BUILD SUCCESS
+ d8211042f91d87737619154f17d94b73598422d8
+Message-ID: <5f3c94c4.aJpgwkZUKgHDzaK2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the return expression.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  auto-latest
+branch HEAD: d8211042f91d87737619154f17d94b73598422d8  Merge branch 'perf/urgent'
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+elapsed time: 2563m
+
+configs tested: 119
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+powerpc                         ps3_defconfig
+h8300                     edosk2674_defconfig
+sh                          urquell_defconfig
+ia64                        generic_defconfig
+ia64                          tiger_defconfig
+mips                      pic32mzda_defconfig
+powerpc                      ppc40x_defconfig
+sh                           se7780_defconfig
+powerpc                    adder875_defconfig
+nds32                             allnoconfig
+mips                          rb532_defconfig
+powerpc                     mpc83xx_defconfig
+sh                            hp6xx_defconfig
+ia64                             alldefconfig
+arm                       omap2plus_defconfig
+mips                malta_kvm_guest_defconfig
+powerpc                     powernv_defconfig
+mips                             allyesconfig
+arm                         assabet_defconfig
+arm                        neponset_defconfig
+arm                      integrator_defconfig
+sh                          kfr2r09_defconfig
+sh                          sdk7786_defconfig
+arm                           spitz_defconfig
+powerpc                        cell_defconfig
+powerpc                      ppc44x_defconfig
+m68k                       m5208evb_defconfig
+arm                   milbeaut_m10v_defconfig
+c6x                        evmc6472_defconfig
+sh                           sh2007_defconfig
+mips                        nlm_xlp_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allmodconfig
+powerpc                             defconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+x86_64               randconfig-a006-20200817
+x86_64               randconfig-a001-20200817
+x86_64               randconfig-a005-20200817
+x86_64               randconfig-a003-20200817
+x86_64               randconfig-a002-20200817
+x86_64               randconfig-a004-20200817
+i386                 randconfig-a005-20200817
+i386                 randconfig-a001-20200817
+i386                 randconfig-a002-20200817
+i386                 randconfig-a003-20200817
+i386                 randconfig-a006-20200817
+i386                 randconfig-a004-20200817
+i386                 randconfig-a005-20200818
+i386                 randconfig-a002-20200818
+i386                 randconfig-a001-20200818
+i386                 randconfig-a006-20200818
+i386                 randconfig-a003-20200818
+i386                 randconfig-a004-20200818
+x86_64               randconfig-a013-20200818
+x86_64               randconfig-a016-20200818
+x86_64               randconfig-a012-20200818
+x86_64               randconfig-a011-20200818
+x86_64               randconfig-a014-20200818
+x86_64               randconfig-a015-20200818
+i386                 randconfig-a016-20200817
+i386                 randconfig-a011-20200817
+i386                 randconfig-a013-20200817
+i386                 randconfig-a015-20200817
+i386                 randconfig-a014-20200817
+i386                 randconfig-a012-20200817
+i386                 randconfig-a016-20200818
+i386                 randconfig-a011-20200818
+i386                 randconfig-a015-20200818
+i386                 randconfig-a013-20200818
+i386                 randconfig-a012-20200818
+i386                 randconfig-a014-20200818
+x86_64               randconfig-a006-20200819
+x86_64               randconfig-a001-20200819
+x86_64               randconfig-a003-20200819
+x86_64               randconfig-a005-20200819
+x86_64               randconfig-a004-20200819
+x86_64               randconfig-a002-20200819
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- tools/lib/bpf/libbpf.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 5d20b2da4427..cd59e237ca96 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1924,7 +1924,7 @@ static bool get_map_field_int(const char *map_name, const struct btf *btf,
- static int build_map_pin_path(struct bpf_map *map, const char *path)
- {
- 	char buf[PATH_MAX];
--	int err, len;
-+	int len;
- 
- 	if (!path)
- 		path = "/sys/fs/bpf";
-@@ -1935,11 +1935,7 @@ static int build_map_pin_path(struct bpf_map *map, const char *path)
- 	else if (len >= PATH_MAX)
- 		return -ENAMETOOLONG;
- 
--	err = bpf_map__set_pin_path(map, buf);
--	if (err)
--		return err;
--
--	return 0;
-+	return bpf_map__set_pin_path(map, buf);
- }
- 
- 
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
