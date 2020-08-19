@@ -2,81 +2,67 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF09C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29455C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CDAC20709
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D6462075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:21:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgHSBT7 (ORCPT
+        id S1727798AbgHSBVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:19:59 -0400
-Received: from smtprelay0125.hostedemail.com ([216.40.44.125]:40192 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726367AbgHSBT6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:19:58 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id A882B181D330D;
-        Wed, 19 Aug 2020 01:19:56 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: wash41_4712ceb27023
-X-Filterd-Recvd-Size: 2169
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 19 Aug 2020 01:19:55 +0000 (UTC)
-Message-ID: <3ca05f10dec479a70f6c33274ded8d4fab9c01ec.camel@perches.com>
-Subject: Re: [PATCH v2 11/25] powerpc/signal: Refactor bad frame logging
-From:   Joe Perches <joe@perches.com>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 18 Aug 2020 18:19:54 -0700
-In-Reply-To: <fa094445c119fc00315e1c13783b493346306c6a.1597770847.git.christophe.leroy@csgroup.eu>
-References: <cover.1597770847.git.christophe.leroy@csgroup.eu>
-         <fa094445c119fc00315e1c13783b493346306c6a.1597770847.git.christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.4-0ubuntu1 
+        Tue, 18 Aug 2020 21:21:39 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51070 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726367AbgHSBVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 21:21:39 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0BCF02E87E7A37FE1993;
+        Wed, 19 Aug 2020 09:21:37 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 19 Aug 2020 09:21:27 +0800
+From:   Jing Xiangfeng <jingxiangfeng@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <johan@kernel.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jingxiangfeng@huawei.com>
+Subject: [PATCH] USB: usblcd: Remove the superfluous break
+Date:   Wed, 19 Aug 2020 09:23:16 +0800
+Message-ID: <20200819012316.170388-1-jingxiangfeng@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-08-18 at 17:19 +0000, Christophe Leroy wrote:
-> The logging of bad frame appears half a dozen of times
-> and is pretty similar.
-[]
-> diff --git a/arch/powerpc/kernel/signal.c b/arch/powerpc/kernel/signal.c
-[]
-> @@ -355,3 +355,14 @@ static unsigned long get_tm_stackpointer(struct task_struct *tsk)
->  #endif
->  	return ret;
->  }
-> +
-> +static const char fm32[] = KERN_INFO "%s[%d]: bad frame in %s: %p nip %08lx lr %08lx\n";
-> +static const char fm64[] = KERN_INFO "%s[%d]: bad frame in %s: %p nip %016lx lr %016lx\n";
+Remove the superfuous break, as there is a 'return' before it.
 
-Why not remove this and use it in place with
-%08lx/%016x used as %px with a case to (void *)?
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+---
+ drivers/usb/misc/usblcd.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> +void signal_fault(struct task_struct *tsk, struct pt_regs *regs,
-> +		  const char *where, void __user *ptr)
-> +{
-> +	if (show_unhandled_signals)
-> +		printk_ratelimited(regs->msr & MSR_64BIT ? fm64 : fm32, tsk->comm,
-> +				   task_pid_nr(tsk), where, ptr, regs->nip, regs->link);
-
-	pr_info_ratelimited("%s[%d]: bad frame in %s: %p nip %016lx lr %016lx\n",
-			    tsk->comm, task_pid_nr(tsk), where, ptr,
-			    (void *)regs->nip, (void *)regs->link);
-
+diff --git a/drivers/usb/misc/usblcd.c b/drivers/usb/misc/usblcd.c
+index 61e9e987fe4a..bb546f624a45 100644
+--- a/drivers/usb/misc/usblcd.c
++++ b/drivers/usb/misc/usblcd.c
+@@ -187,7 +187,6 @@ static long lcd_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		break;
+ 	default:
+ 		return -ENOTTY;
+-		break;
+ 	}
+ 
+ 	return 0;
+-- 
+2.17.1
 
