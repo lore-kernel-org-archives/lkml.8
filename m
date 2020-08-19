@@ -2,142 +2,357 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF41C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B691C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5995E20885
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8344207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 15:35:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K2Fg1f12"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="oX6WM86r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgHSPep (ORCPT
+        id S1728738AbgHSPfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 11:34:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33955 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726809AbgHSPem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 11:34:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597851280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Wed, 19 Aug 2020 11:35:17 -0400
+Received: from crapouillou.net ([89.234.176.41]:49310 "EHLO crapouillou.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726792AbgHSPfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 11:35:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597851313; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ooA3o5vq6YM8Ef9YopTxN6Ikb2/hAbxiMviClb1Hatc=;
-        b=K2Fg1f12zLslypzEa6Gn8RbStq8EqfXdPZD9DXoS4wDk6QepHy1+Yz06jSnSeirnRXBzGF
-        sG4YNV0HP1c9QGhvByL5xJ9SFXdeskYB+QN8uNKWdAFtQqTzx/ghSHncNbAcB/o1tuPRsz
-        /Wy/elBNi0lddV7tVynaUoeyDegY7YU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-160-3FxzB86DPAew_9bkbVZ7Gg-1; Wed, 19 Aug 2020 11:34:38 -0400
-X-MC-Unique: 3FxzB86DPAew_9bkbVZ7Gg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 15440186A56B;
-        Wed, 19 Aug 2020 15:34:37 +0000 (UTC)
-Received: from [10.36.113.110] (ovpn-113-110.ams2.redhat.com [10.36.113.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE688600E4;
-        Wed, 19 Aug 2020 15:34:32 +0000 (UTC)
-Subject: Re: Kernel build error on BTFIDS vmlinux
-To:     Mark Wielaard <mark@klomp.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
-        andriin@fb.com
-References: <20200818105555.51fc6d62@carbon> <20200818091404.GB177896@krava>
- <20200818105602.GC177896@krava> <20200818134543.GD177896@krava>
- <20200818183318.2c3fe4a2@carbon>
- <c9c4a42ba6b4d36e557a5441e90f7f4961ec3f72.camel@klomp.org>
-From:   Nick Clifton <nickc@redhat.com>
-Autocrypt: addr=nickc@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- 6susi2ReUyNJEJaSnjO5z13TQ1U=
-Organization: Red Hat
-Message-ID: <0ddf7bc5-be05-cc06-05d7-2778c53d023b@redhat.com>
-Date:   Wed, 19 Aug 2020 16:34:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+         in-reply-to:in-reply-to:references:references;
+        bh=WzN53cUaotjYqu5RTmwfxPDkjaAdJFZ3gt7ebr/csaA=;
+        b=oX6WM86rLk9VSONPXd8B2gY3Qv+GlrG0H/aLU9Om5r9rMGRNn5AHonReQk91h/TvARJyRk
+        AxywSPXPwimoNoFx/sROhpQOOuLehWJObrVSKnV7U33q3Z5/ztEF6YLSDDFcxZ23ErcZ6L
+        54vKMONwDagFtLQuNwwWTFdD3rx21Us=
+Date:   Wed, 19 Aug 2020 17:35:02 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 00/13] Convert Ingenic to a generic board v2
+To:     Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>, od@zcrc.me,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Message-Id: <EYHBFQ.EKRXTON0GS3D1@crapouillou.net>
+In-Reply-To: <92dee3a6-9b1d-8fef-19b3-461bf8432f30@wanyeetech.com>
+References: <20200812001510.460382-1-paul@crapouillou.net>
+        <92dee3a6-9b1d-8fef-19b3-461bf8432f30@wanyeetech.com>
 MIME-Version: 1.0
-In-Reply-To: <c9c4a42ba6b4d36e557a5441e90f7f4961ec3f72.camel@klomp.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Hi Zhou,
 
-> Adding Nick, the binutils maintainer, so we can make sure
-> binutils/elfutils agree on some ELF section compression corner case.
+Le mer. 19 ao=C3=BBt 2020 =C3=A0 22:12, Zhou Yanjie <zhouyanjie@wanyeetech.=
+com>=20
+a =C3=A9crit :
+> Hi Paul,
+>=20
+> I have some good news and some bad news.
+>=20
+> Good news is:
+>=20
+> I tested this series of patches on CU1000-Neo & CU1830-Neo, and it=20
+> can boot normally and log in to  debian normally.
+>=20
+> Bad news is:
+>=20
+> 1. Because we dropped arch/mips/jz4740/setup.c, so it did not return=20
+> MACH_INGENIC_XXXX correctly, which caused the correction of the L2=20
+> cache probe in arch/mips/mm/sc-mips.c to fail, causing JZ4770/X1000=20
+> to detect the L2 cache capacity incorrect.
 
-Thanks for doing this.
+It's properly detected here on JZ4770. The detection code was just=20
+moved to arch/mips/generic/board-ingenic.c.
 
-> But it would obviously be better if that wasn't necessary. So I'll try
-> to fix libelf so that if it fixes up the alignment when reading the
-> compressed data, it also does that when writing out the data again. But
-> that would only help for a new version of elfutils.
-> 
-> So it would be nice if binutils ld could also be fixed to write out
-> compressed sections with the correct alignment.
+> 2. When I did some heavy work (compiled docker source code after=20
+> logging in with ssh), the following message appeared:
 
-OK, I will look into doing this.
+Chances are that these messages are related. Stuff like that tends to=20
+appear in -rc1 and get fixed afterwards.
 
-By any chance is there a small test case that you are using to check
-this behaviour ?   If so, please may I have a copy for myself ?
+Cheers,
+-Paul
 
-Cheers
-  Nick
-
+> message1:
+>=20
+> [ 4694.290776] warn_alloc: 25 callbacks suppressed
+> [ 4694.290791] containerd-shim: page allocation failure: order:4,=20
+> mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=3D(null)
+> [ 4694.315266] CPU: 0 PID: 19817 Comm: containerd-shim Not tainted=20
+> 5.8.0-00013-g192f2fd7b678 #15
+> [ 4694.317993] Stack : 80ae0000 80a50000 80860000 809b8fb0 809e4a30=20
+> 850dfcb4 00000000 ffffffff
+> [ 4694.320818]         80a50000 80a576c7 809c4374 00004d69 80ad348c=20
+> 00000001 850dfc58 7750292a
+> [ 4694.322695]         00000000 00000000 809c4374 ffff00fe 850dffe0=20
+> 00001400 00000199 00000000
+> [ 4694.325083]         ffffffff 866f7600 80a50000 878bd778 80a50000=20
+> 80000000 809c2b50 00000000
+> [ 4694.326957]         00040cc0 00000000 000001d2 00000000 80a53220=20
+> 7750292a 0000a098 80ad0000
+> [ 4694.327750]         ...
+> [ 4694.340943] Call Trace:
+> [ 4694.341181] [<8001ae08>] show_stack+0x6c/0x12c
+> [ 4694.355233] [<800f64b0>] warn_alloc+0xa8/0x130
+> [ 4694.361283] [<800f6dfc>] __alloc_pages_nodemask+0x8a4/0x8d8
+> [ 4694.362839] [<80103110>] ____cache_alloc+0x324/0x8fc
+> [ 4694.367439] [<801038e4>] __kmalloc+0x78/0xd8
+> [ 4694.376798] [<80195b28>] proc_sys_call_handler+0xf4/0x1d8
+> [ 4694.377229] [<80195c44>] proc_sys_read+0x14/0x20
+> [ 4694.384090] [<80116274>] vfs_read+0xac/0x108
+> [ 4694.385654] [<801165d4>] ksys_read+0x80/0xe0
+> [ 4694.395277] [<8001ec8c>] syscall_common+0x34/0x58
+> [ 4694.394544] Mem-Info:
+> [ 4694.396828] active_anon:661 inactive_anon:942 isolated_anon:0
+> [ 4694.396828]  active_file:10515 inactive_file:9667 isolated_file:0
+> [ 4694.396828]  unevictable:0 dirty:2003 writeback:0
+> [ 4694.396828]  slab_reclaimable:1609 slab_unreclaimable:3103
+> [ 4694.396828]  mapped:2182 shmem:156 pagetables:207 bounce:0
+> [ 4694.396828]  free:1635 free_pcp:7 free_cma:0
+> [ 4694.405770] Node 0 active_anon:2644kB inactive_anon:3768kB=20
+> active_file:42060kB inactive_file:38668kB unevictable:0kB=20
+> isolated(anon):0kB isolated(file):0kB mapped:8728kB dirty:8048kB=20
+> writeback:0kB shmem:624kB writeback_tmp:0kB all_unreclaimable? no
+> [ 4694.408349] Normal free:6484kB min:1376kB low:1720kB high:2064kB=20
+> reserved_highatomic:0KB active_anon:2644kB inactive_anon:3768kB=20
+> active_file:42064kB inactive_file:38724kB unevictable:0kB=20
+> writepending:8060kB present:131072kB managed:118804kB mlocked:0kB=20
+> kernel_stack:584kB pagetables:828kB bounce:0kB free_pcp:32kB=20
+> local_pcp:32kB free_cma:0kB
+> [ 4694.409607] lowmem_reserve[]: 0 0 0
+> [ 4694.410382] Normal: 117*4kB (UM) 406*8kB (UM) 149*16kB (UME)=20
+> 12*32kB (UME) 0*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB=20
+> 0*4096kB =3D 6484kB
+> [ 4694.418673] 20618 total pagecache pages
+> [ 4694.423125] 226 pages in swap cache
+> [ 4694.423912] Swap cache stats: add 535090, delete 534864, find=20
+> 234586/366812
+> [ 4694.431304] Free swap  =3D 774396kB
+> [ 4694.431900] Total swap =3D 786428kB
+> [ 4694.432480] 32768 pages RAM
+> [ 4694.432537] 0 pages HighMem/MovableOnly
+> [ 4694.441338] 3067 pages reserved
+> [ 4694.441770] 0 pages cma reserved
+>=20
+> ---------------------------------------------------------
+>=20
+> message2:
+>=20
+> [ 4426.473667] warn_alloc: 27 callbacks suppressed
+> [ 4426.473681] kswapd0: page allocation failure: order:0,=20
+> mode:0xa20(GFP_ATOMIC), nodemask=3D(null)
+> [ 4426.475946] CPU: 0 PID: 439 Comm: kswapd0 Not tainted=20
+> 5.8.0-00013-g192f2fd7b678 #15
+> [ 4426.478136] Stack : 80ae0000 80a50000 80860000 809b8fb0 809e4a30=20
+> 87c0dccc 00000000 ffffffff
+> [ 4426.478301]         80a50000 80a576c7 809c4374 000001b7 80ad348c=20
+> 00000001 87c0dc70 b7c290ba
+> [ 4426.478464]         00000000 00000000 809c4374 00000000 0000000f=20
+> 00000000 0000019f 00000000
+> [ 4426.478626]         bff4ffd7 1c5e5f3c 80ae0000 31672d33 80a50000=20
+> 00000000 809c2b50 00000000
+> [ 4426.478787]         00000a20 00000000 00000000 00000000 00000002=20
+> 804d392c 00000000 80ad0000
+> [ 4426.478940]         ...
+> [ 4426.481390] Call Trace:
+> [ 4426.483842] [<8001ae08>] show_stack+0x6c/0x12c
+> [ 4426.485555] [<800f64b0>] warn_alloc+0xa8/0x130
+> [ 4426.487275] [<800f6dfc>] __alloc_pages_nodemask+0x8a4/0x8d8
+> [ 4426.487382] [<800f6f80>] page_frag_alloc+0x74/0x144
+> [ 4426.489534] [<805fc1a4>] __napi_alloc_skb+0x88/0x118
+> [ 4426.491769] [<8052ed8c>] stmmac_napi_poll_rx+0x434/0xa94
+> [ 4426.494354] [<80613eb0>] net_rx_action+0x11c/0x310
+> [ 4426.496414] [<807ecd0c>] __do_softirq+0x10c/0x258
+> [ 4426.498395] [<800320c0>] __irq_exit_rcu+0x68/0xbc
+> [ 4426.500365] [<80032324>] irq_exit+0x10/0x1c
+> [ 4426.501844] [<804876b4>] plat_irq_dispatch+0x8c/0xb8
+> [ 4426.504076] [<800154f8>] handle_int+0x138/0x144
+> [ 4426.505883] [<8005280c>] arch_local_irq_enable+0x4/0xc
+> [ 4426.508289] Mem-Info:
+> [ 4426.510576] active_anon:770 inactive_anon:1763 isolated_anon:0
+> [ 4426.510576]  active_file:5581 inactive_file:15166 isolated_file:0
+> [ 4426.510576]  unevictable:0 dirty:1262 writeback:880
+> [ 4426.510576]  slab_reclaimable:1187 slab_unreclaimable:3016
+> [ 4426.510576]  mapped:3478 shmem:315 pagetables:186 bounce:0
+> [ 4426.510576]  free:453 free_pcp:16 free_cma:0
+> [ 4426.512469] Node 0 active_anon:3080kB inactive_anon:7052kB=20
+> active_file:22324kB inactive_file:60664kB unevictable:0kB=20
+> isolated(anon):0kB isolated(file):0kB mapped:13912kB dirty:5048kB=20
+> writeback:3520kB shmem:1260kB writeback_tmp:0kB all_unreclaimable? no
+> [ 4426.512938] Normal free:1812kB min:5472kB low:5816kB high:6160kB=20
+> reserved_highatomic:0KB active_anon:3080kB inactive_anon:7052kB=20
+> active_file:22324kB inactive_file:60664kB unevictable:0kB=20
+> writepending:8568kB present:131072kB managed:118804kB mlocked:0kB=20
+> kernel_stack:544kB pagetables:744kB bounce:0kB free_pcp:64kB=20
+> local_pcp:64kB free_cma:0kB
+> [ 4426.515643] lowmem_reserve[]: 0 0 0
+> [ 4426.516400] Normal: 11*4kB (U) 59*8kB (UE) 75*16kB (U) 3*32kB (U)=20
+> 0*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 1812kB
+> [ 4426.517399] 21378 total pagecache pages
+> [ 4426.518507] 306 pages in swap cache
+> [ 4426.519259] Swap cache stats: add 533859, delete 533553, find=20
+> 134676/266712
+> [ 4426.520752] Free swap  =3D 777212kB
+> [ 4426.521331] Total swap =3D 786428kB
+> [ 4426.521911] 32768 pages RAM
+> [ 4426.521973] 0 pages HighMem/MovableOnly
+> [ 4426.523072] 3067 pages reserved
+> [ 4426.523474] 0 pages cma reserved
+>=20
+> ---------------------------------------------------------
+>=20
+> message3:
+>=20
+> [  292.077309] CPU 0 Unable to handle kernel paging request at=20
+> virtual address 00000104, epc =3D=3D 801e7f30, ra =3D=3D 801e7f24
+> [  292.087904] Oops[#1]:
+> [  292.090169] CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted=20
+> 5.9.0-rc1-00016-g8d1e63c37d0d-dirty #1
+> [  292.098768] Workqueue: events cache_reap
+> [  292.102675] $ 0   : 00000000 00000001 808f3bf4 00000122
+> [  292.107887] $ 4   : 808f3bf8 00000100 0000003c 87c02080
+> [  292.113099] $ 8   : 87c01000 8581e301 00000001 00000000
+> [  292.118311] $12   : 87c3dc7c 0000000a 810021c4 00000100
+> [  292.123523] $16   : 85855600 8100218c 86284600 80790000
+> [  292.128735] $20   : 0000003c 00000000 8100219c fffffffe
+> [  292.133946] $24   : 00000122 87c02090
+> [  292.139158] $28   : 87c3c000 87c3dc48 807b0000 801e7f24
+> [  292.144371] Hi    : 00000000
+> [  292.147237] Lo    : 000c6bf4
+> [  292.150109] epc   : 801e7f30 free_block+0x68/0x198
+> [  292.154887] ra    : 801e7f24 free_block+0x5c/0x198
+> [  292.159660] Status: 10001402 KERNEL EXL
+> [  292.163569] Cause : 4080800c (ExcCode 03)
+> [  292.167563] BadVA : 00000104
+> [  292.170430] PrId  : 00d00100 (Ingenic XBurst)
+> [  292.174776] Process kworker/0:0 (pid: 5, threadinfo=3D50ecb211,=20
+> task=3Da81ea849, tls=3D00000000)
+> [  292.183016] Stack : 87c2e020 87c50cd0 8079e358 00000000 87c01000=20
+> 801e8b14 87c50cd0 87c2e050
+> [  292.191353]         87c50cd0 8014930c 87c3dc7c 87c50ca0 807a0000=20
+> 87c3dc7c 87c3dc7c 018070a3
+> [  292.199689]         80790000 86284600 801e8618 00000000 00000100=20
+> 00000122 00000000 8100219c
+> [  292.208025]         fffffffe 801e8544 00000003 00000000 00000000=20
+> 87c3dce0 808f3bf4 00000000
+> [  292.216361]         87c01000 801e8618 87c06300 00000000 00000000=20
+> 87c3dce0 87c01000 85855a80
+> [  292.224697]         ...
+> [  292.227132] Call Trace:
+> [  292.229569] [<801e7f30>] free_block+0x68/0x198
+> [  292.234003] [<801e8b14>] ___cache_free+0x1f8/0x2e8
+> [  292.238781] [<801e8544>] kfree+0x48/0x6c
+> [  292.242693] [<801e8618>] kmem_freepages+0xb0/0x124
+> [  292.247471] [<801e86e0>] slab_destroy+0x48/0x7c
+> [  292.251989] [<801e8778>] slabs_destroy+0x64/0x94
+> [  292.256593] [<801e8b4c>] ___cache_free+0x230/0x2e8
+> [  292.261372] [<801e8544>] kfree+0x48/0x6c
+> [  292.265283] [<801e8618>] kmem_freepages+0xb0/0x124
+> [  292.270062] [<801e86e0>] slab_destroy+0x48/0x7c
+> [  292.274580] [<801e8778>] slabs_destroy+0x64/0x94
+> [  292.279185] [<801e8d90>] drain_array.isra.59.constprop.61+0xb4/0xdc
+> [  292.285437] [<801e8f84>] cache_reap+0x64/0x120
+> [  292.289869] [<80137204>] process_one_work+0x1b8/0x25c
+> [  292.294907] [<80137588>] worker_thread+0x294/0x3c4
+> [  292.299684] [<8013cfe0>] kthread+0x148/0x150
+> [  292.303941] [<8010506c>] ret_from_kernel_thread+0x14/0x1c
+> [  292.309324] Code: 8c430008  8c450004  24440004 <aca30004> ac650000=20
+>  8c430014  ac4f0004  ac580008  8d0a0014
+> [  292.319053]
+> [  292.320591] ---[ end trace 2a1f2afba7a08ca1 ]---
+> [  292.325197] Kernel panic - not syncing: Fatal exception
+> [  292.330409] Rebooting in 10 seconds..
+>=20
+> these three kinds of message appear at random. Sometimes they will=20
+> appear at the beginning of the compilation, and sometimes they will=20
+> appear after tens of minutes of compilation.
+>=20
+> Thanks and best regards!
+>=20
+> =E5=9C=A8 2020/8/12 =E4=B8=8A=E5=8D=888:14, Paul Cercueil =E5=86=99=E9=81=
+=93:
+>> Hi,
+>>=20
+>> Changes since V1:
+>>=20
+>> - the get_system_type() now will simply return the "system_type"
+>>    variable if non-NULL, and the various boards can set this pointer
+>>    should they want to set a custom value. The .get_system_type
+>>    callback that v1 added to the struct mips_machine is gone.
+>>=20
+>> - the board-ingenic.c has been modified accordingly.
+>>=20
+>> - patch [06/13] is new, it makes sure that the kernel's command line=20
+>> is
+>>    initialized properly and includes the parameters passed by the
+>>    bootloader.
+>>=20
+>> - the cu1830-neo board defconfig has now been regenerated in patch
+>>    [12/13].
+>>=20
+>> Cheers,
+>> -Paul
+>>=20
+>> Paul Cercueil (13):
+>>    MIPS: cpu-probe: Set Ingenic's writecombine to _CACHE_CACHABLE_WA
+>>    MIPS: cpu-probe: Mark XBurst CPU as having vtagged caches
+>>    MIPS: cpu-probe: ingenic: Fix broken BUG_ON
+>>    MIPS: Kconfig: add MIPS_GENERIC_KERNEL symbol
+>>    MIPS: generic: Allow boards to set system type
+>>    MIPS: generic: Init command line with fw_init_cmdline()
+>>    MIPS: generic: Support booting with built-in or appended DTB
+>>    MIPS: generic: Add support for zboot
+>>    MIPS: generic: Increase NR_IRQS to 256
+>>    MIPS: generic: Add support for Ingenic SoCs
+>>    MIPS: jz4740: Drop folder
+>>    MIPS: configs: Regenerate configs of Ingenic boards
+>>    MAINTAINERS: Update paths to Ingenic platform code
+>>=20
+>>   MAINTAINERS                                   |   4 +-
+>>   arch/mips/Kbuild.platforms                    |   1 -
+>>   arch/mips/Kconfig                             |  43 ++++--
+>>   arch/mips/configs/ci20_defconfig              |   4 +-
+>>   arch/mips/configs/cu1000-neo_defconfig        |  16 +-
+>>   arch/mips/configs/cu1830-neo_defconfig        |  15 +-
+>>   arch/mips/configs/gcw0_defconfig              |   2 +-
+>>   arch/mips/configs/qi_lb60_defconfig           |   5 +-
+>>   arch/mips/configs/rs90_defconfig              |   4 +-
+>>   arch/mips/generic/Kconfig                     |   8 +-
+>>   arch/mips/generic/Makefile                    |   1 +
+>>   arch/mips/generic/Platform                    |   1 +
+>>   arch/mips/generic/board-ingenic.c             | 108 +++++++++++++
+>>   arch/mips/generic/init.c                      |  11 +-
+>>   arch/mips/generic/proc.c                      |   5 +
+>>   arch/mips/include/asm/mach-generic/irq.h      |   2 +-
+>>   .../asm/mach-jz4740/cpu-feature-overrides.h   |  50 ------
+>>   arch/mips/include/asm/mach-jz4740/irq.h       |  13 --
+>>   arch/mips/include/asm/pgtable-bits.h          |   5 -
+>>   arch/mips/{jz4740 =3D> ingenic}/Kconfig         |  16 +-
+>>   arch/mips/jz4740/Makefile                     |   9 --
+>>   arch/mips/jz4740/Platform                     |   3 -
+>>   arch/mips/jz4740/setup.c                      | 145=20
+>> ------------------
+>>   arch/mips/kernel/cpu-probe.c                  |   8 +-
+>>   24 files changed, 186 insertions(+), 293 deletions(-)
+>>   create mode 100644 arch/mips/generic/board-ingenic.c
+>>   delete mode 100644=20
+>> arch/mips/include/asm/mach-jz4740/cpu-feature-overrides.h
+>>   delete mode 100644 arch/mips/include/asm/mach-jz4740/irq.h
+>>   rename arch/mips/{jz4740 =3D> ingenic}/Kconfig (91%)
+>>   delete mode 100644 arch/mips/jz4740/Makefile
+>>   delete mode 100644 arch/mips/jz4740/Platform
+>>   delete mode 100644 arch/mips/jz4740/setup.c
+>>=20
 
 
