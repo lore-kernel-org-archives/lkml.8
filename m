@@ -2,111 +2,122 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D80D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7834B206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6E2205CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:26:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="M8aenhv6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vs5d92An"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgHSNZS (ORCPT
+        id S1728515AbgHSN0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:25:18 -0400
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:49695 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726961AbgHSNQM (ORCPT
+        Wed, 19 Aug 2020 09:26:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgHSNQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:16:12 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id 8NwMkcqI5uuXO8NwNkhD1S; Wed, 19 Aug 2020 15:15:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1597842943; bh=XJUjA6GhgJMPcqkxF1vR+8X4AdV6W5Jd5RTMaz80g/k=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=M8aenhv6PjoRzN8MNsDrsM4kWTyImKm6UR7AQXDXpdUVHIN893XH9Uypb7Y1rnp32
-         MB/7dC7Aew9TvapDmY1M5tZAt5A647yXFCVRAD+uGAsVFG6A/42R0uVkkx+1CyGdnv
-         A+Aq+PSz9b2MTWhseyu8GUQJNoDeR/kY9V0sQoge7vqgaYyXP0j1F4xmA/40lzRhzj
-         Treg4CdrpH3DgyIzzkIWpPo5KvU79+YJbO+xDyIclYWUDpXw5e4xCZnTZlsQrKmDC+
-         DLJJQ7uFsa0k6/e0b/FEct+NsuoeOg+aNuRHEpNJMCY5xoTI5Bca3VEZqg5AKQkkVt
-         SjJcRdwwhBZLQ==
-Subject: Re: [PATCH 1/2] media: Revert "media: exynos4-is: Add missed check
- for pinctrl_lookup_state()"
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-media@vger.kernel.org
-Cc:     hslester96@gmail.com, krzk@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com
-References: <CGME20200810153301eucas1p2684476145e627ba124ba4740ef204712@eucas1p2.samsung.com>
- <20200810153240.23827-1-s.nawrocki@samsung.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <bdcb0a29-8c7e-3736-9936-2b25460f9aef@xs4all.nl>
-Date:   Wed, 19 Aug 2020 15:15:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 09:16:10 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AD1C061757;
+        Wed, 19 Aug 2020 06:15:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6OmaKKadGGCbbfJkvWKVfWa9O8hEFuHEWndvy5gHwGo=; b=Vs5d92An2unRgCOXkYuOlup+XS
+        AZ35hH21bLHlG31aLN6sizaN7ank+eQl0aD1fi6OQ/I4G5+mEETjs6SCull5ijE9QJUvnPnMpZB36
+        aA7ImgGnoH02ArGKJA9gZkFPb5XIT4w1S63HKofniAGrWNwCtzxMniJzGkAhk8pSq4gqj8fZoaonV
+        Hb86MdsuWHtIvRTord5hhA720erjFR9WiSNY9NDk4a1FcYydnXtbJnlavOu2hn6nuHXrd0Ea9rL+Q
+        WhH5ZSbTsTjBVQ63FsP17Dh7AaL6JPrl1mtqs0WFk0p1QV5d1dYUg1kxCAKYciRNzka+H15jE6tMn
+        aKNksZLA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8Nvq-0005k6-Oc; Wed, 19 Aug 2020 13:15:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 400CE301179;
+        Wed, 19 Aug 2020 15:15:07 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 08DF72BC988B4; Wed, 19 Aug 2020 15:15:07 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 15:15:07 +0200
+From:   peterz@infradead.org
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
+ preemption
+Message-ID: <20200819131507.GC2674@hirez.programming.kicks-ass.net>
+References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200810153240.23827-1-s.nawrocki@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCkIhUtNaVpYFQcL/3qCAdkOvGF9e/YUvgKcHKX3f126eVPkUlcDSp89i09CuIk68hCjtduB4QUQvq3gZP7Meq5HWeof8IRc9ggwqYC++sRA/5kYKzcD
- b3jz0GFnlFagsbNkMMc8mxw60JKJ9a9pCGOVLOyv0zjcuUy5ujc1zkfyvRPI6dwACSnQSeL0Jm2KTBKsDoaw4/xjqZaEkzb/FhtYklijTYBwUwSovzidJgpE
- Kf3llJzgxFhED+K/h5tD98Msfnz12C5jooH+yTGOFuQoiEgbVkvmyKN+oU6V4q/iZMTEwwIdqBekk6xOywDZknSARo3aimryTuX0h7yxkdrvoc2Kz8Ck0ewx
- f7TcxHV/2lIqkbwcWENjVhR0Gik3KjtO2z6cQowUHE/Omn1W1NrtcARu5EI/L4DXn6T+2HDKmtMmDGRvvDjdMv2JJtoTIqwRtiiFW7lzP4k9SRZfjtUpNv2d
- 9Q2xLfLUmFFtk1lZ3gn6ci8YZtzhiDrzWv2RFOJSloHs1c2LXuDiioYmEq4x64SRcZzuOdygX+YJuUEgJ/jkITfv0WSfl+Z3oVRequUyRRJvubgbY1cppkNR
- eX0=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sylwester,
+On Wed, Aug 19, 2020 at 02:37:58PM +0200, Sebastian Andrzej Siewior wrote:
 
-Can you rebase this patch series on top of the media_tree master?
+> I don't see a significant reason why this lock should become a
+> raw_spinlock_t therefore I suggest to move it after the
+> tsk_is_pi_blocked() check.
 
-This series didn't apply anymore.
-
-Thanks!
-
-	Hans
-
-On 10/08/2020 17:32, Sylwester Nawrocki wrote:
-> The "idle" pinctrl state is optional as documented in the DT binding.
-> The change introduced by the commit being reverted makes that pinctrl state
-> mandatory and breaks initialization of the whole media driver, since the
-> "idle" state is not specified in any mainline dts.
+> Any feedback on this vs raw_spinlock_t?
 > 
-> This reverts commit 18ffec750578f7447c288647d7282c7d12b1d969 to fix
-> the regression.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 > ---
->  drivers/media/platform/exynos4-is/media-dev.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-> index 16dd660..9a57523 100644
-> --- a/drivers/media/platform/exynos4-is/media-dev.c
-> +++ b/drivers/media/platform/exynos4-is/media-dev.c
-> @@ -1268,11 +1268,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
->  	if (IS_ERR(pctl->state_default))
->  		return PTR_ERR(pctl->state_default);
->  
-> +	/* PINCTRL_STATE_IDLE is optional */
->  	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
->  					PINCTRL_STATE_IDLE);
-> -	if (IS_ERR(pctl->state_idle))
-> -		return PTR_ERR(pctl->state_idle);
-> -
->  	return 0;
->  }
->  
+>  fs/io-wq.c          |  8 ++++----
+>  kernel/sched/core.c | 10 +++++-----
+>  2 files changed, 9 insertions(+), 9 deletions(-)
 > 
 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 3bbb60b97c73c..b76c0f27bd95e 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -4694,18 +4694,18 @@ static inline void sched_submit_work(struct task_struct *tsk)
+>  	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
+>  	 * requires it.
+>  	 */
+> -	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+> +	if (tsk->flags & PF_WQ_WORKER) {
+>  		preempt_disable();
+> -		if (tsk->flags & PF_WQ_WORKER)
+> -			wq_worker_sleeping(tsk);
+> -		else
+> -			io_wq_worker_sleeping(tsk);
+> +		wq_worker_sleeping(tsk);
+>  		preempt_enable_no_resched();
+>  	}
+>  
+>  	if (tsk_is_pi_blocked(tsk))
+>  		return;
+>  
+> +	if (tsk->flags & PF_IO_WORKER)
+> +		io_wq_worker_sleeping(tsk);
+> +
+
+Urgh, so this adds a branch in what is normally considered a fairly hot
+path.
+
+I'm thinking that the raw_spinlock_t option would permit leaving that
+single:
+
+	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER))
+
+branch intact?
