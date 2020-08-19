@@ -2,208 +2,105 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0287CC433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026DAC433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C62AC207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LPU/vpuK"
+	by mail.kernel.org (Postfix) with ESMTP id C6644207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:02:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597863759;
+	bh=Bes5gAE/OeXnjsxIVe+19tzrqDrPF4k1abhGj2/onYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QTci2055Esly1uZezPbFIcmOJhxRvUWv0dGvlD4GHMBMphwAyd4aYilYs8anChWaL
+	 7QW8oBpdh8wU5cicpaAmNnBLTMuCFthC4+RCh6rsVUWFclPFAH/S+4TukLkAxT0qvg
+	 dy2V2xgF8JEXaEoUJlCwNK319OCM9zqkh93FZViY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgHSTAy (ORCPT
+        id S1726735AbgHSTCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgHSTAa (ORCPT
+        Wed, 19 Aug 2020 15:02:38 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41869 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbgHSTCh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:00:30 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDDBEC061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:00:29 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id t15so25928206iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:00:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Owe3WEEvN9p/SYMSQvZJkkHHqglCi0hIPyzh+2BeQeI=;
-        b=LPU/vpuKH6lF8j9fkQ+U37K1cxGX01IWf50Lm5BMckr6n2jcH6/IwaBluNUPB8u6A6
-         YmfOYuUQ+4qG/sIQzpSsU6k8/PPQeJOXepBq9YWizgTL7aOOxChObtay2nnFp8fBHqMa
-         LvpW2if8LPASDFMYEfhb27dlexQT60nn9d3dY=
+        Wed, 19 Aug 2020 15:02:37 -0400
+Received: by mail-ed1-f67.google.com with SMTP id w17so18977167edt.8;
+        Wed, 19 Aug 2020 12:02:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Owe3WEEvN9p/SYMSQvZJkkHHqglCi0hIPyzh+2BeQeI=;
-        b=iseZGlDg5wBeA45X6FCsGk/dxMAQUO+hrwMHhuEYc1PF+e7TiVq9o7B9Rdug7f7/a3
-         9MNs3BVmyz9NApWKySTzWK+wnhxsnkuHlZnD/ABJP7+Gm/YyQKrnxRt+byjJJL+9l5Pv
-         mCHZgWsJtk8jTg35SMjSMiK300ROuXs/ZENafkeyjC1cZaPfoBqB4eA2o1Jt6yIvo9f0
-         0bVYppGXBndmswu545CsL8pSVELTGlitNdgMAFP4a6ga/TlJhH2hfvxoB/DpKKgWvGF7
-         JIWaXufuop1r/Xeg+iN55IaC7sxOpoIw1tsP5/mN9XBk/WrGkIvVrOLdI40l6OkLZTdV
-         KZAw==
-X-Gm-Message-State: AOAM533a9VB6Sl+9SQKR3zYawCJFSPXvbYDDxtjfFKzzpMISi8CIX7g/
-        6Y2uVXmPz5cFWqG5r43iH0gCFw==
-X-Google-Smtp-Source: ABdhPJxlQIhqwdlp+5bS1sr/NWQ+A3RkYtMPqT6c/FrqOtmmG3vhCgjjUIAV1mW2KmDJKGmmY3bIZA==
-X-Received: by 2002:a05:6602:2183:: with SMTP id b3mr20596969iob.20.1597863628789;
-        Wed, 19 Aug 2020 12:00:28 -0700 (PDT)
-Received: from rrangel920.bld.corp.google.com (h184-60-195-141.arvdco.broadband.dynamic.tds.net. [184.60.195.141])
-        by smtp.gmail.com with ESMTPSA id e19sm13692266iow.33.2020.08.19.12.00.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 12:00:28 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     adrian.hunter@intel.com
-Cc:     Akshu.Agrawal@amd.com, chris.wang@amd.com,
-        Nehal-bakulchandra.Shah@amd.com,
-        Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH v2] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
-Date:   Wed, 19 Aug 2020 13:00:19 -0600
-Message-Id: <20200819125832.v2.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
-X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KGGY3D3pTn+rblImU0N+zXuHhPpD8sOvtylyTgiCNHk=;
+        b=PbK9O80lRR/mJDXsZ9dYM2y7fKDyN8PbdYcwAN1nDP7rU1mwPIVvNmjAB7rOBVcgsa
+         Ym/jDBZ32Zkgx85pMFO3T7O8otdZuOPhgGs/Ghw5GzIvbpHp8OsahdN5E31LYLxCUaIW
+         bXRq565C3KuxoOyQA50SylW1JGQ5G6vztyqky8I4b4YitZHIGW2zN6Yk+4WNfqiC9MBE
+         ehNfLRXJP95BEhFmdy4fG5/YmL8j7xn4i3HysmYSixc/Fl93LWZ7A93EmID9fQu5YDzY
+         LhdsyG+RSOMu+VBxUEAnD+6Vxr61F8z8WBHPZ/CDlr8hXL0cnYyMJc0OSABDwS8qTELI
+         1UEw==
+X-Gm-Message-State: AOAM532BGW4wrq975DgpRHpqvl8n6p6Jw7ClFMx5bvJv4Fsi2YXPq34M
+        oj6PyaknhRg+Kn6T94XAf6E=
+X-Google-Smtp-Source: ABdhPJykIMcrjaRlsdKqIfVe6NXArnUjcmqPPS3YQOJSQ7mlY5sLLKuYBtT6RLqjt3fPz4B0GXb52Q==
+X-Received: by 2002:a05:6402:1504:: with SMTP id f4mr26630154edw.163.1597863755505;
+        Wed, 19 Aug 2020 12:02:35 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id t18sm19193122ejf.38.2020.08.19.12.02.34
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Aug 2020 12:02:34 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 21:02:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 01/41] ARM: s3c: Remove unneeded machine header
+ includes
+Message-ID: <20200819190232.GA18183@kozik-lap>
+References: <20200806181932.2253-1-krzk@kernel.org>
+ <20200806182059.2431-1-krzk@kernel.org>
+ <159783932455.55025.7979458249415199743.b4-ty@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <159783932455.55025.7979458249415199743.b4-ty@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AMD eMMC Controller can only use the tuned clock while in HS200 and
-HS400 mode. If we switch to a different mode, we need to disable the
-tuned clock. If we have previously performed tuning and switch back to
-HS200 or HS400, we can re-enable the tuned clock.
+On Wed, Aug 19, 2020 at 01:15:29PM +0100, Mark Brown wrote:
+> On Thu, 6 Aug 2020 20:20:18 +0200, Krzysztof Kozlowski wrote:
+> > Not all units use the contents of mach/hardware.h and
+> > mach/dma.h.  Remove these includes when not needed.
+> 
+> Applied to
+> 
+>    https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+> 
+> Thanks!
+> 
+> [1/5] ASoC: samsung: h1940: turn into platform driver
+>       commit: 2c5c4fdc710c5d3beff78ac5605c5732ebfa8ae5
+> [2/5] ASoC: samsung: neo1973: turn into platform driver
+>       commit: a65e8a320846b8c69f53a758dc3662e4b42e6a48
+> [3/5] ASoC: samsung: rx1950: turn into platform driver
+>       commit: a0f3315a2558e22e75873e1184d0c213c2f8315f
+> [4/5] ASoC: samsung: s3c2412-i2s: avoid hardcoded S3C2410_PA_IIS
+>       commit: 2f1525848844c996990aafd3104bddf0f0cb3a28
+> [5/5] ARM: s3c24xx: move iis pinctrl config into boards
+>       (no commit info)
 
-Previously the tuned clock was not getting disabled when switching to
-DDR52 which is part of the HS400 tuning sequence.
+Thanks Mark.  Could you provide me with a tag/branch with these to pull
+into samsung-soc?
 
-Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
-
-Changes in v2:
-- Added static to amd_sdhci_execute_tuning
-
- drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
- 1 file changed, 58 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-index 48ecbd0b180d8..a832d917e2fe3 100644
---- a/drivers/mmc/host/sdhci-acpi.c
-+++ b/drivers/mmc/host/sdhci-acpi.c
-@@ -535,6 +535,11 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_qcom_sd = {
- 	.caps    = MMC_CAP_NONREMOVABLE,
- };
- 
-+struct amd_sdhci_host {
-+	bool	tuned_clock;
-+	bool	dll_enabled;
-+};
-+
- /* AMD sdhci reset dll register. */
- #define SDHCI_AMD_RESET_DLL_REGISTER    0x908
- 
-@@ -555,26 +560,67 @@ static void sdhci_acpi_amd_hs400_dll(struct sdhci_host *host)
- }
- 
- /*
-- * For AMD Platform it is required to disable the tuning
-- * bit first controller to bring to HS Mode from HS200
-- * mode, later enable to tune to HS400 mode.
-+ * The initialization sequence for HS400 is:
-+ *     HS->HS200->Perform Tuning->HS->HS400
-+ *
-+ * The re-tuning sequence is:
-+ *     HS400->DDR52->HS->HS200->Perform Tuning->HS->HS400
-+ *
-+ * The AMD eMMC Controller can only use the tuned clock while in HS200 and HS400
-+ * mode. If we switch to a different mode, we need to disable the tuned clock.
-+ * If we have previously performed tuning and switch back to HS200 or
-+ * HS400, we can re-enable the tuned clock.
-+ *
-  */
- static void amd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- {
- 	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
- 	unsigned int old_timing = host->timing;
-+	u16 val;
- 
- 	sdhci_set_ios(mmc, ios);
--	if (old_timing == MMC_TIMING_MMC_HS200 &&
--	    ios->timing == MMC_TIMING_MMC_HS)
--		sdhci_writew(host, 0x9, SDHCI_HOST_CONTROL2);
--	if (old_timing != MMC_TIMING_MMC_HS400 &&
--	    ios->timing == MMC_TIMING_MMC_HS400) {
--		sdhci_writew(host, 0x80, SDHCI_HOST_CONTROL2);
--		sdhci_acpi_amd_hs400_dll(host);
-+
-+	if (old_timing != host->timing && amd_host->tuned_clock) {
-+		if (host->timing == MMC_TIMING_MMC_HS400 ||
-+		    host->timing == MMC_TIMING_MMC_HS200) {
-+			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			val |= SDHCI_CTRL_TUNED_CLK;
-+			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
-+		} else {
-+			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+			val &= ~SDHCI_CTRL_TUNED_CLK;
-+			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
-+		}
-+
-+		/* DLL is only required for HS400 */
-+		if (host->timing == MMC_TIMING_MMC_HS400 &&
-+		    !amd_host->dll_enabled) {
-+			trace_printk("%s: Enabling DLL\n", __func__);
-+			sdhci_acpi_amd_hs400_dll(host);
-+			amd_host->dll_enabled = true;
-+		}
- 	}
- }
- 
-+static int amd_sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	int err;
-+	struct sdhci_host *host = mmc_priv(mmc);
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
-+
-+	amd_host->tuned_clock = false;
-+
-+	err = sdhci_execute_tuning(mmc, opcode);
-+
-+	if (!err && !host->tuning_err)
-+		amd_host->tuned_clock = true;
-+
-+	return err;
-+}
-+
- static const struct sdhci_ops sdhci_acpi_ops_amd = {
- 	.set_clock	= sdhci_set_clock,
- 	.set_bus_width	= sdhci_set_bus_width,
-@@ -602,6 +648,7 @@ static int sdhci_acpi_emmc_amd_probe_slot(struct platform_device *pdev,
- 
- 	host->mmc_host_ops.select_drive_strength = amd_select_drive_strength;
- 	host->mmc_host_ops.set_ios = amd_set_ios;
-+	host->mmc_host_ops.execute_tuning = amd_sdhci_execute_tuning;
- 	return 0;
- }
- 
-@@ -613,6 +660,7 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_amd_emmc = {
- 			  SDHCI_QUIRK_32BIT_ADMA_SIZE,
- 	.quirks2	= SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
- 	.probe_slot     = sdhci_acpi_emmc_amd_probe_slot,
-+	.priv_size	= sizeof(struct amd_sdhci_host),
- };
- 
- struct sdhci_acpi_uid_slot {
--- 
-2.28.0.220.ged08abb693-goog
+Best regards,
+Krzysztof
 
