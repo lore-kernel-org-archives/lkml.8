@@ -2,156 +2,117 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E80C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CD1206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E39B206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gXzVlZtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728602AbgHSNEy (ORCPT
+        id S1728614AbgHSNE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:04:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37320 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgHSNCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:02:33 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 89FA0B023;
-        Wed, 19 Aug 2020 13:02:57 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 15:02:30 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 08/11] mm/memory_hotplug: simplify page onlining
-Message-ID: <20200819130230.GM5422@dhcp22.suse.cz>
-References: <20200819101157.12723-1-david@redhat.com>
- <20200819101157.12723-9-david@redhat.com>
+        Wed, 19 Aug 2020 09:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbgHSNCK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:02:10 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 391BDC06134B
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:01:20 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id kq25so26178113ejb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 06:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=S08efVGlFbnCRWAooQ5BgeOCyESGGd5F97xt8fYK1v0=;
+        b=gXzVlZtvnou0mDkrZAK2Fnuw9dSHO7Edi/cQP/i3F+AAbHgN3yCpdOvzogBHylOWmq
+         Qc0FKLbxNWpaTbSaQEuwm+ujFF001aQbadp4GYn5t3ogCQHV/SqT1EaYeGyGK5d1Zyc7
+         esDQ142rLIroj8edGg4TAizj7oV8OgZaOxosM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S08efVGlFbnCRWAooQ5BgeOCyESGGd5F97xt8fYK1v0=;
+        b=V2rcZ021wWFNBGii0a9IsbUPrFjnOOvG7zkzjRZmiRKxRzn2g9Kq+f1CYHtGTMP5E6
+         vlyrUX3HMoFjqbtSWhRxaWyG2IwcZB4psTDNQo1OA3DdSelNib6iWw2Ov43s8bjDn8je
+         3+u2zpZfiizVHklidLRP9MAkTq32tgI3rhVzM0uvzc7zmiT7b7cdem9vKGdiJfH4lty4
+         JknAGfE1YyUo8Gxa6mWcULpZhMI8xi/bwFwYgTiENz+Y5Z/37erCNOQcXERPNBsu02K2
+         AQJ9LI/d1l9vUNVo/QoiIBgCbnNvUEQat3Bnt2k9Ctjj89gfwc4yRppzgTPuk4BvWMGE
+         4j2Q==
+X-Gm-Message-State: AOAM5310Yf84r82I1HcZk4XzuEuuSPetcYPBI6x2m+viUHdaYM4ieKYF
+        UuCOBxfcECLlchFt7V/psxVQzw==
+X-Google-Smtp-Source: ABdhPJxS2tf0sP7AgOv/ZCmElHwH5nT7hhwed9Oh3Cg6C5L9jxDqiFxUJFEr130TB6JjA6KVwlTe4w==
+X-Received: by 2002:a17:906:1f15:: with SMTP id w21mr24281904ejj.152.1597842078291;
+        Wed, 19 Aug 2020 06:01:18 -0700 (PDT)
+Received: from [192.168.2.66] ([81.6.44.51])
+        by smtp.gmail.com with ESMTPSA id o25sm18529498ejm.34.2020.08.19.06.01.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 06:01:17 -0700 (PDT)
+Subject: Re: [PATCH bpf-next v8 6/7] bpf: Allow local storage to be used from
+ LSM programs
+To:     Martin KaFai Lau <kafai@fb.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>
+References: <20200803164655.1924498-1-kpsingh@chromium.org>
+ <20200803164655.1924498-7-kpsingh@chromium.org>
+ <20200818041638.2dv5cewlgwerd7hm@kafai-mbp.dhcp.thefacebook.com>
+From:   KP Singh <kpsingh@chromium.org>
+Message-ID: <87e6c97f-5d72-ddb9-331a-4a79ccab11c1@chromium.org>
+Date:   Wed, 19 Aug 2020 15:01:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819101157.12723-9-david@redhat.com>
+In-Reply-To: <20200818041638.2dv5cewlgwerd7hm@kafai-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-08-20 12:11:54, David Hildenbrand wrote:
-> We don't allow to offline memory with holes, all boot memory is online,
-> and all hotplugged memory cannot have holes.
-> 
-> We can now simplify onlining of pages. As we only allow to online/offline
-> full sections and sections always span full MAX_ORDER_NR_PAGES, we can just
-> process MAX_ORDER - 1 pages without further special handling.
-> 
-> The number of onlined pages simply corresponds to the number of pages we
-> were requested to online.
-> 
-> While at it, refine the comment regarding the callback not exposing all
-> pages to the buddy.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Wei Yang <richard.weiyang@linux.alibaba.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
 
-> ---
->  mm/memory_hotplug.c | 38 ++++++++++----------------------------
->  1 file changed, 10 insertions(+), 28 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 0011a1115381c..3aba0d956f9b1 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -617,31 +617,22 @@ void generic_online_page(struct page *page, unsigned int order)
->  }
->  EXPORT_SYMBOL_GPL(generic_online_page);
->  
-> -static int online_pages_range(unsigned long start_pfn, unsigned long nr_pages,
-> -			void *arg)
-> +static void online_pages_range(unsigned long start_pfn, unsigned long nr_pages)
->  {
->  	const unsigned long end_pfn = start_pfn + nr_pages;
->  	unsigned long pfn;
-> -	int order;
->  
->  	/*
-> -	 * Online the pages. The callback might decide to keep some pages
-> -	 * PG_reserved (to add them to the buddy later), but we still account
-> -	 * them as being online/belonging to this zone ("present").
-> +	 * Online the pages in MAX_ORDER - 1 aligned chunks. The callback might
-> +	 * decide to not expose all pages to the buddy (e.g., expose them
-> +	 * later). We account all pages as being online and belonging to this
-> +	 * zone ("present").
->  	 */
-> -	for (pfn = start_pfn; pfn < end_pfn; pfn += 1ul << order) {
-> -		order = min(MAX_ORDER - 1, get_order(PFN_PHYS(end_pfn - pfn)));
-> -		/* __free_pages_core() wants pfns to be aligned to the order */
-> -		if (WARN_ON_ONCE(!IS_ALIGNED(pfn, 1ul << order)))
-> -			order = 0;
-> -		(*online_page_callback)(pfn_to_page(pfn), order);
-> -	}
-> +	for (pfn = start_pfn; pfn < end_pfn; pfn += MAX_ORDER_NR_PAGES)
-> +		(*online_page_callback)(pfn_to_page(pfn), MAX_ORDER - 1);
->  
->  	/* mark all involved sections as online */
->  	online_mem_sections(start_pfn, end_pfn);
-> -
-> -	*(unsigned long *)arg += nr_pages;
-> -	return 0;
->  }
->  
->  /* check which state of node_states will be changed when online memory */
-> @@ -795,7 +786,6 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->  		       int online_type, int nid)
->  {
->  	unsigned long flags;
-> -	unsigned long onlined_pages = 0;
->  	struct zone *zone;
->  	int need_zonelists_rebuild = 0;
->  	int ret;
-> @@ -831,19 +821,11 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
->  		setup_zone_pageset(zone);
->  	}
->  
-> -	ret = walk_system_ram_range(pfn, nr_pages, &onlined_pages,
-> -		online_pages_range);
-> -	if (ret) {
-> -		/* not a single memory resource was applicable */
-> -		if (need_zonelists_rebuild)
-> -			zone_pcp_reset(zone);
-> -		goto failed_addition;
-> -	}
-> -
-> -	zone->present_pages += onlined_pages;
-> +	online_pages_range(pfn, nr_pages);
-> +	zone->present_pages += nr_pages;
->  
->  	pgdat_resize_lock(zone->zone_pgdat, &flags);
-> -	zone->zone_pgdat->node_present_pages += onlined_pages;
-> +	zone->zone_pgdat->node_present_pages += nr_pages;
->  	pgdat_resize_unlock(zone->zone_pgdat, &flags);
->  
->  	/*
-> -- 
-> 2.26.2
-> 
+On 8/18/20 6:16 AM, Martin KaFai Lau wrote:
+> On Mon, Aug 03, 2020 at 06:46:54PM +0200, KP Singh wrote:
+>> From: KP Singh <kpsingh@google.com>
+>>
+>> Adds support for both bpf_{sk, inode}_storage_{get, delete} to be used
+>> in LSM programs. These helpers are not used for tracing programs
 
--- 
-Michal Hocko
-SUSE Labs
+[...]
+
+>> @@ -2823,6 +2823,10 @@ union bpf_attr {
+>>   *		"type". The bpf-local-storage "type" (i.e. the *map*) is
+>>   *		searched against all bpf-local-storages residing at *sk*.
+>>   *
+>> + *		For socket programs, *sk* should be a **struct bpf_sock** pointer
+>> + *		and an **ARG_PTR_TO_BTF_ID** of type **struct sock** for LSM
+>> + *		programs.
+> I found it a little vague on what "socket programs" is.  May be:
+> 
+> *sk* is a kernel **struct sock** pointer for LSM program.
+> *sk* is a **struct bpf_sock** pointer for other program types.
+
+This is better, Thanks!
+
+- KP
+
+> 
+> Others LGTM
+> 
+> Acked-by: Martin KaFai Lau <kafai@fb.com>
+> 
