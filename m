@@ -2,108 +2,88 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F6EC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7604C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF1862065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A299E2078B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597806809;
+	bh=3HYKC4lph4BSGjKk7QnGJ/iNJRQMO5s9oVBYH6NYs40=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PFNbdIyfp/QapbfltJWoww1EE9aTEZzDbalgktIEGAbKn8mg0pg59ohlKobZVcQR4
+	 e8HC9pk23UHPWjfgeFW74f4QXd8oboRMXmpg1JDHfJxvaz9Ec3uR0XMhjWalfmqhbx
+	 H7880ioH+pB0rEqYyQ2zxpJ7ojolpj8/N0ojm9B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgHSDMr (ORCPT
+        id S1727926AbgHSDN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:12:47 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:45484 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbgHSDMq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:12:46 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 07J3CN4c8010285, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 07J3CN4c8010285
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 19 Aug 2020 11:12:23 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 11:12:23 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 19 Aug 2020 11:12:23 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
- RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
- 15.01.1779.005; Wed, 19 Aug 2020 11:12:23 +0800
-From:   =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-To:     =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        Rob Herring <robh@kernel.org>
-CC:     "linux-realtek-soc@lists.infradead.org" 
-        <linux-realtek-soc@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: RE: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC SoC rtd1295
-Thread-Topic: [PATCH v3 5/9] dt-bindings: pinctrl: realtek: Add Realtek DHC
- SoC rtd1295
-Thread-Index: AQHWcUZJlJ4JLjNahkCHOz3e6aEePqk8Qs4AgADkp4CAAI/acA==
-Date:   Wed, 19 Aug 2020 03:12:22 +0000
-Message-ID: <5f6355d6af724dc6b2e113e567e4ec5f@realtek.com>
-References: <20200813074908.889-1-tychang@realtek.com>
- <20200813074908.889-6-tychang@realtek.com> <20200817203358.GA1508879@bogus>
- <012eee35-6835-7244-0013-9fc6980107e0@suse.de>
-In-Reply-To: <012eee35-6835-7244-0013-9fc6980107e0@suse.de>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.181.134]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Tue, 18 Aug 2020 23:13:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727793AbgHSDN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 23:13:27 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33D1B2065F;
+        Wed, 19 Aug 2020 03:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597806807;
+        bh=3HYKC4lph4BSGjKk7QnGJ/iNJRQMO5s9oVBYH6NYs40=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Y6chg8ZcukcmnDpajVBgevZppgQK1mINo+4sdKBBmU91pVR5RZUrU1kDSZzsW/Naq
+         XduQkg9vC+UKUFEf8NV5iXGoTzaSpdgWfG2jkF2grngC5emeQOmZcEWrUL/k2OOEv9
+         HfjGIy6x28gKzIn78NCWMYN/gp9gFup7TNQjt6hM=
+Date:   Tue, 18 Aug 2020 20:13:26 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Guenter Roeck <groeck@google.com>
+Cc:     Phillip Lougher <phillip@squashfs.org.uk>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Philippe Liard <pliard@google.com>, hch@lst.de,
+        adrien+dev@schischi.me, Guenter Roeck <groeck@chromium.org>,
+        Daniel Rosenberg <drosen@google.com>,
+        Nicolas Prochazka <nicolas.prochazka@gmail.com>,
+        Tomoatsu Shimada <shimada@walbrix.com>
+Subject: Re: [PATCH] squashfs: avoid bio_alloc() failure with 1Mbyte blocks
+Message-Id: <20200818201326.2b9eab480ab4228ccd250ffa@linux-foundation.org>
+In-Reply-To: <CABXOdTcJDub=ffmwn4_Xn0chxdwwu4jNFrh9o3HVVH1Mzt4iSA@mail.gmail.com>
+References: <20200815035637.15319-1-phillip@squashfs.org.uk>
+        <CABXOdTcJDub=ffmwn4_Xn0chxdwwu4jNFrh9o3HVVH1Mzt4iSA@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLCBBbmRyZWFzLA0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcuDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNl
-LmRlPg0KPiBTZW50OiBUdWVzZGF5LCBBdWd1c3QgMTgsIDIwMjAgNjoxMiBQTQ0KPiBUbzogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IFRZX0NoYW5nW+W8teWtkOmAuF0NCj4gPHR5Y2hh
-bmdAcmVhbHRlay5jb20+DQo+IENjOiBsaW51eC1yZWFsdGVrLXNvY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsN
-Cj4gbGludXMud2FsbGVpakBsaW5hcm8ub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgNS85
-XSBkdC1iaW5kaW5nczogcGluY3RybDogcmVhbHRlazogQWRkIFJlYWx0ZWsgREhDIFNvQw0KPiBy
-dGQxMjk1DQo+IA0KPiBBbSAxNy4wOC4yMCB1bSAyMjozMyBzY2hyaWViIFJvYiBIZXJyaW5nOg0K
-PiA+IE9uIFRodSwgMTMgQXVnIDIwMjAgMTU6NDk6MDQgKzA4MDAsIFRZIENoYW5nIHdyb3RlOg0K
-PiA+PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZyBEb2N1bWVudGF0aW9uIGZvciBydGQxMjk1IHBp
-bmN0cmwgZHJpdmVyLg0KPiA+Pg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBUWSBDaGFuZyA8dHljaGFu
-Z0ByZWFsdGVrLmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAuLi4vcGluY3RybC9yZWFsdGVrLHJ0ZDEy
-OTUtcGluY3RybC55YW1sICAgICAgfCAxOTIgKysrKysrKysrKysrKysrKysrDQo+ID4+ICAxIGZp
-bGUgY2hhbmdlZCwgMTkyIGluc2VydGlvbnMoKykNCj4gPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0K
-PiA+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9yZWFsdGVrLHJ0
-ZDEyOTUtcGluY3RybC55YW0NCj4gPj4gbA0KPiA+Pg0KPiA+DQo+ID4NCj4gPiBQbGVhc2UgYWRk
-IEFja2VkLWJ5L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4NCj4g
-PiBIb3dldmVyLCB0aGVyZSdzIG5vIG5lZWQgdG8gcmVwb3N0IHBhdGNoZXMgKm9ubHkqIHRvIGFk
-ZCB0aGUgdGFncy4gVGhlDQo+ID4gdXBzdHJlYW0gbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9y
-IGFja3MgcmVjZWl2ZWQgb24gdGhlIHZlcnNpb24gdGhleSBhcHBseS4NCj4gPg0KPiA+IElmIGEg
-dGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBj
-aGFuZ2VkLg0KPiANCj4gVGhlIHRoaW5nIHJlYWxseSBtaXNzaW5nIGhlcmUgaXMgYSBwZXItcGF0
-Y2ggY2hhbmdlIGxvZy4NCj4gDQo+IFRoaW5ncyB3ZXJlIGFkZGVkIGhlcmUgdGhhdCBJJ20gc3Vy
-ZSB5b3Ugd291bGQgbm90IGdpdmUgeW91ciBSZXZpZXdlZC1ieSBmb3IsDQo+IGluIHBhcnRpY3Vs
-YXIgbmV3IHByb3BlcnRpZXMgcHJlZml4ZWQgd2l0aCB1bnJlZ2lzdGVyZWQgcnRrIHByZWZpeCBp
-bnN0ZWFkIG9mIHRoZQ0KPiByZWdpc3RlcmVkIHJlYWx0ZWsgcHJlZml4Lg0KDQpJIHdpbGwgbW9k
-aWZ5IHRoZSBwcm9wZXJ0eSBuYW1lIHdpdGggcmVhbHRlayBwcmVmaXggaW4gcGF0Y2ggdjQuDQoN
-Cj4gDQo+IEBUWSwgaGlkaW5nIHN1Y2ggY2hhbmdlcyBpbiBhIGJpZyBwcmV2aW91c2x5IHJldmll
-d2VkIHBhdGNoIHdpdGhvdXQgYW55DQo+IG1lbnRpb24gaXMgcHJvYmxlbWF0aWMgLSBwbGVhc2Ug
-cmF0aGVyIGRvIHNtYWxsZXIgZm9sbG93LXVwIHBhdGNoZXMgdG8gbm90DQo+IGludmFsaWRhdGUg
-cHJldmlvdXMgcmV2aWV3cyB3aXRoIG5ldyBmZWF0dXJlcy4NCj4gDQoNCkknbSBzb3JyeSBhYm91
-dCB0aGF0LiBJIHdpbGwgYWRkIFJldmlld2VkLWJ5IHRhZ3MgaW4gdGhlIHByZXZpb3VzbHkgcmV2
-aWV3ZWQgcGF0Y2ggYW5kIGFkZCBmb2xsb3ctdXAgcGF0Y2hlcyBmb3IgbmV3IGZlYXR1cmVzIGlu
-IHBhdGNoIHY0Lg0KDQpCZXN0IFJlZ2FyZHMsDQpUWUNoYW5nDQoNCiANCj4gLS0tLS0tUGxlYXNl
-IGNvbnNpZGVyIHRoZSBlbnZpcm9ubWVudCBiZWZvcmUgcHJpbnRpbmcgdGhpcyBlLW1haWwuDQo=
+On Fri, 14 Aug 2020 21:30:33 -0700 Guenter Roeck <groeck@google.com> wrote:
+
+> On Fri, Aug 14, 2020 at 8:57 PM Phillip Lougher <phillip@squashfs.org.uk> wrote:
+> >
+> > This is a regression introduced by the "migrate from ll_rw_block usage
+> > to BIO" patch.
+> >
+> > Bio_alloc() is limited to 256 pages (1 Mbyte).   This can cause a
+> > failure when reading 1 Mbyte block filesystems.  The problem is
+> > a datablock can be fully (or almost uncompressed), requiring 256
+> > pages, but, because blocks are not aligned to page boundaries, it
+> > may require 257 pages to read.
+> >
+> > Bio_kmalloc() can handle 1024 pages, and so use this for the
+> > edge condition.
+> >
+> > Reported-by: Nicolas Prochazka <nicolas.prochazka@gmail.com>
+> > Reported-by: Tomoatsu Shimada <shimada@walbrix.com>
+> > Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
+> 
+> Fixes: 93e72b3c612a ("squashfs: migrate from ll_rw_block usage to BIO")
+> Reviewed-by: Guenter Roeck <groeck@chromium.org>
+
+Thanks.  I added cc:stable also.
