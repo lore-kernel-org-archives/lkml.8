@@ -2,139 +2,166 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2506AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C93C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 058932078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8C6206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:30:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjLcbFOb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgHSR3e (ORCPT
+        id S1726820AbgHSRad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:29:34 -0400
-Received: from mga04.intel.com ([192.55.52.120]:35337 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSR3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:29:12 -0400
-IronPort-SDR: rTRMxi/Gqi5uL7saD2QhA+lThjs3Dlb68+Q75m71V8KB6tjUb4x9MJgjATXP5Z0d9mHx8WIyK5
- 2VQZAQ3XpnUw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152577296"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="152577296"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:29:11 -0700
-IronPort-SDR: fjTHM9Cqv3sYIY/fdPyfa8pCXMVQNRCtF3fY/Qf7Xvejs7oMp7ACqpmERR6OO1PDjQthPYBVat
- y1Pn8YDltSBg==
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="497824286"
-Received: from jbrandeb-mobl3.amr.corp.intel.com (HELO localhost) ([10.212.220.26])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:29:11 -0700
-Date:   Wed, 19 Aug 2020 10:29:09 -0700
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux- stable <stable@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jakub Kicinski" <kuba@kernel.org>, <lkft-triage@lists.linaro.org>,
-        LTP List <ltp@lists.linux.it>
-Subject: Re: NETDEV WATCHDOG: WARNING: at net/sched/sch_generic.c:442
- dev_watchdog
-Message-ID: <20200819102909.000016ac@intel.com>
-In-Reply-To: <20200819125732.1c296ce7@oasis.local.home>
-References: <CA+G9fYtS_nAX=sPV8zTTs-nOdpJ4uxk9sqeHOZNuS4WLvBcPGg@mail.gmail.com>
-        <20200819125732.1c296ce7@oasis.local.home>
-X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
+        Wed, 19 Aug 2020 13:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbgHSRab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:30:31 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C09D9C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:30:30 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id g19so27218000ejc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VOcSRB7E+UURYFoPXpG2ZH3TPSzIfXIMapUvNuoS0Es=;
+        b=tjLcbFObqqfmKWDsYFo5awl3d+Ui4pOByCdtwfgv/ZPjhkQLWR9gTVYDf/Xg3rJTVW
+         ZlNXNmPsRGmZhr2KdB9vvE9VUK28FvNifz1PHPFKn4G7y5fFpH865aVYFXG7PBY0fzmL
+         2QwquDQbOPNz1V5VMLjwGY7Mt6DZeHUrgELiMW6Ci2FZsBPZyz/t5idcZHMnJdO0r8KG
+         nBMkQVQiQo9/H1HE9PKvvbbgjNvwDTcc59iTcVxTndn8pEnM8jBpfSX3PuYYz3b82BSq
+         OzWaMX1pu1L9AFCtkpX2D+YpFBy2p+3QcWiGRfAcHo9DczaIeNLe3dUcZyCaQKHbeft9
+         0BvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VOcSRB7E+UURYFoPXpG2ZH3TPSzIfXIMapUvNuoS0Es=;
+        b=fNh/UFaMbPs4Zk3Zzj1DJoF1GJTog7rdV/sEmdOSHc4Bz98hEIwFGDmzNUoWRTsIXk
+         KhmOrVMGr6q1wVnkifyVIXSI1DGCPFE9PkymVArbKR5HgPivNy1ZbZqsLNsd+3TnJXJx
+         Z9zmELi6zgtx6mql/4StyWYtTm85b0Dfc6UYg1sn5dLq3UZ8MtHkV3a6PnyOKCixeWhG
+         SOhDrmsxHha/pxb0rKcz8PYK4GGNgdWTFsREmK6m6+FXN+BuDma25Cm8AG1K8DvKEAlM
+         XUXK9OjuBSVvZmJn6OCaZVmR4AidpMGbnLBlB4+AqLHc0wa6fZMpUs5pm6NLitTxk4rt
+         VztQ==
+X-Gm-Message-State: AOAM532cArD/OaPqFbp0YAcQkXdbpHLEo7IMtudhfirjLR6JlLhxaCvA
+        fXFzPcvyTwYNoq6N5XYv0Rwc8rz7dv4=
+X-Google-Smtp-Source: ABdhPJyOy0p/v1KUw3fByKwh3JH+BqudNmF/x6xD+3144rLX5Rd70O0gn2fbfrKs8h+E1ozh5Ae4kw==
+X-Received: by 2002:a17:906:824d:: with SMTP id f13mr27277475ejx.190.1597858229128;
+        Wed, 19 Aug 2020 10:30:29 -0700 (PDT)
+Received: from [10.67.50.75] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id a18sm19191773ejt.69.2020.08.19.10.30.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 10:30:27 -0700 (PDT)
+Subject: Re: [PATCH v2] mm: include CMA pages in lowmem_reserve at boot
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Doug Berger <opendmb@gmail.com>, Jason Baron <jbaron@akamai.com>,
+        David Rientjes <rientjes@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1597423766-27849-1-git-send-email-opendmb@gmail.com>
+ <20200818201817.351499e75cba2a84e8bf33e6@linux-foundation.org>
+ <e22cbcdc-e9ce-50b7-aa88-6a3579ffd509@gmail.com>
+ <20200819102214.32238093b116ab6f1c5c7b73@linux-foundation.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <50ad53dc-faf2-3014-bac3-be370b972f59@gmail.com>
+Date:   Wed, 19 Aug 2020 10:30:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200819102214.32238093b116ab6f1c5c7b73@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt wrote:
-
-> On Wed, 19 Aug 2020 17:01:06 +0530
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+On 8/19/20 10:22 AM, Andrew Morton wrote:
+> On Wed, 19 Aug 2020 10:15:53 -0700 Florian Fainelli <f.fainelli@gmail.com> wrote:
 > 
-> > kernel warning noticed on x86_64 while running LTP tracing ftrace-stress-test
-> > case. started noticing on the stable-rc linux-5.8.y branch.
-> > 
-> > This device booted with KASAN config and DYNAMIC tracing configs and more.
-> > This reported issue is not easily reproducible.
-> > 
-> > metadata:
-> >   git branch: linux-5.8.y
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-> >   git commit: ad8c735b1497520df959f675718f39dca8cb8019
-> >   git describe: v5.8.2
-> >   make_kernelversion: 5.8.2
-> >   kernel-config:
-> > https://builds.tuxbuild.com/bOz0eAwkcraRiWALTW9D3Q/kernel.config
-> > 
-> > 
-> > [   88.139387] Scheduler tracepoints stat_sleep, stat_iowait,
-> > stat_blocked and stat_runtime require the kernel parameter
-> > schedstats=enable or kernel.sched_schedstats=1
-> > [   88.139387] Scheduler tracepoints stat_sleep, stat_iowait,
-> > stat_blocked and stat_runtime require the kernel parameter
-> > schedstats=enable or kernel.sched_schedstats=1
-> > [  107.507991] ------------[ cut here ]------------
-> > [  107.513103] NETDEV WATCHDOG: eth0 (igb): transmit queue 2 timed out
-> > [  107.519973] WARNING: CPU: 1 PID: 331 at net/sched/sch_generic.c:442
-> > dev_watchdog+0x4c7/0x4d0
-> > [  107.528907] Modules linked in: x86_pkg_temp_thermal
-> > [  107.534541] CPU: 1 PID: 331 Comm: systemd-journal Not tainted 5.8.2 #1
-> > [  107.541480] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > 2.2 05/23/2018
-> > [  107.549314] RIP: 0010:dev_watchdog+0x4c7/0x4d0
-> > [  107.554226] Code: ff ff 48 8b 5d c8 c6 05 6d f7 94 01 01 48 89 df
-> > e8 9e b4 f8 ff 44 89 e9 48 89 de 48 c7 c7 20 49 51 9c 48 89 c2 e8 91
-> > 7e e9 fe <0f> 0b e9 03 ff ff ff 66 90 e8 9b 23 db fe 55 48 89 e5 41 57
+>>>> In many cases the difference is not significant, but for example
+>>>> an ARM platform with 1GB of memory and the following memory layout
+>>>> [    0.000000] cma: Reserved 256 MiB at 0x0000000030000000
+>>>> [    0.000000] Zone ranges:
+>>>> [    0.000000]   DMA      [mem 0x0000000000000000-0x000000002fffffff]
+>>>> [    0.000000]   Normal   empty
+>>>> [    0.000000]   HighMem  [mem 0x0000000030000000-0x000000003fffffff]
+>>>>
+>>>> would result in 0 lowmem_reserve for the DMA zone. This would allow
+>>>> userspace to deplete the DMA zone easily.
+>>>
+>>> Sounds fairly serious for thos machines.  Was a cc:stable considered?
+>>
+>> Since there is a Fixes: tag, it may have been assumed that the patch
+>> would be picked up and as soon as it reaches Linus' tree it would be
+>> picked up by the stable selection.
 > 
-> I've triggered this myself in my testing, and I assumed that adding the
-> overhead of tracing and here KASAN too, made some watchdog a bit
-> unhappy. By commenting out the warning, I've seen no ill effects.
-> 
-> Perhaps this is something we need to dig a bit deeper into.
+> It doesn't work that way - sometimes a fix isn't considered important
+> enough to backport.  It could just fix a typo in a comment!
 
-Looked into it a little, igb uses a timeout of 5 seconds, and the stack
-prints the warning if we haven't completed the transmit in that time.
-
-What I don't understand in the stack trace is this:
-> > [  107.654661] Call Trace:
-> > [  107.657735]  <IRQ>
-> > [  107.663155]  ? ftrace_graph_caller+0xc0/0xc0
-> > [  107.667929]  call_timer_fn+0x3b/0x1b0
-> > [  107.672238]  ? netif_carrier_off+0x70/0x70
-> > [  107.677771]  ? netif_carrier_off+0x70/0x70
-> > [  107.682656]  ? ftrace_graph_caller+0xc0/0xc0
-> > [  107.687379]  run_timer_softirq+0x3e8/0xa10
-> > [  107.694653]  ? call_timer_fn+0x1b0/0x1b0
-> > [  107.699382]  ? trace_event_raw_event_softirq+0xdd/0x150
-> > [  107.706768]  ? ring_buffer_unlock_commit+0xf5/0x210
-> > [  107.712213]  ? call_timer_fn+0x1b0/0x1b0
-> > [  107.716625]  ? __do_softirq+0x155/0x467
-
-
-If the carrier was turned off by something, that could cause the stack
-to timeout since it appears the driver didn't call this itself after
-finishing all transmits like it normally would have.
-
-Is the trace above correct? Usually the ? indicate unsure backtrace due
-to missing symbols, right?
+Then can this be applied ASAP and back ported?
+-- 
+Florian
