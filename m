@@ -2,125 +2,113 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57713C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:14:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 391542078B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99FE420772
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 01:14:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E80VCHyq"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="A08HzhhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgHSBNF (ORCPT
+        id S1727110AbgHSBO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 21:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgHSBND (ORCPT
+        Tue, 18 Aug 2020 21:14:58 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:58780 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726923AbgHSBO5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 21:13:03 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31782C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:13:03 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id cq28so16753246edb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kva/k1UFU9lX2N7TTtpIgvJkFqnuUIPtW/9Hq387vwc=;
-        b=E80VCHyqzl3gqdes4ecq90ED7Teoc8Dly2yf/OW0+jZosjYQ4+6IbmLNkza5ENUV9a
-         00LaDl0rnvLZt0T5tfVqRCNtSE/Yh9uc6E9qUIp+85Ib+GYsKoV6YQWx7z68iwkuMKq1
-         uYDb1yLguz82kKnD0amyvpIB/Lkwomyrz4KElJuECYSvodnqlEHSInELcYYMFUr/mk3v
-         tANj3qbpj3nRf7thLtCmPp+/OC6WpjkgRG03JKejP4BapuV3GDWK4MzisB2zyv097I8P
-         l1aZBFgoeDfOYzZUoK+Wf413zbD4QjmhOqvJnHuJ7IkXHgeGhK94aXq4gd0Q2nYEuYnh
-         tUIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kva/k1UFU9lX2N7TTtpIgvJkFqnuUIPtW/9Hq387vwc=;
-        b=pQQM2dfLXgzZLXnTA6G4+RhGe/iTuF+u9Ugdfu2u1PWAXyDS3EAlWlVsHggET9m3nX
-         cR4qEc795aYrtkkRgwzPAzoQ+wQnZ153AMhUjjeS5NA1OxW6OHIgw3OJnC0GdPTDYLZi
-         M/yTljEyOOnc2wYfeEmk3dGsh0OhDFsNV+KyF1tBZSiyHO71RGrqvGojMC+x6v7ebc8v
-         F7VqEH5W6VZ3nMjFZthk1zuo2vom+8E6GAvEn/QJNGhVeIy4M3IsdMCX0pgaGdwAhaFA
-         RDr+hz/WBLFxPqRMl1P1jn/dqfO+IYOzUeUvhjbjuVJr82mG3Wq33PWJdUKyqps9jtlc
-         nGLQ==
-X-Gm-Message-State: AOAM531qFPl/w5/EuxtR0cZRzL8gpRqJJSNi7kRFerJAbDhS+uVraWPB
-        YxXzjVubl20aTnoRKXv71If1fI6sisHWj59W/3A=
-X-Google-Smtp-Source: ABdhPJw/E2soj0fKW/huWNagmPnn6FvooCTxqFBO86xFYeA9eId5qxqcTlM7QtwRbaUuORA3KNbPfZXftYphQAe6stY=
-X-Received: by 2002:a05:6402:2069:: with SMTP id bd9mr21969357edb.127.1597799581776;
- Tue, 18 Aug 2020 18:13:01 -0700 (PDT)
+        Tue, 18 Aug 2020 21:14:57 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07J1DW85018300
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:14:56 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=/uUFrz2pplyNeuzwjVTtdWHekCwyi/O0CKqPnUBAh2Y=;
+ b=A08HzhhPElIP8ar1HUd6SO3WoFR2zWYS304bUD3/iGH7tq16rHT9X+6i+bNksEqKJLBo
+ tPJNPbLzpcBnIor4xYyEYi7riZWFWYvmcvYY3NG7BEl+DYk4GgNICA273F6w3AuMIU+L
+ 3tXb3CcQoiPSbZxSgxn7eetJn3yu2L3kzDc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3304kpp0ep-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 18:14:56 -0700
+Received: from intmgw002.08.frc2.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 18 Aug 2020 18:14:54 -0700
+Received: by devbig218.frc2.facebook.com (Postfix, from userid 116055)
+        id 4079D207458; Tue, 18 Aug 2020 18:14:50 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Udip Pant <udippant@fb.com>
+Smtp-Origin-Hostname: devbig218.frc2.facebook.com
+To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Smtp-Origin-Cluster: frc2c02
+Subject: [PATCH bpf] bpf: verifier: check for packet data access based on target prog
+Date:   Tue, 18 Aug 2020 18:12:44 -0700
+Message-ID: <20200819011244.2027725-1-udippant@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20200817161132.GA4711@amd> <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
-In-Reply-To: <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Wed, 19 Aug 2020 11:12:50 +1000
-Message-ID: <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to mainline
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Pavel Machek <pavel@ucw.cz>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-18_16:2020-08-18,2020-08-18 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 clxscore=1011 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=896
+ lowpriorityscore=0 suspectscore=0 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008190010
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 at 10:38, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Ping on this?
->
-> The code disassembles to
->
->   24: 8b 85 d0 fd ff ff    mov    -0x230(%ebp),%eax
->   2a:* c7 03 01 00 40 10    movl   $0x10400001,(%ebx) <-- trapping instruction
->   30: 89 43 04              mov    %eax,0x4(%ebx)
->   33: 8b 85 b4 fd ff ff    mov    -0x24c(%ebp),%eax
->   39: 89 43 08              mov    %eax,0x8(%ebx)
->   3c: e9                    jmp ...
->
-> which looks like is one of the cases in __reloc_entry_gpu(). I *think*
-> it's this one:
->
->         } else if (gen >= 3 &&
->                    !(IS_I915G(eb->i915) || IS_I915GM(eb->i915))) {
->                 *batch++ = MI_STORE_DWORD_IMM | MI_MEM_VIRTUAL;
->                 *batch++ = addr;
->                 *batch++ = target_addr;
->
-> where that "batch" pointer is 0xf8601000, so it looks like it just
-> overflowed into the next page that isn't there.
->
-> The cleaned-up call trace is
->
->   drm_ioctl+0x1f4/0x38b ->
->     drm_ioctl_kernel+0x87/0xd0 ->
->       i915_gem_execbuffer2_ioctl+0xdd/0x360 ->
->         i915_gem_do_execbuffer+0xaab/0x2780 ->
->           eb_relocate_vma
->
-> but there's a lot of inling going on, so..
->
-> The obvious suspect is commit 9e0f9464e2ab ("drm/i915/gem: Async GPU
-> relocations only") but that's going purely by "that seems to be the
-> main relocation change this mmrge window".
+While using dynamic program extension (of type BPF_PROG_TYPE_EXT), we
+need to check the program type of the target program to grant the read /
+write access to the packet data.
 
-I think there's been some discussion about reverting that change for
-other reasons, but it's quite likely the culprit.
+The BPF_PROG_TYPE_EXT type can be used to extend types such as XDP, SKB
+and others. Since the BPF_PROG_TYPE_EXT program type on itself is just a
+placeholder for those, we need this extended check for those target
+programs to actually work while using this option.
 
-Maybe we can push for a revert sooner, (cc'ing more of i915 team).
+Tested this with a freplace xdp program. Without this patch, the
+verifier fails with error 'cannot write into packet'.
 
-Dave.
+Signed-off-by: Udip Pant <udippant@fb.com>
+---
+ kernel/bpf/verifier.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index ef938f17b944..4d7604430994 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -2629,7 +2629,11 @@ static bool may_access_direct_pkt_data(struct bpf_=
+verifier_env *env,
+ 				       const struct bpf_call_arg_meta *meta,
+ 				       enum bpf_access_type t)
+ {
+-	switch (env->prog->type) {
++	struct bpf_prog *prog =3D env->prog;
++	enum bpf_prog_type prog_type =3D prog->aux->linked_prog ?
++	      prog->aux->linked_prog->type : prog->type;
++
++	switch (prog_type) {
+ 	/* Program types only with direct read access go here! */
+ 	case BPF_PROG_TYPE_LWT_IN:
+ 	case BPF_PROG_TYPE_LWT_OUT:
+--=20
+2.24.1
+
