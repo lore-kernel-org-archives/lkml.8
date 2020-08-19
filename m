@@ -2,97 +2,186 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F3EC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C737AC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:53:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 644352063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CEBF207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 06:53:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DS+03TUR"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="sZC4lsqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbgHSGw4 (ORCPT
+        id S1726977AbgHSGxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 02:52:56 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:40407 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726883AbgHSGwx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 02:52:53 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597819972; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=kk18VZt/UZaR2z1275ZwkWBhTQypRK0gS1BfRBqg2H0=; b=DS+03TURs57dl85G1zn9Ef+1wt5r3+Ko8xuiGofDnzkO5wZq8MLaevKepsumF/V/0T+fmVxv
- 1XFKpr7yvsU95UoB0vWpmphW58jjvowWG4T6Sdx5KTfutLGXVyUiV4eEwd5ZjzQuoh3Df5kH
- TeLtVwV92Cye7HM6n6W9eKzLL1Y=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 5f3ccc44440a07969a5737db (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 Aug 2020 06:52:52
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EBD19C433CA; Wed, 19 Aug 2020 06:52:50 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 32F49C433C6;
-        Wed, 19 Aug 2020 06:52:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 32F49C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Wireless <linux-wireless@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: Re: linux-next: Fixes tag needs some work in the wireless-drivers-next tree
-References: <20200819083359.67f45112@canb.auug.org.au>
-Date:   Wed, 19 Aug 2020 09:52:47 +0300
-In-Reply-To: <20200819083359.67f45112@canb.auug.org.au> (Stephen Rothwell's
-        message of "Wed, 19 Aug 2020 08:33:59 +1000")
-Message-ID: <87y2mbi0u8.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 19 Aug 2020 02:53:36 -0400
+Received: from mout.web.de ([212.227.17.11]:37007 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbgHSGxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 02:53:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1597819985;
+        bh=zbAovNYHYVj9b7GS0MasMl9nnZWPfpSPFLXNzvGNNYc=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=sZC4lsqqn+Kaed7Y+Q0pgm7uV46gpRLRWg5CfgKJ6xPy4y+XShOfH9imUj35k1HF9
+         hU2b74pCsEF6OO82H1+l5mXZgOf43WujunTM93lWTZdDiy40QPFo1AQdXg/hmzB59S
+         Pwe0z/ytAf/1w4cVVRVU0j6Ixhige1Xq3odB3rQ0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from Neuromancer.fritz.box ([2.202.13.221]) by smtp.web.de (mrweb103
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0M1GAG-1kwffN0R9k-00tBM2; Wed, 19
+ Aug 2020 08:53:05 +0200
+Message-ID: <1597819984.4101.16.camel@web.de>
+Subject: Re: [PATCH] HID: roccat: add bounds checking in
+ kone_sysfs_write_settings()
+From:   Stefan Achatz <stefan_achatz@web.de>
+To:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Date:   Wed, 19 Aug 2020 08:53:04 +0200
+In-Reply-To: <20200805095501.GD483832@mwanda>
+References: <20200805095501.GD483832@mwanda>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 (3.26.6-1.fc27) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Rs9MzHG1qjI3CG7K3NLpjAJPeQM6OaxvsjMjqBri1KU9hx1mhI4
+ O1Pl1GkiX7SXO+DzET1/4szZD3xn/lU8aENIruNUZs01mwEzlx1XyL+uixc6k+vgcKHfKTd
+ bViFAniGQyUT2ocaL5D2ijhUre41TuhAWXGLRTLKQinf05X69V0pwY9350Rlqu8rP3yOWKC
+ Zrx8/xflXJRuxx+qyTpHA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/u3Case0BA8=:JGgDNp2N2q81s9rrN3Q2U5
+ JLR6J2bQyn/LcARhIADjILZ2DWmltIL5xtxjSQPYnPjY0Upg3/k2xOjc568abrsXF27ajGWhA
+ lxSQAqpGq1TtOkJVVd+9RnEX4JPsCYX46skWb24JG8nrhAadr2I+w/7EqNiHBfFhznPl+IVaC
+ 7esMPTDHhqxc1gqHma5H1Q3jZ724OT6dqZ43kqgo25Fvok6J0+GZWVjNF8fY38ehrepliKanL
+ pE4uOWh8T74r+WViEbmTq0gm4xwXqhwi3T2uU7wEVtoVEsMHYzohLVdjKk1fHj5mCtSsXGjka
+ gm11bLQsRChTFnLDVfFF1Xvxiep1r5x3plv/eQN1QNPO3yOhEpMMeLqScENVvsvztIUgD3fk5
+ 9NYUSdNYVRh0KZ9B7cGdAJPXXeRw1tQECQGfrociIFBl0Sp/x2RB9jDC0EfA53uLHBTLbv7ZK
+ Yci78AtcAzFtV0ScTvasGEamd1nLE76wtneC3FSAltQIr8v7tuQ+r7Vgid9rMYN6/xPyNaH9/
+ hx1yxhe8WfF89BPI8M1IKShAM96MxiP+8dRM21MnTZ26HBZxYlRvapdvB+Od+wzAjsAecxHVB
+ /4NBwTB3PtlUkh+sgbE/XepQprYciADAQJMm1bV4Ivvzwg9ZCukT2/Gr3ZVdnOa2zFSWjYn7O
+ pBKluEPCeBi+gtLqtyrZd0d0ktTlDsu3DsguFgptgVvjP5UzLjSq2ee54W+UAPrY3OIkJMviC
+ 8W4vqDQn1qHA0rOWsTBp/FuuIqvHLr2lJRvrT42EvcM7MtEGEyB1rG5lMVk+ZYIyo0tc3Nq2j
+ ehiJ4yqCIMkn0nbK9009Uj7Q6wxw0gg0gyEoqxzCUjOOZyeIsMnBIAU41naNz69iL1wS4BcQz
+ 3g/69y8XfrIvkRwOg0gMfs8SxiCJORMQJqxORDCpGPjWjGahY0FCGpBte+w3R8VPoYhKMVbLB
+ 09XNAiBwL4iUDTzctZvr2JIgLG8RQx7ZsyMU5LJDL6EUWXtl3DuQZ7TWvf2GthHpIGRoxGhUx
+ qa8424PKd/E0nmvoR+lzFr6yHFImc3sDN/R9OXkkdJLivBP211dWFs0f56RK62L1YWeL6OXC5
+ IOVYF1zyUvyEPDC81uNKqlOoUUd/yJR1PAm+CZFgUZXDF4Sv3wz24V6JCN5mnIAulgwIHDJmY
+ 6N4DY9B+0oJcRPqXFXemyANb7FjRI8r9NLkB+xDwejVW1B1XmZVJ+WxiTzlysU07XH2MaVYWT
+ yKtBVbF6zS6bVta5NXSXJeAEfMwycfGXoh3xpAw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen Rothwell <sfr@canb.auug.org.au> writes:
+Please remove the settings->size check. The driver sometimes just
+writes a modified version of the read settings data. This would fail if
+stored size is invalid. This value of size is not solely in my hands, I
+can't guarantee Windows driver does a sanity check, also cases of flash
+data corruption are known.
 
-> Hi all,
->
-> In commit
->
->   3b9fb6791e71 ("wcn36xx: Fix reported 802.11n rx_highest rate wcn3660/wcn3680")
->
-> Fixes tag
->
->   Fixes: 8e84c2582169 ("wcn36xx: mac80211 driver for Qualcomm WCN3660/WCN3680
->
-> has these problem(s):
->
->   - Subject has leading but no trailing parentheses
->   - Subject has leading but no trailing quotes
->
-> Please do not split Fixes tags over more that one line.  Also, keep all
-> the commit message tags together at the end of the message.
+My general design agenda is that in my userspace tools I make sure only
+valid data (to the best of knowledge) is prepared for the device. In
+the kernel driver I don't (or didn't) do additional checks and
+eventually let the hardware reject things it doesn't like. This way the
+kernel driver doesn't need an update if firmware updates change the
+binary interface. This happend in the past, but won't for this device
+anymore because it's oop for years.
 
-Doh, I have checked carefully the commit ids but of course I missed
-checking the trailing. I really need to automate this. Stephen, are your
-scripts checking these available somewhere?
-
-But I'll leave this as is, no point of rebasing just because of this.
-Thanks for the report.
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Am Mittwoch, den 05.08.2020, 12:55 +0300 schrieb Dan Carpenter:
+> In the original code we didn't check if the new value for
+> "settings->startup_profile" was within bounds that could possibly
+> result in an out of bounds array acccess.  What we did was we checked
+> if
+> we could write the data to the firmware and it's possibly the
+> firmware
+> checks these values but there is no way to know.  It's safer and
+> easier
+> to read if we check it in the kernel as well.
+>
+> I also added a check to ensure that "settings->size" was
+> correct.  The
+> comments say that the only valid value is 36 which is sizeof(struct
+> kone_settings).
+>
+> Fixes: 14bf62cde794 ("HID: add driver for Roccat Kone gaming mouse")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> This isn't tested.  Checking settings->size seems like a good idea,
+> but
+> there is a slight risky because maybe invalid values used to be
+> allowed
+> and I don't want to break user space.
+>
+>  drivers/hid/hid-roccat-kone.c | 24 +++++++++++++++++-------
+>  1 file changed, 17 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/hid/hid-roccat-kone.c b/drivers/hid/hid-roccat-
+> kone.c
+> index 1a6e600197d0..5e8e1517f23c 100644
+> --- a/drivers/hid/hid-roccat-kone.c
+> +++ b/drivers/hid/hid-roccat-kone.c
+> @@ -294,31 +294,41 @@ static ssize_t kone_sysfs_write_settings(struct
+> file *fp, struct kobject *kobj,
+>  	struct kone_device *kone =3D
+> hid_get_drvdata(dev_get_drvdata(dev));
+>  	struct usb_device *usb_dev =3D
+> interface_to_usbdev(to_usb_interface(dev));
+>  	int retval =3D 0, difference, old_profile;
+> +	struct kone_settings *settings =3D (struct kone_settings
+> *)buf;
+>
+>  	/* I need to get my data in one piece */
+>  	if (off !=3D 0 || count !=3D sizeof(struct kone_settings))
+>  		return -EINVAL;
+>
+>  	mutex_lock(&kone->kone_lock);
+> -	difference =3D memcmp(buf, &kone->settings, sizeof(struct
+> kone_settings));
+> +	difference =3D memcmp(settings, &kone->settings,
+> +			    sizeof(struct kone_settings));
+>  	if (difference) {
+> -		retval =3D kone_set_settings(usb_dev,
+> -				(struct kone_settings const *)buf);
+> -		if (retval) {
+> -			mutex_unlock(&kone->kone_lock);
+> -			return retval;
+> +		if (settings->size !=3D sizeof(struct kone_settings)
+> ||
+> +		    settings->startup_profile < 1 ||
+> +		    settings->startup_profile > 5) {
+> +			retval =3D -EINVAL;
+> +			goto unlock;
+>  		}
+>
+> +		retval =3D kone_set_settings(usb_dev, settings);
+> +		if (retval)
+> +			goto unlock;
+> +
+>  		old_profile =3D kone->settings.startup_profile;
+> -		memcpy(&kone->settings, buf, sizeof(struct
+> kone_settings));
+> +		memcpy(&kone->settings, settings, sizeof(struct
+> kone_settings));
+>
+>  		kone_profile_activated(kone, kone-
+> >settings.startup_profile);
+>
+>  		if (kone->settings.startup_profile !=3D old_profile)
+>  			kone_profile_report(kone, kone-
+> >settings.startup_profile);
+>  	}
+> +unlock:
+>  	mutex_unlock(&kone->kone_lock);
+>
+> +	if (retval)
+> +		return retval;
+> +
+>  	return sizeof(struct kone_settings);
+>  }
+>  static BIN_ATTR(settings, 0660, kone_sysfs_read_settings,
