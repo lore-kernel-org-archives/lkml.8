@@ -2,147 +2,193 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA78C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B51AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF96920882
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDA152072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727021AbgHSJFA (ORCPT
+        id S1727073AbgHSJFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:05:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgHSJE7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:04:59 -0400
-Received: from mxout014.mail.hostpoint.ch (mxout014.mail.hostpoint.ch [IPv6:2a00:d70:0:e::314])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4646C061757;
-        Wed, 19 Aug 2020 02:04:58 -0700 (PDT)
-Received: from [10.0.2.46] (helo=asmtp013.mail.hostpoint.ch)
-        by mxout014.mail.hostpoint.ch with esmtp (Exim 4.92.3 (FreeBSD))
-        (envelope-from <code@reto-schneider.ch>)
-        id 1k8K1b-000NWz-49; Wed, 19 Aug 2020 11:04:51 +0200
-Received: from [2a02:168:6182:1:2c96:ee1d:6a9a:1f33]
-        by asmtp013.mail.hostpoint.ch with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3 (FreeBSD))
-        (envelope-from <code@reto-schneider.ch>)
-        id 1k8K1b-000IMW-1R; Wed, 19 Aug 2020 11:04:51 +0200
-X-Authenticated-Sender-Id: reto-schneider@reto-schneider.ch
-Subject: Re: [PATCH] ARM: at91: Add GARDENA smart Gateway AT91SAM board
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Reto Schneider <reto.schneider@husqvarnagroup.com>,
-        Stefan Roese <sr@denx.de>,
-        Michael Zimmermann <michael.zimmermann@grandcentrix.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200810171921.8679-1-code@reto-schneider.ch>
- <20200817102136.GC4500@piout.net>
-From:   Reto Schneider <code@reto-schneider.ch>
-Autocrypt: addr=code@reto-schneider.ch; prefer-encrypt=mutual; keydata=
- mDMEXsRRExYJKwYBBAHaRw8BAQdAvw3GH8aeA8Pay1QqPdjlETAUDAa8WmHHXZRDk5a0DHa0
- J1JldG8gU2NobmVpZGVyIDxtYWlsQHJldG8tc2NobmVpZGVyLmNoPoiYBBMWCgBAFiEEP2/t
- baSDn9KAkTQyv7k+j0IlhuAFAl7EURMCGwMFCQWjmoAICwkNCAwHCwoFFQoJCAsEFgMCAQIe
- AQIXgAAKCRC/uT6PQiWG4IsVAP9xonMRrcrTBWFxPMjEYVWUMHi8BssqkzMdc1QQXwpCKwEA
- qdBF1odOUr4SUHVQmadIE5eRpF9MbyBMQdR3ms8DrQ64OARexFETEgorBgEEAZdVAQUBAQdA
- 6PW5+rUjfrKbl3623SR35Drobzij2XjkGFY6zswMz3EDAQgHiH4EGBYKACYWIQQ/b+1tpIOf
- 0oCRNDK/uT6PQiWG4AUCXsRREwIbDAUJBaOagAAKCRC/uT6PQiWG4IyHAQCqmjwBTGyVAfLZ
- OVQSUPqSlu/RGcCWPQFEXP+Be2mdNQEA05ScK4+GgAShVE8wUObbpjdl/u5djZF8hEGQR3Ke Vws=
-Message-ID: <02431938-63ac-7f90-d985-534bcd60aac2@reto-schneider.ch>
-Date:   Wed, 19 Aug 2020 11:04:48 +0200
+        Wed, 19 Aug 2020 05:05:53 -0400
+Received: from mga17.intel.com ([192.55.52.151]:15408 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726110AbgHSJFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:05:51 -0400
+IronPort-SDR: c/iDZ7DxXZx7Gph+5KnhayxSpru5AnoQ29Y9uHdSXem+qpUtxF/roqm92NiC0nO/ZaM2EAvf70
+ 6BTu7hknqeqQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="135142503"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="135142503"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 02:05:34 -0700
+IronPort-SDR: HlCZaYJtG0bXOgLYMEH3+ka4B1mypIN62Gv2IXSj00ZKBL7BcjMhGqoCkJ0GZ5lr4M5sHkmtgB
+ YhNGq/9NcIaw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="320411698"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 02:05:31 -0700
+Subject: Re: [PATCH] mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     Nehal-bakulchandra.Shah@amd.com, chris.wang@amd.com,
+        Akshu.Agrawal@amd.com, Ulf Hansson <ulf.hansson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+References: <20200818162900.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <9bdadb87-67e2-305e-5dfc-7d0981dc2405@intel.com>
+Date:   Wed, 19 Aug 2020 12:04:59 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200817102136.GC4500@piout.net>
-Content-Type: multipart/mixed;
- boundary="------------B39DB9DE1623DCE625606089"
+In-Reply-To: <20200818162900.1.Ie8f0689ec9f449203328b37409d1cf06b565f331@changeid>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------B39DB9DE1623DCE625606089
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+On 19/08/20 1:31 am, Raul E Rangel wrote:
+> The AMD eMMC Controller can only use the tuned clock while in HS200 and
+> HS400 mode. If we switch to a different mode, we need to disable the
+> tuned clock. If we have previously performed tuning and switch back to
+> HS200 or HS400, we can re-enable the tuned clock.
+> 
+> Previously the tuned clock was not getting disabled when switching to
+> DDR52 which is part of the HS400 tuning sequence.
+> 
+> Fixes: 34597a3f60b1 ("mmc: sdhci-acpi: Add support for ACPI HID of AMD Controller with HS400")
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
-Hi Alexandre,
+If you make amd_sdhci_execute_tuning() static as the robot pointed out:
 
-On 8/17/20 12:21 PM, Alexandre Belloni wrote:
-> Thank you for this submission.
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks a lot for the feedback.
+> ---
+> 
+>  drivers/mmc/host/sdhci-acpi.c | 68 +++++++++++++++++++++++++++++------
+>  1 file changed, 58 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
+> index 48ecbd0b180d8..5a30920ef595f 100644
+> --- a/drivers/mmc/host/sdhci-acpi.c
+> +++ b/drivers/mmc/host/sdhci-acpi.c
+> @@ -535,6 +535,11 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_qcom_sd = {
+>  	.caps    = MMC_CAP_NONREMOVABLE,
+>  };
+>  
+> +struct amd_sdhci_host {
+> +	bool	tuned_clock;
+> +	bool	dll_enabled;
+> +};
+> +
+>  /* AMD sdhci reset dll register. */
+>  #define SDHCI_AMD_RESET_DLL_REGISTER    0x908
+>  
+> @@ -555,26 +560,67 @@ static void sdhci_acpi_amd_hs400_dll(struct sdhci_host *host)
+>  }
+>  
+>  /*
+> - * For AMD Platform it is required to disable the tuning
+> - * bit first controller to bring to HS Mode from HS200
+> - * mode, later enable to tune to HS400 mode.
+> + * The initialization sequence for HS400 is:
+> + *     HS->HS200->Perform Tuning->HS->HS400
+> + *
+> + * The re-tuning sequence is:
+> + *     HS400->DDR52->HS->HS200->Perform Tuning->HS->HS400
+> + *
+> + * The AMD eMMC Controller can only use the tuned clock while in HS200 and HS400
+> + * mode. If we switch to a different mode, we need to disable the tuned clock.
+> + * If we have previously performed tuning and switch back to HS200 or
+> + * HS400, we can re-enable the tuned clock.
+> + *
+>   */
+>  static void amd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+> +	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
+> +	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
+>  	unsigned int old_timing = host->timing;
+> +	u16 val;
+>  
+>  	sdhci_set_ios(mmc, ios);
+> -	if (old_timing == MMC_TIMING_MMC_HS200 &&
+> -	    ios->timing == MMC_TIMING_MMC_HS)
+> -		sdhci_writew(host, 0x9, SDHCI_HOST_CONTROL2);
+> -	if (old_timing != MMC_TIMING_MMC_HS400 &&
+> -	    ios->timing == MMC_TIMING_MMC_HS400) {
+> -		sdhci_writew(host, 0x80, SDHCI_HOST_CONTROL2);
+> -		sdhci_acpi_amd_hs400_dll(host);
+> +
+> +	if (old_timing != host->timing && amd_host->tuned_clock) {
+> +		if (host->timing == MMC_TIMING_MMC_HS400 ||
+> +		    host->timing == MMC_TIMING_MMC_HS200) {
+> +			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +			val |= SDHCI_CTRL_TUNED_CLK;
+> +			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
+> +		} else {
+> +			val = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> +			val &= ~SDHCI_CTRL_TUNED_CLK;
+> +			sdhci_writew(host, val, SDHCI_HOST_CONTROL2);
+> +		}
+> +
+> +		/* DLL is only required for HS400 */
+> +		if (host->timing == MMC_TIMING_MMC_HS400 &&
+> +		    !amd_host->dll_enabled) {
+> +			trace_printk("%s: Enabling DLL\n", __func__);
+> +			sdhci_acpi_amd_hs400_dll(host);
+> +			amd_host->dll_enabled = true;
+> +		}
+>  	}
+>  }
+>  
+> +int amd_sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
+> +{
+> +	int err;
+> +	struct sdhci_host *host = mmc_priv(mmc);
+> +	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
+> +	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
+> +
+> +	amd_host->tuned_clock = false;
+> +
+> +	err = sdhci_execute_tuning(mmc, opcode);
+> +
+> +	if (!err && !host->tuning_err)
+> +		amd_host->tuned_clock = true;
+> +
+> +	return err;
+> +}
+> +
+>  static const struct sdhci_ops sdhci_acpi_ops_amd = {
+>  	.set_clock	= sdhci_set_clock,
+>  	.set_bus_width	= sdhci_set_bus_width,
+> @@ -602,6 +648,7 @@ static int sdhci_acpi_emmc_amd_probe_slot(struct platform_device *pdev,
+>  
+>  	host->mmc_host_ops.select_drive_strength = amd_select_drive_strength;
+>  	host->mmc_host_ops.set_ios = amd_set_ios;
+> +	host->mmc_host_ops.execute_tuning = amd_sdhci_execute_tuning;
+>  	return 0;
+>  }
+>  
+> @@ -613,6 +660,7 @@ static const struct sdhci_acpi_slot sdhci_acpi_slot_amd_emmc = {
+>  			  SDHCI_QUIRK_32BIT_ADMA_SIZE,
+>  	.quirks2	= SDHCI_QUIRK2_BROKEN_64_BIT_DMA,
+>  	.probe_slot     = sdhci_acpi_emmc_amd_probe_slot,
+> +	.priv_size	= sizeof(struct amd_sdhci_host),
+>  };
+>  
+>  struct sdhci_acpi_uid_slot {
+> 
 
-I will send a v2.
-
-> Overall, I'm not convinced it is a good idea to start from
-> at91sam9x5ek.dtsi as it makes you dtb bigger than necessary but if you
-> want it that way, I'm fine with that.
-
-Because using at91sam9x5ek.dtsi saves some code (maintenance effort?!) I
-am willing to accept the extra binary size.
-However, if you think that this causes the maintenance efforts to be
-greater than when doing it your way, I'd be up for changing it.
-
-Kind regards,
-Reto
-
---------------B39DB9DE1623DCE625606089
-Content-Type: application/pgp-keys;
- name="0xBFB93E8F422586E0.asc"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="0xBFB93E8F422586E0.asc"
-
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-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
-XpxTgY94Its7BZwpBw==
-=1Ttn
------END PGP PUBLIC KEY BLOCK-----
-
---------------B39DB9DE1623DCE625606089--
