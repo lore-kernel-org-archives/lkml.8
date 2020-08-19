@@ -2,136 +2,235 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5743C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B79C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E1EF20786
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8532076E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:32:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lRjpuSCp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OcjB70+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbgHSK3H (ORCPT
+        id S1727808AbgHSKcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:29:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726642AbgHSK3A (ORCPT
+        Wed, 19 Aug 2020 06:32:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41700 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgHSKcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:29:00 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07JA1a06146945;
-        Wed, 19 Aug 2020 06:28:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=vAVx19PN5evAuL1yft8QctVm3MEbjgVTzM0AEmd3lu8=;
- b=lRjpuSCp10DoMysfqOcmcU5aufeygLjPEgxdiJ8jV5YUS4CgcCkxwzVaSaLD/9UtEnnI
- VDpJ73Npda2qV4zp9hHT+04djr14hFHB42sM+CPXjCfPc77mOSMf7ueX6Xuj5EBr6ZTP
- YCoJhjDzDVdaNSgbfYnKc2JSjqDCPiU89jnjxWTf/5WKD6MiebeDLiBgSXXKbbm0qljL
- DK9gnm6nA8LHUxfSTUtGTYOUtQa18Xm6jY3W3+0HLPMj8M1yTkZWwdTetIEnz2Xh/Bp0
- MNmUhiz19X5EGHEvAgZzmtjGCg/MTf6xzWEqtHmikvYkSeLRDKkZxP1yAYXq7w0rDMpN pg== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304ru5fny-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 06:28:51 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07JAPIms005141;
-        Wed, 19 Aug 2020 10:28:49 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma03ams.nl.ibm.com with ESMTP id 3304um1q59-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 10:28:49 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07JASkkB21365094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Aug 2020 10:28:46 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0BBA42064;
-        Wed, 19 Aug 2020 10:28:46 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0409242041;
-        Wed, 19 Aug 2020 10:28:45 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.85.116.28])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Aug 2020 10:28:44 +0000 (GMT)
-From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
-To:     hch@infradead.org, darrick.wong@oracle.com
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        riteshh@linux.ibm.com, anju@linux.vnet.ibm.com
-Subject: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
-Date:   Wed, 19 Aug 2020 15:58:41 +0530
-Message-Id: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Wed, 19 Aug 2020 06:32:18 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B02C061757;
+        Wed, 19 Aug 2020 03:32:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id f193so11448160pfa.12;
+        Wed, 19 Aug 2020 03:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=anNefZypNBNyeAiop+Awx8oJbDXiIkICXZ8m5YrLk34=;
+        b=OcjB70+iaINz8+km8ALYsIDidVUELFZ5RZJb7PaZ37nIwMbCOssnD8pIZH11dawT+J
+         4AbF3evMUTKdRnWlphEkKXkEfW8N0fda5qiej4LW75S3Z/fb8cepse7hvQWoI5jjJG5I
+         IfX9Uzp7QxgfOcW0btEWH9WHxj4Cjs/P6XVW/TRmsSlMOd81+cWZl9FSXh6KMI0CPc5A
+         +hJYQ8yqYwKvmlfxKuu97tedKwQNbOneZK3YKzaa+3VuN+vlW+dRLGq1demCof337wEb
+         SoZo5p0KnC13KZh5Q4salCJzr29uCqv6j1iMySqUasFpo2ZomL883zHHK2ZuHb0VhtRY
+         diiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=anNefZypNBNyeAiop+Awx8oJbDXiIkICXZ8m5YrLk34=;
+        b=GqIIRwFDb+/Xui029976StX6YeUam+vZhX4pJvOUQ3AK4zbXmA/pfBScL0H5bFNxAS
+         Mq6ga0BziId4cyW6efLmQg9wbPfl+zH6ayKNwXJZ6P95vzar/Kw7udxDFz6IUOJhN1Mv
+         9PSSrzGAV5bzDe9hsLiGKAaLO1buOPbIQBUstcLTFPDUY5Bb52VqV16i2fnWNttjSCDo
+         5AR9FKV0PdGrgFajkijLhkc6cCvBp3ZC1k8aQ3AUpw5SJ+VG5O0VcSROHdgDKr3eZHCt
+         VLbnvufOORVl/zMstP4n3J/9ch2FjLoC4p/Umx9mUGm/Muv/alKKQEiJ7byTwPkEiUUy
+         rZQw==
+X-Gm-Message-State: AOAM531Ib1DOnP/S7d2Y/KwESSlQB2CWX9PTM1Qym3WDMhBizP8mlUV+
+        4TlzTlguXI/e0cDBjWxU/RILNPi0jVs+1wli47s=
+X-Google-Smtp-Source: ABdhPJy9N5GGtZRfM6arZTfwY2ew99jvNw44O9fYuyo18fzwV1ajUpxYutlhdyjuuwNhVxVoG4Sx8JFkY+5d5vfERo8=
+X-Received: by 2002:a63:ec18:: with SMTP id j24mr15765794pgh.74.1597833134742;
+ Wed, 19 Aug 2020 03:32:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_04:2020-08-19,2020-08-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=708 priorityscore=1501 suspectscore=0 phishscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxscore=0 clxscore=1011 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008190082
+References: <20200810213055.103962-1-Sandeep.Singh@amd.com> <20200810213055.103962-4-Sandeep.Singh@amd.com>
+In-Reply-To: <20200810213055.103962-4-Sandeep.Singh@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 13:31:58 +0300
+Message-ID: <CAHp75VfO-6UOy=u+tX-iFb0XtNs_6Xfk3ZAQn6Rg9739JxULdg@mail.gmail.com>
+Subject: Re: [PATCH v7 3/4] SFH: Transport Driver to add support of AMD Sensor
+ Fusion Hub (SFH)
+To:     Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Richard Neumann <mail@richard-neumann.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>, Shyam-sundar.S-k@amd.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Harjani <riteshh@linux.ibm.com>
+On Tue, Aug 11, 2020 at 12:31 AM Sandeep Singh <Sandeep.Singh@amd.com> wrote:
 
-__bio_try_merge_page() may return same_page = 1 and merged = 0. 
-This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
-Handle this case in iomap_add_to_ioend() by incrementing write_count.
-This scenario mostly happens where we have too much dirty data accumulated. 
+> This part of module will provide the interaction between HID framework
 
-w/o the patch we hit below kernel warning,
- 
- WARNING: CPU: 18 PID: 5130 at fs/iomap/buffered-io.c:74 iomap_page_release+0x120/0x150
- CPU: 18 PID: 5130 Comm: fio Kdump: loaded Tainted: G        W         5.8.0-rc3 #6
- Call Trace:
-  __remove_mapping+0x154/0x320 (unreliable)
-  iomap_releasepage+0x80/0x180
-  try_to_release_page+0x94/0xe0
-  invalidate_inode_page+0xc8/0x110
-  invalidate_mapping_pages+0x1dc/0x540
-  generic_fadvise+0x3c8/0x450
-  xfs_file_fadvise+0x2c/0xe0 [xfs]
-  vfs_fadvise+0x3c/0x60
-  ksys_fadvise64_64+0x68/0xe0
-  sys_fadvise64+0x28/0x40
-  system_call_exception+0xf8/0x1c0
-  system_call_common+0xf0/0x278
+of the module
 
-Reported-by: Shivaprasad G Bhat <sbhat@linux.ibm.com>
-Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
----
- fs/iomap/buffered-io.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> and client layer.This module will registered client layer with
 
-diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
-index bcfc288dba3f..4e8062279e66 100644
---- a/fs/iomap/buffered-io.c
-+++ b/fs/iomap/buffered-io.c
-@@ -1332,10 +1332,12 @@ iomap_add_to_ioend(struct inode *inode, loff_t offset, struct page *page,
- 
- 	merged = __bio_try_merge_page(wpc->ioend->io_bio, page, len, poff,
- 			&same_page);
--	if (iop && !same_page)
-+	if (iop && merged && !same_page)
- 		atomic_inc(&iop->write_count);
- 
- 	if (!merged) {
-+		if (iop)
-+			atomic_inc(&iop->write_count);
- 		if (bio_full(wpc->ioend->io_bio, len)) {
- 			wpc->ioend->io_bio =
- 				iomap_chain_bio(wpc->ioend->io_bio);
+register
+
+> HID framework.
+
+...
+
+> +/*
+
+Is it kernel doc or not? Fix this in all occurrences.
+
+> + * amdtp_hid_parse() - hid-core .parse() callback
+> + * @hid:       hid device instance
+> + *
+> + * This function gets called during call to hid_add_device
+> + *
+> + * Return: 0 on success and non zero on error
+> + */
+
+...
+
+> +static void amdtp_hid_request(struct hid_device *hid, struct hid_report *rep, int reqtype)
+> +{
+> +       int rc;
+> +
+> +       switch (reqtype) {
+> +       case HID_REQ_GET_REPORT:
+> +               rc = amd_sfh_get_report(hid, rep->id, rep->type);
+> +               if (rc)
+> +                       pr_err("AMDSFH  get report error ");
+
+Use dev_err() and similar in the other places.
+
+> +               break;
+> +       case HID_REQ_SET_REPORT:
+> +               amd_sfh_set_report(hid, rep->id, reqtype);
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +}
+
+...
+
+> +       if (!cli_data->request_done[i])
+> +               ret = wait_event_interruptible_timeout(hid_data->hid_wait,
+> +                                                      cli_data->request_done[i], 1500);
+
+Magic number!
+
+> +       if (ret > 0)
+> +               return 0;
+
+Usually we return errors first...
+
+> +       else if (ret == -ERESTARTSYS)
+> +               return -ERESTARTSYS;
+> +       else
+> +               return -ETIMEDOUT;
+> +}
+
+...
+
+> +       hid = hid_allocate_device();
+> +       if (IS_ERR(hid)) {
+
+> +               rc = PTR_ERR(hid);
+> +               return rc;
+
+Why do you need two lines here?
+
+> +       }
+
+...
+
+> +       hid_data = kzalloc(sizeof(*hid_data), GFP_KERNEL);
+
+devm_kzalloc() ?
+
+> +       if (!hid_data) {
+> +               rc = -ENOMEM;
+> +               goto err_hid_data;
+> +       }
+
+...
+
+> +#define AMD_SFH_HID_VENDOR     1022
+
+Decimal?!
+
+> +#define AMD_SFH_HID_PRODUCT    0x0001
+
+...
+
+> +#include <linux/dma-mapping.h>
+> +#include <linux/hid.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +#include <linux/workqueue.h>
+
+> +#include <uapi/asm-generic/errno-base.h>
+
+Huh?! linux/errno.h
+
++ blank line here.
+
+> +#include "hid_descriptor/amd_sfh_hid_descriptor.h"
+> +#include "amdsfh_hid.h"
+> +#include "amd_mp2_pcie.h"
+
+...
+
+> +#define PERIOD  200
+
+Too generic name (namespace?), absence of unit.
+
+...
+
+> +       for (i = 0; i < cli_data->num_hid_devices; i++) {
+> +               if (cli_data->hid_sensor_hubs[i] == hid) {
+
+if (!...)
+  continue;
+
+?
+
+> +                       struct request_list *new = kzalloc(sizeof(*new), GFP_KERNEL);
+> +
+> +                       if (!new)
+> +                               return -ENOMEM;
+> +                       new->current_index = i;
+> +                       new->sensor_idx = cli_data->sensor_idx[i];
+> +                       new->hid = hid;
+> +                       new->report_type = report_type;
+> +                       new->report_id = report_id;
+> +                       cli_data->report_id[i] = report_id;
+> +                       cli_data->request_done[i] = false;
+> +                       list_add(&new->list, &req_list.list);
+> +                       break;
+> +               }
+> +       }
+
 -- 
-2.25.4
-
+With Best Regards,
+Andy Shevchenko
