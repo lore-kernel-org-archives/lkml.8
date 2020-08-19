@@ -2,136 +2,129 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA85C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0E62067C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B44732067C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:02:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Il4mUn2K"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iyYZ/UQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbgHSRCI (ORCPT
+        id S1726700AbgHSRCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:02:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45842 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHSRCG (ORCPT
+        Wed, 19 Aug 2020 13:02:41 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25293 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725804AbgHSRCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:02:06 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5069AC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:02:05 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id g13so11184699ioo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 10:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c5R0bKLD4IQJAxbXV/MHy5oB2ZKOef13BK1brjzJ63Q=;
-        b=Il4mUn2KElTQdKcXtaNWURCYaRHxLSwjgiUP5m1oe7/nNMPk3by8+5BUYv52G22R9c
-         g7BTGrNNW6WBMf2aIXKP7uTyJRrgbLDQ0lIW4dFwtp8SoIAY0vpZkh/TlqIe4o73ye0a
-         0yWWxkBtp0WUT6dGO855eUjmVjnJRQXI6MjENle0kyb0I1c9uWSatRY1Zd8J1J3CAr5z
-         dsnJgvWWdcRSbry8lnt4BaRfwbuWX046gwBGDd0HHZlUBjr7fXlZgCSGjgAeJLNbyS0p
-         hVFvhgK+gTr3jXAMqfr5n+Sxezdk4w7HEVfDJYClNLuM0ZZLsFXRSgtzWNIy6wXApI6X
-         A9gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c5R0bKLD4IQJAxbXV/MHy5oB2ZKOef13BK1brjzJ63Q=;
-        b=dZkinArVfJvg6KGUaPJhfZl7V4zEUBerxDAaMi+gTiioXxXsTlZya1HweqKaeVP/rV
-         bOplle05o9jULuQIRcLyQUqloVybAK+wv5cee/egw9f8OEshqxCeaYl794vqJjMo8Ji3
-         FuZSCIk2tTcIEFdxkE0nzwrw4mPP/d3XioqHQH/o6zF0V2H4hGLF/sKaOxBD4u8/DX4i
-         uplU/r6UmWAg06Gvmmryg69SKEjjLLCy/EUPvNkaFyFVXo+8Lx8iXS1PuKB7xqWfgLaw
-         NCmPmcZwacNnwlh4eV86CG7tVZs/YYvwLL3y9muXmwxIaQDrracY0qISit/uhDulYjki
-         UxOw==
-X-Gm-Message-State: AOAM531kJrOlTe8iiRMEf2P8Mxz7YYVnioLtDOJx1YR9o5GYn8T5vS3n
-        eYmJGo/EU9z/0Z2fwNdltEBZieW5qjbPLaFDN2kPRA==
-X-Google-Smtp-Source: ABdhPJz6U3qxfQY7FyyjwoYDmcSIZxEIGX20jsPbcikmWABU8VgSxQUtwLuL76KK7Ncz4aahl8skE/4PZ2aPsssIy2c=
-X-Received: by 2002:a05:6638:d95:: with SMTP id l21mr23962229jaj.98.1597856524486;
- Wed, 19 Aug 2020 10:02:04 -0700 (PDT)
+        Wed, 19 Aug 2020 13:02:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597856557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cHu72fh1fFkkjp/hOIC1Y0NnDw8ZT+1uUdQ3/2I1wFY=;
+        b=iyYZ/UQdDjPSUnaA2pwumpmuLdEGFU0JeGYEcJcXDKnA5wG0cx3fFRarvA+fR+kMjHJRNv
+        FWvQzVJIhI8gSbRHCtn9BUem+AgkkYWJKZE+F7jW7eF+1D73DW3n+EhnCCrBifzceuV1WV
+        YHK+wT3LZXIosoM5N5ZjlPhj+4Y226s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-576-BzVCQt0pN7qIorN9J_YkMw-1; Wed, 19 Aug 2020 13:02:33 -0400
+X-MC-Unique: BzVCQt0pN7qIorN9J_YkMw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8084910054FF;
+        Wed, 19 Aug 2020 17:02:31 +0000 (UTC)
+Received: from treble (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C39F5D9E8;
+        Wed, 19 Aug 2020 17:02:25 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 12:02:23 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
+ speculation
+Message-ID: <20200819170223.nmv7dekvpc5yk4rm@treble>
+References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
+ <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200817193140.3659956-1-mathieu.poirier@linaro.org> <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com>
-In-Reply-To: <ede047ea-ad6a-1f7e-d597-b47bc87271c3@huawei.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 19 Aug 2020 11:01:38 -0600
-Message-ID: <CANLsYkw2aBJmrHV+8_bDUtgD-Jfvndqz2kOfNNcBBMM+vztkug@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entries for CoreSight and Arm SPE
-To:     John Garry <john.garry@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Will Deacon <will@kernel.org>, Leo Yan <leo.yan@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 at 11:56, John Garry <john.garry@huawei.com> wrote:
->
-> On 17/08/2020 20:31, Mathieu Poirier wrote:
-> > Add entries for perf tools elements related to the support of
-> > Arm CoreSight and Arm SPE.
->
-> Thanks for doing this...
->
-> >
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > ---
-> >   MAINTAINERS | 10 ++++++++++
-> >   1 file changed, 10 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 4e2698cc7e23..f9bb76baeec9 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -13427,8 +13427,18 @@ F:   tools/perf/
-> >   PERFORMANCE EVENTS SUBSYSTEM ARM64 PMU EVENTS
-> >   R:  John Garry <john.garry@huawei.com>
-> >   R:  Will Deacon <will@kernel.org>
-> > +R:   Mathieu Poirier <mathieu.poirier@linaro.org>
-> > +R:   Leo Yan <leo.yan@linaro.org>
-> >   L:  linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> >   S:  Supported
-> > +F:   tools/build/feature/test-libopencsd.c
-> > +F:   tools/perf/arch/arm/util/auxtrace.c
-> > +F:   tools/perf/arch/arm/util/cs-etm.*
-> > +F:   tools/perf/arch/arm/util/pmu.c
-> > +F:   tools/perf/arch/arm64/util/arm-spe.c
-> > +F:   tools/perf/util/arm-spe.h
-> > +F:   tools/perf/util/cs-etm-decoder/*
-> > +F:   tools/perf/util/cs-etm.*
->
-> But from the previous discussion, I thought that we wanted an entry to
-> cover all tools/perf/arch/arm64/ and other related folders. Or was it
-> just put all special interest parts (like SPE support) under one entry
-> and leave the other arm/arm64 parts to be caught by "PERFORMANCE EVENTS
-> SUBSYSTEM" entry?
+On Wed, Aug 19, 2020 at 09:39:10AM -0700, Andy Lutomirski wrote:
+> On Wed, Aug 19, 2020 at 7:50 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > +/*
+> > + * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
+> > + * user pointer.  This blocks speculative dereferences of user-controlled
+> > + * pointers.
+> > + */
+> > +#define uaccess_mask_ptr(ptr) \
+> > +       (__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
+> > +
+> 
+> If I dug through all the macros correctly, this is generating a fairly
+> complex pile of math to account for the fact that user_addr_max() is
+> variable and that it's a nasty number.
 
-I do not have the time to maintain anything outside of coresight -
-listing individual files as I did removes any ambiguity on that front.
-I'm happy to add tools/perf/arch/arm and tools/perf/arch/arm64/ if you
-agree to maintain them.  In that case you will have to be more
-specific about the "other related folders" you are referring to above.
+The math is actually pretty simple.  It's identical to what getuser.S is
+doing:
 
-Thanks,
-Mathieu
+	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
+	sbb %_ASM_DX, %_ASM_DX
+	and %_ASM_DX, %_ASM_AX
 
->
-> Cheers,
-> John
->
-> >   F:  tools/perf/pmu-events/arch/arm64/
-> >
-> >   PERSONALITY HANDLING
-> >
->
+> But I don't think there's any particular need to use the real maximum
+> user address here.  Allowing a mis-speculated user access to a
+> non-canonical address or to the top guard page of the lower canonical
+> region is harmless.  With current kernels, a sequence like:
+> 
+> if (likely((long)addr > 0) {
+>   masked_addr = addr & 0x7FFFFFFFFFFFFFFFUL;
+> } else {
+>   if (kernel fs) {
+>     masked_addr = addr;
+>   } else {
+>     EFAULT;
+>   }
+> }
+
+The masking has to be done without conditional branches, otherwise it
+defeats the point.
+
+> could plausibly be better.  But Christoph's series fixes this whole
+> mess, and I think that this should be:
+> 
+> #define uaccess_mask_ptr(ptr) ((__typeof___(ptr)) (__force unsigned
+> long)ptr & USER_ADDR_MASK))
+> 
+> where USER_ADDR_MASK is the appropriate value for 32-bit or 64-bit.
+
+Yeah, we could do that.  Though in the meantime, the simple merge
+conflict resolution with Christoph's patches would be
+s/user_addr_max/TASK_SIZE_MAX/ in my uaccess_mask_ptr() macro.
+
+-- 
+Josh
+
