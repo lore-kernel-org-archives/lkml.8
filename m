@@ -2,154 +2,159 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,
+	CHARSET_FARAWAY_HEADER,DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCF5C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756B7C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC8820829
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4B320855
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:24:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="RyM+LpnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHSDWq (ORCPT
+        id S1727912AbgHSDYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:22:46 -0400
-Received: from mga02.intel.com ([134.134.136.20]:17561 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHSDWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:22:45 -0400
-IronPort-SDR: /ya+HZU058Vq46pjpK4qAuJGFJI2p7t41McJ/WlbWu5LnkwHLuMM5mxIkVMpjpn876CWRekDX/
- WQafulJ+YDjg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="142857183"
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="142857183"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 20:22:44 -0700
-IronPort-SDR: Senj1BZqyIx7QEhJtx3MgP2EuF3Z3mhgVvhZsvD6NczpUCw8/+zSa9uXt8XUGAkoRlr9dTq78T
- 6wwpQwyDiuIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="329189501"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Aug 2020 20:22:43 -0700
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Zhang Rui <rui.zhang@intel.com>, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH][v2] ACPI: processor: Print more information when acpi_processor_evaluate_cst() failed
-Date:   Wed, 19 Aug 2020 11:23:54 +0800
-Message-Id: <20200819032354.30234-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 18 Aug 2020 23:24:00 -0400
+Received: from mail-dm6nam12on2074.outbound.protection.outlook.com ([40.107.243.74]:41505
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726605AbgHSDX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 23:23:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gm1ionFQRq3/ezlNxrotL1h0PIy57E+JY2uxcAeZw0biPd0k9XiWZqUT1u0TrtdxNx7lmgOo5+jNHK1BjhorLHZhENSBTT0bx5jcwRWTPuktyyvZ3tv69eHy6NqsMkKqv+J644MV5JJEFrPCTQyVq5tlPp/MHzvHv85L0S4nl/2VOEuIpdLrdfhtGNrXSc87UJqrhYUpMK7EFapBenr7+yEihesbP+y0NczVLJqx49vdI6lG3Y3//tlT38T2oL+eh/tIY85ruopn98gD+1VBVxxFaWQyJfqJ7CXz9NB6r89AHbEhxo75MdSM1tU54hE/7HG7WyhcyF0l5960b5EsiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wj3ktnfkaE/zES+RSgPwDyQ8mhOTu7xXCT0aIGkFCfY=;
+ b=aQzRT/XXAEbhF/bjrFGt00WQSKbFUd/i1pjivc4w6y483ookZ9xu046GzNffZ+XlIeMNlbZEKsF6d0AXD+eejEIjfddMbW8Ws/WK72WYZ0HXmDjyAACavVlwFsHnpp4lAcexdJolUU0DVu5cXZcnNAvZ88bJP7JT5Vm2kPA1vnALlXC8bKftj5oUwBaDgXG6Od0O9H7y+0H/ZzYsKU56bu5mW+bnIW1PPqT1OEp1WXfmXLanheJJGHdx1TsKk+kMQgpmEJRaFxcK+UIk+PCF65r1VIwd5NYtlkInxojZo2fybkWtPYeWGHfblBQk4ArHEmswtFPkTOJ48sdLEOOwNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wj3ktnfkaE/zES+RSgPwDyQ8mhOTu7xXCT0aIGkFCfY=;
+ b=RyM+LpnNBTOapNqc5mDH/epreEC1PEe7oc9YGitq/Tl4ZJKy7p0Birw8W9umQjuubLdadVYb0c+wRhO4Wsb1VIikDPz55cPuZ53lwTo9VsH8qPkNDH6G3ljYBBDGfWAqga84WaHBJZOy/19rmZEdH/X4bMIaVF5Rtp2MGrRJ26w=
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com (2603:10b6:a02:c4::17)
+ by BYAPR11MB2807.namprd11.prod.outlook.com (2603:10b6:a02:c3::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 19 Aug
+ 2020 03:23:53 +0000
+Received: from BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::d87a:b368:655c:e12b]) by BYAPR11MB2632.namprd11.prod.outlook.com
+ ([fe80::d87a:b368:655c:e12b%7]) with mapi id 15.20.3305.024; Wed, 19 Aug 2020
+ 03:23:53 +0000
+From:   "Zhang, Qiang" <Qiang.Zhang@windriver.com>
+To:     "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>
+CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: =?gb2312?B?u9i4tDogW1BBVENIIHYyXSBsaWJudmRpbW06IEtBU0FOOiBnbG9iYWwtb3V0?=
+ =?gb2312?B?LW9mLWJvdW5kcyBSZWFkIGluIGludGVybmFsX2NyZWF0ZV9ncm91cA==?=
+Thread-Topic: [PATCH v2] libnvdimm: KASAN: global-out-of-bounds Read in
+ internal_create_group
+Thread-Index: AQHWcIZ759O455Me90qyS7wcmU/yCKk+zxcs
+Date:   Wed, 19 Aug 2020 03:23:53 +0000
+Message-ID: <BYAPR11MB26327E2CF93B199DFDA4BCD4FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
+References: <20200812085501.30963-1-qiang.zhang@windriver.com>
+In-Reply-To: <20200812085501.30963-1-qiang.zhang@windriver.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=windriver.com;
+x-originating-ip: [60.247.85.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2efac0b5-453d-4560-de08-08d843ef4c7b
+x-ms-traffictypediagnostic: BYAPR11MB2807:
+x-microsoft-antispam-prvs: <BYAPR11MB2807808ED945966378CC092EFF5D0@BYAPR11MB2807.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4VQkvVhvAppgxNkyNtEWthhDny1QO/cL40UBnuNWLlUadEqcmdDMzGy42kjQzzVB2MLZGseiZmKhl4BkgvlT2TIcCDDPSrKNi7bbRFcqJmllTPJB5G56Cof09dLC/j+S1M5lG9JkL+yDz3HUZI8UTvJLWK3T5Y7oRCP6yFevcjYqlY8cxN7j4/qzu5CEbuzfesgJNALGhOZYTUaEBoITwCILc3UUaX/jt/FxYlwQj38/jgfBdePlf+uvLLxVChvMem6FGPJNL18r7uckGfjeXlBitZnQ/WeQgzh+tyWHAIziKBMzTa/lr7ByJm0m7lL3V/gIJ8rgnA8oq6QjWxLyJQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2632.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(376002)(39840400004)(366004)(136003)(7696005)(8936002)(54906003)(4326008)(33656002)(9686003)(71200400001)(55016002)(224303003)(83380400001)(186003)(2906002)(66476007)(86362001)(26005)(66946007)(52536014)(478600001)(316002)(66556008)(64756008)(6506007)(91956017)(5660300002)(110136005)(76116006)(66446008);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: XlCKAUbNexF7xOxjXfqzZBejUAimNBCYwX2UVvJcsJNskA+/skJzFlYbnsDFY5QfsBrTtK2Yms0YnY506CTMs9Gs7icNuNc8DgStU2lN/bG9+GF0RqS0iWwSWkbrKFQKCLRCq21Aqepl6SCUAZy3XBnsKo4hF4/qR+iv15tOZftg3jr6/X9aMiH304RO72jJpV0JN5NrJ7Oz9C0DXiJsn1OL+rFdGWrsrJXwy8bwTQC8ITTm2W7VXbiBC00gBk8cNfilY/5O0GUKRjUBjJxHpJOB8vPuowiJLhMCjQOmea0Sfo2BLgjXck9vZZbR+fnXLSAVZLFn4zYLJUiyrkimUl4XbAdNPfx+1fL7+9tLBHP3DYQZLfuwO0RTV/IQt1G2kb4hlFCLFTRU3VxqWEc8O3soony/cr42OdVGjNEo+nYzZAQAxLzQ4UbY+XLS+N1/PB1lK0/2oP9VpQMRwTjYYj3J/skZDHdhXcythwa9nLP7qyHbmvG5YQzNmXTFxnbl09JTII9XMe+MRjv6n9i6Vn2FRcUXGTUIY9lEvb53aMrb1yQ7v1HJHvd6nubappps3HKD1np1KA47PxYpEuGm33HQBFC9agXAwFAulxgKc14zsgWJZezixixtz4iFJEcSemgHOMw05Bmbi/7VjA+JIw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2632.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2efac0b5-453d-4560-de08-08d843ef4c7b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 03:23:53.1136
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xDHXP4JM0JRfDmrikLpN3BEm1b4/lo08zy0JX5QGa2mLVbRwtNFfa1rinhB7EFSWHJKYDZ0fDtrQd3WFhkXLXiB8yP61js9o6FqYUfSBkho=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2807
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some platforms have bogus _CST which might cause expectd behavior
-in the cpu idle driver. Some bogus _CST might be unable to be
-disassembled by acpica-tools due to broken format.
-Print extra log if the _CST extraction/verification failed.
-This can be used to help the user narrow down why the cpu
-idle driver fails to behave as expected.
-
-Suggested-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v2: According to Rafael's suggestion, change the log level
-    from "warn" to "info"
----
- drivers/acpi/acpi_processor.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/acpi/acpi_processor.c b/drivers/acpi/acpi_processor.c
-index b51ddf3bb616..412a9725cc1e 100644
---- a/drivers/acpi/acpi_processor.c
-+++ b/drivers/acpi/acpi_processor.c
-@@ -798,22 +798,34 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 		memset(&cx, 0, sizeof(cx));
- 
- 		element = &cst->package.elements[i];
--		if (element->type != ACPI_TYPE_PACKAGE)
-+		if (element->type != ACPI_TYPE_PACKAGE) {
-+			acpi_handle_info(handle, "_CST C%d type(%x) is not package, skip...\n",
-+					 i, element->type);
- 			continue;
-+		}
- 
--		if (element->package.count != 4)
-+		if (element->package.count != 4) {
-+			acpi_handle_info(handle, "_CST C%d package count(%d) is not 4, skip...\n",
-+					 i, element->package.count);
- 			continue;
-+		}
- 
- 		obj = &element->package.elements[0];
- 
--		if (obj->type != ACPI_TYPE_BUFFER)
-+		if (obj->type != ACPI_TYPE_BUFFER) {
-+			acpi_handle_info(handle, "_CST C%d package element[0] type(%x) is not buffer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		reg = (struct acpi_power_register *)obj->buffer.pointer;
- 
- 		obj = &element->package.elements[1];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_info(handle, "_CST C[%d] package element[1] type(%x) is not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		cx.type = obj->integer.value;
- 		/*
-@@ -850,6 +862,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 				cx.entry_method = ACPI_CSTATE_HALT;
- 				snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI HLT");
- 			} else {
-+				acpi_handle_info(handle, "_CST C%d declares FIXED_HARDWARE C-state but not supported in hardware, skip...\n",
-+						 i);
- 				continue;
- 			}
- 		} else if (reg->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
-@@ -857,6 +871,8 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 			snprintf(cx.desc, ACPI_CX_DESC_LEN, "ACPI IOPORT 0x%x",
- 				 cx.address);
- 		} else {
-+			acpi_handle_info(handle, "_CST C%d space_id(%x) neither FIXED_HARDWARE nor SYSTEM_IO, skip...\n",
-+					 i, reg->space_id);
- 			continue;
- 		}
- 
-@@ -864,14 +880,20 @@ int acpi_processor_evaluate_cst(acpi_handle handle, u32 cpu,
- 			cx.valid = 1;
- 
- 		obj = &element->package.elements[2];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_info(handle, "_CST C%d package element[2] type(%x) not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		cx.latency = obj->integer.value;
- 
- 		obj = &element->package.elements[3];
--		if (obj->type != ACPI_TYPE_INTEGER)
-+		if (obj->type != ACPI_TYPE_INTEGER) {
-+			acpi_handle_info(handle, "_CST C%d package element[3] type(%x) not integer, skip...\n",
-+					 i, obj->type);
- 			continue;
-+		}
- 
- 		memcpy(&info->states[++last_index], &cx, sizeof(cx));
- 	}
--- 
-2.17.1
-
+Y2M6IERhbiBXaWxsaWFtcw0KUGxlYXNlIHJldmlldy4NCg0KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXw0Kt6K8/sjLOiBsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJu
+ZWwub3JnIDxsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnPiC0+rHtIHFpYW5nLnpo
+YW5nQHdpbmRyaXZlci5jb20gPHFpYW5nLnpoYW5nQHdpbmRyaXZlci5jb20+DQq3osvNyrG85Dog
+MjAyMMTqONTCMTLI1SAxNjo1NQ0KytW8/sjLOiBkYW4uai53aWxsaWFtc0BpbnRlbC5jb207IHZp
+c2hhbC5sLnZlcm1hQGludGVsLmNvbTsgZGF2ZS5qaWFuZ0BpbnRlbC5jb207IGlyYS53ZWlueUBp
+bnRlbC5jb20NCrOty806IGxpbnV4LW52ZGltbUBsaXN0cy4wMS5vcmc7IGxpbnV4LWtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmcNCtb3zOI6IFtQQVRDSCB2Ml0gbGlibnZkaW1tOiBLQVNBTjogZ2xvYmFs
+LW91dC1vZi1ib3VuZHMgUmVhZCBpbiBpbnRlcm5hbF9jcmVhdGVfZ3JvdXANCg0KRnJvbTogWnFp
+YW5nIDxxaWFuZy56aGFuZ0B3aW5kcml2ZXIuY29tPg0KDQpCZWNhdXNlIHRoZSBsYXN0IG1lbWJl
+ciBvZiB0aGUgIm52ZGltbV9maXJtd2FyZV9hdHRyaWJ1dGVzIiBhcnJheQ0Kd2FzIG5vdCBhc3Np
+Z25lZCBhIG51bGwgcHRyLCB3aGVuIHRyYXZlcnNhbCBvZiAiZ3JwLT5hdHRycyIgYXJyYXkNCmlz
+IG91dCBvZiBib3VuZHMgaW4gImNyZWF0ZV9maWxlcyIgZnVuYy4NCg0KZnVuYzoNCiAgICAgICAg
+Y3JlYXRlX2ZpbGVzOg0KICAgICAgICAgICAgICAgIC0+Zm9yIChpID0gMCwgYXR0ciA9IGdycC0+
+YXR0cnM7ICphdHRyICYmICFlcnJvcjsgaSsrLCBhdHRyKyspDQogICAgICAgICAgICAgICAgICAg
+ICAgICAtPi4uLi4NCg0KQlVHOiBLQVNBTjogZ2xvYmFsLW91dC1vZi1ib3VuZHMgaW4gY3JlYXRl
+X2ZpbGVzIGZzL3N5c2ZzL2dyb3VwLmM6NDMgW2lubGluZV0NCkJVRzogS0FTQU46IGdsb2JhbC1v
+dXQtb2YtYm91bmRzIGluIGludGVybmFsX2NyZWF0ZV9ncm91cCsweDlkOC8weGIyMA0KZnMvc3lz
+ZnMvZ3JvdXAuYzoxNDkNClJlYWQgb2Ygc2l6ZSA4IGF0IGFkZHIgZmZmZmZmZmY4YTJlNGNmMCBi
+eSB0YXNrIGt3b3JrZXIvdTE3OjEwLzk1OQ0KDQpDUFU6IDIgUElEOiA5NTkgQ29tbToga3dvcmtl
+ci91MTc6MTAgTm90IHRhaW50ZWQgNS44LjAtc3l6a2FsbGVyICMwDQpIYXJkd2FyZSBuYW1lOiBR
+RU1VIFN0YW5kYXJkIFBDIChRMzUgKyBJQ0g5LCAyMDA5KSwNCkJJT1MgcmVsLTEuMTIuMC01OS1n
+YzliYTUyNzZlMzIxLXByZWJ1aWx0LnFlbXUub3JnIDA0LzAxLzIwMTQNCldvcmtxdWV1ZTogZXZl
+bnRzX3VuYm91bmQgYXN5bmNfcnVuX2VudHJ5X2ZuDQpDYWxsIFRyYWNlOg0KIF9fZHVtcF9zdGFj
+ayBsaWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQogZHVtcF9zdGFjaysweDE4Zi8weDIwZCBs
+aWIvZHVtcF9zdGFjay5jOjExOA0KIHByaW50X2FkZHJlc3NfZGVzY3JpcHRpb24uY29uc3Rwcm9w
+LjAuY29sZCsweDUvMHg0OTcgbW0va2FzYW4vcmVwb3J0LmM6MzgzDQogX19rYXNhbl9yZXBvcnQg
+bW0va2FzYW4vcmVwb3J0LmM6NTEzIFtpbmxpbmVdDQoga2FzYW5fcmVwb3J0LmNvbGQrMHgxZi8w
+eDM3IG1tL2thc2FuL3JlcG9ydC5jOjUzMA0KIGNyZWF0ZV9maWxlcyBmcy9zeXNmcy9ncm91cC5j
+OjQzIFtpbmxpbmVdDQogaW50ZXJuYWxfY3JlYXRlX2dyb3VwKzB4OWQ4LzB4YjIwIGZzL3N5c2Zz
+L2dyb3VwLmM6MTQ5DQogaW50ZXJuYWxfY3JlYXRlX2dyb3Vwcy5wYXJ0LjArMHg5MC8weDE0MCBm
+cy9zeXNmcy9ncm91cC5jOjE4OQ0KIGludGVybmFsX2NyZWF0ZV9ncm91cHMgZnMvc3lzZnMvZ3Jv
+dXAuYzoxODUgW2lubGluZV0NCiBzeXNmc19jcmVhdGVfZ3JvdXBzKzB4MjUvMHg1MCBmcy9zeXNm
+cy9ncm91cC5jOjIxNQ0KIGRldmljZV9hZGRfZ3JvdXBzIGRyaXZlcnMvYmFzZS9jb3JlLmM6MjAy
+NCBbaW5saW5lXQ0KIGRldmljZV9hZGRfYXR0cnMgZHJpdmVycy9iYXNlL2NvcmUuYzoyMTc4IFtp
+bmxpbmVdDQogZGV2aWNlX2FkZCsweDdmZC8weDFjNDAgZHJpdmVycy9iYXNlL2NvcmUuYzoyODgx
+DQogbmRfYXN5bmNfZGV2aWNlX3JlZ2lzdGVyKzB4MTIvMHg4MCBkcml2ZXJzL252ZGltbS9idXMu
+Yzo1MDYNCiBhc3luY19ydW5fZW50cnlfZm4rMHgxMjEvMHg1MzAga2VybmVsL2FzeW5jLmM6MTIz
+DQogcHJvY2Vzc19vbmVfd29yaysweDk0Yy8weDE2NzAga2VybmVsL3dvcmtxdWV1ZS5jOjIyNjkN
+CiB3b3JrZXJfdGhyZWFkKzB4NjRjLzB4MTEyMCBrZXJuZWwvd29ya3F1ZXVlLmM6MjQxNQ0KIGt0
+aHJlYWQrMHgzYjUvMHg0YTAga2VybmVsL2t0aHJlYWQuYzoyOTINCiByZXRfZnJvbV9mb3JrKzB4
+MWYvMHgzMCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjI5NA0KDQpUaGUgYnVnZ3kgYWRkcmVz
+cyBiZWxvbmdzIHRvIHRoZSB2YXJpYWJsZToNCiBudmRpbW1fZmlybXdhcmVfYXR0cmlidXRlcysw
+eDEwLzB4NDANCg0KUmVwb3J0ZWQtYnk6IHN5emJvdCsxY2YwZmZlNjFhZWNmNDZmNTg4ZkBzeXpr
+YWxsZXIuYXBwc3BvdG1haWwuY29tDQpTaWduZWQtb2ZmLWJ5OiBacWlhbmcgPHFpYW5nLnpoYW5n
+QHdpbmRyaXZlci5jb20+DQotLS0NCiB2MS0+djI6DQogTW9kaWZ5IHRoZSBkZXNjcmlwdGlvbiBv
+ZiB0aGUgZXJyb3IuDQoNCiBkcml2ZXJzL252ZGltbS9kaW1tX2RldnMuYyB8IDEgKw0KIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRpbW0v
+ZGltbV9kZXZzLmMgYi9kcml2ZXJzL252ZGltbS9kaW1tX2RldnMuYw0KaW5kZXggNjEzNzRkZWY1
+MTU1Li5iNTkwMzJlMDg1OWIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL252ZGltbS9kaW1tX2RldnMu
+Yw0KKysrIGIvZHJpdmVycy9udmRpbW0vZGltbV9kZXZzLmMNCkBAIC01MjksNiArNTI5LDcgQEAg
+c3RhdGljIERFVklDRV9BVFRSX0FETUlOX1JXKGFjdGl2YXRlKTsNCiBzdGF0aWMgc3RydWN0IGF0
+dHJpYnV0ZSAqbnZkaW1tX2Zpcm13YXJlX2F0dHJpYnV0ZXNbXSA9IHsNCiAgICAgICAgJmRldl9h
+dHRyX2FjdGl2YXRlLmF0dHIsDQogICAgICAgICZkZXZfYXR0cl9yZXN1bHQuYXR0ciwNCisgICAg
+ICAgTlVMTCwNCiB9Ow0KDQogc3RhdGljIHVtb2RlX3QgbnZkaW1tX2Zpcm13YXJlX3Zpc2libGUo
+c3RydWN0IGtvYmplY3QgKmtvYmosIHN0cnVjdCBhdHRyaWJ1dGUgKmEsIGludCBuKQ0KLS0NCjIu
+MTcuMQ0KDQo=
