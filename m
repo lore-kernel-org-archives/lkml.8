@@ -2,192 +2,107 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901D4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3630C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629BB207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:54:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 865A0207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:55:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="TX+hzzw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgHSSy3 (ORCPT
+        id S1726836AbgHSSzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
+        Wed, 19 Aug 2020 14:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSSyS (ORCPT
+        with ESMTP id S1725997AbgHSSzH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:54:18 -0400
-Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [IPv6:2001:1600:3:17::42af])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71633C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:54:17 -0700 (PDT)
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [10.4.36.107])
-        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4BWxlD0kK1zlhQGJ;
-        Wed, 19 Aug 2020 20:54:00 +0200 (CEST)
-Received: from ns3096276.ip-94-23-54.eu (unknown [94.23.54.103])
-        by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4BWxlB6m3Xzlh8TC;
-        Wed, 19 Aug 2020 20:53:58 +0200 (CEST)
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-To:     Mark Rutland <mark.rutland@arm.com>,
-        "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>
-Cc:     kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
- <20200812100650.GB28154@C02TD0UTHF1T.local>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Message-ID: <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
-Date:   Wed, 19 Aug 2020 20:53:42 +0200
-User-Agent: 
+        Wed, 19 Aug 2020 14:55:07 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C8F4C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:55:07 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z18so22514785wrm.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:55:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ooMhFUs9RFhswhrwBkRtQX2o8ZbiuA0ZfSr1gShQi2Q=;
+        b=TX+hzzw73D70v1zibyNZazPeJ9ek6hmB8R8NSrhcQoCsyGihMKlNkLYi/p8HHcsP5c
+         mVo5+ZJbc1ovI8/cPwyp4Vjz4CxsW+oX1zTf8QchcKsNAOwL+sEx5yQWbBLeghwfJCle
+         Wkg5vrD01Xy4SIl6gHkVt0z1pNAkZHY77Yn5k8QbW7C69vlHls42Dy6sPTBQlO4lQQ0e
+         rSPhxlyNAL/9D7eqbaGX+k4H+U2CViB77Cj6WyI4Ev1S9cGBGCXkKimNslmC5K6P/env
+         XlOMu4LXPpqLzipkAo66pFGSL87UxW1Kbprjz0XZGXFkD5k7+pOFxEluJF/wnTToyp7d
+         VWzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ooMhFUs9RFhswhrwBkRtQX2o8ZbiuA0ZfSr1gShQi2Q=;
+        b=XYG257ZVxCflYMLK4HFxfDchweNFODKIYKJM6xZSiH9ArGSh6szcnr8TwYRJdbSARc
+         h2mgo3IWvyrmxKHQdyEujWIssOcYyGQTqAp4Jj0shaMKAVOEHimQq1PEmGeSrYJf6jzK
+         su7/ydHiu8NXm3DSQKQGMLgzRcz/V/B8cib32xEyrPvu82KiZdNmY0G8iKU7Q2MJzJFa
+         FplGx2tCfyZbbotwxhPrx6ZsVHD3FECjtTJfuc3ukKt/xNWvQyGU80Bh2hY1N/BCGtvI
+         /hQJanl0hu0JHC7WJO5Au7lcZxURDu4AsC1ayCa89eHASjUWUaOSCEJPZd7H7PPEMKmN
+         NWtg==
+X-Gm-Message-State: AOAM530Sm6LKYtfeGENkl/EmFDg1J9gZ9p3f7K7y9V5rjnDnp1UnNpRP
+        WbUEfPMEziAobL5JE/bvNEvPzw==
+X-Google-Smtp-Source: ABdhPJx0Yv5S6txvI494QVf7VePMx3q8R6FTlG8yfzQhyZhSzunlCykNh+fbCmNLbxVhietRztfrow==
+X-Received: by 2002:adf:a4d7:: with SMTP id h23mr5851348wrb.276.1597863305805;
+        Wed, 19 Aug 2020 11:55:05 -0700 (PDT)
+Received: from localhost ([86.61.181.4])
+        by smtp.gmail.com with ESMTPSA id w10sm7599043wmk.0.2020.08.19.11.55.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 11:55:05 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 20:55:04 +0200
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Moshe Shemesh <moshe@nvidia.com>,
+        Moshe Shemesh <moshe@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next RFC v2 01/13] devlink: Add reload action option
+ to devlink reload command
+Message-ID: <20200819185504.GB2575@nanopsycho.orion>
+References: <1597657072-3130-1-git-send-email-moshe@mellanox.com>
+ <1597657072-3130-2-git-send-email-moshe@mellanox.com>
+ <20200817163612.GA2627@nanopsycho>
+ <3ed1115e-8b44-b398-55f2-cee94ef426fd@nvidia.com>
+ <20200818171010.11e4b615@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <cd0e3d7e-4746-d26d-dd0c-eb36c9c8a10f@nvidia.com>
+ <20200819124616.GA2314@nanopsycho.orion>
+ <fc0d7c2f-afb5-c2e7-e44b-2ab5d21d8465@nvidia.com>
+ <20200819151815.GA2575@nanopsycho.orion>
+ <20200819092551.6d94de03@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200812100650.GB28154@C02TD0UTHF1T.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819092551.6d94de03@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 12/08/2020 12:06, Mark Rutland wrote:
-> On Thu, Aug 06, 2020 at 12:26:02PM -0500, Madhavan T. Venkataraman wrote:
->> Thanks for the lively discussion. I have tried to answer some of the
->> comments below.
->>
->> On 8/4/20 9:30 AM, Mark Rutland wrote:
+Wed, Aug 19, 2020 at 06:25:51PM CEST, kuba@kernel.org wrote:
+>On Wed, 19 Aug 2020 17:18:15 +0200 Jiri Pirko wrote:
+>>>>> I will add counters on which reload were done. reload_down()/up() can return
+>>>>> which actions were actually done and devlink will show counters.  
+>>>> Why a counter? Just return what was done over netlink reply.  
 >>>
->>>> So, the context is - if security settings in a system disallow a page to have
->>>> both write and execute permissions, how do you allow the execution of
->>>> genuine trampolines that are runtime generated and placed in a data
->>>> page or a stack page?
->>> There are options today, e.g.
->>>
->>> a) If the restriction is only per-alias, you can have distinct aliases
->>>    where one is writable and another is executable, and you can make it
->>>    hard to find the relationship between the two.
->>>
->>> b) If the restriction is only temporal, you can write instructions into
->>>    an RW- buffer, transition the buffer to R--, verify the buffer
->>>    contents, then transition it to --X.
->>>
->>> c) You can have two processes A and B where A generates instrucitons into
->>>    a buffer that (only) B can execute (where B may be restricted from
->>>    making syscalls like write, mprotect, etc).
->>
->> The general principle of the mitigation is W^X. I would argue that
->> the above options are violations of the W^X principle. If they are
->> allowed today, they must be fixed. And they will be. So, we cannot
->> rely on them.
-> 
-> Hold on.
-> 
-> Contemporary W^X means that a given virtual alias cannot be writeable
-> and executeable simultaneously, permitting (a) and (b). If you read the
-> references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
-> release notes and related presentation make this clear, and further they
-> expect (b) to occur with JITS flipping W/X with mprotect().
+>>> Such counters can be useful for debugging, telling which reload actions were
+>>> done on this dev from the point it was up.  
+>> 
+>> Not sure why this is any different from other commands...
+>
+>Good question, perhaps because reset is more "dangerous"? The question
+>of "what reset this NIC" does come up in practice. With live activation
+>in the mix, knowing if the NIC FW was live activated will be very
+>useful for dissecting failures, I'd imagine.
 
-W^X (with "permanent" mprotect restrictions [1]) goes back to 2000 with
-PaX [2] (which predates partial OpenBSD implementation from 2003).
-
-[1] https://pax.grsecurity.net/docs/mprotect.txt
-[2] https://undeadly.org/cgi?action=article;sid=20030417082752
-
-> 
-> Please don't conflate your assumed stronger semantics with the general
-> principle. It not matching you expectations does not necessarily mean
-> that it is wrong.
-> 
-> If you want a stronger W^X semantics, please refer to this specifically
-> with a distinct name.
-> 
->> a) This requires a remap operation. Two mappings point to the same
->>      physical page. One mapping has W and the other one has X. This
->>      is a violation of W^X.
->>
->> b) This is again a violation. The kernel should refuse to give execute
->>      permission to a page that was writeable in the past and refuse to
->>      give write permission to a page that was executable in the past.
->>
->> c) This is just a variation of (a).
-> 
-> As above, this is not true.
-> 
-> If you have a rationale for why this is desirable or necessary, please
-> justify that before using this as justification for additional features.
-> 
->> In general, the problem with user-level methods to map and execute
->> dynamic code is that the kernel cannot tell if a genuine application is
->> using them or an attacker is using them or piggy-backing on them.
-> 
-> Yes, and as I pointed out the same is true for trampfd unless you can
-> somehow authenticate the calls are legitimate (in both callsite and the
-> set of arguments), and I don't see any reasonable way of doing that.
-> 
-> If you relax your threat model to an attacker not being able to make
-> arbitrary syscalls, then your suggestion that userspace can perorm
-> chceks between syscalls may be sufficient, but as I pointed out that's
-> equally true for a sealed memfd or similar.
-> 
->> Off the top of my head, I have tried to identify some examples
->> where we can have more trust on dynamic code and have the kernel
->> permit its execution.
->>
->> 1. If the kernel can do the job, then that is one safe way. Here, the kernel
->>     is the code. There is no code generation involved. This is what I
->>     have presented in the patch series as the first cut.
-> 
-> This is sleight-of-hand; it doesn't matter where the logic is performed
-> if the power is identical. Practically speaking this is equivalent to
-> some dynamic code generation.
-> 
-> I think that it's misleading to say that because the kernel emulates
-> something it is safe when the provenance of the syscall arguments cannot
-> be verified.
-> 
-> [...]
-> 
->> Anyway, these are just examples. The principle is - if we can identify
->> dynamic code that has a certain measure of trust, can the kernel
->> permit their execution?
-> 
-> My point generally is that the kernel cannot identify this, and if
-> usrspace code is trusted to dynamically generate trampfd arguments it
-> can equally be trusted to dyncamilly generate code.
-> 
-> [...]
-> 
->> As I have mentioned above, I intend to have the kernel generate code
->> only if the code generation is simple enough. For more complicated cases,
->> I plan to use a user-level code generator that is for exclusive kernel use.
->> I have yet to work out the details on how this would work. Need time.
-> 
-> This reads to me like trampfd is only dealing with a few special cases
-> and we know that we need a more general solution.
-> 
-> I hope I am mistaken, but I get the strong impression that you're trying
-> to justify your existing solution rather than trying to understand the
-> problem space.
-> 
-> To be clear, my strong opinion is that we should not be trying to do
-> this sort of emulation or code generation within the kernel. I do think
-> it's worthwhile to look at mechanisms to make it harder to subvert
-> dynamic userspace code generation, but I think the code generation
-> itself needs to live in userspace (e.g. for ABI reasons I previously
-> mentioned).
-> 
-> Mark.
-> 
+Okay, fair enough. Yet, I think that the info in the reply as I
+suggested would be also nice to have, while we are at it.
