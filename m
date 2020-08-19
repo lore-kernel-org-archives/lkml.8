@@ -2,108 +2,93 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04B9C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35665C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:08:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CB7207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79052078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:08:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XdSoOU8b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VFUbxE5a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbgHSWHv (ORCPT
+        id S1726967AbgHSWIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:07:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
+        Wed, 19 Aug 2020 18:08:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726209AbgHSWHt (ORCPT
+        with ESMTP id S1726209AbgHSWIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:07:49 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92797C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:07:49 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id 17so6814pfw.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 15:07:49 -0700 (PDT)
+        Wed, 19 Aug 2020 18:08:36 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC7AC061757;
+        Wed, 19 Aug 2020 15:08:36 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so27101516ljg.13;
+        Wed, 19 Aug 2020 15:08:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kf0ZzHRJMAbFMLLUKsjOglGhImKY7cyfAyt1lKaRTFE=;
-        b=XdSoOU8bhGfMFDMNkNB0PbGSyC9b/j1tzuVKEsB9zu7tjC2Vu7SEGSFi1W1cIQakbE
-         o9qXTs96ee/VmG7efkxn8wb4vmhSq0ewikBueR4YGGz4OVA6fjbIeZISd2TXUVABiNcj
-         2cRCBsILsz+/mHHhsf+pfXMZJsKWFTExc0Fuk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QRPA5r6A792vgu7L2xso4haqi9Meln0z35JzsRxIX1U=;
+        b=VFUbxE5as5MRNGN3HpPJ5HHpZtN5/sa2FqMEJI7zPplNACsRP4hD0Dr791JSLNK8fv
+         k5SBVDGjqZirLkXw1/YJ/UMPwcYYk91G1CqC0xLXi1MGWKo1l9VoneEEz38vTsKfTOqu
+         Hj5NmyEs3sdyRKl2T9qqohmsbaDTDxsYpG5Q51nbS1e7vQ1cLBkYUYbmx0bs3nWz/ZcD
+         Jft05s5lLO1IMjbEL60ChsWquOUlJ4XDPjKd6offWjN+CoyKmVv6lxynCNAjUCxVUecn
+         mDfq3cRWLUGYb8ga2QnMQMnUIVeSdsWWmA+i4AJAGJ1Z+OPvlGetObMwz/5K/QwhKvxk
+         H/Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kf0ZzHRJMAbFMLLUKsjOglGhImKY7cyfAyt1lKaRTFE=;
-        b=I8sE9LMfTYBQTrmcuB4CXrz8VVuv1OYkR7G1cA4/Y4UQdMLckduJOVph30LeR+q8Df
-         7USHeQBA6haNnyOMJ6taiQ9PNCtoUq21QPwtx7UDx50FP85EhVBy5jVCywXgf4uBVHz8
-         B2c3sSgnH9KM/RYUaZcED8E/yF4RodAWrmRQvAUCIkm54cNTqpPGUPxgQGzzy3jenec2
-         bawl9/uOM8heem89/iojdIIFAFddT/3DkdCT8avbtlRcMpNdQ87s56trKwm+Xmm0YV6J
-         dujFSF5oJT2c1rFCCKjsTvw0zAjWwanebcZnU57O5rUZ6sOhn9pctI7Pc92Z/KLEcMkc
-         Jmmw==
-X-Gm-Message-State: AOAM532ZeNX+2VPRtobdI4SfapVGo1cD/SQvAjs+mSmLWH/MrueAAW2Y
-        Dg9hdcnd8aubUqXWw3rVSFRFuw==
-X-Google-Smtp-Source: ABdhPJxLBSOW/rpsj19Cs2xhJm2vDqZ4jNnT0/9og9Y8mFmIcYvE0rLxvkfRoBix9hXJmZPD7SaZlw==
-X-Received: by 2002:a62:6d04:: with SMTP id i4mr10910877pfc.188.1597874869067;
-        Wed, 19 Aug 2020 15:07:49 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q25sm182088pfn.181.2020.08.19.15.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 15:07:48 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 15:07:46 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot <syzbot+017265e8553724e514e8@syzkaller.appspotmail.com>
-Subject: Re: [PATCH v3] vt: Reject zero-sized screen buffer size.
-Message-ID: <202008191452.0278B57D43@keescook>
-References: <189fc902-db7c-9886-cc31-c0348435303a@i-love.sakura.ne.jp>
- <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QRPA5r6A792vgu7L2xso4haqi9Meln0z35JzsRxIX1U=;
+        b=brs0fdLrwSa/lYGP+MWV3pzukGu1QkVk01zSYXxCr8+dc9EHgIqIznF2dkrImq+4oW
+         63wTLZ5oEiHT8lOTgOXMDRUOpyM5ECRa0I6zncnYP8nvJ2sbS81YakrM2B8lNRYYDhs8
+         2oB/BE0d5GPMssJRPKtgWt/usb9iL/jPVqQ47XjLykQZfx/3xEwDe0hVUtEfZiZL46AH
+         gje6OwmXifpqQnZpyCggMinLt0sD5Z2yFRkFnd4sATSzZPtKCVOexVaA4MPcTJbh16Uz
+         YJQFDMLudRwWuVOmlElM7XGiZBx6+KrQ5FBDKMzdMNJ2Kv89I4AUyCyEucU+vtdyZwq8
+         zg5w==
+X-Gm-Message-State: AOAM5307t6tVy6WuGBPLU67MwxmiJmsFvHfKlBfp5nPiDj8C322wJ2b/
+        +/G+YekVcvGnp+6MPSdOh30MZ7yjulLtiOsFH4WM2xa8
+X-Google-Smtp-Source: ABdhPJzCqr+QXSEyqWgeRwzpjb8GtFJmLprLj/wkClavtr5xcbY4074z8nl5npP5BKl+3BHUgUb4aw+GF78drL/eoPo=
+X-Received: by 2002:a2e:80d3:: with SMTP id r19mr150402ljg.310.1597874914921;
+ Wed, 19 Aug 2020 15:08:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200712111013.11881-1-penguin-kernel@I-love.SAKURA.ne.jp>
+References: <20200817022746.3115005-1-cphealy@gmail.com>
+In-Reply-To: <20200817022746.3115005-1-cphealy@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Aug 2020 19:08:24 -0300
+Message-ID: <CAOMZO5D=g-_+gmZ+=tDvEOZNqW9zBFTkKOWamzSoFWgm_fvkAQ@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vfxxx: Add syscon compatible with ocotp
+To:     Chris Healy <cphealy@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jul 12, 2020 at 08:10:12PM +0900, Tetsuo Handa wrote:
-> [...]
-> @@ -1125,6 +1134,11 @@ int vc_allocate(unsigned int currcons)	/* return 0 on success */
->  	if (!*vc->vc_uni_pagedir_loc)
->  		con_set_default_unimap(vc);
->  
-> +	err = -EINVAL;
-> +	if (vc->vc_cols > VC_MAXCOL || vc->vc_rows > VC_MAXROW ||
-> +	    vc->vc_screenbuf_size > KMALLOC_MAX_SIZE || !vc->vc_screenbuf_size)
-> +		goto err_free;
-> +	err = -ENOMEM;
->  	vc->vc_screenbuf = kzalloc(vc->vc_screenbuf_size, GFP_KERNEL);
->  	if (!vc->vc_screenbuf)
->  		goto err_free;
+Hi Chris,
 
-I realize this patch already landed, but I wanted to remind folks to
-use the check_*_overflow() helpers, which can make a lot of this kind
-of stuff easier to deal with.
+On Sun, Aug 16, 2020 at 11:28 PM Chris Healy <cphealy@gmail.com> wrote:
+>
+> From: Chris Healy <cphealy@gmail.com>
+>
+> Add syscon compatibility with Vybrid ocotp node. This is required to
+> access the UID.
+>
+> Signed-off-by: Chris Healy <cphealy@gmail.com>
 
-For example, in this case, I think visual_init() could likely be changed
-to return success/failure and do all the sanity checking:
-
-	if (check_shl_overflow(vc->vc_cols, 1, &vc->vc_size_row) ||
-	    check_mul_overflow(vc->vc_rows, vc->vc_size_row, &vc->vc_screenbuf_size))
-		return -EINVAL;
-
-
--- 
-Kees Cook
+Would a Fixes tag be appropriate here so that it can be backported to
+older stable kernels?
