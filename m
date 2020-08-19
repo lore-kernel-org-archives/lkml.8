@@ -2,127 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD7CC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33D5720772
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597835119;
-	bh=qPmqAtB5kIlL9CLvyvLMssKURPyMFOvitfa8TYvP0fA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RNRnkfeF+Zy7DxOXlWBz6Kezthvzbz/k0Sst89y6T5aSh8d5nzuKS5kEt/Qr8YTQC
-	 +EL6mbChfESBJmjdIH8mRoi6spW9iEgdOYOAwqL1uVBo/CdhW1JoFA49/NBF5XHFrO
-	 4hl7GrnE2k2AU7jE5a3xRIO2sX2WEc0A8PXTKik8=
+	by mail.kernel.org (Postfix) with ESMTP id E42A22075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727900AbgHSLFS (ORCPT
+        id S1727964AbgHSLF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:05:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45496 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726820AbgHSLFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:05:15 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792CE20855
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597835114;
-        bh=qPmqAtB5kIlL9CLvyvLMssKURPyMFOvitfa8TYvP0fA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0J3VhVx8LMcvrlzwxlwsuXkv8inwZY/nckToHljNV9ideetAqMXYPTD9/cfdQ80bY
-         BSRm3deJCd7YEJx4yhg26v4rApWzuPsuZj3n9YRcssqChXBE8hGrWAr6/thzOGOG41
-         81UlfMfbTbMeD0Unup77kbrNc8vZZ/iyvuoQx6e8=
-Received: by mail-ua1-f54.google.com with SMTP id d20so6741092ual.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:05:14 -0700 (PDT)
-X-Gm-Message-State: AOAM5312Qtwicu4bbfuPJ4mB2l1OPvAjLZjmdVlIBb55bZQhkQi6Ik5f
-        bGuY3LWdX/9SSczzTcYexJa525PXGvSZNNR9Yk9Azg==
-X-Google-Smtp-Source: ABdhPJyD0UglYBq8i1MxNJwsh1Hl91rwRFZ202eXtS0Tb7JGoCFVZhhpi1lQID75+bQ14YBE2fGt+CFQO79gZ0/0+S4=
-X-Received: by 2002:ab0:20b6:: with SMTP id y22mr13393349ual.77.1597835113615;
- Wed, 19 Aug 2020 04:05:13 -0700 (PDT)
+        Wed, 19 Aug 2020 07:05:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54869 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgHSLFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:05:20 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1k8Lu9-0007i7-JR; Wed, 19 Aug 2020 11:05:17 +0000
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Carl Huang <cjhuang@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        netdev@vger.kernel.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Subject: re: ath11k: initialize wmi config based on hw_params
+Message-ID: <480d8984-a5fb-be1b-b553-e01609601059@canonical.com>
+Date:   Wed, 19 Aug 2020 12:05:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200818063005.13828-1-zbestahu@gmail.com>
-In-Reply-To: <20200818063005.13828-1-zbestahu@gmail.com>
-From:   Amit Kucheria <amitk@kernel.org>
-Date:   Wed, 19 Aug 2020 16:35:02 +0530
-X-Gmail-Original-Message-ID: <CAHLCerOzFTy2iEbaXefvTHCs79L6=nUJtJOcgcMAzV4pd6qpYg@mail.gmail.com>
-Message-ID: <CAHLCerOzFTy2iEbaXefvTHCs79L6=nUJtJOcgcMAzV4pd6qpYg@mail.gmail.com>
-Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling device's statistics
-To:     Yue Hu <zbestahu@gmail.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, huyue2@yulong.com,
-        zbestahu@163.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:00 PM Yue Hu <zbestahu@gmail.com> wrote:
->
-> From: Yue Hu <huyue2@yulong.com>
->
-> We observed warning about kzalloc() when register thermal cooling device
-> in backlight_device_register(). backlight display can be a cooling device
-> since reducing screen brightness will can help reduce temperature.
->
-> However, ->get_max_state of backlight will assign max brightness of 1024
-> to states. The memory size can be getting 1MB+ due to states * states.
-> That is so large to trigger kmalloc() warning.
->
-> So, let's remove it and try vzalloc() if kzalloc() fails.
+Hi,
 
-If we can do with vzalloc()'ed memory i.e. we don't need contiguous
-physical memory, why even attempt kzalloc?
+static analysis with Coverity has detected a duplicated assignment issue
+with the following commit:
 
->
-> Signed-off-by: Yue Hu <huyue2@yulong.com>
-> ---
->  drivers/thermal/thermal_sysfs.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> index aa99edb..9bae0b6 100644
-> --- a/drivers/thermal/thermal_sysfs.c
-> +++ b/drivers/thermal/thermal_sysfs.c
-> @@ -16,6 +16,8 @@
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/slab.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/mm.h>
->  #include <linux/string.h>
->  #include <linux/jiffies.h>
->
-> @@ -919,7 +921,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
->         var += sizeof(*stats->time_in_state) * states;
->         var += sizeof(*stats->trans_table) * states * states;
->
-> -       stats = kzalloc(var, GFP_KERNEL);
-> +       stats = kzalloc(var, GFP_KERNEL | __GFP_NOWARN);
-> +       if (!stats)
-> +               stats = vzalloc(var);
->         if (!stats)
->                 return;
->
-> @@ -938,7 +942,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
->
->  static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
->  {
-> -       kfree(cdev->stats);
-> +       kvfree(cdev->stats);
->         cdev->stats = NULL;
->  }
->
-> --
-> 1.9.1
->
+commit 2d4bcbed5b7d53e19fc158885e7340b464b64507
+Author: Carl Huang <cjhuang@codeaurora.org>
+Date:   Mon Aug 17 13:31:51 2020 +0300
+
+    ath11k: initialize wmi config based on hw_params
+
+The analysis is as follows:
+
+
+ 74        config->beacon_tx_offload_max_vdev = 0x2;
+ 75        config->num_multicast_filter_entries = 0x20;
+ 76        config->num_wow_filters = 0x16;
+
+Unused value (UNUSED_VALUE)
+assigned_value: Assigning value 1U to config->num_keep_alive_pattern
+here, but that stored value is overwritten before it can be used.
+ 77        config->num_keep_alive_pattern = 0x1;
+
+value_overwrite: Overwriting previous write to
+config->num_keep_alive_pattern with value 0U.
+
+ 78        config->num_keep_alive_pattern = 0;
+
+
+I'm not sure if one of these assignments is redundant, or perhaps one of
+the assignments is meant to be setting a different structure element.
+
+Colin
