@@ -2,92 +2,100 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B338C433E4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D99C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610CD2072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597832609;
-	bh=oMYBEUfHSM2v9gpQsXXVTp2+Mxw0O8DXVBsLeWmVKDo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ITOs+hD05nKmYelaROL4ImeF9cfkTjjGY2wh0QJAO//zBeVv7Aao2aswK1bTcDjQf
-	 pmf8FQevnu0IhD7kgKty+7Kmdhljq5ZraJpMS6bjpOQROvBGW4b/MdfkIMkNIQ66EA
-	 tEWArUragLOK5ohDASOmH7gzV2VKsU01//ERf+B4=
+	by mail.kernel.org (Postfix) with ESMTP id 4120220786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 10:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UEP9TuJD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgHSKX1 (ORCPT
+        id S1727961AbgHSKX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 06:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47152 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbgHSKXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 06:23:08 -0400
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AFB1207FF;
-        Wed, 19 Aug 2020 10:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597832584;
-        bh=oMYBEUfHSM2v9gpQsXXVTp2+Mxw0O8DXVBsLeWmVKDo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ExYOqmJhj6UsXjvsK+ywMpDYRDLlU7zPM6GoHn3dQ6uQhbiwKftGVAiMF3TBNc9Da
-         7PelrfvaG67iMUayh0Y5hOIT9y28l/4OcH+sfKVxsVaK+U/XPGEKYMbsTCQBrqD+5M
-         X/NAyA8kx/fVB+vqVrYw1Z893P1XioEdXW7MFtP0=
-Received: by mail-ot1-f44.google.com with SMTP id a65so18616411otc.8;
-        Wed, 19 Aug 2020 03:23:04 -0700 (PDT)
-X-Gm-Message-State: AOAM5305QPlcSJ7CAz7HNJlKzzaeeltan+Eh8HzOF8ycVNxPiUdYwq9O
-        YwVyw5KOQlNYcy7ybnhfJLvyuthGUSJYL0IWqwY=
-X-Google-Smtp-Source: ABdhPJwlbAJBtsIRDkgre//dLBcO99gXvk5YwUiRvc5nSnAoD+YC73rzW2NIO3G+3cJeUjxd9C2BYU4Rfv4gjUK3d0U=
-X-Received: by 2002:a9d:6251:: with SMTP id i17mr17101807otk.90.1597832583514;
- Wed, 19 Aug 2020 03:23:03 -0700 (PDT)
+        Wed, 19 Aug 2020 06:23:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40404 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726851AbgHSKXw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 06:23:52 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 343F3C061757;
+        Wed, 19 Aug 2020 03:23:52 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mt12so898741pjb.4;
+        Wed, 19 Aug 2020 03:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZF+JkSDfbnzvjaa8IC3wj92vlganG6A3YrEjV6Fuv/M=;
+        b=UEP9TuJDEd2pHM+8LuXD+l6KqMp5ef2BIAsBD13tY6H/ugcKB9lG/cwi9cFl/ITTRW
+         bqpVhsSYTveAaxqRPv1ZNfw2svZa7HFhNMg6PkNKUMeX+CXjLp5/CO3x2GPTSULzlW/N
+         qr/Gs4IwFnPFATmVf/JCh/pc7jxxJRYeNuWgFwL5cMAlKGLJUP7et/lNhq9420rFBzLb
+         cQgHhddJ+521SyxRgzkfu/KQy8Y5HfwoMhz81eVJnEoSaZuCdM2RNwzk+cCicaIENMup
+         rFsylIcxSiuksJkG4nvVeklcP22uP/NvQ0QmEoXLgA/qj6kCRxQbmAaPN1YOSvpozEA/
+         +8rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZF+JkSDfbnzvjaa8IC3wj92vlganG6A3YrEjV6Fuv/M=;
+        b=oo6zaNTFOWlbYQ5YAA8JN12zNBrnR3NrEyxPSCr/DVn4XhmYr2smUacbwqjogQX/Rn
+         tPUzfvfspjeP1HhTTlN9or6iPCATbegQZ8lJa+8qmJKmVUuvT6W6Z2Zad0MyJjn+kw8G
+         sqRZoaE0l2r4NNI16Fysg7vbpfVhUpePijvUJnJLWgIP4nVdQiPCdm/BaP4ySGEjHl+J
+         zPAKFEYLescRO9sStNWRKtd55Dk8ega/vX+k427Kc/RYsgVxz55RJFysty+4sg1Hjkwb
+         44+xuh5mwEChfF8EDR42/G7H6c5LABhsWiK/LhDpm4k0JNV6A3gLMYNr0mPQhQiBjka3
+         2JpA==
+X-Gm-Message-State: AOAM533y/6XoNFbaq6hazjy3VY/zVo7GGRsqJGEkt59F6S72eYpdoTmk
+        wQBSVx+fvHu3JX/i0XsaXVaBgQ8g8wJP50KdBBs=
+X-Google-Smtp-Source: ABdhPJz/poGFigNWxrEccu1EA8W7dcsV7edr3zwKR57UmL0YcGlTLfXoKLMXSVw5mJOn5HH5iJ8lHmrXY+QKbaxHH2E=
+X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr3641739pjb.129.1597832631782;
+ Wed, 19 Aug 2020 03:23:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200728031433.3370-1-masahisa.kojima@linaro.org>
- <20200728031433.3370-3-masahisa.kojima@linaro.org> <20200817211440.GB44714@linux.intel.com>
-In-Reply-To: <20200817211440.GB44714@linux.intel.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 19 Aug 2020 12:22:52 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
-Message-ID: <CAMj1kXG2h-yk_hw-HZvhAPfYRVHq=LgNp5FB1J4SmnN82Zm9jA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/2] dt-bindings: Add SynQucer TPM MMIO as a trivial device
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Masahisa Kojima <masahisa.kojima@linaro.org>,
+References: <20200810213055.103962-1-Sandeep.Singh@amd.com> <20200810213055.103962-2-Sandeep.Singh@amd.com>
+In-Reply-To: <20200810213055.103962-2-Sandeep.Singh@amd.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 19 Aug 2020 13:23:35 +0300
+Message-ID: <CAHp75VcYhJnknZyy1bZBtM87bP=XyoL9o+5TU-PQcDKg47XKHA@mail.gmail.com>
+Subject: Re: [PATCH v7 1/4] SFH: Add maintainers and documentation for AMD SFH
+ based on HID framework
+To:     Sandeep Singh <Sandeep.Singh@amd.com>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+        linux-input <linux-input@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        Richard Neumann <mail@richard-neumann.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>, Shyam-sundar.S-k@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Aug 2020 at 23:14, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Tue, Aug 11, 2020 at 12:31 AM Sandeep Singh <Sandeep.Singh@amd.com> wrote:
 >
-> On Tue, Jul 28, 2020 at 12:14:32PM +0900, Masahisa Kojima wrote:
-> > Add a compatible string for the SynQuacer TPM to the binding for a
-> > TPM exposed via a memory mapped TIS frame. The MMIO window behaves
-> > slightly differently on this hardware, so it requires its own
-> > identifier.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Acked-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Masahisa Kojima <masahisa.kojima@linaro.org>
+> From: Sandeep Singh <sandeep.singh@amd.com>
 >
-> I applied these patches:
->
-> http://git.infradead.org/users/jjs/linux-tpmdd.git/log/refs/heads/master
+> Add Maintainers for AMD SFH(SENSOR FUSION HUB) Solution and work flow
+> document.
 >
 
-Thanks Jarkko
+> Signed-off-by: Nehal Shah <Nehal-bakulchandra.Shah@amd.com>
+> Signed-off-by: Sandeep Singh <sandeep.singh@amd.com>
+
+Either you missed Co-developed-by, or the first SoB is wrong here.
+Please, fix over the patches.
+
+-- 
+With Best Regards,
+Andy Shevchenko
