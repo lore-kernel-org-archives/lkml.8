@@ -2,106 +2,112 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED479C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5764C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C968F207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597876237;
-	bh=107X92WlWILbgg3oOEW9J2/g9CbOmsCMKO5aA8rXW+Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HDV1L1B9iQdTR+0K5jAU8JPQX741S1j1bsgUFlFHjX5xQnYVcsrYMuaiCwHpJ9nRU
-	 OJtGD0/5lS6jqiHYMColNFTz+ht5RxN3kHwD07Gxxu/ID+PAxiBk8V04tF5eX8a9Lc
-	 eokVgC45QD2kYgNXcO2INoavb4XSdoRrZ07IF/9M=
+	by mail.kernel.org (Postfix) with ESMTP id 91802207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 22:31:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a6jgQbps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHSWag (ORCPT
+        id S1726868AbgHSWbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 18:30:36 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39611 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgHSWaf (ORCPT
+        Wed, 19 Aug 2020 18:31:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbgHSWbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 18:30:35 -0400
-Received: by mail-io1-f68.google.com with SMTP id z6so375913iow.6;
-        Wed, 19 Aug 2020 15:30:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TPAgoF6CS6LHb79mBEQMdU6QynqQNT4ADYnbP9+wi74=;
-        b=Iy3eq/WA8d3tP56uIU8z31H/+gJFoshRuzJlQVlwM8uC7l+yminCpJO5C1lxhPdqJr
-         HExhMNpxUSYz1AwLaICvNTZp8ixGXIVH6DEntjlHJnM9qgOUhW+yRTe7AK6xPEYo54YY
-         CwhIJwr/cjaZS4wIJs0K0Hz3JB5YOG1gKo5pFgHBSKScx0OWwJuBWAfrXFcDEk8/oumR
-         JaB1O8ryX0Q8L/TuSfv6P78a9J/1HS3XGLeMjM5Sl1Hb9iWDG24/z6D15E+Yc9/1IYwx
-         IcTf2o2SnahMKS8tyg4UeqY4C9+fnRJVpBQAOcAeZhN4Wn3V9z2FkzVWMfYr9RuLqTeh
-         RFVQ==
-X-Gm-Message-State: AOAM531qUo+t6ZuP5PJ3Judh1M/u0Q35r0iGZUaiSS7h5YIEpajSKrWf
-        PGNRrjZ9bZJx75dDHX/GPA==
-X-Google-Smtp-Source: ABdhPJzOVbOE3td6fQsaX3GtZOf+rgr1VvqINzVc5EPIlkHCXVE0LtV3YFDHep9Apf5exI1W+VesoQ==
-X-Received: by 2002:a02:8806:: with SMTP id r6mr533184jai.88.1597876234835;
-        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
-Received: from xps15 ([64.188.179.249])
-        by smtp.gmail.com with ESMTPSA id z26sm243083ilf.60.2020.08.19.15.30.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 15:30:34 -0700 (PDT)
-Received: (nullmailer pid 2077672 invoked by uid 1000);
-        Wed, 19 Aug 2020 22:30:32 -0000
-Date:   Wed, 19 Aug 2020 16:30:31 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>, kernel-team@android.com,
-        Heiko Stuebner <heiko@sntech.de>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-rockchip@lists.infradead.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2] of: address: Work around missing device_type property
- in pcie nodes
-Message-ID: <20200819223031.GA2077542@bogus>
-References: <20200819094255.474565-1-maz@kernel.org>
+        Wed, 19 Aug 2020 18:31:18 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 323F7C061757;
+        Wed, 19 Aug 2020 15:31:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BX2Yq62c3z9sRK;
+        Thu, 20 Aug 2020 08:31:11 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597876276;
+        bh=e1BaWobOG9FFy0YvLbBCR/TOCh+GM9IhmHC6JY0ZZpw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=a6jgQbps4JbjB8nQ07bCO3tJJQh7vajvN5rsqaRXj2idfEDYojZfx834oMezdUhBG
+         j8R1NH/Kg/Jrj1JnbPADcoi4s+xX6x4PJmm/Erst5v7WXx+3dQCA+ABMIaLBqgy9Hp
+         us3Bx4TpUAHFBwz4Cqm5Sdq8cy1qo3vPSfKDRVt1T1OjqnkcAN6tsQYKr05PhMT3VO
+         XWMRTcOi1yiyMnJOhuThstHyA37n9Um57oP1E4RlawR8AhB9Anew94Wtl5dLtGhGEL
+         pX08S3Tpwaw/Phh3nJL0RYjRvXMbgkXLPk2XNj7pSegLu7vpwMBVChON1N6wHjIdSU
+         e/TXAWceJB03g==
+Date:   Thu, 20 Aug 2020 08:31:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        paul@paul-moore.com, Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, omosnace@redhat.com,
+        rgb@redhat.com, Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
+ interrupt - RIP: 0010:security_port_sid
+Message-ID: <20200820083111.46e81b4c@canb.auug.org.au>
+In-Reply-To: <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
+References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+        <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
+        <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
+        <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819094255.474565-1-maz@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/f0p.4TsNKii6.9fLa1W2MTL";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 10:42:55 +0100, Marc Zyngier wrote:
-> Recent changes to the DT PCI bus parsing made it mandatory for
-> device tree nodes describing a PCI controller to have the
-> 'device_type = "pci"' property for the node to be matched.
-> 
-> Although this follows the letter of the specification, it
-> breaks existing device-trees that have been working fine
-> for years.  Rockchip rk3399-based systems are a prime example
-> of such collateral damage, and have stopped discovering their
-> PCI bus.
-> 
-> In order to paper over it, let's add a workaround to the code
-> matching the device type, and accept as PCI any node that is
-> named "pcie",
-> 
-> A warning will hopefully nudge the user into updating their
-> DT to a fixed version if they can, but the incentive is
-> obviously pretty small.
-> 
-> Fixes: 2f96593ecc37 ("of_address: Add bus type match for pci ranges parser")
-> Suggested-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/of/address.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
+--Sig_/f0p.4TsNKii6.9fLa1W2MTL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks!
+Hi all,
+
+On Wed, 19 Aug 2020 11:12:44 -0400 Stephen Smalley <stephen.smalley.work@gm=
+ail.com> wrote:
+>
+> Fix can be found at:https://patchwork.kernel.org/patch/11724203/=20
+> <https://patchwork.kernel.org/patch/11724203/>
+
+Thanks.
+
+I will add that to the selinux tree merge in linux-next until it turns
+up in the tree.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/f0p.4TsNKii6.9fLa1W2MTL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl89qC8ACgkQAVBC80lX
+0Gy6VAgAjdE0ErSHLB+UXfirQt0T/YP/oftROZXZxsKCsVjh1Z9xozJ05/s7j+bG
+b5RjoVr0vtLav/p/zmx4cSXoc9xx0z/7mNhcLrwfQ8CnyQhEvPY5mBwnyvPkqVZj
+stt+mlKmwRL+zQKxxnJuQ8hRlOPWY49a0w4rNFx+1XsL4UvESSKJYMicd6tGVZMN
+/Z0CTS8BtiM7PkKnwQh2UtGuT/JSlSl4nGkYbQUyLoJf7u65U8FR7YJNgkvAvEG2
+VZJzC4oG3BhJBlSlKJ2FXX2um1cFmfnlukJrBECdZohk7Xo6exRVvatCE0cHDUDw
+JQdIsqn2BQv76CQ+Z4n/iby/6dlejA==
+=BgvK
+-----END PGP SIGNATURE-----
+
+--Sig_/f0p.4TsNKii6.9fLa1W2MTL--
