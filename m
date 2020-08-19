@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F46BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D302C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32AD220738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146FA20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:18:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="iScmRo7M"
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="bHMrvzcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHSISr (ORCPT
+        id S1726930AbgHSISq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49214 "EHLO
+        Wed, 19 Aug 2020 04:18:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726711AbgHSISG (ORCPT
+        with ESMTP id S1726729AbgHSISH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:18:06 -0400
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98618C061389
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:18:05 -0700 (PDT)
+        Wed, 19 Aug 2020 04:18:07 -0400
+Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611C4C061342
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 01:18:06 -0700 (PDT)
 Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout1.routing.net (Postfix) with ESMTP id 2057F3FEAE;
-        Wed, 19 Aug 2020 08:18:04 +0000 (UTC)
+        by mxout3.routing.net (Postfix) with ESMTP id 0477F604E7;
+        Wed, 19 Aug 2020 08:18:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1597825084;
+        s=20200217; t=1597825085;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ijU+V9LGg8duQNI23k95/QRwqGkghf0DR8qVS5zQXKM=;
-        b=iScmRo7M1+BnQhd4Evnyw4ltBlpJtqQSih+yfflVI5/kUSicaHE7JyAHWX/kDgrX6QTIpT
-        t4JLdFTcvj4z/zFjRTFR6RW5ZxOEYnPRz5SP9w3FDzJdcGeZIIFauwm0lx4eaBAmXz8WrG
-        bXr5GlF4NzAcmVtM9kRmI8AUCIDsJr4=
+        bh=W3o1FZBLZAbABnpopO+j+qFeIdb+A4jyLTzWb/dtdMM=;
+        b=bHMrvzcdU8R4atDOpja4f7qlfcX0w1xKasRrwU3q3PdGmCzdcdcpls93NpcFs7alOp1P+W
+        xW1hWugtl12W65thJE1NhMwQ1KaJowcsF3jz+6DBnzH/b/xfnr6tjSF5ybViu1XuIpMVp2
+        ZxzEFLltJAE3CBlb699kQ2N5zk5004E=
 Received: from localhost.localdomain (fttx-pool-185.76.97.101.bambit.de [185.76.97.101])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 4024F100539;
-        Wed, 19 Aug 2020 08:18:03 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id 2780B10007C;
+        Wed, 19 Aug 2020 08:18:04 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -51,365 +51,449 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
         Matthias Brugger <matthias.bgg@gmail.com>,
         linux-arm-kernel@lists.infradead.org,
-        David Woodhouse <dwmw@amazon.co.uk>
-Subject: [PATCH v5 6/7] arm: dts: mt7623: move display nodes to separate mt7623n.dtsi
-Date:   Wed, 19 Aug 2020 10:17:51 +0200
-Message-Id: <20200819081752.4805-7-linux@fw-web.de>
+        Ryder Lee <ryder.lee@mediatek.com>,
+        chunhui dai <chunhui.dai@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v5 7/7] arm: dts: mt7623: add display subsystem related device nodes
+Date:   Wed, 19 Aug 2020 10:17:52 +0200
+Message-Id: <20200819081752.4805-8-linux@fw-web.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819081752.4805-1-linux@fw-web.de>
 References: <20200819081752.4805-1-linux@fw-web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-mt7623a has no graphics support so move nodes from generic mt7623.dtsi
-to mt7623n.dtsi
+Add display subsystem related device nodes for MT7623.
 
-Fixes: 1f6ed224594 ("arm: dts: mt7623: add Mali-450 device node")
-Suggested-by: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- arch/arm/boot/dts/mt7623.dtsi                 | 123 ----------------
- arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |   2 +-
- arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |   2 +-
- arch/arm/boot/dts/mt7623n.dtsi                | 134 ++++++++++++++++++
- 4 files changed, 136 insertions(+), 125 deletions(-)
- create mode 100644 arch/arm/boot/dts/mt7623n.dtsi
+changed
+v4->v5:
+  add nodes to new mt7623n.dtsi to avoid conflict with mt7623a
+v3->v4:
+  drop display_components which is duplicate of existing mmsys
+v2->v3:
+  drop bls to dpi routing
+---
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  72 ++++++++
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  72 ++++++++
+ arch/arm/boot/dts/mt7623n.dtsi                | 171 ++++++++++++++++++
+ 3 files changed, 315 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index a106c0d90a52..d09b5671c91b 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -14,7 +14,6 @@
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/phy/phy.h>
--#include <dt-bindings/memory/mt2701-larb-port.h>
- #include <dt-bindings/reset/mt2701-resets.h>
- #include <dt-bindings/thermal/thermal.h>
- 
-@@ -297,17 +296,6 @@ timer: timer@10008000 {
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
--	smi_common: smi@1000c000 {
--		compatible = "mediatek,mt7623-smi-common",
--			     "mediatek,mt2701-smi-common";
--		reg = <0 0x1000c000 0 0x1000>;
--		clocks = <&infracfg CLK_INFRA_SMI>,
--			 <&mmsys CLK_MM_SMI_COMMON>,
--			 <&infracfg CLK_INFRA_SMI>;
--		clock-names = "apb", "smi", "async";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
--	};
--
- 	pwrap: pwrap@1000d000 {
- 		compatible = "mediatek,mt7623-pwrap",
- 			     "mediatek,mt2701-pwrap";
-@@ -339,17 +327,6 @@ sysirq: interrupt-controller@10200100 {
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
--	iommu: mmsys_iommu@10205000 {
--		compatible = "mediatek,mt7623-m4u",
--			     "mediatek,mt2701-m4u";
--		reg = <0 0x10205000 0 0x1000>;
--		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&infracfg CLK_INFRA_M4U>;
--		clock-names = "bclk";
--		mediatek,larbs = <&larb0 &larb1 &larb2>;
--		#iommu-cells = <1>;
--	};
--
- 	efuse: efuse@10206000 {
- 		compatible = "mediatek,mt7623-efuse",
- 			     "mediatek,mt8173-efuse";
-@@ -725,94 +702,6 @@ mmc0: mmc@11230000 {
- 		status = "disabled";
- 	};
- 
--	g3dsys: syscon@13000000 {
--		compatible = "mediatek,mt7623-g3dsys",
--			     "mediatek,mt2701-g3dsys",
--			     "syscon";
--		reg = <0 0x13000000 0 0x200>;
--		#clock-cells = <1>;
--		#reset-cells = <1>;
--	};
--
--	mali: gpu@13040000 {
--		compatible = "mediatek,mt7623-mali", "arm,mali-450";
--		reg = <0 0x13040000 0 0x30000>;
--		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 178 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 179 IRQ_TYPE_LEVEL_LOW>,
--			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
--		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
--				  "ppmmu1", "pp2", "ppmmu2", "pp3", "ppmmu3",
--				  "pp";
--		clocks = <&topckgen CLK_TOP_MMPLL>,
--			 <&g3dsys CLK_G3DSYS_CORE>;
--		clock-names = "bus", "core";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
--		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
--	};
--
--	mmsys: syscon@14000000 {
--		compatible = "mediatek,mt7623-mmsys",
--			     "mediatek,mt2701-mmsys",
--			     "syscon";
--		reg = <0 0x14000000 0 0x1000>;
--		#clock-cells = <1>;
--	};
--
--	larb0: larb@14010000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x14010000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <0>;
--		clocks = <&mmsys CLK_MM_SMI_LARB0>,
--			 <&mmsys CLK_MM_SMI_LARB0>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
--	};
--
--	imgsys: syscon@15000000 {
--		compatible = "mediatek,mt7623-imgsys",
--			     "mediatek,mt2701-imgsys",
--			     "syscon";
--		reg = <0 0x15000000 0 0x1000>;
--		#clock-cells = <1>;
--	};
--
--	larb2: larb@15001000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x15001000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <2>;
--		clocks = <&imgsys CLK_IMG_SMI_COMM>,
--			 <&imgsys CLK_IMG_SMI_COMM>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
--	};
--
--	jpegdec: jpegdec@15004000 {
--		compatible = "mediatek,mt7623-jpgdec",
--			     "mediatek,mt2701-jpgdec";
--		reg = <0 0x15004000 0 0x1000>;
--		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
--		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
--			  <&imgsys CLK_IMG_JPGDEC>;
--		clock-names = "jpgdec-smi",
--			      "jpgdec";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
--		mediatek,larb = <&larb2>;
--		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
--			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
--	};
--
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt7623-vdecsys",
- 			     "mediatek,mt2701-vdecsys",
-@@ -821,18 +710,6 @@ vdecsys: syscon@16000000 {
- 		#clock-cells = <1>;
- 	};
- 
--	larb1: larb@16010000 {
--		compatible = "mediatek,mt7623-smi-larb",
--			     "mediatek,mt2701-smi-larb";
--		reg = <0 0x16010000 0 0x1000>;
--		mediatek,smi = <&smi_common>;
--		mediatek,larb-id = <1>;
--		clocks = <&vdecsys CLK_VDEC_CKGEN>,
--			 <&vdecsys CLK_VDEC_LARB>;
--		clock-names = "apb", "smi";
--		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
--	};
--
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
 diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-index 2b760f90f38c..344f8c65c4aa 100644
+index 344f8c65c4aa..f41f221e56ca 100644
 --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
 +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-@@ -6,7 +6,7 @@
+@@ -21,6 +21,19 @@ chosen {
+ 		stdout-path = "serial2:115200n8";
+ 	};
  
- /dts-v1/;
- #include <dt-bindings/input/input.h>
--#include "mt7623.dtsi"
-+#include "mt7623n.dtsi"
- #include "mt6323.dtsi"
++	connector {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "d";
++		ddc-i2c-bus = <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply = <&mt6323_vproc_reg>;
+@@ -114,10 +127,18 @@ memory@80000000 {
+ 	};
+ };
  
- / {
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-index 0447748f9fa0..f8efcc364bc3 100644
---- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
-@@ -7,7 +7,7 @@
++&bls {
++	status = "okay";
++};
++
+ &btif {
+ 	status = "okay";
+ };
  
- /dts-v1/;
- #include <dt-bindings/input/input.h>
--#include "mt7623.dtsi"
-+#include "mt7623n.dtsi"
- #include "mt6323.dtsi"
++&cec {
++	status = "okay";
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
+@@ -128,6 +149,21 @@ &crypto {
+ 	status = "okay";
+ };
  
- / {
-diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
-new file mode 100644
-index 000000000000..a47e82468895
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623n.dtsi
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright © 2017-2020 MediaTek Inc.
-+ * Author: Sean Wang <sean.wang@mediatek.com>
-+ *	   Ryder Lee <ryder.lee@mediatek.com>
-+ *
-+ */
++&dpi0 {
++	status = "okay";
 +
-+#include "mt7623.dtsi"
-+#include <dt-bindings/memory/mt2701-larb-port.h>
-+
-+/ {
-+	g3dsys: syscon@13000000 {
-+		compatible = "mediatek,mt7623-g3dsys",
-+			     "mediatek,mt2701-g3dsys",
-+			     "syscon";
-+		reg = <0 0x13000000 0 0x200>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	mali: gpu@13040000 {
-+		compatible = "mediatek,mt7623-mali", "arm,mali-450";
-+		reg = <0 0x13040000 0 0x30000>;
-+		interrupts = <GIC_SPI 170 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 171 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 172 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 173 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 174 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 175 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 176 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 177 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 178 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 179 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 180 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "gp", "gpmmu", "pp0", "ppmmu0", "pp1",
-+				  "ppmmu1", "pp2", "ppmmu2", "pp3", "ppmmu3",
-+				  "pp";
-+		clocks = <&topckgen CLK_TOP_MMPLL>,
-+			 <&g3dsys CLK_G3DSYS_CORE>;
-+		clock-names = "bus", "core";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_MFG>;
-+		resets = <&g3dsys MT2701_G3DSYS_CORE_RST>;
-+	};
-+
-+	mmsys: syscon@14000000 {
-+		compatible = "mediatek,mt7623-mmsys",
-+			     "mediatek,mt2701-mmsys",
-+			     "syscon";
-+		reg = <0 0x14000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <0>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <1>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <2>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
-+	imgsys: syscon@15000000 {
-+		compatible = "mediatek,mt7623-imgsys",
-+			     "mediatek,mt2701-imgsys",
-+			     "syscon";
-+		reg = <0 0x15000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt7623-m4u",
-+			     "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
-+	};
-+
-+	jpegdec: jpegdec@15004000 {
-+		compatible = "mediatek,mt7623-jpgdec",
-+			     "mediatek,mt2701-jpgdec";
-+		reg = <0 0x15004000 0 0x1000>;
-+		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
-+			  <&imgsys CLK_IMG_JPGDEC>;
-+		clock-names = "jpgdec-smi",
-+			      "jpgdec";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+		mediatek,larb = <&larb2>;
-+		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
-+			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
-+	};
-+
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt7623-smi-common",
-+			     "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			dpi0_out: endpoint {
++				remote-endpoint = <&hdmi0_in>;
++			};
++		};
 +	};
 +};
++
+ &eth {
+ 	status = "okay";
+ 
+@@ -199,6 +235,42 @@ fixed-link {
+ 	};
+ };
+ 
++&hdmi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_pins_a>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint = <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmiddc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_ddc_pins_a>;
++	status = "okay";
++};
++
++&hdmi_phy {
++	mediatek,ibias = <0xa>;
++	mediatek,ibias_up = <0x1c>;
++	status = "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+index f8efcc364bc3..1b9b9a8145a7 100644
+--- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+@@ -24,6 +24,19 @@ chosen {
+ 		stdout-path = "serial2:115200n8";
+ 	};
+ 
++	connector {
++		compatible = "hdmi-connector";
++		label = "hdmi";
++		type = "d";
++		ddc-i2c-bus = <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply = <&mt6323_vproc_reg>;
+@@ -106,10 +119,18 @@ sound {
+ 	};
+ };
+ 
++&bls {
++	status = "okay";
++};
++
+ &btif {
+ 	status = "okay";
+ };
+ 
++&cec {
++	status = "okay";
++};
++
+ &cir {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&cir_pins_a>;
+@@ -120,6 +141,21 @@ &crypto {
+ 	status = "okay";
+ };
+ 
++&dpi0 {
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			dpi0_out: endpoint {
++				remote-endpoint = <&hdmi0_in>;
++			};
++		};
++	};
++};
++
+ &eth {
+ 	status = "okay";
+ 
+@@ -203,6 +239,42 @@ fixed-link {
+ 	};
+ };
+ 
++&hdmi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_pins_a>;
++	status = "okay";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint = <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmiddc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&hdmi_ddc_pins_a>;
++	status = "okay";
++};
++
++&hdmi_phy {
++	mediatek,ibias = <0xa>;
++	mediatek,ibias_up = <0x1c>;
++	status = "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+diff --git a/arch/arm/boot/dts/mt7623n.dtsi b/arch/arm/boot/dts/mt7623n.dtsi
+index a47e82468895..61545fc541c4 100644
+--- a/arch/arm/boot/dts/mt7623n.dtsi
++++ b/arch/arm/boot/dts/mt7623n.dtsi
+@@ -10,6 +10,10 @@
+ #include <dt-bindings/memory/mt2701-larb-port.h>
+ 
+ / {
++	aliases {
++		rdma0 = &rdma0;
++		rdma1 = &rdma1;
++	};
+ 	g3dsys: syscon@13000000 {
+ 		compatible = "mediatek,mt7623-g3dsys",
+ 			     "mediatek,mt2701-g3dsys",
+@@ -131,4 +135,171 @@ smi_common: smi@1000c000 {
+ 		clock-names = "apb", "smi", "async";
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+ 	};
++
++	ovl: ovl@14007000 {
++		compatible = "mediatek,mt7623-disp-ovl",
++			     "mediatek,mt2701-disp-ovl";
++		reg = <0 0x14007000 0 0x1000>;
++		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_OVL>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
++		mediatek,larb = <&larb0>;
++	};
++
++	rdma0: rdma@14008000 {
++		compatible = "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14008000 0 0x1000>;
++		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	wdma@14009000 {
++		compatible = "mediatek,mt7623-disp-wdma",
++			     "mediatek,mt2701-disp-wdma";
++		reg = <0 0x14009000 0 0x1000>;
++		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_WDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	bls: pwm@1400a000 {
++		compatible = "mediatek,mt7623-disp-pwm",
++			     "mediatek,mt2701-disp-pwm";
++		reg = <0 0x1400a000 0 0x1000>;
++		#pwm-cells = <2>;
++		clocks = <&mmsys CLK_MM_MDP_BLS_26M>,
++			 <&mmsys CLK_MM_DISP_BLS>;
++		clock-names = "main", "mm";
++		status = "disabled";
++	};
++
++	color: color@1400b000 {
++		compatible = "mediatek,mt7623-disp-color",
++			     "mediatek,mt2701-disp-color";
++		reg = <0 0x1400b000 0 0x1000>;
++		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_COLOR>;
++	};
++
++	dsi: dsi@1400c000 {
++		compatible = "mediatek,mt7623-dsi",
++			     "mediatek,mt2701-dsi";
++		reg = <0 0x1400c000 0 0x1000>;
++		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DSI_ENGINE>,
++			 <&mmsys CLK_MM_DSI_DIG>,
++			 <&mipi_tx0>;
++		clock-names = "engine", "digital", "hs";
++		phys = <&mipi_tx0>;
++		phy-names = "dphy";
++		status = "disabled";
++	};
++
++	mutex: mutex@1400e000 {
++		compatible = "mediatek,mt7623-disp-mutex",
++			     "mediatek,mt2701-disp-mutex";
++		reg = <0 0x1400e000 0 0x1000>;
++		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_MUTEX_32K>;
++	};
++
++	rdma1: rdma@14012000 {
++		compatible = "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14012000 0 0x1000>;
++		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
++		mediatek,larb = <&larb0>;
++	};
++
++	dpi0: dpi@14014000 {
++		compatible = "mediatek,mt7623-dpi",
++			     "mediatek,mt2701-dpi";
++		reg = <0 0x14014000 0 0x1000>;
++		interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DPI1_DIGL>,
++			 <&mmsys CLK_MM_DPI1_ENGINE>,
++			 <&apmixedsys CLK_APMIXED_TVDPLL>;
++		clock-names = "pixel", "engine", "pll";
++		status = "disabled";
++	};
++
++	hdmi0: hdmi@14015000 {
++		compatible = "mediatek,mt7623-hdmi",
++			     "mediatek,mt8173-hdmi";
++		reg = <0 0x14015000 0 0x400>;
++		clocks = <&mmsys CLK_MM_HDMI_PIXEL>,
++			 <&mmsys CLK_MM_HDMI_PLL>,
++			 <&mmsys CLK_MM_HDMI_AUDIO>,
++			 <&mmsys CLK_MM_HDMI_SPDIF>;
++		clock-names = "pixel", "pll", "bclk", "spdif";
++		phys = <&hdmi_phy>;
++		phy-names = "hdmi";
++		mediatek,syscon-hdmi = <&mmsys 0x900>;
++		cec = <&cec>;
++		status = "disabled";
++	};
++
++	mipi_tx0: mipi-dphy@10010000 {
++		compatible = "mediatek,mt7623-mipi-tx",
++			     "mediatek,mt2701-mipi-tx";
++		reg = <0 0x10010000 0 0x90>;
++		clocks = <&clk26m>;
++		clock-output-names = "mipi_tx0_pll";
++		#clock-cells = <0>;
++		#phy-cells = <0>;
++	};
++
++	cec: cec@10012000 {
++		compatible = "mediatek,mt7623-cec",
++			     "mediatek,mt8173-cec";
++		reg = <0 0x10012000 0 0xbc>;
++		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&infracfg CLK_INFRA_CEC>;
++		status = "disabled";
++	};
++
++	hdmi_phy: phy@10209100 {
++		compatible = "mediatek,mt7623-hdmi-phy",
++			     "mediatek,mt2701-hdmi-phy";
++		reg = <0 0x10209100 0 0x24>;
++		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
++		clock-names = "pll_ref";
++		clock-output-names = "hdmitx_dig_cts";
++		#clock-cells = <0>;
++		#phy-cells = <0>;
++		status = "disabled";
++	};
++
++	hdmiddc0: i2c@11013000 {
++		compatible = "mediatek,mt7623-hdmi-ddc",
++			     "mediatek,mt8173-hdmi-ddc";
++		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0 0x11013000 0 0x1C>;
++		clocks = <&pericfg CLK_PERI_I2C3>;
++		clock-names = "ddc-i2c";
++		status = "disabled";
++	};
++};
++
++&pio {
++	hdmi_pins_a: hdmi-default {
++		pins-hdmi {
++			pinmux = <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
++			input-enable;
++			bias-pull-down;
++		};
++	};
++
++	hdmi_ddc_pins_a: hdmi_ddc-default {
++		pins-hdmi-ddc {
++			pinmux = <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
++				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
++		};
++	};
+ };
 -- 
 2.25.1
 
