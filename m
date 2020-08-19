@@ -2,154 +2,73 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDC2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CF92078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="AhYV0PVH"
+	by mail.kernel.org (Postfix) with ESMTP id 4EC722078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgHSUCO (ORCPT
+        id S1727031AbgHSUCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:02:14 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:35520 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbgHSUCN (ORCPT
+        Wed, 19 Aug 2020 16:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45562 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgHSUC1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:02:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1597867334; x=1629403334;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=/WuUsWWRaL1RoCuSGDbDXqbB2zUmPQ8qHvxQ39aJ2XE=;
-  b=AhYV0PVHNkVCU2qoecWSYTMUsd1bOP4FOe564k2GFdd+zH7cB68HOAUh
-   VSx3kd1BdJm8pC4eJaHJHh/KNdf8NU+j8R9Opj3ENZq1IGQ8Uv/8Zpsbn
-   HhlfjEwdjDwkbBkSSDIwCt1hmfe2vmqQ03CB7Q7TCuf38pLjoKq9e4ijR
-   qWCtqDC7xXYVDR1RE8Tij22nwzoqV03Inx4f/oDjjqaFkqFh042j1Bs5U
-   TvQjHK60IFpEpPTOVRuXZ1/zccS2cSYZP8VNWm6JQQhVzKe/YLsQVvyBj
-   UHFcgVC8KQj/KG8paltEXySZhvmctxyDihJASjRy4CWXiQ0XnBbUG/k0A
-   w==;
-IronPort-SDR: vhsi6WmrJ7uoCStof2WRmBXZL1Axfa4kjHuO/aAWJdg8iBTEuQyHgYI8ylCESQ9OabQAHQIfyK
- WKeIDvbkWfASy6mz179hx7GyQby1kPDdRjNac3DgtTHwNbHjqXsElh24C6Upyjx00xmHthy6hy
- kvSFtnnn51fUClwJaTKD3qpa9cEPaJqneJCrxAeAcHMPO/iPVRGd27nutf0mC+2z4p5YUGzGoQ
- G8VBelJBTsb9DCVSWLxiedIRfQTMxnh267gLVHI+DldxwQeOuasOGKFx6KP6Pkwf19EJXgvPYX
- z3U=
-X-IronPort-AV: E=Sophos;i="5.76,332,1592841600"; 
-   d="scan'208";a="149675228"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 20 Aug 2020 04:02:14 +0800
-IronPort-SDR: 85AtiEJc3UwCZU8SCbF1XXG2j55Vh5hd6N/Rz8WnN4tZGIA4jSZAO6iCqNNli2QjI75MSfmvHF
- JsPIIXEokGVA==
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 12:49:09 -0700
-IronPort-SDR: lgC0qzfmt+LZzgs6kv/HBx4AvEFDNKPlHG7WS3l2eueThUpIpnLKMnCur05odAaPlQfkGCiGdB
- +xazf3+SHAFw==
-WDCIronportException: Internal
-Received: from unknown (HELO redsun52) ([10.149.66.28])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 13:02:12 -0700
-Date:   Wed, 19 Aug 2020 21:00:46 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-cc:     viro@zeniv.linux.org.uk, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] riscv: ptrace: Use the correct API for `fcsr'
- access
-In-Reply-To: <mhng-6e42b0e6-1f3b-41a3-a023-4145fb4d8980@palmerdabbelt-glaptop1>
-Message-ID: <alpine.LFD.2.21.2008190019480.24175@redsun52.ssa.fujisawa.hgst.com>
-References: <mhng-6e42b0e6-1f3b-41a3-a023-4145fb4d8980@palmerdabbelt-glaptop1>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 19 Aug 2020 16:02:27 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8337CC061757;
+        Wed, 19 Aug 2020 13:02:26 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 32B9F11E45763;
+        Wed, 19 Aug 2020 12:45:37 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 13:02:22 -0700 (PDT)
+Message-Id: <20200819.130222.1915954815957844234.davem@davemloft.net>
+To:     christian.brauner@ubuntu.com
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        corbet@lwn.net, ysato@users.sourceforge.jp, tony.luck@intel.com,
+        fenghua.yu@intel.com, geert@linux-m68k.org, ley.foon.tan@intel.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        arnd@arndb.de, rostedt@goodmis.org, shorne@gmail.com,
+        peterz@infradead.org, jongk@linux-m68k.org, keescook@chromium.org,
+        green.hu@gmail.com, ebiederm@xmission.com,
+        mchehab+huawei@kernel.org, alexandre.chartre@oracle.com,
+        mhiramat@kernel.org, zanussi@kernel.org, yangx.jy@cn.fujitsu.com,
+        linux-doc@vger.kernel.org, uclinux-h8-devel@lists.sourceforge.jp,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        sparclinux@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net,
+        linux-kselftest@vger.kernel.org, torvalds@linux-foundation.org,
+        hch@infradead.org, willy@infradead.org
+Subject: Re: [PATCH v2 06/11] sparc: switch to kernel_clone()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200819104655.436656-7-christian.brauner@ubuntu.com>
+References: <20200819104655.436656-1-christian.brauner@ubuntu.com>
+        <20200819104655.436656-7-christian.brauner@ubuntu.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Aug 2020 12:45:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 5 Aug 2020, Palmer Dabbelt wrote:
+From: Christian Brauner <christian.brauner@ubuntu.com>
+Date: Wed, 19 Aug 2020 12:46:50 +0200
 
-> >  I can push linux-next through regression-testing with RISC-V gdbserver
-> > and/or native GDB if that would help.  This is also used with core dumps,
-> > but honestly I don't know what state RISC-V support is in in the BFD/GDB's
-> > core dump interpreter, as people tend to forget about the core dump
-> > feature nowadays.
+> The old _do_fork() helper is removed in favor of the new kernel_clone() helper.
+> The latter adheres to naming conventions for kernel internal syscall helpers.
 > 
-> IIRC Andrew does GDB test suite runs sometimes natively on Linux as part of
-> general GDB maintiance and we don't see major issues, but I'm pretty checked
-> out of GDB development these days so he would know better than I do.  It's
-> always great to have someone test stuff, though -- and I doubt he's testing
-> linux-next.  It's been on my TODO list for a long time now to put together
-> tip-of-tree testing for the various projects but I've never gotten around to
-> doing it.
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: sparclinux@vger.kernel.org
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 
- I have now run GDB regression testing with remote `gdbserver' on a HiFive 
-Unleashed, lp64d ABI only, comparing 5.8.0-next-20200814 against 5.8.0-rc5 
-with no issues observed.
-
-> Oddly enough, despite not really using GDB I have used it for core dumps -- I
-> was writing a tool to convert commit logs to coredumps with the GDB reverse
-> debugging annotations, but I never got around to finishing it.
-
- I fiddled with core dump handling verification for GDB back in my MIPS 
-days expanding an existing test case to interpret an OS-generated core 
-dump in addition to one produced by GDB's `gcore' command, although in the 
-case of local testing only (i.e. either native or running `gdbserver' on 
-the same test machine GDB runs); this restriction is due to the need to 
-isolate the core file produced, as it may or may not have a .$pid suffix 
-attached (or may have yet another name variation with non-Linux targets), 
-which is somewhat complicated with commands run remotely (though I imagine 
-the restriction could be lifted by someone sufficiently inclined).
-
- The relevant tests results are as follows (on a successful run):
-
-PASS: gdb.threads/tls-core.exp: native: load core file
-PASS: gdb.threads/tls-core.exp: native: print thread-local storage variable
-PASS: gdb.threads/tls-core.exp: gcore: load core file
-PASS: gdb.threads/tls-core.exp: gcore: print thread-local storage variable
-
-and the binutils-gdb change is commit d9f6d7f8b636 ("testsuite: Extend TLS 
-core file testing with an OS-generated dump").  So that part should be 
-covered at least to some extent by automated testing.
-
- However something is not exactly right and I recall having an issue 
-recorded for later investigation (which may not happen given the recent 
-turn of events) that RISC-V/Linux does not actually dump cores even in the 
-circumstances it is supposed to (i.e. the combination of the specific 
-signal delivered and RLIMIT_CORE set to infinity imply it).
-
- Indeed I have run the test natively now and I got:
-
-PASS: gdb.threads/tls-core.exp: successfully compiled posix threads test case
-WARNING: can't generate a core file - core tests suppressed - check ulimit -c
-PASS: gdb.threads/tls-core.exp: gcore
-UNSUPPORTED: gdb.threads/tls-core.exp: native: load core file
-UNSUPPORTED: gdb.threads/tls-core.exp: native: print thread-local storage variable
-PASS: gdb.threads/tls-core.exp: gcore: load core file
-PASS: gdb.threads/tls-core.exp: gcore: print thread-local storage variable
-
-which means things are not actually sound.  Likewise if I run the test 
-program manually:
-
-$ ulimit -c
-unlimited
-$ ./tls-core
-Aborted (core dumped)
-$ ls -la core*
-ls: cannot access 'core*': No such file or directory
-$ 
-
--- oops!
-
- [As it turned out MIPS core dump handling was completely messed up both 
-on the Linux and the GDB side.  See binutils-gdb commit d8dab6c3bbe6 
-("MIPS/Linux: Correct o32 core file FGR interpretation") if interested; 
-there are further Linux commit references there.]
-
-  Maciej
+Acked-by: David S. Miller <davem@davemloft.net>
