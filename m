@@ -2,83 +2,116 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA15C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB2D2076E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597846895;
-	bh=jpRfui17lA3nFG0e1CxOk2FPwyfMV1V22Ev0GKkWB5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OJ+vX5eG6u7xL1+St43opH1o4q9wc2KeFgxCOYmYfStsVCZ8plUcGa4t9OnR1j/fI
-	 X8khmMcTrrHiwR8esHhZ051y0IDd5xjCp5m4DCNendSX2BKWAioL7ppC+I+nDk1b2K
-	 8jtWOT1emi55AYqygEkKqJOCzsTz+g4h65DasTiQ=
+	by mail.kernel.org (Postfix) with ESMTP id 81CFE20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:22:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BUM4YlZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbgHSOVe (ORCPT
+        id S1728348AbgHSOWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42256 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgHSOVd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:21:33 -0400
-Received: from localhost (unknown [213.57.247.131])
+        Wed, 19 Aug 2020 10:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726560AbgHSOV6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 10:21:58 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A798C061757;
+        Wed, 19 Aug 2020 07:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OM9WQWb562JnQ8J9qmB6TNE93wwhfVi68/R72R/S3h0=; b=BUM4YlZD5Yzmb8kaTUCuZ6lBKL
+        sDkrBxK8WowYEFSqfVTPPZMnOn8zTD2mLHohwdxCiIDp92t/Gs0Da+jg9LgTXbCOXXmH5vXocflo3
+        4cQrotNxKJ994S1WlTq8sVi+GhSNXq9fBNY0FmxCEw/pqL6a02cINpbs3s9kGcVAJugcl4u0QfvcG
+        Jzp0W4//UkQV81HYqI5VCVAaQc7hnJRt72wcDM+htFYNRFfwXOWkFmcGaVlBcHM9+1sL+w1xc/G8r
+        xEIBJQ+DOcVJUNPf5PqDb405kHSlQ8HXtH8busyTSb3Uk68tXQwhMgVzlZRwNY44I5zS0U+tvFsrZ
+        kFnJgdlA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8Oy9-0004od-0T; Wed, 19 Aug 2020 14:21:37 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D7D20639;
-        Wed, 19 Aug 2020 14:21:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597846892;
-        bh=jpRfui17lA3nFG0e1CxOk2FPwyfMV1V22Ev0GKkWB5E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X7zfblykkgvANcP9POyOnUxHDXg9cDz4FFVBE/kIQ3PAKcFHmFmfQn0VQaZiMxBbE
-         /MPHy0sqMsKnVuvCGfgtlRiSkpegn72o6mWRIeAjl7RV7341ZeaysZkrefaDaLln6w
-         H8zIbQGGMZe81k9Et5xXtpWLWxewHx8qV6THQgtg=
-Date:   Wed, 19 Aug 2020 17:21:29 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] Fixes to GCC warnings while compiling with W=1 level
-Message-ID: <20200819142129.GW7555@unreal>
-References: <20200819141630.1338693-1-leon@kernel.org>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C297F3003E1;
+        Wed, 19 Aug 2020 16:21:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AB49F20D805B3; Wed, 19 Aug 2020 16:21:34 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 16:21:34 +0200
+From:   peterz@infradead.org
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
+ preemption
+Message-ID: <20200819142134.GD2674@hirez.programming.kicks-ass.net>
+References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
+ <20200819131507.GC2674@hirez.programming.kicks-ass.net>
+ <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200819141630.1338693-1-leon@kernel.org>
+In-Reply-To: <20200819133320.bxwb3ikjswyhmsyg@linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:16:27PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@nvidia.com>
->
-> Hi,
->
-> The series of trivial fixes for GCC warnings seen while compiling with W=1.
->
-> Thanks
->
-> Leon Romanovsky (3):
->   fs/btfrs: Fix -Wunused-but-set-variable warnings
-      ^^^ this is typo - btrfs
+On Wed, Aug 19, 2020 at 03:33:20PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-08-19 15:15:07 [+0200], peterz@infradead.org wrote:
 
->   fs/btrfs: Fix -Wignored-qualifiers warnings
->   fs/btrfs: Fix -Wmissing-prototypes warnings
->
->  fs/btrfs/compression.c | 35 -----------------------------------
->  fs/btrfs/compression.h | 35 +++++++++++++++++++++++++++++++++++
->  fs/btrfs/ctree.c       |  2 +-
->  fs/btrfs/ctree.h       |  2 +-
->  fs/btrfs/sysfs.c       |  7 +++----
->  fs/btrfs/sysfs.h       |  2 +-
->  6 files changed, 41 insertions(+), 42 deletions(-)
->
-> --
-> 2.26.2
->
+> If you want to optimize further, we could move PF_IO_WORKER to an lower
+> bit. x86 can test for both via
+> (gcc-10)
+> |         testl   $536870944, 44(%rbp)    #, _11->flags
+> |         jne     .L1635  #,
+> 
+> (clang-9)
+> |         testl   $536870944, 44(%rbx)    # imm = 0x20000020
+> |         je      .LBB112_6
+> 
+> 
+> but ARM can't and does
+> |          ldr     r1, [r5, #16]   @ tsk_3->flags, tsk_3->flags
+> |         mov     r2, #32 @ tmp157,
+> |         movt    r2, 8192        @ tmp157,
+> |         tst     r2, r1  @ tmp157, tsk_3->flags
+> |         beq     .L998           @,
+> 
+> same ARM64
+> |         ldr     w0, [x20, 60]   //, _11->flags
+> |         and     w0, w0, 1073741792      // tmp117, _11->flags,
+> |         and     w0, w0, -536870849      // tmp117, tmp117,
+> |         cbnz    w0, .L453       // tmp117,
+> 
+> using 0x10 for PF_IO_WORKER instead will turn this into:
+> |         ldr     w0, [x20, 60]   //, _11->flags
+> |         tst     w0, 48  // _11->flags,
+> |         bne     .L453           //,
+> 
+> ARM:
+> |         ldr     r2, [r5, #16]   @ tsk_3->flags, tsk_3->flags
+> |         tst     r2, #48 @ tsk_3->flags,
+> |         beq     .L998           @,
+
+Good point, AFAICT there's a number of low bits still open (and we can
+shuffle if we have to), so sure put a patch in to that effect while
+you're at it.
+
+
