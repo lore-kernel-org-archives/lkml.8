@@ -2,139 +2,104 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2697BC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5EDC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEA792072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:33:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796242072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:33:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mRtZ4GXN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eXR2tjKL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ESOIyo5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbgHSMdU (ORCPT
+        id S1728255AbgHSMdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:33:20 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60247 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728155AbgHSMct (ORCPT
+        Wed, 19 Aug 2020 08:33:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39024 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728143AbgHSMdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:32:49 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200819123229euoutp019e599a913119d090bd9043e9853ab080~sq1UEeDZg2980229802euoutp01h
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:32:29 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200819123229euoutp019e599a913119d090bd9043e9853ab080~sq1UEeDZg2980229802euoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597840349;
-        bh=+cQ0qkFcczMMqrtKf3ORB2nrtOVHuhDIpsXvvZWWCto=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mRtZ4GXNPeziK7GJoeLjO53EvkRyT+Yfnf1rbQ4LeWPV7SI0O2r5P0kfpRnHMu4dW
-         j1ez54S7ecIlt7Cil96L/1Wram2maHFIy54gSlwP8bwLgaAhW6XDop1VL4AIj9PRZW
-         gWzX0kIrvGZFsXRzNcidsOBGI2UqOQr/7oJsYE6A=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200819123229eucas1p2080888519e789dd3d209ed718b0cccdc~sq1TtBOXi2958529585eucas1p2W;
-        Wed, 19 Aug 2020 12:32:29 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id E4.FC.05997.CDB1D3F5; Wed, 19
-        Aug 2020 13:32:28 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200819123228eucas1p132d530d17256f887d93ed7792f5b9587~sq1TVEUJn1043110431eucas1p1_;
-        Wed, 19 Aug 2020 12:32:28 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200819123228eusmtrp177eef954eecb0661659abe8ea61d335e~sq1TUV2341680116801eusmtrp1A;
-        Wed, 19 Aug 2020 12:32:28 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-41-5f3d1bdc3a76
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id B0.73.06017.CDB1D3F5; Wed, 19
-        Aug 2020 13:32:28 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200819123228eusmtip129998803c8db9600657644651c4f8d31~sq1TLIxaS3061630616eusmtip1j;
-        Wed, 19 Aug 2020 12:32:28 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH 8/8] spi: spi-s3c64xx: Turn on interrupts upon resume
-Date:   Wed, 19 Aug 2020 14:32:08 +0200
-Message-Id: <20200819123208.12337-9-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200819123208.12337-1-l.stelmach@samsung.com>
+        Wed, 19 Aug 2020 08:33:14 -0400
+Date:   Wed, 19 Aug 2020 12:33:11 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597840391;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QSYH8UGdj1f61R0KtIe765d1bB1D8LF4L63dxPDF0+U=;
+        b=eXR2tjKLHRPArAECAnuX+gH2PFo6ff5oIM6aESXn/+568gW9mV7bcPzDC1Zdvc3pYG5nr7
+        FSotx4k679g+Ux9e5sGkxrpJmCN0w1IdcYt/pwTz6MPyF5QmHpKnVr8H0a/sU3iFZVu5ys
+        huDwjvxkhbT/hxGGYVp8BHFtZaqX8EdkDgILr5pnjW9ihDAAb4WR/3+JWmGTnr/3Ud+P0/
+        QDjT71DCBxHx6Sbze8WyeDTndQvD4FqQpNE0IGjDbrxiAGaSaALHsJZ0e1EK2GHW68xSvT
+        3jUHijRV0loacgEY4nxoUzezRmXbdqjfnsQUavbP+o1WQmEx6TEkVYS+OkZFGw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597840391;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QSYH8UGdj1f61R0KtIe765d1bB1D8LF4L63dxPDF0+U=;
+        b=ESOIyo5ZEJnF3pXV9+8Yv5PIJ9/Dn+RgOq7UYu1+SmLmh35cuzdAt+20uYKFE0mQ+5Q0eM
+        /4otvK+M1VRVDtCA==
+From:   "tip-bot2 for James Morse" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cache] x86/resctrl: Include pid.h
+Cc:     James Morse <james.morse@arm.com>, Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200708163929.2783-6-james.morse@arm.com>
+References: <20200708163929.2783-6-james.morse@arm.com>
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrEKsWRmVeSWpSXmKPExsWy7djPc7p3pG3jDX60W1ks/vGcyWLjjPWs
-        FlMfPmGz6H/8mtni/PkN7BY3D61gtNj0+BqrxeVdc9gsZpzfx2TR+PEmu8XaI3fZHbg9ri/5
-        xOyxaVUnm8fmJfUefVtWMXp83iQXwBrFZZOSmpNZllqkb5fAlbH75j32giWsFZe7+tkbGHey
-        dDFyckgImEhsO7SSsYuRi0NIYAWjxOlFZ5khnC+MEnuWfmOHcD4zSuz8do8VpuXv32esEInl
-        jBK3936Fcp4zSsy8uRJsMJuAo0T/0hNgCRGBCUwSD8+9YQNJMAuUSvTsPARmCwu4SmxYcw3M
-        ZhFQlfi9q40RxOYVsJa4dvsPO8Q6eYn25dvBajgFbCQe/prCBlEjKHFy5hOwZfwCWhJrmq6z
-        QMyXl2jeOhvsCQmBc+wS++bPZYQY5CJx4OVhqKHCEq+Ob4GyZSROT+4BauYAsuslJk8yg+jt
-        YZTYNucHNJisJe6c+8UGUsMsoCmxfpc+RNhR4mFPMztEK5/EjbeCECfwSUzaNp0ZIswr0dEm
-        BFGtIrGufw/UQCmJ3lcrGCcwKs1C8swsJA/MQti1gJF5FaN4amlxbnpqsVFearlecWJucWle
-        ul5yfu4mRmBKOv3v+JcdjLv+JB1iFOBgVOLhrThnHS/EmlhWXJl7iFGCg1lJhNfp7Ok4Id6U
-        xMqq1KL8+KLSnNTiQ4zSHCxK4rzGi17GCgmkJ5akZqemFqQWwWSZODilGhiF/8kXnLrdmTvN
-        Xvj09ZRnq/1DyuuUFUqS4lbes+15u3Nt6Bkt7WTXm82rxI3DDqrs/uZSrPzp7gY+NrU3tiwv
-        Q98cnCAUs+LwzNfSKuGqhjN+7zE+HlXc92S/3RSf2svmZaZW3C6JU92i5aXtzIPCDKaqXX0+
-        P7jv8r+Xy5l9rL3E5hrqMiixFGckGmoxFxUnAgAGB/RVRQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEIsWRmVeSWpSXmKPExsVy+t/xu7p3pG3jDaY1qlos/vGcyWLjjPWs
-        FlMfPmGz6H/8mtni/PkN7BY3D61gtNj0+BqrxeVdc9gsZpzfx2TR+PEmu8XaI3fZHbg9ri/5
-        xOyxaVUnm8fmJfUefVtWMXp83iQXwBqlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl7H75j32giWsFZe7+tkbGHeydDFyckgImEj8/fuMtYuRi0NI
-        YCmjxJ1NH9i7GDmAElISK+emQ9QIS/y51sUGUfOUUeLBrc1MIAk2AUeJ/qUnwJpFBGYwSTy5
-        MZkVJMEsUC5xadZzdhBbWMBVYsOaa2wgNouAqsTvXW2MIDavgLXEtdt/2CE2yEu0L98OVsMp
-        YCPx8NcUMFsIqKZr8UImiHpBiZMzn7CAHMcsoC6xfp4QSJhfQEtiTdN1Foi18hLNW2czT2AU
-        moWkYxZCxywkVQsYmVcxiqSWFuem5xYb6RUn5haX5qXrJefnbmIExt+2Yz+37GDsehd8iFGA
-        g1GJh7finHW8EGtiWXFl7iFGCQ5mJRFep7On44R4UxIrq1KL8uOLSnNSiw8xmgK9OZFZSjQ5
-        H5ga8kriDU0NzS0sDc2NzY3NLJTEeTsEDsYICaQnlqRmp6YWpBbB9DFxcEo1MOqduqely2O6
-        9SPfhVuPFmcaLpnPx7r1UieX4odFk7M3n9cXFtzhln/Wsa87WqHkrs/RcBdxdXbWQEX9fh5O
-        50Mcl0/ZctsZZ/Dsy9sikyw6hz+qzH6O+prY/ycq1r3abrx8ifzpv9F7U7QzZ3cdMrh/rPy5
-        /rSXshfkw8U/Hjuz2uH/LO37ZkosxRmJhlrMRcWJAL3wrWDVAgAA
-X-CMS-MailID: 20200819123228eucas1p132d530d17256f887d93ed7792f5b9587
-X-Msg-Generator: CA
+Message-ID: <159784039111.3192.590146678481310707.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200819123228eucas1p132d530d17256f887d93ed7792f5b9587
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200819123228eucas1p132d530d17256f887d93ed7792f5b9587
-References: <20200819123208.12337-1-l.stelmach@samsung.com>
-        <CGME20200819123228eucas1p132d530d17256f887d93ed7792f5b9587@eucas1p1.samsung.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+The following commit has been merged into the x86/cache branch of tip:
+
+Commit-ID:     a21a4391f20c0ab45db452e22bc3e8afe8b36e46
+Gitweb:        https://git.kernel.org/tip/a21a4391f20c0ab45db452e22bc3e8afe8b36e46
+Author:        James Morse <james.morse@arm.com>
+AuthorDate:    Wed, 08 Jul 2020 16:39:24 
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 18 Aug 2020 17:06:15 +02:00
+
+x86/resctrl: Include pid.h
+
+We are about to disturb the header soup. This header uses struct pid
+and struct pid_namespace. Include their header.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Link: https://lkml.kernel.org/r/20200708163929.2783-6-james.morse@arm.com
 ---
- drivers/spi/spi-s3c64xx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/linux/resctrl.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 27db1e0f6f32..5dcad43fb847 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -1356,6 +1356,10 @@ static int s3c64xx_spi_runtime_resume(struct device *dev)
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+index daf5cf6..9b05af9 100644
+--- a/include/linux/resctrl.h
++++ b/include/linux/resctrl.h
+@@ -2,6 +2,8 @@
+ #ifndef _RESCTRL_H
+ #define _RESCTRL_H
  
- 	s3c64xx_spi_hwinit(sdd);
- 
-+	writel(S3C64XX_SPI_INT_RX_OVERRUN_EN | S3C64XX_SPI_INT_RX_UNDERRUN_EN |
-+	       S3C64XX_SPI_INT_TX_OVERRUN_EN | S3C64XX_SPI_INT_TX_UNDERRUN_EN,
-+	       sdd->regs + S3C64XX_SPI_INT_EN);
++#include <linux/pid.h>
 +
- 	return 0;
+ #ifdef CONFIG_PROC_CPU_RESCTRL
  
- err_disable_src_clk:
--- 
-2.26.2
-
+ int proc_resctrl_show(struct seq_file *m,
