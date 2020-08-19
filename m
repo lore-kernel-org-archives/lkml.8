@@ -2,89 +2,78 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1481BC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F26C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDF762065F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:13:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597806817;
-	bh=jBJh5kxEFmem8OBd4D3VvTvseJXtj5YSJL31DFhDNRg=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=jLEB5i7KLQjY3jvEpnQUEZWGEo+OQUv3Q2aQlrXW95lexTd/Mbw6Aj7QDrBj6TDk5
-	 9iZosF6m7Q3MzQcYX/enJcr2nsLF7y5FRtFshAtTy05sg26EmkZVcFvfQlaET66K/o
-	 5abucg3akN69/wrxj/iFgJ/K2mZHqVgISzgjnPAY=
+	by mail.kernel.org (Postfix) with ESMTP id 8A35C20639
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 03:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgHSDNg (ORCPT
+        id S1727955AbgHSDPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 23:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47128 "EHLO mail.kernel.org"
+        Tue, 18 Aug 2020 23:15:54 -0400
+Received: from mga14.intel.com ([192.55.52.115]:46296 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbgHSDNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 23:13:34 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D1EF2065F;
-        Wed, 19 Aug 2020 03:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597806814;
-        bh=jBJh5kxEFmem8OBd4D3VvTvseJXtj5YSJL31DFhDNRg=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=WyPqN4dWQaX7X9BksHna51LU8C201UlVBvovPE6gkQ0CbzPoiR0AnqqjRQTc9u2FY
-         EEC/aLO5jXWhlIgmYK+4IBr2V5oaRQgJ9X50ZViVnZ6KkE2IDZyCW0JYcYlKSkzyJ6
-         gYfjtvpMUkQq6nIwD88oPbYaPi6GUa4PIAbSrjmI=
-Content-Type: text/plain; charset="utf-8"
+        id S1726751AbgHSDPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 23:15:53 -0400
+IronPort-SDR: u7w4/VFZCWBInrHizdBZz/asjwkJyYcl1wJSb8qoUAte/zrjUAJ8hN6MUyPYpU0YAo1fKS3wwS
+ T74SPqbjsAaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="154304311"
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="154304311"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 20:15:53 -0700
+IronPort-SDR: zXLuRtJ8qM3fEIi5i4ituO1UIQm+2OT627pgXOK6XZe1crqJCZnEVDvaPpe+XP6EbooxpE8m27
+ DZ6EYZfdiPsQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
+   d="scan'208";a="371101364"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by orsmga001.jf.intel.com with ESMTP; 18 Aug 2020 20:15:51 -0700
+Date:   Wed, 19 Aug 2020 11:15:50 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@suse.de>,
+        "Chen, Rong A" <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "lkp@lists.01.org" <lkp@lists.01.org>
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200819031550.GA59663@shbuild999.sh.intel.com>
+References: <20200425114414.GU26573@shao2-debian>
+ <20200425130136.GA28245@zn.tnic>
+ <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <149e0cfb5b7e48dfb9bea966c7741336@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200811084943.GC7488@shao2-debian>
-References: <20200811084943.GC7488@shao2-debian>
-Subject: Re: [clk] a2499eff4b: BUG:kernel_NULL_pointer_dereference,address
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, 0day robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        kernel test robot <rong.a.chen@intel.com>
-Date:   Tue, 18 Aug 2020 20:13:33 -0700
-Message-ID: <159780681339.334488.10402512224012716827@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <149e0cfb5b7e48dfb9bea966c7741336@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting kernel test robot (2020-08-11 01:49:44)
-> Greeting,
->=20
-> FYI, we noticed the following commit (built with gcc-9):
->=20
-> commit: a2499eff4b30a85d56e4466e6ca4746c72a347c6 ("[PATCH v2] clk: samsun=
-g: Keep top BPLL mux on Exynos542x enabled")
-> url: https://github.com/0day-ci/linux/commits/Marek-Szyprowski/clk-samsun=
-g-Keep-top-BPLL-mux-on-Exynos542x-enabled/20200807-213239
-> base: https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git clk-next
->=20
-> in testcase: trinity
-> with following parameters:
->=20
->         runtime: 300s
->=20
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
->=20
->=20
-> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m =
-16G
+On Wed, Aug 19, 2020 at 10:23:11AM +0800, Luck, Tony wrote:
+> 	0000000000019260 D pqr_state
+> 
+> Do you have /sys/fs/resctrl mounted?  This variable is read on every context switch.
+> If your benchmark does a lot of context switching and this now shares a cache line
+> with something different (especially something that is sometimes modified from another
+> CPU) that could cause some cache line bouncing.
 
-Cool robot. But this doesn't look related to the patch at all?
+No, the kernel doesn't has /sys/fs/resctrl mounted.
+
+And the test case is not context switch intensive. It just forks a task
+for each CPU which loops running malloc/free and counts the number of
+complted operations for 300 seconds.
+
+Thanks,
+Feng
