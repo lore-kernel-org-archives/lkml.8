@@ -2,321 +2,139 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D9AC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27AA62072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597838173;
-	bh=nB9SuwtUizzYREhBl09f96wwqfl+6v1Nki9XxEYxFmg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HotlocCUtVstXVY0mH8yQ99gdHwcSwOioZeCodPpKIII667WyGIgutXczlMMPZnL0
-	 l8JFMPyQGd0iWhmaqHOGeK+ftluHbr/AW2CX/56kd2FQWqeGIUivKVVz/us7U5HpSH
-	 VdnT3cZqQViMFyJjvRjEVNBVK4PnWm+qg6JR7Fmw=
+	by mail.kernel.org (Postfix) with ESMTP id 3A43C2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:56:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgHSL4L (ORCPT
+        id S1728179AbgHSL4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56344 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 07:56:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:34086 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728259AbgHSLzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:55:09 -0400
-Received: from kernel.org (unknown [87.70.91.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FB6322CB2;
-        Wed, 19 Aug 2020 11:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597838028;
-        bh=nB9SuwtUizzYREhBl09f96wwqfl+6v1Nki9XxEYxFmg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XzrjsD+88ReKpEKVPxcwBs0sO7/deF5YmgL8LgJvrSN6vKteBo3UksVlQ439kYefA
-         pqi62Er1Ztem1X6xeUf0PcjYSye7F9ZeTEP4gsLHxxhVLZS4GHJvJhgTJYf67ZgHza
-         yH2N2HWN3WZDusoyvsFWvEe6drqcLGHPLKWZz18o=
-Date:   Wed, 19 Aug 2020 14:53:35 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christopher Lameter <cl@linux.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org
-Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
- boot
-Message-ID: <20200819115335.GU752365@kernel.org>
-References: <20200818141554.13945-1-rppt@kernel.org>
- <20200818141554.13945-7-rppt@kernel.org>
- <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+        id S1728301AbgHSLzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:55:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F04E61063;
+        Wed, 19 Aug 2020 04:55:50 -0700 (PDT)
+Received: from [192.168.178.2] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 79F253F71F;
+        Wed, 19 Aug 2020 04:55:49 -0700 (PDT)
+Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
+ runable(Internet mail)
+To:     Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>,
+        Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200801023248.90104-1-benbjiang@gmail.com>
+ <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
+ <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com>
+ <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
+ <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com>
+ <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
+ <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com>
+ <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
+ <70236E62-AA36-48C1-9382-86353649253C@tencent.com>
+ <3a1047fc-a86a-014a-b17a-eae71f669da1@arm.com>
+ <643B0ECE-D758-4D08-8B1B-C70F34DD9943@tencent.com>
+ <55f04582-69d6-aeb4-85be-3e46a3b15beb@arm.com>
+ <755BFAD0-9072-4D73-9CD7-AF4F74A79D21@tencent.com>
+ <729675a2-b083-4211-62c0-f7ed7f483ae2@arm.com>
+ <CAKfTPtATf94n4t6EnB5_76ygox26xd9EwvEHiv5cGN=E9BdLgg@mail.gmail.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <bb7456af-6a4d-874c-e635-8d21e1ab3efc@arm.com>
+Date:   Wed, 19 Aug 2020 13:55:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+In-Reply-To: <CAKfTPtATf94n4t6EnB5_76ygox26xd9EwvEHiv5cGN=E9BdLgg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
-> On 18.08.20 16:15, Mike Rapoport wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > Taking pages out from the direct map and bringing them back may create
-> > undesired fragmentation and usage of the smaller pages in the direct
-> > mapping of the physical memory.
-> > 
-> > This can be avoided if a significantly large area of the physical memory
-> > would be reserved for secretmem purposes at boot time.
-> > 
-> > Add ability to reserve physical memory for secretmem at boot time using
-> > "secretmem" kernel parameter and then use that reserved memory as a global
-> > pool for secret memory needs.
+On 19/08/2020 13:05, Vincent Guittot wrote:
+> On Wed, 19 Aug 2020 at 12:46, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>
+>> On 17/08/2020 14:05, benbjiang(蒋彪) wrote:
+>>>
+>>>
+>>>> On Aug 17, 2020, at 4:57 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>
+>>>> On 14/08/2020 01:55, benbjiang(蒋彪) wrote:
+>>>>> Hi,
+>>>>>
+>>>>>> On Aug 13, 2020, at 2:39 AM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>
+>>>>>> On 12/08/2020 05:19, benbjiang(蒋彪) wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>>> On Aug 11, 2020, at 11:54 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>>>
+>>>>>>>> On 11/08/2020 02:41, benbjiang(蒋彪) wrote:
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>>> On Aug 10, 2020, at 9:24 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 06/08/2020 17:52, benbjiang(蒋彪) wrote:
+>>>>>>>>>>> Hi,
+>>>>>>>>>>>
+>>>>>>>>>>>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 03/08/2020 13:26, benbjiang(蒋彪) wrote:
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 01/08/2020 04:32, Jiang Biao wrote:
+>>>>>>>>>>>>>>> From: Jiang Biao <benbjiang@tencent.com>
+>>
+>> [...]
+>>
+>>>> Are you sure about this?
+>>> Yes. :)
+>>>>
+>>>> The math is telling me for the:
+>>>>
+>>>> idle task:      (3 / (1024 + 1024 + 3))^(-1) * 4ms = 2735ms
+>>>>
+>>>> normal task: (1024 / (1024 + 1024 + 3))^(-1) * 4ms =    8ms
+>>>>
+>>>> (4ms - 250 Hz)
+>>> My tick is 1ms - 1000HZ, which seems reasonable for 600ms? :)
+>>
+>> OK, I see.
+>>
+>> But here the different sched slices (check_preempt_tick()->
+>> sched_slice()) between normal tasks and the idle task play a role to.
+>>
+>> Normal tasks get ~3ms whereas the idle task gets <0.01ms.
 > 
-> Wouldn't something like CMA be the better fit? Just wondering. Then, the
-> memory can actually be reused for something else while not needed.
+> In fact that depends on the number of CPUs on the system
+> :sysctl_sched_latency = 6ms * (1 + ilog(ncpus)) . On a 8 cores system,
+> normal task will run around 12ms in one shoot and the idle task still
+> one tick period
 
-The memory allocated as secret is removed from the direct map and the
-boot time reservation is intended to reduce direct map fragmentatioan
-and to avoid splitting 1G pages there. So with CMA I'd still need to
-allocate 1G chunks for this and once 1G page is dropped from the direct
-map it still cannot be reused for anything else until it is freed.
+True. This is on a single CPU.
 
-I could use CMA to do the boot time reservation, but doing the
-reservesion directly seemed simpler and more explicit to me.
+> Also, you can increase even more the period between 2 runs of idle
+> task by using cgroups and min shares value : 2
 
+Ah yes, maybe this is what Jiang wants to do then? If his runtime does
+not have other requirements preventing this.
 
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> > ---
-> >  mm/secretmem.c | 134 ++++++++++++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 126 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/mm/secretmem.c b/mm/secretmem.c
-> > index 333eb18fb483..54067ea62b2d 100644
-> > --- a/mm/secretmem.c
-> > +++ b/mm/secretmem.c
-> > @@ -14,6 +14,7 @@
-> >  #include <linux/pagemap.h>
-> >  #include <linux/genalloc.h>
-> >  #include <linux/syscalls.h>
-> > +#include <linux/memblock.h>
-> >  #include <linux/pseudo_fs.h>
-> >  #include <linux/set_memory.h>
-> >  #include <linux/sched/signal.h>
-> > @@ -45,6 +46,39 @@ struct secretmem_ctx {
-> >  	unsigned int mode;
-> >  };
-> >  
-> > +struct secretmem_pool {
-> > +	struct gen_pool *pool;
-> > +	unsigned long reserved_size;
-> > +	void *reserved;
-> > +};
-> > +
-> > +static struct secretmem_pool secretmem_pool;
-> > +
-> > +static struct page *secretmem_alloc_huge_page(gfp_t gfp)
-> > +{
-> > +	struct gen_pool *pool = secretmem_pool.pool;
-> > +	unsigned long addr = 0;
-> > +	struct page *page = NULL;
-> > +
-> > +	if (pool) {
-> > +		if (gen_pool_avail(pool) < PMD_SIZE)
-> > +			return NULL;
-> > +
-> > +		addr = gen_pool_alloc(pool, PMD_SIZE);
-> > +		if (!addr)
-> > +			return NULL;
-> > +
-> > +		page = virt_to_page(addr);
-> > +	} else {
-> > +		page = alloc_pages(gfp, PMD_PAGE_ORDER);
-> > +
-> > +		if (page)
-> > +			split_page(page, PMD_PAGE_ORDER);
-> > +	}
-> > +
-> > +	return page;
-> > +}
-> > +
-> >  static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
-> >  {
-> >  	unsigned long nr_pages = (1 << PMD_PAGE_ORDER);
-> > @@ -53,12 +87,11 @@ static int secretmem_pool_increase(struct secretmem_ctx *ctx, gfp_t gfp)
-> >  	struct page *page;
-> >  	int err;
-> >  
-> > -	page = alloc_pages(gfp, PMD_PAGE_ORDER);
-> > +	page = secretmem_alloc_huge_page(gfp);
-> >  	if (!page)
-> >  		return -ENOMEM;
-> >  
-> >  	addr = (unsigned long)page_address(page);
-> > -	split_page(page, PMD_PAGE_ORDER);
-> >  
-> >  	err = gen_pool_add(pool, addr, PMD_SIZE, NUMA_NO_NODE);
-> >  	if (err) {
-> > @@ -267,11 +300,13 @@ SYSCALL_DEFINE1(memfd_secret, unsigned long, flags)
-> >  	return err;
-> >  }
-> >  
-> > -static void secretmem_cleanup_chunk(struct gen_pool *pool,
-> > -				    struct gen_pool_chunk *chunk, void *data)
-> > +static void secretmem_recycle_range(unsigned long start, unsigned long end)
-> > +{
-> > +	gen_pool_free(secretmem_pool.pool, start, PMD_SIZE);
-> > +}
-> > +
-> > +static void secretmem_release_range(unsigned long start, unsigned long end)
-> >  {
-> > -	unsigned long start = chunk->start_addr;
-> > -	unsigned long end = chunk->end_addr;
-> >  	unsigned long nr_pages, addr;
-> >  
-> >  	nr_pages = (end - start + 1) / PAGE_SIZE;
-> > @@ -281,6 +316,18 @@ static void secretmem_cleanup_chunk(struct gen_pool *pool,
-> >  		put_page(virt_to_page(addr));
-> >  }
-> >  
-> > +static void secretmem_cleanup_chunk(struct gen_pool *pool,
-> > +				    struct gen_pool_chunk *chunk, void *data)
-> > +{
-> > +	unsigned long start = chunk->start_addr;
-> > +	unsigned long end = chunk->end_addr;
-> > +
-> > +	if (secretmem_pool.pool)
-> > +		secretmem_recycle_range(start, end);
-> > +	else
-> > +		secretmem_release_range(start, end);
-> > +}
-> > +
-> >  static void secretmem_cleanup_pool(struct secretmem_ctx *ctx)
-> >  {
-> >  	struct gen_pool *pool = ctx->pool;
-> > @@ -320,14 +367,85 @@ static struct file_system_type secretmem_fs = {
-> >  	.kill_sb	= kill_anon_super,
-> >  };
-> >  
-> > +static int secretmem_reserved_mem_init(void)
-> > +{
-> > +	struct gen_pool *pool;
-> > +	struct page *page;
-> > +	void *addr;
-> > +	int err;
-> > +
-> > +	if (!secretmem_pool.reserved)
-> > +		return 0;
-> > +
-> > +	pool = gen_pool_create(PMD_SHIFT, NUMA_NO_NODE);
-> > +	if (!pool)
-> > +		return -ENOMEM;
-> > +
-> > +	err = gen_pool_add(pool, (unsigned long)secretmem_pool.reserved,
-> > +			   secretmem_pool.reserved_size, NUMA_NO_NODE);
-> > +	if (err)
-> > +		goto err_destroy_pool;
-> > +
-> > +	for (addr = secretmem_pool.reserved;
-> > +	     addr < secretmem_pool.reserved + secretmem_pool.reserved_size;
-> > +	     addr += PAGE_SIZE) {
-> > +		page = virt_to_page(addr);
-> > +		__ClearPageReserved(page);
-> > +		set_page_count(page, 1);
-> > +	}
-> > +
-> > +	secretmem_pool.pool = pool;
-> > +	page = virt_to_page(secretmem_pool.reserved);
-> > +	__kernel_map_pages(page, secretmem_pool.reserved_size / PAGE_SIZE, 0);
-> > +	return 0;
-> > +
-> > +err_destroy_pool:
-> > +	gen_pool_destroy(pool);
-> > +	return err;
-> > +}
-> > +
-> >  static int secretmem_init(void)
-> >  {
-> > -	int ret = 0;
-> > +	int ret;
-> > +
-> > +	ret = secretmem_reserved_mem_init();
-> > +	if (ret)
-> > +		return ret;
-> >  
-> >  	secretmem_mnt = kern_mount(&secretmem_fs);
-> > -	if (IS_ERR(secretmem_mnt))
-> > +	if (IS_ERR(secretmem_mnt)) {
-> > +		gen_pool_destroy(secretmem_pool.pool);
-> >  		ret = PTR_ERR(secretmem_mnt);
-> > +	}
-> >  
-> >  	return ret;
-> >  }
-> >  fs_initcall(secretmem_init);
-> > +
-> > +static int __init secretmem_setup(char *str)
-> > +{
-> > +	phys_addr_t align = PMD_SIZE;
-> > +	unsigned long reserved_size;
-> > +	void *reserved;
-> > +
-> > +	reserved_size = memparse(str, NULL);
-> > +	if (!reserved_size)
-> > +		return 0;
-> > +
-> > +	if (reserved_size * 2 > PUD_SIZE)
-> > +		align = PUD_SIZE;
-> > +
-> > +	reserved = memblock_alloc(reserved_size, align);
-> > +	if (!reserved) {
-> > +		pr_err("failed to reserve %lu bytes\n", secretmem_pool.reserved_size);
-> > +		return 0;
-> > +	}
-> > +
-> > +	secretmem_pool.reserved_size = reserved_size;
-> > +	secretmem_pool.reserved = reserved;
-> > +
-> > +	pr_info("reserved %luM\n", reserved_size >> 20);
-> > +
-> > +	return 1;
-> > +}
-> > +__setup("secretmem=", secretmem_setup);
-> > 
-> 
-> 
-> -- 
-> Thanks,
-> 
-> David / dhildenb
-> 
-
--- 
-Sincerely yours,
-Mike.
+[...]
