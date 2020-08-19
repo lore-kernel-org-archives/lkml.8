@@ -2,116 +2,128 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0438CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C14C520639
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:28:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UJg96UPN"
+	by mail.kernel.org (Postfix) with ESMTP id 0B350206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgHSJ2p (ORCPT
+        id S1726934AbgHSJbu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 05:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgHSJ2n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 05:28:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0CCC061757;
-        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 128so11112244pgd.5;
-        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=sfALJ3tnvI7h4k/zG4r6toxyODZkz1A4RL+TTCxV1MQ=;
-        b=UJg96UPNkqjdaV4Z8G1IDr8c6TPIWfXOxPYd3O0SO5WoJKuI7jCmUbACjWzBZHo9U7
-         0c7nnXAgDABQEBuR0un7P4giAqlg814vs3v74WUKa4O3jHlp5d9Peg+8lpFHu6SmfEBX
-         T8OsGUc+M40aP4W28v0M6kqxwGgTcZDzMTgzPm2JLXfUdp+3cII65MNQJdmQl8cWud4Z
-         k3F0lqNF8NUMnE5OQdYexzBoLJ2mSWn/W7hs6/zxeYfNl58kw70iZIseA4f0limFxE47
-         Smr+gNjgXUG+xFLsiOrrxvcHlpMjISJ9qMWHeHAqYXd6oxHVdWktrACBujKwqcrj972f
-         mkgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=sfALJ3tnvI7h4k/zG4r6toxyODZkz1A4RL+TTCxV1MQ=;
-        b=IPyyRhnzb1UVApTLyYKUQ/t+YopR3LVLXnLpwE6tvtmfhSFyGhfYHnEaDP3aNRMruE
-         Xt2JedL9FxVsuvGcANAGVPzfyvfh1x86gvAICQybO1XsoVyt5n5p+4+geyFNsGxHzvsb
-         IijhAQ9MA0XY+CbEtPIuIe+FeX49zwK/usOXJqBCPhHD4MpKqzKvrwH5vZyF+O9KStgD
-         3YFZzMjGbk9dZTcav9ZqQ03IjR6vKUqp+voe4+3oRLcdOJMvPSMAgEQ4hFXCGAgUBXGN
-         ys0Au3Gu3LmN96xApNpKALxOQr/94GByOKEcBsQ16jbCpqOwo/7R5WXV6AP/tbh35v18
-         POdQ==
-X-Gm-Message-State: AOAM531B6gldqAib0bJLeryEO5g4WPumqQFmnMAU0Fyh9t0vFqCojbZ2
-        TjNI1njgRbNukjjVT+yaZWo=
-X-Google-Smtp-Source: ABdhPJx7gzRQZ4ej9DhjQf8YqJN5RJv4x/cQ7y4ijPpmhsFEfzKb+5fPtlTWpjDM8h6ry27HPjOUUg==
-X-Received: by 2002:a63:ff18:: with SMTP id k24mr16640114pgi.109.1597829323025;
-        Wed, 19 Aug 2020 02:28:43 -0700 (PDT)
-Received: from linux-691t.suse.de ([124.11.22.254])
-        by smtp.gmail.com with ESMTPSA id y1sm27060156pfl.136.2020.08.19.02.28.40
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Aug 2020 02:28:42 -0700 (PDT)
-From:   "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-X-Google-Original-From: "Lee, Chun-Yi" <jlee@suse.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Lee, Chun-Yi" <jlee@suse.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH] efi/efivars: create efivars mount point when get variable services are available
-Date:   Wed, 19 Aug 2020 17:28:38 +0800
-Message-Id: <20200819092838.11290-1-jlee@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Wed, 19 Aug 2020 05:31:50 -0400
+Received: from mga09.intel.com ([134.134.136.24]:6347 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726835AbgHSJbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 05:31:48 -0400
+IronPort-SDR: xl7tFlJVo1u+8NsAVDxBs7J87a6PDhXO6zFe9L/74oABnElySxxJxf7GKPgAZmXcwxCt7aOXtA
+ LLdUeB4QdixA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="156145907"
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="156145907"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 02:31:47 -0700
+IronPort-SDR: KcYYofNl8Lq06snYEvg+e1pLJ9t2x0pWy5+yYL30Q0/rQZf0DELbUCRdSMIf3//398c4qQQ+tp
+ tPhDeiPAuAuQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
+   d="scan'208";a="327032676"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 19 Aug 2020 02:31:44 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1k8KAi-009qDg-0R; Wed, 19 Aug 2020 12:14:16 +0300
+Date:   Wed, 19 Aug 2020 12:14:16 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v7 1/3] devres: provide devm_krealloc()
+Message-ID: <20200819091416.GX1891694@smile.fi.intel.com>
+References: <20200817170535.17041-1-brgl@bgdev.pl>
+ <20200817170535.17041-2-brgl@bgdev.pl>
+ <20200817173908.GS1891694@smile.fi.intel.com>
+ <CAMRc=MdaaWhV_ZKHgWy_Gxkp=jMuZcwqpoE8Ya_84n9ZT5O31A@mail.gmail.com>
+ <20200818082500.GB1891694@smile.fi.intel.com>
+ <CAMRc=Md5yrgxnPf=qwKYhwHACcq-XeKOKZ76OwYdMGO8SgYmzQ@mail.gmail.com>
+ <20200818171046.GU1891694@smile.fi.intel.com>
+ <CAMRc=MfmmRweZ_WBkqA_FHVoTZ5KxNwyFLjwpypG5c=K9ki8XA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfmmRweZ_WBkqA_FHVoTZ5KxNwyFLjwpypG5c=K9ki8XA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The efivars filesystem depends on GetVariable or GetNextVariable EFI
-runtime services. So the /sys/firmware/efi/efivars does not need to be
-created when GetVariable and GetNextVariable are not available.
+On Tue, Aug 18, 2020 at 08:13:10PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Aug 18, 2020 at 7:19 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Aug 18, 2020 at 06:27:12PM +0200, Bartosz Golaszewski wrote:
+> > > On Tue, Aug 18, 2020 at 10:40 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Aug 17, 2020 at 10:02:05PM +0200, Bartosz Golaszewski wrote:
+> > > > > On Mon, Aug 17, 2020 at 7:43 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Mon, Aug 17, 2020 at 07:05:33PM +0200, Bartosz Golaszewski wrote:
+> > > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-It is useful for userland to determine the availability of efivars
-filesystem.
+...
 
-Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
----
- drivers/firmware/efi/efi.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+> > > > > > > +static struct devres *to_devres(void *data)
+> > > > > > > +{
+> > > > > > > +     return (struct devres *)((u8 *)data - ALIGN(sizeof(struct devres),
+> > > > > > > +                                                 ARCH_KMALLOC_MINALIGN));
+> > > > > >
+> > > > > > Do you really need both explicit castings?
+> > > > > >
+> > > > >
+> > > > > Yeah, we can probably drop the (struct devres *) here.
+> > > >
+> > > > void * -> u8 * here is also not needed, it is considered byte access IIRC.
+> > > >
+> > >
+> > > Actually it turns out that while we don't need the (void *) -> (u8 *)
+> > > casting, we must cast to (struct devres *) or the following error is
+> > > produced:
+> > >
+> > > drivers/base/devres.c: In function ‘to_devres’:
+> > > drivers/base/devres.c:41:21: error: returning ‘u8 *’ {aka ‘unsigned
+> > > char *’} from a function with incompatible return type ‘struct devres
+> > > *’ [-Werror=incompatible-pointer-types]
+> > >   return ((u8 *)data - ALIGN(sizeof(struct devres),
+> > >          ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >         ARCH_KMALLOC_MINALIGN));
+> > >         ~~~~~~~~~~~~~~~~~~~~~~~
+> >
+> > Of course, you have to drop u8 * casting as well.
+> >
+> 
+> Yes, of course. Duh
 
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index fdd1db025dbf..929fbf4dfd5d 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -404,11 +404,14 @@ static int __init efisubsys_init(void)
- 	if (error)
- 		goto err_remove_group;
- 
--	/* and the standard mountpoint for efivarfs */
--	error = sysfs_create_mount_point(efi_kobj, "efivars");
--	if (error) {
--		pr_err("efivars: Subsystem registration failed.\n");
--		goto err_remove_group;
-+	if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
-+				      EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
-+		/* and the standard mountpoint for efivarfs */
-+		error = sysfs_create_mount_point(efi_kobj, "efivars");
-+		if (error) {
-+			pr_err("efivars: Subsystem registration failed.\n");
-+			goto err_remove_group;
-+		}
- 	}
- 
- 	if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+With this addressed (and don't forget to remove also unneeded parentheses),
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks!
+
 -- 
-2.16.4
+With Best Regards,
+Andy Shevchenko
+
 
