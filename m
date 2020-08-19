@@ -2,182 +2,215 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227FC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C456C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5918B207BB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:22:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yBsyuDXs"
+	by mail.kernel.org (Postfix) with ESMTP id 554B82078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 19:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgHSTWG (ORCPT
+        id S1726873AbgHSTWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 15:22:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39326 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726211AbgHSTWD (ORCPT
+        Wed, 19 Aug 2020 15:22:32 -0400
+Received: from ex13-edg-ou-001.vmware.com ([208.91.0.189]:42204 "EHLO
+        EX13-EDG-OU-001.vmware.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726211AbgHSTW3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 15:22:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA1DC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:22:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id 2so1546808pjx.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 12:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=8PkIiecMhmu/CfXlzNYOVI+vIHq/acMmq5ED/98dBs4=;
-        b=yBsyuDXs/lDr+j83bJq+Tj0dPIqLlnIDJS46d3oNuul7H8WtviWHS92HKFDnoG/24M
-         M+YnJWlPOvojGxb6I3MgqXdAtrhr9KpR96JZy5lPzbDSlf8c5H+I8EsJJpVQOgnaxXgJ
-         keJhv5lWrXztVQIIRqEU3EunvyZjoW9itHkykB8bZz11iyYleCbQEu1a7o4qiOT6ilSy
-         y2iPDoi7FFl4jkkdbTtrYzslFktygRRFI1JwBnLNv6G9XqTlSJsr4ZWSmZ6OFG0DSTvi
-         uwHRh97NxMkRVGfaARTPtZJRxrZfY+RYLmZxBdmMuGCwQ/VMUXebZiMgpESxYZBw15jP
-         Uy+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8PkIiecMhmu/CfXlzNYOVI+vIHq/acMmq5ED/98dBs4=;
-        b=tPlhQBJgBPsUxpgiS2azh3cLt8WMXYxc1cEIzM434a35hmFvqhHfCCmSGfDCq2K3oA
-         0za4ovsjK6F1C9ks1BcAxRENVqneR2caX3E/QYVgpr+A4kBJj57d3kOusa1kXC8TlVLA
-         a85jzM35GMUKCqLG5qTwoWYs5xqxRZSMrXYFfZJjuIidjtvIV81fGYcA+PxF2gd58xTi
-         Y4WKNxqhBsBUOhfvQh7hYokVbisxsYTvenRVLzcGJ/K7Y0JNPkCcwGGW2P+mLG1mZ5Im
-         lhtHBTlesRi8M6LCtW+Xs1Mj45/1KZFbYcdmoOS6INktJPXqMX9S2SmjRSTlmA8ScDPp
-         /2qg==
-X-Gm-Message-State: AOAM533IIjMkUE1OhpyHz71AgO3YD8rtsP2SY4oF8/skPrWm+EC/ZMzL
-        AgY3snAaTxa8lIvhSVr9mXlNvw==
-X-Google-Smtp-Source: ABdhPJy7l97fdQMFvLve4E/Ol0cGTb5PtJ8RsNubKsBb+X1PDsmHlLakGiJ7zMEYWUhK2PH9mls5Xg==
-X-Received: by 2002:a17:902:bcc6:: with SMTP id o6mr20097915pls.109.1597864922627;
-        Wed, 19 Aug 2020 12:22:02 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id v77sm30508041pfc.137.2020.08.19.12.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 12:22:01 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 13:22:00 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, coresight@lists.linaro.org,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: etm4x: Handle unreachable sink in perf mode
-Message-ID: <20200819192200.GA3845366@xps15>
-References: <20200818192931.168584-1-suzuki.poulose@arm.com>
+        Wed, 19 Aug 2020 15:22:29 -0400
+Received: from sc9-mailhost3.vmware.com (10.113.161.73) by
+ EX13-EDG-OU-001.vmware.com (10.113.208.155) with Microsoft SMTP Server id
+ 15.0.1156.6; Wed, 19 Aug 2020 12:22:23 -0700
+Received: from [0.0.0.0] (oddjob.vmware.com [10.253.4.32])
+        by sc9-mailhost3.vmware.com (Postfix) with ESMTP id 29D0040475;
+        Wed, 19 Aug 2020 12:22:24 -0700 (PDT)
+Subject: Re: [vmwgfx] Xwayland crash on latest linus git
+To:     <jongman.heo@samsung.com>,
+        "linux-graphics-maintainer@vmware.com" 
+        <linux-graphics-maintainer@vmware.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CGME20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483@epcms1p1>
+ <20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483@epcms1p1>
+From:   Roland Scheidegger <sroland@vmware.com>
+Message-ID: <c223a0d7-0a6e-e6ed-6471-2b77c7af952f@vmware.com>
+Date:   Wed, 19 Aug 2020 21:22:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818192931.168584-1-suzuki.poulose@arm.com>
+In-Reply-To: <20200819074713epcms1p1b60d663694e96a0945327b1fba1e3483@epcms1p1>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+Received-SPF: None (EX13-EDG-OU-001.vmware.com: sroland@vmware.com does not
+ designate permitted sender hosts)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+I'm now able to reproduce this, looking into it. (The crash looks
+actually similar to what was also happening with the next commit,
+drm/ttm: make TT creation purely optional v3, but that got reverted
+already.)
 
-On Tue, Aug 18, 2020 at 08:29:31PM +0100, Suzuki K Poulose wrote:
-> If the specified/hinted sink is not reachable from a subset of the CPUs,
-> we could end up unable to trace the event on those CPUs. This
-> is the best effort we could do until we support 1:1 configurations.
-> Fail gracefully in such cases avoiding a WARN_ON, which can be easily
-> triggered by the user on certain platforms, like :
+Roland
+
+
+Am 19.08.20 um 09:47 schrieb 허종만:
 > 
-> [10919.513250] ------------[ cut here ]------------
-> [10919.517861] WARNING: CPU: 2 PID: 24021 at
-> drivers/hwtracing/coresight/coresight-etm-perf.c:316 etm_event_start+0xf8/0x100
-> ...
+> Hi,
 > 
-> [10919.564403] CPU: 2 PID: 24021 Comm: perf Not tainted 5.8.0+ #24
-> [10919.570308] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> [10919.575865] pc : etm_event_start+0xf8/0x100
-> [10919.580034] lr : etm_event_start+0x80/0x100
-> [10919.584202] sp : fffffe001932f940
-> [10919.587502] x29: fffffe001932f940 x28: fffffc834995f800
-> [10919.592799] x27: 0000000000000000 x26: fffffe0011f3ced0
-> [10919.598095] x25: fffffc837fce244c x24: fffffc837fce2448
-> [10919.603391] x23: 0000000000000002 x22: fffffc8353529c00
-> [10919.608688] x21: fffffc835bb31000 x20: 0000000000000000
-> [10919.613984] x19: fffffc837fcdcc70 x18: 0000000000000000
-> [10919.619281] x17: 0000000000000000 x16: 0000000000000000
-> [10919.624577] x15: 0000000000000000 x14: 00000000000009f8
-> [10919.629874] x13: 00000000000009f8 x12: 0000000000000018
-> [10919.635170] x11: 0000000000000000 x10: 0000000000000000
-> [10919.640467] x9 : fffffe00108cd168 x8 : 0000000000000000
-> [10919.645763] x7 : 0000000000000020 x6 : 0000000000000001
-> [10919.651059] x5 : 0000000000000002 x4 : 0000000000000001
-> [10919.656356] x3 : 0000000000000000 x2 : 0000000000000000
-> [10919.661652] x1 : fffffe836eb40000 x0 : 0000000000000000
-> [10919.666949] Call trace:
-> [10919.669382]  etm_event_start+0xf8/0x100
-> [10919.673203]  etm_event_add+0x40/0x60
-> [10919.676765]  event_sched_in.isra.134+0xcc/0x210
-> [10919.681281]  merge_sched_in+0xb0/0x2a8
-> [10919.685017]  visit_groups_merge.constprop.140+0x15c/0x4b8
-> [10919.690400]  ctx_sched_in+0x15c/0x170
-> [10919.694048]  perf_event_sched_in+0x6c/0xa0
-> [10919.698130]  ctx_resched+0x60/0xa0
-> [10919.701517]  perf_event_exec+0x288/0x2f0
-> [10919.705425]  begin_new_exec+0x4c8/0xf58
-> [10919.709247]  load_elf_binary+0x66c/0xf30
-> [10919.713155]  exec_binprm+0x15c/0x450
-> [10919.716716]  __do_execve_file+0x508/0x748
-> [10919.720711]  __arm64_sys_execve+0x40/0x50
-> [10919.724707]  do_el0_svc+0xf4/0x1b8
-> [10919.728095]  el0_sync_handler+0xf8/0x124
-> [10919.732003]  el0_sync+0x140/0x180
 > 
-> Fixes: f9d81a657bb8 ("coresight: perf: Allow tracing on hotplugged CPUs")
-> Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+> I'm running Linux guest OS (Fedora 33 + custom build kernel) on Windows 10 host, with VMWare workstation.
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 1a3169e69bb1..9d61a71da96f 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -321,6 +321,16 @@ static void etm_event_start(struct perf_event *event, int flags)
->  	if (!event_data)
->  		goto fail;
->  
-> +	/*
-> +	 * Check if this ETM is allowed to trace, as decided
-> +	 * at etm_setup_aux(). This could be due to an unreachable
-> +	 * sink from this ETM. We can't do much in this case if
-> +	 * the sink was specified or hinted to the driver. For
-> +	 * now, simply don't record anything on this ETM.
-> +	 */
-
-Can you provide more details on the scenario and the topology of the system?
-Without either it is hard to wrap my head around the problem to address.
-Having that information in the changelog would go a long way.
-
-I'm sure this is a per-thread scenario because there is more than one CPU per
-event.  I'm also suspecting this is on a system where there is one sink per CPU
-cluster, and that is not supported.
-
-If I am right on both account I am questionning the "Fixes".  On a system with
-N:1 topology the code introduced by f9d81a657bb8 will work in the event a CPU is
-hotplugged in.  The code introduced in this patch is simply to prevent a
-warn_on() trace from being generated on systems that aren't supported.  It should
-have a "stable" tag. 
-
-Thanks,
-Mathieu
-
-> +	if (!cpumask_test_cpu(cpu, &event_data->mask))
-> +		goto fail_end_stop;
-> +
->  	path = etm_event_cpu_path(event_data, cpu);
->  	/* We need a sink, no need to continue without one */
->  	sink = coresight_get_sink(path);
-> -- 
-> 2.24.1
+> Kernel 5.8 was fine, but latest linus git kernel has a problem, Xwayland crashes. 
 > 
+> Gnome login screen is Ok, but when I try login, crash occurs.
+> 
+> I just see black screen, cannot see graphic screen after the login screen.
+> 
+> 
+>  * If I disable 3D accelaration from VMWare setting, then this issue doesn't occur
+> 
+> 
+> git bisect log follows;
+> 
+> =================================================================================
+> # git bisect log
+> git bisect start '--' 'drivers/gpu/drm'
+> # bad: [18445bf405cb331117bc98427b1ba6f12418ad17] Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi
+> git bisect bad 18445bf405cb331117bc98427b1ba6f12418ad17
+> # good: [bcf876870b95592b52519ed4aafcf9d95999bc9c] Linux 5.8
+> git bisect good bcf876870b95592b52519ed4aafcf9d95999bc9c
+> # good: [026c396b41a4c9412f6f2b6496077949ea99e3ad] drm/amdgpu: add ih ip block for navy_flounder
+> git bisect good 026c396b41a4c9412f6f2b6496077949ea99e3ad
+> # bad: [395be0f47a001a975d25a3e2a0bfe4f08ee193fa] Merge tag 'drm/tegra/for-5.9-rc1' of ssh://git.freedesktop.org/git/tegra/linux into drm-next
+> git bisect bad 395be0f47a001a975d25a3e2a0bfe4f08ee193fa
+> # good: [d524b87f77364db096855d7eb714ffacec974ddf] drm/i915: Update DRIVER_DATE to 20200702
+> git bisect good d524b87f77364db096855d7eb714ffacec974ddf
+> # bad: [3ffff3c6855bda1b39eae88f3730d2baddce3bfd] Merge tag 'drm-misc-next-2020-07-16' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+> git bisect bad 3ffff3c6855bda1b39eae88f3730d2baddce3bfd
+> # bad: [247c12fcba30ecb9473fe6b6c0375d46916417c9] drm/vc4: Reorder the bind order of the devices
+> git bisect bad 247c12fcba30ecb9473fe6b6c0375d46916417c9
+> # bad: [04f08f8831779e91fc59570dbbd3b7815c229d92] drm/ingenic-drm: drop use of legacy drm_bus_flags
+> git bisect bad 04f08f8831779e91fc59570dbbd3b7815c229d92
+> # good: [60e9eabf41fa916d2ef68c5bf929197975917578] Backmerge remote-tracking branch 'drm/drm-next' into drm-misc-next
+> git bisect good 60e9eabf41fa916d2ef68c5bf929197975917578
+> # bad: [35205ee9ba46dcb2a82dbb981ec5fb242c4d847d] drm/i915: Send hotplug event if edid had changed
+> git bisect bad 35205ee9ba46dcb2a82dbb981ec5fb242c4d847d
+> # bad: [3f1f6981afed9fa21efa12ce396b35ca684b8a29] drm: pl111: Credit where credit is due
+> git bisect bad 3f1f6981afed9fa21efa12ce396b35ca684b8a29
+> # bad: [2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b] drm/ttm: make TT creation purely optional v3
+> git bisect bad 2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b
+> # bad: [58e4d686d456c3e356439ae160ff4a0728940b8e] drm/ttm: cleanup ttm_mem_type_manager_func.get_node interface v3
+> git bisect bad 58e4d686d456c3e356439ae160ff4a0728940b8e
+> # first bad commit: [58e4d686d456c3e356439ae160ff4a0728940b8e] drm/ttm: cleanup ttm_mem_type_manager_func.get_node interface v3
+> =================================================================================
+> 
+> But I can't revert first bad commit, 58e4d686d456, due to conflict. So I couldn't test it with the commit reverted.
+> Also, there was another issue, boot crash [1], which is now fixed. 
+> But I'm afraid it affects git bisect result.
+> 
+> [1] https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fwww.spinics.net%2Flists%2Farm-kernel%2Fmsg828262.html&amp;data=02%7C01%7Csroland%40vmware.com%7C47c14d644bc2401449bf08d8441419ba%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637334200428210022&amp;sdata=uky0qUPe9dYnChyx9aHzOyHg1a12xaLQIUmMqOkigfk%3D&amp;reserved=0
+> 
+> Among above bad commits, followings are marked bad due to the boot crash, not the Xwayland crash.
+> 
+>     395be0f47a001a975d25a3e2a0bfe4f08ee193fa
+>     3ffff3c6855bda1b39eae88f3730d2baddce3bfd
+>     247c12fcba30ecb9473fe6b6c0375d46916417c9
+>     04f08f8831779e91fc59570dbbd3b7815c229d92
+>     35205ee9ba46dcb2a82dbb981ec5fb242c4d847d
+>     3f1f6981afed9fa21efa12ce396b35ca684b8a29
+>     2ddef17678bc2ea1d20517dd2b4ed4aa967ffa8b
+> 
+> 
+> And following is journalctl log.
+> 
+> ===================================================================================
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: VMware: vmw_ioctl_command error Cannot allocate memory.
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) Backtrace:
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 0: /usr/bin/Xwayland (XNFreallocarray+0xb9) [0x562e51c93bb>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 1: /lib64/libpthread.so.0 (funlockfile+0x60) [0x7fb5661702>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 2: /lib64/libc.so.6 (gsignal+0x145) [0x7fb565fcbbc5]
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 3: /lib64/libc.so.6 (abort+0x116) [0x7fb565fb48a4]
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 4: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 5: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 6: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 7: /usr/lib64/dri/vmwgfx_dri.so (nouveau_drm_screen_create>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 8: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions_>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 9: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions_>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 10: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 11: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+> Aug 14 15:26:39 localhost.localdomain kernel: ioremap: invalid physical address f91ab40ed1340000
+> Aug 14 15:26:39 localhost.localdomain kernel: ------------[ cut here ]------------
+> Aug 14 15:26:39 localhost.localdomain kernel: WARNING: CPU: 6 PID: 1093 at arch/x86/mm/ioremap.c:198 __ioremap_caller.cold+0x47/0x65
+> Aug 14 15:26:39 localhost.localdomain kernel: Modules linked in:
+> Aug 14 15:26:39 localhost.localdomain kernel: CPU: 6 PID: 1093 Comm: Xwayland Not tainted 5.8.0+ #108
+> Aug 14 15:26:39 localhost.localdomain kernel: Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, >
+> Aug 14 15:26:39 localhost.localdomain kernel: RIP: 0010:__ioremap_caller.cold+0x47/0x65
+> Aug 14 15:26:39 localhost.localdomain kernel: Code: e9 d7 fa ff ff 89 c6 48 c7 c7 a8 27 85 b5 45 31 e4 e8 49 0b 0d 00 e9 5d fa ff ff>
+> Aug 14 15:26:39 localhost.localdomain kernel: RSP: 0018:ffffa973414e7938 EFLAGS: 00010282
+> Aug 14 15:26:39 localhost.localdomain kernel: RAX: 0000000000000032 RBX: 0000000000000002 RCX: 0000000000000000
+> Aug 14 15:26:39 localhost.localdomain kernel: RDX: ffff91ab7cba6ae0 RSI: ffff91ab7cb98900 RDI: ffff91ab7cb98900
+> Aug 14 15:26:39 localhost.localdomain kernel: RBP: f91ab40ed1340000 R08: 0000000000000001 R09: 0000000000000694
+> Aug 14 15:26:39 localhost.localdomain kernel: R10: 0000000000026680 R11: 0000000000000003 R12: ffff91aaf5c13000
+> Aug 14 15:26:39 localhost.localdomain kernel: R13: 0000000001000000 R14: ffffa973414e7a38 R15: ffffffffb49ababa
+> Aug 14 15:26:39 localhost.localdomain kernel: FS:  00007fb56585d5c0(0000) GS:ffff91ab7cb80000(0000) knlGS:0000000000000000
+> Aug 14 15:26:39 localhost.localdomain kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Aug 14 15:26:39 localhost.localdomain kernel: CR2: 0000562e529a90f8 CR3: 0000000095374001 CR4: 00000000003706e0
+> Aug 14 15:26:39 localhost.localdomain kernel: Call Trace:
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_ttm_unbind+0x60/0x60
+> Aug 14 15:26:39 localhost.localdomain kernel:  ttm_mem_reg_ioremap+0xea/0xf0
+> Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_move_memcpy+0x147/0x600
+> Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_handle_move_mem+0x5ce/0x5e0
+> Aug 14 15:26:39 localhost.localdomain kernel:  ttm_bo_validate+0x144/0x160
+> Aug 14 15:26:39 localhost.localdomain kernel:  vmw_validation_bo_validate_single+0x5b/0xa0
+> Aug 14 15:26:39 localhost.localdomain kernel:  vmw_validation_bo_validate+0xa9/0xf0
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? ttm_eu_reserve_buffers+0xfa/0x2d0
+> Aug 14 15:26:39 localhost.localdomain kernel:  vmw_execbuf_process+0x696/0x1120
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? pat_enabled+0x10/0x10
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? insert_pfn+0xe6/0x2c0
+> Aug 14 15:26:39 localhost.localdomain kernel:  vmw_execbuf_ioctl+0x7c/0x150
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_execbuf_release_pinned_bo+0x50/0x50
+> Aug 14 15:26:39 localhost.localdomain kernel:  drm_ioctl_kernel+0x86/0xd0
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? do_wp_page+0x1a9/0x720
+> Aug 14 15:26:39 localhost.localdomain kernel:  drm_ioctl+0x20f/0x39a
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? vmw_execbuf_release_pinned_bo+0x50/0x50
+> Aug 14 15:26:39 localhost.localdomain kernel:  ? do_user_addr_fault+0x1cc/0x3ed
+> Aug 14 15:26:39 localhost.localdomain kernel:  __x64_sys_ioctl+0x83/0xb0
+> Aug 14 15:26:39 localhost.localdomain kernel:  do_syscall_64+0x33/0x40
+> Aug 14 15:26:39 localhost.localdomain kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> Aug 14 15:26:39 localhost.localdomain kernel: RIP: 0033:0x7fb56608658b
+> Aug 14 15:26:39 localhost.localdomain kernel: Code: 89 d8 49 8d 3c 1c 48 f7 d8 49 39 c4 72 b5 e8 1c ff ff ff 85 c0 78 ba 4c 89 e0 5b>
+> Aug 14 15:26:39 localhost.localdomain kernel: RSP: 002b:00007ffd0e2b4988 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+> Aug 14 15:26:39 localhost.localdomain kernel: RAX: ffffffffffffffda RBX: 00007ffd0e2b4a10 RCX: 00007fb56608658b
+> Aug 14 15:26:39 localhost.localdomain kernel: RDX: 00007ffd0e2b4a10 RSI: 000000004028644c RDI: 000000000000000e
+> Aug 14 15:26:39 localhost.localdomain kernel: RBP: 000000004028644c R08: 0000000000000000 R09: 0000000000000002
+> Aug 14 15:26:39 localhost.localdomain kernel: R10: 0000562e521dead8 R11: 0000000000000246 R12: 0000000000000028
+> Aug 14 15:26:39 localhost.localdomain kernel: R13: 000000000000000e R14: 00007ffd0e2b4a10 R15: 0000000000000001
+> Aug 14 15:26:39 localhost.localdomain kernel: ---[ end trace 28b9197fbfdd95be ]---
+> Aug 14 15:26:39 localhost.localdomain kernel: ioremap: invalid physical address f91ab40ed1340000
+> Aug 14 15:26:39 localhost.localdomain audit[1093]: ANOM_ABEND auid=4294967295 uid=42 gid=42 ses=4294967295 pid=1093 comm="Xwayland" >
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 12: /usr/lib64/dri/vmwgfx_dri.so (__driDriverGetExtensions>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 13: /usr/bin/Xwayland (fbClearVisualTypes+0x1c79) [0x562e5>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 14: /usr/bin/Xwayland (glamor_destroy_gc+0x508c) [0x562e51>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 15: /usr/bin/Xwayland (QueryColors+0x4f17) [0x562e51c52eb7]
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 16: /usr/bin/Xwayland (SetPictureClipRects+0x223c) [0x562e>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 17: /usr/bin/Xwayland (ReplyNotSwappd+0x184e) [0x562e51b36>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 18: /lib64/libc.so.6 (__libc_start_main+0xf2) [0x7fb565fb6>
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) 19: /usr/bin/Xwayland (_start+0x2e) [0x562e51b364ee]
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: Fatal server error:
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE) Caught signal 6 (Aborted). Server aborting
+> Aug 14 15:26:39 localhost.localdomain org.gnome.Shell.desktop[1093]: (EE)
+> ===================================================================================
+> 
+
