@@ -2,98 +2,149 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6858CC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE87207FF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40016207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 20:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DPsJXVrE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W0qzDu0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgHSULU (ORCPT
+        id S1727081AbgHSULe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 16:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
+        Wed, 19 Aug 2020 16:11:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725275AbgHSULT (ORCPT
+        with ESMTP id S1725275AbgHSUL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 16:11:19 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21B5C061757;
-        Wed, 19 Aug 2020 13:11:18 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id k13so11343168plk.13;
-        Wed, 19 Aug 2020 13:11:18 -0700 (PDT)
+        Wed, 19 Aug 2020 16:11:29 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8709EC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:11:29 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id h12so4603pgm.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 13:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:message-id:in-reply-to:references:subject
-         :mime-version:content-transfer-encoding;
-        bh=dbcOzTqx7hOOJVlLikGR6xEV3IO3I5Sm2hqIIob1Cuo=;
-        b=DPsJXVrE4wsCVAUtKsCOLb0YlLh7Om3nNkFl0FqcfsIcx8uJav/oLgVJmYsTroWpAt
-         s9kTeMsnuX112omdMZ8Oxa024PmVMXGgYRG5cRpVUECVxsUcyN+DrJY7KFmuMYZrdG00
-         k0BH7UkcZ2Yaqh09IuRyJDWKUd6349jkwvc2whcHZMezjP65WV7V8dBuCTeN+XT+nl7r
-         kKJdB0jL6lioLHwvJYzwRrthg+bEMxuDMobrRsNVFC3RwvI76mPPAAynEaDTEzT1PCLk
-         9CsjyIcbysz7H1fNXVH2KNd0nkYZgfSlRShswGEe528kABtIOV0g3uy0G+wQkr6rz+mw
-         Jfvw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ysEscVWILmvmykMxg8+0n31+wodeRoaMfoU6oDZTo84=;
+        b=W0qzDu0dz/vFLIgmwd1kjxLHoxU+UwI1bE9+a5gGd+09ufPzSS4iMaaJ+O1+MrnJgc
+         2ms7ld15axXbGMV4cveW2c13TbR98YkSq+qPYMrtJvudgciopq2AQu+mo9MNykDpBsLy
+         cTCA7w3gv+vTyr9GoMzmF7vXnZ+QNO1kQaS6x8Oqt/tJL6o+wcQRhDcZv3TZ8EIpOMF2
+         MrqQACaFUfPnHEfC0vNTlCJUepNtOyEf4z99vf9/dUNx1HcJBNzpMZSSSx3IM/X/Pj+3
+         abAtZWj7BSlh/omOuXiBBmjiQnN7kgR1tg93rDtfc+pfQLx61XrLLnxwifrHUzsNmM0T
+         Vz0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
-         :references:subject:mime-version:content-transfer-encoding;
-        bh=dbcOzTqx7hOOJVlLikGR6xEV3IO3I5Sm2hqIIob1Cuo=;
-        b=AV4II6ZmdDZi/IcxGi4hE6vmKzmyvo0ymm+9zyqLSXFjyqHQpNR3jbyKxXG6eUPXyS
-         B4Yu18qQ0iiEUSOr4Sf1mfTRa7GKhaUMmBIGNcQGRZbi+xMIIJa2Ku5gKCL8SM60Z87N
-         KJOMJeQnQBjRFkZ4zBxTG6lDwdEdsuG9jPvKXu5d2a/FXcZXvSwtJUmSYy0lMr2A2C82
-         OhCjHV646ls1c9ysktG8e1t/R+QYwtMS3rl7N+99P5KpgD1nV/1uLSngwDxeiEFUDF19
-         ml+ZAw6O+ooyuEaGRlyQBVESN44UpSFtbadSApTT+ekWC8qxRlxnhM0Tc5dQojCfBD/W
-         MKQw==
-X-Gm-Message-State: AOAM533eUjNru3CV0vPK+7gFw15Ss4kBIhRPMcrNqcyC7YivVnRzGyzK
-        gIP0uK93oJz2BsPEsI1yHZ4=
-X-Google-Smtp-Source: ABdhPJxKb6igMqNCmJg6p6N0OwVskY/zaKIHTUPQISWCRr/ANvJg5GGLvX2ebLkFVLNRFjfXrBa5pQ==
-X-Received: by 2002:a17:902:8546:: with SMTP id d6mr20334128plo.218.1597867878106;
-        Wed, 19 Aug 2020 13:11:18 -0700 (PDT)
-Received: from localhost ([184.63.162.180])
-        by smtp.gmail.com with ESMTPSA id n12sm44536pfj.99.2020.08.19.13.11.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 13:11:17 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 13:11:11 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>, jakub@cloudflare.com,
-        john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <5f3d875f43b9f_2c9b2adeefb585bcea@john-XPS-13-9370.notmuch>
-In-Reply-To: <20200819092436.58232-3-lmb@cloudflare.com>
-References: <20200819092436.58232-1-lmb@cloudflare.com>
- <20200819092436.58232-3-lmb@cloudflare.com>
-Subject: RE: [PATCH bpf-next 2/6] bpf: sockmap: merge sockmap and sockhash
- update functions
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ysEscVWILmvmykMxg8+0n31+wodeRoaMfoU6oDZTo84=;
+        b=BoRWITBiVZZaj9MSEYfYDuPUQcryLdT+uK0DvXPkVN+ODqAJE38rIsHkVqCJeLvdxB
+         8a51jmsbyeWNNzXD7/E6K6zS4wxErI2FjOGMHVD+NnIG4sCr6h+CL90PsC/FGB4JEsgv
+         c+WG7M7GmTEpamOyTG4w5fq7uP9Op9NRmCokfA8EPW4zb7w+Ud2TiAwulgShU4EWMb0A
+         0MvRJkbKjtv7AzeS6pdE/AFnhovF9hxZY5MZFgqDOdyRTZRJEF3ltWrNPLXzK+Q6bKBt
+         294gcChsc1/tKmI0dC8vACHaBI+g2wk+HmvvLrhGSPFGxTmyWLvoeOCx3BWP6WY/CluI
+         Pz1Q==
+X-Gm-Message-State: AOAM533WWN2XW3v3tZTq+wHJhukTfIXb3xudPL6cZeKprucyaEbzGul2
+        tu4wcH3Fj8EnEX3NAa3xLC6w0elMx4xGSwt2YyhdWQ==
+X-Google-Smtp-Source: ABdhPJwvRmg/DUpVHXrDhcZyVbveYkPJZZxlAB7YooCCxegjU6ojPHBaRIQeJNx70cCujRu1aiwKGCQG01MEe7c2woM=
+X-Received: by 2002:a05:6a00:14d0:: with SMTP id w16mr20101130pfu.39.1597867888865;
+ Wed, 19 Aug 2020 13:11:28 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200819191654.1130563-1-ndesaulniers@google.com>
+ <20200819191654.1130563-5-ndesaulniers@google.com> <20200819192932.GA58968@rani.riverdale.lan>
+In-Reply-To: <20200819192932.GA58968@rani.riverdale.lan>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 19 Aug 2020 13:11:17 -0700
+Message-ID: <CAKwvOdnkqt8vBHcFNk1TMDWcnrOKcZF2O=Y250r6ZBns5dGvBA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] x86/boot: use -fno-builtin-bcmp
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lorenz Bauer wrote:
-> Merge the two very similar functions sock_map_update_elem and
-> sock_hash_update_elem into one.
-> 
-> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> ---
->  net/core/sock_map.c | 53 ++++++++-------------------------------------
->  1 file changed, 9 insertions(+), 44 deletions(-)
-> 
+On Wed, Aug 19, 2020 at 12:29 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, Aug 19, 2020 at 12:16:53PM -0700, Nick Desaulniers wrote:
+> > We're reverting
+> > commit 5f074f3e192f ("lib/string.c: implement a basic bcmp")
+> > in favor of -fno-builtin-bcmp. Remove the additional definition here,
+> > too.
+> >
+> > arch/x86/purgatory/Makefile uses -ffreestanding, so there's no risk of
+> > this libcall optimization occurring for arch/x86/boot/purgatory.ro.
+> >
+> > arch/x86/boot/Makefile resets KBUILD_CFLAGS, so make sure to reset this
+> > flag that was set for the top level Makefile.
+> >
+> > Fixes: 4ce97317f41d ("x86/purgatory: Do not use __builtin_memcpy and __builtin_memset")
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> > ---
+> >  arch/x86/boot/Makefile | 1 +
+> >  arch/x86/boot/string.c | 8 --------
+> >  2 files changed, 1 insertion(+), 8 deletions(-)
+> >
+> > diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
+> > index fe605205b4ce..ef7f15bfceab 100644
+> > --- a/arch/x86/boot/Makefile
+> > +++ b/arch/x86/boot/Makefile
+> > @@ -70,6 +70,7 @@ KBUILD_CFLAGS       := $(REALMODE_CFLAGS) -D_SETUP
+> >  KBUILD_AFLAGS        := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+> >  KBUILD_CFLAGS        += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+> >  KBUILD_CFLAGS        += -fno-asynchronous-unwind-tables
+> > +KBUILD_CFLAGS        += -fno-builtin-bcmp
+> >  GCOV_PROFILE := n
+> >  UBSAN_SANITIZE := n
+> >
+>
+> This should be unnecessary: KBUILD_CFLAGS in arch/x86/boot/Makefile is
+> set to REALMODE_CFLAGS (defined in arch/x86/Makefile), which includes
+> -ffreestanding.
 
-Fixup the warning, but otherwise
+I triple checked by grepping the disassemblies of
+./arch/x86/purgatory/purgatory.ro, arch/x86/purgatory/*.o, and
+arch/x86/boot/*.o for bcmp; should be fine to drop that hunk.  Will
+wait a bit to see if there's other feedback, and whether folks are on
+board with the plan to merge the series proposed in the cover letter
+or not.
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+--
+Thanks,
+~Nick Desaulniers
