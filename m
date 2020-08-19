@@ -2,78 +2,71 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A175C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83EAC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10CDA204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C674F20888
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 13:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597844200;
+	bh=EYEELYhlPPBI2CBDzAW5l5k0sAMr4X6tY2UG4Gap+ts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hn+Q9Uo0IpuwYo8QAU7aSunO6t4wiPBeeo43iwEI9p/pD4nV9xY/kw4dModtJlW7B
+	 lng6vWnCiENCWkWWQ4quAHoH7iW0PGNCcVwWXPhpQLKYQTbpRqeN2rTnHhfkoDWtOS
+	 lxtzaDgPxbLKNymKFDx0Bed2396s6+xIlM07LCWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgHSNgc (ORCPT
+        id S1728620AbgHSNgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 09:36:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:37106 "EHLO foss.arm.com"
+        Wed, 19 Aug 2020 09:36:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbgHSNfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 09:35:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3255C1435;
-        Wed, 19 Aug 2020 06:35:42 -0700 (PDT)
-Received: from monolith.localdoman (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E87BD3F71F;
-        Wed, 19 Aug 2020 06:35:40 -0700 (PDT)
-From:   Alexandru Elisei <alexandru.elisei@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     jason@lakedaemon.net, maz@kernel.org, catalin.marinas@arm.com,
-        tglx@linutronix.de, will@kernel.org, yuzenghui@huawei.com
-Subject: [PATCH v2 1/2] irqchip/gicv3: Spell out when pseudo-NMIs are enabled
-Date:   Wed, 19 Aug 2020 14:36:29 +0100
-Message-Id: <20200819133630.527243-2-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200819133630.527243-1-alexandru.elisei@arm.com>
-References: <20200819133630.527243-1-alexandru.elisei@arm.com>
+        id S1728343AbgHSNgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 09:36:11 -0400
+Received: from dragon (unknown [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55BD8204EC;
+        Wed, 19 Aug 2020 13:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597844170;
+        bh=EYEELYhlPPBI2CBDzAW5l5k0sAMr4X6tY2UG4Gap+ts=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R6Rkg5PBAjcQERps7XOwJZdaBUl+/L5XAaDyUdV5kZI4cesQFY6N/JhsKHvCHubWC
+         oF6NtJIe+kaoFd2YPT8wak5+xMSMip02QkvefaWbFUO+YmKDQbr/aWHf8H6d9lsvqW
+         Y6tCqVi1nxk87ZFBQBWpkfOEO/ZAOh0UAe8s/j1s=
+Date:   Wed, 19 Aug 2020 21:35:56 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Olof Johansson <olof@lixom.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
+Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable caam crypto module
+Message-ID: <20200819133555.GC7114@dragon>
+References: <20200727161428.14586-1-horia.geanta@nxp.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200727161428.14586-1-horia.geanta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When NMIs cannot be enabled, the driver prints a message stating that
-unambiguously. When they are enabled, the only feedback we get is a message
-regarding the use of synchronization for ICC_PMR_EL1 writes, which is not
-as useful for a user who is not intimately familiar with how NMIs are
-implemented.
+On Mon, Jul 27, 2020 at 07:14:28PM +0300, Horia Geantă wrote:
+> caam crypto module is included in several ARMv7-based SoCs from
+> i.MX, Layerscape, Vybrid families.
+> 
+> Signed-off-by: Horia Geantă <horia.geanta@nxp.com>
 
-Let's make it obvious that pseudo-NMIs are enabled. Keep the message about
-using a barrier for ICC_PMR_EL1 writes, because it has a non-negligible
-impact on performance.
-
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
----
- drivers/irqchip/irq-gic-v3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index 324f280ff606..ce8944ae1b84 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -1564,8 +1564,8 @@ static void gic_enable_nmi_support(void)
- 	if (gic_read_ctlr() & ICC_CTLR_EL1_PMHE_MASK)
- 		static_branch_enable(&gic_pmr_sync);
- 
--	pr_info("%s ICC_PMR_EL1 synchronisation\n",
--		static_branch_unlikely(&gic_pmr_sync) ? "Forcing" : "Relaxing");
-+	pr_info("Pseudo-NMIs enabled using %s ICC_PMR_EL1 synchronisation\n",
-+		static_branch_unlikely(&gic_pmr_sync) ? "forced" : "relaxed");
- 
- 	static_branch_enable(&supports_pseudo_nmis);
- 
--- 
-2.28.0
-
+Applied, thanks.
