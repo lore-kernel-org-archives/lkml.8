@@ -7,213 +7,102 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5D54C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B533C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C08AF2083B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:38:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB01620709
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 00:44:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597797514;
-	bh=rSeM4eIblNEI9L/M+ae/pB/OgmWokJYp7yURZj/zVxQ=;
+	s=default; t=1597797866;
+	bh=9AZNmJ/YfGcrRAjyOFJ2NvgMUIdInjkVbrwCpErqI1A=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DbFSFZI+MLkdUYpjgF0Z8v7J+xtznKeiO9DGGHIrylaEJXNr/hYihgxG3BvO9Dtff
-	 bVS4KZAK1B3UIpMUBFojZVph0TIerR4QrG9KvbZdovykdAE8oRWE2QZmf3cJ+APsNj
-	 ObTjW4QIa5mNAte1wLRSrcAENsTGuffnWLWIBC2M=
+	b=LEauu5l55NYPxYpy+NBAHrW8lSV/MM+GXpHO/5DoD0SMDMT35T5kwEt2fcUHsayQK
+	 psxCS8r6uzCebTTyNEsDrihNqmH7u/yayvOfKAwmVdVGeSnnUwXb78OnAYoF+3VrtT
+	 LWb1OcgxMtQDyJg/ZOoXpmeAcn1PuRzH47OqwGIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHSAid (ORCPT
+        id S1726890AbgHSAoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 20:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34268 "EHLO
+        Tue, 18 Aug 2020 20:44:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725554AbgHSAic (ORCPT
+        with ESMTP id S1726486AbgHSAoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 20:38:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56AA2C061389
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:38:30 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m22so23435109ljj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:38:30 -0700 (PDT)
+        Tue, 18 Aug 2020 20:44:24 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F6A6C061389
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:44:23 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id x24so11153047lfe.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yd8RQiYd3lIlnveKq9AD3vAUL0UPw0snW7rgN+Ot8+A=;
-        b=YWKYVyFKZKU8Du8+0eku2p5ObHZXJkU0CbMfnVxdCIL9RSlgf5EBwXe+dKU14eyYUO
-         +iL7GeDnuanZIJgxOkMR4E8EbAjyPFiGvW6/wCGigLTZ8AKm6yL1sM1IyuikinZ8PyH4
-         d20kY/3xnxM/f+cb3jcvtnmo+t0BTkuumJlJ4=
+        bh=z2DynlYRISsaYGNYsitlwb4+khyZlyAf5FIqSKM75Sw=;
+        b=ZWjTUpPqeNDFZ5App1PKI3BTysWeld/2SgkPFZEQq11iPN7vO/wNK5oKv6EG7MF+QJ
+         7xi0n1OxTlKsaQFzGElnBMPOv4og7mbxTlw5Au6CKtjV9v4dQJ1BJYjehwKKf75/ulbt
+         DPWNZloSONUhqNB49PEiskUtNkKaIzAiBDQr4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yd8RQiYd3lIlnveKq9AD3vAUL0UPw0snW7rgN+Ot8+A=;
-        b=l7IC0Hk2E7I12CE3qAApV33qU21MjqEhWd+JDo5yjkcHFkYube5tEyL993WRNIG5Sr
-         vNx2nOL9n73oT31En0FGG9UJMkkIQnXaRtdsS/Csm7N2/qOgsq9CeWR55GEpx8+2UFsY
-         Wl90FvgrSoz0BgQcVPxXE/0ZNdwhfVhiuNEc+UgkUgMU6drlPasf6i9f5RWIFUQ9RpRx
-         Jblq2/vUEh2a/hOycnKUzQ2LR+3UsyjDUfYDq8lOsoiiqTgYFCVqv/0IHbj85g/I78LR
-         FjDIn7JAsPDw0MyeJdGVV+XuQ5R8+95ootTok4H1fB4MmtJWpakk2CFYyo47deWrwaYr
-         PPgQ==
-X-Gm-Message-State: AOAM533ErZ8y5BbtCGA+jOYz5OfO1PPUANtuo4PjBQ8F4NT6N0RIX5Wm
-        r8yeqlNi12/mR/nUAai0BSBdP7hDViM/iA==
-X-Google-Smtp-Source: ABdhPJx/I6cohcq+yOufm83M6qFgbl4iSzmBSr3LE+VrzmwkVqTqx7EqzYw8Ew/DXqMhWtzpuwykQA==
-X-Received: by 2002:a2e:98ce:: with SMTP id s14mr10144964ljj.358.1597797508207;
-        Tue, 18 Aug 2020 17:38:28 -0700 (PDT)
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
-        by smtp.gmail.com with ESMTPSA id f3sm6417860ljo.81.2020.08.18.17.38.26
+        bh=z2DynlYRISsaYGNYsitlwb4+khyZlyAf5FIqSKM75Sw=;
+        b=NWqKkpf+0I2WvNdvjprhos5Zu4r2gbOIahIIUKpvdZ62/Ox10XWc0iuHlJqRO74+0w
+         fVfebyuCnHrGBoX7z9vefadrIe8k/hzAtqVu48E7OdEhRcjw65FKAlh9MW98/6Oh2NrL
+         zZwfO5hlXMV2gI8HAI54eBjRDH2kyrbMb/jPhX+djAyCaKqhm8HR03rQuKGDuQZx2UoC
+         vP5SrH7oFwCoyZlWAg/9JRxmNU3bxgF4t+SFORMZBPZAE5XrhnQQ9gTWEe/cVmJ8Hm7h
+         JiXa5/CL/YiDD0m618SdWfCxdAEBQv7OMCoVRvjx6qgFHonEmz+K9E4gOHCK78fdxArK
+         uB0g==
+X-Gm-Message-State: AOAM530adj3hR0c+oX4Bcu+tQua9trxFQO1bM5Kkt95jC4iKU8MMNt/A
+        tsU+fz9MEP4jmnjAeIRT7cv8UjzwlG2tgA==
+X-Google-Smtp-Source: ABdhPJzKqS29ScFzqBxjgVt3SJZ35SO9y9KETdnBLu4MKMNu2hV8pYaLULRWwDi+1J2FRlEaWO4jjg==
+X-Received: by 2002:a19:c1d7:: with SMTP id r206mr11003926lff.2.1597797861009;
+        Tue, 18 Aug 2020 17:44:21 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id x17sm6388105ljm.0.2020.08.18.17.44.19
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Aug 2020 17:38:27 -0700 (PDT)
-Received: by mail-lj1-f182.google.com with SMTP id t23so23480424ljc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:38:26 -0700 (PDT)
-X-Received: by 2002:a2e:7615:: with SMTP id r21mr10229382ljc.371.1597797506311;
- Tue, 18 Aug 2020 17:38:26 -0700 (PDT)
+        Tue, 18 Aug 2020 17:44:19 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id d2so11183074lfj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 17:44:19 -0700 (PDT)
+X-Received: by 2002:ac2:46d0:: with SMTP id p16mr11162480lfo.142.1597797859441;
+ Tue, 18 Aug 2020 17:44:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200817161132.GA4711@amd>
-In-Reply-To: <20200817161132.GA4711@amd>
+References: <20200818234307.3382306-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200818234307.3382306-1-nivedita@alum.mit.edu>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 18 Aug 2020 17:38:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
-Message-ID: <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
-Subject: Re: 5.9-rc1: graphics regression moved from -next to mainline
-To:     Pavel Machek <pavel@ucw.cz>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>
+Date:   Tue, 18 Aug 2020 17:44:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wik-oXnUpfZ6Hw37uLykc-_P0Apyn2XuX-odh-3Nzop8w@mail.gmail.com>
+Message-ID: <CAHk-=wik-oXnUpfZ6Hw37uLykc-_P0Apyn2XuX-odh-3Nzop8w@mail.gmail.com>
+Subject: Re: [PATCH] lib/string.c: Disable tree-loop-distribute-patterns
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping on this?
-
-The code disassembles to
-
-  24: 8b 85 d0 fd ff ff    mov    -0x230(%ebp),%eax
-  2a:* c7 03 01 00 40 10    movl   $0x10400001,(%ebx) <-- trapping instruction
-  30: 89 43 04              mov    %eax,0x4(%ebx)
-  33: 8b 85 b4 fd ff ff    mov    -0x24c(%ebp),%eax
-  39: 89 43 08              mov    %eax,0x8(%ebx)
-  3c: e9                    jmp ...
-
-which looks like is one of the cases in __reloc_entry_gpu(). I *think*
-it's this one:
-
-        } else if (gen >= 3 &&
-                   !(IS_I915G(eb->i915) || IS_I915GM(eb->i915))) {
-                *batch++ = MI_STORE_DWORD_IMM | MI_MEM_VIRTUAL;
-                *batch++ = addr;
-                *batch++ = target_addr;
-
-where that "batch" pointer is 0xf8601000, so it looks like it just
-overflowed into the next page that isn't there.
-
-The cleaned-up call trace is
-
-  drm_ioctl+0x1f4/0x38b ->
-    drm_ioctl_kernel+0x87/0xd0 ->
-      i915_gem_execbuffer2_ioctl+0xdd/0x360 ->
-        i915_gem_do_execbuffer+0xaab/0x2780 ->
-          eb_relocate_vma
-
-but there's a lot of inling going on, so..
-
-The obvious suspect is commit 9e0f9464e2ab ("drm/i915/gem: Async GPU
-relocations only") but that's going purely by "that seems to be the
-main relocation change this mmrge window".
-
-                     Linus
-
-On Mon, Aug 17, 2020 at 9:11 AM Pavel Machek <pavel@ucw.cz> wrote:
+On Tue, Aug 18, 2020 at 4:43 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> Hi!
->
-> After about half an hour of uptime, screen starts blinking on thinkpad
-> x60 and machine becomes unusable.
->
-> I already reported this in -next, and now it is in mainline. It is
-> 32-bit x86 system.
->
->
->                                                                 Pavel
->
->
-> Aug 17 17:36:04 amd ovpn-castor[2828]: UDPv4 link local (bound):
-> [undef]
-> Aug 17 17:36:04 amd ovpn-castor[2828]: UDPv4 link remote:
-> [AF_INET]87.138.219.28:1194
-> Aug 17 17:36:23 amd kernel: BUG: unable to handle page fault for
-> address: f8601000
-> Aug 17 17:36:23 amd kernel: #PF: supervisor write access in kernel
-> mode
-> Aug 17 17:36:23 amd kernel: #PF: error_code(0x0002) - not-present page
-> Aug 17 17:36:23 amd kernel: *pdpt = 00000000318f2001 *pde =
-> 0000000000000000
-> Aug 17 17:36:23 amd kernel: Oops: 0002 [#1] PREEMPT SMP PTI
-> Aug 17 17:36:23 amd kernel: CPU: 1 PID: 3004 Comm: Xorg Not tainted
-> 5.9.0-rc1+ #86
-> Aug 17 17:36:23 amd kernel: Hardware name: LENOVO 17097HU/17097HU,
-> BIOS 7BETD8WW (2.19 ) 03/31
-> /2011
-> Aug 17 17:36:23 amd kernel: EIP: eb_relocate_vma+0xcf6/0xf20
-> Aug 17 17:36:23 amd kernel: Code: e9 ff f7 ff ff c7 85 c0 fd ff ff ed
-> ff ff ff c7 85 c4 fd ff
-> ff ff ff ff ff 8b 85 c0 fd ff ff e9 a5 f8 ff ff 8b 85 d0 fd ff ff <c7>
-> 03 01 00 40 10 89 43 04
->  8b 85 b4 fd ff ff 89 43 08 e9 9f f7 ff
->  Aug 17 17:36:23 amd kernel: EAX: 003c306c EBX: f8601000 ECX: 00847000
->  EDX: 00000000
->  Aug 17 17:36:23 amd kernel: ESI: 00847000 EDI: 00000000 EBP: f1947c68
->  ESP: f19479fc
->  Aug 17 17:36:23 amd kernel: DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS:
->  0068 EFLAGS: 00210246
->  Aug 17 17:36:23 amd kernel: CR0: 80050033 CR2: f8601000 CR3: 31a1e000
->  CR4: 000006b0
->  Aug 17 17:36:23 amd kernel: Call Trace:
->  Aug 17 17:36:23 amd kernel: ? i915_vma_pin+0xc5/0x8c0
->  Aug 17 17:36:23 amd kernel: ? __mutex_unlock_slowpath+0x2b/0x280
->  Aug 17 17:36:23 amd kernel: ? __active_retire+0x7e/0xd0
->  Aug 17 17:36:23 amd kernel: ? mutex_unlock+0xb/0x10
->  Aug 17 17:36:23 amd kernel: ? i915_vma_pin+0xc5/0x8c0
->  Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
->  Aug 17 17:36:23 amd kernel: ? eb_lookup_vmas+0x1f5/0x9e0
->  Aug 17 17:36:23 amd kernel: i915_gem_do_execbuffer+0xaab/0x2780
->  Aug 17 17:36:23 amd kernel: ? _raw_spin_unlock_irqrestore+0x27/0x40
->  Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
->  Aug 17 17:36:23 amd kernel: ? __lock_acquire.isra.31+0x261/0x530
->  Aug 17 17:36:23 amd kernel: ? kvmalloc_node+0x69/0x70
->  Aug 17 17:36:23 amd kernel: i915_gem_execbuffer2_ioctl+0xdd/0x360
->  Aug 17 17:36:23 amd kernel: ? i915_gem_execbuffer_ioctl+0x2b0/0x2b0
->  Aug 17 17:36:23 amd kernel: drm_ioctl_kernel+0x87/0xd0
->  Aug 17 17:36:23 amd kernel: drm_ioctl+0x1f4/0x38b
->  Aug 17 17:36:23 amd kernel: ? i915_gem_execbuffer_ioctl+0x2b0/0x2b0
->  Aug 17 17:36:23 amd kernel: ? posix_get_monotonic_timespec+0x1c/0x90
->  Aug 17 17:36:23 amd kernel: ? ktime_get_ts64+0x7a/0x1e0
->  Aug 17 17:36:23 amd kernel: ? drm_ioctl_kernel+0xd0/0xd0
->  Aug 17 17:36:23 amd kernel: __ia32_sys_ioctl+0x1ad/0x799
->  Aug 17 17:36:23 amd kernel: ? debug_smp_processor_id+0x12/0x20
->  Aug 17 17:36:23 amd kernel: ? exit_to_user_mode_prepare+0x4f/0x100
->  Aug 17 17:36:23 amd kernel: do_int80_syscall_32+0x2c/0x40
->  Aug 17 17:36:23 amd kernel: entry_INT80_32+0x111/0x111
->  Aug 17 17:36:23 amd kernel: EIP: 0xb7fbc092
->  Aug 17 17:36:23 amd kernel: Code: 00 00 00 e9 90 ff ff ff ff a3 24 00
->  00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 e8 ff ff ff 66 90 00 00 00
->  00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b
->  1c 24 c3 8d b4 26 00
->  Aug 17 17:36:23 amd kernel: EAX: ffffffda EBX: 0000000a ECX: c0406469
->  EDX: bff0ae3c
->  Aug 17 17:36:23 amd kernel: ESI: b73aa000 EDI: c0406469 EBP: 0000000a
->  ESP: bff0adb4
->  Aug 17 17:36:23 amd kernel: DS: 007b ES: 007b FS: 0000 GS: 0033 SS:
->  007b EFLAGS: 00200296
->  Aug 17 17:36:23 amd kernel: ? asm_exc_nmi+0xcc/0x2bc
->  Aug 17 17:36:23 amd kernel: Modules linked in:
->  Aug 17 17:36:23 amd kernel: CR2: 00000000f8601000
->  Aug 17 17:36:23 amd kernel: ---[ end trace 2ca9775068bbac06 ]---
->
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+> This by itself is insufficient for gcc if the optimization was
+> explicitly enabled by CFLAGS, so also add a flag to explicitly disable
+> it.
+
+Using -fno-tree-loop-distribute-patterns seems to really be a bit too
+incestuous with internal compiler knowledge.
+
+That generic memcpy implementation is horrible anyway. It should never be used.
+
+So I'd rather see this either removed entirely, ot possibly rewritten
+to be a somewhat proper memcpy implementation, and in the process made
+to not be recognizable by the compiler (possibly by adding a dummy
+barrier() or something like that).
+
+Looking at the implementation of "strscpy()" in the same file, and
+then comparing that to the ludicrously simplisting "memcpy()", I
+really get the feeling that that memcpy() is not worth having.
+
+              Linus
