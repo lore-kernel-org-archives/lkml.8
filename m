@@ -2,86 +2,121 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CCAC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F333BC433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5B6206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:22:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597857757;
-	bh=ns3QqN1GE86TyATblzqVP/NCI85PrE0w52RqoEnvbBg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0T80Xp2e6ccdo8uFsIxk/N+MGRHwK5TWv9k8jTiXD82/wgAw1OGzQT+O5ZILtNVuc
-	 CDGpbl8iXMcwo+ULvmVx7xad6Jptwjpd9m7+f7ulodvfjs3UwpS95t1ie5N0fytH0F
-	 NGhqu8wqJF+bJtNMmvvBw/viQIWnFX5WUe6mqBaA=
+	by mail.kernel.org (Postfix) with ESMTP id D2485206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:23:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nJoK3HvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726723AbgHSRWf (ORCPT
+        id S1726718AbgHSRXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57622 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726846AbgHSRWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:22:15 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 757FC206FA;
-        Wed, 19 Aug 2020 17:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597857734;
-        bh=ns3QqN1GE86TyATblzqVP/NCI85PrE0w52RqoEnvbBg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=biwztO1ihUXf4Euv72Qr3Rri8ht6NKWGwsqFXckg/nbkuURUNgmIs3mw3wg/xmvKp
-         w9LlJlTBn2g0nRd+NYSiFy0nwZv5mnv3/883shiNjSOxvRLMBKParaJI2R4PnvHTDc
-         /AmICpbuSNWIxMgrOgeuPRS+J1+c+LrZZxUiSOoE=
-Date:   Wed, 19 Aug 2020 10:22:14 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Doug Berger <opendmb@gmail.com>, Jason Baron <jbaron@akamai.com>,
-        David Rientjes <rientjes@google.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] mm: include CMA pages in lowmem_reserve at boot
-Message-Id: <20200819102214.32238093b116ab6f1c5c7b73@linux-foundation.org>
-In-Reply-To: <e22cbcdc-e9ce-50b7-aa88-6a3579ffd509@gmail.com>
-References: <1597423766-27849-1-git-send-email-opendmb@gmail.com>
-        <20200818201817.351499e75cba2a84e8bf33e6@linux-foundation.org>
-        <e22cbcdc-e9ce-50b7-aa88-6a3579ffd509@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 19 Aug 2020 13:23:55 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:38602 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbgHSRXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:23:54 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07JHD3tL005151;
+        Wed, 19 Aug 2020 17:23:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=oo8HJPOFnI8jYMf22UYgSVQCSYKNPPazecoW3XTuh6E=;
+ b=nJoK3HvSvLS9hkuz5yxZGUO3oabzdeV8TRP8UMs+uFfNBfr6Ea1NlREW/FXLqVRRW+r1
+ 3wpJdqut57L4RIYiUzWF4Pu5UyDSZOYJOCg4RVyiURObIUQe54okMzXt16nZAxQIgfwu
+ NFuN1yVUZSBanrPFcTAw79Eu7hQAHBrdEHaX9TgOmUVCUbYWnlkJOLiWoOAuPub8xPGV
+ 6h8KNtVAx3Ev7V0o8pvWjPGooz9tOPAgN+zkNwFwXe3uiLv/Ur/yKFz0sET3VtOy6zTo
+ DqBTL+XYSEOTw8mjeG3rf4fEu7fIDguFdsGOcTS2P1Fxk9HUefEB48u01QAvGnO7Qy87 0g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 32x8bnbt9y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 19 Aug 2020 17:23:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07JHCLIv112642;
+        Wed, 19 Aug 2020 17:21:38 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 32xs9pgyps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Aug 2020 17:21:38 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07JHLaV6000771;
+        Wed, 19 Aug 2020 17:21:37 GMT
+Received: from [10.74.109.231] (/10.74.109.231)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Aug 2020 10:21:35 -0700
+Subject: Re: [PATCH 0/3] Simplify PM for am3/4, drop RTC pdata for am3/4/dra7
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, Keerthy <j-keerthy@ti.com>
+References: <20200703160731.53698-1-tony@atomide.com>
+ <20200818082953.GN2994@atomide.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <aaf8a24c-d12c-c3b2-6cd1-b9825d14e7a0@oracle.com>
+Date:   Wed, 19 Aug 2020 10:21:33 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200818082953.GN2994@atomide.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 adultscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008190143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008190143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 10:15:53 -0700 Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-> >> In many cases the difference is not significant, but for example
-> >> an ARM platform with 1GB of memory and the following memory layout
-> >> [    0.000000] cma: Reserved 256 MiB at 0x0000000030000000
-> >> [    0.000000] Zone ranges:
-> >> [    0.000000]   DMA      [mem 0x0000000000000000-0x000000002fffffff]
-> >> [    0.000000]   Normal   empty
-> >> [    0.000000]   HighMem  [mem 0x0000000030000000-0x000000003fffffff]
-> >>
-> >> would result in 0 lowmem_reserve for the DMA zone. This would allow
-> >> userspace to deplete the DMA zone easily.
-> > 
-> > Sounds fairly serious for thos machines.  Was a cc:stable considered?
+
+On 8/18/20 1:29 AM, Tony Lindgren wrote:
+> Hi Santosh,
 > 
-> Since there is a Fixes: tag, it may have been assumed that the patch
-> would be picked up and as soon as it reaches Linus' tree it would be
-> picked up by the stable selection.
+> * Tony Lindgren <tony@atomide.com> [200703 19:08]:
+>> Hi all,
+>>
+>> Here are patches to simplify the RTC+DDR PM code for am3 and am4. We want
+>> to do this to drop the RTC related legacy platform data for am3 and am4.
+>> We also drop RTC legacy platform data for dra7.
+>>
+>> Please test the RTC+DDR suspend on am437x-gp-evm if possible. I've tested
+>> this series on am437x-sk-evm, but at least currently cannot do RTC+DDR
+>> suspend and is limited to testing retention suspend only.
+>>
+>> These patches depend on v5.8-rc3 for earlier suspend and resume related
+>> fixes.
+>>
+>> Additionally, for testing the LCD for suspend, the following patch is
+>> needed for the missing omapdrm PM ops:
+>>
+>> drm/omap: force runtime PM suspend on system suspend
+> 
+> Here's another series that was getting too late for v5.9 that I'd like to
+> queue for v5.10. Care to take a look and ack if it looks OK?
+> 
+Just finished going through the patches. If the suspend continue to work
+with this update then its good to go.
 
-It doesn't work that way - sometimes a fix isn't considered important
-enough to backport.  It could just fix a typo in a comment!
-
-
-
+FWIW,
+Acked-by: Santosh Shilimkar <ssantosh@kernel.org>
