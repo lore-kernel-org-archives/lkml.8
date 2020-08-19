@@ -2,135 +2,168 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AD4C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C13C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF2A8204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6EA204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 14:08:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0g7/SVpo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ep91QEHm"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="Twg4BMrx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgHSOGS (ORCPT
+        id S1728343AbgHSOIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 10:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46156 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728212AbgHSOCt (ORCPT
+        Wed, 19 Aug 2020 10:08:06 -0400
+Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:59279 "EHLO
+        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726858AbgHSOIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 10:02:49 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F4E5C061757;
-        Wed, 19 Aug 2020 07:02:50 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:02:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597845767;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fduUs2llT1q1Xx3qiiobcLkR9jqkNHnZPxzfLXB5oxw=;
-        b=0g7/SVporcjlPY/43UB6iiM7WsMZacKIEkOZB2tRSEsfLhPgpFBYMVmTty94VOsqZEYK0f
-        ny9uPVrolykELmYw+kwTprQMcqr14hgC7Q9ew/ECAUD6VUsE2JATn3SMd4++qVO3b7recQ
-        xkaiwNojVaTPe5P0lbIJXJkuvA/Vj95ZKGxH4cLX9Ru7BDSjXyAx0X1n37esr6Aj6wP/xi
-        rPT0ggQCheRLvvdJLW8hE/o5h/vcjz47nCBmXFlZ8rsCmrfBqAipOxAP5kdu4m/5ZA7mKP
-        vS8mN2xK9gTJVX4mbzYotyeEsjdbsHuqfAsvY4xHrb7sH6eOQeJD+U6qursNRA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597845767;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fduUs2llT1q1Xx3qiiobcLkR9jqkNHnZPxzfLXB5oxw=;
-        b=Ep91QEHm6JnBtL1sz142ElHWO/aCq/Lr0+5RVHZjOmcaG4hJI0UFhswfzgd/aX2pI1OLKg
-        /NKEz2UQTAQL27Ag==
-From:   "tip-bot2 for Valentin Schneider" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/topology: Use prebuilt SD flag degeneration mask
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200817113003.20802-9-valentin.schneider@arm.com>
-References: <20200817113003.20802-9-valentin.schneider@arm.com>
+        Wed, 19 Aug 2020 10:08:05 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id 8OkzkdEsDuuXO8Ol0khT7h; Wed, 19 Aug 2020 16:08:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597846082; bh=hy+V1NOblWLH8aYZMPbFZNBcgkQSkIN5hhnQlljKF24=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=Twg4BMrxADBXFtJZpbwDlD1J8A7G2iPxKI9JBL5mMd36JD5lztdyR//Cv8EAV0ROC
+         VoPmYKnWOnorAdA20G6bEc4bTcPwEQ79lRuuOt5NrGXLfplAJM6SnQDbaGIsSYk7Qn
+         MtNt86yYVWEvIQpWj+MxO3+808sb/v1WEXRulaOCh3A22HuIIICgX1mIqVBFYcVR4W
+         ++TN8Drb6HuumaFKgL9viNBchlF7Pt1Bj/qPFPUvLkEaumHKL98wi3rzurkVLap1ne
+         CDeOTOv6+x+w4bDeVlYTZ78DnRsA/VzGFNvWAI0R/vDBZqo6shIbrUzQnwavtxSpA7
+         +VvFcfE1AcsHA==
+Subject: Re: [PATCH] media: rcar-vin: Update crop and compose settings for
+ every s_fmt call
+To:     Niklas <niklas.soderlund@ragnatech.se>,
+        "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Biju Das <biju.das.jz@bp.renesas.com>
+References: <1596187745-31596-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200801090456.GB1379367@oden.dyn.berto.se>
+ <CA+V-a8sOHct_JetCsug8Z2BQpMLH2p39hj2XNw_1N5gkBQp1Gg@mail.gmail.com>
+ <20200803192108.GB2297236@oden.dyn.berto.se>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <6d659e56-1e1f-c9c7-2e66-4ddc4e7fad15@xs4all.nl>
+Date:   Wed, 19 Aug 2020 16:08:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159784576699.3192.17019412360260680450.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200803192108.GB2297236@oden.dyn.berto.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfD66bE590ro+1a2VaasmDx/4aw7E5J1jWU11L5dOfQH30XSzIS3D9iCxmkaatuqhUNKm5YWPBQ0NPpwqNg2qx1SI7so47rsszk6QFcb3dvFgEaCxtShy
+ SE/P9VEBaKT/+AJD4b/vNQ8aaGq1QGnNn9iQ5faaME4WH6csqsFg05afHkkyOHELawwTXKCiWijZnPoN1XhfrEQJgnNIYsYiTUhyeQKMa4njRfrtqvy8Uixh
+ RvVC0MUqStiyrr8KuQRadAH6Denkl8HVXrjJkt51RbSNDdmQOIKrRkQUdidEMopyyNgq+/0fxNAAYXXpgoW3WEAMUT2xzFyJLCHCrs40vWus3tsDQKEdaG1+
+ XHosV4IcAoLOA59vnLWx26sP8Lr5YrsVafJA8QN9HCtvFRtuVSfq1pr/0Bsh0r5I2wg0so8D3q96F71iGwJaz+bFRnmDWNw9c8X85S6tgqDfzzA2ZGqs1Daz
+ l9AqdLPt56JjpU2V1bJu4ZnIVjtt3wMdNSd/RN/TxjyFO062S7ICsgSg+HhIFPp8K0p8Z7Z3+MgGT6e/eUkWo8S9pIbh3lQAGWsdHN40K8lU+dC1n/k/Un4P
+ g/eWmH+YNgM/JyUT/pt8sCMaDYOIg6Upj5OhhccwnxQ9lGqnVFizGi/6ib5s8Tc6cwAgpuQiyuamgpuDgxjzVkyOjv1posvd6zOxr7GVsn/euQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On 03/08/2020 21:21, Niklas wrote:
+> Hi Lad, Hans,
+> 
+> On 2020-08-03 19:11:32 +0100, Lad, Prabhakar wrote:
+>> Hi Hans,
+>>
+>> On Sat, Aug 1, 2020 at 10:04 AM Niklas <niklas.soderlund@ragnatech.se> wrote:
+>>>
+>>> Hi Lad,
+>>>
+>>> Thanks for your work.
+>>>
+>>> On 2020-07-31 10:29:05 +0100, Lad Prabhakar wrote:
+>>>> The crop and compose settings for VIN in non mc mode werent updated
+>>>> in s_fmt call this resulted in captured images being clipped.
+>>>>
+>>>> With the below sequence on the third capture where size is set to
+>>>> 640x480 resulted in clipped image of size 320x240.
+>>>>
+>>>> high(640x480) -> low (320x240) -> high (640x480)
+>>>>
+>>>> This patch makes sure the VIN crop and compose settings are updated.
+>>>
+>>> This is clearly an inconsistency in the VIN driver that should be fixed.
+>>> But I think the none-mc mode implements the correct behavior. That is
+>>> that S_FMT should not modify the crop/compose rectangles other then make
+>>> sure they don't go out of bounds. This is an area we tried to clarify in
+>>> the past but I'm still not sure what the correct answer to.
+>>>
+>> What should be the exact behaviour of the bridge driver  for s_fmt
+>> call. Should the crop/compose settings be updated for every s_fmt
+>> callback or should they be only updated on s_selection callback.
+>> Currently the non-mc rcar-vin doesnt update the crop/compose setting
+>> in s_fmt callback due to which I see the above issue as mentioned.
+> 
+> This is not entirely correct. It does update the crop and compose 
+> rectangles on s_fmt, it makes sure they are not out-of-bounds for the 
+> new format if it's accepted by s_fmt. See v4l2_rect_map_inside() calls 
+> in the snippet bellow.
 
-Commit-ID:     6f349818621dff364fc000909135d0065e9756c9
-Gitweb:        https://git.kernel.org/tip/6f349818621dff364fc000909135d0065e9756c9
-Author:        Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate:    Mon, 17 Aug 2020 12:29:54 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Aug 2020 10:49:48 +02:00
+For non-mc mode s_fmt must update any crop/compose rectangles to ensure that
+they are not out-of-bounds. But for mc mode the validation is done when you
+start streaming, so I think s_fmt won't make any changes in that mode.
 
-sched/topology: Use prebuilt SD flag degeneration mask
+Double-check that with Laurent, though...
 
-Leverage SD_DEGENERATE_GROUPS_MASK in sd_degenerate() and
-sd_parent_degenerate().
+Regards,
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Link: https://lore.kernel.org/r/20200817113003.20802-9-valentin.schneider@arm.com
----
- kernel/sched/topology.c | 20 ++++----------------
- 1 file changed, 4 insertions(+), 16 deletions(-)
+	Hans
 
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index cbdaf08..38e6671 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -160,15 +160,9 @@ static int sd_degenerate(struct sched_domain *sd)
- 		return 1;
- 
- 	/* Following flags need at least 2 groups */
--	if (sd->flags & (SD_BALANCE_NEWIDLE |
--			 SD_BALANCE_FORK |
--			 SD_BALANCE_EXEC |
--			 SD_SHARE_CPUCAPACITY |
--			 SD_ASYM_CPUCAPACITY |
--			 SD_SHARE_PKG_RESOURCES)) {
--		if (sd->groups != sd->groups->next)
--			return 0;
--	}
-+	if ((sd->flags & SD_DEGENERATE_GROUPS_MASK) &&
-+	    (sd->groups != sd->groups->next))
-+		return 0;
- 
- 	/* Following flags don't use groups */
- 	if (sd->flags & (SD_WAKE_AFFINE))
-@@ -190,13 +184,7 @@ sd_parent_degenerate(struct sched_domain *sd, struct sched_domain *parent)
- 
- 	/* Flags needing groups don't count if only 1 group in parent */
- 	if (parent->groups == parent->groups->next) {
--		pflags &= ~(SD_BALANCE_NEWIDLE |
--			    SD_BALANCE_FORK |
--			    SD_BALANCE_EXEC |
--			    SD_ASYM_CPUCAPACITY |
--			    SD_SHARE_CPUCAPACITY |
--			    SD_SHARE_PKG_RESOURCES |
--			    SD_PREFER_SIBLING);
-+		pflags &= ~(SD_DEGENERATE_GROUPS_MASK | SD_PREFER_SIBLING);
- 		if (nr_node_ids == 1)
- 			pflags &= ~SD_SERIALIZE;
- 	}
+> 
+> That being said there is a difference how this is handled in the VIN 
+> driver between it's MC and non-MC modes and I would love to learn the 
+> correct mode of operation and seeing VIN being updated to doing it 
+> correct in both cases. Thanks Lad for dealing with this!
+> 
+>>
+>> Cheers,
+>> Prabhakar
+>>
+>>>>
+>>>> Fixes: 104464f573d ("media: rcar-vin: Do not reset the crop and compose rectangles in s_fmt")
+>>>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>>>> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
+>>>> ---
+>>>>  drivers/media/platform/rcar-vin/rcar-v4l2.c | 6 ++++++
+>>>>  1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+>>>> index f421e25..a9b13d9 100644
+>>>> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+>>>> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+>>>> @@ -319,6 +319,12 @@ static int rvin_s_fmt_vid_cap(struct file *file, void *priv,
+>>>>       fmt_rect.width = vin->format.width;
+>>>>       fmt_rect.height = vin->format.height;
+>>>>
+>>>> +     vin->crop.top = 0;
+>>>> +     vin->crop.left = 0;
+>>>> +     vin->crop.width = vin->format.width;
+>>>> +     vin->crop.height = vin->format.height;
+>>>> +     vin->compose = vin->crop;
+>>>> +
+>>>>       v4l2_rect_map_inside(&vin->crop, &src_rect);
+>>>>       v4l2_rect_map_inside(&vin->compose, &fmt_rect);
+>>>>       vin->src_rect = src_rect;
+>>>> --
+>>>> 2.7.4
+>>>>
+>>>
+>>> --
+>>> Regards,
+>>> Niklas Söderlund
+> 
+
