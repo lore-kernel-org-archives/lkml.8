@@ -2,123 +2,168 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64DD6C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42A22075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379F62075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:05:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DF06F1w9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbgHSLF1 (ORCPT
+        id S1727994AbgHSLFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:05:27 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54869 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHSLFU (ORCPT
+        Wed, 19 Aug 2020 07:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727901AbgHSLFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:05:20 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1k8Lu9-0007i7-JR; Wed, 19 Aug 2020 11:05:17 +0000
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Carl Huang <cjhuang@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, ath11k@lists.infradead.org,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        netdev@vger.kernel.org
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: re: ath11k: initialize wmi config based on hw_params
-Message-ID: <480d8984-a5fb-be1b-b553-e01609601059@canonical.com>
-Date:   Wed, 19 Aug 2020 12:05:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 07:05:36 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87DAC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:05:35 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id t23so24917804ljc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CNNvZSrpZe1na795UzZLdD0f0kb59Zd5OOwEuyJTVrM=;
+        b=DF06F1w9ZkJlAhGKWH6IUQ9TDRzCqoxf9CllIH+0YcuG2PkhPXrEN81KsUe0qcnpBo
+         sXsg3st6w21SrII+tovrMoiiWgdy09H+tasrcJmD7NPVnA80ABx/8l5D0o1uIfF0zWzG
+         sOLMDlAaKqEwgpr7KePGYR45fD6BiZp2M5aAE77jp+uMvLNjNgit3Q/bI9tIMvCaGNjf
+         DX1aS9dUkp33pMowVizRR9AyT2/IEh1ajbJiyfAE7HURqCEUag4A+VpJBAhQkfHDZOHx
+         nUf0TMWwp0zcUzNB+JBfc0qfAOONMeUfcMUdscO82X6Rg4mesUcUrUHYy6y08CEIoey1
+         w/Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CNNvZSrpZe1na795UzZLdD0f0kb59Zd5OOwEuyJTVrM=;
+        b=foWJFBP9bHVgMMmXaHQMP/8g74tTtD41BJKHL8W+tNb12nRtApm+nftSXVTh68zVu9
+         Xp4/v0W3Q0ZOL3mHH9Etqy8ZMF9BRRWsWjMmqxDX1cKLAaEogJwT73ckHFS7YWPMscXQ
+         AtU8yxTsSuR3bEyZPto/ByevzeHNVs753oXHgfqxVt94r9ZzgPeQK0ouw+rMdvjtYDff
+         3ErzKQx80Y5pmdlfBWrOK9COtpFYPCQqqDelxBQjIuMcsDJjen2otCy/PR9IBF6tut/j
+         6QVh8GYtVJZWPRFCDKgAn86XysjcxwhN++m+n/AqlHeki//0kYFeP9vY5YAtgOY96X5G
+         0ZkQ==
+X-Gm-Message-State: AOAM530q5KNOncB4itGl51ThlPM8lbjHcCC1TTs8O1Awp44CzXCjVTPt
+        i77IcqxVceeIg1YU31u3SKlGtFz/FovotLjdrhnvUA==
+X-Google-Smtp-Source: ABdhPJzj95wPmXG9dKhKiBcVHM02iqWsgBEupdaLJ2JF3f1Juk80QhgVehC2mukFJSq9dnQ0MDuq7HAxVujA2vaoBA0=
+X-Received: by 2002:a2e:b045:: with SMTP id d5mr12619588ljl.111.1597835134136;
+ Wed, 19 Aug 2020 04:05:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200801023248.90104-1-benbjiang@gmail.com> <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
+ <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com> <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
+ <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com> <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
+ <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com> <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
+ <70236E62-AA36-48C1-9382-86353649253C@tencent.com> <3a1047fc-a86a-014a-b17a-eae71f669da1@arm.com>
+ <643B0ECE-D758-4D08-8B1B-C70F34DD9943@tencent.com> <55f04582-69d6-aeb4-85be-3e46a3b15beb@arm.com>
+ <755BFAD0-9072-4D73-9CD7-AF4F74A79D21@tencent.com> <729675a2-b083-4211-62c0-f7ed7f483ae2@arm.com>
+In-Reply-To: <729675a2-b083-4211-62c0-f7ed7f483ae2@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 19 Aug 2020 13:05:22 +0200
+Message-ID: <CAKfTPtATf94n4t6EnB5_76ygox26xd9EwvEHiv5cGN=E9BdLgg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
+ runable(Internet mail)
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>,
+        Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 19 Aug 2020 at 12:46, Dietmar Eggemann <dietmar.eggemann@arm.com> w=
+rote:
+>
+> On 17/08/2020 14:05, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >
+> >
+> >> On Aug 17, 2020, at 4:57 PM, Dietmar Eggemann <dietmar.eggemann@arm.co=
+m> wrote:
+> >>
+> >> On 14/08/2020 01:55, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>> Hi,
+> >>>
+> >>>> On Aug 13, 2020, at 2:39 AM, Dietmar Eggemann <dietmar.eggemann@arm.=
+com> wrote:
+> >>>>
+> >>>> On 12/08/2020 05:19, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>>> On Aug 11, 2020, at 11:54 PM, Dietmar Eggemann <dietmar.eggemann@a=
+rm.com> wrote:
+> >>>>>>
+> >>>>>> On 11/08/2020 02:41, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>>> On Aug 10, 2020, at 9:24 PM, Dietmar Eggemann <dietmar.eggemann@=
+arm.com> wrote:
+> >>>>>>>>
+> >>>>>>>> On 06/08/2020 17:52, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>> Hi,
+> >>>>>>>>>
+> >>>>>>>>>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.eggemann=
+@arm.com> wrote:
+> >>>>>>>>>>
+> >>>>>>>>>> On 03/08/2020 13:26, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.eggema=
+nn@arm.com> wrote:
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> On 01/08/2020 04:32, Jiang Biao wrote:
+> >>>>>>>>>>>>> From: Jiang Biao <benbjiang@tencent.com>
+>
+> [...]
+>
+> >> Are you sure about this?
+> > Yes. :)
+> >>
+> >> The math is telling me for the:
+> >>
+> >> idle task:      (3 / (1024 + 1024 + 3))^(-1) * 4ms =3D 2735ms
+> >>
+> >> normal task: (1024 / (1024 + 1024 + 3))^(-1) * 4ms =3D    8ms
+> >>
+> >> (4ms - 250 Hz)
+> > My tick is 1ms - 1000HZ, which seems reasonable for 600ms? :)
+>
+> OK, I see.
+>
+> But here the different sched slices (check_preempt_tick()->
+> sched_slice()) between normal tasks and the idle task play a role to.
+>
+> Normal tasks get ~3ms whereas the idle task gets <0.01ms.
 
-static analysis with Coverity has detected a duplicated assignment issue
-with the following commit:
+In fact that depends on the number of CPUs on the system
+:sysctl_sched_latency =3D 6ms * (1 + ilog(ncpus)) . On a 8 cores system,
+normal task will run around 12ms in one shoot and the idle task still
+one tick period
 
-commit 2d4bcbed5b7d53e19fc158885e7340b464b64507
-Author: Carl Huang <cjhuang@codeaurora.org>
-Date:   Mon Aug 17 13:31:51 2020 +0300
+Also, you can increase even more the period between 2 runs of idle
+task by using cgroups and min shares value : 2
 
-    ath11k: initialize wmi config based on hw_params
-
-The analysis is as follows:
-
-
- 74        config->beacon_tx_offload_max_vdev = 0x2;
- 75        config->num_multicast_filter_entries = 0x20;
- 76        config->num_wow_filters = 0x16;
-
-Unused value (UNUSED_VALUE)
-assigned_value: Assigning value 1U to config->num_keep_alive_pattern
-here, but that stored value is overwritten before it can be used.
- 77        config->num_keep_alive_pattern = 0x1;
-
-value_overwrite: Overwriting previous write to
-config->num_keep_alive_pattern with value 0U.
-
- 78        config->num_keep_alive_pattern = 0;
-
-
-I'm not sure if one of these assignments is redundant, or perhaps one of
-the assignments is meant to be setting a different structure element.
-
-Colin
+>
+> So the idle task runs every ~680ms but only for 1 tick (1ms) (4 times
+> less than the normal tasks). The condition 'if (delta_exec >
+> ideal_runtime)' in check_preempt_tick() is only true at the 4th tick
+> when a normal task runs even though the slice is 3ms.
+>
+> In the 250 Hz example the sched slice diffs are hidden behind the 4ms tic=
+k.
+>
+> [...]
