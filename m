@@ -2,123 +2,157 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC383C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A311C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2921206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597840682;
-	bh=o1aH6Vc5HDoeUAUMEJNJq1za6d80HUUBuus+I+GTc6o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gCvYm7aqpUEbGTqD8IE/gdpni6slO/qtG1a/pysVgF+bVCYCYgV7fKAMYTUg+WxvW
-	 9rEorCArFSsOKNu+5615AZmxqf3GrXlvS9Eaz2UbI8Xo7xJiNhr33eOCY0Mex+DqcT
-	 DrzypT36qhgg4wd7OunKyk4T4Yy8GFXlZWNoJoFY=
+	by mail.kernel.org (Postfix) with ESMTP id 02AC3206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 12:38:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="imGxWJhr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L96aS3EG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgHSMh7 convert rfc822-to-8bit (ORCPT
+        id S1728327AbgHSMiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 08:37:59 -0400
-Received: from mail-ej1-f65.google.com ([209.85.218.65]:41099 "EHLO
-        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgHSMhh (ORCPT
+        Wed, 19 Aug 2020 08:38:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32836 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728249AbgHSMiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 08:37:37 -0400
-Received: by mail-ej1-f65.google.com with SMTP id t10so26087374ejs.8;
-        Wed, 19 Aug 2020 05:37:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=6FCKFOV4tXuhe4ALaKK45GgE/rtv2KFtTsBAHakWHm4=;
-        b=CocKN0U5OmS0A9cRNxM7XxA7kFlY1XGFx/vS47SaPi+ke1XyjYcuyi84gaHrjyvkh/
-         dvPCBmaVxEFZKYWYoT/fSALggJBilw9EpuMBcxuZbffjIHIPoJQy5z0TWM/uOQrU77X4
-         +7uKkrakBmB98YCmfhsvGprQ5exW+z9neYLOD+41qTYSRb8B1Ep+kgbwERT1NVgc91dz
-         WA0nNFcNWEUdk4oz1H5Mpz4lUsGcNHsCTnqvxNm+gKLWoV+t5nK9ENXD8vhMS9e1hFZU
-         Z1q7OW+ldGcO//JpkTmDUXDMLKuq6VnHv10RbpIArho++lzE6s79kgmRDpU47wFnORKq
-         QV6A==
-X-Gm-Message-State: AOAM5327rMf1eoWeNlrjJoxqEPQusspEMU7OljDXBFgKJIUbUxb3gea6
-        zSMTbtd8CWWgQ4PMYblmT4U=
-X-Google-Smtp-Source: ABdhPJw9xEf2bvQxWdoKfV7GBCyYJK5pCq04/DM+3vXVGjGug31Euua3pze+tmiaLYIlaBLh8/tQsA==
-X-Received: by 2002:a17:906:cc51:: with SMTP id mm17mr25546416ejb.137.1597840654741;
-        Wed, 19 Aug 2020 05:37:34 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id pv28sm18391843ejb.71.2020.08.19.05.37.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 05:37:34 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 14:37:32 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc:     Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 5/8] spi: spi-s3c64xx: Fix doc comment for struct
- s3c64xx_spi_driver_data
-Message-ID: <20200819123732.GA18122@kozik-lap>
-References: <20200819123208.12337-1-l.stelmach@samsung.com>
- <CGME20200819123227eucas1p11cd47cf281a035ed02d5fc819a0370c1@eucas1p1.samsung.com>
- <20200819123208.12337-6-l.stelmach@samsung.com>
+        Wed, 19 Aug 2020 08:38:01 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D3CC061757;
+        Wed, 19 Aug 2020 05:38:01 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 14:37:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1597840679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=lwW59TWfLQL9/3bZCi/CgmH2rjvRhAnceBj2jd3SReo=;
+        b=imGxWJhrhkFrnQ6z3tR+Tn958XvlBhli27vWGVVlvnb5U7529LWEvoBmnFzBrt9h+KvJzb
+        J/Mi16BTNBaP0RDORRxDLgpxddkXb5gD+rmjgvE2WIrTdPdl4cfYYEZ/9QzGi7IQZ1FYMM
+        XLzWdkNdAHqgU7t/6dZaHSTT3veW0NELHlDBrdVD++uBEW6+Puo6LPhvtFwOMLcWk2oAuC
+        Zf1OB9ZrA8yFytDcs/+GHiWmniFMZMMIJkANU4Pd7D4JA05/OjLdNtd+KB6TLGHQRkx9bY
+        L7Gbmdxj1Dh5CM+oK32cn0Ak6bA9oEQ1grOtb+lgIgQwe0aI8OORV+NWMyrV7w==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1597840679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=lwW59TWfLQL9/3bZCi/CgmH2rjvRhAnceBj2jd3SReo=;
+        b=L96aS3EG2/dopYg65zffBoCQs2OJ3KlrwOAI5sFEBi2GymemUk0tDk5n9DAPYbj0sZWHE1
+        U8+k+5QFGSljGJCg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [RFC PATCH] sched: Invoke io_wq_worker_sleeping() with enabled
+ preemption
+Message-ID: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <20200819123208.12337-6-l.stelmach@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 02:32:05PM +0200, Łukasz Stelmach wrote:
-> Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
+During a context switch the scheduler invokes wq_worker_sleeping() with
+disabled preemption. Disabling preemption is needed because it protects
+access to `worker->sleeping'. As an optimisation it avoids invoking
+schedule() within the schedule path as part of possible wake up (thus
+preempt_enable_no_resched() afterwards).
 
-Hi,
+The io-wq has been added to the mix in the same section with disabled
+preemption. This breaks on PREEMPT_RT because io_wq_worker_sleeping()
+acquires a spinlock_t. Also within the schedule() the spinlock_t must be
+acquired after tsk_is_pi_blocked() otherwise it will block on the sleeping lock
+again while scheduling out.
 
-Missing commit msg - fix what exactly?
+While playing with `io_uring-bench' I didn't notice a significant
+latency spike after converting io_wqe::lock to a raw_spinlock_t. The
+latency was more or less the same.
 
-You need to rebase your patch as most of these were already fixed by Lee
-Jones.
+I don't see a significant reason why this lock should become a
+raw_spinlock_t therefore I suggest to move it after the
+tsk_is_pi_blocked() check.
+The io_worker::flags are usually modified under the lock except in the
+scheduler path. Ideally the lock is always acquired since the
+IO_WORKER_F_UP flag is set early in the startup and IO_WORKER_F_RUNNING
+should be set unless the task loops within schedule(). I *think* ::flags
+requires the same protection like workqueue's ::sleeping and therefore I
+move the check within the locked section.
 
-However he did not remove the @rx_dmach and tx entries...
+Any feedback on this vs raw_spinlock_t?
 
-Best regards,
-Krzysztof
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ fs/io-wq.c          |  8 ++++----
+ kernel/sched/core.c | 10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-> ---
->  drivers/spi/spi-s3c64xx.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-> index 6fe896f2be18..505789f91fdf 100644
-> --- a/drivers/spi/spi-s3c64xx.c
-> +++ b/drivers/spi/spi-s3c64xx.c
-> @@ -155,19 +155,21 @@ struct s3c64xx_spi_port_config {
->   * @clk: Pointer to the spi clock.
->   * @src_clk: Pointer to the clock used to generate SPI signals.
->   * @ioclk: Pointer to the i/o clock between master and slave
-> + * @pdev: Pointer to the SPI controller platform device
->   * @master: Pointer to the SPI Protocol master.
->   * @cntrlr_info: Platform specific data for the controller this driver manages.
->   * @lock: Controller specific lock.
->   * @state: Set of FLAGS to indicate status.
-> - * @rx_dmach: Controller's DMA channel for Rx.
-> - * @tx_dmach: Controller's DMA channel for Tx.
-> + * @rx_dma: Controller's DMA channel for Rx.
-> + * @tx_dma: Controller's DMA channel for Tx.
->   * @sfr_start: BUS address of SPI controller regs.
->   * @regs: Pointer to ioremap'ed controller registers.
-> - * @irq: interrupt
->   * @xfer_completion: To indicate completion of xfer task.
->   * @cur_mode: Stores the active configuration of the controller.
->   * @cur_bpw: Stores the active bits per word settings.
->   * @cur_speed: Stores the active xfer clock speed.
-> + * @port_conf: Pointer to the SPI port configuration
-> + * @port_id: SPI port ID number
->   */
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index e92c4724480ca..a7e07b3ac5b95 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -623,15 +623,15 @@ void io_wq_worker_sleeping(struct task_struct *tsk)
+ 	struct io_worker *worker = kthread_data(tsk);
+ 	struct io_wqe *wqe = worker->wqe;
+ 
++	spin_lock_irq(&wqe->lock);
+ 	if (!(worker->flags & IO_WORKER_F_UP))
+-		return;
++		goto out;
+ 	if (!(worker->flags & IO_WORKER_F_RUNNING))
+-		return;
++		goto out;
+ 
+ 	worker->flags &= ~IO_WORKER_F_RUNNING;
+-
+-	spin_lock_irq(&wqe->lock);
+ 	io_wqe_dec_running(wqe, worker);
++out:
+ 	spin_unlock_irq(&wqe->lock);
+ }
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3bbb60b97c73c..b76c0f27bd95e 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4694,18 +4694,18 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 	 * in the possible wakeup of a kworker and because wq_worker_sleeping()
+ 	 * requires it.
+ 	 */
+-	if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
++	if (tsk->flags & PF_WQ_WORKER) {
+ 		preempt_disable();
+-		if (tsk->flags & PF_WQ_WORKER)
+-			wq_worker_sleeping(tsk);
+-		else
+-			io_wq_worker_sleeping(tsk);
++		wq_worker_sleeping(tsk);
+ 		preempt_enable_no_resched();
+ 	}
+ 
+ 	if (tsk_is_pi_blocked(tsk))
+ 		return;
+ 
++	if (tsk->flags & PF_IO_WORKER)
++		io_wq_worker_sleeping(tsk);
++
+ 	/*
+ 	 * If we are going to sleep and we have plugged IO queued,
+ 	 * make sure to submit it to avoid deadlocks.
+-- 
+2.28.0
+
