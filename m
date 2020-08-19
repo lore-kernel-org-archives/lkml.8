@@ -2,92 +2,123 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C089CC433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A95BE2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC4E2080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:51:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=pantacor-com.20150623.gappssmtp.com header.i=@pantacor-com.20150623.gappssmtp.com header.b="KU2N9icZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgHSLvi (ORCPT
+        id S1728253AbgHSLvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:51:38 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:41548 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728382AbgHSLuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:50:44 -0400
-Received: from localhost.localdomain (unknown [210.32.144.184])
-        by mail-app2 (Coremail) with SMTP id by_KCgBHF7z3ET1fwy8CAg--.51675S4;
-        Wed, 19 Aug 2020 19:50:19 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Ajay Singh <ajay.kathat@microchip.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: wilc1000: Fix memleak in wilc_sdio_probe
-Date:   Wed, 19 Aug 2020 19:50:14 +0800
-Message-Id: <20200819115014.28955-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgBHF7z3ET1fwy8CAg--.51675S4
-X-Coremail-Antispam: 1UD129KBjvdXoWruFWUJF4xAw47Ww1rAr4Dtwb_yoWkuFX_Cr
-        1xXFn2gr1xWw1jyr1UCrW5ZrZFyF1kuFn5Cwsaq3yfGa17ArZ7CF4fuF4fJwsIk3W0vF4U
-        Kw4DWF93Ar4FqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb-kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc2xSY4AK
-        67AK6r4kMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG
-        6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbeT5PUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgcLBlZdtPihowAjsu
+        Wed, 19 Aug 2020 07:51:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53872 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728404AbgHSLvL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:51:11 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E29C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:51:11 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id g15so6803047plj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 04:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pantacor-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=i0tNVSZaTTSBSz1XMN9me4AeE1YySOZOXVNji2is7bI=;
+        b=KU2N9icZcino+gt7U3a/eLtnZKkt6AD9RvGBD4MmAH3rtUrB7er2x60jDj15eru501
+         n6OUx6p1tBA9eLbeZuReAAzUsCY1Lt/hyfK5uyf6FjzZNwyWQd4kf+pfQ2MM9WpeYuNi
+         0l+LF/A4LD1Nj6ac2Pl3HDcV3nweA93RqoQbo8g+vS9ThmMB3z6VxKmnngHpJ5k0Aqjy
+         8VKyXgJ1zkFtRPTjWNpaVaTdFypI6MzEC7bisjptgvH08my8JbmcoNvUW3rO/c3ZFpZu
+         CTT4FdA3cq10OH5awPwZwmYEJtN9pEymggM3p55bK0LDnrhO7oqtYKLOqBy/fTq+PDoA
+         37ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=i0tNVSZaTTSBSz1XMN9me4AeE1YySOZOXVNji2is7bI=;
+        b=ps04DIm671uXHQkQCucvCH934av65anB0FBhYme8EITz5OKrIOA8vvtc+sKMgJxDFE
+         iyk6jj8Mu0NRvbK8zoHPIHsQZvkf06Xn6fekAQxqaIqaOTX9YA2TzGMSCbImsUiqgyjh
+         AswPF8/mXJ++ZHBDm7gKvQktRuOiwviFPvsfI6AgnW/kIFtl5f4yx9XMYFgJAML3GIGx
+         oC/CQdVmjQ2OfDzAqd5iA1v+6CemYCf1LuUtf53FADGr2DEc0aKkWd1p2cOtrX3nd3J8
+         +Xe3qJRcbKVL1T3BUxV0KXuZ2VblpUftK8PHYO8d+NIYZSTYCxAxOPZGy0C4AVDT4/j5
+         OsXQ==
+X-Gm-Message-State: AOAM533P2AzikLEVYMG5sjKFIQkIMnkWZh0LbfectuUmskH8wLKPxqOC
+        kTIdyY8hhHVKlXJUT1D4MudGe+SyXXSs8TkF6KgA7tigZA0xPu/n
+X-Google-Smtp-Source: ABdhPJxJ4K74YGSKKGp+gwdCR/YE8Cu+mBb+YPcVIXoxbrpUVMvtqsoUb6E4GNlLZcIzX1sHI08a1QqXY6O+2ACB0tg=
+X-Received: by 2002:a17:90b:1295:: with SMTP id fw21mr3563857pjb.81.1597837870565;
+ Wed, 19 Aug 2020 04:51:10 -0700 (PDT)
+MIME-Version: 1.0
+From:   Pranay Srivastava <pranay.srivastava@pantacor.com>
+Date:   Wed, 19 Aug 2020 17:20:59 +0530
+Message-ID: <CABfyVHc=oQmZG9NuJgu1G92VQqsxkynE+S9DosQzh9r+9G1Jbg@mail.gmail.com>
+Subject: mountinfo contents changed when rootfs is ramfs
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When devm_clk_get() returns -EPROBE_DEFER, sdio_priv
-should be freed just like when wilc_cfg80211_init()
-fails.
+Hello,
 
-Fixes: 8692b047e86cf ("staging: wilc1000: look for rtc_clk clock")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- drivers/net/wireless/microchip/wilc1000/sdio.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I'm running a system where rootfs is ramfs. For kernel version 5.2.11
 
-diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
-index 3ece7b0b0392..351ff909ab1c 100644
---- a/drivers/net/wireless/microchip/wilc1000/sdio.c
-+++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
-@@ -149,9 +149,10 @@ static int wilc_sdio_probe(struct sdio_func *func,
- 	wilc->dev = &func->dev;
- 
- 	wilc->rtc_clk = devm_clk_get(&func->card->dev, "rtc");
--	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER)
-+	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER) {
-+		kfree(sdio_priv);
- 		return -EPROBE_DEFER;
--	else if (!IS_ERR(wilc->rtc_clk))
-+	} else if (!IS_ERR(wilc->rtc_clk))
- 		clk_prepare_enable(wilc->rtc_clk);
- 
- 	dev_info(&func->dev, "Driver Initializing success\n");
+# cat /proc/self/mountinfo
+0 0 0:1 / / rw - rootfs rootfs rw
+%<---snip>%
+
+while for kernel 5.4.58
+# cat /proc/self/mountinfo
+0 0 0:1 / / rw - rootfs none rw
+%<---snip>%
+
+The reason for the above difference is because for kernel 5.2.11 the
+parse_param for
+rootfs was set to legacy_parse_param which handled the "source" param
+instead of
+ignoring it.
+
+With kernel 5.4.58 this is set to ramfs_parse_param which ignores any
+parameters not
+recognized and also returns 0 instead of -ENOPARAM. This causes
+vfs_parse_fs_param
+to not set the file context  source(fc->source) which results in "none" from
+alloc_vfs_mount(fc->source ? : "none")
+
+The commit which introduced the above change was
+
+commit f32356261d44d580649a7abce1156d15d49cf20f
+Author: David Howells <dhowells@redhat.com>
+Date:   Mon Mar 25 16:38:31 2019 +0000
+
+    vfs: Convert ramfs, shmem, tmpfs, devtmpfs, rootfs to use the new mount API
+
+I'm not sure if this is a regression? But if it is, do we handle it like
+
+diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
+index ee179a81b3da..47a39baa0535 100644
+--- a/fs/ramfs/inode.c
++++ b/fs/ramfs/inode.c
+
+@@ -200,7 +200,7 @@ static int ramfs_parse_param(struct fs_context
+*fc, struct fs_parameter *param)
+                 * and as it is used as a !CONFIG_SHMEM simple substitute
+                 * for tmpfs, better continue to ignore other mount options.
+                 */
+-               if (opt == -ENOPARAM)
++               if (opt == -ENOPARAM && strcmp(param->key, "source"))
+                        opt = 0;
+                return opt;
+        }
+
+so that mountinfo gives the same information as for earlier kernels.
+
+Thanks!
 -- 
-2.17.1
-
+Regards,
+Pranay Srivastava
