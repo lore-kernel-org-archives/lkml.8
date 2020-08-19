@@ -5,82 +5,75 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBD0C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA8F020738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8591520738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 18:26:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE17SsbR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rvTJgXKb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgHSSZs (ORCPT
+        id S1726858AbgHSS0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 14:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58728 "EHLO
+        Wed, 19 Aug 2020 14:26:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbgHSSZp (ORCPT
+        with ESMTP id S1726817AbgHSSZ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 14:25:45 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F70C061757;
-        Wed, 19 Aug 2020 11:25:45 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id x24so19842704otp.3;
-        Wed, 19 Aug 2020 11:25:45 -0700 (PDT)
+        Wed, 19 Aug 2020 14:25:56 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E47D1C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:25:53 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id n128so18015027oif.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 11:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Uj2G5qDhsm+bapptHCJ7Bq0u40iHl5V2rOPjbm76rTA=;
-        b=hE17SsbRqQpRbkfOlDKQ7cHbfmXUCJ0VwlKiGbZoC2ttuB63xjWR6C00YVa12lip+H
-         5Asa0XO6gTnbfwrYxuWZ3ol5YiA0QBQdkUPdpJ5TwkCl00rK0Sio3v6UDQCfl3a3OZRC
-         nkVBzNoGfS+3q7RZy4Qep59FvFffEAvV1aMebFGXjGCN9CDSDpVmhHi3gE0WprXGlXir
-         9JMn9lLil/9r56iq7V1W7A/CLbZkGasag9MGOaS7kt0J4tv0m5RzyRMpUXKPa3uYenzy
-         7aHsknBx/m6nOLZBPz4cYKibvDOhl5BUwdrud2oKoxuv88+ERZIeymKB/LtV/hUoguCY
-         Qitw==
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc:content-transfer-encoding;
+        bh=2LFNBHgjYStPtiYjN5+A3oNUrC4aUB8RGtOJANH38co=;
+        b=rvTJgXKbEMuPzQir9P3piCVWE0IotVUVVRD5+jZ50NCpkJrEeLFOa807vkWTobANLH
+         Lg2bVVZn1njtsa0z4BnoghhtwkHpjMT/AOI+ulkRQumxYpLvkRoVF5NMl+JtwoYhEBAI
+         zJgdfkAfXeYlucA/fspB6ITFm5gX7KyhIO7J3U2fM/V1NF3uUDPMdQGP6cvaR07vaWi6
+         OEg3HUmP9Th9+YGRcuBtA/ASlbtAK+D40yvqlbL7lzsPLxgYVQ+lrztR4wIEBYF46wjS
+         nO+N23f1fgRoPlY6jZOdgMUrTRHQ2n4keGEpxGZjccK5vNsV7HMPYY0HBJoTZdd1giFh
+         yLfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Uj2G5qDhsm+bapptHCJ7Bq0u40iHl5V2rOPjbm76rTA=;
-        b=N/Uoss4WLC/vRYkwLdIJTZy8FdlWVEUsS1pOXCt45bhTEl0CQ2neJ7pFXsiSSIU9ry
-         KUJRLBCjZLhiJ8nDYF6n7OY+SR09jUqCvFJuvjAZLugZQJ2KTtZhZXam6pLvA0hWD1hf
-         hjdbalHrwEi+fhcTi0g6gXRpPJR1+N7Aihqo8F+lGkyR9g1+u7fdKhGyLpN8u3+v3+AJ
-         fQayyHsetHgSPuwRqgzgEFpK7naGy6KUsAm1e7Zkqy0BNu2FplEMWyFQvC/2obKnZUh7
-         1bxcXhEbXhj93vnr4H77TcPRZCQqSy7CM8Ds4IchsmDas6wSOJ4T4oMMN6NK3HdMeCTp
-         Yj3w==
-X-Gm-Message-State: AOAM531GTGzzKhOzYS416T1AMdheOC1PWVdmCs4DGGKgY0iV9D6yxPGM
-        aPR0bRp6/7bM1WVgzFATRoEuEVU2X4OjSah1lOs=
-X-Google-Smtp-Source: ABdhPJwJR8sF/ZcOD7xlXzSk86ZIVJ765re8VslROHCqbVK/phzo2qOwJwntqdZES6IBnWgK5FawZmDnJIMv7glO6L8=
-X-Received: by 2002:a9d:24e7:: with SMTP id z94mr19379061ota.91.1597861544816;
- Wed, 19 Aug 2020 11:25:44 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc:content-transfer-encoding;
+        bh=2LFNBHgjYStPtiYjN5+A3oNUrC4aUB8RGtOJANH38co=;
+        b=V0AymrJJ/Y86ARimFpzkSCNldReHWnQTNM/vdc7o6aEAIGC6blvQXJQVUeZO/KMdPR
+         FG6XVLabvP0RwyHLLV3YKcEY02t7YytmJ8CyQP/sVU3SaLzBrOdfKKn9mwlIOAc4vbxZ
+         NZmFKZ/G4UTlRd8DLB0IZp150Cy5PoQ91lkggVcLFhh0dCZA2lXXqkVlOhnjGG06p3rZ
+         3YlxzOLfhmShoCzlAeILgtpT4HQUS44qB6bJ75ufGy/fhkOB4kNuxxnN6vUPr/RGKiGk
+         PQp/XYjgMX1ZAHYd/4W/CaN19i/WK96XJldMqIuNMVIitlrsRXTtQK3gFPk0s+q2jjh5
+         zUvg==
+X-Gm-Message-State: AOAM530pkuTgkGXu1FgNmmPApAQFiBMgcxeJV9xRBVK/LTcLmc9WK8Cu
+        FkvOIXVpO57rXUATZs/bNYgE6SBHzdrN54zNdGg=
+X-Google-Smtp-Source: ABdhPJzkOnOxhKBPJWXgNq8IPr7MZLDmfWIzBSnr8Gb+5otoBmfI9a0Fjq2i6tdrgH4v4kQRdq6yr5f+XdNFXPGmbC4=
+X-Received: by 2002:aca:724f:: with SMTP id p76mr4037574oic.35.1597861552495;
+ Wed, 19 Aug 2020 11:25:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200813084129.332730-1-josephsih@chromium.org>
- <20200813164059.v1.2.I03247d3813c6dcbcdbeab26d068f9fd765edb1f5@changeid>
- <CABBYNZJ-nBXeujF2WkMEPYPQhXAphqKCV39gr-QYFdTC3GvjXg@mail.gmail.com>
- <20200819143716.iimo4l3uul7lrpjn@pali> <CABBYNZJVDk6LWqyY7h8=KwpA4Oub+aCb3WEWnxk_AGWPvgmatg@mail.gmail.com>
- <20200819182306.wvyht6ocyqpo75tp@pali>
-In-Reply-To: <20200819182306.wvyht6ocyqpo75tp@pali>
-From:   Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date:   Wed, 19 Aug 2020 11:25:34 -0700
-Message-ID: <CABBYNZ+F=-YsZoL4B9=XQvHSs9wU=0W3iqbYn4s65JMAJAmAKw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] Bluetooth: sco: expose WBS packet length in socket option
-To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     Joseph Hwang <josephsih@chromium.org>,
-        "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Joseph Hwang <josephsih@google.com>,
-        ChromeOS Bluetooth Upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Alain Michaud <alainm@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+References: <20200810155943.2583275-1-daniel.diaz@linaro.org> <20200819173225.3821449-1-daniel.diaz@linaro.org>
+In-Reply-To: <20200819173225.3821449-1-daniel.diaz@linaro.org>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Wed, 19 Aug 2020 20:25:40 +0200
+Message-ID: <CA+icZUUNCmAY1P_bdUMUmGFZPztTTE_G4j-Q+9zHmU-i422rEA@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
+To:     =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        =?UTF-8?Q?Diego_Elio_Petten=C3=B2?= <flameeyes@flameeyes.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -88,120 +81,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:23 AM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+On Wed, Aug 19, 2020 at 7:32 PM Daniel D=C3=ADaz <daniel.diaz@linaro.org> w=
+rote:
 >
-> On Wednesday 19 August 2020 11:21:00 Luiz Augusto von Dentz wrote:
-> > Hi Pali,
-> >
-> > On Wed, Aug 19, 2020 at 7:37 AM Pali Roh=C3=A1r <pali@kernel.org> wrote=
-:
-> > >
-> > > On Friday 14 August 2020 12:56:05 Luiz Augusto von Dentz wrote:
-> > > > Hi Joseph,
-> > > >
-> > > > On Thu, Aug 13, 2020 at 1:42 AM Joseph Hwang <josephsih@chromium.or=
-g> wrote:
-> > > > >
-> > > > > It is desirable to expose the wideband speech packet length via
-> > > > > a socket option to the user space so that the user space can set
-> > > > > the value correctly in configuring the sco connection.
-> > > > >
-> > > > > Reviewed-by: Alain Michaud <alainm@chromium.org>
-> > > > > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-> > > > > Signed-off-by: Joseph Hwang <josephsih@chromium.org>
-> > > > > ---
-> > > > >
-> > > > >  include/net/bluetooth/bluetooth.h | 2 ++
-> > > > >  net/bluetooth/sco.c               | 8 ++++++++
-> > > > >  2 files changed, 10 insertions(+)
-> > > > >
-> > > > > diff --git a/include/net/bluetooth/bluetooth.h b/include/net/blue=
-tooth/bluetooth.h
-> > > > > index 9125effbf4483d..922cc03143def4 100644
-> > > > > --- a/include/net/bluetooth/bluetooth.h
-> > > > > +++ b/include/net/bluetooth/bluetooth.h
-> > > > > @@ -153,6 +153,8 @@ struct bt_voice {
-> > > > >
-> > > > >  #define BT_SCM_PKT_STATUS      0x03
-> > > > >
-> > > > > +#define BT_SCO_PKT_LEN         17
-> > > > > +
-> > > > >  __printf(1, 2)
-> > > > >  void bt_info(const char *fmt, ...);
-> > > > >  __printf(1, 2)
-> > > > > diff --git a/net/bluetooth/sco.c b/net/bluetooth/sco.c
-> > > > > index dcf7f96ff417e6..97e4e7c7b8cf62 100644
-> > > > > --- a/net/bluetooth/sco.c
-> > > > > +++ b/net/bluetooth/sco.c
-> > > > > @@ -67,6 +67,7 @@ struct sco_pinfo {
-> > > > >         __u32           flags;
-> > > > >         __u16           setting;
-> > > > >         __u8            cmsg_mask;
-> > > > > +       __u32           pkt_len;
-> > > > >         struct sco_conn *conn;
-> > > > >  };
-> > > > >
-> > > > > @@ -267,6 +268,8 @@ static int sco_connect(struct sock *sk)
-> > > > >                 sco_sock_set_timer(sk, sk->sk_sndtimeo);
-> > > > >         }
-> > > > >
-> > > > > +       sco_pi(sk)->pkt_len =3D hdev->sco_pkt_len;
-> > > > > +
-> > > > >  done:
-> > > > >         hci_dev_unlock(hdev);
-> > > > >         hci_dev_put(hdev);
-> > > > > @@ -1001,6 +1004,11 @@ static int sco_sock_getsockopt(struct sock=
-et *sock, int level, int optname,
-> > > > >                         err =3D -EFAULT;
-> > > > >                 break;
-> > > > >
-> > > > > +       case BT_SCO_PKT_LEN:
-> > > > > +               if (put_user(sco_pi(sk)->pkt_len, (u32 __user *)o=
-ptval))
-> > > > > +                       err =3D -EFAULT;
-> > > > > +               break;
-> > > >
-> > > > Couldn't we expose this via BT_SNDMTU/BT_RCVMTU?
-> > >
-> > > Hello!
-> > >
-> > > There is already SCO_OPTIONS sock option, uses struct sco_options and
-> > > contains 'mtu' member.
-> > >
-> > > I think that instead of adding new sock option, existing SCO_OPTIONS
-> > > option should be used.
-> >
-> > We are moving away from type specific options to so options like
-> > BT_SNDMTU/BT_RCVMTU should be supported in all socket types.
+> A recent refresh of the defconfigs got rid of the following
+> (unset) config:
 >
-> Yes, this make sense.
+>   # CONFIG_64BIT is not set
 >
-> But I guess that SCO_OPTIONS should be provided for backward
-> compatibility as it is already used by lot of userspace applications.
+> Innocuous as it seems, when the config file is saved again the
+> behavior is changed so that CONFIG_64BIT=3Dy.
 >
-> So for me it looks like that BT_SNDMTU/BT_RCVMTU should return same
-> value as SCO_OPTIONS.
+> Currently,
+>
+>   $ make i386_defconfig
+>   $ grep CONFIG_64BIT .config
+>   CONFIG_64BIT=3Dy
+>
+> whereas previously (and with this patch):
+>
+>   $ make i386_defconfig
+>   $ grep CONFIG_64BIT .config
+>   # CONFIG_64BIT is not set
+>
+> This was found with weird compiler errors on OpenEmbedded
+> builds, as the compiler was unable to cope with 64-bits data
+> types:
+>
+>   NOTE: make -j1 bzImage CC=3Di686-linaro-linux-gcc  -fuse-ld=3Dbfd -fdeb=
+ug-prefix-map=3D/oe/build/tmp/work/intel_core2_32-linaro-linux/linux-generi=
+c-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0=3D/usr/src/debug/linux-generic-main=
+line/5.8+gitAUTOINC+1d0e12fd3a-r0 -fdebug-prefix-map=3D/oe/build/tmp/work/i=
+ntel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a=
+-r0/recipe-sysroot=3D -fdebug-prefix-map=3D/oe/build/tmp/work/intel_core2_3=
+2-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd3a-r0/recipe-s=
+ysroot-native=3D  -fdebug-prefix-map=3D/oe/build/tmp/work-shared/intel-core=
+2-32/kernel-source=3D/usr/src/kernel -ffile-prefix-map=3D/oe/build/tmp/work=
+/intel_core2_32-linaro-linux/linux-generic-mainline/5.8+gitAUTOINC+1d0e12fd=
+3a-r0/git=3D/kernel-source/  LD=3Di686-linaro-linux-ld.bfd
+>     GEN     Makefile
+>     CC      scripts/mod/empty.o
+>   cc1: error: code model 'kernel' not supported in the 32 bit mode
+>   cc1: sorry, unimplemented: 64-bit mode not compiled in
+>   /oe/build/tmp/work-shared/intel-core2-32/kernel-source/scripts/Makefile=
+.build:280: recipe for target 'scripts/mod/empty.o' failed
+>   make[2]: *** [scripts/mod/empty.o] Error 1
+>   /oe/build/tmp/work-shared/intel-core2-32/kernel-source/Makefile:1174: r=
+ecipe for target 'prepare0' failed
+>   make[1]: *** [prepare0] Error 2
+>   /oe/build/tmp/work-shared/intel-core2-32/kernel-source/Makefile:185: re=
+cipe for target '__sub-make' failed
+>   make: *** [__sub-make] Error 2
+>
+> Fixes: 1d0e12fd3a84 ("x86/defconfigs: Refresh defconfig files")
+>
+> Signed-off-by: Daniel D=C3=ADaz <daniel.diaz@linaro.org>
 
-Yep, luckily we can do this here because SCO MTU is symmetric.
+Thanks for v2 of your patch.
 
-> > >
-> > > > >         default:
-> > > > >                 err =3D -ENOPROTOOPT;
-> > > > >                 break;
-> > > > > --
-> > > > > 2.28.0.236.gb10cc79966-goog
-> > > > >
-> > > >
-> > > >
-> > > > --
-> > > > Luiz Augusto von Dentz
-> >
-> >
-> >
-> > --
-> > Luiz Augusto von Dentz
+Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
 
+- Sedat -
 
-
---=20
-Luiz Augusto von Dentz
+> ---
+> v1 -> v2: Clarify subject
+>
+>  arch/x86/configs/i386_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/x86/configs/i386_defconfig b/arch/x86/configs/i386_defc=
+onfig
+> index d7577fece9eb..4cfdf5755ab5 100644
+> --- a/arch/x86/configs/i386_defconfig
+> +++ b/arch/x86/configs/i386_defconfig
+> @@ -19,6 +19,7 @@ CONFIG_CGROUP_CPUACCT=3Dy
+>  CONFIG_BLK_DEV_INITRD=3Dy
+>  # CONFIG_COMPAT_BRK is not set
+>  CONFIG_PROFILING=3Dy
+> +# CONFIG_64BIT is not set
+>  CONFIG_SMP=3Dy
+>  CONFIG_X86_GENERIC=3Dy
+>  CONFIG_HPET_TIMER=3Dy
+> --
+> 2.25.1
+>
