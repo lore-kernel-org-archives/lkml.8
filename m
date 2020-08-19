@@ -2,126 +2,95 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F15C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AACC433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACF3020866
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:55:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="E8O4Wcn4"
+	by mail.kernel.org (Postfix) with ESMTP id 3E891207BB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 04:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbgHSEzt (ORCPT
+        id S1726435AbgHSE6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 00:55:49 -0400
-Received: from mail-eopbgr80041.outbound.protection.outlook.com ([40.107.8.41]:22144
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725803AbgHSEzr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 00:55:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y5nRyBlxN9S/yFurX+CgB+topYJ2Bnr8eiCM+89NS3PUcXzWIRcTqsZ872Q24vaV0c1A2Sa2PgF4EblZjRAZjDtlR0/oRkgiKyjPhmxvnBB7DDpOMGloAk8PG65XueQBEBcllUvOxuHw7GbfZIlgSL3rnOJTEm9RvSRca45PfKKAAk613UJAsyYgDlZuCbMVsw7rb/6Rvz41ihtFnmgFW+bPBmmn86gP8KO+ZLxdLIwvOZqaP3vwbzABsuca4klwLr4E7YsHcmmfVRKCpUy9CUYDufnhj0I+N0+4/T9G9sYqdKuGL8LMpmyh1srUwG+zP2bUmoHHlMbeJGJNdk6Txw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XCwLR3QbJCGeSdsx3ZAFKPY7OzU/bj9jOXxGVYHPRb0=;
- b=jrPbRcOSsddaPloTEDSgUw7im0klWKHHgfzorH2dAKWEAGu2BJ+FFCk1Gpx7ZYmQOCsO8CejiNa+vRAjDPXTIWV5maYxzAjI+VWzABGQimX3ai59qsJOlnST0FlEZ1WqnVs6dZJNuyY42L25yZ2m/7J8pPnOtC7dnb8BvvVId5VVvIlhazYs2XH2ZLiwjkdmvF5Ok1/sVbfKlpgPTQYEb1nO2qBKcuBxBQmtuAq7Vo4OleeWNmxrj8eTwj2rSw0ryBQhEBQAGy83wSt9GC30B49l1HjpiA5JDc7wQ7kx148Ea2HVo27jYfGiB4IL/Vy7o+tkqGHKJFwVH2a378J+AA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XCwLR3QbJCGeSdsx3ZAFKPY7OzU/bj9jOXxGVYHPRb0=;
- b=E8O4Wcn4y0uRnsN0kzvxluO3x0Q3Gr+cWdmTG3lSj/1g+2nHl0lj/8PBlY2+thXwu4hS+5D1QEFdlQ0NxPunH2c26IZkEdFAzZzR2Pm22NS1xqDylIyl+8jkdIksqdjImgsnoo4eURNEsZdmWaSXsHCnUCbO88gN19aX3GptxDg=
-Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com (2603:10a6:7:85::27)
- by HE1PR0401MB2458.eurprd04.prod.outlook.com (2603:10a6:3:7f::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.23; Wed, 19 Aug
- 2020 04:55:43 +0000
-Received: from HE1PR0402MB3371.eurprd04.prod.outlook.com
- ([fe80::525:4554:3b4f:321d]) by HE1PR0402MB3371.eurprd04.prod.outlook.com
- ([fe80::525:4554:3b4f:321d%2]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 04:55:43 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        PCI <linux-pci@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Subject: RE: [PATCHv2] PCI: designware-ep: Fix the Header Type check
-Thread-Topic: [PATCHv2] PCI: designware-ep: Fix the Header Type check
-Thread-Index: AQHWdULdmUdKZ3Yx7k+9v6T/XTG8U6k94vIAgAD8TNA=
-Date:   Wed, 19 Aug 2020 04:55:43 +0000
-Message-ID: <HE1PR0402MB3371820E90A64B8B83D2CBA9845D0@HE1PR0402MB3371.eurprd04.prod.outlook.com>
-References: <20200818092746.24366-1-Zhiqiang.Hou@nxp.com>
- <CAL_Jsq+TG7JD2oWGmOSJqqBQihbHr0C12cteH5EtSRLCj63Nhw@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+TG7JD2oWGmOSJqqBQihbHr0C12cteH5EtSRLCj63Nhw@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c36c21a5-a274-41da-e9e3-08d843fc2109
-x-ms-traffictypediagnostic: HE1PR0401MB2458:
-x-microsoft-antispam-prvs: <HE1PR0401MB2458D53F7BEE31B422BAED61845D0@HE1PR0401MB2458.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3173;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rsODqUFMLNmNzx4mGDwYaYwsUNdPT41LyQ7q0t3JbcdBOSiVncCSDNh5VjJFvZhZS6qszxd2E7m7p+bWmjNaiUyN6WckVaPO+9oFXh/kqrFpOS3bNnjqNbTxSsEQtdmmqI738/LwdOElS3WLnJVY1VbhmPobYmQcFRaHUovUHpMu+FnxeuJkF0bf3qRQQUCxlbZx7A37wSH74TOWF/w89IRQ8f6WF/NIt5B0LARUdSDL4niaApLq7Y4xlfWg4yGD79k9HzcfRZaqsLBI+ZO/xwA6Xt2qCmBik4I+Xjb6m5eVgTZF38NOqV4I6CTcdmrJmr07Stk3bzUGqEX1gpMaJQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0402MB3371.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(4326008)(186003)(83380400001)(53546011)(2906002)(8676002)(52536014)(5660300002)(7696005)(6506007)(54906003)(316002)(33656002)(8936002)(26005)(6916009)(66556008)(71200400001)(66476007)(66446008)(66946007)(76116006)(64756008)(4744005)(478600001)(9686003)(86362001)(55016002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: XHMp2ExyZEWRaAEW6G6A1bYXLX1s2U1Ns/FXYqhpjVDt7FKk5ATYIZXYj0i1rZArsDUuD8YgPaanqnsGHzLX826RxXsFCx+8ro7Tos+X+sK4jGmAvFVzvmiIDqeSo2aogLP3bki9aBw4x33UAu8GVdUSr102i1UibzemopiVXIFwoAs4ANE7CE22gSiSKwijRibfqqV09r/VcTeIvuodc6H2R+Te9wjNd+Kpz1VTUiNGdx0JvG+8saOvBb2PbSFHxMDK30Q1s386B4Cb0QswcH2hFPTFz7geQqA3cAoxFPRIoHdaWEa5wVGr4R2+zPYefSVXanPzZKPaBlWK7LT/QAYwJBOw4XG3RghmRNwns7yLQH0rxVsdyw9idSxqTrEB+w01lT8oa506oamSKZHibLPMFe8EQQaXs6mpt5OMuCtJLsH6mCLwqR9wrmCfrlnpbaw5pGJF/5SFMudiGtK/SkB3TE8mUOOh7RfXjutRGi2x2I/KI1C0/G65mvEKV8fW20No+R9D1QyMp7DBaXjMiyW+4vj3Cjrjkh1jPqRqKScBrT3DBVpO6XIqy2Bjhw7KG11GXJASSJg5g5Y2sN8Mp2CwjMwMKyOUYc7tLwgcosyxoiR7r7Prn0wfkyof+y3QcIxk10HahaOR9VY2sjI3hA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 19 Aug 2020 00:58:52 -0400
+Received: from muru.com ([72.249.23.125]:40838 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725280AbgHSE6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 00:58:50 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 2718F810D;
+        Wed, 19 Aug 2020 04:58:46 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 07:59:14 +0300
+From:   Tony Lindgren <tony@atomide.com>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-omap@vger.kernel.org, aford@beaconembedded.com,
+        Russell King <linux@armlinux.org.uk>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Keerthy <j-keerthy@ti.com>, Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amitk@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] thermal: ti-soc-thermal: Enable addition power
+ management
+Message-ID: <20200819045914.GS2994@atomide.com>
+References: <20200818154633.5421-1-aford173@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0402MB3371.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c36c21a5-a274-41da-e9e3-08d843fc2109
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 04:55:43.6754
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Zb6+H5r116Sp2ulB/5CSs9m1Gv3SiY7W7XFXyM/GPlnOjfNNe1lbtbgsY5LmczP4RNmwhMtA5WYJSlGIXCHBEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0401MB2458
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818154633.5421-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgYSBsb3QgZm9yIHlvdXIgcmV2aWV3IQ0KDQpSZWdhcmRzLA0KWmhp
-cWlhbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPg0KPiBTZW50OiAyMDIw5bm0OOaciDE45pelIDIxOjUyDQo+IFRv
-OiBaLnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1rZXJuZWxAdmdl
-ci5rZXJuZWwub3JnOyBQQ0kgPGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc+OyBMb3JlbnpvDQo+
-IFBpZXJhbGlzaSA8bG9yZW56by5waWVyYWxpc2lAYXJtLmNvbT47IEJqb3JuIEhlbGdhYXMNCj4g
-PGJoZWxnYWFzQGdvb2dsZS5jb20+OyBBbmRyZXcgTXVycmF5DQo+IDxhbXVycmF5QHRoZWdvb2Rw
-ZW5ndWluLmNvLnVrPjsgSmluZ29vIEhhbiA8amluZ29vaGFuMUBnbWFpbC5jb20+Ow0KPiBHdXN0
-YXZvIFBpbWVudGVsIDxndXN0YXZvLnBpbWVudGVsQHN5bm9wc3lzLmNvbT4NCj4gU3ViamVjdDog
-UmU6IFtQQVRDSHYyXSBQQ0k6IGRlc2lnbndhcmUtZXA6IEZpeCB0aGUgSGVhZGVyIFR5cGUgY2hl
-Y2sNCj4gDQo+IE9uIFR1ZSwgQXVnIDE4LCAyMDIwIGF0IDM6MzUgQU0gWmhpcWlhbmcgSG91IDxa
-aGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gd3JvdGU6DQo+ID4NCj4gPiBGcm9tOiBIb3UgWmhpcWlh
-bmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+DQo+ID4gVGhlIGN1cnJlbnQgY2hlY2sgd2ls
-bCByZXN1bHQgaW4gdGhlIG11bHRpcGxlIGZ1bmN0aW9uIGRldmljZSBmYWlscyB0bw0KPiA+IGlu
-aXRpYWxpemUuIFNvIGZpeCB0aGUgY2hlY2sgYnkgbWFza2luZyBvdXQgdGhlIG11bHRpcGxlIGZ1
-bmN0aW9uIGJpdC4NCj4gPg0KPiA+IEZpeGVzOiAwYjI0MTM0Zjc4ODggKCJQQ0k6IGR3YzogQWRk
-IHZhbGlkYXRpb24gdGhhdCBQQ0llIGNvcmUgaXMgc2V0DQo+ID4gdG8gY29ycmVjdCBtb2RlIikN
-Cj4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0K
-PiA+IC0tLQ0KPiA+IFYyOg0KPiA+ICAtIEFkZCBtYXJjbyBQQ0lfSEVBREVSX1RZUEVfTUFTSyBh
-bmQgcHJpbnQgdGhlIG1hc2tlZCB2YWx1ZS4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250cm9s
-bGVyL2R3Yy9wY2llLWRlc2lnbndhcmUtZXAuYyB8IDMgKystDQo+ID4gIGluY2x1ZGUvdWFwaS9s
-aW51eC9wY2lfcmVncy5oICAgICAgICAgICAgICAgICAgIHwgMSArDQo+ID4gIDIgZmlsZXMgY2hh
-bmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiBSZXZpZXdlZC1ieTog
-Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCg==
+* Adam Ford <aford173@gmail.com> [200818 15:46]:
+> @@ -1153,6 +1166,38 @@ static int ti_bandgap_suspend(struct device *dev)
+>  	return err;
+>  }
+>  
+> +static int bandgap_omap_cpu_notifier(struct notifier_block *nb,
+> +				  unsigned long cmd, void *v)
+> +{
+> +	struct ti_bandgap *bgp;
+> +
+> +	bgp = container_of(nb, struct ti_bandgap, nb);
+> +
+> +	spin_lock(&bgp->lock);
+> +	switch (cmd) {
+> +	case CPU_CLUSTER_PM_ENTER:
+> +		if (bgp->is_suspended)
+> +			break;
+> +		ti_bandgap_save_ctxt(bgp);
+> +		ti_bandgap_power(bgp, false);
+> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> +			clk_disable(bgp->fclock);
+> +		break;
+> +	case CPU_CLUSTER_PM_ENTER_FAILED:
+> +	case CPU_CLUSTER_PM_EXIT:
+> +		if (bgp->is_suspended)
+> +			break;
+> +		if (TI_BANDGAP_HAS(bgp, CLK_CTRL))
+> +			clk_enable(bgp->fclock);
+> +		ti_bandgap_power(bgp, true);
+> +		ti_bandgap_restore_ctxt(bgp);
+> +		break;
+> +	}
+> +	spin_unlock(&bgp->lock);
+> +
+> +	return NOTIFY_OK;
+> +}
+
+Hmm to me it looks like is_suspended is not used right now?
+I guess you want to set it in ti_bandgap_suspend() and clear
+it in ti_bandgap_resume()?
+
+Otherwise looks good to me, I can't test the power consumption
+right now though so you may want to check it to make sure
+device still hits off mode during idle.
+
+Regards,
+
+Tony
