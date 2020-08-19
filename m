@@ -2,101 +2,94 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E481C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D1D2063A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:21:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YaevMVCP"
+	by mail.kernel.org (Postfix) with ESMTP id 849022063A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 21:22:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbgHSVVz (ORCPT
+        id S1727831AbgHSVWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 17:21:55 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:37058 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726617AbgHSVVx (ORCPT
+        Wed, 19 Aug 2020 17:22:15 -0400
+Received: from smtprelay0184.hostedemail.com ([216.40.44.184]:51706 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726617AbgHSVWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 17:21:53 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07JLLl48060542;
-        Wed, 19 Aug 2020 16:21:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597872107;
-        bh=/+Tm+6kFguoE4AbqqrMbP10cUaIjmqI1jlWKYkTK0Kw=;
-        h=Subject:From:To:References:Date:In-Reply-To;
-        b=YaevMVCPmnTnxP4vlbBk7fCwqnzZuFnDubTpw/Tq0317sXCcXaRjQbwd/XxlXm+lM
-         06HD0tDc8F3TD+YXdDnQyc5/qnnQJytLOT7/O8luoJpvdxhrKL3AWrEt1S9RVnqgb/
-         J8TImc9gky92tjefjq/VDqwQFwqY9/InimcV0gSA=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07JLLlud064031
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Aug 2020 16:21:47 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 19
- Aug 2020 16:21:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Wed, 19 Aug 2020 16:21:47 -0500
-Received: from [10.250.53.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07JLLk8k030523;
-        Wed, 19 Aug 2020 16:21:46 -0500
-Subject: Re: [PATCH iproute2 v5 0/2] iplink: hsr: add support for creating PRP
- device
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <nsekhar@ti.com>, <vinicius.gomes@intel.com>,
-        <stephen@networkplumber.org>
-References: <20200817211737.576-1-m-karicheri2@ti.com>
-Message-ID: <44143c5d-ba93-363f-ca74-f9d7833c403f@ti.com>
-Date:   Wed, 19 Aug 2020 17:21:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Wed, 19 Aug 2020 17:22:13 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id A7FFD2465;
+        Wed, 19 Aug 2020 21:22:12 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: scene64_34169932702b
+X-Filterd-Recvd-Size: 2308
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 19 Aug 2020 21:22:11 +0000 (UTC)
+Message-ID: <3bf27caf462007dfa75647b040ab3191374a59de.camel@perches.com>
+Subject: [PATCH] checkpatch: Add test for comma use that should be semicolon
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andy Whitcroft <apw@shadowen.org>
+Date:   Wed, 19 Aug 2020 14:22:10 -0700
+In-Reply-To: <20200818184107.f8af232fb58b17160c570874@linux-foundation.org>
+References: <20200818184107.f8af232fb58b17160c570874@linux-foundation.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <20200817211737.576-1-m-karicheri2@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Stephen,
+There are commas used as statement terminations that should typically
+have used semicolons instead.  Only direct assignments or use of a single
+function or value on a single line are detected by this test.
 
-On 8/17/20 5:17 PM, Murali Karicheri wrote:
-> This series enhances the iproute2 iplink module to add support
-> for creating PRP device similar to HSR. The kernel part of this
-> is already merged to v5.9 master
-> 
-> v5 - addressed comment from Stephen Hemminger
->     - Sending this with a iproute2 prefix so that this can
->       be merged to v5.9 iprout2 if possible.
-> v3 of the series is rebased to iproute2-next/master at
-> git://git.kernel.org/pub/scm/network/iproute2/iproute2-next
-> and send as v4.
-> 
-> Please apply this if looks good.
-> 
-> 
-> Murali Karicheri (2):
->    iplink: hsr: add support for creating PRP device similar to HSR
->    ip: iplink: prp: update man page for new parameter
-> 
->   ip/iplink_hsr.c       | 17 +++++++++++++++--
->   man/man8/ip-link.8.in |  9 ++++++++-
->   2 files changed, 23 insertions(+), 3 deletions(-)
-> 
-Can we merge this version please?
--- 
-Murali Karicheri
-Texas Instruments
+e.g.:
+	foo = bar(),		/* typical use is semicolon not comma */
+	bar = baz();
+
+Add an imperfect test to detect these comma uses.
+
+No false positives were found in testing, but many types of false negatives
+are possible.
+
+e.g.:
+	foo = bar() + 1,	/* comma use, but not direct assignment */
+	bar = baz();
+
+Signed-off-by: Joe Perches <joe@perches.com
+---
+ scripts/checkpatch.pl | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl= 
+index 60d4a79674b6..93b99809df07 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -4936,6 +4936,17 @@ sub process {
+ 			}
+ 		}
+ 
++# check if a statement with a comma should be two statements like:
++#	foo = bar(),	/* comma should be semicolon */
++#	bar = baz();
++		if (defined($stat) &&
++		    $stat =~ /^\+\s*(?:$Lval\s*$Assignment\s*)?$FuncArg\s*,\s*(?:$Lval\s*$Assignment\s*)?$FuncArg\s*;\s*$/) {
++			my $cnt = statement_rawlines($stat);
++			my $herectx = get_stat_here($linenr, $cnt, $here);
++			WARN("SUSPECT_COMMA_SEMICOLON",
++			     "Possible comma where semicolon could be used\n" . $herectx);
++		}
++
+ # return is not a function
+ 		if (defined($stat) && $stat =~ /^.\s*return(\s*)\(/s) {
+ 			my $spacing = $1;
+
