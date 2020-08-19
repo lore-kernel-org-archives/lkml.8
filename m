@@ -2,143 +2,287 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEDFC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67466C433E3
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA0F32224D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V04Czjw7"
+	by mail.kernel.org (Postfix) with ESMTP id 42B6722BED
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 11:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597837602;
+	bh=DCWLKCwZjS1SXuA6hU5j6msFXhg+lD/MJEczJod+cDk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QtDMDy1rDmRPSXY2/Cph1beFXH25/DigIrrRv5AYM811YT6ugdIFhJo3fbR4EHAB+
+	 NU7YOBZ+cTQKi/X/Cd3eXqxrPHewXkivgBDfbC9moCfutDz1pCQqIz4esnUg02AEq4
+	 U6kev8+R04I0vaeh7tUcWGDAU04KtPNim5UBFPpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgHSLq3 (ORCPT
+        id S1728107AbgHSLqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 07:46:29 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18018 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgHSLqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 07:46:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f3d10cd0000>; Wed, 19 Aug 2020 04:45:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Aug 2020 04:46:15 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Aug 2020 04:46:15 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Aug
- 2020 11:46:15 +0000
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.173)
- by HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 19 Aug 2020 11:46:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HfXi0EkJzCzDLzPTsaWNKjFnTtMi44eETwC6C+R/EjGpXqqQR+vu0qd0VzDiAv6CB9hnVoIdY9RCF6fRtNNGnJvaSsU0LJML5+WIJaCPZWOT2FV+VMAjLvJy3MMTXQkTKG6a/OTkBMQr0jBcqtpGHCqfg4CBj0yQRl9GJQthFNOOC0dsXTVJi7sTzb0QIXYJg8M5ZWKXiXszSqSMtWFeHMD+XSq6yZH00HyfWDod6fIPdGULeCBlk8j/2Si0VoLnyUiUq/TPxFAqe7SphtaQk0isX6i7rbFOUozBqXq1xC3AhNbRqC+76TzkF6o8gBmm8vcZJGl0Jwu1RsEJhx4Oeg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=b5FFuN4irdpCEDQzY7tCRMJD6inKu1lKLQQbsY3v9mU=;
- b=X6mFBNZzU93I7X5cfA+W9a3F/uydOjql+a5a5Zh6UdfRiLYclRWbsQfB2J9jtF36iigjz+GgCQr5nzmQezB1atggTD8bMuIbEE19FlYeGSUG5Uo4ckvfJqv68/yf3h8IToLZOzcPmrcWkBhUY2xG2GRC0AG9nWshG2T/r2k0peLTxgHnSpCHAaCLStx+EuJAV6r/QlSVxRjQZblmKthdLN1eAgEW3owrbArEF0NugtLwKnaH7ur4K7Vl6cNM8GlThABfbP1oA/Q2dBN7rQALRSKR/sw4DTgHQ8WqzH4+NunIwc0EG58JENnCH4AIxbjBjqNwCeOMHsx7vpD452hubQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM6PR12MB4356.namprd12.prod.outlook.com (2603:10b6:5:2aa::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.15; Wed, 19 Aug
- 2020 11:46:14 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3305.025; Wed, 19 Aug 2020
- 11:46:14 +0000
-Date:   Wed, 19 Aug 2020 08:46:12 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Doug Ledford <dledford@redhat.com>, <linux-rdma@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] RDMA/core: fix spelling mistake "Could't" -> "Couldn't"
-Message-ID: <20200819114612.GA2127968@nvidia.com>
-References: <20200810075824.46770-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200810075824.46770-1-colin.king@canonical.com>
-X-ClientProxiedBy: BL0PR03CA0027.namprd03.prod.outlook.com
- (2603:10b6:208:2d::40) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Wed, 19 Aug 2020 07:46:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728021AbgHSLqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 07:46:22 -0400
+Received: from mail.kernel.org (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3330F207BB;
+        Wed, 19 Aug 2020 11:46:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597837581;
+        bh=DCWLKCwZjS1SXuA6hU5j6msFXhg+lD/MJEczJod+cDk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0EiQ6RSR+sEmF7BqkCIlCaUb1aizT+O9Gb+BcU4EPPu4xHUnFm6pwc2fQHSYrzq9b
+         eN4QfqBFzlfjm/pILGrY3eOBnxElxjkzJEGSSPaKwkx1QcOUlrSD4NHW/RTVHcakCc
+         ksSrWj/Q3Rqa9Inz0MLWewNcDkyZTQhTggG3xo8c=
+Received: from mchehab by mail.kernel.org with local (Exim 4.94)
+        (envelope-from <mchehab@kernel.org>)
+        id 1k8MXr-00Eua4-7U; Wed, 19 Aug 2020 13:46:19 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 04/49] staging: hikey9xx/gpu: resolve the performance issue by interrupt mechanism
+Date:   Wed, 19 Aug 2020 13:45:32 +0200
+Message-Id: <44b04aeafc7ae414f2a4b51f46f6524ec6babd5e.1597833138.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BL0PR03CA0027.namprd03.prod.outlook.com (2603:10b6:208:2d::40) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16 via Frontend Transport; Wed, 19 Aug 2020 11:46:14 +0000
-Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1k8MXk-008vac-KI; Wed, 19 Aug 2020 08:46:12 -0300
-X-Originating-IP: [156.34.48.30]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 57bfcd5f-2c82-433d-379c-08d8443579cb
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4356:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB43562FB24BB69767B52E2B73C25D0@DM6PR12MB4356.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h7D2HeNFAovP0TDjwxXNA6Ubein1gSZXYro+9AfHZPnfazG4osndO2KPZjlUSC0mmirSy6CE9Vb6F5gp0jKtfKJoIyEci058rTreoo2CihUoZAF5bHo9QkRydycGMAaRl/+EkhcjptMMub0982AnDO2KfVDKziEOUkQ889raiV8mgFETpHIduqrclOavtFHvAiPpo0Je8+CEPhP353iXv3MNHSVioUASJh0oZTHVvVtdClpvSYRUjFoVfS7B53iv1O+nvPaX9qZJBQfwKU6J8ZXTHLsLQ8Z6xl3oj0C/iFf/jZEciNyX528/HVxvOk85LXu+8x65wVBeTSa8cOZimg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39860400002)(396003)(136003)(376002)(2616005)(8676002)(4744005)(1076003)(2906002)(186003)(66946007)(86362001)(66556008)(8936002)(66476007)(316002)(478600001)(26005)(36756003)(6916009)(33656002)(4326008)(9746002)(5660300002)(83380400001)(9786002)(426003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: WLDEz8pgK8IS+I4f5yg/dar6wPtQ44wcuHYV/VvLcoZPz2CKYXMFyiTjdtx6ez23Q9c9B49COstkPo53nBkXNE581w1/VZxUV0O5SGMgtwm48HHFhYig0BJj3njMknIBF5YkvVb2YcTMOmVACwYD4k0ZKpeofTcdem4ParyeTju3e8YxRDQ7K+dAnoXDp+2lwhlKgMCQDFpth/B48eXH2GcdmwDwwE4ArOrHzZFgrH54CYKcLV4ng/SK6AGQIbmtyvOKnFFPzprpEYgNZOD307Fu4nI1LXPzfJl0/2QXaPmeR8eU2X0Y7nXDBFJ6yg5TRLhpn52qVFa7dtd160CTA/LPta37PMV13E1ljVV8XiUr7ZgX3bVRtjpnAaAgYMscpB2wxTiHmY24TiTDql1AFCQfQ6ZOI+WbwcuCmQtHdT4bhGNHLIb19WUoJzs9nLTv1xq4Xx8Goqx60m+Fa1XJv55GdzQo6guxSzDGS5veoEdZ928k/kdgLykIKxd0cSBWGg0gRj9XwOfVcstUlX9OgBY5VdnpX3jNhiI9p4/oXpgcf7f/CRA8WGSXGcBsdJI/PiMdxcZ69OqR52rzdW8mBCaoB667bsEkGW297QEXEBso2DAPJRBK1SqSAXspMW5yrmS9REaWATzlnXPIYZBWDA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57bfcd5f-2c82-433d-379c-08d8443579cb
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2020 11:46:14.2430
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q/Y24Tkt3OZ1Ws5KWqeMKVKYCynnaxtUDw3IMTCdHAjAdOtPExJlwgLR6nMZeJC0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4356
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1597837517; bh=b5FFuN4irdpCEDQzY7tCRMJD6inKu1lKLQQbsY3v9mU=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
-         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
-         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=V04Czjw7Wwhfe+3Aas8TXqFKX+4KNg7rJOE6xVPkMvGqOI4HNubZN2IOlbzYtLsXp
-         E6ndW5Fkej51/CeztnW2v9XnQyPj7l9lfj/FYtIpL8SwndbZ/RNw69TqCzRRORSH3m
-         3fc2Q/40sleNd80+ccg7eVSORh9tuwUf77nUhYWowX/RShEOiLNuPh4EisHw34igmI
-         0y3pN89mDUlEOQWcuTHifFuCQ+cY3GqyefOrL1f4eKqMqx9DxJCnXooFEXOerpexQq
-         pHBO0HKwmf20CmYVrwvXwBEB5jdGNR3V5YSqxOqy7NI7ZlMuoxMNGtSkJEZuLSWSuN
-         2jAZx1U+I0t4g==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 08:58:24AM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a pr_warn message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/infiniband/core/device.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+From: Liwei Cai <cailiwei@hisilicon.com>
 
-Applied to for-next, thanks
+There is an error at wait for vactive end flags, waiting
+vactive flag in 1ms maybe too rough, but it's not good to
+control the waiting grain size, there is no way to get the
+waiting unit, so the interrupt mechanism is the best way to
+solve this problem.
 
-Jason
+Each frame would report hardware interrupt, implement the interrupt
+service to get vactive end interrupt, and fb_post return to tell
+gpu render next framebuffer.
+
+Signed-off-by: Wanchun Zheng <zhengwanchun@hisilicon.com>
+Signed-off-by: Liwei Cai <cailiwei@hisilicon.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h  |  4 +-
+ .../hikey9xx/gpu/kirin_drm_dpe_utils.c        |  3 +-
+ drivers/staging/hikey9xx/gpu/kirin_drm_dss.c  | 14 ++---
+ .../hikey9xx/gpu/kirin_drm_overlay_utils.c    | 56 ++++---------------
+ 4 files changed, 20 insertions(+), 57 deletions(-)
+
+diff --git a/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h b/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
+index 9fad9ef942bd..adaa71f6dcd5 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
++++ b/drivers/staging/hikey9xx/gpu/kirin_dpe_reg.h
+@@ -2948,8 +2948,8 @@ struct dss_hw_ctx {
+ 	bool power_on;
+ 	int irq;
+ 
+-	wait_queue_head_t vactive0_start_wq;
+-	u32 vactive0_start_flag;
++	wait_queue_head_t vactive0_end_wq;
++	u32 vactive0_end_flag;
+ 	ktime_t vsync_timestamp;
+ 	ktime_t vsync_timestamp_prev;
+ 
+diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_dpe_utils.c b/drivers/staging/hikey9xx/gpu/kirin_drm_dpe_utils.c
+index 2d6809b72b42..2a13bbd772b7 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin_drm_dpe_utils.c
++++ b/drivers/staging/hikey9xx/gpu/kirin_drm_dpe_utils.c
+@@ -554,8 +554,7 @@ void dpe_interrupt_unmask(struct dss_crtc *acrtc)
+ 	outp32(dss_base + GLB_CPU_PDP_INT_MSK, unmask);
+ 
+ 	unmask = ~0;
+-	unmask &= ~(BIT_VSYNC | BIT_VACTIVE0_START
+-		| BIT_VACTIVE0_END | BIT_FRM_END | BIT_LDI_UNFLOW);
++	unmask &= ~(BIT_VSYNC | BIT_VACTIVE0_END | BIT_LDI_UNFLOW);
+ 
+ 	outp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INT_MSK, unmask);
+ }
+diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c b/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
+index 62ac1a0648cc..64d0b1979bf5 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
++++ b/drivers/staging/hikey9xx/gpu/kirin_drm_dss.c
+@@ -167,8 +167,8 @@ static int dss_power_up(struct dss_crtc *acrtc)
+ 	dss_inner_clk_common_enable(acrtc);
+ 	dpe_interrupt_mask(acrtc);
+ 	dpe_interrupt_clear(acrtc);
+-	//dpe_irq_enable(acrtc);
+-	//dpe_interrupt_unmask(acrtc);
++	dpe_irq_enable(acrtc);
++	dpe_interrupt_unmask(acrtc);
+ 
+ 	ctx->power_on = true;
+ 	return 0;
+@@ -237,9 +237,9 @@ static irqreturn_t dss_irq_handler(int irq, void *data)
+ 	isr_s2 &= ~(inp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INT_MSK));
+ 	isr_s2_dpp &= ~(inp32(dss_base + DSS_DPP_OFFSET + DPP_INT_MSK));
+ 
+-	if (isr_s2 & BIT_VACTIVE0_START) {
+-		ctx->vactive0_start_flag++;
+-		wake_up_interruptible_all(&ctx->vactive0_start_wq);
++	if (isr_s2 & BIT_VACTIVE0_END) {
++		ctx->vactive0_end_flag++;
++		wake_up_interruptible_all(&ctx->vactive0_end_wq);
+ 	}
+ 
+ 	if (isr_s2 & BIT_VSYNC) {
+@@ -637,8 +637,8 @@ static int dss_drm_init(struct drm_device *dev)
+ 	ctx->screen_size = 0;
+ 	ctx->smem_start = 0;
+ 
+-	ctx->vactive0_start_flag = 0;
+-	init_waitqueue_head(&ctx->vactive0_start_wq);
++	ctx->vactive0_end_flag = 0;
++	init_waitqueue_head(&ctx->vactive0_end_wq);
+ 
+ 	/*
+ 	 * plane init
+diff --git a/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c b/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
+index 917e1a7d7bdf..28778b15512a 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
++++ b/drivers/staging/hikey9xx/gpu/kirin_drm_overlay_utils.c
+@@ -30,8 +30,6 @@
+ 
+ 
+ #define DSS_CHN_MAX_DEFINE (DSS_COPYBIT_MAX)
+-#define TIME_OUT  (16)
+-
+ static int mid_array[DSS_CHN_MAX_DEFINE] = {0xb, 0xa, 0x9, 0x8, 0x7, 0x6, 0x5, 0x4, 0x2, 0x1, 0x3, 0x0};
+ 
+ /*
+@@ -1065,49 +1063,17 @@ void hisi_dss_unflow_handler(struct dss_hw_ctx *ctx, bool unmask)
+ 	outp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INT_MSK, tmp);
+ }
+ 
+-void hisi_dss_wait_for_complete(struct dss_hw_ctx *ctx, bool need_clear)
+-{
+-	void __iomem *dss_base;
+-	u32 tmp = 0;
+-	u32 isr_s2 = 0;
+-
+-	if (!ctx) {
+-		DRM_ERROR("ctx is NULL!\n");
+-		return;
+-	}
+-
+-	dss_base = ctx->base;
+-
+-	do {
+-		isr_s2 = inp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INTS);
+-		if (isr_s2 & BIT_VACTIVE0_END) {
+-			DRM_DEBUG("hisi_dss_wait_for_complete exit! temp = %d\n", tmp);
+-			if (need_clear)
+-				outp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INTS, BIT_VACTIVE0_END);
+-			break;
+-		} else {
+-			msleep(1);
+-			tmp++;
+-		}
+-	} while (tmp < TIME_OUT);
+-
+-	if (tmp == TIME_OUT) {
+-		isr_s2 = inp32(dss_base + DSS_LDI0_OFFSET + LDI_CPU_ITF_INTS);
+-		DRM_INFO("wait vactive0_end timeout: isr_s2 = 0x%x\n", isr_s2);
+-	}
+-}
+-#if 0
+-static int hisi_vactive0_start_config(struct dss_hw_ctx *ctx)
++static int hisi_dss_wait_for_complete(struct dss_hw_ctx *ctx)
+ {
+ 	int ret = 0;
+ 	u32 times = 0;
+-	u32 prev_vactive0_start = 0;
++	u32 prev_vactive0_end = 0;
+ 
+-	prev_vactive0_start = ctx->vactive0_start_flag;
++	prev_vactive0_end = ctx->vactive0_end_flag;
+ 
+ REDO:
+-	ret = wait_event_interruptible_timeout(ctx->vactive0_start_wq,
+-		(prev_vactive0_start != ctx->vactive0_start_flag),
++	ret = wait_event_interruptible_timeout(ctx->vactive0_end_wq,
++		(prev_vactive0_end != ctx->vactive0_end_flag),
+ 		msecs_to_jiffies(300));
+ 	if (ret == -ERESTARTSYS) {
+ 		if (times < 50) {
+@@ -1118,7 +1084,7 @@ static int hisi_vactive0_start_config(struct dss_hw_ctx *ctx)
+ 	}
+ 
+ 	if (ret <= 0) {
+-		DRM_ERROR("wait_for vactive0_start_flag timeout! ret=%d.\n", ret);
++		DRM_ERROR("wait_for vactive0_end_flag timeout! ret=%d.\n", ret);
+ 
+ 		ret = -ETIMEDOUT;
+ 	} else {
+@@ -1127,7 +1093,6 @@ static int hisi_vactive0_start_config(struct dss_hw_ctx *ctx)
+ 
+ 	return ret;
+ }
+-#endif
+ 
+ void hisi_fb_pan_display(struct drm_plane *plane)
+ {
+@@ -1195,8 +1160,6 @@ void hisi_fb_pan_display(struct drm_plane *plane)
+ 	vbp = mode->vtotal - mode->vsync_end;
+ 	vsw = mode->vsync_end - mode->vsync_start;
+ 
+-	hisi_dss_wait_for_complete(ctx, true);
+-
+ 	hisi_dss_mctl_mutex_lock(ctx);
+ 	hisi_dss_aif_ch_config(ctx, chn_idx);
+ 	hisi_dss_mif_config(ctx, chn_idx, mmu_enable);
+@@ -1209,9 +1172,10 @@ void hisi_fb_pan_display(struct drm_plane *plane)
+ 	hisi_dss_mctl_ov_config(ctx, chn_idx);
+ 	hisi_dss_mctl_sys_config(ctx, chn_idx);
+ 	hisi_dss_mctl_mutex_unlock(ctx);
++	hisi_dss_unflow_handler(ctx, true);
+ 
+ 	enable_ldi(acrtc);
+-	hisi_dss_wait_for_complete(ctx, false);
++	hisi_dss_wait_for_complete(ctx);
+ }
+ 
+ void hisi_dss_online_play(struct drm_plane *plane, drm_dss_layer_t *layer)
+@@ -1257,7 +1221,6 @@ void hisi_dss_online_play(struct drm_plane *plane, drm_dss_layer_t *layer)
+ 	vfp = mode->vsync_start - mode->vdisplay;
+ 	vbp = mode->vtotal - mode->vsync_end;
+ 	vsw = mode->vsync_end - mode->vsync_start;
+-	hisi_dss_wait_for_complete(ctx, true);
+ 
+ 	hisi_dss_mctl_mutex_lock(ctx);
+ 	hisi_dss_aif_ch_config(ctx, chn_idx);
+@@ -1271,7 +1234,8 @@ void hisi_dss_online_play(struct drm_plane *plane, drm_dss_layer_t *layer)
+ 	hisi_dss_mctl_ov_config(ctx, chn_idx);
+ 	hisi_dss_mctl_sys_config(ctx, chn_idx);
+ 	hisi_dss_mctl_mutex_unlock(ctx);
++	hisi_dss_unflow_handler(ctx, true);
+ 
+ 	enable_ldi(acrtc);
+-	hisi_dss_wait_for_complete(ctx, false);
++	hisi_dss_wait_for_complete(ctx);
+ }
+-- 
+2.26.2
+
