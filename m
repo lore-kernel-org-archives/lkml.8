@@ -2,221 +2,116 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933E5207DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A11207DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="FXLM4z1m"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iqk00Hmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgHSH36 (ORCPT
+        id S1727990AbgHSH3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:29:58 -0400
-Received: from mga03.intel.com ([134.134.136.65]:25275 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727011AbgHSH3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:29:54 -0400
-IronPort-SDR: YLKm1efn5xwNBaPTBVAhf7RJDCA7sY1d8D84DmwvjW3UUm2U6Ao+dPVMA01xR8pWkLjD+5ot53
- zbw8eh2nhojw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="155032359"
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="155032359"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 00:29:53 -0700
-IronPort-SDR: NJUtkLg0HgKlVcWiCGIswdwlYrCgo3+PvldB23TW1KukMOkbjRsON1SPb8rZFJjyfO1cm0es2G
- dzod5EKk6RqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,330,1592895600"; 
-   d="scan'208";a="293032181"
-Received: from orsmsx601-2.jf.intel.com (HELO ORSMSX601.amr.corp.intel.com) ([10.22.229.81])
-  by orsmga003.jf.intel.com with ESMTP; 19 Aug 2020 00:29:53 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 19 Aug 2020 00:29:52 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 19 Aug 2020 00:29:52 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.57) by
- edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Wed, 19 Aug 2020 00:29:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bA+Zw5J2Y3UMT1+7U85WKKzN3rJ0tmSNJHmQJmWU5hQx87/H7raiChdsSADxI5kgFvt/RqV2RcLu5qnorP2XLH7pH6fjOxZZ1QoTl+C08MLzNdYKlytdEw7nLPEkIXR4HoJ4B6Z8wPUR2+wOWB5zFIl/FZQ/9xsXc2LSI9cdJwYiewoWvigAywpzjNOgWmjixbgL1UNJNeH68eJKIU4X+wTsW2NUf4bxlWbN21nng09fv6x635Ixp69sL+mahsVee0UwNAwjaYEGrRanBrJl2FKDtxgfoEDS+IlyqoeuRpVvwGNgrQiiaOg6szbXDbzae+3jU9e556vUL8lgvDmBKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OsnPIgZe3ByZJjaLyfB3d3pyBbJ5gZBVExNiaU/Nt94=;
- b=i6iHXJ80j0sABrjBOopYC+BvRLKqyKdVPPiZzzDIcRNKS68nGBMwatp6QZQEZvfA+NWaUWL6QvQoz1wQJaeorYoEmpXAvP7wvXoxe/H0uUWBGOxtsB4V7Rg5JqAKAgKE8cylybN/Tkl3ds1b4smXlh37Hw+ZHpbqN+pE0ujup+BGM91+vZRZVjpNdzhadfEWO+eUlwGI3lKoSXLPsFS0/2tmlrB2pmOPF2gHsfWuKq5Y+l/NW+/XcqnOXBBP/CxHkLBiI3l39Ka3uhAVyCYxbF5HTXjcOSfA8dx3+GHxQylfaiqN2mbOMnk9AHmHsc/OpAd19jRMoufOI/t36wYqWw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OsnPIgZe3ByZJjaLyfB3d3pyBbJ5gZBVExNiaU/Nt94=;
- b=FXLM4z1m8jhTYQLigO8ACKrEZvOpvUQm4KKqnct1RaEuQwEvTNG6PFyGq0YC1Kch0jizpgp0YvpIAUgXRzDCQNGyASlR3BTGAhPtlgRCmWejXsdLMaVOHi+Rekw8LqhZOykYGddNIpMcdZ3vzKrPTemfrLV7q/WPMv3b4eemHLk=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR11MB1710.namprd11.prod.outlook.com (2603:10b6:300:26::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Wed, 19 Aug
- 2020 07:29:49 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::6dfe:feb8:25f1:ac9c%7]) with mapi id 15.20.3283.028; Wed, 19 Aug 2020
- 07:29:49 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     Alex Williamson <alex.williamson@redhat.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        "Dey, Megha" <megha.dey@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Pan, Jacob jun" <jacob.jun.pan@intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>, "Lu, Baolu" <baolu.lu@intel.com>,
-        "Kumar, Sanjay K" <sanjay.k.kumar@intel.com>,
-        "Luck, Tony" <tony.luck@intel.com>,
-        "Lin, Jing" <jing.lin@intel.com>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "netanelg@mellanox.com" <netanelg@mellanox.com>,
-        "shahafs@mellanox.com" <shahafs@mellanox.com>,
-        "yan.y.zhao@linux.intel.com" <yan.y.zhao@linux.intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Ortiz, Samuel" <samuel.ortiz@intel.com>,
-        "Hossain, Mona" <mona.hossain@intel.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: RE: [PATCH RFC v2 00/18] Add VFIO mediated device support and DEV-MSI
- support for the idxd driver
-Thread-Topic: [PATCH RFC v2 00/18] Add VFIO mediated device support and
- DEV-MSI support for the idxd driver
-Thread-Index: AQHWX3hut2htBlMVB0qfW0Pa+gZbC6kSPbuAgABwW8CAAzMrAIAUgAoAgAJJ4oCABDO9YIAG4akAgAPzRxCAAX50gIAAAjDAgAC3+4CAATW4oA==
-Date:   Wed, 19 Aug 2020 07:29:49 +0000
-Message-ID: <MWHPR11MB1645FC76A1866EA6A7C9DA6F8C5D0@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <20200721164527.GD2021248@mellanox.com>
- <CY4PR11MB1638103EC73DD9C025F144C98C780@CY4PR11MB1638.namprd11.prod.outlook.com>
- <20200724001930.GS2021248@mellanox.com> <20200805192258.5ee7a05b@x1.home>
- <20200807121955.GS16789@nvidia.com>
- <MWHPR11MB16452EBE866E330A7E000AFC8C440@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200814133522.GE1152540@nvidia.com>
- <MWHPR11MB16456D49F2F2E9646F0841488C5F0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200818004343.GG1152540@nvidia.com>
- <MWHPR11MB164579D1BBBB0F7164B07A228C5C0@MWHPR11MB1645.namprd11.prod.outlook.com>
- <20200818115003.GM1152540@nvidia.com>
-In-Reply-To: <20200818115003.GM1152540@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.5.1.3
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.200]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2ce6a325-c078-45be-1d2d-08d84411a819
-x-ms-traffictypediagnostic: MWHPR11MB1710:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr,ExtFwd
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB1710B7813EB6D51D7381A5CF8C5D0@MWHPR11MB1710.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vrFrot8wT3Yu5hh8VSn8ZdTZ7ojQsGuy+2ZIFXN+4nxHQv+Ifrq+rYj/s62u/9J2JGwX8cE6V34bGrSF801vaw4RW/Olj5hd6e9asZkH1b+TzMEn8XqO833u0UCcZC0cGx2rzcCJLdtAV9f0cGCXIuEmQkEok8xx4YqS4Jhzjitvdk1rAfFnlmcju6DjXJ69T+nhOOhe9s2jLUgx9QH2Ec+7+RwptYJfWBdBMX6yao0Lb9DjCA4CkfumOCnuz3dbpu+SZ/NrupRy9k1zKmQ9inPowb844g/ccP35ptetVmRv+wQgs4I0bTbyR8b0akcl1f04rXtDMJfA1HZGkP67+g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(396003)(346002)(366004)(136003)(39860400002)(5660300002)(66556008)(66476007)(52536014)(83380400001)(7416002)(6506007)(26005)(66946007)(8676002)(316002)(64756008)(66446008)(54906003)(9686003)(76116006)(7696005)(55016002)(4326008)(186003)(478600001)(6916009)(86362001)(8936002)(2906002)(71200400001)(33656002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: muCPMC/4aG6qvOza8gaVDkJo30FcCmsOjAtOKJaCf3srlBU8QUwLoiJMDMmw2LkfgSUIKaoikljI1y349VJgexz2r5MfEZJuo8GY4TwQWha+iZuOcvuTYtWfikUqJP0EXK4FqGAZAVbIUlAlDanNFh9NYS98It8bbAO7M1ePjvfSrmjsxPmn0j3NxzwvYmNKXEO6GfwUEh/+1OCb7mS71NYGltWMnCiDG4/ncdaiR0BvC6ag+hvs19ERimBbL3OOla6v6iHXbke5NFK7aX56ytnxN8oVmPgXQgkPQAk/K4LajB8nkEi1efu5XO9u1Dk0ezpfWyMlWgfXM4g00HwQ5M3+l9IZ28cxJIUMUtrh9MS6nmzkqQKE/aQdPoCKteK+I8ghEDYNqSt0Orb+TjSn229gRHRDraTfS8a60KLGb4XKeApen6KYeNs9VtXZjDx5kdzSlOXZAaXNj/7Xc6CTBtaqwCDbH2ACElVglg0rh9W0bY7ep8EQTFWoqhgeRMKxv4TaPwIsfL/IuZ391nggZa8MKKOZvdq6ph81qWdapWBQQAtpbl/IYjjddhVNBdgAXezUSiQktMiVT1g+O8ievYINWhL/pl0egnGqONb8iPFX9zHjYBnL7D53Z8A1afEK/Ul16VDK5jrJCpqNMWohlQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 19 Aug 2020 03:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgHSHYV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:24:21 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB09C06135D
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:17 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 3so1128976wmi.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CpJGFhZ7lq89b4fQU2CLX0YYZznNJZa5+dtW6ao3V6o=;
+        b=Iqk00HmxZ8Mpvy4BTJaRHdTxttDSNzpXR+o0P4CYh1ddH0KA4qMBY/RzGUF29Y6aA7
+         A1EngZDMXBwYH/uO49VL1P7tk4cjoPr2LJivX3cfMJEE9cb37TfS+Clr2503UX1aQl+F
+         BztKMijeXNXYbqsn8QgxrPTs9iF3rNfk7rK8Up7GBPQgp7O4cUj6HDjAvyM44llimqfc
+         UL+uVUUxVUCdDdW6Xitpfm1LMVpoxaJHjUpeDmeCUOw1fJSn4zQ7gC7fuOyvjH7TpVrB
+         9tjLpn968CSNyPMTI7u576U5AEwLYp3En9kZJYz/djWvK9xYiXX6HNZK4vDruJ//nO7X
+         ZzXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CpJGFhZ7lq89b4fQU2CLX0YYZznNJZa5+dtW6ao3V6o=;
+        b=OLJA/cSe70orn1yvvD5501L5owuR0ZfnRCYhg56fEVY6+0ZefYwWRP3UXkPjuCJvDd
+         tTPlvtDj0AzheckIEvZ6EdUQWErwVL3kSlaxk88RAinVeK25f4d2LyGswjIzNdy5WhLQ
+         im03RMbXiYB+lf3C3XHpOJITf5nTJaq63/wwpZWtdLn1BHKpAN7Z4OYlV6Z7yM8pWJgP
+         cPVv8+/Ucazs1P9RG56Z9Iq3SExql9sUbm1s5es2zKyDCozCt2FILj4m1jD5pzS9CIYk
+         QWrR5ndDR8SV6Xzm4T8PAVYnn9SeqwXM31TBdYVnqSs4lZ/juaeqviRA5E0sNxlv8FZI
+         AHLA==
+X-Gm-Message-State: AOAM533UQ9DuxlFpOZBYGa0475C+SOY5oaneJ/CZpQwKyGFtVmE64GkP
+        Yqfi/JeSAlkml6hfSR6+4GqGCA==
+X-Google-Smtp-Source: ABdhPJynxqpv1c3Pu0O7jBCGNAOoBJesUsfT7ytpD9b/jegM7Im9l2oUkdCWae9Niy8MnRKN6umV6A==
+X-Received: by 2002:a1c:ba42:: with SMTP id k63mr3410582wmf.31.1597821856532;
+        Wed, 19 Aug 2020 00:24:16 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 00:24:15 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Linux Wireless <ilw@linux.intel.com>
+Subject: [PATCH 09/28] wireless: intel: iwlegacy: debug: Demote seemingly unintentional kerneldoc header
+Date:   Wed, 19 Aug 2020 08:23:43 +0100
+Message-Id: <20200819072402.3085022-10-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
+References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ce6a325-c078-45be-1d2d-08d84411a819
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2020 07:29:49.3628
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CDGtMIkovCwhYlRPI8N0nvjsBtx2AaDFlTG65ZanhxMcFpOqEAJKP08BCShRHW4AQwjQE24V60Wtdj81yyu1mw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1710
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Jason Gunthorpe <jgg@nvidia.com>
-> Sent: Tuesday, August 18, 2020 7:50 PM
->=20
-> On Tue, Aug 18, 2020 at 01:09:01AM +0000, Tian, Kevin wrote:
-> > The difference in my reply is not just about the implementation gap
-> > of growing a userspace DMA framework to a passthrough framework.
-> > My real point is about the different goals that each wants to achieve.
-> > Userspace DMA is purely about allowing userspace to directly access
-> > the portal and do DMA, but the wq configuration is always under kernel
-> > driver's control. On the other hand, passthrough means delegating full
-> > control of the wq to the guest and then associated mock-up (live migrat=
-ion,
-> > vSVA, posted interrupt, etc.) for that to work. I really didn't see the
-> > value of mixing them together when there is already a good candidate
-> > to handle passthrough...
->=20
-> In Linux a 'VM' and virtualization has always been a normal system
-> process that uses a few extra kernel features. This has been more or
-> less the cornerstone of that design since the start.
->=20
-> In that view it doesn't make any sense to say that uAPI from idxd that
-> is useful for virtualization somehow doesn't belong as part of the
-> standard uAPI.
+This is the only use of kerneldoc in the sourcefile and no
+descriptions are provided.
 
-The point is that we already have a more standard uAPI (VFIO) which
-is unified and vendor-agnostic to userspace. Creating a idxd specific
-uAPI to absorb similar requirements that VFIO already does is not=20
-compelling and instead causes more trouble to Qemu or other VMMs=20
-as they need to deal with every such driver uAPI even when Qemu=20
-itself has no interest in the device detail (since the real user is inside=
-=20
-guest).=20
+Fixes the following W=1 kernel build warning(s):
 
->=20
-> Especially when it is such a small detail like what APIs are used to
-> configure the wq.
->=20
-> For instance, what about suspend/resume of containers using idxd?
-> Wouldn't you want to have the same basic approach of controlling the
-> wq from userspace that virtualization uses?
->=20
+ drivers/net/wireless/intel/iwlegacy/debug.c:1373: warning: Function parameter or member 'il' not described in 'il_dbgfs_unregister'
 
-I'm not familiar with how container suspend/resume is done today.
-But my gut-feeling is that it's different from virtualization. For=20
-virtualization, the whole wq is assigned to the guest thus the uAPI
-must provide a way to save the wq state including its configuration=20
-at suspsend, and then restore the state to what guest expects when
-resume. However in container case which does userspace DMA, the
-wq is managed by host kernel and could be shared between multiple
-containers. So the wq state is irrelevant to container. The only relevant
-state is the in-fly workloads which needs a draining interface. In this
-view I think the two have a major difference.
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Linux Wireless <ilw@linux.intel.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/net/wireless/intel/iwlegacy/debug.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Thanks
-Kevin
+diff --git a/drivers/net/wireless/intel/iwlegacy/debug.c b/drivers/net/wireless/intel/iwlegacy/debug.c
+index 4f741b305d964..d998a3f1b0566 100644
+--- a/drivers/net/wireless/intel/iwlegacy/debug.c
++++ b/drivers/net/wireless/intel/iwlegacy/debug.c
+@@ -1364,9 +1364,8 @@ il_dbgfs_register(struct il_priv *il, const char *name)
+ }
+ EXPORT_SYMBOL(il_dbgfs_register);
+ 
+-/**
++/*
+  * Remove the debugfs files and directories
+- *
+  */
+ void
+ il_dbgfs_unregister(struct il_priv *il)
+-- 
+2.25.1
+
