@@ -2,154 +2,98 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB64C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31456C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C732E206FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0716F2072D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 09:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLFOV3C9"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="dSKspFOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgHSI5x (ORCPT
+        id S1726879AbgHSJAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        Wed, 19 Aug 2020 05:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgHSI5T (ORCPT
+        with ESMTP id S1725804AbgHSJAi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:57:19 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19EC1C061342;
-        Wed, 19 Aug 2020 01:57:19 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id f7so20713299wrw.1;
-        Wed, 19 Aug 2020 01:57:19 -0700 (PDT)
+        Wed, 19 Aug 2020 05:00:38 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 747ADC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:00:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id o5so11094773pgb.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 02:00:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3IDlmArv+ha2HqUtuqilQB53eBkXbwqE5RHb/bHCDeE=;
-        b=jLFOV3C93J/646mCY5hFwORqAfzjfF+jfChRKBH6730XYB9q3jyij6imWacVqqEgOq
-         9AIDOxkO1XGxUB33jqXcYVgyaphb9L2m9yxu063yJE2S+Yw2ZCsIcT7B1XGnOUokispI
-         0mTzZldZivb7OfrnX70Ie0qhIpQJpFuDVE6ABo245MXqu6wph7JzAdAIIWOYiOe/sjJW
-         MX4C+xOxgv3EDPVUxbZsMsl+E0wi2YU4kOG07fuKrvNk6zX5d2xH9BipVj/Ax9GRwVLy
-         /m9GGGCOz6+IKKmVSqrQwmYYPFBqpbicZhZv/TW6+Pgwxzkh/zTfyZl2qWz1B+Ucm9wO
-         619w==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n8UtwaqIlfVSIB6Dt6GOUKZqlSP3TY6fuzqmfdsiMlo=;
+        b=dSKspFOpyxBO+8KHrabzB69kVWMmqjclzNTYuKF+IitXoGXlw3VBRROMVBIwCNyr38
+         bqhoo9xnoHzU9yR3bbGXuSrNx6+xx9z2Iix2Q8XFFp1UCyN14mWorT+045QulTe0VrX3
+         1+myvd9GIEIzoEd48GrMet2jdz4LxXZZG+LSqfG2CZAoabIhGuFAidA0rmKeoJFIGTjR
+         HwbtbVi458OMOnkcFCmMX4PATh66pkOMpbg7OKC8oTIY9Pxo+wrR6bHDdKQGI12gF9s5
+         7h7Znn7HTnRjRkiBp9TtvVpXHfYnbe7Omo1wwHQ/KI1g1IaA3yuLyIV+eFlt6n9IDTOd
+         fjIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3IDlmArv+ha2HqUtuqilQB53eBkXbwqE5RHb/bHCDeE=;
-        b=lG6sNVSvh0mwEqXCmzm5hduoVgI21BIWOKnFYXQHJOduaHF9gRJFyyIIKh864hZsPQ
-         M6OoBRfAFurVQf80wc2+m1aUwmSFi92Kv/PukuqCQnuNKdkIUk57ew2RgGCWEpYFLnou
-         vcZfX7JeNGTvJCKAmh129UTad4I3JOvaU1rBAZZcTtE2zaxsU8ln/Z2aXR2L90gaNwZt
-         PlDMACZH7p+QAgWAyyc0Nnf7pssPaEcbBeyjGd3rDkl1Xliz+CClUSqAlKm+602XhYT3
-         FUkE6v9yInecIBXTXQUB1f4j7p0SC3eFmduCMiNvBymn/GFQIH+Qpe5i78vFsUktCUNq
-         +U+Q==
-X-Gm-Message-State: AOAM530eaLjLOapPamAhCb2OqE0qdk9It/jzaHR4usz4ZRz8HYs+czje
-        8DvMqerP3HgFzOLujH665duI4/5n6Z5op35CkZTRtm63oDZ19w==
-X-Google-Smtp-Source: ABdhPJzCJKAynaogm/xrbpKCom0oA16u65iZqPuQmO4PBwVlBFVcOkyBzIb2BaTu5RBQcz1oLfqgTJW1hyxZnNJM+qU=
-X-Received: by 2002:a5d:43ca:: with SMTP id v10mr23896375wrr.299.1597827437739;
- Wed, 19 Aug 2020 01:57:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n8UtwaqIlfVSIB6Dt6GOUKZqlSP3TY6fuzqmfdsiMlo=;
+        b=gTJ/nERSu+tlnAg8kb8FdOnjJKHgZjWZnm70UPalhhdeyC8aKplhzPwOsq3miO/Nog
+         165h3kCV5bs5nKvFk6WlXD3WPkRPakuxD1Lgk26liXEx+lQpjE7rmKBsS1triJb47BlY
+         W/q41TDOYfD8wtpmC5dhsKwjeFt5MHnWoJfemoo7a7hwWRMsj7J1d+DtCz8Fc8dCZ8Ga
+         QqqW1mGPcN2NIR6Qo7euy3QKmupcwS3WCEOQy+KoZ4c9uLd+0WBpV3BNWabL2GMaw7eS
+         wom0EoL84bRDwq0Hq/hujbuXo6ftmEZpH4G1kY3WoVIXMLUG5kaHVGqW6sSOQFcohJRp
+         MLDg==
+X-Gm-Message-State: AOAM533lhyw3Mf/j9RX0bSmd9+a0ziQKeBjI3zCwtUPAtvSX4GzkvhSu
+        AZKZ3tSnHkYPLA1UhXVsOg03vQ==
+X-Google-Smtp-Source: ABdhPJzzAkaNBRKKdL70R6JqGRiEeKD6sO8fKKx80iWvU/qSvK9Flv5EmV0SxIY5S6PiJjb4hZ99+A==
+X-Received: by 2002:a62:e704:: with SMTP id s4mr19235303pfh.177.1597827637401;
+        Wed, 19 Aug 2020 02:00:37 -0700 (PDT)
+Received: from localhost.localdomain (36-239-211-11.dynamic-ip.hinet.net. [36.239.211.11])
+        by smtp.gmail.com with ESMTPSA id u5sm12827237pfm.149.2020.08.19.02.00.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 02:00:36 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     ChiYuan Huang <cy_huang@richtek.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: rt4801: Select REGMAP_I2C to fix build error
+Date:   Wed, 19 Aug 2020 16:59:59 +0800
+Message-Id: <20200819085959.1914471-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <000000000000d411cf05a8ffc4a6@google.com>
-In-Reply-To: <000000000000d411cf05a8ffc4a6@google.com>
-From:   Xin Long <lucien.xin@gmail.com>
-Date:   Wed, 19 Aug 2020 17:09:54 +0800
-Message-ID: <CADvbK_dRc+Cn4wM4R9KEzoHy+jUa7uWzfA096NthsEEXxwNGOQ@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage in tipc_l2_send_msg
-To:     syzbot <syzbot+47bbc6b678d317cccbe0@syzkaller.appspotmail.com>
-Cc:     davem <davem@davemloft.net>, Jon Maloy <jmaloy@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        network dev <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        tipc-discussion@lists.sourceforge.net,
-        Ying Xue <ying.xue@windriver.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 1:25 AM syzbot
-<syzbot+47bbc6b678d317cccbe0@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    b835a71e usbnet: smsc95xx: Fix use-after-free after removal
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1095a51d100000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=47bbc6b678d317cccbe0
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+47bbc6b678d317cccbe0@syzkaller.appspotmail.com
->
-> =============================
-> WARNING: suspicious RCU usage
-> 5.8.0-rc1-syzkaller #0 Not tainted
-> -----------------------------
-> net/tipc/bearer.c:466 suspicious rcu_dereference_check() usage!
->
-> other info that might help us debug this:
->
->
-> rcu_scheduler_active = 2, debug_locks = 1
-> 2 locks held by kworker/0:16/19143:
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
->  #0: ffff8880a6901d38 ((wq_completion)cryptd){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
->  #1: ffffc90006f9fda8 ((work_completion)(&cpu_queue->work)){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
->
-> stack backtrace:
-> CPU: 0 PID: 19143 Comm: kworker/0:16 Not tainted 5.8.0-rc1-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> Workqueue: cryptd cryptd_queue_worker
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x18f/0x20d lib/dump_stack.c:118
->  tipc_l2_send_msg+0x354/0x420 net/tipc/bearer.c:466
->  tipc_aead_encrypt_done+0x204/0x3a0 net/tipc/crypto.c:761
->  cryptd_aead_crypt+0xe8/0x1d0 crypto/cryptd.c:739
->  cryptd_queue_worker+0x118/0x1b0 crypto/cryptd.c:181
->  process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
->  worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
->  kthread+0x3b5/0x4a0 kernel/kthread.c:291
->  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
->
-Like in bearer.c, rcu_read_lock() is needed before calling
-b->media->send_msg() in tipc_aead_encrypt_done():
+Fix build error when CONFIG_REGMAP_I2C is not set.
 
-@@ -757,10 +757,12 @@ static void tipc_aead_encrypt_done(struct
-crypto_async_request *base, int err)
-        switch (err) {
-        case 0:
-                this_cpu_inc(tx->stats->stat[STAT_ASYNC_OK]);
-+               rcu_read_lock();
-                if (likely(test_bit(0, &b->up)))
-                        b->media->send_msg(net, skb, b, &tx_ctx->dst);
-                else
-                        kfree_skb(skb);
-+               rcu_read_unlock();
-                break;
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index ebce11cbab44..f719ed5a8c33 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -907,6 +907,7 @@ config REGULATOR_ROHM
+ config REGULATOR_RT4801
+ 	tristate "Richtek RT4801 Regulators"
+ 	depends on I2C
++	select REGMAP_I2C
+ 	help
+ 	  This adds support for voltage regulators in Richtek RT4801 Display Bias IC.
+ 	  The device supports two regulators (DSVP/DSVN).
+-- 
+2.25.1
+
