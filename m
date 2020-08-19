@@ -2,48 +2,65 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-4.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A048AC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87AA620738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE81D207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726918AbgHSHVP (ORCPT
+        id S1727106AbgHSHWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:21:15 -0400
-Received: from muru.com ([72.249.23.125]:40990 "EHLO muru.com"
+        Wed, 19 Aug 2020 03:22:17 -0400
+Received: from verein.lst.de ([213.95.11.211]:36479 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727859AbgHSHVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:21:07 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AACB38107;
-        Wed, 19 Aug 2020 07:21:07 +0000 (UTC)
-Date:   Wed, 19 Aug 2020 10:21:35 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc:     linux@armlinux.org.uk, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH for v5.9] OMAP2+: Replace HTTP links with HTTPS ones
-Message-ID: <20200819072135.GB2994@atomide.com>
-References: <20200719103033.57850-1-grandmaster@al2klimov.de>
+        id S1726783AbgHSHWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:22:16 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 60E246736F; Wed, 19 Aug 2020 09:22:13 +0200 (CEST)
+Date:   Wed, 19 Aug 2020 09:22:13 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: iter and normal ops on /dev/zero & co, was Re: remove the last
+ set_fs() in common code, and remove it for x86 and powerpc
+Message-ID: <20200819072213.GA21832@lst.de>
+References: <20200817073212.830069-1-hch@lst.de> <319d15b1-cb4a-a7b4-3082-12bb30eb5143@csgroup.eu> <20200818180555.GA29185@lst.de> <e3781661-2e13-4f46-d892-181907a2e768@csgroup.eu> <f2e31c89-dd9e-f0f8-ef5c-e930d01a3b65@csgroup.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200719103033.57850-1-grandmaster@al2klimov.de>
+In-Reply-To: <f2e31c89-dd9e-f0f8-ef5c-e930d01a3b65@csgroup.eu>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Alexander A. Klimov <grandmaster@al2klimov.de> [200719 13:30]:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+On Wed, Aug 19, 2020 at 09:16:59AM +0200, Christophe Leroy wrote:
+> I made a test with only the first patch of your series: That's definitely 
+> the culprit. With only that patch applies, the duration is 6.64 seconds, 
+> that's a 25% degradation.
 
-Thanks applying into omap-for-v5.10/soc.
+For the record: the first patch is:
 
-Tony
+     mem: remove duplicate ops for /dev/zero and /dev/null
+
+So these micro-optimizations matter at least for some popular
+benchmarks.  It would be easy to drop, but that means we either:
+
+ - can't support kernel_read/write on these files, which should not
+   matter
+
+or
+ 
+ - have to drop the check for both ops being present
+
+Al, what do you think?
