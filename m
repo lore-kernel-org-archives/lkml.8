@@ -2,196 +2,80 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FB9C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE180C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1B5720738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D1A1207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 05:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597816371;
+	bh=eDYPmryot5vJDEr3Oa+VhUcnmO1H55HLBUwMGfZDMQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mdVi65XRED86HOHMmQG+UVdUV7phSiuMnfOuCjQW50f/BVuRbD6ekChhGKXfTUTah
+	 VA+MwrhgZ044oUGhTKSI0s+YDqlVJdVFEzhSmroiwSahgJqm+LqKTO/wZx0BIkyYGa
+	 89nT9wsfWhdJx41efw2WobvJuk4QkKReFNQF4u+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHSFse (ORCPT
+        id S1726552AbgHSFwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 01:48:34 -0400
-Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:44626 "EHLO
-        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726531AbgHSFsb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 01:48:31 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07425;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0U6CFft4_1597816103;
-Received: from aliy80.localdomain(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6CFft4_1597816103)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 19 Aug 2020 13:48:24 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] mm/pageblock: mitigation cmpxchg false sharing in pageblock flags
-Date:   Wed, 19 Aug 2020 13:47:54 +0800
-Message-Id: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 19 Aug 2020 01:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56048 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725883AbgHSFwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 01:52:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271F9207DA;
+        Wed, 19 Aug 2020 05:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597816369;
+        bh=eDYPmryot5vJDEr3Oa+VhUcnmO1H55HLBUwMGfZDMQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qyp9M/VjLa/uZ+FA7mKFQ/n0NCtR4ezHk+Oldywlz/o7NBeLE16Y0WrK1rU1NmQ6D
+         MotSV9JCrq6FrLR0RJX9U4yWHsjFVB43wTDKuq8WFDY5+E2N/BbU7kkMl0Q5ixVbz8
+         jv2BixQUMd+XBPj3ODo6oFEFvWSCJ0uq4SW1a4pk=
+Date:   Wed, 19 Aug 2020 07:53:10 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Scott Branden <scott.branden@broadcom.com>,
+        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v2 0/3] Add Broadcom VK driver
+Message-ID: <20200819055310.GA853200@kroah.com>
+References: <20200806004631.8102-1-scott.branden@broadcom.com>
+ <202008181251.1CA80429@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202008181251.1CA80429@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pageblock_flags is used as long, since every pageblock_flags is just 4
-bits, 'long' size will include 8(32bit machine) or 16 pageblocks' flags,
-that flag setting has to sync in cmpxchg with 7 or 15 other pageblock
-flags. It would cause long waiting for sync.
+On Tue, Aug 18, 2020 at 12:52:54PM -0700, Kees Cook wrote:
+> On Wed, Aug 05, 2020 at 05:46:28PM -0700, Scott Branden wrote:
+> > This patch series drops previous patches in [1]
+> > that were incorporated by Kees Cook into patch series
+> > "Introduce partial kernel_read_file() support" [2].
+> > 
+> > Remaining patches are contained in this series to add Broadcom VK driver.
+> > (which depends on request_firmware_into_buf API addition in
+> > other patch series [2] being applied first).
+> > 
+> > Please note this patch series will not compile without [2].
+> > 
+> > [1] https://lore.kernel.org/lkml/20200706232309.12010-1-scott.branden@broadcom.com/
+> > [2] https://lore.kernel.org/lkml/20200729175845.1745471-1-keescook@chromium.org/
+> 
+> Greg, is your intention to take [2] into your tree? AFAICT, it's got the
+> appropriate Acks, etc.
 
-If we could change the pageblock_flags variable as char, we could use
-char size cmpxchg, which just sync up with 2 pageblock flags. it could
-relief much false sharing in cmpxchg.
+Yes, it is in my queue to do so, hopefully soon, digging out now from
+the big -rc1 patch-submission-pile...
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
----
- include/linux/mmzone.h          |  6 +++---
- include/linux/pageblock-flags.h |  2 +-
- mm/page_alloc.c                 | 38 +++++++++++++++++++-------------------
- 3 files changed, 23 insertions(+), 23 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 0ed520954843..c92d6d24527d 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -438,7 +438,7 @@ struct zone {
- 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
- 	 * In SPARSEMEM, this map is stored in struct mem_section
- 	 */
--	unsigned long		*pageblock_flags;
-+	unsigned char		*pageblock_flags;
- #endif /* CONFIG_SPARSEMEM */
- 
- 	/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
-@@ -1159,7 +1159,7 @@ struct mem_section_usage {
- 	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
- #endif
- 	/* See declaration of similar field in struct zone */
--	unsigned long pageblock_flags[0];
-+	unsigned char	pageblock_flags[0];
- };
- 
- void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
-@@ -1212,7 +1212,7 @@ struct mem_section {
- extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
- #endif
- 
--static inline unsigned long *section_to_usemap(struct mem_section *ms)
-+static inline unsigned char *section_to_usemap(struct mem_section *ms)
- {
- 	return ms->usage->pageblock_flags;
- }
-diff --git a/include/linux/pageblock-flags.h b/include/linux/pageblock-flags.h
-index fff52ad370c1..d189441568eb 100644
---- a/include/linux/pageblock-flags.h
-+++ b/include/linux/pageblock-flags.h
-@@ -54,7 +54,7 @@ enum pageblock_bits {
- /* Forward declaration */
- struct page;
- 
--unsigned long get_pfnblock_flags_mask(struct page *page,
-+unsigned char get_pfnblock_flags_mask(struct page *page,
- 				unsigned long pfn,
- 				unsigned long mask);
- 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c0b0b32de50e..f60071e8a4e1 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -445,7 +445,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
- #endif
- 
- /* Return a pointer to the bitmap storing bits affecting a block of pages */
--static inline unsigned long *get_pageblock_bitmap(struct page *page,
-+static inline unsigned char *get_pageblock_bitmap(struct page *page,
- 							unsigned long pfn)
- {
- #ifdef CONFIG_SPARSEMEM
-@@ -474,24 +474,24 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
-  * Return: pageblock_bits flags
-  */
- static __always_inline
--unsigned long __get_pfnblock_flags_mask(struct page *page,
-+unsigned char __get_pfnblock_flags_mask(struct page *page,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char byte;
- 
- 	bitmap = get_pageblock_bitmap(page, pfn);
- 	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
- 
--	word = bitmap[word_bitidx];
--	return (word >> bitidx) & mask;
-+	byte = bitmap[byte_bitidx];
-+	return (byte >> bitidx) & mask;
- }
- 
--unsigned long get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
-+unsigned char get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
- 					unsigned long mask)
- {
- 	return __get_pfnblock_flags_mask(page, pfn, mask);
-@@ -513,29 +513,29 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
- 					unsigned long pfn,
- 					unsigned long mask)
- {
--	unsigned long *bitmap;
--	unsigned long bitidx, word_bitidx;
--	unsigned long old_word, word;
-+	unsigned char *bitmap;
-+	unsigned long bitidx, byte_bitidx;
-+	unsigned char old_byte, byte;
- 
- 	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != 4);
- 	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
- 
- 	bitmap = get_pageblock_bitmap(page, pfn);
- 	bitidx = pfn_to_bitidx(page, pfn);
--	word_bitidx = bitidx / BITS_PER_LONG;
--	bitidx &= (BITS_PER_LONG-1);
-+	byte_bitidx = bitidx / BITS_PER_BYTE;
-+	bitidx &= (BITS_PER_BYTE-1);
- 
- 	VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
- 
- 	mask <<= bitidx;
- 	flags <<= bitidx;
- 
--	word = READ_ONCE(bitmap[word_bitidx]);
-+	byte = READ_ONCE(bitmap[byte_bitidx]);
- 	for (;;) {
--		old_word = cmpxchg(&bitmap[word_bitidx], word, (word & ~mask) | flags);
--		if (word == old_word)
-+		old_byte = cmpxchg(&bitmap[byte_bitidx], byte, (byte & ~mask) | flags);
-+		if (byte == old_byte)
- 			break;
--		word = old_word;
-+		byte = old_byte;
- 	}
- }
- 
--- 
-1.8.3.1
-
+greg k-h
