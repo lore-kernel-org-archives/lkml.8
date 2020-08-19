@@ -7,58 +7,61 @@ X-Spam-Status: No, score=-14.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63863C433E3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B6C52072D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC83206FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 08:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wz6rFRXo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="QzUYsdUH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rRkzvlI3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mIs7IXED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgHSIzo (ORCPT
+        id S1727891AbgHSI4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 04:55:44 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37136 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726972AbgHSIwK (ORCPT
+        Wed, 19 Aug 2020 04:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgHSIxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 04:52:10 -0400
-Date:   Wed, 19 Aug 2020 08:52:07 -0000
+        Wed, 19 Aug 2020 04:53:51 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 130BDC061347;
+        Wed, 19 Aug 2020 01:52:13 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 08:52:10 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597827128;
+        s=2020; t=1597827131;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cSB0N+9be3Ueq42H1CGqA3pI7bdNN9hhiVSr6xoOjiI=;
-        b=Wz6rFRXoLc3SwnuLqS1fByUGIy+EoPw2lHJPYlGNudUgf2n54RpHvxlQPyqUZoV99+qnQ9
-        FMBOtkKedfSqv1oDZ9Ov6hSLK9mNWyrC1xIuF9Snal48cHfxo9iTuO8u4R+ZodySO9LVSx
-        3x1pFaYTp9oDNvrsF8Eg6efXqsDZkMyNPrSvmlkYPDXABRUNoCa81hepl4DHRAkto2Ub1T
-        RJUSkKXDxFh3BGLXQYM2oeBz/JZBEq/acG10/D8Hc0PrGZw7JYJJHhmE2W0zrMfdkcCOvZ
-        ic4R4vMb/wFA8MEW6pfGqDLYnqXZUNOw2fW0Js8R88tmL3cN5STmZnNkjki5xQ==
+        bh=xB62ipU3c36GDRZN7Srlw0bVi4SwB21C4BFlAs5SHvk=;
+        b=rRkzvlI3XGao8swR9/Z+VrwU/lKGCM2kLoZ7JIl7Aswt906xE6B9lTyhM6T+xNkCLchYgx
+        avOUCnNf0Aine9gRVG9yu8HtWZT0VD+K5LJ2G2OqWG2uJSUOoEIkBi9xG2wC+TR01G2KAK
+        /bQzMms6SuLz9D281L2QRFWIcF6CxoM1NN2kLTODpzyNadsITy2wb0Dfh1tOiXuisTtUgH
+        hDZIizEUPENknXOA7YMfmkcT7IIAFqg0pCdggaGVJa4jFohPzSm6KU7piCnPAT2FUFVyTt
+        6MDEDbiqJ/Gr+pOZEtPpv1ckU1hsOb9gpfvkl/aAatZngt6JmwM+aGLoGQfpAA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597827128;
+        s=2020e; t=1597827131;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cSB0N+9be3Ueq42H1CGqA3pI7bdNN9hhiVSr6xoOjiI=;
-        b=QzUYsdUHDO9ArO6OFldMA+iafllNBo1UlevEnhnoknv5zmwjtbEK98GSEIZ3sU7D2HZxto
-        /uL+++Hp91shJGBA==
+        bh=xB62ipU3c36GDRZN7Srlw0bVi4SwB21C4BFlAs5SHvk=;
+        b=mIs7IXEDUmifJtmZOSJeoxHcqGhYAnSuiV0IqTBpX8VY/kE1INkfPY7qNS5dTJ9ZuZDEsA
+        JoZenpk90FaDTdDQ==
 From:   "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf/core: Add a new PERF_EV_CAP_SIBLING event capability
+Subject: [tip: perf/core] perf/x86/intel: Name the global status bit in NMI handler
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Kan Liang <kan.liang@linux.intel.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200723171117.9918-8-kan.liang@linux.intel.com>
-References: <20200723171117.9918-8-kan.liang@linux.intel.com>
+In-Reply-To: <20200723171117.9918-3-kan.liang@linux.intel.com>
+References: <20200723171117.9918-3-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <159782712765.3192.11418251021976454957.tip-bot2@tip-bot2>
+Message-ID: <159782713093.3192.8180456930454502423.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,137 +73,83 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     9f0c4fa111dc909ca545c45ea20ec84da555ce16
-Gitweb:        https://git.kernel.org/tip/9f0c4fa111dc909ca545c45ea20ec84da555ce16
+Commit-ID:     60a2a271cf05cf046c522e1d7f62116b4bcb32a2
+Gitweb:        https://git.kernel.org/tip/60a2a271cf05cf046c522e1d7f62116b4bcb32a2
 Author:        Kan Liang <kan.liang@linux.intel.com>
-AuthorDate:    Thu, 23 Jul 2020 10:11:10 -07:00
+AuthorDate:    Thu, 23 Jul 2020 10:11:05 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Tue, 18 Aug 2020 16:34:36 +02:00
+CommitterDate: Tue, 18 Aug 2020 16:34:34 +02:00
 
-perf/core: Add a new PERF_EV_CAP_SIBLING event capability
+perf/x86/intel: Name the global status bit in NMI handler
 
-Current perf assumes that events in a group are independent. Close an
-event doesn't impact the value of the other events in the same group.
-If the closed event is a member, after the event closure, other events
-are still running like a group. If the closed event is a leader, other
-events are running as singleton events.
+Magic numbers are used in the current NMI handler for the global status
+bit. Use a meaningful name to replace the magic numbers to improve the
+readability of the code.
 
-Add PERF_EV_CAP_SIBLING to allow events to indicate they require being
-part of a group, and when the leader dies they cannot exist
-independently.
+Remove a Tab for all GLOBAL_STATUS_* and INTEL_PMC_IDX_FIXED_BTS macros
+to reduce the length of the line.
 
 Suggested-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200723171117.9918-8-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/20200723171117.9918-3-kan.liang@linux.intel.com
 ---
- include/linux/perf_event.h |  4 ++++-
- kernel/events/core.c       | 38 ++++++++++++++++++++++++++++++++-----
- 2 files changed, 37 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/core.c      |  4 ++--
+ arch/x86/include/asm/perf_event.h | 22 ++++++++++++----------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 04a49cc..6048650 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -576,9 +576,13 @@ typedef void (*perf_overflow_handler_t)(struct perf_event *,
-  * PERF_EV_CAP_SOFTWARE: Is a software event.
-  * PERF_EV_CAP_READ_ACTIVE_PKG: A CPU event (or cgroup event) that can be read
-  * from any CPU in the package where it is active.
-+ * PERF_EV_CAP_SIBLING: An event with this flag must be a group sibling and
-+ * cannot be a group leader. If an event with this flag is detached from the
-+ * group it is scheduled out and moved into an unrecoverable ERROR state.
-  */
- #define PERF_EV_CAP_SOFTWARE		BIT(0)
- #define PERF_EV_CAP_READ_ACTIVE_PKG	BIT(1)
-+#define PERF_EV_CAP_SIBLING		BIT(2)
- 
- #define SWEVENT_HLIST_BITS		8
- #define SWEVENT_HLIST_SIZE		(1 << SWEVENT_HLIST_BITS)
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 5bfe8e3..57efe3b 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2133,8 +2133,24 @@ static inline struct list_head *get_event_list(struct perf_event *event)
- 	return event->attr.pinned ? &ctx->pinned_active : &ctx->flexible_active;
- }
- 
-+/*
-+ * Events that have PERF_EV_CAP_SIBLING require being part of a group and
-+ * cannot exist on their own, schedule them out and move them into the ERROR
-+ * state. Also see _perf_event_enable(), it will not be able to recover
-+ * this ERROR state.
-+ */
-+static inline void perf_remove_sibling_event(struct perf_event *event)
-+{
-+	struct perf_event_context *ctx = event->ctx;
-+	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
-+
-+	event_sched_out(event, cpuctx, ctx);
-+	perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
-+}
-+
- static void perf_group_detach(struct perf_event *event)
- {
-+	struct perf_event *leader = event->group_leader;
- 	struct perf_event *sibling, *tmp;
- 	struct perf_event_context *ctx = event->ctx;
- 
-@@ -2153,7 +2169,7 @@ static void perf_group_detach(struct perf_event *event)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 5096347..ac1408f 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2389,7 +2389,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
  	/*
- 	 * If this is a sibling, remove it from its group.
+ 	 * PEBS overflow sets bit 62 in the global status register
  	 */
--	if (event->group_leader != event) {
-+	if (leader != event) {
- 		list_del_init(&event->sibling_list);
- 		event->group_leader->nr_siblings--;
- 		goto out;
-@@ -2166,6 +2182,9 @@ static void perf_group_detach(struct perf_event *event)
+-	if (__test_and_clear_bit(62, (unsigned long *)&status)) {
++	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
+ 		u64 pebs_enabled = cpuc->pebs_enabled;
+ 
+ 		handled++;
+@@ -2410,7 +2410,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 	/*
+ 	 * Intel PT
  	 */
- 	list_for_each_entry_safe(sibling, tmp, &event->sibling_list, sibling_list) {
- 
-+		if (sibling->event_caps & PERF_EV_CAP_SIBLING)
-+			perf_remove_sibling_event(sibling);
-+
- 		sibling->group_leader = sibling;
- 		list_del_init(&sibling->sibling_list);
- 
-@@ -2183,10 +2202,10 @@ static void perf_group_detach(struct perf_event *event)
- 	}
- 
- out:
--	perf_event__header_size(event->group_leader);
+-	if (__test_and_clear_bit(55, (unsigned long *)&status)) {
++	if (__test_and_clear_bit(GLOBAL_STATUS_TRACE_TOPAPMI_BIT, (unsigned long *)&status)) {
+ 		handled++;
+ 		if (unlikely(perf_guest_cbs && perf_guest_cbs->is_in_guest() &&
+ 			perf_guest_cbs->handle_intel_pt_intr))
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 0c1b137..fd3eba6 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -225,16 +225,18 @@ struct x86_pmu_capability {
+  * values are used by actual fixed events and higher values are used
+  * to indicate other overflow conditions in the PERF_GLOBAL_STATUS msr.
+  */
+-#define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 16)
 -
--	for_each_sibling_event(tmp, event->group_leader)
-+	for_each_sibling_event(tmp, leader)
- 		perf_event__header_size(tmp);
+-#define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
+-#define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
+-#define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+-#define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+-#define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+-#define GLOBAL_STATUS_LBRS_FROZEN_BIT			58
+-#define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
+-#define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
++#define INTEL_PMC_IDX_FIXED_BTS			(INTEL_PMC_IDX_FIXED + 16)
 +
-+	perf_event__header_size(leader);
- }
++#define GLOBAL_STATUS_COND_CHG			BIT_ULL(63)
++#define GLOBAL_STATUS_BUFFER_OVF_BIT		62
++#define GLOBAL_STATUS_BUFFER_OVF		BIT_ULL(GLOBAL_STATUS_BUFFER_OVF_BIT)
++#define GLOBAL_STATUS_UNC_OVF			BIT_ULL(61)
++#define GLOBAL_STATUS_ASIF			BIT_ULL(60)
++#define GLOBAL_STATUS_COUNTERS_FROZEN		BIT_ULL(59)
++#define GLOBAL_STATUS_LBRS_FROZEN_BIT		58
++#define GLOBAL_STATUS_LBRS_FROZEN		BIT_ULL(GLOBAL_STATUS_LBRS_FROZEN_BIT)
++#define GLOBAL_STATUS_TRACE_TOPAPMI_BIT		55
++#define GLOBAL_STATUS_TRACE_TOPAPMI		BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
  
- static bool is_orphaned_event(struct perf_event *event)
-@@ -2979,6 +2998,7 @@ static void _perf_event_enable(struct perf_event *event)
- 	raw_spin_lock_irq(&ctx->lock);
- 	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
- 	    event->state <  PERF_EVENT_STATE_ERROR) {
-+out:
- 		raw_spin_unlock_irq(&ctx->lock);
- 		return;
- 	}
-@@ -2990,8 +3010,16 @@ static void _perf_event_enable(struct perf_event *event)
- 	 * has gone back into error state, as distinct from the task having
- 	 * been scheduled away before the cross-call arrived.
- 	 */
--	if (event->state == PERF_EVENT_STATE_ERROR)
-+	if (event->state == PERF_EVENT_STATE_ERROR) {
-+		/*
-+		 * Detached SIBLING events cannot leave ERROR state.
-+		 */
-+		if (event->event_caps & PERF_EV_CAP_SIBLING &&
-+		    event->group_leader == event)
-+			goto out;
-+
- 		event->state = PERF_EVENT_STATE_OFF;
-+	}
- 	raw_spin_unlock_irq(&ctx->lock);
- 
- 	event_function_call(event, __perf_event_enable, NULL);
+ /*
+  * We model guest LBR event tracing as another fixed-mode PMC like BTS.
