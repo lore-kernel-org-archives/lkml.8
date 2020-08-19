@@ -2,172 +2,149 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABDCC433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 680622054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 165AC20786
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597821051;
-	bh=FfnxurrWWt3Rhmrb33mRsWVhDiDOqME/C5W843zPch0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OkSzny9vRuM9KpjX4HOyVlycEB55eFqOlwGcUA5Hy4nI7VxIWS5ip2AfXs4/bPPt6
-	 O5GGcPPEBQaHLNQr7eF3nXb9x+W8Wk9DpAB7GraUj75bD9Kd/MjOCsdaZ0fHazLTzq
-	 jf5XGz/OzFNi2F9rRd1DLZsrmMLmwXsOw2ODVBAI=
+	s=default; t=1597821064;
+	bh=Q1TUCVyfAYh8p7Z2eIiuchdSuHa7Tv2QtwNlIaXU4+Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=sb7+A7ttGBxf9thVqOEazQGeFB3akWLlOaHu+V3N3Wb25Yp3hZvE4kEnvQdOXUnst
+	 lE6L7DI7FxMhzcbDU9OvmZMydBIh3KSf5xmbNrsqsnFFpI/ImOQss8wESlSzi3EkF0
+	 efcUfdt7IUvBrBb2g3cSJ7tWg8WMe2TXqVMJa6qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHSHKp (ORCPT
+        id S1727045AbgHSHK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:10:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39848 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbgHSHK1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:10:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F0F20738;
-        Wed, 19 Aug 2020 07:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597820422;
-        bh=FfnxurrWWt3Rhmrb33mRsWVhDiDOqME/C5W843zPch0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DdBPcQQlRBI14p91MSa70NzK6YvRg+tYF8pul0kQikyVuNdcPpyEJYDofFS/gpp8E
-         +PSV/Oz8+WVuNBpWlV+GpvNMsql97D1HrIY+/nvKz5LoY3+1fuNZvrqfXSvuQHOKjH
-         wSlufqOe4RXAv/mRAE2LXXTjeUrkv3t35zeWuaac=
-Date:   Wed, 19 Aug 2020 09:00:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH v2 1/3] bcm-vk: add bcm_vk UAPI
-Message-ID: <20200819070044.GA1004396@kroah.com>
-References: <20200806004631.8102-1-scott.branden@broadcom.com>
- <20200806004631.8102-2-scott.branden@broadcom.com>
- <20200818135313.GB495837@kroah.com>
- <8894c3c4-4d5c-cb94-bc90-a26833ebf268@broadcom.com>
- <20200818174451.GA749919@kroah.com>
- <4adbd70e-c49b-c2d4-84c7-5e910f05e449@broadcom.com>
+        Wed, 19 Aug 2020 03:10:59 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35664 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgHSHJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 03:09:07 -0400
+Received: by mail-ed1-f68.google.com with SMTP id m20so17238994eds.2;
+        Wed, 19 Aug 2020 00:09:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=fEkH4ZxpxTY42f36NAcppi2kiNk4M3AwqeTbG0SRAps=;
+        b=XMNlfuMgTF6xKPHeD7ii2g8uJGlt3u0JfKNKWQ9ZPkL9taZouE2W9RhhuFCqAPHdHr
+         dGospbZKYb0yYd8LeJqqKnWsbDeyp0hjDkGLcByuIU99Tz2ylDhv/cIBtfLMpMk+oaWl
+         sj5OllHnOq8+6G/hGbus3OvuzSLIogvpo5EACMT8sKpfoELXLLJ/vSisMklCNQI5ldy8
+         SLXfrAc0Uo6C0bKfN0Y6vJyxdS7yXzN970qkRW2Uhz8zCZQAyWNiSdnfUf5rhDGPFbl0
+         TcHPTodnFkSAauwilRpFlZ8RU1HdRcrwu+203l9v8fvBmC71gJtgEGTsrNYHIsymoPKU
+         cQgw==
+X-Gm-Message-State: AOAM531K4tTU6wxbZNkOUynE3jkR5Qr7tcRPh/fOVVn8jfWPwRSww5K5
+        gGNiPhRizyTpeNEhVuc2YxB9Fw/6iV4=
+X-Google-Smtp-Source: ABdhPJzZjN7yLJ+YMGWbIoHiOG2baBTgjcXtigIJw11DlVTj77AU08DC1d25Da8nBcT/V81rq9KKcg==
+X-Received: by 2002:a50:fd83:: with SMTP id o3mr22404496edt.170.1597820942993;
+        Wed, 19 Aug 2020 00:09:02 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id t19sm17329336edw.63.2020.08.19.00.09.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Aug 2020 00:09:02 -0700 (PDT)
+Subject: Re: [PATCH 02/16] vt: declare xy for get/putconsxy properly
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200818085706.12163-1-jslaby@suse.cz>
+ <20200818085706.12163-2-jslaby@suse.cz> <20200818114341.GA343779@kroah.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <791f5ae5-134e-794d-903e-a39d5f6ac3e2@kernel.org>
+Date:   Wed, 19 Aug 2020 09:09:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4adbd70e-c49b-c2d4-84c7-5e910f05e449@broadcom.com>
+In-Reply-To: <20200818114341.GA343779@kroah.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 05:35:04PM -0700, Scott Branden wrote:
+On 18. 08. 20, 13:43, Greg KH wrote:
+> On Tue, Aug 18, 2020 at 10:56:52AM +0200, Jiri Slaby wrote:
+>> That is:
+>> 1) call the parameter 'xy' to denote what it really is, not generic 'p'
+>> 2) tell the compiler and users that we expect an array:
+>>    * with at least 2 chars (static 2)
+>>    * which we don't modify in putconsxy (const)
+>>
+>> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+>> ---
+>>  drivers/tty/vt/vt.c       | 10 +++++-----
+>>  include/linux/selection.h |  4 ++--
+>>  2 files changed, 7 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+>> index 8f283221330e..a0da7771c327 100644
+>> --- a/drivers/tty/vt/vt.c
+>> +++ b/drivers/tty/vt/vt.c
+>> @@ -4769,17 +4769,17 @@ unsigned short *screen_pos(const struct vc_data *vc, int w_offset, int viewed)
+>>  }
+>>  EXPORT_SYMBOL_GPL(screen_pos);
+>>  
+>> -void getconsxy(const struct vc_data *vc, unsigned char *p)
+>> +void getconsxy(const struct vc_data *vc, unsigned char xy[static 2])
 > 
-> 
-> On 2020-08-18 10:44 a.m., Greg Kroah-Hartman wrote:
-> > On Tue, Aug 18, 2020 at 10:23:42AM -0700, Scott Branden wrote:
-> >> Hi Greg,
-> >>
-> >> On 2020-08-18 6:53 a.m., Greg Kroah-Hartman wrote:
-> >>> On Wed, Aug 05, 2020 at 05:46:29PM -0700, Scott Branden wrote:
-> >>>> Add user space api for bcm-vk driver.
-> >>>>
-> >>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-> >>>> ---
-> >>>>  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
-> >>>>  1 file changed, 99 insertions(+)
-> >>>>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
-> >>>>
-> >>>> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
-> >>>> new file mode 100644
-> >>>> index 000000000000..783087b7c31f
-> >>>> --- /dev/null
-> >>>> +++ b/include/uapi/linux/misc/bcm_vk.h
-> >>>> @@ -0,0 +1,99 @@
-> >>>> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
-> >>>> +/*
-> >>>> + * Copyright 2018-2020 Broadcom.
-> >>>> + */
-> >>>> +
-> >>>> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
-> >>>> +#define __UAPI_LINUX_MISC_BCM_VK_H
-> >>>> +
-> >>>> +#include <linux/ioctl.h>
-> >>>> +#include <linux/types.h>
-> >>>> +
-> >>>> +#define BCM_VK_MAX_FILENAME 64
-> >>>> +
-> >>>> +struct vk_image {
-> >>>> +	__u32 type; /* Type of image */
-> >>>> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
-> >>>> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
-> >>>> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
-> >>>> +};
-> >>>> +
-> >>>> +struct vk_reset {
-> >>>> +	__u32 arg1;
-> >>>> +	__u32 arg2;
-> >>>> +};
-> >>>> +
-> >>>> +#define VK_MAGIC		0x5e
-> >>>> +
-> >>>> +/* Load image to Valkyrie */
-> >>>> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
-> >>>> +
-> >>>> +/* Send Reset to Valkyrie */
-> >>>> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
-> >>>> +
-> >>>> +/*
-> >>>> + * message block - basic unit in the message where a message's size is always
-> >>>> + *		   N x sizeof(basic_block)
-> >>>> + */
-> >>>> +struct vk_msg_blk {
-> >>>> +	__u8 function_id;
-> >>>> +#define VK_FID_TRANS_BUF	5
-> >>>> +#define VK_FID_SHUTDOWN		8
-> >>>> +	__u8 size;
-> >>>> +	__u16 trans_id; /* transport id, queue & msg_id */
-> >>>> +	__u32 context_id;
-> >>>> +	__u32 args[2];
-> >>>> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
-> >>>> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
-> >>>> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
-> >>>> +#define VK_CMD_MASK		0x0f00 /* command mask */
-> >>>> +};
-> >>>> +
-> >>>> +#define VK_BAR_FWSTS			0x41c
-> >>>> +#define VK_BAR_COP_FWSTS		0x428
-> >>>> +/* VK_FWSTS definitions */
-> >>>> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
-> >>> <snip>
-> >>>
-> >>> I thought BIT() was not allowed in uapi .h files, this really works
-> >>> properly???
-> >> I did some investigation and it looks like a few other header files in include/uapi also use the BIT() macro:
-> >> include/uapi/misc/uacce/uacce.h
-> >> include/uapi/linux/psci.h
-> >> include/uapi/linux/v4l2-subdev.h
-> > Does the header install test target now fail for these?
-> I do not understand the question above.  make headers_install works.
-> But I guess the above headers would have similar issue with the BIT macro.
+> I didn't realize we could do "[static 2]" in the kernel now, is that
+> thanks to the bump of the minimum gcc version?  If so, nice!
 
-Try enabling CONFIG_UAPI_HEADER_TEST and see what happens :)
+gcc supports it since some time around 3.x (these kinds of declaration
+are defined in c99). So hopefully nothing breaks.
 
-> >> tools/include/uapi/linux/pkt_sched.h
-> > That doesn't count :)
-> >
-> >> It does look like we end up defining the BIT() macro in our user space app that includes the header file.
-> >>
-> >> So, what is the proper thing to be done?
-> >> 1) Move the BIT() macro somewhere in include/uapi and include it in the necessary header files
-> >> 2) Use the _BITUL macro in include/uapi/linux/const.h instead?
-> >> 3) something else?
-> > open-code it for now please, that's the best way as I am pretty sure we
-> > can not contaminate the global C namespace with out BIT() macro, no
-> > matter how much we would like to...
-> OK, I will open-code it instead.
-
-Great!
-
-greg k-h
+thanks,
+-- 
+js
+suse labs
