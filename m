@@ -2,178 +2,140 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA4BC433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC54C433E4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7136E207DE
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F3A20758
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 17:45:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ca7C1Vus"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726715AbgHSRo5 (ORCPT
+        id S1726772AbgHSRpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 13:44:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:39258 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725804AbgHSRoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 13:44:54 -0400
-IronPort-SDR: gqJnFc+apa+36RHMbFsCMg/QYWjtcBONZlB4fTbz5TpUWLH5wAHGEOMUr8Jog8Bs4gXLAAWFcl
- DLEo723cOH5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="142984162"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="142984162"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:44:53 -0700
-IronPort-SDR: lvWAKSOz/gYMlM8RHyPflbusPtjx/GMfDwuX4T8/btt5FTlvvXnv7z4AlyTB542e7y+X1acUpf
- Aee+KmKw5f4Q==
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="472320725"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 10:44:53 -0700
-Date:   Wed, 19 Aug 2020 10:44:53 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Barry Song <song.bao.hua@hisilicon.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linuxarm@huawei.com,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm/gup: don't permit users to call get_user_pages with
- FOLL_LONGTERM
-Message-ID: <20200819174452.GA104589@iweiny-DESK2.sc.intel.com>
-References: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200819110100.23504-1-song.bao.hua@hisilicon.com>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+        Wed, 19 Aug 2020 13:45:51 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47436 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726585AbgHSRpr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 13:45:47 -0400
+Received: from testvm-timer.0wqf5yk0ngwuzjntifuk1ppqse.cx.internal.cloudapp.net (unknown [40.65.222.102])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5AF4A20B4908;
+        Wed, 19 Aug 2020 10:45:46 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5AF4A20B4908
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1597859147;
+        bh=oJvVQrh4jnzYt7dEfXybXGswGytcooOTB3Khc1pg+FI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ca7C1VusOXy1L9HsrDB6vF01EVdJte1CPjAexezLrjCGftRbWPHc4Q4ya06L1wWO0
+         +KPxzkCe1nUJsTMSxFWyy33ptlT+LKMBkr0RRaCnkgLl/ON12ORpTgudZHNrjPEuKx
+         yEEzIti3qlHmofPm1X8qpyn0fjkxAZQ9Rvla8v6A=
+From:   Vineeth Pillai <viremana@linux.microsoft.com>
+To:     Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] hv_utils: return error if host timesysnc update is stale
+Date:   Wed, 19 Aug 2020 17:45:27 +0000
+Message-Id: <20200819174527.47156-1-viremana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:01:00PM +1200, Barry Song wrote:
-> gug prohibits users from calling get_user_pages() with FOLL_PIN. But it
-> allows users to call get_user_pages() with FOLL_LONGTERM only. It seems
-> insensible.
-> 
-> since FOLL_LONGTERM is a stricter case of FOLL_PIN, we should prohibit
-> users from calling get_user_pages() with FOLL_LONGTERM while not with
-> FOLL_PIN.
-> 
-> mm/gup_benchmark.c used to be the only user who did this improperly.
-> But it has been fixed by moving to use pin_user_pages().
-> 
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Mike Kravetz <mike.kravetz@oracle.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+If for any reason, host timesync messages were not processed by
+the guest, hv_ptp_gettime() returns a stale value and the
+caller (clock_gettime, PTP ioctl etc) has no means to know this
+now. Return an error so that the caller knows about this.
 
-Seems reasonable to me.
+Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
+---
+ drivers/hv/hv_util.c | 46 +++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 35 insertions(+), 11 deletions(-)
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
+index 92ee0fe4c919..1357861fd8ae 100644
+--- a/drivers/hv/hv_util.c
++++ b/drivers/hv/hv_util.c
+@@ -282,26 +282,52 @@ static struct {
+ 	spinlock_t			lock;
+ } host_ts;
+ 
+-static struct timespec64 hv_get_adj_host_time(void)
++static inline u64 reftime_to_ns(u64 reftime)
+ {
+-	struct timespec64 ts;
+-	u64 newtime, reftime;
++	return (reftime - WLTIMEDELTA) * 100;
++}
++
++/*
++ * Hard coded threshold for host timesync delay: 600 seconds
++ */
++const u64 HOST_TIMESYNC_DELAY_THRESH = 600 * NSEC_PER_SEC;
++
++static int hv_get_adj_host_time(struct timespec64 *ts)
++{
++	u64 newtime, reftime, timediff_adj;
+ 	unsigned long flags;
++	int ret = 0;
+ 
+ 	spin_lock_irqsave(&host_ts.lock, flags);
+ 	reftime = hv_read_reference_counter();
+-	newtime = host_ts.host_time + (reftime - host_ts.ref_time);
+-	ts = ns_to_timespec64((newtime - WLTIMEDELTA) * 100);
++
++	/*
++	 * We need to let the caller know that last update from host
++	 * is older than the max allowable threshold. clock_gettime()
++	 * and PTP ioctl do not have a documented error that we could
++	 * return for this specific case. Use ESTALE to report this.
++	 */
++	timediff_adj = reftime - host_ts.ref_time;
++	if (timediff_adj * 100 > HOST_TIMESYNC_DELAY_THRESH) {
++		pr_warn("TIMESYNC IC: Stale time stamp, %llu nsecs old\n",
++			HOST_TIMESYNC_DELAY_THRESH);
++		ret = -ESTALE;
++	}
++
++	newtime = host_ts.host_time + timediff_adj;
++	*ts = ns_to_timespec64(reftime_to_ns(newtime));
+ 	spin_unlock_irqrestore(&host_ts.lock, flags);
+ 
+-	return ts;
++	return ret;
+ }
+ 
+ static void hv_set_host_time(struct work_struct *work)
+ {
+-	struct timespec64 ts = hv_get_adj_host_time();
+ 
+-	do_settimeofday64(&ts);
++	struct timespec64 ts;
++
++	if (!hv_get_adj_host_time(&ts))
++		do_settimeofday64(&ts);
+ }
+ 
+ /*
+@@ -622,9 +648,7 @@ static int hv_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
+ 
+ static int hv_ptp_gettime(struct ptp_clock_info *info, struct timespec64 *ts)
+ {
+-	*ts = hv_get_adj_host_time();
+-
+-	return 0;
++	return hv_get_adj_host_time(ts);
+ }
+ 
+ static struct ptp_clock_info ptp_hyperv_info = {
+-- 
+2.17.1
 
-> ---
->  mm/gup.c | 37 ++++++++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 15 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ae096ea7583f..4da669f79566 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1789,6 +1789,25 @@ static long __get_user_pages_remote(struct mm_struct *mm,
->  				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
->  }
->  
-> +static bool is_valid_gup_flags(unsigned int gup_flags)
-> +{
-> +	/*
-> +	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> +	 * never directly by the caller, so enforce that with an assertion:
-> +	 */
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +		return false;
-> +	/*
-> +	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
-> +	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
-> +	 * FOLL_PIN.
-> +	 */
-> +	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
->  /**
->   * get_user_pages_remote() - pin user pages in memory
->   * @mm:		mm_struct of target mm
-> @@ -1854,11 +1873,7 @@ long get_user_pages_remote(struct mm_struct *mm,
->  		unsigned int gup_flags, struct page **pages,
->  		struct vm_area_struct **vmas, int *locked)
->  {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that with an assertion:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->  		return -EINVAL;
->  
->  	return __get_user_pages_remote(mm, start, nr_pages, gup_flags,
-> @@ -1904,11 +1919,7 @@ long get_user_pages(unsigned long start, unsigned long nr_pages,
->  		unsigned int gup_flags, struct page **pages,
->  		struct vm_area_struct **vmas)
->  {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that with an assertion:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->  		return -EINVAL;
->  
->  	return __gup_longterm_locked(current->mm, start, nr_pages,
-> @@ -2810,11 +2821,7 @@ EXPORT_SYMBOL_GPL(get_user_pages_fast_only);
->  int get_user_pages_fast(unsigned long start, int nr_pages,
->  			unsigned int gup_flags, struct page **pages)
->  {
-> -	/*
-> -	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-> -	 * never directly by the caller, so enforce that:
-> -	 */
-> -	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-> +	if (!is_valid_gup_flags(gup_flags))
->  		return -EINVAL;
->  
->  	/*
-> -- 
-> 2.27.0
-> 
-> 
-> 
