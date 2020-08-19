@@ -4,107 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CA5C433E1
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84F0C433DF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 625AA20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE2A7207DE
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 07:24:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQMDxP40"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YhK7+Gkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726600AbgHSHYT (ORCPT
+        id S1727773AbgHSHYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 03:24:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40914 "EHLO
+        Wed, 19 Aug 2020 03:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbgHSHYI (ORCPT
+        with ESMTP id S1726890AbgHSHYN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 03:24:08 -0400
+        Wed, 19 Aug 2020 03:24:13 -0400
 Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D854EC061345
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z18so20435851wrm.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51DBBC061343
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:11 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a14so20466313wra.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 00:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4oTMRepDWAwvEG4gP7KM4XWzXr1eKKBuCn5XU6f/p3c=;
-        b=xQMDxP40oi3eBNc7Z3Xh8ZZ0nMN8DIhN4T8xH85Xsm9iNdWmnZXm/ZacjDGeA5/lZp
-         8J9KeASsvVw6L9nuo/M08nb8BL6pxwOzjKxpv3VR1E2sgB9PQE5PVpiBgR0WNSMBzLwe
-         C2+pRvFC194BLywESVmUchHD+cAbjWSp0xJkjNQE0D/EHQg3dCa6eMy8eSmSMtKxQHH3
-         eVYlDOWMnc3D4GluUOh+YHHuNhJ6N/1ECcenz13QCZ3y1E4jZJ/1hhMUuFtxbBS1dw9h
-         Nd88JhHg5VbirFMOeN4O8YWOuaD+5rLX5+RVZykRnjnNpD7+/RRyIQ8xuJyJvcAEjI0d
-         B6Fw==
+        bh=1vaZ+GprAhy2WYAM7ouom3T40mlyDiSFdzkYLUqEOnA=;
+        b=YhK7+Gkgm60xh0/o16dYRkX3oK8trh5m0up4fYpP76ITHXS7Qvs+iz7mM/TtE/kt+C
+         Uuftv5fopnYrIQaSajIr9ZIRXMfpkKvj7QrXOKYAWWKVRi9iFObahuDTC+kpGL91CGek
+         RBYZGakNTHur0l17D+1PC5nI+cgyz2orPmCjyBdNe8uQ25T5tNYz6p9buAaOq0UN/TSY
+         WIXkK0KhDL30pdN59/ns00DgoGnLf5o6pZ62zQx0YhcnlTYJ7CIlI+QcDghQwTnOuqaN
+         NGrCgmC6/Z2u2axxK1T80a6o4llMhwkJNNy+qJMYsCTsobqlAgZ5dcQMVk/24EEKNUq/
+         VSWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4oTMRepDWAwvEG4gP7KM4XWzXr1eKKBuCn5XU6f/p3c=;
-        b=gaAjGhE0YkQtmEBbkmEF45XUQzgcHxRB3udZbA22sSrx3AH5YoLyVPCbiVDMRyro9C
-         6JUbYHqjWxKIGpaXgrm33ov0WjyEh+MPxNdGxBcoeCEViopIb1/MW0TmJg5A7dtFVz+T
-         O+olWCPnXD3VK4pH7eMfdKDVw0iNAUP03L+6YknDhKa5OUNnNNiBfwCVl2wnqppbDxxF
-         5xammWK8zgZwj4TnlHdJJeli/nbX0ib08bUkvxdaiqNF95oUC4RH2QiuJHCl1qJrIFiJ
-         pGF0ydV6nxJfRjzDITnQtnAMZrXrwvmyHfnzn7lT9h7caPR4WjsQYl/cRQVXXn7OhPk7
-         KfqA==
-X-Gm-Message-State: AOAM532PnQFYPIvPDaopt6yXX/elEnNba2VGJJUq4QkeoMWsMTC+0vUN
-        sFVDl7HBgJXszAppsHUGQU9GCg==
-X-Google-Smtp-Source: ABdhPJz4i/nOOv5dyCQ2pLbOgF5zC3v94kASka1DzykL10DVWGIgCT/Y9WW0yTSg2OuK7xwmQmfTJQ==
-X-Received: by 2002:a5d:6992:: with SMTP id g18mr23221572wru.15.1597821846494;
-        Wed, 19 Aug 2020 00:24:06 -0700 (PDT)
+        bh=1vaZ+GprAhy2WYAM7ouom3T40mlyDiSFdzkYLUqEOnA=;
+        b=EfbUXZMSFmtXGUbPCo1ibCyUt366hUSATE74vL4zhMebdMXGb6A+rtZWX1a5V25gRc
+         ltakWQgFCXUH3qLKhOyw0QrD7ek8BWcVtL+FbFClJjX5ZO+3F1sNdxHylpI+1VtcJ6wB
+         fIzy0hmXtDyZKU77bIfEYm4WBgKK8xzEPs36VfjsK+hhmRArZQGz7cu4lCzv2IuhjiOj
+         BKBlckl38X7bFxsZrL+YOj3rh2IOmKKuBlks1BPDeEzaIPAyvrHD14y1SlyWuwRraH5b
+         6NFWDatrNcJ6RGodqA6sMtq3QDo/aXS+eCaqsixRp2gPgFBaoYZR8cBaxp15EsX0C22n
+         TfXw==
+X-Gm-Message-State: AOAM530YH/SdQQMiENJZdf/3X6fE6siUy0JwaNSH9ZRPlhWUefny0Icv
+        Ihvvfpf5y3lcOTYUxTSvFoqC9dEYgc8flw==
+X-Google-Smtp-Source: ABdhPJwh4q+qWk7ffnlfepOmSFUtqSc9oXwvRWHyCij00qidVfOMj+GW8jr+2YbYNaQDA+dFBmihlQ==
+X-Received: by 2002:a05:6000:120c:: with SMTP id e12mr23301717wrx.354.1597821850019;
+        Wed, 19 Aug 2020 00:24:10 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.05
+        by smtp.gmail.com with ESMTPSA id c145sm3795808wmd.7.2020.08.19.00.24.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 00:24:05 -0700 (PDT)
+        Wed, 19 Aug 2020 00:24:09 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Jouni Malinen <j@w1.fi>
-Subject: [PATCH 01/28] wireless: intersil: hostap: Mark 'freq_list' as __maybe_unused
-Date:   Wed, 19 Aug 2020 08:23:35 +0100
-Message-Id: <20200819072402.3085022-2-lee.jones@linaro.org>
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 04/28] wireless: marvell: libertas_tf: Demote non-conformant kernel-doc headers
+Date:   Wed, 19 Aug 2020 08:23:38 +0100
+Message-Id: <20200819072402.3085022-5-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200819072402.3085022-1-lee.jones@linaro.org>
 References: <20200819072402.3085022-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'freq_list' is used in some source files which include hostap.h, but
-not all.  The compiler complains about the times it's not used.  Mark
-it as __maybe_used to tell the compiler that this is not only okay,
-it's expected.
+There are only 2 kernel-doc headers in this file and both are
+incorrect.  The first one does not attempt to document the function at
+all and the second one is suffering from severe doc-rot; the format is
+wrong and only 1 out of 3 parameters are being documented.
 
 Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/net/wireless/intersil/hostap/hostap_80211_tx.c:9:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
- In file included from drivers/net/wireless/intersil/hostap/hostap_main.c:31:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
- In file included from drivers/net/wireless/intersil/hostap/hostap_proc.c:10:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
- In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
- from drivers/net/wireless/intersil/hostap/hostap_cs.c:196:
- At top level:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
- In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
- from drivers/net/wireless/intersil/hostap/hostap_pci.c:221:
- At top level:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
- In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
- from drivers/net/wireless/intersil/hostap/hostap_plx.c:264:
- At top level:
- drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+ drivers/net/wireless/marvell/libertas_tf/main.c:129: warning: Function parameter or member 't' not described in 'command_timer_fn'
+ drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'card' not described in 'lbtf_add_card'
+ drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'dmdev' not described in 'lbtf_add_card'
+ drivers/net/wireless/marvell/libertas_tf/main.c:554: warning: Function parameter or member 'ops' not described in 'lbtf_add_card'
 
-Cc: Jouni Malinen <j@w1.fi>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -112,26 +95,35 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intersil/hostap/hostap.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/wireless/marvell/libertas_tf/main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intersil/hostap/hostap.h b/drivers/net/wireless/intersil/hostap/hostap.h
-index 8130d29c7989c..c4b81ff7d7e47 100644
---- a/drivers/net/wireless/intersil/hostap/hostap.h
-+++ b/drivers/net/wireless/intersil/hostap/hostap.h
-@@ -8,8 +8,10 @@
- #include "hostap_wlan.h"
- #include "hostap_ap.h"
+diff --git a/drivers/net/wireless/marvell/libertas_tf/main.c b/drivers/net/wireless/marvell/libertas_tf/main.c
+index 02bd7c99b3588..5937b645a5334 100644
+--- a/drivers/net/wireless/marvell/libertas_tf/main.c
++++ b/drivers/net/wireless/marvell/libertas_tf/main.c
+@@ -121,7 +121,7 @@ static void lbtf_cmd_work(struct work_struct *work)
+ 	lbtf_deb_leave(LBTF_DEB_CMD);
+ }
  
--static const long freq_list[] = { 2412, 2417, 2422, 2427, 2432, 2437, 2442,
--				  2447, 2452, 2457, 2462, 2467, 2472, 2484 };
-+static const long __maybe_unused freq_list[] = {
-+	2412, 2417, 2422, 2427, 2432, 2437, 2442,
-+	2447, 2452, 2457, 2462, 2467, 2472, 2484
-+};
- #define FREQ_COUNT ARRAY_SIZE(freq_list)
+-/**
++/*
+  *  This function handles the timeout of command sending.
+  *  It will re-send the same command again.
+  */
+@@ -542,11 +542,9 @@ int lbtf_rx(struct lbtf_private *priv, struct sk_buff *skb)
+ }
+ EXPORT_SYMBOL_GPL(lbtf_rx);
  
- /* hostap.c */
+-/**
++/*
+  * lbtf_add_card: Add and initialize the card.
+  *
+- *  @card    A pointer to card
+- *
+  *  Returns: pointer to struct lbtf_priv.
+  */
+ struct lbtf_private *lbtf_add_card(void *card, struct device *dmdev,
 -- 
 2.25.1
 
