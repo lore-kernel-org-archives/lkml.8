@@ -2,79 +2,113 @@ Return-Path: <SRS0=EnQK=B5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023F6C433DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD6DC20738
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594EF20738
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Aug 2020 02:48:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="a4omXrGF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHSCrr (ORCPT
+        id S1727824AbgHSCsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Aug 2020 22:47:47 -0400
-Received: from mga06.intel.com ([134.134.136.31]:15030 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbgHSCrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Aug 2020 22:47:45 -0400
-IronPort-SDR: L6pEgruXE4aIiFCpbNo2xc1LQGzJPGqaQEjFiMwADumXCSP/Q5mwpN0k/Fy74MuNnGRvNbGiuT
- qBn0XIf6/Stw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9717"; a="216562473"
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="216562473"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Aug 2020 19:47:44 -0700
-IronPort-SDR: HTPu3kc4NDfnQNpcql8xFm6h7Bcvs/ijovcCEMgk88lATFsD/VWz2NgT1MF8RUnPoQA28XFtl2
- q0wEHbI0ZNow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,329,1592895600"; 
-   d="scan'208";a="320315331"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Aug 2020 19:47:43 -0700
-Date:   Wed, 19 Aug 2020 10:48:58 +0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Zhang, Rui" <rui.zhang@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][RFC] ACPI: processor: Print more information when
- acpi_processor_evaluate_cst() failed
-Message-ID: <20200819024858.GA25038@chenyu-office.sh.intel.com>
-References: <20200816151230.14524-1-yu.c.chen@intel.com>
- <CAJZ5v0jz5EH7bB5Goia=qd_P5eVLoONbscSvvEAqU7svodg_MA@mail.gmail.com>
+        Tue, 18 Aug 2020 22:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727793AbgHSCsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Aug 2020 22:48:15 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501C4C061342
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 19:48:15 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id x24so17966512otp.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Aug 2020 19:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lXeL2NqENRyGepDGalfKTgrjgpPAYVjCiCWgtC+osv8=;
+        b=a4omXrGFt2mE73+iut1A5IhTEFfx6pamQME9IhWd57cwGlHU0WCx/xyCsDMW9oCRx/
+         r5Je+Jnqvv1oGb7qtzaDv7HdK8PFQzuo5T1zxSjyPR57HwOTgkaLE65klwpLM+bA3M/d
+         6UjCbZvUpey/j0kaj3lyZFqRoIQMTdTLmSwIY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lXeL2NqENRyGepDGalfKTgrjgpPAYVjCiCWgtC+osv8=;
+        b=htIN5iCL65ZEXBr58nReIPD1I6h4PxMziRJ6NNIu9uPR5bvZ6e+VQ3MN9Cg3OPImyo
+         e6rSfNcIUntHBIQHivey1haNzMNjFlW6kq9U8naPtLhu/pFb3dxpZWh38ZhddhLMyQ4W
+         u9p9C/I7jGc+BoWeUg7vuV/HdS7s/Dx17lbpcoAtjuZ7bNZwlqyCG92ZEOT6Z1Nzklee
+         NUEWY/6oKTIgwuLktjVSSVBys9E8e7qvvZYxr4/ZNz06wwvCXh5bdQ0kFYy4MVw5bDJ4
+         Lp5gH7tOXDVf+FP/zZRqLfkIygTVZsZBy775CuXUJHNMbJDRd+JUiOV4UBPOU53eGuwO
+         q23g==
+X-Gm-Message-State: AOAM530mU+L3+wdHmY7zPXD9puHMWYBw3qMcQ5JH2DSyZwldQbYmKyGU
+        6OS7vs4zqsdoOOtMxJHx6wLMQxPrs9vD5VfvVqGSNQ==
+X-Google-Smtp-Source: ABdhPJx7w/5ngmosBOb0nMnQpaaLLJ1ixcBwEM2m0noWsqACqIeFsrPmFWmcpoi9Um2KGR21e//49yJBL9TQ+yUx080=
+X-Received: by 2002:a9d:6f85:: with SMTP id h5mr17108737otq.81.1597805294630;
+ Tue, 18 Aug 2020 19:48:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jz5EH7bB5Goia=qd_P5eVLoONbscSvvEAqU7svodg_MA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200813084129.332730-1-josephsih@chromium.org>
+In-Reply-To: <20200813084129.332730-1-josephsih@chromium.org>
+From:   Shyh-In Hwang <josephsih@chromium.org>
+Date:   Wed, 19 Aug 2020 10:48:03 +0800
+Message-ID: <CAC9bf3SZKuCan1uDLZ55e0kHychy=6BHb1Cn4O0e5yJwBe1Wzg@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] To support the HFP WBS, a chip vendor may choose a particular
+To:     linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
+        luiz.dentz@gmail.com
+Cc:     Joseph Hwang <josephsih@google.com>,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:46:12PM +0200, Rafael J. Wysocki wrote:
-> On Sun, Aug 16, 2020 at 5:12 PM Chen Yu <yu.c.chen@intel.com> wrote:
-> >
-> > Some platforms have bogus _CST which might cause expectd behavior
-> > in the cpu idle driver. Some bogus _CST might be unable to be
-> > disassembled by acpica-tools due to broken format.
-> > Print extra log if the _CST extraction/verification failed.
-> > This can be used to help the user narrow down why the cpu
-> > idle driver fails to behave as expected.
-> >
-> > Suggested-by: Zhang Rui <rui.zhang@intel.com>
-> > Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-> 
-> This is fine by me as a general idea, but please change the log level to "info".
->
-Okay, I will send a new version. Thanks!
+Dear maintainers:
 
-thanks,
-Chenyu
+These two patches are to expose the WBS sco packet length to the user
+space. Since different vendors may choose different USB alternate
+settings which result in different packet lengths, we need the kernel
+to expose the lengths to the user space to handle the packets
+properly.
+
+Thanks!
+
+Joseph
+
+
+On Thu, Aug 13, 2020 at 4:42 PM Joseph Hwang <josephsih@chromium.org> wrote:
+>
+> USB alternate seeting of which the packet size is distinct.
+> The patches are to expose the packet size to user space so that
+> the user space does not need to hard code those values.
+>
+> We have verified this patch on Chromebooks which use
+> - Realtek 8822CE controller with USB alt setting 1
+> - Intel controller with USB alt setting 6
+> Our user space audio server, cras, can get the correct
+> packet length from the socket option.
+>
+>
+> Joseph Hwang (2):
+>   Bluetooth: btusb: define HCI packet sizes of USB Alts
+>   Bluetooth: sco: expose WBS packet length in socket option
+>
+>  drivers/bluetooth/btusb.c         | 43 +++++++++++++++++++++++--------
+>  include/net/bluetooth/bluetooth.h |  2 ++
+>  include/net/bluetooth/hci_core.h  |  1 +
+>  net/bluetooth/sco.c               |  8 ++++++
+>  4 files changed, 43 insertions(+), 11 deletions(-)
+>
+> --
+> 2.28.0.236.gb10cc79966-goog
+>
