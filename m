@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D34C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD4F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC97322B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98CE822B43
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916082;
-	bh=wp8G5LoikT6tMvWTrOAsmUvkum57qThOs0SmGsnDMmE=;
+	s=default; t=1597916091;
+	bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1imSAE/iME2WLIDHd6t9lh9cKUMCLtGlI9y8TCAa2sJJTo639QHaIeK2CkMT9rJ42
-	 244xbhdbbffJ31qFpalyJ7ci9IK5Ehi1Lg7fU+OGRvAXPx2hwSi/45cClJ8ejJfepN
-	 xeB0TKXoXLUUB8GcykRE8Z7lRP6r6uqYEnbl4Glw=
+	b=OtmV+dQMOYlz0iI7ceK7LjhQ917MVOECLuxIHpIlh2gTD1OFI+xRuATbsyx0aeazt
+	 aRWhsVd3WTF53EHlEt4PE/IlbQs+T+pmqvL9B0c5/PvQbZkPL3NZzO6xELczBgAGsd
+	 VJ8uNzx4cEI5V+bl8V/OjekWLeaZwtFLnPJjOogo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbgHTJeV (ORCPT
+        id S1728343AbgHTJet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:34:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:34:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbgHTJbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:38 -0400
+        id S1727845AbgHTJbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9337122B3F;
-        Thu, 20 Aug 2020 09:31:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D22F20724;
+        Thu, 20 Aug 2020 09:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915898;
-        bh=wp8G5LoikT6tMvWTrOAsmUvkum57qThOs0SmGsnDMmE=;
+        s=default; t=1597915884;
+        bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jHg4W3l6z93G80sxfHYFssGiWTOf3pRCVpzsSvJJ+mbowONt1j7a8A6MXS4iME8eC
-         wCz2rMzYrPi3ocl34AOQn9vWdzMwLTpWYnvYpMbZNB1fuXpzVCc0C31nQcxdOURNDa
-         QkbI3mgPQugCXO42e1tMkmcEfbT24rW2TH6x3U7E=
+        b=Oa+ybJEcmIl0bkYMeEdYLnxg0i3o+Tvb9WTpCgI46a+KswLsd3LzZ1V2ZlZ0bpHGF
+         AmT7XsbHvRu7aFGhJvnYQAg28h3pzsEDxEHyjL0y/L8Dx8hftLEt8oGCu5RXg1fhQ5
+         C0HmcOmVUUgytEx7pEoZPH01GrRREx0twpUTkjR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 174/232] ubi: fastmap: Dont produce the initial next anchor PEB when fastmap is disabled
-Date:   Thu, 20 Aug 2020 11:20:25 +0200
-Message-Id: <20200820091621.246072260@linuxfoundation.org>
+Subject: [PATCH 5.8 169/232] pwm: bcm-iproc: handle clk_get_rate() return
+Date:   Thu, 20 Aug 2020 11:20:20 +0200
+Message-Id: <20200820091621.001700555@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,43 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit 3b185255bb2f34fa6927619b9ef27f192a3d9f5a ]
+[ Upstream commit 6ced5ff0be8e94871ba846dfbddf69d21363f3d7 ]
 
-Following process triggers a memleak caused by forgetting to release the
-initial next anchor PEB (CONFIG_MTD_UBI_FASTMAP is disabled):
-1. attach -> __erase_worker -> produce the initial next anchor PEB
-2. detach -> ubi_fastmap_close (Do nothing, it should have released the
-   initial next anchor PEB)
+Handle clk_get_rate() returning 0 to avoid possible division by zero.
 
-Don't produce the initial next anchor PEB in __erase_worker() when fastmap
-is disabled.
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
-Fixes: f9c34bb529975fe ("ubi: Fix producing anchor PEBs")
-Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/ubi/wl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
-index 27636063ed1bb..42cac572f82dc 100644
---- a/drivers/mtd/ubi/wl.c
-+++ b/drivers/mtd/ubi/wl.c
-@@ -1086,7 +1086,8 @@ static int __erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk)
- 	if (!err) {
- 		spin_lock(&ubi->wl_lock);
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 1f829edd8ee70..d392a828fc493 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	u64 tmp, multi, rate;
+ 	u32 value, prescale;
  
--		if (!ubi->fm_next_anchor && e->pnum < UBI_FM_MAX_START) {
-+		if (!ubi->fm_disabled && !ubi->fm_next_anchor &&
-+		    e->pnum < UBI_FM_MAX_START) {
- 			/* Abort anchor production, if needed it will be
- 			 * enabled again in the wear leveling started below.
- 			 */
+-	rate = clk_get_rate(ip->clk);
+-
+ 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+ 
+ 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		state->polarity = PWM_POLARITY_INVERSED;
+ 
++	rate = clk_get_rate(ip->clk);
++	if (rate == 0) {
++		state->period = 0;
++		state->duty_cycle = 0;
++		return;
++	}
++
+ 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+ 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+ 	prescale &= IPROC_PWM_PRESCALE_MAX;
 -- 
 2.25.1
 
