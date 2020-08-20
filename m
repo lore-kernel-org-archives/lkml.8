@@ -2,211 +2,179 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA78C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD00C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E33B22080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1CF521744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="swKUvLLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHTIG6 (ORCPT
+        id S1726765AbgHTIG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:06:58 -0400
-Received: from mga07.intel.com ([134.134.136.100]:6342 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgHTIGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:06:50 -0400
-IronPort-SDR: tg5/UWn3GYTP9fMCWsNGhSXejHFePOEXe+t/4OS5tm27ozRKWhEC85/nJ6265v2Axllp0cntsT
- sWEQHHAsQoSA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="219563394"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="219563394"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 01:06:48 -0700
-IronPort-SDR: ofSLQ90hcXgo9+AOSKBWlxm1iZpaVXrMm33vBnHA+mUz2CKr20IvxDVqlNHTn7HJV+DgpCNNRz
- 5+wG3IhPChsg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="329595076"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
-  by fmsmga002.fm.intel.com with ESMTP; 20 Aug 2020 01:06:47 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     <linux-kernel@vger.kernel.org>, <yang.shi@linux.alibaba.com>,
-        <rientjes@google.com>, <dan.j.williams@intel.com>
-Subject: Re: [RFC][PATCH 5/9] mm/migrate: demote pages during reclaim
-References: <20200818184122.29C415DF@viggo.jf.intel.com>
-        <20200818184131.C972AFCC@viggo.jf.intel.com>
-Date:   Thu, 20 Aug 2020 16:06:46 +0800
-In-Reply-To: <20200818184131.C972AFCC@viggo.jf.intel.com> (Dave Hansen's
-        message of "Tue, 18 Aug 2020 11:41:31 -0700")
-Message-ID: <87lfi9wxk9.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 20 Aug 2020 04:06:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgHTIGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:06:40 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C1A7C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:06:39 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id m20so873414eds.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0OwhNfFCbhYDQLA4/dccOD7L7141WZ9ATtkpH6xUNMc=;
+        b=swKUvLLnAQdFPDLye2jyXh2prjZtgQAcVoLnNhc7qsmp4y6k0yNkEfsA5FufOZ56X8
+         pymAO2W/n81MdoV+Uo3zfbU64TjgEKIkSmaKZMhdY/6q87jaNSn0K2bGDXXzd6L8DiTZ
+         7ii1ra03DhVoia2KQzGGhqhQJpCxGL0UeVwPbAJivnYhHgc5JH0TK09/6+PMDp/ggC2K
+         DSUnx2mgfsZUpWFQDB3efdz27VUZtITNnPOHIQrp92tQt0Hzj0K7AGZu1MTgO6480SEz
+         ePiYPyT3Ysh5+oprallpD6gif3mMAjj1m2n/zuPrMwunpU1bm/ojeO7YfIBLznybOQFJ
+         cGXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0OwhNfFCbhYDQLA4/dccOD7L7141WZ9ATtkpH6xUNMc=;
+        b=UsShGassfWBbDXYx2G/1d/2UspB3mFQiLk+DtYOiJ/kCd8Re0e+q5R9woLC9IXdCxR
+         CzPhrYzXfs8gVpXEA0FjC2P2qm/ZMD+PbD8TJub8Z9WSUIR6aDuYjkiy4dLHDFgmH8Na
+         54hMkmz8St6H0T41awS6JKca8AVuBY5pOzD0fEj1pzj440HpovhCcSD8J6r9MtKTdqlv
+         Ih5va3aZreT4eB97iwTi8yEYDdcDn0M0cGQPWT4COpLQ1ePBB29OsUh624qjVDPMMe7G
+         wibQyP5jlq0JaeTGJ2w2qgWKDTKw9KrKBiAZvSkZNJrvmeRArGafaLQH+SxzHF5Gwl0I
+         FVIw==
+X-Gm-Message-State: AOAM532xd9P8vL4ZZpiZpARZnRTlC1V//JwbLkY0oufRZ1+SXiOa7chL
+        8cMO51mtOghvNSfryL1PqsnHEQIi/0WvLFuPXFlRcQ==
+X-Google-Smtp-Source: ABdhPJxedwVOjuhOGa+YZ2VRQ5JC/KBODV2K/n3WXxs7L+MCk4FOrvdgSwNrpgvPVRF3DiAgVdCepfeUVHJ0icaTZOY=
+X-Received: by 2002:aa7:c395:: with SMTP id k21mr1797517edq.386.1597910798048;
+ Thu, 20 Aug 2020 01:06:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20200818111057.19755-1-tingwei@codeaurora.org> <20200818111057.19755-3-tingwei@codeaurora.org>
+In-Reply-To: <20200818111057.19755-3-tingwei@codeaurora.org>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 20 Aug 2020 09:06:27 +0100
+Message-ID: <CAJ9a7VjoKZnztndjAZKKsAj1-QJhWDHZN6e3hyp8dj7EerJF=A@mail.gmail.com>
+Subject: Re: [PATCH] coresight: cti: write regsiters directly in cti_enable_hw()
+To:     Tingwei Zhang <tingwei@codeaurora.org>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Coresight ML <coresight@lists.linaro.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Dave,
+Hi Tingwei
 
-Dave Hansen <dave.hansen@linux.intel.com> writes:
+On Tue, 18 Aug 2020 at 12:11, Tingwei Zhang <tingwei@codeaurora.org> wrote:
+>
+> Deadlock as below is triggered by one CPU holds drvdata->spinlock
+> and calls cti_enable_hw(). Smp_call_function_single() is called
+> in cti_enable_hw() and tries to let another CPU write CTI registers.
+> That CPU is trying to get drvdata->spinlock in cti_cpu_pm_notify()
+> and doesn't response to IPI from smp_call_function_single().
+>
+> [  988.335937] CPU: 6 PID: 10258 Comm: sh Tainted: G        W    L
+> 5.8.0-rc6-mainline-16783-gc38daa79b26b-dirty #1
+> [  988.346364] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [  988.352073] pstate: 20400005 (nzCv daif +PAN -UAO BTYPE=--)
+> [  988.357689] pc : smp_call_function_single+0x158/0x1b8
+> [  988.362782] lr : smp_call_function_single+0x124/0x1b8
+> ...
+> [  988.451638] Call trace:
+> [  988.454119]  smp_call_function_single+0x158/0x1b8
+> [  988.458866]  cti_enable+0xb4/0xf8 [coresight_cti]
+> [  988.463618]  coresight_control_assoc_ectdev+0x6c/0x128 [coresight]
+> [  988.469855]  coresight_enable+0x1f0/0x364 [coresight]
+> [  988.474957]  enable_source_store+0x5c/0x9c [coresight]
+> [  988.480140]  dev_attr_store+0x14/0x28
+> [  988.483839]  sysfs_kf_write+0x38/0x4c
+> [  988.487532]  kernfs_fop_write+0x1c0/0x2b0
+> [  988.491585]  vfs_write+0xfc/0x300
+> [  988.494931]  ksys_write+0x78/0xe0
+> [  988.498283]  __arm64_sys_write+0x18/0x20
+> [  988.502240]  el0_svc_common+0x98/0x160
+> [  988.506024]  do_el0_svc+0x78/0x80
+> [  988.509377]  el0_sync_handler+0xd4/0x270
+> [  988.513337]  el0_sync+0x164/0x180
+>
+> This change write CTI registers directly in cti_enable_hw().
+> Config->hw_powered has been checked to be true with spinlock holded.
+> CTI is powered and can be programmed until spinlock is released.
+>
 
-[snip]
+Agreed.
 
-> diff -puN mm/vmscan.c~demote-with-migrate_pages mm/vmscan.c
-> --- a/mm/vmscan.c~demote-with-migrate_pages	2020-08-18 11:36:52.919583179 -0700
-> +++ b/mm/vmscan.c	2020-08-18 11:36:52.924583179 -0700
-> @@ -43,6 +43,7 @@
->  #include <linux/kthread.h>
->  #include <linux/freezer.h>
->  #include <linux/memcontrol.h>
-> +#include <linux/migrate.h>
->  #include <linux/delayacct.h>
->  #include <linux/sysctl.h>
->  #include <linux/oom.h>
-> @@ -1040,6 +1041,24 @@ static enum page_references page_check_r
->  	return PAGEREF_RECLAIM;
+Reviewed-by Mike Leach <mike.leach@linaro.org>
+
+> Fixes: 6a0953ce7de9 ("coresight: cti: Add CPU idle pm notifer to CTI devices")
+> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+> ---
+>  drivers/hwtracing/coresight/coresight-cti.c | 17 +----------------
+>  1 file changed, 1 insertion(+), 16 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
+> index 3ccc703dc940..869569eb8c7f 100644
+> --- a/drivers/hwtracing/coresight/coresight-cti.c
+> +++ b/drivers/hwtracing/coresight/coresight-cti.c
+> @@ -86,13 +86,6 @@ void cti_write_all_hw_regs(struct cti_drvdata *drvdata)
+>         CS_LOCK(drvdata->base);
 >  }
->  
-> +bool migrate_demote_page_ok(struct page *page, struct scan_control *sc)
-> +{
-> +	int next_nid = next_demotion_node(page_to_nid(page));
-> +
-> +	VM_BUG_ON_PAGE(!PageLocked(page), page);
-> +	VM_BUG_ON_PAGE(PageHuge(page), page);
-> +	VM_BUG_ON_PAGE(PageLRU(page), page);
-> +
-> +	if (next_nid == NUMA_NO_NODE)
-> +		return false;
-> +	if (PageTransHuge(page) && !thp_migration_supported())
-> +		return false;
-> +
-> +	// FIXME: actually enable this later in the series
-> +	return false;
-> +}
-> +
-> +
->  /* Check if a page is dirty or under writeback */
->  static void page_check_dirty_writeback(struct page *page,
->  				       bool *dirty, bool *writeback)
-> @@ -1070,6 +1089,66 @@ static void page_check_dirty_writeback(s
->  		mapping->a_ops->is_dirty_writeback(page, dirty, writeback);
->  }
->  
-> +static struct page *alloc_demote_page(struct page *page, unsigned long node)
-> +{
-> +	/*
-> +	 * Try to fail quickly if memory on the target node is not
-> +	 * available.  Leaving out __GFP_IO and __GFP_FS helps with
-> +	 * this.  If the desintation node is full, we want kswapd to
-> +	 * run there so that its pages will get reclaimed and future
-> +	 * migration attempts may succeed.
-> +	 */
-> +	gfp_t flags = (__GFP_HIGHMEM | __GFP_MOVABLE | __GFP_NORETRY |
-> +		       __GFP_NOMEMALLOC | __GFP_NOWARN | __GFP_THISNODE |
-> +		       __GFP_KSWAPD_RECLAIM);
-> +	/* HugeTLB pages should not be on the LRU */
-> +	WARN_ON_ONCE(PageHuge(page));
-> +
-> +	if (PageTransHuge(page)) {
-> +		struct page *thp;
-> +
-> +		flags |= __GFP_COMP;
-> +
-> +		thp = alloc_pages_node(node, flags, HPAGE_PMD_ORDER);
-> +		if (!thp)
-> +			return NULL;
-> +		prep_transhuge_page(thp);
-> +		return thp;
-> +	}
-> +
-> +	return __alloc_pages_node(node, flags, 0);
-> +}
-> +
-> +/*
-> + * Take pages on @demote_list and attempt to demote them to
-> + * another node.  Pages which are not demoted are added to
-> + * @ret_pages.
-> + */
-> +static unsigned int demote_page_list(struct list_head *ret_list,
-> +				     struct list_head *demote_pages,
-> +				     struct pglist_data *pgdat,
-> +				     struct scan_control *sc)
-> +{
-> +	int target_nid = next_demotion_node(pgdat->node_id);
-> +	unsigned int nr_succeeded = 0;
-> +	int err;
-> +
-> +	if (list_empty(demote_pages))
-> +		return 0;
-> +
-> +	/* Demotion ignores all cpuset and mempolicy settings */
-> +	err = migrate_pages(demote_pages, alloc_demote_page, NULL,
-> +			    target_nid, MIGRATE_ASYNC, MR_DEMOTION,
-> +			    &nr_succeeded);
-> +
-> +	if (err) {
-> +		putback_movable_pages(demote_pages);
-> +		list_splice(ret_list, demote_pages);
-> +	}
-> +
-> +	return nr_succeeded;
-> +}
-> +
->  /*
->   * shrink_page_list() returns the number of reclaimed pages
->   */
-> @@ -1082,6 +1161,7 @@ static unsigned int shrink_page_list(str
+>
+> -static void cti_enable_hw_smp_call(void *info)
+> -{
+> -       struct cti_drvdata *drvdata = info;
+> -
+> -       cti_write_all_hw_regs(drvdata);
+> -}
+> -
+>  /* write regs to hardware and enable */
+>  static int cti_enable_hw(struct cti_drvdata *drvdata)
 >  {
->  	LIST_HEAD(ret_pages);
->  	LIST_HEAD(free_pages);
-> +	LIST_HEAD(demote_pages);
->  	unsigned int nr_reclaimed = 0;
->  	unsigned int pgactivate = 0;
->  
-> @@ -1237,6 +1317,16 @@ static unsigned int shrink_page_list(str
->  		}
->  
->  		/*
-> +		 * Before reclaiming the page, try to relocate
-> +		 * its contents to another node.
-> +		 */
-> +		if (migrate_demote_page_ok(page, sc)) {
-> +			list_add(&page->lru, &demote_pages);
-> +			unlock_page(page);
-> +			continue;
-> +		}
-> +
-> +		/*
->  		 * Anonymous process memory has backing store?
->  		 * Try to allocate it some swap space here.
->  		 * Lazyfree page could be freed directly
-> @@ -1484,6 +1574,9 @@ keep:
->  		VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), page);
->  	}
->  
-> +	/* Migrate pages selected for demotion */
-> +	nr_reclaimed += demote_page_list(&ret_pages, &demote_pages, pgdat, sc);
-> +
->  	pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
->  
->  	mem_cgroup_uncharge_list(&free_pages);
-> _
+> @@ -112,15 +105,7 @@ static int cti_enable_hw(struct cti_drvdata *drvdata)
+>         if (rc)
+>                 goto cti_err_not_enabled;
+>
+> -       if (drvdata->ctidev.cpu >= 0) {
+> -               rc = smp_call_function_single(drvdata->ctidev.cpu,
+> -                                             cti_enable_hw_smp_call,
+> -                                             drvdata, 1);
+> -               if (rc)
+> -                       goto cti_err_not_enabled;
+> -       } else {
+> -               cti_write_all_hw_regs(drvdata);
+> -       }
+> +       cti_write_all_hw_regs(drvdata);
+>
+>         config->hw_enabled = true;
+>         atomic_inc(&drvdata->config.enable_req_count);
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+> _______________________________________________
+> CoreSight mailing list
+> CoreSight@lists.linaro.org
+> https://lists.linaro.org/mailman/listinfo/coresight
 
-Generally, it's good to batch the page migration.  But one side effect
-is that, if the pages are failed to be migrated, they will be placed
-back to the LRU list instead of falling back to be reclaimed really.
-This may cause some issue in some situation.  For example, if there's no
-enough space in the PMEM (slow) node, so the page migration fails, OOM
-may be triggered, because the direct reclaiming on the DRAM (fast) node
-may make no progress, while it can reclaim some pages really before.
 
-Best Regards,
-Huang, Ying
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
