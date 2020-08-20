@@ -2,210 +2,210 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561E6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F5BE207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tF9K4dno"
+	by mail.kernel.org (Postfix) with ESMTP id 581342086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597929030;
+	bh=UeJwsg7fozCpZ80Y5Rbc3gl702P9dpH/K54G/Ivdd2I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dMwQKXD+gqUUBM2N+homWpUWcVZfLNjXh/+MMcndm/z1Pln8VqtfJ6aVQBYQF/7rG
+	 6OjWfbEivkJZO4M8g/9Qvyg1LF2f7IoPoKhls/5/FHgcDecVC43lOTEcKI2wY1CFUh
+	 o51eIpalXzrHDshPLh4H1A4ZDhh9yrzU2fqmcTAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgHTNKT (ORCPT
+        id S1729008AbgHTNK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:10:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26200 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728762AbgHTNJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:09:38 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KD2CXq030836;
-        Thu, 20 Aug 2020 09:09:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : date : mime-version : in-reply-to : content-type :
- content-transfer-encoding : message-id; s=pp1;
- bh=o9TyYL3CUeDWcjaJivIo7lPu6CidluEG3TmZxmgWp4Q=;
- b=tF9K4dnoe+BjKneJP99iaqGFfTRP40FfgD8gdygX817JQDRMlKn+yAZeSdM5kc1ZsMPE
- u8UZfScQeBb0xRmJa7P1lVf+8fCAhaHIm9Hh0pIhZYT5FpYsn4ikM05bY1/ErH656Qpg
- 9h8NclhTnGAjlsQApADXJsm+KiBXHiW4qSTQJfUX+/wBtv7PbaTaQXHPHtPToEKyxVks
- QgRCqHjpGRa8rDdqSHkQdwgDpmVKH9o4nXn8yVvxAwgY0DvLyptUe4pFo+yGYQJxGrVz
- rKeB6JtpR5o1ZiuBng/xi0uCfZuxHID1zTmb4adqd5m1S7MvdkAQxw50tcHANZ7QCe2i hQ== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mx4jky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 09:09:33 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KD4xsQ015558;
-        Thu, 20 Aug 2020 13:09:30 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 3304ujsxas-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 13:09:30 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KD9Saf56295740
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 13:09:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93ECD4C040;
-        Thu, 20 Aug 2020 13:09:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F1CA4C046;
-        Thu, 20 Aug 2020 13:09:27 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.33.217])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 13:09:27 +0000 (GMT)
-Subject: Re: [RFC 1/1] ext4: Optimize ext4 DAX overwrites
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-ext4@vger.kernel.org, tytso@mit.edu,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-References: <cover.1597855360.git.riteshh@linux.ibm.com>
- <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
- <20200820125300.GK1902@quack2.suse.cz>
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-Date:   Thu, 20 Aug 2020 18:39:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Thu, 20 Aug 2020 09:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728703AbgHTJhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:36 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63A5322B3F;
+        Thu, 20 Aug 2020 09:37:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916255;
+        bh=UeJwsg7fozCpZ80Y5Rbc3gl702P9dpH/K54G/Ivdd2I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZUQBdupGyuYwHdHq5p9E51lFOXQzPDcwLySa0kjrNhSgXpANr0d7bnf74y401afPN
+         Z4uyfRxs4HVCddF6f2Bn1ldyuOAMJJ+ZwrzoZ849xWYhKpDsij85zZ9ElcS1Xuyq1g
+         axYV+XoeU0ufeUQkCOtQktvDAWwhx4CGLDAi6uf0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 025/204] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
+Date:   Thu, 20 Aug 2020 11:18:42 +0200
+Message-Id: <20200820091607.523759267@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200820125300.GK1902@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Message-Id: <20200820130927.7F1CA4C046@d06av22.portsmouth.uk.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0
- impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200104
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Josef Bacik <josef@toxicpanda.com>
+
+commit fbabd4a36faaf74c83142d0b3d950c11ec14fda1 upstream.
+
+Eric reported seeing this message while running generic/475
+
+  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+
+Full stack trace:
+
+  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
+  BTRFS info (device dm-0): forced readonly
+  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
+  ------------[ cut here ]------------
+  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
+  BTRFS: Transaction aborted (error -117)
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
+  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
+  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
+  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
+  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
+  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
+  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
+  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
+  Call Trace:
+   ? finish_wait+0x90/0x90
+   ? __mutex_unlock_slowpath+0x45/0x2a0
+   ? lock_acquire+0xa3/0x440
+   ? lockref_put_or_lock+0x9/0x30
+   ? dput+0x20/0x4a0
+   ? dput+0x20/0x4a0
+   ? do_raw_spin_unlock+0x4b/0xc0
+   ? _raw_spin_unlock+0x1f/0x30
+   btrfs_sync_file+0x335/0x490 [btrfs]
+   do_fsync+0x38/0x70
+   __x64_sys_fsync+0x10/0x20
+   do_syscall_64+0x50/0xe0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f6a6ef1b6e3
+  Code: Bad RIP value.
+  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
+  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
+  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
+  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
+  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  irq event stamp: 0
+  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last disabled at (0): [<0000000000000000>] 0x0
+  ---[ end trace af146e0e38433456 ]---
+  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+
+This ret came from btrfs_write_marked_extents().  If we get an aborted
+transaction via EIO before, we'll see it in btree_write_cache_pages()
+and return EUCLEAN, which gets printed as "Filesystem corrupted".
+
+Except we shouldn't be returning EUCLEAN here, we need to be returning
+EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
+
+We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
+elsewhere, but we want to use EROFS for this particular case.  The
+original transaction abort has the real error code for why we ended up
+with an aborted transaction, all subsequent actions just need to return
+EROFS because they may not have a trans handle and have no idea about
+the original cause of the abort.
+
+After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
+stacktrace will not be dumped either.
+
+Reported-by: Eric Sandeen <esandeen@redhat.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add full test stacktrace ]
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/extent_io.c   |    2 +-
+ fs/btrfs/scrub.c       |    2 +-
+ fs/btrfs/transaction.c |    5 ++++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4110,7 +4110,7 @@ retry:
+ 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
+ 		ret = flush_write_bio(&epd);
+ 	} else {
+-		ret = -EUCLEAN;
++		ret = -EROFS;
+ 		end_write_bio(&epd, ret);
+ 	}
+ 	return ret;
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3761,7 +3761,7 @@ static noinline_for_stack int scrub_supe
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
+ 
+ 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
+-		return -EIO;
++		return -EROFS;
+ 
+ 	/* Seed devices of a new filesystem has their own generation. */
+ 	if (scrub_dev->fs_devices != fs_info->fs_devices)
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -937,7 +937,10 @@ static int __btrfs_end_transaction(struc
+ 	if (TRANS_ABORTED(trans) ||
+ 	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
+ 		wake_up_process(info->transaction_kthread);
+-		err = -EIO;
++		if (TRANS_ABORTED(trans))
++			err = trans->aborted;
++		else
++			err = -EROFS;
+ 	}
+ 
+ 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
 
 
-On 8/20/20 6:23 PM, Jan Kara wrote:
-> On Thu 20-08-20 17:06:28, Ritesh Harjani wrote:
->> Currently in case of DAX, we are starting a transaction
->> everytime for IOMAP_WRITE case. This can be optimized
->> away in case of an overwrite (where the blocks were already
->> allocated). This could give a significant performance boost
->> for multi-threaded random writes.
->>
->> Reported-by: Dan Williams <dan.j.williams@intel.com>
->> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
-> 
-> Thanks for returning to this and I'm glad to see how much this helped :)
-> BTW, I'd suspect there could be also significant contention and cache line
-> bouncing on j_state_lock and transaction's atomic counters...
-
-ok, will try and profile to see if this happens.
-
-
-> 
->> ---
->>   fs/ext4/ext4.h  | 1 +
->>   fs/ext4/file.c  | 2 +-
->>   fs/ext4/inode.c | 8 +++++++-
->>   3 files changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
->> index 42f5060f3cdf..9a2138afc751 100644
->> --- a/fs/ext4/ext4.h
->> +++ b/fs/ext4/ext4.h
->> @@ -3232,6 +3232,7 @@ extern const struct dentry_operations ext4_dentry_ops;
->>   extern const struct inode_operations ext4_file_inode_operations;
->>   extern const struct file_operations ext4_file_operations;
->>   extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
->> +extern bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len);
->>   
->>   /* inline.c */
->>   extern int ext4_get_max_inline_size(struct inode *inode);
->> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
->> index 2a01e31a032c..51cd92ac1758 100644
->> --- a/fs/ext4/file.c
->> +++ b/fs/ext4/file.c
->> @@ -188,7 +188,7 @@ ext4_extending_io(struct inode *inode, loff_t offset, size_t len)
->>   }
->>   
->>   /* Is IO overwriting allocated and initialized blocks? */
->> -static bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
->> +bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
->>   {
->>   	struct ext4_map_blocks map;
->>   	unsigned int blkbits = inode->i_blkbits;
->> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->> index 10dd470876b3..f0ac0ee9e991 100644
->> --- a/fs/ext4/inode.c
->> +++ b/fs/ext4/inode.c
->> @@ -3423,6 +3423,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->>   	int ret;
->>   	struct ext4_map_blocks map;
->>   	u8 blkbits = inode->i_blkbits;
->> +	bool overwrite = false;
->>   
->>   	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
->>   		return -EINVAL;
->> @@ -3430,6 +3431,9 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->>   	if (WARN_ON_ONCE(ext4_has_inline_data(inode)))
->>   		return -ERANGE;
->>   
->> +	if (IS_DAX(inode) && (flags & IOMAP_WRITE) &&
->> +	    ext4_overwrite_io(inode, offset, length))
->> +		overwrite = true;
-> 
-> So the patch looks correct but using ext4_overwrite_io() seems a bit
-> foolish since under the hood it does ext4_map_blocks() only to be able to
-> decide whether to call ext4_map_blocks() once again with exactly the same
-> arguments :). So I'd rather slightly refactor the code in
-> ext4_iomap_begin() to avoid this double calling of ext4_map_blocks() for
-> the fast path.
-
-Yes, agreed. Looking at the numbers I was excited to post out the RFC
-for discussion. Will make above changes and post. :)
-
-
-With DIO, we need to detect overwrite case early in
-ext4_dio_write_iter() to determine whether we need shared or excl.
-locks - so probably for DIO case we still need overwrite check in
-ext4_dio_write_iter()
-
-Thanks for review!!
--ritesh
-
-
-> 
-> 								Honza
-> 
->>   	/*
->>   	 * Calculate the first and last logical blocks respectively.
->>   	 */
->> @@ -3437,13 +3441,15 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->>   	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
->>   			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
->>   
->> -	if (flags & IOMAP_WRITE)
->> +	if ((flags & IOMAP_WRITE) && !overwrite)
->>   		ret = ext4_iomap_alloc(inode, &map, flags);
->>   	else
->>   		ret = ext4_map_blocks(NULL, inode, &map, 0);
->>   
->>   	if (ret < 0)
->>   		return ret;
->> +	if (IS_DAX(inode) && overwrite)
->> +		WARN_ON(!(map.m_flags & EXT4_MAP_MAPPED));
->>   
->>   	ext4_set_iomap(inode, iomap, &map, offset, length);
->>   
->> -- 
->> 2.25.4
->>
