@@ -2,144 +2,122 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F9DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CFAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 339272086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jg6X0gcU"
+	by mail.kernel.org (Postfix) with ESMTP id D1762204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgHTMuP (ORCPT
+        id S1730003AbgHTMuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:50:15 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:16026 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbgHTMtp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:49:45 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597927784; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=BhNeirievu7ABUQ2mRSmIu+sWUN4ihC6bWjNuJCyjvc=; b=jg6X0gcUrStaNIZaXRDpTvvLaby7WD8j50rS/vKiGZTrgoswqwPKQ1W/r2DiEfX4zpVk5PCf
- MEiXW6KzgknlhS5W9d3bQ+YWpFU9zIpth7iBf4dNpeMvjrj8onKKW2HvVwDLNaAsm0wS45Ki
- tfh5qAtR2SHGd2AyT1fdabgHcaI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f3e716755574eb3e8949855 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 12:49:43
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 52474C43395; Thu, 20 Aug 2020 12:49:42 +0000 (UTC)
-Received: from vjitta-linux.qualcomm.com (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vjitta)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6C862C433CA;
-        Thu, 20 Aug 2020 12:49:39 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6C862C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
-From:   vjitta@codeaurora.org
-To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
-        robin.murphy@arm.com, vjitta@codeaurora.org
-Subject: [PATCH v2 1/2] iommu/iova: Retry from last rb tree node if iova search fails
-Date:   Thu, 20 Aug 2020 18:19:20 +0530
-Message-Id: <1597927761-24441-1-git-send-email-vjitta@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Thu, 20 Aug 2020 08:50:25 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:40948 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728152AbgHTMt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:49:27 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.93)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k8k0I-00Adm1-K2; Thu, 20 Aug 2020 06:49:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1k8k0H-0004wa-Os; Thu, 20 Aug 2020 06:49:14 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        christian.brauner@ubuntu.com, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
+        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+References: <20200820002053.1424000-1-surenb@google.com>
+        <87zh6pxzq6.fsf@x220.int.ebiederm.org>
+        <20200820124241.GJ5033@dhcp22.suse.cz>
+Date:   Thu, 20 Aug 2020 07:45:37 -0500
+In-Reply-To: <20200820124241.GJ5033@dhcp22.suse.cz> (Michal Hocko's message of
+        "Thu, 20 Aug 2020 14:42:41 +0200")
+Message-ID: <87lfi9xz7y.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1k8k0H-0004wa-Os;;;mid=<87lfi9xz7y.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+DAdP7WXJ3+fqaabHe/txON167hJBjJH8=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in __set_oom_adj when not necessary
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vijayanand Jitta <vjitta@codeaurora.org>
+Michal Hocko <mhocko@suse.com> writes:
 
-When ever a new iova alloc request comes iova is always searched
-from the cached node and the nodes which are previous to cached
-node. So, even if there is free iova space available in the nodes
-which are next to the cached node iova allocation can still fail
-because of this approach.
+> On Thu 20-08-20 07:34:41, Eric W. Biederman wrote:
+>> Suren Baghdasaryan <surenb@google.com> writes:
+>> 
+>> > Currently __set_oom_adj loops through all processes in the system to
+>> > keep oom_score_adj and oom_score_adj_min in sync between processes
+>> > sharing their mm. This is done for any task with more that one mm_users,
+>> > which includes processes with multiple threads (sharing mm and signals).
+>> > However for such processes the loop is unnecessary because their signal
+>> > structure is shared as well.
+>> > Android updates oom_score_adj whenever a tasks changes its role
+>> > (background/foreground/...) or binds to/unbinds from a service, making
+>> > it more/less important. Such operation can happen frequently.
+>> > We noticed that updates to oom_score_adj became more expensive and after
+>> > further investigation found out that the patch mentioned in "Fixes"
+>> > introduced a regression. Using Pixel 4 with a typical Android workload,
+>> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+>> > this regression linearly depends on the number of multi-threaded
+>> > processes running on the system.
+>> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+>> > CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
+>> > instead of mm_users to decide whether oom_score_adj update should be
+>> > synchronized between multiple processes. To prevent races between clone()
+>> > and __set_oom_adj(), when oom_score_adj of the process being cloned might
+>> > be modified from userspace, we use oom_adj_mutex. Its scope is changed to
+>> > global and it is renamed into oom_adj_lock for naming consistency with
+>> > oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+>> > used the additional mutex lock in that path of the clone() syscall should
+>> > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+>> > (when the last process sharing the mm exits) is left out of this patch to
+>> > keep it simple and because it is believed that this threading model is
+>> > rare. Should there ever be a need for optimizing that case as well, it
+>> > can be done by hooking into the exit path, likely following the
+>> > mm_update_next_owner pattern.
+>> > With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
+>> > regression is gone after the change is applied.
+>> 
+>> So I am confused.
+>> 
+>> Is there any reason why we don't simply move signal->oom_score_adj to
+>> mm->oom_score_adj and call it a day?
+>
+> Yes. Please read through 44a70adec910 ("mm, oom_adj: make sure processes
+> sharing mm have same view of oom_score_adj")
 
-Consider the following sequence of iova alloc and frees on
-1GB of iova space
+That explains why the scores are synchronized.
 
-1) alloc - 500MB
-2) alloc - 12MB
-3) alloc - 499MB
-4) free -  12MB which was allocated in step 2
-5) alloc - 13MB
+It doesn't explain why we don't do the much simpler thing and move
+oom_score_adj from signal_struct to mm_struct. Which is my question.
 
-After the above sequence we will have 12MB of free iova space and
-cached node will be pointing to the iova pfn of last alloc of 13MB
-which will be the lowest iova pfn of that iova space. Now if we get an
-alloc request of 2MB we just search from cached node and then look
-for lower iova pfn's for free iova and as they aren't any, iova alloc
-fails though there is 12MB of free iova space.
+Why not put the score where we need it to ensure that the oom score
+is always synchronized?  AKA on the mm_struct, not the signal_struct.
 
-To avoid such iova search failures do a retry from the last rb tree node
-when iova search fails, this will search the entire tree and get an iova
-if its available.
-
-Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
----
- drivers/iommu/iova.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 49fc01f..4e77116 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -184,8 +184,9 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 	struct rb_node *curr, *prev;
- 	struct iova *curr_iova;
- 	unsigned long flags;
--	unsigned long new_pfn;
-+	unsigned long new_pfn, low_pfn_new;
- 	unsigned long align_mask = ~0UL;
-+	unsigned long high_pfn = limit_pfn, low_pfn = iovad->start_pfn;
- 
- 	if (size_aligned)
- 		align_mask <<= fls_long(size - 1);
-@@ -198,15 +199,25 @@ static int __alloc_and_insert_iova_range(struct iova_domain *iovad,
- 
- 	curr = __get_cached_rbnode(iovad, limit_pfn);
- 	curr_iova = rb_entry(curr, struct iova, node);
-+	low_pfn_new = curr_iova->pfn_hi + 1;
-+
-+retry:
- 	do {
--		limit_pfn = min(limit_pfn, curr_iova->pfn_lo);
--		new_pfn = (limit_pfn - size) & align_mask;
-+		high_pfn = min(high_pfn, curr_iova->pfn_lo);
-+		new_pfn = (high_pfn - size) & align_mask;
- 		prev = curr;
- 		curr = rb_prev(curr);
- 		curr_iova = rb_entry(curr, struct iova, node);
--	} while (curr && new_pfn <= curr_iova->pfn_hi);
--
--	if (limit_pfn < size || new_pfn < iovad->start_pfn) {
-+	} while (curr && new_pfn <= curr_iova->pfn_hi && new_pfn >= low_pfn);
-+
-+	if (high_pfn < size || new_pfn < low_pfn) {
-+		if (low_pfn == iovad->start_pfn && low_pfn_new < limit_pfn) {
-+			high_pfn = limit_pfn;
-+			low_pfn = low_pfn_new;
-+			curr = &iovad->anchor.node;
-+			curr_iova = rb_entry(curr, struct iova, node);
-+			goto retry;
-+		}
- 		iovad->max32_alloc_size = size;
- 		goto iova32_full;
- 	}
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-1.9.1
+Eric
 
