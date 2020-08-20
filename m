@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ACAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6185420738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEC0D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931129;
-	bh=qlZatptjxTirg4Rm1dhbqHVFHrmeSZ2GGI51mK8nO1g=;
+	s=default; t=1597931141;
+	bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HwgCcQfjTiwNiCuBK1flu6bTDAZBZvh2iEV8B0PVlGrY1tcN+tjVcTcraABDIAttG
-	 aCeSkEHB1CtRrxXD+1IRaBwqUeCHz5n9ypnv4YVpeCQrUrxLkyvU92vjPR3qIVgJWa
-	 WvwxpUdEAnsd3ber+n/c/ilCj8AQ5Ys7qvmnPzw8=
+	b=fcpCeK7sSMzn0WLkmyVwRO4psIXGyXBpOm8+3SO2lOhqkKjDnrPsTrHgEtbty/Mfc
+	 V1z65dtTSsGH+fDOF6nmhnboR/7VGLKK7wucvwD9zJjRigJfffWfNEF3xQHKsIzjBq
+	 MAD3VP7Hrc22fOeJBgBJp18PH3CzPmC3TPW5hYyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgHTNp0 (ORCPT
+        id S1730376AbgHTNpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:45:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726858AbgHTJ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:28:15 -0400
+        id S1727031AbgHTJ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3A0B22D37;
-        Thu, 20 Aug 2020 09:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F017522D2A;
+        Thu, 20 Aug 2020 09:28:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915686;
-        bh=qlZatptjxTirg4Rm1dhbqHVFHrmeSZ2GGI51mK8nO1g=;
+        s=default; t=1597915683;
+        bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=npjHmCvQH6+oO79WX0pRh3KODBoCddGD8jQjLxBcXZHk4z6Yr/8fJjbDfxy/VgWzW
-         Tqa5rfsZ3Y77CY6Z/ulAOokyhLmcL/U1in3C/pRv6gD8yJMevLtlCqEKFE9TE3TwCO
-         iZvXeQlY72pxEdfx+alGuqdloOauTUk5kzyYDXBI=
+        b=kIylcYC0/btL0GZmefYETxKB9CtLcabqCTLlNmEe3kdEebCvUl+Zft1L7efRJZtzM
+         klI2O1Ry/rDVNwcRDalqjofrs6QL3J/spC/GG4mdKeuv8IzAYnO2skZfSGrtGH5Nh8
+         sgxrsvyulasPIusLcbdq8SASvP2JI8AU6/FJEyiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.8 092/232] watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
-Date:   Thu, 20 Aug 2020 11:19:03 +0200
-Message-Id: <20200820091617.292866001@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 5.8 059/232] irqchip/loongson-liointc: Fix misuse of gc->mask_cache
+Date:   Thu, 20 Aug 2020 11:18:30 +0200
+Message-Id: <20200820091615.649467700@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,38 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit e871e93fb08a619dfc015974a05768ed6880fd82 upstream.
+commit c9c73a05413ea4a465cae1cb3593b01b190a233f upstream.
 
-The driver supports populating bootstatus with WDIOF_CARDRESET, but so
-far userspace couldn't portably determine whether absence of this flag
-meant no watchdog reset or no driver support. Or-in the bit to fix this.
+In gc->mask_cache bits, 1 means enabled and 0 means disabled, but in the
+loongson-liointc driver mask_cache is misused by reverting its meaning.
+This patch fix the bug and update the comments as well.
 
-Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
+Fixes: dbb152267908c4b2c3639492a ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-3-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Link: https://lore.kernel.org/r/1596099090-23516-4-git-send-email-chenhc@lemote.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/f71808e_wdt.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-loongson-liointc.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -692,7 +692,8 @@ static int __init watchdog_init(int sioa
- 	watchdog.sioaddr = sioaddr;
- 	watchdog.ident.options = WDIOC_SETTIMEOUT
- 				| WDIOF_MAGICCLOSE
--				| WDIOF_KEEPALIVEPING;
-+				| WDIOF_KEEPALIVEPING
-+				| WDIOF_CARDRESET;
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -60,7 +60,7 @@ static void liointc_chained_handle_irq(s
+ 	if (!pending) {
+ 		/* Always blame LPC IRQ if we have that bug */
+ 		if (handler->priv->has_lpc_irq_errata &&
+-			(handler->parent_int_map & ~gc->mask_cache &
++			(handler->parent_int_map & gc->mask_cache &
+ 			BIT(LIOINTC_ERRATA_IRQ)))
+ 			pending = BIT(LIOINTC_ERRATA_IRQ);
+ 		else
+@@ -132,11 +132,11 @@ static void liointc_resume(struct irq_ch
+ 	irq_gc_lock_irqsave(gc, flags);
+ 	/* Disable all at first */
+ 	writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
+-	/* Revert map cache */
++	/* Restore map cache */
+ 	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
+ 		writeb(priv->map_cache[i], gc->reg_base + i);
+-	/* Revert mask cache */
+-	writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
++	/* Restore mask cache */
++	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
+ 	irq_gc_unlock_irqrestore(gc, flags);
+ }
  
- 	snprintf(watchdog.ident.identity,
- 		sizeof(watchdog.ident.identity), "%s watchdog",
+@@ -244,7 +244,7 @@ int __init liointc_of_init(struct device
+ 	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
+ 	ct->chip.irq_set_type = liointc_set_type;
+ 
+-	gc->mask_cache = 0xffffffff;
++	gc->mask_cache = 0;
+ 	priv->gc = gc;
+ 
+ 	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
 
 
