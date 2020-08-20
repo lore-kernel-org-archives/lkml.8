@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D42C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5134A22CBE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F48722D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916730;
-	bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
+	s=default; t=1597916736;
+	bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+ymjCqMK4PtB7zWzjvSHFNgWT22mm1SDj54G5sSxgbBdxJ0Tsl48WPTZKtdgeGOX
-	 PCFx+z71dBpgECIyxoBQ29a0SCh/mFiSz36y+fg7w7MUD0WrxmqAE2X+5y8zR/3E5p
-	 IQi9zhrgCFd3sMtT9ur8hGrrRXE/O1h0gwyempfE=
+	b=P0IaQxGO8JP6PSoVua10+KzmixZL0OcFGYx8S3ZD81XO7EE7yPN3bGqL6WwVdiiDp
+	 WWx2drMMKmb2CpbyH0YjvIFf/Pf73KNGmeP8lZyqyRn7TMAJhFrjDjp3P4ijdfOR5m
+	 1VAO54RZFSWpmCAXxMSDB95CIKC7o9reTegkNWSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729211AbgHTJp3 (ORCPT
+        id S1729246AbgHTJpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:45:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36266 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:45:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728490AbgHTJmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:01 -0400
+        id S1729024AbgHTJnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCA120724;
-        Thu, 20 Aug 2020 09:41:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDCD92173E;
+        Thu, 20 Aug 2020 09:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916520;
-        bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
+        s=default; t=1597916579;
+        bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xz4wWHZ8P+pPoudsxVY30efaHryXB7bk2b6juxR2SchLLeHkZBeA9wvUUL1bEl8r4
-         +fvkIN0H/5gciyJebEgGG6Jhz3+DcnSX5J7h7MKmleF+JKeyiVs0hEDBvzJ3hJq29g
-         A/mj9FU0st/qOrKAgVYAxrR47d12z8t1d6L94zsA=
+        b=JdNfKuqgiDffIL5egFDwPeDk0sBmYWzciiL8yeR3JCzRiQWV87RCLoBJdobKdCu0x
+         54d6j4avf3MzOVkDWmYSvc1FaLC4IeKa+8ervDCE6NSsi/E4sT6D1VCjF0+6HJcVMU
+         6HhztpTQxeren6nQTEGYuonlixToOl92ovFS9HXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 127/204] crypto: caam - Remove broken arc4 support
-Date:   Thu, 20 Aug 2020 11:20:24 +0200
-Message-Id: <20200820091612.632767074@linuxfoundation.org>
+Subject: [PATCH 5.7 178/204] fs/minix: remove expected error message in block_to_path()
+Date:   Thu, 20 Aug 2020 11:21:15 +0200
+Message-Id: <20200820091615.096124816@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,115 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit eeedb618378f8a09779546a3eeac16b000447d62 ]
+[ Upstream commit f666f9fb9a36f1c833b9d18923572f0e4d304754 ]
 
-The arc4 algorithm requires storing state in the request context
-in order to allow more than one encrypt/decrypt operation.  As this
-driver does not seem to do that, it means that using it for more
-than one operation is broken.
+When truncating a file to a size within the last allowed logical block,
+block_to_path() is called with the *next* block.  This exceeds the limit,
+causing the "block %ld too big" error message to be printed.
 
-Fixes: eaed71a44ad9 ("crypto: caam - add ecb(*) support")
-Link: https://lore.kernel.org/linux-crypto/CAMj1kXGvMe_A_iQ43Pmygg9xaAM-RLy=_M=v+eg--8xNmv9P+w@mail.gmail.com
-Link: https://lore.kernel.org/linux-crypto/20200702101947.682-1-ardb@kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Acked-by: Horia Geantă <horia.geanta@nxp.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+This case isn't actually an error; there are just no more blocks past that
+point.  So, remove this error message.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Link: http://lkml.kernel.org/r/20200628060846.682158-7-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/caam/caamalg.c | 29 -----------------------------
- drivers/crypto/caam/compat.h  |  1 -
- 2 files changed, 30 deletions(-)
+ fs/minix/itree_v1.c | 12 ++++++------
+ fs/minix/itree_v2.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
-index bf90a4fcabd1f..8149ac4d6ef22 100644
---- a/drivers/crypto/caam/caamalg.c
-+++ b/drivers/crypto/caam/caamalg.c
-@@ -810,12 +810,6 @@ static int ctr_skcipher_setkey(struct crypto_skcipher *skcipher,
- 	return skcipher_setkey(skcipher, key, keylen, ctx1_iv_off);
- }
- 
--static int arc4_skcipher_setkey(struct crypto_skcipher *skcipher,
--				const u8 *key, unsigned int keylen)
--{
--	return skcipher_setkey(skcipher, key, keylen, 0);
--}
--
- static int des_skcipher_setkey(struct crypto_skcipher *skcipher,
- 			       const u8 *key, unsigned int keylen)
- {
-@@ -1967,21 +1961,6 @@ static struct caam_skcipher_alg driver_algs[] = {
- 		},
- 		.caam.class1_alg_type = OP_ALG_ALGSEL_3DES | OP_ALG_AAI_ECB,
- 	},
--	{
--		.skcipher = {
--			.base = {
--				.cra_name = "ecb(arc4)",
--				.cra_driver_name = "ecb-arc4-caam",
--				.cra_blocksize = ARC4_BLOCK_SIZE,
--			},
--			.setkey = arc4_skcipher_setkey,
--			.encrypt = skcipher_encrypt,
--			.decrypt = skcipher_decrypt,
--			.min_keysize = ARC4_MIN_KEY_SIZE,
--			.max_keysize = ARC4_MAX_KEY_SIZE,
--		},
--		.caam.class1_alg_type = OP_ALG_ALGSEL_ARC4 | OP_ALG_AAI_ECB,
--	},
- };
- 
- static struct caam_aead_alg driver_aeads[] = {
-@@ -3457,7 +3436,6 @@ int caam_algapi_init(struct device *ctrldev)
- 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
- 	int i = 0, err = 0;
- 	u32 aes_vid, aes_inst, des_inst, md_vid, md_inst, ccha_inst, ptha_inst;
--	u32 arc4_inst;
- 	unsigned int md_limit = SHA512_DIGEST_SIZE;
- 	bool registered = false, gcm_support;
- 
-@@ -3477,8 +3455,6 @@ int caam_algapi_init(struct device *ctrldev)
- 			   CHA_ID_LS_DES_SHIFT;
- 		aes_inst = cha_inst & CHA_ID_LS_AES_MASK;
- 		md_inst = (cha_inst & CHA_ID_LS_MD_MASK) >> CHA_ID_LS_MD_SHIFT;
--		arc4_inst = (cha_inst & CHA_ID_LS_ARC4_MASK) >>
--			    CHA_ID_LS_ARC4_SHIFT;
- 		ccha_inst = 0;
- 		ptha_inst = 0;
- 
-@@ -3499,7 +3475,6 @@ int caam_algapi_init(struct device *ctrldev)
- 		md_inst = mdha & CHA_VER_NUM_MASK;
- 		ccha_inst = rd_reg32(&priv->ctrl->vreg.ccha) & CHA_VER_NUM_MASK;
- 		ptha_inst = rd_reg32(&priv->ctrl->vreg.ptha) & CHA_VER_NUM_MASK;
--		arc4_inst = rd_reg32(&priv->ctrl->vreg.afha) & CHA_VER_NUM_MASK;
- 
- 		gcm_support = aesa & CHA_VER_MISC_AES_GCM;
- 	}
-@@ -3522,10 +3497,6 @@ int caam_algapi_init(struct device *ctrldev)
- 		if (!aes_inst && (alg_sel == OP_ALG_ALGSEL_AES))
- 				continue;
- 
--		/* Skip ARC4 algorithms if not supported by device */
--		if (!arc4_inst && alg_sel == OP_ALG_ALGSEL_ARC4)
--			continue;
--
- 		/*
- 		 * Check support for AES modes not available
- 		 * on LP devices.
-diff --git a/drivers/crypto/caam/compat.h b/drivers/crypto/caam/compat.h
-index 60e2a54c19f11..c3c22a8de4c00 100644
---- a/drivers/crypto/caam/compat.h
-+++ b/drivers/crypto/caam/compat.h
-@@ -43,7 +43,6 @@
- #include <crypto/akcipher.h>
- #include <crypto/scatterwalk.h>
- #include <crypto/skcipher.h>
--#include <crypto/arc4.h>
- #include <crypto/internal/skcipher.h>
- #include <crypto/internal/hash.h>
- #include <crypto/internal/rsa.h>
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index 405573a79aab4..1fed906042aa8 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,12 +29,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, inode->i_sb->s_bdev);
+-	} else if (block < 7) {
++		return 0;
++	}
++	if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes)
++		return 0;
++
++	if (block < 7) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= 7) < 512) {
+ 		offsets[n++] = 7;
+diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
+index ee8af2f9e2828..9d00f31a2d9d1 100644
+--- a/fs/minix/itree_v2.c
++++ b/fs/minix/itree_v2.c
+@@ -32,12 +32,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, sb->s_bdev);
+-	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, sb->s_bdev);
+-	} else if (block < DIRCOUNT) {
++		return 0;
++	}
++	if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes)
++		return 0;
++
++	if (block < DIRCOUNT) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= DIRCOUNT) < INDIRCOUNT(sb)) {
+ 		offsets[n++] = DIRCOUNT;
 -- 
 2.25.1
 
