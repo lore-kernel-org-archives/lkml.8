@@ -2,143 +2,362 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FAC5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 174ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 743272078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC6982078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="h8MmIUzf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="oVT3dN+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbgHTJBl (ORCPT
+        id S1726745AbgHTJBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:01:41 -0400
-Received: from mail-bn8nam12on2089.outbound.protection.outlook.com ([40.107.237.89]:36193
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgHTJBj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:01:39 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WykbU1/IjSMVE/vRNOzpklIQqBD0C/ZyLlgF04Ja/7NiTTiiJM/+2XKIhJ5NVDAKZI6UJnGuXnpgSeK6Qa5yep68XxNZ//jp0DhxGuJyoeb0ex3UMc8nSszGJSF8zsVUUXezBDyIQ8vcvN8BQr3RQIwJ/OlEPI6XSgkNcB7cGSPNj+CLEXr3lQ/Bh1J3T2SRZV2kbbeFV+JZgSLCTJZeTqwvpjQN4rth0QG8EXcAv67QIHJujwnUqRBHdU5JmqZGv05HCVRHU4VGRvrDoz7/ea5BguUqqHN1pMugSZvlZ0bRvWJKwLjzH0+KuwwURT/oGVypPVovbsHBjwznVxIfyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ab1FJCII+B+N7LDkMU+8v4/NCmHR1dfE/oYii3ovvTU=;
- b=fYwof8B5304Uim3O2dvP7chzg484avv9bstLhyKDd20H1Mxlz4uu2GGi23D0ySSlh4lcn3o6672ju6PDeBQUiAXed8Ekxrbyl9dXQGvS6nUco/cqgiWypfTghfysovGtjgBavEW2LoumdvxaYEUTgD7s4Skkkf9TwjWUwaokuMqhldGRtfqKuTQsMEWzzW9YFx9XUnBLaP38whLKYlWu7tM0vqWd4UUKJ+EGGXDsvu6J23WAxYqRCUWCx2UR4zHqoWQQbMkhdKFlzlhvmxVZgC7Q3RM3H4MefIfaIqHkbgL2696A6KHW91jdNpnQ46nS+ZPyBnL7TiOyLFTxQoG9Tw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ab1FJCII+B+N7LDkMU+8v4/NCmHR1dfE/oYii3ovvTU=;
- b=h8MmIUzfhTF18XWNzeypoX9j9uh2YYLRJsxm9d5C7FpssBWAEsKdn3oSf1dY7c3YSLK0FYJxy/7R71Bj9umBPukOBUjdvKTriu6WCGhL0Ny+f/TJJon+4ivuwZI40LH/KKP94MWjOEUKKV4o9w0AxihCX58tN4VLHB+dA/yCwN4=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
- by MN2PR12MB3677.namprd12.prod.outlook.com (2603:10b6:208:15a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
- 2020 09:01:36 +0000
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.028; Thu, 20 Aug 2020
- 09:01:36 +0000
-Subject: Re: [PATCH v2] drivers: gpu: amd: Initialize amdgpu_dm_backlight_caps
- object to 0 in amdgpu_dm_update_backlight_caps
-To:     Furquan Shaikh <furquan@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Stylon Wang <stylon.wang@amd.com>, Roman Li <roman.li@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, adurbin@google.com,
-        deepak.sharma@amd.com
-References: <20200820052600.3069895-1-furquan@google.com>
- <20200820075241.3160534-1-furquan@google.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <5c7dbcd6-b4c5-f7e5-40d5-b65d8ff58030@amd.com>
-Date:   Thu, 20 Aug 2020 11:01:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200820075241.3160534-1-furquan@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: AM4PR0701CA0027.eurprd07.prod.outlook.com
- (2603:10a6:200:42::37) To MN2PR12MB3775.namprd12.prod.outlook.com
- (2603:10b6:208:159::19)
+        Thu, 20 Aug 2020 05:01:54 -0400
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.179]:26656 "EHLO
+        mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgHTJBv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:01:51 -0400
+X-Greylist: delayed 538 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 05:01:48 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597914108;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=5dSGSAiOchgXa0bateO3AteEhDNKiuRbQ7iJbxrg0gc=;
+        b=oVT3dN+Q7VeDyVi4cNdzaf/i6wHEkOKk1VJyhb0JkGN9mwndrTGajG4ehiM8yqO59P
+        43VyB8+qjQs4pUhAhTmj3gjC3H9dp4OnucEo3FJewv5Sc9+WHHjq3ge6CTDOK/QhF5qx
+        HXJgePJ2yMCtcIOgNNF5xLfyLsuL4IPgpCI4JXxB88UVyOUI3acTW6YtHVkqQkrmMKDo
+        MqDKb/fpLIMIbIDMhzOacD3HueQh2j6ftg5AbJnvS9n7zy4TcBoY8mqqY6Zqny0Rsx0X
+        FqSZs28uaazs3jdklFb2jDYkRXXXxDnC87qsB8JA7gNAbqcG2NT6BgCb345EyzRHRlzG
+        ixIg==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xm0dNS3IdRAZAL+p6A=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id 002e9aw7K8njBSw
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 20 Aug 2020 10:49:45 +0200 (CEST)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v32 03/12] LRNG - sysctls and /proc interface
+Date:   Thu, 20 Aug 2020 10:40:43 +0200
+Message-ID: <21893267.6Emhk5qWAg@positron.chronox.de>
+In-Reply-To: <2544450.mvXUDI8C0e@positron.chronox.de>
+References: <2544450.mvXUDI8C0e@positron.chronox.de>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0701CA0027.eurprd07.prod.outlook.com (2603:10a6:200:42::37) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Thu, 20 Aug 2020 09:01:33 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: aa03b1b1-db92-4db3-5f0b-08d844e7a482
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3677:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB36772412EEFE666ADA136508835A0@MN2PR12MB3677.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7RyTahbzTnCd0d5zcGGai2lcEby3yy3vrgyeQTp00m21jUr4zd30UxS8joncy6mKIj1NLxo7ybmN3TtHEm6mFS679JUftPXDHto9NlyAFRAYUlVufbBq8+/NDBlIHm/E0rBIyfpb+Ih1zSKOR/eLtokFjg6teySrEBJbKmlAiptZpk3E+g5DmLzJZg+rhfzY3CLpq9cPt0tGX43VMaoDDG0HWFtSp92jlfjZsqgK5AAQGDokjZ/P+32a+4+zJBhVSqm0/Fo2D1WvCUyGnaJFUcBzd0sG0M8DCtvIoqUOcDvG7rbE+oHF+3JZTMUnqhtly7GX3J6D3FyojynSYa6bg9c6oljfqjw+uWZ9sX0wz7VcZN5hZKivdwz2W5KpR7O9
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(376002)(396003)(366004)(6486002)(2616005)(186003)(8936002)(5660300002)(6666004)(83380400001)(4326008)(66946007)(6636002)(36756003)(478600001)(52116002)(66556008)(16526019)(66476007)(8676002)(54906003)(86362001)(31696002)(66574015)(110136005)(2906002)(31686004)(316002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: GXUIhDNQej0uPN7MNhLmJ1iP2mIS4NLNeZ9zArSxqKPPMASChug12x6slBYrARywAZLx+gCJ5IaNt94OdeofjMQDi0PRMdNCb996+vdATnXooKBQQIzaRC/R2KJTySdyIkwKUJA5vOdrYNSqaO3weSBgGZ+gY+hPzgPusCJn01PfNDOiz4jNPxATy4b/GGjuoPanzEo17bBKtlObQd6Q2CDXOE1nCN1Y2+277UNz061dZ0KqBUdloWiune6x4d8bKGBZ82RLi3uK3SwiihCRylYcqbYut2vMmk5wzYCbvcS9jbaIQ1PnybRFX1ECmJbI4ib5HiWGRBzUENgiI93cz8/vV4NR10amt9hKWHoalkah/QjAz1f5tq/8z9ROXS+aJK0Z1gP5k5PRilPOKxlE6kcYWVvQjOXsNgivdqjyGU/+rxBI+BhwCvU91IMv2hB65bRlddx6IPhbsw2slSDIeUnDoYlZheVeC7z9roCnn1Svciy1Qx6dharvaROVZOzEs9I69q45Kpt82y51BbslpnVucCxbbBh752yZCrMjEpYocxANjMxohcT989mu8UUBHcPFQp6SCIqn1J1e7E7LK/U9Jt/lPDxhDGtY6xkN2NRFwpvJP5g6aPzuKzQkIuBo/bF2KANsRwOigg4m3Gs7j5ogdW6+MGcvJAV6l5adOfIOFPlzVILDxmNqQDPTJZGaaitYEnc+wdVVMKAGhf+QGw==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa03b1b1-db92-4db3-5f0b-08d844e7a482
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 09:01:36.3615
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7Qj/ZVC6EdqMPYqf2jdW+0sTcRMmUScargtPhXkjEiJGDFXq7XNKlOB9gtATjREd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3677
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 20.08.20 um 09:52 schrieb Furquan Shaikh:
-> In `amdgpu_dm_update_backlight_caps()`, there is a local
-> `amdgpu_dm_backlight_caps` object that is filled in by
-> `amdgpu_acpi_get_backlight_caps()`. However, this object is
-> uninitialized before the call and hence the subsequent check for
-> aux_support can fail since it is not initialized by
-> `amdgpu_acpi_get_backlight_caps()` as well. This change initializes
-> this local `amdgpu_dm_backlight_caps` object to 0.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
+The LRNG sysctl interface provides the same controls as the existing
+/dev/random implementation. These sysctls behave identically and are
+implemented identically. The goal is to allow a possible merge of the
+existing /dev/random implementation with this implementation which
+implies that this patch tries have a very close similarity. Yet, all
+sysctls are documented at [1].
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
+In addition, it provides the file lrng_type which provides details about
+the LRNG:
 
-> ---
-> v2: Switched to using memset for initialization of object.
->
-> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index e4b33c67b634..da072998ce48 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2855,6 +2855,8 @@ static void amdgpu_dm_update_backlight_caps(struct amdgpu_display_manager *dm)
->   #if defined(CONFIG_ACPI)
->   	struct amdgpu_dm_backlight_caps caps;
->   
-> +	memset(&caps, 0, sizeof(caps));
-> +
->   	if (dm->backlight_caps.caps_valid)
->   		return;
->   
+=2D the name of the DRNG that produces the random numbers for /dev/random,
+/dev/urandom, getrandom(2)
+
+=2D the hash used to produce random numbers from the entropy pool
+
+=2D the number of secondary DRNG instances
+
+=2D indicator whether the LRNG operates SP800-90B compliant
+
+=2D indicator whether a high-resolution timer is identified - only with a
+high-resolution timer the interrupt noise source will deliver sufficient
+entropy
+
+=2D indicator whether the LRNG has been minimally seeded (i.e. is the
+secondary DRNG seeded with at least 128 bits of of entropy)
+
+=2D indicator whether the LRNG has been fully seeded (i.e. is the
+secondary DRNG seeded with at least 256 bits of entropy)
+
+[1] https://www.chronox.de/lrng.html
+
+CC: "Eric W. Biederman" <ebiederm@xmission.com>
+CC: "Alexander E. Patrakov" <patrakov@gmail.com>
+CC: "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC: "Theodore Y. Ts'o" <tytso@mit.edu>
+CC: Willy Tarreau <w@1wt.eu>
+CC: Matthew Garrett <mjg59@srcf.ucam.org>
+CC: Vito Caputo <vcaputo@pengaru.com>
+CC: Andreas Dilger <adilger.kernel@dilger.ca>
+CC: Jan Kara <jack@suse.cz>
+CC: Ray Strode <rstrode@redhat.com>
+CC: William Jon McCann <mccann@jhu.edu>
+CC: zhangjs <zachary@baishancloud.com>
+CC: Andy Lutomirski <luto@kernel.org>
+CC: Florian Weimer <fweimer@redhat.com>
+CC: Lennart Poettering <mzxreary@0pointer.de>
+CC: Nicolai Stange <nstange@suse.de>
+Reviewed-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Reviewed-by: Roman Drahtmueller <draht@schaltsekun.de>
+Tested-by: Roman Drahtm=FCller <draht@schaltsekun.de>
+Tested-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+Tested-by: Neil Horman <nhorman@redhat.com>
+Signed-off-by: Stephan Mueller <smueller@chronox.de>
+=2D--
+ drivers/char/lrng/Makefile          |   1 +
+ drivers/char/lrng/lrng_interfaces.c |   1 -
+ drivers/char/lrng/lrng_internal.h   |   4 +
+ drivers/char/lrng/lrng_proc.c       | 163 ++++++++++++++++++++++++++++
+ 4 files changed, 168 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/char/lrng/lrng_proc.c
+
+diff --git a/drivers/char/lrng/Makefile b/drivers/char/lrng/Makefile
+index 0a32f22c2c1a..e69c176f0161 100644
+=2D-- a/drivers/char/lrng/Makefile
++++ b/drivers/char/lrng/Makefile
+@@ -9,3 +9,4 @@ obj-y				+=3D lrng_pool.o lrng_aux.o \
+ 				   lrng_interfaces.o \
+=20
+ obj-$(CONFIG_NUMA)		+=3D lrng_numa.o
++obj-$(CONFIG_SYSCTL)		+=3D lrng_proc.o
+diff --git a/drivers/char/lrng/lrng_interfaces.c b/drivers/char/lrng/lrng_i=
+nterfaces.c
+index 7fc04e54d834..184108b6e1cb 100644
+=2D-- a/drivers/char/lrng/lrng_interfaces.c
++++ b/drivers/char/lrng/lrng_interfaces.c
+@@ -34,7 +34,6 @@ static DECLARE_WAIT_QUEUE_HEAD(lrng_write_wait);
+ static DECLARE_WAIT_QUEUE_HEAD(lrng_init_wait);
+ static struct fasync_struct *fasync;
+=20
+=2Dstruct ctl_table random_table[];
+ /********************************** Helper *******************************=
+****/
+=20
+ /* Is the DRNG seed level too low? */
+diff --git a/drivers/char/lrng/lrng_internal.h b/drivers/char/lrng/lrng_int=
+ernal.h
+index 495e00ae5ee1..a52c4cf367e2 100644
+=2D-- a/drivers/char/lrng/lrng_internal.h
++++ b/drivers/char/lrng/lrng_internal.h
+@@ -117,7 +117,11 @@ void lrng_cc20_init_state_boot(struct chacha20_state *=
+state);
+=20
+ /********************************** /proc ********************************=
+*****/
+=20
++#ifdef CONFIG_SYSCTL
++void lrng_pool_inc_numa_node(void);
++#else
+ static inline void lrng_pool_inc_numa_node(void) { }
++#endif
+=20
+ /****************************** LRNG interfaces **************************=
+*****/
+=20
+diff --git a/drivers/char/lrng/lrng_proc.c b/drivers/char/lrng/lrng_proc.c
+new file mode 100644
+index 000000000000..c569a269b07a
+=2D-- /dev/null
++++ b/drivers/char/lrng/lrng_proc.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
++/*
++ * LRNG proc and sysctl interfaces
++ *
++ * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
++ */
++
++#include <linux/lrng.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/sysctl.h>
++#include <linux/uuid.h>
++
++#include "lrng_internal.h"
++
++/*
++ * This function is used to return both the bootid UUID, and random
++ * UUID.  The difference is in whether table->data is NULL; if it is,
++ * then a new UUID is generated and returned to the user.
++ *
++ * If the user accesses this via the proc interface, the UUID will be
++ * returned as an ASCII string in the standard UUID format; if via the
++ * sysctl system call, as 16 bytes of binary data.
++ */
++static int lrng_proc_do_uuid(struct ctl_table *table, int write,
++			     void __user *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table fake_table;
++	unsigned char buf[64], tmp_uuid[16], *uuid;
++
++	uuid =3D table->data;
++	if (!uuid) {
++		uuid =3D tmp_uuid;
++		generate_random_uuid(uuid);
++	} else {
++		static DEFINE_SPINLOCK(bootid_spinlock);
++
++		spin_lock(&bootid_spinlock);
++		if (!uuid[8])
++			generate_random_uuid(uuid);
++		spin_unlock(&bootid_spinlock);
++	}
++
++	sprintf(buf, "%pU", uuid);
++
++	fake_table.data =3D buf;
++	fake_table.maxlen =3D sizeof(buf);
++
++	return proc_dostring(&fake_table, write, buffer, lenp, ppos);
++}
++
++static int lrng_proc_do_entropy(struct ctl_table *table, int write,
++				void *buffer, size_t *lenp, loff_t *ppos)
++{
++	struct ctl_table fake_table;
++	int entropy_count;
++
++	entropy_count =3D lrng_avail_entropy();
++
++	fake_table.data =3D &entropy_count;
++	fake_table.maxlen =3D sizeof(entropy_count);
++
++	return proc_dointvec(&fake_table, write, buffer, lenp, ppos);
++}
++
++static int lrng_sysctl_poolsize =3D LRNG_POOL_SIZE_BITS;
++static int lrng_min_write_thresh;
++static int lrng_max_write_thresh =3D LRNG_POOL_SIZE_BITS;
++static char lrng_sysctl_bootid[16];
++static int lrng_drng_reseed_max_min;
++
++struct ctl_table random_table[] =3D {
++	{
++		.procname	=3D "poolsize",
++		.data		=3D &lrng_sysctl_poolsize,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0444,
++		.proc_handler	=3D proc_dointvec,
++	},
++	{
++		.procname	=3D "entropy_avail",
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_entropy,
++	},
++	{
++		.procname	=3D "write_wakeup_threshold",
++		.data		=3D &lrng_write_wakeup_bits,
++		.maxlen		=3D sizeof(int),
++		.mode		=3D 0644,
++		.proc_handler	=3D proc_dointvec_minmax,
++		.extra1		=3D &lrng_min_write_thresh,
++		.extra2		=3D &lrng_max_write_thresh,
++	},
++	{
++		.procname	=3D "boot_id",
++		.data		=3D &lrng_sysctl_bootid,
++		.maxlen		=3D 16,
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_uuid,
++	},
++	{
++		.procname	=3D "uuid",
++		.maxlen		=3D 16,
++		.mode		=3D 0444,
++		.proc_handler	=3D lrng_proc_do_uuid,
++	},
++	{
++		.procname       =3D "urandom_min_reseed_secs",
++		.data           =3D &lrng_drng_reseed_max_time,
++		.maxlen         =3D sizeof(int),
++		.mode           =3D 0644,
++		.proc_handler   =3D proc_dointvec,
++		.extra1		=3D &lrng_drng_reseed_max_min,
++	},
++	{ }
++};
++
++/* Number of online DRNGs */
++static u32 numa_drngs =3D 1;
++
++void lrng_pool_inc_numa_node(void)
++{
++	numa_drngs++;
++}
++
++static int lrng_proc_type_show(struct seq_file *m, void *v)
++{
++	struct lrng_drng *lrng_drng_init =3D lrng_drng_init_instance();
++	unsigned long flags =3D 0;
++	unsigned char buf[300];
++
++	lrng_drng_lock(lrng_drng_init, &flags);
++	snprintf(buf, sizeof(buf),
++		 "DRNG name: %s\n"
++		 "Hash for reading entropy pool: %s\n"
++		 "DRNG security strength: %d bits\n"
++		 "number of DRNG instances: %u\n"
++		 "SP800-90B compliance: %s\n"
++		 "High-resolution timer: %s\n"
++		 "LRNG minimally seeded: %s\n"
++		 "LRNG fully seeded: %s\n",
++		 lrng_drng_init->crypto_cb->lrng_drng_name(),
++		 lrng_drng_init->crypto_cb->lrng_hash_name(),
++		 LRNG_DRNG_SECURITY_STRENGTH_BITS, numa_drngs,
++		 lrng_sp80090b_compliant() ? "true" : "false",
++		 lrng_pool_highres_timer() ? "true" : "false",
++		 lrng_state_min_seeded() ? "true" : "false",
++		 lrng_state_fully_seeded() ? "true" : "false");
++	lrng_drng_unlock(lrng_drng_init, &flags);
++
++	seq_write(m, buf, strlen(buf));
++
++	return 0;
++}
++
++static int __init lrng_proc_type_init(void)
++{
++	proc_create_single("lrng_type", 0444, NULL, &lrng_proc_type_show);
++	return 0;
++}
++
++module_init(lrng_proc_type_init);
+=2D-=20
+2.26.2
+
+
+
 
