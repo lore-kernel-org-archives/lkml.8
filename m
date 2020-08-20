@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F191EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD1AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE76120724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B5820724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597932662;
-	bh=OR7j9qoFQeMiFNy5PaaWKvdEV1b7geYDxd0P+SguzH4=;
+	s=default; t=1597932671;
+	bh=HMeLencfP79QnOTHpQu9SCQ8crUYfKYEweeJFlkvMmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hz4ZQVcLx3jYf2BWOyk7LBkJUcjHHl6uTONDblp0mdjIOrnGSPlXltV9PYnLGeHSR
-	 gM/WLHh566XQNWfTJ1Ofl1Go/L5jy9P2kxHfwl+WPvTyG5kMILnFmiOQZes/fgtc2W
-	 GOkKTjqXpPVlBSosSDcm1anluxRaUXDg0D9IP9MQ=
+	b=D9v5LrZjhdXtBGqzBfigk+Y6woQnKAiodqVbr4yJEf0SaaxSC4YggMjjg2S1xArCu
+	 Pe48yhmc9LIbJzAj/GSL6pUmkbUACtAqsRA96oIFHttv2Svmv6iGTH64vK6NNupWL+
+	 JeUoXkRi9TTfrr4nTtupFf9yQ+yJIYPcueDJz5RY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbgHTNyi (ORCPT
+        id S1731012AbgHTNyT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:54:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgHTJ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:34 -0400
+        id S1727931AbgHTJ0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F10AF22D00;
-        Thu, 20 Aug 2020 09:26:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5562122D0B;
+        Thu, 20 Aug 2020 09:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915594;
-        bh=OR7j9qoFQeMiFNy5PaaWKvdEV1b7geYDxd0P+SguzH4=;
+        s=default; t=1597915609;
+        bh=HMeLencfP79QnOTHpQu9SCQ8crUYfKYEweeJFlkvMmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yI1K5NPK1nGgSwLKPdIxFu+3w1h6qAV1BLNFnbnsuVGL8FimmcigmHVNOeLEjwbBs
-         kUppKSAV8ohBiRHSJDZutJCu6jXvfSBltcVCwSvkS1ZJWMOUBOXAuI5Q2noT3KFo4L
-         KXfszU9Ziwyt5sjrcE/C1BybXADU1Zs9sAtSpUXY=
+        b=YT/zfQBXHi3eFcJYXFTYgXIVV8X0QlZLNEnTzWQsWdGWQ7P7skGRsUHcOr0n1+RnJ
+         3Pp8xJZjxwkylvvfR6twVHanuqs2H000zcrQgQXcu+5rlZ+vkl+2MHq3A6w48Kizx8
+         yQNUImnpwNKuDOq8VrcIa5VgheWjmIbIV/Daof5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 069/232] bcache: use disk_{start,end}_io_acct() to count I/O for bcache device
-Date:   Thu, 20 Aug 2020 11:18:40 +0200
-Message-Id: <20200820091616.139861355@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 5.8 074/232] MIPS: qi_lb60: Fix routing to audio amplifier
+Date:   Thu, 20 Aug 2020 11:18:45 +0200
+Message-Id: <20200820091616.393166982@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,101 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit c5be1f2c5bab1538aa29cd42e226d6b80391e3ff upstream.
+commit 0889a67a9e7a56ba39af223d536630b20b877fda upstream.
 
-This patch is a fix to patch "bcache: fix bio_{start,end}_io_acct with
-proper device". The previous patch uses a hack to temporarily set
-bi_disk to bcache device, which is mistaken too.
+The ROUT (right channel output of audio codec) was connected to INL
+(left channel of audio amplifier) instead of INR (right channel of audio
+amplifier).
 
-As Christoph suggests, this patch uses disk_{start,end}_io_acct() to
-count I/O for bcache device in the correct way.
-
-Fixes: 85750aeb748f ("bcache: use bio_{start,end}_io_acct")
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 8ddebad15e9b ("MIPS: qi_lb60: Migrate to devicetree")
+Cc: stable@vger.kernel.org # v5.3
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/request.c |   37 +++++++++----------------------------
- 1 file changed, 9 insertions(+), 28 deletions(-)
+ arch/mips/boot/dts/ingenic/qi_lb60.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -617,28 +617,6 @@ static void cache_lookup(struct closure
+--- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
++++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
+@@ -69,7 +69,7 @@
+ 			"Speaker", "OUTL",
+ 			"Speaker", "OUTR",
+ 			"INL", "LOUT",
+-			"INL", "ROUT";
++			"INR", "ROUT";
  
- /* Common code for the make_request functions */
+ 		simple-audio-card,aux-devs = <&amp>;
  
--static inline void bch_bio_start_io_acct(struct gendisk *acct_bi_disk,
--					 struct bio *bio,
--					 unsigned long *start_time)
--{
--	struct gendisk *saved_bi_disk = bio->bi_disk;
--
--	bio->bi_disk = acct_bi_disk;
--	*start_time = bio_start_io_acct(bio);
--	bio->bi_disk = saved_bi_disk;
--}
--
--static inline void bch_bio_end_io_acct(struct gendisk *acct_bi_disk,
--				       struct bio *bio,
--				       unsigned long start_time)
--{
--	struct gendisk *saved_bi_disk = bio->bi_disk;
--
--	bio->bi_disk = acct_bi_disk;
--	bio_end_io_acct(bio, start_time);
--	bio->bi_disk = saved_bi_disk;
--}
--
- static void request_endio(struct bio *bio)
- {
- 	struct closure *cl = bio->bi_private;
-@@ -690,7 +668,9 @@ static void backing_request_endio(struct
- static void bio_complete(struct search *s)
- {
- 	if (s->orig_bio) {
--		bch_bio_end_io_acct(s->d->disk, s->orig_bio, s->start_time);
-+		/* Count on bcache device */
-+		disk_end_io_acct(s->d->disk, bio_op(s->orig_bio), s->start_time);
-+
- 		trace_bcache_request_end(s->d, s->orig_bio);
- 		s->orig_bio->bi_status = s->iop.status;
- 		bio_endio(s->orig_bio);
-@@ -750,8 +730,8 @@ static inline struct search *search_allo
- 	s->recoverable		= 1;
- 	s->write		= op_is_write(bio_op(bio));
- 	s->read_dirty_data	= 0;
--	bch_bio_start_io_acct(d->disk, bio, &s->start_time);
--
-+	/* Count on the bcache device */
-+	s->start_time		= disk_start_io_acct(d->disk, bio_sectors(bio), bio_op(bio));
- 	s->iop.c		= d->c;
- 	s->iop.bio		= NULL;
- 	s->iop.inode		= d->id;
-@@ -1102,7 +1082,8 @@ static void detached_dev_end_io(struct b
- 	bio->bi_end_io = ddip->bi_end_io;
- 	bio->bi_private = ddip->bi_private;
- 
--	bch_bio_end_io_acct(ddip->d->disk, bio, ddip->start_time);
-+	/* Count on the bcache device */
-+	disk_end_io_acct(ddip->d->disk, bio_op(bio), ddip->start_time);
- 
- 	if (bio->bi_status) {
- 		struct cached_dev *dc = container_of(ddip->d,
-@@ -1127,8 +1108,8 @@ static void detached_dev_do_request(stru
- 	 */
- 	ddip = kzalloc(sizeof(struct detached_dev_io_private), GFP_NOIO);
- 	ddip->d = d;
--	bch_bio_start_io_acct(d->disk, bio, &ddip->start_time);
--
-+	/* Count on the bcache device */
-+	ddip->start_time = disk_start_io_acct(d->disk, bio_sectors(bio), bio_op(bio));
- 	ddip->bi_end_io = bio->bi_end_io;
- 	ddip->bi_private = bio->bi_private;
- 	bio->bi_end_io = detached_dev_end_io;
 
 
