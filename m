@@ -2,106 +2,70 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C23EF2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFB9207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgHTXBr (ORCPT
+        id S1728615AbgHTXLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:01:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:46972 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgHTXBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:01:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6C6331B;
-        Thu, 20 Aug 2020 16:01:44 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 98AAB3F71F;
-        Thu, 20 Aug 2020 16:01:39 -0700 (PDT)
-Subject: Re: [PATCH 17/18] media/omap3isp: Clean up IOMMU workaround
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-Cc:     hch@lst.de, joro@8bytes.org, linux@armlinux.org.uk,
-        will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
-        digetx@gmail.com, matthias.bgg@gmail.com, yong.wu@mediatek.com,
-        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
-        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <11d8419744e4e744a9448180801b0c4683328afd.1597931876.git.robin.murphy@arm.com>
- <20200820165339.GK7145@valkosipuli.retiisi.org.uk>
- <be010209-4abc-ba48-4e31-185427776a13@arm.com>
- <20200820195536.GL7145@valkosipuli.retiisi.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5190a40e-ad24-d98e-3588-b95592ea2db3@arm.com>
-Date:   Fri, 21 Aug 2020 00:01:38 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 19:11:45 -0400
+Received: from mail108.syd.optusnet.com.au ([211.29.132.59]:50583 "EHLO
+        mail108.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728368AbgHTXLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 19:11:45 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail108.syd.optusnet.com.au (Postfix) with ESMTPS id 12B711A96D6;
+        Fri, 21 Aug 2020 09:11:41 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k8tie-0007W7-9n; Fri, 21 Aug 2020 09:11:40 +1000
+Date:   Fri, 21 Aug 2020 09:11:40 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        riteshh@linux.ibm.com
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200820231140.GE7941@dread.disaster.area>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200820195536.GL7145@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=LPwYv6e9 c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
+        a=QKTNYlJRi8Dho5xtcI0A:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-20 20:55, Sakari Ailus wrote:
-> On Thu, Aug 20, 2020 at 06:25:19PM +0100, Robin Murphy wrote:
->> On 2020-08-20 17:53, Sakari Ailus wrote:
->>> Hi Robin,
->>>
->>> On Thu, Aug 20, 2020 at 04:08:36PM +0100, Robin Murphy wrote:
->>>> Now that arch/arm is wired up for default domains and iommu-dma, devices
->>>> behind IOMMUs will get mappings set up automatically as appropriate, so
->>>> there is no need for drivers to do so manually.
->>>>
->>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>>
->>> Thanks for the patch.
->>
->> Many thanks for testing so quickly!
->>
->>> I haven't looked at the details but it seems that this causes the buffer
->>> memory allocation to be physically contiguous, which causes a failure to
->>> allocate video buffers of entirely normal size. I guess that was not
->>> intentional?
->>
->> Hmm, it looks like the device ends up with the wrong DMA ops, which implies
->> something didn't go as expected with the earlier IOMMU setup and default
->> domain creation. Chances are that either I missed some subtlety in the
->> omap_iommu change, or I've fundamentally misjudged how the ISP probing works
->> and it never actually goes down the of_iommu_configure() path in the first
->> place. Do you get any messages from the IOMMU layer earlier on during boot?
+On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
+> From: Ritesh Harjani <riteshh@linux.ibm.com>
 > 
-> I do get these:
-> 
-> [    2.934936] iommu: Default domain type: Translated
-> [    2.940917] omap-iommu 480bd400.mmu: 480bd400.mmu registered
-> [    2.946899] platform 480bc000.isp: Adding to iommu group 0
-> 
+> __bio_try_merge_page() may return same_page = 1 and merged = 0. 
+> This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
 
-So that much looks OK, if there are no obvious errors. Unfortunately 
-there's no easy way to tell exactly what of_iommu_configure() is doing 
-(beyond enabling a couple of vague debug messages). The first thing I'll 
-do tomorrow is double-check whether it's really working on my boards 
-here, or whether I was just getting lucky with CMA... (I assume you 
-don't have CMA enabled if you're ending up in remap_allocator_alloc())
+Ummm, silly question, but exactly how are we getting a bio that
+large in ->writepages getting built? Even with 64kB pages, that's a
+bio with 2^16 pages attached to it. We shouldn't be building single
+bios in writeback that large - what storage hardware is allowing
+such huge bios to be built? (i.e. can you dump all the values in
+/sys/block/<dev>/queue/* for that device for us?)
 
-Robin.
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
