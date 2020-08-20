@@ -2,201 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D063D207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D17052086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aHxLbdSU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="va3YQUB/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgHTMtx (ORCPT
+        id S1730240AbgHTMuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Aug 2020 08:50:05 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31797 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730143AbgHTMtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 08:49:53 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38752 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729213AbgHTMtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:49:33 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KCmHbw051388;
-        Thu, 20 Aug 2020 12:49:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=O0BdtsGVhMNiPzyRfyyvEXkjUO6B3elzYUK2+aFxQNQ=;
- b=aHxLbdSUbIIlGsv9dWsuf7RmdaUeIly6X3CWRrqSFhDD8ztUpy6tJ+636DAF9i1xJVc/
- hClp1l4VKVnVLGWnGss+/agmyygiHZASWIQ90tnCRTN+WXYx7asEDGhBXBYvDzK+aufC
- X+5L5MRl+pWPSTKfW552fRrmxpVjjMvl9nbwZJ9OKZ8qdDqAAOLqfkGZ9aGcHTKEly0n
- LMNBYMepNe+S0AUy0izBDm99jFQ5s6GaSqsHmPYm3yqAebVGL/pfDYZ8IMWZ9GY+bbZb
- exvj2vuJi/Ci4jLgfTJ4bFjbLy2DFaaSiaP5HWYiyWvRqKrhBiK6rjTcB2EJqFqeaACx Qg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32x74rgd3n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Aug 2020 12:49:16 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KClqN7191789;
-        Thu, 20 Aug 2020 12:49:16 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 330pvp2v3b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 12:49:15 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KCnEKh007088;
-        Thu, 20 Aug 2020 12:49:14 GMT
-Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Aug 2020 05:49:13 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
-Subject: Re: [PATCH v2] nfsd: Convert to use the preferred fallthrough macro
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200820025718.51244-1-linmiaohe@huawei.com>
-Date:   Thu, 20 Aug 2020 08:49:12 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <01498CCA-B21A-4E8D-9761-41610C54CB9A@oracle.com>
-References: <20200820025718.51244-1-linmiaohe@huawei.com>
-To:     Miaohe Lin <linmiaohe@huawei.com>,
-        Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3608.120.23.2.1)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
- malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200106
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597927792; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=CTYfSxipttQF90/6IHjYN+pYoPbXSp2wCshlwP0fbw8=; b=va3YQUB/gRLM4S7rrQ35xUJ/xt3tHIUaY5Pq549aprL3qUTf7Y1GbOgdWCoIazQ4n3CZxR2g
+ QsqOtsRKzbMhWvXV9OR4FbGJztWdts7rgX/FuUU7rz57cipbKgazeK4p8wlu2CTa439Nc5UJ
+ vs8Xoapu5HtEMP8cf0sOPDkI844=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 5f3e71707eb4541d9364459b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 12:49:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 45007C43395; Thu, 20 Aug 2020 12:49:51 +0000 (UTC)
+Received: from vjitta-linux.qualcomm.com (unknown [202.46.22.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vjitta)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68043C433CB;
+        Thu, 20 Aug 2020 12:49:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68043C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vjitta@codeaurora.org
+From:   vjitta@codeaurora.org
+To:     joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     vinmenon@codeaurora.org, kernel-team@android.com,
+        robin.murphy@arm.com, vjitta@codeaurora.org
+Subject: [PATCH v2 2/2] iommu/iova: Free global iova rcache on iova alloc failure
+Date:   Thu, 20 Aug 2020 18:19:21 +0530
+Message-Id: <1597927761-24441-2-git-send-email-vjitta@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1597927761-24441-1-git-send-email-vjitta@codeaurora.org>
+References: <1597927761-24441-1-git-send-email-vjitta@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi-
+From: Vijayanand Jitta <vjitta@codeaurora.org>
 
-> On Aug 19, 2020, at 10:57 PM, Miaohe Lin <linmiaohe@huawei.com> wrote:
->=20
-> Convert the uses of fallthrough comments to fallthrough macro. Please =
-see
-> commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
-> keyword for switch/case use") for detail.
->=20
-> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+When ever an iova alloc request fails we free the iova
+ranges present in the percpu iova rcaches and then retry
+but the global iova rcache is not freed as a result we could
+still see iova alloc failure even after retry as global
+rcache is holding the iova's which can cause fragmentation.
+So, free the global iova rcache as well and then go for the
+retry.
 
-LGTM. If he also approves, I assume Bruce is taking this one for v5.10.
+Signed-off-by: Vijayanand Jitta <vjitta@codeaurora.org>
+---
+ drivers/iommu/iova.c | 23 +++++++++++++++++++++++
+ include/linux/iova.h |  6 ++++++
+ 2 files changed, 29 insertions(+)
 
-
-> ---
-> fs/nfsd/nfs4callback.c | 2 +-
-> fs/nfsd/nfs4proc.c     | 2 +-
-> fs/nfsd/nfs4state.c    | 2 +-
-> fs/nfsd/nfsfh.c        | 2 +-
-> fs/nfsd/vfs.c          | 4 ++--
-> 5 files changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 7fbe9840a03e..052be5bf9ef5 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct =
-rpc_task *task, struct nfsd4_callback
-> 		break;
-> 	case -ESERVERFAULT:
-> 		++session->se_cb_seq_nr;
-> -		/* Fall through */
-> +		fallthrough;
-> 	case 1:
-> 	case -NFS4ERR_BADSESSION:
-> 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index a527da3d8052..eaf50eafa935 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 				goto out;
-> 			open->op_openowner->oo_flags |=3D =
-NFS4_OO_CONFIRMED;
-> 			reclaim =3D true;
-> -			/* fall through */
-> +			fallthrough;
-> 		case NFS4_OPEN_CLAIM_FH:
-> 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
-> 			status =3D do_open_fhandle(rqstp, cstate, open);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 81ed8e8bab3f..2f77f4b66cbc 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct =
-nfsd4_compound_state *cstate,
-> 		break;
-> 	default:				/* checked by xdr code =
-*/
-> 		WARN_ON_ONCE(1);
-> -		/* fall through */
-> +		fallthrough;
-> 	case SP4_SSV:
-> 		status =3D nfserr_encr_alg_unsupp;
-> 		goto out_nolock;
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index 37bc8f5f4514..a0a8d27539ae 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, =
-struct svc_export *exp)
-> 	case FSID_UUID16:
-> 		if (!is_root_export(exp))
-> 			return false;
-> -		/* fall through */
-> +		fallthrough;
-> 	case FSID_UUID4_INUM:
-> 	case FSID_UUID16_INUM:
-> 		return exp->ex_uuid !=3D NULL;
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 7d2933b85b65..aba5af9df328 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct =
-svc_fh *fhp,
-> 					*created =3D true;
-> 				break;
-> 			}
-> -			/* fall through */
-> +			fallthrough;
-> 		case NFS4_CREATE_EXCLUSIVE4_1:
-> 			if (   d_inode(dchild)->i_mtime.tv_sec =3D=3D =
-v_mtime
-> 			    && d_inode(dchild)->i_atime.tv_sec =3D=3D =
-v_atime
-> @@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct =
-svc_fh *fhp,
-> 					*created =3D true;
-> 				goto set_attr;
-> 			}
-> -			/* fall through */
-> +			fallthrough;
-> 		case NFS3_CREATE_GUARDED:
-> 			err =3D nfserr_exist;
-> 		}
-> --=20
-> 2.19.1
->=20
-
---
-Chuck Lever
-
-
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 4e77116..5836c87 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -442,6 +442,7 @@ struct iova *find_iova(struct iova_domain *iovad, unsigned long pfn)
+ 		flush_rcache = false;
+ 		for_each_online_cpu(cpu)
+ 			free_cpu_cached_iovas(cpu, iovad);
++		free_global_cached_iovas(iovad);
+ 		goto retry;
+ 	}
+ 
+@@ -1055,5 +1056,27 @@ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad)
+ 	}
+ }
+ 
++/*
++ * free all the IOVA ranges of global cache
++ */
++void free_global_cached_iovas(struct iova_domain *iovad)
++{
++	struct iova_rcache *rcache;
++	unsigned long flags;
++	int i, j;
++
++	for (i = 0; i < IOVA_RANGE_CACHE_MAX_SIZE; ++i) {
++		rcache = &iovad->rcaches[i];
++		spin_lock_irqsave(&rcache->lock, flags);
++		for (j = 0; j < rcache->depot_size; ++j) {
++			iova_magazine_free_pfns(rcache->depot[j], iovad);
++			iova_magazine_free(rcache->depot[j]);
++			rcache->depot[j] = NULL;
++		}
++		rcache->depot_size = 0;
++		spin_unlock_irqrestore(&rcache->lock, flags);
++	}
++}
++
+ MODULE_AUTHOR("Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>");
+ MODULE_LICENSE("GPL");
+diff --git a/include/linux/iova.h b/include/linux/iova.h
+index a0637ab..a905726 100644
+--- a/include/linux/iova.h
++++ b/include/linux/iova.h
+@@ -163,6 +163,7 @@ int init_iova_flush_queue(struct iova_domain *iovad,
+ struct iova *split_and_remove_iova(struct iova_domain *iovad,
+ 	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
+ void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
++void free_global_cached_iovas(struct iova_domain *iovad);
+ #else
+ static inline int iova_cache_get(void)
+ {
+@@ -270,6 +271,11 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
+ 					 struct iova_domain *iovad)
+ {
+ }
++
++static inline void free_global_cached_iovas(struct iova_domain *iovad)
++{
++}
++
+ #endif
+ 
+ #endif
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.9.1
 
