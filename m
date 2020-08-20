@@ -2,139 +2,162 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 884E0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54970C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60B0020786
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B31420786
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:54:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sg30RJgw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zb7Txy+f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHTEwp (ORCPT
+        id S1725977AbgHTEyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:52:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgHTEwp (ORCPT
+        Thu, 20 Aug 2020 00:54:15 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50625 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725772AbgHTEyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:52:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CCFC061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 21:52:45 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g33so583690pgb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 21:52:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5VWHI9n0+G3Tugiglsr+/xN2YwY1eAl4mqxcjHXV038=;
-        b=sg30RJgwK8Lv5XRHi/WimqIf3rB9gatyZVHbgFDOwMn7DjJxESwLjKeUKI2qYM5QF4
-         nTFUfN0Y+S9GN2ac/6llvCHHe0Lo5YX0H+8ITh+k2JsR1uztzHIK2d34f0VJUrZLcyhx
-         h/YQ2oVahy/2yRuf7hAaey+KgMV+xdQUgbaEBal1/4jQoYeJUk4Rr4g0BhS+79D9ezMp
-         xJTz/olwauOaZme+0lHGzyRNUSwtxL9ZMJnrsIl0wGyvuNjQVIi0OkiGLi9O4xopuhkt
-         /R3IbmbP/0LM91dhD9sEfL8VuuTfSlbHlt9VsqOotqNn0nXj4wwMcyCzSCFWbsn3augQ
-         j93A==
+        Thu, 20 Aug 2020 00:54:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597899250;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=5+VTUkZxM5oNmypKkhPEwWwEokFyqkG+NZrtkR/m294=;
+        b=Zb7Txy+fp+vxslDJ6GB8hwDM3iZgxSi05FGUTnVz5kSJQidCogqbbWi67M7al43pBJbjzH
+        bSW6vqhr+wURzZa83Mhh8W4wSfLetn8Gftsgsefn0cuVuileGEJabfkc0W68iqTSSGRuvs
+        BMwaYX0P+IPhWRA1muhs26Q4moBD1EU=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-259-60R8k3HFNHiNfGm_uPeHsg-1; Thu, 20 Aug 2020 00:54:08 -0400
+X-MC-Unique: 60R8k3HFNHiNfGm_uPeHsg-1
+Received: by mail-pg1-f198.google.com with SMTP id h36so541028pgl.14
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 21:54:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5VWHI9n0+G3Tugiglsr+/xN2YwY1eAl4mqxcjHXV038=;
-        b=KpuHnyescuweoW334MQ/izGMs4DZcA62Ko08pY7RZDCncTSYNG+3eHsvt18tv5Vt1o
-         +36sLvuHo2lZC+G+U7kzj7LlvRsWmLSHcyvsr9dO7UWKtjdJGa8bP6LGiyu+/OFb04Al
-         qGbSDMyXntsd+1wJe2revVGlQgP7xXYBQMWcrXNJzK5tmgqZCuNG8xY01nEU39haEKVA
-         XcCBgOQ4Nf99MQt8MduL5adS2s3rVCWGj7nC9VVdHGERSVwF4greU+TjjqjiX7TwYqhi
-         pjTKMD4ejMk/WqknlnL7sJY6MWw9VwBHshxZChemJ9EmgOWOqIcrcd/BkgXEdUvnUVVD
-         D+Ag==
-X-Gm-Message-State: AOAM531OLQQQmGw0pCXnomF7x1HnlaCeD2zcRDSBSatmMg3t4Bjf5xMY
-        FkX2YRSCudxSScqZEPlIOhQ=
-X-Google-Smtp-Source: ABdhPJwk8QJnC9KbOI5ziFvW6UbllAaSRg+AL5gHNG6xLAWMh2Mh0hNlihlPpcjmyT2/1uEAMMDVPg==
-X-Received: by 2002:a63:64b:: with SMTP id 72mr1201470pgg.157.1597899164625;
-        Wed, 19 Aug 2020 21:52:44 -0700 (PDT)
-Received: from localhost ([1.23.143.142])
-        by smtp.gmail.com with ESMTPSA id lk16sm572071pjb.13.2020.08.19.21.52.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5+VTUkZxM5oNmypKkhPEwWwEokFyqkG+NZrtkR/m294=;
+        b=W5CWBR2VRSh9BoxVZSS2MDe/eCIBFzJb6eRk1WqZfUhX0wDAWqVsPVQo3UJZlbRZJM
+         aXfXxCYxEfKcqoX3D/EnQObg0L3ISdd5khSUYb8z4h9i/KOMLEnFTfyPcZyAg7lss8jo
+         A22CK9EGOl/xQBBP2eb4LIRspC3mZ8LE9ZKxoZC0EIJeyDUl6hvBFVo726shx0vQ/2dK
+         X+CZ7z7eCp+uSuVGOS8cXLGrJteqGOdxoRkTEWvdta26oYPUEPRYsMZba6khSq2y7hxD
+         OR+nKwfXWpLRwi3UA8h0cArer/zPhTb8VHi43h3zctn8N2SzoOazkRSeICJc2EBskFvr
+         YbIA==
+X-Gm-Message-State: AOAM531v7JrsIOuAB4dbGHveL8+8dDVTus46uSAgL9tueodS2bP3Z87j
+        bdjNyg1dosMbxQHl7+GagoNNq/K5F1oRgmMPcF/nUdGmfUOvKz2v9qpFWf002iptlolI2J8S/tw
+        ngfMs6qi/7VlveaL0VfiXKLAV
+X-Received: by 2002:a62:5a87:: with SMTP id o129mr954888pfb.204.1597899247837;
+        Wed, 19 Aug 2020 21:54:07 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz+eEuz/lXHLcXBgHgYxHWdcGo0cQru9Km40vz5Mcw+NKZD7EVUPE35k7tZi3N+gJsdzQjD7g==
+X-Received: by 2002:a62:5a87:: with SMTP id o129mr954876pfb.204.1597899247575;
+        Wed, 19 Aug 2020 21:54:07 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id q16sm1017900pfg.153.2020.08.19.21.54.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 21:52:36 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:22:32 +0530
-From:   Mrinal Pandey <mrinalmni@gmail.com>
-To:     apw@canonical.com, joe@perches.com, linux-kernel@vger.kernel.org,
-        lukas.bulwahn@gmail.com, skhan@linuxfoundation.org,
-        Linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v2] checkpatch: Fix the usage of capture group ( ... )
-Message-ID: <20200820045232.tmun7jlppeeesg4p@mrinalpandey>
-References: <20200714032352.f476hanaj2dlmiot@mrinalpandey>
- <alpine.DEB.2.21.2007300746330.13710@felia>
- <a2773089a844047407855f2da7bd72c2970d2e6b.camel@perches.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ux4q3enrmoiq3cjy"
-Content-Disposition: inline
-In-Reply-To: <a2773089a844047407855f2da7bd72c2970d2e6b.camel@perches.com>
+        Wed, 19 Aug 2020 21:54:07 -0700 (PDT)
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        Gao Xiang <hsiangkao@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
+Date:   Thu, 20 Aug 2020 12:53:23 +0800
+Message-Id: <20200820045323.7809-1-hsiangkao@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+SWP_FS is used to make swap_{read,write}page() go through
+the filesystem, and it's only used for swap files over
+NFS. So, !SWP_FS means non NFS for now, it could be either
+file backed or device backed. Something similar goes with
+legacy SWP_FILE.
 
---ux4q3enrmoiq3cjy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So in order to achieve the goal of the original patch,
+SWP_BLKDEV should be used instead.
 
-On 20/07/30 12:31AM, Joe Perches wrote:
-> On Thu, 2020-07-30 at 07:58 +0200, Lukas Bulwahn wrote:
-> > Hi Joe,
-> >=20
-> > did you see this quick fix to checkpatch.pl? Can you comment on the=20
-> > commit and can we get a quick ack on that fix, please?
->=20
-> Yes, in a bit.
->=20
-> > General question on patches for ./scripts/checkpatch.pl:
-> > How do they travel to Linus?
->=20
-> Generally via Andrew Morton.
->=20
-> > Do you pick those patches and provide them to Andrew Morton?
-> > Or do you just ack them and we need to send them to Andrew Morton to ge=
-t=20
-> > them into mainline?
->=20
-> Generally, ack and forward.
->=20
->=20
-Respected maintainers,
+FS corruption can be observed with SSD device + XFS +
+fragmented swapfile due to CONFIG_THP_SWAP=y.
 
-Did you get the time to check this patch out? This patch is a part of my
-mentorship project and your comments on it would help me to make the
-best out of this learning process.
-Please review it as time permits and let me know if what I propose makes
-sense at all.
+I reproduced the issue with the following details:
 
-Thank you.
+Environment:
+QEMU + upstream kernel + buildroot + NVMe (2 GB)
 
---ux4q3enrmoiq3cjy
-Content-Type: application/pgp-signature; name="signature.asc"
+Kernel config:
+CONFIG_BLK_DEV_NVME=y
+CONFIG_THP_SWAP=y
 
------BEGIN PGP SIGNATURE-----
+Some reproducable steps:
+mkfs.xfs -f /dev/nvme0n1
+mkdir /tmp/mnt
+mount /dev/nvme0n1 /tmp/mnt
+bs="32k"
+sz="1024m"    # doesn't matter too much, I also tried 16m
+xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
 
-iQIzBAEBCgAdFiEE8DwCG1PwaC2uTI99xIwpEWwxhGQFAl8+AZAACgkQxIwpEWwx
-hGSRYhAAsnHeGya+r57xffK0LAGoAC8gmK0pURMm8cSkIuwN8Q6pUQoqHR5lT6U0
-HnKCqnDhdyivZLHpM2ApQtZ3eAAVyJyRwzbltybExm74IOdNTGdfvUoonDmzWq4j
-9AacN7giMY5BHtrhaGuq4ULSD6Nh45wl/yYfVIqAhKZxYLAAZyQzCIwIiY62YB5z
-QWF15M8GwzS5XJM3qqyuA5gmngljnQ11fd1AcRSvdBQLDVRcFO/7OwCkvZQFxsgl
-wB2TF2FB6u2MP/7j2DoCfGTwSSlOp1rOQN1mMsLT+EoxWbIpX+yd1aw+4Igm07De
-7R0lOcMQ6V0M1kvO+Kos38kW5HqeJ7YsSSsSx7FlFCbxVUpvK42jrAtbFY9RTofA
-SBPTrb1SaFNXVZEM3yO05kkgPx5aF3IveOxZnBjT0A8IrfFERYXEEIVytOhR5IoB
-xJp41qx6C8F9hhDXrvwcflxqt5vueJLth100xZaklc0/1DO4FtPcxwJYwflLz1C3
-Jn+lzC6v7QBgyXHEI1lWCN2PLODjW2RZd+QkRIoMQjVCeqnDmhBEKfeAF3Ru1wux
-yCDiQrmrqxHZGJLi/1oOCM+xICd6Xh89YFn24YQXv7lEw6OIdgy2fhqMoU0+Z4ab
-4kbEI1D6sDan0mNjvs/iQvkU/GRpkt4JQygvafVHpJLPoZ+IRc4=
-=GBtR
------END PGP SIGNATURE-----
+mkswap /tmp/mnt/sw
+swapon /tmp/mnt/sw
 
---ux4q3enrmoiq3cjy--
+stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
+
+Symptoms:
+ - FS corruption (e.g. checksum failure)
+ - memory corruption at: 0xd2808010
+ - segfault
+
+Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
+Cc: "Huang, Ying" <ying.huang@intel.com>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: Rafael Aquini <aquini@redhat.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+---
+v1: https://lore.kernel.org/r/20200819195613.24269-1-hsiangkao@redhat.com
+
+changes since v1:
+ - improve commit message description
+
+Hi Andrew,
+Kindly consider this one instead if no other concerns...
+
+Thanks,
+Gao Xiang
+
+ mm/swapfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 6c26916e95fd..2937daf3ca02 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+ 			goto nextsi;
+ 		}
+ 		if (size == SWAPFILE_CLUSTER) {
+-			if (!(si->flags & SWP_FS))
++			if (si->flags & SWP_BLKDEV)
+ 				n_ret = swap_alloc_cluster(si, swp_entries);
+ 		} else
+ 			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+-- 
+2.18.1
+
