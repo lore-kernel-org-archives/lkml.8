@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74915C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4571E2245C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A8FE214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881740;
-	bh=2OGik1si2CQz73pb1R1EN1XL5l9NZWL7GYoRLCxjPrY=;
+	s=default; t=1597881746;
+	bh=bEjCleIxmOPiFhdtMIeCAd9DTLvi9E9m0OfrRBUtUA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiteniIVX94jq2rui2v8xFDT6pE84pp1NiIOqFYaEO4rJvU2emz4XCPJzpjlOHWFs
-	 ps2oL7wlVaG+fgDCw9YU0unPWgDZnwPV7GKj6REVdikFproxXdf8SCXWZn4WBMCDyW
-	 HKO1UW/33sBUib1Ivs2draAyVa73BM+m8x0JDmeo=
+	b=ScRBVRvWSCVcEi9dm9yctX0kHhBMYJ8nhg34h646kZbC0J+I80NKLgE42gOrCKOuz
+	 FcvS4WQWwJnCVNwmxqUCdBW/43pJIy3VtWWyowK0UGx54WbxEKSAZGDb4AuB4041HZ
+	 zXhSLxppYZVDV4Nim3vmzhL7GCqEanpd5bjbgMF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgHTACT (ORCPT
+        id S1727937AbgHTACY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:02:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbgHTACD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:03 -0400
+        id S1727829AbgHTACK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61070207FB;
-        Thu, 20 Aug 2020 00:02:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6294D208E4;
+        Thu, 20 Aug 2020 00:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881723;
-        bh=2OGik1si2CQz73pb1R1EN1XL5l9NZWL7GYoRLCxjPrY=;
+        s=default; t=1597881730;
+        bh=bEjCleIxmOPiFhdtMIeCAd9DTLvi9E9m0OfrRBUtUA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P0jd1aZ3ABMFlW1eOThTfdZhxvfRCQauZTIGAx4Y1SjgdW/YQKd00iYBZ0xvsdjZ+
-         LEy0GVp1dpV39+yaDGfCjBmvCVYBFIhoVw53TEnERBwHZPF3djENWKQxN7zumuC9Xl
-         FIG7Ro4BoWNvKEO9DNASCT4PjJhNN2B9jgKBlM/I=
+        b=IcH1dPvAqzjcJMjRaJ+/Q1FFAbDCCGyHWGIKjoeJATpBkuTZGMQDsy03Iof52IrXF
+         V4XAAHqPI+Fy7fBy7p2wkIwp+uHd1GVhIsekP3TJmi1FuyvsIVEg2TxHeh2XHDhauH
+         aBv1BYxzuNepsr7xMEHLlcI+teS+lmtnC9iO+U8A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 05/24] rtc: goldfish: Enable interrupt in set_alarm() when necessary
-Date:   Wed, 19 Aug 2020 20:01:36 -0400
-Message-Id: <20200820000155.215089-5-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 11/24] xfs: fix inode quota reservation checks
+Date:   Wed, 19 Aug 2020 20:01:42 -0400
+Message-Id: <20200820000155.215089-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000155.215089-1-sashal@kernel.org>
 References: <20200820000155.215089-1-sashal@kernel.org>
@@ -60,37 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-When use goldfish rtc, the "hwclock" command fails with "select() to
-/dev/rtc to wait for clock tick timed out". This is because "hwclock"
-need the set_alarm() hook to enable interrupt when alrm->enabled is
-true. This operation is missing in goldfish rtc (but other rtc drivers,
-such as cmos rtc, enable interrupt here), so add it.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
+
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-goldfish.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
-index cb6b0ad7ec3f2..5dd92147f1680 100644
---- a/drivers/rtc/rtc-goldfish.c
-+++ b/drivers/rtc/rtc-goldfish.c
-@@ -73,6 +73,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
- 		rtc_alarm64 = rtc_tm_to_time64(&alrm->time) * NSEC_PER_SEC;
- 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
- 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
-+		writel(1, base + TIMER_IRQ_ENABLED);
- 	} else {
- 		/*
- 		 * if this function was called with enabled=0
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index d1b9869bc5fa6..af3636a99bf60 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -647,7 +647,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
