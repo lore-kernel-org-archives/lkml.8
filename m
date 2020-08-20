@@ -2,102 +2,147 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D908EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C0EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6673207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928066;
-	bh=+2rkOLTAojPpciCsfnRQKWhqYJpIMKTSKUdmYJd/ZrI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kfoFR3wPIA2md4x9YNMgXwV9JvB7I3ydzPzfuvqX+60/og/aS+oX4PuKZHTaK5zkd
-	 +8pYtQ8iDKVsw8kAuF+YyWt//H2WQScFM0YP9JbX0DDs8hKFTnSSrArDrRMEkZ0Wea
-	 6Yjt8faLnEDgNBRvjmsGnLToRDsDs6B+7dHJpUHU=
+	by mail.kernel.org (Postfix) with ESMTP id CAFBC2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbgHTMyR (ORCPT
+        id S1730339AbgHTMym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:54:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43960 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728449AbgHTJnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2513E208E4;
-        Thu, 20 Aug 2020 09:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916599;
-        bh=+2rkOLTAojPpciCsfnRQKWhqYJpIMKTSKUdmYJd/ZrI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xwLlMdhM6rxUeQxoqg84zaxDAvL2u/M94oln0JqzvQdkKPMSPRn+p6JlQIaYmilXl
-         inSSwhluST+QUHO081SbxSKAwFQWsCQHa4vmGjOPB1tp6j0lA+ay0/ZYvwx151U4cg
-         LHGwSMmYDBceropi4VNiPqQJPQ0Jtm1Tr/dTxSJY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 184/204] ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
-Date:   Thu, 20 Aug 2020 11:21:21 +0200
-Message-Id: <20200820091615.386738415@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730541AbgHTMxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:53:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 3ECC6B0BA;
+        Thu, 20 Aug 2020 12:53:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id CCF4A1E1312; Thu, 20 Aug 2020 14:53:00 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 14:53:00 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     linux-ext4@vger.kernel.org, jack@suse.cz, tytso@mit.edu,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [RFC 1/1] ext4: Optimize ext4 DAX overwrites
+Message-ID: <20200820125300.GK1902@quack2.suse.cz>
+References: <cover.1597855360.git.riteshh@linux.ibm.com>
+ <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+On Thu 20-08-20 17:06:28, Ritesh Harjani wrote:
+> Currently in case of DAX, we are starting a transaction
+> everytime for IOMAP_WRITE case. This can be optimized
+> away in case of an overwrite (where the blocks were already
+> allocated). This could give a significant performance boost
+> for multi-threaded random writes.
+> 
+> Reported-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
 
-[ Upstream commit 5a25de6df789cc805a9b8ba7ab5deef5067af47e ]
+Thanks for returning to this and I'm glad to see how much this helped :)
+BTW, I'd suspect there could be also significant contention and cache line
+bouncing on j_state_lock and transaction's atomic counters...
 
-Freeing chip on error may lead to an Oops at the next time
-the system goes to resume. Fix this by removing all
-snd_echo_free() calls on error.
+> ---
+>  fs/ext4/ext4.h  | 1 +
+>  fs/ext4/file.c  | 2 +-
+>  fs/ext4/inode.c | 8 +++++++-
+>  3 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 42f5060f3cdf..9a2138afc751 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3232,6 +3232,7 @@ extern const struct dentry_operations ext4_dentry_ops;
+>  extern const struct inode_operations ext4_file_inode_operations;
+>  extern const struct file_operations ext4_file_operations;
+>  extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
+> +extern bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len);
+>  
+>  /* inline.c */
+>  extern int ext4_get_max_inline_size(struct inode *inode);
+> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> index 2a01e31a032c..51cd92ac1758 100644
+> --- a/fs/ext4/file.c
+> +++ b/fs/ext4/file.c
+> @@ -188,7 +188,7 @@ ext4_extending_io(struct inode *inode, loff_t offset, size_t len)
+>  }
+>  
+>  /* Is IO overwriting allocated and initialized blocks? */
+> -static bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
+> +bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
+>  {
+>  	struct ext4_map_blocks map;
+>  	unsigned int blkbits = inode->i_blkbits;
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 10dd470876b3..f0ac0ee9e991 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -3423,6 +3423,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>  	int ret;
+>  	struct ext4_map_blocks map;
+>  	u8 blkbits = inode->i_blkbits;
+> +	bool overwrite = false;
+>  
+>  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>  		return -EINVAL;
+> @@ -3430,6 +3431,9 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>  	if (WARN_ON_ONCE(ext4_has_inline_data(inode)))
+>  		return -ERANGE;
+>  
+> +	if (IS_DAX(inode) && (flags & IOMAP_WRITE) &&
+> +	    ext4_overwrite_io(inode, offset, length))
+> +		overwrite = true;
 
-Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Link: https://lore.kernel.org/r/20200813074632.17022-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/echoaudio/echoaudio.c | 2 --
- 1 file changed, 2 deletions(-)
+So the patch looks correct but using ext4_overwrite_io() seems a bit
+foolish since under the hood it does ext4_map_blocks() only to be able to
+decide whether to call ext4_map_blocks() once again with exactly the same
+arguments :). So I'd rather slightly refactor the code in
+ext4_iomap_begin() to avoid this double calling of ext4_map_blocks() for
+the fast path.
 
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index 0941a7a17623a..456219a665a79 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -2158,7 +2158,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (err < 0) {
- 		kfree(commpage_bak);
- 		dev_err(dev, "resume init_hw err=%d\n", err);
--		snd_echo_free(chip);
- 		return err;
- 	}
- 
-@@ -2185,7 +2184,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
- 		dev_err(chip->card->dev, "cannot grab irq\n");
--		snd_echo_free(chip);
- 		return -EBUSY;
- 	}
- 	chip->irq = pci->irq;
+								Honza
+
+>  	/*
+>  	 * Calculate the first and last logical blocks respectively.
+>  	 */
+> @@ -3437,13 +3441,15 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>  	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+>  
+> -	if (flags & IOMAP_WRITE)
+> +	if ((flags & IOMAP_WRITE) && !overwrite)
+>  		ret = ext4_iomap_alloc(inode, &map, flags);
+>  	else
+>  		ret = ext4_map_blocks(NULL, inode, &map, 0);
+>  
+>  	if (ret < 0)
+>  		return ret;
+> +	if (IS_DAX(inode) && overwrite)
+> +		WARN_ON(!(map.m_flags & EXT4_MAP_MAPPED));
+>  
+>  	ext4_set_iomap(inode, iomap, &map, offset, length);
+>  
+> -- 
+> 2.25.4
+> 
 -- 
-2.25.1
-
-
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
