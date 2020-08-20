@@ -2,90 +2,107 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45801C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616C6C433E3
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2581F204EA
+	by mail.kernel.org (Postfix) with ESMTP id 4165822B4D
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923267;
-	bh=SriRrDedMudRpYmWo2kpmKuWSF9BDf4K95kArhbHnPQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DJyYGRISZIMVIvpOs3RKbHj4/xjVdIBgE/rW3x+X/GfLqoXjoWrfQHv9c5LAf1IoQ
-	 g5WBGxKZ2O8Cujt4WPXRXwGHYB1Bazb7Mk135Y9YqPXQRd9yQgrcXMLGlz+XwQYvPk
-	 fgcquNY9yG77oLeZqxUbPsbQ59EmXqQXvWrE1baE=
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0ncrEOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbgHTLdt (ORCPT
+        id S1730652AbgHTLcu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:33:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730590AbgHTKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 07:32:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60506 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730595AbgHTKFq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597917944;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jQk9HF5WyLsR7Qjp7OmzOvtHJ+K+Qv4nXKEE5TBkCHU=;
+        b=P0ncrEOj8ays6jEwbw0sgcehEGjGm7eIb/32vYxzM66YtN4lNGBajOl5Urmi6KtVlp8Xlp
+        CLvM490voNxw+tXgEjBsiRTZcnBjnUhe7z+eVoGT18tsx+2OmZH2oQrvvIgev/ETFhLkEp
+        ND1nVCB3HwG7w+8pS9OSsbXNMNR3vBI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-557-cGDsWAEVNY2VwpKo97NMHQ-1; Thu, 20 Aug 2020 06:05:43 -0400
+X-MC-Unique: cGDsWAEVNY2VwpKo97NMHQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 998A1206DA;
-        Thu, 20 Aug 2020 10:05:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917943;
-        bh=SriRrDedMudRpYmWo2kpmKuWSF9BDf4K95kArhbHnPQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFtMywaPTZjqRPlbcThbw1QGeTxbCQwsh2M1S70E1KSVEV/tbciRTfNxH3Oq8XaoS
-         ZHVhI7dtlHgGav+HnC8g0ZyFwllCa/xXMv7Nz7USMWUfslsZPuvaRJMmKnWToluQbz
-         3ERyu9sVRml9ImrjfL65h0VFzDqAKs1IWByRtfvs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.9 212/212] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
-Date:   Thu, 20 Aug 2020 11:23:05 +0200
-Message-Id: <20200820091613.040898601@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7F335807332;
+        Thu, 20 Aug 2020 10:05:41 +0000 (UTC)
+Received: from starship (unknown [10.35.206.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FE3F7E309;
+        Thu, 20 Aug 2020 10:05:38 +0000 (UTC)
+Message-ID: <33166884f54569ab47cc17a4c3e01f9dbc96401a.camel@redhat.com>
+Subject: Re: [PATCH 8/8] KVM: nSVM: read only changed fields of the nested
+ guest data area
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Date:   Thu, 20 Aug 2020 13:05:37 +0300
+In-Reply-To: <53afbfba-427e-72f5-73a6-faea7606e78e@redhat.com>
+References: <20200820091327.197807-1-mlevitsk@redhat.com>
+         <20200820091327.197807-9-mlevitsk@redhat.com>
+         <53afbfba-427e-72f5-73a6-faea7606e78e@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+On Thu, 2020-08-20 at 12:01 +0200, Paolo Bonzini wrote:
+> On 20/08/20 11:13, Maxim Levitsky wrote:
+> > +	u32 clean = nested_vmcb->control.clean;
+> > +
+> > +	if (svm->nested.vmcb_gpa != vmcb_gpa) {
+> > +		svm->nested.vmcb_gpa = vmcb_gpa;
+> > +		clean = 0;
+> > +	}
+> 
+> You probably should set clean to 0 also if the guest doesn't have the
+> VMCBCLEAN feature (so, you first need an extra patch to add the
+> VMCBCLEAN feature to cpufeatures.h).  It's probably best to cache the
+> guest vmcbclean in struct vcpu_svm, too.
 
-commit f29aa08852e1953e461f2d47ab13c34e14bc08b3 upstream.
+Right, I totally forgot about this one.
 
-clk_s is checked twice in a row in ni_init_smc_spll_table().
-fb_div should be checked instead.
+One thing why I made this patch optional, is that I can instead drop it,
+and not 'read back' the saved area on vmexit, this will probably be faster
+that what this optimization does. What do you think? Is this patch worth it?
+(I submitted it because I already implemented this and wanted to hear opinion
+on this).
 
-Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Best regards,
+	Maxim Levitsky
 
----
- drivers/gpu/drm/radeon/ni_dpm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/gpu/drm/radeon/ni_dpm.c
-+++ b/drivers/gpu/drm/radeon/ni_dpm.c
-@@ -2123,7 +2123,7 @@ static int ni_init_smc_spll_table(struct
- 		if (p_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_SHIFT))
- 			ret = -EINVAL;
- 
--		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
-+		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
- 			ret = -EINVAL;
- 
- 		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+> 
+> Paolo
+> 
 
 
