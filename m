@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06105C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E782AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8FAA206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1B02067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918219;
-	bh=IfDtPWHDu6w1xaYNiEa8Sqca5Op8tyggw6IiHrLJwWM=;
+	s=default; t=1597918222;
+	bh=XYRT9QlV1V+F9o3hPmuQ8qXMUy5c6QM3eYvpnEST3fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MStpYdSdfnRA5s7usAxYtYpt17zMTa4NQIchUBGn8bcBO28YQCm/XM9Cw2f2YDfCF
-	 fgLNFClFdG7EGA0ChjsMP3ZHk3cAiBRR+ZJZY4XvJVRJMYc4drJVuo0FxtQIUJGSAM
-	 us5ztmyYVwde0XCjRgJlGI+ToBcm6uFmDIhS5va0=
+	b=CqCtfnU6i0jFANj3FxMALG4zT0dtKJ/EKnkon2UbGIgu/RaH2sFnf7DEb99TyPEGf
+	 1GRZpcsN94l9hOoblCh2T8G1977VRA9Q/nQ0kHyM1bVOG37/0h0kIqnO6wb/jdC456
+	 apZWWRCglybLLNE2Rmh9XV1VovsJViGBKdaLxpFs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbgHTKKS (ORCPT
+        id S1730905AbgHTKKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730874AbgHTKKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:15 -0400
+        id S1730896AbgHTKKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1FF520724;
-        Thu, 20 Aug 2020 10:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7673C2075E;
+        Thu, 20 Aug 2020 10:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918215;
-        bh=IfDtPWHDu6w1xaYNiEa8Sqca5Op8tyggw6IiHrLJwWM=;
+        s=default; t=1597918218;
+        bh=XYRT9QlV1V+F9o3hPmuQ8qXMUy5c6QM3eYvpnEST3fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NoMYNYexZAkRs+Ag6AVAJMZsf+UGZ7PU7tLHRYhwyM7DXYReRP+ZNE030FKQ5vXOf
-         cXDoJgxfn52XQA4A37B8QW4O2bXknXOS120xuNS/1feJcKx8aoKprDQKJ1/63E3UFx
-         L7P0juWgi4MijMBPnIPO+4fQzIGORyeodqfT/YWw=
+        b=VTYn8/TY1/0+2406oKjk+puYPoTyQh7vr7aVEny9YtLHjJxYmUFAM8Tyr0SUeee1F
+         4pF/rlHyx/nrOj5LsauUv8LboYKMCUOzlS9Og3H48aFmGKHgKi8WDc62Lw1wuV2x7R
+         c3uRfbP0qpTO/mmPfFUS2QecCcHVipZ+vAb8JU6A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 052/228] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Thu, 20 Aug 2020 11:20:27 +0200
-Message-Id: <20200820091610.215335414@linuxfoundation.org>
+Subject: [PATCH 4.14 086/228] drm/arm: fix unintentional integer overflow on left shift
+Date:   Thu, 20 Aug 2020 11:21:01 +0200
+Message-Id: <20200820091611.914793815@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,35 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 5f368ddea6fec519bdb93b5368f6a844b6ea27a6 ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+Shifting the integer value 1 is evaluated using 32-bit arithmetic
+and then used in an expression that expects a long value leads to
+a potential integer overflow. Fix this by using the BIT macro to
+perform the shift to avoid the overflow.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Addresses-Coverity: ("Unintentional integer overflow")
+Fixes: ad49f8602fe8 ("drm/arm: Add support for Mali Display Processors")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200618100400.11464-1-colin.king@canonical.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/arm/malidp_planes.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 4a8b1fb51243c..c8824b918693d 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -155,6 +155,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
- 
- 			ldo8_reg: LDO8 {
+diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
+index 16b8b310ae5c7..7072d738b072b 100644
+--- a/drivers/gpu/drm/arm/malidp_planes.c
++++ b/drivers/gpu/drm/arm/malidp_planes.c
+@@ -369,7 +369,7 @@ int malidp_de_planes_init(struct drm_device *drm)
+ 	const struct malidp_hw_regmap *map = &malidp->dev->map;
+ 	struct malidp_plane *plane = NULL;
+ 	enum drm_plane_type plane_type;
+-	unsigned long crtcs = 1 << drm->mode_config.num_crtc;
++	unsigned long crtcs = BIT(drm->mode_config.num_crtc);
+ 	unsigned long flags = DRM_MODE_ROTATE_0 | DRM_MODE_ROTATE_90 | DRM_MODE_ROTATE_180 |
+ 			      DRM_MODE_ROTATE_270 | DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y;
+ 	u32 *formats;
 -- 
 2.25.1
 
