@@ -2,141 +2,264 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAF5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB31C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88A2D208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31871208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="voVLMNwy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kh+7Oi77"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgHTRH7 (ORCPT
+        id S1730452AbgHTRIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
+        Thu, 20 Aug 2020 13:08:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730381AbgHTRFQ (ORCPT
+        with ESMTP id S1730380AbgHTRFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 13:05:16 -0400
-Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F40BC061342
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:08 -0700 (PDT)
-Received: by mail-vk1-xa41.google.com with SMTP id m12so574387vko.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:08 -0700 (PDT)
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27531C061388
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:06 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id d6so3385154ejr.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QMaiGT30LKtLlawZDaTsiOOUCyQJdWMlHkzyfdww7TU=;
-        b=voVLMNwyYF5yt8ORXHFmegDJzN5i/p3XveW33+kSdXDEUpjgd3givYskKk18LZY8Tj
-         qQGmwS6j0hJFw3+1G4/PnVK987gG4zKKFrg5An2mCffuBiFtjPIznPJfaGmMzvO+Xc91
-         nfd7nJ57RyhHu4hIUdIP1snE38pYxGDi/Y+CHYrhEFEJ/C0B8kf3L+3Y2ZBAGCwSBv+J
-         o0VyszodTpvhY5HFlY5/A/KU8JGyGEppW09peiWZVYDJ+r9hynM+ydaTijpmTQ083Zjs
-         O8hVFJFVls1ohPR0CgMLzH+r7H8W7xji7vUYhRQxZZ+VRk01BAcAT9PwGPV5YLyKKJ5L
-         hcfg==
+         :cc;
+        bh=Io5tdLMfOwzBnOTgWMWIIWlg9YYSmolrrRZ0RRvwKR8=;
+        b=kh+7Oi77zCYs0Sv7wjusq4Fc5vU9fpUjsb6r/DE/kUtxx0CQITSCQqoDaZMzjaZZ0n
+         b1VJBkGhEFH8feITupWHQFvEFbhGDN845BnvjWUre/C1K2N+lPbdhqaIylz5UM+JGll+
+         GAVJaLbBjUVw3gF32YxoWxhiSe7a6YeLphd03FE7liKLJ5lz6XlIf+0N3dLp2wHQZ2P2
+         53QhRJ8b2V+Ssvr4++sy0/W/vhM+NV6FRxAvOqnSw4Nm2O2HY9sBxZRz1vMCOGY4jAbH
+         UjkJOxnjy+aZJDIrRyJTTdd0XsUtqpmNCMnzV1KqEUvUC7x54C+Gl0x7HdYdkHKrC7ng
+         JLZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QMaiGT30LKtLlawZDaTsiOOUCyQJdWMlHkzyfdww7TU=;
-        b=tNygouD+EToLDBUrfHP1wmVho9ND61DUyLoki4D09EnpDKmEFTxIglAn3vIZHDzvBp
-         sn5bMMNyQINrtvILTLeAQrpUuvSjnSDp+cp9tEP6oDZkkMI7Dk0gJe2oaGpeSGMTyROC
-         IEW76J67hLOdvasWCapJrmTKCc1BChuWajj/9RZ424nbQhcmHFWJtfKIFh5QqwsPowEm
-         5bSr6HpeHrPcK+3SHiIN2AZRVcpJyVcN8kGCtLF090FdocMWSIapsajOzbEFVFzqMax2
-         My7YNweB6lpGJT3jCatNMR6Nf8qsZ4QivMhRvaK1ld3C6WtUTG5Ibbn3S+2X1v0NqxHj
-         u5oA==
-X-Gm-Message-State: AOAM533Dw1bmMCaQK97uzc5Cy2voAMnaiHc9lFQfUC1epjl6KS7pS0tl
-        SZ+p7d108ZzNnGkNazl9qbzc+N1ZTXgz7KhzMRR7lw==
-X-Google-Smtp-Source: ABdhPJw0AHuWD8nNz3mjjHi8gb99GyFZmSI4fWRyfdqag2g9dEVL/BfYYPFVIqjS+RfYFDwHH/CT26r95B95gLAwdSM=
-X-Received: by 2002:a1f:a256:: with SMTP id l83mr2291083vke.78.1597943105094;
- Thu, 20 Aug 2020 10:05:05 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Io5tdLMfOwzBnOTgWMWIIWlg9YYSmolrrRZ0RRvwKR8=;
+        b=lkUtkmPmp8mo23m+kYI4+QK+G7hKixNi4sOcswZdWTyatlg/RLBJFa68KVJ0AKfYdF
+         IXGHAXh9OiMhm74t/WJ2s3LdStr5SicAB2yUxUgHfOL6N6u/sqHjJUHUb7YVdfSUEpmn
+         lF9UTrtsh49KBaT6lvDTsc9Q4t1yuovvBF6JINbHYKdBz0oa1ghpmAma1fG1YQdjGccJ
+         cDairqcxx9a4xevttoIGHlNXha1lGM+fG/vuvP53iRyROKo5/Ulply6PCkh2k/fmYkgH
+         G88luCn9eQgkwfrtG0MreRAkcs5RRMxEtuTtO9gEH0aWZ5gOm51WwuPl48ZZJ/nOmy5D
+         8eGQ==
+X-Gm-Message-State: AOAM531/AWKwU8t4oEoHCInIN2XbaATzG6xf6GOIhPCREvo4x2Qkjsgh
+        up01S4GM8NwIV9mArOLgwTiXI7LP/fbO/cXGr5whuw==
+X-Google-Smtp-Source: ABdhPJxmhN2XhjhlawKzSbrnBdxU0whJpUJmBc0bEkLW6GcfQwO/fGclhykmEtouej1+n+vSOnBFgnayetnB0wumRKM=
+X-Received: by 2002:a17:906:54d3:: with SMTP id c19mr4419389ejp.408.1597943104367;
+ Thu, 20 Aug 2020 10:05:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820091606.194320503@linuxfoundation.org>
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 20 Aug 2020 22:34:53 +0530
-Message-ID: <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/204] 5.7.17-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-2-haoluo@google.com>
+ <35519fec-754c-0a17-4f01-9d6e39a8a7e8@fb.com>
+In-Reply-To: <35519fec-754c-0a17-4f01-9d6e39a8a7e8@fb.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Thu, 20 Aug 2020 10:04:53 -0700
+Message-ID: <CA+khW7jYgRxsjvqSWwLQDP5PpuXB0HJDNMLGFAOPddi7SdMP0g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 1/8] bpf: Introduce pseudo_btf_id
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 15:06, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Yonghong,
+
+Thank you for taking a look. Explicitly cc'ing Arnaldo to see if he
+has any immediate insights. In the meantime, I'll dedicate time to
+investigate this issue you found.
+
+Thanks,
+Hao
+
+
+On Thu, Aug 20, 2020 at 8:23 AM Yonghong Song <yhs@fb.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.7.17 release.
-> There are 204 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
 >
-> Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
-> Anything received after that time might be too late.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.7.17-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
+> On 8/19/20 3:40 PM, Hao Luo wrote:
+> > Pseudo_btf_id is a type of ld_imm insn that associates a btf_id to a
+> > ksym so that further dereferences on the ksym can use the BTF info
+> > to validate accesses. Internally, when seeing a pseudo_btf_id ld insn,
+> > the verifier reads the btf_id stored in the insn[0]'s imm field and
+> > marks the dst_reg as PTR_TO_BTF_ID. The btf_id points to a VAR_KIND,
+> > which is encoded in btf_vminux by pahole. If the VAR is not of a struct
+> > type, the dst reg will be marked as PTR_TO_MEM instead of PTR_TO_BTF_ID
+> > and the mem_size is resolved to the size of the VAR's type.
+> >
+> >  From the VAR btf_id, the verifier can also read the address of the
+> > ksym's corresponding kernel var from kallsyms and use that to fill
+> > dst_reg.
+> >
+> > Therefore, the proper functionality of pseudo_btf_id depends on (1)
+> > kallsyms and (2) the encoding of kernel global VARs in pahole, which
+> > should be available since pahole v1.18.
 >
-> thanks,
+> I tried your patch with latest pahole but it did not generate
+> expected BTF_TYPE_VARs. My pahole head is:
+>    f3d9054ba8ff btf_encoder: Teach pahole to store percpu variables in
+> vmlinux BTF.
 >
-> greg k-h
-
-> Herbert Xu <herbert@gondor.apana.org.au>
->     crypto: af_alg - Fix regression on empty requests
-
-Results from Linaro=E2=80=99s test farm.
-Regressions detected.
-
-LTP crypto af_alg02 and cve-2017-17805 failed on stable-rc 5.7 and 5.8
-branches on arm, arm64, i386 and x86_64.
-
-  ltp-crypto-tests:
-    * af_alg02
-
-  ltp-cve-tests:
-    * cve-2017-17805
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.17-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: 7366707e7e9962245a618a0aee04c22ab31115c2
-git describe: v5.7.16-205-g7366707e7e99
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.16-205-g7366707e7e99
-
-Regressions (compared to build v5.7.16)
-------------------------------------------------------------------------
-  ltp-crypto-tests:
-    * af_alg02
-
-  ltp-cve-tests:
-    * cve-2017-17805
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> First I made the following changes to facilitate debugging:
+> diff --git a/btf_encoder.c b/btf_encoder.c
+> index 982f59d..f94c3a6 100644
+> --- a/btf_encoder.c
+> +++ b/btf_encoder.c
+> @@ -334,6 +334,9 @@ int cu__encode_btf(struct cu *cu, int verbose, bool
+> force)
+>                  /* percpu variables are allocated in global space */
+>                  if (variable__scope(var) != VSCOPE_GLOBAL)
+>                          continue;
+> +               /* type 0 is void, probably an internal error */
+> +               if (var->ip.tag.type == 0)
+> +                       continue;
+>                  has_global_var = true;
+>                  head = &hash_addr[hashaddr__fn(var->ip.addr)];
+>                  hlist_add_head(&var->tool_hnode, head);
+> @@ -399,8 +402,8 @@ int cu__encode_btf(struct cu *cu, int verbose, bool
+> force)
+>                  }
+>
+>                  if (verbose)
+> -                       printf("symbol '%s' of address 0x%lx encoded\n",
+> -                              sym_name, addr);
+> +                       printf("symbol '%s' of address 0x%lx encoded,
+> type %u\n",
+> +                              sym_name, addr, type);
+>
+>                  /* add a BTF_KIND_VAR in btfe->types */
+>                  linkage = var->external ? BTF_VAR_GLOBAL_ALLOCATED :
+> BTF_VAR_STATIC;
+> diff --git a/libbtf.c b/libbtf.c
+> index 7a01ded..3a0d8d7 100644
+> --- a/libbtf.c
+> +++ b/libbtf.c
+> @@ -304,6 +304,8 @@ static const char * const btf_kind_str[NR_BTF_KINDS] = {
+>          [BTF_KIND_RESTRICT]     = "RESTRICT",
+>          [BTF_KIND_FUNC]         = "FUNC",
+>          [BTF_KIND_FUNC_PROTO]   = "FUNC_PROTO",
+> +       [BTF_KIND_VAR]          = "VAR",
+> +       [BTF_KIND_DATASEC]      = "DATASEC",
+>   };
+>
+>   static const char *btf_elf__name_in_gobuf(const struct btf_elf *btfe,
+> uint32_t offset)
+> @@ -671,7 +673,7 @@ int32_t btf_elf__add_var_type(struct btf_elf *btfe,
+> uint32_t type, uint32_t name
+>                  return -1;
+>          }
+>
+> -       btf_elf__log_type(btfe, &t.type, false, false, "type=%u name=%s",
+> +       btf_elf__log_type(btfe, &t.type, false, false, "type=%u name=%s\n",
+>                            t.type.type, btf_elf__name_in_gobuf(btfe,
+> t.type.name_off));
+>
+>          return btfe->type_index;
+>
+> It would be good if you can add some of the above changes to
+> pahole for easier `pahole -JV` dump.
+>
+> With the above change, I only got static per cpu variables.
+> For example,
+>     static DEFINE_PER_CPU(unsigned int , mirred_rec_level);
+> in net/sched/act_mirred.c.
+>
+> [10] INT 'unsigned int' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+> [74536] VAR 'mirred_rec_level' type_id=10, linkage=static
+>
+> The dwarf debug_info entry for `mirred_rec_level`:
+> 0x0001d8d6:   DW_TAG_variable
+>                  DW_AT_name      ("mirred_rec_level")
+>                  DW_AT_decl_file
+> ("/data/users/yhs/work/net-next/net/sched/act_mirred.c")
+>                  DW_AT_decl_line (31)
+>                  DW_AT_decl_column       (0x08)
+>                  DW_AT_type      (0x00000063 "unsigned int")
+>                  DW_AT_location  (DW_OP_addr 0x0)
+> It is not a declaration and it contains type.
+>
+> All global per cpu variables do not have BTF_KIND_VAR generated.
+> I did a brief investigation and found this mostly like to be a
+> pahole issue. For example, for global per cpu variable
+> bpf_prog_active,
+>    include/linux/bpf.h
+>          DECLARE_PER_CPU(int , bpf_prog_active);
+>    kernel/bpf/syscall.c
+>          DEFINE_PER_CPU(int , bpf_prog_active);
+> it is declared in the header include/linux/bpf.h and
+> defined in kernel/bpf/syscall.c.
+>
+> In many cu's, you will see:
+> 0x0003592a:   DW_TAG_variable
+>                  DW_AT_name      ("bpf_prog_active")
+>                  DW_AT_decl_file
+> ("/data/users/yhs/work/net-next/include/linux/bpf.h")
+>                  DW_AT_decl_line (1074)
+>                  DW_AT_decl_column       (0x01)
+>                  DW_AT_type      (0x0001fa7e "int")
+>                  DW_AT_external  (true)
+>                  DW_AT_declaration       (true)
+>
+> In kernel/bpf/syscall.c, I see
+> the following dwarf entry for real definition:
+> 0x00013534:   DW_TAG_variable
+>                  DW_AT_name      ("bpf_prog_active")
+>                  DW_AT_decl_file
+> ("/data/users/yhs/work/net-next/include/linux/bpf.h")
+>                  DW_AT_decl_line (1074)
+>                  DW_AT_decl_column       (0x01)
+>                  DW_AT_type      (0x000000d6 "int")
+>                  DW_AT_external  (true)
+>                  DW_AT_declaration       (true)
+>
+> 0x00021a25:   DW_TAG_variable
+>                  DW_AT_specification     (0x00013534 "bpf_prog_active")
+>                  DW_AT_decl_file
+> ("/data/users/yhs/work/net-next/kernel/bpf/syscall.c")
+>                  DW_AT_decl_line (43)
+>                  DW_AT_location  (DW_OP_addr 0x0)
+>
+> Note that for the second entry DW_AT_specification points to the
+> declaration. I am not 100% sure whether pahole handle this properly or
+> not. It generates a type id 0 (void) for bpf_prog_active variable.
+>
+> Could you investigate this a little more?
+>
+> I am using gcc 8.2.1. Using kernel default dwarf (dwarf 2) exposed
+> the above issue. Tries to use dwarf 4 and the problem still exists.
+>
+>
+> >
+> > Signed-off-by: Hao Luo <haoluo@google.com>
+> > ---
+> >   include/linux/btf.h      | 15 +++++++++
+> >   include/uapi/linux/bpf.h | 38 ++++++++++++++++------
+> >   kernel/bpf/btf.c         | 15 ---------
+> >   kernel/bpf/verifier.c    | 68 ++++++++++++++++++++++++++++++++++++++++
+> >   4 files changed, 112 insertions(+), 24 deletions(-)
+> >
+> [...]
