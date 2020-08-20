@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B7DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3667207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 014B7207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928922;
-	bh=PKNpThjb7+fkLR/AL7zx/sviArJdzkpLNMjlFLtKWsE=;
+	s=default; t=1597928927;
+	bh=OKjp/ShmCEdiLKKV6apOS8N497zVwXlDGDvwFaxJTYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bkzw4Zv51xC6QTXLcKZ5JdTF9VPKGz0Tx7SXIYOhw7JnE6RJUvJaI5Nby/pflgSNp
-	 yXIy4UDhWhPuS3XikhA0G09a0ZIiy6uxHk4rSQGWVeUApfkLL3nHM99zlEXtYJPyYp
-	 Zurk1z87B5sOx0JhDEbT3LDL+iY+E5XhUmqsqVxU=
+	b=C4wz6BjanO5H6ehoizCUHvEQYoRoxP40q0ieD6yl8DU1lTNqhHEB2aV1ZF9aDyLFL
+	 82Gh2u7gvjjTGoh/FuSqO3/YQ+KPGQ3oqWnfV2PH0XquVVivjaULmqKpY6pqihBMb4
+	 Asz2Wb0WGgeAbB9M5cG3RVF9WMxjKKz6bCJ82Deg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728961AbgHTNIf (ORCPT
+        id S1730147AbgHTNIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbgHTJhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:55 -0400
+        id S1728795AbgHTJhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D86922B3F;
-        Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28FCF20724;
+        Thu, 20 Aug 2020 09:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916275;
-        bh=PKNpThjb7+fkLR/AL7zx/sviArJdzkpLNMjlFLtKWsE=;
+        s=default; t=1597916266;
+        bh=OKjp/ShmCEdiLKKV6apOS8N497zVwXlDGDvwFaxJTYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AeXYXV8WlPvaJvlj+Dz+qnOuSyNnYOQaSp7TdhIZKunxqnbJZ8+EUkChLlhywbMfl
-         r4Z4Q+LvVEHJ3jNkjI5z208UpFQORuID5CnzwwBY/HDwpO14itHuglj/3WsbFT1MoV
-         Oj+sleqllHhyerj0WGnujjv1nhVXlZAcxa+AwYDs=
+        b=BllekY9aUFnv8aKaKjB0SuCKoEWk0EaxxSt451PuqBUuASYZz5rCLfVhnsTYdJMRs
+         vLcz6Zezox/FdkhtlXdx+aU6Uha0tHofOVHLH7HkQoWZ38o1e8Axz74BOSBIIwwAqR
+         nBehissfiwSEkU1qZe+yQtFU0KsTVOfKqtsB4UBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>,
-        Jun Piao <piaojun@huawei.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 072/204] ocfs2: change slot number type s16 to u16
-Date:   Thu, 20 Aug 2020 11:19:29 +0200
-Message-Id: <20200820091609.948580322@linuxfoundation.org>
+Subject: [PATCH 5.7 069/204] khugepaged: collapse_pte_mapped_thp() protect the pmd lock
+Date:   Thu, 20 Aug 2020 11:19:26 +0200
+Message-Id: <20200820091609.758629351@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -66,87 +64,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Hugh Dickins <hughd@google.com>
 
-commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
+commit 119a5fc16105b2b9383a6e2a7800b2ef861b2975 upstream.
 
-Dan Carpenter reported the following static checker warning.
+When retract_page_tables() removes a page table to make way for a huge
+pmd, it holds huge page lock, i_mmap_lock_write, mmap_write_trylock and
+pmd lock; but when collapse_pte_mapped_thp() does the same (to handle the
+case when the original mmap_write_trylock had failed), only
+mmap_write_trylock and pmd lock are held.
 
-	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
-	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
-	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
+That's not enough.  One machine has twice crashed under load, with "BUG:
+spinlock bad magic" and GPF on 6b6b6b6b6b6b6b6b.  Examining the second
+crash, page_vma_mapped_walk_done()'s spin_unlock of pvmw->ptl (serving
+page_referenced() on a file THP, that had found a page table at *pmd)
+discovers that the page table page and its lock have already been freed by
+the time it comes to unlock.
 
-That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
-never negative, so change s16 to u16.
+Follow the example of retract_page_tables(), but we only need one of huge
+page lock or i_mmap_lock_write to secure against this: because it's the
+narrower lock, and because it simplifies collapse_pte_mapped_thp() to know
+the hpage earlier, choose to rely on huge page lock here.
 
-Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+Signed-off-by: Hugh Dickins <hughd@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reviewed-by: Gang He <ghe@suse.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021213070.27773@eggly.anvils
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/ocfs2.h    |    4 ++--
- fs/ocfs2/suballoc.c |    4 ++--
- fs/ocfs2/super.c    |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ mm/khugepaged.c |   44 +++++++++++++++++++-------------------------
+ 1 file changed, 19 insertions(+), 25 deletions(-)
 
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -326,8 +326,8 @@ struct ocfs2_super
- 	spinlock_t osb_lock;
- 	u32 s_next_generation;
- 	unsigned long osb_flags;
--	s16 s_inode_steal_slot;
--	s16 s_meta_steal_slot;
-+	u16 s_inode_steal_slot;
-+	u16 s_meta_steal_slot;
- 	atomic_t s_num_inodes_stolen;
- 	atomic_t s_num_meta_stolen;
- 
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -879,9 +879,9 @@ static void __ocfs2_set_steal_slot(struc
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1313,7 +1313,7 @@ void collapse_pte_mapped_thp(struct mm_s
  {
- 	spin_lock(&osb->osb_lock);
- 	if (type == INODE_ALLOC_SYSTEM_INODE)
--		osb->s_inode_steal_slot = slot;
-+		osb->s_inode_steal_slot = (u16)slot;
- 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
--		osb->s_meta_steal_slot = slot;
-+		osb->s_meta_steal_slot = (u16)slot;
- 	spin_unlock(&osb->osb_lock);
+ 	unsigned long haddr = addr & HPAGE_PMD_MASK;
+ 	struct vm_area_struct *vma = find_vma(mm, haddr);
+-	struct page *hpage = NULL;
++	struct page *hpage;
+ 	pte_t *start_pte, *pte;
+ 	pmd_t *pmd, _pmd;
+ 	spinlock_t *ptl;
+@@ -1333,9 +1333,17 @@ void collapse_pte_mapped_thp(struct mm_s
+ 	if (!hugepage_vma_check(vma, vma->vm_flags | VM_HUGEPAGE))
+ 		return;
+ 
++	hpage = find_lock_page(vma->vm_file->f_mapping,
++			       linear_page_index(vma, haddr));
++	if (!hpage)
++		return;
++
++	if (!PageHead(hpage))
++		goto drop_hpage;
++
+ 	pmd = mm_find_pmd(mm, haddr);
+ 	if (!pmd)
+-		return;
++		goto drop_hpage;
+ 
+ 	start_pte = pte_offset_map_lock(mm, pmd, haddr, &ptl);
+ 
+@@ -1354,30 +1362,11 @@ void collapse_pte_mapped_thp(struct mm_s
+ 
+ 		page = vm_normal_page(vma, addr, *pte);
+ 
+-		if (!page || !PageCompound(page))
+-			goto abort;
+-
+-		if (!hpage) {
+-			hpage = compound_head(page);
+-			/*
+-			 * The mapping of the THP should not change.
+-			 *
+-			 * Note that uprobe, debugger, or MAP_PRIVATE may
+-			 * change the page table, but the new page will
+-			 * not pass PageCompound() check.
+-			 */
+-			if (WARN_ON(hpage->mapping != vma->vm_file->f_mapping))
+-				goto abort;
+-		}
+-
+ 		/*
+-		 * Confirm the page maps to the correct subpage.
+-		 *
+-		 * Note that uprobe, debugger, or MAP_PRIVATE may change
+-		 * the page table, but the new page will not pass
+-		 * PageCompound() check.
++		 * Note that uprobe, debugger, or MAP_PRIVATE may change the
++		 * page table, but the new page will not be a subpage of hpage.
+ 		 */
+-		if (WARN_ON(hpage + i != page))
++		if (hpage + i != page)
+ 			goto abort;
+ 		count++;
+ 	}
+@@ -1396,7 +1385,7 @@ void collapse_pte_mapped_thp(struct mm_s
+ 	pte_unmap_unlock(start_pte, ptl);
+ 
+ 	/* step 3: set proper refcount and mm_counters. */
+-	if (hpage) {
++	if (count) {
+ 		page_ref_sub(hpage, count);
+ 		add_mm_counter(vma->vm_mm, mm_counter_file(hpage), -count);
+ 	}
+@@ -1407,10 +1396,15 @@ void collapse_pte_mapped_thp(struct mm_s
+ 	spin_unlock(ptl);
+ 	mm_dec_nr_ptes(mm);
+ 	pte_free(mm, pmd_pgtable(_pmd));
++
++drop_hpage:
++	unlock_page(hpage);
++	put_page(hpage);
+ 	return;
+ 
+ abort:
+ 	pte_unmap_unlock(start_pte, ptl);
++	goto drop_hpage;
  }
  
---- a/fs/ocfs2/super.c
-+++ b/fs/ocfs2/super.c
-@@ -78,7 +78,7 @@ struct mount_options
- 	unsigned long	commit_interval;
- 	unsigned long	mount_opt;
- 	unsigned int	atime_quantum;
--	signed short	slot;
-+	unsigned short	slot;
- 	int		localalloc_opt;
- 	unsigned int	resv_level;
- 	int		dir_resv_level;
-@@ -1334,7 +1334,7 @@ static int ocfs2_parse_options(struct su
- 				goto bail;
- 			}
- 			if (option)
--				mopt->slot = (s16)option;
-+				mopt->slot = (u16)option;
- 			break;
- 		case Opt_commit:
- 			if (match_int(&args[0], &option)) {
+ static int khugepaged_collapse_pte_mapped_thps(struct mm_slot *mm_slot)
 
 
