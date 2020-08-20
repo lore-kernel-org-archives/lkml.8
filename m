@@ -2,167 +2,133 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76997C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F8922C9F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929358;
-	bh=BWIFhBcJkDPjoIakh06/+fl++GlwpNvJo517PZVI+mQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOaduUv/h6BL/wU1dDh1XbZ1V6J94g8OmvA76sLjFxYGBg7skOEA1auZSMta729bd
-	 g0nX3oeyroAI7JndXI8X8jYJfMQy/QFpASLry2KGEhs+OiQelIH4tk0UjJDbu2RayT
-	 Ly3uP9Ki6quI7TUk1Pu8u3oFy5qVuUfYfSpOndVU=
+	by mail.kernel.org (Postfix) with ESMTP id 3E5ED20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:16:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sZMJamaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgHTNPx (ORCPT
+        id S1728877AbgHTNQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbgHTJfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83D772075E;
-        Thu, 20 Aug 2020 09:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916137;
-        bh=BWIFhBcJkDPjoIakh06/+fl++GlwpNvJo517PZVI+mQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=edpsiuhdf76ZgmXurg3TmqMGizWOk+9tmDwLskAQEXDOOtK9GleC1tRxMmzcI3Wkh
-         0m17YzZCQOpX3jC6VNiE0HADJldaOtxn6lbn41W6KUNrSC72ML1zYx3we+svKgj8i1
-         VKY5eIewMN7WXb93K8OoB7cIc3f99l8KzmN4+HAk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 023/204] btrfs: add missing check for nocow and compression inode flags
-Date:   Thu, 20 Aug 2020 11:18:40 +0200
-Message-Id: <20200820091607.420361766@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:16:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728812AbgHTNPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:15:45 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E49FC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:15:44 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id j7so1786798oij.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:15:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uxwgX0CmrS+bL9jcwOXBNfIFagcjimHKU8Dz8OFh9wM=;
+        b=sZMJamaRU56/9uttmwSR1aZ9G2hQwvy/8xKscuv5uhdh4WUpL6qL1uGWJoWCRGg/x3
+         w16ByBrSQR6vmgPtfSHPBRAUrJkJ9e7/gmgKuSVoIsiSzNYEVvivHLjG8XiNUL4fh2u9
+         OmnOgDnmg7k14yNQHRaGVH4UaH1qjuT3CSsM+RMR4xxNVDZHeFXYee136MF1itGmA5pt
+         SYKgQSZHQHVZ8ZT7gQMZqhoKq3dheJ5g7glvd8f4/JarRBjblg8FVCCxDVDa6UnznyZv
+         A5y3htjBXdZl4xw1R1GQbCR7NQXka8fvcHPtKi/SokPZEwqA/YtgMPi3M/xODRXkMZPj
+         DtZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uxwgX0CmrS+bL9jcwOXBNfIFagcjimHKU8Dz8OFh9wM=;
+        b=HlXnsPB0JfD2+ThL8emo7ypmxQsQxc+k+qDRYv4m0WCh/iKF1UKKsoLFLD4zl4Exof
+         q9Ii/pHFyZfYCi0uv6YvQXcNnClAmPuKtiW1ODHnc4z3bpPYlAwkH+53Abys7dGrFCP2
+         tgrlmTPBH8LDVDS1K/hJG5J7Csq+gRMaeQk0mMqYQCkuWJ/4q4wVa21jRrAIK2mg67Pq
+         143UWXTHOXW0/zZdNVtxDYW2j7OXvOAHVwSdWiP0Zm3rTqJL+uuwbv3ZBVe1AhMKraDz
+         apKrCipCVqXpdoKeSjx5jvmI6JMAqAU6ogZakAIMyZQUDKnP252JCastv5Mdmi4KSlYq
+         Z/rA==
+X-Gm-Message-State: AOAM531BrqOeM+c6rCytmm4aaXcKUVbbQhJUrPYC7LweXfx9ooadvgo+
+        p1X1JeCVyuX4+kgCiOAW/169F/BdZLQkSvtsqnXolA==
+X-Google-Smtp-Source: ABdhPJx8MtyIqEt4eq5i7NpkgELb0LW4xVC/Qxsp/06hphz7mwCsibbMQmzcpjEBP3sxVH9VQLg0AZn0NKOaarJ+bmw=
+X-Received: by 2002:a05:6808:3da:: with SMTP id o26mr1573458oie.3.1597929343965;
+ Thu, 20 Aug 2020 06:15:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200820120025.74460-1-benbjiang@tencent.com> <CAKfTPtABCbEuYf3uup5ZODyPXpUqBjgM8A5gBQqM0cQGxWk5zw@mail.gmail.com>
+ <20200820125829.GT2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200820125829.GT2674@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 20 Aug 2020 15:15:32 +0200
+Message-ID: <CAKfTPtBuZOb9-W5sS=DqxcuMFa8Lw=7XqMJ_YrXEgd5zvufYjA@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: avoid vruntime compensation for SCHED_IDLE task
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jiang Biao <benbjiang@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+On Thu, 20 Aug 2020 at 14:58, <peterz@infradead.org> wrote:
+>
+> On Thu, Aug 20, 2020 at 02:51:06PM +0200, Vincent Guittot wrote:
+> > On Thu, 20 Aug 2020 at 14:00, Jiang Biao <benbjiang@gmail.com> wrote:
+> > >
+> > > From: Jiang Biao <benbjiang@tencent.com>
+> > >
+> > > Vruntime compensation has been down in place_entity() to
+> > > boot the waking procedure for fair tasks. There is no need to
+> >
+> > s/boot/boost/ ?
+> >
+> > > do that for SCHED_IDLE task actually.
+> > >
+> > > Not compensating vruntime for SCHED_IDLE task could make
+> > > SCHED_IDLE task more harmless for normal tasks.
+>
+> This is rather week. It would be much better if there's some actual data
+> to support this claim.
+>
+> > > Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> > > ---
+> > >  kernel/sched/fair.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> > > index 1a68a0536add..adff77676a0a 100644
+> > > --- a/kernel/sched/fair.c
+> > > +++ b/kernel/sched/fair.c
+> > > @@ -4115,7 +4115,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
+> > >                 vruntime += sched_vslice(cfs_rq, se);
+> > >
+> > >         /* sleeps up to a single latency don't count. */
+> > > -       if (!initial) {
+> > > +       if (!initial && likely(!task_has_idle_policy(task_of(se)))) {
+> >
+> > What if se is not a task ?
+>
+> Then we very much need it, because it might have fair tasks inside. I
+> suppose you could do something complicated with idle_h_nr_running, but
+> is all that really worth the effort?
 
-commit f37c563bab4297024c300b05c8f48430e323809d upstream.
+Not sure that Jiang is using cgroups otherwise he would have seen a
+warning I think.
+That's been said, not compensating the vruntime for a sched_idle task
+makes sense for me. Even if that will only help for others task in the
+same cfs_rq
 
-User Forza reported on IRC that some invalid combinations of file
-attributes are accepted by chattr.
-
-The NODATACOW and compression file flags/attributes are mutually
-exclusive, but they could be set by 'chattr +c +C' on an empty file. The
-nodatacow will be in effect because it's checked first in
-btrfs_run_delalloc_range.
-
-Extend the flag validation to catch the following cases:
-
-  - input flags are conflicting
-  - old and new flags are conflicting
-  - initialize the local variable with inode flags after inode ls locked
-
-Inode attributes take precedence over mount options and are an
-independent setting.
-
-Nocompress would be a no-op with nodatacow, but we don't want to mix
-any compression-related options with nodatacow.
-
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/ioctl.c |   30 ++++++++++++++++++++++--------
- 1 file changed, 22 insertions(+), 8 deletions(-)
-
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -164,8 +164,11 @@ static int btrfs_ioctl_getflags(struct f
- 	return 0;
- }
- 
--/* Check if @flags are a supported and valid set of FS_*_FL flags */
--static int check_fsflags(unsigned int flags)
-+/*
-+ * Check if @flags are a supported and valid set of FS_*_FL flags and that
-+ * the old and new flags are not conflicting
-+ */
-+static int check_fsflags(unsigned int old_flags, unsigned int flags)
- {
- 	if (flags & ~(FS_IMMUTABLE_FL | FS_APPEND_FL | \
- 		      FS_NOATIME_FL | FS_NODUMP_FL | \
-@@ -174,9 +177,19 @@ static int check_fsflags(unsigned int fl
- 		      FS_NOCOW_FL))
- 		return -EOPNOTSUPP;
- 
-+	/* COMPR and NOCOMP on new/old are valid */
- 	if ((flags & FS_NOCOMP_FL) && (flags & FS_COMPR_FL))
- 		return -EINVAL;
- 
-+	if ((flags & FS_COMPR_FL) && (flags & FS_NOCOW_FL))
-+		return -EINVAL;
-+
-+	/* NOCOW and compression options are mutually exclusive */
-+	if ((old_flags & FS_NOCOW_FL) && (flags & (FS_COMPR_FL | FS_NOCOMP_FL)))
-+		return -EINVAL;
-+	if ((flags & FS_NOCOW_FL) && (old_flags & (FS_COMPR_FL | FS_NOCOMP_FL)))
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
-@@ -190,7 +203,7 @@ static int btrfs_ioctl_setflags(struct f
- 	unsigned int fsflags, old_fsflags;
- 	int ret;
- 	const char *comp = NULL;
--	u32 binode_flags = binode->flags;
-+	u32 binode_flags;
- 
- 	if (!inode_owner_or_capable(inode))
- 		return -EPERM;
-@@ -201,22 +214,23 @@ static int btrfs_ioctl_setflags(struct f
- 	if (copy_from_user(&fsflags, arg, sizeof(fsflags)))
- 		return -EFAULT;
- 
--	ret = check_fsflags(fsflags);
--	if (ret)
--		return ret;
--
- 	ret = mnt_want_write_file(file);
- 	if (ret)
- 		return ret;
- 
- 	inode_lock(inode);
--
- 	fsflags = btrfs_mask_fsflags_for_type(inode, fsflags);
- 	old_fsflags = btrfs_inode_flags_to_fsflags(binode->flags);
-+
- 	ret = vfs_ioc_setflags_prepare(inode, old_fsflags, fsflags);
- 	if (ret)
- 		goto out_unlock;
- 
-+	ret = check_fsflags(old_fsflags, fsflags);
-+	if (ret)
-+		goto out_unlock;
-+
-+	binode_flags = binode->flags;
- 	if (fsflags & FS_SYNC_FL)
- 		binode_flags |= BTRFS_INODE_SYNC;
- 	else
-
-
+>
+> > >                 unsigned long thresh = sysctl_sched_latency;
+> > >
+> > >                 /*
+> > > --
+> > > 2.21.0
+> > >
