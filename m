@@ -2,84 +2,66 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:12:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE7720FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pZigIs87"
+	by mail.kernel.org (Postfix) with ESMTP id 97CBC2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgHTCMo (ORCPT
+        id S1726793AbgHTCPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:12:44 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:37319 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHTCMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:12:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BX7TM3wDzz9sRN;
-        Thu, 20 Aug 2020 12:12:39 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1597889560;
-        bh=gPdGSuMbBr6AKJw/++doCCfD8GkVb+j4pQ8PJ3xV49A=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pZigIs87s/0HJCQu3CMeGxmU0e2JIr0P58tO7g3RDssIi9EJAWo6dG2xAEOeHDFUN
-         H/U0C6GQyVs1FTXIqdcuIOi1g6VWt3esLh1358kQCRaPPn3HpgPcIfg7b0MqD4lPxa
-         vaedp/MpmDiMZyRDSUDUTwoIyNc2WvONX4FWrm9ApXlgHzNAHzVOQ1LWJQ6aL7VIQv
-         jYci3SYKpJhI7xoajLFJH8NrnUEgQdKBtqb/Gnjb6UVVuc40f9BgYZO2HAzBFkSGh8
-         Ym6AviUgzKcWLDdtvnZFf5y5fvG+orpGwMv3tCGcngvhsq4jMphAzi+hKg7TzFnQqq
-         YO31FxQ3zKJzg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christoph Hellwig <hch@lst.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] powerpc/pseries/svm: Allocate SWIOTLB buffer anywhere in memory
-In-Reply-To: <20200819044351.GA19391@lst.de>
-References: <20200818221126.391073-1-bauerman@linux.ibm.com> <20200819044351.GA19391@lst.de>
-Date:   Thu, 20 Aug 2020 12:12:35 +1000
-Message-ID: <877dtuhxpo.fsf@mpe.ellerman.id.au>
+        Wed, 19 Aug 2020 22:15:35 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:35534 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726435AbgHTCPe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:15:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0U6GzjvK_1597889732;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U6GzjvK_1597889732)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 20 Aug 2020 10:15:32 +0800
+Date:   Thu, 20 Aug 2020 10:15:31 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm/mmap: rename __vma_unlink_common() to
+ __vma_unlink()
+Message-ID: <20200820021531.GA51743@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <20200809232057.23477-1-richard.weiyang@linux.alibaba.com>
+ <20200819131210.dc5c045a626d1bf4475214d1@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819131210.dc5c045a626d1bf4475214d1@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> writes:
-> On Tue, Aug 18, 2020 at 07:11:26PM -0300, Thiago Jung Bauermann wrote:
->> POWER secure guests (i.e., guests which use the Protection Execution
->> Facility) need to use SWIOTLB to be able to do I/O with the hypervisor, but
->> they don't need the SWIOTLB memory to be in low addresses since the
->> hypervisor doesn't have any addressing limitation.
->> 
->> This solves a SWIOTLB initialization problem we are seeing in secure guests
->> with 128 GB of RAM: they are configured with 4 GB of crashkernel reserved
->> memory, which leaves no space for SWIOTLB in low addresses.
->> 
->> To do this, we use mostly the same code as swiotlb_init(), but allocate the
->> buffer using memblock_alloc() instead of memblock_alloc_low().
->> 
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+On Wed, Aug 19, 2020 at 01:12:10PM -0700, Andrew Morton wrote:
+>On Mon, 10 Aug 2020 07:20:56 +0800 Wei Yang <richard.weiyang@linux.alibaba.com> wrote:
 >
-> Looks fine to me (except for the pointlessly long comment lines, but I've
-> been told that's the powerpc way).
+>> __vma_unlink_common() and __vma_unlink() are counterparts. Since there is
+>
+>I assume you meant "__vma_link()" here?
+>
 
-They're 80 columns AFAICS?
+Oops, my fault. You are right.
 
-cheers
+Do you prefer a v2, or you would like to fix it online?
+
+>> not function named __vma_unlink(), let's rename it to __vma_unlink() to
+>> make the code more self-explain and easy for audience to understand.
+>> 
+>> Otherwise we may expect there are several variants of vma_unlink and
+>> __vma_unlink_common() is used by them.
+
+-- 
+Wei Yang
+Help you, Help me
