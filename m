@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE32C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 522AF207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D877207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928978;
-	bh=8C7sI/wlPnSBvAJA7CplaILSRVFHiaLC9iQie6ct7N0=;
+	s=default; t=1597929010;
+	bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ClTH5lU2qOYgy8AJ2UKWaCgwslZKT/yliXpsrj3XznniUbCQQoLm46UcvHdrODsAN
-	 aThfhsXMh1za1/m/ODCYSFGOt+XbekzZ1+aFNKEMF5NO8mxiH2EqNYUQliDKVnsAfz
-	 bSDj2MCmaXYaAk/IvAZwh6PLET5fePA2EhX/lbtA=
+	b=mQcmhlzfuJALI5dLKsxT94LmAZv//DzTEV88ZMPtUYF6uQMmviqdWtQIGav3Ijda3
+	 caZt3bwLp6D0DEiNZ8UbdTmUpCEeNtfQxeh/aF425HAvs1h/3TsshptK3UL0DyvThO
+	 RxMOeNWZKaohrdcAfqNrLpCXzqM7/OE6x/NIlX74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgHTNJg (ORCPT
+        id S1728988AbgHTNKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54272 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbgHTJhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:41 -0400
+        id S1728746AbgHTJhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 196162075E;
-        Thu, 20 Aug 2020 09:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8371D20724;
+        Thu, 20 Aug 2020 09:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916260;
-        bh=8C7sI/wlPnSBvAJA7CplaILSRVFHiaLC9iQie6ct7N0=;
+        s=default; t=1597916258;
+        bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpvQHSefySu3ASBsH96gyP2OO6RrLZPpwTNmvsOi07fAVnp6Obiqzs3mHKacc2ezS
-         On9n5c3ylc68pS9f5MXJ4xCtGj+x8EFPgGpHHx6bJ0BrdhQ+4166x9GLuAsZRwbfWi
-         q/FyFECnMeWbnlcY20ve8RzSIZS6FcHpRBi7FyAo=
+        b=FEuS1csmrEoeFEBs0uQPq6DkFlDJxXeenv37dDMMGag+IpRIo4HgNca4XeXpp96FP
+         og1hXG0EuVag110QNYrabRTpjuZOa3tVuob0x8oji1v+XnIn392ZDTgQMJ2rWTYo7N
+         u4W18yQCA4+YGSGsV61CfVuJKpr3dcj4TND7cDdk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 067/204] khugepaged: collapse_pte_mapped_thp() flush the right range
-Date:   Thu, 20 Aug 2020 11:19:24 +0200
-Message-Id: <20200820091609.603676164@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
+        BingJing Chang <bingjingc@synology.com>,
+        Danny Shih <dannyshih@synology.com>,
+        ChangSyun Peng <allenpeng@synology.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.7 058/204] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
+Date:   Thu, 20 Aug 2020 11:19:15 +0200
+Message-Id: <20200820091609.166505068@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -64,50 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: ChangSyun Peng <allenpeng@synology.com>
 
-commit 723a80dafed5c95889d48baab9aa433a6ffa0b4e upstream.
+commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
 
-pmdp_collapse_flush() should be given the start address at which the huge
-page is mapped, haddr: it was given addr, which at that point has been
-used as a local variable, incremented to the end address of the extent.
+In degraded raid5, we need to read parity to do reconstruct-write when
+data disks fail. However, we can not read parity from
+handle_stripe_dirtying() in force reconstruct-write mode.
 
-Found by source inspection while chasing a hugepage locking bug, which I
-then could not explain by this.  At first I thought this was very bad;
-then saw that all of the page translations that were not flushed would
-actually still point to the right pages afterwards, so harmless; then
-realized that I know nothing of how different architectures and models
-cache intermediate paging structures, so maybe it matters after all -
-particularly since the page table concerned is immediately freed.
+Reproducible Steps:
 
-Much easier to fix than to think about.
+1. Create degraded raid5
+mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
+2. Set rmw_level to 0
+echo 0 > /sys/block/md2/md/rmw_level
+3. IO to raid5
 
-Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021204390.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
+the parity in this situation.
+
+Cc: <stable@vger.kernel.org> # v4.4+
+Reviewed-by: Alex Wu <alexwu@synology.com>
+Reviewed-by: BingJing Chang <bingjingc@synology.com>
+Reviewed-by: Danny Shih <dannyshih@synology.com>
+Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/khugepaged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/raid5.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1403,7 +1403,7 @@ void collapse_pte_mapped_thp(struct mm_s
- 
- 	/* step 4: collapse pmd */
- 	ptl = pmd_lock(vma->vm_mm, pmd);
--	_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
- 	spin_unlock(ptl);
- 	mm_dec_nr_ptes(mm);
- 	pte_free(mm, pmd_pgtable(_pmd));
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3604,6 +3604,7 @@ static int need_this_block(struct stripe
+ 	 * is missing/faulty, then we need to read everything we can.
+ 	 */
+ 	if (sh->raid_conf->level != 6 &&
++	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
+ 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
+ 		/* reconstruct-write isn't being forced */
+ 		return 0;
+@@ -4839,7 +4840,7 @@ static void handle_stripe(struct stripe_
+ 	 * or to load a block that is being partially written.
+ 	 */
+ 	if (s.to_read || s.non_overwrite
+-	    || (conf->level == 6 && s.to_write && s.failed)
++	    || (s.to_write && s.failed)
+ 	    || (s.syncing && (s.uptodate + s.compute < disks))
+ 	    || s.replacing
+ 	    || s.expanding)
 
 
