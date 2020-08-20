@@ -2,53 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F362C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC978C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1255E22B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08D52078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924100;
-	bh=BQTI3+tiI15DcT22dfSVE6yp8o122jIZ19LZBh6aKMw=;
+	s=default; t=1597924120;
+	bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6TXtAXrEkAsez8GCTsHI7OJElBUkM7fjQEWLkeJSFCTvZ99hTzfOw5DkX8e6qyCL
-	 lk0M6wzf69NyF7ICtgj1N2ebJns/UvJuZxpUii8geqVl3oaYUND064eL40akMtEHW/
-	 aeowpJXTUgp+4zNKmY73YDGeIFNhC2jW56cRyfs4=
+	b=PBT58/ti2qMhFVcwa34TF/dxXQpEDSx5EJg3EBQnG5HN3tGD2EpyUYtTt3LNq7d52
+	 oXu02vPHUFaBujNwLky8/OAriGdrPefQCQc/Ucl2qxBWAlQZpVZh4g80SSxWQwpn9T
+	 lh2ytLNe3H4Kuw20Dn+vWzLVGBqgnERKXER5Z1Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgHTKDg (ORCPT
+        id S1730710AbgHTLsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:03:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730490AbgHTKBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:48 -0400
+        id S1728238AbgHTKDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:03:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D8E22BED;
-        Thu, 20 Aug 2020 10:01:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF42B22BEB;
+        Thu, 20 Aug 2020 10:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917707;
-        bh=BQTI3+tiI15DcT22dfSVE6yp8o122jIZ19LZBh6aKMw=;
+        s=default; t=1597917831;
+        bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVEvLjZRGVx3P4jPKSywdGW2YNiCD5bzgbQBiiD4CZjiz1uVa3uDv6F+pK4Bx1rYq
-         qJDJUrRratM0O+eaw2+3ec+wK8S8YLjwfxmp8WeROO37xn8FVGx2C4Bt0kvvwOIfZ3
-         QNMdjydmVpbmfta6jnmOHarKS/nadMyTT3P0P7MM=
+        b=nQ/wQdRgIJycJCnzbBxqzjQeiwdC0mavBSDVBC4wffmvIWkGlcKYo84bq3SDoSnwi
+         kRlfS6POgX2efCP/AYBeQB4in+/ro5DepnRIsnb3g46sCSgrCSnSK3Msq5ZHUe3jFQ
+         KQrmdrrghQw8M8Q9LjkWTTvGU8JN17w2suoAS4NM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 127/212] mwifiex: Prevent memory corruption handling keys
-Date:   Thu, 20 Aug 2020 11:21:40 +0200
-Message-Id: <20200820091608.764536979@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Charles Stanhope <charles.stanhope@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.9 174/212] iio: dac: ad5592r: fix unbalanced mutex unlocks in ad5592r_read_raw()
+Date:   Thu, 20 Aug 2020 11:22:27 +0200
+Message-Id: <20200820091611.181295528@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,82 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-[ Upstream commit e18696786548244914f36ec3c46ac99c53df99c3 ]
+commit 65afb0932a81c1de719ceee0db0b276094b10ac8 upstream.
 
-The length of the key comes from the network and it's a 16 bit number.  It
-needs to be capped to prevent a buffer overflow.
+There are 2 exit paths where the lock isn't held, but try to unlock the
+mutex when exiting. In these places we should just return from the
+function.
 
-Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200708115857.GA13729@mwanda
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A neater approach would be to cleanup the ad5592r_read_raw(), but that
+would make this patch more difficult to backport to stable versions.
+
+Fixes 56ca9db862bf3: ("iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs")
+Reported-by: Charles Stanhope <charles.stanhope@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../wireless/marvell/mwifiex/sta_cmdresp.c    | 22 +++++++++++++------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+ drivers/iio/dac/ad5592r-base.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-index 8548027abf71b..1e26936c0d727 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
-@@ -586,6 +586,11 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
- {
- 	struct host_cmd_ds_802_11_key_material *key =
- 						&resp->params.key_material;
-+	int len;
-+
-+	len = le16_to_cpu(key->key_param_set.key_len);
-+	if (len > sizeof(key->key_param_set.key))
+--- a/drivers/iio/dac/ad5592r-base.c
++++ b/drivers/iio/dac/ad5592r-base.c
+@@ -417,7 +417,7 @@ static int ad5592r_read_raw(struct iio_d
+ 			s64 tmp = *val * (3767897513LL / 25LL);
+ 			*val = div_s64_rem(tmp, 1000000000LL, val2);
+ 
+-			ret = IIO_VAL_INT_PLUS_MICRO;
++			return IIO_VAL_INT_PLUS_MICRO;
+ 		} else {
+ 			int mult;
+ 
+@@ -448,7 +448,7 @@ static int ad5592r_read_raw(struct iio_d
+ 		ret =  IIO_VAL_INT;
+ 		break;
+ 	default:
+-		ret = -EINVAL;
 +		return -EINVAL;
+ 	}
  
- 	if (le16_to_cpu(key->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key->key_param_set.key_info) & KEY_MCAST)) {
-@@ -599,9 +604,8 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
- 
- 	memset(priv->aes_key.key_param_set.key, 0,
- 	       sizeof(key->key_param_set.key));
--	priv->aes_key.key_param_set.key_len = key->key_param_set.key_len;
--	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key,
--	       le16_to_cpu(priv->aes_key.key_param_set.key_len));
-+	priv->aes_key.key_param_set.key_len = cpu_to_le16(len);
-+	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key, len);
- 
- 	return 0;
- }
-@@ -616,9 +620,14 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 					      struct host_cmd_ds_command *resp)
- {
- 	struct host_cmd_ds_802_11_key_material_v2 *key_v2;
--	__le16 len;
-+	int len;
- 
- 	key_v2 = &resp->params.key_material_v2;
-+
-+	len = le16_to_cpu(key_v2->key_param_set.key_params.aes.key_len);
-+	if (len > WLAN_KEY_LEN_CCMP)
-+		return -EINVAL;
-+
- 	if (le16_to_cpu(key_v2->action) == HostCmd_ACT_GEN_SET) {
- 		if ((le16_to_cpu(key_v2->key_param_set.key_info) & KEY_MCAST)) {
- 			mwifiex_dbg(priv->adapter, INFO, "info: key: GTK is set\n");
-@@ -634,10 +643,9 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
- 	memset(priv->aes_key_v2.key_param_set.key_params.aes.key, 0,
- 	       WLAN_KEY_LEN_CCMP);
- 	priv->aes_key_v2.key_param_set.key_params.aes.key_len =
--				key_v2->key_param_set.key_params.aes.key_len;
--	len = priv->aes_key_v2.key_param_set.key_params.aes.key_len;
-+				cpu_to_le16(len);
- 	memcpy(priv->aes_key_v2.key_param_set.key_params.aes.key,
--	       key_v2->key_param_set.key_params.aes.key, le16_to_cpu(len));
-+	       key_v2->key_param_set.key_params.aes.key, len);
- 
- 	return 0;
- }
--- 
-2.25.1
-
+ unlock:
 
 
