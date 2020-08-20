@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA20DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88E61208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8362A207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881947;
-	bh=MGpCxETfVBdJUi9yLlAn0NS7XSW2oCvWtdSw+Yn9XmU=;
+	s=default; t=1597881955;
+	bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mivu9DtnF5AoOxhrlczR+h3Lpr14jbHCOq1VZ4AwjTrENUQ02vqv97JFBemBXTrXu
-	 Ejz8TaBTsSgRY998ImHhiEsB/ER05Hcq6QodywIDdTyhuspR3Du1E17ioTtowoMsGx
-	 bxu+u6S6e+aMBrzpzBvsfPkD6DioYNe6M/ibfJw0=
+	b=tH+whs6MHosC5eJ5SjxVbrd+YcDWO+0doQ8xiqdI3oyEr93RlvTtjLuuu+EegHuYQ
+	 GPytLIaoWlXGgocEID1IyZnYmayJ0DPdSwgqNqXI92TztjxTdOkVsQ8HO5wAIGuRx5
+	 b5mns1oPexgN0bpI/9gtzjVobG40yRWSVhQ+T1U8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgHTAFf (ORCPT
+        id S1727113AbgHTAFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgHTAEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:04:02 -0400
+        id S1728392AbgHTAD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DEF9208E4;
-        Thu, 20 Aug 2020 00:04:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 817D1207FB;
+        Thu, 20 Aug 2020 00:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881842;
-        bh=MGpCxETfVBdJUi9yLlAn0NS7XSW2oCvWtdSw+Yn9XmU=;
+        s=default; t=1597881839;
+        bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uzYYOSYy/en7jhJ4KcCNCWsaP3UdpPLRISTmWiRcsQnN/PZkySSq0vhCe/M02vWBm
-         ElNDzwsjb8/1fC/a6gPK8aQN+1IcefbSnCEdz5qrVbmLNe6YlWfGcAwk4lNTQjvz0Z
-         I8n3dV2OIkLi4c4eDpUxyahOZVoet1s8BvgMksBo=
+        b=sQD8tiaCwcOwOJRE0IRBIFF0t7RUh+zYG3SpAjQiptkqDC2s5pRtfd0eFDx9ZLfhr
+         JhYZEp2pVLwxCRG3WwD9rKoOX+ZaGsJ6sltrAe5kblsV88sH1azlZ+KyJw3Bys4388
+         zRj+4sF5f4UW/gwj1wU8yos0/2YEsdf70UDJc3Rk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <wenan.mao@linux.alibaba.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.9 09/11] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-Date:   Wed, 19 Aug 2020 20:03:46 -0400
-Message-Id: <20200820000348.215911-9-sashal@kernel.org>
+Cc:     Zhe Li <lizhe67@huawei.com>, Hou Tao <houtao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 07/11] jffs2: fix UAF problem
+Date:   Wed, 19 Aug 2020 20:03:44 -0400
+Message-Id: <20200820000348.215911-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
 References: <20200820000348.215911-1-sashal@kernel.org>
@@ -61,51 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <wenan.mao@linux.alibaba.com>
+From: Zhe Li <lizhe67@huawei.com>
 
-[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
+[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
 
-The loop may exist if vq->broken is true,
-virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
-will return NULL, so virtnet_poll will reschedule napi to
-receive packet, it will lead cpu usage(si) to 100%.
+The log of UAF problem is listed below.
+BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
+Read of size 4 by task rm/8283
+=============================================================================
+BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
+-----------------------------------------------------------------------------
 
-call trace as below:
-virtnet_poll
-	virtnet_receive
-		virtqueue_get_buf_ctx
-			virtqueue_get_buf_ctx_packed
-			virtqueue_get_buf_ctx_split
-	virtqueue_napi_complete
-		virtqueue_poll           //return true
-		virtqueue_napi_schedule //it will reschedule napi
+INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
+        0xb0bba6ef
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        __slab_alloc.isra.21.constprop.25+0x2c/0x44
+        __kmalloc+0x1dc/0x370
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        jffs2_do_unlink+0x328/0x5fc [jffs2]
+        jffs2_rmdir+0x110/0x1cc [jffs2]
+        vfs_rmdir+0x180/0x268
+        do_rmdir+0x2cc/0x300
+        ret_from_syscall+0x0/0x3c
+INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
+        0x2e9173
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
+        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
+        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
+        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
+        kthread+0x1a8/0x1b0
+        ret_from_kernel_thread+0x5c/0x64
+Call Trace:
+[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
+[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
+[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
+[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
+[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
 
-to fix this, return false if vq is broken in virtqueue_poll.
+The root cause is that we don't get "jffs2_inode_info.sem" before
+we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
+This patch add codes to get "jffs2_inode_info.sem" before we scan
+"jffs2_inode_info.dents" to slove the UAF problem.
 
-Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Zhe Li <lizhe67@huawei.com>
+Reviewed-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/jffs2/dir.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index e459cd7302e27..5cad9f41c238b 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -785,6 +785,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
- {
- 	struct vring_virtqueue *vq = to_vvq(_vq);
+diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
+index e5a6deb38e1e1..f4a5ec92f5dc7 100644
+--- a/fs/jffs2/dir.c
++++ b/fs/jffs2/dir.c
+@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
+ 	int ret;
+ 	uint32_t now = get_seconds();
  
-+	if (unlikely(vq->broken))
-+		return false;
-+
- 	virtio_mb(vq->weak_barriers);
- 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
- }
++	mutex_lock(&f->sem);
+ 	for (fd = f->dents ; fd; fd = fd->next) {
+-		if (fd->ino)
++		if (fd->ino) {
++			mutex_unlock(&f->sem);
+ 			return -ENOTEMPTY;
++		}
+ 	}
++	mutex_unlock(&f->sem);
+ 
+ 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
+ 			      dentry->d_name.len, f, now);
 -- 
 2.25.1
 
