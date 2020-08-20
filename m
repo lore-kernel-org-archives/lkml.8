@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E437C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F69C20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C93920855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922609;
-	bh=STaAiDozz5Ey94ASQtqCmUMNQiuV/yBML8B1zscPEZ0=;
+	s=default; t=1597922621;
+	bh=dPor8RalgF2oJq7M7FT7ltZhtMKyFs5xsBkAHeEcRPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bGVgTFNBXFdMri9qLb7/v3EsOOzJB7fgkjmqZosj0Jdno/19Pn1y8Li8ISVkg8Q4C
-	 frqytGcRCGojnlqn2kIpWyDqE+yH93KvNL5Asj7cfFeAh+hmclZYx5yZA3/2FHDZlK
-	 fw+mYZfM+2MeJKVfr7AYsqSyn/T+RFrNMtQH6/0c=
+	b=ntH5UerIKeL+5crfSRg7Aiw2861ErS7lcufOFvBoeIUjIA+QfoK1vzbp6p96stecl
+	 mHmTVY7jD98IbyuNwotcDKQjM2CzwvavJBP0qqkivI4GQAbst1nhebS2oe6Wao68Zc
+	 skWlkK1rPYDhSkQKB2mvZW8aFlCbf98C32lZe9Mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgHTLXP (ORCPT
+        id S1730361AbgHTLXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37432 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730361AbgHTKHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:07:18 -0400
+        id S1729743AbgHTKHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D61FF20855;
-        Thu, 20 Aug 2020 10:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECAF20738;
+        Thu, 20 Aug 2020 10:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918038;
-        bh=STaAiDozz5Ey94ASQtqCmUMNQiuV/yBML8B1zscPEZ0=;
+        s=default; t=1597918032;
+        bh=dPor8RalgF2oJq7M7FT7ltZhtMKyFs5xsBkAHeEcRPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZhUUYCYpNpcWNJnw69jOqvzwjz83BXVpm6PsxYp5oDSu4aay9Yr0nkUtpKxFmsha3
-         8xTCQtHhIUM9baPePWXNSBSMw/LOn7XzFPlLT7YzC0rA/XWBec8Cjji5d/OAh6sfyk
-         d0knbqajkkcSWhrFXDyC93ugayvYZta/L/5nNCrM=
+        b=AR4Cm1joD89kPlzIPYhwBbRKerWlfmINsIe29qNOPz7dUOvludOYPwzw8ip3P1VIY
+         GvtUxfTpRxIANjR4pa7+mDsXJHswxRxjDBuXe4pWi3okdxMxzNvMU63LO60yyCudlz
+         Q9I/qs/mvMjACk7CKCTWj5sZk6zDNmpwQRWqh9NE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Landen Chao <landen.chao@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 032/228] net: ethernet: mtk_eth_soc: fix MTU warnings
-Date:   Thu, 20 Aug 2020 11:20:07 +0200
-Message-Id: <20200820091609.142068878@linuxfoundation.org>
+Subject: [PATCH 4.14 030/228] ipv4: Silence suspicious RCU usage warning
+Date:   Thu, 20 Aug 2020 11:20:05 +0200
+Message-Id: <20200820091609.043158161@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,38 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Landen Chao <landen.chao@mediatek.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 555a893303872e044fb86f0a5834ce78d41ad2e2 ]
+[ Upstream commit 83f3522860f702748143e022f1a546547314c715 ]
 
-in recent kernel versions there are warnings about incorrect MTU size
-like these:
+fib_trie_unmerge() is called with RTNL held, but not from an RCU
+read-side critical section. This leads to the following warning [1] when
+the FIB alias list in a leaf is traversed with
+hlist_for_each_entry_rcu().
 
-eth0: mtu greater than device maximum
-mtk_soc_eth 1b100000.ethernet eth0: error -22 setting MTU to include DSA overhead
+Since the function is always called with RTNL held and since
+modification of the list is protected by RTNL, simply use
+hlist_for_each_entry() and silence the warning.
 
-Fixes: bfcb813203e6 ("net: dsa: configure the MTU for switch ports")
-Fixes: 72579e14a1d3 ("net: dsa: don't fail to probe if we couldn't set the MTU")
-Fixes: 7a4c53bee332 ("net: report invalid mtu value via netlink extack")
-Signed-off-by: Landen Chao <landen.chao@mediatek.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+[1]
+WARNING: suspicious RCU usage
+5.8.0-rc4-custom-01520-gc1f937f3f83b #30 Not tainted
+-----------------------------
+net/ipv4/fib_trie.c:1867 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by ip/164:
+ #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
+
+stack backtrace:
+CPU: 0 PID: 164 Comm: ip Not tainted 5.8.0-rc4-custom-01520-gc1f937f3f83b #30
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+Call Trace:
+ dump_stack+0x100/0x184
+ lockdep_rcu_suspicious+0x153/0x15d
+ fib_trie_unmerge+0x608/0xdb0
+ fib_unmerge+0x44/0x360
+ fib4_rule_configure+0xc8/0xad0
+ fib_nl_newrule+0x37a/0x1dd0
+ rtnetlink_rcv_msg+0x4f7/0xbd0
+ netlink_rcv_skb+0x17a/0x480
+ rtnetlink_rcv+0x22/0x30
+ netlink_unicast+0x5ae/0x890
+ netlink_sendmsg+0x98a/0xf40
+ ____sys_sendmsg+0x879/0xa00
+ ___sys_sendmsg+0x122/0x190
+ __sys_sendmsg+0x103/0x1d0
+ __x64_sys_sendmsg+0x7d/0xb0
+ do_syscall_64+0x54/0xa0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fc80a234e97
+Code: Bad RIP value.
+RSP: 002b:00007ffef8b66798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc80a234e97
+RDX: 0000000000000000 RSI: 00007ffef8b66800 RDI: 0000000000000003
+RBP: 000000005f141b1c R08: 0000000000000001 R09: 0000000000000000
+R10: 00007fc80a2a8ac0 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007ffef8b67008 R15: 0000556fccb10020
+
+Fixes: 0ddcf43d5d4a ("ipv4: FIB Local/MAIN table collapse")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/fib_trie.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2452,6 +2452,8 @@ static int mtk_add_mac(struct mtk_eth *e
- 	eth->netdev[id]->irq = eth->irq[0];
- 	eth->netdev[id]->dev.of_node = np;
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -1729,7 +1729,7 @@ struct fib_table *fib_trie_unmerge(struc
+ 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
+ 		struct key_vector *local_l = NULL, *local_tp;
  
-+	eth->netdev[id]->max_mtu = MTK_MAX_RX_LENGTH - MTK_RX_ETH_HLEN;
-+
- 	return 0;
+-		hlist_for_each_entry_rcu(fa, &l->leaf, fa_list) {
++		hlist_for_each_entry(fa, &l->leaf, fa_list) {
+ 			struct fib_alias *new_fa;
  
- free_netdev:
+ 			if (local_tb->tb_id != fa->tb_id)
 
 
