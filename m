@@ -2,58 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 366F2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA79C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5EE20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4594320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925796;
-	bh=v82VMAnIc4Uxb3auCZw26sAs6sE1Xz0aSxH4vCm1s5o=;
+	s=default; t=1597925798;
+	bh=GhFvoRWDwdlAIbItK878bl23oh/B9FZs/fvE3PNlG3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sMirJyNcmoantOrESOT/AT85hBdQeUKquCIeBiQxsfpR0xrA0Y8GCb4FEFh2qnOBz
-	 Dv14MT3OlI/LO4+nPevYuQX1l4M7ARiMQ27kqB5ov7ypBiQ0NP2YbpBcfwXpPW/nwX
-	 AColyrvSxVHcqe3pAkY9rFYaFLvYYnrbbIBmJytA=
+	b=V71UmQPEOXqrF5acH1uxpUjAtz+7ya9K29oe8+FChMxfKh7CmXHtdM/pVrB85nscn
+	 Bt8V+d5hp6pSBWbD3o6LwRz6ke7jWsfqAiCZk0xheEtQ25jGBRM4yQffj/PJzqNuYu
+	 Yr9QJNQmf8qTYSWmM8k8Tkp8x9hBGIw66/b7MYgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgHTMQd (ORCPT
+        id S1730413AbgHTMQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbgHTJ4v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:51 -0400
+        id S1730262AbgHTJ4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 426E620855;
-        Thu, 20 Aug 2020 09:56:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E28820885;
+        Thu, 20 Aug 2020 09:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917410;
-        bh=v82VMAnIc4Uxb3auCZw26sAs6sE1Xz0aSxH4vCm1s5o=;
+        s=default; t=1597917405;
+        bh=GhFvoRWDwdlAIbItK878bl23oh/B9FZs/fvE3PNlG3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmRAzxyRgibsOC9w5OyuT6ffhFKbnegvBZ1t4s5ixJvZAoKA1XQy4ETG0UtkhZo8D
-         XQHHPN1cLnUWiESYITvkOYguZQIScsATMsHCOTcqMHDScCx4/g1rHhKvEtp603+k6s
-         7RuNIZo9nQBeZptrlaQCSH9VmvaLpS/Mj6MY/3fg=
+        b=jKgJ7+wOxPwjF4Z+8zCtI8LwTifg6RStLn2tVg0bgqIG/njZ9ASS0bC8V8TyPSOA5
+         6dPEjOwC4awkNeLyg4rL0uMGsYBWJtJAkVQJTo4XlaByf/6ZkGiKVpbbmq3G3BhzHs
+         D2ybEKUWyxIcmbOV58SCQC9XKsJ29w7DMd3pE358=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mason <clm@fb.com>,
-        Rik van Riel <riel@surriel.com>,
+        stable@vger.kernel.org, Wen Xu <wen.xu@gatech.edu>,
         Dave Chinner <dchinner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Samuel Mendoza-Jonas <samjonas@amazon.com>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Suraj Jitindar Singh <surajjs@amazon.com>,
-        Benjamin Herrenschmidt <benh@amazon.com>,
-        Anchal Agarwal <anchalag@amazon.com>
-Subject: [PATCH 4.9 021/212] xfs: fix missed wakeup on l_flush_wait
-Date:   Thu, 20 Aug 2020 11:19:54 +0200
-Message-Id: <20200820091603.404319017@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 002/212] xfs: validate cached inodes are free when allocated
+Date:   Thu, 20 Aug 2020 11:19:35 +0200
+Message-Id: <20200820091602.380738506@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -66,90 +63,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rik van Riel <riel@surriel.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-commit cdea5459ce263fbc963657a7736762ae897a8ae6 upstream.
+[ Upstream commit afca6c5b2595fc44383919fba740c194b0b76aff ]
 
-The code in xlog_wait uses the spinlock to make adding the task to
-the wait queue, and setting the task state to UNINTERRUPTIBLE atomic
-with respect to the waker.
+A recent fuzzed filesystem image cached random dcache corruption
+when the reproducer was run. This often showed up as panics in
+lookup_slow() on a null inode->i_ops pointer when doing pathwalks.
 
-Doing the wakeup after releasing the spinlock opens up the following
-race condition:
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+....
+Call Trace:
+ lookup_slow+0x44/0x60
+ walk_component+0x3dd/0x9f0
+ link_path_walk+0x4a7/0x830
+ path_lookupat+0xc1/0x470
+ filename_lookup+0x129/0x270
+ user_path_at_empty+0x36/0x40
+ path_listxattr+0x98/0x110
+ SyS_listxattr+0x13/0x20
+ do_syscall_64+0xf5/0x280
+ entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-Task 1					task 2
-add task to wait queue
-					wake up task
-set task state to UNINTERRUPTIBLE
+but had many different failure modes including deadlocks trying to
+lock the inode that was just allocated or KASAN reports of
+use-after-free violations.
 
-This issue was found through code inspection as a result of kworkers
-being observed stuck in UNINTERRUPTIBLE state with an empty
-wait queue. It is rare and largely unreproducable.
+The cause of the problem was a corrupt INOBT on a v4 fs where the
+root inode was marked as free in the inobt record. Hence when we
+allocated an inode, it chose the root inode to allocate, found it in
+the cache and re-initialised it.
 
-Simply moving the spin_unlock to after the wake_up_all results
-in the waker not being able to see a task on the waitqueue before
-it has set its state to UNINTERRUPTIBLE.
+We recently fixed a similar inode allocation issue caused by inobt
+record corruption problem in xfs_iget_cache_miss() in commit
+ee457001ed6c ("xfs: catch inode allocation state mismatch
+corruption"). This change adds similar checks to the cache-hit path
+to catch it, and turns the reproducer into a corruption shutdown
+situation.
 
-This bug dates back to the conversion of this code to generic
-waitqueue infrastructure from a counting semaphore back in 2008
-which didn't place the wakeups consistently w.r.t. to the relevant
-spin locks.
-
-[dchinner: Also fix a similar issue in the shutdown path on
-xc_commit_wait. Update commit log with more details of the issue.]
-
-Fixes: d748c62367eb ("[XFS] Convert l_flushsema to a sv_t")
-Reported-by: Chris Mason <clm@fb.com>
-Signed-off-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reported-by: Wen Xu <wen.xu@gatech.edu>
+Signed-Off-By: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
 Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: fix typos in comment]
 Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: stable@vger.kernel.org # 4.9.x-4.19.x
-[modified for contextual change near xlog_state_do_callback()]
-Signed-off-by: Samuel Mendoza-Jonas <samjonas@amazon.com>
-Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-Reviewed-by: Suraj Jitindar Singh <surajjs@amazon.com>
-Reviewed-by: Benjamin Herrenschmidt <benh@amazon.com>
-Reviewed-by: Anchal Agarwal <anchalag@amazon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_log.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/xfs/xfs_icache.c | 73 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 48 insertions(+), 25 deletions(-)
 
---- a/fs/xfs/xfs_log.c
-+++ b/fs/xfs/xfs_log.c
-@@ -2634,7 +2634,6 @@ xlog_state_do_callback(
- 	int		   funcdidcallbacks; /* flag: function did callbacks */
- 	int		   repeats;	/* for issuing console warnings if
- 					 * looping too many times */
--	int		   wake = 0;
- 
- 	spin_lock(&log->l_icloglock);
- 	first_iclog = iclog = log->l_iclog;
-@@ -2836,11 +2835,9 @@ xlog_state_do_callback(
- #endif
- 
- 	if (log->l_iclog->ic_state & (XLOG_STATE_ACTIVE|XLOG_STATE_IOERROR))
--		wake = 1;
--	spin_unlock(&log->l_icloglock);
--
--	if (wake)
- 		wake_up_all(&log->l_flush_wait);
-+
-+	spin_unlock(&log->l_icloglock);
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 57ec10809f4bf..69c112ddb544d 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -307,6 +307,46 @@ xfs_reinit_inode(
+ 	return error;
  }
  
++/*
++ * If we are allocating a new inode, then check what was returned is
++ * actually a free, empty inode. If we are not allocating an inode,
++ * then check we didn't find a free inode.
++ *
++ * Returns:
++ *	0		if the inode free state matches the lookup context
++ *	-ENOENT		if the inode is free and we are not allocating
++ *	-EFSCORRUPTED	if there is any state mismatch at all
++ */
++static int
++xfs_iget_check_free_state(
++	struct xfs_inode	*ip,
++	int			flags)
++{
++	if (flags & XFS_IGET_CREATE) {
++		/* should be a free inode */
++		if (VFS_I(ip)->i_mode != 0) {
++			xfs_warn(ip->i_mount,
++"Corruption detected! Free inode 0x%llx not marked free! (mode 0x%x)",
++				ip->i_ino, VFS_I(ip)->i_mode);
++			return -EFSCORRUPTED;
++		}
++
++		if (ip->i_d.di_nblocks != 0) {
++			xfs_warn(ip->i_mount,
++"Corruption detected! Free inode 0x%llx has blocks allocated!",
++				ip->i_ino);
++			return -EFSCORRUPTED;
++		}
++		return 0;
++	}
++
++	/* should be an allocated inode */
++	if (VFS_I(ip)->i_mode == 0)
++		return -ENOENT;
++
++	return 0;
++}
++
+ /*
+  * Check the validity of the inode we just found it the cache
+  */
+@@ -356,12 +396,12 @@ xfs_iget_cache_hit(
+ 	}
  
-@@ -4002,7 +3999,9 @@ xfs_log_force_umount(
- 	 * item committed callback functions will do this again under lock to
- 	 * avoid races.
+ 	/*
+-	 * If lookup is racing with unlink return an error immediately.
++	 * Check the inode free state is valid. This also detects lookup
++	 * racing with unlinks.
  	 */
-+	spin_lock(&log->l_cilp->xc_push_lock);
- 	wake_up_all(&log->l_cilp->xc_commit_wait);
-+	spin_unlock(&log->l_cilp->xc_push_lock);
- 	xlog_state_do_callback(log, XFS_LI_ABORTED, NULL);
+-	if (VFS_I(ip)->i_mode == 0 && !(flags & XFS_IGET_CREATE)) {
+-		error = -ENOENT;
++	error = xfs_iget_check_free_state(ip, flags);
++	if (error)
+ 		goto out_error;
+-	}
  
- #ifdef XFSERRORDEBUG
+ 	/*
+ 	 * If IRECLAIMABLE is set, we've torn down the VFS inode already.
+@@ -473,29 +513,12 @@ xfs_iget_cache_miss(
+ 
+ 
+ 	/*
+-	 * If we are allocating a new inode, then check what was returned is
+-	 * actually a free, empty inode. If we are not allocating an inode,
+-	 * the check we didn't find a free inode.
++	 * Check the inode free state is valid. This also detects lookup
++	 * racing with unlinks.
+ 	 */
+-	if (flags & XFS_IGET_CREATE) {
+-		if (VFS_I(ip)->i_mode != 0) {
+-			xfs_warn(mp,
+-"Corruption detected! Free inode 0x%llx not marked free on disk",
+-				ino);
+-			error = -EFSCORRUPTED;
+-			goto out_destroy;
+-		}
+-		if (ip->i_d.di_nblocks != 0) {
+-			xfs_warn(mp,
+-"Corruption detected! Free inode 0x%llx has blocks allocated!",
+-				ino);
+-			error = -EFSCORRUPTED;
+-			goto out_destroy;
+-		}
+-	} else if (VFS_I(ip)->i_mode == 0) {
+-		error = -ENOENT;
++	error = xfs_iget_check_free_state(ip, flags);
++	if (error)
+ 		goto out_destroy;
+-	}
+ 
+ 	/*
+ 	 * Preload the radix tree so we can insert safely under the
+-- 
+2.25.1
+
 
 
