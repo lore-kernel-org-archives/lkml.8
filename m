@@ -2,105 +2,126 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E793BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2F222076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DFA7207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:59:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726911AbgHTT6M (ORCPT
+        id S1727039AbgHTT71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:58:12 -0400
-Received: from mga04.intel.com ([192.55.52.120]:59267 "EHLO mga04.intel.com"
+        Thu, 20 Aug 2020 15:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgHTT6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 15:58:12 -0400
-IronPort-SDR: FsrGtP93efUMa9jhdiFWhFrUVwLTzFpCy7rFlGZ5Y6p2ECj/P6uSoLGFSnHZX0llEalwooJGbk
- pDiMjTC8Sn5A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152810177"
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="152810177"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 12:58:12 -0700
-IronPort-SDR: 7ff5AW1OqJFyIq9w0Y0w/6okfpx2Z6o8s+b+Kgv9kt9JBCuS0bhUtg2F5m17yH+1gocNNLuzQ4
- me8rXcGpPHGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="497741219"
-Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2020 12:58:11 -0700
-Date:   Thu, 20 Aug 2020 12:58:11 -0700
-From:   "Raj, Ashok" <ashok.raj@intel.com>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
-        Ashok Raj <ashok.raj@intel.com>
-Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
- migrated
-Message-ID: <20200820195811.GA22799@otc-nc-03>
-References: <20200814213842.31151-1-ashok.raj@intel.com>
- <CAE=gft6fQ7cLQO025TDYNF-d6xxMeGkOHVieMZDq6wAZ84NsGQ@mail.gmail.com>
- <20200817183322.GA11486@araj-mobl1.jf.intel.com>
- <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
+        id S1725819AbgHTT70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 15:59:26 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3534F2076E;
+        Thu, 20 Aug 2020 19:59:25 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 15:59:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Marco Elver <elver@google.com>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, will@kernel.org, npiggin@gmail.com,
+        jgross@suse.com, paulmck@kernel.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de
+Subject: Re: [PATCH 0/9] TRACE_IRQFLAGS wreckage
+Message-ID: <20200820155923.3d5c4873@oasis.local.home>
+In-Reply-To: <20200820172046.GA177701@elver.google.com>
+References: <20200820073031.886217423@infradead.org>
+        <20200820103643.1b9abe88@oasis.local.home>
+        <20200820145821.GA1362448@hirez.programming.kicks-ass.net>
+        <20200820172046.GA177701@elver.google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:21:24AM -0700, Evan Green wrote:
-> > >
-> > > I'm slightly unclear about whether interrupts are disabled at the core
-> > > by this point or not. I followed native_cpu_disable() up to
-> > > __cpu_disable(), up to take_cpu_down(). This is passed into a call to
-> > > stop_machine_cpuslocked(), where interrupts get disabled at the core.
-> > > So unless there's another path, it seems like interrupts are always
-> > > disabled at the core by this point.
-> >
-> > local_irq_disable() just does cli() which allows interrupts to trickle
-> > in to the IRR bits, and once you do sti() things would flow back for
-> > normal interrupt processing.
-> >
-> >
-> > >
-> > > If interrupts are always disabled, then the comment above is a little
-> >
-> > Disable interrupts is different from disabling LAPIC. Once you do the
-> > apic_soft_disable(), there is nothing flowing into the LAPIC except
-> > for INIT, NMI, SMI and SIPI messages.
-> >
-> > This turns off the pipe for all other interrupts to enter LAPIC. Which
-> > is different from doing a cli().
-> 
-> I understand the distinction. I was mostly musing on the difference in
-> behavior your change causes if this function is entered with
-> interrupts enabled at the core (ie sti()). But I think it never is, so
-> that thought is moot.
-> 
-> I could never repro the issue reliably on comet lake after Thomas'
-> original fix. But I can still repro it easily on jasper lake. And this
-> patch fixes the issue for me on that platform. Thanks for the fix.
-> 
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> Tested-by: Evan Green <evgreen@chromium.org>
+On Thu, 20 Aug 2020 19:20:46 +0200
+Marco Elver <elver@google.com> wrote:
 
-Thanks Evan for testing. I'll wait for thomas if he finds anything else
-that needs to be fixed and send a final v2 after fixing the typos and
-others identified by Randy. 
+> On Thu, Aug 20, 2020 at 04:58PM +0200, peterz@infradead.org wrote:
+> > On Thu, Aug 20, 2020 at 10:36:43AM -0400, Steven Rostedt wrote:  
+> > > 
+> > > I tested this series on top of tip/master and triggered the below
+> > > warning when running the irqsoff tracer boot up test (config attached).
+> > > 
+> > > -- Steve
+> > > 
+> > >  Testing tracer irqsoff: 
+> > >  
+> > >  =============================
+> > >  WARNING: suspicious RCU usage
+> > >  5.9.0-rc1-test+ #92 Not tainted
+> > >  -----------------------------
+> > >  include/trace/events/lock.h:13 suspicious rcu_dereference_check() usage!  
+> ...
+> > 
+> > Shiny, I think that wants something like the below, but let me go frob
+> > my config and test it.
+> > 
+> > ---
+> > --- a/drivers/cpuidle/cpuidle.c
+> > +++ b/drivers/cpuidle/cpuidle.c  
+> ...
+> 
+> With that applied (manually, due to conflicts), I still get warnings for
+> certain call locations with KCSAN on (that is with my fix from the other
+> email):
+> 
+> | =============================
+> | WARNING: suspicious RCU usage
+> | 5.9.0-rc1+ #23 Tainted: G        W        
+> | -----------------------------
+> | include/trace/events/random.h:310 suspicious rcu_dereference_check() usage!
+> | 
+> | other info that might help us debug this:
+> | 
+> | 
+> | rcu_scheduler_active = 2, debug_locks = 0
+> | RCU used illegally from extended quiescent state!
+> | no locks held by swapper/1/0.
+> | 
+> | stack backtrace:
+> | CPU: 1 PID: 0 Comm: swapper/1 Tainted: G        W         5.9.0-rc1+ #23
+> | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1 04/01/2014
+> | Call Trace:
+> |  __dump_stack lib/dump_stack.c:77 [inline]
+> |  dump_stack+0xf1/0x14d lib/dump_stack.c:118
+> |  trace_prandom_u32 include/trace/events/random.h:310 [inline]
+> |  prandom_u32+0x1ee/0x200 lib/random32.c:86
+> |  prandom_u32_max include/linux/prandom.h:46 [inline]
+> |  reset_kcsan_skip kernel/kcsan/core.c:277 [inline]
+> |  kcsan_setup_watchpoint+0x9b/0x600 kernel/kcsan/core.c:424
+> |  is_idle_task+0xd/0x20 include/linux/sched.h:1671 		<==== inline, but not noinstr
+> |  irqentry_enter+0x17/0x50 kernel/entry/common.c:293 		<==== noinstr function
+> 
 
-Cheers,
-Ashok
+What happens if you apply the below patch?
+
+-- Steve
+
+diff --git a/lib/random32.c b/lib/random32.c
+index 932345323af0..1c5607a411d4 100644
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -83,7 +83,7 @@ u32 prandom_u32(void)
+ 	u32 res;
+ 
+ 	res = prandom_u32_state(state);
+-	trace_prandom_u32(res);
++	trace_prandom_u32_rcuidle(res);
+ 	put_cpu_var(net_rand_state);
+ 
+ 	return res;
