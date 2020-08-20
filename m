@@ -2,122 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58020C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C79DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32CE52078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58CAE207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:13:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="b3w2jNsO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HAqCRnYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHTJNU (ORCPT
+        id S1726815AbgHTJNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:13:20 -0400
-Received: from mail-bn8nam11on2046.outbound.protection.outlook.com ([40.107.236.46]:6177
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgHTJNN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:13:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H3mtckPi0a2h511UkiWeKUZvFLD3r7nh2mRyFtBYT0cZMg/cTnsTIRTHt4b0PTbIKM47EcQAsH3cxmEGuCphYtZBkbYr6um/t/aIWgw6SpilKW8JH+LcjZ/1dtCx3SArU5oSHL4KlAkaqO0DACQOnYPYsg+7J+t7XOL6lg+zVGKrhx1jPJ+fkbTEVvW3ln+za4Wh/D4LO6z0u8MPNnUESwCy6uTSZ+2Vp4b1DH5lEgA6gWoLIgtnhx5SMuzu4VPJJGMngg9wsN+CviY6YteZHJYSrmvtaU7vWmW6Mg5R6VTg/d35aGDHaHYTNhJ4J505jebylSsxpQWZJIaNgLkDow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TuShWgbGVevNfvlxB8L0dXqg61kae6KDDNAZZApS9Ms=;
- b=PaxSgCGetvaRvCfVlEGv/uATkXkSyFtOGdiCNN4gjhMZKVLn8DXMZEcCoYk3CqAEoLhqq+gsnkdEMaqQdl0Sx1uAgVKnl9a21TY+XbXvwyiNZ34xMCfCLF82hQELkOO1o27Du50MJKl8QrjaK9XavXRqgDAxCgKE9wS5ompgV1gIKvsYGeDuwfh1646JLLj1SdRVwsL6Mh5KDV7iKlCbqlQTrE6P58CtS5ybRNQs6erkuFjYGAKop88NlRySj/pzatbClfZrkb3O4L5+6wUME6mQ27U2j+kSn7uMUJGlOf6zV+5YumSji+5EmtRd1+b0tNaScQjvmH2n+vTKwPcyNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
+        Thu, 20 Aug 2020 05:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54300 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgHTJN3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:13:29 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC39AC061757;
+        Thu, 20 Aug 2020 02:13:28 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id c15so1271421wrs.11;
+        Thu, 20 Aug 2020 02:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TuShWgbGVevNfvlxB8L0dXqg61kae6KDDNAZZApS9Ms=;
- b=b3w2jNsOHzv6xMQARO1XkanDwKm4VvYzsbNchiX3YpkTu987OwxWnXcgUBjQGqEFeDnFQKXwvYoKXqQ3Hj9XyUPfaWxuuXdABAtoWk1tyWnC7f1ZdBWK2IqiUdJuYvnWUO0uLcWaVMnXoyiWZKc3KWlk9csGogY1/XriatY9vF4=
-Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SA0PR11MB4544.namprd11.prod.outlook.com (2603:10b6:806:92::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
- 2020 09:13:11 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6%4]) with mapi id 15.20.3305.026; Thu, 20 Aug 2020
- 09:13:11 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     gregkh@linuxfoundation.org, Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 4/6] staging: wfx/debug.c: Fix spelling mistake "carefull" => "careful"
-Date:   Thu, 20 Aug 2020 11:13:05 +0200
-Message-ID: <3146523.GL6Gmh1C2x@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <ec3e765875adfe59f1d8d8ef2c610d6423116f55.1597913333.git.usuraj35@gmail.com>
-References: <834139101223e627665c939388cd7c542920c531.1597913333.git.usuraj35@gmail.com> <ec3e765875adfe59f1d8d8ef2c610d6423116f55.1597913333.git.usuraj35@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: PR0P264CA0106.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:19::22) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0JbEGUpzUPbEtjAsVmRvH6bX5043+AS9qSE1XvD9D/U=;
+        b=HAqCRnYoKh4shWP1Bh6iF2OQL1zyAwfk3BldT7lyFCXSdpMbI5McqVXvAg1y2E5Fl/
+         PJRjYvURrqHmVTi6+1hqi+MzoxqmfJjkbsv2yAi3BiinfthNgiMYJFXnlbqQFxa6Z2+Q
+         9USt7O5dHznyME7cQG9Pc9EGe6vfd/GJApL4neO9QkscPj91V6pZwbPzo5LMTMmWFm4i
+         09CDuv2FV4cv8RPcIHCuHvYNgUP7CdFzpNOfobwbe7AYSX2EcHEDaEsgAxgG925H7BnC
+         rPm2/6G8Ne1qVDOcsLcg11RLDMNcmshDznM87XgprKE9l3MFiwpM9U3ZkEhOmcSSBTI4
+         n0UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0JbEGUpzUPbEtjAsVmRvH6bX5043+AS9qSE1XvD9D/U=;
+        b=AY0PFv3Mec3shPqTh4k0x1fJRZh7VV2+tiYipIwASwKjuzZ2KjPN5rnwIR4WAWxlOY
+         cclUHRpFrbmYQjH4lRXJdDvPyGxHm8josduALuYGpXm/cQhjTVUxut0O4a4jO0o98H1H
+         2i7bD1ggU6tV/TPXjMo7x1XsJBLZBxMBTKsK5qoRLINWItmTHqGgmN16tDTVc3i/fDFh
+         aYDRGJL8gAxeq9prvtmsDqryGuMw6msklcPwLrdIhPGPwZGdm/qjU6XXNSHLoNeDd4za
+         QUSIhlW7+Iuq7Bk+B3KDlUxkB3thTG60k0kkXPUQI1m7PzGHH/Z2OVB+Gi8lOa82oNBf
+         BbHg==
+X-Gm-Message-State: AOAM532VrK9KwDF/civLR8mtm2vCcKgtDCMxd7FsNfzqjnMX//s1GFSL
+        YDGJqLnmYvBgqbLtCDuNOA8FJxeZsWRDdg==
+X-Google-Smtp-Source: ABdhPJxoY9JmdC2hvKhv7zPTHozm34JZIknaHlVUcr+Fi116POuZOZYfQqOQ5WVjgvJwAFPP1yh0VA==
+X-Received: by 2002:a5d:464a:: with SMTP id j10mr2318764wrs.187.1597914807249;
+        Thu, 20 Aug 2020 02:13:27 -0700 (PDT)
+Received: from ziggy.stardust (81.172.57.81.dyn.user.ono.com. [81.172.57.81])
+        by smtp.gmail.com with ESMTPSA id a3sm3045157wme.34.2020.08.20.02.13.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 02:13:26 -0700 (PDT)
+Subject: Re: [PATCH v1 00/21] add drm support for MT8192
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Message-ID: <d723ec4f-b251-5a94-4939-01f2df61f7d8@gmail.com>
+Date:   Thu, 20 Aug 2020 11:13:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by PR0P264CA0106.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:19::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 09:13:10 +0000
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 26006554-8232-4707-23ca-08d844e942d1
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4544:
-X-Microsoft-Antispam-PRVS: <SA0PR11MB4544B6EB3587130DC899B9A4935A0@SA0PR11MB4544.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:175;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hZ3RoOQCHBg48le9A+70DAPzkitr10MpWIUMib9O/P0gNJ4PDJ0bBweEC7dd3biK534uHUbZxh4e9pcawnAzbNgcOXplMQZkTiERwArPKy/+oTtMKPb8bF7on/GcVpiGwalBgu0B4DtzSeve/dZn6n1oT05Y+0eW7iPTsCu75CAfiXnbjGengDtLoI3OYCsIxF5FBFduJMg0lXYYIVe5c4tDfvUQA3tGNmYJlPjUSzYAFdS2dZPTG8o/OugK+84ynyHR22Hy4BEYhs7oJ2otfrAofgbBsxiAdPBcxy896AIHyPmpzQvnDw/IyPwFDWoaGywfTA/loumcGgzxDFWaEmmnAd4gmJ8rI8AeM+JP8lp0TNBvXeBBlIttbfpdT7DxUTZaKiwyl8KyHlD0Gb7MZA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(136003)(39850400004)(376002)(366004)(346002)(396003)(186003)(4744005)(6916009)(8936002)(8676002)(956004)(9686003)(478600001)(86362001)(2906002)(5660300002)(66556008)(4326008)(33716001)(66946007)(66476007)(16576012)(6666004)(6486002)(110011004)(83380400001)(316002)(52116002)(36916002)(66574015)(26005)(39026012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: kz+6SNhkDibcpLYimjN8BDfC6w6+5DzQv6JaRNWQY/iDGt3nSNPVgsGxMGrQznyTxnHh22WL27mFcZHBqlXtmD8xnoQTjRRzAqHAIfGJVv3rzAce25XMZCeyybdulCY0E7s/G6DBodSi10QmBPqk3dW+blYTYjFTIDmOJJi9lGboCCAdcbq7SLsFzSkZwf3Wnuk40mMjvv1oH6bJ2ARydYIcqPN+uyLkThIJCA7V6R1VxJtWOBh2UYVqrJZBb3T6B9LjnAdQduDqoYSHtFq3JBqT+qhve2dCARntLrvnyup0WVuZBxwcze1MsBPN94YzYYF5eEhwlGO7AlCBw82W2HlQuBOXRx4dIHFoO/ii0pRMR14awDe926fsY1x/TtEQrVx4xUQD+S1/NhjEpzFbyVMzTO79bPS8GO1kcJemk0Q2ue89KaEfW8lfmbRsggxMNgjOAZaDmHbeLIrQpLGUB/mFacVqmRRiLpaC9uA40MzD2f/C7TXaJeEGOTo3NoVU8rx8QwzcmMNaPA98GO7yne2z8lpSBFK5o/o57seAJMDcEjf0bYrW28MVmz5sai3bRqt02qEH+slSXofUsvTSQoCs4VJF7bF7O3S3iYa5U6+fd3Vaw3/TLWMfy1l/1o5ecHYZKcyQnnQ6S0UztY2yQQ==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 26006554-8232-4707-23ca-08d844e942d1
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 09:13:11.4035
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9GOsBDE42q6ie8WDd5O5KYm9NU1z3zqkel2TDgVOUiWhEqCXojuz1RiTjnAOEVw19oBY9ovHKaFrLr90Jn4sZA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4544
+In-Reply-To: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 20 August 2020 10:50:57 CEST Suraj Upadhyay wrote:
->=20
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-> ---
->  drivers/staging/wfx/debug.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/staging/wfx/debug.c b/drivers/staging/wfx/debug.c
-> index 3f1712b7c919..5772e2375370 100644
-> --- a/drivers/staging/wfx/debug.c
-> +++ b/drivers/staging/wfx/debug.c
-> @@ -299,7 +299,7 @@ static ssize_t wfx_send_hif_msg_read(struct file *fil=
-e, char __user *user_buf,
->                 return ret;
->         if (context->ret < 0)
->                 return context->ret;
-> -       // Be carefull, write() is waiting for a full message while read(=
-)
-> +       // Be careful, write() is waiting for a full message while read()
-
-Already fixed by commit c9638363f02d ("staging: wfx: fix a handful of
-spelling mistakes").
-
---=20
-J=E9r=F4me Pouiller
 
 
+On 20/08/2020 08:03, Yongqiang Niu wrote:
+> Changes in v1:
+> - add some more ddp component
+> - add mt8192 mmsys support
+> - add ovl mount on support
+> - add 2 more clock into mutex device
+> - fix ovl smi_id_en and fb null software bug
+> - fix ddp compoent size config bug
+> - add mt8192 drm support
+> - add ddp bypass shadow register function
+> - add 8192 dts description
+> 
+> Yongqiang Niu (21):
+>    drm/mediatek: add component OVL_2L2
+>    drm/mediatek: add component POSTMASK
+>    drm/mediatek: add component RDMA4
+>    mtk-mmsys: add mt8192 mmsys support
+>    mtk-mmsys: add ovl mout on  support
+>    drm/mediatek: add disp config and mm 26mhz clock into mutex device
+>    drm/mediatek: enable OVL_LAYER_SMI_ID_EN for multi-layer usecase
+>    drm/mediatek: check if fb is null
+>    drm/mediatek: fix aal size config
+>    drm/mediatek: fix dither size config
+>    drm/mediatek: fix gamma size config
+>    drm/mediatek: fix ccorr size config
+>    drm/mediatek: add support for mediatek SOC MT8192
+>    drm/mediatek: add bypass shadow register function call for ddp
+>      component
+>    drm/mediatek: add color bypass shadow register function
+>    drm/mediatek: add ovl bypass shadow register function
+>    drm/mediatek: add rdma bypass shadow register function
+>    drm/mediatek: add dither bypass shadow register function
+>    drm/mediatek: add aal bypass shadow register function
+>    drm/mediatek: add ccorr bypass shadow register function
+>    arm64: dts: mt8192: add display node
+> 
+
+At least regarding mmsys and dtsi patches, these are not based on upstream. 
+Please rebase.
+
+Regards,
+Matthias
+
+>   arch/arm64/boot/dts/mediatek/mt8192.dtsi    | 126 +++++++++++++++++++
+>   drivers/gpu/drm/mediatek/mtk_disp_color.c   |  22 ++++
+>   drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |  41 ++++++-
+>   drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |  27 +++++
+>   drivers/gpu/drm/mediatek/mtk_drm_crtc.c     |   3 +
+>   drivers/gpu/drm/mediatek/mtk_drm_ddp.c      |  84 +++++++++++--
+>   drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |  80 +++++++++++-
+>   drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |   8 ++
+>   drivers/gpu/drm/mediatek/mtk_drm_drv.c      |  48 ++++++++
+>   drivers/soc/mediatek/mmsys/Makefile         |   1 +
+>   drivers/soc/mediatek/mmsys/mt8192-mmsys.c   | 182 ++++++++++++++++++++++++++++
+>   drivers/soc/mediatek/mtk-mmsys.c            |   8 ++
+>   include/linux/soc/mediatek/mtk-mmsys.h      |   6 +
+>   13 files changed, 623 insertions(+), 13 deletions(-)
+>   create mode 100644 drivers/soc/mediatek/mmsys/mt8192-mmsys.c
+> 
