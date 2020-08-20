@@ -2,53 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06344C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1D9022B3F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E341208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917642;
-	bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
+	s=default; t=1597917685;
+	bh=YZnMjO/6zwXyl+KT3ibEE6f9gUR4An819JMKRFtDwDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bM5rESNRSy9aJRp9g+cKra/qqO0bRG6GBWCMI5W32dzjD+QXoNi31HfhNKsHTHmhj
-	 jrIszZjgYx3p8oyYTN5GpXp6YTn2L5dXdcgOQuuJejo/p1YPptwEhMPiu2NI0cg/Ho
-	 bEN91OPu/sTkf4E9Nst6iOLs6sPN51XArr2Fo/fA=
+	b=qzvP8mC5xYeT5McxWMNrY9jO10j8PlNVWj3J9yVRE4RKslD9aLCSSRJaGya+jzJLo
+	 Hg0yhW+5oVdKkJxQK9Wev/1zbEbdv5ZFCK5WkrblUP8AG/aVnFjR/uuKuJIgspr2KZ
+	 ZY32s+rzjy1qGFi03Apvh8W3BaY7i3ClHY170nlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgHTKAl (ORCPT
+        id S1729854AbgHTKBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:01:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbgHTKAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:01 -0400
+        id S1730472AbgHTKAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8046C2067C;
-        Thu, 20 Aug 2020 10:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 678B520724;
+        Thu, 20 Aug 2020 10:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917601;
-        bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
+        s=default; t=1597917632;
+        bh=YZnMjO/6zwXyl+KT3ibEE6f9gUR4An819JMKRFtDwDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XeoeQtjinrZSKyJUr4bBSfhQlxNYaa/McifLzgl9cLyDWTfaqtx/phMJlnUtaaLAa
-         x/cyTUSq526P5ctYTOTBEAIcEL3+4Fay2BatJWWd2l2sGNGuxg1Daz9k05HHu6txg3
-         pHe1ZO2n85xHIB3lc5daI5BWuUIRDCvxMpTyHCKU=
+        b=UmlDL0CJqxVrA341MRzBt4f1da9kq1YX358lMOe1O8hM9CHgwCmD+57pA1iYOtxgc
+         BJIbzlDlQpstBztbSuFkewTQwaqFwNmWp3UBtk+BMfjjxS1RJju2HVQH1UQCKF0T0d
+         XoqINVGvavpudlgKy9e2vJ9WFyfhJgMVYEtpNXXI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Lu Wei <luwei32@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 088/212] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
-Date:   Thu, 20 Aug 2020 11:21:01 +0200
-Message-Id: <20200820091606.792489258@linuxfoundation.org>
+        stable@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: [PATCH 4.9 070/212] xattr: break delegations in {set,remove}xattr
+Date:   Thu, 20 Aug 2020 11:20:43 +0200
+Message-Id: <20200820091605.901394859@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,38 +61,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Frank van der Linden <fllinden@amazon.com>
 
-[ Upstream commit 64dd4a5a7d214a07e3d9f40227ec30ac8ba8796e ]
+commit 08b5d5014a27e717826999ad20e394a8811aae92 upstream.
 
-In the function check_acpi_dev(), if it fails to create
-platform device, the return value is ERR_PTR() or NULL.
-Thus it must use IS_ERR_OR_NULL() to check return value.
+set/removexattr on an exported filesystem should break NFS delegations.
+This is true in general, but also for the upcoming support for
+RFC 8726 (NFSv4 extended attribute support). Make sure that they do.
 
-Fixes: 332e081225fc ("intel-vbtn: new driver for Intel Virtual Button")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Additionally, they need to grow a _locked variant, since callers might
+call this with i_rwsem held (like the NFS server code).
+
+Cc: stable@vger.kernel.org # v4.9+
+Cc: linux-fsdevel@vger.kernel.org
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/platform/x86/intel-vbtn.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xattr.c            |   84 +++++++++++++++++++++++++++++++++++++++++++++-----
+ include/linux/xattr.h |    2 +
+ 2 files changed, 79 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
-index a74340dff530e..1cf2a38add5f9 100644
---- a/drivers/platform/x86/intel-vbtn.c
-+++ b/drivers/platform/x86/intel-vbtn.c
-@@ -168,7 +168,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 		return AE_OK;
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -203,10 +203,22 @@ int __vfs_setxattr_noperm(struct dentry
+ 	return error;
+ }
  
- 	if (acpi_match_device_ids(dev, ids) == 0)
--		if (acpi_create_platform_device(dev, NULL))
-+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
- 			dev_info(&dev->dev,
- 				 "intel-vbtn: created platform device\n");
+-
++/**
++ * __vfs_setxattr_locked: set an extended attribute while holding the inode
++ * lock
++ *
++ *  @dentry - object to perform setxattr on
++ *  @name - xattr name to set
++ *  @value - value to set @name to
++ *  @size - size of @value
++ *  @flags - flags to pass into filesystem operations
++ *  @delegated_inode - on return, will contain an inode pointer that
++ *  a delegation was broken on, NULL if none.
++ */
+ int
+-vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
+-		size_t size, int flags)
++__vfs_setxattr_locked(struct dentry *dentry, const char *name,
++		const void *value, size_t size, int flags,
++		struct inode **delegated_inode)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error;
+@@ -215,15 +227,40 @@ vfs_setxattr(struct dentry *dentry, cons
+ 	if (error)
+ 		return error;
  
--- 
-2.25.1
-
+-	inode_lock(inode);
+ 	error = security_inode_setxattr(dentry, name, value, size, flags);
+ 	if (error)
+ 		goto out;
+ 
++	error = try_break_deleg(inode, delegated_inode);
++	if (error)
++		goto out;
++
+ 	error = __vfs_setxattr_noperm(dentry, name, value, size, flags);
+ 
+ out:
++	return error;
++}
++EXPORT_SYMBOL_GPL(__vfs_setxattr_locked);
++
++int
++vfs_setxattr(struct dentry *dentry, const char *name, const void *value,
++		size_t size, int flags)
++{
++	struct inode *inode = dentry->d_inode;
++	struct inode *delegated_inode = NULL;
++	int error;
++
++retry_deleg:
++	inode_lock(inode);
++	error = __vfs_setxattr_locked(dentry, name, value, size, flags,
++	    &delegated_inode);
+ 	inode_unlock(inode);
++
++	if (delegated_inode) {
++		error = break_deleg_wait(&delegated_inode);
++		if (!error)
++			goto retry_deleg;
++	}
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(vfs_setxattr);
+@@ -379,8 +416,18 @@ __vfs_removexattr(struct dentry *dentry,
+ }
+ EXPORT_SYMBOL(__vfs_removexattr);
+ 
++/**
++ * __vfs_removexattr_locked: set an extended attribute while holding the inode
++ * lock
++ *
++ *  @dentry - object to perform setxattr on
++ *  @name - name of xattr to remove
++ *  @delegated_inode - on return, will contain an inode pointer that
++ *  a delegation was broken on, NULL if none.
++ */
+ int
+-vfs_removexattr(struct dentry *dentry, const char *name)
++__vfs_removexattr_locked(struct dentry *dentry, const char *name,
++		struct inode **delegated_inode)
+ {
+ 	struct inode *inode = dentry->d_inode;
+ 	int error;
+@@ -389,11 +436,14 @@ vfs_removexattr(struct dentry *dentry, c
+ 	if (error)
+ 		return error;
+ 
+-	inode_lock(inode);
+ 	error = security_inode_removexattr(dentry, name);
+ 	if (error)
+ 		goto out;
+ 
++	error = try_break_deleg(inode, delegated_inode);
++	if (error)
++		goto out;
++
+ 	error = __vfs_removexattr(dentry, name);
+ 
+ 	if (!error) {
+@@ -402,12 +452,32 @@ vfs_removexattr(struct dentry *dentry, c
+ 	}
+ 
+ out:
++	return error;
++}
++EXPORT_SYMBOL_GPL(__vfs_removexattr_locked);
++
++int
++vfs_removexattr(struct dentry *dentry, const char *name)
++{
++	struct inode *inode = dentry->d_inode;
++	struct inode *delegated_inode = NULL;
++	int error;
++
++retry_deleg:
++	inode_lock(inode);
++	error = __vfs_removexattr_locked(dentry, name, &delegated_inode);
+ 	inode_unlock(inode);
++
++	if (delegated_inode) {
++		error = break_deleg_wait(&delegated_inode);
++		if (!error)
++			goto retry_deleg;
++	}
++
+ 	return error;
+ }
+ EXPORT_SYMBOL_GPL(vfs_removexattr);
+ 
+-
+ /*
+  * Extended attribute SET operations
+  */
+--- a/include/linux/xattr.h
++++ b/include/linux/xattr.h
+@@ -51,8 +51,10 @@ ssize_t vfs_getxattr(struct dentry *, co
+ ssize_t vfs_listxattr(struct dentry *d, char *list, size_t size);
+ int __vfs_setxattr(struct dentry *, struct inode *, const char *, const void *, size_t, int);
+ int __vfs_setxattr_noperm(struct dentry *, const char *, const void *, size_t, int);
++int __vfs_setxattr_locked(struct dentry *, const char *, const void *, size_t, int, struct inode **);
+ int vfs_setxattr(struct dentry *, const char *, const void *, size_t, int);
+ int __vfs_removexattr(struct dentry *, const char *);
++int __vfs_removexattr_locked(struct dentry *, const char *, struct inode **);
+ int vfs_removexattr(struct dentry *, const char *);
+ 
+ ssize_t generic_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size);
 
 
