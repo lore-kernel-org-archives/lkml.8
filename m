@@ -2,136 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D5AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8023C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61BA20758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:03:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="KlfHUjej"
+	by mail.kernel.org (Postfix) with ESMTP id A383420758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:04:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbgHTFD0 (ORCPT
+        id S1726750AbgHTFEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:03:26 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:57906 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725780AbgHTFDZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:03:25 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07K50FEE015293;
-        Wed, 19 Aug 2020 22:03:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=pfpt0220; bh=uwgbRGsLu7TM3L7kScUPbHo+Zd1DkfFIByzJ2VIUTeQ=;
- b=KlfHUjej9R399YagK5RL/iVywco9xKfBzrbBBgbfinkZQ892HjoADoAEP5zbqNJNJBI+
- N8uxbJYdD/rqh1WecyUS6GlUdj1NEyqB3R9bTGknMXu7xiyWqXQTs2pFF/VtthaEBHYK
- FYLLRbphmevd05Dd7+D82xwQJYcnFK32PVfdWMS4iXl4ShF6HxycE1XG8EKZtQIxdDix
- 0mly4nl/8RndcqP0NcId//tP08A4h/6goXzZpB/B+SNucMKuRQnbao/u+nwO4F7+h/wy
- PrDFd5w5KIgHlCuhsOcnwvgd35TmBr/y+B6rE1FCxFNhC3We4OENHG0jP3xem9Y8XfLH NA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 3304hhudxq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 19 Aug 2020 22:03:19 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 19 Aug
- 2020 22:03:17 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 19 Aug 2020 22:03:17 -0700
-Received: from hyd1584.caveonetworks.com (unknown [10.29.37.82])
-        by maili.marvell.com (Postfix) with ESMTP id 187863F7044;
-        Wed, 19 Aug 2020 22:03:14 -0700 (PDT)
-From:   George Cherian <george.cherian@marvell.com>
-To:     <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-CC:     <bhelgaas@google.com>, <arnd@arndb.de>,
-        George Cherian <george.cherian@marvell.com>
-Subject: [PATCHv2] PCI: Add pci_iounmap
-Date:   Thu, 20 Aug 2020 10:33:06 +0530
-Message-ID: <20200820050306.2015009-1-george.cherian@marvell.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 20 Aug 2020 01:04:15 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45660 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHTFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:04:14 -0400
+IronPort-SDR: LAI45mVG2xLY0ONW7CGjQsLhPLCGtL3dptEEGuQRbXqfRYMIXjsQuWJw9aLMCRtpIqNI+w5zZe
+ UAFa2pXdSGIQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="156307267"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="156307267"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:04:14 -0700
+IronPort-SDR: 5ew4P0zvnHwOu7lJzv+xOjVYlGdfsv79mm0uX03gaziLHUvawKN3Sx8MLKVZCyYgrqcDwdHdi1
+ 5Fv9ZawvzNRg==
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="441846299"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:04:11 -0700
+Subject: Re: [clk] a2499eff4b: BUG:kernel_NULL_pointer_dereference,address
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, 0day robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200811084943.GC7488@shao2-debian>
+ <159780681339.334488.10402512224012716827@swboyd.mtv.corp.google.com>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <be4c9098-98a2-e9c0-b787-57fa7d7da24f@intel.com>
+Date:   Thu, 20 Aug 2020 13:03:27 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-19_13:2020-08-19,2020-08-19 signatures=0
+In-Reply-To: <159780681339.334488.10402512224012716827@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if any architecture selects CONFIG_GENERIC_PCI_IOMAP and not
-CONFIG_GENERIC_IOMAP, then the pci_iounmap function is reduced to a NULL
-function. Due to this the managed release variants or even the explicit
-pci_iounmap calls doesn't really remove the mappings.
 
-This issue is seen on an arm64 based system. arm64 by default selects
-only CONFIG_GENERIC_PCI_IOMAP and not CONFIG_GENERIC_IOMAP from this
-'commit cb61f6769b88 ("ARM64: use GENERIC_PCI_IOMAP")'
 
-Simple bind/unbind test of any pci driver using pcim_iomap/pci_iomap,
-would lead to the following error message after long hour tests
+On 8/19/20 11:13 AM, Stephen Boyd wrote:
+> Quoting kernel test robot (2020-08-11 01:49:44)
+>> Greeting,
+>>
+>> FYI, we noticed the following commit (built with gcc-9):
+>>
+>> commit: a2499eff4b30a85d56e4466e6ca4746c72a347c6 ("[PATCH v2] clk: samsung: Keep top BPLL mux on Exynos542x enabled")
+>> url: https://github.com/0day-ci/linux/commits/Marek-Szyprowski/clk-samsung-Keep-top-BPLL-mux-on-Exynos542x-enabled/20200807-213239
+>> base: https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git clk-next
+>>
+>> in testcase: trinity
+>> with following parameters:
+>>
+>>          runtime: 300s
+>>
+>> test-description: Trinity is a linux system call fuzz tester.
+>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>
+>>
+>> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> Cool robot. But this doesn't look related to the patch at all?
 
-"allocation failed: out of vmalloc space - use vmalloc=<size> to
-increase size."
+Hi Stephen,
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
-* Changes from v1
-	- Fix the 0-day compilation error.
-	- Mark the lib/iomap pci_iounmap call as weak incase 
-	  if any architecture have there own implementation.
+Sorry for the inconvenience, you are right, we run more times
+on the parent commit and can reproduce the error too.
 
- include/asm-generic/io.h |  4 ++++
- lib/pci_iomap.c          | 10 ++++++++++
- 2 files changed, 14 insertions(+)
+Best Regards,
+Rong Chen
 
-diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-index dabf8cb7203b..5986b37226b7 100644
---- a/include/asm-generic/io.h
-+++ b/include/asm-generic/io.h
-@@ -915,12 +915,16 @@ static inline void iowrite64_rep(volatile void __iomem *addr,
- struct pci_dev;
- extern void __iomem *pci_iomap(struct pci_dev *dev, int bar, unsigned long max);
- 
-+#ifdef CONFIG_GENERIC_PCI_IOMAP
-+extern void pci_iounmap(struct pci_dev *dev, void __iomem *p);
-+#else
- #ifndef pci_iounmap
- #define pci_iounmap pci_iounmap
- static inline void pci_iounmap(struct pci_dev *dev, void __iomem *p)
- {
- }
- #endif
-+#endif /* CONFIG_GENERIC_PCI_IOMAP */
- #endif /* CONFIG_GENERIC_IOMAP */
- 
- /*
-diff --git a/lib/pci_iomap.c b/lib/pci_iomap.c
-index 2d3eb1cb73b8..ecd1eb3f6c25 100644
---- a/lib/pci_iomap.c
-+++ b/lib/pci_iomap.c
-@@ -134,4 +134,14 @@ void __iomem *pci_iomap_wc(struct pci_dev *dev, int bar, unsigned long maxlen)
- 	return pci_iomap_wc_range(dev, bar, 0, maxlen);
- }
- EXPORT_SYMBOL_GPL(pci_iomap_wc);
-+
-+#ifndef CONFIG_GENERIC_IOMAP
-+#define pci_iounmap pci_iounmap
-+void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr);
-+void __weak pci_iounmap(struct pci_dev *dev, void __iomem *addr)
-+{
-+	iounmap(addr);
-+}
-+EXPORT_SYMBOL(pci_iounmap);
-+#endif
- #endif /* CONFIG_PCI */
--- 
-2.25.1
 
