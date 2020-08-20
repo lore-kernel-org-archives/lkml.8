@@ -2,118 +2,161 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03387C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48032C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D71E322CA1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mIYWqROv"
+	by mail.kernel.org (Postfix) with ESMTP id 23C85208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926102;
+	bh=4Kqy42bYRo9TCoGLVURv1kmQzUNij8zQ5wCsCx9mP54=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=GzYJrJVIx1faG19L5OdxwoGW4L91Ge7F27Ft3r4bDSTfbfO8nLxu3Gb0T15qqtfw4
+	 /xhDcD+jJMDUPx1Pum5wRZXByvgl1YnF/syBP72VYB9lnxvw9EO2TS6gyfXCNp7gq9
+	 MDmAEb3jrcY/aRI4HjNa9JSbxJ5djLwWrnJkszjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbgHTMVb (ORCPT
+        id S1730609AbgHTMVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:21:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60790 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730207AbgHTJz2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:28 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FBBC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:55:27 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id c12so745362qtn.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=byj5e1NcGEKCZCoUKeCb/RN9/39259nsooaPeWr05l4=;
-        b=mIYWqROvWD/RKdlCt/1BmnvTJH0idhKXzinoONCuobC26Ag8t2QIs/tRAQMvpAJ08U
-         BzQnr6Nj3HJWweGGabib/1Ebtv6b9iTSVp37ZQ0WUFyGT/1Mwf9LHvU5nK4YjsOecvx0
-         qeq35+syF+iWCEZEKoRYj8cJkQFXUe4PUx4IfwcRXiDj3YC7NyPY3pzIqRseHc7REiIh
-         N/sY49jbKljaksEPUT/z8xb0zCJuW6D4i/ZcCidJbK5nRKJOJOPGEWLPa7qSCfoJtzPD
-         ifR+I7dLcXN7mec2hk//+ojQ1if4Az7i7YBKVrbsiRurX/txFql1hnICOgzD9ep0YRYN
-         Frng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=byj5e1NcGEKCZCoUKeCb/RN9/39259nsooaPeWr05l4=;
-        b=bsd68IwhwPD/V8dVAlvQxWKY3oGiralcYE9qfNQOKln3ybVLNartCCcySKxDD7rGp2
-         wJYqEfjUCru8/VMXIAl0MaE7mFLv8GEzzbfBqHzvG73jdaKarfVW8ml0ld1NSWVT87Vy
-         F+ALSzDYwkYa3a8UyHu8LSUesd4kgLOUsu7TZaRTQF0h8TxKRdWmg6JzBwBf2oeIB8aO
-         ExJjV/xlSfdg2lwKgKxUKz+CT/+2ULTfrCtyYc7ufAD09qchABwCdbdrTPoizrP5/v5X
-         eBCXm7RsSCuFqSEoJDu23hOd4FF0YYX/j2klHStpbwTrS4mzu0zUk9u+ThoueU4g7nTA
-         Knyw==
-X-Gm-Message-State: AOAM530tWUihmDstzmKoqiKrxk81tNFR96P5qypCqCLMsS06ctHrfCs3
-        1WHqDp02jiRetV4wQD9oJpoFurclHBVLoBfDtO6Upw==
-X-Google-Smtp-Source: ABdhPJxN/Qcu0Avu7t5f0IsPNNgIlJfLFijf+/xkCrEm8gQAOrgnBi2Xab4nv3xb6LKbZ1GtGC+38K0MG7TuYx2ZwF0=
-X-Received: by 2002:ac8:480c:: with SMTP id g12mr1838251qtq.257.1597917326809;
- Thu, 20 Aug 2020 02:55:26 -0700 (PDT)
+        Thu, 20 Aug 2020 08:21:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38570 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730211AbgHTJz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0855D22B3F;
+        Thu, 20 Aug 2020 09:55:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917328;
+        bh=4Kqy42bYRo9TCoGLVURv1kmQzUNij8zQ5wCsCx9mP54=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cVMdAqfnwWBnu46r8xA1IFluG4zWYseJ15ja+8spr6/XVnuLx7rxAPCHfseRxbcWb
+         a5kCi6643+05uZ+yXUj3IDMuN0l094tcQT1BlwGiymXoRjfplcySCRuIaPdz98ry8e
+         r8n7DCe7DV0RXHklJAjEkl6vtA8Ei57+0M/x9hd4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 86/92] tools build feature: Quote CC and CXX for their arguments
+Date:   Thu, 20 Aug 2020 11:22:11 +0200
+Message-Id: <20200820091542.111946709@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <000000000000a7e38a05a997edb2@google.com> <0000000000005c13f505ad3f5c42@google.com>
- <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-In-Reply-To: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 20 Aug 2020 11:55:15 +0200
-Message-ID: <CACT4Y+b7eZNuCOBhwxpzXoEXqOAk9ZGBJBakr6nqYrnd54URpQ@mail.gmail.com>
-Subject: Re: WARNING in __cfg80211_connect_result
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:48 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> On Wed, Aug 19, 2020 at 8:42 PM syzbot
-> <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this issue to:
-> >
-> > commit e7096c131e5161fa3b8e52a650d7719d2857adfd
-> > Author: Jason A. Donenfeld <Jason@zx2c4.com>
-> > Date:   Sun Dec 8 23:27:34 2019 +0000
-> >
-> >     net: WireGuard secure network tunnel
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
-> > start commit:   e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
-> > git tree:       net-next
-> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=14dad8b1900000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10dad8b1900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
-> >
-> > Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
-> > Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
->
-> Having trouble linking this back to wireguard... Those oopses don't
-> have anything to do with it either. Bisection error?
+From: Daniel Díaz <daniel.diaz@linaro.org>
 
-I don't see anything obviously wrong in the bisection log:
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
+[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
 
-On the other hand, it looks super precise. It tracked "WARNING in
-__cfg80211_connect_result" all the way down to the wireguard commit
-with no flakes or anything.
+When using a cross-compilation environment, such as OpenEmbedded,
+the CC an CXX variables are set to something more than just a
+command: there are arguments (such as --sysroot) that need to be
+passed on to the compiler so that the right set of headers and
+libraries are used.
+
+For the particular case that our systems detected, CC is set to
+the following:
+
+  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
+
+Without quotes, detection is as follows:
+
+  Auto-detecting system features:
+  ...                         dwarf: [ OFF ]
+  ...            dwarf_getlocations: [ OFF ]
+  ...                         glibc: [ OFF ]
+  ...                          gtk2: [ OFF ]
+  ...                        libbfd: [ OFF ]
+  ...                        libcap: [ OFF ]
+  ...                        libelf: [ OFF ]
+  ...                       libnuma: [ OFF ]
+  ...        numa_num_possible_cpus: [ OFF ]
+  ...                       libperl: [ OFF ]
+  ...                     libpython: [ OFF ]
+  ...                     libcrypto: [ OFF ]
+  ...                     libunwind: [ OFF ]
+  ...            libdw-dwarf-unwind: [ OFF ]
+  ...                          zlib: [ OFF ]
+  ...                          lzma: [ OFF ]
+  ...                     get_cpuid: [ OFF ]
+  ...                           bpf: [ OFF ]
+  ...                        libaio: [ OFF ]
+  ...                       libzstd: [ OFF ]
+  ...        disassembler-four-args: [ OFF ]
+
+  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+  Makefile.perf:230: recipe for target 'sub-make' failed
+  make[1]: *** [sub-make] Error 2
+  Makefile:69: recipe for target 'all' failed
+  make: *** [all] Error 2
+
+With CC and CXX quoted, some of those features are now detected.
+
+Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@chromium.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/build/Makefile.feature | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 7d9d70c0b3800..7c17f17ea2cd2 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -7,7 +7,7 @@ endif
+ 
+ feature_check = $(eval $(feature_check_code))
+ define feature_check_code
+-  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
++  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+ endef
+ 
+ feature_set = $(eval $(feature_set_code))
+-- 
+2.25.1
+
+
+
