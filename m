@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA60DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD369C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E7172173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B124720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916881;
-	bh=PNCLyphAMtbUMpwWPAZS1VpRriUsfSVeorKX42UKzhA=;
+	s=default; t=1597916898;
+	bh=YEqyb9kL2os4ZFPP5inKgP+wN2Rg/j/LS+W+ycTNXCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IdXPj4fXuAu0mdayaknGnfVYs+ZTOusHKBdc/cdemiEKK8hHPjRGdOaCsg+M7SZ8a
-	 TZPbvxRQVS9GaPvTIH1VmfAW2P3O/qsnKxMv/SzPwpG2/5qMtCB/lod5+g1TPsHrla
-	 z2hlVfnQ9NAYEz8wzjMgkn/YJ05aSCTWaFvS+2d0=
+	b=uvNGQk42efM0PyLKw+z2Ubtc40UM0EpZTDaCya286GQ9m5dFf1zAh4qSO62j0NWW2
+	 zn4ymRClg/I8Hnp8xrDbfVonoJTZtY43+oe8cfgvnIjkFuLIo0XrjUVUc87QuSIS1T
+	 0w40PydaBuumEto1oGIIS3ctYtM65d79N13NFTf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgHTJr4 (ORCPT
+        id S1726925AbgHTJsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:47:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51354 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgHTJrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:32 -0400
+        id S1729206AbgHTJrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B587C20724;
-        Thu, 20 Aug 2020 09:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51EC020724;
+        Thu, 20 Aug 2020 09:47:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916851;
-        bh=PNCLyphAMtbUMpwWPAZS1VpRriUsfSVeorKX42UKzhA=;
+        s=default; t=1597916867;
+        bh=YEqyb9kL2os4ZFPP5inKgP+wN2Rg/j/LS+W+ycTNXCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gx/BMzZ2ofHBbaBmpY9i2soSWiAkXmVx3mwsk/zOixgGW+8Zr1Ti3kMGxqtADoa2E
-         mEZxmkcFjCvVFwQEx66muYGsp7xqbnHm+ZOx0ZVKv161PnlnjkzzcW9VXxfmIg0b99
-         NRWJtV8A1iMWhGChzrbxGeB5BqpKDShAISOZf+AA=
+        b=yRdd/m/u+NubITZ2ge4nnjYfixC3ayLio8syEmopIjI46XEor2sxQ9DyyqHhyi158
+         Fa4/eQEgkJCbh8O4ig2CoRY0Zo8obd7qsSyJ4iR6Wng3Xm6LknCTmwTSbRSgOi4/vL
+         TvD3gHlx5LK+GmdAS9k31sK9VKWbwO2f3lLrJ6Xs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 068/152] module: Correctly truncate sysfs sections output
-Date:   Thu, 20 Aug 2020 11:20:35 +0200
-Message-Id: <20200820091557.210709757@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 5.4 073/152] remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before load
+Date:   Thu, 20 Aug 2020 11:20:40 +0200
+Message-Id: <20200820091557.458696192@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,77 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-commit 11990a5bd7e558e9203c1070fc52fb6f0488e75b upstream.
+commit 135b9e8d1cd8ba5ac9ad9bcf24b464b7b052e5b8 upstream.
 
-The only-root-readable /sys/module/$module/sections/$section files
-did not truncate their output to the available buffer size. While most
-paths into the kernfs read handlers end up using PAGE_SIZE buffers,
-it's possible to get there through other paths (e.g. splice, sendfile).
-Actually limit the output to the "count" passed into the read function,
-and report it back correctly. *sigh*
+The following mem abort is observed when one of the modem blob firmware
+size exceeds the allocated mpss region. Fix this by restricting the copy
+size to segment size using request_firmware_into_buf before load.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/20200805002015.GE23458@shao2-debian
-Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
+Err Logs:
+Unable to handle kernel paging request at virtual address
+Mem abort info:
+...
+Call trace:
+  __memcpy+0x110/0x180
+  rproc_start+0xd0/0x190
+  rproc_boot+0x404/0x550
+  state_store+0x54/0xf8
+  dev_attr_store+0x44/0x60
+  sysfs_kf_write+0x58/0x80
+  kernfs_fop_write+0x140/0x230
+  vfs_write+0xc4/0x208
+  ksys_write+0x74/0xf8
+...
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200722201047.12975-3-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ drivers/remoteproc/qcom_q6v5_mss.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1517,18 +1517,34 @@ struct module_sect_attrs {
- 	struct module_sect_attr attrs[0];
- };
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1034,15 +1034,14 @@ static int q6v5_mpss_load(struct q6v5 *q
+ 		} else if (phdr->p_filesz) {
+ 			/* Replace "xxx.xxx" with "xxx.bxx" */
+ 			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
+-			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
++			ret = request_firmware_into_buf(&seg_fw, fw_name, qproc->dev,
++							ptr, phdr->p_filesz);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
+ 				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
  
-+#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
- static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
- 				struct bin_attribute *battr,
- 				char *buf, loff_t pos, size_t count)
- {
- 	struct module_sect_attr *sattr =
- 		container_of(battr, struct module_sect_attr, battr);
-+	char bounce[MODULE_SECT_READ_SIZE + 1];
-+	size_t wrote;
+-			memcpy(ptr, seg_fw->data, seg_fw->size);
+-
+ 			release_firmware(seg_fw);
+ 		}
  
- 	if (pos != 0)
- 		return -EINVAL;
- 
--	return sprintf(buf, "0x%px\n",
--		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
-+	/*
-+	 * Since we're a binary read handler, we must account for the
-+	 * trailing NUL byte that sprintf will write: if "buf" is
-+	 * too small to hold the NUL, or the NUL is exactly the last
-+	 * byte, the read will look like it got truncated by one byte.
-+	 * Since there is no way to ask sprintf nicely to not write
-+	 * the NUL, we have to use a bounce buffer.
-+	 */
-+	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
-+			 kallsyms_show_value(file->f_cred)
-+				? (void *)sattr->address : NULL);
-+	count = min(count, wrote);
-+	memcpy(buf, bounce, count);
-+
-+	return count;
- }
- 
- static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
-@@ -1577,7 +1593,7 @@ static void add_sect_attrs(struct module
- 			goto out;
- 		sect_attrs->nsections++;
- 		sattr->battr.read = module_sect_read;
--		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
-+		sattr->battr.size = MODULE_SECT_READ_SIZE;
- 		sattr->battr.attr.mode = 0400;
- 		*(gattr++) = &(sattr++)->battr;
- 	}
 
 
