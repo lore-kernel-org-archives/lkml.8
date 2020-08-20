@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B2EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 415AC2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47EFB2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927957;
-	bh=rlTFFjVfqchzJa9yKjg1EGsF8v9dJrnMGqs1uNS64iw=;
+	s=default; t=1597927967;
+	bh=0pkLbZ3ecE1PW8MfK1EZfq9ZmaccVL2nFYhP+U3ugMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2u+vw0ud103/Nie2KO1tmdUhh0auOvOdtAYP2LOO3nXNqaeRoohRhJul9Dtzri6D
-	 E1iwzukDM20MMwQ2VVshbBwn53BJzn2BJYGB8v3pxz5lCXjQY53FO1hBkycL2r0Bnv
-	 l2ruFqXrjl3a/InfmO6901l0UG7PybNtt4dYq1mY=
+	b=bAjYawJZIiJ45yEXTKn9lz3m5GSGZbwzNp46/kWaie/8HqBO4ElGSRStFgParn3Cf
+	 9HxzPXxxKM6INEf/mdVT/onFNFRVV3sPJgOBaR/xcEYD8ngchzPiFyCOv40gHshHdQ
+	 ArEfe+YMrYQapgMKIZI7FKKiFxFV+0nCpRfR2YNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730143AbgHTMw1 (ORCPT
+        id S1729151AbgHTMwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41810 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:52:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729127AbgHTJnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:43 -0400
+        id S1729258AbgHTJni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 789FA208E4;
-        Thu, 20 Aug 2020 09:43:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1572207DE;
+        Thu, 20 Aug 2020 09:43:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916623;
-        bh=rlTFFjVfqchzJa9yKjg1EGsF8v9dJrnMGqs1uNS64iw=;
+        s=default; t=1597916617;
+        bh=0pkLbZ3ecE1PW8MfK1EZfq9ZmaccVL2nFYhP+U3ugMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfq2doIIt5hutYmS9DdAyMT7EUBVdCc9GPIkcc4/bHuQfo170oS49h5fqfuBTP0UT
-         c+gqErYv6h1Qc2V6Y9LaJdO618k0vqZpJCGd2amThoWm1F8/U/zRJYIET44+evl4Ox
-         TKsMRMqQ3Oh6cSi2W1nM8Ckhprv8QptFna6L+6pI=
+        b=So3GdkBPDNuDbnX4Mf1/Oa1EOXBzybH05Zt9b8Barb2CDxUNSClmd6tesQ7hZrBbD
+         Jeh4+tIsScvKVcmmwJJz+gBnkqshSvq+dUcDDzDEUceGTqE7Y3dhfKu8R1qCecJlM/
+         iFZJ4zsHVozIq2+IrMbao+wRq+cV8EUP6Kq2aJnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 163/204] selftests/bpf: Prevent runqslower from racing on building bpftool
-Date:   Thu, 20 Aug 2020 11:21:00 +0200
-Message-Id: <20200820091614.361527900@linuxfoundation.org>
+Subject: [PATCH 5.7 161/204] x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
+Date:   Thu, 20 Aug 2020 11:20:58 +0200
+Message-Id: <20200820091614.262581605@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,50 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-[ Upstream commit 6bcaf41f9613278cd5897fc80ab93033bda8efaa ]
+[ Upstream commit 7d98585860d845e36ee612832a5ff021f201dbaf ]
 
-runqslower's Makefile is building/installing bpftool into
-$(OUTPUT)/sbin/bpftool, which coincides with $(DEFAULT_BPFTOOL). In practice
-this means that often when building selftests from scratch (after `make
-clean`), selftests are racing with runqslower to simultaneously build bpftool
-and one of the two processes fail due to file being busy. Prevent this race by
-explicitly order-depending on $(BPFTOOL_DEFAULT).
+Frequency descriptor of Lightning Mountain SoC doesn't have all the
+frequency entries so resulting in the below failure causing a kernel hang:
 
-Fixes: a2c9652f751e ("selftests: Refactor build to remove tools/lib/bpf from include path")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200805004757.2960750-1-andriin@fb.com
+    Error MSR_FSB_FREQ index 15 is unknown
+    tsc: Fast TSC calibration failed
+
+So, add all the frequency entries in the Lightning Mountain SoC frequency
+descriptor.
+
+Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
+Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/211c643ae217604b46cbec43a2c0423946dc7d2d.1596440057.git.eswara.kota@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/tsc_msr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index af139d0e2e0c6..666b1b786bd29 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -138,7 +138,9 @@ VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)				\
- 		     /boot/vmlinux-$(shell uname -r)
- VMLINUX_BTF := $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index 4fec6f3a1858b..a654a9b4b77c0 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -133,10 +133,15 @@ static const struct freq_desc freq_desc_ann = {
+ 	.mask = 0x0f,
+ };
  
--$(OUTPUT)/runqslower: $(BPFOBJ)
-+DEFAULT_BPFTOOL := $(SCRATCH_DIR)/sbin/bpftool
-+
-+$(OUTPUT)/runqslower: $(BPFOBJ) | $(DEFAULT_BPFTOOL)
- 	$(Q)$(MAKE) $(submake_extras) -C $(TOOLSDIR)/bpf/runqslower	\
- 		    OUTPUT=$(SCRATCH_DIR)/ VMLINUX_BTF=$(VMLINUX_BTF)   \
- 		    BPFOBJ=$(BPFOBJ) BPF_INCLUDE=$(INCLUDE_DIR) &&	\
-@@ -160,7 +162,6 @@ $(OUTPUT)/test_netcnt: cgroup_helpers.c
- $(OUTPUT)/test_sock_fields: cgroup_helpers.c
- $(OUTPUT)/test_sysctl: cgroup_helpers.c
+-/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
++/*
++ * 24 MHz crystal? : 24 * 13 / 4 = 78 MHz
++ * Frequency step for Lightning Mountain SoC is fixed to 78 MHz,
++ * so all the frequency entries are 78000.
++ */
+ static const struct freq_desc freq_desc_lgm = {
+ 	.use_msr_plat = true,
+-	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
++	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
++		   78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ 	.mask = 0x0f,
+ };
  
--DEFAULT_BPFTOOL := $(SCRATCH_DIR)/sbin/bpftool
- BPFTOOL ?= $(DEFAULT_BPFTOOL)
- $(DEFAULT_BPFTOOL): $(wildcard $(BPFTOOLDIR)/*.[ch] $(BPFTOOLDIR)/Makefile)    \
- 		    $(BPFOBJ) | $(BUILD_DIR)/bpftool
 -- 
 2.25.1
 
