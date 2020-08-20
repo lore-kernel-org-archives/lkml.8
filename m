@@ -7,199 +7,124 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F87C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B07C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0522078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0C932078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:21:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="WG3KUIyd"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XxgsNqxM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726681AbgHTBPx (ORCPT
+        id S1726698AbgHTBVn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:15:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
+        Wed, 19 Aug 2020 21:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHTBPv (ORCPT
+        with ESMTP id S1726578AbgHTBVm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:15:51 -0400
+        Wed, 19 Aug 2020 21:21:42 -0400
 Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0ADC061384
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:15:51 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id bo3so624833ejb.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:15:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C92C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:41 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id kq25so687532ejb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=L95gIXwGMvZZq8+ZBbJLFbYWdlFmXYekwntOD8a6oOA=;
-        b=WG3KUIydvAL6lmQrHxm61oJNRNmcU6P3AYdrnvvDk2Y+hKlIojHKEJGegWF4qwv1+Y
-         QTeYxO/dmBMjiGuD8Bcer9Szc6wGqRF7KS54/JvegK794xU8NuZtLrfXge70efh+Srjf
-         j8SOWTy9A9tvc8TrHp9v6b/ZgrKwYzANCvRu97KxycC19b+fIKbadEqG5DQwkPrUYnrD
-         oXvP4WUQANyhz4Iia2vNUjttdG3ES2Q5Q+15Mf8bYJ86ICEPE5SpK2K5syACwh1i+IeQ
-         SzVm4NRN8oEMld6tQ3d+tp0J1Y7Gsx/80wE5GM+Iv8TVgc/ysjZ1fPS6WsvaQVMk41/k
-         HhsQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=clSRpeeAhBeOa1Z/EGoW+BCJ0W1c3rpm/3iMv3CQBEg=;
+        b=XxgsNqxMJXLMCQt0hvVtovYPMv5lUeVtNbekV18RPRgTSr0lhWryi6qkLfR94gGEFA
+         PztV185NnjB+IYrEZe/xikgYrOfWzJcB4lRxCVUsGayaD7bm8YHeNDsf/DamWw8BVs2k
+         +C5RLMsYP77t9xELeLr7BZ8TE9RPDTxUtbOCnIfrcwrBw8y3WSH+0ZHY3lxyoFNYInmd
+         TDJMfUOKVrH8E2/fkwXZ0LCI2QSnPDsF872t5RLF6bYhssrqv69dNmVY8+Eghelm3/l9
+         teR8GTfWk0l6Uls7pTmAylPqw9UetBvz7mVqC+Lfnnr+ldA5FBptPQ9RJUdzYhBT78hX
+         yNTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=L95gIXwGMvZZq8+ZBbJLFbYWdlFmXYekwntOD8a6oOA=;
-        b=MRE/OhQ3kTXCLr+pE238k3MhktbNBP5QdYd3jRgdAcsC+E717+69yXxGXK2KV7WrTO
-         q33KIOJw0X/DhrEfhbwm3nQE2ju0zAk6Y7TOKhSXtmn0Es60PXIT30jav1+PxXjp4NUS
-         3cDAiHdsz8kj0YKCvawASNjHpZmCGf9r5/1HjKVVLjxcp0c5MIvAbF/IbxeCh/gwCIxR
-         RCk6fF7/OXpyRVsUZVu8WynSlL0x7wk83BX+7c/QLrLg4PrZEcGRBzErDOafHlfhKX5N
-         8BGcppJIjR67nvldjMImaEaMmO8C2R7rDc/9ZISKBdTKxBRlylXaI4T6pSqyoB5fibVO
-         j12Q==
-X-Gm-Message-State: AOAM533fEvLfTAmTK/lL4B1FJebCSJ5G8vICLXgSaXLYKDNTHRS25P3K
-        M3iv38K7kqwMVuvVFBsEh4ZS3Q==
-X-Google-Smtp-Source: ABdhPJyEI0+REUtIA4p2wEAbWZN4TQlHgJzr4Z/vBB40QUXm8ya4oYGDbsGWCuRbDl47Y0QH6guB/Q==
-X-Received: by 2002:a17:906:528d:: with SMTP id c13mr1023638ejm.61.1597886149318;
-        Wed, 19 Aug 2020 18:15:49 -0700 (PDT)
-Received: from x1 ([2001:16b8:5ca7:9f01:a7aa:12ad:e665:579d])
-        by smtp.gmail.com with ESMTPSA id i26sm274194edv.70.2020.08.19.18.15.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 18:15:48 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 03:15:45 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: Re: [PATCH] gpio: omap: improve coding style for pin config flags
-Message-ID: <20200820011545.GA140179@x1>
-References: <20200722120755.230741-1-drew@beagleboard.org>
- <20200819063127.GU2994@atomide.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=clSRpeeAhBeOa1Z/EGoW+BCJ0W1c3rpm/3iMv3CQBEg=;
+        b=r4GfIik/+6zkqaiwSSrRN177qKhOHjvZxkARFhdA3xZmYC4pJt1p5dOpGGDoF/bWIX
+         KhXxUmEJiaWoU8FmdUD0zNRZq3w9TmKELoOjEs7SDjpDQNUs3heuwSf9FPwYSenpmzTk
+         smd8qPyYcYVKyYN9ZgFdRGPL6bpVCzZqQpYA22/i0nqtkSyHI4Llm/VUZAUYhtgBo1tW
+         0tBIYCmwe65ljcwcUlnLMlOcFxvgtxcVHMt5xohkGNyI6d7B2tvRoxyrCV4aDaGx+QQP
+         HwBEuuFX2TtEQXJLW4tOGFJGgbRVsk+DQTYjMrTuuVVRSDCdKyUheth4Zef+VO3xrCcf
+         XjmQ==
+X-Gm-Message-State: AOAM5309JWXdnkq+EEEbk+17YyqyzG+BVHuN+czLH++C6QAXOVcZlG87
+        fXLPh6UtCRxjms66s6/HpXuz62x+GlGYQBdOFdTA
+X-Google-Smtp-Source: ABdhPJy5YCNpJnv1Y/CpvGqmyFX6PcYJ+U9KLCqrkT4JqKRby0aWCLgHjSuUt8brRGEdtFouaOnueCCnkewqCmUMGeo=
+X-Received: by 2002:a17:906:c1d8:: with SMTP id bw24mr998580ejb.91.1597886500276;
+ Wed, 19 Aug 2020 18:21:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819063127.GU2994@atomide.com>
+References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+ <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com> <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
+ <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com> <20200820083111.46e81b4c@canb.auug.org.au>
+In-Reply-To: <20200820083111.46e81b4c@canb.auug.org.au>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 19 Aug 2020 21:21:29 -0400
+Message-ID: <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
+Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
+ interrupt - RIP: 0010:security_port_sid
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 09:31:27AM +0300, Tony Lindgren wrote:
-> Hi,
-> 
-> * Drew Fustini <drew@beagleboard.org> [200722 12:09]:
-> > Change the handling of pin config flags from if/else to switch
-> > statement to make the code more readable and cleaner.
-> > 
-> > Suggested-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> > Signed-off-by: Drew Fustini <drew@beagleboard.org>
-> 
-> This looks OK to me:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
-> I've lost track of the pending pinctrl/gpio/dts patches you've
-> posted :) Care to also summarized the pending ones and repost
-> them now that v5.9-rc1 is out?
+On Wed, Aug 19, 2020 at 6:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> Hi all,
+>
+> On Wed, 19 Aug 2020 11:12:44 -0400 Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
+> >
+> > Fix can be found at:https://patchwork.kernel.org/patch/11724203/
+> > <https://patchwork.kernel.org/patch/11724203/>
+>
+> Thanks.
+>
+> I will add that to the selinux tree merge in linux-next until it turns
+> up in the tree.
 
-Everything appears to be in mainline already:
+FYI, I just merged that patch into the selinux/next tree.
 
-commit f1b206cf7c57561ea156798f323b0541a783bd2f
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 22 14:27:52 2020 +0200
+  commit 37ea433c66070fcef09c6d118492c36299eb72ba
+  Author: Stephen Smalley <stephen.smalley.work@gmail.com>
+  Date:   Wed Aug 19 09:45:41 2020 -0400
 
-    pinctrl: core: print gpio in pins debugfs file
+   selinux: avoid dereferencing the policy prior to initialization
 
-commit bde8c0e64c78633612aaf283692f72bef0bbc549
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 22 14:07:56 2020 +0200
+   Certain SELinux security server functions (e.g. security_port_sid,
+   called during bind) were not explicitly testing to see if SELinux
+   has been initialized (i.e. initial policy loaded) and handling
+   the no-policy-loaded case.  In the past this happened to work
+   because the policydb was statically allocated and could always
+   be accessed, but with the recent encapsulation of policy state
+   and conversion to dynamic allocation, we can no longer access
+   the policy state prior to initialization.  Add a test of
+   !selinux_initialized(state) to all of the exported functions that
+   were missing them and handle appropriately.
 
-    gpio: omap: improve coding style for pin config flags
-        
-commit 75dec56710dfafd37daa95e756c5d1840932ba90
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Jul 17 21:40:43 2020 +0200
+   Fixes: 461698026ffa ("selinux: encapsulate policy state, refactor ...")
+   Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+   Tested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+   Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+   Signed-off-by: Paul Moore <paul@paul-moore.com>
 
-    gpio: omap: handle pin config bias flags
-
-commit 40e30d26d909af89de2dcd0b4abdd27c47ac2235
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 15 23:37:38 2020 +0200
-
-    gpio: omap: handle pin config bias flags
-
-commit abe4e4675dfc62b7f2328e2c4bce8b5bdcdff7c0
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Sun Jul 12 12:37:19 2020 +0200
-
-    ARM: dts: am335x-pocketbeagle: set default mux for gpio pins
-    
-commit bc6d201591344aa21d616179ee9ad406a7336267
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jun 17 20:05:43 2020 +0200
-
-    pinctrl: single: fix function name in documentation
-
-commit 27c90e5e48d008bfda1cf6108eb699697317c67b
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 1 03:33:20 2020 +0200
-
-    ARM: dts: am33xx-l4: change #pinctrl-cells from 1 to 2
-    
-commit a133954188887a830b5ce438a287a5e4e234b1be
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jul 1 03:33:19 2020 +0200
-
-    pinctrl: single: parse #pinctrl-cells = 2
-    
-commit e14d2c766392ff1f226017fd62f0b6283a53bd0c
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Thu Jun 18 20:29:21 2020 +0200
-
-    ARM: dts: am335x-pocketbeagle: add gpio-line-names
-
-commit aafd897a5ac4cb7f9b4f99acc5365a7df1f77aa0
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Thu May 21 22:09:26 2020 +0200
-
-    ARM: dts: am335x-boneblack: add gpio-line-names
-
-commit ff82009fcc6ace774570107750f5af91c9081b0a
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Wed Jun 10 13:02:58 2020 +0200
-
-    ARM: dts: am33xx-l4: add gpio-ranges
-
-commit 25fae752156db7253471347df08a2700501eafde
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Jun 12 13:27:58 2020 +0200
-
-    pinctrl: single: fix function name in documentation
-
-commit 80bf72598663496d08b3c0231377db6a99d7fd68
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Mon Jun 15 17:57:01 2020 +0200
-
-    ARM: dts: am5729: beaglebone-ai: fix rgmii phy-mode
-
-commit d7af722344e6dc52d87649100516515263e15c75
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Tue Jun 9 23:45:21 2020 +0200
-
-    ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
-
-commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Mon Jun 8 14:51:43 2020 +0200
-
-    pinctrl-single: fix pcs_parse_pinconf() return value
-
-Author: Drew Fustini <drew@beagleboard.org>
-Date:   Fri Apr 3 21:19:31 2020 +0200
-
-    dt-bindings: Add vendor prefix for BeagleBoard.org
-
-
-The only thing that isn't would be "ARM: dts: am33xx: add ocp label"
-which you applied to omap-for-v5.9/dt.
-
-thanks,
-drew
+-- 
+paul moore
+www.paul-moore.com
