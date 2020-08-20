@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039E5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8575A2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4750206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920744;
-	bh=7xMbWi8u2MztLyU+DFZFgOrpTUybRCIU3q3jbvbycHM=;
+	s=default; t=1597920768;
+	bh=XCOsw6EYaCe/VuNEJW7IXNxuEoH4nyKL4wkuResnRA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UkcYxRsXJoxaj+sl5ce2BAX+tTk/I339txuFFV8IFLM7Fkn9cGE6ePOzr1yAtjXN2
-	 ThaoXYYTmj+8ReFaX2Z0yom78ZjzHX4AiA+FpKzelLU417c2/VzJHzKD3OXDazLdF+
-	 cJ7Nm05tTO4BN56cA6ZXly/ZUkf0htjd3Ey7QLbg=
+	b=gT8lrAbjFX9c4iFsr+TMUI7AfKWa4nKDZg+TIDd9iqoAoKU/HXFJJ0EInRCrc6azQ
+	 nCe95daNoDTKwVs+PzJknP1vYU3cSCZ0rcxyreBhaeKqn63P5H1/mjEUxtylNAGgp3
+	 tBRIDl0nUKwLS13fHj3jcRiza65hEkK+OLagWoUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730726AbgHTKOZ (ORCPT
+        id S1731565AbgHTKwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:52:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730822AbgHTKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:48 -0400
+        id S1731168AbgHTKOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C84C2206DA;
-        Thu, 20 Aug 2020 10:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14F32067C;
+        Thu, 20 Aug 2020 10:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918427;
-        bh=7xMbWi8u2MztLyU+DFZFgOrpTUybRCIU3q3jbvbycHM=;
+        s=default; t=1597918464;
+        bh=XCOsw6EYaCe/VuNEJW7IXNxuEoH4nyKL4wkuResnRA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1LJkEdoP36iN4SX9aL04G/uShCrwq0DEdQhe6+cPYzUFYLAs1YmfzEl8U79Vfhvzp
-         io1a6gaqsq1hDXndXIyy12nTH8G9jz0CFH14ODRU5QaUhwAc8IesWE2dmbU2WnNfIT
-         4fqk2WUJyCXDepj87CYZSU1/43I2JlhJjzz2qIks=
+        b=QzqNJjyHmcm4YmCIlGnIjYT49VOXt2Zao3mzEcHhSATtLASuUG4yKrPqUCp343VW/
+         nluFlcsfyl46e2oxeqJTwBkyHucLSf6Ec3A29T5UIObSZo6t7Ei1YTI2ZuzmMxJJlo
+         Uu5X5nO3RMGlBS6KeIYN9YcBpKp+yUX86ZTPrdKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
-        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 166/228] net: initialize fastreuse on inet_inherit_port
-Date:   Thu, 20 Aug 2020 11:22:21 +0200
-Message-Id: <20200820091615.869366086@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
+        BingJing Chang <bingjingc@synology.com>,
+        Danny Shih <dannyshih@synology.com>,
+        ChangSyun Peng <allenpeng@synology.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.14 179/228] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
+Date:   Thu, 20 Aug 2020 11:22:34 +0200
+Message-Id: <20200820091616.523407496@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,61 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+From: ChangSyun Peng <allenpeng@synology.com>
 
-commit d76f3351cea2d927fdf70dd7c06898235035e84e upstream.
+commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
 
-In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
-SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
-behaviour or in the incorrect reuse of a bind.
+In degraded raid5, we need to read parity to do reconstruct-write when
+data disks fail. However, we can not read parity from
+handle_stripe_dirtying() in force reconstruct-write mode.
 
-the kernel keeps track for each bind_bucket if all sockets in the
-bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
-These flags allow skipping the costly bind_conflict check when possible
-(meaning when all sockets have the proper SO_REUSE option).
+Reproducible Steps:
 
-For every socket added to a bind_bucket, these flags need to be updated.
-As soon as a socket that does not support reuse is added, the flag is
-set to false and will never go back to true, unless the bind_bucket is
-deleted.
+1. Create degraded raid5
+mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
+2. Set rmw_level to 0
+echo 0 > /sys/block/md2/md/rmw_level
+3. IO to raid5
 
-Note that there is no mechanism to re-evaluate these flags when a socket
-is removed (this might make sense when removing a socket that would not
-allow reuse; this leaves room for a future patch).
+Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
+the parity in this situation.
 
-For this optimization to work, it is mandatory that these flags are
-properly initialized and updated.
-
-When a child socket is created from a listen socket in
-__inet_inherit_port, the TPROXY case could create a new bind bucket
-without properly initializing these flags, thus preventing the
-optimization to work. Alternatively, a socket not allowing reuse could
-be added to an existing bind bucket without updating the flags, causing
-bind_conflict to never be called as it should.
-
-Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
-a new bind_bucket or use a different bind_bucket than the one of the
-listen socket.
-
-Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
-Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
-Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: <stable@vger.kernel.org> # v4.4+
+Reviewed-by: Alex Wu <alexwu@synology.com>
+Reviewed-by: BingJing Chang <bingjingc@synology.com>
+Reviewed-by: Danny Shih <dannyshih@synology.com>
+Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/ipv4/inet_hashtables.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/raid5.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -160,6 +160,7 @@ int __inet_inherit_port(const struct soc
- 				return -ENOMEM;
- 			}
- 		}
-+		inet_csk_update_fastreuse(tb, child);
- 	}
- 	inet_bind_hash(child, tb, port);
- 	spin_unlock(&head->lock);
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3593,6 +3593,7 @@ static int need_this_block(struct stripe
+ 	 * is missing/faulty, then we need to read everything we can.
+ 	 */
+ 	if (sh->raid_conf->level != 6 &&
++	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
+ 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
+ 		/* reconstruct-write isn't being forced */
+ 		return 0;
+@@ -4829,7 +4830,7 @@ static void handle_stripe(struct stripe_
+ 	 * or to load a block that is being partially written.
+ 	 */
+ 	if (s.to_read || s.non_overwrite
+-	    || (conf->level == 6 && s.to_write && s.failed)
++	    || (s.to_write && s.failed)
+ 	    || (s.syncing && (s.uptodate + s.compute < disks))
+ 	    || s.replacing
+ 	    || s.expanding)
 
 
