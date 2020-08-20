@@ -2,87 +2,173 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C87C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90981C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 217262078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jGbkrces"
+	by mail.kernel.org (Postfix) with ESMTP id 7055E2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597922607;
+	bh=4sA2SVy2eqXQUnimgZbwpUFmOUet79IhZHAJL9bPbGU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dZ0Qh7WGodjc5x3rbmSxStFfEbp7RrVL4FQmzOBr5pQuLZL0XlwTj+fmIixa+dFQL
+	 6LrAa2g4Vv1zSGXApjqziSkhTU+1UWY4JOQYvVy+yR5F6Mpnk32rMUtrVaXr/SUt3b
+	 DOVYO7YsIFF79+8GomkfrQfLBOrGvIJuI+i1dCCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbgHTLXB (ORCPT
+        id S1730524AbgHTLXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:23:01 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:57527 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730549AbgHTLWd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:22:33 -0400
-X-UUID: af4d0888a4f647dab8a88998ad979dc4-20200820
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=S1Y+0IiFS8nO4Trq+5CEEIC6sfUAEGt90ibukYT0b9E=;
-        b=jGbkrcesOI3wVd2mXfBAN9w/vHttcOMif6TLelF36AnrYNIbu55x54Z9wbExfm2m7KZQkrxUyQgsAXig34choBQ3fGTPRRg37vcuOuxQrWJdOP5di3NTP4Ep5GB6lvuAx9O0gQE5iA+1Jkd7fcO70uTcZwOJMbLMQMwQKXvjVX4=;
-X-UUID: af4d0888a4f647dab8a88998ad979dc4-20200820
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <hanks.chen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1994942789; Thu, 20 Aug 2020 19:22:31 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 20 Aug 2020 19:22:27 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 20 Aug 2020 19:22:27 +0800
-From:   Hanks Chen <hanks.chen@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
-        sin_jieyang <sin_jieyang@mediatek.com>,
-        Hanks Chen <hanks.chen@mediatek.com>
-Subject: [PATCH v2] pinctrl: mediatek: check mtk_is_virt_gpio input parameter
-Date:   Thu, 20 Aug 2020 19:22:25 +0800
-Message-ID: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 20 Aug 2020 07:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729523AbgHTKHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB0D2078D;
+        Thu, 20 Aug 2020 10:07:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918034;
+        bh=4sA2SVy2eqXQUnimgZbwpUFmOUet79IhZHAJL9bPbGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tL5RK67lNuethj1dFqhXQEEuegU5ab7ubxECnDUPS2epQohjnVaEAPZ4oCUWUfgx0
+         lxq2t3DRyAmTbBjQmC/qxbgMUPJtk0uYYrlZcDgTovtE0jjoz44kQW3njLcinYaBh2
+         CQeETA8l4uo1VisNIOTMdlmZAYDlJsfqJ3jhpMVI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, ch3332xr@gmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 031/228] ipv6: fix memory leaks on IPV6_ADDRFORM path
+Date:   Thu, 20 Aug 2020 11:20:06 +0200
+Message-Id: <20200820091609.093583318@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: F88F058F9D588338A2C62533E12951333599251915843B08FD4ABEB0C93057CF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Y2hlY2sgbXRrX2lzX3ZpcnRfZ3BpbyBpbnB1dCBwYXJhbWV0ZXIsDQp2aXJ0dWFsIGdwaW8gbmVl
-ZCB0byBzdXBwb3J0IGVpbnQgbW9kZS4NCg0KYWRkIGVycm9yIGhhbmRsZXIgZm9yIHRoZSBrbyBj
-YXNlDQp0byBmaXggdGhpcyBib290IGZhaWw6DQpwYyA6IG10a19pc192aXJ0X2dwaW8rMHgyMC8w
-eDM4IFtwaW5jdHJsX210a19jb21tb25fdjJdDQpsciA6IG10a19ncGlvX2dldF9kaXJlY3Rpb24r
-MHg0NC8weGIwIFtwaW5jdHJsX3BhcmlzXQ0KDQpGaXhlczogZWRkNTQ2NDY1MDAyICgicGluY3Ry
-bDogbWVkaWF0ZWs6IGF2b2lkIHZpcnR1YWwgZ3BpbyB0cnlpbmcgdG8gc2V0IHJlZyIpDQpTaW5n
-ZWQtb2ZmLWJ5OiBKaWUgWWFuZyA8c2luX2ppZXlhbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9m
-Zi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQoNCi0tLQ0KQ2hhbmdl
-cyBzaW5jZSB2MToNCi0gdXBkYXRlIFNpbmdlZC1vZmYtYnkNCi0gYWxpZ24gd2l0aCBwaW5jdHJs
-L21lZGlhdGVrL3BpbmN0cmwtbXRrLW10Ki5oIA0KDQotLS0NCiBkcml2ZXJzL3BpbmN0cmwvbWVk
-aWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCA0ICsrKysNCiAxIGZpbGUgY2hhbmdlZCwg
-NCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
-cGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
-bC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGM1M2UyYzM5MWUzMi4uYTQ4NWQ3OWY1MWExIDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5j
-DQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMN
-CkBAIC0yNTksNiArMjU5LDEwIEBAIGJvb2wgbXRrX2lzX3ZpcnRfZ3BpbyhzdHJ1Y3QgbXRrX3Bp
-bmN0cmwgKmh3LCB1bnNpZ25lZCBpbnQgZ3Bpb19uKQ0KIA0KIAlkZXNjID0gKGNvbnN0IHN0cnVj
-dCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvX25dOw0KIA0KKwkvKiBpZiB0aGUg
-R1BJTyBpcyBub3Qgc3VwcG9ydGVkIGZvciBlaW50IG1vZGUgKi8NCisJaWYgKGRlc2MtPmVpbnQu
-ZWludF9tID09IE5PX0VJTlRfU1VQUE9SVCkNCisJCXJldHVybiB2aXJ0X2dwaW87DQorDQogCWlm
-IChkZXNjLT5mdW5jcyAmJiAhZGVzYy0+ZnVuY3NbZGVzYy0+ZWludC5laW50X21dLm5hbWUpDQog
-CQl2aXJ0X2dwaW8gPSB0cnVlOw0KIA0KLS0gDQoyLjE4LjANCg==
+From: Cong Wang <xiyou.wangcong@gmail.com>
+
+[ Upstream commit 8c0de6e96c9794cb523a516c465991a70245da1c ]
+
+IPV6_ADDRFORM causes resource leaks when converting an IPv6 socket
+to IPv4, particularly struct ipv6_ac_socklist. Similar to
+struct ipv6_mc_socklist, we should just close it on this path.
+
+This bug can be easily reproduced with the following C program:
+
+  #include <stdio.h>
+  #include <string.h>
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <arpa/inet.h>
+
+  int main()
+  {
+    int s, value;
+    struct sockaddr_in6 addr;
+    struct ipv6_mreq m6;
+
+    s = socket(AF_INET6, SOCK_DGRAM, 0);
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(5000);
+    inet_pton(AF_INET6, "::ffff:192.168.122.194", &addr.sin6_addr);
+    connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+    inet_pton(AF_INET6, "fe80::AAAA", &m6.ipv6mr_multiaddr);
+    m6.ipv6mr_interface = 5;
+    setsockopt(s, SOL_IPV6, IPV6_JOIN_ANYCAST, &m6, sizeof(m6));
+
+    value = AF_INET;
+    setsockopt(s, SOL_IPV6, IPV6_ADDRFORM, &value, sizeof(value));
+
+    close(s);
+    return 0;
+  }
+
+Reported-by: ch3332xr@gmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/addrconf.h   |    1 +
+ net/ipv6/anycast.c       |   17 ++++++++++++-----
+ net/ipv6/ipv6_sockglue.c |    1 +
+ 3 files changed, 14 insertions(+), 5 deletions(-)
+
+--- a/include/net/addrconf.h
++++ b/include/net/addrconf.h
+@@ -270,6 +270,7 @@ int ipv6_sock_ac_join(struct sock *sk, i
+ 		      const struct in6_addr *addr);
+ int ipv6_sock_ac_drop(struct sock *sk, int ifindex,
+ 		      const struct in6_addr *addr);
++void __ipv6_sock_ac_close(struct sock *sk);
+ void ipv6_sock_ac_close(struct sock *sk);
+ 
+ int __ipv6_dev_ac_inc(struct inet6_dev *idev, const struct in6_addr *addr);
+--- a/net/ipv6/anycast.c
++++ b/net/ipv6/anycast.c
+@@ -170,7 +170,7 @@ int ipv6_sock_ac_drop(struct sock *sk, i
+ 	return 0;
+ }
+ 
+-void ipv6_sock_ac_close(struct sock *sk)
++void __ipv6_sock_ac_close(struct sock *sk)
+ {
+ 	struct ipv6_pinfo *np = inet6_sk(sk);
+ 	struct net_device *dev = NULL;
+@@ -178,10 +178,7 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 	struct net *net = sock_net(sk);
+ 	int	prev_index;
+ 
+-	if (!np->ipv6_ac_list)
+-		return;
+-
+-	rtnl_lock();
++	ASSERT_RTNL();
+ 	pac = np->ipv6_ac_list;
+ 	np->ipv6_ac_list = NULL;
+ 
+@@ -198,6 +195,16 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 		sock_kfree_s(sk, pac, sizeof(*pac));
+ 		pac = next;
+ 	}
++}
++
++void ipv6_sock_ac_close(struct sock *sk)
++{
++	struct ipv6_pinfo *np = inet6_sk(sk);
++
++	if (!np->ipv6_ac_list)
++		return;
++	rtnl_lock();
++	__ipv6_sock_ac_close(sk);
+ 	rtnl_unlock();
+ }
+ 
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -207,6 +207,7 @@ static int do_ipv6_setsockopt(struct soc
+ 
+ 			fl6_free_socklist(sk);
+ 			__ipv6_sock_mc_close(sk);
++			__ipv6_sock_ac_close(sk);
+ 
+ 			/*
+ 			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
+
 
