@@ -2,119 +2,165 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B7AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F695C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D952922CA1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597911822;
-	bh=fwGVCmgPxQ4tMxOoVebfaKdoWjHkC+p6W4oBmOn2pCQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=e3n8Id6G4i7JPdWgXC108TNDJyj4cf26pZxmBQuEZ0BsW0rwKlGBu9xpZwaHJPgWg
-	 whrcIh8ZoDawWypiHMKH9EcuDhGY7XmEM8D3kuQYS7DKCZMqbR2iHSEntqEuQ2zCqJ
-	 GOSJFH8ocs65i6vh2dNgV66/tQ9I1Wkt2/lgzQkg=
+	by mail.kernel.org (Postfix) with ESMTP id 27070207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZPxYklGa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726347AbgHTIXl (ORCPT
+        id S1726435AbgHTIbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:23:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38992 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725824AbgHTIXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:23:38 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8686E22BED;
-        Thu, 20 Aug 2020 08:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597911818;
-        bh=fwGVCmgPxQ4tMxOoVebfaKdoWjHkC+p6W4oBmOn2pCQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k0Qrqpn40gEcXyvKnJpr0UKl58JLXD6w6wg75Lq2H21jh3VFgBAOCOS+kekx5tu9V
-         jsUl78z48aIZGiHBdWd1mOYDpQBTELDITS0xBdrtmERRoFb9QzRIeW0N/YpsPE8jit
-         7HQ7sD1Dxlw1XtG5XGuAiZ1QVR+DwoViOpFp6a28=
-Date:   Thu, 20 Aug 2020 10:23:32 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 25/49] staging: hikey9xx/gpu: do some code cleanups
-Message-ID: <20200820102332.7223d38d@coco.lan>
-In-Reply-To: <CALAqxLV-LaMPKD-ddRM1EehFh+JZfh1eUsKobXgVG9R+q0EF2w@mail.gmail.com>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-        <9fa944021373ec5b82c2c1e118c15d9effe7f964.1597833138.git.mchehab+huawei@kernel.org>
-        <CALAqxLV-LaMPKD-ddRM1EehFh+JZfh1eUsKobXgVG9R+q0EF2w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 20 Aug 2020 04:31:36 -0400
+Received: from mail-bn8nam11on2048.outbound.protection.outlook.com ([40.107.236.48]:6817
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725819AbgHTIbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:31:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jPhQ2FgGNS65rmv39he/tB7A5UQPdVwv13frmgsifVQ4qu56QJdg8Al97UzvDGJcwRz3lYs6z/m9W1C4EPyo4U4iCU5/bkGfZFgJY4oNLrk7rcU5Ap/wlRQMj6Olrguh6rE1cKI9cYoFCQl6j9Bf4S8t20EPcHSc8v9BmACHdl+eBCWh4UB6Kd2iE4E2XuJSBHgjYlldzbt4qs5D4hzam8XC6maqYNwZpNhBR1pcFkiTXprqUwsnqlmVQmJSRDfVZZZfXF+GanfN3MA8lLAxFVfcmOUKDniQB27duUe3hXHE+bUlrs8Yft5XYVaa9yL4PIXQ3IeGMxKwArUBcGHLiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
+ b=iCIqnhQyZ4Jko59qg3BzK1ATuLR3snzeLQbapvrVFNeh+jdYdcRyPIutb8uEmJZ/yZdz0dJszEBHoiBJxjPamrNgmP09uxgwjHOvLHOcuQWNHWSH4ff8y9z7+W4+ZEtSG1/peVslEIWiZHIDOy3wj98zKSejuqS7JggZCxLIioFjya/2g7uSptBj73a8zdbzrujVr9Oy9BE5ExFiOv+WCkXzwP+qOPZBaYWFXGSqQQsl9opFpLZrsJhul01MrAB4dP8tTW5AOa56yuVgMFKjtxktlyQvqyPzFlrsniZrcvDr9WHVtnCD6YWQJ4Jl/HL7NC4QJ8Xswh464yTJ+WhWzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
+ b=ZPxYklGa1qn3IXtiriAqOqXUJxPXC8SGiJhIlfQzOvhEeSc22yrbOwpq/3ulCGSZz81ZVngP/hcZ0bHitTarCRoK8EINyE/HyC2XtHPUK9RE2hs1b2nSgo7SvtFHsxRA6Zw6ilZJx2M8vEcbc8lMar8mWC6YcaJRMZwwZ1Tn/L4=
+Received: from DM3PR11CA0009.namprd11.prod.outlook.com (2603:10b6:0:54::19) by
+ DM6PR02MB4042.namprd02.prod.outlook.com (2603:10b6:5:96::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3283.16; Thu, 20 Aug 2020 08:31:30 +0000
+Received: from CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:0:54:cafe::48) by DM3PR11CA0009.outlook.office365.com
+ (2603:10b6:0:54::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
+ Transport; Thu, 20 Aug 2020 08:31:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT054.mail.protection.outlook.com (10.152.74.100) with Microsoft SMTP
+ Server id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 08:31:30
+ +0000
+Received: from [149.199.38.66] (port=51266 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1k8fyX-0002EY-LW; Thu, 20 Aug 2020 01:31:09 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1k8fys-0007iK-BP; Thu, 20 Aug 2020 01:31:30 -0700
+Received: from [172.19.2.102] (helo=xsjanandash50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <anand.ashok.dumbre@xilinx.com>)
+        id 1k8fym-0007hr-Hm; Thu, 20 Aug 2020 01:31:24 -0700
+From:   Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, michal.simek@xilinx.com, git@xilinx.com,
+        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Subject: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative values
+Date:   Thu, 20 Aug 2020 01:31:22 -0700
+Message-Id: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 03e25842-8734-4377-b613-08d844e37053
+X-MS-TrafficTypeDiagnostic: DM6PR02MB4042:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB404218FE371DCCA3A177EBCBA95A0@DM6PR02MB4042.namprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: taqfh1Wm03lt7+gjo9YWyJqwuMQ7V0mKt8PjbKvBDvzLlMHUmsiIla1Li0G/9UBMc9PDJHu6f/7+cb90S1I74Q7aSUIT1XzqRo360LMYmIpQDmV2cSD8PdMtVwYZouZEvSntWbrUcY5JpgVXqAcLx0+/4ieqDWyHo5tcoyWjCrIBg5LNePiqHudCKHLDOEKp/YyWryT5CrEgUqIh8XkV/ZtBl2UoqKc4vqSmP8PMDj+UZZB40QYF/UHkgevv+VhqtuMC5YZvd7B++7Me2zK3n2JdgWV20ti2GyHItDTLlOxrAepWwbGalALXUTcG6Dgtq07aJsFwJQGGFeEeGFwbN3pTyCttekkGbfVCtiuvJppbRkEChST+Dc4npgePXs9nvdb6snMAll6DDpFo9i3ktQ==
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(376002)(396003)(136003)(39860400002)(346002)(46966005)(81166007)(356005)(36756003)(426003)(70206006)(5660300002)(2906002)(70586007)(7696005)(82310400002)(336012)(26005)(107886003)(186003)(9786002)(316002)(82740400003)(47076004)(8676002)(2616005)(478600001)(8936002)(4326008)(83380400001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 08:31:30.5629
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 03e25842-8734-4377-b613-08d844e37053
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4042
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(added c/c Rob Herring)
+This patch fixes IIO_VAL_FRACTIONAL calculation for negative
+values where the exponent is 0.
 
-Em Wed, 19 Aug 2020 18:53:06 -0700
-John Stultz <john.stultz@linaro.org> escreveu:
+Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+---
+ drivers/iio/industrialio-core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-> On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
-> <mchehab+huawei@kernel.org> wrote:
-> > @@ -376,7 +355,7 @@ static int kirin_drm_platform_resume(struct platform_device *pdev)
-> >  }
-> >
-> >  static const struct of_device_id kirin_drm_dt_ids[] = {
-> > -       { .compatible = "hisilicon,hi3660-dpe",
-> > +       { .compatible = "hisilicon,kirin960-dpe",  
-> 
-> 
-> One issue, elsewhere in your patch stack you still refer to the
-> hisilicon,hi3660-dpe compatible string. This should probably be
-> consistent one way or the other.
+diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-cor=
+e.c
+index f72c2dc..cd43b17 100644
+--- a/drivers/iio/industrialio-core.c
++++ b/drivers/iio/industrialio-core.c
+@@ -554,6 +554,7 @@ static ssize_t __iio_format_value(char *buf, size_t len=
+, unsigned int type,
+ {
+        unsigned long long tmp;
+        int tmp0, tmp1;
++       s64 tmp2;
+        bool scale_db =3D false;
 
-Agreed with regards to consistency.
+        switch (type) {
+@@ -576,10 +577,13 @@ static ssize_t __iio_format_value(char *buf, size_t l=
+en, unsigned int type,
+                else
+                        return snprintf(buf, len, "%d.%09u", vals[0], vals[=
+1]);
+        case IIO_VAL_FRACTIONAL:
+-               tmp =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
++               tmp2 =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
+                tmp1 =3D vals[1];
+-               tmp0 =3D (int)div_s64_rem(tmp, 1000000000, &tmp1);
+-               return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
++               tmp0 =3D (int)div_s64_rem(tmp2, 1000000000, &tmp1);
++               if ((tmp2 < 0) && (tmp0 =3D=3D 0))
++                       return snprintf(buf, len, "-%d.%09u", tmp0, abs(tmp=
+1));
++               else
++                       return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1=
+));
+        case IIO_VAL_FRACTIONAL_LOG2:
+                tmp =3D shift_right((s64)vals[0] * 1000000000LL, vals[1]);
+                tmp0 =3D (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
+--
+2.7.4
 
-It sounds to me that calling those as Kirin 9xx (and the previous one
-as Kirin 620) is better than using the part number.
-
-Here, googling for "Kirin 970" gave about 6.9 million hits, while "Hi3670"
-gave only 75,5K hits.
-
-Kirin 620 has similar results: 6.85 million hits, against 61,9 hits
-for "Hi3620".
-
-With "Kirin 960", the numbers are a lot higher: had 21,4 million hits,
-against 423K hits for "Hi3660".
-
-So, my preference is to use "Kirin 620, 960 and 970" for future changes.
-
--
-
-Currently, there are already some inconsistency, as some places
-use the part number where others use "Kirin xxx" designation,
-when referring to Kirin 620, 960 and 970.
-
-I would love to make this consistent among the Kernel. However,
-I'm not sure if changing "compatible" would be acceptable
-by DT maintainers.
-
-If something like that would be OK, I can prepare a separate
-patchset to be applied at the Kernel.
-
-Thanks,
-Mauro
+This email and any attachments are intended for the sole use of the named r=
+ecipient(s) and contain(s) confidential information that may be proprietary=
+, privileged or copyrighted under applicable law. If you are not the intend=
+ed recipient, do not read, copy, or forward this email message or any attac=
+hments. Delete this email message and any attachments immediately.
