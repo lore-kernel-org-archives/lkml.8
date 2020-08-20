@@ -2,254 +2,137 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17951C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8C12076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1E2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:00:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="E3Wi6uyR"
+	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="P1Mt5cG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbgHTIAA (ORCPT
+        id S1726759AbgHTIAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:00:00 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:37647 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbgHTH76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:59:58 -0400
-IronPort-SDR: S6y16wQS5NJBnXulz4btA7UCBh79HkIzZI17Y9xvS1XsOq8EksHElQGsSmNoESO6VlfKANb9kH
- 6Lyx+apUEIx4SaKEex+tBg5m2bGPN7nixdgKdPAvAhlIB2qZogpFnhkP7lPPzhf/zaQkgLV7gP
- hIndeArQ+X9Ar2HhI5aNWM7Ky8rB+zppjbpp1Y24aArwLGnwWd5NzGDp/adpBf4ZvdMYgkyKGM
- UyU/+B+AZDx8DJ78A1U/qJUWsXIVr0yTqycJIcSa6e/7DUo8HZLr4B7/uhg/hJ6FVh1yJExKTv
- d1c=
-X-IronPort-AV: E=Sophos;i="5.76,332,1592863200"; 
-   d="scan'208";a="13534484"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 20 Aug 2020 09:59:55 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 20 Aug 2020 09:59:55 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 20 Aug 2020 09:59:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1597910395; x=1629446395;
-  h=from:to:cc:subject:date:message-id;
-  bh=HO7u0shBOUMf7ftO844jtABJD5UXzGgbOj7cMvvZQfU=;
-  b=E3Wi6uyRiE61bB02/E+JMx4T6X3moZ8NZ8NpyGZXAdzx7Nc62XYLsTJq
-   i3/wlEZnjX35SZ0tGhvEoZtvImihUqg+3axPp3FIpgScjFQ/VZrogsOxU
-   dyBlw1UrAijX1zdz37F52M6Bfgc4ZJ1YlSd31wPXLAgfLuQDS6b6ypI8k
-   xPgxHIrYRepzF1W4xMuu++DaalDexIhXkxyU7xj9Gr29lyYYX1MHIAjrM
-   ImCQZ27WJJr4cwHoFwSLC2RTnwgSB4jG4m/wSFvebZHvDRvwJVuyc9q+/
-   11VgFrwAc/gBIRQZz5w0Mc0sbv8vFlgrQgXbLqvMz4wil0L6aZ/G9B3sD
-   g==;
-IronPort-SDR: v5vSJDwBqSysn0qyXQZJu+YCO7/gv7KPTP1yuc6r9oJsXKZGg99x4SNHGtiML3cp6IMrekb9RO
- q1D3ewbDpYKRv8f4BBB8owAzZyBPMj0OojB845wrxCYaM3NjiGWmXqquYCQZzRpLlHTguEMz+3
- 7NSzm5Cmj3mYiIYk9dU+L7Zr1LO+rISJyxRLyZVEw06VceCmlW8B2TVi4eKtFyf/bvhrcWoP8X
- ZhuWZTulXsUoZ37ycsfL25Nkr5cascikQZtRjqBdHCVYGa0s9dDkGzcDbuvJyiPDgceQ56bRug
- nYc=
-X-IronPort-AV: E=Sophos;i="5.76,332,1592863200"; 
-   d="scan'208";a="13534483"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 20 Aug 2020 09:59:55 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 66DAE280065;
-        Thu, 20 Aug 2020 09:59:55 +0200 (CEST)
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH mmc-next v2] mmc: allow setting slot index via device tree alias
-Date:   Thu, 20 Aug 2020 09:59:49 +0200
-Message-Id: <20200820075949.19133-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Aug 2020 04:00:38 -0400
+Received: from mail-bn8nam11on2082.outbound.protection.outlook.com ([40.107.236.82]:56303
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbgHTIAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:00:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i2Fr039mhkjv0h8qZyoDZAp06p4B+2KT5AehmeSQLBRGozRFW/vurLLEOJdKrt/5gr/3kVsm16UAFcGmmn6Nc2hRwasAKe4Jth84VNwTz0IBu1hJf9v5fEIBBUrJHkyXFNpznGZ2521y7Lys4RKWmJB3eTF6WIoN/78FikCqVhqippYa+MC3Our7MeZnezwPWx5VLUIV5f0gO5ougDwcbhCQdAp/sUsAfs3U2H2XzNubp61kCigJ0avzuEiWn5JAw1G+aRPNUS0XpKxaAYChO3SYQCb0ZUpHmR+zx2lJv8UUUQNFOPXsE5eB3Wg1+kNa6jN4O2hZKgFhWNviJmmSIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XEE/uf+lGN6v0rd4q1AgcaV70h711P2y/1/OScSbPjY=;
+ b=djLWhHmfutmdGUY6XzTAov9RvO0MvnXWzj/yVTu8BmXeeVctO6DlvAllPQGPtiXsFuuVCn7YafBoJ7ScQ9kx6R5oqX18lVZlfXRR3tMe3LI2VWqFVD1hXw88DMnMADIVp9hh7EDu9wOrl+Sjtx1cK+EYOhNum5rBo8OMA7yeFXly16gz+uLshLsNKiU4PWJBD+iRt/Z8FtWu8DsTWstyiTP4zVXsW48iTq3iXM1TkX/0J/rUxfS4n9tSVGv/Yrhmo7Q0qgpxsHxd2CF67aWyd17A32jeEGJCcyfpe/R4A3SoEMD1G3VzSq42BymbTB4Rdn/CEgoJKATzt5gmeIIVfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synaptics.com; dmarc=pass action=none
+ header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XEE/uf+lGN6v0rd4q1AgcaV70h711P2y/1/OScSbPjY=;
+ b=P1Mt5cG5TqJNkolzFgMkoGHrzuTvrt+f9G5/hDf1/+OhjVB8dHO3KWmgM/EtWALgzPeiyrLj4q2TOlugXl0HosT2rVB4e/FqQWPfQTAcAPxrNbYM73DcjChiZDkBxfguKEU+8pmblaVIyj9iDc7N5Jf3WOlOOgm4WwZvIgpBKmU=
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
+Received: from BN7PR03MB4547.namprd03.prod.outlook.com (2603:10b6:408:9::22)
+ by BN7PR03MB4563.namprd03.prod.outlook.com (2603:10b6:408:36::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 20 Aug
+ 2020 08:00:33 +0000
+Received: from BN7PR03MB4547.namprd03.prod.outlook.com
+ ([fe80::3cda:7634:5802:df5f]) by BN7PR03MB4547.namprd03.prod.outlook.com
+ ([fe80::3cda:7634:5802:df5f%7]) with mapi id 15.20.3305.024; Thu, 20 Aug 2020
+ 08:00:33 +0000
+Date:   Thu, 20 Aug 2020 16:00:10 +0800
+From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Icenowy Zheng <icenowy@aosc.io>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 10/12] regulator: stm32-pwr: Fix W=1 build warning when
+ CONFIG_OF=n
+Message-ID: <20200820155903.26c152b7@xhacker.debian>
+In-Reply-To: <20200820152926.42c48840@xhacker.debian>
+References: <20200820152926.42c48840@xhacker.debian>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: HK2PR04CA0082.apcprd04.prod.outlook.com
+ (2603:1096:202:15::26) To BN7PR03MB4547.namprd03.prod.outlook.com
+ (2603:10b6:408:9::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by HK2PR04CA0082.apcprd04.prod.outlook.com (2603:1096:202:15::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 08:00:29 +0000
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+X-Originating-IP: [124.74.246.114]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 3dd56ef4-ade7-46fd-e220-08d844df1cf4
+X-MS-TrafficTypeDiagnostic: BN7PR03MB4563:
+X-Microsoft-Antispam-PRVS: <BN7PR03MB4563D642641C2CAEBD7D7B49ED5A0@BN7PR03MB4563.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:449;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: JCtfxuBy+q9q24BnXbwJuHnTz6vzpWu42shqLcJk7mvyR8YvPu5GFLPVaRvTjke8v86AWxGNuiuFl9gdzJ+LTSz3dwjXpBEqLiRD8PVTuppUbGK1vcP0OaA1R6YXm4E1szjJtR+o0FYeRNkhIp782vPHaFglPbfrxX9+Qiv73Mkf325qoOZ0X1PWESvYPcWDuKOcGhLeecD3lcMIqeZh6I4R1MSaJv6+b8UkYLu0fPGiaIhYuNaibjy8dxjCzf6hgFmcbxUztGOhgXDUbcOEgPU9xs9OQ6osgjHEEs5V9+4c7RGcslW1zCFLVQGU1bDeJJwH6WqD9/DGCmy573g/qAK5gxuSj8BA+ahsFzuyycrIl3eZcnHIuj+0iHLIzL4D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR03MB4547.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39860400002)(396003)(346002)(136003)(376002)(1076003)(4744005)(4326008)(2906002)(5660300002)(6666004)(478600001)(956004)(9686003)(83380400001)(26005)(316002)(86362001)(52116002)(8676002)(66946007)(16576012)(66556008)(6486002)(110011004)(8936002)(66476007)(110136005)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ySUn+f6tExyRX/6bY/1uU6UIDG0xwcdWzTOGKUR60/YGB0pZIGaf+7qT4ponQ4imirzzoynYK2BoD0dsQAlZ+vx0fT89R83l125uW7gH2V7TqREujhxVfT0zCr8BXDv10R0PuNzj4H+eRllOIvi9yoeY/pUYH2dhRNM+EjR17MZJQ1MjwBE2enRu4A+qr37Z3yXzagP23NyRJpC8mSDlDm5l0u5q2OLNCudqKqyd2/NNz6xF8GN+5x72+EyZYw+yYbLi0rcn3hLH8/c+0pBnLzOAQh9FxFlt98nhfCyuzNorZAVPThA4NZSL23iaov8aK+JwYy5W7MKZhxKxeElJ6XdFIUmPDkR37SC5vITcnCpTPCQbYnGc1c8lJiHJPCSUc4W3k1oH69+ty8mMqQzo76QPddRTNAwesTUlgA3BvNGMBJ5Rp5tDUIueCNxwLsM+X7CYxFLbHKsJlolXp3D+tJd9kidypmIiVvDRiZAN54Zog1nTKPjKR1T68Tb8zAsfsX0o5b0Hx0szUEadSMKE9j4lE6kMSe1pGuYK0xCxyHF9ueIDUqLduQ46fWc3bJ8J75yy2BitBbSXApuTk5kMkdqPo9StnVv5ULZexkTq+yyWPrz5AJcl7uy6QsngXvUJGBoMo3q3aUkWDmDfJaIA/A==
+X-OriginatorOrg: synaptics.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3dd56ef4-ade7-46fd-e220-08d844df1cf4
+X-MS-Exchange-CrossTenant-AuthSource: BN7PR03MB4547.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 08:00:33.0539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9vzWRZCaCqE2P7PQNcmsWXAy38Tb5k1O0EB18+dOYYu3BhbolcmzVp70R5ONfcssS+VeayG0iK7Tu4C2/ajmVA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB4563
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As with GPIO, UART and others, allow specifying the device index via the
-aliases node in the device tree.
+Fix below warning when CONFIG_OF=3Dn:
 
-On embedded devices, there is often a combination of removable (e.g.
-SD card) and non-removable MMC devices (e.g. eMMC).
-Therefore the index might change depending on
+drivers/regulator/stm32-pwr.c:169:34: warning: =E2=80=98stm32_pwr_of_match=
+=E2=80=99 defined but not used [-Wunused-const-variable=3D]
+  169 | static const struct of_device_id stm32_pwr_of_match[] =3D {
+      |                                  ^~~~~~~~~~~~~~~~~~
 
-* host of removable device
-* removable card present or not
-
-This makes it difficult to hardcode the root device, if it is on the
-non-removable device. E.g. if SD card is present eMMC will be mmcblk1,
-if SD card is not present at boot, eMMC will be mmcblk0.
-
-All indices defined in the aliases node will be reserved for use by the
-respective MMC device, moving the indices of devices that don't have an
-alias up into the non-reserved range. If the aliases node is not found,
-the driver will act as before.
-
-This is a rebased and slightly cleaned up version of
-https://www.spinics.net/lists/linux-mmc/msg26588.html .
-
-Based-on-patch-by: Sascha Hauer <s.hauer@pengutronix.de>
-Link: https://lkml.org/lkml/2020/8/5/194
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
+ drivers/regulator/stm32-pwr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v2: fix missing symbols for modular mmcblock
-
- drivers/mmc/core/block.c | 13 +++++++++++--
- drivers/mmc/core/core.c  | 40 ++++++++++++++++++++++++++++++++++++++++
- drivers/mmc/core/core.h  |  3 +++
- drivers/mmc/core/host.c  | 15 +++++++++++++--
- 4 files changed, 67 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/mmc/core/block.c b/drivers/mmc/core/block.c
-index 7896952de1ac..4620afaf0e50 100644
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -38,6 +38,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/idr.h>
- #include <linux/debugfs.h>
-+#include <linux/of.h>
- 
- #include <linux/mmc/ioctl.h>
- #include <linux/mmc/card.h>
-@@ -2260,9 +2261,17 @@ static struct mmc_blk_data *mmc_blk_alloc_req(struct mmc_card *card,
- 					      int area_type)
- {
- 	struct mmc_blk_data *md;
--	int devidx, ret;
-+	int rsvidx, devidx = -1, ret;
-+
-+	rsvidx = mmc_get_reserved_index(card->host);
-+	if (rsvidx >= 0)
-+		devidx = ida_simple_get(&mmc_blk_ida, rsvidx, rsvidx + 1,
-+					GFP_KERNEL);
-+	if (devidx < 0)
-+		devidx = ida_simple_get(&mmc_blk_ida,
-+					mmc_first_nonreserved_index(),
-+					max_devices, GFP_KERNEL);
- 
--	devidx = ida_simple_get(&mmc_blk_ida, 0, max_devices, GFP_KERNEL);
- 	if (devidx < 0) {
- 		/*
- 		 * We get -ENOSPC because there are no more any available
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 8ccae6452b9c..5bce281a5faa 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -2419,10 +2419,50 @@ void mmc_unregister_pm_notifier(struct mmc_host *host)
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index e0e627b0106e..3d5cd954c391 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -166,11 +166,13 @@ static int stm32_pwr_regulator_probe(struct platform_=
+device *pdev)
+ 	return ret;
  }
- #endif
- 
-+static int mmc_max_reserved_idx = -1;
-+
-+/**
-+ * mmc_first_nonreserved_index() - get the first index that is not reserved
-+ */
-+int mmc_first_nonreserved_index(void)
-+{
-+	return mmc_max_reserved_idx + 1;
-+}
-+EXPORT_SYMBOL(mmc_first_nonreserved_index);
-+
-+/**
-+ * mmc_get_reserved_index() - get the index reserved for this MMC host
-+ *
-+ * Returns:
-+ *   The index reserved for this host on success,
-+ *   negative error if no index is reserved for this host
-+ */
-+int mmc_get_reserved_index(struct mmc_host *host)
-+{
-+	return of_alias_get_id(host->parent->of_node, "mmc");
-+}
-+EXPORT_SYMBOL(mmc_get_reserved_index);
-+
-+static void __init mmc_of_reserve_idx(void)
-+{
-+	int max;
-+
-+	max = of_alias_get_highest_id("mmc");
-+	if (max < 0)
-+		return;
-+
-+	mmc_max_reserved_idx = max;
-+
-+	pr_debug("MMC: reserving %d slots for OF aliases\n",
-+		 mmc_max_reserved_idx + 1);
-+}
-+
- static int __init mmc_init(void)
- {
- 	int ret;
- 
-+	mmc_of_reserve_idx();
-+
- 	ret = mmc_register_bus();
- 	if (ret)
- 		return ret;
-diff --git a/drivers/mmc/core/core.h b/drivers/mmc/core/core.h
-index 575ac0257af2..6aef6cf4e90f 100644
---- a/drivers/mmc/core/core.h
-+++ b/drivers/mmc/core/core.h
-@@ -79,6 +79,9 @@ int mmc_attach_mmc(struct mmc_host *host);
- int mmc_attach_sd(struct mmc_host *host);
- int mmc_attach_sdio(struct mmc_host *host);
- 
-+int mmc_first_nonreserved_index(void);
-+int mmc_get_reserved_index(struct mmc_host *host);
-+
- /* Module parameters */
- extern bool use_spi_crc;
- 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index ce43f7573d80..386e15afde83 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -387,6 +387,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- {
- 	int err;
- 	struct mmc_host *host;
-+	int alias_id, min_idx, max_idx;
- 
- 	host = kzalloc(sizeof(struct mmc_host) + extra, GFP_KERNEL);
- 	if (!host)
-@@ -395,7 +396,18 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 	/* scanning will be enabled when we're ready */
- 	host->rescan_disable = 1;
- 
--	err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
-+	host->parent = dev;
-+
-+	alias_id = mmc_get_reserved_index(host);
-+	if (alias_id >= 0) {
-+		min_idx = alias_id;
-+		max_idx = alias_id + 1;
-+	} else {
-+		min_idx = mmc_first_nonreserved_index();
-+		max_idx = 0;
-+	}
-+
-+	err = ida_simple_get(&mmc_host_ida, min_idx, max_idx, GFP_KERNEL);
- 	if (err < 0) {
- 		kfree(host);
- 		return NULL;
-@@ -406,7 +418,6 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 	dev_set_name(&host->class_dev, "mmc%d", host->index);
- 	host->ws = wakeup_source_register(NULL, dev_name(&host->class_dev));
- 
--	host->parent = dev;
- 	host->class_dev.parent = dev;
- 	host->class_dev.class = &mmc_host_class;
- 	device_initialize(&host->class_dev);
--- 
-2.17.1
+=20
++#ifdef CONFIG_OF
+ static const struct of_device_id stm32_pwr_of_match[] =3D {
+ 	{ .compatible =3D "st,stm32mp1,pwr-reg", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
++#endif
+=20
+ static struct platform_driver stm32_pwr_driver =3D {
+ 	.probe =3D stm32_pwr_regulator_probe,
+--=20
+2.28.0
 
