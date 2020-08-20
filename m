@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0876C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6A3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A734208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A291208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929803;
-	bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+	s=default; t=1597929805;
+	bh=IiYFq2Urt7CVFWhnRx7Sf4p1sOBGWy+A0gkv82MJwEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKHDcWJctxGsuOMRAKhcW66MF2o8id06ZGgPp9wrHQHEwpQ4G30puPUPvkT0OMf0p
-	 AlDZwECAJcyy1yUOLAFFuj3g3/eP+SxcRaBvw1eKETzF9ocWodxlKc0gyXNfMgi35c
-	 eO+UBXYBkz2L0vFwbNmJYBqL2/e8YiSRmONixfxA=
+	b=gKBZPElm4Pm5e85jBtZSO0DhCUwIPDAU1vObGD83cY0NbXEpqbukY5TKeVdXamF9J
+	 RMv3tC2VuUU6JeD7ivQJtANn3tW9rH9Ox0EogkDuj6CyjXACAc5MiZN/8l/5x/Wmsg
+	 +yjqIcH5lu8zlgMRS3eTetRG0a8dxXZORn6gqYPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgHTNXU (ORCPT
+        id S1730790AbgHTNXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:23:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:23:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbgHTJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:10 -0400
+        id S1728444AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4D522C9F;
-        Thu, 20 Aug 2020 09:33:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79135207DE;
+        Thu, 20 Aug 2020 09:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916019;
-        bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+        s=default; t=1597916040;
+        bh=IiYFq2Urt7CVFWhnRx7Sf4p1sOBGWy+A0gkv82MJwEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0K6eMO3IBhmyJfVKc1PmZGMxR9m5gTy+naIrEj7vSUDgKB2Ki2AHXXT5LdhaeUGd
-         vXtxb9JBgv9YMdoBRuMZm7etqlGt8v+Kt4WZFdQCly7/Vr27M4DlkgtKy0TdFX6J2E
-         sXQbpdvT+YAcOmjtFxHGFEOYiLmJfj3exO5ZONRM=
+        b=R+BOCZgE/zNav6UOrPkEY+xgp3krx7x6gVbuYJaglHCmWiSMITI1SoJzdKCiQ6MQO
+         /TxSefcLELRozIY/+McKC2HjWJffReFOVbivIpzrhYKzPIL75KpAdzcV1GvAOpMxtq
+         6effkBDWSsluNXkbku0skZewKoLG+/rPsFzjLQm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 215/232] perf bench mem: Always memset source before memcpy
-Date:   Thu, 20 Aug 2020 11:21:06 +0200
-Message-Id: <20200820091623.210335929@linuxfoundation.org>
+Subject: [PATCH 5.8 193/232] perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
+Date:   Thu, 20 Aug 2020 11:20:44 +0200
+Message-Id: <20200820091622.140479237@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -66,103 +65,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
+[ Upstream commit 1101c872c8c7869c78dc106ae820040f36807eda ]
 
-For memcpy, the source pages are memset to zero only when --cycles is
-used.  This leads to wildly different results with or without --cycles,
-since all sources pages are likely to be mapped to the same zero page
-without explicit writes.
+We received an error report that perf-record caused 'Segmentation fault'
+on a newly system (e.g. on the new installed ubuntu).
 
-Before this fix:
+  (gdb) backtrace
+  #0  __read_once_size (size=4, res=<synthetic pointer>, p=0x14) at /root/0-jinyao/acme/tools/include/linux/compiler.h:139
+  #1  atomic_read (v=0x14) at /root/0-jinyao/acme/tools/include/asm/../../arch/x86/include/asm/atomic.h:28
+  #2  refcount_read (r=0x14) at /root/0-jinyao/acme/tools/include/linux/refcount.h:65
+  #3  perf_mmap__read_init (map=map@entry=0x0) at mmap.c:177
+  #4  0x0000561ce5c0de39 in perf_evlist__poll_thread (arg=0x561ce68584d0) at util/sideband_evlist.c:62
+  #5  0x00007fad78491609 in start_thread (arg=<optimized out>) at pthread_create.c:477
+  #6  0x00007fad7823c103 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
 
-$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
-  mem memcpy -s 1024MB -l 100 -f default"
-$ $cmd
+The root cause is, evlist__add_bpf_sb_event() just returns 0 if
+HAVE_LIBBPF_SUPPORT is not defined (inline function path). So it will
+not create a valid evsel for side-band event.
 
-         2,935,826      LLC-loads
-       3.821677452 seconds time elapsed
+But perf-record still creates BPF side band thread to process the
+side-band event, then the error happpens.
 
-$ $cmd --cycles
+We can reproduce this issue by removing the libelf-dev. e.g.
+1. apt-get remove libelf-dev
+2. perf record -a -- sleep 1
 
-       217,533,436      LLC-loads
-       8.616725985 seconds time elapsed
+  root@test:~# ./perf record -a -- sleep 1
+  perf: Segmentation fault
+  Obtained 6 stack frames.
+  ./perf(+0x28eee8) [0x5562d6ef6ee8]
+  /lib/x86_64-linux-gnu/libc.so.6(+0x46210) [0x7fbfdc65f210]
+  ./perf(+0x342e74) [0x5562d6faae74]
+  ./perf(+0x257e39) [0x5562d6ebfe39]
+  /lib/x86_64-linux-gnu/libpthread.so.0(+0x9609) [0x7fbfdc990609]
+  /lib/x86_64-linux-gnu/libc.so.6(clone+0x43) [0x7fbfdc73b103]
+  Segmentation fault (core dumped)
 
-After this fix:
+To fix this issue,
 
-$ $cmd
+1. We either install the missing libraries to let HAVE_LIBBPF_SUPPORT
+   be defined.
+   e.g. apt-get install libelf-dev and install other related libraries.
 
-       214,459,686      LLC-loads
-       8.674301124 seconds time elapsed
+2. Use this patch to skip the side-band event setup if HAVE_LIBBPF_SUPPORT
+   is not set.
 
-$ $cmd --cycles
+Committer notes:
 
-       214,758,651      LLC-loads
-       8.644480006 seconds time elapsed
+The side band thread is not used just with BPF, it is also used with
+--switch-output-event, so narrow the ifdef to the BPF specific part.
 
-Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Fixes: 23cbb41c939a ("perf record: Move side band evlist setup to separate routine")
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel@axis.com
-Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
+Link: http://lore.kernel.org/lkml/20200805022937.29184-1-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/mem-functions.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ tools/perf/builtin-record.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index 9235b76501be8..19d45c377ac18 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -223,12 +223,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
- 	return 0;
- }
- 
--static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
- {
--	u64 cycle_start = 0ULL, cycle_end = 0ULL;
--	memcpy_t fn = r->fn.memcpy;
--	int i;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index a37e7910e9e90..23ea934f30b34 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1489,7 +1489,7 @@ static int record__setup_sb_evlist(struct record *rec)
+ 		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
+ 		rec->thread_id = pthread_self();
+ 	}
 -
- 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
- 	memset(src, 0, size);
- 
-@@ -237,6 +233,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
- 	 * to not measure page fault overhead:
- 	 */
- 	fn(dst, src, size);
-+}
-+
-+static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+{
-+	u64 cycle_start = 0ULL, cycle_end = 0ULL;
-+	memcpy_t fn = r->fn.memcpy;
-+	int i;
-+
-+	memcpy_prefault(fn, size, src, dst);
- 
- 	cycle_start = get_cycles();
- 	for (i = 0; i < nr_loops; ++i)
-@@ -252,11 +257,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
- 	memcpy_t fn = r->fn.memcpy;
- 	int i;
- 
--	/*
--	 * We prefault the freshly allocated memory range here,
--	 * to not measure page fault overhead:
--	 */
--	fn(dst, src, size);
-+	memcpy_prefault(fn, size, src, dst);
- 
- 	BUG_ON(gettimeofday(&tv_start, NULL));
- 	for (i = 0; i < nr_loops; ++i)
++#ifdef HAVE_LIBBPF_SUPPORT
+ 	if (!opts->no_bpf_event) {
+ 		if (rec->sb_evlist == NULL) {
+ 			rec->sb_evlist = evlist__new();
+@@ -1505,7 +1505,7 @@ static int record__setup_sb_evlist(struct record *rec)
+ 			return -1;
+ 		}
+ 	}
+-
++#endif
+ 	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
+ 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
+ 		opts->no_bpf_event = true;
 -- 
 2.25.1
 
