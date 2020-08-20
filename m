@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B26C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA37AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84EFC2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B334207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916324;
-	bh=qODI7FfI8D79fxtK+8MRpGep8DMuZaOYzP9AJdDA99k=;
+	s=default; t=1597916331;
+	bh=F/lWx3rCyAx0QUIFhY6nhve4Bh0dW3+M/Nm1ZT3P9w8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c8fbL09mjmIVm/CU8F8nb/K81FLh/Egr7gBFatjpZi5/rndqYR7dCvwi46HrRUaFG
-	 7T+uncztCN0vwsnUBWhAtiJ44FaK30uFxPgaT0Nx4+B+YDaAqGYfzmBzLWe1UNdcKb
-	 3YjI8HyHb9iLbfgRDpJ78SkFD78YjaWOG1sz7Ous=
+	b=u+I8gZxCKpHnnnF26EIKPufXcSnMvIpTw6MwcFsR/JuMUdYoGLa1UB3j8b7hYHRAt
+	 OvJBwpzdExDLuoAkce8P9O6PNhJC/1jEcz2vdHX6hmA++1ViwwJiNtxauyoXrXCHsm
+	 AesoCuuFvg55sSNHmlzGJ+vLFY1LNIfWRbWjXGbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgHTJil (ORCPT
+        id S1728898AbgHTJiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:38:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55972 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:38:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgHTJiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:22 -0400
+        id S1728837AbgHTJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74A5B208E4;
-        Thu, 20 Aug 2020 09:38:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB2520724;
+        Thu, 20 Aug 2020 09:38:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916302;
-        bh=qODI7FfI8D79fxtK+8MRpGep8DMuZaOYzP9AJdDA99k=;
+        s=default; t=1597916307;
+        bh=F/lWx3rCyAx0QUIFhY6nhve4Bh0dW3+M/Nm1ZT3P9w8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7WNUcPoGwdpfV+ll0q6Y87SiyBQk7mqwj3cn7/Gx7j8bPL3Ol2nu2V1+qLcpnsP5
-         NTqmJiydC9j0gl7it2KNDtmGIydvfaMe1yhc03iW+KvMvICHbrWBTP7L/ncIpNzNG5
-         fUaPhE+3DLaqeDMBWEnbSjFrdCj7PUnVTu49mHV0=
+        b=N8j/evRkFu2XMgES6eeSQdtQk3yyl6g/Ag8/A5DtK2nqwRzm+an5yjbPRKZwHET9H
+         bM4MmuQiXbFSK5pgDem9Ucj+asi9tshEFYoO3as/5ud9Rm9aJ9IS14Wh/C3AzlxBZ/
+         Mc5LmyLY0P6yhD8xedPvZc+mqPAwjuJZb1ltIFdI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.7 081/204] watchdog: f71808e_wdt: remove use of wrong watchdog_info option
-Date:   Thu, 20 Aug 2020 11:19:38 +0200
-Message-Id: <20200820091610.388391556@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.7 083/204] ceph: set sec_context xattr on symlink creation
+Date:   Thu, 20 Aug 2020 11:19:40 +0200
+Message-Id: <20200820091610.486448645@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,48 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Jeff Layton <jlayton@kernel.org>
 
-commit 802141462d844f2e6a4d63a12260d79b7afc4c34 upstream.
+commit b748fc7a8763a5b3f8149f12c45711cd73ef8176 upstream.
 
-The flags that should be or-ed into the watchdog_info.options by drivers
-all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
-driver's watchdog_ops has a usable set_timeout.
+Symlink inodes should have the security context set in their xattrs on
+creation. We already set the context on creation, but we don't attach
+the pagelist. The effect is that symlink inodes don't get an SELinux
+context set on them at creation, so they end up unlabeled instead of
+inheriting the proper context. Make it do so.
 
-WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
-equals:
-
-   WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
-   WDIOF_MAGICCLOSE | 0xc0045000
-
-These were so far indicated to userspace on WDIOC_GETSUPPORT.
-As the driver has not yet been migrated to the new watchdog kernel API,
-the constant can just be dropped without substitute.
-
-Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for Fintek F71808E and F71882FG")
 Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-4-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/f71808e_wdt.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/ceph/dir.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -690,8 +690,7 @@ static int __init watchdog_init(int sioa
- 	 * into the module have been registered yet.
- 	 */
- 	watchdog.sioaddr = sioaddr;
--	watchdog.ident.options = WDIOC_SETTIMEOUT
--				| WDIOF_MAGICCLOSE
-+	watchdog.ident.options = WDIOF_MAGICCLOSE
- 				| WDIOF_KEEPALIVEPING
- 				| WDIOF_CARDRESET;
- 
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -924,6 +924,10 @@ static int ceph_symlink(struct inode *di
+ 	req->r_num_caps = 2;
+ 	req->r_dentry_drop = CEPH_CAP_FILE_SHARED | CEPH_CAP_AUTH_EXCL;
+ 	req->r_dentry_unless = CEPH_CAP_FILE_EXCL;
++	if (as_ctx.pagelist) {
++		req->r_pagelist = as_ctx.pagelist;
++		as_ctx.pagelist = NULL;
++	}
+ 	err = ceph_mdsc_do_request(mdsc, dir, req);
+ 	if (!err && !req->r_reply_info.head->is_dentry)
+ 		err = ceph_handle_notrace_create(dir, dentry);
 
 
