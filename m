@@ -2,52 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 104CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3F7F207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79264207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928523;
-	bh=TR0u0Tg/4wUTCtl8JfcQ5s5qtVO/WCoEmg9siCooIaY=;
+	s=default; t=1597928529;
+	bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v42PvopGuVl/pNUXDBCqbiDz+51i0rDXP+zvrlLmivzJU/BjGYN/qUcbmUHjnyK6b
-	 wJTt2GKTnFHuvzMkuVOFGvsDJZTtbX73yoHYCbLm3wJpygGGhfBE6aiXm4CxrlO8QB
-	 feZ5vqbZLg5VqCVprEFBa4NielCH6jUtAyU8OeM4=
+	b=XjLC0Uh6C6rn/FhgFIV8pBpAoYqP/fDxGJ8tNGgZ8AbusS9SGsptGLbZTBgjWEXus
+	 BRVlr9RJvaQkvfNgY/8WbOLT/GwhAAaHAt9iYR4+PRcCI5mJkwXXvXMaTXAWANqRp/
+	 f5zBaHdOgNCcU4769NPOJcuHhSoFTJdFPTPxnz84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgHTNCC (ORCPT
+        id S1728656AbgHTJkY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:02:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729032AbgHTJkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:35 -0400
+        id S1729017AbgHTJkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC3D2075E;
-        Thu, 20 Aug 2020 09:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEDA4207DE;
+        Thu, 20 Aug 2020 09:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916435;
-        bh=TR0u0Tg/4wUTCtl8JfcQ5s5qtVO/WCoEmg9siCooIaY=;
+        s=default; t=1597916417;
+        bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tbp/Yf8zqSmf56Wx7HHTFgQRRrK9mi41I/UP5n3dUm74nDxo/GHPJ1K7YQQuSAV5x
-         lTR9p2ViYmyBcbzVDA/kmhyN0mPwC4miDbYHvgCCf2Y/VJadn1ehH3wqrGWcf9xDKl
-         30go38LluMgcrEacVtcLtLYm1RcQZ8tuJPi3iI3g=
+        b=i2Hifk9DLuxN66ULb6aMdkiHooHZ3ULI/0wxxLzn+5IoofTPpdcu/JU2HtlL6J2Fw
+         V2RDaVmzg9r+Vs2PM88SZTnqKfunO+nJcLc+wQNPx7CuAGZhtiULHSYFaLRzK6n7GU
+         fHYTsDKuzG7uizBnz8g15jxqzL6JO3Jrwl3ThwzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5.7 096/204] remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before load
-Date:   Thu, 20 Aug 2020 11:19:53 +0200
-Message-Id: <20200820091611.127579684@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 119/204] USB: serial: ftdi_sio: fix break and sysrq handling
+Date:   Thu, 20 Aug 2020 11:20:16 +0200
+Message-Id: <20200820091612.243500483@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,61 +59,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 135b9e8d1cd8ba5ac9ad9bcf24b464b7b052e5b8 upstream.
+[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
 
-The following mem abort is observed when one of the modem blob firmware
-size exceeds the allocated mpss region. Fix this by restricting the copy
-size to segment size using request_firmware_into_buf before load.
+Only the last NUL in a packet should be flagged as a break character,
+for example, to avoid dropping unrelated characters when IGNBRK is set.
 
-Err Logs:
-Unable to handle kernel paging request at virtual address
-Mem abort info:
-...
-Call trace:
-  __memcpy+0x110/0x180
-  rproc_start+0xd0/0x190
-  rproc_boot+0x404/0x550
-  state_store+0x54/0xf8
-  dev_attr_store+0x44/0x60
-  sysfs_kf_write+0x58/0x80
-  kernfs_fop_write+0x140/0x230
-  vfs_write+0xc4/0x208
-  ksys_write+0x74/0xf8
-...
+Also make sysrq work by consuming the break character instead of having
+it immediately cancel the sysrq request, and by not processing it
+prematurely to avoid triggering a sysrq based on an unrelated character
+received in the same packet (which was received *before* the break).
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200722201047.12975-3-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note that the break flag can be left set also for a packet received
+immediately following a break and that and an ending NUL in such a
+packet will continue to be reported as a break as there's no good way to
+tell it apart from an actual break.
 
+Tested on FT232R and FT232H.
+
+Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1145,15 +1145,14 @@ static int q6v5_mpss_load(struct q6v5 *q
- 		} else if (phdr->p_filesz) {
- 			/* Replace "xxx.xxx" with "xxx.bxx" */
- 			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
--			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
-+			ret = request_firmware_into_buf(&seg_fw, fw_name, qproc->dev,
-+							ptr, phdr->p_filesz);
- 			if (ret) {
- 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
- 				iounmap(ptr);
- 				goto release_firmware;
- 			}
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 33f1cca7eaa61..07b146d7033a6 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2483,6 +2483,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		struct ftdi_private *priv, unsigned char *buf, int len)
+ {
+ 	unsigned char status;
++	bool brkint = false;
+ 	int i;
+ 	char flag;
  
--			memcpy(ptr, seg_fw->data, seg_fw->size);
--
- 			release_firmware(seg_fw);
- 		}
+@@ -2534,13 +2535,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	 */
+ 	flag = TTY_NORMAL;
+ 	if (buf[1] & FTDI_RS_ERR_MASK) {
+-		/* Break takes precedence over parity, which takes precedence
+-		 * over framing errors */
+-		if (buf[1] & FTDI_RS_BI) {
+-			flag = TTY_BREAK;
++		/*
++		 * Break takes precedence over parity, which takes precedence
++		 * over framing errors. Note that break is only associated
++		 * with the last character in the buffer and only when it's a
++		 * NUL.
++		 */
++		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
+ 			port->icount.brk++;
+-			usb_serial_handle_break(port);
+-		} else if (buf[1] & FTDI_RS_PE) {
++			brkint = true;
++		}
++		if (buf[1] & FTDI_RS_PE) {
+ 			flag = TTY_PARITY;
+ 			port->icount.parity++;
+ 		} else if (buf[1] & FTDI_RS_FE) {
+@@ -2556,8 +2561,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
  
+ 	port->icount.rx += len - 2;
+ 
+-	if (port->port.console && port->sysrq) {
++	if (brkint || (port->port.console && port->sysrq)) {
+ 		for (i = 2; i < len; i++) {
++			if (brkint && i == len - 1) {
++				if (usb_serial_handle_break(port))
++					return len - 3;
++				flag = TTY_BREAK;
++			}
+ 			if (usb_serial_handle_sysrq_char(port, buf[i]))
+ 				continue;
+ 			tty_insert_flip_char(&port->port, buf[i], flag);
+-- 
+2.25.1
+
 
 
