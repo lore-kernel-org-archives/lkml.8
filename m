@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C63ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD725C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A111A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A374520658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928196;
-	bh=kd2Yr6+wbTLLBxWO7E4xpvAev+G/QmkPgWGalcRAUp8=;
+	s=default; t=1597928223;
+	bh=2hBbJOO4iuT8nhJ3RlzspynEawv1SShGp6bum17U2Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NPZlD6tBJ18ZyKzhDLShpxXN09uWO5hNcp5ZJ1Ca0wHDfwAT9iZ63s8+eRlIlmEOT
-	 sLeCi+K1k4XtOJem1YXwDBb4lNmaPXlz8LPgiTjAEfExckpxX2qRrJN4cBocgXIOzv
-	 MfvyKSB9RQUgMn2CuTizUMtfEJ7xoV0dtzaCkEkk=
+	b=S1UCEanuyimPubcHi30a1XlZn3001RwUNN1wK+/m9Jkwmsokh9EYU1VKqTS83srqD
+	 l0vJI/jEFydMrVqH0WOJa5Mzt+t+ph7+Hjjt74gfkLnEmclhSVlhlNMOhGBlGUO6Fk
+	 sf47VX2LPbXpKt3s2tAacRLNTkUw/Kw8pTa77Y1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729838AbgHTM4f (ORCPT
+        id S1728914AbgHTM5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:56:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35250 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgHTJlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:37 -0400
+        id S1729098AbgHTJl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B72C0207DE;
-        Thu, 20 Aug 2020 09:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 672552075E;
+        Thu, 20 Aug 2020 09:41:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916496;
-        bh=kd2Yr6+wbTLLBxWO7E4xpvAev+G/QmkPgWGalcRAUp8=;
+        s=default; t=1597916487;
+        bh=2hBbJOO4iuT8nhJ3RlzspynEawv1SShGp6bum17U2Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDcYJHLfnjj4JXq/efBlrZALO/MLxOU17AMKq4uQ5Jps1makruNWuaVVLI4+70lK5
-         eeWZQkbfDt7p5ATyh6MiW6uCqBp7XEYPAFEjL0R/foLBBsE5cFcjXRqMb83GRIziun
-         M2TPz8y2xEDBo8REhJzsixz4mNOVsI0ApugdkN/U=
+        b=vyOPjFuF+krFWV2QcHb2AMstYB3HRLvEnb9EobguTki2BCy7yFMaNwe8PxdA2ip4q
+         Vfpuz+Qu2JE9unftpWmdMLRsSDChwkN44vr45TqRHICKWZaNrT6pKH5qv1tdZ9m1t6
+         sDfsPGVTaVw2r3p9dSJxoTQX/5TaPuhOWNlr3Xcg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 148/204] tools build feature: Use CC and CXX from parent
-Date:   Thu, 20 Aug 2020 11:20:45 +0200
-Message-Id: <20200820091613.639065276@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 145/204] nvme: fix deadlock in disconnect during scan_work and/or ana_work
+Date:   Thu, 20 Aug 2020 11:20:42 +0200
+Message-Id: <20200820091613.496557033@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -68,89 +60,340 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit e3232c2f39acafd5a29128425bc30b9884642cfa ]
+[ Upstream commit ecca390e80561debbfdb4dc96bf94595136889fa ]
 
-commit c8c188679ccf ("tools build: Use the same CC for feature detection
-and actual build") changed these assignments from unconditional (:=) to
-conditional (?=) so that they wouldn't clobber values from the
-environment. However, conditional assignment does not work properly for
-variables that Make implicitly sets, among which are CC and CXX. To
-quote tools/scripts/Makefile.include, which handles this properly:
+A deadlock happens in the following scenario with multipath:
+1) scan_work(nvme0) detects a new nsid while nvme0
+    is an optimized path to it, path nvme1 happens to be
+    inaccessible.
 
-  # Makefiles suck: This macro sets a default value of $(2) for the
-  # variable named by $(1), unless the variable has been set by
-  # environment or command line. This is necessary for CC and AR
-  # because make sets default values, so the simpler ?= approach
-  # won't work as expected.
+2) Before scan_work is complete nvme0 disconnect is initiated
+    nvme_delete_ctrl_sync() sets nvme0 state to NVME_CTRL_DELETING
 
-In other words, the conditional assignments will not run even if the
-variables are not overridden in the environment; Make will set CC to
-"cc" and CXX to "g++" when it starts[1], meaning the variables are not
-empty by the time the conditional assignments are evaluated. This breaks
-cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
-gets used for feature detection instead of the cross compiler (and
-likewise for CXX).
+3) scan_work(1) attempts to submit IO,
+    but nvme_path_is_optimized() observes nvme0 is not LIVE.
+    Since nvme1 is a possible path IO is requeued and scan_work hangs.
 
-To fix the issue, just pass down the values of CC and CXX computed by
-the parent Makefile, which gets included by the Makefile that actually
-builds whatever we're detecting features for and so is guaranteed to
-have good values. This is a better solution anyway, since it means we
-aren't trying to replicate the logic of the parent build system and so
-don't risk it getting out of sync.
+--
+Workqueue: nvme-wq nvme_scan_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  io_schedule+0x16/0x40
+kernel:  do_read_cache_page+0x438/0x830
+kernel:  read_cache_page+0x12/0x20
+kernel:  read_dev_sector+0x27/0xc0
+kernel:  read_lba+0xc1/0x220
+kernel:  efi_partition+0x1e6/0x708
+kernel:  check_partition+0x154/0x244
+kernel:  rescan_partitions+0xae/0x280
+kernel:  __blkdev_get+0x40f/0x560
+kernel:  blkdev_get+0x3d/0x140
+kernel:  __device_add_disk+0x388/0x480
+kernel:  device_add_disk+0x13/0x20
+kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
+kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
+kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
+kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
+kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
+kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
+kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x249/0x400
+kernel:  kthread+0x104/0x140
+--
 
-Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
-in Makefile.include, and 2) it's not an implicit variable, so
-conditional assignment works properly.
+4) Delete also hangs in flush_work(ctrl->scan_work)
+    from nvme_remove_namespaces().
 
-[1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
+Similiarly a deadlock with ana_work may happen: if ana_work has started
+and calls nvme_mpath_set_live and device_add_disk, it will
+trigger I/O. When we trigger disconnect I/O will block because
+our accessible (optimized) path is disconnecting, but the alternate
+path is inaccessible, so I/O blocks. Then disconnect tries to flush
+the ana_work and hangs.
 
-Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <quentin@isovalent.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: thomas hebb <tommyhebb@gmail.com>
-Link: http://lore.kernel.org/lkml/0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+[  605.550896] Workqueue: nvme-wq nvme_ana_work [nvme_core]
+[  605.552087] Call Trace:
+[  605.552683]  __schedule+0x2b9/0x6c0
+[  605.553507]  schedule+0x42/0xb0
+[  605.554201]  io_schedule+0x16/0x40
+[  605.555012]  do_read_cache_page+0x438/0x830
+[  605.556925]  read_cache_page+0x12/0x20
+[  605.557757]  read_dev_sector+0x27/0xc0
+[  605.558587]  amiga_partition+0x4d/0x4c5
+[  605.561278]  check_partition+0x154/0x244
+[  605.562138]  rescan_partitions+0xae/0x280
+[  605.563076]  __blkdev_get+0x40f/0x560
+[  605.563830]  blkdev_get+0x3d/0x140
+[  605.564500]  __device_add_disk+0x388/0x480
+[  605.565316]  device_add_disk+0x13/0x20
+[  605.566070]  nvme_mpath_set_live+0x5e/0x130 [nvme_core]
+[  605.567114]  nvme_update_ns_ana_state+0x2c/0x30 [nvme_core]
+[  605.568197]  nvme_update_ana_state+0xca/0xe0 [nvme_core]
+[  605.569360]  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
+[  605.571385]  nvme_read_ana_log+0x76/0x100 [nvme_core]
+[  605.572376]  nvme_ana_work+0x15/0x20 [nvme_core]
+[  605.573330]  process_one_work+0x1db/0x380
+[  605.574144]  worker_thread+0x4d/0x400
+[  605.574896]  kthread+0x104/0x140
+[  605.577205]  ret_from_fork+0x35/0x40
+[  605.577955] INFO: task nvme:14044 blocked for more than 120 seconds.
+[  605.579239]       Tainted: G           OE     5.3.5-050305-generic #201910071830
+[  605.580712] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+[  605.582320] nvme            D    0 14044  14043 0x00000000
+[  605.583424] Call Trace:
+[  605.583935]  __schedule+0x2b9/0x6c0
+[  605.584625]  schedule+0x42/0xb0
+[  605.585290]  schedule_timeout+0x203/0x2f0
+[  605.588493]  wait_for_completion+0xb1/0x120
+[  605.590066]  __flush_work+0x123/0x1d0
+[  605.591758]  __cancel_work_timer+0x10e/0x190
+[  605.593542]  cancel_work_sync+0x10/0x20
+[  605.594347]  nvme_mpath_stop+0x2f/0x40 [nvme_core]
+[  605.595328]  nvme_stop_ctrl+0x12/0x50 [nvme_core]
+[  605.596262]  nvme_do_delete_ctrl+0x3f/0x90 [nvme_core]
+[  605.597333]  nvme_sysfs_delete+0x5c/0x70 [nvme_core]
+[  605.598320]  dev_attr_store+0x17/0x30
+
+Fix this by introducing a new state: NVME_CTRL_DELETE_NOIO, which will
+indicate the phase of controller deletion where I/O cannot be allowed
+to access the namespace. NVME_CTRL_DELETING still allows mpath I/O to
+be issued to the bottom device, and only after we flush the ana_work
+and scan_work (after nvme_stop_ctrl and nvme_prep_remove_namespaces)
+we change the state to NVME_CTRL_DELETING_NOIO. Also we prevent ana_work
+from re-firing by aborting early if we are not LIVE, so we should be safe
+here.
+
+In addition, change the transport drivers to follow the updated state
+machine.
+
+Fixes: 0d0b660f214d ("nvme: add ANA support")
+Reported-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature | 2 +-
- tools/build/feature/Makefile | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/nvme/host/core.c      | 15 +++++++++++++++
+ drivers/nvme/host/fabrics.c   |  2 +-
+ drivers/nvme/host/fabrics.h   |  3 ++-
+ drivers/nvme/host/fc.c        |  1 +
+ drivers/nvme/host/multipath.c | 18 +++++++++++++++---
+ drivers/nvme/host/nvme.h      |  1 +
+ drivers/nvme/host/rdma.c      | 10 ++++++----
+ drivers/nvme/host/tcp.c       | 15 +++++++++------
+ 8 files changed, 50 insertions(+), 15 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 3e0c019ef2971..941cddd5c00cd 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -8,7 +8,7 @@ endif
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index f7540a9e54fd2..ee67113d96b1b 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -368,6 +368,16 @@ bool nvme_change_ctrl_state(struct nvme_ctrl *ctrl,
+ 			break;
+ 		}
+ 		break;
++	case NVME_CTRL_DELETING_NOIO:
++		switch (old_state) {
++		case NVME_CTRL_DELETING:
++		case NVME_CTRL_DEAD:
++			changed = true;
++			/* FALLTHRU */
++		default:
++			break;
++		}
++		break;
+ 	case NVME_CTRL_DEAD:
+ 		switch (old_state) {
+ 		case NVME_CTRL_DELETING:
+@@ -405,6 +415,7 @@ static bool nvme_state_terminal(struct nvme_ctrl *ctrl)
+ 	case NVME_CTRL_CONNECTING:
+ 		return false;
+ 	case NVME_CTRL_DELETING:
++	case NVME_CTRL_DELETING_NOIO:
+ 	case NVME_CTRL_DEAD:
+ 		return true;
+ 	default:
+@@ -3280,6 +3291,7 @@ static ssize_t nvme_sysfs_show_state(struct device *dev,
+ 		[NVME_CTRL_RESETTING]	= "resetting",
+ 		[NVME_CTRL_CONNECTING]	= "connecting",
+ 		[NVME_CTRL_DELETING]	= "deleting",
++		[NVME_CTRL_DELETING_NOIO]= "deleting (no IO)",
+ 		[NVME_CTRL_DEAD]	= "dead",
+ 	};
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+@@ -3860,6 +3872,9 @@ void nvme_remove_namespaces(struct nvme_ctrl *ctrl)
+ 	if (ctrl->state == NVME_CTRL_DEAD)
+ 		nvme_kill_queues(ctrl);
  
- feature_set = $(eval $(feature_set_code))
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 92012381393ad..ef4ca6e408427 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -73,8 +73,6 @@ FILES=                                          \
++	/* this is a no-op when called from the controller reset handler */
++	nvme_change_ctrl_state(ctrl, NVME_CTRL_DELETING_NOIO);
++
+ 	down_write(&ctrl->namespaces_rwsem);
+ 	list_splice_init(&ctrl->namespaces, &ns_list);
+ 	up_write(&ctrl->namespaces_rwsem);
+diff --git a/drivers/nvme/host/fabrics.c b/drivers/nvme/host/fabrics.c
+index 2a6c8190eeb76..4ec4829d62334 100644
+--- a/drivers/nvme/host/fabrics.c
++++ b/drivers/nvme/host/fabrics.c
+@@ -547,7 +547,7 @@ static struct nvmf_transport_ops *nvmf_lookup_transport(
+ blk_status_t nvmf_fail_nonready_command(struct nvme_ctrl *ctrl,
+ 		struct request *rq)
+ {
+-	if (ctrl->state != NVME_CTRL_DELETING &&
++	if (ctrl->state != NVME_CTRL_DELETING_NOIO &&
+ 	    ctrl->state != NVME_CTRL_DEAD &&
+ 	    !blk_noretry_request(rq) && !(rq->cmd_flags & REQ_NVME_MPATH))
+ 		return BLK_STS_RESOURCE;
+diff --git a/drivers/nvme/host/fabrics.h b/drivers/nvme/host/fabrics.h
+index a0ec40ab62eeb..a9c1e3b4585ec 100644
+--- a/drivers/nvme/host/fabrics.h
++++ b/drivers/nvme/host/fabrics.h
+@@ -182,7 +182,8 @@ bool nvmf_ip_options_match(struct nvme_ctrl *ctrl,
+ static inline bool nvmf_check_ready(struct nvme_ctrl *ctrl, struct request *rq,
+ 		bool queue_live)
+ {
+-	if (likely(ctrl->state == NVME_CTRL_LIVE))
++	if (likely(ctrl->state == NVME_CTRL_LIVE ||
++		   ctrl->state == NVME_CTRL_DELETING))
+ 		return true;
+ 	return __nvmf_check_ready(ctrl, rq, queue_live);
+ }
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 564e3f220ac79..a70220df1f570 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -800,6 +800,7 @@ nvme_fc_ctrl_connectivity_loss(struct nvme_fc_ctrl *ctrl)
+ 		break;
  
- FILES := $(addprefix $(OUTPUT),$(FILES))
+ 	case NVME_CTRL_DELETING:
++	case NVME_CTRL_DELETING_NOIO:
+ 	default:
+ 		/* no action to take - let it delete */
+ 		break;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index d3914b7e8f52c..8f235fbfe44ee 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -167,9 +167,18 @@ void nvme_mpath_clear_ctrl_paths(struct nvme_ctrl *ctrl)
  
--CC ?= $(CROSS_COMPILE)gcc
--CXX ?= $(CROSS_COMPILE)g++
- PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
- LLVM_CONFIG ?= llvm-config
- CLANG ?= clang
+ static bool nvme_path_is_disabled(struct nvme_ns *ns)
+ {
+-	return ns->ctrl->state != NVME_CTRL_LIVE ||
+-		test_bit(NVME_NS_ANA_PENDING, &ns->flags) ||
+-		test_bit(NVME_NS_REMOVING, &ns->flags);
++	/*
++	 * We don't treat NVME_CTRL_DELETING as a disabled path as I/O should
++	 * still be able to complete assuming that the controller is connected.
++	 * Otherwise it will fail immediately and return to the requeue list.
++	 */
++	if (ns->ctrl->state != NVME_CTRL_LIVE &&
++	    ns->ctrl->state != NVME_CTRL_DELETING)
++		return true;
++	if (test_bit(NVME_NS_ANA_PENDING, &ns->flags) ||
++	    test_bit(NVME_NS_REMOVING, &ns->flags))
++		return true;
++	return false;
+ }
+ 
+ static struct nvme_ns *__nvme_find_path(struct nvme_ns_head *head, int node)
+@@ -575,6 +584,9 @@ static void nvme_ana_work(struct work_struct *work)
+ {
+ 	struct nvme_ctrl *ctrl = container_of(work, struct nvme_ctrl, ana_work);
+ 
++	if (ctrl->state != NVME_CTRL_LIVE)
++		return;
++
+ 	nvme_read_ana_log(ctrl);
+ }
+ 
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 8f1b0a30fd2a6..ff0b4079e8d6d 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -183,6 +183,7 @@ enum nvme_ctrl_state {
+ 	NVME_CTRL_RESETTING,
+ 	NVME_CTRL_CONNECTING,
+ 	NVME_CTRL_DELETING,
++	NVME_CTRL_DELETING_NOIO,
+ 	NVME_CTRL_DEAD,
+ };
+ 
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 19c94080512cf..fdab0054cd809 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -1023,11 +1023,12 @@ static int nvme_rdma_setup_ctrl(struct nvme_rdma_ctrl *ctrl, bool new)
+ 	changed = nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_LIVE);
+ 	if (!changed) {
+ 		/*
+-		 * state change failure is ok if we're in DELETING state,
++		 * state change failure is ok if we started ctrl delete,
+ 		 * unless we're during creation of a new controller to
+ 		 * avoid races with teardown flow.
+ 		 */
+-		WARN_ON_ONCE(ctrl->ctrl.state != NVME_CTRL_DELETING);
++		WARN_ON_ONCE(ctrl->ctrl.state != NVME_CTRL_DELETING &&
++			     ctrl->ctrl.state != NVME_CTRL_DELETING_NOIO);
+ 		WARN_ON_ONCE(new);
+ 		ret = -EINVAL;
+ 		goto destroy_io;
+@@ -1080,8 +1081,9 @@ static void nvme_rdma_error_recovery_work(struct work_struct *work)
+ 	blk_mq_unquiesce_queue(ctrl->ctrl.admin_q);
+ 
+ 	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_CONNECTING)) {
+-		/* state change failure is ok if we're in DELETING state */
+-		WARN_ON_ONCE(ctrl->ctrl.state != NVME_CTRL_DELETING);
++		/* state change failure is ok if we started ctrl delete */
++		WARN_ON_ONCE(ctrl->ctrl.state != NVME_CTRL_DELETING &&
++			     ctrl->ctrl.state != NVME_CTRL_DELETING_NOIO);
+ 		return;
+ 	}
+ 
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 99eaa0474e10b..06d6c1c6de35b 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1938,11 +1938,12 @@ static int nvme_tcp_setup_ctrl(struct nvme_ctrl *ctrl, bool new)
+ 
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE)) {
+ 		/*
+-		 * state change failure is ok if we're in DELETING state,
++		 * state change failure is ok if we started ctrl delete,
+ 		 * unless we're during creation of a new controller to
+ 		 * avoid races with teardown flow.
+ 		 */
+-		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING);
++		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING &&
++			     ctrl->state != NVME_CTRL_DELETING_NOIO);
+ 		WARN_ON_ONCE(new);
+ 		ret = -EINVAL;
+ 		goto destroy_io;
+@@ -1998,8 +1999,9 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
+ 	blk_mq_unquiesce_queue(ctrl->admin_q);
+ 
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING)) {
+-		/* state change failure is ok if we're in DELETING state */
+-		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING);
++		/* state change failure is ok if we started ctrl delete */
++		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING &&
++			     ctrl->state != NVME_CTRL_DELETING_NOIO);
+ 		return;
+ 	}
+ 
+@@ -2034,8 +2036,9 @@ static void nvme_reset_ctrl_work(struct work_struct *work)
+ 	nvme_tcp_teardown_ctrl(ctrl, false);
+ 
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING)) {
+-		/* state change failure is ok if we're in DELETING state */
+-		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING);
++		/* state change failure is ok if we started ctrl delete */
++		WARN_ON_ONCE(ctrl->state != NVME_CTRL_DELETING &&
++			     ctrl->state != NVME_CTRL_DELETING_NOIO);
+ 		return;
+ 	}
+ 
 -- 
 2.25.1
 
