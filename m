@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E46C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E671F207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9E4207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928587;
-	bh=oBxoObPMKORcwt2/y7eTfPimZ2dz2DrSpmq51a5rxe4=;
+	s=default; t=1597928590;
+	bh=Ppy0K30nwzt28Mru2lU1ywgvkdZrBsRCRZtpiXrXVBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F5pG2y0oFPnLDKhv0+xpBXH9O9/eHmcgKGu+YweijJgmHPw859/NH7M3TajwGrYwM
-	 oowzxP2QLTcCNMJtGwhZIN/P05q9A7CYQ134T/0eDGvcr3vyTg77je4g3tkRFQein2
-	 yKAapUSebwDhhama1yILkVs3iS3gSGVsf2/okdMI=
+	b=YRRn2oavUbwdY0AOYW3IOoMq/KkEIDv10sARQrRr/opp0tZWZ9NbObjuSnpu8CfpX
+	 ++33L/QXbKb02T+MQUQoMTykPa+M5R6R1VcMsYO28AzAFaSP2KOBGA1yHkPaBiY1FF
+	 4dbEHc9oLW5u/bHrgP1nXryfD9BlAAH31twYWNY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgHTNDC (ORCPT
+        id S1729243AbgHTNDG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:03:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59952 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbgHTJkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:03 -0400
+        id S1728721AbgHTJkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF6982075E;
-        Thu, 20 Aug 2020 09:40:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DBAA20724;
+        Thu, 20 Aug 2020 09:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916402;
-        bh=oBxoObPMKORcwt2/y7eTfPimZ2dz2DrSpmq51a5rxe4=;
+        s=default; t=1597916399;
+        bh=Ppy0K30nwzt28Mru2lU1ywgvkdZrBsRCRZtpiXrXVBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+3Tuswd3gNV0H4dDazf+3n0HNc3Giy71F1u0IBn67zAY32mdqfBfrPcG3qvXgYnx
-         g9904JCGLsIO7RBTifoafYZ9YiPa4deo0CLRB75+OvxY6Zz4SK5ERsPBKwnIlPQTSi
-         Amag9ovEXbBO+5aQA6m+9f1fIrqm76eb+hqqnBjg=
+        b=fUNinLSPb9ryxKOzybrIeqsVpcjwiD39NlGkN8ZfoEByQ6/GZOGb+eh3y7k1sZS6B
+         YqCqX9P49f7/JMAW95DUaWMHvX2UVMaC2uSNphLLg/8bXOEaZQyOsCfWAT5pwGudEK
+         4YP3OAsoq6Jky60yoXFoVjv3/PCYj1e6+cppJJYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 115/204] selftests/bpf: test_progs use another shell exit on non-actions
-Date:   Thu, 20 Aug 2020 11:20:12 +0200
-Message-Id: <20200820091612.065629536@linuxfoundation.org>
+Subject: [PATCH 5.7 114/204] bpf: selftests: Restore netns after each test
+Date:   Thu, 20 Aug 2020 11:20:11 +0200
+Message-Id: <20200820091612.016677118@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,52 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit 3220fb667842a9725cbb71656f406eadb03c094b ]
+[ Upstream commit 811d7e375d08312dba23f3b6bf7e58ec14aa5dcb ]
 
-This is a follow up adjustment to commit 6c92bd5cd465 ("selftests/bpf:
-Test_progs indicate to shell on non-actions"), that returns shell exit
-indication EXIT_FAILURE (value 1) when user selects a non-existing test.
+It is common for networking tests creating its netns and making its own
+setting under this new netns (e.g. changing tcp sysctl).  If the test
+forgot to restore to the original netns, it would affect the
+result of other tests.
 
-The problem with using EXIT_FAILURE is that a shell script cannot tell
-the difference between a non-existing test and the test failing.
+This patch saves the original netns at the beginning and then restores it
+after every test.  Since the restore "setns()" is not expensive, it does it
+on all tests without tracking if a test has created a new netns or not.
 
-This patch uses value 2 as shell exit indication.
-(Aside note unrecognized option parameters use value 64).
+The new restore_netns() could also be done in test__end_subtest() such
+that each subtest will get an automatic netns reset.  However,
+the individual test would lose flexibility to have total control
+on netns for its own subtests.  In some cases, forcing a test to do
+unnecessary netns re-configure for each subtest is time consuming.
+e.g. In my vm, forcing netns re-configure on each subtest in sk_assign.c
+increased the runtime from 1s to 8s.  On top of that,  test_progs.c
+is also doing per-test (instead of per-subtest) cleanup for cgroup.
+Thus, this patch also does per-test restore_netns().  The only existing
+per-subtest cleanup is reset_affinity() and no test is depending on this.
+Thus, it is removed from test__end_subtest() to give a consistent
+expectation to the individual tests.  test_progs.c only ensures
+any affinity/netns/cgroup change made by an earlier test does not
+affect the following tests.
 
-Fixes: 6c92bd5cd465 ("selftests/bpf: Test_progs indicate to shell on non-actions")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159410593992.1093222.90072558386094370.stgit@firesoul
+Link: https://lore.kernel.org/bpf/20200702004858.2103728-1-kafai@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 23 +++++++++++++++++++++--
+ tools/testing/selftests/bpf/test_progs.h |  2 ++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 64bb5728040f4..a75a83155f6d0 100644
+index ac40d9558b80e..64bb5728040f4 100644
 --- a/tools/testing/selftests/bpf/test_progs.c
 +++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -12,6 +12,8 @@
- #include <string.h>
- #include <execinfo.h> /* backtrace */
+@@ -121,6 +121,24 @@ static void reset_affinity() {
+ 	}
+ }
  
-+#define EXIT_NO_TEST		2
++static void save_netns(void)
++{
++	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
++	if (env.saved_netns_fd == -1) {
++		perror("open(/proc/self/ns/net)");
++		exit(-1);
++	}
++}
 +
- /* defined in test_progs.h */
- struct test_env env = {};
++static void restore_netns(void)
++{
++	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
++		stdio_restore();
++		perror("setns(CLONE_NEWNS)");
++		exit(-1);
++	}
++}
++
+ void test__end_subtest()
+ {
+ 	struct prog_test_def *test = env.test;
+@@ -138,8 +156,6 @@ void test__end_subtest()
+ 	       test->test_num, test->subtest_num,
+ 	       test->subtest_name, sub_error_cnt ? "FAIL" : "OK");
  
-@@ -796,7 +798,7 @@ int main(int argc, char **argv)
- 	close(env.saved_netns_fd);
+-	reset_affinity();
+-
+ 	free(test->subtest_name);
+ 	test->subtest_name = NULL;
+ }
+@@ -732,6 +748,7 @@ int main(int argc, char **argv)
+ 		return -1;
+ 	}
+ 
++	save_netns();
+ 	stdio_hijack();
+ 	for (i = 0; i < prog_test_cnt; i++) {
+ 		struct prog_test_def *test = &prog_test_defs[i];
+@@ -762,6 +779,7 @@ int main(int argc, char **argv)
+ 			test->error_cnt ? "FAIL" : "OK");
+ 
+ 		reset_affinity();
++		restore_netns();
+ 		if (test->need_cgroup_cleanup)
+ 			cleanup_cgroup_environment();
+ 	}
+@@ -775,6 +793,7 @@ int main(int argc, char **argv)
+ 	free_str_set(&env.subtest_selector.blacklist);
+ 	free_str_set(&env.subtest_selector.whitelist);
+ 	free(env.subtest_selector.num_set);
++	close(env.saved_netns_fd);
  
  	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
--		return EXIT_FAILURE;
-+		return EXIT_NO_TEST;
+ 		return EXIT_FAILURE;
+diff --git a/tools/testing/selftests/bpf/test_progs.h b/tools/testing/selftests/bpf/test_progs.h
+index f4aff6b8284be..3817667deb103 100644
+--- a/tools/testing/selftests/bpf/test_progs.h
++++ b/tools/testing/selftests/bpf/test_progs.h
+@@ -77,6 +77,8 @@ struct test_env {
+ 	int sub_succ_cnt; /* successful sub-tests */
+ 	int fail_cnt; /* total failed tests + sub-tests */
+ 	int skip_cnt; /* skipped tests */
++
++	int saved_netns_fd;
+ };
  
- 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
- }
+ extern struct test_env env;
 -- 
 2.25.1
 
