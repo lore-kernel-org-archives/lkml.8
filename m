@@ -2,93 +2,210 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FORGED_MUA_MOZILLA,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDBEF207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F5BE207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf51tNS8"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tF9K4dno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbgHTNKO (ORCPT
+        id S1728900AbgHTNKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:10:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728947AbgHTNJz (ORCPT
+        Thu, 20 Aug 2020 09:10:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26200 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728762AbgHTNJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:09:55 -0400
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B9DC061385;
-        Thu, 20 Aug 2020 06:09:55 -0700 (PDT)
-Received: by mail-pl1-x62d.google.com with SMTP id h2so1027769plr.0;
-        Thu, 20 Aug 2020 06:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rcpRkVJoKyVY/3B/RffNTzv0GP7F/59KL5DNPGHvfJo=;
-        b=Kf51tNS8rKp5fAVzk8nTv6XAPFRnqZ12quyqy90P+iGzGjaHGiEmXk215a5rwrkSjP
-         A9fpL2d/oKHqMZuzlceR1N+yUW37/wGUuyGI2rqGbYRU4IfIu5Y5Xr36e6nNOACeKDpE
-         hfe6IgfeFgaMbOu9luA8b0ZnspPXVfd/jy/6pJSbyFsGc1+Ta5JD6ea2V5uans9mXq7m
-         l6TwHmRnHyAJU+1xiDgPliP16TTvr+pXxZ8kr6J5VOUDEERoejv26SWpqR4NShZ/2zwd
-         lepX0NPt7T5uK2lT7kOUp6EYB2b1xwt0bdWHRlJ/+qcEwRRLSwYtreuJh/ptx6IZcWPF
-         VAUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rcpRkVJoKyVY/3B/RffNTzv0GP7F/59KL5DNPGHvfJo=;
-        b=XDR6QuSRZND/3w/D4H2bucl7ZHvbuNEiGyYGGjxY/NkQpwL9QdobTgu5JHX7+ouuSk
-         WiuXVp04bWdYqVhseZxYsoNOqAZ4NGr7YmEi54+jjtAVddfOiUZU4Ef1/F4j99Gio4wK
-         RZ50DV9tUfwoRiM1dZOMhJesoJke0dW3p01K4qqnPfDSFYK/dy2JeNMiLT3psJl3TLA5
-         0icNCbmXmLRIXNz8f8oKEqIgISBuyp5piiEfusF/4nfXGyw/3X89BylJwkKRD0vq6J+t
-         HMuIDG3xZ+g4oA8qFHhk8MQUlCDjqR+Bc/UalyRYks6TsLhmuovYdzJMdUGIBbJ5Fy8W
-         9FSg==
-X-Gm-Message-State: AOAM533JAHufeMrL2Lb8k/tai78dj+LmJYQ7kjqsUPkBbkXibhfjec5l
-        2nH6R17amEu3iVgCBZLXw4bnwGgOH8JMtDEq3W0=
-X-Google-Smtp-Source: ABdhPJyu0tldf5JCV8BFWNDw6/Y2eW0lJLDaQEyv+8zGx6tjmMIqt1bgmh6TEetWI13G8rBzfiKhrUCbyej3YoEdjxk=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2347505pjv.181.1597928994060;
- Thu, 20 Aug 2020 06:09:54 -0700 (PDT)
+        Thu, 20 Aug 2020 09:09:38 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KD2CXq030836;
+        Thu, 20 Aug 2020 09:09:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : date : mime-version : in-reply-to : content-type :
+ content-transfer-encoding : message-id; s=pp1;
+ bh=o9TyYL3CUeDWcjaJivIo7lPu6CidluEG3TmZxmgWp4Q=;
+ b=tF9K4dnoe+BjKneJP99iaqGFfTRP40FfgD8gdygX817JQDRMlKn+yAZeSdM5kc1ZsMPE
+ u8UZfScQeBb0xRmJa7P1lVf+8fCAhaHIm9Hh0pIhZYT5FpYsn4ikM05bY1/ErH656Qpg
+ 9h8NclhTnGAjlsQApADXJsm+KiBXHiW4qSTQJfUX+/wBtv7PbaTaQXHPHtPToEKyxVks
+ QgRCqHjpGRa8rDdqSHkQdwgDpmVKH9o4nXn8yVvxAwgY0DvLyptUe4pFo+yGYQJxGrVz
+ rKeB6JtpR5o1ZiuBng/xi0uCfZuxHID1zTmb4adqd5m1S7MvdkAQxw50tcHANZ7QCe2i hQ== 
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mx4jky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 09:09:33 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KD4xsQ015558;
+        Thu, 20 Aug 2020 13:09:30 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 3304ujsxas-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 13:09:30 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KD9Saf56295740
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 13:09:28 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93ECD4C040;
+        Thu, 20 Aug 2020 13:09:28 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F1CA4C046;
+        Thu, 20 Aug 2020 13:09:27 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.33.217])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 13:09:27 +0000 (GMT)
+Subject: Re: [RFC 1/1] ext4: Optimize ext4 DAX overwrites
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-ext4@vger.kernel.org, tytso@mit.edu,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+References: <cover.1597855360.git.riteshh@linux.ibm.com>
+ <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
+ <20200820125300.GK1902@quack2.suse.cz>
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+Date:   Thu, 20 Aug 2020 18:39:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
-In-Reply-To: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Aug 2020 16:09:37 +0300
-Message-ID: <CAHp75VeHut83MwpN8VNycXetcH1W0uu0TNm7o5BHrqp-9BB_gQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative values
-To:     Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>, git <git@xilinx.com>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200820125300.GK1902@quack2.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Message-Id: <20200820130927.7F1CA4C046@d06av22.portsmouth.uk.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:32 AM Anand Ashok Dumbre
-<anand.ashok.dumbre@xilinx.com> wrote:
 
-> This email and any attachments are intended for the sole use of the named=
- recipient(s) and contain(s) confidential information that may be proprieta=
-ry, privileged or copyrighted under applicable law. If you are not the inte=
-nded recipient, do not read, copy, or forward this email message or any att=
-achments. Delete this email message and any attachments immediately.
 
-This is not the footer that allows you to do open source.
+On 8/20/20 6:23 PM, Jan Kara wrote:
+> On Thu 20-08-20 17:06:28, Ritesh Harjani wrote:
+>> Currently in case of DAX, we are starting a transaction
+>> everytime for IOMAP_WRITE case. This can be optimized
+>> away in case of an overwrite (where the blocks were already
+>> allocated). This could give a significant performance boost
+>> for multi-threaded random writes.
+>>
+>> Reported-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+> 
+> Thanks for returning to this and I'm glad to see how much this helped :)
+> BTW, I'd suspect there could be also significant contention and cache line
+> bouncing on j_state_lock and transaction's atomic counters...
 
---=20
-With Best Regards,
-Andy Shevchenko
+ok, will try and profile to see if this happens.
+
+
+> 
+>> ---
+>>   fs/ext4/ext4.h  | 1 +
+>>   fs/ext4/file.c  | 2 +-
+>>   fs/ext4/inode.c | 8 +++++++-
+>>   3 files changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+>> index 42f5060f3cdf..9a2138afc751 100644
+>> --- a/fs/ext4/ext4.h
+>> +++ b/fs/ext4/ext4.h
+>> @@ -3232,6 +3232,7 @@ extern const struct dentry_operations ext4_dentry_ops;
+>>   extern const struct inode_operations ext4_file_inode_operations;
+>>   extern const struct file_operations ext4_file_operations;
+>>   extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
+>> +extern bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len);
+>>   
+>>   /* inline.c */
+>>   extern int ext4_get_max_inline_size(struct inode *inode);
+>> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+>> index 2a01e31a032c..51cd92ac1758 100644
+>> --- a/fs/ext4/file.c
+>> +++ b/fs/ext4/file.c
+>> @@ -188,7 +188,7 @@ ext4_extending_io(struct inode *inode, loff_t offset, size_t len)
+>>   }
+>>   
+>>   /* Is IO overwriting allocated and initialized blocks? */
+>> -static bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
+>> +bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
+>>   {
+>>   	struct ext4_map_blocks map;
+>>   	unsigned int blkbits = inode->i_blkbits;
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index 10dd470876b3..f0ac0ee9e991 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -3423,6 +3423,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>   	int ret;
+>>   	struct ext4_map_blocks map;
+>>   	u8 blkbits = inode->i_blkbits;
+>> +	bool overwrite = false;
+>>   
+>>   	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
+>>   		return -EINVAL;
+>> @@ -3430,6 +3431,9 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>   	if (WARN_ON_ONCE(ext4_has_inline_data(inode)))
+>>   		return -ERANGE;
+>>   
+>> +	if (IS_DAX(inode) && (flags & IOMAP_WRITE) &&
+>> +	    ext4_overwrite_io(inode, offset, length))
+>> +		overwrite = true;
+> 
+> So the patch looks correct but using ext4_overwrite_io() seems a bit
+> foolish since under the hood it does ext4_map_blocks() only to be able to
+> decide whether to call ext4_map_blocks() once again with exactly the same
+> arguments :). So I'd rather slightly refactor the code in
+> ext4_iomap_begin() to avoid this double calling of ext4_map_blocks() for
+> the fast path.
+
+Yes, agreed. Looking at the numbers I was excited to post out the RFC
+for discussion. Will make above changes and post. :)
+
+
+With DIO, we need to detect overwrite case early in
+ext4_dio_write_iter() to determine whether we need shared or excl.
+locks - so probably for DIO case we still need overwrite check in
+ext4_dio_write_iter()
+
+Thanks for review!!
+-ritesh
+
+
+> 
+> 								Honza
+> 
+>>   	/*
+>>   	 * Calculate the first and last logical blocks respectively.
+>>   	 */
+>> @@ -3437,13 +3441,15 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+>>   	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
+>>   			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
+>>   
+>> -	if (flags & IOMAP_WRITE)
+>> +	if ((flags & IOMAP_WRITE) && !overwrite)
+>>   		ret = ext4_iomap_alloc(inode, &map, flags);
+>>   	else
+>>   		ret = ext4_map_blocks(NULL, inode, &map, 0);
+>>   
+>>   	if (ret < 0)
+>>   		return ret;
+>> +	if (IS_DAX(inode) && overwrite)
+>> +		WARN_ON(!(map.m_flags & EXT4_MAP_MAPPED));
+>>   
+>>   	ext4_set_iomap(inode, iomap, &map, offset, length);
+>>   
+>> -- 
+>> 2.25.4
+>>
