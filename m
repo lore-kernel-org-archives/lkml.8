@@ -3,113 +3,200 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E20822D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927785;
-	bh=bk/x8Y10EKdsRTQUjwNWHxsSDrm6J2y97JLT8GSLSUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UYewcl9AXHF0d9oXs6T9jDuJ2Go6WYWcQMf4CEdiEbHCiufkjcESmhg9QiPf7R3qd
-	 o7PYA9WGrA9ilb+auYTYSzeqWxT0UMvSOfq2iACpX8p78Rfnlzm7wHXMkEm5zMWMRO
-	 YEpTvMtN9JX3p8FJaIMraK+yCyMMRrVPBrg+Eovw=
+	by mail.kernel.org (Postfix) with ESMTP id D063D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aHxLbdSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729821AbgHTMtm (ORCPT
+        id S1730228AbgHTMtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:49:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:45:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BCDD22D02;
-        Thu, 20 Aug 2020 09:44:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916661;
-        bh=bk/x8Y10EKdsRTQUjwNWHxsSDrm6J2y97JLT8GSLSUo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16k6JOYfwu4KjWiIyVjp0EB4EM25AB+lAXEpyoVZ9MqmWManCDyDOUohKCiLX2Jzy
-         aJFl2bg+bG4/+fNnN69O3+xuF/qxxywMumVj/rMmiU7VQahhlO7DeK9WVP62Kmx/dk
-         cahWtR5cWnV0NJquHID/a5zdZhEOjc7lDplVzKUQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 5.7 192/204] ASoC: tegra: Enable audio mclk during tegra_asoc_utils_init()
-Date:   Thu, 20 Aug 2020 11:21:29 +0200
-Message-Id: <20200820091615.784375033@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Aug 2020 08:49:53 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38752 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729213AbgHTMtd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:49:33 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KCmHbw051388;
+        Thu, 20 Aug 2020 12:49:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=O0BdtsGVhMNiPzyRfyyvEXkjUO6B3elzYUK2+aFxQNQ=;
+ b=aHxLbdSUbIIlGsv9dWsuf7RmdaUeIly6X3CWRrqSFhDD8ztUpy6tJ+636DAF9i1xJVc/
+ hClp1l4VKVnVLGWnGss+/agmyygiHZASWIQ90tnCRTN+WXYx7asEDGhBXBYvDzK+aufC
+ X+5L5MRl+pWPSTKfW552fRrmxpVjjMvl9nbwZJ9OKZ8qdDqAAOLqfkGZ9aGcHTKEly0n
+ LMNBYMepNe+S0AUy0izBDm99jFQ5s6GaSqsHmPYm3yqAebVGL/pfDYZ8IMWZ9GY+bbZb
+ exvj2vuJi/Ci4jLgfTJ4bFjbLy2DFaaSiaP5HWYiyWvRqKrhBiK6rjTcB2EJqFqeaACx Qg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 32x74rgd3n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 12:49:16 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KClqN7191789;
+        Thu, 20 Aug 2020 12:49:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 330pvp2v3b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 12:49:15 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KCnEKh007088;
+        Thu, 20 Aug 2020 12:49:14 GMT
+Received: from anon-dhcp-152.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Aug 2020 05:49:13 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.1\))
+Subject: Re: [PATCH v2] nfsd: Convert to use the preferred fallthrough macro
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200820025718.51244-1-linmiaohe@huawei.com>
+Date:   Thu, 20 Aug 2020 08:49:12 -0400
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <01498CCA-B21A-4E8D-9761-41610C54CB9A@oracle.com>
+References: <20200820025718.51244-1-linmiaohe@huawei.com>
+To:     Miaohe Lin <linmiaohe@huawei.com>,
+        Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3608.120.23.2.1)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200106
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
+ priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Hi-
 
-commit ff5d18cb04f4ecccbcf05b7f83ab6df2a0d95c16 upstream.
+> On Aug 19, 2020, at 10:57 PM, Miaohe Lin <linmiaohe@huawei.com> wrote:
+>=20
+> Convert the uses of fallthrough comments to fallthrough macro. Please =
+see
+> commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
+> keyword for switch/case use") for detail.
+>=20
+> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 
-Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
-through Tegra210 and currently Tegra clock driver keeps the audio mclk
-enabled.
+LGTM. If he also approves, I assume Bruce is taking this one for v5.10.
 
-With the move of PMC clocks from clock driver into pmc driver, audio
-mclk enable from clock driver is removed and this should be taken care
-of by the audio driver.
 
-tegra_asoc_utils_init() calls tegra_asoc_utils_set_rate() and audio mclk
-rate configuration is not needed during init and the rate is actually
-set during the ->hw_params() callback.
+> ---
+> fs/nfsd/nfs4callback.c | 2 +-
+> fs/nfsd/nfs4proc.c     | 2 +-
+> fs/nfsd/nfs4state.c    | 2 +-
+> fs/nfsd/nfsfh.c        | 2 +-
+> fs/nfsd/vfs.c          | 4 ++--
+> 5 files changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 7fbe9840a03e..052be5bf9ef5 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct =
+rpc_task *task, struct nfsd4_callback
+> 		break;
+> 	case -ESERVERFAULT:
+> 		++session->se_cb_seq_nr;
+> -		/* Fall through */
+> +		fallthrough;
+> 	case 1:
+> 	case -NFS4ERR_BADSESSION:
+> 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index a527da3d8052..eaf50eafa935 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 				goto out;
+> 			open->op_openowner->oo_flags |=3D =
+NFS4_OO_CONFIRMED;
+> 			reclaim =3D true;
+> -			/* fall through */
+> +			fallthrough;
+> 		case NFS4_OPEN_CLAIM_FH:
+> 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+> 			status =3D do_open_fhandle(rqstp, cstate, open);
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 81ed8e8bab3f..2f77f4b66cbc 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct =
+nfsd4_compound_state *cstate,
+> 		break;
+> 	default:				/* checked by xdr code =
+*/
+> 		WARN_ON_ONCE(1);
+> -		/* fall through */
+> +		fallthrough;
+> 	case SP4_SSV:
+> 		status =3D nfserr_encr_alg_unsupp;
+> 		goto out_nolock;
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index 37bc8f5f4514..a0a8d27539ae 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, =
+struct svc_export *exp)
+> 	case FSID_UUID16:
+> 		if (!is_root_export(exp))
+> 			return false;
+> -		/* fall through */
+> +		fallthrough;
+> 	case FSID_UUID4_INUM:
+> 	case FSID_UUID16_INUM:
+> 		return exp->ex_uuid !=3D NULL;
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 7d2933b85b65..aba5af9df328 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+> 					*created =3D true;
+> 				break;
+> 			}
+> -			/* fall through */
+> +			fallthrough;
+> 		case NFS4_CREATE_EXCLUSIVE4_1:
+> 			if (   d_inode(dchild)->i_mtime.tv_sec =3D=3D =
+v_mtime
+> 			    && d_inode(dchild)->i_atime.tv_sec =3D=3D =
+v_atime
+> @@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+> 					*created =3D true;
+> 				goto set_attr;
+> 			}
+> -			/* fall through */
+> +			fallthrough;
+> 		case NFS3_CREATE_GUARDED:
+> 			err =3D nfserr_exist;
+> 		}
+> --=20
+> 2.19.1
+>=20
 
-So, this patch removes tegra_asoc_utils_set_rate() call and just leaves
-the audio mclk enabled.
+--
+Chuck Lever
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/tegra/tegra_asoc_utils.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
---- a/sound/soc/tegra/tegra_asoc_utils.c
-+++ b/sound/soc/tegra/tegra_asoc_utils.c
-@@ -205,9 +205,16 @@ int tegra_asoc_utils_init(struct tegra_a
- 		data->clk_cdev1 = clk_out_1;
- 	}
- 
--	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
--	if (ret)
-+	/*
-+	 * FIXME: There is some unknown dependency between audio mclk disable
-+	 * and suspend-resume functionality on Tegra30, although audio mclk is
-+	 * only needed for audio.
-+	 */
-+	ret = clk_prepare_enable(data->clk_cdev1);
-+	if (ret) {
-+		dev_err(data->dev, "Can't enable cdev1: %d\n", ret);
- 		return ret;
-+	}
- 
- 	return 0;
- }
 
 
