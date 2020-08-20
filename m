@@ -2,77 +2,96 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA8BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11545C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDB692075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="C+4fabQd"
+	by mail.kernel.org (Postfix) with ESMTP id DBA1A2177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:48:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597960123;
+	bh=23yUEfhFOmQ/QJGKJF2s1PtUXf40Zt+kxozKC+ATEgk=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=xQLVM3Szsb7bihjwaMEF+Id1l9AjXighXRRmRA/w22SvsndgjE97HmxYAxNdB/lEb
+	 Z1JoCpbxHY55MWQ0WzXJVQGeMaNnLC3MvIhFu9QonjGc9njdl5KlZGFBRd96YRP6y4
+	 qU/W0SgoEmG74NMkNhSlMCPy377XqB6Idgv3+dPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgHTVsT (ORCPT
+        id S1728055AbgHTVsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:48:19 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:39228 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgHTVsS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:48:18 -0400
-Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 2A73920B4908;
-        Thu, 20 Aug 2020 14:48:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2A73920B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597960098;
-        bh=1poYvZ5PwBVampeoy9/r+Ck8lpluSiK2TwYPa0QxQy8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C+4fabQdO2f9Gi1nCABCKRSBGNcAGeU4oo14Py/MMLDNnBNIKqj3OFQZ61+9Wg5i2
-         gaQuzc/mbeCMLWFy8RxFyWmGXC8ajz2oAuL7bJ2FhCfI4G+dRQXF9E0JNv+0Doo8rU
-         8Wq9iYUqrHsbTA1Y7Gbp/8JvM4SxZSnghiwAV3lI=
-Date:   Thu, 20 Aug 2020 21:48:17 +0000
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hv_utils: drain the timesync packets on onchannelcallback
-Message-ID: <20200820214817.ndjmzanwmdm5qfvf@viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net>
-References: <20200819174740.47291-1-viremana@linux.microsoft.com>
- <MW2PR2101MB1052254C5ED7C587E548DB3AD75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052254C5ED7C587E548DB3AD75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20171215
+        Thu, 20 Aug 2020 17:48:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726852AbgHTVsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 17:48:41 -0400
+Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EB8D2075E;
+        Thu, 20 Aug 2020 21:48:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597960121;
+        bh=23yUEfhFOmQ/QJGKJF2s1PtUXf40Zt+kxozKC+ATEgk=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=lwaNkhwhgJpbE/zhVTfYZlNlh5BcgLwoBKqVYtgciUf+XphecrM4e40zZWnoPhWLr
+         7LR9JTFTO6VfDbLvzPuUiDJm4fBse8n5dQQE45mqwRzNjQb/wxGiAHr1b4b98oZVQp
+         gLXN8JhF5q2DsgDXOykirQXl1G7iYuLaKS2mwiRQ=
+Date:   Thu, 20 Aug 2020 22:48:08 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>, matthias.bgg@gmail.com,
+        robh+dt@kernel.org, tiwai@suse.com, linux-kernel@vger.kernel.org
+Cc:     eason.yen@mediatek.com, tzungbi@google.com,
+        linux-mediatek@lists.infradead.org, alsa-devel@alsa-project.org,
+        howie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        shane.chien@mediatek.com, bicycle.tasi@mediatek.com
+In-Reply-To: <1597913493-10747-1-git-send-email-jiaxin.yu@mediatek.com>
+References: <1597913493-10747-1-git-send-email-jiaxin.yu@mediatek.com>
+Subject: Re: [PATCH v6 0/2] Add mediatek codec mt6359 driver
+Message-Id: <159796008815.44152.16317052982855858224.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 20 Aug 2020 16:51:31 +0800, Jiaxin Yu wrote:
+> Add mediatek codec (MT6359) driver
+> 
+> MT6359 support playback and capture feature.
+> 
+> On downlink path, it includes three DACs for handset, headset,
+> and lineout path. On unlink path, it includeds three ADCs for
+> main mic, second mic, 3rd mic, and headset mic.
+> 
+> [...]
 
-Hi Michael,
+Applied to
 
-> > +			pr_warn("TimeSync IC pkt recv failed (Err: %d)\n",
-> > +				ret);
-> 
-> Let's use pr_warn_once().
-> 
-> If there's a packet at the head of the ring buffer that specifies a bogus length,
-> we could take the error path.  But the bad packet stays at the head of the ring buffer,
-> so if we end up back here again, we'll spit out the same error message.  We
-> actually should not end up here again because Hyper-V shouldn't interrupt
-> when adding a packet to a non-empty ring buffer, but who knows what might
-> happen.
-> 
-Valid point, will fix this in the next iteration.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/2] ASoC: mediatek: mt6359: add codec driver
+      commit: 8061734ab65498f4802578564fc0948ec9aaf933
+[2/2] dt-bindings: mediatek: mt6359: add codec document
+      commit: 539237d1c609c0fd23389369939b5cc93feb16fb
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Vineeth
+Mark
