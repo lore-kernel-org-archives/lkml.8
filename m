@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D90C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCFCC433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B0532078D
+	by mail.kernel.org (Postfix) with ESMTP id 53A1C208DB
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597922147;
-	bh=tFtOHLlSmr0ZanRNrVBLZNCQ6z4elVuV4Sbo6SmXFGU=;
+	bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AdCPsGEnihovF8o+7+PeJZRbv1d8J58dA9gVVQo0Ashil4g6VqZub4OaeVzE8wDiA
-	 wzHgMrIKpzP624f2rAjKIqVvIAtPgE1TAPRWr1RYJBBIVdJib8YnzY86YXFbNPTMKV
-	 MQhJnNvp+eaDJ6cnaKJBHuJg3Z/FrFfuSvSf9Es4=
+	b=DKkDS5hkxFbKAihMysirAPKqGP1kWFXyTSoh48fh6gqUQ11vh0yWUGq13fQ2k237S
+	 Zo2SHextQ/fKhBSnIg63EQtSeSt/Sm3qAbJsIn0FIHWqj17hFJw0rwiYmuA938vKoz
+	 o137FbndF168u3JGwXPX8A1YLpLmOdJgo7JgRNow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgHTKIu (ORCPT
+        id S1730081AbgHTLP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730681AbgHTKIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:35 -0400
+        id S1729679AbgHTKI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C4182067C;
-        Thu, 20 Aug 2020 10:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9992420738;
+        Thu, 20 Aug 2020 10:08:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918115;
-        bh=tFtOHLlSmr0ZanRNrVBLZNCQ6z4elVuV4Sbo6SmXFGU=;
+        s=default; t=1597918136;
+        bh=ZYzY6ErG/NfSQMyGO+ymxwRPG0Hb5eEKj9Iv+PmCo5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tcOo56vokw0eNBK9rVpZEyXTBrxwDxBUc4lvLdGtXNi13ORvK++3hEnnI4RTUqeLb
-         T2lvMuzvHoIZRPEFfPGY2R8uiNTDB/xnd9TZGGQ8G1F9xcdDbesh/SqLgO7s4qJypA
-         Yahmo4uKd4gJc5BjINjN53K4OhKTJzH5kEyUfvS0=
+        b=o6gxt6+WIUmhwHPLzUXBP8HcUq+jLPlRtFsGtnInebTZb5EPhkFO7Hmlrrr+zBeLc
+         dfYygt6w9ykxgoowOb/dqZWznE2ajxhKUn2dXu7M+rom/80JxhoYJFyMmXc1nv1jRf
+         C8wAQoaQRAJTAjDBLbL1WkFdx4qCXTbLT+C78v9w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 027/228] tools lib traceevent: Fix memory leak in process_dynamic_array_len
-Date:   Thu, 20 Aug 2020 11:20:02 +0200
-Message-Id: <20200820091608.891200333@linuxfoundation.org>
+        =?UTF-8?q?Ricardo=20Ca=C3=B1uelo?= <ricardo.canuelo@collabora.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Wei Xu <xuwei5@hisilicon.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 066/228] arm64: dts: hisilicon: hikey: fixes to comply with adi, adv7533 DT binding
+Date:   Thu, 20 Aug 2020 11:20:41 +0200
+Message-Id: <20200820091610.908828095@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,69 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+From: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
 
-[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
+[ Upstream commit bbe28fc3cbabbef781bcdf847615d52ce2e26e42 ]
 
-I compiled with AddressSanitizer and I had these memory leaks while I
-was using the tep_parse_format function:
+hi3660-hikey960.dts:
+  Define a 'ports' node for 'adv7533: adv7533@39' and the
+  'adi,dsi-lanes' property to make it compliant with the adi,adv7533 DT
+  binding.
 
-    Direct leak of 28 byte(s) in 4 object(s) allocated from:
-        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
-        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
-        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
-        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
-        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
-        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
-        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
-        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
-        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
-        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
-        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
-        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
-        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
-        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
-        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
-        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
-        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
-        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
-        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
-        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
-        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
-        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
-        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
-        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
-        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
-        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
-        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
+  This fills the requirements to meet the binding requirements,
+  remote endpoints are not defined.
 
-The token variable in the process_dynamic_array_len function is
-allocated in the read_expect_type function, but is not freed before
-calling the read_token function.
+hi6220-hikey.dts:
+  Change property name s/pd-gpio/pd-gpios, gpio properties should be
+  plural. This is just a cosmetic change.
 
-Free the token variable before calling read_token in order to plug the
-leak.
-
-Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ricardo Cañuelo <ricardo.canuelo@collabora.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 11 +++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts    |  2 +-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 8211e8010e09b..d260ca680f074 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2780,6 +2780,7 @@ process_dynamic_array_len(struct event_format *event, struct print_arg *arg,
- 	if (read_expected(EVENT_DELIM, ")") < 0)
- 		goto out_err;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index e9f87cb61ade7..8587912e1eb00 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -210,6 +210,17 @@ adv7533: adv7533@39 {
+ 		status = "ok";
+ 		compatible = "adi,adv7533";
+ 		reg = <0x39>;
++		adi,dsi-lanes = <4>;
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
+ 	};
+ };
  
-+	free_token(token);
- 	type = read_token(&token);
- 	*tok = token;
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 6887cc1a743d4..f78e6468b02fc 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -513,7 +513,7 @@ adv7533: adv7533@39 {
+ 		reg = <0x39>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <1 2>;
+-		pd-gpio = <&gpio0 4 0>;
++		pd-gpios = <&gpio0 4 0>;
+ 		adi,dsi-lanes = <4>;
+ 		#sound-dai-cells = <0>;
  
 -- 
 2.25.1
