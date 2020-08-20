@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7361C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6E4A207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C72F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927180;
-	bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
+	s=default; t=1597927194;
+	bh=5AckTXm0iPCXnCFpyigvpzwr1s+pozYsuJuIRPH0wgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPRgluMBWvz5SFZeqy+1SINlEiKsW1ewc1zBm5WT/LWkl+a+DSEEmAOSDh57uBTdg
-	 AbnY5VQAkc7L3iTdBQQ8ymn+UhE79QYPdXWyuIkIKFZPTxluI49clr+JTSiSTuUoq7
-	 dUAJLZH7CFJb2bbsIZJScd/rk/A4JTY4qQkTsBy0=
+	b=jIGnXvrXRTqcFUk+tjlFvUE2x4zyHbDLisKlm4LKsrIiVTDGz6rR/dK6cgzwWGQ/O
+	 2M67Z8FHMrx9wLbh2YvxdpTQR8CVK6Zv0GypVp7+mEUrSeWsAF6lLE5nWnVXlraLXX
+	 WlvAdXYdWBNZ133r1w6yPaSBxCJKQ+iZecCOCkgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbgHTMjj (ORCPT
+        id S1729460AbgHTMjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:39:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51482 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729470AbgHTJrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:35 -0400
+        id S1729472AbgHTJri (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D866C20724;
-        Thu, 20 Aug 2020 09:47:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8BFC2173E;
+        Thu, 20 Aug 2020 09:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916854;
-        bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
+        s=default; t=1597916857;
+        bh=5AckTXm0iPCXnCFpyigvpzwr1s+pozYsuJuIRPH0wgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kOG+2ZaVViPvwwHxRGd9DPfaj6CNl+CkEcJNBn3sO0EzZNqNWnJU/adBOT3BYqdCZ
-         z4JKMvaWiDlwMPCfSfg1cP9Np5t9hNOdoX4UTc1SL2zkHrVtLCwFleWDLfvcnAgM7A
-         0MZs/OM5vX0xncqJnIzTsHZ+YMQeEHoXiCU7BQwk=
+        b=ufX8i+ijNQ3ibSilBf+W5lgeIC3wXviatQUJvmORSg8pMOBTpP7yNbWuCg95yn9ys
+         oV/7xiA0mqdk1EQZwIZMFk3VOGhLJZ1q8WXLihFEQk+rBjwKdFvbIQ7n/uHSCdPvTs
+         yRiCjO4a7St5q7/p+zx4VvHnjwHr1s54J+Hjm3PI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.4 069/152] perf intel-pt: Fix FUP packet state
-Date:   Thu, 20 Aug 2020 11:20:36 +0200
-Message-Id: <20200820091557.262157715@linuxfoundation.org>
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 5.4 070/152] perf intel-pt: Fix duplicate branch after CBR
+Date:   Thu, 20 Aug 2020 11:20:37 +0200
+Message-Id: <20200820091557.310963386@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -62,74 +63,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-commit 401136bb084fd021acd9f8c51b52fe0a25e326b2 upstream.
+commit a58a057ce65b52125dd355b7d8b0d540ea267a5f upstream.
 
-While walking code towards a FUP ip, the packet state is
-INTEL_PT_STATE_FUP or INTEL_PT_STATE_FUP_NO_TIP. That was mishandled
-resulting in the state becoming INTEL_PT_STATE_IN_SYNC prematurely.  The
-result was an occasional lost EXSTOP event.
+CBR events can result in a duplicate branch event, because the state
+type defaults to a branch. Fix by clearing the state type.
 
+Example: trace 'sleep' and hope for a frequency change
+
+ Before:
+
+   $ perf record -e intel_pt//u sleep 0.1
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.034 MB perf.data ]
+   $ perf script --itrace=bpe > before.txt
+
+ After:
+
+   $ perf script --itrace=bpe > after.txt
+   $ diff -u before.txt after.txt
+#  --- before.txt  2020-07-07 14:42:18.191508098 +0300
+#  +++ after.txt   2020-07-07 14:42:36.587891753 +0300
+   @@ -29673,7 +29673,6 @@
+               sleep 93431 [007] 15411.619905:          1  branches:u:                 0 [unknown] ([unknown]) =>     7f0818abb2e0 clock_nanosleep@@GLIBC_2.17+0x0 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.619905:          1  branches:u:      7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>                0 [unknown] ([unknown])
+               sleep 93431 [007] 15411.720069:         cbr:  cbr: 15 freq: 1507 MHz ( 56%)         7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+   -           sleep 93431 [007] 15411.720069:          1  branches:u:      7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>                0 [unknown] ([unknown])
+               sleep 93431 [007] 15411.720076:          1  branches:u:                 0 [unknown] ([unknown]) =>     7f0818abb30e clock_nanosleep@@GLIBC_2.17+0x2e (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.720077:          1  branches:u:      7f0818abb323 clock_nanosleep@@GLIBC_2.17+0x43 (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>     7f0818ac0eb7 __nanosleep+0x17 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.720077:          1  branches:u:      7f0818ac0ebf __nanosleep+0x1f (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>     55cb7e4c2827 rpl_nanosleep+0x97 (/usr/bin/sleep)
+
+Fixes: 91de8684f1cff ("perf intel-pt: Cater for CBR change in PSB+")
+Fixes: abe5a1d3e4bee ("perf intel-pt: Decoder to output CBR changes immediately")
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200710151104.15137-2-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20200710151104.15137-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   21 ++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 --- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
 +++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1164,6 +1164,7 @@ static int intel_pt_walk_fup(struct inte
- 			return 0;
- 		if (err == -EAGAIN ||
- 		    intel_pt_fup_with_nlip(decoder, &intel_pt_insn, ip, err)) {
-+			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			if (intel_pt_fup_event(decoder))
+@@ -1977,8 +1977,10 @@ next:
+ 			 * possibility of another CBR change that gets caught up
+ 			 * in the PSB+.
+ 			 */
+-			if (decoder->cbr != decoder->cbr_seen)
++			if (decoder->cbr != decoder->cbr_seen) {
++				decoder->state.type = 0;
  				return 0;
- 			return -EAGAIN;
-@@ -1942,17 +1943,13 @@ next:
- 			}
- 			if (decoder->set_fup_mwait)
- 				no_tip = true;
-+			if (no_tip)
-+				decoder->pkt_state = INTEL_PT_STATE_FUP_NO_TIP;
-+			else
-+				decoder->pkt_state = INTEL_PT_STATE_FUP;
- 			err = intel_pt_walk_fup(decoder);
--			if (err != -EAGAIN) {
--				if (err)
--					return err;
--				if (no_tip)
--					decoder->pkt_state =
--						INTEL_PT_STATE_FUP_NO_TIP;
--				else
--					decoder->pkt_state = INTEL_PT_STATE_FUP;
--				return 0;
--			}
-+			if (err != -EAGAIN)
-+				return err;
- 			if (no_tip) {
- 				no_tip = false;
- 				break;
-@@ -2599,15 +2596,11 @@ const struct intel_pt_state *intel_pt_de
- 			err = intel_pt_walk_tip(decoder);
++			}
  			break;
- 		case INTEL_PT_STATE_FUP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_fup_tip(decoder);
--			else if (!err)
--				decoder->pkt_state = INTEL_PT_STATE_FUP;
+ 
+ 		case INTEL_PT_PIP:
+@@ -2019,8 +2021,10 @@ next:
+ 
+ 		case INTEL_PT_CBR:
+ 			intel_pt_calc_cbr(decoder);
+-			if (decoder->cbr != decoder->cbr_seen)
++			if (decoder->cbr != decoder->cbr_seen) {
++				decoder->state.type = 0;
+ 				return 0;
++			}
  			break;
- 		case INTEL_PT_STATE_FUP_NO_TIP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_trace(decoder);
+ 
+ 		case INTEL_PT_MODE_EXEC:
 
 
