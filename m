@@ -2,98 +2,117 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ED9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E08D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A34E9208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926599;
+	bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=wbIg5+GEdmxx75Zze8u0cHMaxEKbSKPIPD3uzp5PctIdxN3ROe+RRJEoip7LH5cmk
+	 d7WDDgi1yPEqLAOc1/A/aC9GULTuKGQItW5c+R0IQK0RqxCe3e0D6zhbyxWrY7hhPW
+	 2LfNZ6ezP3PytG0JmVL8dnHrghAsmjkcVn3V++DE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbgHTM3s (ORCPT
+        id S1727106AbgHTM35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:29:48 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729347AbgHTM3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:29:37 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7A43D86F04766B046245;
-        Thu, 20 Aug 2020 20:29:34 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
- 20:29:28 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>,
-        <martin.varghese@nokia.com>, <pshelar@ovn.org>, <fw@strlen.de>,
-        <dcaratti@redhat.com>, <edumazet@google.com>,
-        <steffen.klassert@secunet.com>, <pabeni@redhat.com>,
-        <shmulik@metanetworks.com>, <kyk.segfault@gmail.com>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] net: Check the expect of skb->data at mac header
-Date:   Thu, 20 Aug 2020 08:28:22 -0400
-Message-ID: <20200820122822.46608-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 20 Aug 2020 08:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727822AbgHTJvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 213F92067C;
+        Thu, 20 Aug 2020 09:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917083;
+        bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tdzFLyoMCU1P+EZ9TDiOvO3PKx/evM+d6mO3M8j5BkexnkxR/jbf54Kkm/b8BKhVB
+         eQEbVekR+xmrZ1YErECGNEhvbgnxzUofxrB++UQoojZClNt5f1Uk39eXrZBnx8FrjD
+         eObQoLC1vdevOcQ/mHF9PH9w2EnICelJGGvSYp8c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 151/152] drm/amdgpu: Fix bug where DPM is not enabled after hibernate and resume
+Date:   Thu, 20 Aug 2020 11:21:58 +0200
+Message-Id: <20200820091601.569990290@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb_mpls_push() and skb_mpls_pop() expect skb->data at mac header. Check
-this assumption or we would get wrong mac_header and network_header.
+From: Sandeep Raghuraman <sandy.8925@gmail.com>
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+commit f87812284172a9809820d10143b573d833cd3f75 upstream.
+
+Reproducing bug report here:
+After hibernating and resuming, DPM is not enabled. This remains the case
+even if you test hibernate using the steps here:
+https://www.kernel.org/doc/html/latest/power/basic-pm-debugging.html
+
+I debugged the problem, and figured out that in the file hardwaremanager.c,
+in the function, phm_enable_dynamic_state_management(), the check
+'if (!hwmgr->pp_one_vf && smum_is_dpm_running(hwmgr) && !amdgpu_passthrough(adev) && adev->in_suspend)'
+returns true for the hibernate case, and false for the suspend case.
+
+This means that for the hibernate case, the AMDGPU driver doesn't enable DPM
+(even though it should) and simply returns from that function.
+In the suspend case, it goes ahead and enables DPM, even though it doesn't need to.
+
+I debugged further, and found out that in the case of suspend, for the
+CIK/Hawaii GPUs, smum_is_dpm_running(hwmgr) returns false, while in the case of
+hibernate, smum_is_dpm_running(hwmgr) returns true.
+
+For CIK, the ci_is_dpm_running() function calls the ci_is_smc_ram_running() function,
+which is ultimately used to determine if DPM is currently enabled or not,
+and this seems to provide the wrong answer.
+
+I've changed the ci_is_dpm_running() function to instead use the same method that
+some other AMD GPU chips do (e.g Fiji), which seems to read the voltage controller.
+I've tested on my R9 390 and it seems to work correctly for both suspend and
+hibernate use cases, and has been stable so far.
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208839
+Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/core/skbuff.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index e18184ffa9c3..52d2ad54aa97 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -5590,6 +5590,7 @@ static void skb_mod_eth_type(struct sk_buff *skb, struct ethhdr *hdr,
- int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
- 		  int mac_len, bool ethernet)
+--- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
++++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
+@@ -2725,7 +2725,10 @@ static int ci_initialize_mc_reg_table(st
+ 
+ static bool ci_is_dpm_running(struct pp_hwmgr *hwmgr)
  {
-+	int offset = skb->data - skb_mac_header(skb);
- 	struct mpls_shim_hdr *lse;
- 	int err;
+-	return ci_is_smc_ram_running(hwmgr);
++	return (1 == PHM_READ_INDIRECT_FIELD(hwmgr->device,
++					     CGS_IND_REG__SMC, FEATURE_STATUS,
++					     VOLTAGE_CONTROLLER_ON))
++		? true : false;
+ }
  
-@@ -5600,6 +5601,9 @@ int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
- 	if (skb->encapsulation)
- 		return -EINVAL;
- 
-+	if (WARN_ONCE(offset, "We got skb with skb->data not at mac header (offset %d)\n", offset))
-+		return -EINVAL;
-+
- 	err = skb_cow_head(skb, MPLS_HLEN);
- 	if (unlikely(err))
- 		return err;
-@@ -5643,11 +5647,15 @@ EXPORT_SYMBOL_GPL(skb_mpls_push);
- int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len,
- 		 bool ethernet)
- {
-+	int offset = skb->data - skb_mac_header(skb);
- 	int err;
- 
- 	if (unlikely(!eth_p_mpls(skb->protocol)))
- 		return 0;
- 
-+	if (WARN_ONCE(offset, "We got skb with skb->data not at mac header (offset %d)\n", offset))
-+		return -EINVAL;
-+
- 	err = skb_ensure_writable(skb, mac_len + MPLS_HLEN);
- 	if (unlikely(err))
- 		return err;
--- 
-2.19.1
+ static int ci_smu_init(struct pp_hwmgr *hwmgr)
+
 
