@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3ED9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34691C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A34E9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1D01207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926599;
-	bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+	s=default; t=1597926618;
+	bh=bu/gfhKHX2wDS5zQxERccVGF9giJQteXKz3SFp1TCdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wbIg5+GEdmxx75Zze8u0cHMaxEKbSKPIPD3uzp5PctIdxN3ROe+RRJEoip7LH5cmk
-	 d7WDDgi1yPEqLAOc1/A/aC9GULTuKGQItW5c+R0IQK0RqxCe3e0D6zhbyxWrY7hhPW
-	 2LfNZ6ezP3PytG0JmVL8dnHrghAsmjkcVn3V++DE=
+	b=j9toRKqabCpMICNqRYTldYgdzKAYsjHzK+49L0BkcfFUg9sGPIVw4FdF/FCexuydW
+	 y86uOxJSNHpqILz0trb3xe7HlX/Toz334UVFtY2+bm+IgdqUkgazbwh+yVYBI+tdb+
+	 gGoLCResU4L8MbuyOWRIfjGKgAUgX7rFstifu6hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727106AbgHTM35 (ORCPT
+        id S1730034AbgHTMaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60340 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgHTJvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:24 -0400
+        id S1729800AbgHTJvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 213F92067C;
-        Thu, 20 Aug 2020 09:51:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 380C52075E;
+        Thu, 20 Aug 2020 09:51:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917083;
-        bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+        s=default; t=1597917080;
+        bh=bu/gfhKHX2wDS5zQxERccVGF9giJQteXKz3SFp1TCdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tdzFLyoMCU1P+EZ9TDiOvO3PKx/evM+d6mO3M8j5BkexnkxR/jbf54Kkm/b8BKhVB
-         eQEbVekR+xmrZ1YErECGNEhvbgnxzUofxrB++UQoojZClNt5f1Uk39eXrZBnx8FrjD
-         eObQoLC1vdevOcQ/mHF9PH9w2EnICelJGGvSYp8c=
+        b=VnW6tX49YTvqvAhRfMUnrSHzSytES3mgtVa++s7gwHlnZPX5R0b4hAdBS62c/kpvP
+         Gl4ZZm7tJf+JNsBUipedFYD5QZcAwAYTprXijRSAbwPsJTddhLiIg0N2yGPRYZxChm
+         /tMs7b79habs41+CtYgPIiGwH9tggkxjZEMyzgY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 151/152] drm/amdgpu: Fix bug where DPM is not enabled after hibernate and resume
-Date:   Thu, 20 Aug 2020 11:21:58 +0200
-Message-Id: <20200820091601.569990290@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Xin Xiong <xiongx18@fudan.edu.cn>,
+        Lyude Paul <lyude@redhat.com>
+Subject: [PATCH 5.4 150/152] drm: fix drm_dp_mst_port refcount leaks in drm_dp_mst_allocate_vcpi
+Date:   Thu, 20 Aug 2020 11:21:57 +0200
+Message-Id: <20200820091601.510194925@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,60 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Raghuraman <sandy.8925@gmail.com>
+From: Xin Xiong <xiongx18@fudan.edu.cn>
 
-commit f87812284172a9809820d10143b573d833cd3f75 upstream.
+commit a34a0a632dd991a371fec56431d73279f9c54029 upstream.
 
-Reproducing bug report here:
-After hibernating and resuming, DPM is not enabled. This remains the case
-even if you test hibernate using the steps here:
-https://www.kernel.org/doc/html/latest/power/basic-pm-debugging.html
+drm_dp_mst_allocate_vcpi() invokes
+drm_dp_mst_topology_get_port_validated(), which increases the refcount
+of the "port".
 
-I debugged the problem, and figured out that in the file hardwaremanager.c,
-in the function, phm_enable_dynamic_state_management(), the check
-'if (!hwmgr->pp_one_vf && smum_is_dpm_running(hwmgr) && !amdgpu_passthrough(adev) && adev->in_suspend)'
-returns true for the hibernate case, and false for the suspend case.
+These reference counting issues take place in two exception handling
+paths separately. Either when “slots” is less than 0 or when
+drm_dp_init_vcpi() returns a negative value, the function forgets to
+reduce the refcnt increased drm_dp_mst_topology_get_port_validated(),
+which results in a refcount leak.
 
-This means that for the hibernate case, the AMDGPU driver doesn't enable DPM
-(even though it should) and simply returns from that function.
-In the suspend case, it goes ahead and enables DPM, even though it doesn't need to.
+Fix these issues by pulling up the error handling when "slots" is less
+than 0, and calling drm_dp_mst_topology_put_port() before termination
+when drm_dp_init_vcpi() returns a negative value.
 
-I debugged further, and found out that in the case of suspend, for the
-CIK/Hawaii GPUs, smum_is_dpm_running(hwmgr) returns false, while in the case of
-hibernate, smum_is_dpm_running(hwmgr) returns true.
-
-For CIK, the ci_is_dpm_running() function calls the ci_is_smc_ram_running() function,
-which is ultimately used to determine if DPM is currently enabled or not,
-and this seems to provide the wrong answer.
-
-I've changed the ci_is_dpm_running() function to instead use the same method that
-some other AMD GPU chips do (e.g Fiji), which seems to read the voltage controller.
-I've tested on my R9 390 and it seems to work correctly for both suspend and
-hibernate use cases, and has been stable so far.
-
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208839
-Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: 1e797f556c61 ("drm/dp: Split drm_dp_mst_allocate_vcpi")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200719154545.GA41231@xin-virtual-machine
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-@@ -2725,7 +2725,10 @@ static int ci_initialize_mc_reg_table(st
- 
- static bool ci_is_dpm_running(struct pp_hwmgr *hwmgr)
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -3369,11 +3369,11 @@ bool drm_dp_mst_allocate_vcpi(struct drm
  {
--	return ci_is_smc_ram_running(hwmgr);
-+	return (1 == PHM_READ_INDIRECT_FIELD(hwmgr->device,
-+					     CGS_IND_REG__SMC, FEATURE_STATUS,
-+					     VOLTAGE_CONTROLLER_ON))
-+		? true : false;
- }
+ 	int ret;
  
- static int ci_smu_init(struct pp_hwmgr *hwmgr)
+-	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+-	if (!port)
++	if (slots < 0)
+ 		return false;
+ 
+-	if (slots < 0)
++	port = drm_dp_mst_topology_get_port_validated(mgr, port);
++	if (!port)
+ 		return false;
+ 
+ 	if (port->vcpi.vcpi > 0) {
+@@ -3389,6 +3389,7 @@ bool drm_dp_mst_allocate_vcpi(struct drm
+ 	if (ret) {
+ 		DRM_DEBUG_KMS("failed to init vcpi slots=%d max=63 ret=%d\n",
+ 			      DIV_ROUND_UP(pbn, mgr->pbn_div), ret);
++		drm_dp_mst_topology_put_port(port);
+ 		goto out;
+ 	}
+ 	DRM_DEBUG_KMS("initing vcpi for pbn=%d slots=%d\n",
 
 
