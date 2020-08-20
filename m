@@ -4,57 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB19C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33E8E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B49D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925926;
-	bh=nIEEiL55U8qmkJwBXAKfaXgaadHb9EnmGhE2Nkaj4SY=;
+	s=default; t=1597925929;
+	bh=QjGe+u4Tj7ppzgognTnADJBAxd+Zn8/zcCRRhTVVB4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlbkbsXjcdhDuEybaZO8s9msx9ezEDZ9jgryWtFq7GwuiDOmZhrt9NWxCV0ne9PVS
-	 DQDKKaXYRoAp4zVK5lvkC1Tii0mW49sukLx9IYxWgedsTFhArfagjVXX4Mc+OurW6d
-	 UXPUW3rv3nHJzP8xVUFdBJVLcNZlAwO2Ok2NX1Pw=
+	b=djbeAkiAWBldFwPeEJJF6bJ8w0aBEA/LN4tYWCr6cy41itHVAjTnVE4qGNwKz8I3J
+	 DWEAL/PzMXgYcyyujUVMbD9J2t5Zwvopke8NyXvPPX4envBbQL+10zTbKtGjBJ4dtH
+	 VyBYyLumOKvT/sM+lSCxv1sajDZQK+YMMG62NCRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbgHTMSl (ORCPT
+        id S1730507AbgHTMSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39612 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbgHTJ4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:13 -0400
+        id S1730251AbgHTJ4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E71892078D;
-        Thu, 20 Aug 2020 09:56:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2A982067C;
+        Thu, 20 Aug 2020 09:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917372;
-        bh=nIEEiL55U8qmkJwBXAKfaXgaadHb9EnmGhE2Nkaj4SY=;
+        s=default; t=1597917369;
+        bh=QjGe+u4Tj7ppzgognTnADJBAxd+Zn8/zcCRRhTVVB4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcurJgGFCRHFfP8GJdfUr+E3AzbAWaP0m8RgoiYdgmBplERiUcIWEXKoXKphKQN7E
-         CwyPJnzCt4wKo/c7sGwTaqYsHB3NE6TwFmA3iarp90fJBZjcPAQdlsUK4/r83c31Zs
-         GC7040NNHJNAYteK37eiZMGfJAmxNFD2Ouzm7ie0=
+        b=ug4G9XYRRLCWNOtv2qReeHzYohXUBA0JOrIPC4ZP2qz+S1k7/lsFcVPnwwnehOhUu
+         Ss2j1+AVb+/LJCUA+nR3/p7CHdnM1XTLCYUft1WfNTNI6oMJc7tDBOz4kdTlTFkeYi
+         FP/bf4MpAM+QA9DinhmPBJpKyR18EwKhtTRXK7ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 001/212] xfs: catch inode allocation state mismatch corruption
-Date:   Thu, 20 Aug 2020 11:19:34 +0200
-Message-Id: <20200820091602.332668035@linuxfoundation.org>
+Subject: [PATCH 4.19 76/92] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
+Date:   Thu, 20 Aug 2020 11:22:01 +0200
+Message-Id: <20200820091541.622531436@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,185 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit ee457001ed6c6f31ddad69c24c1da8f377d8472d ]
+[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
 
-We recently came across a V4 filesystem causing memory corruption
-due to a newly allocated inode being setup twice and being added to
-the superblock inode list twice. From code inspection, the only way
-this could happen is if a newly allocated inode was not marked as
-free on disk (i.e. di_mode wasn't zero).
+Fix the missing clk_disable_unprepare() before return
+from emac_clks_phase1_init() in the error handling case.
 
-Running the metadump on an upstream debug kernel fails during inode
-allocation like so:
-
-XFS: Assertion failed: ip->i_d.di_nblocks == 0, file: fs/xfs/xfs_inod=
-e.c, line: 838
- ------------[ cut here ]------------
-kernel BUG at fs/xfs/xfs_message.c:114!
-invalid opcode: 0000 [#1] PREEMPT SMP
-CPU: 11 PID: 3496 Comm: mkdir Not tainted 4.16.0-rc5-dgc #442
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/0=
-1/2014
-RIP: 0010:assfail+0x28/0x30
-RSP: 0018:ffffc9000236fc80 EFLAGS: 00010202
-RAX: 00000000ffffffea RBX: 0000000000004000 RCX: 0000000000000000
-RDX: 00000000ffffffc0 RSI: 000000000000000a RDI: ffffffff8227211b
-RBP: ffffc9000236fce8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000bec R11: f000000000000000 R12: ffffc9000236fd30
-R13: ffff8805c76bab80 R14: ffff8805c77ac800 R15: ffff88083fb12e10
-FS:  00007fac8cbff040(0000) GS:ffff88083fd00000(0000) knlGS:0000000000000=
-000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fffa6783ff8 CR3: 00000005c6e2b003 CR4: 00000000000606e0
-Call Trace:
- xfs_ialloc+0x383/0x570
- xfs_dir_ialloc+0x6a/0x2a0
- xfs_create+0x412/0x670
- xfs_generic_create+0x1f7/0x2c0
- ? capable_wrt_inode_uidgid+0x3f/0x50
- vfs_mkdir+0xfb/0x1b0
- SyS_mkdir+0xcf/0xf0
- do_syscall_64+0x73/0x1a0
- entry_SYSCALL_64_after_hwframe+0x42/0xb7
-
-Extracting the inode number we crashed on from an event trace and
-looking at it with xfs_db:
-
-xfs_db> inode 184452204
-xfs_db> p
-core.magic = 0x494e
-core.mode = 0100644
-core.version = 2
-core.format = 2 (extents)
-core.nlinkv2 = 1
-core.onlink = 0
-.....
-
-Confirms that it is not a free inode on disk. xfs_repair
-also trips over this inode:
-
-.....
-zero length extent (off = 0, fsbno = 0) in ino 184452204
-correcting nextents for inode 184452204
-bad attribute fork in inode 184452204, would clear attr fork
-bad nblocks 1 for inode 184452204, would reset to 0
-bad anextents 1 for inode 184452204, would reset to 0
-imap claims in-use inode 184452204 is free, would correct imap
-would have cleared inode 184452204
-.....
-disconnected inode 184452204, would move to lost+found
-
-And so we have a situation where the directory structure and the
-inobt thinks the inode is free, but the inode on disk thinks it is
-still in use. Where this corruption came from is not possible to
-diagnose, but we can detect it and prevent the kernel from oopsing
-on lookup. The reproducer now results in:
-
-$ sudo mkdir /mnt/scratch/{0,1,2,3,4,5}{0,1,2,3,4,5}
-mkdir: cannot create directory =E2=80=98/mnt/scratch/00=E2=80=99: File ex=
-ists
-mkdir: cannot create directory =E2=80=98/mnt/scratch/01=E2=80=99: File ex=
-ists
-mkdir: cannot create directory =E2=80=98/mnt/scratch/03=E2=80=99: Structu=
-re needs cleaning
-mkdir: cannot create directory =E2=80=98/mnt/scratch/04=E2=80=99: Input/o=
-utput error
-mkdir: cannot create directory =E2=80=98/mnt/scratch/05=E2=80=99: Input/o=
-utput error
-....
-
-And this corruption shutdown:
-
-[   54.843517] XFS (loop0): Corruption detected! Free inode 0xafe846c not=
- marked free on disk
-[   54.845885] XFS (loop0): Internal error xfs_trans_cancel at line 1023 =
-of file fs/xfs/xfs_trans.c.  Caller xfs_create+0x425/0x670
-[   54.848994] CPU: 10 PID: 3541 Comm: mkdir Not tainted 4.16.0-rc5-dgc #=
-443
-[   54.850753] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
-S 1.10.2-1 04/01/2014
-[   54.852859] Call Trace:
-[   54.853531]  dump_stack+0x85/0xc5
-[   54.854385]  xfs_trans_cancel+0x197/0x1c0
-[   54.855421]  xfs_create+0x425/0x670
-[   54.856314]  xfs_generic_create+0x1f7/0x2c0
-[   54.857390]  ? capable_wrt_inode_uidgid+0x3f/0x50
-[   54.858586]  vfs_mkdir+0xfb/0x1b0
-[   54.859458]  SyS_mkdir+0xcf/0xf0
-[   54.860254]  do_syscall_64+0x73/0x1a0
-[   54.861193]  entry_SYSCALL_64_after_hwframe+0x42/0xb7
-[   54.862492] RIP: 0033:0x7fb73bddf547
-[   54.863358] RSP: 002b:00007ffdaa553338 EFLAGS: 00000246 ORIG_RAX: 0000=
-000000000053
-[   54.865133] RAX: ffffffffffffffda RBX: 00007ffdaa55449a RCX: 00007fb73=
-bddf547
-[   54.866766] RDX: 0000000000000001 RSI: 00000000000001ff RDI: 00007ffda=
-a55449a
-[   54.868432] RBP: 00007ffdaa55449a R08: 00000000000001ff R09: 00005623a=
-8670dd0
-[   54.870110] R10: 00007fb73be72d5b R11: 0000000000000246 R12: 000000000=
-00001ff
-[   54.871752] R13: 00007ffdaa5534b0 R14: 0000000000000000 R15: 00007ffda=
-a553500
-[   54.873429] XFS (loop0): xfs_do_force_shutdown(0x8) called from line 1=
-024 of file fs/xfs/xfs_trans.c.  Return address = ffffffff814cd050
-[   54.882790] XFS (loop0): Corruption of in-memory data detected.  Shutt=
-ing down filesystem
-[   54.884597] XFS (loop0): Please umount the filesystem and rectify the =
-problem(s)
-
-Note that this crash is only possible on v4 filesystemsi or v5
-filesystems mounted with the ikeep mount option. For all other V5
-filesystems, this problem cannot occur because we don't read inodes
-we are allocating from disk - we simply overwrite them with the new
-inode information.
-
-Signed-Off-By: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-Tested-by: Carlos Maiolino <cmaiolino@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_icache.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 86a4911520cc5..57ec10809f4bf 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -471,7 +471,28 @@ xfs_iget_cache_miss(
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
+index 2a0cbc535a2ed..19673ed929e68 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -493,13 +493,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
  
- 	trace_xfs_iget_miss(ip);
+ 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_axi;
  
--	if ((VFS_I(ip)->i_mode == 0) && !(flags & XFS_IGET_CREATE)) {
+ 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_cfg_ahb;
 +
-+	/*
-+	 * If we are allocating a new inode, then check what was returned is
-+	 * actually a free, empty inode. If we are not allocating an inode,
-+	 * the check we didn't find a free inode.
-+	 */
-+	if (flags & XFS_IGET_CREATE) {
-+		if (VFS_I(ip)->i_mode != 0) {
-+			xfs_warn(mp,
-+"Corruption detected! Free inode 0x%llx not marked free on disk",
-+				ino);
-+			error = -EFSCORRUPTED;
-+			goto out_destroy;
-+		}
-+		if (ip->i_d.di_nblocks != 0) {
-+			xfs_warn(mp,
-+"Corruption detected! Free inode 0x%llx has blocks allocated!",
-+				ino);
-+			error = -EFSCORRUPTED;
-+			goto out_destroy;
-+		}
-+	} else if (VFS_I(ip)->i_mode == 0) {
- 		error = -ENOENT;
- 		goto out_destroy;
- 	}
++	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	if (ret)
++		goto disable_clk_cfg_ahb;
+ 
+-	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	return 0;
++
++disable_clk_cfg_ahb:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
++disable_clk_axi:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
++
++	return ret;
+ }
+ 
+ /* Enable clocks; needs emac_clks_phase1_init to be called before */
 -- 
 2.25.1
 
