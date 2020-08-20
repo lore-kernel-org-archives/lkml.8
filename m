@@ -2,106 +2,87 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23ACBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B945C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF405207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:52:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TggKAq+G"
+	by mail.kernel.org (Postfix) with ESMTP id 3EFEE207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597949580;
+	bh=rSUz5YSmWP/BtGBq8Tyabp7GiDHOHBwKBlQJLdfm/nQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=w7miQWiKtaKBQXIA1Etd0ccOk4DCf1hk+RhSAMMNwQJ4Mb0gpLjCxyKmtifY9XTTs
+	 io8jxGQF3mi8O4Wu2EVMyEqSld0/BJXlLhsR1193IalYftwjgFoWtyWexYZ7KXHmk8
+	 FtIilJUN+PsWFoQIyqn5SZLxBtvD58NmNReLbiMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgHTSwD (ORCPT
+        id S1728005AbgHTSwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:52:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59260 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727943AbgHTSv5 (ORCPT
+        Thu, 20 Aug 2020 14:52:53 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40950 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbgHTSwp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:51:57 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D913C061385;
-        Thu, 20 Aug 2020 11:51:56 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z18so3102649wrm.12;
-        Thu, 20 Aug 2020 11:51:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1OBfjEMXrvHfHA4ZfSTlw1MEhV9y4/rsLJtMDyqLaZE=;
-        b=TggKAq+GHBkFEqPv5wF0L7x1EL8m9AjUaZo3YMoCq0oby0froLzwXVCIYof0QcV6gP
-         4PDAmkQ8mNAsgGmgcE/0ufjCu1/VA336H7AQmdmWW0s70PdH7AC6M/s6Czw6dysdOy7u
-         9PZ7A8lpDnAfn5ogdcCCezXRSParyypBJqEO+NC/YJhank4UfcdWyF4NCaTXXpLF/mHC
-         r5TYZ7PtPG/emC8Dl500w54ZLWIoxb2Mbdkg7Liw7sVWpgeVFK18osTAR2wQNBkprzVi
-         io4PSPLfeWuaNnu1KnKLvHZCY4wQ/xNOkI5dwWfMCKQCzZvPkAmsheWwpHYUwQ9afR/1
-         d07w==
+        Thu, 20 Aug 2020 14:52:45 -0400
+Received: by mail-wr1-f68.google.com with SMTP id l2so3137212wrc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:52:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1OBfjEMXrvHfHA4ZfSTlw1MEhV9y4/rsLJtMDyqLaZE=;
-        b=RZaFOHbLRR26fs1N1sgJPrzHNZcLxkuTx1jFA5CuDXA1e454zNOedNuOdHX/XeWOFk
-         lDUQFU90iCRXQfx27aU3bK/nEGNRvS9oD9G+ezA8bUkOJWxDB+3E+pgbVmYD/VVwhnau
-         sx3BUcOUa8v+IMgy2xSVD1LhrVfqemzMLpkxKBOmfYYNeBZ4n+9xd1gL1zqloWvXyaOp
-         7sMZ3wAFKOKv4lrmTmGWGzNf+zWmxkL4tyGlCQygoeLGc9kKm0IfS036ztr79vAwj5sk
-         Ud4ZUohqd0FlsnNhMqabm7qjsEgNyuxu88WH0BuuYmcAjHj4KrAvI8YVKi5y+gpzjAEL
-         z4XA==
-X-Gm-Message-State: AOAM530+G/Jc+zSQRBLw6PLWn11H+QpyjpCqw0W98SDy4ZVy8aAeeBpB
-        BLyq4/O0H1YZWejqhxhT+RwQNUsZyhitxFxm
-X-Google-Smtp-Source: ABdhPJwuFJAYfGU9Hmt7SvFrIIXQWtVurSNECgoa311lZtPpNp64wDhutmHAW01NOap7yrwY/7qQbQ==
-X-Received: by 2002:adf:c983:: with SMTP id f3mr96319wrh.348.1597949515238;
-        Thu, 20 Aug 2020 11:51:55 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id t17sm5511290wmj.34.2020.08.20.11.51.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 11:51:54 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     Nilesh Javali <njavali@marvell.com>,
-        GR-QLogic-Storage-Upstream@marvell.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Alex Dewar <alex.dewar90@gmail.com>
-Subject: [PATCH] scsi: qla2xxx: Remove unnecessary call to memset
-Date:   Thu, 20 Aug 2020 19:51:49 +0100
-Message-Id: <20200820185149.932178-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BJ095o2R3pfLHrGrBkg75D4r4m29RUPbdiOfPVS83Ok=;
+        b=q7QgR74Ox6vR+DfxgQTlpAUjOAHdFQ/d5J3xL9N4RmSLZxD3OOYIjGZoGNxPaxjmDv
+         whahzFOBXE0MfhQtKDlV5pqf6dvw2j5BhJtZIh1BArDbxll5emGL1GKX3zsAumfH1zj/
+         67WA7YrhVYRF6jVl/WK9HkgF2bew+VzPAT0cKWm5ykdxfEZ9nUCxBcM9+6jrAfw0emkM
+         AtkyyACw3SqUAKGstklDzQOfsEMlML/38HNV2jr3GQpi0KugDXprESU/h1O8R7fIF/JP
+         ljULnJ1a11jICOs1F3yM6gTtwkuI1WWnOil82G/vHBE9F4TFFqqS+7YlYRpSXUOZU8cq
+         KFEw==
+X-Gm-Message-State: AOAM532OOF4Eizvv+dFgeuIgzd1LQwmaLM7vUwFxgOxAXKKprsBOPpzL
+        vH9UxAn29YMrMFiRZe31D+I=
+X-Google-Smtp-Source: ABdhPJzkDPZAouwqIHWPOQHYosJiqPAJhKrgroO2UbF2yZfw92R8S8xfuBRKKq1Q9umYszmavSEPPw==
+X-Received: by 2002:a5d:49c9:: with SMTP id t9mr111645wrs.302.1597949563855;
+        Thu, 20 Aug 2020 11:52:43 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id m20sm22707438wmc.1.2020.08.20.11.52.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 11:52:43 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 20:52:41 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] memory: brcmstb_dpfe: Fix memory leak
+Message-ID: <20200820185241.GA2833@kozik-lap>
+References: <20200820172118.781324-1-alex.dewar90@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200820172118.781324-1-alex.dewar90@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In qla25xx_set_els_cmds_supported(), a call is made to
-dma_alloc_coherent() followed by zeroing the memory with memset. This is
-unnecessary as dma_alloc_coherent() already zeros memory. Remove.
+On Thu, Aug 20, 2020 at 06:21:18PM +0100, Alex Dewar wrote:
+> In brcmstb_dpfe_download_firmware(), memory is allocated to variable fw by
+> firmware_request_nowarn(), but never released. Fix up to release fw on
+> all return paths.
+> 
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> ---
+> v2: Don't assign ret unnecessarily (Krzysztof)
+> ---
+>  drivers/memory/brcmstb_dpfe.c | 16 ++++++++++------
 
-Issue identified with Coccinelle.
+Thanks, applied with acks, CC stable and Fixes tag.
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
----
- drivers/scsi/qla2xxx/qla_mbx.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
-index 226f1428d3e5..e00f604bbf7a 100644
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -4925,8 +4925,6 @@ qla25xx_set_els_cmds_supported(scsi_qla_host_t *vha)
- 		return QLA_MEMORY_ALLOC_FAILED;
- 	}
- 
--	memset(els_cmd_map, 0, ELS_CMD_MAP_SIZE);
--
- 	/* List of Purex ELS */
- 	cmd_opcode[0] = ELS_FPIN;
- 	cmd_opcode[1] = ELS_RDP;
--- 
-2.28.0
+Best regards,
+Krzysztof
 
