@@ -2,51 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31253C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79264207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 073A5207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928529;
-	bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
+	s=default; t=1597928538;
+	bh=5AckTXm0iPCXnCFpyigvpzwr1s+pozYsuJuIRPH0wgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XjLC0Uh6C6rn/FhgFIV8pBpAoYqP/fDxGJ8tNGgZ8AbusS9SGsptGLbZTBgjWEXus
-	 BRVlr9RJvaQkvfNgY/8WbOLT/GwhAAaHAt9iYR4+PRcCI5mJkwXXvXMaTXAWANqRp/
-	 f5zBaHdOgNCcU4769NPOJcuHhSoFTJdFPTPxnz84=
+	b=MjFDCOWBlu4shyl9jT3EeKH+D7JjVnbLWIbSFuvTmHeD9W758Rvpsa31k4eBcXAJ+
+	 aJ9qjAWMcvMIJYo4esVMb+2L82jr/0ym2oe+Qb0CnqABSwQlDkW4VQxAjYg6wxZqk+
+	 PUfRy/oTcxwYnDy40az65x7uw9uMyYb0x+OmSaFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgHTJkY (ORCPT
+        id S1728470AbgHTNCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:40:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:02:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbgHTJkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:18 -0400
+        id S1728528AbgHTJkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEDA4207DE;
-        Thu, 20 Aug 2020 09:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6043F2075E;
+        Thu, 20 Aug 2020 09:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916417;
-        bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
+        s=default; t=1597916413;
+        bh=5AckTXm0iPCXnCFpyigvpzwr1s+pozYsuJuIRPH0wgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i2Hifk9DLuxN66ULb6aMdkiHooHZ3ULI/0wxxLzn+5IoofTPpdcu/JU2HtlL6J2Fw
-         V2RDaVmzg9r+Vs2PM88SZTnqKfunO+nJcLc+wQNPx7CuAGZhtiULHSYFaLRzK6n7GU
-         fHYTsDKuzG7uizBnz8g15jxqzL6JO3Jrwl3ThwzE=
+        b=BgTp/A7pWnJXvp1tTOm0QUuySRSOmuAjqgwUVCgPIHtB3BHeG/aSoRqhKv0LduqFf
+         zxD5notlbFuAnfL/n9K0MJAYsfld7TCLWN1K4d+u2l2DOzPrbifkXj8lxn9dQNc3N8
+         TxGPE20kCG9LND0e1GMwCTNVRI8BUIoOS8OEWCyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 119/204] USB: serial: ftdi_sio: fix break and sysrq handling
-Date:   Thu, 20 Aug 2020 11:20:16 +0200
-Message-Id: <20200820091612.243500483@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Subject: [PATCH 5.7 092/204] perf intel-pt: Fix duplicate branch after CBR
+Date:   Thu, 20 Aug 2020 11:19:49 +0200
+Message-Id: <20200820091610.928636133@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,87 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
+commit a58a057ce65b52125dd355b7d8b0d540ea267a5f upstream.
 
-Only the last NUL in a packet should be flagged as a break character,
-for example, to avoid dropping unrelated characters when IGNBRK is set.
+CBR events can result in a duplicate branch event, because the state
+type defaults to a branch. Fix by clearing the state type.
 
-Also make sysrq work by consuming the break character instead of having
-it immediately cancel the sysrq request, and by not processing it
-prematurely to avoid triggering a sysrq based on an unrelated character
-received in the same packet (which was received *before* the break).
+Example: trace 'sleep' and hope for a frequency change
 
-Note that the break flag can be left set also for a packet received
-immediately following a break and that and an ending NUL in such a
-packet will continue to be reported as a break as there's no good way to
-tell it apart from an actual break.
+ Before:
 
-Tested on FT232R and FT232H.
+   $ perf record -e intel_pt//u sleep 0.1
+   [ perf record: Woken up 1 times to write data ]
+   [ perf record: Captured and wrote 0.034 MB perf.data ]
+   $ perf script --itrace=bpe > before.txt
 
-Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ After:
+
+   $ perf script --itrace=bpe > after.txt
+   $ diff -u before.txt after.txt
+#  --- before.txt  2020-07-07 14:42:18.191508098 +0300
+#  +++ after.txt   2020-07-07 14:42:36.587891753 +0300
+   @@ -29673,7 +29673,6 @@
+               sleep 93431 [007] 15411.619905:          1  branches:u:                 0 [unknown] ([unknown]) =>     7f0818abb2e0 clock_nanosleep@@GLIBC_2.17+0x0 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.619905:          1  branches:u:      7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>                0 [unknown] ([unknown])
+               sleep 93431 [007] 15411.720069:         cbr:  cbr: 15 freq: 1507 MHz ( 56%)         7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+   -           sleep 93431 [007] 15411.720069:          1  branches:u:      7f0818abb30c clock_nanosleep@@GLIBC_2.17+0x2c (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>                0 [unknown] ([unknown])
+               sleep 93431 [007] 15411.720076:          1  branches:u:                 0 [unknown] ([unknown]) =>     7f0818abb30e clock_nanosleep@@GLIBC_2.17+0x2e (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.720077:          1  branches:u:      7f0818abb323 clock_nanosleep@@GLIBC_2.17+0x43 (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>     7f0818ac0eb7 __nanosleep+0x17 (/usr/lib/x86_64-linux-gnu/libc-2.31.so)
+               sleep 93431 [007] 15411.720077:          1  branches:u:      7f0818ac0ebf __nanosleep+0x1f (/usr/lib/x86_64-linux-gnu/libc-2.31.so) =>     55cb7e4c2827 rpl_nanosleep+0x97 (/usr/bin/sleep)
+
+Fixes: 91de8684f1cff ("perf intel-pt: Cater for CBR change in PSB+")
+Fixes: abe5a1d3e4bee ("perf intel-pt: Decoder to output CBR changes immediately")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200710151104.15137-3-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 33f1cca7eaa61..07b146d7033a6 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2483,6 +2483,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
- {
- 	unsigned char status;
-+	bool brkint = false;
- 	int i;
- 	char flag;
- 
-@@ -2534,13 +2535,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 */
- 	flag = TTY_NORMAL;
- 	if (buf[1] & FTDI_RS_ERR_MASK) {
--		/* Break takes precedence over parity, which takes precedence
--		 * over framing errors */
--		if (buf[1] & FTDI_RS_BI) {
--			flag = TTY_BREAK;
-+		/*
-+		 * Break takes precedence over parity, which takes precedence
-+		 * over framing errors. Note that break is only associated
-+		 * with the last character in the buffer and only when it's a
-+		 * NUL.
-+		 */
-+		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
- 			port->icount.brk++;
--			usb_serial_handle_break(port);
--		} else if (buf[1] & FTDI_RS_PE) {
-+			brkint = true;
-+		}
-+		if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
- 		} else if (buf[1] & FTDI_RS_FE) {
-@@ -2556,8 +2561,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 
- 	port->icount.rx += len - 2;
- 
--	if (port->port.console && port->sysrq) {
-+	if (brkint || (port->port.console && port->sysrq)) {
- 		for (i = 2; i < len; i++) {
-+			if (brkint && i == len - 1) {
-+				if (usb_serial_handle_break(port))
-+					return len - 3;
-+				flag = TTY_BREAK;
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1977,8 +1977,10 @@ next:
+ 			 * possibility of another CBR change that gets caught up
+ 			 * in the PSB+.
+ 			 */
+-			if (decoder->cbr != decoder->cbr_seen)
++			if (decoder->cbr != decoder->cbr_seen) {
++				decoder->state.type = 0;
+ 				return 0;
 +			}
- 			if (usb_serial_handle_sysrq_char(port, buf[i]))
- 				continue;
- 			tty_insert_flip_char(&port->port, buf[i], flag);
--- 
-2.25.1
-
+ 			break;
+ 
+ 		case INTEL_PT_PIP:
+@@ -2019,8 +2021,10 @@ next:
+ 
+ 		case INTEL_PT_CBR:
+ 			intel_pt_calc_cbr(decoder);
+-			if (decoder->cbr != decoder->cbr_seen)
++			if (decoder->cbr != decoder->cbr_seen) {
++				decoder->state.type = 0;
+ 				return 0;
++			}
+ 			break;
+ 
+ 		case INTEL_PT_MODE_EXEC:
 
 
