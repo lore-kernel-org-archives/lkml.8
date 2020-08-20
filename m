@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C29C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3637C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D041220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804E220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926213;
-	bh=YJIOkrnDLtvjSdQPBkT7qqKl3C3DwVHsZlnDQUDsGLk=;
+	s=default; t=1597926220;
+	bh=cc3kPJd05HR4KDSl2IwNS8GqwV87x7XMPJlut7rIJKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAaoFlOwRs7l4NOASUb91n7aLim6G5MOCD6ixpPwYNljgKupmS0fHKQrH894jyJwc
-	 /h3QT8MoniXbpzdn5A+V/ml4+/+bRK3+ir4/1csPOV1/rklrPxrhIHFl/ZfoerJWLV
-	 4opo4UBlk1d52jfc7D4mvNh4JcU4F8KNAPLvCLeY=
+	b=GzaMOlpnGbrqqogqKfRbxsqFEg1xopz1PWDWtkv57DWFBOOk7q53ReiQtWXXnm+zj
+	 WXYSbBu3X/gSZSpLhNlhvXyXRZ8v+bJhjRI6XGxqrICIfqGTbMI18xpvQgd/CHP2uK
+	 XgjgZgfuXtIxvTyGRVhTLTmMzOmxCPuGcbR67Rcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgHTMXb (ORCPT
+        id S1730313AbgHTMXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:23:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:23:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbgHTJyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:36 -0400
+        id S1729190AbgHTJy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C2B72075E;
-        Thu, 20 Aug 2020 09:54:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C3182075E;
+        Thu, 20 Aug 2020 09:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917276;
-        bh=YJIOkrnDLtvjSdQPBkT7qqKl3C3DwVHsZlnDQUDsGLk=;
+        s=default; t=1597917267;
+        bh=cc3kPJd05HR4KDSl2IwNS8GqwV87x7XMPJlut7rIJKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2stVS8f+R60QbN6Hl8x9k6FzIQiZFbed6QusRKBVk1sfvg+xG6SnKF/AMGc2b3FcJ
-         749L/wITYUklEvEhKmZlxbS11o9WrIF02bgeRPWWz2lD9reOjGorAKRh+yTAtU/WVI
-         pQanElE306P9ntwJKHzlUYI+krEcGQfHVCnD2Ug0=
+        b=s0ZghojqY2kLhGB/y0Jh8OFwwvjfIHzadttULBgolb89QFJpaaHb1BtIKE7+Ui5mC
+         yKzKi+g+Vc7WsKWmcXTBJHH+U7eES1N/JRz1VysmX7Vj/G/URm2Ua0NHhV4rLIy26X
+         uLa9tHSrwTttqBp0st8xR3Scbz+DS8TMhApHOM8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 65/92] i2c: rcar: slave: only send STOP event when we have been addressed
-Date:   Thu, 20 Aug 2020 11:21:50 +0200
-Message-Id: <20200820091540.998682796@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 63/92] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
+Date:   Thu, 20 Aug 2020 11:21:48 +0200
+Message-Id: <20200820091540.893123826@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,53 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
+[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
 
-When the SSR interrupt is activated, it will detect every STOP condition
-on the bus, not only the ones after we have been addressed. So, enable
-this interrupt only after we have been addressed, and disable it
-otherwise.
+It is possible for the call to omap_iommu_dump_ctx to return
+a negative error number, so check for the failure and return
+the error number rather than pass the negative value to
+simple_read_from_buffer.
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
+Addresses-Coverity: ("Improper use of negative value")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/iommu/omap-iommu-debug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 6e49e438ef5a5..11d1977616858 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -587,13 +587,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
- 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
- 		}
+diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
+index 50217548c3b8e..5ce55fabc9d80 100644
+--- a/drivers/iommu/omap-iommu-debug.c
++++ b/drivers/iommu/omap-iommu-debug.c
+@@ -101,8 +101,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
+ 	mutex_lock(&iommu_debug_lock);
  
--		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
-+		/* Clear SSR, too, because of old STOPs to other clients than us */
-+		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
- 	}
+ 	bytes = omap_iommu_dump_ctx(obj, p, count);
++	if (bytes < 0)
++		goto err;
+ 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
  
- 	/* master sent stop */
- 	if (ssr_filtered & SSR) {
- 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
--		rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+		rcar_i2c_write(priv, ICSIER, SAR);
- 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
- 	}
++err:
+ 	mutex_unlock(&iommu_debug_lock);
+ 	kfree(buf);
  
-@@ -848,7 +849,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
- 	priv->slave = slave;
- 	rcar_i2c_write(priv, ICSAR, slave->addr);
- 	rcar_i2c_write(priv, ICSSR, 0);
--	rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+	rcar_i2c_write(priv, ICSIER, SAR);
- 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
- 
- 	return 0;
 -- 
 2.25.1
 
