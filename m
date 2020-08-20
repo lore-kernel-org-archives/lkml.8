@@ -2,52 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C93920855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2778520855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922621;
-	bh=dPor8RalgF2oJq7M7FT7ltZhtMKyFs5xsBkAHeEcRPY=;
+	s=default; t=1597922638;
+	bh=nPF0txjiELBv6Oz5GF2WpnSDI0mKS6IXhMWkN0onJKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntH5UerIKeL+5crfSRg7Aiw2861ErS7lcufOFvBoeIUjIA+QfoK1vzbp6p96stecl
-	 mHmTVY7jD98IbyuNwotcDKQjM2CzwvavJBP0qqkivI4GQAbst1nhebS2oe6Wao68Zc
-	 skWlkK1rPYDhSkQKB2mvZW8aFlCbf98C32lZe9Mk=
+	b=bjGmxwEEIhVfwvX0LNnF1WfWs0aqipI14scObGecwg8DJdw7JANEVRPfxs6Q4LO60
+	 1u++HUZXR1TsDqA+RJX7zJp8okSQ59mloGIGHPCRM0PcG6fSU67ZssRSR5ukP3iw3c
+	 FWhUds09BlorNl0NRIl3T5oYjbOVN5LOc1uuE7hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730361AbgHTLXj (ORCPT
+        id S1730667AbgHTLXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:23:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37182 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:23:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729743AbgHTKHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:07:13 -0400
+        id S1730536AbgHTKHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BECAF20738;
-        Thu, 20 Aug 2020 10:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C2B120724;
+        Thu, 20 Aug 2020 10:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918032;
-        bh=dPor8RalgF2oJq7M7FT7ltZhtMKyFs5xsBkAHeEcRPY=;
+        s=default; t=1597918026;
+        bh=nPF0txjiELBv6Oz5GF2WpnSDI0mKS6IXhMWkN0onJKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AR4Cm1joD89kPlzIPYhwBbRKerWlfmINsIe29qNOPz7dUOvludOYPwzw8ip3P1VIY
-         GvtUxfTpRxIANjR4pa7+mDsXJHswxRxjDBuXe4pWi3okdxMxzNvMU63LO60yyCudlz
-         Q9I/qs/mvMjACk7CKCTWj5sZk6zDNmpwQRWqh9NE=
+        b=RPwuyLsOkRAjl8esc+YUotxYzVT5rgHv6JxeejqM/zeaX7jzvg/tz8P1u5aLFNHJm
+         Eha6/tyELYeXQ9bQQbG93inEPyhlYISvU487tBkw7ccxOR/SJznPbIVP9GiNicekm/
+         E/qPDohMNneX1ySGlYlh4KcXaIOCBbiPwWY0GGhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 030/228] ipv4: Silence suspicious RCU usage warning
-Date:   Thu, 20 Aug 2020 11:20:05 +0200
-Message-Id: <20200820091609.043158161@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 020/228] drm/nouveau/fbcon: fix module unload when fbcon init has failed for some reason
+Date:   Thu, 20 Aug 2020 11:19:55 +0200
+Message-Id: <20200820091608.542688736@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,80 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Ben Skeggs <bskeggs@redhat.com>
 
-[ Upstream commit 83f3522860f702748143e022f1a546547314c715 ]
+[ Upstream commit 498595abf5bd51f0ae074cec565d888778ea558f ]
 
-fib_trie_unmerge() is called with RTNL held, but not from an RCU
-read-side critical section. This leads to the following warning [1] when
-the FIB alias list in a leaf is traversed with
-hlist_for_each_entry_rcu().
+Stale pointer was tripping up the unload path.
 
-Since the function is always called with RTNL held and since
-modification of the list is protected by RTNL, simply use
-hlist_for_each_entry() and silence the warning.
-
-[1]
-WARNING: suspicious RCU usage
-5.8.0-rc4-custom-01520-gc1f937f3f83b #30 Not tainted
------------------------------
-net/ipv4/fib_trie.c:1867 RCU-list traversed in non-reader section!!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by ip/164:
- #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
-
-stack backtrace:
-CPU: 0 PID: 164 Comm: ip Not tainted 5.8.0-rc4-custom-01520-gc1f937f3f83b #30
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
-Call Trace:
- dump_stack+0x100/0x184
- lockdep_rcu_suspicious+0x153/0x15d
- fib_trie_unmerge+0x608/0xdb0
- fib_unmerge+0x44/0x360
- fib4_rule_configure+0xc8/0xad0
- fib_nl_newrule+0x37a/0x1dd0
- rtnetlink_rcv_msg+0x4f7/0xbd0
- netlink_rcv_skb+0x17a/0x480
- rtnetlink_rcv+0x22/0x30
- netlink_unicast+0x5ae/0x890
- netlink_sendmsg+0x98a/0xf40
- ____sys_sendmsg+0x879/0xa00
- ___sys_sendmsg+0x122/0x190
- __sys_sendmsg+0x103/0x1d0
- __x64_sys_sendmsg+0x7d/0xb0
- do_syscall_64+0x54/0xa0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fc80a234e97
-Code: Bad RIP value.
-RSP: 002b:00007ffef8b66798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc80a234e97
-RDX: 0000000000000000 RSI: 00007ffef8b66800 RDI: 0000000000000003
-RBP: 000000005f141b1c R08: 0000000000000001 R09: 0000000000000000
-R10: 00007fc80a2a8ac0 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007ffef8b67008 R15: 0000556fccb10020
-
-Fixes: 0ddcf43d5d4a ("ipv4: FIB Local/MAIN table collapse")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_trie.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_fbcon.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -1729,7 +1729,7 @@ struct fib_table *fib_trie_unmerge(struc
- 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
- 		struct key_vector *local_l = NULL, *local_tp;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+index 2b12d82aac150..ee8f744dc4881 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+@@ -543,6 +543,7 @@ fini:
+ 	drm_fb_helper_fini(&fbcon->helper);
+ free:
+ 	kfree(fbcon);
++	drm->fbcon = NULL;
+ 	return ret;
+ }
  
--		hlist_for_each_entry_rcu(fa, &l->leaf, fa_list) {
-+		hlist_for_each_entry(fa, &l->leaf, fa_list) {
- 			struct fib_alias *new_fa;
- 
- 			if (local_tb->tb_id != fa->tb_id)
+-- 
+2.25.1
+
 
 
