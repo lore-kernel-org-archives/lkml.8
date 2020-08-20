@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82735C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4534DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49CF320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FEE20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926278;
-	bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
+	s=default; t=1597926287;
+	bh=ng2dWQPIygJnSwEabXZLLCmhiuRhUXoVKVZys+erk0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yYZWzPdGmJY9kWpnoywITU2RxG4GkewJC2z0kOhqbA2S89J35ZUhbdYL3Y23fYth3
-	 5Rtvm4v/gyy7kqxXvNbiLHgnoes9v4s8i8xRROWoMclx7wVICZ3PBus6SR+XRBvNiS
-	 0K0fpdF6zK5tVYgBY+adxp5GgU0+t9CMJ6dl5L5c=
+	b=D7GwSdOYj0Bp06Payandopl4tLsy6vu7GYGNEakvP83evQMapH3NAjFSbDS517HWU
+	 8t0dXpAQk4fh7l4pO/8uL3FTnn8mXFUyH16japebK+UCQyBsdULv+3jkmB03CKTMoR
+	 JonIEtozbMp0D09dNo0rGMe3xdt9pg/nATmk4dD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgHTMYg (ORCPT
+        id S1730213AbgHTMYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:24:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35956 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:24:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729902AbgHTJxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:50 -0400
+        id S1730071AbgHTJxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CACD12075E;
-        Thu, 20 Aug 2020 09:53:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF0821775;
+        Thu, 20 Aug 2020 09:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917230;
-        bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
+        s=default; t=1597917224;
+        bh=ng2dWQPIygJnSwEabXZLLCmhiuRhUXoVKVZys+erk0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMm8bvO9/Ygn6c11blOTxMWKNE3cmV2CY1GHgiMysGGd4NT1i9pAFOr1Lly7S8ajr
-         akoeblXDdBH+DOj3CMph6Jvixfytv8sTY+rXH7gyDNCEU39XAtRL9ddY8Oj3p+2qAC
-         drOWpbAbWxKSJ2H+5tMUG1K48nJpzR+kkcfVcIgw=
+        b=EUVejZn/cAiveBWTpASi2nk6sFV7RMmEVlhpVuasLyXX7Iv2BdAhuuxkCaEGJX+eO
+         QSFx3Cwo/4OCBXwaa0GmkXeW+EHfCLzxFlaviOK0Bd86GxJu6yDIu8IqBWeo7tNCvg
+         fNpMTSzLzlkApPdzrLfdpFGDBowhDADqj16Wdbo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Stanhope <charles.stanhope@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.19 19/92] iio: dac: ad5592r: fix unbalanced mutex unlocks in ad5592r_read_raw()
-Date:   Thu, 20 Aug 2020 11:21:04 +0200
-Message-Id: <20200820091538.559679156@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        "Pavel Machek (CIP)" <pavel@denx.de>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 17/92] btrfs: fix return value mixup in btrfs_get_extent
+Date:   Thu, 20 Aug 2020 11:21:02 +0200
+Message-Id: <20200820091538.452622277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -62,47 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Pavel Machek <pavel@denx.de>
 
-commit 65afb0932a81c1de719ceee0db0b276094b10ac8 upstream.
+commit 881a3a11c2b858fe9b69ef79ac5ee9978a266dc9 upstream.
 
-There are 2 exit paths where the lock isn't held, but try to unlock the
-mutex when exiting. In these places we should just return from the
-function.
+btrfs_get_extent() sets variable ret, but out: error path expect error
+to be in variable err so the error code is lost.
 
-A neater approach would be to cleanup the ad5592r_read_raw(), but that
-would make this patch more difficult to backport to stable versions.
-
-Fixes 56ca9db862bf3: ("iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs")
-Reported-by: Charles Stanhope <charles.stanhope@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Fixes: 6bf9e4bd6a27 ("btrfs: inode: Verify inode mode to avoid NULL pointer dereference")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/dac/ad5592r-base.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/inode.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -417,7 +417,7 @@ static int ad5592r_read_raw(struct iio_d
- 			s64 tmp = *val * (3767897513LL / 25LL);
- 			*val = div_s64_rem(tmp, 1000000000LL, val2);
- 
--			ret = IIO_VAL_INT_PLUS_MICRO;
-+			return IIO_VAL_INT_PLUS_MICRO;
- 		} else {
- 			int mult;
- 
-@@ -448,7 +448,7 @@ static int ad5592r_read_raw(struct iio_d
- 		ret =  IIO_VAL_INT;
- 		break;
- 	default:
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
- 
- unlock:
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -7014,7 +7014,7 @@ struct extent_map *btrfs_get_extent(stru
+ 	    found_type == BTRFS_FILE_EXTENT_PREALLOC) {
+ 		/* Only regular file could have regular/prealloc extent */
+ 		if (!S_ISREG(inode->vfs_inode.i_mode)) {
+-			ret = -EUCLEAN;
++			err = -EUCLEAN;
+ 			btrfs_crit(fs_info,
+ 		"regular/prealloc extent found for non-regular inode %llu",
+ 				   btrfs_ino(inode));
 
 
