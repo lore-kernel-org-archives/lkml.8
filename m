@@ -2,283 +2,125 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B5FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0A7207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629DD207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:55:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="lZ/K4yVK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DgoHEPEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHTByL (ORCPT
+        id S1726772AbgHTBzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
+        Wed, 19 Aug 2020 21:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTByK (ORCPT
+        with ESMTP id S1726362AbgHTBzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:54:10 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AEF2C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:54:10 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id g19so711238ejc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:54:10 -0700 (PDT)
+        Wed, 19 Aug 2020 21:55:32 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B39C061757;
+        Wed, 19 Aug 2020 18:55:32 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id l23so376172edv.11;
+        Wed, 19 Aug 2020 18:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=M2856byAPxR8wC0hiTcV4Eu6Vwp5zHAzX+5RXykLdZ8=;
-        b=lZ/K4yVK00w07TAWoz4NrJ7bh2SQj0QlEXGy+16Uvv+KVxUgjz3B3Iv7EDFWqB1Pdr
-         DuqS0vl9GBWbYe7Tv0iQX9ujEvHAFPuKsnBXPYGFMmNAlAMmAGkWwywfwrjoKzj7KHaq
-         9x9L9GAliRR0hzTYRqnJnP0AEzhhN86hMJ/tfa5N1nZQYhNMWXesPPOB/n1sQBmB9iFO
-         1gldSVsbODRKjEwdNvNll8hWpTbiqQ6XVTWltCogzN6iGXyVjZR5g3DVI13dx5mRUp7V
-         PQNTIep7dDdU8pcLAQzgJrYbrZcCxhZ6TJ0/WHGSPo2V8rXXnajEPWLIdfd2u3CPbZ4m
-         C4iQ==
+        bh=ToacIw0lll2YQvnSO/xL/+VeiTLkY2lOUpjxJou/kXU=;
+        b=DgoHEPEwFtQfs9zPlXT3FqbKes+MhIsMXW6UhrO6yny8npEEHTxoxBk2HAiSZ+jSqK
+         zlPeWx5brxQw4ZP5AvaE76RGGQK5wYWbjWD32nkN5PUhmwRQW1/DBFmuPSLNTrSr4P16
+         TOictmeNLSRoBYq5kz1jAjVx1REVzHAprVjUZ/E8wEIuMci3SrkKBe3y9DmdRBM0nDTk
+         0ArMn4HV82cWRQS9Hs8rmas+1zzCuwoZTkeCaXxc9LL7XKVZq7SALbZATXFa8FYkVoBl
+         vJkfcMlezXvhvyT6Wp4iJ4lMLBkvK4mrrQU2tMLyhYk4WCNA/DxrOYQz3Aacc9cPFhaR
+         FURg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=M2856byAPxR8wC0hiTcV4Eu6Vwp5zHAzX+5RXykLdZ8=;
-        b=GH9YugRSHYKd8vNbkCDX+C1iy8uujB51grX2D2R95zfJYeG0sjUJUNW7xiOJcFAX7O
-         mRowAf6zqd/ipItYO+L5W4T94PBn5Q+cjT6blT+lmQ/AEBkFDuXq68ctnKa50MqmqEQE
-         rIy00oiRCA3CpvT+VHAdFdtwwOwDvvokm8JMRbet46c7bHebGW9mEEQcOm/6ldDnWCNi
-         t6RGHCb+lBy+D7qibzZDD8NWzDceFl41/DXIu61MeUYeUAUF6qqYx+6MqmD+tFhD2jdc
-         FfvlGkJMoJTsrZ9/ESJHdAXoTIcd/YPDwaDwloU2Ky24LeHS+dV6gH7YXsAJN0DAGWim
-         li4Q==
-X-Gm-Message-State: AOAM531yA+FR3qpD2LGYX+OH/OY7HsOcCAsifDyeSJqTyhLxx1IYT5Uy
-        6s18aotYIwD7/EkMm3rUbivmWUClT3cQFwIYjIEQog==
-X-Google-Smtp-Source: ABdhPJzvu8YTM6DfS52cWqhkmKxDgLU8iC/mKftCXZJ19EZWyjZICrR61eKB8x5hnqIA1r8PziL6kB6a/+obAqDoPt8=
-X-Received: by 2002:a17:906:413:: with SMTP id d19mr1123427eja.523.1597888448722;
- Wed, 19 Aug 2020 18:54:08 -0700 (PDT)
+        bh=ToacIw0lll2YQvnSO/xL/+VeiTLkY2lOUpjxJou/kXU=;
+        b=ZxW8z01HmKsdRTJ4zCHTMg4L0aGaIG6O3sqcCixiLJUawKBb+0op/OrPSR7vgo3NA6
+         NSc/9Oml1RorAste0zOEQ0FtHShsyoaI2BY3ORA1LXkO25p7768xb6TbB8rpdqRd1gQB
+         W/BK7Ib0x57/5DDMH6VMkhMQnW8k5ZjRK51/rBIlNDh/W234FqLoSPFDZ22IiVlfR0Zk
+         mmdoXL8jMFGgTGYb79Kj3L8aimXgH7WSY2Adqa06CC9ZZL7R9rFvJRng3iGI40T2SfuB
+         Jl8u1kx/A6PjNa6qcJiUO+klFrKVflg6N76pSQjG4Ln19c+39Yc4Y5rgjmDh4Qhp4u9F
+         htNQ==
+X-Gm-Message-State: AOAM532Yb/f50CfIBA9+N81gg7VfT7K92lQ+1ISIALuKhkUYocJO8rsm
+        rNImgKA11cRF3BWV8fIOMmb7X/ZKp9qiIxhK8WAU0jkJ
+X-Google-Smtp-Source: ABdhPJzxYSbCfjlQL09Z8thB5yHOEcQFVo7lLkpDPs0nvIj5WHBFAY+GGn3P+8fCuAYFRCCOS/XVAMPRi8WTq5KWKBI=
+X-Received: by 2002:a05:6402:b45:: with SMTP id bx5mr846526edb.22.1597888531248;
+ Wed, 19 Aug 2020 18:55:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <159643094279.4062302.17779410714418721328.stgit@dwillia2-desk3.amr.corp.intel.com>
- <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
-In-Reply-To: <c59111f9-7c94-8b9e-2b8c-4cb96b9aa848@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 Aug 2020 18:53:57 -0700
-Message-ID: <CAPcyv4j8-5nWU5GPDBoFicwR84qM=hWRtd78DkcCg4PW-8i6Vg@mail.gmail.com>
-Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved ranges
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-12-git-send-email-abel.vesa@nxp.com> <CAA+hA=R9bFBX-tFfSEO3wqC+b4P1nbfSVyBQUOzez=oZ71AhkA@mail.gmail.com>
+ <20200819203150.bddziq2m75sccixj@fsr-ub1664-175>
+In-Reply-To: <20200819203150.bddziq2m75sccixj@fsr-ub1664-175>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Thu, 20 Aug 2020 09:40:22 +0800
+Message-ID: <CAA+hA=RiNeruR2d2qVS1A+P31YA42hjvyAo53W0+31zcEei9mg@mail.gmail.com>
+Subject: Re: [PATCH v2 11/17] clk: imx: Add blk_ctrl combo driver
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
+        linux-clk <linux-clk@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 3, 2020 at 12:48 AM David Hildenbrand <david@redhat.com> wrote:
->
-> [...]
->
-> > Well, no v5.8-rc8 to line this up for v5.9, so next best is early
-> > integration into -mm before other collisions develop.
+On Thu, Aug 20, 2020 at 4:31 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+....
+> > > +extern const struct imx_blk_ctrl_dev_data imx8mp_audio_blk_ctrl_dev_data __initconst;
+> > > +extern const struct imx_blk_ctrl_dev_data imx8mp_media_blk_ctrl_dev_data __initconst;
+> > > +extern const struct imx_blk_ctrl_dev_data imx8mp_hdmi_blk_ctrl_dev_data __initconst;
+> > > +
 > >
-> > Chatted with Justin offline and it currently appears that the missing
-> > numa information is the fault of the platform firmware to populate all
-> > the necessary NUMA data in the NFIT.
+> > If no special reasons, i may prefer to put those data in either
+> > clk-blk-ctrl.c or separate clk-blk-ctrl-data.c
+> > because there seems to be no code level dependency on the CCM
+> > driver(clk-imx8mq.c) for clk_blk_ctrl drivers.
+> > Then we can save those extern variables.
+> >
 >
-> I'm planning on looking at some bits of this series this week, but some
-> questions upfront ...
+> The rationale here is to have the SoC specific definitions in the SoC specific
+> clock provider driver. Otherwise with every new SoC that will use the blk_ctl
+> IPs we will increase the size of clk-blk-ctrl driver. Plus the kernel names of
+> the clocks used by each blk_ctl IP as parents are also defined in the SoC
+> specific clock provider driver.
 >
-> >
-> > ---
-> > Cover:
-> >
-> > The device-dax facility allows an address range to be directly mapped
-> > through a chardev, or optionally hotplugged to the core kernel page
-> > allocator as System-RAM. It is the mechanism for converting persistent
-> > memory (pmem) to be used as another volatile memory pool i.e. the
-> > current Memory Tiering hot topic on linux-mm.
-> >
-> > In the case of pmem the nvdimm-namespace-label mechanism can sub-divide
-> > it, but that labeling mechanism is not available / applicable to
-> > soft-reserved ("EFI specific purpose") memory [3]. This series provides
-> > a sysfs-mechanism for the daxctl utility to enable provisioning of
-> > volatile-soft-reserved memory ranges.
-> >
-> > The motivations for this facility are:
-> >
-> > 1/ Allow performance differentiated memory ranges to be split between
-> >    kernel-managed and directly-accessed use cases.
-> >
-> > 2/ Allow physical memory to be provisioned along performance relevant
-> >    address boundaries. For example, divide a memory-side cache [4] along
-> >    cache-color boundaries.
-> >
-> > 3/ Parcel out soft-reserved memory to VMs using device-dax as a security
-> >    / permissions boundary [5]. Specifically I have seen people (ab)using
-> >    memmap=nn!ss (mark System-RAM as Persistent Memory) just to get the
-> >    device-dax interface on custom address ranges. A follow-on for the VM
-> >    use case is to teach device-dax to dynamically allocate 'struct page' at
-> >    runtime to reduce the duplication of 'struct page' space in both the
-> >    guest and the host kernel for the same physical pages.
+> I'll find a way, though, to move those so that they would not be shared between
+> all the clock drivers that needs a blk_ctl implementation.
 >
->
-> I think I am missing some important pieces. Bear with me.
 
-No worries, also bear with me, I'm going to be offline intermittently
-until at least mid-September. Hopefully Joao and/or Vishal can jump in
-on this discussion.
+Please refer to pinctrl-imx.c to see if we can do similar things for blk-ctrl.
 
->
-> 1. On x86-64, e820 indicates "soft-reserved" memory. This memory is not
-> automatically used in the buddy during boot, but remains untouched
-> (similar to pmem). But as it involves ACPI as well, it could also be
-> used on arm64 (-e820), correct?
+Regards
+Aisheng
 
-Correct, arm64 also gets the EFI support for enumerating memory this
-way. However, I would clarify that whether soft-reserved is given to
-the buddy allocator by default or not is the kernel's policy choice,
-"buddy-by-default" is ok and is what will happen anyways with older
-kernels on platforms that enumerate a memory range this way.
-
-> 2. Soft-reserved memory is volatile RAM with differing performance
-> characteristics ("performance differentiated memory"). What would be
-> examples of such memory?
-
-Likely the most prominent one that drove the creation of the "EFI
-Specific Purpose" attribute bit is high-bandwidth memory. One concrete
-example of that was a platform called Knights Landing [1] that ended
-up shipping firmware that lied to the OS about the latency
-characteristics of the memory to try to reverse engineer OS behavior
-to not allocate from that memory range by default. With the EFI
-attribute firmware performance tables can tell the truth about the
-performance characteristics of the memory range *and* indicate that
-the OS not use it for general purpose allocations by default.
-
-[1]: https://software.intel.com/content/www/us/en/develop/blogs/an-intro-to-mcdram-high-bandwidth-memory-on-knights-landing.html
-
-> Like, memory that is faster than RAM (scratch
-> pad), or slower (pmem)? Or both? :)
-
-Both, but note that PMEM is already hard-reserved by default.
-Soft-reserved is about a memory range that, for example, an
-administrator may want to reserve 100% for a weather simulation where
-if even a small amount of memory was stolen for the page cache the
-application may not meet its performance targets. It could also be a
-memory range that is so slow that only applications with higher
-latency tolerances would be prepared to consume it.
-
-In other words the soft-reserved memory can be used to indicate memory
-that is either too precious, or too slow for general purpose OS
-allocations.
-
-> Is it a valid use case to use pmem
-> in a hypervisor to back this memory?
-
-Depends on the pmem. That performance capability is indicated by the
-ACPI HMAT, not the EFI soft-reserved designation.
-
-> 3. There seem to be use cases where "soft-reserved" memory is used via
-> DAX. What is an example use case? I assume it's *not* to treat it like
-> PMEM but instead e.g., use it as a fast buffer inside applications or
-> similar.
-
-Right, in that weather-simulation example that application could just
-mmap /dev/daxX.Y and never worry about contending for the "fast
-memory" resource on the platform. Alternatively if that resource needs
-to be shared and/or over-commited then kernel memory-management
-services are needed and that dax-device can be assigned to kmem.
-
-> 4. There seem to be use cases where some part of "soft-reserved" memory
-> is used via DAX, some other is given to the buddy. What is an example
-> use case? Is this really necessary or only some theoretical use case?
-
-It's as necessary as pmem namespace partitioning, or the inclusion of
-dax-kmem upstream in the first place. In that kmem case the motivation
-was that some users want a portion of pmem provisioned for storage and
-some for volatile usage. The motivation is similar here, platform
-firmware can only identify memory attributes on coarse boundaries,
-finer grained provisioning decisions are up to the administrator /
-platform-owner and the kernel is a just a facilitator of that policy.
-
->
-> 5. The "provisioned along performance relevant address boundaries." part
-> is unclear to me. Can you give an example of how this would look like
-> from user space? Like, split that memory in blocks of size X with
-> alignment Y and give them to separate applications?
-
-One example of platform address boundaries are the memory address
-ranges that alias in a direct-mapped memory-side-cache. In the
-direct-map-cache aliasing may repeat every N GBs where N is the ratio
-of far-to-near memory. ("Near memory" ==  cache "Far memory" ==
-backing memory). Also refer back to the background in the page
-allocator shuffling patches [2]. With this partitioning mechanism you
-could, for one example use case, assign different VMs to exclusive
-colors in the memory side cache.
-
-[2]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e900a918b098
-
-> 6. If you add such memory to the buddy, is there any way the system can
-> differentiate it from other memory? E.g., via fake/other NUMA nodes?
-
-Numa node numbers / are how performance differentiated memory ranges
-are enumerated. The expectation is that all distinct performance
-memory targets have unique ACPI proximity domains and Linux numa node
-numbers as a result.
-
-> Also, can you give examples of how kmem-added memory is represented in
-> /proc/iomem for a) pmem and b) soft-resered memory after this series
-> (skimming over the patches, I think there is a change for pmem, right?)?
-
-I don't expect a change. The only difference is the parent resource
-will be marked "Soft Reserved" instead of "Persistent Memory".
-
-> I am really wondering if it's the right approach to squeeze this into
-> our pmem/nvdimm infrastructure just because it's easy to do. E.g., man
-> "ndctl" - "ndctl - Manage "libnvdimm" subsystem devices (Non-volatile
-> Memory)" speaks explicitly about non-volatile memory.
-
-In fact it's not squeezed into PMEM infrastructure. dax-kmem and
-device-dax are independent of PMEM. PMEM is one source of potential
-device-dax instances, soft-reserved memory is another orthogonal
-source. This is why device-dax needs its own userspace policy directed
-partitioning mechanism because there is no PMEM to store the
-configuration for partitioned higph-bandwidth memory. The userspace
-tooling for this mechanism is targeted for a tool called daxctl that
-has no PMEM dependencies. Look to Joao's use case that is using this
-infrastructure independent of PMEM with manual soft-reservations
-specified on the kernel command-line.
+> > Regards
+> > Aisheng
+> >
+> > > +#endif
+> > > +
+> > > --
+> > > 2.7.4
+> > >
