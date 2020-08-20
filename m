@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 064D322BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BAB22CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916827;
-	bh=ERX7nxT/qU+q9mUGONITiBEF8Kuwqk6p+kmLb994YJc=;
+	s=default; t=1597916834;
+	bh=C/84CIoJYHv4E/FABQ0fh8uf1gdQweNA4EgZRAF4Klc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k3PY8vkb+hnoz9ozoynR0EA47yEvFzj8Ww4jkPFJXt3eheHZ8eazl03KerveWqaCB
-	 f22GMMsBScwIDTfMEfDODEON03uFrDoVVMetRFwztKr0D0w60xahbkkJpd/3tSzmIo
-	 o7jIzBQ2+eof0TFNinv3BxNF2o0zCGqPQIVJ0oQU=
+	b=cgbT/P21KwY4B6S+SbYPUvNb7Mw7z9c9sEMWtAPNrPt8ASzgULk8GtosYYpJ9XThw
+	 Ss28gqSZtQ/kJdXB8R+fDcKD/l419qnmuA2VrhBdkdYUKRapWg5JByrAmcwJWaNQA0
+	 xkFLN+8Z/WJmrmSYOPl1hFetItmZx0utjkKUGyvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbgHTJrE (ORCPT
+        id S1729398AbgHTJrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:47:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729344AbgHTJql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:46:41 -0400
+        id S1729359AbgHTJqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 409132173E;
-        Thu, 20 Aug 2020 09:46:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFCBF2173E;
+        Thu, 20 Aug 2020 09:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916800;
-        bh=ERX7nxT/qU+q9mUGONITiBEF8Kuwqk6p+kmLb994YJc=;
+        s=default; t=1597916811;
+        bh=C/84CIoJYHv4E/FABQ0fh8uf1gdQweNA4EgZRAF4Klc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ik0C3WUat7X1RcKMQ8sub/UuLeVIEmHqlSuVKR8fzdjY9xTtTz+kKvJd75Q8OllQT
-         wUtT+wRlpZp288ygXo68Ml8bX9xCDpvJ+sAgoq02r8L2SAJ/U+o5thLBL4ngtXWgki
-         X90Ed8fzQB8g49wQV+HLsk5c0XzAAMyX9FQFBKZs=
+        b=iGHEJLUSiQ5r4i+CrewD8B6EWYnDtVJogROozJIWxMZK0J5yj9g0Fd4qm7WuSb54F
+         ApCAq/YiZsTMcmBJSsNJEpYXE6adsLmqFQtY74+yHDmKWsQklroGCHwUJu7Ne4pATa
+         datcEB3NDcO2ukgeBIHgEvanUh0fP6gGP6tpvh5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.4 043/152] net/compat: Add missing sock updates for SCM_RIGHTS
-Date:   Thu, 20 Aug 2020 11:20:10 +0200
-Message-Id: <20200820091555.874277038@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 055/152] mm/page_counter.c: fix protection usage propagation
+Date:   Thu, 20 Aug 2020 11:20:22 +0200
+Message-Id: <20200820091556.543146115@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -62,89 +65,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Michal Koutný <mkoutny@suse.com>
 
-commit d9539752d23283db4692384a634034f451261e29 upstream.
+commit a6f23d14ec7d7d02220ad8bb2774be3322b9aeec upstream.
 
-Add missed sock updates to compat path via a new helper, which will be
-used more in coming patches. (The net/core/scm.c code is left as-is here
-to assist with -stable backports for the compat path.)
+When workload runs in cgroups that aren't directly below root cgroup and
+their parent specifies reclaim protection, it may end up ineffective.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+The reason is that propagate_protected_usage() is not called in all
+hierarchy up.  All the protected usage is incorrectly accumulated in the
+workload's parent.  This means that siblings_low_usage is overestimated
+and effective protection underestimated.  Even though it is transitional
+phenomenon (uncharge path does correct propagation and fixes the wrong
+children_low_usage), it can undermine the intended protection
+unexpectedly.
+
+We have noticed this problem while seeing a swap out in a descendant of a
+protected memcg (intermediate node) while the parent was conveniently
+under its protection limit and the memory pressure was external to that
+hierarchy.  Michal has pinpointed this down to the wrong
+siblings_low_usage which led to the unwanted reclaim.
+
+The fix is simply updating children_low_usage in respective ancestors also
+in the charging path.
+
+Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.18+]
+Link: http://lkml.kernel.org/r/20200803153231.15477-1-mhocko@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sock.h |    4 ++++
- net/compat.c       |    1 +
- net/core/sock.c    |   21 +++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ mm/page_counter.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -849,6 +849,8 @@ static inline int sk_memalloc_socks(void
- {
- 	return static_branch_unlikely(&memalloc_socks_key);
- }
-+
-+void __receive_sock(struct file *file);
- #else
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -77,7 +77,7 @@ void page_counter_charge(struct page_cou
+ 		long new;
  
- static inline int sk_memalloc_socks(void)
-@@ -856,6 +858,8 @@ static inline int sk_memalloc_socks(void
- 	return 0;
- }
- 
-+static inline void __receive_sock(struct file *file)
-+{ }
- #endif
- 
- static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -291,6 +291,7 @@ void scm_detach_fds_compat(struct msghdr
- 			break;
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * This is indeed racy, but we can live with some
+ 		 * inaccuracy in the watermark.
+@@ -121,7 +121,7 @@ bool page_counter_try_charge(struct page
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+ 		if (new > c->max) {
+ 			atomic_long_sub(nr_pages, &c->usage);
+-			propagate_protected_usage(counter, new);
++			propagate_protected_usage(c, new);
+ 			/*
+ 			 * This is racy, but we can live with some
+ 			 * inaccuracy in the failcnt.
+@@ -130,7 +130,7 @@ bool page_counter_try_charge(struct page
+ 			*fail = c;
+ 			goto failed;
  		}
- 		/* Bump the usage count and install the file. */
-+		__receive_sock(fp[i]);
- 		fd_install(new_fd, get_file(fp[i]));
- 	}
- 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2736,6 +2736,27 @@ int sock_no_mmap(struct file *file, stru
- }
- EXPORT_SYMBOL(sock_no_mmap);
- 
-+/*
-+ * When a file is received (via SCM_RIGHTS, etc), we must bump the
-+ * various sock-based usage counts.
-+ */
-+void __receive_sock(struct file *file)
-+{
-+	struct socket *sock;
-+	int error;
-+
-+	/*
-+	 * The resulting value of "error" is ignored here since we only
-+	 * need to take action when the file is a socket and testing
-+	 * "sock" for NULL is sufficient.
-+	 */
-+	sock = sock_from_file(file, &error);
-+	if (sock) {
-+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-+		sock_update_classid(&sock->sk->sk_cgrp_data);
-+	}
-+}
-+
- ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
- {
- 	ssize_t res;
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * Just like with failcnt, we can live with some
+ 		 * inaccuracy in the watermark.
 
 
