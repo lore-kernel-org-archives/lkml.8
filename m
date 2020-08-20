@@ -2,82 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F39C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E2FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41F42206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597937115;
-	bh=Rr8BadVQmc+yhuxW6996EN9N6bisFQ+xqkh4fdqJ/nI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JJ+Yct6SteSX3Bkr7IQ0DoTXKO66vVp/v41nHnHOQ0iQwatC3WTnA1m1zLSHto3fa
-	 voMt3oW6IXyjep1eYm7lL9y/mqXEZhvAHZ56zz5mh+gn+8CLqQI3QPRJA9HsGpmOLE
-	 GASbUTRqpQjuYHQYZwBAXu0iA+9EHK/y/9764Km4=
+	by mail.kernel.org (Postfix) with ESMTP id 4EFAE206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yL9tqtIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgHTPZL (ORCPT
+        id S1728706AbgHTP2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:25:11 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39337 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgHTPZC (ORCPT
+        Thu, 20 Aug 2020 11:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56008 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728338AbgHTP2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:25:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g75so1939695wme.4;
-        Thu, 20 Aug 2020 08:25:01 -0700 (PDT)
+        Thu, 20 Aug 2020 11:28:11 -0400
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E524C061387
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:28:10 -0700 (PDT)
+Received: by mail-vs1-xe44.google.com with SMTP id r7so1274849vsq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=uYPF26fOsnSxq0X3BeFPOk0SUrFLHUyRFGGzgVJXfq8=;
+        b=yL9tqtIiWrwVP/vk+PNTbPQudFqQ/Nku03VDHttP1IrTMx970xW8h0wDtHQ7KNfK+I
+         SWrGQnvnwuRocjuXw6z77wNdi8Nvhd5I+47g+pDfhaHGkxBrHs04+0q9VRPmUi9bTZlD
+         CyuWwq4cV7pUsyLb2cOjDle8eG+aggRgOAFAwDs0D6Ae1uZ927VlLwHo6AXcdIyZePh4
+         js71qeG+n+b7/7Iy3nieGkp+iWW2pfeTaKbyCK8OA2Kn/JfDUMbsjTIKuFqRsGkM8i0J
+         MEXNsxeYZg2U1hetwLztffdgRucy6cAy8re+dFL3IgCy2CgB5p/DZOVQRHd3lgEY8iS1
+         WySg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Jna++P8ibJUzY4rXBqsDRJ76r2GrW9IXjOzwbfnLiaU=;
-        b=Tm7kRo+C19QeR8Pm6PpIzqDyoFxnVhjN7Hz63D6e6lKwZnr6k9sNoGtzJractJh4ad
-         D2PNJbi/fV7HsMwal0VwsS60PYzgk/dLpwRZb9A8bQ19xKphk436S5G5H5klkz5zYUHJ
-         rAkPLZNcR6zcBnG6T8QDbn4i6tacVQi4fTRYq2A0eDOY5u3D6b2+YyR/hj0cyXTTmVbh
-         ApwTZIIr1AjlG7XNtC84/LbHirwzEll84X+SRmokjqXWrOLVzNkacXUejMxun6LeIkuL
-         y5sq1W+Bgl9hZ1yU44H7TWPtNsK4I5dVg6xjZwukEQDnRJJkTS/N0d9mFVJMqKtz57WX
-         QRHQ==
-X-Gm-Message-State: AOAM531U6ASPnOvJpWrSiNpXw1BZ9F7SXGpOBmyiajaWee3w4/XRPXqZ
-        NG7V6jVpjMKEG16WJjhqpDM=
-X-Google-Smtp-Source: ABdhPJxHoozIQKOovfpdgjFEUuF8vXf4rcux9Gapm/Z8yZh3pdQKppbCBoVdTwT2wswiFa0z+kTx5g==
-X-Received: by 2002:a1c:ed0e:: with SMTP id l14mr3915978wmh.140.1597937100925;
-        Thu, 20 Aug 2020 08:25:00 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id k204sm5178775wma.21.2020.08.20.08.24.59
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 08:25:00 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 17:24:58 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH] memory: tegra: Correct shift value of apew
-Message-ID: <20200820152458.GA17144@kozik-lap>
-References: <20200818095121.13645-1-nicoleotsuka@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=uYPF26fOsnSxq0X3BeFPOk0SUrFLHUyRFGGzgVJXfq8=;
+        b=B5/Hp5A5PVgtXZz0Yf1eLTuqoZq3wUL5PW3FWgc8PJKAtsn/AVZ5o11RAaQwihg1rv
+         5gvCRfpUNHaj4Xh9ntCaByfLWN3Jze2vQjCXfiQAwKJlRJymW6J4Lb0fQbI+uAZWKhZP
+         Yd5EBdgee6QZSXxXQIOeCdxBMjEVmqfBM3QTWlPRlIuIfaatDX0k09fyBk2rxpXi31h+
+         XiQ/0mttZHMaYDpPb8vJLzRMgrgLz3jKDegMCIvD+5LJpzoyJWLgj6r2P79yMigEtGHR
+         1fi7m4ULvI0bUu7e1cFz1g/Y4u0x5A3nsWEnchAqrrEQ5jr9GBsu6mbmGXFG1nE+xkhY
+         COrw==
+X-Gm-Message-State: AOAM532oYdJP77EnBeqic63+oZLddIONoVtwrG5hlbntCX8Bi6QwajZy
+        4Q6RkY+0FwDj5vBMEVXgV0Ha9X+Pu0MTiBTxD0gqkw==
+X-Google-Smtp-Source: ABdhPJw3x/JjWeGkqsHzLhjFeoMAMLmCjvIghKiFM19pnVR2pzadjfWz1sl+deP5Pc9dZd8e9wEdeR0iwIOlz36At6A=
+X-Received: by 2002:a67:e45:: with SMTP id 66mr2349582vso.191.1597937289189;
+ Thu, 20 Aug 2020 08:28:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200818095121.13645-1-nicoleotsuka@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200820091612.692383444@linuxfoundation.org>
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 20 Aug 2020 20:57:57 +0530
+Message-ID: <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
+Subject: Re: [PATCH 5.8 000/232] 5.8.3-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        LTP List <ltp@lists.linux.it>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        Eric Biggers <ebiggers@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 02:51:21AM -0700, Nicolin Chen wrote:
-> According to Tegra X1 (Tegra210) TRM, the APEW field is between
-> [23:16] so the shift bit for apew should be 16 accordingly.
-> 
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> ---
->  drivers/memory/tegra/tegra210.c | 2 +-
+On Thu, 20 Aug 2020 at 14:55, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.8.3 release.
+> There are 232 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.8.3-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.8.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Thanks, applied to drivers/memory.
+> Herbert Xu <herbert@gondor.apana.org.au>
+>     crypto: af_alg - Fix regression on empty requests
 
-Best regards,
-Krzysztof
+Results from Linaro=E2=80=99s test farm.
+Regressions detected.
 
+  ltp-crypto-tests:
+    * af_alg02
+  ltp-cve-tests:
+    * cve-2017-17805
+
+af_alg02.c:52: BROK: Timed out while reading from request socket.
+We are running the LTP 20200515 tag released test suite.
+ https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/cry=
+pto/af_alg02.c
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.8.3-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.8.y
+git commit: 201fff807310ce10485bcff294d47be95f3769eb
+git describe: v5.8.2-233-g201fff807310
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/bui=
+ld/v5.8.2-233-g201fff807310
+
+Regressions (compared to build v5.8.2)
+------------------------------------------------------------------------
+
+x15:
+  ltp-crypto-tests:
+    * af_alg02
+
+  ltp-cve-tests:
+    * cve-2017-17805
+
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
