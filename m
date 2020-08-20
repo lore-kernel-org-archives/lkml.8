@@ -2,119 +2,93 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AEFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B57A7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0088522B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9101C22BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915923;
-	bh=FlEwQBX94KrxCPiD4PuGRd2JWinm9GizSS6oM0z5SQ4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tvz/FlAveUlbyke2DLTT2dzPOYfmiZx8FlMBxxsrQcB7aLLcbQ+Pj+xGrY7IECBjd
-	 JBQfIY3onfUOJPGiGj5d/pmJgU046EAUZWJthO7lWcswh6fEsOcUq53xCAmRKjB7WJ
-	 5xQgmhgCud7Vr8+IoTUGr0jmKQlaNl6VFFo16uAU=
+	s=default; t=1597915930;
+	bh=vdxripKePBWqF+bZjaYX2lU5JgkTx4UY2JsoCYkvAn0=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=YXSVG6jsTULvjke5bVyRwnisboWGswmEwrMezoAzfagwWtt6PnyU+fN4IJRrH2LQF
+	 BDVeNVr+Kc/k4c4jfqlksWLrVTn5KvcfSuqa2UGmLo4wpPcnncnykSAWs84g8N6ojv
+	 uAwVyLJK6fxLEsjuKy55GHvDAI9RyZH7RcN2cf/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbgHTJb7 (ORCPT
+        id S1728265AbgHTJcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbgHTJbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 035D8207DE;
-        Thu, 20 Aug 2020 09:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915881;
-        bh=FlEwQBX94KrxCPiD4PuGRd2JWinm9GizSS6oM0z5SQ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VYeEZYJ/F4n7/Jr4hs5lo0a29n8YyZk97amED8cUIVvRMQnCWBE0QJWGI38AyKCwT
-         GBRW3FFopKzGEBrAbH5t+uz40Sm0ipvmWe5e12UnVtkKs3LMdx+QgYozLLXWw7Bq6R
-         elIipAwAYyTgFE/tEUOhiIzJg6MAlhlivwBuUhSs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 168/232] sched/uclamp: Fix a deadlock when enabling uclamp static key
-Date:   Thu, 20 Aug 2020 11:20:19 +0200
-Message-Id: <20200820091620.954076640@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 05:32:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38410 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728227AbgHTJbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:23 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a14so1358797wra.5;
+        Thu, 20 Aug 2020 02:31:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b1bNFiZgiP0kbWWwCg17EvjL33DK3FeILPEpJ0Dhl/Q=;
+        b=uA9edRSq25TmKCGVnHYoP5cHkYNbN41oRl3S0afOBoDXd5TLtLaExA7B33xt2MhSiJ
+         tynMT5tmW36TyXYGDl7xffBHurmHwGax/+S6tjoTX/P9gN3jD8iF+krSUTP/Hc+Kk6mR
+         lcKyg3SujxHl29mGtm1vGl/ZEgup7NFXxpjA0xaB6pJafcQjQQAJvaV3jgzhtVrZOa6+
+         zcPq0Y85hXtTTnLPVNIdJ4nG5+hiTBS/wHrHZ94ysK23SZi4Nft5nGZAJWpLaIAtFgcQ
+         dbX8ewA8PZpR9odN9OP6q2a6jOLHFnfcoC3tq0tn2S7siySvVqziRATeKZE1PBkjbWfy
+         3GHg==
+X-Gm-Message-State: AOAM533ZBSqaMRM6oNuol5vyFNIOeR0XYYluJov1DSv2EPYXr9WhnORU
+        3b1vtAvJ5tRtVBDlqXWTY6Y=
+X-Google-Smtp-Source: ABdhPJyp9/7bHjGRhaR63apXcQFn01iJGOXs1Poxb/moYU7gYPKQXpIuQVliKswmp5fn+tzr2fBnTw==
+X-Received: by 2002:a5d:4c45:: with SMTP id n5mr2319721wrt.68.1597915881386;
+        Thu, 20 Aug 2020 02:31:21 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id z7sm3102928wmk.6.2020.08.20.02.31.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 02:31:20 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 11:31:18 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RESEND PATCH 4/5] ARM: dts: tango: Align L2 cache-controller
+ nodename with dtschema
+Message-ID: <20200820093118.GC15884@kozik-lap>
+References: <20200819175853.21492-1-krzk@kernel.org>
+ <20200819175853.21492-4-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200819175853.21492-4-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+On Wed, Aug 19, 2020 at 07:58:52PM +0200, Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache-controller@20100000: $nodename:0:
+>         'l2-cache-controller@20100000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/tango4-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-[ Upstream commit e65855a52b479f98674998cb23b21ef5a8144b04 ]
+I forgot to add the tag provided on previous submission:
+Acked-by: Mans Rullgard <mans@mansr.com>
 
-The following splat was caught when setting uclamp value of a task:
-
-  BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
-
-   cpus_read_lock+0x68/0x130
-   static_key_enable+0x1c/0x38
-   __sched_setscheduler+0x900/0xad8
-
-Fix by ensuring we enable the key outside of the critical section in
-__sched_setscheduler()
-
-Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/sched/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index db1e99756c400..f788cd61df212 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1248,6 +1248,15 @@ static int uclamp_validate(struct task_struct *p,
- 	if (upper_bound > SCHED_CAPACITY_SCALE)
- 		return -EINVAL;
- 
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
-+	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
-+	 */
-+	static_branch_enable(&sched_uclamp_used);
-+
- 	return 0;
- }
- 
-@@ -1278,8 +1287,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
- 
--	static_branch_enable(&sched_uclamp_used);
--
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
--- 
-2.25.1
-
-
-
+Best regards,
+Krzysztof
