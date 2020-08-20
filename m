@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EA5C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6013C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A35722CF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9136A22B49
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927465;
-	bh=vP9r/k3O0VUEQNdvy7TNwB5dGZg5WLLdWIBH9UWlk68=;
+	s=default; t=1597927469;
+	bh=PVYJA52WYw9Hl0D2KaJmkgzZjHf0Bu545Twx30LwtL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yq5s72QOO0/qLv4d+cDLBHJpD+J45P6mJOi598dbl3zn1Tyr87NugU3J42LyrTW/e
-	 NxkfKLBC97GEG7sGgjaO9SCZhlLAEhKCTZhgh6S18tLa9Vudoh7XB7lg+ootRFYtD5
-	 TluaTHYbj+VDPZZsPoXCLyxmThjtQ5NNxOwsECnI=
+	b=WLKPUng8RDtkmGyKebNKD2DYwVgRl+8tppXgD7g3RMxFBk4dR4iJRrvEvS05rFqz5
+	 1zJ7uX2UdEU9kN8425fzCVdfjB5ebn4b+wb4zo6txem99B+/+LqX1/bKvYHdmj9HbQ
+	 S8w//4kFUJx5Sy4XtIljW5c3qNHA6MPwMkU752/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgHTMoW (ORCPT
+        id S1729397AbgHTMo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729310AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEEB22D03;
-        Thu, 20 Aug 2020 09:45:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51AFF22CB1;
+        Thu, 20 Aug 2020 09:45:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916737;
-        bh=vP9r/k3O0VUEQNdvy7TNwB5dGZg5WLLdWIBH9UWlk68=;
+        s=default; t=1597916743;
+        bh=PVYJA52WYw9Hl0D2KaJmkgzZjHf0Bu545Twx30LwtL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PZVdcHnYAt8qczYPL8+gAQ5kfntxMIUujguBMYFAXVReSsyaCiwvu7wunH1q6wnyP
-         axrI597x7VPCB4mW93Ex1RXGdfPBpeI+IkbtITOKWU32f5jDrl7ulsigBfaeF8ZkEz
-         Rq6+UIrbJRRPjtOo1FP/Ppewn+/y8U/EIa1VEi3c=
+        b=jOkCo0agOqeGSDOARL89V/qAb/s89Snd7C4I0QNIVa65p0er86GO85Iam8t0ZyrQ0
+         sxEUSdODD82LTUDviek5KDlW4d4+OgOGO3gLPk2EKLb44wc3znR62syzWw1m0udGtP
+         yZ4U81GBLmnTN0JAUEAlZh9tnQDa9Q8vJbQqxsa0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 011/152] btrfs: dont allocate anonymous block device for user invisible roots
-Date:   Thu, 20 Aug 2020 11:19:38 +0200
-Message-Id: <20200820091554.212800590@linuxfoundation.org>
+        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 5.4 030/152] arm64: perf: Correct the event index in sysfs
+Date:   Thu, 20 Aug 2020 11:19:57 +0200
+Message-Id: <20200820091555.202025556@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,90 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-commit 851fd730a743e072badaf67caf39883e32439431 upstream.
+commit 539707caa1a89ee4efc57b4e4231c20c46575ccc upstream.
 
-[BUG]
-When a lot of subvolumes are created, there is a user report about
-transaction aborted:
+When PMU event ID is equal or greater than 0x4000, it will be reduced
+by 0x4000 and it is not the raw number in the sysfs. Let's correct it
+and obtain the raw event ID.
 
-  BTRFS: Transaction aborted (error -24)
-  WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
-  RIP: 0010:create_pending_snapshot+0xbc4/0xd10 [btrfs]
-  Call Trace:
-   create_pending_snapshots+0x82/0xa0 [btrfs]
-   btrfs_commit_transaction+0x275/0x8c0 [btrfs]
-   btrfs_mksubvol+0x4b9/0x500 [btrfs]
-   btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
-   btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
-   btrfs_ioctl+0x11a4/0x2da0 [btrfs]
-   do_vfs_ioctl+0xa9/0x640
-   ksys_ioctl+0x67/0x90
-   __x64_sys_ioctl+0x1a/0x20
-   do_syscall_64+0x5a/0x110
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ---[ end trace 33f2f83f3d5250e9 ]---
-  BTRFS: error (device sda1) in create_pending_snapshot:1576: errno=-24 unknown
-  BTRFS info (device sda1): forced readonly
-  BTRFS warning (device sda1): Skipping commit of aborted transaction.
-  BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
+Before this patch:
+cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
+event=0x001
+After this patch:
+cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
+event=0x4001
 
-[CAUSE]
-The error is EMFILE (Too many files open) and comes from the anonymous
-block device allocation. The ids are in a shared pool of size 1<<20.
-
-The ids are assigned to live subvolumes, ie. the root structure exists
-in memory (eg. after creation or after the root appears in some path).
-The pool could be exhausted if the numbers are not reclaimed fast
-enough, after subvolume deletion or if other system component uses the
-anon block devices.
-
-[WORKAROUND]
-Since it's not possible to completely solve the problem, we can only
-minimize the time the id is allocated to a subvolume root.
-
-Firstly, we can reduce the use of anon_dev by trees that are not
-subvolume roots, like data reloc tree.
-
-This patch will do extra check on root objectid, to skip roots that
-don't need anon_dev.  Currently it's only data reloc tree and orphan
-roots.
-
-Reported-by: Greed Rong <greedrong@gmail.com>
-Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1592487344-30555-3-git-send-email-zhangshaokun@hisilicon.com
+[will: fixed formatting of 'if' condition]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ arch/arm64/kernel/perf_event.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1475,9 +1475,16 @@ int btrfs_init_fs_root(struct btrfs_root
- 	spin_lock_init(&root->ino_cache_lock);
- 	init_waitqueue_head(&root->ino_cache_wait);
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -155,7 +155,7 @@ armv8pmu_events_sysfs_show(struct device
  
--	ret = get_anon_bdev(&root->anon_dev);
--	if (ret)
--		goto fail;
-+	/*
-+	 * Don't assign anonymous block device to roots that are not exposed to
-+	 * userspace, the id pool is limited to 1M
-+	 */
-+	if (is_fstree(root->root_key.objectid) &&
-+	    btrfs_root_refs(&root->root_item) > 0) {
-+		ret = get_anon_bdev(&root->anon_dev);
-+		if (ret)
-+			goto fail;
+ 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
+ 
+-	return sprintf(page, "event=0x%03llx\n", pmu_attr->id);
++	return sprintf(page, "event=0x%04llx\n", pmu_attr->id);
+ }
+ 
+ #define ARMV8_EVENT_ATTR(name, config) \
+@@ -303,10 +303,13 @@ armv8pmu_event_attr_is_visible(struct ko
+ 	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
+ 		return attr->mode;
+ 
+-	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
+-	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
+-	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
+-		return attr->mode;
++	if (pmu_attr->id >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE) {
++		u64 id = pmu_attr->id - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
++
++		if (id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
++		    test_bit(id, cpu_pmu->pmceid_ext_bitmap))
++			return attr->mode;
 +	}
  
- 	mutex_lock(&root->objectid_mutex);
- 	ret = btrfs_find_highest_objectid(root,
+ 	return 0;
+ }
 
 
