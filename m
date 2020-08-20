@@ -2,53 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04316C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 832DEC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C972D20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5210B20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919596;
-	bh=33xtOSQzAKscQ6rBqSHuBqUHIaqVnIAJOecHSLLlMsk=;
+	s=default; t=1597919602;
+	bh=0Z2hUltLq069wZa+/qtp3R/ZhGVZS5aJq14Fu82lEZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xZOu7F7qd3mJTAAMvFeHcFfBdaVs5GhSn2wfAxrCZbTCdYpTXneTkM6xSDp1k8sYO
-	 Tn5RrsLSUcCBJ1Sj7w+S8fQM+pFhOcaknRquIL26fr69p42Ss7KJ2PZeYVQxL5nMS3
-	 VeMP4cRZz2cD0ZMIRYg/64y01ieFo8pf2STnJ8Ck=
+	b=2LC9rh4nGVTdrJI3pkIasf/aM2OuXLaphMSqboJeLfJ3wXECOcnYkmoTbF26IRAt8
+	 fuvRFHoUi2tupp15XK4ERD+w0X4cRXSP81rI3Jn6JegoE2MoD8lq87dycSYlm6lr7J
+	 oDyrE9undTgNbtLMm22A4Lck0mA2UxQqhpyRtBS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731758AbgHTKdO (ORCPT
+        id S1731496AbgHTKdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:33:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgHTKTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:47 -0400
+        id S1727959AbgHTKTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 583CB20658;
-        Thu, 20 Aug 2020 10:19:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B253E20658;
+        Thu, 20 Aug 2020 10:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918786;
-        bh=33xtOSQzAKscQ6rBqSHuBqUHIaqVnIAJOecHSLLlMsk=;
+        s=default; t=1597918781;
+        bh=0Z2hUltLq069wZa+/qtp3R/ZhGVZS5aJq14Fu82lEZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kez1jSyWYG6FCdGGE/4lpam3BHXluKbrpKO3TJ75Os9IdrX84uuVdFdEuuq2fuV6a
-         G+twrClPufucKkUkLI9dGWJpstGzxdY0ws60WhI55F/tJrhhXLKF/+EA7sz84XqPPe
-         k+hsUAh8pw5WLKsy1M9+tZe1VwHoNCtCc8U+IqzY=
+        b=BtPvmGavQZCeE7gVusdE0xmPeYhr9ziI02D2rjl/CuKGGsOl89fXx9sg24oZ1lByd
+         VexfNgti8DIjD/CqT6PclKHzBeFI+hlHMIXeBQqssruOdkDuHnj8d2sSafiYZMPqDa
+         tD8+4WPzG3l2x8n0pyCi/OQNetY32CgFrf778oJ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        stable <stable@kernel.org>
-Subject: [PATCH 4.4 039/149] mtd: properly check all write ioctls for permissions
-Date:   Thu, 20 Aug 2020 11:21:56 +0200
-Message-Id: <20200820092127.626813517@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 064/149] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
+Date:   Thu, 20 Aug 2020 11:22:21 +0200
+Message-Id: <20200820092128.843799533@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,120 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit f7e6b19bc76471ba03725fe58e0c218a3d6266c3 upstream.
+[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
 
-When doing a "write" ioctl call, properly check that we have permissions
-to do so before copying anything from userspace or anything else so we
-can "fail fast".  This includes also covering the MEMWRITE ioctl which
-previously missed checking for this.
+Very large I/Os can cause the following RCU CPU stall warning:
 
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: stable <stable@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[rw: Fixed locking issue]
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+RIP: 0010:rb_prev+0x8/0x50
+Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
+89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
+RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
+RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
+RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
+RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
+R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
+R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
+ __lookup_extent_mapping+0xa0/0x110
+ try_release_extent_mapping+0xdc/0x220
+ btrfs_releasepage+0x45/0x70
+ shrink_page_list+0xa39/0xb30
+ shrink_inactive_list+0x18f/0x3b0
+ shrink_lruvec+0x38e/0x6b0
+ shrink_node+0x14d/0x690
+ do_try_to_free_pages+0xc6/0x3e0
+ try_to_free_mem_cgroup_pages+0xe6/0x1e0
+ reclaim_high.constprop.73+0x87/0xc0
+ mem_cgroup_handle_over_high+0x66/0x150
+ exit_to_usermode_loop+0x82/0xd0
+ do_syscall_64+0xd4/0x100
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+On a PREEMPT=n kernel, the try_release_extent_mapping() function's
+"while" loop might run for a very long time on a large I/O.  This commit
+therefore adds a cond_resched() to this loop, providing RCU any needed
+quiescent states.
+
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/mtdchar.c |   56 +++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 9 deletions(-)
+ fs/btrfs/extent_io.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/mtd/mtdchar.c
-+++ b/drivers/mtd/mtdchar.c
-@@ -372,9 +372,6 @@ static int mtdchar_writeoob(struct file
- 	uint32_t retlen;
- 	int ret = 0;
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 42b7409d4cc55..2f9f738ecf84a 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4437,6 +4437,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
  
--	if (!(file->f_mode & FMODE_WRITE))
--		return -EPERM;
--
- 	if (length > 4096)
- 		return -EINVAL;
- 
-@@ -608,6 +605,48 @@ static int mtdchar_ioctl(struct file *fi
- 			return -EFAULT;
+ 			/* once for us */
+ 			free_extent_map(em);
++
++			cond_resched(); /* Allow large-extent preemption. */
+ 		}
  	}
- 
-+	/*
-+	 * Check the file mode to require "dangerous" commands to have write
-+	 * permissions.
-+	 */
-+	switch (cmd) {
-+	/* "safe" commands */
-+	case MEMGETREGIONCOUNT:
-+	case MEMGETREGIONINFO:
-+	case MEMGETINFO:
-+	case MEMREADOOB:
-+	case MEMREADOOB64:
-+	case MEMLOCK:
-+	case MEMUNLOCK:
-+	case MEMISLOCKED:
-+	case MEMGETOOBSEL:
-+	case MEMGETBADBLOCK:
-+	case MEMSETBADBLOCK:
-+	case OTPSELECT:
-+	case OTPGETREGIONCOUNT:
-+	case OTPGETREGIONINFO:
-+	case OTPLOCK:
-+	case ECCGETLAYOUT:
-+	case ECCGETSTATS:
-+	case MTDFILEMODE:
-+	case BLKPG:
-+	case BLKRRPART:
-+		break;
-+
-+	/* "dangerous" commands */
-+	case MEMERASE:
-+	case MEMERASE64:
-+	case MEMWRITEOOB:
-+	case MEMWRITEOOB64:
-+	case MEMWRITE:
-+		if (!(file->f_mode & FMODE_WRITE))
-+			return -EPERM;
-+		break;
-+
-+	default:
-+		return -ENOTTY;
-+	}
-+
- 	switch (cmd) {
- 	case MEMGETREGIONCOUNT:
- 		if (copy_to_user(argp, &(mtd->numeraseregions), sizeof(int)))
-@@ -655,9 +694,6 @@ static int mtdchar_ioctl(struct file *fi
- 	{
- 		struct erase_info *erase;
- 
--		if(!(file->f_mode & FMODE_WRITE))
--			return -EPERM;
--
- 		erase=kzalloc(sizeof(struct erase_info),GFP_KERNEL);
- 		if (!erase)
- 			ret = -ENOMEM;
-@@ -982,9 +1018,6 @@ static int mtdchar_ioctl(struct file *fi
- 		ret = 0;
- 		break;
- 	}
--
--	default:
--		ret = -ENOTTY;
- 	}
- 
- 	return ret;
-@@ -1028,6 +1061,11 @@ static long mtdchar_compat_ioctl(struct
- 		struct mtd_oob_buf32 buf;
- 		struct mtd_oob_buf32 __user *buf_user = argp;
- 
-+		if (!(file->f_mode & FMODE_WRITE)) {
-+			ret = -EPERM;
-+			break;
-+		}
-+
- 		if (copy_from_user(&buf, argp, sizeof(buf)))
- 			ret = -EFAULT;
- 		else
+ 	return try_release_extent_state(map, tree, page, mask);
+-- 
+2.25.1
+
 
 
