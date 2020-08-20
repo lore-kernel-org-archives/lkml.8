@@ -5,55 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09EAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF0CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB722054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2A82054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923721;
-	bh=g8/2Dh9DtE6p7fR8NvLVq77PzaAf/uC9wYHROkAijkc=;
+	s=default; t=1597923727;
+	bh=enhf8k01R4vt8Qqq7cJmRsJN44nJ6ydLCnUF7N1rXQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OO5OAuuPOEOlGNxhR/l2a12hZLndA7Tw4w7PygtleUhWSA11HjvDjk9afE6aCR2md
-	 9gr0lvmKTUITQV0Spg19oRIGK6/Gw9RUIV+GSBIjIMvw86HYWx8APiAZ3b6ZSNIiO0
-	 7AQDdjCntKrzqeJ69MfW9064Zt4US05FccKLfpOY=
+	b=0XRJehdC5HQ3i2QoQyqpnKh3ITGPsTYLIcaAVjdlcGNqmwrnm8dfDQ9e5NY43uiNw
+	 PvsZAtwCIySmSdxD5QQsvF+ovnmIH7Mxf5Rw4L0jcHGGX7jVLkHlbaPl4YcVQa4r8m
+	 tm9/RiLRlCLkt5Kh+8PVw5c5C+rjadz97LRA/LLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbgHTLl7 (ORCPT
+        id S1730779AbgHTLmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58536 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbgHTKE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:26 -0400
+        id S1730356AbgHTKE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD7DB22B40;
-        Thu, 20 Aug 2020 10:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94D3A22C9F;
+        Thu, 20 Aug 2020 10:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917866;
-        bh=g8/2Dh9DtE6p7fR8NvLVq77PzaAf/uC9wYHROkAijkc=;
+        s=default; t=1597917869;
+        bh=enhf8k01R4vt8Qqq7cJmRsJN44nJ6ydLCnUF7N1rXQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J3gtVEttbErPcGkZ01hj3ndTIsHBZM0+wx9SgW14kMhcQrBg36ND6uHMDTjrGtB2I
-         OXiQqHQva74DTsykw8FSLxn1eJ0xUNInWshiMDXobCBPxw2jCs/0sWpZaR4jQdsItK
-         9IBmmPPy8RuKFP+tnCZSUGHDo+kfbNLu4yRGO+qQ=
+        b=phVZ5qTnIXhFaap8Ysn4uOvFK8Qff4f+xIyTMSaWS6pDVM/Ds5nhfl5rP0qbdc0zA
+         qFUXeyTni/yaRMPq7vg4btaIWttBSuq5wTh8IhsLa9iNzxXqIf9Hz5PY/j0aQPLOsS
+         VqgI/5b3u7wK+ctL0UrSivy8t3c9qgNk8lxPC1gU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 185/212] ocfs2: change slot number type s16 to u16
-Date:   Thu, 20 Aug 2020 11:22:38 +0200
-Message-Id: <20200820091611.733730746@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.9 186/212] ftrace: Setup correct FTRACE_FL_REGS flags for module
+Date:   Thu, 20 Aug 2020 11:22:39 +0200
+Message-Id: <20200820091611.784423456@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -66,87 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
+commit 8a224ffb3f52b0027f6b7279854c71a31c48fc97 upstream.
 
-Dan Carpenter reported the following static checker warning.
+When module loaded and enabled, we will use __ftrace_replace_code
+for module if any ftrace_ops referenced it found. But we will get
+wrong ftrace_addr for module rec in ftrace_get_addr_new, because
+rec->flags has not been setup correctly. It can cause the callback
+function of a ftrace_ops has FTRACE_OPS_FL_SAVE_REGS to be called
+with pt_regs set to NULL.
+So setup correct FTRACE_FL_REGS flags for rec when we call
+referenced_filters to find ftrace_ops references it.
 
-	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
-	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
-	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
+Link: https://lkml.kernel.org/r/20200728180554.65203-1-zhouchengming@bytedance.com
 
-That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
-never negative, so change s16 to u16.
-
-Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reviewed-by: Gang He <ghe@suse.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 8c4f3c3fa9681 ("ftrace: Check module functions being traced on reload")
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/ocfs2.h    |    4 ++--
- fs/ocfs2/suballoc.c |    4 ++--
- fs/ocfs2/super.c    |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ kernel/trace/ftrace.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -337,8 +337,8 @@ struct ocfs2_super
- 	spinlock_t osb_lock;
- 	u32 s_next_generation;
- 	unsigned long osb_flags;
--	s16 s_inode_steal_slot;
--	s16 s_meta_steal_slot;
-+	u16 s_inode_steal_slot;
-+	u16 s_meta_steal_slot;
- 	atomic_t s_num_inodes_stolen;
- 	atomic_t s_num_meta_stolen;
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -4987,8 +4987,11 @@ static int referenced_filters(struct dyn
+ 	int cnt = 0;
  
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -895,9 +895,9 @@ static void __ocfs2_set_steal_slot(struc
- {
- 	spin_lock(&osb->osb_lock);
- 	if (type == INODE_ALLOC_SYSTEM_INODE)
--		osb->s_inode_steal_slot = slot;
-+		osb->s_inode_steal_slot = (u16)slot;
- 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
--		osb->s_meta_steal_slot = slot;
-+		osb->s_meta_steal_slot = (u16)slot;
- 	spin_unlock(&osb->osb_lock);
- }
+ 	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
+-		if (ops_references_rec(ops, rec))
+-		    cnt++;
++		if (ops_references_rec(ops, rec)) {
++			cnt++;
++			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
++				rec->flags |= FTRACE_FL_REGS;
++		}
+ 	}
  
---- a/fs/ocfs2/super.c
-+++ b/fs/ocfs2/super.c
-@@ -91,7 +91,7 @@ struct mount_options
- 	unsigned long	commit_interval;
- 	unsigned long	mount_opt;
- 	unsigned int	atime_quantum;
--	signed short	slot;
-+	unsigned short	slot;
- 	int		localalloc_opt;
- 	unsigned int	resv_level;
- 	int		dir_resv_level;
-@@ -1369,7 +1369,7 @@ static int ocfs2_parse_options(struct su
- 				goto bail;
- 			}
- 			if (option)
--				mopt->slot = (s16)option;
-+				mopt->slot = (u16)option;
- 			break;
- 		case Opt_commit:
- 			if (match_int(&args[0], &option)) {
+ 	return cnt;
+@@ -5084,8 +5087,8 @@ void ftrace_module_enable(struct module
+ 		if (ftrace_start_up)
+ 			cnt += referenced_filters(rec);
+ 
+-		/* This clears FTRACE_FL_DISABLED */
+-		rec->flags = cnt;
++		rec->flags &= ~FTRACE_FL_DISABLED;
++		rec->flags += cnt;
+ 
+ 		if (ftrace_start_up && cnt) {
+ 			int failed = __ftrace_replace_code(rec, 1);
 
 
