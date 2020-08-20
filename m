@@ -2,93 +2,137 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00366C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1932C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD642067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D89E12076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbgHTE3J (ORCPT
+        id S1725882AbgHTEgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:29:09 -0400
-Received: from spam.zju.edu.cn ([61.164.42.155]:32464 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725770AbgHTE3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:29:08 -0400
-Received: from localhost.localdomain (unknown [10.192.85.18])
-        by mail-app2 (Coremail) with SMTP id by_KCgD3_rLs+z1f6KMHAg--.11144S4;
-        Thu, 20 Aug 2020 12:28:32 +0800 (CST)
-From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
-To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
-Cc:     Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: qcom: common: Fix refcount imbalance on error
-Date:   Thu, 20 Aug 2020 12:28:27 +0800
-Message-Id: <20200820042828.10308-1-dinghao.liu@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: by_KCgD3_rLs+z1f6KMHAg--.11144S4
-X-Coremail-Antispam: 1UD129KBjvdXoWrZr1rJr13JF47AFWxWF48JFb_yoWfAFXEk3
-        97CFs5CrZrGF4fJwsrGr13Zrykt3y7urn8Aw4Iqr17Ja4DCrZ3KFZ8XF95u34rZ3WxCr9x
-        Gwn0vr95Ar18KjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbVkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
-        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
-        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
-        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
-        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
-        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
-        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
-        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
-        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
-        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
-        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
-        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-        nxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAJsW
+        Thu, 20 Aug 2020 00:36:14 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65063 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHTEgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 00:36:13 -0400
+IronPort-SDR: EW+jL4UfldUyx7WdE1ZLG5hOO8YRtJcyK03m56F3eV9kvoGVEsB8G4X5aQ7NIPuLstV0ewG/mr
+ qfp7fM5SV+Cg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="216769937"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="216769937"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 21:36:11 -0700
+IronPort-SDR: XZn4dWScW7OdwVe3M0ntHuTNGaiNEarXemCJtZ8yy28pTCGf9mvDtgFnI2DaGKQ/JZA0gjvIPf
+ 0T0wJyyAuCtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="472488442"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
+  by orsmga005.jf.intel.com with ESMTP; 19 Aug 2020 21:36:08 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, Rafael Aquini <aquini@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by mistake
+References: <20200819195613.24269-1-hsiangkao@redhat.com>
+Date:   Thu, 20 Aug 2020 12:36:08 +0800
+In-Reply-To: <20200819195613.24269-1-hsiangkao@redhat.com> (Gao Xiang's
+        message of "Thu, 20 Aug 2020 03:56:13 +0800")
+Message-ID: <871rk2x7bb.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-for_each_child_of_node returns a node pointer np with
-refcount incremented. So when devm_kzalloc fails, a
-pairing refcount decrement is needed to keep np's
-refcount balanced.
+Gao Xiang <hsiangkao@redhat.com> writes:
 
-Fixes: 16395ceee11f8 ("ASoC: qcom: common: Fix NULL pointer in of parser")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
----
- sound/soc/qcom/common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> SWP_FS doesn't mean the device is file-backed swap device,
+> which just means each writeback request should go through fs
+> by DIO. Or it'll just use extents added by .swap_activate(),
+> but it also works as file-backed swap device.
+>
+> So in order to achieve the goal of the original patch,
+> SWP_BLKDEV should be used instead.
+>
+> FS corruption can be observed with SSD device + XFS +
+> fragmented swapfile due to CONFIG_THP_SWAP=y.
+>
+> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 5194d90ddb96..fd69cf8b1f23 100644
---- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -52,8 +52,10 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 
- 	for_each_child_of_node(dev->of_node, np) {
- 		dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
--		if (!dlc)
--			return -ENOMEM;
-+		if (!dlc) {
-+			ret = -ENOMEM;
-+			goto err;
-+		}
- 
- 		link->cpus	= &dlc[0];
- 		link->platforms	= &dlc[1];
--- 
-2.17.1
+Good catch!  The fix itself looks good me!  Although the description is
+a little confusing.
 
+After some digging, it seems that SWP_FS is set on the swap devices
+which make swap entry read/write go through the file system specific
+callback (now used by swap over NFS only).
+
+Best Regards,
+Huang, Ying
+
+> ---
+>
+> I reproduced the issue with the following details:
+>
+> Environment:
+> QEMU + upstream kernel + buildroot + NVMe (2 GB)
+>
+> Kernel config:
+> CONFIG_BLK_DEV_NVME=y
+> CONFIG_THP_SWAP=y
+>
+> Some reproducable steps:
+> mkfs.xfs -f /dev/nvme0n1
+> mkdir /tmp/mnt
+> mount /dev/nvme0n1 /tmp/mnt
+> bs="32k"
+> sz="1024m"    # doesn't matter too much, I also tried 16m
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
+>
+> mkswap /tmp/mnt/sw
+> swapon /tmp/mnt/sw
+>
+> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
+>
+> Symptoms:
+>  - FS corruption (e.g. checksum failure)
+>  - memory corruption at: 0xd2808010
+>  - segfault
+>  ... 
+>
+>  mm/swapfile.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 6c26916e95fd..2937daf3ca02 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+>  			goto nextsi;
+>  		}
+>  		if (size == SWAPFILE_CLUSTER) {
+> -			if (!(si->flags & SWP_FS))
+> +			if (si->flags & SWP_BLKDEV)
+>  				n_ret = swap_alloc_cluster(si, swp_entries);
+>  		} else
+>  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
