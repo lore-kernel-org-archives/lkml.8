@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D139C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE46C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:26:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 288A522D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F6722D03
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915552;
-	bh=OztBmgibWac0/yJ+f4OlaPKdZfBiGL7/ahnGw2aTiHg=;
+	s=default; t=1597915565;
+	bh=DHjk1xprJ640WK6GuoIc6wNF5AJ2FL1WMkWgfQxe4W0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPMqxXHH4VX2w3hUzRobBUqgIJvPleA4BTFNc7BgPW9a/uB/qNmkKdeY1C0R1iai2
-	 1m/KWyXmbH/C48d91MXGJB2vismerygWQjikK/H8jQCeSLHeB8WXiCBD1fFYgMhJBP
-	 Rz3Zy6IWGipJBmsWA0VtZxLGJXN4i0g8ARaj6vBI=
+	b=RpICXmmv6pIZOOzuabeQeImGMQc1bepbZ+V2S13ezoo8Dj3jQqYldW743bNkKhgeM
+	 Wkd33QZ/ass/qQz+9f5kC7mswJMZef5utOo4cf8Ph0bHxqDUhOoA7lqUvCgAWvrwMY
+	 JgxhiVUyyHM9jioqI7WCgbBvjPhjrhjd+P9SNFM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgHTJZu (ORCPT
+        id S1726664AbgHTJ0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:25:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60858 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726983AbgHTJYg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:36 -0400
+        id S1727069AbgHTJZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:25:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 889C822CB2;
-        Thu, 20 Aug 2020 09:24:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B678422CE3;
+        Thu, 20 Aug 2020 09:25:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915476;
-        bh=OztBmgibWac0/yJ+f4OlaPKdZfBiGL7/ahnGw2aTiHg=;
+        s=default; t=1597915503;
+        bh=DHjk1xprJ640WK6GuoIc6wNF5AJ2FL1WMkWgfQxe4W0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzxwoVbdhZTpv3bxLwbo7gkolheU6t1Cohvhp7Z61QLbDGK3aJ/RO6aFnEQ9MV2kL
-         mJMp85sidBsujP3Rlty4t2rbYokuYnVwkGG3EARCmYsVrkAmK1cjfr3rY69c+dUsKf
-         SHs9D8Astc2T2JlVZlmcONTnqfs95k0CPXQq2zTQ=
+        b=Hps1F+7Cile+yHFZq2Ffzubo9JuZ/kJwt21p7EaB9C0NbzeNatWeT/8Qk6G1tCLsI
+         +idH9p6UYfCfOt3UKbmdDA1CyBgn6I1GBHHkooQF70LJRQc1EqCAUpSlZqEMvPsNFY
+         vTMRHMSUDAPR8X24KUdGK0JmHD/qlijoYuF0Tvxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 026/232] btrfs: relocation: review the call sites which can be interrupted by signal
-Date:   Thu, 20 Aug 2020 11:17:57 +0200
-Message-Id: <20200820091614.014697416@linuxfoundation.org>
+Subject: [PATCH 5.8 037/232] btrfs: fix memory leaks after failure to lookup checksums during inode logging
+Date:   Thu, 20 Aug 2020 11:18:08 +0200
+Message-Id: <20200820091614.569546808@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,104 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 44d354abf33e92a5e73b965c84caf5a5d5e58a0b upstream.
+commit 4f26433e9b3eb7a55ed70d8f882ae9cd48ba448b upstream.
 
-Since most metadata reservation calls can return -EINTR when get
-interrupted by fatal signal, we need to review the all the metadata
-reservation call sites.
+While logging an inode, at copy_items(), if we fail to lookup the checksums
+for an extent we release the destination path, free the ins_data array and
+then return immediately. However a previous iteration of the for loop may
+have added checksums to the ordered_sums list, in which case we leak the
+memory used by them.
 
-In relocation code, the metadata reservation happens in the following
-sites:
+So fix this by making sure we iterate the ordered_sums list and free all
+its checksums before returning.
 
-- btrfs_block_rsv_refill() in merge_reloc_root()
-  merge_reloc_root() is a pretty critical section, we don't want to be
-  interrupted by signal, so change the flush status to
-  BTRFS_RESERVE_FLUSH_LIMIT, so it won't get interrupted by signal.
-  Since such change can be ENPSPC-prone, also shrink the amount of
-  metadata to reserve least amount avoid deadly ENOSPC there.
-
-- btrfs_block_rsv_refill() in reserve_metadata_space()
-  It calls with BTRFS_RESERVE_FLUSH_LIMIT, which won't get interrupted
-  by signal.
-
-- btrfs_block_rsv_refill() in prepare_to_relocate()
-
-- btrfs_block_rsv_add() in prepare_to_relocate()
-
-- btrfs_block_rsv_refill() in relocate_block_group()
-
-- btrfs_delalloc_reserve_metadata() in relocate_file_extent_cluster()
-
-- btrfs_start_transaction() in relocate_block_group()
-
-- btrfs_start_transaction() in create_reloc_inode()
-  Can be interrupted by fatal signal and we can handle it easily.
-  For these call sites, just catch the -EINTR value in btrfs_balance()
-  and count them as canceled.
-
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
+Fixes: 3650860b90cc2a ("Btrfs: remove almost all of the BUG()'s from tree-log.c")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   12 ++++++++++--
- fs/btrfs/volumes.c    |   17 ++++++++++++++++-
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ fs/btrfs/tree-log.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -1686,12 +1686,20 @@ static noinline_for_stack int merge_relo
- 		btrfs_unlock_up_safe(path, 0);
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4027,11 +4027,8 @@ static noinline int copy_items(struct bt
+ 						fs_info->csum_root,
+ 						ds + cs, ds + cs + cl - 1,
+ 						&ordered_sums, 0);
+-				if (ret) {
+-					btrfs_release_path(dst_path);
+-					kfree(ins_data);
+-					return ret;
+-				}
++				if (ret)
++					break;
+ 			}
+ 		}
  	}
- 
--	min_reserved = fs_info->nodesize * (BTRFS_MAX_LEVEL - 1) * 2;
-+	/*
-+	 * In merge_reloc_root(), we modify the upper level pointer to swap the
-+	 * tree blocks between reloc tree and subvolume tree.  Thus for tree
-+	 * block COW, we COW at most from level 1 to root level for each tree.
-+	 *
-+	 * Thus the needed metadata size is at most root_level * nodesize,
-+	 * and * 2 since we have two trees to COW.
-+	 */
-+	min_reserved = fs_info->nodesize * btrfs_root_level(root_item) * 2;
- 	memset(&next_key, 0, sizeof(next_key));
- 
- 	while (1) {
- 		ret = btrfs_block_rsv_refill(root, rc->block_rsv, min_reserved,
--					     BTRFS_RESERVE_FLUSH_ALL);
-+					     BTRFS_RESERVE_FLUSH_LIMIT);
- 		if (ret) {
- 			err = ret;
- 			goto out;
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4150,7 +4150,22 @@ int btrfs_balance(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->balance_mutex);
- 	if (ret == -ECANCELED && atomic_read(&fs_info->balance_pause_req))
- 		btrfs_info(fs_info, "balance: paused");
--	else if (ret == -ECANCELED && atomic_read(&fs_info->balance_cancel_req))
-+	/*
-+	 * Balance can be canceled by:
-+	 *
-+	 * - Regular cancel request
-+	 *   Then ret == -ECANCELED and balance_cancel_req > 0
-+	 *
-+	 * - Fatal signal to "btrfs" process
-+	 *   Either the signal caught by wait_reserve_ticket() and callers
-+	 *   got -EINTR, or caught by btrfs_should_cancel_balance() and
-+	 *   got -ECANCELED.
-+	 *   Either way, in this case balance_cancel_req = 0, and
-+	 *   ret == -EINTR or ret == -ECANCELED.
-+	 *
-+	 * So here we only check the return value to catch canceled balance.
-+	 */
-+	else if (ret == -ECANCELED || ret == -EINTR)
- 		btrfs_info(fs_info, "balance: canceled");
- 	else
- 		btrfs_info(fs_info, "balance: ended with status: %d", ret);
+@@ -4044,7 +4041,6 @@ static noinline int copy_items(struct bt
+ 	 * we have to do this after the loop above to avoid changing the
+ 	 * log tree while trying to change the log tree.
+ 	 */
+-	ret = 0;
+ 	while (!list_empty(&ordered_sums)) {
+ 		struct btrfs_ordered_sum *sums = list_entry(ordered_sums.next,
+ 						   struct btrfs_ordered_sum,
 
 
