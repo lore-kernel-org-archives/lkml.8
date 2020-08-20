@@ -2,53 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F6FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F96520855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA52E214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924754;
-	bh=UjThr/AbDF+r+cHfs7kHV66RNhDFQIPaR76spC6viQE=;
+	s=default; t=1597924756;
+	bh=ZGfKLK7QDF6UKIB9ZK1taXhdAkb39nAqHSWRWISVJDI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YP6jOxoiVeFKntqa0Vxl2wGmiA9Fxa7bG54FIUhUHq84OWAW6aIc1ooYFDqzIJZU4
-	 /hcek4kMO6GcTS+XVZuBFLjCgGKRhgRpJnFr85nNxGQOF40geZxcXpLEG4YuLmJ5DO
-	 mk8/Rp0A9us/rolIZflFba2ftKfoL8ImwjMGbt5Q=
+	b=MrFOWcyGTpkIPtUvcZcWt5WFBPsXneJfML9TFARHpjc6nxcG3FjR0mKzhF0b5qsjQ
+	 2NE833T/Geny+naV1KCSLACYqGKkpa4HRXLg+m+p4WHhlo+GHw8lE6j3mwAifoEeTF
+	 h32xU2CwTnZNjQCIvhwWk68JMLm47Xu4ut6NGnsM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730382AbgHTKAd (ORCPT
+        id S1729292AbgHTL7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:59:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730451AbgHTJ76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:58 -0400
+        id S1730191AbgHTKAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBACF207FB;
-        Thu, 20 Aug 2020 09:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10C9207FB;
+        Thu, 20 Aug 2020 10:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917597;
-        bh=UjThr/AbDF+r+cHfs7kHV66RNhDFQIPaR76spC6viQE=;
+        s=default; t=1597917637;
+        bh=ZGfKLK7QDF6UKIB9ZK1taXhdAkb39nAqHSWRWISVJDI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcfB/w/7WfbO/+ssDFEAd8PP+BncOcih8SrMgDZG5kdwghE2NXWKswxAjkBcyO6aw
-         bSycQpqHV1Hw5HPfrhQAjsFIDXE84dX81nUJpuSyxD9pnqY8HQ+pKkOnwx2oQNfBxR
-         BeH8wMrgJhg+zk5ksxUa4+VCZnxEho8Xfi/uUbPI=
+        b=sPKxxlGeiKgz3oMq2pCZv/ndhJkdWXH2vOrvUFsTkvP93mYpLAzndPOlk5+/t3nsw
+         s5CrAwrbuj8XdMX/X528NUP8kMi3i0is11QwfoQHRV4dkfAwFl8/vBMXAfTN2CDrfJ
+         Gopzw76fFp2iV2/+4IlNr7Ai2LYzSoUReuwQYICo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Lu Wei <luwei32@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 087/212] platform/x86: intel-hid: Fix return value check in check_acpi_dev()
-Date:   Thu, 20 Aug 2020 11:21:00 +0200
-Message-Id: <20200820091606.742663696@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 072/212] ipv4: Silence suspicious RCU usage warning
+Date:   Thu, 20 Aug 2020 11:20:45 +0200
+Message-Id: <20200820091605.997432275@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,38 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Wei <luwei32@huawei.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 71fbe886ce6dd0be17f20aded9c63fe58edd2806 ]
+[ Upstream commit 83f3522860f702748143e022f1a546547314c715 ]
 
-In the function check_acpi_dev(), if it fails to create
-platform device, the return value is ERR_PTR() or NULL.
-Thus it must use IS_ERR_OR_NULL() to check return value.
+fib_trie_unmerge() is called with RTNL held, but not from an RCU
+read-side critical section. This leads to the following warning [1] when
+the FIB alias list in a leaf is traversed with
+hlist_for_each_entry_rcu().
 
-Fixes: ecc83e52b28c ("intel-hid: new hid event driver for hotkeys")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Lu Wei <luwei32@huawei.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Since the function is always called with RTNL held and since
+modification of the list is protected by RTNL, simply use
+hlist_for_each_entry() and silence the warning.
+
+[1]
+WARNING: suspicious RCU usage
+5.8.0-rc4-custom-01520-gc1f937f3f83b #30 Not tainted
+-----------------------------
+net/ipv4/fib_trie.c:1867 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by ip/164:
+ #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
+
+stack backtrace:
+CPU: 0 PID: 164 Comm: ip Not tainted 5.8.0-rc4-custom-01520-gc1f937f3f83b #30
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+Call Trace:
+ dump_stack+0x100/0x184
+ lockdep_rcu_suspicious+0x153/0x15d
+ fib_trie_unmerge+0x608/0xdb0
+ fib_unmerge+0x44/0x360
+ fib4_rule_configure+0xc8/0xad0
+ fib_nl_newrule+0x37a/0x1dd0
+ rtnetlink_rcv_msg+0x4f7/0xbd0
+ netlink_rcv_skb+0x17a/0x480
+ rtnetlink_rcv+0x22/0x30
+ netlink_unicast+0x5ae/0x890
+ netlink_sendmsg+0x98a/0xf40
+ ____sys_sendmsg+0x879/0xa00
+ ___sys_sendmsg+0x122/0x190
+ __sys_sendmsg+0x103/0x1d0
+ __x64_sys_sendmsg+0x7d/0xb0
+ do_syscall_64+0x54/0xa0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fc80a234e97
+Code: Bad RIP value.
+RSP: 002b:00007ffef8b66798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc80a234e97
+RDX: 0000000000000000 RSI: 00007ffef8b66800 RDI: 0000000000000003
+RBP: 000000005f141b1c R08: 0000000000000001 R09: 0000000000000000
+R10: 00007fc80a2a8ac0 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000000000 R14: 00007ffef8b67008 R15: 0000556fccb10020
+
+Fixes: 0ddcf43d5d4a ("ipv4: FIB Local/MAIN table collapse")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/platform/x86/intel-hid.c | 2 +-
+ net/ipv4/fib_trie.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel-hid.c b/drivers/platform/x86/intel-hid.c
-index 12dbb50633761..a5c645b9e3f2a 100644
---- a/drivers/platform/x86/intel-hid.c
-+++ b/drivers/platform/x86/intel-hid.c
-@@ -264,7 +264,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
- 		return AE_OK;
+--- a/net/ipv4/fib_trie.c
++++ b/net/ipv4/fib_trie.c
+@@ -1719,7 +1719,7 @@ struct fib_table *fib_trie_unmerge(struc
+ 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
+ 		struct key_vector *local_l = NULL, *local_tp;
  
- 	if (acpi_match_device_ids(dev, ids) == 0)
--		if (acpi_create_platform_device(dev, NULL))
-+		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
- 			dev_info(&dev->dev,
- 				 "intel-hid: created platform device\n");
+-		hlist_for_each_entry_rcu(fa, &l->leaf, fa_list) {
++		hlist_for_each_entry(fa, &l->leaf, fa_list) {
+ 			struct fib_alias *new_fa;
  
--- 
-2.25.1
-
+ 			if (local_tb->tb_id != fa->tb_id)
 
 
