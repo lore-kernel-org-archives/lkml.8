@@ -2,157 +2,185 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B20AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E09C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69F66208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271A3208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="JAoLsfvQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z11Hdhb8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbgHTRKE (ORCPT
+        id S1730509AbgHTRK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43022 "EHLO
+        Thu, 20 Aug 2020 13:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730398AbgHTRGy (ORCPT
+        with ESMTP id S1730151AbgHTRGy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 13:06:54 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0AADC061347
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:52 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id r9so1986575qtp.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:52 -0700 (PDT)
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7ADC061344;
+        Thu, 20 Aug 2020 10:05:38 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u18so2268482wmc.3;
+        Thu, 20 Aug 2020 10:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=Iv89Xj9r4G2AFHTvNFTUszt55oudaNNsbG7Jzt5MM3M=;
-        b=JAoLsfvQ4br/TgUsmWn9DiWKTa+gHnJlRKDqSlFzX5V673qRD69mVU//vMYNLqeytr
-         rhFyPscW3spdsfTlmOmV0nDCn+n1FekpqqrNOrpaPaUUDFPyK2yaaGgjnubuGAFXfgOZ
-         4RN2pffxWbl/Vt9OuWgk4OiLFRcn+ZneSYLa3l8/scg3+pGjlXbiE0IEgtCx62jc46ib
-         dtjdcsceajNguBonA3n67SB27pzahfP4nEEXTjzZUXBgq6Cze40JodWRpNDL1p68sZMo
-         4pt1nbmOJkkOV9mUv901MxLQQu5ovydCHcUgt1ALfMQw7OjMdo6PynVY+OtkRA0EdKUh
-         uRLA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4eX00c0ckm8hT0A0C/n4MyfX4EjjAaDz31mN/Lb//fY=;
+        b=Z11Hdhb8fIf+RWDsfZYkftMhqk7M2OXy0n6MgA0ETp9jr3pQV8ulNcpRKj/wKp+Jcb
+         TJydKyyk8agCFCKNNVnmf/LSzwt5bkfqxPoBrJfk9wIeWsj3ZxeZ0ypZrs1MtkVmxRRX
+         x81JDHis0hoohcY0Q6Ywz9FkA4+uo/uBfiR3m6br16gLBDZ0jm2DrQuA5qDaLjy/F60S
+         V1fg+5A7e4NKYugc3e5Xg2R7tNWQTDUK4LztV5U6/Rt21jkXnI9pXAOnIuQyz923d1dR
+         HzHV5ev7gLhj5R1KTo733m06xj4N6pqkhAWVg59VKP5cboJK1OKaF5Gqsjv4rsSG1r1h
+         /zsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Iv89Xj9r4G2AFHTvNFTUszt55oudaNNsbG7Jzt5MM3M=;
-        b=GLjjR9P655pio+aupDQ227UPRijcIb4l1eBTE9ZE5VQLeXDIeaoPwXTQ9P8vhzvRKW
-         hwPduXc2EL9VLLoJXZkH4zRQJS0QWJsfD/KfIS6lsIY324qB1BLCYBO6U/7bIRwrLdJi
-         Ah8STpf0T1R+6x0NAroedMA7Y5iWIxLtlCn2cwijwA4oUBi+lmqRFioCXWR3ManUmRPt
-         WwpVmGUFpzGiP+jvJ/JBPXrlSFczHDc4YAXhuuwwGkaBXi/3WLnlRrYO9ZdGwDRlW3Wl
-         v8P3pNjSVez+GB1iaL6+pLISjV+Z5RJQwqurV2RPpd0ax4mqj7HzZ2KENObJbIwxty52
-         +h5g==
-X-Gm-Message-State: AOAM533pzdI/wU3pZBbs+wHJXgGDfQspZso1aTsh7z6c1W8eB6PdzRUm
-        ih1F5kNJuZy/3VXPz6MXaRXs6Ls/s9vVlfU=
-X-Google-Smtp-Source: ABdhPJyAeDAmjp/cOMLYBlzKs+yr6QsVC8gvT2N9bGSimDFXyKsgrBOjYXHKDZ2UXbzrYoObhj6uF80NWOzZdd4=
-X-Received: from ckennelly28.nyc.corp.google.com ([2620:0:1003:1003:3e52:82ff:fe5a:a91a])
- (user=ckennelly job=sendgmr) by 2002:a05:6214:1910:: with SMTP id
- er16mr3766114qvb.228.1597943152055; Thu, 20 Aug 2020 10:05:52 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 13:05:40 -0400
-In-Reply-To: <20200820170541.1132271-1-ckennelly@google.com>
-Message-Id: <20200820170541.1132271-2-ckennelly@google.com>
-Mime-Version: 1.0
-References: <20200820170541.1132271-1-ckennelly@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v3 1/2] fs/binfmt_elf: Use PT_LOAD p_align values for suitable
- start address.
-From:   Chris Kennelly <ckennelly@google.com>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Song Liu <songliubraving@fb.com>
-Cc:     David Rientjes <rientjes@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Hugh Dickens <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chris Kennelly <ckennelly@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4eX00c0ckm8hT0A0C/n4MyfX4EjjAaDz31mN/Lb//fY=;
+        b=W7viDUIzQeVWC4fmHbZnzjL+PO/ocamtCcGRVbGD0NCpaaG/aa4jR6mGhIByr93I7f
+         SGeUXhiEFNVRN+2797aPBmyV0H5soFmbHJBrTGxxA3c48ZF3KhOSt4vE8j/r7k8HPTwI
+         IDDtoTrQMMPMb3Mqo48PpYY/actmh78WXexKjbMCjlz0YL8YlS/md7TzMOKOo4sa2NHg
+         VyPDqisW5phnZ3JsqGifqRT+TK6iiVVx/4KzDsBVjZ5LEqIsSmmcykwXXabRpJ4Zrgfs
+         ODmaateMyqQCTxS2EJ8CGHlaWP8V6SLiEw3Q2HZKLGCjBpRWKnZckjq1f15iw9BvzGJ4
+         sZJw==
+X-Gm-Message-State: AOAM533E4ix4X1ebe6UxaRiTRi7hNGbor95VCmjX2lFNnc7vfZ9ogSdS
+        I4jYnOz/hwwYC/ivdkuSvQ50T66K7xZl1ZKoN5o=
+X-Google-Smtp-Source: ABdhPJyyd8HHoirSU/WeVEZLJyRDkczRjPGF9/eWaPA4wGBOVGhOy7ejxlGod+q0XjTYTyGC7MJSrAGP/V2HLxQLL8g=
+X-Received: by 2002:a1c:4c17:: with SMTP id z23mr4638247wmf.49.1597943137022;
+ Thu, 20 Aug 2020 10:05:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1597931875.git.robin.murphy@arm.com> <93d7de3533cfd952aecd6198b9221d7a58c0e521.1597931876.git.robin.murphy@arm.com>
+ <CAF6AEGuKa4P=gfus08CdfT2H5pG6a2PBumGb=Pw3qvD=NWueig@mail.gmail.com> <b5aa001f-6a1c-af0b-1526-c5b7a2e29ef7@arm.com>
+In-Reply-To: <b5aa001f-6a1c-af0b-1526-c5b7a2e29ef7@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 20 Aug 2020 10:05:25 -0700
+Message-ID: <CAF6AEGs1JyZqNYyHC6DsjZa2wbHVhP-M=ZVJxHqYjeFQPZ3APA@mail.gmail.com>
+Subject: Re: [PATCH 10/18] iommu/msm: Add IOMMU_DOMAIN_DMA support
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        digetx@gmail.com, Suman Anna <s-anna@ti.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:ARM/S5P EXYNOS AR..." 
+        <linux-samsung-soc@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        linux-media@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>, linux-tegra@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        t-kristo@ti.com,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current ELF loading mechancism provides page-aligned mappings.  This
-can lead to the program being loaded in a way unsuitable for
-file-backed, transparent huge pages when handling PIE executables.
+On Thu, Aug 20, 2020 at 9:58 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 2020-08-20 16:55, Rob Clark wrote:
+> > Side note, I suspect we'll end up needing something like
+> > 0e764a01015dfebff8a8ffd297d74663772e248a .. if someone can dig a 32b
+> > device out of the closet and dust it off, the fix is easy enough.
+> > Just wanted to mention that here so anyone with a 32b device could
+> > find what is needed.
+>
+> FWIW there shouldn't be any material change here - the generic default
+> domain is installed under the same circumstances as the Arm
+> dma_iommu_mapping was, so if any platform does have an issue, then it
+> should already have started 4 years with f78ebca8ff3d ("iommu/msm: Add
+> support for generic master bindings").
 
-For binaries built with increased alignment, this limits the number of
-bits usable for ASLR, but provides some randomization over using fixed
-load addresses/non-PIE binaries.
+ok, it has, I guess, been a while since playing with 32b things..
+someone on IRC had mentioned a problem that sounded like what
+0e764a01015dfebff8a8ffd297d74663772e248a solved, unless they disabled
+some ARCH_HAS_xyz thing (IIRC), which I guess is related..
 
-Tested: verified program with -Wl,-z,max-page-size=0x200000 loading
-Signed-off-by: Chris Kennelly <ckennelly@google.com>
----
- fs/binfmt_elf.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+BR,
+-R
 
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 13d053982dd73..a980dc3704639 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/fs.h>
-+#include <linux/log2.h>
- #include <linux/mm.h>
- #include <linux/mman.h>
- #include <linux/errno.h>
-@@ -421,6 +422,24 @@ static int elf_read(struct file *file, void *buf, size_t len, loff_t pos)
- 	return 0;
- }
- 
-+static unsigned long maximum_alignment(struct elf_phdr *cmds, int nr)
-+{
-+	unsigned long alignment = 0;
-+	int i;
-+
-+	for (i = 0; i < nr; i++) {
-+		if (cmds[i].p_type == PT_LOAD) {
-+			/* skip non-power of two alignments */
-+			if (!is_power_of_2(cmds[i].p_align))
-+				continue;
-+			alignment = max(alignment, cmds[i].p_align);
-+		}
-+	}
-+
-+	/* ensure we align to at least one page */
-+	return ELF_PAGEALIGN(alignment);
-+}
-+
- /**
-  * load_elf_phdrs() - load ELF program headers
-  * @elf_ex:   ELF header of the binary whose program headers should be loaded
-@@ -1008,6 +1027,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 		int elf_prot, elf_flags;
- 		unsigned long k, vaddr;
- 		unsigned long total_size = 0;
-+		unsigned long alignment;
- 
- 		if (elf_ppnt->p_type != PT_LOAD)
- 			continue;
-@@ -1086,6 +1106,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				load_bias = ELF_ET_DYN_BASE;
- 				if (current->flags & PF_RANDOMIZE)
- 					load_bias += arch_mmap_rnd();
-+				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-+				if (alignment)
-+					load_bias &= ~(alignment - 1);
- 				elf_flags |= MAP_FIXED;
- 			} else
- 				load_bias = 0;
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+> Robin.
+>
+> >
+> > BR,
+> > -R
+> >
+> > On Thu, Aug 20, 2020 at 8:09 AM Robin Murphy <robin.murphy@arm.com> wrote:
+> >>
+> >> Now that arch/arm is wired up for default domains and iommu-dma,
+> >> implement the corresponding driver-side support for DMA domains.
+> >>
+> >> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> >> ---
+> >>   drivers/iommu/msm_iommu.c | 7 ++++++-
+> >>   1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+> >> index 3615cd6241c4..f34efcbb0b2b 100644
+> >> --- a/drivers/iommu/msm_iommu.c
+> >> +++ b/drivers/iommu/msm_iommu.c
+> >> @@ -8,6 +8,7 @@
+> >>   #include <linux/kernel.h>
+> >>   #include <linux/init.h>
+> >>   #include <linux/platform_device.h>
+> >> +#include <linux/dma-iommu.h>
+> >>   #include <linux/errno.h>
+> >>   #include <linux/io.h>
+> >>   #include <linux/io-pgtable.h>
+> >> @@ -314,13 +315,16 @@ static struct iommu_domain *msm_iommu_domain_alloc(unsigned type)
+> >>   {
+> >>          struct msm_priv *priv;
+> >>
+> >> -       if (type != IOMMU_DOMAIN_UNMANAGED)
+> >> +       if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
+> >>                  return NULL;
+> >>
+> >>          priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> >>          if (!priv)
+> >>                  goto fail_nomem;
+> >>
+> >> +       if (type == IOMMU_DOMAIN_DMA && iommu_get_dma_cookie(&priv->domain))
+> >> +               goto fail_nomem;
+> >> +
+> >>          INIT_LIST_HEAD(&priv->list_attached);
+> >>
+> >>          priv->domain.geometry.aperture_start = 0;
+> >> @@ -339,6 +343,7 @@ static void msm_iommu_domain_free(struct iommu_domain *domain)
+> >>          struct msm_priv *priv;
+> >>          unsigned long flags;
+> >>
+> >> +       iommu_put_dma_cookie(domain);
+> >>          spin_lock_irqsave(&msm_iommu_lock, flags);
+> >>          priv = to_msm_priv(domain);
+> >>          kfree(priv);
+> >> --
+> >> 2.28.0.dirty
+> >>
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel@lists.freedesktop.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
