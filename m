@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20634C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0032BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECD6620758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE51E2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921660;
-	bh=XUsDHk2bho+IYQs9Eox9WcAMU/IPmS9f80d3SMOOORk=;
+	s=default; t=1597921664;
+	bh=9QFl/43fNCHem9vZtnvO/6abc/DSg1vJcDNJzCUteRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y3JCwpeg2qsbwkkUALoynG/oEycrKpckh7yieVMTlUGoqCY1SlSl2yccoqNy1KBsQ
-	 x9zh8ULWGlwqxLpLXfW8aLVisF7cbrZclwV1/dAm3do99wydfn51RZWN5ne2cctm3Y
-	 P8BRJYlXc3fVg+84vDf4oNpp6Y2HOtDuFV8RZLqA=
+	b=UjLWf3x82qh2ecnmAKJfRo0HqZDCfziCR2vHsckF/omslLiYGj+NDbI0Nf3euIvaw
+	 SUArhVxOfO2+dODtD2waAXDewqvbi/CPZoBJBgp3gL5KbQqknECk7DIYKlFpBynlty
+	 99Ch/aj24LrYPwbP3jG/z6fYDC8AH3lAuEULHOwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgHTLHh (ORCPT
+        id S1728509AbgHTLHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:07:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48928 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729969AbgHTKLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:11:03 -0400
+        id S1730919AbgHTKK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0737D20724;
-        Thu, 20 Aug 2020 10:11:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA552067C;
+        Thu, 20 Aug 2020 10:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918262;
-        bh=XUsDHk2bho+IYQs9Eox9WcAMU/IPmS9f80d3SMOOORk=;
+        s=default; t=1597918256;
+        bh=9QFl/43fNCHem9vZtnvO/6abc/DSg1vJcDNJzCUteRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZbpwrsbuACVHmRXLHObjxr1uMXoyvAO6wg+k7fV/rhf6aWRPEPpQN2NJiyQsJXvqM
-         RtHw+ZnVIFtcOVlfrU4nUaHcpvLZpEFxK3lDgqGFFw0vkezuKqCkyhU8WaOIZLXI4C
-         IZgtW2EZulaGqevVwPtW0fScGt975p2iwY1LfLpw=
+        b=FWudGep2+CnDCiCPneQEXQ+J0InGXg3YIh23LktxPsTAgYfjKb5x2DOxcRqG576L/
+         n1nnuEq34KSBoqCjxxVD1xkSMIpClWH0wX1dRitjrvqZuwigIlGHSVSQIXsDzRjK92
+         BdisamfY+xvTHtMY+fAxOr6yzjFygASuriHjaWok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
+        Anton Blanchard <anton@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 108/228] PCI/ASPM: Add missing newline in sysfs policy
-Date:   Thu, 20 Aug 2020 11:21:23 +0200
-Message-Id: <20200820091612.997530828@linuxfoundation.org>
+Subject: [PATCH 4.14 106/228] powerpc/vdso: Fix vdso cpu truncation
+Date:   Thu, 20 Aug 2020 11:21:21 +0200
+Message-Id: <20200820091612.897934041@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Milton Miller <miltonm@us.ibm.com>
 
-[ Upstream commit 3167e3d340c092fd47924bc4d23117a3074ef9a9 ]
+[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
 
-When I cat ASPM parameter 'policy' by sysfs, it displays as follows.  Add a
-newline for easy reading.  Other sysfs attributes already include a
-newline.
+The code in vdso_cpu_init that exposes the cpu and numa node to
+userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
+that any kernel running on a box with more than 4096 threads (NR_CPUS
+advertises a limit of of 8192 cpus) would expose userspace to two cpu
+contexts running at the same time with the same cpu number.
 
-  [root@localhost ~]# cat /sys/module/pcie_aspm/parameters/policy
-  [default] performance powersave powersupersave [root@localhost ~]#
+Note: I'm not aware of any distro shipping a kernel with support for more
+than 4096 threads today, nor of any system image that currently exceeds
+4096 threads. Found via code browsing.
 
-Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
-Link: https://lore.kernel.org/r/1594972765-10404-1-git-send-email-wangxiongfeng2@huawei.com
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
+Signed-off-by: Milton Miller <miltonm@us.ibm.com>
+Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/kernel/vdso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 04d5c62588b77..f41c105adfbd4 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1111,6 +1111,7 @@ static int pcie_aspm_get_policy(char *buffer, struct kernel_param *kp)
- 			cnt += sprintf(buffer + cnt, "[%s] ", policy_str[i]);
- 		else
- 			cnt += sprintf(buffer + cnt, "%s ", policy_str[i]);
-+	cnt += sprintf(buffer + cnt, "\n");
- 	return cnt;
- }
+diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
+index 22b01a3962f06..3edaee28b6383 100644
+--- a/arch/powerpc/kernel/vdso.c
++++ b/arch/powerpc/kernel/vdso.c
+@@ -704,7 +704,7 @@ int vdso_getcpu_init(void)
+ 	node = cpu_to_node(cpu);
+ 	WARN_ON_ONCE(node > 0xffff);
+ 
+-	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
++	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
+ 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
+ 	get_paca()->sprg_vdso = val;
  
 -- 
 2.25.1
