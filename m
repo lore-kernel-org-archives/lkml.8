@@ -2,136 +2,107 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:19:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DEEA20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:19:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Phws8BHU"
+	by mail.kernel.org (Postfix) with ESMTP id 698C220674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgHTOTv (ORCPT
+        id S1727973AbgHTOUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgHTOTo (ORCPT
+        Thu, 20 Aug 2020 10:20:20 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61461 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbgHTOUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:19:44 -0400
-Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90548C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:19:44 -0700 (PDT)
-Received: by mail-oo1-xc41.google.com with SMTP id r6so438214oon.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:19:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQb9WVGZOx9n9j1FigmsnSqdEAP41Eibw43enyJulIg=;
-        b=Phws8BHUL0rUuOaS64E2fTWRZt9Xw776XjmJ2R1c/Hs4o7LUXA/dRJkOBCvjOR38Qm
-         k1/SI/7I9n+X2CSLxuurpdv3E+7JZ8jK7n7+cQ/BPmCzXBdTaQWkfR9GN2cUgVn5lGLa
-         G/fWMnjIvdIaYf2gOXJ83vUsrFRSkG0J60nkpCxtBv01hK9A/oIdsBnDEUvSZu39MHXp
-         T/YsqM4ksVBjDaKSYM2ZYiIyTkIF/ZY+u9QotE0y9ifo8nK4tr7n6gmGV6dbBslWSc/d
-         J/Nim7X6TUEoCYaZDnbBpBifL53hflbz05yy3N8Up7dTK0Ub0xP0e3snxl274kmA6xde
-         KZFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQb9WVGZOx9n9j1FigmsnSqdEAP41Eibw43enyJulIg=;
-        b=Z3PtYeLPAF63scigEg6eZhyUHu5GngGwiZfHYXsLp1R6hUP0Z9wI+zVbPPs2i/0/Hh
-         +yCPx/bZCpjUKSv+hi9dibNHFA99h+Sni4IcKhpipa/flHKvG4iJcaX+KjfU8mVKa2oH
-         AWpuly+v9dgXTkUZ+cftSwWBiTzZFJvR9nc+4Q+uK4CqUR11+lZMYu3NevXPfpDSWy+p
-         Ft4Hsw9Z52HG0j+l1p9Pw6p7f/d3q7NSaKUGpreSqMB0eLw/zt5X37X/bfAEBU+duqVw
-         CU38eE8OK7LsOyMJRnEbSxXda9jj6awIlEWhe3LRj5SqdepTmp1jScF/lEN4+2FjH0dl
-         e5HQ==
-X-Gm-Message-State: AOAM530ObzwoRmaMs6WB2xlWPNcmiTECUtLYSyGJy0l4u/naYIjPTa65
-        Mv5uPYWrq3v3rc9SXil3J8nzqIvZ+ayfirOyB53AeEHaVPvPEQ==
-X-Google-Smtp-Source: ABdhPJyhjS63/b7WDVE9wM6oUnylRf6OwbI259OrGMTGANyQn2bOCLku2JrRZ5P9CrNozQGO1Sgqpy0LvqHAo91+ycY=
-X-Received: by 2002:a4a:d2d8:: with SMTP id j24mr2588594oos.82.1597933182847;
- Thu, 20 Aug 2020 07:19:42 -0700 (PDT)
+        Thu, 20 Aug 2020 10:20:03 -0400
+Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07KEIi5Q077845;
+        Thu, 20 Aug 2020 23:18:45 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
+ Thu, 20 Aug 2020 23:18:44 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07KEIigG077841
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Thu, 20 Aug 2020 23:18:44 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Suren Baghdasaryan <surenb@google.com>, timmurray@google.com,
+        mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+        esyr@redhat.com, christian@kellner.me, areber@redhat.com,
+        shakeelb@google.com, cyphar@cyphar.com, oleg@redhat.com,
+        adobriyan@gmail.com, akpm@linux-foundation.org,
+        gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org
+References: <20200820002053.1424000-1-surenb@google.com>
+ <87zh6pxzq6.fsf@x220.int.ebiederm.org> <20200820124241.GJ5033@dhcp22.suse.cz>
+ <87lfi9xz7y.fsf@x220.int.ebiederm.org> <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+Date:   Thu, 20 Aug 2020 23:18:40 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200820120025.74460-1-benbjiang@tencent.com> <CAKfTPtABCbEuYf3uup5ZODyPXpUqBjgM8A5gBQqM0cQGxWk5zw@mail.gmail.com>
- <20200820125829.GT2674@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200820125829.GT2674@hirez.programming.kicks-ass.net>
-From:   Jiang Biao <benbjiang@gmail.com>
-Date:   Thu, 20 Aug 2020 22:19:32 +0800
-Message-ID: <CAPJCdB=f_qSS-t_TFSjtT9uDo6q57bScCyau=gkF4E1gNcSjmQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: avoid vruntime compensation for SCHED_IDLE task
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 20:58, <peterz@infradead.org> wrote:
->
-> On Thu, Aug 20, 2020 at 02:51:06PM +0200, Vincent Guittot wrote:
-> > On Thu, 20 Aug 2020 at 14:00, Jiang Biao <benbjiang@gmail.com> wrote:
-> > >
-> > > From: Jiang Biao <benbjiang@tencent.com>
-> > >
-> > > Vruntime compensation has been down in place_entity() to
-> > > boot the waking procedure for fair tasks. There is no need to
-> >
-> > s/boot/boost/ ?
-> >
-> > > do that for SCHED_IDLE task actually.
-> > >
-> > > Not compensating vruntime for SCHED_IDLE task could make
-> > > SCHED_IDLE task more harmless for normal tasks.
->
-> This is rather week. It would be much better if there's some actual data
-> to support this claim.
-I'll try to have a test and get some data. :)
+On 2020/08/20 23:00, Christian Brauner wrote:
+> On Thu, Aug 20, 2020 at 10:48:43PM +0900, Tetsuo Handa wrote:
+>> On 2020/08/20 22:34, Christian Brauner wrote:
+>>> On Thu, Aug 20, 2020 at 03:26:31PM +0200, Michal Hocko wrote:
+>>>> If you can handle vfork by other means then I am all for it. There were
+>>>> no patches in that regard proposed yet. Maybe it will turn out simpler
+>>>> then the heavy lifting we have to do in the oom specific code.
+>>>
+>>> Eric's not wrong. I fiddled with this too this morning but since
+>>> oom_score_adj is fiddled with in a bunch of places this seemed way more
+>>> code churn then what's proposed here.
+>>
+>> I prefer simply reverting commit 44a70adec910d692 ("mm, oom_adj: make sure
+>> processes sharing mm have same view of oom_score_adj").
+>>
+>>   https://lore.kernel.org/patchwork/patch/1037208/
+> 
+> I guess this is a can of worms but just or the sake of getting more
+> background: the question seems to be whether the oom adj score is a
+> property of the task/thread-group or a property of the mm. I always
+> thought the oom score is a property of the task/thread-group and not the
+> mm which is also why it lives in struct signal_struct and not in struct
+> mm_struct. But
+> 
+> 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+> 
+> reads like it is supposed to be a property of the mm or at least the
+> change makes it so.
 
->
-> > > Signed-off-by: Jiang Biao <benbjiang@tencent.com>
-> > > ---
-> > >  kernel/sched/fair.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > > index 1a68a0536add..adff77676a0a 100644
-> > > --- a/kernel/sched/fair.c
-> > > +++ b/kernel/sched/fair.c
-> > > @@ -4115,7 +4115,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
-> > >                 vruntime += sched_vslice(cfs_rq, se);
-> > >
-> > >         /* sleeps up to a single latency don't count. */
-> > > -       if (!initial) {
-> > > +       if (!initial && likely(!task_has_idle_policy(task_of(se)))) {
-> >
-> > What if se is not a task ?
->
-> Then we very much need it, because it might have fair tasks inside. I
-> suppose you could do something complicated with idle_h_nr_running, but
-> is all that really worth the effort?
-Would it be better to limit to task se case? like
- +       if (!initial && likely(!entity_is_task(se) ||
-!task_has_idle_policy(task_of(se)))) {
+Yes, 44a70adec910 is trying to go towards changing from a property of the task/thread-group
+to a property of mm. But I don't think we need to do it at the cost of "__set_oom_adj() latency
+Yong-Taek Lee and Tim Murray have reported" and "complicity for supporting
+vfork() => __set_oom_adj() => execve() sequence".
 
-
-
->
-> > >                 unsigned long thresh = sysctl_sched_latency;
-> > >
-> > >                 /*
-> > > --
-> > > 2.21.0
-> > >
