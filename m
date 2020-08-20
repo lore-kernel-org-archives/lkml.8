@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52756C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B620BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28F1C20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E79A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916502;
-	bh=y95aqhMghBTuYzwc96pgSXwzVNjO3rBpSfMV1LhH2hg=;
+	s=default; t=1597916509;
+	bh=cCUOGE8MGkysAC94vp/q2pSVU3xfxlp5tQo6NvQEVZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KiGJ0cf6s9DWarjpXbGVupcUUsGZkFPJUdMI+dWm0myrTIMF4/AvdiGLUG4sc5hSN
-	 Ymfb//NlwtsxFhBkCYQBQjq/Q9n6GXeVsH813Ackpm7pTPd4ECkYuV//Vcut6g9vkH
-	 0xjMWCrGgKyL5atiwlzDqNA6rdEv+pSaUBBYIlT0=
+	b=0RBZDBQ4Z0SP3fIBoQSbRA66Gp34xdfhJj/ehMkgvpgK35bKog7LQUXCqk8rnqz4o
+	 X+HsfZ37ejYMsmmYcVgA2GysOF+l0Pn0IZSg2x1+AyJ0oXMhw9l5NSS70mew8aDcG1
+	 nNFWNQKGAMoZkvHSGzBrICJWRFhoSQgbs4YhiVns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbgHTJlj (ORCPT
+        id S1729120AbgHTJlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgHTJla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:30 -0400
+        id S1727914AbgHTJlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1F4C207DE;
-        Thu, 20 Aug 2020 09:41:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89BD1207FB;
+        Thu, 20 Aug 2020 09:41:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916490;
-        bh=y95aqhMghBTuYzwc96pgSXwzVNjO3rBpSfMV1LhH2hg=;
+        s=default; t=1597916502;
+        bh=cCUOGE8MGkysAC94vp/q2pSVU3xfxlp5tQo6NvQEVZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0uMQBOEX3afTNZx8sX8TpDlzk73i9K++eSxJJR00+j/nsZMVl1tbJS0JSXddWUwS
-         v1onKzTydz0wUjhnVonA66dbniTws1YXt0TQhaSyibuZsBo9QwIoKleHaWVtuM4fRG
-         rWuRV/LEOn23eXZdu94iR0ThIcx5T5N3p9cbhHBQ=
+        b=FuUeEcWpTWPgcFE1yIb6ssaCbwzYryF+9/aoitePqeQoldDBF0jncnQNwMhvgBPi2
+         koMSy49533+jpXMpht20jSw23kajKVs9qFpHsz3jEofj+Njz9YY0FU1sUiwdjHUBnB
+         uQWeMj+28/OBlS09ab8f5PHppYrKZtf/azikjRpI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 146/204] sched/uclamp: Fix a deadlock when enabling uclamp static key
-Date:   Thu, 20 Aug 2020 11:20:43 +0200
-Message-Id: <20200820091613.539576056@linuxfoundation.org>
+Subject: [PATCH 5.7 150/204] nfs: ensure correct writeback errors are returned on close()
+Date:   Thu, 20 Aug 2020 11:20:47 +0200
+Message-Id: <20200820091613.736322187@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,59 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-[ Upstream commit e65855a52b479f98674998cb23b21ef5a8144b04 ]
+[ Upstream commit 67dd23f9e6fbaf163431912ef5599c5e0693476c ]
 
-The following splat was caught when setting uclamp value of a task:
+nfs_wb_all() calls filemap_write_and_wait(), which uses
+filemap_check_errors() to determine the error to return.
+filemap_check_errors() only looks at the mapping->flags and will
+therefore only return either -ENOSPC or -EIO.  To ensure that the
+correct error is returned on close(), nfs{,4}_file_flush() should call
+filemap_check_wb_err() which looks at the errseq value in
+mapping->wb_err without consuming it.
 
-  BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
-
-   cpus_read_lock+0x68/0x130
-   static_key_enable+0x1c/0x38
-   __sched_setscheduler+0x900/0xad8
-
-Fix by ensuring we enable the key outside of the critical section in
-__sched_setscheduler()
-
-Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
+Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with
+generic one")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/nfs/file.c     | 5 ++++-
+ fs/nfs/nfs4file.c | 5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 49b5c5cf9271d..ebecf1cc3b788 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1248,6 +1248,15 @@ static int uclamp_validate(struct task_struct *p,
- 	if (upper_bound > SCHED_CAPACITY_SCALE)
- 		return -EINVAL;
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index f96367a2463e3..d72496efa17b0 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -140,6 +140,7 @@ static int
+ nfs_file_flush(struct file *file, fl_owner_t id)
+ {
+ 	struct inode	*inode = file_inode(file);
++	errseq_t since;
  
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
-+	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
-+	 */
-+	static_branch_enable(&sched_uclamp_used);
-+
- 	return 0;
+ 	dprintk("NFS: flush(%pD2)\n", file);
+ 
+@@ -148,7 +149,9 @@ nfs_file_flush(struct file *file, fl_owner_t id)
+ 		return 0;
+ 
+ 	/* Flush writes to the server and return any errors */
+-	return nfs_wb_all(inode);
++	since = filemap_sample_wb_err(file->f_mapping);
++	nfs_wb_all(inode);
++	return filemap_check_wb_err(file->f_mapping, since);
  }
  
-@@ -1278,8 +1287,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
+ ssize_t
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index 8e5d6223ddd35..a339707654673 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -110,6 +110,7 @@ static int
+ nfs4_file_flush(struct file *file, fl_owner_t id)
+ {
+ 	struct inode	*inode = file_inode(file);
++	errseq_t since;
  
--	static_branch_enable(&sched_uclamp_used);
--
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
+ 	dprintk("NFS: flush(%pD2)\n", file);
+ 
+@@ -125,7 +126,9 @@ nfs4_file_flush(struct file *file, fl_owner_t id)
+ 		return filemap_fdatawrite(file->f_mapping);
+ 
+ 	/* Flush writes to the server and return any errors */
+-	return nfs_wb_all(inode);
++	since = filemap_sample_wb_err(file->f_mapping);
++	nfs_wb_all(inode);
++	return filemap_check_wb_err(file->f_mapping, since);
+ }
+ 
+ #ifdef CONFIG_NFS_V4_2
 -- 
 2.25.1
 
