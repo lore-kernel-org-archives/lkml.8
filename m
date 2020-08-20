@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDF2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05958C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3AF20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F6B2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917146;
-	bh=jHopqwvpfTLIe/E0Lw1lj/3ANsQyejgd1n9hrdtErjE=;
+	s=default; t=1597917156;
+	bh=+jlW5mBM0KX/G8DIWN/J/SV8dzYCZkFhr/5qSTloDdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ADEZbEjZHG/wsUiAnprEIop99rMHLtfjMSbVjTlYVcXijrp7if9dg7S1US6LIxJxR
-	 vrcADPyOteQopVC1ViEHkBHA3yzoO+AxA9olZ8MvsSUC30fjJlQgc3tXYCncdxj37c
-	 RY7nh0dqGyCMo5Z31m+eAIlBd8IkHnF5C6bGm1f4=
+	b=TVqRYIfsd0+Vr7fNrVl/DzKFWjN4p6oyjX8gelSvPUWYbqz8p6/sEHS2OcnbihBYS
+	 PF+OGTb27HcwSMi3SITCfe3shqnbUvu22PnswpW81efyweMYNkkGvUV9pJXgpKejwq
+	 CvlAOiVWIk7sz7Z9EM4c2V0Egd87bbcU58CVO1ys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729908AbgHTJwY (ORCPT
+        id S1729429AbgHTJw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729321AbgHTJwI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:08 -0400
+        id S1729897AbgHTJwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B01B207FB;
-        Thu, 20 Aug 2020 09:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCB212075E;
+        Thu, 20 Aug 2020 09:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917127;
-        bh=jHopqwvpfTLIe/E0Lw1lj/3ANsQyejgd1n9hrdtErjE=;
+        s=default; t=1597917133;
+        bh=+jlW5mBM0KX/G8DIWN/J/SV8dzYCZkFhr/5qSTloDdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YD51dkEKWdk5ejlb0Y8kQBpl+n6O0oWhXReGzijmbBbvC8ml4gOPJuGtjEW9W4lqR
-         L4I/kgOEzA4GtRJNRnM958G85bRkQ+IuhsCj6JQQ+tnWUcu/+0UCY3aj7P7GguiaTt
-         g7MX7Ni3K5H9A8rFPfmJLsOSsRSFroASEB8Ty5tY=
+        b=wwpLsrPmXwcO2b115/Mm1dunYaqknv4mYlAWp71YNcWKGC9l4QgGZyNnNqA4NcJrE
+         zknzC1SbiJUb35GFPrCpV22I0eueFEELcLkXVWITRIXgZ2UR6oI4T/5ZywPjLRoCUo
+         H1+rOzPbaVKv4Wb9Cbn7X201PL9mtG5uVLljESZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 05/92] PCI: Add device even if driver attach failed
-Date:   Thu, 20 Aug 2020 11:20:50 +0200
-Message-Id: <20200820091537.769509157@linuxfoundation.org>
+        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 4.19 07/92] PCI: qcom: Add support for tx term offset for rev 2.1.0
+Date:   Thu, 20 Aug 2020 11:20:52 +0200
+Message-Id: <20200820091537.879710579@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,46 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rajat Jain <rajatja@google.com>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-commit 2194bc7c39610be7cabe7456c5f63a570604f015 upstream.
+commit de3c4bf648975ea0b1d344d811e9b0748907b47c upstream.
 
-device_attach() returning failure indicates a driver error while trying to
-probe the device. In such a scenario, the PCI device should still be added
-in the system and be visible to the user.
+Add tx term offset support to pcie qcom driver need in some revision of
+the ipq806x SoC. Ipq8064 needs tx term offset set to 7.
 
-When device_attach() fails, merely warn about it and keep the PCI device in
-the system.
-
-This partially reverts ab1a187bba5c ("PCI: Check device_attach() return
-value always").
-
-Link: https://lore.kernel.org/r/20200706233240.3245512-1-rajatja@google.com
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org	# v4.6+
+Link: https://lore.kernel.org/r/20200615210608.21469-9-ansuelsmth@gmail.com
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v4.5+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/bus.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -323,12 +323,8 @@ void pci_bus_add_device(struct pci_dev *
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -45,7 +45,13 @@
+ #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
  
- 	dev->match_driver = true;
- 	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER) {
-+	if (retval < 0 && retval != -EPROBE_DEFER)
- 		pci_warn(dev, "device attach failed (%d)\n", retval);
--		pci_proc_detach_device(dev);
--		pci_remove_sysfs_dev_files(dev);
--		return;
--	}
+ #define PCIE20_PARF_PHY_CTRL			0x40
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
++
+ #define PCIE20_PARF_PHY_REFCLK			0x4C
++#define PHY_REFCLK_SSP_EN			BIT(16)
++#define PHY_REFCLK_USE_PAD			BIT(12)
++
+ #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+ #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+ #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+@@ -343,9 +349,18 @@ static int qcom_pcie_init_2_1_0(struct q
+ 		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+ 	}
  
- 	pci_dev_assign_added(dev, true);
- }
++	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
++		/* set TX termination offset */
++		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
++		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
++		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	}
++
+ 	/* enable external reference clock */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+-	val |= BIT(16);
++	val &= ~PHY_REFCLK_USE_PAD;
++	val |= PHY_REFCLK_SSP_EN;
+ 	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+ 
+ 	ret = reset_control_deassert(res->phy_reset);
 
 
