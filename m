@@ -2,118 +2,96 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D98BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B50C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29F2D207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928865;
-	bh=9T4WeDp0RYzmw5XlXp9uYtO1HytLjTO0M9v9kwsrWf0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vJtLSE5BpO5Hxd23CbiZmM1M2Q18W9TtaX6CQ/AtRNYoVhWXWGJ9mUnq39mtK14f9
-	 PLfGvB+dDEj9GkZPHYGWa5Q60YPU8gj1ioOFS2GQe5tQNW9NzCg3jRXsK8Sq8f2qwB
-	 ZJNkAbto3B847GyIdGq2AZ7hhG2VR7JhqXcvQ9h4=
+	by mail.kernel.org (Postfix) with ESMTP id 5C399207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WdBUSZcf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbgHTNHn (ORCPT
+        id S1729200AbgHTNHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbgHTNHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbgHTNHV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 09:07:21 -0400
-Received: from localhost (p54b3333c.dip0.t-ipconnect.de [84.179.51.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F322B207BB;
-        Thu, 20 Aug 2020 13:07:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597928840;
-        bh=9T4WeDp0RYzmw5XlXp9uYtO1HytLjTO0M9v9kwsrWf0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UVlhYFh3XV1+TA5Oe6DIE5oEjDi94Rt10we1LK8ZozUWHc/cfLYVjjEniqZMmpRGL
-         cQQOx0q8nmki/LH94WEslevVWm1QLAzs5udMYpgNoi9QdzXtTConvoGjce6mzAC+S/
-         gWpulzQ8AH2xNYzOjoSTRBPMzFK7AT4GMfUBspl8=
-Date:   Thu, 20 Aug 2020 15:07:08 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel@pengutronix.de, Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH] can: mscan: mpc5xxx_can: update contact email
-Message-ID: <20200820130707.GA11403@ninjato>
-References: <20200502142657.19199-1-wsa@kernel.org>
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63BAC061385;
+        Thu, 20 Aug 2020 06:07:20 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q1so611254pjd.1;
+        Thu, 20 Aug 2020 06:07:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KqAsHDETQOry6yr0jg3Z6xIgB+xnOYYAudJegp+z6Xg=;
+        b=WdBUSZcfs2umRDboNZztXlEAAV7GXKDNIeb3Qb2tD03c5LMqg/0C6EmPXDfMC4vGWL
+         flyFLLiEZhr4QCDVgE3+cb2zmhMWitLjXqJ0jj0o4gYEw/evnDkw549tkqmeEGscRXiM
+         1ZB7RY9M0hxS28Kea7vrFQwB13yMu4HdnhSCKzBywdTbdjHcXiMtNyG0gf6YqYz6WqcB
+         9YmTgQO2wTo3eDMwEH9314ukhV0zyWbjsQoImrKwTmjhsu8rzPuPZeN8L/ViGy97D60m
+         ZOvHlwd0+bLn5hL72D8Z7pc0CdOU3wnfqxyVHVM20A6dASHAcEzFQF+rxu70wU3I3XLh
+         Cs9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KqAsHDETQOry6yr0jg3Z6xIgB+xnOYYAudJegp+z6Xg=;
+        b=Pzv1M0ZNfF+X4Av74M8Z4Khsdmj3Ks1vUqu/uTENRnCHWk3BRzRmVwofOd//seYbHz
+         X+p9Zhp5/KCiXiW3B65R33LbC4NixRmCatrAhz6Us1w1gmjmKRe7lGGpQw0relFxNtxv
+         CsonANaYrEk4fxYfAPhVgoNYN4/lhC6QMdZyFfWNyTQDSrZz5tLFFONDjObPKuA96Ocg
+         mtNYm7fcZzzMnz4EpYE9+L9heaHyA9EJJmx8+piCtMwvLl7/sJDS30NiU2W66fy9wy+m
+         iMJYuvlX72wowEzAJkKaK2ARxFyb2NuVbxGXBzC0NKpluQ8VSHtJTEQUgstUqcg0M0nS
+         TFCg==
+X-Gm-Message-State: AOAM5307qfckB3gxlEDTLQKHNeauvC2Knr2NVwEj3nLrNWGj5f0IdtgS
+        V0WubRwTcC69/oNXC+iVpLC7UahNPRNR59n4DNM=
+X-Google-Smtp-Source: ABdhPJzTHllU7kCzBoIpVPf6oizdkQ2tk+JvmqjlKxXsncAf9YDI/4BREQa+apJHkj8ZH65udItiUhcbOlKL8p4kbqc=
+X-Received: by 2002:a17:902:b098:: with SMTP id p24mr2309156plr.255.1597928840300;
+ Thu, 20 Aug 2020 06:07:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
-Content-Disposition: inline
-In-Reply-To: <20200502142657.19199-1-wsa@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1597892486-3236-1-git-send-email-tiantao6@hisilicon.com>
+ <CA+U=DsojNXFxT812=i-0ceRGUV3gJXhMMb-ungP=DO166jjZMA@mail.gmail.com> <CAHp75VdqrczNjsgR7JZTsK8+=RmgFopGJ1VZdD4+BYxBHMHukg@mail.gmail.com>
+In-Reply-To: <CAHp75VdqrczNjsgR7JZTsK8+=RmgFopGJ1VZdD4+BYxBHMHukg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 20 Aug 2020 16:07:04 +0300
+Message-ID: <CAHp75Vf1C17eQzbuaxukzqxTgKO9Lv6fKDZ5JqfwMFWcvbMxFA@mail.gmail.com>
+Subject: Re: [PATCH] iio: adc: adi-axi-adc: Use kobj_to_dev() instead of container_of()
+To:     Alexandru Ardelean <ardeleanalex@gmail.com>
+Cc:     Tian Tao <tiantao6@hisilicon.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 4:05 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Thu, Aug 20, 2020 at 12:10 PM Alexandru Ardelean
+> <ardeleanalex@gmail.com> wrote:
+> > On Thu, Aug 20, 2020 at 6:04 AM Tian Tao <tiantao6@hisilicon.com> wrote:
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > > -       struct device *dev = container_of(kobj, struct device, kobj);
+> > > +       struct device *dev = kobj_to_dev(kobj);
 
-On Sat, May 02, 2020 at 04:26:56PM +0200, Wolfram Sang wrote:
-> The 'pengutronix' address is defunct for years. Use the proper contact
-> address.
->=20
-> Signed-off-by: Wolfram Sang <wsa@kernel.org>
+> And now this can be one line since dev is not used separately.
 
-Ping?
+On the other hand perhaps one object per line is better to read.
 
-> ---
->  drivers/net/can/mscan/mpc5xxx_can.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/=
-mpc5xxx_can.c
-> index e4f4b5c9ebd6..e254e04ae257 100644
-> --- a/drivers/net/can/mscan/mpc5xxx_can.c
-> +++ b/drivers/net/can/mscan/mpc5xxx_can.c
-> @@ -5,7 +5,7 @@
->   * Copyright (C) 2004-2005 Andrey Volkov <avolkov@varma-el.com>,
->   *                         Varma Electronics Oy
->   * Copyright (C) 2008-2009 Wolfgang Grandegger <wg@grandegger.com>
-> - * Copyright (C) 2009 Wolfram Sang, Pengutronix <w.sang@pengutronix.de>
-> + * Copyright (C) 2009 Wolfram Sang, Pengutronix <kernel@pengutronix.de>
->   */
-> =20
->  #include <linux/kernel.h>
-> --=20
-> 2.20.1
->=20
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8+dXcACgkQFA3kzBSg
-Kbbitw/9F16nwRBCNgwSGqNwxfnuj1puuUpdtbdyXSh3CwYylq50zKpHrYTd232F
-qEyVjLzVCF+qfq5o9P3GkWb6jL/kAnB9GVz+jkoLxYpXpk+Z4x3hxTXo/6I3AeMm
-s9wY9Svr06xrsn8hqk7K0m4LWcSTwBOH4qMAhTykf8bWsom/+mX5eLStF8FzFF9/
-lmjNdZm38vZ4GAfD8INpS358dUMmKLrQ/sL5heWs8bLpwTLli+qDCFf3dHXOVr1b
-bt2vNqUdk9jAIp4oc4gRxFEpWxJmLzPl7bUqb41bnUfx+ARra/iQtMiODZgmmevL
-vy7tKrgH5y1Q9AFWZnyMqeCoi8NxwFS+kN7dERz/haBnocHHlzwPEcM3SfdU2A8o
-4Rvo7FdEdXLROQsZWUzJaYtEN/aEyNyNGPU3HYYxZ0zjU1O7sTRlsMTbeyJXPCit
-IxK77SEAZXSCP6oCwUqoZ303wAvL+YUxYU+CgKvn6nmJqj58+iN8t6z3VHA94Yyq
-tybtEz6dp3qN6dhLK7LB3vT4o6H0OhVgnuBEmqFf+o6t2m5xIBNjxyCnkDBvkxBH
-jHsBeUw0zynKxRt6x3zCvRZA2qL4nJ6WizyIm6uKd01fekTKTeM6NHTL91QNY+Rl
-cxAIXV+esUM4psPYJ37M3je60bVX0ymkFSoXQ3XxQORTCntFmkg=
-=Ucks
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
+-- 
+With Best Regards,
+Andy Shevchenko
