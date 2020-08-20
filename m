@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C56C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4506A22CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF3372078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916921;
-	bh=jWbCFWTiHf+hm/s+EFXcXBpUr6fBEbGeNjTBoOoDPWc=;
+	s=default; t=1597916927;
+	bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MAAT2+z8jkhlY3fhj4JHPTusV0a3Tb3yaAWtJZlVJHmMFDfJg00bomKQeWSRL5jGB
-	 DjY8Fom1HxYDDwgVv9fUacTVKpQapnDvqaqQui9sCAWKHxPnxk5xkoSv58V2RbNx2h
-	 bpPB3gJL/hYmjoMOOEaoSm+hS3OGNk5fUAumeayw=
+	b=0eMd0cAIOPIWyvYc8XyH+gFiQStNVj9JdVOBxRt+gXkQncCgtQ6l6zN3++x9LHxDv
+	 EFGNixRki3Dw0nLboe8nqvPW8IoT3gvEYrjPQfEc8/KbNVryyLp5WeLWGWG6kioN+W
+	 B4Pgm2ltoUaDgx9KivHBLjskPjReXlQNmHrR+VVc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgHTJsf (ORCPT
+        id S1729571AbgHTJsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53038 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:48:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729423AbgHTJsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:21 -0400
+        id S1729557AbgHTJs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D7A320724;
-        Thu, 20 Aug 2020 09:48:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4840E2078D;
+        Thu, 20 Aug 2020 09:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916900;
-        bh=jWbCFWTiHf+hm/s+EFXcXBpUr6fBEbGeNjTBoOoDPWc=;
+        s=default; t=1597916908;
+        bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OcHKqfk/VNCv4kR3DCc0zuhOen8Vv9HGXOxBMfiQjG+I7OxXr5GlkXUguIHpdpa8M
-         4ci8DYXkPWe0FdTrk0dfN1tQ2g/3+bCU3yrrzyTlrQdqxbOwW+8eAQlwldzmAhp+SX
-         4JDNMDut1h5kwaDetpzDJmWRf379N/2ImPePkM2E=
+        b=p7Z01Xvkx1A2O3h033xRTdSI1vNj3Jc3Wy+0Y+kjt49WqLvL+tUv+J/yMydy6RVsd
+         4GYVrTLxkl+tZ7o0HQQRapAd6nxgEcoDlygst24+9HHKfLM0IgzzfHbX7eYHavk1pB
+         okT91J6MIya6h7oIah8X0Q1XhdfiC3vwR47OAtKs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 086/152] IB/uverbs: Set IOVA on IB MR in uverbs layer
-Date:   Thu, 20 Aug 2020 11:20:53 +0200
-Message-Id: <20200820091558.142006157@linuxfoundation.org>
+Subject: [PATCH 5.4 089/152] USB: serial: ftdi_sio: make process-packet buffer unsigned
+Date:   Thu, 20 Aug 2020 11:20:56 +0200
+Message-Id: <20200820091558.295106724@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,73 +59,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 04c0a5fcfcf65aade2fb238b6336445f1a99b646 ]
+[ Upstream commit ab4cc4ef6724ea588e835fc1e764c4b4407a70b7 ]
 
-Set IOVA on IB MR in uverbs layer to let all drivers have it, this
-includes both reg/rereg MR flows.
-As part of this change cleaned-up this setting from the drivers that
-already did it by themselves in their user flows.
+Use an unsigned type for the process-packet buffer argument and give it
+a more apt name.
 
-Fixes: e6f0330106f4 ("mlx4_ib: set user mr attributes in struct ib_mr")
-Link: https://lore.kernel.org/r/20200630093916.332097-3-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/uverbs_cmd.c | 4 ++++
- drivers/infiniband/hw/cxgb4/mem.c    | 1 -
- drivers/infiniband/hw/mlx4/mr.c      | 1 -
- 3 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/serial/ftdi_sio.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index e2ddcb0dc4ee3..c398d1a64614c 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -757,6 +757,7 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
- 	mr->uobject = uobj;
- 	atomic_inc(&pd->usecnt);
- 	mr->res.type = RDMA_RESTRACK_MR;
-+	mr->iova = cmd.hca_va;
- 	rdma_restrack_uadd(&mr->res);
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 9ad44a96dfe3a..96b9e2768ac5c 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2480,12 +2480,12 @@ static int ftdi_prepare_write_buffer(struct usb_serial_port *port,
+ #define FTDI_RS_ERR_MASK (FTDI_RS_BI | FTDI_RS_PE | FTDI_RS_FE | FTDI_RS_OE)
  
- 	uobj->object = mr;
-@@ -847,6 +848,9 @@ static int ib_uverbs_rereg_mr(struct uverbs_attr_bundle *attrs)
- 		atomic_dec(&old_pd->usecnt);
+ static int ftdi_process_packet(struct usb_serial_port *port,
+-		struct ftdi_private *priv, char *packet, int len)
++		struct ftdi_private *priv, unsigned char *buf, int len)
+ {
++	unsigned char status;
++	unsigned char *ch;
+ 	int i;
+-	char status;
+ 	char flag;
+-	char *ch;
+ 
+ 	if (len < 2) {
+ 		dev_dbg(&port->dev, "malformed packet\n");
+@@ -2495,7 +2495,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	/* Compare new line status to the old one, signal if different/
+ 	   N.B. packet may be processed more than once, but differences
+ 	   are only processed once.  */
+-	status = packet[0] & FTDI_STATUS_B0_MASK;
++	status = buf[0] & FTDI_STATUS_B0_MASK;
+ 	if (status != priv->prev_status) {
+ 		char diff_status = status ^ priv->prev_status;
+ 
+@@ -2521,7 +2521,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
  	}
  
-+	if (cmd.flags & IB_MR_REREG_TRANS)
-+		mr->iova = cmd.hca_va;
-+
- 	memset(&resp, 0, sizeof(resp));
- 	resp.lkey      = mr->lkey;
- 	resp.rkey      = mr->rkey;
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index 35c284af574da..dcb58cef336d9 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -399,7 +399,6 @@ static int finish_mem_reg(struct c4iw_mr *mhp, u32 stag)
- 	mmid = stag >> 8;
- 	mhp->ibmr.rkey = mhp->ibmr.lkey = stag;
- 	mhp->ibmr.length = mhp->attr.len;
--	mhp->ibmr.iova = mhp->attr.va_fbo;
- 	mhp->ibmr.page_size = 1U << (mhp->attr.page_size + 12);
- 	pr_debug("mmid 0x%x mhp %p\n", mmid, mhp);
- 	return xa_insert_irq(&mhp->rhp->mrs, mmid, mhp, GFP_KERNEL);
-diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
-index 6ae503cfc5264..9114cb7307692 100644
---- a/drivers/infiniband/hw/mlx4/mr.c
-+++ b/drivers/infiniband/hw/mlx4/mr.c
-@@ -439,7 +439,6 @@ struct ib_mr *mlx4_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
+ 	/* save if the transmitter is empty or not */
+-	if (packet[1] & FTDI_RS_TEMT)
++	if (buf[1] & FTDI_RS_TEMT)
+ 		priv->transmit_empty = 1;
+ 	else
+ 		priv->transmit_empty = 0;
+@@ -2535,29 +2535,29 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	 * data payload to avoid over-reporting.
+ 	 */
+ 	flag = TTY_NORMAL;
+-	if (packet[1] & FTDI_RS_ERR_MASK) {
++	if (buf[1] & FTDI_RS_ERR_MASK) {
+ 		/* Break takes precedence over parity, which takes precedence
+ 		 * over framing errors */
+-		if (packet[1] & FTDI_RS_BI) {
++		if (buf[1] & FTDI_RS_BI) {
+ 			flag = TTY_BREAK;
+ 			port->icount.brk++;
+ 			usb_serial_handle_break(port);
+-		} else if (packet[1] & FTDI_RS_PE) {
++		} else if (buf[1] & FTDI_RS_PE) {
+ 			flag = TTY_PARITY;
+ 			port->icount.parity++;
+-		} else if (packet[1] & FTDI_RS_FE) {
++		} else if (buf[1] & FTDI_RS_FE) {
+ 			flag = TTY_FRAME;
+ 			port->icount.frame++;
+ 		}
+ 		/* Overrun is special, not associated with a char */
+-		if (packet[1] & FTDI_RS_OE) {
++		if (buf[1] & FTDI_RS_OE) {
+ 			port->icount.overrun++;
+ 			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
+ 		}
+ 	}
  
- 	mr->ibmr.rkey = mr->ibmr.lkey = mr->mmr.key;
- 	mr->ibmr.length = length;
--	mr->ibmr.iova = virt_addr;
- 	mr->ibmr.page_size = 1U << shift;
+ 	port->icount.rx += len;
+-	ch = packet + 2;
++	ch = buf + 2;
  
- 	return &mr->ibmr;
+ 	if (port->port.console && port->sysrq) {
+ 		for (i = 0; i < len; i++, ch++) {
 -- 
 2.25.1
 
