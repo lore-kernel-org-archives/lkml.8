@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 329B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 513FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0154C2173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20B2421775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917515;
-	bh=JviOPlayrNp5TUqYGsqdv/rzayIkoShqBQoDfszUVDA=;
+	s=default; t=1597917525;
+	bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fj8VQyBMzBPYldOBxmq+wpwaB1RVlulIXEapURPL/eULEGMW8opt6P3MiGklFxT5F
-	 HEDsw3Y1enuULSuivQReYxHku2Rqve3qREOaj5P358RDH0WTRUD4lJSWmw2GgJGcze
-	 1fVA3F0TIQmN5dAylO11pqUDpCJ4wB+5kONKzcvc=
+	b=wfLGTJ/WWY26ZBDOpQHNHBWh4Du0h5OenmQcx9XzvB3thwgbViM+Js3gB81okGsn2
+	 GU43GaG49kx5/9B2h/HBGl4/9y30oBIa4xYq/5bvROX//zI5cebGdnajObeEDljAf9
+	 3JkJhnTeNzrRiS6I0L7rZQuustacXt177A7aV6zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbgHTJ6d (ORCPT
+        id S1730331AbgHTJ6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:58:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42502 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729948AbgHTJ6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:23 -0400
+        id S1730409AbgHTJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B17D21775;
-        Thu, 20 Aug 2020 09:58:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5D9622B3F;
+        Thu, 20 Aug 2020 09:58:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917503;
-        bh=JviOPlayrNp5TUqYGsqdv/rzayIkoShqBQoDfszUVDA=;
+        s=default; t=1597917512;
+        bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RN/URKmOx5Q9u30oCE+POPRwRID3UT2x4tBo2U9Xfqe7BZjvkmrW3SBgS0LfH2aPx
-         D4HsuTnxhEmwrDWH+4qjHBply8NUBhA/+yDxLCbUCLBH5GpLxGO7RIhyrAfULl9N+c
-         zfeg4iUEGF41ui+j3//ep7ZlQg7IxhAMZMQSujIs=
+        b=KGrGVB4pf90/PZfr3BIUHtjcoYGs0KD8GLv4Ph1KGzjR0LOPAT73G9nt5MWyZsJfh
+         biKJL+Z1ZSLdKHj+0yPuEucONHgKCNfpyFhZhHwS4LfGvVCWzM7TMGSmt1ryi2OyrF
+         JuUatsOD9uErv3GysrqKrkmH9aaoXSPsuuGQPzxo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
-        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 053/212] ALSA: seq: oss: Serialize ioctls
-Date:   Thu, 20 Aug 2020 11:20:26 +0200
-Message-Id: <20200820091605.051906512@linuxfoundation.org>
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 056/212] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_with_rssi_evt()
+Date:   Thu, 20 Aug 2020 11:20:29 +0200
+Message-Id: <20200820091605.201121887@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,51 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
+commit 629b49c848ee71244203934347bd7730b0ddee8d upstream.
 
-Some ioctls via OSS sequencer API may race and lead to UAF when the
-port create and delete are performed concurrently, as spotted by a
-couple of syzkaller cases.  This patch is an attempt to address it by
-serializing the ioctls with the existing register_mutex.
+Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
 
-Basically OSS sequencer API is an obsoleted interface and was designed
-without much consideration of the concurrency.  There are very few
-applications with it, and the concurrent performance isn't asked,
-hence this "big hammer" approach should be good enough.
-
-Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
-Reported-by: syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200804185815.2453-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/oss/seq_oss.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_event.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/core/seq/oss/seq_oss.c
-+++ b/sound/core/seq/oss/seq_oss.c
-@@ -181,10 +181,16 @@ static long
- odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct seq_oss_devinfo *dp;
-+	long rc;
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -3623,6 +3623,9 @@ static void hci_inquiry_result_with_rssi
+ 		struct inquiry_info_with_rssi_and_pscan_mode *info;
+ 		info = (void *) (skb->data + 1);
+ 
++		if (skb->len < num_rsp * sizeof(*info) + 1)
++			goto unlock;
 +
- 	dp = file->private_data;
- 	if (snd_BUG_ON(!dp))
- 		return -ENXIO;
--	return snd_seq_oss_ioctl(dp, cmd, arg);
+ 		for (; num_rsp; num_rsp--, info++) {
+ 			u32 flags;
+ 
+@@ -3644,6 +3647,9 @@ static void hci_inquiry_result_with_rssi
+ 	} else {
+ 		struct inquiry_info_with_rssi *info = (void *) (skb->data + 1);
+ 
++		if (skb->len < num_rsp * sizeof(*info) + 1)
++			goto unlock;
 +
-+	mutex_lock(&register_mutex);
-+	rc = snd_seq_oss_ioctl(dp, cmd, arg);
-+	mutex_unlock(&register_mutex);
-+	return rc;
+ 		for (; num_rsp; num_rsp--, info++) {
+ 			u32 flags;
+ 
+@@ -3664,6 +3670,7 @@ static void hci_inquiry_result_with_rssi
+ 		}
+ 	}
+ 
++unlock:
+ 	hci_dev_unlock(hdev);
  }
  
- #ifdef CONFIG_COMPAT
 
 
