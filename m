@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D424FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D54C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A81122CE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C73321775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924829;
-	bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
+	s=default; t=1597924834;
+	bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CCUxmmqoTRoaMX5TBqoP3NCq5sqQSr2kCJSn963PN4Numl7EZ7XgBMgJ32dbNYpZ3
-	 twSYrjGVBwCP7UUm9ab4IgSd0OqGPH69J+xbIM7RJzDGJn7mTF9GESwfzauMUn51zP
-	 Hmjy312U4yvv5k3Xp/aCz3JGa9K3UlJuO/J1fh0Q=
+	b=UBbxxQrsdgHmy88uiWbtkztcnC2cyGrC3qH7tMMYFYSfpUsCVbs0xPgCcF4/F6P4o
+	 OCCmjeu6o3OESGEM9DplLgRbRq3r+ULbOrUWSuIXDQlNcnLe9cajM7WDHBhEN0e9jS
+	 uioDyKJQsg/30MfThfOuWegcEiOsMV3G5fivyElQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729918AbgHTMA1 (ORCPT
+        id S1728514AbgHTMAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:00:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48252 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:00:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730464AbgHTKAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:21 -0400
+        id S1730462AbgHTKAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDB2222B40;
-        Thu, 20 Aug 2020 10:00:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DF3421775;
+        Thu, 20 Aug 2020 10:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917621;
-        bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
+        s=default; t=1597917618;
+        bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PrUkpnDEv76PCxG9TmiLRGZajbAr51s9s/UmAdgcBmh3df2iTPb2sOVbHvkkoAwkA
-         e01Go/k3I7S6sREC0EspygxP7RaTSLmZ2caEBYGVQvszGkbjYRA58LtuGJCcpCz0iJ
-         2EarUtosrNEZDOmF2oN/wCPWPDRjbkCau/UdpGLk=
+        b=oyUxqwkbOAh6HwF0BmxQXCBBgO1FQm9edt5D3PA4EvDcHyLvvmWFRI8U76hIhBWoo
+         K2i1ChiYr8AuMueK84h2lNtGLtYO2ewo31ZwrIf1gqSAPYMNqliyPH8y6FLXHNbIwL
+         VLwZgfZS37WBl/KoIPEas2UW9fu9JEu23sGaMHjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 095/212] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Thu, 20 Aug 2020 11:21:08 +0200
-Message-Id: <20200820091607.148408467@linuxfoundation.org>
+Subject: [PATCH 4.9 094/212] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
+Date:   Thu, 20 Aug 2020 11:21:07 +0200
+Message-Id: <20200820091607.097614592@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -64,44 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/neofb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
+ drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
+ drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index db023a97d1eae..e243254a57214 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 432ad7d73cb9b..99e23800cadc7 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -639,8 +639,10 @@ radeon_crtc_set_config(struct drm_mode_set *set)
+ 	dev = set->crtc->dev;
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_crtc_helper_set_config(set);
+ 
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 30bd4a6a9d466..7648fd0d10751 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
+ 	long ret;
+ 	dev = file_priv->minor->dev;
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
+ 
+ 	ret = drm_ioctl(filp, cmd, arg);
+ 	
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index 4388ddeec8d24..96d2a564d9a3c 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -634,8 +634,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 	file_priv->driver_priv = NULL;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return r;
++	}
+ 
+ 	/* new gpu have virtual address space support */
+ 	if (rdev->family >= CHIP_CAYMAN) {
 -- 
 2.25.1
 
