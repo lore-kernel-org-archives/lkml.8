@@ -2,152 +2,136 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB52C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90054C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F26332078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:57:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqFB0hcm"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2F62078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:58:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHTC5h (ORCPT
+        id S1726870AbgHTC6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTC5g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:57:36 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67E32C061757;
-        Wed, 19 Aug 2020 19:57:36 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id p37so472936pgl.3;
-        Wed, 19 Aug 2020 19:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jTZqKjSB9r2gJFW1JAilJsfMpODWTgE7quVxyG/JV0Q=;
-        b=aqFB0hcmPtIdQdl+J4qqXU53QuOPGe7WR7ubHvNbF9GJBq/7dDalvoXa2k58qjTM5a
-         fhpvWe5h1Sy9QkKke/8nIG4ri/XMB/AY5zt/+p0sXgV435iw62JkVFVH1I6z2NJe50AF
-         /cDyK+Q7THqKwg2I+EL/Z2+6UUTc6XW4G96OLODqmmqvV05c/zYCtjLx64yPQELugoVd
-         msO8GslO5Fzm5NVTHTzMjoHhTat6IjEKmE6Rs3FmVDV+4JCkyCg1gd4FVYTrrJ1adaei
-         Sjj9OY1k6gphOPwX5WVZVly2/Xqu36XfZxaJDfo4miw90uWSlvaKt4GpQrscif7eAKzU
-         lzSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jTZqKjSB9r2gJFW1JAilJsfMpODWTgE7quVxyG/JV0Q=;
-        b=W81Yx6oQeZabOHog7YOKkSS37M8KlJ7ntX85olh2GZiwE+rHV5/fOOheD986g/0ran
-         Z4N2jJubq8Rkt9JlQvn4FWh6TrVQS6yloBOMX7jLrm8MvuKOGdts6kMni9cAwp8x3pVk
-         g1GHAwqEBH6jjDKFP2UfcmhM6Kh+QQk7BygjUF6g01N7ELbBwTsDHUqt1NuqF31NgMTA
-         Ay3CUfZq0R+WAOJJpldlYpJ/n+fquoNXCm5kvge7Cdh3ImNoGOLZSqi3WokX0ncuRxzM
-         HImjQXnItrntwWoRwCMyLXFRNzoUWpVtFNJXE2/UCC1gPK+nhE75nK7J0y3GyJADMq+R
-         SUyQ==
-X-Gm-Message-State: AOAM530OIFaW3bD4vyFC9iENemZ+S2dQDxvimBcxaKt8yB2mKwcPZE3S
-        QWdhk3iY8YZ+2G+PSi9I4K9EXHU6LIQ=
-X-Google-Smtp-Source: ABdhPJyTowlmnktuwtaN+RzZTK1LH2cdJ/Shx8X02gxe0krmkBiaNHaJGSquj+Gf88iJArRik46TbA==
-X-Received: by 2002:a62:8cd3:: with SMTP id m202mr697054pfd.184.1597892255994;
-        Wed, 19 Aug 2020 19:57:35 -0700 (PDT)
-Received: from localhost ([124.156.176.71])
-        by smtp.gmail.com with ESMTPSA id g9sm672596pfr.172.2020.08.19.19.57.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Aug 2020 19:57:35 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:57:36 +0800
-From:   Yue Hu <zbestahu@gmail.com>
-To:     Amit Kucheria <amitk@kernel.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, huyue2@yulong.com,
-        zbestahu@163.com
-Subject: Re: [PATCH] thermal: sysfs: fall back to vzalloc for cooling
- device's statistics
-Message-ID: <20200820105736.000019d4.zbestahu@gmail.com>
-In-Reply-To: <CAHLCerPpsFoy=MZSQiHyCCoHLU2X=pT=NR6b0pkX93C+cd5uCg@mail.gmail.com>
-References: <20200818063005.13828-1-zbestahu@gmail.com>
-        <CAHLCerPpsFoy=MZSQiHyCCoHLU2X=pT=NR6b0pkX93C+cd5uCg@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        Wed, 19 Aug 2020 22:58:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9790 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgHTC6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:58:31 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B0188A24B8655BD6CAFB;
+        Thu, 20 Aug 2020 10:58:29 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 10:58:23 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH v2] nfsd: Convert to use the preferred fallthrough macro
+Date:   Wed, 19 Aug 2020 22:57:18 -0400
+Message-ID: <20200820025718.51244-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 16:47:01 +0530
-Amit Kucheria <amitk@kernel.org> wrote:
+Convert the uses of fallthrough comments to fallthrough macro. Please see
+commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
+keyword for switch/case use") for detail.
 
-> On Tue, Aug 18, 2020 at 12:00 PM Yue Hu <zbestahu@gmail.com> wrote:
-> >
-> > From: Yue Hu <huyue2@yulong.com>
-> >
-> > We observed warning about kzalloc() when register thermal cooling device
-> > in backlight_device_register(). backlight display can be a cooling device
-> > since reducing screen brightness will can help reduce temperature.
-> >
-> > However, ->get_max_state of backlight will assign max brightness of 1024
-> > to states. The memory size can be getting 1MB+ due to states * states.
-> > That is so large to trigger kmalloc() warning.
-> >
-> > So, let's remove it and try vzalloc() if kzalloc() fails.
-> >
-> > Signed-off-by: Yue Hu <huyue2@yulong.com>
-> > ---
-> >  drivers/thermal/thermal_sysfs.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/thermal/thermal_sysfs.c b/drivers/thermal/thermal_sysfs.c
-> > index aa99edb..9bae0b6 100644
-> > --- a/drivers/thermal/thermal_sysfs.c
-> > +++ b/drivers/thermal/thermal_sysfs.c
-> > @@ -16,6 +16,8 @@
-> >  #include <linux/device.h>
-> >  #include <linux/err.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/vmalloc.h>
-> > +#include <linux/mm.h>
-> >  #include <linux/string.h>
-> >  #include <linux/jiffies.h>
-> >
-> > @@ -919,7 +921,9 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-> >         var += sizeof(*stats->time_in_state) * states;
-> >         var += sizeof(*stats->trans_table) * states * states;
-> >
-> > -       stats = kzalloc(var, GFP_KERNEL);
-> > +       stats = kzalloc(var, GFP_KERNEL | __GFP_NOWARN);
-> > +       if (!stats)
-> > +               stats = vzalloc(var);  
-> 
-> Couldn't this be replaced by kvzalloc()?
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ fs/nfsd/nfs4callback.c | 2 +-
+ fs/nfsd/nfs4proc.c     | 2 +-
+ fs/nfsd/nfs4state.c    | 2 +-
+ fs/nfsd/nfsfh.c        | 2 +-
+ fs/nfsd/vfs.c          | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-Yes, it should be more better as kvzalloc has a vmalloc fallback.
-
-Thx.
-
-> 
-> >         if (!stats)
-> >                 return;
-> >
-> > @@ -938,7 +942,7 @@ static void cooling_device_stats_setup(struct thermal_cooling_device *cdev)
-> >
-> >  static void cooling_device_stats_destroy(struct thermal_cooling_device *cdev)
-> >  {
-> > -       kfree(cdev->stats);
-> > +       kvfree(cdev->stats);
-> >         cdev->stats = NULL;
-> >  }
-> >
-> > --
-> > 1.9.1
-> >  
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 7fbe9840a03e..052be5bf9ef5 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1119,7 +1119,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		break;
+ 	case -ESERVERFAULT:
+ 		++session->se_cb_seq_nr;
+-		/* Fall through */
++		fallthrough;
+ 	case 1:
+ 	case -NFS4ERR_BADSESSION:
+ 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index a527da3d8052..eaf50eafa935 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -428,7 +428,7 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 				goto out;
+ 			open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
+ 			reclaim = true;
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_OPEN_CLAIM_FH:
+ 		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+ 			status = do_open_fhandle(rqstp, cstate, open);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 81ed8e8bab3f..2f77f4b66cbc 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3117,7 +3117,7 @@ nfsd4_exchange_id(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		break;
+ 	default:				/* checked by xdr code */
+ 		WARN_ON_ONCE(1);
+-		/* fall through */
++		fallthrough;
+ 	case SP4_SSV:
+ 		status = nfserr_encr_alg_unsupp;
+ 		goto out_nolock;
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index 37bc8f5f4514..a0a8d27539ae 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -469,7 +469,7 @@ static bool fsid_type_ok_for_exp(u8 fsid_type, struct svc_export *exp)
+ 	case FSID_UUID16:
+ 		if (!is_root_export(exp))
+ 			return false;
+-		/* fall through */
++		fallthrough;
+ 	case FSID_UUID4_INUM:
+ 	case FSID_UUID16_INUM:
+ 		return exp->ex_uuid != NULL;
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 7d2933b85b65..aba5af9df328 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1456,7 +1456,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				break;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS4_CREATE_EXCLUSIVE4_1:
+ 			if (   d_inode(dchild)->i_mtime.tv_sec == v_mtime
+ 			    && d_inode(dchild)->i_atime.tv_sec == v_atime
+@@ -1465,7 +1465,7 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 					*created = true;
+ 				goto set_attr;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case NFS3_CREATE_GUARDED:
+ 			err = nfserr_exist;
+ 		}
+-- 
+2.19.1
 
