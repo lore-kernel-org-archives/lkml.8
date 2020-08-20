@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0398AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D720207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD4AD20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916493;
-	bh=YwCUYJ3M+NOBCMTGQwF6bnEEU2OBYP4CIDFQrvVrv8o=;
+	s=default; t=1597916496;
+	bh=Ot+IlbwWoYcMtGQlRqjPHSZwBDd0x0OKpAG8nmv7J4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ybr8GFqaqRdiUElvQXwXc+iOZgWyhG/usmMY8zYqQPdztf8x9b+4HOZWRrXPeEvlB
-	 a1id2h4ClQxDIWkPiDwAIdXAyR047yDvO+Wm77G2glA8hx2IpzEl4uraTI79DkJgJW
-	 FcoQqCd7gJdM6BAsn6Mh4aDCRBnspKb5MtZWDH9c=
+	b=BupP2EmZyyx9UXWNmhDYd+ZWOCK6Yb2wezS7Do5mVqstgA6A0WjSok2EAFkda5txs
+	 RpIgs9cDFLNoLwlMzj2xkjKJHTTkKlYAPA32cjh8O1mu50/1QffFKhs3prysSyPOnn
+	 SO5oJx85lM89rlfVqRvG3pPpx3pF60d4au+mc4PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728694AbgHTJlc (ORCPT
+        id S1729099AbgHTJlf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728856AbgHTJlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:19 -0400
+        id S1729096AbgHTJlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264AD20724;
-        Thu, 20 Aug 2020 09:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91016207DE;
+        Thu, 20 Aug 2020 09:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916478;
-        bh=YwCUYJ3M+NOBCMTGQwF6bnEEU2OBYP4CIDFQrvVrv8o=;
+        s=default; t=1597916482;
+        bh=Ot+IlbwWoYcMtGQlRqjPHSZwBDd0x0OKpAG8nmv7J4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1+4pzc6Gm3C9zwCfAmQqAAsgtXsbgVAA9jfHtrQl1w9v+pDD8Y7fyBMrrTUGaENn
-         ZzXLceSHuwGWC3WQXJZiMLk9Za4SPNbtglOvMuSQdp/tngXfjM/G1Hiorjbn3Nj3T6
-         RZWKgYXGrRtS1MweUhDiPNlAvq1Cu/6bheaNcep0=
+        b=kj6+EXmW/Zt0dTuxdqAhu+Jd4qWJQoLlu35Ry5GLxFcfRKgxFNFGX6CLdZIgfyx2p
+         AzSE9w3MZSQjaNh96mVguUnrgPdA3XvvEjhU2iqlnTwY1ASBRM51+vzEBkGCrKM2Do
+         Yu+taSw3ddfCe/dvcOBu9c7mgivjOupHuDLwavPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Konrad Dybcio <konradybcio@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 142/204] f2fs: compress: fix to update isize when overwriting compressed file
-Date:   Thu, 20 Aug 2020 11:20:39 +0200
-Message-Id: <20200820091613.347167633@linuxfoundation.org>
+Subject: [PATCH 5.7 143/204] clk: qcom: gcc-sdm660: Fix up gcc_mss_mnoc_bimc_axi_clk
+Date:   Thu, 20 Aug 2020 11:20:40 +0200
+Message-Id: <20200820091613.395253114@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,41 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Konrad Dybcio <konradybcio@gmail.com>
 
-[ Upstream commit 944dd22ea4475bd11180fd2f431a4a547ca4d8f5 ]
+[ Upstream commit 3386af51d3bcebcba3f7becdb1ef2e384abe90cf ]
 
-We missed to update isize of compressed file in write_end() with
-below case:
+Add missing halt_check, hwcg_reg and hwcg_bit properties.
+These were likely omitted when porting the driver upstream.
 
-cluster size is 16KB
-
-- write 14KB data from offset 0
-- overwrite 16KB data from offset 0
-
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Link: https://lore.kernel.org/r/20200726111215.22361-9-konradybcio@gmail.com
+Fixes: f2a76a2955c0 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/data.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/qcom/gcc-sdm660.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 10491ae1cb850..329afa55a581c 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -3353,6 +3353,10 @@ static int f2fs_write_end(struct file *file,
- 	if (f2fs_compressed_file(inode) && fsdata) {
- 		f2fs_compress_write_end(inode, fsdata, page->index, copied);
- 		f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
-+
-+		if (pos + copied > i_size_read(inode) &&
-+				!f2fs_verity_in_progress(inode))
-+			f2fs_i_size_write(inode, pos + copied);
- 		return copied;
- 	}
- #endif
+diff --git a/drivers/clk/qcom/gcc-sdm660.c b/drivers/clk/qcom/gcc-sdm660.c
+index bf5730832ef3d..c6fb57cd576f5 100644
+--- a/drivers/clk/qcom/gcc-sdm660.c
++++ b/drivers/clk/qcom/gcc-sdm660.c
+@@ -1715,6 +1715,9 @@ static struct clk_branch gcc_mss_cfg_ahb_clk = {
+ 
+ static struct clk_branch gcc_mss_mnoc_bimc_axi_clk = {
+ 	.halt_reg = 0x8a004,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x8a004,
++	.hwcg_bit = 1,
+ 	.clkr = {
+ 		.enable_reg = 0x8a004,
+ 		.enable_mask = BIT(0),
 -- 
 2.25.1
 
