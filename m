@@ -2,239 +2,155 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B900C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D17E2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BCD2086A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="V+Pg235A"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B66nR30x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgHTPrS (ORCPT
+        id S1729456AbgHTPr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:47:18 -0400
-Received: from mout.gmx.net ([212.227.17.21]:41485 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgHTPqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:46:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597938388;
-        bh=zvocH08i6MtUf0HLDjXaePZn6A49ALLiRY3gLkB1JE4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=V+Pg235AWZvkb1BrODDVs/v8IGJJSj5heUngs//ufhCcfEZXzSmEbOoxyOGoc5u/Z
-         kioRBJ5fFAHx7VLgg1Sc2NKXAFEfILUHhSKRRRxHd/CtbU7oTJVcAjfM/ops/UGs7h
-         MfmBIY7Qa4m7DSsG0BtlMWQtACCekmwWButOb8Oc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from obelix.fritz.box ([46.142.24.146]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MWigq-1kB3wi2Cca-00X5XV; Thu, 20
- Aug 2020 17:46:28 +0200
-Subject: Re: BUG with 5.8.x and make xconfig
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>
-References: <ab0cfaed-50bb-5b29-cb93-a2987c384af1@gmx.de>
- <CAK7LNASZ_sHPjDLd7+LTc0Sj9K+W51zoRq-=r-0_5AJC06jaEg@mail.gmail.com>
-From:   Ronald Warsow <rwarsow@gmx.de>
-Message-ID: <862c22df-9f9b-67b3-2b98-9109f26aaac8@gmx.de>
-Date:   Thu, 20 Aug 2020 17:46:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 11:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58882 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729389AbgHTPqr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:46:47 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E8B9C061388
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:46:45 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id h19so2589677ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J1RrYNr31NQi6xNHXP2IRc+NcviE0ZSrBQayM98jfLA=;
+        b=B66nR30x++j+0C6TC7iGxqjyYlJdwDK1j7E7nieS/4aXdOCO0M8a/jFKAtiw85Q+nG
+         ieb5GxU155DY0Dh3SvFGyBaBDNAb6JRuhPmIt7S+QiiKGe2bQTwVYBoA1fGVAU6okfSJ
+         RRiTXS4u+PFueBC8wjb2zeohu0Ie7ja9DN+i3K16n3LUK6HEk0fMCd6dWblnnKyS2ei7
+         3eQdvarbSACmkDn6nfAzjuUUh8yXU7o3Jcg+0En+/v7rM1MxUqbvc/RReMDdW9up1bHA
+         LT7SQl4hEfm16MsHes5PHoJ2qRPzuijyk+uljFR0v7utOJtWG3CitkqEh2kSy7/awP0c
+         a3kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J1RrYNr31NQi6xNHXP2IRc+NcviE0ZSrBQayM98jfLA=;
+        b=kjXoHbGFGqLMem3t79UuHhnWFJi4yhZBPE3036BeIs7WLi2kM1AKpgi6phEktGT/5w
+         UIds8GkGSNFLScIXifi0JOXBMGQkOXqoG+OKRlAqwzEh71va0wuAyBJB144azH9cN4Pc
+         khK/aTFALuaAD4sh2ABBBTl7/bPK3FaqK9hkN80+VXmNm+OG9593DqsNlSgFZ6A4x9sh
+         uVbc3AUPks5KoBpRlrgjQc5aJ5oXwDTr12rTtK1MSmRp+LSEkPycStPK+3jomLdFMp/f
+         XQGN2ab7npGyEefUSnCZHAHkSEwgP2Z3keWivNzD/r0DL3w6H8cH4uHVMESmKX/oMGHu
+         y5Ag==
+X-Gm-Message-State: AOAM532YmS3AuNxLNkmzHEMp/CoAwS32zMHSSclzwavHzQC27AvhBIYZ
+        IcjkNMF7Z5YKL5ZFNCUgtgZEWvJomJ1Q03iOl5PMNg==
+X-Google-Smtp-Source: ABdhPJwoCdm+N1AxiYk/1lBjrYcLmf0ZuNk8IyAfuDNgXgQHz2fUUgkcpq+Tblv/Rig+AH7Vx7Rd11XIpM05l6TL+ws=
+X-Received: by 2002:a2e:2a04:: with SMTP id q4mr1770388ljq.192.1597938403738;
+ Thu, 20 Aug 2020 08:46:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNASZ_sHPjDLd7+LTc0Sj9K+W51zoRq-=r-0_5AJC06jaEg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:0AEr3q7taH9msBXOwragGkMKO/+zBaqPB1xERal1jUBc7FrXniF
- eifQ46TClQhmiCcHQC+42BLRksMfC195Uj2MeZDzN5g4IlHXAHbQj+ZmNCxKZJR10GXGaHT
- DMBu1GPQBX7dq3CbXeE5KWP8EzHYSXRDymHjICNvtaJSYgJAWiVEEoVO8vIidbdzzaj/onJ
- FE72ZpUiLbx9h+liQUwig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zXYF6RrEarE=:roMlipVwjrtEX3D7BNjOu3
- jfQzcxKA05v/5TG8yYCyvKabthRUBEcgfmZbnU6LKlxTlja42pdwncQ1nt0epl/Ht/dzyge7L
- 2gNebVzDdUbeDuf5ZO5hTinLXJIfBbJtlGfVuSValmD/IiVlq8MfAZ8fZHhAXQbRvvWWeFcCU
- zlAp1NNSLNbYwfqHu3Ze4xjQvzVSo/6yFyrFWbyA6FEE4cl3bqP6PI+pYRLxbZ5CPt5qBgEUT
- kiBXc5VeRf/sHGi3isXNNvvU5Ub2GTRKGQhPwOKNcSd7O1Sohk2o/BpXIcMaTFxnsbhyGWwxg
- cREyBwWMIm8/+gYm8Lj54ehhfCQv9+Q1+NsTv1U46pqQbhyRfwKPyhz8wp9R9gg4yoJsCGWHY
- tp2rGz2/INUIqd3FZ2rW3KTQTuGfYBCD9xjb2N918MetHy8TBss1Ul4e9WyOPoVWE0rdYprD7
- QGfIXSyi3gHZLblr+OGzd9nlt5rMeijx9pVrNAp3EZccsjjo0CmI3OQz9P/3WfHDQHyV84mWO
- BgtSPWITgHtR36XW0FfE/GVjKHDrvY+x8fgb4ktpbvsabHsf3mJEVQG6CzeLsp3P3anvjZa+u
- Gre3jn7PzBkB9KmaKK3IZ8OWuhcOIc6FEPaJjfSpoOw9Z8ESxx+Z0X32P4YRn8Lu9Ov0if+v+
- 8NiFYgmWNDx1YLWueI37kRXwXIgv1DVhhEQxzsf1/MbhevgQyamEC07q4qMVBjEEAzP6/P7K+
- R1ukDQewzkJ0DITtXWzdh0rAcT2slW8gLftBzltCfyF93hDY/QHIeB6cgkf4S7R3VYpwx9D5P
- bWRuUL2G1/HygMT5+wl9i2rYgXAhX62mKX8lX9bJjJG0e/1lwqSmyasfh3B0a/WVY2ESnlwAv
- rjByBgDNykdIQABKASBBmyVHhK/7zOAdKW38PFyBO9QXmyjwdvxZbS0h5sq/0etPyjXnjnYzt
- 8sy032MFl5Roj8UVpAmemLoP7oxtqf6OgyKYMhEyirerHpfsOUEeEabgsSoT5jZe9uZ6FYbt6
- OHTfBaylacarwEq2tgBTVIPS+TkjJJ42kDkgnpPGl/hTifvXkgSBS9A+OZOj6gDhEGNBlzwKV
- Y/q6M9DjGI8PpFNYYHvugHxd/36umn7Kp49bYgfX4uBsTi8LYuvUX7rYV14qwsVuOlO/rJ7G3
- /dRjzdysvJFxRcD501Ws9GjoWSj+4eY3nNLfidUA/ItpXTms18Cgeim3MbfuR0Ad+Gj7GWOKI
- JzhAIgEMD/RzJEOtY
+References: <20200820130350.3211-1-longman@redhat.com> <20200820130350.3211-4-longman@redhat.com>
+In-Reply-To: <20200820130350.3211-4-longman@redhat.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 20 Aug 2020 08:46:32 -0700
+Message-ID: <CALvZod7cNkjgd_YWzPSFm=AeC8sy5kWspX3J_Q7237Q9+N5Pxw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mm/memcg: Unify swap and memsw page counters
+To:     Waiman Long <longman@redhat.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        Chris Down <chris@chrisdown.name>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.20 13:33, Masahiro Yamada wrote:
-> On Thu, Aug 20, 2020 at 4:19 AM Ronald Warsow <rwarsow@gmx.de> wrote:
->>
-...
+On Thu, Aug 20, 2020 at 6:04 AM Waiman Long <longman@redhat.com> wrote:
 >
+> The swap page counter is v2 only while memsw is v1 only. As v1 and v2
+> controllers cannot be active at the same time, there is no point to keep
+> both swap and memsw page counters in mem_cgroup. The previous patch has
+> made sure that memsw page counter is updated and accessed only when in
+> v1 code paths. So it is now safe to alias the v1 memsw page counter to v2
+> swap page counter. This saves 14 long's in the size of mem_cgroup. This
+> is a saving of 112 bytes for 64-bit archs.
 >
-> I think you are using Qt4
-> (dnf install qt4-devel).
-
-no, there is no qt4-devel in the Fedora repos:
-
-rpm -qa|grep -i qt4
-
-adwaita-qt4-1.1.3-2.fc32.x86_64
-
-
-
-all qt relative currently installed, is this:
-
-rpm -qa|grep -i qt|sort:
-
-
-adwaita-qt4-1.1.3-2.fc32.x86_64
-adwaita-qt5-1.1.3-2.fc32.x86_64
-dbusmenu-qt-0.9.3-0.22.20160218.fc32.x86_64
-gstreamer1-plugins-good-qt-1.16.2-2.fc32.x86_64
-ibus-qt-1.3.3-24.fc32.x86_64
-qt-4.8.7-55.fc32.x86_64
-qt5-qtbase-5.14.2-5.fc32.x86_64
-qt5-qtbase-common-5.14.2-5.fc32.noarch
-qt5-qtbase-gui-5.14.2-5.fc32.x86_64
-qt5-qtdeclarative-5.14.2-1.fc32.x86_64
-qt5-qtmultimedia-5.14.2-1.fc32.x86_64
-qt5-qtsvg-5.14.2-1.fc32.x86_64
-qt5-qtwayland-5.14.2-4.fc32.x86_64
-qt5-qtx11extras-5.14.2-1.fc32.x86_64
-qt5-qtxmlpatterns-5.14.2-1.fc32.x86_64
-qt5-srpm-macros-5.14.2-3.fc32.noarch
-qt-common-4.8.7-55.fc32.noarch
-qt-devel-4.8.7-55.fc32.x86_64
-qt-settings-32.0-3.fc32.noarch
-qt-x11-4.8.7-55.fc32.x86_64
-quazip-qt5-0.7.6-6.fc32.x86_64
-sni-qt-0.2.7-0.4.20170217.fc32.x86_64
-
-
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  include/linux/memcontrol.h | 3 +--
+>  mm/memcontrol.c            | 8 +++++---
+>  2 files changed, 6 insertions(+), 5 deletions(-)
 >
-> If you install Qt5
-> (dnf install qt5-devel),
-> you will be able to do "make xconfig".
-
-so I did dnf install qt5-devel
-
-
-make xconfig runs now, but it gives:
-
-
-  UPD     scripts/kconfig/qconf-cfg
-   HOSTCXX scripts/kconfig/qconf.o
-scripts/kconfig/qconf.cc: In member function =E2=80=98void
-ConfigInfoView::menuInfo()=E2=80=99:
-scripts/kconfig/qconf.cc:1080:61: warning: =E2=80=98QString&
-QString::sprintf(const char*, ...)=E2=80=99 is deprecated: Use asprintf(),=
- arg()
-or QTextStream instead [-Wdeprecated-declarations]
-  1080 |      head +=3D QString().sprintf("<a href=3D\"s%s\">", sym->name)=
-;
-       |                                                             ^
-In file included from /usr/include/qt5/QtGui/qkeysequence.h:44,
-                  from /usr/include/qt5/QtWidgets/qaction.h:44,
-                  from /usr/include/qt5/QtWidgets/QAction:1,
-                  from scripts/kconfig/qconf.cc:7:
-/usr/include/qt5/QtCore/qstring.h:382:14: note: declared here
-   382 |     QString &sprintf(const char *format, ...)
-Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
-       |              ^~~~~~~
-scripts/kconfig/qconf.cc:1089:60: warning: =E2=80=98QString&
-QString::sprintf(const char*, ...)=E2=80=99 is deprecated: Use asprintf(),=
- arg()
-or QTextStream instead [-Wdeprecated-declarations]
-  1089 |     head +=3D QString().sprintf("<a href=3D\"s%s\">", sym->name);
-       |                                                            ^
-In file included from /usr/include/qt5/QtGui/qkeysequence.h:44,
-                  from /usr/include/qt5/QtWidgets/qaction.h:44,
-                  from /usr/include/qt5/QtWidgets/QAction:1,
-                  from scripts/kconfig/qconf.cc:7:
-/usr/include/qt5/QtCore/qstring.h:382:14: note: declared here
-   382 |     QString &sprintf(const char *format, ...)
-Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
-       |              ^~~~~~~
-scripts/kconfig/qconf.cc:1117:90: warning: =E2=80=98QString&
-QString::sprintf(const char*, ...)=E2=80=99 is deprecated: Use asprintf(),=
- arg()
-or QTextStream instead [-Wdeprecated-declarations]
-  1117 |   debug +=3D QString().sprintf("defined at %s:%d<br><br>",
-_menu->file->name, _menu->lineno);
-       |
-                          ^
-In file included from /usr/include/qt5/QtGui/qkeysequence.h:44,
-                  from /usr/include/qt5/QtWidgets/qaction.h:44,
-                  from /usr/include/qt5/QtWidgets/QAction:1,
-                  from scripts/kconfig/qconf.cc:7:
-/usr/include/qt5/QtCore/qstring.h:382:14: note: declared here
-   382 |     QString &sprintf(const char *format, ...)
-Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
-       |              ^~~~~~~
-scripts/kconfig/qconf.cc: In member function =E2=80=98QString
-ConfigInfoView::debug_info(symbol*)=E2=80=99:
-scripts/kconfig/qconf.cc:1140:68: warning: =E2=80=98QString&
-QString::sprintf(const char*, ...)=E2=80=99 is deprecated: Use asprintf(),=
- arg()
-or QTextStream instead [-Wdeprecated-declarations]
-  1140 |    debug +=3D QString().sprintf("prompt: <a href=3D\"m%s\">",
-sym->name);
-       |
-    ^
-In file included from /usr/include/qt5/QtGui/qkeysequence.h:44,
-                  from /usr/include/qt5/QtWidgets/qaction.h:44,
-                  from /usr/include/qt5/QtWidgets/QAction:1,
-                  from scripts/kconfig/qconf.cc:7:
-/usr/include/qt5/QtCore/qstring.h:382:14: note: declared here
-   382 |     QString &sprintf(const char *format, ...)
-Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
-       |              ^~~~~~~
-scripts/kconfig/qconf.cc: In static member function =E2=80=98static void
-ConfigInfoView::expr_print_help(void*, symbol*, const char*)=E2=80=99:
-scripts/kconfig/qconf.cc:1215:59: warning: =E2=80=98QString&
-QString::sprintf(const char*, ...)=E2=80=99 is deprecated: Use asprintf(),=
- arg()
-or QTextStream instead [-Wdeprecated-declarations]
-  1215 |   *text +=3D QString().sprintf("<a href=3D\"s%s\">", sym->name);
-       |                                                           ^
-In file included from /usr/include/qt5/QtGui/qkeysequence.h:44,
-                  from /usr/include/qt5/QtWidgets/qaction.h:44,
-                  from /usr/include/qt5/QtWidgets/QAction:1,
-                  from scripts/kconfig/qconf.cc:7:
-/usr/include/qt5/QtCore/qstring.h:382:14: note: declared here
-   382 |     QString &sprintf(const char *format, ...)
-Q_ATTRIBUTE_FORMAT_PRINTF(2, 3);
-       |              ^~~~~~~
-   MOC     scripts/kconfig/qconf-moc.cc
-   HOSTCXX scripts/kconfig/qconf-moc.o
-   HOSTLD  scripts/kconfig/qconf
-scripts/kconfig/qconf  Kconfig
-
-
-
-
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index d0b036123c6a..d2a819d7db70 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -216,10 +216,9 @@ struct mem_cgroup {
 >
-> I will consider what to do about this.
+>         /* Accounted resources */
+>         struct page_counter memory;
+> -       struct page_counter swap;
+> +       struct page_counter swap;       /* memsw (memory+swap) for v1 */
 >
+>         /* Legacy consumer-oriented counters */
+> -       struct page_counter memsw;
+>         struct page_counter kmem;
+>         struct page_counter tcpmem;
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d219dca5239f..04c3794cdc98 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -68,6 +68,11 @@
+>
+>  #include <trace/events/vmscan.h>
+>
+> +/*
+> + * The v1 memsw page counter is aliased to the v2 swap page counter.
+> + */
+> +#define memsw  swap
+> +
 
+Personally I would prefer a union instead of #define.
 
-thanks Masahiro.
-
-
-=2D-
-regards
-
-Ronald
+>  struct cgroup_subsys memory_cgrp_subsys __read_mostly;
+>  EXPORT_SYMBOL(memory_cgrp_subsys);
+>
+> @@ -5279,13 +5284,11 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+>                 memcg->use_hierarchy = true;
+>                 page_counter_init(&memcg->memory, &parent->memory);
+>                 page_counter_init(&memcg->swap, &parent->swap);
+> -               page_counter_init(&memcg->memsw, &parent->memsw);
+>                 page_counter_init(&memcg->kmem, &parent->kmem);
+>                 page_counter_init(&memcg->tcpmem, &parent->tcpmem);
+>         } else {
+>                 page_counter_init(&memcg->memory, NULL);
+>                 page_counter_init(&memcg->swap, NULL);
+> -               page_counter_init(&memcg->memsw, NULL);
+>                 page_counter_init(&memcg->kmem, NULL);
+>                 page_counter_init(&memcg->tcpmem, NULL);
+>                 /*
+> @@ -5414,7 +5417,6 @@ static void mem_cgroup_css_reset(struct cgroup_subsys_state *css)
+>
+>         page_counter_set_max(&memcg->memory, PAGE_COUNTER_MAX);
+>         page_counter_set_max(&memcg->swap, PAGE_COUNTER_MAX);
+> -       page_counter_set_max(&memcg->memsw, PAGE_COUNTER_MAX);
+>         page_counter_set_max(&memcg->kmem, PAGE_COUNTER_MAX);
+>         page_counter_set_max(&memcg->tcpmem, PAGE_COUNTER_MAX);
+>         page_counter_set_min(&memcg->memory, 0);
+> --
+> 2.18.1
+>
