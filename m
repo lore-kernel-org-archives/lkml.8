@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6447A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6112D208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928235;
-	bh=8Nx+WniPGYDtKfMVx4hJjYH84RdLwha1VvyMXy5JftU=;
+	s=default; t=1597928240;
+	bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TJdyLoAiRhs0d+NJpbxgqBp1QZWBdotnzZQ+UXyeae8AJka1KseHrcYoDAfuinOjW
-	 E9cajvtWkXIWBRcg7laock+1vtETd6UXqkQCVRZYppiB3fMVkcmfbjwXMPbweUMm4o
-	 U7wPU7SGF1lTbjI1tfqPjnCFBmJPA/2DBQXxi/Jw=
+	b=IWBOS/w8aQY7aRG+0JDZyec9lUQBFhPeA4fgffCGLtU8PRG6eOKbLokcG+PElhjoq
+	 2Ujr+0MSkANWsLDBTioClbzlEI/GQuqq1Ow4RUNgpDnQwr4NIfXMLpZrcOtR3VwSOJ
+	 JiamNtxl/FmdBV3jUWKjcr0XXWGLoH3Q6g794MyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgHTM5N (ORCPT
+        id S1728135AbgHTJlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:57:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34454 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727033AbgHTJlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:16 -0400
+        id S1728664AbgHTJk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF242075E;
-        Thu, 20 Aug 2020 09:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3D53207DE;
+        Thu, 20 Aug 2020 09:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916476;
-        bh=8Nx+WniPGYDtKfMVx4hJjYH84RdLwha1VvyMXy5JftU=;
+        s=default; t=1597916459;
+        bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scFszwih5LAZuLClvzDPb5aGZY9BMoaP0d6EjPVycu8fHf4yRoG8blH+jQ7sxq1uW
-         HbMujNzzzxSVYU+5hxhoRAq3oxvxCf9SWGiJ4KUurbJxg+0dyIuBbOW6ag3WfC7TKS
-         kzqg9dtCLzYJEr8ayB6E8SOKwCMpcVCDOsUBnjGc=
+        b=0wfeIL3d3NY/nr6fwBh/HHYxN49BfUc1KdvjQSCM+JMWyRD0cEH6ZDQk7W4AAGnwL
+         FYP9vRQMhavfhT4bn2mCoZvqZoU+U1I/H5uS31m5aSSDSMd3Hy/r7JnUllSbtVgP8H
+         wTCyZuSvL9QEzmP+TS3VMraqWy4UjjoaamjuFnSk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 124/204] mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
-Date:   Thu, 20 Aug 2020 11:20:21 +0200
-Message-Id: <20200820091612.485945522@linuxfoundation.org>
+Subject: [PATCH 5.7 136/204] selftests/powerpc: ptrace-pkey: Dont update expected UAMOR value
+Date:   Thu, 20 Aug 2020 11:20:33 +0200
+Message-Id: <20200820091613.052924066@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,62 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 2b26e34e9af3fa24fa1266e9ea2d66a1f7d62dc0 ]
+[ Upstream commit 3563b9bea0ca7f53e4218b5e268550341a49f333 ]
 
-To add end() operation in the future, clean the code of
-renesas_sdhi_internal_dmac_complete_tasklet_fn(). No behavior change.
+With commit 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation
+must not change pkey registers") we are not updating UAMOR on key
+allocation. So don't update the expected uamor value in the test.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1590044466-28372-3-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation must not change pkey registers")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-23-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index 47ac53e912411..201b8ed37f2e0 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -229,15 +229,12 @@ static void renesas_sdhi_internal_dmac_issue_tasklet_fn(unsigned long arg)
- 					    DTRAN_CTRL_DM_START);
- }
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index bc33d748d95b4..3694613f418f6 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -101,15 +101,20 @@ static int child(struct shared_info *info)
+ 	 */
+ 	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
  
--static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+static bool renesas_sdhi_internal_dmac_complete(struct tmio_mmc_host *host)
- {
--	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
- 	enum dma_data_direction dir;
++	/*
++	 * if PKEY_DISABLE_EXECUTE succeeded we should update the expected_iamr
++	 */
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+ 	else
+ 		info->expected_iamr &= ~(1ul << pkeyshift(pkey1));
  
--	spin_lock_irq(&host->lock);
--
- 	if (!host->data)
--		goto out;
-+		return false;
+-	info->expected_iamr &= ~(1ul << pkeyshift(pkey2) | 1ul << pkeyshift(pkey3));
++	/*
++	 * We allocated pkey2 and pkey 3 above. Clear the IAMR bits.
++	 */
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey2));
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey3));
  
- 	if (host->data->flags & MMC_DATA_READ)
- 		dir = DMA_FROM_DEVICE;
-@@ -250,6 +247,17 @@ static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
- 	if (dir == DMA_FROM_DEVICE)
- 		clear_bit(SDHI_INTERNAL_DMAC_RX_IN_USE, &global_flags);
- 
-+	return true;
-+}
-+
-+static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+{
-+	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
-+
-+	spin_lock_irq(&host->lock);
-+	if (!renesas_sdhi_internal_dmac_complete(host))
-+		goto out;
-+
- 	tmio_mmc_do_data_irq(host);
- out:
- 	spin_unlock_irq(&host->lock);
+-	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+-				3ul << pkeyshift(pkey2);
+ 	/*
+ 	 * Create an IAMR value different from expected value.
+ 	 * Kernel will reject an IAMR and UAMOR change.
 -- 
 2.25.1
 
