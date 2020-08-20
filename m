@@ -2,82 +2,163 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E577C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A1020885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:54:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5191208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597956921;
+	bh=0sC4plwLSrHCEwGCAy2r05gwxbQdkP/sGe8Xwz3RSX0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=a+X0EK9jTloVVZMWsPXP+QhnPBfUlttLIaDXo+aP683eM7NrJPgp1oeuo+8VYNCKu
+	 uJvFhVgd9cCXNPPm37UL/PfGVoBtpvSoWWEe8jWOOxO9wlB+V/bp216+h1ZRYisBb5
+	 m2SH/epSef9zHnQ2sE9OWjXe19ifuCNgLlojT1F8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbgHTUyu (ORCPT
+        id S1728571AbgHTUzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 16:54:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42190 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 16:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHTUyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:54:49 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 636AAACB5;
+        id S1725820AbgHTUzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 16:55:18 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E89BB20885;
         Thu, 20 Aug 2020 20:55:15 +0000 (UTC)
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     akpm@linux-foundation.org
-Cc:     catalin.marinas@arm.com, oleg@redhat.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, dave@stgolabs.net,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH] mm/kmemleak: rely on rcu for task stack scanning
-Date:   Thu, 20 Aug 2020 13:39:02 -0700
-Message-Id: <20200820203902.11308-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.26.2
-MIME-Version: 1.0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597956916;
+        bh=0sC4plwLSrHCEwGCAy2r05gwxbQdkP/sGe8Xwz3RSX0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=KtEB4K2Mxe1YWeBfBpp3kbuupp93sDeZqu4W10cnBxvmYNgrjShbUr0OMMtAIQjP7
+         lZBfhetsS8S/oetCoDroqLe+PjwWsWeZOh8x/xndisyuxV+YdpX5yd8s5j18W1ef/F
+         azzTZZq2iebAalbcSX7ngCZBAPabFw5wZG5hOMaI=
+Date:   Thu, 20 Aug 2020 13:55:15 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
+        linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: mm/gup.c:1922:7: error: implicit declaration of function
+ =?UTF-8?B?4oCYaXNfdmFsaWRfZ3VwX2ZsYWdz4oCZ?=
+Message-Id: <20200820135515.c36b35449143c723f0800f5b@linux-foundation.org>
+In-Reply-To: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
+References: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kmemleak_scan() currently relies on the big tasklist_lock
-hammer to stabilize iterating through the tasklist. Instead,
-this patch proposes simply using rcu along with the rcu-safe
-for_each_process_thread flavor (without changing scan semantics),
-which doesn't make use of next_thread/p->thread_group and thus
-cannot race with exit. Furthermore, any races with fork()
-and not seeing the new child should be benign as it's not
-running yet and can also be detected by the next scan.
+On Thu, 20 Aug 2020 14:59:52 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
+> arm and riscv architecture build failed on linux next 20200820 tag.
+> 
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
+> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
+> arm-linux-gnueabihf-gcc" O=build zImage
+> 
+> 348#
+> 349../mm/gup.c: In function ‘get_user_pages’:
+> 350../mm/gup.c:1922:7: error: implicit declaration of function
+> ‘is_valid_gup_flags’ [-Werror=implicit-function-declaration]
+> 351 1922 | if (!is_valid_gup_flags(gup_flags))
+> 352 | ^~~~~~~~~~~~~~~~~~
+> 353cc1: some warnings being treated as errors
+> 
+
+Yes, thanks.
+
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: mm-gup-dont-permit-users-to-call-get_user_pages-with-foll_longterm-fix
+
+fix CONFIG_MMU=n build
+
+Link: https://lkml.kernel.org/r/CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Barry Song <song.bao.hua@hisilicon.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- mm/kmemleak.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 5e252d91eb14..c0014d3b91c1 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1471,15 +1471,15 @@ static void kmemleak_scan(void)
- 	if (kmemleak_stack_scan) {
- 		struct task_struct *p, *g;
+ mm/gup.c |   38 +++++++++++++++++++-------------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+--- a/mm/gup.c~mm-gup-dont-permit-users-to-call-get_user_pages-with-foll_longterm-fix
++++ a/mm/gup.c
+@@ -1759,6 +1759,25 @@ static __always_inline long __gup_longte
+ }
+ #endif /* CONFIG_FS_DAX || CONFIG_CMA */
  
--		read_lock(&tasklist_lock);
--		do_each_thread(g, p) {
-+		rcu_read_lock();
-+		for_each_process_thread(g, p) {
- 			void *stack = try_get_task_stack(p);
- 			if (stack) {
- 				scan_block(stack, stack + THREAD_SIZE, NULL);
- 				put_task_stack(p);
- 			}
--		} while_each_thread(g, p);
--		read_unlock(&tasklist_lock);
-+		}
-+		rcu_read_unlock();
- 	}
++static bool is_valid_gup_flags(unsigned int gup_flags)
++{
++	/*
++	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
++	 * never directly by the caller, so enforce that with an assertion:
++	 */
++	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
++		return false;
++	/*
++	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
++	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
++	 * FOLL_PIN.
++	 */
++	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
++		return false;
++
++	return true;
++}
++
+ #ifdef CONFIG_MMU
+ static long __get_user_pages_remote(struct mm_struct *mm,
+ 				    unsigned long start, unsigned long nr_pages,
+@@ -1789,25 +1808,6 @@ static long __get_user_pages_remote(stru
+ 				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
+ }
  
- 	/*
--- 
-2.26.2
+-static bool is_valid_gup_flags(unsigned int gup_flags)
+-{
+-	/*
+-	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
+-	 * never directly by the caller, so enforce that with an assertion:
+-	 */
+-	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
+-		return false;
+-	/*
+-	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
+-	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
+-	 * FOLL_PIN.
+-	 */
+-	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
+-		return false;
+-
+-	return true;
+-}
+-
+ /**
+  * get_user_pages_remote() - pin user pages in memory
+  * @mm:		mm_struct of target mm
+_
 
