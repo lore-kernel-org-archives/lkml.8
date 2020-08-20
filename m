@@ -2,55 +2,56 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43540C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75AB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 208BF20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550132078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926489;
-	bh=2hTiHBj5GDxe6smlNZQ1HWaL2bz/g+aouyUMLlufD04=;
+	s=default; t=1597926507;
+	bh=xGSghv4vVlkYjoXq27P/5hyIj+LHqAvkUJ1zVGjpX84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Qpap9km5k7anwOWONCpK+87yMSDBR9/SWskPLV/iHSmDfre77g/ZOBf0VMME+IdVn
-	 5nWQmMkLddweFFDa/Lf0zuEqzaTOyxNhe4eIpRHWOQ653cmYgDqC9dUlhEptlhopGY
-	 8wnv4W4zKsUBKKiruEFyFtWKMiNlcKzl6rIVRxzw=
+	b=J3rhODWdoBE0E7ER1JqE2dllg4kT3HSXcDopdbIySCkJ6l3e1A+bhSZ+kkyFQV8js
+	 oa1BQZp2FGJk6Sni6xMjkLflPJKOLbXb2sRdETkIfQoP6MgNptBZ5kNA46ntzLlpPM
+	 Di//y2WaY50pJj2OyuCgDF6juZktNLWBL+2R8iqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgHTM2C (ORCPT
+        id S1730658AbgHTM2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:28:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729865AbgHTJv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:57 -0400
+        id S1729857AbgHTJvw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7A9D2067C;
-        Thu, 20 Aug 2020 09:51:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F022078D;
+        Thu, 20 Aug 2020 09:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917117;
-        bh=2hTiHBj5GDxe6smlNZQ1HWaL2bz/g+aouyUMLlufD04=;
+        s=default; t=1597917112;
+        bh=xGSghv4vVlkYjoXq27P/5hyIj+LHqAvkUJ1zVGjpX84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BkTjfU75V2djz+o4wzDlL4xwahocRv9lQyPjukzVjzVwT702X/G7z9MLohuR3zLpl
-         bJOSFpULhojEO4D00DMAy0cBXDNYMoueSW0JSiMt1lCEnVSlwslbX/JAriE9XHjh+3
-         TKMCwCJkQVNkY87/4378ENdEacctYopi3Z8IqLBY=
+        b=E59BJqb0U0YZaONaEMUr4IJnRmZdsnh+PSBmMuOQiq30Zmd+JMF6d585t6Q8DEirj
+         iaW/N9p7Iqdbjk2D++mKfl/TpcPLdu7blGKfxx4LhzX4mpPj4eJRVGoYfXnlQjhhWT
+         RNO3mCjt+uzFQ1JJWwIX+d2oz3X8xvZiDexQFqEo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
-        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 10/92] btrfs: dont allocate anonymous block device for user invisible roots
-Date:   Thu, 20 Aug 2020 11:20:55 +0200
-Message-Id: <20200820091538.048068141@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Mueller <smueller@chronox.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 139/152] crypto: algif_aead - fix uninitialized ctx->init
+Date:   Thu, 20 Aug 2020 11:21:46 +0200
+Message-Id: <20200820091600.925682270@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
-References: <20200820091537.490965042@linuxfoundation.org>
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,90 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit 851fd730a743e072badaf67caf39883e32439431 upstream.
+[ Upstream commit 21dfbcd1f5cbff9cf2f9e7e43475aed8d072b0dd ]
 
-[BUG]
-When a lot of subvolumes are created, there is a user report about
-transaction aborted:
+In skcipher_accept_parent_nokey() the whole af_alg_ctx structure is
+cleared by memset() after allocation, so add such memset() also to
+aead_accept_parent_nokey() so that the new "init" field is also
+initialized to zero. Without that the initial ctx->init checks might
+randomly return true and cause errors.
 
-  BTRFS: Transaction aborted (error -24)
-  WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
-  RIP: 0010:create_pending_snapshot+0xbc4/0xd10 [btrfs]
-  Call Trace:
-   create_pending_snapshots+0x82/0xa0 [btrfs]
-   btrfs_commit_transaction+0x275/0x8c0 [btrfs]
-   btrfs_mksubvol+0x4b9/0x500 [btrfs]
-   btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
-   btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
-   btrfs_ioctl+0x11a4/0x2da0 [btrfs]
-   do_vfs_ioctl+0xa9/0x640
-   ksys_ioctl+0x67/0x90
-   __x64_sys_ioctl+0x1a/0x20
-   do_syscall_64+0x5a/0x110
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  ---[ end trace 33f2f83f3d5250e9 ]---
-  BTRFS: error (device sda1) in create_pending_snapshot:1576: errno=-24 unknown
-  BTRFS info (device sda1): forced readonly
-  BTRFS warning (device sda1): Skipping commit of aborted transaction.
-  BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
+While there, also remove the redundant zero assignments in both
+functions.
 
-[CAUSE]
-The error is EMFILE (Too many files open) and comes from the anonymous
-block device allocation. The ids are in a shared pool of size 1<<20.
+Found via libkcapi testsuite.
 
-The ids are assigned to live subvolumes, ie. the root structure exists
-in memory (eg. after creation or after the root appears in some path).
-The pool could be exhausted if the numbers are not reclaimed fast
-enough, after subvolume deletion or if other system component uses the
-anon block devices.
-
-[WORKAROUND]
-Since it's not possible to completely solve the problem, we can only
-minimize the time the id is allocated to a subvolume root.
-
-Firstly, we can reduce the use of anon_dev by trees that are not
-subvolume roots, like data reloc tree.
-
-This patch will do extra check on root objectid, to skip roots that
-don't need anon_dev.  Currently it's only data reloc tree and orphan
-roots.
-
-Reported-by: Greed Rong <greedrong@gmail.com>
-Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Stephan Mueller <smueller@chronox.de>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when ctx->more is zero")
+Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/disk-io.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ crypto/algif_aead.c     | 6 ------
+ crypto/algif_skcipher.c | 7 +------
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1500,9 +1500,16 @@ int btrfs_init_fs_root(struct btrfs_root
- 	spin_lock_init(&root->ino_cache_lock);
- 	init_waitqueue_head(&root->ino_cache_wait);
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index d48d2156e6210..43c6aa784858b 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -558,12 +558,6 @@ static int aead_accept_parent_nokey(void *private, struct sock *sk)
  
--	ret = get_anon_bdev(&root->anon_dev);
--	if (ret)
--		goto fail;
-+	/*
-+	 * Don't assign anonymous block device to roots that are not exposed to
-+	 * userspace, the id pool is limited to 1M
-+	 */
-+	if (is_fstree(root->root_key.objectid) &&
-+	    btrfs_root_refs(&root->root_item) > 0) {
-+		ret = get_anon_bdev(&root->anon_dev);
-+		if (ret)
-+			goto fail;
-+	}
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+-	ctx->aead_assoclen = 0;
+ 	crypto_init_wait(&ctx->wait);
  
- 	mutex_lock(&root->objectid_mutex);
- 	ret = btrfs_find_highest_objectid(root,
+ 	ask->private = ctx;
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index a51ba22fef58f..81c4022285a7c 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -333,6 +333,7 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 	ctx = sock_kmalloc(sk, len, GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++	memset(ctx, 0, len);
+ 
+ 	ctx->iv = sock_kmalloc(sk, crypto_skcipher_ivsize(tfm),
+ 			       GFP_KERNEL);
+@@ -340,16 +341,10 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 		sock_kfree_s(sk, ctx, len);
+ 		return -ENOMEM;
+ 	}
+-
+ 	memset(ctx->iv, 0, crypto_skcipher_ivsize(tfm));
+ 
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+ 	crypto_init_wait(&ctx->wait);
+ 
+ 	ask->private = ctx;
+-- 
+2.25.1
+
 
 
