@@ -2,120 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCADFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BC620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919065;
-	bh=sX5hb72mhQcxV5Y/NcLs73/WvcsHj26ueUFDCkJLfW4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Nor+dCeoqwZ2jTw6JiGusT7z+YHYQb+ZzhjtOd4+Q9xjizjgkcMxclxQcDF0Ev8g
-	 yQJZaT6/w52fMu1Pa5KBnCGE28UcE0sT8R1KkV0vDLUIuLzu3BI6L/vz1LCwvMhWXg
-	 siOiRZGxPfHHnSFL8xd4DS0CnhzLwl9uDebkCehQ=
+	by mail.kernel.org (Postfix) with ESMTP id AD8412078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQ7f8rs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgHTKYY (ORCPT
+        id S1731374AbgHTKXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:24:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731771AbgHTKXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 06:23:38 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26864 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731459AbgHTKXT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:23:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597918996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6DrPsxamb6fxr2VuGH8LdCoENsK+kekbSzDauKSHHQ8=;
+        b=HQ7f8rs7wzleapYUPDA9hC9Rd4iiOdfybA+jJa1+Wd1UrSeH9p767PpTmrdc244dQw9DzE
+        XFUvcPfyI5Ch5fjzGisMDx+9ohKyv9Q7TeiE4BOeSmrZsghL3UTdw1Og2MfmZukp/R32kB
+        MAV5FGewuMrGOhUY3LIdusTu40A+eac=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-441-DH713AW0OcaxK4khNv7WLw-1; Thu, 20 Aug 2020 06:23:15 -0400
+X-MC-Unique: DH713AW0OcaxK4khNv7WLw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD3BB2072D;
-        Thu, 20 Aug 2020 10:23:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919023;
-        bh=sX5hb72mhQcxV5Y/NcLs73/WvcsHj26ueUFDCkJLfW4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNOzyNMiGvfdMsrcrE5KPjXCpKmsA0GQw1vY/Vyz+QwCimiDC6rJsq/SD2icrdGyz
-         0PXdvo0f0QOnpvcDAw4MqKaVf5b3BFF1koSCKLjM86rXWQIAjMQ39AVXAJOUnJ/jc2
-         fhc0Wak/M6ulHFx6RuV4H1LmgYcbp+41wegytesk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Roland Scheidegger <sroland@vmware.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 142/149] drm/vmwgfx: Fix two list_for_each loop exit tests
-Date:   Thu, 20 Aug 2020 11:23:39 +0200
-Message-Id: <20200820092132.573386609@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
-References: <20200820092125.688850368@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DC8D100746D;
+        Thu, 20 Aug 2020 10:23:13 +0000 (UTC)
+Received: from starship (unknown [10.35.206.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1930101417C;
+        Thu, 20 Aug 2020 10:23:09 +0000 (UTC)
+Message-ID: <2b8faaead6f7744dc10b4701bd1583a2b494d4f4.camel@redhat.com>
+Subject: Re: [PATCH 2/8] KVM: nSVM: rename nested 'vmcb' to vmcb_gpa in few
+ places
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Date:   Thu, 20 Aug 2020 13:23:07 +0300
+In-Reply-To: <2e8185af-08fc-18c3-c1ca-fa1f7d4665dd@redhat.com>
+References: <20200820091327.197807-1-mlevitsk@redhat.com>
+         <20200820091327.197807-3-mlevitsk@redhat.com>
+         <f6bf9494-f337-2e53-6e6c-e0b8a847ec8d@redhat.com>
+         <608fe03082dc5e4db142afe3c0eb5f7c165f342b.camel@redhat.com>
+         <2e8185af-08fc-18c3-c1ca-fa1f7d4665dd@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+On Thu, 2020-08-20 at 12:19 +0200, Paolo Bonzini wrote:
+> On 20/08/20 12:00, Maxim Levitsky wrote:
+> > > Please use vmcb12_gpa, and svm->nested.vmcb12 for the VMCB in patch 6.
+> > > 
+> > > (You probably also what to have local variables named vmcb12 in patch 6
+> > > to avoid too-long lines).
+> > The limit was raised to 100 chars recently, thats why I allowed some lines to
+> > go over 80 characters to avoid adding too much noise.
+> > 
+> 
+> True, but having svm->nested.vmcb12->control repeated all over isn't
+> pretty. :)
+I fully agree that adding local variable is a good idea anyway.
 
-[ Upstream commit 4437c1152ce0e57ab8f401aa696ea6291cc07ab1 ]
+I was just noting that svm->nested.vmcb is already about the nested
+(e.g vmcb12) thus I was thinking that naming this field vmcb12 would be
+redundant and not accepted this way.
 
-These if statements are supposed to be true if we ended the
-list_for_each_entry() loops without hitting a break statement but they
-don't work.
+Best regards,
+	Maxim Levitsky
 
-In the first loop, we increment "i" after the "if (i == unit)" condition
-so we don't necessarily know that "i" is not equal to unit at the end of
-the loop.
-
-In the second loop we exit when mode is not pointing to a valid
-drm_display_mode struct so it doesn't make sense to check "mode->type".
-
-Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
-Signed-off-by: Roland Scheidegger <sroland@vmware.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-index 9b97f70fbb3df..0b7427d474feb 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-@@ -2086,7 +2086,7 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
- 		++i;
- 	}
- 
--	if (i != unit) {
-+	if (&con->head == &dev_priv->dev->mode_config.connector_list) {
- 		DRM_ERROR("Could not find initial display unit.\n");
- 		return -EINVAL;
- 	}
-@@ -2108,13 +2108,13 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
- 			break;
- 	}
- 
--	if (mode->type & DRM_MODE_TYPE_PREFERRED)
--		*p_mode = mode;
--	else {
-+	if (&mode->head == &con->modes) {
- 		WARN_ONCE(true, "Could not find initial preferred mode.\n");
- 		*p_mode = list_first_entry(&con->modes,
- 					   struct drm_display_mode,
- 					   head);
-+	} else {
-+		*p_mode = mode;
- 	}
- 
- 	return 0;
--- 
-2.25.1
-
+> 
+> Since you're going to touch all lines anyway, adding the local variable
+> is a good idea.
+> 
+> Paolo
+> 
 
 
