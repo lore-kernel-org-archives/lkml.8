@@ -2,176 +2,170 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64EFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E416C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4742C20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71F2120724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ISzJ/yiz"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="Fd1OZhcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgHTOIT (ORCPT
+        id S1729043AbgHTOIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731173AbgHTN6T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:58:19 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA70DC061345
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:58:07 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f1so2135854wro.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:58:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=dIlmZJB9+eDgtcHSXwLK+yE9xrsf8loBEu9kCmv2aII=;
-        b=ISzJ/yiz5+C1y/r+rRZ0TH2WqW8foBXQtXCtMXa3Ni88vEdoiMbBvipWviQ5t6C7U+
-         ORFWwpN8EzD38dgFERXavPfGAQat4AxfLfBVhlOMlqMqevnkYtJalb12WuMsaDkzuLbZ
-         BCq0OrLB3+/+Pwp7+CpmjceQJ6GuZBxxXxT9k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dIlmZJB9+eDgtcHSXwLK+yE9xrsf8loBEu9kCmv2aII=;
-        b=QjIj3WOQG4ODlQ0E+wYD8UFYTs6AwaNsEpwjf+jUFrb0l8XQnPuJTRR3SjxX/ivKP6
-         /a4oVIVod4dIgob+LrzE90HCa83yAJZTJjBXVvs2476rSD4P5ChqwEKfjsorE2Iyw99L
-         vv4UARUSvC6FuaaZBYgzU6jzIayWL75G5Dn0+HXG/LdNB8BvJZx7XKSOpt3TZhQMaQ9P
-         cgMYSehVtFZ6zrHEivBTwqV4sm2hYKiiBjbVNWWjCIB34rvDcWtGtZcwS51RGchPKa5C
-         EC0/D46eGlmgs8wqpepvVv+vYijd4IR6iGS9DXGGp7TMOG31yL4PGzjdiTtyWRgVAPqi
-         sIvg==
-X-Gm-Message-State: AOAM533Y396fk5lofVhhlnNlA5fNDjxdNlQczO5AOSxOh9sYS8jVSoQj
-        pCXTG9wi08KV3oP3O2QhQdzwOQ==
-X-Google-Smtp-Source: ABdhPJy88DpUAqZntYnMkF6kISfRxqrYXFVdlbWXeJsDdhysjZI6wBEPNnqgskjI2emFz26INYdKOg==
-X-Received: by 2002:a5d:4bcf:: with SMTP id l15mr3325677wrt.384.1597931886563;
-        Thu, 20 Aug 2020 06:58:06 -0700 (PDT)
-Received: from antares.lan (d.0.f.e.b.c.7.2.d.c.3.8.4.8.d.9.f.f.6.2.a.5.a.7.0.b.8.0.1.0.0.2.ip6.arpa. [2001:8b0:7a5a:26ff:9d84:83cd:27cb:ef0d])
-        by smtp.gmail.com with ESMTPSA id l81sm4494215wmf.4.2020.08.20.06.58.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 06:58:06 -0700 (PDT)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     jakub@cloudflare.com, john.fastabend@gmail.com,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v2 2/6] bpf: sockmap: merge sockmap and sockhash update functions
-Date:   Thu, 20 Aug 2020 14:57:25 +0100
-Message-Id: <20200820135729.135783-3-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820135729.135783-1-lmb@cloudflare.com>
-References: <20200820135729.135783-1-lmb@cloudflare.com>
+        Thu, 20 Aug 2020 10:08:54 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:56336 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731117AbgHTN5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:57:53 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 1AD0C160060
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:57:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1597931868; bh=d+hcOSxcO9jP1uRk6VZTRpShglcRxcZrwhKWr0yVcOQ=;
+        h=Subject:To:From:Autocrypt:Date:From;
+        b=Fd1OZhcNuY3txyz+UiP2GNlz3Fx3EyULOQyvHiemyFcQRoVNVa9lCw3xZ9tTdntlk
+         34RCisozCp0uavPHo73dEolLiSGPqAKhVnZ41lS8roj6UT+pT3bWXO+NpZ1/X3j5FG
+         HtkdzL5gqMuGhFdTXbi7Zox30EnLaOIFpmbLUrW/NahMHgrC/l34XYaSt9UlE8W1kW
+         uTrf3U4HAmut7naDp0ZWb2XLx/0g687e2bOFXuQWPMyotyA1fFRPxyRVd0t4Ab7sGY
+         nEly278khZKCPSVOB0XRkNvECzZPbqW+IfgMUGvWOvYwMY4JQPGRVBZB2IELYiTFo5
+         JvSelL4on6s5A==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 4BXR6s0DmNz6tmq;
+        Thu, 20 Aug 2020 15:57:40 +0200 (CEST)
+Subject: Re: [PATCH v2 1/4] arm64: dts: imx8mq: Add NWL MIPI DSI controller
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1597913263.git.agx@sigxcpu.org>
+ <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
+From:   Martin Kepplinger <martink@posteo.de>
+Autocrypt: addr=martink@posteo.de; keydata=
+ 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
+Message-ID: <a01e5b06-47f1-6ba9-1b74-439384b9b56c@posteo.de>
+Date:   Thu, 20 Aug 2020 15:57:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <138346192af1adb1277269a3cbd542dff00ba4a3.1597913263.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Merge the two very similar functions sock_map_update_elem and
-sock_hash_update_elem into one.
+On 20.08.20 10:50, Guido Günther wrote:
+> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
+> default. This also adds the necessary port to LCDIF.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 49 +++++++++++++++++++++++
+>  1 file changed, 49 insertions(+)
 
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
----
- net/core/sock_map.c | 49 +++++++--------------------------------------
- 1 file changed, 7 insertions(+), 42 deletions(-)
+Hi Guido,
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index abe4bac40db9..905e2dd765aa 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -559,10 +559,12 @@ static bool sock_map_sk_state_allowed(const struct sock *sk)
- 	return false;
- }
- 
-+static int sock_hash_update_common(struct bpf_map *map, void *key,
-+				   struct sock *sk, u64 flags);
-+
- static int sock_map_update_elem(struct bpf_map *map, void *key,
- 				void *value, u64 flags)
- {
--	u32 idx = *(u32 *)key;
- 	struct socket *sock;
- 	struct sock *sk;
- 	int ret;
-@@ -591,8 +593,10 @@ static int sock_map_update_elem(struct bpf_map *map, void *key,
- 	sock_map_sk_acquire(sk);
- 	if (!sock_map_sk_state_allowed(sk))
- 		ret = -EOPNOTSUPP;
-+	else if (map->map_type == BPF_MAP_TYPE_SOCKMAP)
-+		ret = sock_map_update_common(map, *(u32 *)key, sk, flags);
- 	else
--		ret = sock_map_update_common(map, idx, sk, flags);
-+		ret = sock_hash_update_common(map, key, sk, flags);
- 	sock_map_sk_release(sk);
- out:
- 	fput(sock->file);
-@@ -909,45 +913,6 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
- 	return ret;
- }
- 
--static int sock_hash_update_elem(struct bpf_map *map, void *key,
--				 void *value, u64 flags)
--{
--	struct socket *sock;
--	struct sock *sk;
--	int ret;
--	u64 ufd;
--
--	if (map->value_size == sizeof(u64))
--		ufd = *(u64 *)value;
--	else
--		ufd = *(u32 *)value;
--	if (ufd > S32_MAX)
--		return -EINVAL;
--
--	sock = sockfd_lookup(ufd, &ret);
--	if (!sock)
--		return ret;
--	sk = sock->sk;
--	if (!sk) {
--		ret = -EINVAL;
--		goto out;
--	}
--	if (!sock_map_sk_is_suitable(sk)) {
--		ret = -EOPNOTSUPP;
--		goto out;
--	}
--
--	sock_map_sk_acquire(sk);
--	if (!sock_map_sk_state_allowed(sk))
--		ret = -EOPNOTSUPP;
--	else
--		ret = sock_hash_update_common(map, key, sk, flags);
--	sock_map_sk_release(sk);
--out:
--	fput(sock->file);
--	return ret;
--}
--
- static int sock_hash_get_next_key(struct bpf_map *map, void *key,
- 				  void *key_next)
- {
-@@ -1216,7 +1181,7 @@ const struct bpf_map_ops sock_hash_ops = {
- 	.map_alloc		= sock_hash_alloc,
- 	.map_free		= sock_hash_free,
- 	.map_get_next_key	= sock_hash_get_next_key,
--	.map_update_elem	= sock_hash_update_elem,
-+	.map_update_elem	= sock_map_update_elem,
- 	.map_delete_elem	= sock_hash_delete_elem,
- 	.map_lookup_elem	= sock_hash_lookup,
- 	.map_lookup_elem_sys_only = sock_hash_lookup_sys,
--- 
-2.25.1
+Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
 
+on the librem5 devkit.
+
+thanks,
+                              martin
