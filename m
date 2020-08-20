@@ -2,52 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E46CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A1AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4847520885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B7A620855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917311;
-	bh=JhwcJ/tqepTYH27UU61VLZNErKUrP6QK/XJvsBUTs9I=;
+	s=default; t=1597917319;
+	bh=qzRfePih8sv+ogj1ftU8VO8sROoCsfG8JpG1hFZ8SUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DSJoTVGe91jPZ5mjZnFmsNbEF8mGHMbiUsb3tu7cG8Sd/sNUkPOMcb/iYcouzM3P0
-	 M2MmzDORMsxxUhezH+eAaWEjR5udLnKj8YNApn6b8nYDxbh3+im6OrSAXXj98NyxV1
-	 W3VaxaKKHT8XnNxfr2GxjWYd4HQgXPkmgURVm/oU=
+	b=FleyTsTU5JSsHpuB1Yo50mFot+snHZLZufGpNKYCHYcdhNcNTKUQCebN9i+/Q2n+9
+	 tObTgOeYWOkZphYSnToJ8SfDqcZVAgQWIYh+oBmECZU2hUL3a6iAfAvQJ5NydMKp2D
+	 9z83UFpxyUiuyeDAgFOnTTyMX8XfsAB/Ov17eBio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgHTJzJ (ORCPT
+        id S1728920AbgHTJzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37870 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbgHTJzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:01 -0400
+        id S1730153AbgHTJy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F81D207FB;
-        Thu, 20 Aug 2020 09:55:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 736C52078D;
+        Thu, 20 Aug 2020 09:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917300;
-        bh=JhwcJ/tqepTYH27UU61VLZNErKUrP6QK/XJvsBUTs9I=;
+        s=default; t=1597917294;
+        bh=qzRfePih8sv+ogj1ftU8VO8sROoCsfG8JpG1hFZ8SUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zGIqgxRb3bQBL7BqgDZvpGNiWCG6meqfOoMfz/nL7nLSjcnIISpLlVD99znI+q4md
-         aqsXu8FcgNCI1Cb4KWs1+YbXQKrzZqiAFFdYEUZDALNUZGn4RSaFnYv9RgWoa0mE5+
-         P0mAmlgP4M12uOLtVY+3TnJiBP3/EPWE/Y6NwYMQ=
+        b=A3sQfBuoXieUtLlQa6npDVhSCyuxNHblyAziT6CFmh7+6EuMyNtT5S53nEmrzEL4A
+         Om+wvXjitudSErFmgmXe3UquPScqQsbfWdqGLpRG0od3MlHCO5LVq7zxh+6Yi6SDxX
+         gEFLXtT/8pDOyP36JGwRMgqnENQF+xZsBEYjNNyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4.19 47/92] remoteproc: qcom: q6v5: Update running state before requesting stop
-Date:   Thu, 20 Aug 2020 11:21:32 +0200
-Message-Id: <20200820091540.111488629@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 72/92] watchdog: initialize device before misc_register
+Date:   Thu, 20 Aug 2020 11:21:57 +0200
+Message-Id: <20200820091541.413970193@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,44 +62,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Krzysztof Sobota <krzysztof.sobota@nokia.com>
 
-commit 5b7be880074c73540948f8fc597e0407b98fabfa upstream.
+[ Upstream commit cb36e29bb0e4b0c33c3d5866a0a4aebace4c99b7 ]
 
-Sometimes the stop triggers a watchdog rather than a stop-ack. Update
-the running state to false on requesting stop to skip the watchdog
-instead.
+When watchdog device is being registered, it calls misc_register that
+makes watchdog available for systemd to open. This is a data race
+scenario, because when device is open it may still have device struct
+not initialized - this in turn causes a crash. This patch moves
+device initialization before misc_register call and it solves the
+problem printed below.
 
-Error Logs:
-$ echo stop > /sys/class/remoteproc/remoteproc0/state
-ipa 1e40000.ipa: received modem stopping event
-remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force stop
-qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
-ipa 1e40000.ipa: received modem offline event
-remoteproc0: stopped remote processor 4080000.remoteproc-modem
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 1 at lib/kobject.c:612 kobject_get+0x50/0x54
+kobject: '(null)' ((ptrval)): is not initialized, yet kobject_get() is being called.
+Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
+CPU: 3 PID: 1 Comm: systemd Tainted: G           O      4.19.113-g2579778-fsm4_k2 #1
+Hardware name: Keystone
+[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
+[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
+[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
+[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
+[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd394>] (kobject_get+0x50/0x54)
+[<c07fd394>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
+[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
+[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
+[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
+[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
+[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
+[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
+[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
+[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xd2ceffa8 to 0xd2cefff0)
+ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
+ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
+ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
+---[ end trace 7b16eb105513974f ]---
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource handling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200602163257.26978-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 1 at lib/refcount.c:153 kobject_get+0x24/0x54
+refcount_t: increment on 0; use-after-free.
+Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
+CPU: 3 PID: 1 Comm: systemd Tainted: G        W  O      4.19.113-g2579778-fsm4_k2 #1
+Hardware name: Keystone
+[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
+[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
+[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
+[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
+[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd368>] (kobject_get+0x24/0x54)
+[<c07fd368>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
+[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
+[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
+[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
+[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
+[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
+[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
+[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
+[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xd2ceffa8 to 0xd2cefff0)
+ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
+ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
+ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
+---[ end trace 7b16eb1055139750 ]---
 
+Fixes: 72139dfa2464 ("watchdog: Fix the race between the release of watchdog_core_data and cdev")
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Krzysztof Sobota <krzysztof.sobota@nokia.com>
+Link: https://lore.kernel.org/r/20200717103109.14660-1-krzysztof.sobota@nokia.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/watchdog/watchdog_dev.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
---- a/drivers/remoteproc/qcom_q6v5.c
-+++ b/drivers/remoteproc/qcom_q6v5.c
-@@ -151,6 +151,8 @@ int qcom_q6v5_request_stop(struct qcom_q
- {
- 	int ret;
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index 10b2090f3e5e7..1c322caecf7f1 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -947,6 +947,15 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+ 	if (IS_ERR_OR_NULL(watchdog_kworker))
+ 		return -ENODEV;
  
-+	q6v5->running = false;
++	device_initialize(&wd_data->dev);
++	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
++	wd_data->dev.class = &watchdog_class;
++	wd_data->dev.parent = wdd->parent;
++	wd_data->dev.groups = wdd->groups;
++	wd_data->dev.release = watchdog_core_data_release;
++	dev_set_drvdata(&wd_data->dev, wdd);
++	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
 +
- 	qcom_smem_state_update_bits(q6v5->state,
- 				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+ 	kthread_init_work(&wd_data->work, watchdog_ping_work);
+ 	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	wd_data->timer.function = watchdog_timer_expired;
+@@ -967,15 +976,6 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+ 		}
+ 	}
  
+-	device_initialize(&wd_data->dev);
+-	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
+-	wd_data->dev.class = &watchdog_class;
+-	wd_data->dev.parent = wdd->parent;
+-	wd_data->dev.groups = wdd->groups;
+-	wd_data->dev.release = watchdog_core_data_release;
+-	dev_set_drvdata(&wd_data->dev, wdd);
+-	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
+-
+ 	/* Fill in the data structures */
+ 	cdev_init(&wd_data->cdev, &watchdog_fops);
+ 
+-- 
+2.25.1
+
 
 
