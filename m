@@ -2,133 +2,211 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0955C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16E5C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A84D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MTTUptam"
+	by mail.kernel.org (Postfix) with ESMTP id 9EDBA20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:15:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597925747;
+	bh=ijwkfMQ2xJaOGxx74rSkJ6ZIDOesUPC2mm8p+lLJ4i4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xRgjM2aQMAaytdf3IMwBr1qllgIT678SAgQzl8FHSbe7bZ1+HiErlLiguf2xMtBBV
+	 jsskQuFiKM/NUfsJUoQ1zi/ak2n4O+bytV7Y23uwDsAMgKLPtFo6uaLGfyyiWe7Xhg
+	 hYHdMGMBynRvm5Jp5fJF7GGnWzZ4kfwEPLpgslUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbgHTMPa (ORCPT
+        id S1729598AbgHTMPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:15:30 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39103 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729652AbgHTMOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:14:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597925686;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=xILkwKXiimBRQG7R/yBOZh2vZwlweNle6iIT8qUHOGk=;
-        b=MTTUptamMcQpfhl8I5GMUKrw017mmmELLsEV/+WE4KwV8eiE+r0ghYwhf7a9+oGmukE0M8
-        uA9Dmj3smL890B+GWolPG9NWNuacIpyWeOy3hWuz+Ps5MVU7DhDLbk/Vv4XwbORbKrtq4W
-        mxuBW9zaiSNuSVJ67bueAThrkgdbyls=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-232-8rgB_toIMCWjnWNOpU1GVw-1; Thu, 20 Aug 2020 08:14:41 -0400
-X-MC-Unique: 8rgB_toIMCWjnWNOpU1GVw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 08:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730289AbgHTJ5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:23 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0A18801AAB;
-        Thu, 20 Aug 2020 12:14:40 +0000 (UTC)
-Received: from [10.36.113.120] (ovpn-113-120.ams2.redhat.com [10.36.113.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 241827E306;
-        Thu, 20 Aug 2020 12:14:35 +0000 (UTC)
-Subject: Re: Kernel build error on BTFIDS vmlinux
-To:     Mark Wielaard <mark@klomp.org>, Jiri Olsa <jolsa@redhat.com>
-Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>, sdf@google.com,
-        andriin@fb.com
-References: <20200818105555.51fc6d62@carbon> <20200818091404.GB177896@krava>
- <20200818105602.GC177896@krava> <20200818134543.GD177896@krava>
- <20200818183318.2c3fe4a2@carbon>
- <c9c4a42ba6b4d36e557a5441e90f7f4961ec3f72.camel@klomp.org>
- <0ddf7bc5-be05-cc06-05d7-2778c53d023b@redhat.com>
- <20200819171820.GG177896@krava>
- <f03e0fec4b29afe24a7a13c43de23e6db6dfce23.camel@klomp.org>
-From:   Nick Clifton <nickc@redhat.com>
-Autocrypt: addr=nickc@redhat.com; prefer-encrypt=mutual; keydata=
- mQINBFm/2cUBEADkvRqMWfAryJ52T4J/640Av5cam9ojdFih9MjcX7QWFxIzJfTFYq2z+nb4
- omdfZosdCJL2zGcn6C0AxpHNvxR9HMDkEyFHKrjDh4xWU+pH4z9azQEqJh331X7UzbZldqQo
- 16VkuVavgsTJaHcXm+nGIBTcUbl2oiTtHhmuaYxx6JTMcFjC7vyO5mLBw78wt52HBYweJ0Nj
- HBvvH/JxbAAULSPRUC61K0exlO49VFbFETQNG1hZTKEji95fPbre7PpXQ0ewQShUgttEE/J3
- UA4jYaF9lOcZgUzbA27xTV//KomP0D30yr4e4EJEJYYNKa3hofTEHDXeeNgM25tprhBUMdbV
- RZpf2Keuk2uDVwc+EiOVri48rb1NU+60sOXvoGO6Ks81+mhAGmrBrlgLhAp8K1HPHI4MG4gH
- nrMqX2rEGUGRPFjC3qqVVlPm8H05PnosNqDLQ1Pf7C0pVgsCx6hKQB7Y1qBui7aoj9zeFaQg
- pYef+CEERIKEcWwrjaOJwK3pi9HFdxS0NNWYZj8HPzz/AsgTTQdsbulPlVq2SsctmOnL42CZ
- OCTppGYwl53CG/EqVY+UQBzFzJBaY8TJRFFYVEy5/HH4H11rMoZwqIkk71EOGU3X6mWlANRi
- kR3M4GhVITRzuaV69Fed+OeXcCmP94ASLfuhBR2uynmcHpBKpwARAQABtDtOaWNrIENsaWZ0
- b24gKENoaWVmIEJpbnV0aWxzIE1haW50YWluZXIpIDxuaWNrY0ByZWRoYXQuY29tPokCOAQT
- AQIAIgUCWb/ZxQIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQE/zvid2ePE9cOxAA
- 3cX1bdDaTFttTqukdPXLCtD2aNwJos4vB4LYPSgugLkYaHIQH9d1NQPhS0TlUeovnFNESLaV
- soihv0YmBUCyL4jE52FRoTjE6fUhYkFNqIWN2HYwkVrSap2UUJFquRVoVbPkbSup8P+D8eyd
- BbdxsY6f+5E8Rtz5ibVnPZTib7CyqnFokJITWjzGdIP0Gn+JWVa6jtHTImWx1MtqiuVRDapU
- hrIoUIjf98HQn9/N5ylEFYQTw7tzaJNWeGUoGYS8+8n/0sNbuYQUU/zwMVY9wpJcrXaas6yZ
- XGpF/tua59t9LFCct+07YAUSWyaBXqBW3PKQz7QP+oE8yje91XrhOQam04eJhPIBLO88g6/U
- rdKaY7evBB8bJ76Zpn1yqsYOXwAxifD0gDcRTQcB2s5MYXYmizn2GoUm1MnCJeAfQCi/YMob
- R+c8xEEkRU83Tnnw3pmAbRU6OcPihEFuK/+SOMKIuV1QWmjkbAr4g9XeXvaN+TRJ9Hl/k1k/
- sj+uOfyGIaFzM/fpaLmFk8vHeej4i2/C6cL4mnahwYBDHAfHO65ZUIBAssdA6AeJ+PGsYeYh
- qs6zkpaA2b0wT4f9s7BPSqi0Veky8bUYYY7WpjzDcHnj1gEeIU55EhOQ42dnEfv7WrIAXanO
- P8SjhgqAUkb3R88azZCpEMTHiCE4bFxzOmi5Ag0EWb/ZxQEQALaJE/3u23rTvPLkitaTJFqK
- kwPVylzkwmKdvd2qeEFk1qys2J3tACTMyYVnYTSXy5EJH2zJyhUfLnhLp8jJZF4oU5QehOaJ
- PcMmzI/CZS1AmH+jnm6pukdZAowTzJyt4IKSapr+7mxcxX1YQ2XewMnFYpLkAA2dHaChLSU/
- EHJXe3+O4DgEURTFMa3SRN/J4GNMBacKXnMSSYylI5DcIOZ/v0IGa5MAXHrP1Hwm1rBmloIc
- gmzexczBf+IcWgCLThyFPffv+2pfLK1XaS82OzBC7fS01pB/eDOkjQuKy16sKZX6Rt57vud4
- 0uE5a0lpyItC2P7u7QWL4yT5pMF+oS8bm3YWgEntV380RyZpqgJGZTZLNq2T4ZgfiaueEV4J
- zOnG2/QRGjOUrNQaYzKy5V127CTnRg4BYF/uLEmizLcI3O3U1+mEz6h48wkAojO1B6AZ8Lm+
- JuxOW5ouGcrkTEuIG56GcDwMWS/Pw/vNsDyNmOCjy9eEKWJgmMmLaq59HpfTd8IOeaYyuAQH
- AsYt/zzKy0giMgjhCQtuc99E4nQE9KZ44DKsnqRabK9s3zYE3PIkCFIEZcUiJXSXWWOIdJ43
- j+YyFHU5hqXfECM6rzKGBeBUGTzyWcOX6YwRM4LzQDVJwYG8cVfth+v4/ImcXR43D4WVxxBE
- AjKag02b+1yfABEBAAGJAh8EGAECAAkFAlm/2cUCGwwACgkQE/zvid2ePE/dqQ/6ApUwgsZz
- tps0MOdRddjPwz44pWXS5MG45irMQXELGQyxkrafc8lwHeABYstoK8dpopTcJGE3dZGL3JNz
- 1YWxQ5AV4uyqBn5N8RubcA8NzR6DQP+OGPIwzMketvVC/cbbKDZqf0uTDy3jP65OFhSkTEIy
- nYv1Mb4JJl3Sq+haUbfWLAV5nboSuHmiZE6Bz2+TjdoVkNwHBfpqxu6MlWka+P98SUcmY8iV
- hPy9QC1XFOGdFDFf1kYgHW27mFwds35NQhNARgftAVz9FZXruW6tFIIfisjr3rVjD9R8VgL7
- l5vMr9ylOFpepnI6+wd2X1566HW7F1Zw1DIrY2NHL7kL5635bHrJY4n7o/n7Elk/Ca/MAqzd
- IZxz6orfXeImsqZ6ODn4Y47PToS3Tr3bMNN9N6tmOPQZkJGHDBExbhAi/Jp8fpWxMmpVCUl6
- c85cOBCR4s8tZsvGYOjR3CvqKrX4bb8GElrhOvAJa6DdmZXc7AyoVMaTvhpq3gJYKmC64oqt
- 7zwIHwaCxTbP6C6oUp9ENRV7nHnXN3BlvIgCo4QEs6HkDzkmgYlCEOKBiDyVMSkPDZdsspa+
- K4GlU2Swi/BDJMjtDxyo+K0M81LXXxOeRfEIfPtZ3ddxBKPva1uSsuz+pbN9d1JY8Ko5T/h1
- 6susi2ReUyNJEJaSnjO5z13TQ1U=
-Organization: Red Hat
-Message-ID: <5a4dfcc7-5f6f-d1bb-42a0-363cb59b6d93@redhat.com>
-Date:   Thu, 20 Aug 2020 13:14:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 40489208DB;
+        Thu, 20 Aug 2020 09:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917440;
+        bh=ijwkfMQ2xJaOGxx74rSkJ6ZIDOesUPC2mm8p+lLJ4i4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AQLEsj9deb6jktaqUHfpcmBQF3Fh/EF7R07lUEYW1PBXX5EkmwCjt7cS/CdB7wGI4
+         dMRq3St3kev6z9znQ9a4DUon8HHj6jnmYjXzvm9lLqqiFBxTbt5S8UGlwXeK6U0p8O
+         0HB87s060HVGbWetBUi93LqzT9aHu+XeFbUFDB4k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 031/212] mlxsw: core: Free EMAD transactions using kfree_rcu()
+Date:   Thu, 20 Aug 2020 11:20:04 +0200
+Message-Id: <20200820091603.929960390@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <f03e0fec4b29afe24a7a13c43de23e6db6dfce23.camel@klomp.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guys,
+From: Ido Schimmel <idosch@mellanox.com>
 
->> so when I take empty object and compile like:
->>
->>   $ echo 'int main(int argc, char **argv) { return 0; }' | gcc -c -o ex.o -g -gz=zlib -x c -
->>   $ ld -o ex --compress-debug-sections=zlib ex.o
+[ Upstream commit 3c8ce24b037648a5a15b85888b259a74b05ff97d ]
 
-Thanks Mark.  I have now created a binutils PR for this bug, and I am looking into a fix:
+The lifetime of EMAD transactions (i.e., 'struct mlxsw_reg_trans') is
+managed using RCU. They are freed using kfree_rcu() once the transaction
+ends.
 
-  https://sourceware.org/bugzilla/show_bug.cgi?id=26428
+However, in case the transaction failed it is freed immediately after being
+removed from the active transactions list. This is problematic because it is
+still possible for a different CPU to dereference the transaction from an RCU
+read-side critical section while traversing the active transaction list in
+mlxsw_emad_rx_listener_func(). In which case, a use-after-free is triggered
+[1].
 
-Cheers
-  Nick
+Fix this by freeing the transaction after a grace period by calling
+kfree_rcu().
+
+[1]
+BUG: KASAN: use-after-free in mlxsw_emad_rx_listener_func+0x969/0xac0 drivers/net/ethernet/mellanox/mlxsw/core.c:671
+Read of size 8 at addr ffff88800b7964e8 by task syz-executor.2/2881
+
+CPU: 0 PID: 2881 Comm: syz-executor.2 Not tainted 5.8.0-rc4+ #44
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0+0x1c/0x250 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ mlxsw_emad_rx_listener_func+0x969/0xac0 drivers/net/ethernet/mellanox/mlxsw/core.c:671
+ mlxsw_core_skb_receive+0x571/0x700 drivers/net/ethernet/mellanox/mlxsw/core.c:2061
+ mlxsw_pci_cqe_rdq_handle drivers/net/ethernet/mellanox/mlxsw/pci.c:595 [inline]
+ mlxsw_pci_cq_tasklet+0x12a6/0x2520 drivers/net/ethernet/mellanox/mlxsw/pci.c:651
+ tasklet_action_common.isra.0+0x13f/0x3e0 kernel/softirq.c:550
+ __do_softirq+0x223/0x964 kernel/softirq.c:292
+ asm_call_on_stack+0x12/0x20 arch/x86/entry/entry_64.S:711
+ </IRQ>
+ __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
+ run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
+ do_softirq_own_stack+0x109/0x140 arch/x86/kernel/irq_64.c:77
+ invoke_softirq kernel/softirq.c:387 [inline]
+ __irq_exit_rcu kernel/softirq.c:417 [inline]
+ irq_exit_rcu+0x16f/0x1a0 kernel/softirq.c:429
+ sysvec_apic_timer_interrupt+0x4e/0xd0 arch/x86/kernel/apic/apic.c:1091
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:587
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
+RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:160 [inline]
+RIP: 0010:_raw_spin_unlock_irqrestore+0x3b/0x40 kernel/locking/spinlock.c:191
+Code: e8 2a c3 f4 fc 48 89 ef e8 12 96 f5 fc f6 c7 02 75 11 53 9d e8 d6 db 11 fd 65 ff 0d 1f 21 b3 56 5b 5d c3 e8 a7 d7 11 fd 53 9d <eb> ed 0f 1f 00 55 48 89 fd 65 ff 05 05 21 b3 56 ff 74 24 08 48 8d
+RSP: 0018:ffff8880446ffd80 EFLAGS: 00000286
+RAX: 0000000000000006 RBX: 0000000000000286 RCX: 0000000000000006
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffa94ecea9
+RBP: ffff888012934408 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000001 R11: fffffbfff57be301 R12: 1ffff110088dffc1
+R13: ffff888037b817c0 R14: ffff88802442415a R15: ffff888024424000
+ __do_sys_perf_event_open+0x1b5d/0x2bd0 kernel/events/core.c:11874
+ do_syscall_64+0x56/0xa0 arch/x86/entry/common.c:384
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x473dbd
+Code: Bad RIP value.
+RSP: 002b:00007f21e5e9cc28 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+RAX: ffffffffffffffda RBX: 000000000057bf00 RCX: 0000000000473dbd
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000040
+RBP: 000000000057bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000003 R11: 0000000000000246 R12: 000000000057bf0c
+R13: 00007ffd0493503f R14: 00000000004d0f46 R15: 00007f21e5e9cd80
+
+Allocated by task 871:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc mm/kasan/common.c:494 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:467
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ mlxsw_core_reg_access_emad+0x70/0x1410 drivers/net/ethernet/mellanox/mlxsw/core.c:1812
+ mlxsw_core_reg_access+0xeb/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1991
+ mlxsw_sp_port_get_hw_xstats+0x335/0x7e0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1130
+ update_stats_cache+0xf4/0x140 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1173
+ process_one_work+0xa3e/0x17a0 kernel/workqueue.c:2269
+ worker_thread+0x9e/0x1050 kernel/workqueue.c:2415
+ kthread+0x355/0x470 kernel/kthread.c:291
+ ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:293
+
+Freed by task 871:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x12c/0x170 mm/kasan/common.c:455
+ slab_free_hook mm/slub.c:1474 [inline]
+ slab_free_freelist_hook mm/slub.c:1507 [inline]
+ slab_free mm/slub.c:3072 [inline]
+ kfree+0xe6/0x320 mm/slub.c:4052
+ mlxsw_core_reg_access_emad+0xd45/0x1410 drivers/net/ethernet/mellanox/mlxsw/core.c:1819
+ mlxsw_core_reg_access+0xeb/0x540 drivers/net/ethernet/mellanox/mlxsw/core.c:1991
+ mlxsw_sp_port_get_hw_xstats+0x335/0x7e0 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1130
+ update_stats_cache+0xf4/0x140 drivers/net/ethernet/mellanox/mlxsw/spectrum.c:1173
+ process_one_work+0xa3e/0x17a0 kernel/workqueue.c:2269
+ worker_thread+0x9e/0x1050 kernel/workqueue.c:2415
+ kthread+0x355/0x470 kernel/kthread.c:291
+ ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:293
+
+The buggy address belongs to the object at ffff88800b796400
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 232 bytes inside of
+ 512-byte region [ffff88800b796400, ffff88800b796600)
+The buggy address belongs to the page:
+page:ffffea00002de500 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00002de500 order:2 compound_mapcount:0 compound_pincount:0
+flags: 0x100000000010200(slab|head)
+raw: 0100000000010200 dead000000000100 dead000000000122 ffff88806c402500
+raw: 0000000000000000 0000000000100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88800b796380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88800b796400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88800b796480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                          ^
+ ffff88800b796500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88800b796580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: caf7297e7ab5 ("mlxsw: core: Introduce support for asynchronous EMAD register access")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index 6ebe88deab62a..808d924dbe21e 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1370,7 +1370,7 @@ static int mlxsw_core_reg_access_emad(struct mlxsw_core *mlxsw_core,
+ 	err = mlxsw_emad_reg_access(mlxsw_core, reg, payload, type, trans,
+ 				    bulk_list, cb, cb_priv, tid);
+ 	if (err) {
+-		kfree(trans);
++		kfree_rcu(trans, rcu);
+ 		return err;
+ 	}
+ 	return 0;
+-- 
+2.25.1
+
+
 
