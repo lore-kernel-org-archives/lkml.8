@@ -2,54 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6292C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87712C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81DE32067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A14B20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918012;
-	bh=DgRfjOAL99Bcig5Syjy1M8Hb2R8D2sQIhGar/tiO4I0=;
+	s=default; t=1597918017;
+	bh=AtLG/bn2mZUKkfIPmi8HqODHX4L427TjEdH9nex621c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r47S/73ITbxiRjyKVvu1Xmvd1pmTx9SadmP+WiJwuxNGsPbMIeDMzmWHZdtMKqSmN
-	 ebsSAK64I1LOEVtXUu4QALYVSQRxh7GcMVAU7Ucj9527/WwU1Z/RsBNyLvLdL8Ifjv
-	 ddjJ6bS8FNygHlm+csWLlBbF0JgtL/C/AsakswVs=
+	b=o+auiorPT8J1YREq9kcMzHdRVU2ZeG9jTwxRhZOLdvTqbejcEvCMYhAGKBCd68xko
+	 lFoew2M6Tb7xqBS3PmBBsQnFV4v3e0BT1APysIxdejoUPjC68sxpl2pThIlSnKiprA
+	 8FNOcH9KN3i7NTIkFjm4P8Z3tyiMtZMg9udyCBf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgHTKGu (ORCPT
+        id S1730480AbgHTKGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbgHTKCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:02:10 -0400
+        id S1730393AbgHTKCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4555822B4E;
-        Thu, 20 Aug 2020 10:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ABBA20738;
+        Thu, 20 Aug 2020 10:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917729;
-        bh=DgRfjOAL99Bcig5Syjy1M8Hb2R8D2sQIhGar/tiO4I0=;
+        s=default; t=1597917732;
+        bh=AtLG/bn2mZUKkfIPmi8HqODHX4L427TjEdH9nex621c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yaoKh1K47QGYz6m1trmx++LBEY3m+ra/17Y2Qks3S2h6c5s+wnBeTvx4JYgRKBkNv
-         gnUctsEY/xRbJXDP1NvYGmWr7c4ASdWuUseR0EX/ngr+9zajiIarX+mLy/+ToZUbs2
-         0IObZ3zNPcoVKAwHjyShYsemHIHHdL+0bHXbu8j8=
+        b=kxBIKbhhQ3xpgjjkZRFh2tYGsHVwH7Ta0268sye1ifNSOhtCxfvLomWW2RQrjKjdG
+         XyCbI9P/yLzBwWJCWDw+WsHzPYdx7DZUg0blZuB0XRo95xRyMNRu8PxV6fBTFBPMKY
+         VnCzoYVp0LSV/lI0p4dwCoVBHQxWWW1qdawdEG2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 106/212] ACPICA: Do not increment operation_region reference counts for field units
-Date:   Thu, 20 Aug 2020 11:21:19 +0200
-Message-Id: <20200820091607.702232507@linuxfoundation.org>
+Subject: [PATCH 4.9 097/212] drm/nouveau: fix multiple instances of reference count leaks
+Date:   Thu, 20 Aug 2020 11:21:10 +0200
+Message-Id: <20200820091607.242576686@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,78 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Kaneda <erik.kaneda@intel.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
+[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
 
-ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+ref count before returning the error.
 
-Object reference counts are used as a part of ACPICA's garbage
-collection mechanism. This mechanism keeps track of references to
-heap-allocated structures such as the ACPI operand objects.
-
-Recent server firmware has revealed that this reference count can
-overflow on large servers that declare many field units under the
-same operation_region. This occurs because each field unit declaration
-will add a reference count to the source operation_region.
-
-This change solves the reference count overflow for operation_regions
-objects by preventing fieldunits from incrementing their
-operation_region's reference count. Each operation_region's reference
-count will not be changed by named objects declared under the Field
-operator. During namespace deletion, the operation_region namespace
-node will be deleted and each fieldunit will be deleted without
-touching the deleted operation_region object.
-
-Link: https://github.com/acpica/acpica/commit/e17b28cf
-Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/exprep.c   | 4 ----
- drivers/acpi/acpica/utdelete.c | 6 +-----
- 2 files changed, 1 insertion(+), 9 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
-index aed8d34592209..c2c391d5c5a1c 100644
---- a/drivers/acpi/acpica/exprep.c
-+++ b/drivers/acpi/acpica/exprep.c
-@@ -507,10 +507,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
- 				    (u8)access_byte_width;
- 			}
- 		}
--		/* An additional reference for the container */
--
--		acpi_ut_add_reference(obj_desc->field.region_obj);
--
- 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
- 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
- 				  obj_desc->field.start_field_bit_offset,
-diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
-index 529d6c38ea7ce..03a2282ceb9ca 100644
---- a/drivers/acpi/acpica/utdelete.c
-+++ b/drivers/acpi/acpica/utdelete.c
-@@ -591,11 +591,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			next_object = object->buffer_field.buffer_obj;
- 			break;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 42829a942e33c..4e12d3d59651b 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -823,8 +823,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
  
--		case ACPI_TYPE_LOCAL_REGION_FIELD:
--
--			next_object = object->field.region_obj;
--			break;
--
- 		case ACPI_TYPE_LOCAL_BANK_FIELD:
+ 	/* need to bring up power immediately if opening device */
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- 			next_object = object->bank_field.bank_obj;
-@@ -636,6 +631,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			}
- 			break;
+ 	get_task_comm(tmpname, current);
+ 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
+@@ -912,8 +914,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	long ret;
  
-+		case ACPI_TYPE_LOCAL_REGION_FIELD:
- 		case ACPI_TYPE_REGION:
- 		default:
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
+ 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
+ 	case DRM_NOUVEAU_NVIF:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index 505dca48b9f80..be6672da33a65 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (WARN_ON(ret < 0 && ret != -EACCES))
++	if (WARN_ON(ret < 0 && ret != -EACCES)) {
++		pm_runtime_put_autosuspend(dev);
+ 		return;
++	}
+ 
+ 	if (gem->import_attach)
+ 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
