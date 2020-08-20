@@ -2,120 +2,187 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B56DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC6FA2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697FE207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eo2PKQWL"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="aS8KE4iT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgHTQNV (ORCPT
+        id S1729501AbgHTQRY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:13:21 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729474AbgHTQMJ (ORCPT
+        Thu, 20 Aug 2020 12:17:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729490AbgHTQQD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:12:09 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG14bW119116;
-        Thu, 20 Aug 2020 12:11:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=B/woJmbaBhftP0bFrk9uDS8GLJjz5yJGm5+afF2Vppo=;
- b=eo2PKQWLHbsSf32pn/d1DXhxM1lL9aB7XWwtC62V9FzeEJn8c/Z/Djs7OsZaEBMJTNQQ
- cxDiHBK3+kv8qLUqxDKJzutvP3v8hegLpbE3LzBLQN+9sXlmY8+a2RNkY3BePVV5kNZC
- b2eDrDaW3pTU6bnBR8xw87v9819P23fUSbx2wVCnPA0AoQP3l2xtgaGvlebRtSrT3zeZ
- eDLnJkXaWmV5sZjDJ26KbvZtV1lauuTLX3imTA3uSSIJJZzO7nXyI6djPzGb5vVOBXAI
- F1v2P09FpvGjvsLXt5ibImNj+hPS2YTaLhgi6mLpY/qU4r5/X+wORVsrBnhkDAjt3t5f 7Q== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 331tkwmhqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:55 -0400
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG15Xx119151;
-        Thu, 20 Aug 2020 12:11:55 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 331tkwmhq2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:55 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KGAhX3019319;
-        Thu, 20 Aug 2020 16:11:54 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma04wdc.us.ibm.com with ESMTP id 3304uewejr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 16:11:54 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGBsb955509490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 16:11:54 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2920112062;
-        Thu, 20 Aug 2020 16:11:53 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9E09112061;
-        Thu, 20 Aug 2020 16:11:52 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 16:11:52 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-input@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
-        joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org,
-        brendanhiggins@google.com, dmitry.torokhov@gmail.com,
-        robh+dt@kernel.org, eajames@linux.ibm.com
-Subject: [PATCH 0/5] input: misc: Add IBM Operation Panel driver
-Date:   Thu, 20 Aug 2020 11:11:47 -0500
-Message-Id: <20200820161152.22751-1-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
+        Thu, 20 Aug 2020 12:16:03 -0400
+Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD21C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:16:03 -0700 (PDT)
+Received: by mail-oo1-xc44.google.com with SMTP id x6so534780ooe.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:16:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UpPzndwiSYhaVueh4zOqhGfv4Oo3BxfBjljCA4pNUIM=;
+        b=aS8KE4iTIRs5uiKqL5IP+COnR+Ldcy7QhNI0Fs+SpBbNkrd+GF28NFlOZwVXfU00zl
+         j9xlxMBX1SaNs94apFw+bOvHsfgwzhfHg1mPOjpSs/xwohYSdnaeU8+R/NArdJ7qfbDH
+         VS5lDOzW9PQPL6PgxyyMlRs2hVSikCAJXxPls=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UpPzndwiSYhaVueh4zOqhGfv4Oo3BxfBjljCA4pNUIM=;
+        b=aZK5+/FIteJa4Q5cGHaqEzqKzhEk6cKFSnf5J/8shpNXDC45Paou0v/SFZy3mNTuUp
+         QE+pWCJwd5l5YV3DXLRSxefYRrjn8RqF3jjONea6MU7sC1TSB04igrkkuid2JWjQufRZ
+         0J8iVsWHMRs2VPy59+eIJ9u2+RFH7wR1lYXSCBfNMZ2UeqW1N5C9hLi35nubD0WygV4z
+         /u3R+81JOK0Ku4cHhRoZ4N+tOToAFRPWMeeEdyjoVqvuEkGBPo9znyZ7sT6Sk6Vc46LJ
+         DUorrhqfoA4ID50TcSg6SfjTAu6dCAU0pknacsl5bRLFIJ6gLxwzrVHZPJljWlJt91it
+         8Bmg==
+X-Gm-Message-State: AOAM531g6liwZ73P8CrQVYTav8EP3jRDwuF4c3+KmdYF+AVInVeuRE2N
+        fz7gVMWWQsit2as+GfaaJk/W5GKR/4Ko0bYAfhQhGA==
+X-Google-Smtp-Source: ABdhPJxhIFwfgHxw3SxwdM5trgHfAXmTzg6cKfXYVIO/ijSC/WKBlr9CdxjuEg4Cgs9XTqRC/fGONcWAjPxBeg7NZYw=
+X-Received: by 2002:a4a:de49:: with SMTP id z9mr3004747oot.6.1597940160388;
+ Thu, 20 Aug 2020 09:16:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxlogscore=999 suspectscore=1 priorityscore=1501
- mlxscore=0 spamscore=0 impostorscore=0 clxscore=1011 bulkscore=0
- phishscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008200127
+References: <20200820135729.135783-1-lmb@cloudflare.com> <20200820135729.135783-5-lmb@cloudflare.com>
+ <34027dbc-d5c6-e886-21f8-f3e73e2fde4a@fb.com>
+In-Reply-To: <34027dbc-d5c6-e886-21f8-f3e73e2fde4a@fb.com>
+From:   Lorenz Bauer <lmb@cloudflare.com>
+Date:   Thu, 20 Aug 2020 17:15:48 +0100
+Message-ID: <CACAyw98gaWmpJT-LPhqKbKgaPG9s=aNU=K2Db1144dihFHzXJA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 4/6] bpf: override the meaning of
+ ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds support for input from the IBM Operation Panel, which is
-a simple controller with three buttons and an LCD display meant for
-interacting with a server. It's connected over I2C. This series only
-supports the input from the panel, in which the panel masters the I2C bus
-and sends data to the host system when someone presses a button on the
-controller.
+On Thu, 20 Aug 2020 at 17:10, Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 8/20/20 6:57 AM, Lorenz Bauer wrote:
+> > The verifier assumes that map values are simple blobs of memory, and
+> > therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
+> > map types where this isn't true. For example, sockmap and sockhash store
+> > sockets. In general this isn't a big problem: we can just
+> > write helpers that explicitly requests PTR_TO_SOCKET instead of
+> > ARG_PTR_TO_MAP_VALUE.
+> >
+> > The one exception are the standard map helpers like map_update_elem,
+> > map_lookup_elem, etc. Here it would be nice we could overload the
+> > function prototype for different kinds of maps. Unfortunately, this
+> > isn't entirely straight forward:
+> > We only know the type of the map once we have resolved meta->map_ptr
+> > in check_func_arg. This means we can't swap out the prototype
+> > in check_helper_call until we're half way through the function.
+> >
+> > Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE* to
+> > mean "the native type for the map" instead of "pointer to memory"
+> > for sockmap and sockhash. This means we don't have to modify the
+> > function prototype at all
+> >
+> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> > ---
+> >   kernel/bpf/verifier.c | 37 +++++++++++++++++++++++++++++++++++++
+> >   1 file changed, 37 insertions(+)
+> >
+> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> > index b6ccfce3bf4c..24feec515d3e 100644
+> > --- a/kernel/bpf/verifier.c
+> > +++ b/kernel/bpf/verifier.c
+> > @@ -3872,6 +3872,35 @@ static int int_ptr_type_to_size(enum bpf_arg_type type)
+> >       return -EINVAL;
+> >   }
+> >
+> > +static int resolve_map_arg_type(struct bpf_verifier_env *env,
+> > +                              const struct bpf_call_arg_meta *meta,
+> > +                              enum bpf_arg_type *arg_type)
+> > +{
+> > +     if (!meta->map_ptr) {
+> > +             /* kernel subsystem misconfigured verifier */
+> > +             verbose(env, "invalid map_ptr to access map->type\n");
+> > +             return -EACCES;
+> > +     }
+> > +
+> > +     switch (meta->map_ptr->map_type) {
+> > +     case BPF_MAP_TYPE_SOCKMAP:
+> > +     case BPF_MAP_TYPE_SOCKHASH:
+> > +             if (*arg_type == ARG_PTR_TO_MAP_VALUE) {
+> > +                     *arg_type = ARG_PTR_TO_SOCKET;
+> > +             } else if (*arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
+> > +                     *arg_type = ARG_PTR_TO_SOCKET_OR_NULL;
+>
+> Is this *arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL possible with
+> current implementation?
 
-Eddie James (5):
-  dt-bindings: input: Add documentation for IBM Operation Panel
-  input: misc: Add IBM Operation Panel driver
-  i2c: aspeed: Mask IRQ status to relevant bits
-  ARM: dts: Aspeed: Tacoma: Add IBM Operation Panel I2C device
-  ARM: dts: Aspeed: Rainier: Add IBM Operation Panel I2C device
+No, the only user is bpf_sk_storage_get and friends which requires
+BPF_MAP_TYPE_SK_STORAGE.
+I seemed to make sense to map ARG_PTR_TO_MAP_VALUE_OR_NULL, but I can
+remove it as
+well if you prefer. Do you think this is dangerous?
 
- .../bindings/input/ibm,op-panel.yaml          |  38 ++++
- MAINTAINERS                                   |   7 +
- arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts  |   6 +
- arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts   |   6 +
- drivers/i2c/busses/i2c-aspeed.c               |   1 +
- drivers/input/misc/Kconfig                    |  10 +
- drivers/input/misc/Makefile                   |   1 +
- drivers/input/misc/ibm-panel.c                | 186 ++++++++++++++++++
- 8 files changed, 255 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/ibm,op-panel.yaml
- create mode 100644 drivers/input/misc/ibm-panel.c
+>
+> If not, we can remove this "else if" and return -EINVAL, right?
+>
+> > +             } else {
+> > +                     verbose(env, "invalid arg_type for sockmap/sockhash\n");
+> > +                     return -EINVAL;
+> > +             }
+> > +             break;
+> > +
+> > +     default:
+> > +             break;
+> > +     }
+> > +     return 0;
+> > +}
+> > +
+> >   static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+> >                         struct bpf_call_arg_meta *meta,
+> >                         const struct bpf_func_proto *fn)
+> > @@ -3904,6 +3933,14 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
+> >               return -EACCES;
+> >       }
+> >
+> > +     if (arg_type == ARG_PTR_TO_MAP_VALUE ||
+> > +         arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
+> > +         arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
+> > +             err = resolve_map_arg_type(env, meta, &arg_type);
+>
+> I am okay with this to cover all MAP_VALUE types with func
+> name resolve_map_arg_type as a generic helper.
+>
+> > +             if (err)
+> > +                     return err;
+> > +     }
+> > +
+> >       if (arg_type == ARG_PTR_TO_MAP_KEY ||
+> >           arg_type == ARG_PTR_TO_MAP_VALUE ||
+> >           arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
+> >
+
+
 
 -- 
-2.26.2
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
 
+www.cloudflare.com
