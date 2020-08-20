@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E084C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E03642075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23A8C207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916463;
-	bh=ATlZv6UUf8gC4J7JiJhspjarlU5BxTsDmslsrQf6BAo=;
+	s=default; t=1597916470;
+	bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AIde2ZJFjL4BG4/wRFCW0X1p2YeQrAFLPxSW+chMdIkMqOlfx3GuifJLpaAt8cWDY
-	 qRXxTr6aIytA/26VxFwaoOXpriIcnnDWdZk28vKQadzfzEbAKWfK+xKThZGUvFH36E
-	 7iHGMCmejeJzdRjGbqoSIDKZTDrhBbvgu/QsCDlU=
+	b=05whLY7n4Cf1FvASK4BpPPWg8JDwbHtcj3ph0B240GuG19BiKg8mOoYwgG7u4EAHR
+	 OyBqRf+PcuE0q/WrC50rAPeo5h3Od2yNeWbMmr9i4NRAakc1Bz2t00MCQn1j8kwuQY
+	 6Yr3fqYvakQ9SHmUHkAvUdihr0bDn2l2ihhWht/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgHTJlA (ORCPT
+        id S1729086AbgHTJlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgHTJkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:46 -0400
+        id S1728893AbgHTJkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53C662075E;
-        Thu, 20 Aug 2020 09:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCBE620724;
+        Thu, 20 Aug 2020 09:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916445;
-        bh=ATlZv6UUf8gC4J7JiJhspjarlU5BxTsDmslsrQf6BAo=;
+        s=default; t=1597916451;
+        bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvdcXM+ryr4MM1zea5XyPM6UCmMPyvNxTX400zC70CgyuSy+YPVERe0il2A3tCK4O
-         7pek2eCAPzL8dSZno3pMm1m88GaOsUwhFNJ2tN7nwPyXM+CcLTmGinPTLpdvxs9sxw
-         WlWqwpP+rM+EOadHKxq/iRXDnTQRR+kJnkyrKGnk=
+        b=2QNVteTn9SrrhSPtPIJiPCZp3ZA3kTFQjeHNWkpyL0MNDWaPtTQnqnCDeS2sbtep5
+         3mi57GGSBTQrfl7IGTTedh0e9wLCb/e5qSy3ny/eREXDSMSg0RGfCKcc6UL7z5ZgrN
+         JkdxYRHQez4tRd1gSL/hE7ZUGWPHJNVv+KBE7oRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org,
+        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 123/204] RDMA/counter: Allow manually bind QPs with different pids to same counter
-Date:   Thu, 20 Aug 2020 11:20:20 +0200
-Message-Id: <20200820091612.439376799@linuxfoundation.org>
+Subject: [PATCH 5.7 133/204] clk: actions: Fix h_clk for Actions S500 SoC
+Date:   Thu, 20 Aug 2020 11:20:30 +0200
+Message-Id: <20200820091612.920283039@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,38 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
 
-[ Upstream commit cbeb7d896c0f296451ffa7b67e7706786b8364c8 ]
+[ Upstream commit f47ee279d25fb0e010cae5d6e758e39b40eb6378 ]
 
-In manual mode allow bind user QPs with different pids to same counter,
-since this is allowed in auto mode.
-Bind kernel QPs and user QPs to the same counter are not allowed.
+The h_clk clock in the Actions Semi S500 SoC clock driver has an
+invalid parent. Replace with the correct one.
 
-Fixes: 1bd8e0a9d0fd ("RDMA/counter: Allow manual mode configuration support")
-Link: https://lore.kernel.org/r/20200702082933.424537-4-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
+Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Link: https://lore.kernel.org/r/c57e7ebabfa970014f073b92fe95b47d3e5a70b1.1593788312.git.cristian.ciocaltea@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/counters.c | 2 +-
+ drivers/clk/actions/owl-s500.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
-index 6deb1901fbd02..417ebf4d8ba9b 100644
---- a/drivers/infiniband/core/counters.c
-+++ b/drivers/infiniband/core/counters.c
-@@ -483,7 +483,7 @@ int rdma_counter_bind_qpn(struct ib_device *dev, u8 port,
- 		goto err;
- 	}
+diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
+index e2007ac4d235d..0eb83a0b70bcc 100644
+--- a/drivers/clk/actions/owl-s500.c
++++ b/drivers/clk/actions/owl-s500.c
+@@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
+ static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
  
--	if (counter->res.task != qp->res.task) {
-+	if (rdma_is_kernel_res(&counter->res) != rdma_is_kernel_res(&qp->res)) {
- 		ret = -EINVAL;
- 		goto err_task;
- 	}
+ /* divider clocks */
+-static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
++static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
+ static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
+ 
+ /* factor clocks */
 -- 
 2.25.1
 
