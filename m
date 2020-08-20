@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65139C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC70C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5482078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED0FE2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927523;
-	bh=RaKFugCKuZ3leuKfF6Xlf6z2dztIZXYGEQs17Aqa4uA=;
+	s=default; t=1597927528;
+	bh=n/aoNVZjfCE/diuBa2MGG510bp8Ugndra1dCjBCqQjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d4ayr3rxmZONusy6n4Yg8p1FChXPP/RSDg6z9W/y1dinJ/qRf/vH0rXzRGcob4Hc/
-	 0nYswbZzODaUnUMsbLTpC4yR7WXw6UKJg+CUM1rENXltECwpXPNujxjcZSWiuM9BsO
-	 3mnoG48/wmarCJOpOWb24ZATUHfkmQr1xU5wZi8g=
+	b=t/wfB/SO4xVqibMHr10p0h7+OQrDG2mG8fdf9QXlEYw3O6y/FE7LsNvtvmShAivhC
+	 yKPJow7CLX8f45tiGL3CltEpw9u4KAo52oSpoJGXhW6MJEpKqyB77QrUOiaEwADMl6
+	 mvFewxyvXZzeCUI2GTOP8YL/9V42W0Cdq8VpDLDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgHTMpV (ORCPT
+        id S1729993AbgHTMpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729068AbgHTJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:45:42 -0400
+        id S1729247AbgHTJpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9C7A22CF6;
-        Thu, 20 Aug 2020 09:45:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE9442173E;
+        Thu, 20 Aug 2020 09:45:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916729;
-        bh=RaKFugCKuZ3leuKfF6Xlf6z2dztIZXYGEQs17Aqa4uA=;
+        s=default; t=1597916723;
+        bh=n/aoNVZjfCE/diuBa2MGG510bp8Ugndra1dCjBCqQjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v+mopblLt6FAm8ds8m+JV/YYZpZatPP2JFV6AMhhqAyUIuAsaSbnBJwQVCNMqQQkk
-         MWYLa/OyUB62+R8xslWiBhqgvRyNMdF2xIwlBvfCHn9CCuWWu10mpjEpHDGrpOC1tw
-         PN5/me1uCPXLHaCfAYyGzsXP0wGs3Q31ZnBH4ZU4=
+        b=kAlrIKjDSlBcgUssn/26swpfSmNuZH0+TjrztdIiojbTGtWST0jcjUBSYgosJqgH2
+         xSXgfCqt5O1g4bt7E+PospSSdflQSTJn/6Fa9Bn1VlOCxwHG9QSeabjmPm7qi0Mg/a
+         vuKtjhrN+c3J9c7ZVdtMHuaG+ZE/jDqjuWgs43D8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luciano Chavez <chavez@us.ibm.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 026/152] btrfs: inode: fix NULL pointer dereference if inode doesnt need compression
-Date:   Thu, 20 Aug 2020 11:19:53 +0200
-Message-Id: <20200820091555.001479760@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 024/152] btrfs: fix messages after changing compression level by remount
+Date:   Thu, 20 Aug 2020 11:19:51 +0200
+Message-Id: <20200820091554.880192147@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,105 +58,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: David Sterba <dsterba@suse.com>
 
-commit 1e6e238c3002ea3611465ce5f32777ddd6a40126 upstream.
+commit 27942c9971cc405c60432eca9395e514a2ae9f5e upstream.
 
-[BUG]
-There is a bug report of NULL pointer dereference caused in
-compress_file_extent():
+Reported by Forza on IRC that remounting with compression options does
+not reflect the change in level, or at least it does not appear to do so
+according to the messages:
 
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Workqueue: btrfs-delalloc btrfs_delalloc_helper [btrfs]
-  NIP [c008000006dd4d34] compress_file_range.constprop.41+0x75c/0x8a0 [btrfs]
-  LR [c008000006dd4d1c] compress_file_range.constprop.41+0x744/0x8a0 [btrfs]
-  Call Trace:
-  [c000000c69093b00] [c008000006dd4d1c] compress_file_range.constprop.41+0x744/0x8a0 [btrfs] (unreliable)
-  [c000000c69093bd0] [c008000006dd4ebc] async_cow_start+0x44/0xa0 [btrfs]
-  [c000000c69093c10] [c008000006e14824] normal_work_helper+0xdc/0x598 [btrfs]
-  [c000000c69093c80] [c0000000001608c0] process_one_work+0x2c0/0x5b0
-  [c000000c69093d10] [c000000000160c38] worker_thread+0x88/0x660
-  [c000000c69093db0] [c00000000016b55c] kthread+0x1ac/0x1c0
-  [c000000c69093e20] [c00000000000b660] ret_from_kernel_thread+0x5c/0x7c
-  ---[ end trace f16954aa20d822f6 ]---
+  mount -o compress=zstd:1 /dev/sda /mnt
+  mount -o remount,compress=zstd:15 /mnt
 
-[CAUSE]
-For the following execution route of compress_file_range(), it's
-possible to hit NULL pointer dereference:
+does not print the change to the level to syslog:
 
- compress_file_extent()
- |- pages = NULL;
- |- start = async_chunk->start = 0;
- |- end = async_chunk = 4095;
- |- nr_pages = 1;
- |- inode_need_compress() == false; <<< Possible, see later explanation
- |  Now, we have nr_pages = 1, pages = NULL
- |- cont:
- |- 		ret = cow_file_range_inline();
- |- 		if (ret <= 0) {
- |-		for (i = 0; i < nr_pages; i++) {
- |-			WARN_ON(pages[i]->mapping);	<<< Crash
+  [   41.366060] BTRFS info (device vda): use zstd compression, level 1
+  [   41.368254] BTRFS info (device vda): disk space caching is enabled
+  [   41.390429] BTRFS info (device vda): disk space caching is enabled
 
-To enter above call execution branch, we need the following race:
+What really happens is that the message is lost but the level is actualy
+changed.
 
-    Thread 1 (chattr)     |            Thread 2 (writeback)
---------------------------+------------------------------
-                          | btrfs_run_delalloc_range
-                          | |- inode_need_compress = true
-                          | |- cow_file_range_async()
-btrfs_ioctl_set_flag()    |
-|- binode_flags |=        |
-   BTRFS_INODE_NOCOMPRESS |
-                          | compress_file_range()
-                          | |- inode_need_compress = false
-                          | |- nr_page = 1 while pages = NULL
-                          | |  Then hit the crash
+There's another weird output, if compression is reset to 'no':
 
-[FIX]
-This patch will fix it by checking @pages before doing accessing it.
-This patch is only designed as a hot fix and easy to backport.
+  [   45.413776] BTRFS info (device vda): use no compression, level 4
 
-More elegant fix may make btrfs only check inode_need_compress() once to
-avoid such race, but that would be another story.
+To fix that, save the previous compression level and print the message
+in that case too and use separate message for 'no' compression.
 
-Reported-by: Luciano Chavez <chavez@us.ibm.com>
-Fixes: 4d3a800ebb12 ("btrfs: merge nr_pages input and output parameter in compress_pages")
-CC: stable@vger.kernel.org # 4.14.x: cecc8d9038d16: btrfs: Move free_pages_out label in inline extent handling branch in compress_file_range
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
+CC: stable@vger.kernel.org # 4.19+
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ fs/btrfs/super.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -641,12 +641,18 @@ cont:
- 						     page_error_op |
- 						     PAGE_END_WRITEBACK);
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -435,6 +435,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 	char *compress_type;
+ 	bool compress_force = false;
+ 	enum btrfs_compression_type saved_compress_type;
++	int saved_compress_level;
+ 	bool saved_compress_force;
+ 	int no_compress = 0;
  
--			for (i = 0; i < nr_pages; i++) {
--				WARN_ON(pages[i]->mapping);
--				put_page(pages[i]);
-+			/*
-+			 * Ensure we only free the compressed pages if we have
-+			 * them allocated, as we can still reach here with
-+			 * inode_need_compress() == false.
-+			 */
-+			if (pages) {
-+				for (i = 0; i < nr_pages; i++) {
-+					WARN_ON(pages[i]->mapping);
-+					put_page(pages[i]);
-+				}
-+				kfree(pages);
+@@ -517,6 +518,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				info->compress_type : BTRFS_COMPRESS_NONE;
+ 			saved_compress_force =
+ 				btrfs_test_opt(info, FORCE_COMPRESS);
++			saved_compress_level = info->compress_level;
+ 			if (token == Opt_compress ||
+ 			    token == Opt_compress_force ||
+ 			    strncmp(args[0].from, "zlib", 4) == 0) {
+@@ -561,6 +563,8 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				no_compress = 0;
+ 			} else if (strncmp(args[0].from, "no", 2) == 0) {
+ 				compress_type = "no";
++				info->compress_level = 0;
++				info->compress_type = 0;
+ 				btrfs_clear_opt(info->mount_opt, COMPRESS);
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
+ 				compress_force = false;
+@@ -581,11 +585,11 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				 */
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
  			}
--			kfree(pages);
--
- 			return 0;
- 		}
- 	}
+-			if ((btrfs_test_opt(info, COMPRESS) &&
+-			     (info->compress_type != saved_compress_type ||
+-			      compress_force != saved_compress_force)) ||
+-			    (!btrfs_test_opt(info, COMPRESS) &&
+-			     no_compress == 1)) {
++			if (no_compress == 1) {
++				btrfs_info(info, "use no compression");
++			} else if ((info->compress_type != saved_compress_type) ||
++				   (compress_force != saved_compress_force) ||
++				   (info->compress_level != saved_compress_level)) {
+ 				btrfs_info(info, "%s %s compression, level %d",
+ 					   (compress_force) ? "force" : "use",
+ 					   compress_type, info->compress_level);
 
 
