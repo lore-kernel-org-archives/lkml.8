@@ -2,53 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B534C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4566D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B3E2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920593;
-	bh=JdjgGhnTYPEIjoZ4i+Mqm/1qWRHWnX8DfyPTKsbyvf4=;
+	s=default; t=1597920600;
+	bh=5lCmqE8k4PkyMgQvNv2cH1Qt3BNAAjoVXgQOsdnIyL4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcIc1mFzwOyOT7p9yLdXor36IJ8uXAU6XGpXJQdB1WUbMDi1nZt6NFo7z6cPWzeu5
-	 u3cXCXkHF8kiBP4ac3BjaJhnt4ZvBYPG4hoHFJYmWafaWlASffhu3961G0V1Ugb/6l
-	 DafJGVbzit6xKM3jQDb7nKoTGiop2ZhGhjCTLvWk=
+	b=OnwMItioaB0ZxuGVWVn2f6nbSZu826+A0Jqa01jsLAO+u5FPM8MOc2E4p3h+UIq4R
+	 ZdghxGtg3uGmHmSWIghZ887itEJSUjTLamnoaLb07DWjzve+PxHtFqXdkz/T8X53n9
+	 M7ZuoJhubgc8hAUkX+wWxJ5dAJ7Lov/AHzSuuGfs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731887AbgHTKtT (ORCPT
+        id S1731767AbgHTKtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731254AbgHTKPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:15:31 -0400
+        id S1731259AbgHTKPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:15:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF8D220658;
-        Thu, 20 Aug 2020 10:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FD7206DA;
+        Thu, 20 Aug 2020 10:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918530;
-        bh=JdjgGhnTYPEIjoZ4i+Mqm/1qWRHWnX8DfyPTKsbyvf4=;
+        s=default; t=1597918533;
+        bh=5lCmqE8k4PkyMgQvNv2cH1Qt3BNAAjoVXgQOsdnIyL4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WtYsCcoLCWehg1fQMIeuxqJcaKB0jmx5CperWL6s5qaI4LaXWbZ0B8ACRzb6RV06b
-         9I21LHOymA+zxxZxPppFAPiNCF66W9Kt4mdzllapLvmt91VU9Y+XZAjMUD8ZGk+bkv
-         +lcPACtASrUQLgPsSJoTFthES4o1tkdmg3ZaSpnY=
+        b=DU8J7K/cUCIzUS8d56/nrfIyHa7RBD5a5mXu92DOLslSxUql1UH1AVSBInY0ru38M
+         psLXkFMvaGfNacrgax9+THvQi+ISdXFjstnQruHIvwBbVHYLTBJNmzH4WL4x97oR3Z
+         qAlo+m08rjiix8Siu7OtdL36yQpRGiDinrWi+UQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.14 186/228] kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
-Date:   Thu, 20 Aug 2020 11:22:41 +0200
-Message-Id: <20200820091616.871419586@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 204/228] i2c: rcar: slave: only send STOP event when we have been addressed
+Date:   Thu, 20 Aug 2020 11:22:59 +0200
+Message-Id: <20200820091617.741032583@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,94 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit 0cb2f1372baa60af8456388a574af6133edd7d80 upstream.
+[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
 
-We found a case of kernel panic on our server. The stack trace is as
-follows(omit some irrelevant information):
+When the SSR interrupt is activated, it will detect every STOP condition
+on the bus, not only the ones after we have been addressed. So, enable
+this interrupt only after we have been addressed, and disable it
+otherwise.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000080
-  RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
-  RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
-  RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
-  RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
-  RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <IRQ>
-   ftrace_ops_assist_func+0x56/0xe0
-   ftrace_call+0x5/0x34
-   tcpa_statistic_send+0x5/0x130 [ttcp_engine]
-
-The tcpa_statistic_send is the function being kprobed. After analysis,
-the root cause is that the fourth parameter regs of kprobe_ftrace_handler
-is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
-
-  crash> dis tcpa_statistic_send -r
-         <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
-
-The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
-So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
-is NULL. In theory, we should call the ftrace_regs_caller instead of the
-ftrace_caller. After in-depth analysis, we found a reproducible path.
-
-  Writing a simple kernel module which starts a periodic timer. The
-  timer's handler is named 'kprobe_test_timer_handler'. The module
-  name is kprobe_test.ko.
-
-  1) insmod kprobe_test.ko
-  2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-  3) echo 0 > /proc/sys/kernel/ftrace_enabled
-  4) rmmod kprobe_test
-  5) stop step 2) kprobe
-  6) insmod kprobe_test.ko
-  7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-
-We mark the kprobe as GONE but not disarm the kprobe in the step 4).
-The step 5) also do not disarm the kprobe when unregister kprobe. So
-we do not remove the ip from the filter. In this case, when the module
-loads again in the step 6), we will replace the code to ftrace_caller
-via the ftrace_module_enable(). When we register kprobe again, we will
-not replace ftrace_caller to ftrace_regs_caller because the ftrace is
-disabled in the step 3). So the step 7) will trigger kernel panic. Fix
-this problem by disarming the kprobe when the module is going away.
-
-Link: https://lkml.kernel.org/r/20200728064536.24405-1-songmuchun@bytedance.com
-
-Cc: stable@vger.kernel.org
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/i2c/busses/i2c-rcar.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2134,6 +2134,13 @@ static void kill_kprobe(struct kprobe *p
- 	 * the original probed function (which will be freed soon) any more.
- 	 */
- 	arch_remove_kprobe(p);
-+
-+	/*
-+	 * The module is going away. We should disarm the kprobe which
-+	 * is using ftrace.
-+	 */
-+	if (kprobe_ftrace(p))
-+		disarm_kprobe_ftrace(p);
- }
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index db9ca8e926ca7..07305304712e1 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -538,13 +538,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
+ 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
+ 		}
  
- /* Disable one kprobe */
+-		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
++		/* Clear SSR, too, because of old STOPs to other clients than us */
++		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
+ 	}
+ 
+ 	/* master sent stop */
+ 	if (ssr_filtered & SSR) {
+ 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
+-		rcar_i2c_write(priv, ICSIER, SAR | SSR);
++		rcar_i2c_write(priv, ICSIER, SAR);
+ 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
+ 	}
+ 
+@@ -802,7 +803,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
+ 	priv->slave = slave;
+ 	rcar_i2c_write(priv, ICSAR, slave->addr);
+ 	rcar_i2c_write(priv, ICSSR, 0);
+-	rcar_i2c_write(priv, ICSIER, SAR | SSR);
++	rcar_i2c_write(priv, ICSIER, SAR);
+ 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
+ 
+ 	return 0;
+-- 
+2.25.1
+
 
 
