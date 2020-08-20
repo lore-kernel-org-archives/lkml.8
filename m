@@ -2,129 +2,165 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96184C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C9CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFCB2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E43207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZeSu88rR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhqU8KCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHTBo7 (ORCPT
+        id S1726731AbgHTBqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42036 "EHLO
+        Wed, 19 Aug 2020 21:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgHTBo6 (ORCPT
+        with ESMTP id S1726603AbgHTBqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:44:58 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B761C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:44:57 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id r19so276491qvw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:44:57 -0700 (PDT)
+        Wed, 19 Aug 2020 21:46:38 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16294C061383;
+        Wed, 19 Aug 2020 18:46:38 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a26so743192ejc.2;
+        Wed, 19 Aug 2020 18:46:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BDDnMK4h5MqrABrJlp8QSE24w6CUN2EJwzH9w5HlgTk=;
-        b=ZeSu88rRmOVOFsKZMIkPfFK1lon84nKwM22J7Ci5blJIcuMjhxhrMDfKDzBcrLBObg
-         5G+zNb+8HK6+UMRTBH3e39+9trLZP1sqNDsrdsF9FWhPA2n3u0NDiT2w+MKPsqhjpGqw
-         UKSpG9UUaDuSjGOSkr8wT6f94tNYtp/cX4SR8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4IAtUvlGZi9cZ30c8Tiv2QcGP8j7YjUireQ2hPSqYIc=;
+        b=lhqU8KCBq3JcXyLrjR7m1WxXBaJBMXFyOeFY2/f+x7ng6G5zQlWUhOOkz3cJRdbPr0
+         fDPjZWPX59w9VLcs3giM+fziJJBtsN8dJW8xIFnSbQNr64LGPjfREopYzlFEvK/t3w6C
+         bkHE1V5JX1QnfMcJYrGSJjsbuogziTWPR6YFrNA4Z57AIwLI2YziBXqL8jBcI7kT45H6
+         DOHctLZABu2Ie6ADGhzwzow3snknVvnvep4cRodQ2jvn8ew3JBKVdwPJhEtFFyndjkko
+         2J83m+iQ94azRYO5bPKbhDJrJPqCm/AIw6xRWgE5Z6qd3t4qoSOgPHQ/jF5Rk3MrFsg7
+         z9QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=BDDnMK4h5MqrABrJlp8QSE24w6CUN2EJwzH9w5HlgTk=;
-        b=QxbjgjgaroHXJs+vLhUOd0gLZd6Sa/50VkKN0lC7AM9GfQoD7SWHxlvPS9rJ0/r+m6
-         MdhZyGVaEmEa6ivCRp7VePwuQnDFRJXIGcCWTGM/oVt/Ve2X/yut+MASPp4bGYNdCmau
-         /uwga1UOAcnqDVmZVtlS/NVDu0jv/lQ5hlvGHLclNKstfRZLLy+J+U0WbMN7acbJ54lu
-         5cJdKoW8pYDYTtzEpZXhGpCWs0UP3VkX8BjeoKKfMgjDsqRlL53S2sscpji94exMF4Xo
-         2ougk+O08Ik38pfLBJNQytaTqOBWwg9vucuNiwOOOqNr8cikPMAi8YFdiI52PrgSBxx5
-         m3nw==
-X-Gm-Message-State: AOAM531m5PDDD/fOO3dAJ73IbU9Cj1yhfLj2WOzOelf9y+ebFL0pATz4
-        sYhDb/1jaTnWWR4rWZET9oIQ5k7rUDWlYw==
-X-Google-Smtp-Source: ABdhPJwt5aP3+ayenQU/okMYJ9OjwFREU3xfoo4bR+bMtRQYEz3Nsyy7lR1q0QIN7W+d+HgNIZeE9w==
-X-Received: by 2002:a0c:da07:: with SMTP id x7mr1124350qvj.66.1597887897077;
-        Wed, 19 Aug 2020 18:44:57 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id b2sm1103304qto.82.2020.08.19.18.44.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 18:44:56 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 21:44:56 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tim Chen <tim.c.chen@intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        fweisbec@gmail.com, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [PATCH RFC 00/12] Core-sched v6+: kernel protection and hotplug
- fixes
-Message-ID: <20200820014456.GD1492280@google.com>
-References: <20200815031908.1015049-1-joel@joelfernandes.org>
- <202008191116.1A1F51186D@keescook>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4IAtUvlGZi9cZ30c8Tiv2QcGP8j7YjUireQ2hPSqYIc=;
+        b=qW3dHjqGaKYUIpsu0hZ2CGiAhepc9BRZB+cyFKEgzD38jqz7gll4ljN6ltHM+YhJ1R
+         WwohZ9ZTA0HarE5NA1g4xlWa8y796loe8wY+eh88OpX4D0x5OrZISvXUIf9CVhz8YumU
+         BrHfcklyugRtWC2SanXvTct/rqfZBtd6epu2PuHorAvp2YV3GdiOJl29tPb2kmJMfrLD
+         Jp9MG0DXHeU5oMDyCXtDViTFLb3mUUPppRzadbJrg6DjOw8EJQMHxsSL3pAMw7D8apTY
+         n9gwx/QosvEGII28DEntTjS9hQpXJfum27w2+KU/ZEmDn5Tb6LKmBDIoJtTOvvOcaQ5F
+         AWyA==
+X-Gm-Message-State: AOAM530sx394T9mJTN7RWhm270S8O3EXozKOY5cK/JBJvyEeX9KSqi7x
+        4fjdyxdGn5jxdm2W8AEsk4KwRenUVScu539GfCI=
+X-Google-Smtp-Source: ABdhPJyE7dDS/w0hK1VUPbkBFQB5sNodimT33cc7agHJsrXQ6a+5qSQ+UFlj1xnEL1rjR8ztnYxPtpo+o8Gs3htaqL8=
+X-Received: by 2002:a17:906:78e:: with SMTP id l14mr1160378ejc.67.1597887996730;
+ Wed, 19 Aug 2020 18:46:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008191116.1A1F51186D@keescook>
+References: <1597406966-13740-1-git-send-email-abel.vesa@nxp.com>
+ <1597406966-13740-17-git-send-email-abel.vesa@nxp.com> <CAA+hA=S_wdoZvCPamW2F1Vs73t4fgnQa8LouUwzq2Vfpz3SDCg@mail.gmail.com>
+ <20200819203734.zbndyvf534xey5xy@fsr-ub1664-175>
+In-Reply-To: <20200819203734.zbndyvf534xey5xy@fsr-ub1664-175>
+From:   Dong Aisheng <dongas86@gmail.com>
+Date:   Thu, 20 Aug 2020 09:31:27 +0800
+Message-ID: <CAA+hA=S6j71M-Bjbkm1C+q6Ke7xGUX3K0TosKwWJ=tegFaBGsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 16/17] arm64: dts: imx8mp: Add media_blk_ctrl node
+To:     Abel Vesa <abel.vesa@nxp.com>
+Cc:     Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 11:26:48AM -0700, Kees Cook wrote:
-> On Fri, Aug 14, 2020 at 11:18:56PM -0400, Joel Fernandes (Google) wrote:
-> > This series is continuation of main core-sched v6 series [1] and adds support
-> 
-> - Is this really "RFC"? Seeing multiple authors implies this is looking
->   to get merged. :)
+Hi Rob, Stephen,
 
-This mini series was inspired by discussions/concerns mostly by Thomas so
-that's why I kept it as RFC since I thought more comments will come.
+On Thu, Aug 20, 2020 at 4:37 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+>
+> On 20-08-18 19:34:14, Dong Aisheng wrote:
+> > On Fri, Aug 14, 2020 at 8:12 PM Abel Vesa <abel.vesa@nxp.com> wrote:
+> > >
+> > > Some of the features of the media_ctrl will be used by some
+> > > different drivers in a way those drivers will know best, so adding the
+> > > syscon compatible we allow those to do just that. Only the resets
+> > > and the clocks are registered bit the clk-blk-ctrl driver.
+> > >
+> > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/imx8mp.dtsi | 16 ++++++++++++++++
+> > >  1 file changed, 16 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > index dede0ae..2d6d213 100644
+> > > --- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+> > > @@ -736,6 +736,22 @@
+> > >                         };
+> > >                 };
+> > >
+> > > +               aips4: bus@32c00000 {
+> > > +                       compatible = "simple-bus";
+> > > +                       reg = <0x32c00000 0x400000>;
+> > > +                       #address-cells = <1>;
+> > > +                       #size-cells = <1>;
+> > > +                       ranges;
+> > > +
+> > > +                       media_blk_ctrl: clock-controller@32ec0000 {
+> >
+> > For this combo device, maybe we can directly name it as blk-ctrl@32ec0000.
+> > Rob, do you think if we can do that?
+> >
+>
+> I think it was Stephen who suggested we change it to clock-controller in the
+> last's version thread.
+>
+> TBH, I agree with you here, since it makes more sense to be called blk-ctrl
+> provided that this is not really just a clock controller.
+>
 
-> - Is this on top of the v6 core-sched series (or instead of)? (That
->   series doesn't seem to be RFC any more either, IMO, if it's at v6.) If
->   this replaces that series, isn't this v7? I don't see the v6
->   core-sched series in -next anywhere?
+How do you think?
 
-Yes, it was just a continuation of that. Actually I screwed up, I should have
-just posted the whole v6 again with these patches with appropriate
-subject-prefix. That would prevent confusion.
+Regards
+Aisheng
 
-> - Whatever the case, please include the series version in the "[PATCH vN ...]"
->   portion of the Subject, otherwise things like "b4" don't really know what's
->   happening.
-
-Got it.
-
-> Sorry for the drive-by comments, but I was really confused trying to
-> understand how this fit together. :)
-
-No problem, your comments are very valid so they are welcome :)
-
-thanks,
-
- - Joel
-
-
-> -- 
-> Kees Cook
+> > > +                               compatible = "fsl,imx8mp-media-blk-ctrl", "syscon";
+> > > +                               reg = <0x32ec0000 0x10000>;
+> > > +
+> >
+> > Remove unnecessary blank line
+> >
+>
+> Will do.
+>
+> > Otherwise:
+> > Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+> >
+> > Regards
+> > Aisheng
+> >
+> > > +                               #clock-cells = <1>;
+> > > +                               #reset-cells = <1>;
+> > > +                       };
+> > > +               };
+> > > +
+> > >                 aips5: bus@30c00000 {
+> > >                         compatible = "fsl,aips-bus", "simple-bus";
+> > >                         reg = <0x30c00000 0x400000>;
+> > > --
+> > > 2.7.4
+> > >
