@@ -2,108 +2,125 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A434EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F634C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA2F207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3LLQUZx"
+	by mail.kernel.org (Postfix) with ESMTP id 778C0207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597882717;
+	bh=YZpMpqzQbr2IvWkTmf8PhaAX8U2jACxI9onk8Go7xCo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=XApmHcG0QnjdR8Lc4YsV1NDmqLZhwkvsxRZ+IWWqWhQf6SklLmjwXoqnW3wkOlgE2
+	 3MiyLPQwU654sT3Pi8Gg/PpWZohkqnSgRQa9gXnadYdVmlYORKtUOfIabk1k/hb0uQ
+	 u6izmSnhAB1Svtmmy8sF0DT/7oWIGE1+zQBV99Oc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgHTARD (ORCPT
+        id S1727001AbgHTASd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:17:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726482AbgHTARC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:17:02 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278C0C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:17:02 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id m22so512421eje.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dD6I2sfjrM7WmVDgF13oHi2u8mSy5yR9cY0JUVIH+rg=;
-        b=i3LLQUZx4nyJ5d3l3nMcnG3nuuf4pMY9IuD04004diC+RW1FBhhynk1uN1fkT+YHlj
-         O6P89P2/0ljvDOBC4J31KdqlQsnHRXQnE3uid+q4MwfgQcj/wP/GqimWxkiJTwp1Yqzf
-         DZ0pReM1kOawPpkXd0EvzBYaXrm29/9NESxqmy8LfWWl0pHJlQaskSNKhEIyBEkQTb9s
-         QCaYqGwnG0A1sASXMGdjgMBMvK2BtabJJA0fd1TcWDz1jC/3BiNg49IBam5xM70JJyBu
-         fEGNrRQ13xxWO/DhqsbW+mXazfEuJs+GEP+UC3kUyhQdRV8mzqHCYuHGFPNSmdrIGvFz
-         ++Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dD6I2sfjrM7WmVDgF13oHi2u8mSy5yR9cY0JUVIH+rg=;
-        b=CQaTlPvV7vMJewvYVPxRDISrB4pHn/ZIedQnazl3ZRgUxw3OjPHrSx5rUgKDdrtqcQ
-         1nyfKXE86pTRsMS8gt8hF+NnL5uBTxlr2YtJj6PAYp322JNJ1P+i2myL6Cqbu0LIVxPF
-         6gM3MZDne3B3NJDohN5JF62kRycBrqFlUDW15xjLStQyzaJIQ1Lhx7tG1FXzXnbYUmxC
-         0q6URRcyYEwvpzi1KEfNBAsRAVCDrdg7bMqnDkzgAM5LFrdTY/34+ROsv97eOrrhttlQ
-         qBJo8S91laQ9yesTqJy+vNEnd+Dcck+HnkkMXtIpFctfySbAAcejDCONL4hCFEuogSi8
-         9bmQ==
-X-Gm-Message-State: AOAM530kHPF2u8CM8xj33bI3Xy1PXXyCLIzY0+m8okm+/M1zbKeDR+Vz
-        uqAnON8HC+fpd1Uu3wLuF1k9bjhIsTrgD13c/4g=
-X-Google-Smtp-Source: ABdhPJyjCrNJBANQhRcSAYN+Gm3Pz8l0tivSgen+dDxeCEI/OYPauzv88z3LE98Jev+9tp0teLzTi4suRmxRX+BZJU8=
-X-Received: by 2002:a17:906:3993:: with SMTP id h19mr820232eje.111.1597882620894;
- Wed, 19 Aug 2020 17:17:00 -0700 (PDT)
+        Wed, 19 Aug 2020 20:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726946AbgHTASc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:18:32 -0400
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D5ED21775
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597882712;
+        bh=YZpMpqzQbr2IvWkTmf8PhaAX8U2jACxI9onk8Go7xCo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=bvzN53Gd9Fxe4ubeT5Bkxnhwg6EF/5NK7r8kVzUoDR4j9NBW5ykvCUfiNhZmfnLdV
+         TapqYM0Tmq9++ozG65Ns4NcsaLO4u7zAF3osoTSCaGbZKP5YTH00y9t4KgNMAyei0A
+         fn8ePt/T5CEz6yLM9GtlL/1H249IYgpYYkX1mXZ0=
+Received: by mail-wr1-f49.google.com with SMTP id a15so411769wrh.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:18:32 -0700 (PDT)
+X-Gm-Message-State: AOAM532uMkuIxzRvtKhzOAMYbQr6ezJ8RuWLWM7OjC40nBL0n2RLt3Xx
+        8yrdkrmxZTUjBSAQbYG0Eb6bpjUzWcqDaxQC5kTGog==
+X-Google-Smtp-Source: ABdhPJw2/o9xv2vNO2UPdZwGB+vSRdTg3W3G0f7KfGoSmhU5HbFkBRCRa6ncvDBjDuR8eyDApjf9t6N29HPBeHnZ6S4=
+X-Received: by 2002:adf:e90f:: with SMTP id f15mr520654wrm.18.1597882710887;
+ Wed, 19 Aug 2020 17:18:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200818184704.3625199-1-yuzhao@google.com> <20200818184704.3625199-3-yuzhao@google.com>
- <CAHbLzkr7oPFtUog1zJWs54dsS8dhwkWp6ET_Zk71nXmRMtGvDQ@mail.gmail.com> <20200819233916.GA2021304@google.com>
-In-Reply-To: <20200819233916.GA2021304@google.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 19 Aug 2020 17:16:49 -0700
-Message-ID: <CAHbLzkp4eOf=jywp+wuqqJoJwqMt7338cfxUsfz1KSt=zEZUiw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] mm: remove superfluous __ClearPageWaiters()
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Hugh Dickins <hughd@google.com>, Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
+ <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com> <20200819170223.nmv7dekvpc5yk4rm@treble>
+In-Reply-To: <20200819170223.nmv7dekvpc5yk4rm@treble>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 19 Aug 2020 17:18:19 -0700
+X-Gmail-Original-Message-ID: <CALCETrXeTqkGry=Rbccn9EP1=YAqkYBt7wywrFohUyG-6A_udA@mail.gmail.com>
+Message-ID: <CALCETrXeTqkGry=Rbccn9EP1=YAqkYBt7wywrFohUyG-6A_udA@mail.gmail.com>
+Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess speculation
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Will Deacon <will@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 4:39 PM Yu Zhao <yuzhao@google.com> wrote:
+On Wed, Aug 19, 2020 at 10:02 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> On Wed, Aug 19, 2020 at 04:06:32PM -0700, Yang Shi wrote:
-> > On Tue, Aug 18, 2020 at 11:47 AM Yu Zhao <yuzhao@google.com> wrote:
-> > >
-> > > Presumably __ClearPageWaiters() was added to follow the previously
-> > > removed __ClearPageActive() pattern.
-> > >
-> > > Only flags that are in PAGE_FLAGS_CHECK_AT_FREE needs to be properly
-> > > cleared because otherwise we think there may be some kind of leak.
-> > > PG_waiters is not one of those flags and leaving the clearing to
-> > > PAGE_FLAGS_CHECK_AT_PREP is more appropriate.
+> On Wed, Aug 19, 2020 at 09:39:10AM -0700, Andy Lutomirski wrote:
+> > On Wed, Aug 19, 2020 at 7:50 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > +/*
+> > > + * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
+> > > + * user pointer.  This blocks speculative dereferences of user-controlled
+> > > + * pointers.
+> > > + */
+> > > +#define uaccess_mask_ptr(ptr) \
+> > > +       (__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
+> > > +
 > >
-> > Actually TBH I'm not very keen to this change, it seems the clearing
-> > is just moved around and the allocation side pays for that instead of
-> > free side.
+> > If I dug through all the macros correctly, this is generating a fairly
+> > complex pile of math to account for the fact that user_addr_max() is
+> > variable and that it's a nasty number.
 >
-> I'll assume you are referring to the overhead from clearing
-> PG_waiters. First of all, there is no overhead -- we should have a
-> serious talk with the hardware team who makes word-size bitwise AND
-> more than one instruction. And the clearing is done in
-> free_pages_prepare(), which has nothing to do with allocations.
+> The math is actually pretty simple.  It's identical to what getuser.S is
+> doing:
+>
+>         cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
+>         sbb %_ASM_DX, %_ASM_DX
+>         and %_ASM_DX, %_ASM_AX
+>
+> > But I don't think there's any particular need to use the real maximum
+> > user address here.  Allowing a mis-speculated user access to a
+> > non-canonical address or to the top guard page of the lower canonical
+> > region is harmless.  With current kernels, a sequence like:
+> >
+> > if (likely((long)addr > 0) {
+> >   masked_addr = addr & 0x7FFFFFFFFFFFFFFFUL;
+> > } else {
+> >   if (kernel fs) {
+> >     masked_addr = addr;
+> >   } else {
+> >     EFAULT;
+> >   }
+> > }
+>
+> The masking has to be done without conditional branches, otherwise it
+> defeats the point.
 
-Oh, yes, you are right. Now I'm wondering why we have the waiter bit
-cleared at the first place.
+Ugh.  Fair enough.
+
+> Yeah, we could do that.  Though in the meantime, the simple merge
+> conflict resolution with Christoph's patches would be
+> s/user_addr_max/TASK_SIZE_MAX/ in my uaccess_mask_ptr() macro.
+
+Okay.  I will try to help remember :)
+
+--Andy
