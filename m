@@ -2,142 +2,118 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5462AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E061C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D14C21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="coWwyHF6"
+	by mail.kernel.org (Postfix) with ESMTP id 44AFA208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbgHTDAB (ORCPT
+        id S1726903AbgHTDAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:00:01 -0400
-Received: from mail-co1nam11on2042.outbound.protection.outlook.com ([40.107.220.42]:4256
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        Wed, 19 Aug 2020 23:00:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9856 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726435AbgHTC76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:59:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jGlpWlUGhr5uVo54/ZHZQVMx/daRcKiZkDD6su6RJXVSGBZPi0jFsrznvTSVWCny4Ma3KyPDjaTl8LpXASoP1qNNXB9PNMxexeekSCr8ptBhOH556a1AkqW9LPB4RobdMDpEO46ZrX6bYUN3kYx06Dg9d1aZHpykGuqX/tPvtLadl00xgxoXAwVTLenpeTJcGV8b3UogwQk83CGpQsIPaac5I4Bqf/00v+HnsCpaxFYRD1Qs51wSfDVc8KQ6WqgLIArbBe3Q0IBMxbCo5UBDUnNQavAtnchrK9KCokpsHmcr5NPx2XGtW1ngDupwJENYDgDj8CnBGOA2iTpd2PD3TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gTWYB5AU39T+AQexcHBb6OAjgXaKbh80lkRMaYWS0a8=;
- b=jzzPUc3UAoMQR5QV8GhmpkcLFpD4SY+dF2M+yD/kZkvvZsAo6dX/f08PjbOYKh3zp2Qz91VzdKggryRnFX8aqEZm2Tsw/tDpI7gYRn2EB2NKj/k0s7hUVP7p9Xd4BQ+/0CJN1p7/8cs7J/6vLe4cLc5Eft9eI4BZ49FlsIHd71I4UG5+eRgFrq4ua3UwRObgeN2Orvip2Ltvy/qqCkbErO8q3gcvh0RjvbJPZM8HLbg6sCwSewPx0FpgahR328NFYd9+34dXXjxHYj1zCumTyKyuqlt48PijGjH36WbaYhG10Ithgyr9+SWsqSVHhb+D/eUdKT18w0gnfIZk0FnLdQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gTWYB5AU39T+AQexcHBb6OAjgXaKbh80lkRMaYWS0a8=;
- b=coWwyHF6O3hAn64BwFb54Ds8b8upMardZO/xyZT+KADr5uFDHQh/E8P6NVE2AMAwXuSPHVNgmsHKhuTKz8wCEE6s0a9B1PU/u+aMU+oEduZecUaxgnWdVgUGZWEluM502Hfrh/kqn0BBCU/Ph95Wn+E0BvsjOKrCCA0MwUilGu0=
-Received: from DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) by
- DM5PR12MB1356.namprd12.prod.outlook.com (2603:10b6:3:74::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.19; Thu, 20 Aug 2020 02:59:56 +0000
-Received: from DM6PR12MB2619.namprd12.prod.outlook.com
- ([fe80::fcd0:74a:b9d0:6b66]) by DM6PR12MB2619.namprd12.prod.outlook.com
- ([fe80::fcd0:74a:b9d0:6b66%2]) with mapi id 15.20.3283.026; Thu, 20 Aug 2020
- 02:59:56 +0000
-From:   "Quan, Evan" <Evan.Quan@amd.com>
-To:     Wang Hai <wanghai38@huawei.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>
-CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next] drm/amd/powerplay: remove duplicate include
-Thread-Topic: [PATCH -next] drm/amd/powerplay: remove duplicate include
-Thread-Index: AQHWdhz6t3RSCj4X8E+n6Pti7n7aUalAT6IQ
-Date:   Thu, 20 Aug 2020 02:59:56 +0000
-Message-ID: <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
-References: <20200819113409.10137-1-wanghai38@huawei.com>
-In-Reply-To: <20200819113409.10137-1-wanghai38@huawei.com>
-Accept-Language: en-US, zh-CN
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=936cf408-d795-4856-ae9c-dc635f54881d;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
- Use Only -
- Unrestricted;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-08-20T02:59:34Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
-authentication-results: huawei.com; dkim=none (message not signed)
- header.d=none;huawei.com; dmarc=none action=none header.from=amd.com;
-x-originating-ip: [58.247.170.242]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 018f8301-41ec-47e8-3cd3-08d844b51e7a
-x-ms-traffictypediagnostic: DM5PR12MB1356:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB1356D9966B4B54CA9FE5F613E45A0@DM5PR12MB1356.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:296;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: gKF1HsZ6E09K09pxDtp5nkLTGi54FbLU9F310sKoFjWUB0xbjyoNPtG+j7su/UnvQr0YSGgqi0Iiii60XGNfNjmdeOY671RORbtAsuTil1xmgWaGuA7/4ACUXVtdpf2zNLibEhso4T0EnmOmbLV1Hn3XpceWAp2robyFkqdm8ZidiUX04IOVlwMaI0hs3VT7YapdSaXCOxIWFRGxVTsNkNcfwLBXf7LkYEfZrz6SexX04A73M6l5m+LAWZrzS8d0Yuk2iaJrt/n+ipIFenbbVFtrV1yvlyeJhWpx0NCx3n3mybHJmzye8gBgQzSqv6eIe7+WRviWBrOPWz0KKbquXg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2619.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(8676002)(110136005)(66556008)(76116006)(26005)(5660300002)(66946007)(6506007)(53546011)(8936002)(33656002)(71200400001)(4326008)(7696005)(316002)(86362001)(54906003)(2906002)(66476007)(66446008)(478600001)(83380400001)(64756008)(9686003)(55016002)(52536014)(186003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Xa343Dc+BL7Fc4xt0NhqBMMqpIlGXABXP/tZ2Pd1yrgm1/+F0eZyML69X7nSo9tXB69IaIAuGhEsdCDmUEQbiAtLWwdyy0L44opSMo3UsrJsuGndfIqu2wwEBCD+v0rXIS6AQB0GfXg7iGhrcWdGZA0OKsIrsS1C/YMoschdtwCBFEX8FOo7H1MPleRDKRLvFldYvockBhWrJ1OQWL9DgJW6UrqzKeDUp/fOPbn/JLc9rnWJomtHUaZS+mbxsHytdAvSjy+1txJpLJ+hWPUMnrSkPdIAzm8zVp7Nn9XV4JS8wxECt/gFgQpkQ136Kkav/SUI0cdjbcuPbO0QfdonNn6mHYPFWSPPzRPTKjrYsvxWKunAx/iWASSlS3GrIk5r4W7xfEZaWiAY3ucOxzn5u5M9hVjMqXf9N4X4g73AWRkV25vBGdeGq6xZv3/6T6Wb2wA0XqixC6ahBl18vy7F7okQZ0HHJVlQJW0uuFnRuQQoZFcmudfE6c/b7l0abyyv+fvoBH2ibMUFMXtMzASgZyAciwTzFnhOlOL/YhsbBuIXahsUVPaZ39maV8sIJvi4SHtO/s30jjQwc2t+AvqSpz558ABh+r27tn6bSU/Ui1RpGrEaHEM64UnaSOAU8uWmdYCxLVyVrpXqJWJbJi7u1A==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1726851AbgHTDAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 23:00:17 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B39FA6764CA30B10BBD2;
+        Thu, 20 Aug 2020 11:00:16 +0800 (CST)
+Received: from huawei.com (10.90.52.227) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 11:00:08 +0800
+From:   qiuguorui1 <qiuguorui1@huawei.com>
+To:     <tglx@linutronix.de>, <jason@lakedaemon.net>, <maz@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <ludovic.barre@st.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <zengweilin@huawei.com>,
+        <chenjianguo3@huawei.com>, <qiuguorui1@huawei.com>
+Subject: [PATCH v2] irqchip/stm32-exti: avoid interrupts losing due to clearing pending bit by mistake
+Date:   Thu, 20 Aug 2020 11:16:29 +0800
+Message-ID: <20200820031629.15582-1-qiuguorui1@huawei.com>
+X-Mailer: git-send-email 2.12.3
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2619.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 018f8301-41ec-47e8-3cd3-08d844b51e7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 02:59:56.2672
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qdbe8hCX8nSPGFGk6a8JaPtDrt+JcW0Lqw4H6j1tUZTugzUY3bz5tDyFv/XQyFsP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1356
+Content-Type: text/plain
+X-Originating-IP: [10.90.52.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[AMD Official Use Only - Internal Distribution Only]
+In the previous code, when the eoi handle of the exti clears the pending
+bit of the current interrupt, it will first read the values of fpr and
+rpr, then logically OR the corresponding bit of the interrupt number,
+and finally write back to fpr and rpr.
 
-Reviewed-by: Evan Quan <evan.quan@amd.com>
+We found through experiments that if two exti interrupts,
+we call them int1/int2, arrive almost at the same time. in our scenario,
+the time difference is 30 microseconds, assuming int1 is triggered first.
 
------Original Message-----
-From: Wang Hai <wanghai38@huawei.com>
-Sent: Wednesday, August 19, 2020 7:34 PM
-To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander <Alexander.Deucher@a=
-md.com>; Koenig, Christian <Christian.Koenig@amd.com>; airlied@linux.ie; da=
-niel@ffwll.ch
-Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-k=
-ernel@vger.kernel.org
-Subject: [PATCH -next] drm/amd/powerplay: remove duplicate include
+there will be an extreme scenario: both int's pending bit are set to 1,
+the irq handle of int1 is executed first, and eoi handle is then executed,
+at this moment, all pending bits are cleared, but the int 2 has not
+finally been reported to the cpu yet, which eventually lost int2.
 
-Remove asic_reg/nbio/nbio_6_1_offset.h which is included more than once
+According to stm32's TRM description about rpr and fpr: Writing a 1 to this
+bit will trigger a rising edge event on event x, Writing 0 has no
+effect.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Therefore, when clearing the pending bit, we only need to clear the
+pending bit of the irq.
+
+Changes in v2:
+ - simplify the code by calling writel_relaxed directly
+   in the function stm32_exti_h_eoi.
+
+v1:https://lore.kernel.org/lkml/20200819023931.28997-1-qiuguorui1@huawei.com/
+
+Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
+Fixes: 927abfc4461e7 ("irqchip/stm32: Add stm32mp1 support with hierarchy domain")
+Cc: stable@vger.kernel.org # v4.18+
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/irqchip/irq-stm32-exti.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h b/drivers/gpu=
-/drm/amd/powerplay/hwmgr/vega12_inc.h
-index e6d9e84059e1..0d08c57d3bca 100644
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
-@@ -34,7 +34,6 @@
- #include "asic_reg/gc/gc_9_2_1_offset.h"
- #include "asic_reg/gc/gc_9_2_1_sh_mask.h"
-
--#include "asic_reg/nbio/nbio_6_1_offset.h"
- #include "asic_reg/nbio/nbio_6_1_offset.h"
- #include "asic_reg/nbio/nbio_6_1_sh_mask.h"
-
---
-2.17.1
+diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
+index 03a36be757d8..0c2c61db26b4 100644
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -416,6 +416,16 @@ static void stm32_irq_ack(struct irq_data *d)
+ 	irq_gc_unlock(gc);
+ }
+ 
++/* directly set the target bit without reading first. */
++static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
++{
++	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
++	void __iomem *base = chip_data->host_data->base;
++	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
++
++	writel_relaxed(val, base + reg);
++}
++
+ static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
+ {
+ 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
+@@ -449,9 +459,9 @@ static void stm32_exti_h_eoi(struct irq_data *d)
+ 
+ 	raw_spin_lock(&chip_data->rlock);
+ 
+-	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
++	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
+ 	if (stm32_bank->fpr_ofst != UNDEF_REG)
+-		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
++		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
+ 
+ 	raw_spin_unlock(&chip_data->rlock);
+ 
+-- 
+2.12.3
 
