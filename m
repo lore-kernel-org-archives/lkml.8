@@ -2,54 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA0A2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF772072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921466;
-	bh=mRNhh1lWE0ACQJaCgePkAq8AsNjxTNJsNxwtcfDVRI4=;
+	s=default; t=1597921473;
+	bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vX9njky7u03Zan1+fJj9JalvGbSu5o0Xy7hc3N9zuCKGFcbPwYZT+aWJH3e9KlrJJ
-	 J6XRetO9JWkNRzSg4D3Odf/uUh/dNbchOrm4Y7+Izv/PtsDOckgRDkSrAnZjnQK6N1
-	 DKWZ0kgi8MJr0937WUtg7jCItEK4smtTpVgj4KaU=
+	b=uiyeM/VnOgmuwuYiNP6RQzNrpYP4wG9u6KnksXxc96C6dLKX0ybNANDZJMg+6JiWP
+	 29SlHgSoRGZHwg9v7/LbVvL4QQdc7XlkEyY2FlzrB//TEwG7pca5vcFUnN/b4jMtFJ
+	 zKdPtZx8Tk+BaCE5wUSLDUzxE2B+bSWDJU7tvcAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHTLEY (ORCPT
+        id S1727926AbgHTLEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:04:24 -0400
+        Thu, 20 Aug 2020 07:04:31 -0400
 Received: from mail.kernel.org ([198.145.29.99]:56324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbgHTKNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:12 -0400
+        id S1729930AbgHTKNG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A59D5206DA;
-        Thu, 20 Aug 2020 10:13:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEDD7206DA;
+        Thu, 20 Aug 2020 10:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918392;
-        bh=mRNhh1lWE0ACQJaCgePkAq8AsNjxTNJsNxwtcfDVRI4=;
+        s=default; t=1597918384;
+        bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDEDLuEnfhqWtDR4R2sfe0IF+vhUHp8KkYEvQ3DS9PojI+OUShXNJi18Kj+kMv11X
-         2/LjgPfBUKSEMCFa9oB5oW+kAR4SJNMBH/lN93WIV4KNdujAc7RauPx8Sc8+ZDILnb
-         vAdGB/6t+MbwVU6cs1MMTehNzlznitVDA7N0lXcw=
+        b=V7UqSPFdD+PX/SQygtGcVs74Naol/Hsc71PwLKXsxZTVrBG+oD+AmG59N3gNGzp+Y
+         dRS1r5ZDG2A9nbQLgp3eZAfRdq2no5pygn/l8N3r0eEa3PNu+ERWwXwM6yfrh5j51V
+         quoN/6SAouPQOyL7mFeDvDozU29GPQh+gMgUHU94=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 123/228] selftests/powerpc: Fix online CPU selection
-Date:   Thu, 20 Aug 2020 11:21:38 +0200
-Message-Id: <20200820091613.740372695@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 149/228] crypto: qat - fix double free in qat_uclo_create_batch_init_list
+Date:   Thu, 20 Aug 2020 11:22:04 +0200
+Message-Id: <20200820091615.024135771@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,93 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
+commit c06c76602e03bde24ee69a2022a829127e504202 upstream.
 
-The size of the CPU affinity mask must be large enough for
-systems with a very large number of CPUs. Otherwise, tests
-which try to determine the first online CPU by calling
-sched_getaffinity() will fail. This makes sure that the size
-of the allocated affinity mask is dependent on the number of
-CPUs as reported by get_nprocs_conf().
+clang static analysis flags this error
 
-Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
-Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+qat_uclo.c:297:3: warning: Attempt to free released memory
+  [unix.Malloc]
+                kfree(*init_tab_base);
+                ^~~~~~~~~~~~~~~~~~~~~
+
+When input *init_tab_base is null, the function allocates memory for
+the head of the list.  When there is problem allocating other list
+elements the list is unwound and freed.  Then a check is made if the
+list head was allocated and is also freed.
+
+Keeping track of the what may need to be freed is the variable 'tail_old'.
+The unwinding/freeing block is
+
+	while (tail_old) {
+		mem_init = tail_old->next;
+		kfree(tail_old);
+		tail_old = mem_init;
+	}
+
+The problem is that the first element of tail_old is also what was
+allocated for the list head
+
+		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
+		...
+		*init_tab_base = init_header;
+		flag = 1;
+	}
+	tail_old = init_header;
+
+So *init_tab_base/init_header are freed twice.
+
+There is another problem.
+When the input *init_tab_base is non null the tail_old is calculated by
+traveling down the list to first non null entry.
+
+	tail_old = init_header;
+	while (tail_old->next)
+		tail_old = tail_old->next;
+
+When the unwinding free happens, the last entry of the input list will
+be freed.
+
+So the freeing needs a general changed.
+If locally allocated the first element of tail_old is freed, else it
+is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
+as null.
+
+Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+ drivers/crypto/qat/qat_common/qat_uclo.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
-index d46916867a6fb..77db4f6ecf2f0 100644
---- a/tools/testing/selftests/powerpc/utils.c
-+++ b/tools/testing/selftests/powerpc/utils.c
-@@ -12,6 +12,7 @@
- #include <sched.h>
- #include <stdio.h>
- #include <sys/stat.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
- #include <unistd.h>
- 
-@@ -81,26 +82,38 @@ void *get_auxv_entry(int type)
- 
- int pick_online_cpu(void)
- {
--	cpu_set_t mask;
--	int cpu;
-+	int ncpus, cpu = -1;
-+	cpu_set_t *mask;
-+	size_t size;
-+
-+	ncpus = get_nprocs_conf();
-+	size = CPU_ALLOC_SIZE(ncpus);
-+	mask = CPU_ALLOC(ncpus);
-+	if (!mask) {
-+		perror("malloc");
-+		return -1;
-+	}
- 
--	CPU_ZERO(&mask);
-+	CPU_ZERO_S(size, mask);
- 
--	if (sched_getaffinity(0, sizeof(mask), &mask)) {
-+	if (sched_getaffinity(0, size, mask)) {
- 		perror("sched_getaffinity");
--		return -1;
-+		goto done;
+--- a/drivers/crypto/qat/qat_common/qat_uclo.c
++++ b/drivers/crypto/qat/qat_common/qat_uclo.c
+@@ -332,13 +332,18 @@ static int qat_uclo_create_batch_init_li
  	}
- 
- 	/* We prefer a primary thread, but skip 0 */
--	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = 8; cpu < ncpus; cpu += 8)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	/* Search for anything, but in reverse */
--	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = ncpus - 1; cpu >= 0; cpu--)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	printf("No cpus in affinity mask?!\n");
--	return -1;
+ 	return 0;
+ out_err:
++	/* Do not free the list head unless we allocated it. */
++	tail_old = tail_old->next;
++	if (flag) {
++		kfree(*init_tab_base);
++		*init_tab_base = NULL;
++	}
 +
-+done:
-+	CPU_FREE(mask);
-+	return cpu;
+ 	while (tail_old) {
+ 		mem_init = tail_old->next;
+ 		kfree(tail_old);
+ 		tail_old = mem_init;
+ 	}
+-	if (flag)
+-		kfree(*init_tab_base);
+ 	return -ENOMEM;
  }
--- 
-2.25.1
-
+ 
 
 
