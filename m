@@ -7,55 +7,52 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA51C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABD42067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31DC32078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917080;
-	bh=zgX5EzlNrMkyPEnY+oFLy6xF9pGS1hqNJAeuwaeQgfU=;
+	s=default; t=1597917084;
+	bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m5yDUAktM3m0PmJASmr7XmrH+MPzuvk/5wKLllDhfqisTUz5nIkm0UpkKYBCetDla
-	 daje7VfhGcaFuGyDUZA9iHccuryKyCRdODlFPajiRnd2Z1YmxR8ghNUmmN/Z7jD+tC
-	 t3llz3RCP/lT+rG/uHX3rQCYmHN5MfX0nzco9//k=
+	b=WJoD4Mgo2TxGpMhuYCpmm4tVwxh7Df4uHpJZ7mu8adV861q5PunW2ZiEs7of7Ikct
+	 MxB5i2YyAti57VG6+y1O/hhsonFThe7L8mMJc0PpmyfkG6YPM+b995v2emCGiBX2sL
+	 KrUS7HunXKyQS8kbv59ZJsv/mgNWDtR3r8VDBl10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbgHTJvQ (ORCPT
+        id S1729804AbgHTJvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59600 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729754AbgHTJvC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:02 -0400
+        id S1729780AbgHTJu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A770207FB;
-        Thu, 20 Aug 2020 09:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 199152078D;
+        Thu, 20 Aug 2020 09:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917061;
-        bh=zgX5EzlNrMkyPEnY+oFLy6xF9pGS1hqNJAeuwaeQgfU=;
+        s=default; t=1597917058;
+        bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cDHHYAeDghZZmGGnjUOfH71PVTnmV79tRxii5iSN16OSlS8zblD6KUDmo5lD03HV7
-         E4TITkPNgJm1I0rJxhldw1Jqkjd0AKXoc6kO9xyngvfBi5Fl0Mi0V9wSeiQ5yIFleA
-         iXhesP4dsZlF3BlZ3DPnXbyRt9HyHPynx4l5VxRA=
+        b=qTmbOP36OIeH9m49W+QzSbJekQyHhTQHAdJt8rWDagZZRtD6EFApAkNxesMfQWZKj
+         Qo5RTRyT4gyZzJcwHZllapAZJT6UM5C1d12GWVLoBClMYXZhjEwa401d4dCQRGhr4e
+         oNuGd4ab6FCZFkRMmvdfycgs/3HV5BZ2xr6iH1vA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 113/152] tools build feature: Use CC and CXX from parent
-Date:   Thu, 20 Aug 2020 11:21:20 +0200
-Message-Id: <20200820091559.561382896@linuxfoundation.org>
+Subject: [PATCH 5.4 112/152] pwm: bcm-iproc: handle clk_get_rate() return
+Date:   Thu, 20 Aug 2020 11:21:19 +0200
+Message-Id: <20200820091559.505653909@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -68,89 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit e3232c2f39acafd5a29128425bc30b9884642cfa ]
+[ Upstream commit 6ced5ff0be8e94871ba846dfbddf69d21363f3d7 ]
 
-commit c8c188679ccf ("tools build: Use the same CC for feature detection
-and actual build") changed these assignments from unconditional (:=) to
-conditional (?=) so that they wouldn't clobber values from the
-environment. However, conditional assignment does not work properly for
-variables that Make implicitly sets, among which are CC and CXX. To
-quote tools/scripts/Makefile.include, which handles this properly:
+Handle clk_get_rate() returning 0 to avoid possible division by zero.
 
-  # Makefiles suck: This macro sets a default value of $(2) for the
-  # variable named by $(1), unless the variable has been set by
-  # environment or command line. This is necessary for CC and AR
-  # because make sets default values, so the simpler ?= approach
-  # won't work as expected.
-
-In other words, the conditional assignments will not run even if the
-variables are not overridden in the environment; Make will set CC to
-"cc" and CXX to "g++" when it starts[1], meaning the variables are not
-empty by the time the conditional assignments are evaluated. This breaks
-cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
-gets used for feature detection instead of the cross compiler (and
-likewise for CXX).
-
-To fix the issue, just pass down the values of CC and CXX computed by
-the parent Makefile, which gets included by the Makefile that actually
-builds whatever we're detecting features for and so is guaranteed to
-have good values. This is a better solution anyway, since it means we
-aren't trying to replicate the logic of the parent build system and so
-don't risk it getting out of sync.
-
-Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
-in Makefile.include, and 2) it's not an implicit variable, so
-conditional assignment works properly.
-
-[1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-
-Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <quentin@isovalent.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: thomas hebb <tommyhebb@gmail.com>
-Link: http://lore.kernel.org/lkml/0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature | 2 +-
- tools/build/feature/Makefile | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 8a19753cc26aa..e80a1a8e287f8 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -8,7 +8,7 @@ endif
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 1f829edd8ee70..d392a828fc493 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	u64 tmp, multi, rate;
+ 	u32 value, prescale;
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+-	rate = clk_get_rate(ip->clk);
+-
+ 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
  
- feature_set = $(eval $(feature_set_code))
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 8499385365c02..054e09ab4a9e4 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -70,8 +70,6 @@ FILES=                                          \
+ 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		state->polarity = PWM_POLARITY_INVERSED;
  
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
--CC ?= $(CROSS_COMPILE)gcc
--CXX ?= $(CROSS_COMPILE)g++
- PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
- LLVM_CONFIG ?= llvm-config
- 
++	rate = clk_get_rate(ip->clk);
++	if (rate == 0) {
++		state->period = 0;
++		state->duty_cycle = 0;
++		return;
++	}
++
+ 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+ 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+ 	prescale &= IPROC_PWM_PRESCALE_MAX;
 -- 
 2.25.1
 
