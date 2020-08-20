@@ -2,107 +2,140 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E37C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D95C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 346C4206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mQKGf1p7"
+	by mail.kernel.org (Postfix) with ESMTP id E6301206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597920705;
+	bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0eFLC9b0R4NSh/CydNu7mCLBiGHBv9YbV/4G3E2UwljdA5+TPi5B6H2ErSi7pGPFc
+	 Mbo9MjGYUPTydAkrE9b0Pzti3L1bUsmPf4l5wfVGxp9jElbLyAuMXCGCTw4Y3FZrvd
+	 0ZwAA8Zs05MLl+L8DnAdJgU9G4bS7Jpsa462pKKE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbgHTKvW (ORCPT
+        id S1731191AbgHTKvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:51:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbgHTKOo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:44 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7572BC061757;
-        Thu, 20 Aug 2020 03:14:44 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c8so638773lfh.9;
-        Thu, 20 Aug 2020 03:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vIqpTmovFa8dVc4Ln43GhodOHY6DYWmxTNMxOIaUSmk=;
-        b=mQKGf1p7s26/YEZUJCDJw1Tu7tKxQjJkJbGshc8hEqWQ0aPATF1nLsD1c05MqNppYj
-         F7jcqy60M6TktK4f2Wp3LLFT1sdbnUNe/NNDlql4uUI1NzKxREGwwFn14IbP8avMucma
-         r9jei4zpVrMjL61VyCyH6hwunwyHB68u3Ls8drUYwxNlUC1ZYwt0nNupTO+1jIVjCjVe
-         BD9MynVK7jENWyxu3sjHrYYu1efw/Zbd4cm+0zg7DEX2+v4oU33KwNy5HSJcfoWUuTsw
-         wp5JP6ddhwrgggtUAiArIdP2nV6uH9hU/1rYqQh881fcMBGyenh6aClx2abnWiMyMlR6
-         LVMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=vIqpTmovFa8dVc4Ln43GhodOHY6DYWmxTNMxOIaUSmk=;
-        b=MTv5nZiKouMVjE74zMUuUt6SYrm0fVUzDL7LpM27k1jRbRgmyDrKyGDe78eddRC0FB
-         oJ7mVztlF6UvVuH8BVWv1T2Wk8dJhc8YCeDQpIMenq1/T3vL/TBZxAt4etHiNJxb23zI
-         wzUaOBNRxpVzcBa8MxKEKjLwH3axF1nZc2ToXrFLpMn+dUWoXd0jI7fWg8E1WVuHlp5k
-         p1pWetVb9mjnpzbdub2Bazds8AYAxsA7ZnJXGCwP+jYyClU32LGMMf59sV31iePF0cum
-         XwVchtXVG+kEEG7TdaAwKRuYpzmeWa+UlodXAZY/UGQXydZ94S72UbIp8ztTSp4R7sVh
-         I8RA==
-X-Gm-Message-State: AOAM531yKnyWO/VY44HgOC3mdViwwHPq2cbReq4TgVvhda1/u38+6xkt
-        8/1/0pa1pEsr2/FMsGJR2OE=
-X-Google-Smtp-Source: ABdhPJwkqxUCR2HlVxBFdk4S2ON7cs2z7amFEy/eH3RHaxNifp9RAtkK3fIzcr28JtSp2B8dyQlCSw==
-X-Received: by 2002:a19:c894:: with SMTP id y142mr1226308lff.74.1597918482964;
-        Thu, 20 Aug 2020 03:14:42 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b? ([2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b])
-        by smtp.gmail.com with ESMTPSA id a12sm400511lfi.83.2020.08.20.03.14.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 03:14:42 -0700 (PDT)
-Subject: Re: [PATCH v2 11/11] iopoll: update kerneldoc of
- read_poll_timeout_atomic()
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-References: <1597902349-8998-1-git-send-email-chunfeng.yun@mediatek.com>
- <1597902349-8998-11-git-send-email-chunfeng.yun@mediatek.com>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <49de5eaf-9870-522c-b1f2-037ecb122237@gmail.com>
-Date:   Thu, 20 Aug 2020 13:14:32 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 06:51:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731202AbgHTKOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6198020724;
+        Thu, 20 Aug 2020 10:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918480;
+        bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cr47rsZVzKGk6bBPoo5Z+xBvA7s4uo/VnxDK450sQLNrXxci4FMjVkUYrZY8VjqcY
+         R6Zgmtpzht3o/IGeKEyQp4qm76qAfYuvgI3NICIV8BH7+MB5s1gecBiShBf0KPYRC2
+         qCGOkqtB1ZTyXpKQRsVqzFSBuWA4KWFWsmYoW1zU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
+        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
+        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 155/228] fs/minix: reject too-large maximum file size
+Date:   Thu, 20 Aug 2020 11:22:10 +0200
+Message-Id: <20200820091615.329868478@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <1597902349-8998-11-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+From: Eric Biggers <ebiggers@google.com>
 
-On 20.08.2020 8:45, Chunfeng Yun wrote:
+commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
 
-> Arguments description of read_poll_timeout_atomic() if out of date,
+If the minix filesystem tries to map a very large logical block number to
+its on-disk location, block_to_path() can return offsets that are too
+large, causing out-of-bounds memory accesses when accessing indirect index
+blocks.  This should be prevented by the check against the maximum file
+size, but this doesn't work because the maximum file size is read directly
+from the on-disk superblock and isn't validated itself.
 
-    s/if/is/?
+Fix this by validating the maximum file size at mount time.
 
-> update it.
-> 
-> Cc: Alan Stern <stern@rowland.harvard.edu>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-[...]
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
+Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
+Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-MBR, Sergei
+---
+ fs/minix/inode.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -155,6 +155,23 @@ static int minix_remount (struct super_b
+ 	return 0;
+ }
+ 
++static bool minix_check_superblock(struct minix_sb_info *sbi)
++{
++	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
++		return false;
++
++	/*
++	 * s_max_size must not exceed the block mapping limitation.  This check
++	 * is only needed for V1 filesystems, since V2/V3 support an extra level
++	 * of indirect blocks which places the limit well above U32_MAX.
++	 */
++	if (sbi->s_version == MINIX_V1 &&
++	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
++		return false;
++
++	return true;
++}
++
+ static int minix_fill_super(struct super_block *s, void *data, int silent)
+ {
+ 	struct buffer_head *bh;
+@@ -233,11 +250,12 @@ static int minix_fill_super(struct super
+ 	} else
+ 		goto out_no_fs;
+ 
++	if (!minix_check_superblock(sbi))
++		goto out_illegal_sb;
++
+ 	/*
+ 	 * Allocate the buffer map to keep the superblock small.
+ 	 */
+-	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
+-		goto out_illegal_sb;
+ 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
+ 	map = kzalloc(i, GFP_KERNEL);
+ 	if (!map)
+
+
