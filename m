@@ -2,51 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02024C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D88C0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2A08207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B628322CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917570;
-	bh=YPjsRFQv74ePM9/WKkdHGjWplj1QCuqn9U5gRqEfeuE=;
+	s=default; t=1597917577;
+	bh=eBXCDnZNWilzhj/f7V2+co07FctdFNJ0+O2jix7pLkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQ/rozKNNEnDclQyeUs3+puX9eXH8LTo9RtkD7GZOfWA2jo1A4BLVDiLeqohdElVT
-	 viA38Isy7i1GwzDLHyiZkyhWQPzMaYEirBmVJeUCdFnIqFqZqR0yauIz2gw2nrp7+z
-	 MDwgjmf9Fi1f7i40l01ciX6CHRIlIyNNsLGLPXlk=
+	b=tLhTgdOHNTXSDhMCUvpkAYI6cp/B4xGT89X90sTs4ODLT5M0TJGhw/98NurnVA6b9
+	 JbzKRPn8fmxqQkxM2E9eGnO/fUekULv1Kcx0x/GZJkwHZDMYsxUjFxT1ILgiJq1ktV
+	 o5/Y6Gnl5FhbRWhJAC+ugX3hMHfFwLyHF9uce174=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbgHTJ73 (ORCPT
+        id S1730276AbgHTJ7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45166 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:59:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbgHTJ7Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:16 -0400
+        id S1730426AbgHTJ7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4EE207FB;
-        Thu, 20 Aug 2020 09:59:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C01C920855;
+        Thu, 20 Aug 2020 09:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917555;
-        bh=YPjsRFQv74ePM9/WKkdHGjWplj1QCuqn9U5gRqEfeuE=;
+        s=default; t=1597917564;
+        bh=eBXCDnZNWilzhj/f7V2+co07FctdFNJ0+O2jix7pLkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYeTIYDJIRDXUIcSE0q2iEXjrlSR5lkg2U9SwjbLoXqPQGqUzNE51zk+01s1g7Q1t
-         wE26Kywow7qy4us4ThnHBi2yMg2zO0WcVzCf6E658y/EJfB7oHELxSFA0XS/+wSuNw
-         PVY4kb2PPBAON/Aw0oR3IzvaRoF88SHOFHz2i7U8=
+        b=ji46omPIxEHL57uJPohmIoJviIAlV+m4fl7Fz1npPTYniohWHwIlvqU5vWOJQYq52
+         9CFdrb1bj7olJiaUkwuET0ZBdCEdUmjjj580kPOc90HaIzk8sm+LzSh5XLpB4x3zC+
+         JxYTywTXj/8KWwOIq144C4R3ifhyIZrT/OC4D04U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/212] drm/nouveau/fbcon: fix module unload when fbcon init has failed for some reason
-Date:   Thu, 20 Aug 2020 11:20:38 +0200
-Message-Id: <20200820091605.652920898@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Guillaume Nault <gnault@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 076/212] Revert "vxlan: fix tos value before xmit"
+Date:   Thu, 20 Aug 2020 11:20:49 +0200
+Message-Id: <20200820091606.207508915@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,32 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Skeggs <bskeggs@redhat.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 498595abf5bd51f0ae074cec565d888778ea558f ]
+[ Upstream commit a0dced17ad9dc08b1b25e0065b54c97a318e6e8b ]
 
-Stale pointer was tripping up the unload path.
+This reverts commit 71130f29979c7c7956b040673e6b9d5643003176.
 
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In commit 71130f29979c ("vxlan: fix tos value before xmit") we want to
+make sure the tos value are filtered by RT_TOS() based on RFC1349.
+
+       0     1     2     3     4     5     6     7
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    |   PRECEDENCE    |          TOS          | MBZ |
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+
+But RFC1349 has been obsoleted by RFC2474. The new DSCP field defined like
+
+       0     1     2     3     4     5     6     7
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+    |          DS FIELD, DSCP           | ECN FIELD |
+    +-----+-----+-----+-----+-----+-----+-----+-----+
+
+So with
+
+IPTOS_TOS_MASK          0x1E
+RT_TOS(tos)		((tos)&IPTOS_TOS_MASK)
+
+the first 3 bits DSCP info will get lost.
+
+To take all the DSCP info in xmit, we should revert the patch and just push
+all tos bits to ip_tunnel_ecn_encap(), which will handling ECN field later.
+
+Fixes: 71130f29979c ("vxlan: fix tos value before xmit")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Guillaume Nault <gnault@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fbcon.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/vxlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-index 2b79e27dd89c6..275abc424ce25 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-@@ -584,6 +584,7 @@ fini:
- 	drm_fb_helper_fini(&fbcon->helper);
- free:
- 	kfree(fbcon);
-+	drm->fbcon = NULL;
- 	return ret;
- }
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2110,7 +2110,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 		else if (info->key.tun_flags & TUNNEL_DONT_FRAGMENT)
+ 			df = htons(IP_DF);
  
--- 
-2.25.1
-
+-		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
++		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+ 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
+ 		err = vxlan_build_skb(skb, &rt->dst, sizeof(struct iphdr),
+ 				      vni, md, flags, udp_sum);
+@@ -2169,7 +2169,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 		if (!info)
+ 			udp_sum = !(flags & VXLAN_F_UDP_ZERO_CSUM6_TX);
+ 
+-		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
++		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+ 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
+ 		skb_scrub_packet(skb, xnet);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
 
 
