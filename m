@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB90C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43319C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 096812075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20A6F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916200;
-	bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+	s=default; t=1597916204;
+	bh=vYJNt8qJJXdiZcQitykIAGvJKVyQZqZYeSoHi0kVUEk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FsoNVcFtpoey4c8mrVlwi4xfupNWXkngJYig//+1yBRDb7LFq8r9OTpGtznD3vnn9
-	 wz7sVPQ9efhjy+/OgoAZO4SxvRmTxFY12Kj8OtpcFDQV8BqnvWTE2teEKVDLcckhoJ
-	 766fe9Z19mM+kDv3pl6NrtfmGaNX1+aX5Z16CFZY=
+	b=gnalkHd9cQPYKJ3ceKkY03zfF9gg0/ma62M05LT6EG6Qll0sdAUjHLy+IF9tsawOK
+	 /3kpBv5tM5rWBa3C9EOv7OuC7hBEBx0r6qKKMZbvQlgZq8gHqeC7XU9Lqi2tabxno2
+	 3szraxRgi45dwwJAXNKfvuZYOLuOyRKhV2w7/DbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgHTJgi (ORCPT
+        id S1728624AbgHTJgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:36:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728228AbgHTJgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:36:18 -0400
+        id S1726965AbgHTJgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBD67208E4;
-        Thu, 20 Aug 2020 09:36:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94B30208E4;
+        Thu, 20 Aug 2020 09:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916178;
-        bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+        s=default; t=1597916184;
+        bh=vYJNt8qJJXdiZcQitykIAGvJKVyQZqZYeSoHi0kVUEk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYYr5RL7NuoybLRgk3x1Pbyq+9E+uqRFmA9EmHBJRz6P6XgCHIUq3sHpt5spbGxWU
-         IVm2bc41VLlLR9DV3IbwqW6zsJNsjK1Iz7bI2GPMi83EHjAV9hBDXMn2FpTWlYInl8
-         SgapWgWtA5oBXFVY629mRn7DWqN0BYgY2FzU1Fcc=
+        b=e9gv7GB8CuF0qbm/t0ycqxKSXT4nSLI5/qPVSZBmHsjFGmRXjrZyg6KUhkeRYUtXZ
+         BgWvK7/0GRdD3JDflAPaPH7993ZI/decTmmHCs6d9f0kKg7cByTxnfsFFRS5OmSGJX
+         MYZ7dpG+4G2xpy2yeU2dpss8J97xxetlAyIdsLo8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Christian Eggers <ceggers@arri.de>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.7 038/204] dt-bindings: iio: io-channel-mux: Fix compatible string in example code
-Date:   Thu, 20 Aug 2020 11:18:55 +0200
-Message-Id: <20200820091608.175052972@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.7 040/204] iio: imu: st_lsm6dsx: reset hw ts after resume
+Date:   Thu, 20 Aug 2020 11:18:57 +0200
+Message-Id: <20200820091608.274773836@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,34 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Eggers <ceggers@arri.de>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-commit add48ba425192c6e04ce70549129cacd01e2a09e upstream.
+commit a1bab9396c2d98c601ce81c27567159dfbc10c19 upstream.
 
-The correct compatible string is "gpio-mux" (see
-bindings/mux/gpio-mux.txt).
+Reset hw time samples generator after system resume in order to avoid
+disalignment between system and device time reference since FIFO
+batching and time samples generator are disabled during suspend.
 
-Cc: stable@vger.kernel.org # v4.13+
-Reviewed-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-Link: https://lore.kernel.org/r/20200727101605.24384-1-ceggers@arri.de
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fixes: 213451076bd3 ("iio: imu: st_lsm6dsx: add hw timestamp support")
+Tested-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        |    3 +--
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c |   23 +++++++++++++++--------
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   |    2 +-
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
---- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-+++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-@@ -21,7 +21,7 @@ controller state. The mux controller sta
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -436,8 +436,7 @@ int st_lsm6dsx_update_watermark(struct s
+ 				u16 watermark);
+ int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable);
+ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
+-int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+-			     enum st_lsm6dsx_fifo_mode fifo_mode);
++int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u32 odr, u8 *val);
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -184,8 +184,8 @@ static int st_lsm6dsx_update_decimators(
+ 	return err;
+ }
  
- Example:
- 	mux: mux-controller {
--		compatible = "mux-gpio";
-+		compatible = "gpio-mux";
- 		#mux-control-cells = <0>;
+-int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+-			     enum st_lsm6dsx_fifo_mode fifo_mode)
++static int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
++				    enum st_lsm6dsx_fifo_mode fifo_mode)
+ {
+ 	unsigned int data;
  
- 		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+@@ -302,6 +302,18 @@ static int st_lsm6dsx_reset_hw_ts(struct
+ 	return 0;
+ }
+ 
++int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw)
++{
++	int err;
++
++	/* reset hw ts counter */
++	err = st_lsm6dsx_reset_hw_ts(hw);
++	if (err < 0)
++		return err;
++
++	return st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++}
++
+ /*
+  * Set max bulk read to ST_LSM6DSX_MAX_WORD_LEN/ST_LSM6DSX_MAX_TAGGED_WORD_LEN
+  * in order to avoid a kmalloc for each bus access
+@@ -675,12 +687,7 @@ int st_lsm6dsx_update_fifo(struct st_lsm
+ 		goto out;
+ 
+ 	if (fifo_mask) {
+-		/* reset hw ts counter */
+-		err = st_lsm6dsx_reset_hw_ts(hw);
+-		if (err < 0)
+-			goto out;
+-
+-		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++		err = st_lsm6dsx_resume_fifo(hw);
+ 		if (err < 0)
+ 			goto out;
+ 	}
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -2451,7 +2451,7 @@ static int __maybe_unused st_lsm6dsx_res
+ 	}
+ 
+ 	if (hw->fifo_mask)
+-		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++		err = st_lsm6dsx_resume_fifo(hw);
+ 
+ 	return err;
+ }
 
 
