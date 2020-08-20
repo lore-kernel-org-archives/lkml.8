@@ -2,54 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25987C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D3F9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0069B2224D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 086D320724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916780;
-	bh=/bkX29MlNOUlzQFGNzz049u3ETyfMbrJy+tTeeKVYTw=;
+	s=default; t=1597916784;
+	bh=gt9J90YxiTewYRvQZD/vhF0BJRoLAcmDDVwMBuPbrF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RbZ3BfSpYTlakmgsuP1ESG+t5BUQ7gnAQKKcYSH0EssEmp+seoQ7OkTY9+RuwLtg4
-	 OOZHrqL7jGNbVdXE1KBM7tZlNnyuRWfaf3RCEaUqAKDA6LW/+VQ539bjNj7LMvspst
-	 cVWwgRTwcRz9J9XBTyBb0oHoZ/NhsUNXPxu1QLLc=
+	b=LSVyTDT/tbVXclZA0qNCbgWsbPZ84P7mJUbt5yK25zhFLbfqKY4s28J5m317A27VH
+	 6AoKQg/ctxYO2wOb1XQiTkaN6K3cnZ4ya3BcvSViQLxujefJTloveP+LnJLbA/Qm4q
+	 SbPiheDwXUKUhZY2IxMQvkMh4CrkXYRsR9jxobHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgHTJqS (ORCPT
+        id S1729180AbgHTJqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgHTJnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:46 -0400
+        id S1729155AbgHTJoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:44:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407BB2173E;
-        Thu, 20 Aug 2020 09:43:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A534722CAF;
+        Thu, 20 Aug 2020 09:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916625;
-        bh=/bkX29MlNOUlzQFGNzz049u3ETyfMbrJy+tTeeKVYTw=;
+        s=default; t=1597916643;
+        bh=gt9J90YxiTewYRvQZD/vhF0BJRoLAcmDDVwMBuPbrF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jRNkjYKF9O0tmwjtSFCCUuvUPSbj/8LR9Sz2IqgXkrBR3JqQJgxNWQ5J6sYmXHDpB
-         McESX/upSNxZRtQkBUcHbW94iC08th1tJWSv9MuojspzE624Ouj6ofkD5AjBXie2bU
-         eNzkdvZGlk47V9KTmZcrsD4hkU6Csv5XxU3oduQk=
+        b=HUyX41ON0xqMRsh/IOqdHn7bTLN7pbKJKiPufh1a/X4OA6Ngre/KwBlZdStV1crb+
+         t70/dJJXFCola1vRLJBHUBBbkriX3jrWruC2qhT8cvVw/8flFCqPGzewLsln4Dznta
+         /iXPN8+mG5KKXZSBem38TC1HkaBTAY21Ni7Itw4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 154/204] libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
-Date:   Thu, 20 Aug 2020 11:20:51 +0200
-Message-Id: <20200820091613.931970561@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Xin Xiong <xiongx18@fudan.edu.cn>,
+        Lyude Paul <lyude@redhat.com>
+Subject: [PATCH 5.7 201/204] drm: fix drm_dp_mst_port refcount leaks in drm_dp_mst_allocate_vcpi
+Date:   Thu, 20 Aug 2020 11:21:38 +0200
+Message-Id: <20200820091616.222343459@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,59 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jane Chu <jane.chu@oracle.com>
+From: Xin Xiong <xiongx18@fudan.edu.cn>
 
-[ Upstream commit 7f674025d9f7321dea11b802cc0ab3f09cbe51c5 ]
+commit a34a0a632dd991a371fec56431d73279f9c54029 upstream.
 
-commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
-operation has completed. But the notification is issued before the internal
-dimm security state and flags have been updated, so the userspace poll thread
-wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
-But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
-the command returns instantly.
+drm_dp_mst_allocate_vcpi() invokes
+drm_dp_mst_topology_get_port_validated(), which increases the refcount
+of the "port".
 
-Link: https://lore.kernel.org/r/1596494499-9852-3-git-send-email-jane.chu@oracle.com
-Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+These reference counting issues take place in two exception handling
+paths separately. Either when “slots” is less than 0 or when
+drm_dp_init_vcpi() returns a negative value, the function forgets to
+reduce the refcnt increased drm_dp_mst_topology_get_port_validated(),
+which results in a refcount leak.
+
+Fix these issues by pulling up the error handling when "slots" is less
+than 0, and calling drm_dp_mst_topology_put_port() before termination
+when drm_dp_init_vcpi() returns a negative value.
+
+Fixes: 1e797f556c61 ("drm/dp: Split drm_dp_mst_allocate_vcpi")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200719154545.GA41231@xin-virtual-machine
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvdimm/security.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index acfd211c01b9c..35d265014e1ec 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
- 	else
- 		dev_dbg(&nvdimm->dev, "overwrite completed\n");
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -4319,11 +4319,11 @@ bool drm_dp_mst_allocate_vcpi(struct drm
+ {
+ 	int ret;
  
--	if (nvdimm->sec.overwrite_state)
--		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	/*
-+	 * Mark the overwrite work done and update dimm security flags,
-+	 * then send a sysfs event notification to wake up userspace
-+	 * poll threads to picked up the changed state.
-+	 */
- 	nvdimm->sec.overwrite_tmo = 0;
- 	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
- 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
--	put_device(&nvdimm->dev);
- 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
- 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-+	if (nvdimm->sec.overwrite_state)
-+		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	put_device(&nvdimm->dev);
- }
+-	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+-	if (!port)
++	if (slots < 0)
+ 		return false;
  
- void nvdimm_security_overwrite_query(struct work_struct *work)
--- 
-2.25.1
-
+-	if (slots < 0)
++	port = drm_dp_mst_topology_get_port_validated(mgr, port);
++	if (!port)
+ 		return false;
+ 
+ 	if (port->vcpi.vcpi > 0) {
+@@ -4339,6 +4339,7 @@ bool drm_dp_mst_allocate_vcpi(struct drm
+ 	if (ret) {
+ 		DRM_DEBUG_KMS("failed to init vcpi slots=%d max=63 ret=%d\n",
+ 			      DIV_ROUND_UP(pbn, mgr->pbn_div), ret);
++		drm_dp_mst_topology_put_port(port);
+ 		goto out;
+ 	}
+ 	DRM_DEBUG_KMS("initing vcpi for pbn=%d slots=%d\n",
 
 
