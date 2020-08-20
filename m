@@ -2,65 +2,50 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18016C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE49C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2DD822BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBED52075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918672;
-	bh=sxZ5ylAKoRVVX/w8LJHVT4jrrFePjUDjSF+qg88vS40=;
+	s=default; t=1597918676;
+	bh=CCvN0bgFwIQE+49m9hrMfGrh0SfGQe5pLOPKwurw+iU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XKZTkgnjKCZR1jnVrNOuzHeM6v46K0DSV00lxGdXBZEZlxrE+uEX/xr/nT5OBoZcl
-	 bVnapzubrpSPrfZp7wN3xl40+LzaCst5SALBhbmed5tQ3jxgiOnK3jZpvu8iZ8FAf+
-	 OSjVax88ImYzSAw30/Usb1fthcoS5gF/yPWNi8VA=
+	b=dn+eY19Ndfyg0JMszzybmn8VWNYaDy2Xz26C1//9PdsjkcWeUmYAG6V+wjZjwGDao
+	 kZQKt2miINYgSI7zCqv12Pw7ypLdwGqrt91M2i3zs1Y4XjIpNVNAG98BH0+/HbSBiR
+	 RgazfwKT+NxWummomM1JIaCmWslVCrbesRalMz/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730992AbgHTKRZ (ORCPT
+        id S1731300AbgHTKRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:17:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37254 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:17:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731290AbgHTKQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:45 -0400
+        id S1731213AbgHTKRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:17:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6951520738;
-        Thu, 20 Aug 2020 10:16:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 839CF2078D;
+        Thu, 20 Aug 2020 10:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918604;
-        bh=sxZ5ylAKoRVVX/w8LJHVT4jrrFePjUDjSF+qg88vS40=;
+        s=default; t=1597918621;
+        bh=CCvN0bgFwIQE+49m9hrMfGrh0SfGQe5pLOPKwurw+iU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UH5MQ262+h42srBq0c0L+dHzQ1hT30P/parlpTgnupJahs1pBfKqdqrwtX341oqSm
-         0hwwt1XE2usy99u+DPy3vcLHJ/XCsPOs/TaZIvt64u+6VaLyiO+nffugRbaiZqX4xT
-         76wMllzt4XUMjCmAsyQr8ErZToK0MFog3A2t19uc=
+        b=gEmUytOLTeaJh+Uc6SsbkTQhrfe0Hke7ikYYK8Wg2QbAjllrrSrH4tMm2aynriUs+
+         6hhmaRwn2vMlw9BhFaBPkFpo9Vls0X3iKczuAdP5pkrr85K0XsUHjG5XZGJRHnl9UH
+         cB8oIAolaFJXNhXupNumTPgCu4KUQiI3DovWJD0Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 219/228] tools build feature: Quote CC and CXX for their arguments
-Date:   Thu, 20 Aug 2020 11:23:14 +0200
-Message-Id: <20200820091618.455902788@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 225/228] dm cache: pass cache structure to mode functions
+Date:   Thu, 20 Aug 2020 11:23:20 +0200
+Message-Id: <20200820091618.751782490@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -73,90 +58,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Díaz <daniel.diaz@linaro.org>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
+commit 8e3c3827776fc93728c0c8d7c7b731226dc6ee23 upstream.
 
-When using a cross-compilation environment, such as OpenEmbedded,
-the CC an CXX variables are set to something more than just a
-command: there are arguments (such as --sysroot) that need to be
-passed on to the compiler so that the right set of headers and
-libraries are used.
+No functional changes, just a bit cleaner than passing cache_features
+structure.
 
-For the particular case that our systems detected, CC is set to
-the following:
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
-
-Without quotes, detection is as follows:
-
-  Auto-detecting system features:
-  ...                         dwarf: [ OFF ]
-  ...            dwarf_getlocations: [ OFF ]
-  ...                         glibc: [ OFF ]
-  ...                          gtk2: [ OFF ]
-  ...                        libbfd: [ OFF ]
-  ...                        libcap: [ OFF ]
-  ...                        libelf: [ OFF ]
-  ...                       libnuma: [ OFF ]
-  ...        numa_num_possible_cpus: [ OFF ]
-  ...                       libperl: [ OFF ]
-  ...                     libpython: [ OFF ]
-  ...                     libcrypto: [ OFF ]
-  ...                     libunwind: [ OFF ]
-  ...            libdw-dwarf-unwind: [ OFF ]
-  ...                          zlib: [ OFF ]
-  ...                          lzma: [ OFF ]
-  ...                     get_cpuid: [ OFF ]
-  ...                           bpf: [ OFF ]
-  ...                        libaio: [ OFF ]
-  ...                       libzstd: [ OFF ]
-  ...        disassembler-four-args: [ OFF ]
-
-  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-  Makefile.perf:230: recipe for target 'sub-make' failed
-  make[1]: *** [sub-make] Error 2
-  Makefile:69: recipe for target 'all' failed
-  make: *** [all] Error 2
-
-With CC and CXX quoted, some of those features are now detected.
-
-Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
-Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
-Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-cache-target.c |   32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index a2389f0c0b1c0..79427b09590c5 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -7,7 +7,7 @@ endif
+--- a/drivers/md/dm-cache-target.c
++++ b/drivers/md/dm-cache-target.c
+@@ -515,19 +515,19 @@ struct dm_cache_migration {
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+ /*----------------------------------------------------------------*/
  
- feature_set = $(eval $(feature_set_code))
--- 
-2.25.1
-
+-static bool writethrough_mode(struct cache_features *f)
++static bool writethrough_mode(struct cache *cache)
+ {
+-	return f->io_mode == CM_IO_WRITETHROUGH;
++	return cache->features.io_mode == CM_IO_WRITETHROUGH;
+ }
+ 
+-static bool writeback_mode(struct cache_features *f)
++static bool writeback_mode(struct cache *cache)
+ {
+-	return f->io_mode == CM_IO_WRITEBACK;
++	return cache->features.io_mode == CM_IO_WRITEBACK;
+ }
+ 
+-static inline bool passthrough_mode(struct cache_features *f)
++static inline bool passthrough_mode(struct cache *cache)
+ {
+-	return unlikely(f->io_mode == CM_IO_PASSTHROUGH);
++	return unlikely(cache->features.io_mode == CM_IO_PASSTHROUGH);
+ }
+ 
+ /*----------------------------------------------------------------*/
+@@ -544,7 +544,7 @@ static void wake_deferred_writethrough_w
+ 
+ static void wake_migration_worker(struct cache *cache)
+ {
+-	if (passthrough_mode(&cache->features))
++	if (passthrough_mode(cache))
+ 		return;
+ 
+ 	queue_work(cache->wq, &cache->migration_worker);
+@@ -626,7 +626,7 @@ static unsigned lock_level(struct bio *b
+ 
+ static size_t get_per_bio_data_size(struct cache *cache)
+ {
+-	return writethrough_mode(&cache->features) ? PB_DATA_SIZE_WT : PB_DATA_SIZE_WB;
++	return writethrough_mode(cache) ? PB_DATA_SIZE_WT : PB_DATA_SIZE_WB;
+ }
+ 
+ static struct per_bio_data *get_per_bio_data(struct bio *bio, size_t data_size)
+@@ -1209,7 +1209,7 @@ static bool bio_writes_complete_block(st
+ 
+ static bool optimisable_bio(struct cache *cache, struct bio *bio, dm_oblock_t block)
+ {
+-	return writeback_mode(&cache->features) &&
++	return writeback_mode(cache) &&
+ 		(is_discarded_oblock(cache, block) || bio_writes_complete_block(cache, bio));
+ }
+ 
+@@ -1862,7 +1862,7 @@ static int map_bio(struct cache *cache,
+ 		 * Passthrough always maps to the origin, invalidating any
+ 		 * cache blocks that are written to.
+ 		 */
+-		if (passthrough_mode(&cache->features)) {
++		if (passthrough_mode(cache)) {
+ 			if (bio_data_dir(bio) == WRITE) {
+ 				bio_drop_shared_lock(cache, bio);
+ 				atomic_inc(&cache->stats.demotion);
+@@ -1871,7 +1871,7 @@ static int map_bio(struct cache *cache,
+ 				remap_to_origin_clear_discard(cache, bio, block);
+ 
+ 		} else {
+-			if (bio_data_dir(bio) == WRITE && writethrough_mode(&cache->features) &&
++			if (bio_data_dir(bio) == WRITE && writethrough_mode(cache) &&
+ 			    !is_dirty(cache, cblock)) {
+ 				remap_to_origin_then_cache(cache, bio, block, cblock);
+ 				accounted_begin(cache, bio);
+@@ -2649,7 +2649,7 @@ static int cache_create(struct cache_arg
+ 		goto bad;
+ 	}
+ 
+-	if (passthrough_mode(&cache->features)) {
++	if (passthrough_mode(cache)) {
+ 		bool all_clean;
+ 
+ 		r = dm_cache_metadata_all_clean(cache->cmd, &all_clean);
+@@ -3279,13 +3279,13 @@ static void cache_status(struct dm_targe
+ 		else
+ 			DMEMIT("1 ");
+ 
+-		if (writethrough_mode(&cache->features))
++		if (writethrough_mode(cache))
+ 			DMEMIT("writethrough ");
+ 
+-		else if (passthrough_mode(&cache->features))
++		else if (passthrough_mode(cache))
+ 			DMEMIT("passthrough ");
+ 
+-		else if (writeback_mode(&cache->features))
++		else if (writeback_mode(cache))
+ 			DMEMIT("writeback ");
+ 
+ 		else {
+@@ -3451,7 +3451,7 @@ static int process_invalidate_cblocks_me
+ 	unsigned i;
+ 	struct cblock_range range;
+ 
+-	if (!passthrough_mode(&cache->features)) {
++	if (!passthrough_mode(cache)) {
+ 		DMERR("%s: cache has to be in passthrough mode for invalidation",
+ 		      cache_device_name(cache));
+ 		return -EPERM;
 
 
