@@ -2,92 +2,137 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EFFC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7498C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE43A207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="aH3z0jih"
+	by mail.kernel.org (Postfix) with ESMTP id AD3D9207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926985;
+	bh=pCYQjoq5QPvCkTrMleT7Z6rXf7d7uCVJfQbAK9By8Wc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PLpJO6R3h3FZolhdvawPIzw9NxQu+SilPwND49nx4L3N1bbVqpW8fOoMO0C1BzSMF
+	 ux7xAUoOhnyHMPLR3BOA6lmTPv/yx+nNVmuCoXrba2NvEvmkNVvZ1REdZFGXOj3xVr
+	 Nja47mTnRZ/4/0rhlnn+6bQTpe36oB6cWVP+jLgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgHTMf6 (ORCPT
+        id S1729167AbgHTJsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:35:58 -0400
-Received: from mail.zx2c4.com ([192.95.5.64]:39071 "EHLO mail.zx2c4.com"
+        Thu, 20 Aug 2020 05:48:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729515AbgHTJsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:07 -0400
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 2a71feb8;
-        Thu, 20 Aug 2020 09:21:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=cC4XKmjMItkWu82Ddd4N3/mfNJY=; b=aH3z0j
-        ih2A6UbHCt3IxPb9cGURoW1AdUF79cwHzp+slOvV8CXFkpZjl6EwYEA+JlKT5gjg
-        zXUFARHfV2sFXTmSREd8NhJunCIHY4nLafXpXu1CpMGAdsfYq1ZI7Ulbh+f6nFuU
-        GLpyQGqn20N+3jb0blAVWJ4mBsKgajaVO0bu5fJURP7VRaYN89n0QypNDmBbRufv
-        ee0CyvIMq5UV+mGRrzaGLR7yKNhLsfMBrsRgpAAPY0ix1nrsuR83acVzKS7914El
-        0vW2TT1WjeT+Ulx5s/6fFxHTTSITqe0SO9LaYWBs5aRN38VHZxd5DoUNpQtc1oJx
-        mQHl+eYy/l9WTo+Q==
-Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 18dd5401 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Thu, 20 Aug 2020 09:21:41 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id z17so385964ioi.6;
-        Thu, 20 Aug 2020 02:48:06 -0700 (PDT)
-X-Gm-Message-State: AOAM533pN3W79s134djddKcgXm3DtAhueZEDHWNsMOx+g89DE9LGy6Z0
-        nvgqpWN0nwu7SaecnD3KF0JrCiBgFDzwFZD/hPw=
-X-Google-Smtp-Source: ABdhPJwxqXuh3zpZ+vXV6pG3wfV26J+WMkYRDPSnD0jh7SwXM3vLbJ0QIOl7CaiQOrNMVRuAQnK6mTMYW9n8YZipXUs=
-X-Received: by 2002:a05:6638:138a:: with SMTP id w10mr2407389jad.36.1597916885689;
- Thu, 20 Aug 2020 02:48:05 -0700 (PDT)
+        id S1729490AbgHTJrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59DA32224D;
+        Thu, 20 Aug 2020 09:47:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916862;
+        bh=pCYQjoq5QPvCkTrMleT7Z6rXf7d7uCVJfQbAK9By8Wc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q7yz36T6wYgrq/60in71s9LuSBdK0vcS5jlvt9PCfIpqCFWVjl4BNpCPfFR18W3l6
+         L7KROHZgOcyP8yohoTGODlMaKolaXg3QTZlWYPJsBKoYMt3HrrIfTHYb2QJDPlRFED
+         WJKnhU50x+ONGocFjkeBGjaQMrR517AOMug59FmQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 045/152] bcache: allocate meta data pages as compound pages
+Date:   Thu, 20 Aug 2020 11:20:12 +0200
+Message-Id: <20200820091556.010907914@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <000000000000a7e38a05a997edb2@google.com> <0000000000005c13f505ad3f5c42@google.com>
-In-Reply-To: <0000000000005c13f505ad3f5c42@google.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 20 Aug 2020 11:47:54 +0200
-X-Gmail-Original-Message-ID: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-Message-ID: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-Subject: Re: WARNING in __cfg80211_connect_result
-To:     syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
-        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 8:42 PM syzbot
-<syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com> wrote:
->
-> syzbot has bisected this issue to:
->
-> commit e7096c131e5161fa3b8e52a650d7719d2857adfd
-> Author: Jason A. Donenfeld <Jason@zx2c4.com>
-> Date:   Sun Dec 8 23:27:34 2019 +0000
->
->     net: WireGuard secure network tunnel
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
-> start commit:   e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
-> git tree:       net-next
-> final oops:     https://syzkaller.appspot.com/x/report.txt?x=14dad8b1900000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10dad8b1900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
-> dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
->
-> Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
-> Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+From: Coly Li <colyli@suse.de>
 
-Having trouble linking this back to wireguard... Those oopses don't
-have anything to do with it either. Bisection error?
+commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
+
+There are some meta data of bcache are allocated by multiple pages,
+and they are used as bio bv_page for I/Os to the cache device. for
+example cache_set->uuids, cache->disk_buckets, journal_write->data,
+bset_tree->data.
+
+For such meta data memory, all the allocated pages should be treated
+as a single memory block. Then the memory management and underlying I/O
+code can treat them more clearly.
+
+This patch adds __GFP_COMP flag to all the location allocating >0 order
+pages for the above mentioned meta data. Then their pages are treated
+as compound pages now.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/bcache/bset.c    |    2 +-
+ drivers/md/bcache/btree.c   |    2 +-
+ drivers/md/bcache/journal.c |    4 ++--
+ drivers/md/bcache/super.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -321,7 +321,7 @@ int bch_btree_keys_alloc(struct btree_ke
+ 
+ 	b->page_order = page_order;
+ 
+-	t->data = (void *) __get_free_pages(gfp, b->page_order);
++	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
+ 	if (!t->data)
+ 		goto err;
+ 
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -840,7 +840,7 @@ int bch_btree_cache_alloc(struct cache_s
+ 	mutex_init(&c->verify_lock);
+ 
+ 	c->verify_ondisk = (void *)
+-		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
++		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
+ 
+ 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
+ 
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -1002,8 +1002,8 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[1].c = c;
+ 
+ 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+-	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+-	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
++	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
++	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1754,7 +1754,7 @@ void bch_cache_set_unregister(struct cac
+ }
+ 
+ #define alloc_bucket_pages(gfp, c)			\
+-	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
++	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
+ 
+ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ {
+
+
