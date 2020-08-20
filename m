@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4103FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74994C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5C82067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5453822B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918386;
-	bh=zknEk2SYahKBzJKWH2mpBxTm0EtLWvmX6voU525LImQ=;
+	s=default; t=1597918400;
+	bh=Keo6OZ8vC0rp+95v2eqm9/aj7XkRtXvNFbrDYtiPdiQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v8nmEdApExufd5zXpzxx/cafi8w4XFYCqkyCgX7884dSDPMVQiFRcFkxuey6wfTav
-	 mRlp+XxwlojHFWLki6I0nk1eVM61VT1FiKxZHjjlph1/gWuVPYxPZUoFtdbMVnRu48
-	 AI4DiC9w/pbakjapPe1KsixSpK4CJlgNSdJIEOrg=
+	b=jI4zIXYKInYvUbZ986cLsLmdo4D1OzLlqgWUAd/HE4YTiWSkjarj8BZrAKYlYrt8J
+	 nLdBmUVQykG0xdGpYpVumLl7XJiEPX6snFwBe1B/F3rblEHn1tUVXvi70fqD7pIhhL
+	 Dp6fRcC6pQW9dOpevDfxelIA+kpylaUCPXlegxA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbgHTKND (ORCPT
+        id S1731064AbgHTKNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55132 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:13:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731067AbgHTKMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:45 -0400
+        id S1731063AbgHTKMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2F60206DA;
-        Thu, 20 Aug 2020 10:12:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED42A2067C;
+        Thu, 20 Aug 2020 10:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918365;
-        bh=zknEk2SYahKBzJKWH2mpBxTm0EtLWvmX6voU525LImQ=;
+        s=default; t=1597918362;
+        bh=Keo6OZ8vC0rp+95v2eqm9/aj7XkRtXvNFbrDYtiPdiQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmpKRyHAfg9oFv5flIdEonIfVT24103Tbtxpv8EdXOZdBuUpaCILh9uCH2VS1qYRL
-         EgO/thAMmIPTK4G8x9Q7O7nWc4Wc94ywrX6VRSdqElJN8yyjBxf42X0Pxqok+yaMRh
-         m33MYEWrei80R295N1Hxzx5yWqJlWWvJE42pn4as=
+        b=DOYUwlflw0fSEoHHBK3QMI2n/e55k7lb/AF5ttWdD1yabS+uQ+Ys5KN0O7DWAEUzp
+         QugVoKMNxCFNYyvpJNwMqLMX0IX+fv12Ye4SB0reBRQTxoJrdKwPVeyndrjhdLmSRT
+         qh8qTog1L0ZzxvjL9IClI9HHdnM4kQySLXQUG11s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 143/228] net: Set fput_needed iff FDPUT_FPUT is set
-Date:   Thu, 20 Aug 2020 11:21:58 +0200
-Message-Id: <20200820091614.727400733@linuxfoundation.org>
+Subject: [PATCH 4.14 142/228] net: refactor bind_bucket fastreuse into helper
+Date:   Thu, 20 Aug 2020 11:21:57 +0200
+Message-Id: <20200820091614.684508567@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,31 +61,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
+[ Upstream commit 62ffc589abb176821662efc4525ee4ac0b9c3894 ]
 
-We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
-accordingly.
+Refactor the fastreuse update code in inet_csk_get_port into a small
+helper function that can be called from other places.
 
-Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/socket.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/inet_connection_sock.h |    4 +
+ net/ipv4/inet_connection_sock.c    |   93 ++++++++++++++++++++-----------------
+ 2 files changed, 55 insertions(+), 42 deletions(-)
 
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -496,7 +496,7 @@ static struct socket *sockfd_lookup_ligh
- 	if (f.file) {
- 		sock = sock_from_file(f.file, err);
- 		if (likely(sock)) {
--			*fput_needed = f.flags;
-+			*fput_needed = f.flags & FDPUT_FPUT;
- 			return sock;
+--- a/include/net/inet_connection_sock.h
++++ b/include/net/inet_connection_sock.h
+@@ -321,5 +321,9 @@ int inet_csk_compat_getsockopt(struct so
+ int inet_csk_compat_setsockopt(struct sock *sk, int level, int optname,
+ 			       char __user *optval, unsigned int optlen);
+ 
++/* update the fast reuse flag when adding a socket */
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk);
++
+ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu);
+ #endif /* _INET_CONNECTION_SOCK_H */
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -276,51 +276,12 @@ static inline int sk_reuseport_match(str
+ 				    ipv6_only_sock(sk), true);
+ }
+ 
+-/* Obtain a reference to a local port for the given sock,
+- * if snum is zero it means select any available local port.
+- * We try to allocate an odd port (and leave even ports for connect())
+- */
+-int inet_csk_get_port(struct sock *sk, unsigned short snum)
++void inet_csk_update_fastreuse(struct inet_bind_bucket *tb,
++			       struct sock *sk)
+ {
+-	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
+-	struct inet_hashinfo *hinfo = sk->sk_prot->h.hashinfo;
+-	int ret = 1, port = snum;
+-	struct inet_bind_hashbucket *head;
+-	struct net *net = sock_net(sk);
+-	struct inet_bind_bucket *tb = NULL;
+ 	kuid_t uid = sock_i_uid(sk);
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
+ 
+-	if (!port) {
+-		head = inet_csk_find_open_port(sk, &tb, &port);
+-		if (!head)
+-			return ret;
+-		if (!tb)
+-			goto tb_not_found;
+-		goto success;
+-	}
+-	head = &hinfo->bhash[inet_bhashfn(net, port,
+-					  hinfo->bhash_size)];
+-	spin_lock_bh(&head->lock);
+-	inet_bind_bucket_for_each(tb, &head->chain)
+-		if (net_eq(ib_net(tb), net) && tb->port == port)
+-			goto tb_found;
+-tb_not_found:
+-	tb = inet_bind_bucket_create(hinfo->bind_bucket_cachep,
+-				     net, head, port);
+-	if (!tb)
+-		goto fail_unlock;
+-tb_found:
+-	if (!hlist_empty(&tb->owners)) {
+-		if (sk->sk_reuse == SK_FORCE_REUSE)
+-			goto success;
+-
+-		if ((tb->fastreuse > 0 && reuse) ||
+-		    sk_reuseport_match(tb, sk))
+-			goto success;
+-		if (inet_csk_bind_conflict(sk, tb, true, true))
+-			goto fail_unlock;
+-	}
+-success:
+ 	if (hlist_empty(&tb->owners)) {
+ 		tb->fastreuse = reuse;
+ 		if (sk->sk_reuseport) {
+@@ -364,6 +325,54 @@ success:
+ 			tb->fastreuseport = 0;
  		}
- 		fdput(f);
+ 	}
++}
++
++/* Obtain a reference to a local port for the given sock,
++ * if snum is zero it means select any available local port.
++ * We try to allocate an odd port (and leave even ports for connect())
++ */
++int inet_csk_get_port(struct sock *sk, unsigned short snum)
++{
++	bool reuse = sk->sk_reuse && sk->sk_state != TCP_LISTEN;
++	struct inet_hashinfo *hinfo = sk->sk_prot->h.hashinfo;
++	int ret = 1, port = snum;
++	struct inet_bind_hashbucket *head;
++	struct net *net = sock_net(sk);
++	struct inet_bind_bucket *tb = NULL;
++
++	if (!port) {
++		head = inet_csk_find_open_port(sk, &tb, &port);
++		if (!head)
++			return ret;
++		if (!tb)
++			goto tb_not_found;
++		goto success;
++	}
++	head = &hinfo->bhash[inet_bhashfn(net, port,
++					  hinfo->bhash_size)];
++	spin_lock_bh(&head->lock);
++	inet_bind_bucket_for_each(tb, &head->chain)
++		if (net_eq(ib_net(tb), net) && tb->port == port)
++			goto tb_found;
++tb_not_found:
++	tb = inet_bind_bucket_create(hinfo->bind_bucket_cachep,
++				     net, head, port);
++	if (!tb)
++		goto fail_unlock;
++tb_found:
++	if (!hlist_empty(&tb->owners)) {
++		if (sk->sk_reuse == SK_FORCE_REUSE)
++			goto success;
++
++		if ((tb->fastreuse > 0 && reuse) ||
++		    sk_reuseport_match(tb, sk))
++			goto success;
++		if (inet_csk_bind_conflict(sk, tb, true, true))
++			goto fail_unlock;
++	}
++success:
++	inet_csk_update_fastreuse(tb, sk);
++
+ 	if (!inet_csk(sk)->icsk_bind_hash)
+ 		inet_bind_hash(sk, tb, port);
+ 	WARN_ON(inet_csk(sk)->icsk_bind_hash != tb);
 
 
