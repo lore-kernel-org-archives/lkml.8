@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF70EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC4CC20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BA920658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928186;
-	bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
+	s=default; t=1597928191;
+	bh=gm98W7cxlKXrJXNcmlT0ZN/s1aay862VXPnEca0d31M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b3U1hQq1BqkZq/29eu7yQsYOgsv4BhAephq0PA61hHb+5HDAlkfvSAiOKIl+IjKOz
-	 l0UkexUBdCx4jOftWJbzNSVAauOMQmtQvTBAeej1yHD8jKqUybxVL/Qy16g2eup2bk
-	 S/3vPmcXKle3TzE1LSVQxZmkX+KZ8hpyAEYejXno=
+	b=WBwHy1nq2EJXDh3mLmpD/hQu+mmaK4Avq6tf7XChL2fjOU1gljNGgmQDMzLpsdJ9K
+	 E7bJI0T1ijjiJ9MVgiamQdKFrSIY9EHKFwzWibMp+m/UKV5+nbbogvF3YD6VB0a5qj
+	 pNUhCYM5U/lFgnyM9tS+tZVSr4lguyehoEx9P6uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgHTJlo (ORCPT
+        id S1729526AbgHTM4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35162 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:56:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgHTJlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:35 -0400
+        id S1729106AbgHTJlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D4C2075E;
-        Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C28B12075E;
+        Thu, 20 Aug 2020 09:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916493;
-        bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
+        s=default; t=1597916499;
+        bh=gm98W7cxlKXrJXNcmlT0ZN/s1aay862VXPnEca0d31M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LR0f1NqBJL1sYoUh+ORFu+AD7OFmw+muA6j523+HuvjYdRgdleTg75yqqPzAfztRg
-         ZSrUcYWoYf2n8D5n8itmcl01d8ijKIRawF2B46i6Gun07aAK0tLuXOz6F+vtFXyMrf
-         FInxHZs5gXQMVBcGC3rmb8LnnAGbeqsmsUCfcapg=
+        b=vL05uyr3KpZdD6jNuoEtCVcYSgEAXi2Jc/rhya52jlxp9+pcBs04BQC2EysgKv5Zd
+         Rc6w+VPPketTVUsJ6OqaGc9qvyqCgw7JsvLAfsWEoTUcY1cQr6dnjPqK5H9OXLm5kZ
+         omZIER+4NHe038WAZXJFPayHcDfots5wtUHBqQ44=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 147/204] pwm: bcm-iproc: handle clk_get_rate() return
-Date:   Thu, 20 Aug 2020 11:20:44 +0200
-Message-Id: <20200820091613.588844723@linuxfoundation.org>
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 149/204] i2c: rcar: avoid race when unregistering slave
+Date:   Thu, 20 Aug 2020 11:20:46 +0200
+Message-Id: <20200820091613.686977292@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -65,50 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit 6ced5ff0be8e94871ba846dfbddf69d21363f3d7 ]
+[ Upstream commit c7c9e914f9a0478fba4dc6f227cfd69cf84a4063 ]
 
-Handle clk_get_rate() returning 0 to avoid possible division by zero.
+Due to the lockless design of the driver, it is theoretically possible
+to access a NULL pointer, if a slave interrupt was running while we were
+unregistering the slave. To make this rock solid, disable the interrupt
+for a short time while we are clearing the interrupt_enable register.
+This patch is purely based on code inspection. The OOPS is super-hard to
+trigger because clearing SAR (the address) makes interrupts even more
+unlikely to happen as well. While here, reinit SCR to SDBS because this
+bit should always be set according to documentation. There is no effect,
+though, because the interface is disabled.
 
-Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
-Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+Fixes: 7b814d852af6 ("i2c: rcar: avoid race when unregistering slave client")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-rcar.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-index 1f829edd8ee70..d392a828fc493 100644
---- a/drivers/pwm/pwm-bcm-iproc.c
-+++ b/drivers/pwm/pwm-bcm-iproc.c
-@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	u64 tmp, multi, rate;
- 	u32 value, prescale;
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 76bcdb27070e1..5615e7c43b436 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -866,12 +866,14 @@ static int rcar_unreg_slave(struct i2c_client *slave)
  
--	rate = clk_get_rate(ip->clk);
--
- 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+ 	WARN_ON(!priv->slave);
  
- 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
-@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	else
- 		state->polarity = PWM_POLARITY_INVERSED;
+-	/* disable irqs and ensure none is running before clearing ptr */
++	/* ensure no irq is running before clearing ptr */
++	disable_irq(priv->irq);
+ 	rcar_i2c_write(priv, ICSIER, 0);
+-	rcar_i2c_write(priv, ICSCR, 0);
++	rcar_i2c_write(priv, ICSSR, 0);
++	enable_irq(priv->irq);
++	rcar_i2c_write(priv, ICSCR, SDBS);
+ 	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
  
-+	rate = clk_get_rate(ip->clk);
-+	if (rate == 0) {
-+		state->period = 0;
-+		state->duty_cycle = 0;
-+		return;
-+	}
-+
- 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
- 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
- 	prescale &= IPROC_PWM_PRESCALE_MAX;
+-	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
 -- 
 2.25.1
 
