@@ -2,51 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C50C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6843EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31C0020738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E7620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919031;
-	bh=1s9FwGZUK+qhmXdAyBcA6SiRJrNldkfYO8/z90el1XY=;
+	s=default; t=1597919033;
+	bh=pLmtuxM2gLsgL9D/mBLQ9ugUl0WP6V1Qc0XaJ/eY1Ek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dE1P91B12dAcTe4NWx5/uQUcJcn3/nnSNwc/dRbSAy6GYe1cjM6IA1UZZJgnv1nWL
-	 BgvSu1DdAd38GYz9ftVqaZt2iqlnFLbiFc+drA5O85l76wuKPy7+r0owjkG3pB81kL
-	 4fW3iQrmqkEvya6ZSUV4G9zcI7L0iycAJK6oYn18=
+	b=gR4cd0c5BclHl1unT9Ts492c7U80GSCXeOiHX08TL3phrMMUMP9YDpJf7w3lL7alK
+	 HCFma/Ls1HNP2tSF7TZNOdDjsRXoO+QseyCna04lIVvfv0KawbDZkxrczMPnv77BeY
+	 GpX1mDfrSVWeNFFKORs2QvDufK8sdxglIXL2wH28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgHTKXt (ORCPT
+        id S1728957AbgHTKXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:23:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52948 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731745AbgHTKX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:28 -0400
+        id S1731742AbgHTKXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:23:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2652020658;
-        Thu, 20 Aug 2020 10:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEADA20658;
+        Thu, 20 Aug 2020 10:23:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919007;
-        bh=1s9FwGZUK+qhmXdAyBcA6SiRJrNldkfYO8/z90el1XY=;
+        s=default; t=1597919002;
+        bh=pLmtuxM2gLsgL9D/mBLQ9ugUl0WP6V1Qc0XaJ/eY1Ek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVZo0HGDaZkGY09+Z4z8Sx+NsgSS1WIg3O5kE4Ded054pznEdPErx5OKr1GhGd9xx
-         LXOwT7j61DZYabGjdvWutSBJqtCqytC99auUSqvTz+zzY0iKkdUXOAJuJxuf1qi/ST
-         pqeY29Pxr3tDP0rlLQImIiCvTWafOXj8Z/tcBkqo=
+        b=RvbUMv6KqL7HqiePIdWOJtxkwdkypzdecfgaWpQ2gP0j60AZGEboDTPWkrecPB1qu
+         j7rqz2Ps8IpeQ6WFldDyClgAHusR2CtXXQVB4q2GxaNZxCXhg+2XpF8eGytyseKoi7
+         X1Nw3vu+tyOfyuoP+BBJ+17SPzWSOUxj/tfh9VL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 136/149] USB: serial: ftdi_sio: fix break and sysrq handling
-Date:   Thu, 20 Aug 2020 11:23:33 +0200
-Message-Id: <20200820092132.283288416@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessio Balsini <balsini@android.com>
+Subject: [PATCH 4.4 149/149] ipv6: check skb->protocol before lookup for nexthop
+Date:   Thu, 20 Aug 2020 11:23:46 +0200
+Message-Id: <20200820092132.902693609@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,87 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: WANG Cong <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
+commit 199ab00f3cdb6f154ea93fa76fd80192861a821d upstream.
 
-Only the last NUL in a packet should be flagged as a break character,
-for example, to avoid dropping unrelated characters when IGNBRK is set.
+Andrey reported a out-of-bound access in ip6_tnl_xmit(), this
+is because we use an ipv4 dst in ip6_tnl_xmit() and cast an IPv4
+neigh key as an IPv6 address:
 
-Also make sysrq work by consuming the break character instead of having
-it immediately cancel the sysrq request, and by not processing it
-prematurely to avoid triggering a sysrq based on an unrelated character
-received in the same packet (which was received *before* the break).
+        neigh = dst_neigh_lookup(skb_dst(skb),
+                                 &ipv6_hdr(skb)->daddr);
+        if (!neigh)
+                goto tx_err_link_failure;
 
-Note that the break flag can be left set also for a packet received
-immediately following a break and that and an ending NUL in such a
-packet will continue to be reported as a break as there's no good way to
-tell it apart from an actual break.
+        addr6 = (struct in6_addr *)&neigh->primary_key; // <=== HERE
+        addr_type = ipv6_addr_type(addr6);
 
-Tested on FT232R and FT232H.
+        if (addr_type == IPV6_ADDR_ANY)
+                addr6 = &ipv6_hdr(skb)->daddr;
 
-Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+        memcpy(&fl6->daddr, addr6, sizeof(fl6->daddr));
+
+Also the network header of the skb at this point should be still IPv4
+for 4in6 tunnels, we shold not just use it as IPv6 header.
+
+This patch fixes it by checking if skb->protocol is ETH_P_IPV6: if it
+is, we are safe to do the nexthop lookup using skb_dst() and
+ipv6_hdr(skb)->daddr; if not (aka IPv4), we have no clue about which
+dest address we can pick here, we have to rely on callers to fill it
+from tunnel config, so just fall to ip6_route_output() to make the
+decision.
+
+Fixes: ea3dc9601bda ("ip6_tunnel: Add support for wildcard tunnel endpoints.")
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Tested-by: Andrey Konovalov <andreyknvl@google.com>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alessio Balsini <balsini@android.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ net/ipv6/ip6_tunnel.c |   42 ++++++++++++++++++++++--------------------
+ 1 file changed, 22 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 0afea511eb376..2dfec4c1ef4de 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2054,6 +2054,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
- {
- 	unsigned char status;
-+	bool brkint = false;
- 	int i;
- 	char flag;
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -972,26 +972,28 @@ static int ip6_tnl_xmit2(struct sk_buff
  
-@@ -2105,13 +2106,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 */
- 	flag = TTY_NORMAL;
- 	if (buf[1] & FTDI_RS_ERR_MASK) {
--		/* Break takes precedence over parity, which takes precedence
--		 * over framing errors */
--		if (buf[1] & FTDI_RS_BI) {
--			flag = TTY_BREAK;
-+		/*
-+		 * Break takes precedence over parity, which takes precedence
-+		 * over framing errors. Note that break is only associated
-+		 * with the last character in the buffer and only when it's a
-+		 * NUL.
-+		 */
-+		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
- 			port->icount.brk++;
--			usb_serial_handle_break(port);
--		} else if (buf[1] & FTDI_RS_PE) {
-+			brkint = true;
+ 	/* NBMA tunnel */
+ 	if (ipv6_addr_any(&t->parms.raddr)) {
+-		struct in6_addr *addr6;
+-		struct neighbour *neigh;
+-		int addr_type;
+-
+-		if (!skb_dst(skb))
+-			goto tx_err_link_failure;
+-
+-		neigh = dst_neigh_lookup(skb_dst(skb),
+-					 &ipv6_hdr(skb)->daddr);
+-		if (!neigh)
+-			goto tx_err_link_failure;
+-
+-		addr6 = (struct in6_addr *)&neigh->primary_key;
+-		addr_type = ipv6_addr_type(addr6);
+-
+-		if (addr_type == IPV6_ADDR_ANY)
+-			addr6 = &ipv6_hdr(skb)->daddr;
+-
+-		memcpy(&fl6->daddr, addr6, sizeof(fl6->daddr));
+-		neigh_release(neigh);
++		if (skb->protocol == htons(ETH_P_IPV6)) {
++			struct in6_addr *addr6;
++			struct neighbour *neigh;
++			int addr_type;
++
++			if (!skb_dst(skb))
++				goto tx_err_link_failure;
++
++			neigh = dst_neigh_lookup(skb_dst(skb),
++						 &ipv6_hdr(skb)->daddr);
++			if (!neigh)
++				goto tx_err_link_failure;
++
++			addr6 = (struct in6_addr *)&neigh->primary_key;
++			addr_type = ipv6_addr_type(addr6);
++
++			if (addr_type == IPV6_ADDR_ANY)
++				addr6 = &ipv6_hdr(skb)->daddr;
++
++			memcpy(&fl6->daddr, addr6, sizeof(fl6->daddr));
++			neigh_release(neigh);
 +		}
-+		if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
- 		} else if (buf[1] & FTDI_RS_FE) {
-@@ -2127,8 +2132,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	} else if (!fl6->flowi6_mark)
+ 		dst = dst_cache_get(&t->dst_cache);
  
- 	port->icount.rx += len - 2;
- 
--	if (port->port.console && port->sysrq) {
-+	if (brkint || (port->port.console && port->sysrq)) {
- 		for (i = 2; i < len; i++) {
-+			if (brkint && i == len - 1) {
-+				if (usb_serial_handle_break(port))
-+					return len - 3;
-+				flag = TTY_BREAK;
-+			}
- 			if (usb_serial_handle_sysrq_char(port, buf[i]))
- 				continue;
- 			tty_insert_flip_char(&port->port, buf[i], flag);
--- 
-2.25.1
-
 
 
