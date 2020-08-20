@@ -2,139 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FE3C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58363C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C77D21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xB4h7JJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 35CC1207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597911396;
+	bh=a9EMwQOztoal5ntoGgZ/p/FzC9zlwjl92x//5B9Ochk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A1fWTlaANy7U/mJyK/K0vANxoQVcCydraoMuccOyt+5xKFxzmsXQC8C4kj5+QEEjc
+	 MwGyqNiB2hbv6phAJb+LJ4MA66O7JbzoVyytDbC/UDCp4ysmtd7cuXH7dGqYQGraZj
+	 v7MfJrQzprpKgw9bGCmv3U4v0PpbpsdD+dXwzCOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbgHTIOT (ORCPT
+        id S1726788AbgHTIQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:14:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbgHTIMZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:12:25 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A464C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:12:24 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id w2so596436edv.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:12:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ao9uhoBJZm/xzm5bKKTXsoRUgxvi4hYl2frDiL3p6Ek=;
-        b=xB4h7JJ1N0TNQ7ccwTGda/uwX30dzaQW5NnWf9el3AW1DeORgfo/iTGZKpfEwQEPvt
-         c7s/4IUb5KoXBSEeXZvDxPOlRAWuUk8TM1jwTHF7o2GOnWL5GWu8fuPlOuzqT9Ex3skL
-         5jEB/TK0abmd+6njhUP775D+frBCR05Jh4GVD+JKevh5caE3bd+nmi6J1wHVGlzLGMHs
-         /UNOdQhM7Ar6nWoOkar4YsGJgi4X/xGiE6/tIwV7CFpBSIeqtC05CLJbECjcu8MHhfJp
-         QA64/dur1Ik+ACO9OTnFizYfhlYFn5sgHOeQ+WO8ZI3JRkxbWB0kPaphZ807rAGVTN8Q
-         BnKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ao9uhoBJZm/xzm5bKKTXsoRUgxvi4hYl2frDiL3p6Ek=;
-        b=lH+KtpEmTL0fzstOhR/sVXDAJu3KkpgxugN+eJbqP+M+sz7WcNB1OAsHjHyHEZ6Q0g
-         esyml9NkW/LAm63eqvcTHBdvMVHzKLtm/q/Rr4UaVwk5nnF/QDukwnsklLsitrxglqEl
-         Q0D6I+PjYwmAaCLgnYx6D6Kbt9Cbo3QyU+vIIb1pExxKQGyJMPt26qmvr3VVoUT/WCYk
-         93Vmv2TaFxwFYawcX4UtoOJ1Xd+hTgBtN2wHDvF90c5za073KwVmmjX7jyUnmxLIjh6d
-         TCXJquIa/8KMRTSF/6ppvsmWX+CVJC4re/Iz318rCEbRl52VpJhJJ0O4do2XoP9StU9j
-         xIbg==
-X-Gm-Message-State: AOAM531Dl3VwzUq1rmnxUSkQAsflPFrO1n2GS3AKHR/70nckp5STUwEQ
-        /QnGn7yPXe/U8JjD2jtb6o43OLPC3nCisxrAhLCbgQ==
-X-Google-Smtp-Source: ABdhPJxcdsGXyoTp69C+mH9LjdkzFmHGs/y3HoUdXM9GRe6Aie7IX6MMciYGWBoZES0c7c6DY7NSnyYyR3qa9d3C274=
-X-Received: by 2002:a05:6402:17c2:: with SMTP id s2mr1739529edy.188.1597911142916;
- Thu, 20 Aug 2020 01:12:22 -0700 (PDT)
+        Thu, 20 Aug 2020 04:16:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbgHTIOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:14:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587482080C;
+        Thu, 20 Aug 2020 08:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597911245;
+        bh=a9EMwQOztoal5ntoGgZ/p/FzC9zlwjl92x//5B9Ochk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eW9pvwPBfY+qYb/gemG5QOA7N1uyTNYP+mNSMeQmos8yVCzHCEqbTinPl8TzkGrAX
+         6OPtk4EdmS6eiVfN1XuryaR0wvVQigsATX7kyZHXT/Esm28TCwamzbDTFR64J6PQXK
+         NS48bWuLKQQ+/J90UJ+DtjdqqAXhsEWM/thsH22g=
+Date:   Thu, 20 Aug 2020 10:14:26 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, stable@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, vbabka@suse.com,
+        david@redhat.com, Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH STABLE 4.9] mm: Avoid calling build_all_zonelists_init
+ under hotplug context
+Message-ID: <20200820081426.GF4049659@kroah.com>
+References: <20200818110046.6664-1-osalvador@suse.de>
+ <20200818122446.GA15067@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <20200818111057.19755-1-tingwei@codeaurora.org>
-In-Reply-To: <20200818111057.19755-1-tingwei@codeaurora.org>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 20 Aug 2020 09:12:12 +0100
-Message-ID: <CAJ9a7VjCX1Gmw0b8rTK8extrc6_mmbRn2BRXNK-+sSN9_6BMtw@mail.gmail.com>
-Subject: Re: [PATCH] coresight: cti: disclaim device only when it's claimed
-To:     Tingwei Zhang <tingwei@codeaurora.org>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        Coresight ML <coresight@lists.linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200818122446.GA15067@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Aug 2020 at 12:11, Tingwei Zhang <tingwei@codeaurora.org> wrote:
->
-> Coresight_claim_device() is called in cti_starting_cpu() only
-> when CTI is enabled while coresight_disclaim_device() is called
-> uncontionally in cti_dying_cpu(). This triggered below WARNING.
-> Only call disclaim device when CTI device is enabled to fix it.
->
-> [   75.989643] WARNING: CPU: 1 PID: 14 at
-> kernel/drivers/hwtracing/coresight/coresight.c:209
-> coresight_disclaim_device_unlocked+0x10/0x24
-> [   75.989697] CPU: 1 PID: 14 Comm: migration/1 Not tainted
-> 5.9.0-rc1-gff1304be0a05-dirty #21
-> [   75.989709] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [   75.989737] pstate: 80c00085 (Nzcv daIf +PAN +UAO BTYPE=--)
-> [   75.989758] pc : coresight_disclaim_device_unlocked+0x10/0x24
-> [   75.989775] lr : coresight_disclaim_device+0x24/0x38
-> [   75.989783] sp : ffff800011cd3c90
-> .
-> [   75.990018] Call trace:
-> [   75.990041]  coresight_disclaim_device_unlocked+0x10/0x24
-> [   75.990066]  cti_dying_cpu+0x34/0x4c
-> [   75.990101]  cpuhp_invoke_callback+0x84/0x1e0
-> [   75.990121]  take_cpu_down+0x90/0xe0
-> [   75.990154]  multi_cpu_stop+0x134/0x160
-> [   75.990171]  cpu_stopper_thread+0xb0/0x13c
-> [   75.990196]  smpboot_thread_fn+0x1c4/0x270
-> [   75.990222]  kthread+0x128/0x154
-> [   75.990251]  ret_from_fork+0x10/0x18
->
-> Fixes: e9b880581d55 ("coresight: cti: Add CPU Hotplug handling to CTI driver")
-> Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> ---
->  drivers/hwtracing/coresight/coresight-cti.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-cti.c b/drivers/hwtracing/coresight/coresight-cti.c
-> index 3ccc703dc940..d6fea6efec71 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> @@ -742,7 +742,8 @@ static int cti_dying_cpu(unsigned int cpu)
->
->         spin_lock(&drvdata->spinlock);
->         drvdata->config.hw_powered = false;
-> -       coresight_disclaim_device(drvdata->base);
-> +       if (drvdata->config.hw_enabled)
-> +               coresight_disclaim_device(drvdata->base);
->         spin_unlock(&drvdata->spinlock);
->         return 0;
->  }
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
->
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+On Tue, Aug 18, 2020 at 02:24:46PM +0200, Michal Hocko wrote:
+> On Tue 18-08-20 13:00:46, Oscar Salvador wrote:
+> > Recently a customer of ours experienced a crash when booting the
+> > system while enabling memory-hotplug.
+> > 
+> > The problem is that Normal zones on different nodes don't get their private
+> > zone->pageset allocated, and keep sharing the initial boot_pageset.
+> > The sharing between zones is normally safe as explained by the comment for
+> > boot_pageset - it's a percpu structure, and manipulations are done with
+> > disabled interrupts, and boot_pageset is set up in a way that any page placed
+> > on its pcplist is immediately flushed to shared zone's freelist, because
+> > pcp->high == 1.
+> > However, the hotplug operation updates pcp->high to a higher value as it
+> > expects to be operating on a private pageset.
+> > 
+> > The problem is in build_all_zonelists(), which is called when the first range
+> > of pages is onlined for the Normal zone of node X or Y:
+> > 
+> > 	if (system_state == SYSTEM_BOOTING) {
+> > 		build_all_zonelists_init();
+> > 	} else {
+> > 	#ifdef CONFIG_MEMORY_HOTPLUG
+> > 		if (zone)
+> > 			setup_zone_pageset(zone);
+> > 	#endif
+> > 		/* we have to stop all cpus to guarantee there is no user
+> > 		of zonelist */
+> > 		stop_machine(__build_all_zonelists, pgdat, NULL);
+> > 		/* cpuset refresh routine should be here */
+> > 	}
+> > 
+> > When called during hotplug, it should execute the setup_zone_pageset(zone)
+> > which allocates the private pageset.
+> > However, with memhp_default_state=online, this happens early while
+> > system_state == SYSTEM_BOOTING is still true, hence this step is skipped.
+> > (and build_all_zonelists_init() is probably unsafe anyway at this point).
+> > 
+> > Another hotplug operation on the same zone then leads to zone_pcp_update(zone)
+> > called from online_pages(), which updates the pcp->high for the shared
+> > boot_pageset to a value higher than 1.
+> > At that point, pages freed from Node X and Y Normal zones can end up on the same
+> > pcplist and from there they can be freed to the wrong zone's freelist,
+> > leading to the corruption and crashes.
+> > 
+> > Please, note that upstream has fixed that differently (and unintentionally) by
+> > adding another boot state (SYSTEM_SCHEDULING), which is set before smp_init().
+> > That should happen before memory hotplug events even with memhp_default_state=online.
+> > Backporting that would be too intrusive.
+> > 
+> > Signed-off-by: Oscar Salvador <osalvador@suse.de>
+> > Debugged-by: Vlastimil Babka <vbabka@suse.cz>
+> 
+> Yes, I believe this is the easiest and the least scary way to fix the
+> issue for stable kernel users. Feel free to add
+> Acked-by: Michal Hocko <mhocko@suse.com> # for stable trees
+> 
+> for that purpose.
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+Now queued up, thanks!
+
+greg k-h
