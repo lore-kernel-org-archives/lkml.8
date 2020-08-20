@@ -2,112 +2,104 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7818AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5361122D03
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DJj2ffV5"
+	by mail.kernel.org (Postfix) with ESMTP id D11C120658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:29:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597930190;
+	bh=TCYmLgf6ZeWa82TBbBiddjDcFsiYAq77Gs/NAYzu4RQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NO17qH/As8GPvcLgAfVcuDPKJuE45nUw2/5pQ3ggvKTzxw7xH8ezU698Y9ZhPKmyG
+	 o18cSjJaPExYR0FliHRav2ra8z56B2r8DxHo4dgTN24V/y4Rhrt2sa3Jn+eikMXx+t
+	 bPpifrUKhgDtsAF/Cf7Y7DGBTQ2slnbw0pTpHDUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729385AbgHTN3k (ORCPT
+        id S1729439AbgHTN3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:29:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:42240 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729301AbgHTN1l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:27:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597930060;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DAGecdZwlkCmWN+ue1t4x/y2+dJaBtvVkYDbnFL2ArE=;
-        b=DJj2ffV5GMFskZvUpCs+SXgswY2KApFmfdwxi+7MZey2Dl8LqAVhSVFVTc/CPddQNNupHi
-        5lwbBXTVTxJOXJZc6GcZKHTSt1hY0rlY8+FMVRm2+6XbyyCdWFk1IpVRhZYl9ElqJn/J+8
-        sXMGLGK4Uf6SrA+SPaEk1mqxy0DokZ0=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-547-yxxGaQzqMcq_kYE18BaPXw-1; Thu, 20 Aug 2020 09:27:39 -0400
-X-MC-Unique: yxxGaQzqMcq_kYE18BaPXw-1
-Received: by mail-qk1-f198.google.com with SMTP id n128so1250214qke.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:27:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=DAGecdZwlkCmWN+ue1t4x/y2+dJaBtvVkYDbnFL2ArE=;
-        b=ajNCuiBJubvJsQMvg0qenl1Zij678KKnlNnNaNfVmkHnatHXhfLyJe4iNJjnunjSGl
-         A1tywggZWrjfaJAxfu3zPy7ApG9WiCFoTjFfvBvkNeYuyYrmdw9WtkZ7yBl+rtN9WYjy
-         DVHdZC7TLlLGi2hRV3LCS5r4knlunnLA2CyGibcAwQdB0323IVUvEbiCDQH3ERy8HGwf
-         AZmlWXlvRbDnNrlo+lULODdR/HKcigiDyuNRudRwwMmmqSmcabnWO8jofV8pYvN4rJO8
-         UpdE6mu9L1f7JO0xH174Y9jz33cGz9Ogt73G6wgUH0GprlP8DTbjEXtrtpckRfqwuWd3
-         qrpQ==
-X-Gm-Message-State: AOAM530viX6dskgvpAuIz7rZNbSynCEg/7zqt59Lkx9gWMSYqSUWrF03
-        UOaVO4XYYhd0DeGJ3MBqEnGp96OYtAtP82Gt1Dn8HdOF31Tc0L0hyKVQGisTgMtNUk43whGz070
-        XiT+g4sS3gzGJ21Nykl9TKf2N
-X-Received: by 2002:ac8:564d:: with SMTP id 13mr2688673qtt.101.1597930058349;
-        Thu, 20 Aug 2020 06:27:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJw8usGhxVEOYqYVa3I9N6+A3QyxTwJoJ2mZHFFTPor1LOox137u/l6oZfaIOPqyX556p76xjA==
-X-Received: by 2002:ac8:564d:: with SMTP id 13mr2688660qtt.101.1597930058111;
-        Thu, 20 Aug 2020 06:27:38 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id k31sm2798255qtd.60.2020.08.20.06.27.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 06:27:37 -0700 (PDT)
-Subject: Re: [PATCH] crypto: drbg: check blocklen is non zero
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     davem@davemloft.net, smueller@chronox.de,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200802171247.16558-1-trix@redhat.com>
- <20200820071522.GA21511@gondor.apana.org.au>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <97371bc7-ebb6-92f2-bbaa-6b444e27cb8b@redhat.com>
-Date:   Thu, 20 Aug 2020 06:27:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 20 Aug 2020 09:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728770AbgHTN3Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:29:25 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A631208A9;
+        Thu, 20 Aug 2020 13:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597930165;
+        bh=TCYmLgf6ZeWa82TBbBiddjDcFsiYAq77Gs/NAYzu4RQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hSd2v8g7NzQcHTqpKc4MRnc3is4Z/W4nds9K2D9wx1uFlDRELkaHfG46pprMNl0qQ
+         B/Ckq6ME9DSu0O226AGuDw79ue3YjbjiQnQ5vzcFuq4VdL+OTR45om/YxxdJaH06IQ
+         wOUJjgMfT8Ezg6bZW8cSDDGylSNcvwwARkVRYacg=
+Date:   Thu, 20 Aug 2020 09:29:24 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 5.8 164/232] PCI: hv: Fix a timing issue which causes
+ kdump to fail occasionally
+Message-ID: <20200820132924.GA8670@sasha-vm>
+References: <20200820091612.692383444@linuxfoundation.org>
+ <20200820091620.754492308@linuxfoundation.org>
+ <MW2PR2101MB10522B1242B1309BF35EFFEED75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200820071522.GA21511@gondor.apana.org.au>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <MW2PR2101MB10522B1242B1309BF35EFFEED75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are many divide by 0 reports.  This one got attention because it is in crypto, where i believe problems, even false positives, should be fixed.
-
-Tom
-
-On 8/20/20 12:15 AM, Herbert Xu wrote:
-> On Sun, Aug 02, 2020 at 10:12:47AM -0700, trix@redhat.com wrote:
->> From: Tom Rix <trix@redhat.com>
+On Thu, Aug 20, 2020 at 01:00:51PM +0000, Michael Kelley wrote:
+>From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> Sent: Thursday, August 20, 2020 2:20 AM
 >>
->> Clang static analysis reports this error
+>> From: Wei Hu <weh@microsoft.com>
 >>
->> crypto/drbg.c:441:40: warning: Division by zero
->>         padlen = (inputlen + sizeof(L_N) + 1) % (drbg_blocklen(drbg));
->>                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+>> [ Upstream commit d6af2ed29c7c1c311b96dac989dcb991e90ee195 ]
 >>
->> When drbg_bocklen fails it returns 0.
+>> Kdump could fail sometime on Hyper-V guest because the retry in
+>> hv_pci_enter_d0() releases child device structures in hv_pci_bus_exit().
 >>
->> 	if (drbg && drbg->core)
->> 		return drbg->core->blocklen_bytes;
->> 	return 0;
-> Yes but it can only fail if the drbg is not instantiated.  If
-> you're hitting the generate path with an uninstantiated drbg you've
-> got bigger problems than a divide by zero.
+>> Although there is a second asynchronous device relations message sending
+>> from the host, if this message arrives to the guest after
+>> hv_send_resource_allocated() is called, the retry would fail.
+>>
+>> Fix the problem by moving retry to hv_pci_probe() and start the retry
+>> from hv_pci_query_relations() call.  This will cause a device relations
+>> message to arrive to the guest synchronously; the guest would then be
+>> able to rebuild the child device structures before calling
+>> hv_send_resource_allocated().
+>>
+>> Link:
+>> https://lore.kernel.org/linux-hyperv/20200727071731.18516-1-weh@microsoft.com/
+>> Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+>> Signed-off-by: Wei Hu <weh@microsoft.com>
+>> [lorenzo.pieralisi@arm.com: fixed a comment and commit log]
+>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
+>>  1 file changed, 37 insertions(+), 34 deletions(-)
+>>
 >
-> So how is this even possible?
->
-> Cheers,
+>This patch came through three days ago, and I indicated then that we don't want
+>it backported to 5.8 and earlier.
 
+Uh, I re-added it by mistake, sorry.
+
+-- 
+Thanks,
+Sasha
