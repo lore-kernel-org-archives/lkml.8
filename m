@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAAAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7150C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80A0A20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0C4020674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597967641;
-	bh=0+j/6QA0LygchhDILln1yfm2HCDRr0a88PJAPwRl+xo=;
+	s=default; t=1597967646;
+	bh=Lgp8hsNdzOTq4kLm5ig7EfIsrARcaqyBrt2jpFkQe6s=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ULNDgYom5vqj6HUKdnROEBnAjplAaOnmHvEOlOpmzZpyIp9//x/yZqXVIN+9qIXLz
-	 nqxdlYfL1eNe5pjsV6DGyvVmcfPcobt455i/LHcn2g5KIscqW2my6otN/0ONkVMF2k
-	 OPNNh0vZeIgYB2R9jYTOw2o89BIe9bxeJ07ox15g=
+	b=JZ2HtvmOXeqMnNPiKgQUF+9oegd8FMZpMdcUJum+LiAWOWWgBUIBIz8hGVOpxt4ae
+	 2vbWDAFl0z8SLIAM9yBAKOxjrv8BhbkEF0lVxwAU8Grvhc80+4HYQJnMhD8VSqDx6e
+	 70qlRcmiMH+lLXBewByRQ2v0CWuelcXdB9cyfqL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgHTXxw (ORCPT
+        id S1727036AbgHTXyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:53:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33172 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 19:54:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbgHTXxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726309AbgHTXxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 19:53:45 -0400
 Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3586422B3F;
-        Thu, 20 Aug 2020 23:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4867F2087D;
+        Thu, 20 Aug 2020 23:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597967322;
-        bh=0+j/6QA0LygchhDILln1yfm2HCDRr0a88PJAPwRl+xo=;
+        s=default; t=1597967175;
+        bh=Lgp8hsNdzOTq4kLm5ig7EfIsrARcaqyBrt2jpFkQe6s=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N+Qu4TRQ6I7L3UpaNQexsvv1BxlVF9FL/w9CTaKc1TkL+sYA14R3lE5YU2/F2TOXW
-         o63nm/yHlj80bBCLzUTPL3kFiAYQzbIWHBu9QKWQHoHazVpN1wNYJuhu+V3kE5qI4i
-         0mkvVoGLDRYSC88tpmH6zvH7FChQIVsjQ5lG8WIE=
-Received: by mail-ej1-f41.google.com with SMTP id o18so246933eje.7;
-        Thu, 20 Aug 2020 16:48:42 -0700 (PDT)
-X-Gm-Message-State: AOAM533wInGiJTAbUKr3XHiGk8aQb0nnbpsyRkHpmgXIAe3p5GmQaA1v
-        l0wgtE0wF214/9R923nqS5g6WPMKupzALVAYtA==
-X-Google-Smtp-Source: ABdhPJxWafAaj3k7lPbaruLTEUXILZXHlJiOWiA943fk40qr+NDtlxb9h2KyFzZEAanAf5GUY6rk5v906+J7wgBQIpo=
-X-Received: by 2002:a17:906:7492:: with SMTP id e18mr193241ejl.375.1597967320752;
- Thu, 20 Aug 2020 16:48:40 -0700 (PDT)
+        b=OZZdzKzBD51K1BPGM0EaH36CMBKdv2QMN7b+GZuFw580TLsXutGo3pLBWhEXxDJjb
+         yyKWfMFiN5pyb8aRWbVR6bWiB3b6XemNhW8ka0ApBKAQewZpX+xuTYvG603BrQW6fU
+         cJrqycD8Iahf+l7FUboEoQsu0APFA7Lj3l5W3YdY=
+Received: by mail-ej1-f41.google.com with SMTP id d6so249824ejr.5;
+        Thu, 20 Aug 2020 16:46:15 -0700 (PDT)
+X-Gm-Message-State: AOAM531nwDGGnzGc73Hd9CggPdWsqPHBVYS+i/ZtdS/2UDEllFZ4pmny
+        lEpuyJiUSj5xlqpIc9iZ6aRWPm4gcmbb+Vsrww==
+X-Google-Smtp-Source: ABdhPJwImiPZfml816TKJ8tULu0ObTfnI7+zw4vuK73Jk4H3K6TAuI9PR6yWIJfRJ60uRj1hxTknbdc2N7ifSaHVAU8=
+X-Received: by 2002:a17:906:2356:: with SMTP id m22mr350366eja.124.1597967173923;
+ Thu, 20 Aug 2020 16:46:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-15-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1597903458-8055-15-git-send-email-yongqiang.niu@mediatek.com>
+References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-10-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1597903458-8055-10-git-send-email-yongqiang.niu@mediatek.com>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 21 Aug 2020 07:48:28 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9xdn3VnU3nSBc4dvxcVOG34VSaDwxHga8=29GPW3zFsw@mail.gmail.com>
-Message-ID: <CAAOTY_9xdn3VnU3nSBc4dvxcVOG34VSaDwxHga8=29GPW3zFsw@mail.gmail.com>
-Subject: Re: [PATCH v1 14/21] drm/mediatek: add bypass shadow register
- function call for ddp component
+Date:   Fri, 21 Aug 2020 07:46:01 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_8rWUdGgNQfvdZh0gCim8uQ=mJ7Pm=WRgCN_z+Dfb_bEQ@mail.gmail.com>
+Message-ID: <CAAOTY_8rWUdGgNQfvdZh0gCim8uQ=mJ7Pm=WRgCN_z+Dfb_bEQ@mail.gmail.com>
+Subject: Re: [PATCH v1 09/21] drm/mediatek: fix aal size config
 To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
 Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -80,66 +79,52 @@ Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
 =8820=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:18=E5=AF=AB=E9=81=93=
 =EF=BC=9A
 >
-> the shadow register for mt8192 ddp component is enable,
-> we need disable it before enable ddp component
+> fix aal size config
+>
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/dr=
+m/mediatek/mtk_drm_ddp_comp.c
+> index c90d2ee..fe76387 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -31,8 +31,13 @@
+>  #define DISP_REG_UFO_START                     0x0000
+>
+>  #define DISP_AAL_EN                            0x0000
+> +#define DISP_AAL_CFG                           0x0020
+> +#define AAL_RELAY_MODE                                 BIT(0)
+> +#define AAL_ENGINE_EN                                  BIT(1)
+>  #define DISP_AAL_SIZE                          0x0030
+>
+> +#define DISP_AAL_OUTPUT_SIZE                   0x04d8
+> +
+>  #define DISP_CCORR_EN                          0x0000
+>  #define CCORR_EN                               BIT(0)
+>  #define DISP_CCORR_CFG                         0x0020
+> @@ -182,7 +187,11 @@ static void mtk_aal_config(struct mtk_ddp_comp *comp=
+, unsigned int w,
+>                            unsigned int h, unsigned int vrefresh,
+>                            unsigned int bpc, struct cmdq_pkt *cmdq_pkt)
+>  {
+> -       mtk_ddp_write(cmdq_pkt, h << 16 | w, comp, DISP_AAL_SIZE);
+> +       mtk_ddp_write(cmdq_pkt, w << 16 | h, comp, DISP_AAL_SIZE);
+> +       mtk_ddp_write(cmdq_pkt, w << 16 | h, comp, DISP_AAL_OUTPUT_SIZE);
+> +
+> +       mtk_ddp_write_mask(NULL, AAL_RELAY_MODE, comp, DISP_AAL_CFG,
+> +                          AAL_RELAY_MODE | AAL_ENGINE_EN);
 
-MT2701 has shadow register and use it. Why MT8192 have shadow register
-but disable it? I would like to use shadow register like MT2701.
+If this only should set in mt8192, add a private data to distinguish this.
 
 Regards,
 Chun-Kuang.
 
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     | 3 +++
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 7 +++++++
->  2 files changed, 10 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/me=
-diatek/mtk_drm_crtc.c
-> index fe46c4b..16e9b88 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -299,6 +299,9 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *=
-mtk_crtc)
->                 goto err_mutex_unprepare;
->         }
->
-> +       for (i =3D 0; i < mtk_crtc->ddp_comp_nr; i++)
-> +               mtk_ddp_comp_bypass_shadow(mtk_crtc->ddp_comp[i]);
-> +
->         DRM_DEBUG_DRIVER("mediatek_ddp_ddp_path_setup\n");
->         for (i =3D 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
->                 mtk_mmsys_ddp_connect(mtk_crtc->mmsys_dev,
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/dr=
-m/mediatek/mtk_drm_ddp_comp.h
-> index ae11b46..1f25705 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -45,6 +45,7 @@ struct mtk_ddp_comp_funcs {
->                        unsigned int bpc, struct cmdq_pkt *cmdq_pkt);
->         void (*start)(struct mtk_ddp_comp *comp);
->         void (*stop)(struct mtk_ddp_comp *comp);
-> +       void (*bypass_shadow)(struct mtk_ddp_comp *comp);
->         void (*enable_vblank)(struct mtk_ddp_comp *comp, struct drm_crtc =
-*crtc);
->         void (*disable_vblank)(struct mtk_ddp_comp *comp);
->         unsigned int (*supported_rotations)(struct mtk_ddp_comp *comp);
-> @@ -169,6 +170,12 @@ static inline void mtk_ddp_ctm_set(struct mtk_ddp_co=
-mp *comp,
->                 comp->funcs->ctm_set(comp, state);
 >  }
 >
-> +static inline void mtk_ddp_comp_bypass_shadow(struct mtk_ddp_comp *comp)
-> +{
-> +       if (comp->funcs && comp->funcs->bypass_shadow)
-> +               comp->funcs->bypass_shadow(comp);
-> +}
-> +
->  int mtk_ddp_comp_get_id(struct device_node *node,
->                         enum mtk_ddp_comp_type comp_type);
->  int mtk_ddp_comp_init(struct device *dev, struct device_node *comp_node,
+>  static void mtk_aal_start(struct mtk_ddp_comp *comp)
 > --
 > 1.8.1.1.dirty
 > _______________________________________________
