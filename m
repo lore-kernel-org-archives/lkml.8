@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0D6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3732CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF34322CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A5D22CB1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915714;
-	bh=tnabjO7JEjY1lDcg7PZdz46k5I4+nn34zgqTPaqIAqg=;
+	s=default; t=1597915717;
+	bh=7INpsne5XqqcM9dgEgvMScCRO9DTUSEYmf2NWPPV3P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O682S10wkKp1483uUlrGScyw01qxKQijSzSajf/jjrNGR0yYX4G0aaeQr/ooRfpvF
-	 quwUkEsWw9Qq7KRcfy7TaAdAe86ZjLSlU1KMocuNlArUYXJylu3oJXrW9eH6xuCMgr
-	 Bj7FIgYXQeRgO061kVbmJM6/iafAwe2vaBILNJyA=
+	b=ybu5Tx/dLs7y/u1/nF94JR4FHFYdALF4dEM4Hv13DBLOHSQ0RnQH8H71blS3P4vSI
+	 SKCmZmz+TcSaOmA1aFUX1Jxw85vZcb1ILGGs68zrHRuUkRafvUpvDQlzdEWls/vf7y
+	 DUlJr/BQvfpijrjjGdf/lfHo+YbEr49fMB6b/EEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgHTJ2b (ORCPT
+        id S1728018AbgHTJ15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:28:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgHTJ1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:04 -0400
+        id S1727949AbgHTJ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:27:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7609022CF6;
-        Thu, 20 Aug 2020 09:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B759122D08;
+        Thu, 20 Aug 2020 09:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915624;
-        bh=tnabjO7JEjY1lDcg7PZdz46k5I4+nn34zgqTPaqIAqg=;
+        s=default; t=1597915618;
+        bh=7INpsne5XqqcM9dgEgvMScCRO9DTUSEYmf2NWPPV3P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DM11x6Y8JQpXhK2Rl6i+8PKmW8odDc4Jp9X/RkjG1cIBT7D+S2/MLXPRNfEZnz19F
-         UYw2PfywfCqN0G/T7bapyW7nfL1ir+LzOJI0TinyvB7YHZw+O6sC1KiLZG/nhl9koM
-         XQVmgzqvZ+TYGja8XcQ7NHbNDgWhb+ucUVHGaGPA=
+        b=HY3fnobaP9xShBvvdAxyVoP5IYHKfjG6dwndLcQByu1mQq6zrzwPSqswB30lxJJ4f
+         prFvRv+kY0xuqVmmXOXWh0I9KcjWbFuDZJEp6Pa1k0FTt7k8ktC2kUdw2cyxOwMaUt
+         9aZ3Ua3wnBb4FN8lpXN3lt8K6wGGi1+X6rV5fFpk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.8 061/232] pidfd: Add missing sock updates for pidfd_getfd()
-Date:   Thu, 20 Aug 2020 11:18:32 +0200
-Message-Id: <20200820091615.744240580@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.8 077/232] khugepaged: collapse_pte_mapped_thp() flush the right range
+Date:   Thu, 20 Aug 2020 11:18:48 +0200
+Message-Id: <20200820091616.540850550@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -63,53 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Hugh Dickins <hughd@google.com>
 
-commit 4969f8a073977123504609d7310b42a588297aa4 upstream.
+commit 723a80dafed5c95889d48baab9aa433a6ffa0b4e upstream.
 
-The sock counting (sock_update_netprioidx() and sock_update_classid())
-was missing from pidfd's implementation of received fd installation. Add
-a call to the new __receive_sock() helper.
+pmdp_collapse_flush() should be given the start address at which the huge
+page is mapped, haddr: it was given addr, which at that point has been
+used as a local variable, incremented to the end address of the extent.
 
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-Fixes: 8649c322f75c ("pid: Implement pidfd_getfd syscall")
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Found by source inspection while chasing a hugepage locking bug, which I
+then could not explain by this.  At first I thought this was very bad;
+then saw that all of the page translations that were not flushed would
+actually still point to the right pages afterwards, so harmless; then
+realized that I know nothing of how different architectures and models
+cache intermediate paging structures, so maybe it matters after all -
+particularly since the page table concerned is immediately freed.
+
+Much easier to fix than to think about.
+
+Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>	[5.4+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021204390.27773@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/pid.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ mm/khugepaged.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -42,6 +42,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/task.h>
- #include <linux/idr.h>
-+#include <net/sock.h>
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1502,7 +1502,7 @@ void collapse_pte_mapped_thp(struct mm_s
  
- struct pid init_struct_pid = {
- 	.count		= REFCOUNT_INIT(1),
-@@ -642,10 +643,12 @@ static int pidfd_getfd(struct pid *pid,
- 	}
- 
- 	ret = get_unused_fd_flags(O_CLOEXEC);
--	if (ret < 0)
-+	if (ret < 0) {
- 		fput(file);
--	else
-+	} else {
-+		__receive_sock(file);
- 		fd_install(ret, file);
-+	}
- 
- 	return ret;
- }
+ 	/* step 4: collapse pmd */
+ 	ptl = pmd_lock(vma->vm_mm, pmd);
+-	_pmd = pmdp_collapse_flush(vma, addr, pmd);
++	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
+ 	spin_unlock(ptl);
+ 	mm_dec_nr_ptes(mm);
+ 	pte_free(mm, pmd_pgtable(_pmd));
 
 
