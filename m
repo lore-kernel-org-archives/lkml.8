@@ -2,165 +2,203 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F695C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33AFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27070207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3999207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:31:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ZPxYklGa"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="uvnfZDkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHTIbg (ORCPT
+        id S1726751AbgHTIbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:31:36 -0400
-Received: from mail-bn8nam11on2048.outbound.protection.outlook.com ([40.107.236.48]:6817
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        Thu, 20 Aug 2020 04:31:55 -0400
+Received: from mail-eopbgr20110.outbound.protection.outlook.com ([40.107.2.110]:43392
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbgHTIbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:31:34 -0400
+        id S1726700AbgHTIbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:31:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jPhQ2FgGNS65rmv39he/tB7A5UQPdVwv13frmgsifVQ4qu56QJdg8Al97UzvDGJcwRz3lYs6z/m9W1C4EPyo4U4iCU5/bkGfZFgJY4oNLrk7rcU5Ap/wlRQMj6Olrguh6rE1cKI9cYoFCQl6j9Bf4S8t20EPcHSc8v9BmACHdl+eBCWh4UB6Kd2iE4E2XuJSBHgjYlldzbt4qs5D4hzam8XC6maqYNwZpNhBR1pcFkiTXprqUwsnqlmVQmJSRDfVZZZfXF+GanfN3MA8lLAxFVfcmOUKDniQB27duUe3hXHE+bUlrs8Yft5XYVaa9yL4PIXQ3IeGMxKwArUBcGHLiw==
+ b=lCT+h5i8yZE2raXW097/YdAExwAXtfK2pWzB2zGPzLkF9+/hNHVjHZMCbKebxNehsouInLaS0UVPH2XY0a05MXA0rg4ZRVZe2K2UcQg+Bp9AzNJR2yP1R6Wna1ZM75VbinTtw6SUM+KP1hRVCQ1Hj8foRYQw6SgwSaRk6QWQ1NRiUGwQ5BhXqy1UsOVUdxANFR7NNGW4Fds87eNky8K8fzce0tDnUkt4Dul3ST8lm6KFoKxSElJD6L/u/63srpF9i+/5/jl35FtmZisapjoozWFaPr7yhF5rJMZr9Uz7Nh3MHaDHqI8WuLb1EYE7qRU/4e1SyubtI39BMeV7ceTRZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
- b=iCIqnhQyZ4Jko59qg3BzK1ATuLR3snzeLQbapvrVFNeh+jdYdcRyPIutb8uEmJZ/yZdz0dJszEBHoiBJxjPamrNgmP09uxgwjHOvLHOcuQWNHWSH4ff8y9z7+W4+ZEtSG1/peVslEIWiZHIDOy3wj98zKSejuqS7JggZCxLIioFjya/2g7uSptBj73a8zdbzrujVr9Oy9BE5ExFiOv+WCkXzwP+qOPZBaYWFXGSqQQsl9opFpLZrsJhul01MrAB4dP8tTW5AOa56yuVgMFKjtxktlyQvqyPzFlrsniZrcvDr9WHVtnCD6YWQJ4Jl/HL7NC4QJ8Xswh464yTJ+WhWzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ bh=Sn/I7C5qoScgi96FdA07+Lx4EWiqsj8J6o983SiNOPs=;
+ b=D7tXM2p8/mHw4ggBV61Rs3N2VTNaRhtTX01KouAp5e+JNlW4VcvaqDYEd6nRX8x8v84348XCawKcdTK3VOAyT0/w3qj0pvFkaZ5cO4S/mNY2WiDIHaXW+zi2sUYvE+QnowChy3T/WSukXnu7fgZSIjBBMvXhRvGXxQR5X6jyUxjlfYZNpqnNBYaBMucHBvMylTFnnO7YioyCRz7Y8hskOR8RcIAM/zPH6e7cNx7aSYsXXqlFFl3+4RtD5LyGeU/SPQVZ1CgVbVN/RLBNXBMgtN/EcE0fvsAZ0TH93Lcu4NlcnM4rQ5JhyTYETGfJOQQzlb3AUEU6NSGu2+4OhHFC8g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
- b=ZPxYklGa1qn3IXtiriAqOqXUJxPXC8SGiJhIlfQzOvhEeSc22yrbOwpq/3ulCGSZz81ZVngP/hcZ0bHitTarCRoK8EINyE/HyC2XtHPUK9RE2hs1b2nSgo7SvtFHsxRA6Zw6ilZJx2M8vEcbc8lMar8mWC6YcaJRMZwwZ1Tn/L4=
-Received: from DM3PR11CA0009.namprd11.prod.outlook.com (2603:10b6:0:54::19) by
- DM6PR02MB4042.namprd02.prod.outlook.com (2603:10b6:5:96::19) with Microsoft
+ bh=Sn/I7C5qoScgi96FdA07+Lx4EWiqsj8J6o983SiNOPs=;
+ b=uvnfZDkzkQsyrt2EMgM774hXDsqZxjlXrJRUb/2v8rRJibGpxBP8a3ZEncy5WWIo+NpSxkEl4RI2t3Drg+wLu3cb3pU6eVXZPurszvhqEb7Cerqq3GUzIsI4SRRmhkqQbnFOFfyJCJmNNALTbhnvqp5BeJu4AvN+3GwQ0grGnCc=
+Authentication-Results: lunn.ch; dkim=none (message not signed)
+ header.d=none;lunn.ch; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0364.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:62::25) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3283.16; Thu, 20 Aug 2020 08:31:30 +0000
-Received: from CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
- (2603:10b6:0:54:cafe::48) by DM3PR11CA0009.outlook.office365.com
- (2603:10b6:0:54::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend
- Transport; Thu, 20 Aug 2020 08:31:30 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- CY1NAM02FT054.mail.protection.outlook.com (10.152.74.100) with Microsoft SMTP
- Server id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 08:31:30
- +0000
-Received: from [149.199.38.66] (port=51266 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8fyX-0002EY-LW; Thu, 20 Aug 2020 01:31:09 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8fys-0007iK-BP; Thu, 20 Aug 2020 01:31:30 -0700
-Received: from [172.19.2.102] (helo=xsjanandash50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8fym-0007hr-Hm; Thu, 20 Aug 2020 01:31:24 -0700
-From:   Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, michal.simek@xilinx.com, git@xilinx.com,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-Subject: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative values
-Date:   Thu, 20 Aug 2020 01:31:22 -0700
-Message-Id: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+ 15.20.3283.20; Thu, 20 Aug 2020 08:31:39 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3305.025; Thu, 20 Aug 2020
+ 08:31:39 +0000
+Date:   Thu, 20 Aug 2020 11:31:31 +0300
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Jonathan McDowell <noodles@earth.li>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Oleksandr Mazur <oleksandr.mazur@plvision.eu>,
+        Serhiy Boiko <serhiy.boiko@plvision.eu>,
+        Serhiy Pshyk <serhiy.pshyk@plvision.eu>,
+        Volodymyr Mytnyk <volodymyr.mytnyk@plvision.eu>,
+        Taras Chornyi <taras.chornyi@plvision.eu>,
+        Andrii Savka <andrii.savka@plvision.eu>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Mickey Rachamim <mickeyr@marvell.com>
+Subject: Re: [net-next v4 1/6] net: marvell: prestera: Add driver for
+ Prestera family ASIC devices
+Message-ID: <20200820083131.GA28129@plvision.eu>
+References: <20200727122242.32337-1-vadym.kochan@plvision.eu>
+ <20200727122242.32337-2-vadym.kochan@plvision.eu>
+ <20200813080322.GH21409@earth.li>
+ <20200814082054.GD17795@plvision.eu>
+ <20200814120536.GA26106@earth.li>
+ <20200814122744.GF17795@plvision.eu>
+ <20200814131815.GA2238071@lunn.ch>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814131815.GA2238071@lunn.ch>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: AM7PR03CA0009.eurprd03.prod.outlook.com
+ (2603:10a6:20b:130::19) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 03e25842-8734-4377-b613-08d844e37053
-X-MS-TrafficTypeDiagnostic: DM6PR02MB4042:
-X-Microsoft-Antispam-PRVS: <DM6PR02MB404218FE371DCCA3A177EBCBA95A0@DM6PR02MB4042.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from plvision.eu (217.20.186.93) by AM7PR03CA0009.eurprd03.prod.outlook.com (2603:10a6:20b:130::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Thu, 20 Aug 2020 08:31:37 +0000
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2dc57a81-e3f2-4e2f-5552-08d844e3756f
+X-MS-TrafficTypeDiagnostic: HE1P190MB0364:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0364694A0F42011AD3325EF4955A0@HE1P190MB0364.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: taqfh1Wm03lt7+gjo9YWyJqwuMQ7V0mKt8PjbKvBDvzLlMHUmsiIla1Li0G/9UBMc9PDJHu6f/7+cb90S1I74Q7aSUIT1XzqRo360LMYmIpQDmV2cSD8PdMtVwYZouZEvSntWbrUcY5JpgVXqAcLx0+/4ieqDWyHo5tcoyWjCrIBg5LNePiqHudCKHLDOEKp/YyWryT5CrEgUqIh8XkV/ZtBl2UoqKc4vqSmP8PMDj+UZZB40QYF/UHkgevv+VhqtuMC5YZvd7B++7Me2zK3n2JdgWV20ti2GyHItDTLlOxrAepWwbGalALXUTcG6Dgtq07aJsFwJQGGFeEeGFwbN3pTyCttekkGbfVCtiuvJppbRkEChST+Dc4npgePXs9nvdb6snMAll6DDpFo9i3ktQ==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(376002)(396003)(136003)(39860400002)(346002)(46966005)(81166007)(356005)(36756003)(426003)(70206006)(5660300002)(2906002)(70586007)(7696005)(82310400002)(336012)(26005)(107886003)(186003)(9786002)(316002)(82740400003)(47076004)(8676002)(2616005)(478600001)(8936002)(4326008)(83380400001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 08:31:30.5629
+X-Microsoft-Antispam-Message-Info: qKIzBFCqP/n6ealpH56KR9idjl1dfdIRoxHc5Ubyf4QhiPZwaMDJbVY64w3xS7jqjRwj1dh/fYt7iZwNsntSesJ8vRZ4+mYIFes0ilsBjmnVjE4XbavPF4ewyC6DAgxSavk5vVM4/DsoLhSX7swB1rsipT9PEflx9+4GP72qpgmrF5YCWXwDtt0kxRwOpdQQ+/hIhPZm1ft9xeBAZhFNNivgFF+NN4HiN9Ek3CLbE2CqsAM3+cI1jqmRKPoDaWIQwOWYuhAhvNLSrrcoVJHGqM37ZhUYEnYsIOkHkJvdKAB0s5lLwetU9tSTE3Cp1+MGkgR5DtGWaYJgsUNPnx4Erg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(396003)(346002)(376002)(39830400003)(136003)(366004)(26005)(83380400001)(8886007)(16526019)(1076003)(8676002)(6916009)(956004)(7416002)(478600001)(33656002)(8936002)(2616005)(44832011)(316002)(55016002)(4326008)(186003)(7696005)(6666004)(36756003)(5660300002)(66556008)(86362001)(66476007)(54906003)(2906002)(52116002)(66946007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: Uweddmng0JziHMT/m+KNpcig6VL0t1RhqiFpr+fI2I8FRm4PRs6bUBRSIC2UFSvXLJDkGBjGhCdqte4gMow7HBC90oqQnzLI13HkiCG5M75XsDOsxJLIVu5UW9+8rasPeKTNPn/7Fwoyyvh4R1A4STw9doE4v60pWuWMSNfaI2ikAsH+iX6lqj2Ysr1K0HOGvmbV0tz2aVbtdBH0SU5USV5hdr64oXU8/aP2vQjb3EJZPTeozrJeM+uuSJozebyxrqNOln2Ot+W5Vb2UMvIg2ca6oz2N/VQl5XOGuHVnueSPjBrbc8NzPXXVybF+gtDamDmE4lvh2m1mcjXD24R3+1RG4RAQCgGhwLDf+9tj5FhcUq9iUSZ9QLSxGI13Lwd/DaRHtRUuuPFwTaseQKp99NwR8ytC6rbyavMuk8yOcVixY8uzn2+YYPo2Zf1K4GYhyxhohEpM8gV6hNywAHeI6EmxiiPLJ2pAqzweogkD9Xmjda6UvJ4/0m2/rwkmrbn2885tt+OhoIo8CHBPTzdFIYqxgtvbhbBqqQ1xzA3JO+9PIHdqWb0pa2ssJq9d6DEtdBwadjsgzOHR1DlaYexUhBKNZvrdQqPxxcUZCu+udu677xWf8BDG4d/H53HjQ1XZGAyOCmwnInABnQYQ7ShSlQ==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dc57a81-e3f2-4e2f-5552-08d844e3756f
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 08:31:39.4025
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03e25842-8734-4377-b613-08d844e37053
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT054.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB4042
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HUHMzWyr8IkphSjq6Tlk6uufW2orOOz/7KZ0Z7hA81Bf+7RDsa2YriyiXUqtBfCnSta44FFyIVIP5BVozu/wJQI7s4T7Ib9d4cvJvE8diws=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0364
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes IIO_VAL_FRACTIONAL calculation for negative
-values where the exponent is 0.
+Hi Andrew,
 
-Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
----
- drivers/iio/industrialio-core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+On Fri, Aug 14, 2020 at 03:18:15PM +0200, Andrew Lunn wrote:
+> > > > Currently 
+> > > > 
+> > > >     compatible = "marvell,prestera"
+> > > > 
+> > > > is used as default, so may be
+> > > > 
+> > > > you mean to support few matching including particular silicon too, like ?
+> > > > 
+> > > > 
+> > > >     compatible = "marvell,prestera"
+> > > >     compatible = "marvell,prestera-ac3x"
+> > > > 
+> > > > Would you please give an example ?
+> > > 
+> > > AFAICT "Prestera" is the general name for the Marvell
+> > > enterprise/data-centre silicon, comparable to the "LinkStreet"
+> > > designation for their lower end switching. The mv88e* drivers do not
+> > > mention LinkStreet in their compatible strings at all, choosing instead
+> > > to refer to chip IDs (I see mv88e6085, mv88e6190 + mv88e6250).
+> > > 
+> > > I do not have enough familiarity with the Prestera range to be able to
+> > > tell what commonality there is between the different versions (it
+> > > appears you need an NDA to get hold of the programming references), but
+> > > even just looking at your driver and the vendor code for the BobCat it
+> > > seems that AlleyCat3 uses an extended DSA header format, and requires a
+> > > firmware with message based access, in comparison to the BobCat which
+> > > uses register poking.
+> > > 
+> > > Based on that I'd recommend not using the bare "marvell,prestera"
+> > > compatible string, but instead something more specific.
+> > > "marvell,prestera-ac3x" seems like a suitable choice, assuming that's
+> > > how these chips are named/generally referred to.
+> > > 
+> > > Also I'd expand your Kconfig information to actually include "Marvell
+> > > Prestera 98DX326x" as that's the only supported chip range at present.
+> > > 
+> > 
+> > Yes, Prestera covers more range of devices. But it is planning to cover
+> > other devices too, and currently there is no device-specific DTS
+> > properties which are used in this version, but only the generic one -
+> > since only the MAC address node.
+> > 
+> > I mean that if there will be other Prestera devices supported then it
+> > will require to extend the DTS matching string in the driver just to
+> > support the same generic DTS properties for new device.
+> > 
+> > Anyway I will rise and discuss this question.
+> 
+> Hi Vadym
+> 
+> Lets start with how mv88e6xxx does this. The switches have ID
+> registers. Once you have read the ID registers, you know what device
+> you have, and you can select device specific code as needed. However,
+> these ID registers are in three different locations, depending on the
+> chip family. So the compatible string is all about where to read the
+> ID from, not about what specific chip is. So most device tree bindings
+> say "marvell,mv88e6085", but the 6390 family use "marvell,mv88e6190"
+> for example.
+> 
+> This naming scheme is actually odd compared to others. And that
+> oddness causes confusion. But it avoids a few problems. If you have
+> per chip compatible strings, what do you do when it conflicts with the
+> ID registers. If from day 1 you validate the compatible string against
+> the ID register and fail the probe if it is incorrect, you are
+> O.K. But if you decide to add this validation later, you are going to
+> find a number of device tree blobs which have the wrong compatible
+> string. Do you fail the probe on boards which have worked?
+> 
+> So what to do with this driver?
+> 
+> Does the prestera have ID registers? Are you using them in the driver?
+> 
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-cor=
-e.c
-index f72c2dc..cd43b17 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -554,6 +554,7 @@ static ssize_t __iio_format_value(char *buf, size_t len=
-, unsigned int type,
- {
-        unsigned long long tmp;
-        int tmp0, tmp1;
-+       s64 tmp2;
-        bool scale_db =3D false;
+ASIC device specific handling is serviced by the firmware, current
+driver's logic does not have PP specific code and relies on the FW ABI
+which is PP-generic, and it looks like this how it should work for
+boards with other ASICs, of course these boards should follow the
+Marvell's Switchdev board design.
 
-        switch (type) {
-@@ -576,10 +577,13 @@ static ssize_t __iio_format_value(char *buf, size_t l=
-en, unsigned int type,
-                else
-                        return snprintf(buf, len, "%d.%09u", vals[0], vals[=
-1]);
-        case IIO_VAL_FRACTIONAL:
--               tmp =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-+               tmp2 =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-                tmp1 =3D vals[1];
--               tmp0 =3D (int)div_s64_rem(tmp, 1000000000, &tmp1);
--               return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-+               tmp0 =3D (int)div_s64_rem(tmp2, 1000000000, &tmp1);
-+               if ((tmp2 < 0) && (tmp0 =3D=3D 0))
-+                       return snprintf(buf, len, "-%d.%09u", tmp0, abs(tmp=
-1));
-+               else
-+                       return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1=
-));
-        case IIO_VAL_FRACTIONAL_LOG2:
-                tmp =3D shift_right((s64)vals[0] * 1000000000LL, vals[1]);
-                tmp0 =3D (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
---
-2.7.4
+> Marvell is not particularly good at backwards compatibility. Does your
+> compatible string give you enough wiggle room you can easily introduce
+> another compatible string in order to find the ID registers when they
+> move?
+> 
+> 	Andrew
 
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
