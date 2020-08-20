@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C31C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D47C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 548BC20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4DA720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926242;
-	bh=4GW/W+1sCL7OmzGDJ9PjUYj5qsFNfoPH9Zi3JGcS6MI=;
+	s=default; t=1597926246;
+	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ePnZAl/uV2cHWN1knnGTcrXMTporsbl3M1lVEEWGFvyZAg9zAN+O7Ql6fRhP684NO
-	 +dPUJAXS695/Tk0B+3new+SeKfgcEitBCHJZpzaguQWo5EvmodBd8k1UF8HbjfxIZD
-	 mGuU34dpG/17hzmwaA8A+5R2MwSF5EIojIlSg8ak=
+	b=BGDwC/rHFfXYAgepQO8m5aUYypEfCWCATosUw3r599YdQE1vS/GtDQERmcrsG3sN1
+	 0/s5PQqV9YDUs3pOac/93QDCFdfOza0WBiXB+46axv1ZdSECjJzGV20frSBU6ecxKI
+	 OXo9w1H94hI7LVDqr4ju5cgzpsDLz6xqkJVdvaGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgHTJyX (ORCPT
+        id S1730242AbgHTMYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:54:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36256 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:24:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730086AbgHTJyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:02 -0400
+        id S1730114AbgHTJyY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70FF82067C;
-        Thu, 20 Aug 2020 09:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4755C2067C;
+        Thu, 20 Aug 2020 09:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917242;
-        bh=4GW/W+1sCL7OmzGDJ9PjUYj5qsFNfoPH9Zi3JGcS6MI=;
+        s=default; t=1597917262;
+        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDNlErYau9WMihbGvmUkp2/jWVVcmC2JqRzyOfxDHXRJkJ4ZVxHRWS29alGbb1pAh
-         ff0gmLDAcVkpXsNI2yEEipZM0Fz26DA6pp7GrSaFUXVsFSslUaAJAi3LvYhPWhZX/i
-         l0Sx1lOQdu1coCK+3ZBLsG18KWt4wFYzo9RYr7Qk=
+        b=b4wiIGS28V+gnol6ahyI3T2QNNySc//jFopV179XS+XrdyAvR2uN1EXAHzGfriB0i
+         QOWbrpZmfSsKTlvKZtId1jpdzuFdybKRyAz/7RBVd61KfKc35TUO2BSobAORmQzilP
+         qtkBpHwZbzRZ7dmk4sZPKtNHQoTaVLadGzbfilEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/92] USB: serial: ftdi_sio: make process-packet buffer unsigned
-Date:   Thu, 20 Aug 2020 11:21:39 +0200
-Message-Id: <20200820091540.438112785@linuxfoundation.org>
+Subject: [PATCH 4.19 61/92] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
+Date:   Thu, 20 Aug 2020 11:21:46 +0200
+Message-Id: <20200820091540.787545895@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,94 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit ab4cc4ef6724ea588e835fc1e764c4b4407a70b7 ]
+[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
 
-Use an unsigned type for the process-packet buffer argument and give it
-a more apt name.
-
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 3c0f38cd3a5a4..d0ae6318d6e96 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2037,12 +2037,12 @@ static int ftdi_prepare_write_buffer(struct usb_serial_port *port,
- #define FTDI_RS_ERR_MASK (FTDI_RS_BI | FTDI_RS_PE | FTDI_RS_FE | FTDI_RS_OE)
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index f9216c7a1829e..bc33d748d95b4 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+ 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
+ }
  
- static int ftdi_process_packet(struct usb_serial_port *port,
--		struct ftdi_private *priv, char *packet, int len)
-+		struct ftdi_private *priv, unsigned char *buf, int len)
+-static int sys_pkey_free(int pkey)
+-{
+-	return syscall(__NR_pkey_free, pkey);
+-}
+-
+ static int child(struct shared_info *info)
  {
-+	unsigned char status;
-+	unsigned char *ch;
- 	int i;
--	char status;
- 	char flag;
--	char *ch;
+ 	unsigned long reg;
+@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
  
- 	if (len < 2) {
- 		dev_dbg(&port->dev, "malformed packet\n");
-@@ -2052,7 +2052,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	/* Compare new line status to the old one, signal if different/
- 	   N.B. packet may be processed more than once, but differences
- 	   are only processed once.  */
--	status = packet[0] & FTDI_STATUS_B0_MASK;
-+	status = buf[0] & FTDI_STATUS_B0_MASK;
- 	if (status != priv->prev_status) {
- 		char diff_status = status ^ priv->prev_status;
+ 	info->amr1 |= 3ul << pkeyshift(pkey1);
+ 	info->amr2 |= 3ul << pkeyshift(pkey2);
+-	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
++	/*
++	 * invalid amr value where we try to force write
++	 * things which are deined by a uamor setting.
++	 */
++	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
  
-@@ -2078,7 +2078,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	}
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
  
- 	/* save if the transmitter is empty or not */
--	if (packet[1] & FTDI_RS_TEMT)
-+	if (buf[1] & FTDI_RS_TEMT)
- 		priv->transmit_empty = 1;
- 	else
- 		priv->transmit_empty = 0;
-@@ -2092,29 +2092,29 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 * data payload to avoid over-reporting.
+ 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+ 				3ul << pkeyshift(pkey2);
+-	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
+-
+ 	/*
+-	 * We won't use pkey3. We just want a plausible but invalid key to test
+-	 * whether ptrace will let us write to AMR bits we are not supposed to.
+-	 *
+-	 * This also tests whether the kernel restores the UAMOR permissions
+-	 * after a key is freed.
++	 * Create an IAMR value different from expected value.
++	 * Kernel will reject an IAMR and UAMOR change.
  	 */
- 	flag = TTY_NORMAL;
--	if (packet[1] & FTDI_RS_ERR_MASK) {
-+	if (buf[1] & FTDI_RS_ERR_MASK) {
- 		/* Break takes precedence over parity, which takes precedence
- 		 * over framing errors */
--		if (packet[1] & FTDI_RS_BI) {
-+		if (buf[1] & FTDI_RS_BI) {
- 			flag = TTY_BREAK;
- 			port->icount.brk++;
- 			usb_serial_handle_break(port);
--		} else if (packet[1] & FTDI_RS_PE) {
-+		} else if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
--		} else if (packet[1] & FTDI_RS_FE) {
-+		} else if (buf[1] & FTDI_RS_FE) {
- 			flag = TTY_FRAME;
- 			port->icount.frame++;
- 		}
- 		/* Overrun is special, not associated with a char */
--		if (packet[1] & FTDI_RS_OE) {
-+		if (buf[1] & FTDI_RS_OE) {
- 			port->icount.overrun++;
- 			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
- 		}
- 	}
+-	sys_pkey_free(pkey3);
++	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
++	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
  
- 	port->icount.rx += len;
--	ch = packet + 2;
-+	ch = buf + 2;
+ 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
+ 	       user_write, info->amr1, pkey1, pkey2, pkey3);
+@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
  
- 	if (port->port.console && port->sysrq) {
- 		for (i = 0; i < len; i++, ch++) {
+-	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
+-	info->expected_iamr = info->invalid_iamr = regs[1];
+-	info->expected_uamor = info->invalid_uamor = regs[2];
++	info->amr1 = info->amr2 = regs[0];
++	info->expected_iamr = regs[1];
++	info->expected_uamor = regs[2];
+ 
+ 	/* Wake up child so that it can set itself up. */
+ 	ret = prod_child(&info->child_sync);
 -- 
 2.25.1
 
