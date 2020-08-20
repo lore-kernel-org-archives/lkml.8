@@ -2,55 +2,57 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB63FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C68C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3E3322BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B8DD20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929416;
-	bh=5N3R9ej26xSgXvjO3fMYpG3b6zxAP3I8LVzaW3P5g2Q=;
+	s=default; t=1597929423;
+	bh=Do5+tr33I6sMu+dO/0UB/wx1YwNFPXRVPUGKAE7s/BM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t6oEu6egESpPDxx4SU7VEFT85x9oTbXM3cOTf9dbn5VfRVKXZA8LlYGkeHuxb5dqd
-	 Gq2DhUOvE28LkK1MUA951BM2IZHjejH4ul0ZLSIn5lRNfuNfDMDDT09DNB5DLaY5GF
-	 eAXlREvBsjxgIZ2Vtpdt9vNl8IAwrQAMCHuYBvaI=
+	b=dMvqRTbo0BJmg0SOr3pMlqAWLIBK+VMhhRtFVaRMa9mW3md0pOUiyTG+Zrs8pntxG
+	 MPhVlj/X8m2ivikmUyF08IEuN8VQQTkj1nBJa7v8p13l1uQ42oZcD+3lIv8CIa7p1m
+	 OejHfDQ8m2lLzBOSDIms7jMKxcaoca68xcEAy4WE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgHTNQz (ORCPT
+        id S1728482AbgHTJfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:16:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48482 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:35:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728368AbgHTJfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:14 -0400
+        id S1727779AbgHTJcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B2820724;
-        Thu, 20 Aug 2020 09:35:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C64722B4B;
+        Thu, 20 Aug 2020 09:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916113;
-        bh=5N3R9ej26xSgXvjO3fMYpG3b6zxAP3I8LVzaW3P5g2Q=;
+        s=default; t=1597915933;
+        bh=Do5+tr33I6sMu+dO/0UB/wx1YwNFPXRVPUGKAE7s/BM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9mKBYL/8AaWDSujguB4G4bBGBhI1XN6VI1AynM4opyzUu7qk9gHRC65yL2iXxcF4
-         o8iy/iBESoU8K93u3NV5rb8/Z2EmmSO4YLkh8pQWHgPJH4z0XWvd0wxMEYsbPAC7HE
-         tmj+3cYFiHhHO4llZB/UL/xRWhoZ5696IPhzDzTs=
+        b=Qgj9ds9uXvKfXCmq1oVZfx+PwQQwMtXRP0grVETzM1EN2Yoi/2w+t8u0aB+ebIUOV
+         Yse+Z38QXNLCt6R3+AOuVD7DME2g7hro/n2dlWtpC/MM4TskiJ2LoQ0jWu2FB+Kwhx
+         hGfutIkSsS13OfpkHLJMbUUlforlsd5DUsGJGBOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 016/204] btrfs: only commit delayed items at fsync if we are logging a directory
-Date:   Thu, 20 Aug 2020 11:18:33 +0200
-Message-Id: <20200820091607.031110603@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 158/232] iommu/vt-d: Handle non-page aligned address
+Date:   Thu, 20 Aug 2020 11:20:09 +0200
+Message-Id: <20200820091620.465486065@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,93 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Liu Yi L <yi.l.liu@intel.com>
 
-commit 5aa7d1a7f4a2f8ca6be1f32415e9365d026e8fa7 upstream.
+[ Upstream commit 288d08e78008828416ffaa85ef274b4e29ef3dae ]
 
-When logging an inode we are committing its delayed items if either the
-inode is a directory or if it is a new inode, created in the current
-transaction.
+Address information for device TLB invalidation comes from userspace
+when device is directly assigned to a guest with vIOMMU support.
+VT-d requires page aligned address. This patch checks and enforce
+address to be page aligned, otherwise reserved bits can be set in the
+invalidation descriptor. Unrecoverable fault will be reported due to
+non-zero value in the reserved bits.
 
-We need to do it for directories, since new directory indexes are stored
-as delayed items of the inode and when logging a directory we need to be
-able to access all indexes from the fs/subvolume tree in order to figure
-out which index ranges need to be logged.
-
-However for new inodes that are not directories, we do not need to do it
-because the only type of delayed item they can have is the inode item, and
-we are guaranteed to always log an up to date version of the inode item:
-
-*) for a full fsync we do it by committing the delayed inode and then
-   copying the item from the fs/subvolume tree with
-   copy_inode_items_to_log();
-
-*) for a fast fsync we always log the inode item based on the contents of
-   the in-memory struct btrfs_inode. We guarantee this is always done since
-   commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
-
-So stop running delayed items for a new inodes that are not directories,
-since that forces committing the delayed inode into the fs/subvolume tree,
-wasting time and adding contention to the tree when a full fsync is not
-required. We will only do it in case a fast fsync is needed.
-
-This patch is part of a series that has the following patches:
-
-1/4 btrfs: only commit the delayed inode when doing a full fsync
-2/4 btrfs: only commit delayed items at fsync if we are logging a directory
-3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
-4/4 btrfs: remove no longer needed use of log_writers for the log root tree
-
-After the entire patchset applied I saw about 12% decrease on max latency
-reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
-ram, using kvm and using a raw NVMe device directly (no intermediary fs on
-the host). The test was invoked like the following:
-
-  mkfs.btrfs -f /dev/sdk
-  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
-  dbench -D /mnt/sdk -t 300 8
-  umount /mnt/dsk
-
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 61a06a16e36d8 ("iommu/vt-d: Support flushing more translation cache types")
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Link: https://lore.kernel.org/r/20200724014925.15523-5-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tree-log.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/iommu/intel/dmar.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -5150,7 +5150,6 @@ static int btrfs_log_inode(struct btrfs_
- 			   const loff_t end,
- 			   struct btrfs_log_ctx *ctx)
- {
--	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct btrfs_path *path;
- 	struct btrfs_path *dst_path;
- 	struct btrfs_key min_key;
-@@ -5193,15 +5192,17 @@ static int btrfs_log_inode(struct btrfs_
- 	max_key.offset = (u64)-1;
- 
- 	/*
--	 * Only run delayed items if we are a dir or a new file.
-+	 * Only run delayed items if we are a directory. We want to make sure
-+	 * all directory indexes hit the fs/subvolume tree so we can find them
-+	 * and figure out which index ranges have to be logged.
-+	 *
- 	 * Otherwise commit the delayed inode only if the full sync flag is set,
- 	 * as we want to make sure an up to date version is in the subvolume
- 	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
- 	 * it to the log tree. For a non full sync, we always log the inode item
- 	 * based on the in-memory struct btrfs_inode which is always up to date.
+diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+index 16f47041f1bf5..ec23a2f0b5f8d 100644
+--- a/drivers/iommu/intel/dmar.c
++++ b/drivers/iommu/intel/dmar.c
+@@ -1459,9 +1459,26 @@ void qi_flush_dev_iotlb_pasid(struct intel_iommu *iommu, u16 sid, u16 pfsid,
+ 	 * Max Invs Pending (MIP) is set to 0 for now until we have DIT in
+ 	 * ECAP.
  	 */
--	if (S_ISDIR(inode->vfs_inode.i_mode) ||
--	    inode->generation > fs_info->last_trans_committed)
-+	if (S_ISDIR(inode->vfs_inode.i_mode))
- 		ret = btrfs_commit_inode_delayed_items(trans, inode);
- 	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
- 		ret = btrfs_commit_inode_delayed_inode(inode);
+-	desc.qw1 |= addr & ~mask;
+-	if (size_order)
++	if (addr & GENMASK_ULL(size_order + VTD_PAGE_SHIFT, 0))
++		pr_warn_ratelimited("Invalidate non-aligned address %llx, order %d\n",
++				    addr, size_order);
++
++	/* Take page address */
++	desc.qw1 = QI_DEV_EIOTLB_ADDR(addr);
++
++	if (size_order) {
++		/*
++		 * Existing 0s in address below size_order may be the least
++		 * significant bit, we must set them to 1s to avoid having
++		 * smaller size than desired.
++		 */
++		desc.qw1 |= GENMASK_ULL(size_order + VTD_PAGE_SHIFT - 1,
++					VTD_PAGE_SHIFT);
++		/* Clear size_order bit to indicate size */
++		desc.qw1 &= ~mask;
++		/* Set the S bit to indicate flushing more than 1 page */
+ 		desc.qw1 |= QI_DEV_EIOTLB_SIZE;
++	}
+ 
+ 	qi_submit_sync(iommu, &desc, 1, 0);
+ }
+-- 
+2.25.1
+
 
 
