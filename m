@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91870C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF152C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54AD3206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BF7206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ErNp8oBZ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YAMSJQXN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgHTScK (ORCPT
+        id S1728035AbgHTScN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:32:10 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55891 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727889AbgHTSbR (ORCPT
+        Thu, 20 Aug 2020 14:32:13 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51190 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727912AbgHTSbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:31:17 -0400
+        Thu, 20 Aug 2020 14:31:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597948276;
+        s=mimecast20190719; t=1597948290;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=hmfhbTgiJshdHk/qquvzkEDDNHj6aCysj8P0ZBueTi8=;
-        b=ErNp8oBZ7Io7/SQUbIeoKamF4tOc0lWSzvVYqH5JDN6cXhBcz9NlPFXyV95M68DkEwfrct
-        dbITKNqHrMS7TmvJeW4+FJDLcoYN4+Xq3To2bPRZVLspjIiMspCXLzXd4KvcO8nV2R4KOS
-        Hsu1HK4RSUgM70PWR1K1XQSC17mp84M=
+        bh=wx4w2b+l+3aiwt9r2MHDGnNbHUs1+Gqgk9a6kwpF6vA=;
+        b=YAMSJQXNJ98yNJqxki1TzdauZaXKO3JelLQ8LZZK2yePOwA5bI8V8XV6saC8AN5aclTQV7
+        SIUQx+Iu+e6PoNru8BjnGyEPocwC/TH7p6OZVMa3YsGxVdTcfl0eule+R8Db0JWFZyjyX7
+        S46Ntd5MIJVcBKJIp5m1uhyNIyafHQQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-6sZMtxJrPBSvH6qmo9BKrA-1; Thu, 20 Aug 2020 14:31:12 -0400
-X-MC-Unique: 6sZMtxJrPBSvH6qmo9BKrA-1
+ us-mta-95-gE7UGQUOMduKWT0Cx-9H9w-1; Thu, 20 Aug 2020 14:31:26 -0400
+X-MC-Unique: gE7UGQUOMduKWT0Cx-9H9w-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 598838030A9;
-        Thu, 20 Aug 2020 18:31:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B5A2107464E;
+        Thu, 20 Aug 2020 18:31:23 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-120-42.rdu2.redhat.com [10.10.120.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A58BF5DA78;
-        Thu, 20 Aug 2020 18:31:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5F565DA74;
+        Thu, 20 Aug 2020 18:31:21 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
@@ -66,10 +66,11 @@ Cc:     Sean Paul <sean@poorly.run>,
         Imre Deak <imre.deak@intel.com>,
         Wambui Karuga <wambui.karugax@gmail.com>,
         Lucas De Marchi <lucas.demarchi@intel.com>,
+        Ramalingam C <ramalingam.c@intel.com>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v2 15/20] drm/i915/dp: Extract drm_dp_has_sink_count()
-Date:   Thu, 20 Aug 2020 14:30:07 -0400
-Message-Id: <20200820183012.288794-16-lyude@redhat.com>
+Subject: [RFC v2 19/20] drm/i915/dp: Extract drm_dp_read_dpcd_caps()
+Date:   Thu, 20 Aug 2020 14:30:11 -0400
+Message-Id: <20200820183012.288794-20-lyude@redhat.com>
 In-Reply-To: <20200820183012.288794-1-lyude@redhat.com>
 References: <20200820183012.288794-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -80,128 +81,241 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since other drivers are also going to need to be aware of the sink count
-in order to do proper dongle detection, we might as well steal i915's
-DP_SINK_COUNT helpers and move them into DRM helpers so that other
-dirvers can use them as well.
+Since DP 1.3, it's been possible for DP receivers to specify an
+additional set of DPCD capabilities, which can take precedence over the
+capabilities reported at DP_DPCD_REV.
 
-Note that this also starts using intel_dp_has_sink_count() in
-intel_dp_detect_dpcd(), which is a functional change.
+Basically any device supporting DP is going to need to read these in an
+identical manner, in particular nouveau, so let's go ahead and just move
+this code out of i915 into a shared DRM DP helper that we can use in
+other drivers.
+
+v2:
+* Remove redundant dpcd[DP_DPCD_REV] == 0 check
+* Fix drm_dp_dpcd_read() ret checks
 
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Reviewed-by: Sean Paul <sean@poorly.run>
 ---
- drivers/gpu/drm/drm_dp_helper.c         | 22 ++++++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_dp.c | 21 ++++++++++++---------
- include/drm/drm_dp_helper.h             |  8 +++++++-
- 3 files changed, 41 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/drm_dp_helper.c             | 77 +++++++++++++++++++++
+ drivers/gpu/drm/i915/display/intel_dp.c     | 60 +---------------
+ drivers/gpu/drm/i915/display/intel_dp.h     |  1 -
+ drivers/gpu/drm/i915/display/intel_lspcon.c |  2 +-
+ include/drm/drm_dp_helper.h                 |  3 +
+ 5 files changed, 83 insertions(+), 60 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 4f845995f1f66..863e0babc1903 100644
+index 67ad05eb05b7e..9c99d21b42c15 100644
 --- a/drivers/gpu/drm/drm_dp_helper.c
 +++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -714,6 +714,28 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
+@@ -433,6 +433,83 @@ static u8 drm_dp_downstream_port_count(const u8 dpcd[DP_RECEIVER_CAP_SIZE])
+ 	return port_count;
  }
- EXPORT_SYMBOL(drm_dp_set_subconnector_property);
  
-+/**
-+ * drm_dp_has_sink_count() - Check whether a given connector has a valid sink
-+ * count
-+ * @connector: The DRM connector to check
-+ * @dpcd: A cached copy of the connector's DPCD RX capabilities
-+ * @desc: A cached copy of the connector's DP descriptor
-+ *
-+ * Returns: %True if the (e)DP connector has a valid sink count that should
-+ * be probed, %false otherwise.
-+ */
-+bool drm_dp_has_sink_count(struct drm_connector *connector,
-+			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-+			   const struct drm_dp_desc *desc)
++static int drm_dp_read_extended_dpcd_caps(struct drm_dp_aux *aux,
++					  u8 dpcd[DP_RECEIVER_CAP_SIZE])
 +{
-+	/* Some eDP panels don't set a valid value for the sink count */
-+	return connector->connector_type != DRM_MODE_CONNECTOR_eDP &&
-+		dpcd[DP_DPCD_REV] >= DP_DPCD_REV_11 &&
-+		dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT &&
-+		!drm_dp_has_quirk(desc, 0, DP_DPCD_QUIRK_NO_SINK_COUNT);
-+}
-+EXPORT_SYMBOL(drm_dp_has_sink_count);
++	u8 dpcd_ext[6];
++	int ret;
 +
- /*
-  * I2C-over-AUX implementation
-  */
++	/*
++	 * Prior to DP1.3 the bit represented by
++	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
++	 * If it is set DP_DPCD_REV at 0000h could be at a value less than
++	 * the true capability of the panel. The only way to check is to
++	 * then compare 0000h and 2200h.
++	 */
++	if (!(dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
++	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
++		return 0;
++
++	ret = drm_dp_dpcd_read(aux, DP_DP13_DPCD_REV, &dpcd_ext,
++			       sizeof(dpcd_ext));
++	if (ret < 0)
++		return ret;
++	if (ret != sizeof(dpcd_ext))
++		return -EIO;
++
++	if (dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
++		DRM_DEBUG_KMS("%s: Extended DPCD rev less than base DPCD rev (%d > %d)\n",
++			      aux->name, dpcd[DP_DPCD_REV],
++			      dpcd_ext[DP_DPCD_REV]);
++		return 0;
++	}
++
++	if (!memcmp(dpcd, dpcd_ext, sizeof(dpcd_ext)))
++		return 0;
++
++	DRM_DEBUG_KMS("%s: Base DPCD: %*ph\n",
++		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
++
++	memcpy(dpcd, dpcd_ext, sizeof(dpcd_ext));
++
++	return 0;
++}
++
++/**
++ * drm_dp_read_dpcd_caps() - read DPCD caps and extended DPCD caps if
++ * available
++ * @aux: DisplayPort AUX channel
++ * @dpcd: Buffer to store the resulting DPCD in
++ *
++ * Attempts to read the base DPCD caps for @aux. Additionally, this function
++ * checks for and reads the extended DPRX caps (%DP_DP13_DPCD_REV) if
++ * present.
++ *
++ * Returns: %0 if the DPCD was read successfully, negative error code
++ * otherwise.
++ */
++int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
++			  u8 dpcd[DP_RECEIVER_CAP_SIZE])
++{
++	int ret;
++
++	ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
++	if (ret < 0)
++		return ret;
++	if (ret != DP_RECEIVER_CAP_SIZE || dpcd[DP_DPCD_REV] == 0)
++		return -EIO;
++
++	ret = drm_dp_read_extended_dpcd_caps(aux, dpcd);
++	if (ret < 0)
++		return ret;
++
++	DRM_DEBUG_KMS("%s: DPCD: %*ph\n",
++		      aux->name, DP_RECEIVER_CAP_SIZE, dpcd);
++
++	return ret;
++}
++EXPORT_SYMBOL(drm_dp_read_dpcd_caps);
++
+ /**
+  * drm_dp_downstream_read_info() - read DPCD downstream port info if available
+  * @aux: DisplayPort AUX channel
 diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
-index 984e49194ca31..35a4779a442e2 100644
+index 4337321a3be4f..fb7872e2a0b93 100644
 --- a/drivers/gpu/drm/i915/display/intel_dp.c
 +++ b/drivers/gpu/drm/i915/display/intel_dp.c
-@@ -4634,6 +4634,16 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
- 	return true;
+@@ -4449,62 +4449,6 @@ intel_dp_link_down(struct intel_encoder *encoder,
+ 	}
  }
  
-+static bool
-+intel_dp_has_sink_count(struct intel_dp *intel_dp)
-+{
-+	if (!intel_dp->attached_connector)
-+		return false;
-+
-+	return drm_dp_has_sink_count(&intel_dp->attached_connector->base,
-+				     intel_dp->dpcd,
-+				     &intel_dp->desc);
-+}
+-static void
+-intel_dp_extended_receiver_capabilities(struct intel_dp *intel_dp)
+-{
+-	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+-	u8 dpcd_ext[6];
+-
+-	/*
+-	 * Prior to DP1.3 the bit represented by
+-	 * DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT was reserved.
+-	 * if it is set DP_DPCD_REV at 0000h could be at a value less than
+-	 * the true capability of the panel. The only way to check is to
+-	 * then compare 0000h and 2200h.
+-	 */
+-	if (!(intel_dp->dpcd[DP_TRAINING_AUX_RD_INTERVAL] &
+-	      DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT))
+-		return;
+-
+-	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DP13_DPCD_REV,
+-			     &dpcd_ext, sizeof(dpcd_ext)) != sizeof(dpcd_ext)) {
+-		drm_err(&i915->drm,
+-			"DPCD failed read at extended capabilities\n");
+-		return;
+-	}
+-
+-	if (intel_dp->dpcd[DP_DPCD_REV] > dpcd_ext[DP_DPCD_REV]) {
+-		drm_dbg_kms(&i915->drm,
+-			    "DPCD extended DPCD rev less than base DPCD rev\n");
+-		return;
+-	}
+-
+-	if (!memcmp(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext)))
+-		return;
+-
+-	drm_dbg_kms(&i915->drm, "Base DPCD: %*ph\n",
+-		    (int)sizeof(intel_dp->dpcd), intel_dp->dpcd);
+-
+-	memcpy(intel_dp->dpcd, dpcd_ext, sizeof(dpcd_ext));
+-}
+-
+-bool
+-intel_dp_read_dpcd(struct intel_dp *intel_dp)
+-{
+-	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+-
+-	if (drm_dp_dpcd_read(&intel_dp->aux, 0x000, intel_dp->dpcd,
+-			     sizeof(intel_dp->dpcd)) < 0)
+-		return false; /* aux transfer failed */
+-
+-	intel_dp_extended_receiver_capabilities(intel_dp);
+-
+-	drm_dbg_kms(&i915->drm, "DPCD: %*ph\n", (int)sizeof(intel_dp->dpcd),
+-		    intel_dp->dpcd);
+-
+-	return intel_dp->dpcd[DP_DPCD_REV] != 0;
+-}
+-
+ bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp)
+ {
+ 	u8 dprx = 0;
+@@ -4563,7 +4507,7 @@ intel_edp_init_dpcd(struct intel_dp *intel_dp)
+ 	/* this function is meant to be called only once */
+ 	drm_WARN_ON(&dev_priv->drm, intel_dp->dpcd[DP_DPCD_REV] != 0);
  
- static bool
- intel_dp_get_dpcd(struct intel_dp *intel_dp)
-@@ -4653,13 +4663,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
- 		intel_dp_set_common_rates(intel_dp);
+-	if (!intel_dp_read_dpcd(intel_dp))
++	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd) != 0)
+ 		return false;
+ 
+ 	drm_dp_read_desc(&intel_dp->aux, &intel_dp->desc,
+@@ -4650,7 +4594,7 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+ {
+ 	int ret;
+ 
+-	if (!intel_dp_read_dpcd(intel_dp))
++	if (drm_dp_read_dpcd_caps(&intel_dp->aux, intel_dp->dpcd))
+ 		return false;
+ 
+ 	/*
+diff --git a/drivers/gpu/drm/i915/display/intel_dp.h b/drivers/gpu/drm/i915/display/intel_dp.h
+index b901ab850cbd9..0a3af3410d52e 100644
+--- a/drivers/gpu/drm/i915/display/intel_dp.h
++++ b/drivers/gpu/drm/i915/display/intel_dp.h
+@@ -99,7 +99,6 @@ bool intel_dp_source_supports_hbr3(struct intel_dp *intel_dp);
+ bool
+ intel_dp_get_link_status(struct intel_dp *intel_dp, u8 *link_status);
+ 
+-bool intel_dp_read_dpcd(struct intel_dp *intel_dp);
+ bool intel_dp_get_colorimetry_status(struct intel_dp *intel_dp);
+ int intel_dp_link_required(int pixel_clock, int bpp);
+ int intel_dp_max_data_rate(int max_link_clock, int max_lanes);
+diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
+index b781bf4696443..dc1b35559afdf 100644
+--- a/drivers/gpu/drm/i915/display/intel_lspcon.c
++++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
+@@ -571,7 +571,7 @@ bool lspcon_init(struct intel_digital_port *dig_port)
+ 		return false;
  	}
  
--	/*
--	 * Some eDP panels do not set a valid value for sink count, that is why
--	 * it don't care about read it here and in intel_edp_init_dpcd().
--	 */
--	if (!intel_dp_is_edp(intel_dp) &&
--	    !drm_dp_has_quirk(&intel_dp->desc, 0,
--			      DP_DPCD_QUIRK_NO_SINK_COUNT)) {
-+	if (intel_dp_has_sink_count(intel_dp)) {
- 		u8 count;
- 		ssize_t r;
- 
-@@ -5939,9 +5943,8 @@ intel_dp_detect_dpcd(struct intel_dp *intel_dp)
- 		return connector_status_connected;
- 
- 	/* If we're HPD-aware, SINK_COUNT changes dynamically */
--	if (intel_dp->dpcd[DP_DPCD_REV] >= 0x11 &&
-+	if (intel_dp_has_sink_count(intel_dp) &&
- 	    intel_dp->downstream_ports[0] & DP_DS_PORT_HPD) {
--
- 		return intel_dp->sink_count ?
- 		connector_status_connected : connector_status_disconnected;
+-	if (!intel_dp_read_dpcd(dp)) {
++	if (drm_dp_read_dpcd_caps(&dp->aux, dp->dpcd) != 0) {
+ 		DRM_ERROR("LSPCON DPCD read failed\n");
+ 		return false;
  	}
 diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 1349f16564ace..a1413a531eaf4 100644
+index 0c141fc81aaa8..11649e93e5bb6 100644
 --- a/include/drm/drm_dp_helper.h
 +++ b/include/drm/drm_dp_helper.h
-@@ -1631,6 +1631,11 @@ void drm_dp_set_subconnector_property(struct drm_connector *connector,
- 				      const u8 *dpcd,
- 				      const u8 port_cap[4]);
+@@ -1607,6 +1607,9 @@ static inline ssize_t drm_dp_dpcd_writeb(struct drm_dp_aux *aux,
+ 	return drm_dp_dpcd_write(aux, offset, &value, 1);
+ }
  
-+struct drm_dp_desc;
-+bool drm_dp_has_sink_count(struct drm_connector *connector,
-+			   const u8 dpcd[DP_RECEIVER_CAP_SIZE],
-+			   const struct drm_dp_desc *desc);
++int drm_dp_read_dpcd_caps(struct drm_dp_aux *aux,
++			  u8 dpcd[DP_RECEIVER_CAP_SIZE]);
 +
- void drm_dp_remote_aux_init(struct drm_dp_aux *aux);
- void drm_dp_aux_init(struct drm_dp_aux *aux);
- int drm_dp_aux_register(struct drm_dp_aux *aux);
-@@ -1689,7 +1694,8 @@ enum drm_dp_quirk {
- 	 * @DP_DPCD_QUIRK_NO_SINK_COUNT:
- 	 *
- 	 * The device does not set SINK_COUNT to a non-zero value.
--	 * The driver should ignore SINK_COUNT during detection.
-+	 * The driver should ignore SINK_COUNT during detection. Note that
-+	 * drm_dp_has_sink_count() automatically checks for this quirk.
- 	 */
- 	DP_DPCD_QUIRK_NO_SINK_COUNT,
- 	/**
+ int drm_dp_dpcd_read_link_status(struct drm_dp_aux *aux,
+ 				 u8 status[DP_LINK_STATUS_SIZE]);
+ 
 -- 
 2.26.2
 
