@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6269C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9063C22D3E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5850E22CE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925067;
-	bh=3DbTosbn/9M8AZwshGP3ITLMyCZ5UHRUtgMC2+pda8o=;
+	s=default; t=1597925090;
+	bh=q+/BfhKioI3638M7k9ipVudVd623gBSf1KwRlG9SoYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pnPHQu1ow404sKrxK5xq7/35WMHRMcuzytEuM1J5/b7F5bZFP1NZjZMMb4Lt1vM5Z
-	 ukwaCeCLvD1kFj3BDo9ct4C+uGSbvOGjFQkw7e/y2bdVgc3jJMsQsqz8bI2BFUY03q
-	 GBgAaaztW2QfNZC6LPCMopn5bMNpZ3bx7rPRPVfA=
+	b=eke26hpDDRo5DNxtH34ZzdPHVl3RKXIi9i2KiY40a8ZNsY4lv+ojPgHoTVnqpI1mY
+	 cwCtERPeOtMkygLAlngPRgo0ERTFE/2e4/d9maIBt9EXETuFxrS0Dya69i3mXe0e3T
+	 bbdaV4s65+oeMESiEVQh+fY8iVBM4pzTnV45M5Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgHTMEZ (ORCPT
+        id S1729958AbgHTMEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:04:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbgHTJ7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:19 -0400
+        id S1730346AbgHTJ7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 769ED2067C;
-        Thu, 20 Aug 2020 09:59:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42A722CAE;
+        Thu, 20 Aug 2020 09:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917559;
-        bh=3DbTosbn/9M8AZwshGP3ITLMyCZ5UHRUtgMC2+pda8o=;
+        s=default; t=1597917553;
+        bh=q+/BfhKioI3638M7k9ipVudVd623gBSf1KwRlG9SoYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pf2u4d1HuEkpOKXtr7K+kc9sTx3qnNe2RFQVD5Sr3uNM3l18IohqKS+efQktlmlY9
-         8PXLWaA097VP0bMHIXLh/MxoJeEaWpzbkuI9k58JvgfZ6Sgz5g63Z+yO0vxKF6w5SZ
-         qK7xnDDqzzFLg57ZMmdpXl1WZX6yKe4gJbJORgV0=
+        b=wW0u6OS/Gwhl+CpiVi/tVLuQwWW866pIw4O+WrK4VNn0MKiLsyQzPEuOVxYO3r237
+         IHewlBd1PJjQYAVXl/lbamvLYnF0ASnk0IpdOk1yC19/gAsoCnRZXvbR90b3XqYnx9
+         2A9UhslJanWGm503RFsZUs6WUUuhbybfmTX1zzrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 074/212] vxlan: Ensure FDB dump is performed under RCU
-Date:   Thu, 20 Aug 2020 11:20:47 +0200
-Message-Id: <20200820091606.102963626@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 032/212] ibmvnic: Fix IRQ mapping disposal in error path
+Date:   Thu, 20 Aug 2020 11:20:05 +0200
+Message-Id: <20200820091603.982157277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,96 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit b5141915b5aec3b29a63db869229e3741ebce258 ]
+[ Upstream commit 27a2145d6f826d1fad9de06ac541b1016ced3427 ]
 
-The commit cited below removed the RCU read-side critical section from
-rtnl_fdb_dump() which means that the ndo_fdb_dump() callback is invoked
-without RCU protection.
+RX queue IRQ mappings are disposed in both the TX IRQ and RX IRQ
+error paths. Fix this and dispose of TX IRQ mappings correctly in
+case of an error.
 
-This results in the following warning [1] in the VXLAN driver, which
-relied on the callback being invoked from an RCU read-side critical
-section.
-
-Fix this by calling rcu_read_lock() in the VXLAN driver, as already done
-in the bridge driver.
-
-[1]
-WARNING: suspicious RCU usage
-5.8.0-rc4-custom-01521-g481007553ce6 #29 Not tainted
------------------------------
-drivers/net/vxlan.c:1379 RCU-list traversed in non-reader section!!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by bridge/166:
- #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: netlink_dump+0xea/0x1090
-
-stack backtrace:
-CPU: 1 PID: 166 Comm: bridge Not tainted 5.8.0-rc4-custom-01521-g481007553ce6 #29
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
-Call Trace:
- dump_stack+0x100/0x184
- lockdep_rcu_suspicious+0x153/0x15d
- vxlan_fdb_dump+0x51e/0x6d0
- rtnl_fdb_dump+0x4dc/0xad0
- netlink_dump+0x540/0x1090
- __netlink_dump_start+0x695/0x950
- rtnetlink_rcv_msg+0x802/0xbd0
- netlink_rcv_skb+0x17a/0x480
- rtnetlink_rcv+0x22/0x30
- netlink_unicast+0x5ae/0x890
- netlink_sendmsg+0x98a/0xf40
- __sys_sendto+0x279/0x3b0
- __x64_sys_sendto+0xe6/0x1a0
- do_syscall_64+0x54/0xa0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fe14fa2ade0
-Code: Bad RIP value.
-RSP: 002b:00007fff75bb5b88 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00005614b1ba0020 RCX: 00007fe14fa2ade0
-RDX: 000000000000011c RSI: 00007fff75bb5b90 RDI: 0000000000000003
-RBP: 00007fff75bb5b90 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00005614b1b89160
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: 5e6d24358799 ("bridge: netlink dump interface at par with brctl")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Fixes: ea22d51a7831 ("ibmvnic: simplify and improve driver probe function")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -889,6 +889,7 @@ static int vxlan_fdb_dump(struct sk_buff
- 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
- 		struct vxlan_fdb *f;
- 
-+		rcu_read_lock();
- 		hlist_for_each_entry_rcu(f, &vxlan->fdb_head[h], hlist) {
- 			struct vxlan_rdst *rd;
- 
-@@ -901,12 +902,15 @@ static int vxlan_fdb_dump(struct sk_buff
- 						     cb->nlh->nlmsg_seq,
- 						     RTM_NEWNEIGH,
- 						     NLM_F_MULTI, rd);
--				if (err < 0)
-+				if (err < 0) {
-+					rcu_read_unlock();
- 					goto out;
-+				}
- skip:
- 				*idx += 1;
- 			}
- 		}
-+		rcu_read_unlock();
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 20f7ab4aa2f15..d25b76440c114 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1515,7 +1515,7 @@ req_rx_irq_failed:
+ req_tx_irq_failed:
+ 	for (j = 0; j < i; j++) {
+ 		free_irq(adapter->tx_scrq[j]->irq, adapter->tx_scrq[j]);
+-		irq_dispose_mapping(adapter->rx_scrq[j]->irq);
++		irq_dispose_mapping(adapter->tx_scrq[j]->irq);
  	}
- out:
- 	return err;
+ 	release_sub_crqs_no_irqs(adapter);
+ 	return rc;
+-- 
+2.25.1
+
 
 
