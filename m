@@ -7,61 +7,61 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC85EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD4F32076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64B52076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+IMfnfO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSV5hRvo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725798AbgHTED2 (ORCPT
+        id S1725823AbgHTEHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:03:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35010 "EHLO
+        Thu, 20 Aug 2020 00:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgHTEDY (ORCPT
+        with ESMTP id S1725290AbgHTEHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:03:24 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521BCC061757;
-        Wed, 19 Aug 2020 21:03:23 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id m22so660298ljj.5;
-        Wed, 19 Aug 2020 21:03:23 -0700 (PDT)
+        Thu, 20 Aug 2020 00:07:08 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A773C061757;
+        Wed, 19 Aug 2020 21:07:07 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id f26so651104ljc.8;
+        Wed, 19 Aug 2020 21:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=6OYjRa2YFAp9GJDPztH9gcNTvoIcykOgM6tlkjols9M=;
-        b=W+IMfnfO0neSwKeVFbvWDeuWIRAvdaVfvcDLXJJ41lTXU7iPndyA9PLt28yD9GMKe4
-         C4HBzhGytXnftGN6bZUSUvWof472d4B6Dz1pquvg+xhwsp7SDdnVU634hM4h9LSiuAH9
-         hmYTr4EItQSteN4PSjXLv4iJZ5WBNrll3N34ayRio9FL+fQV3Z7wtCHpcFoRyiiHc5GP
-         RJgjqRE14sD/Yvn8YW856kH0e0A6p7Rq2lZQTTiyAnyZ6dHN4H6DV9YibWOcRpyfFdsR
-         /jeOEvyOo8NLtQGxywbWEiQLpDjdlChuCufX2VNDLcK1dzVZyxE/CK6Om5vn3HkvqL7F
-         1pRw==
+        bh=BO9tyh8T8tCTBMaQBV0urXMM6teq8tH6A459y0FQgpQ=;
+        b=hSV5hRvoKIvX411//W3s83AN2F0kpoWdN6nMPPCY6RGHkyTgHNlQXQhssEKWDH+smv
+         cYmg8h7+lAWv948uBqKrr8tEr7nWcCXkKifSzZrQ+GgtxWuOC4uXn2Z9x9DtcXAhyAvn
+         B5vUHqISzRU79Yk/zjY3b4Jpej1yPqx7CaZqpkwAqfirNSssWvaRiOb2caK080+cL4oa
+         GGHYEVPoT0zNpMVwFSfa/pfZj2sYXMtBYSY2CALwSCFpOXYWzHiRar9CxNAUuQxPRDYC
+         VIFfsYPT/O3Jeo6KxH6i5mx/7YD9wNNi3VLinztfa4Q7awXT/MbWSquw+I9HTukSed40
+         pCWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6OYjRa2YFAp9GJDPztH9gcNTvoIcykOgM6tlkjols9M=;
-        b=JjitZN5izmwCG2Nm6EW0cQuhA9PZBUYSvZaaqGHj7f8NwqhPC/FuJmXW9J+CutJ8mN
-         mghy9Ev/4RlnPpX1rZNvdm+sXuM4ZFajdkHFY9zc+gg2qp2SETqA1eLP5AwS6KJGnedF
-         0nIBbekBV7123xt7jKH9D9cpmETX9mx62b1BkVEBlrRKlGjptRIMs7xZyuLQ7xlO2GYu
-         W9tR8dbkNaTARMlINQ3c/ejk5gi2ZZssyRp/SXm4h+YxN+uAyfnoapS2oZjtfn4WFV9o
-         N0eJqpCjA8W6IU+a8L3UwhiiIZl0h1FetteyyxVnW/6HTtf4lvWdZQKFAJ/OJCdoTEiR
-         eBOw==
-X-Gm-Message-State: AOAM530TbEP55yODI4n6CQ9U0uCzxeJGQoL9hSN+mEw7yM7inZ/5RR66
-        Ci/fkY3lE3GAKcusI2LFaZjgUwTGv4xfRYlvG3k=
-X-Google-Smtp-Source: ABdhPJx1X9zOEzqgLSjQ4E93SffXxZgVfkOs9yIT7X25hcIxRXMs+MjFFkiDnYKpp5gtJYO1b/QtmjlOzyx0/o2H6gw=
-X-Received: by 2002:a2e:5cc9:: with SMTP id q192mr641018ljb.452.1597896202260;
- Wed, 19 Aug 2020 21:03:22 -0700 (PDT)
+        bh=BO9tyh8T8tCTBMaQBV0urXMM6teq8tH6A459y0FQgpQ=;
+        b=CLlq8UInFii0Yz/hg8vh2adSG7LYJJuci+wrJ8xM58xs3kkEyGyNCP7Tv9ajGWWSH+
+         9kx6Q7WxfbhSgu922SNlZC8TunrO+x6orVjlf5yfCcFXrQL0UCwn3CjhKfyKe87oEfzH
+         GkR7LP2mGZCDWW/UUPpkdNhwVD0R7OwAyW+HS8tTFf9mmEkMmW7GCM8AvBEMThS9gD65
+         T42YMpZ88bxcgYPvh/6nIA2wiEJnsc9VbxwIRJcWzF/N32FpJ93ynjWFGBbPWQq9ixGY
+         9BqrjK84paCJJTJYKwqZx4YCqDVKKeBjhkWeqg3j3M+CXp/GbH3cbEHtlMjFGx0kH5o8
+         KY3A==
+X-Gm-Message-State: AOAM5325Ap673NgOO+93EQbeej7/dna+IF9glWZ5oTSQ5IOkjz5xjbuw
+        eeJNc2C/r7CVx36Fj/mXQWYgPowyB8KCM24kUSM=
+X-Google-Smtp-Source: ABdhPJwgXZisg/Mfzp4Ub8SEXZ4V4WszrVaQY4jH2nQhnXMUhjDRn9RxHps4ovDq4mOz7ajRxULlYB3qlwTHVGfbu8g=
+X-Received: by 2002:a2e:8ed4:: with SMTP id e20mr672312ljl.403.1597896425849;
+ Wed, 19 Aug 2020 21:07:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1596025057.git.agx@sigxcpu.org> <41adfe49c75d8bb261dc8d481e9bb537f6699cb4.1596025057.git.agx@sigxcpu.org>
-In-Reply-To: <41adfe49c75d8bb261dc8d481e9bb537f6699cb4.1596025057.git.agx@sigxcpu.org>
+References: <cover.1596025057.git.agx@sigxcpu.org> <b12158087838bf8e78f06024fa65da8d94f5d185.1596025057.git.agx@sigxcpu.org>
+In-Reply-To: <b12158087838bf8e78f06024fa65da8d94f5d185.1596025057.git.agx@sigxcpu.org>
 From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 20 Aug 2020 01:03:10 -0300
-Message-ID: <CAOMZO5DUA5eS8apZPbte0EcSQ4Vwpg6YLK7D0YdjSUy+kdBu8Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] arm64: dts: imx8mq: Add NWL MIPI DSI controller
+Date:   Thu, 20 Aug 2020 01:06:54 -0300
+Message-ID: <CAOMZO5ANrd2JCmHyxZ0Sv0WNcU9T-q3MbaeADxbOwf+31MQ4LQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] arm64: dts: imx8mq-librem5-devkit: Enable the LCD panel
 To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
 Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
@@ -99,8 +99,8 @@ Hi Guido,
 
 On Wed, Jul 29, 2020 at 9:19 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
 >
-> Add a node for the Northwest Logic MIPI DSI IP core, "disabled" by
-> default. This also adds the necessary port to LCDIF.
+> Enable LCD panel output by adding nodes for the NWL DSI host controller,
+> the Rocktech panel and the eLCDIF display controller.
 >
 > Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
 
