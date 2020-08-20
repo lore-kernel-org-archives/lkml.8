@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F9FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98158C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0ED6207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682AD20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926883;
-	bh=XrbbsEwzjw+TUQZLjHjpZRKnnu1QqeUqlC+z7zSuM0g=;
+	s=default; t=1597926896;
+	bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1R/AHPqLjjf+bCCU2VaqhroGaKsyIAGOkcEnPtLp+K4jyi/swbA1Ce+rl6gddhjPr
-	 wuv+kxnrHabMbDPBwQogVy+nR0wHfxp3PVQqPGygo7fSlbcvKgL/A4uEhUAbi+U9B2
-	 6uXslT9ztUn6WBKQCR1/uNpUt5gioiRCDmKNWsk4=
+	b=W0oEXsO7fC1HHa8YPc9JwUJ54kAfUwzF3rbHFmNRy+UvyErc215OKHlfNZ3iOdfUZ
+	 f1rOUOEnEa/addz+zzj3X8khp1x9YHmzG2nyeOFO3BBz7wFkVrdlMjbYDzAKRv1KA1
+	 pBUZfQrz+R0F/OFpziNBNzpsLIesSQtHhb/kcX2k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgHTJsp (ORCPT
+        id S1729887AbgHTMez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53144 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:34:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729497AbgHTJsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:23 -0400
+        id S1729548AbgHTJsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88D4C2078D;
-        Thu, 20 Aug 2020 09:48:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A98D2173E;
+        Thu, 20 Aug 2020 09:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916903;
-        bh=XrbbsEwzjw+TUQZLjHjpZRKnnu1QqeUqlC+z7zSuM0g=;
+        s=default; t=1597916914;
+        bh=uPeGqQXkvY7c5Sqc18JCLPAOGTvavRRRr4EheBmcF8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yhzok+Gl3wZNYnHyjEFi22g3Utbz8yfYuIM2xJbyG2Dyd2JwNP5eU3U1+yojm+jaN
-         Chmpkr7UKiYLxRF19ailGvRYQad6kf68tkl3z/MjuXLz2XRZaaBKhmrKSDsaqivAAN
-         7ibiQoU+haVpImPabSkb8Z43hiDpcevdX63OwP6g=
+        b=L6h3D9SdSKfh9N8mxr9KSlipbeVWOukTw0DwaieA1EIm1Y7i0i+G4VETXfDNeDroS
+         xlREJaA6pcJun3SqDotaItZPHmMOrK01bn4rSrMOEuO234MS2+e3Gy92MCdNhZMshV
+         ficsrojkan6WqRUd5clTCseLh1LzMR1yV4+hB7Sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 087/152] selftests/bpf: Test_progs indicate to shell on non-actions
-Date:   Thu, 20 Aug 2020 11:20:54 +0200
-Message-Id: <20200820091558.191183968@linuxfoundation.org>
+Subject: [PATCH 5.4 091/152] USB: serial: ftdi_sio: fix break and sysrq handling
+Date:   Thu, 20 Aug 2020 11:20:58 +0200
+Message-Id: <20200820091558.394549455@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,37 +59,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 6c92bd5cd4650c39dd929565ee172984c680fead ]
+[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
 
-When a user selects a non-existing test the summary is printed with
-indication 0 for all info types, and shell "success" (EXIT_SUCCESS) is
-indicated. This can be understood by a human end-user, but for shell
-scripting is it useful to indicate a shell failure (EXIT_FAILURE).
+Only the last NUL in a packet should be flagged as a break character,
+for example, to avoid dropping unrelated characters when IGNBRK is set.
 
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159363984736.930467.17956007131403952343.stgit@firesoul
+Also make sysrq work by consuming the break character instead of having
+it immediately cancel the sysrq request, and by not processing it
+prematurely to avoid triggering a sysrq based on an unrelated character
+received in the same packet (which was received *before* the break).
+
+Note that the break flag can be left set also for a packet received
+immediately following a break and that and an ending NUL in such a
+packet will continue to be reported as a break as there's no good way to
+tell it apart from an actual break.
+
+Tested on FT232R and FT232H.
+
+Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 8cb3469dd11f2..a7d06724c18c2 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -584,5 +584,8 @@ int main(int argc, char **argv)
- 	free(env.test_selector.num_set);
- 	free(env.subtest_selector.num_set);
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 33f1cca7eaa61..07b146d7033a6 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2483,6 +2483,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		struct ftdi_private *priv, unsigned char *buf, int len)
+ {
+ 	unsigned char status;
++	bool brkint = false;
+ 	int i;
+ 	char flag;
  
-+	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
-+		return EXIT_FAILURE;
-+
- 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
- }
+@@ -2534,13 +2535,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	 */
+ 	flag = TTY_NORMAL;
+ 	if (buf[1] & FTDI_RS_ERR_MASK) {
+-		/* Break takes precedence over parity, which takes precedence
+-		 * over framing errors */
+-		if (buf[1] & FTDI_RS_BI) {
+-			flag = TTY_BREAK;
++		/*
++		 * Break takes precedence over parity, which takes precedence
++		 * over framing errors. Note that break is only associated
++		 * with the last character in the buffer and only when it's a
++		 * NUL.
++		 */
++		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
+ 			port->icount.brk++;
+-			usb_serial_handle_break(port);
+-		} else if (buf[1] & FTDI_RS_PE) {
++			brkint = true;
++		}
++		if (buf[1] & FTDI_RS_PE) {
+ 			flag = TTY_PARITY;
+ 			port->icount.parity++;
+ 		} else if (buf[1] & FTDI_RS_FE) {
+@@ -2556,8 +2561,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 
+ 	port->icount.rx += len - 2;
+ 
+-	if (port->port.console && port->sysrq) {
++	if (brkint || (port->port.console && port->sysrq)) {
+ 		for (i = 2; i < len; i++) {
++			if (brkint && i == len - 1) {
++				if (usb_serial_handle_break(port))
++					return len - 3;
++				flag = TTY_BREAK;
++			}
+ 			if (usb_serial_handle_sysrq_char(port, buf[i]))
+ 				continue;
+ 			tty_insert_flip_char(&port->port, buf[i], flag);
 -- 
 2.25.1
 
