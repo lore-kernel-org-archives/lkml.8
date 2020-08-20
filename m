@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB63C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C44742078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27EB82078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924562;
-	bh=1gBw/nizSjzEAkxJYCzqvO1twynNchzj+53LZt4J2us=;
+	s=default; t=1597924570;
+	bh=DmdG/bHokmLdRs93LHOjww+JEXTHyUySZ26OQc0iFYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o3BQRRvnYX20DjWIdA4DiCvsqkfaXWtWzB5iaungUkcjzIO8DMNtc3s6BP4KmXJer
-	 njQ1w/rZOeVGQWTsVW6N7fqAcrpenpfOsX+56z9kVjnmtgff0AhvJ+L47u9RtKDM/8
-	 v9gaxRmyzPa5GGwF9T9PY5uqvpfa4z/axFnaGcCQ=
+	b=VQx4yDjHJJuNrF46EkZzqcJAZFahitL9vZFd1QPhOdhCxWTlMohlFL4lL8FdSgLsF
+	 1i/+3fHvWrRhBSGG3do3nFX7hMfhvt/salbRs2XVDkV9V60BEu6yWJ1Ho7dKzivxkH
+	 L6bjk90TtbjgPZl4t7e+7ijyGa02t7QDzgvxfzPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbgHTL4B (ORCPT
+        id S1728611AbgHTL4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48252 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:56:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730436AbgHTKBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:18 -0400
+        id S1730088AbgHTKBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A744622BEA;
-        Thu, 20 Aug 2020 10:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A3B2067C;
+        Thu, 20 Aug 2020 10:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917676;
-        bh=1gBw/nizSjzEAkxJYCzqvO1twynNchzj+53LZt4J2us=;
+        s=default; t=1597917678;
+        bh=DmdG/bHokmLdRs93LHOjww+JEXTHyUySZ26OQc0iFYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=if+H3TZEAEoSfE6hNm0Ss4/80ofvNfsaOtOeYmWMjL0O4W7nRWb3EwGr60Kjedkis
-         pezsm98/kzfTNA4611hhZuJzt7hjNORZzSNTVzrMqj4FbU2+ppvy2H8X+vf7nt/Ir9
-         viF+BfVlKdcQZHHZUO9md+8/WJFdmYPDmZpK5jJM=
+        b=dnIZVXHr91o8x3tMtqSCN0bXB0xBuL7tpsmb6s3NlYr5FOAcKtmjQHgKgR8dKQAp5
+         m1sO0XJTadN7KU5IUeFvu2ByBK3HOOtrLEKCkU9LklDto3/FBsmEMd1A4zS4SGimqf
+         BQ0FNhpBZ9VFn1BIYCgWxzCTDbNZM7lRaHdae400=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 099/212] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
-Date:   Thu, 20 Aug 2020 11:21:12 +0200
-Message-Id: <20200820091607.345136281@linuxfoundation.org>
+Subject: [PATCH 4.9 117/212] drm/radeon: fix array out-of-bounds read and write issues
+Date:   Thu, 20 Aug 2020 11:21:30 +0200
+Message-Id: <20200820091608.260104874@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,81 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
+[ Upstream commit 7ee78aff9de13d5dccba133f4a0de5367194b243 ]
 
-A large process running on a heavily loaded system can encounter the
-following RCU CPU stall warning:
+There is an off-by-one bounds check on the index into arrays
+table->mc_reg_address and table->mc_reg_table_entry[k].mc_data[j] that
+can lead to reads and writes outside of arrays. Fix the bound checking
+off-by-one error.
 
-  rcu: INFO: rcu_sched self-detected stall on CPU
-  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
-  	(t=21013 jiffies g=1005461 q=132576)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
-  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x60
-   nmi_cpu_backtrace.cold.3+0x13/0x50
-   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x99/0xc7
-   rcu_sched_clock_irq.cold.87+0x1aa/0x397
-   ? tick_sched_do_timer+0x60/0x60
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x37/0x70
-   __hrtimer_run_queues+0xfe/0x270
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x5e/0x120
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:kmem_cache_free+0x223/0x300
-  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
-  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
-  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
-  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
-  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
-  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
-   ? remove_vma+0x4f/0x60
-   remove_vma+0x4f/0x60
-   exit_mmap+0xd6/0x160
-   mmput+0x4a/0x110
-   do_exit+0x278/0xae0
-   ? syscall_trace_enter+0x1d3/0x2b0
-   ? handle_mm_fault+0xaa/0x1c0
-   do_group_exit+0x3a/0xa0
-   __x64_sys_exit_group+0x14/0x20
-   do_syscall_64+0x42/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-for a very long time given a large process.  This commit therefore adds
-a cond_resched() to this loop, providing RCU any needed quiescent states.
-
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-mm@kvack.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Addresses-Coverity: ("Out-of-bounds read/write")
+Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/mmap.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index d221266d100f4..7109f886e739e 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3018,6 +3018,7 @@ void exit_mmap(struct mm_struct *mm)
- 		if (vma->vm_flags & VM_ACCOUNT)
- 			nr_accounted += vma_pages(vma);
- 		vma = remove_vma(vma);
-+		cond_resched();
- 	}
- 	vm_unacct_memory(nr_accounted);
- }
+diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
+index be43582811dfc..50bad42527b1c 100644
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -4348,7 +4348,7 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
+ 					table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
+ 			}
+ 			j++;
+-			if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
++			if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
+ 				return -EINVAL;
+ 
+ 			if (!pi->mem_gddr5) {
 -- 
 2.25.1
 
