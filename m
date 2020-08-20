@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378B72173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AD54208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917471;
-	bh=qnaBYUjvGUjG4EwYsGZIGob0s5WCAJNqm2B67vsURKg=;
+	s=default; t=1597917481;
+	bh=d48/wqnRyveoPbGeJevVTB9ec4J9pTMHqjBH7dZK2gs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zkNl0gQnxn497PaKjJd3jC/Hywg4ElG4KQE0gwIBqKOb8zloDIDHOhtBKklC/pw9a
-	 uqbDfFAVe1lIsgid7o72UV53dPIwJRjWGQk9cO/A9T6CEV8BPOCUVPEPyaEzgSZD8Z
-	 b3jAbRluWfbC/SPZVSdgXimRB/vsNEj9ctUqWzFU=
+	b=j9Auu52O/QfDsRSe4sYlKaWWv2aS/6IJKespX+MXOfnoiTvKmgURbRFVqyMw7WDKW
+	 hEQvmKh2I1zj562e7AT7tj6ywSF7Tt8gWA9VG8hRSIzUeMcwm8jKPFP4z5kLOmIhne
+	 Slz3RY5b8P9FjQMYu01AApYMSaBppR6pQnbfNNyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730345AbgHTJ5j (ORCPT
+        id S1730197AbgHTJ57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730286AbgHTJ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:18 -0400
+        id S1730290AbgHTJ5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 061AC2067C;
-        Thu, 20 Aug 2020 09:57:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1F8207FB;
+        Thu, 20 Aug 2020 09:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917437;
-        bh=qnaBYUjvGUjG4EwYsGZIGob0s5WCAJNqm2B67vsURKg=;
+        s=default; t=1597917449;
+        bh=d48/wqnRyveoPbGeJevVTB9ec4J9pTMHqjBH7dZK2gs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDRhPT7imWEv8PspDY6ylA0spU8uRLypc8F2iL8yx9FDJmfI2MGyLm2OnyLU5zQGd
-         HSpjn7nOQtQCLp5hEWL53CzI44YWWBONTyxfIbvjaSQzQC89dr/vAou8XvE8NVoGNN
-         UF25rn3PA1w+ukeFLOjjTFkI3xeRxYaEPFN2kdjg=
+        b=lkWF7PN//VntkQ2jK7VBKadw6FObivtvDClaM8S3535uPozIvJ0QsJdDsLFITtSZn
+         +1KRyZ/4maPQMVBbmJxPI4HH37sD+xvEbw7MSfhNV1Jh7+8OE793lC5Ob2RTXfhHbD
+         r3T9yuFEwVdq57192utLgZ1TL4jCkY6OVUKZzAJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/212] mlxsw: core: Increase scope of RCU read-side critical section
-Date:   Thu, 20 Aug 2020 11:20:03 +0200
-Message-Id: <20200820091603.871846929@linuxfoundation.org>
+Subject: [PATCH 4.9 006/212] media: rc: prevent memory leak in cx23888_ir_probe
+Date:   Thu, 20 Aug 2020 11:19:39 +0200
+Message-Id: <20200820091602.571979921@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,50 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 7d8e8f3433dc8d1dc87c1aabe73a154978fb4c4d ]
+[ Upstream commit a7b2df76b42bdd026e3106cf2ba97db41345a177 ]
 
-The lifetime of the Rx listener item ('rxl_item') is managed using RCU,
-but is dereferenced outside of RCU read-side critical section, which can
-lead to a use-after-free.
+In cx23888_ir_probe if kfifo_alloc fails the allocated memory for state
+should be released.
 
-Fix this by increasing the scope of the RCU read-side critical section.
-
-Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/pci/cx23885/cx23888-ir.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index aa33d58b9f81c..6ebe88deab62a 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1584,9 +1584,10 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
- 			break;
- 		}
- 	}
--	rcu_read_unlock();
--	if (!found)
-+	if (!found) {
-+		rcu_read_unlock();
- 		goto drop;
+diff --git a/drivers/media/pci/cx23885/cx23888-ir.c b/drivers/media/pci/cx23885/cx23888-ir.c
+index c1aa888af7054..83864a99d3a66 100644
+--- a/drivers/media/pci/cx23885/cx23888-ir.c
++++ b/drivers/media/pci/cx23885/cx23888-ir.c
+@@ -1179,8 +1179,11 @@ int cx23888_ir_probe(struct cx23885_dev *dev)
+ 		return -ENOMEM;
+ 
+ 	spin_lock_init(&state->rx_kfifo_lock);
+-	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE, GFP_KERNEL))
++	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE,
++			GFP_KERNEL)) {
++		kfree(state);
+ 		return -ENOMEM;
 +	}
  
- 	pcpu_stats = this_cpu_ptr(mlxsw_core->pcpu_stats);
- 	u64_stats_update_begin(&pcpu_stats->syncp);
-@@ -1597,6 +1598,7 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
- 	u64_stats_update_end(&pcpu_stats->syncp);
- 
- 	rxl->func(skb, local_port, rxl_item->priv);
-+	rcu_read_unlock();
- 	return;
- 
- drop:
+ 	state->dev = dev;
+ 	sd = &state->sd;
 -- 
 2.25.1
 
