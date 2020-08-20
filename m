@@ -2,149 +2,247 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF62C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C1EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BD5C22BED
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920798;
-	bh=UhkpiOq4AmEwUCFpvcqVVtgln98Cq8cPElpho6ALOhE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TUZOQ8lZdsszY5jBcet25S8anEhgKCjag+ZvFixRYu6f9Jt29cJbW3QaXUEr/w3ER
-	 HbqzlLSVtKh1XQMP8pfhJZyfYcYPTbw4pAdCzhDMAgmYaIMRnkcKhUpv9xa8OgTcuG
-	 b5JDWbacXeYVW7JrArpnW2kDMkxy3k01zXIkAC6E=
+	by mail.kernel.org (Postfix) with ESMTP id EA60420724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbgHTKxQ (ORCPT
+        id S1731250AbgHTKxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:53:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60958 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:53:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:52351 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731160AbgHTKOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F9AF206DA;
-        Thu, 20 Aug 2020 10:14:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918461;
-        bh=UhkpiOq4AmEwUCFpvcqVVtgln98Cq8cPElpho6ALOhE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WiL0X6d66rdakPfm6VGs2zL4w+gHqkcB4brhFk256XiAS9twJL9lgRnoDyqo4p/EB
-         lo58YxW7XE15nXyjplXZkF7fZvID+Lftux94zEXmX5jtzkTIhQ1bkiemk2RJ2sd7xw
-         tDysq1TFkmfYm9ug71AcVUm9jDJ2t4JbX9c7PBTo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 4.14 178/228] net/compat: Add missing sock updates for SCM_RIGHTS
-Date:   Thu, 20 Aug 2020 11:22:33 +0200
-Message-Id: <20200820091616.475566368@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731514AbgHTKxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:53:02 -0400
+IronPort-SDR: mTFY2IsmrTjA6seb/afrZwNU1L7tes2q0eqeR3QSAyZloyQIdIKO/+12EJNW19vwwFNoiriWL6
+ iFtHE447+Vlg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="216814278"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="216814278"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 03:53:01 -0700
+IronPort-SDR: F/MSpuvDJb0c+Fl311bQpLMxkIGXF5XvQ6IQk4EsJbAiffqOx9xUzw79vymMv2eshLsNtJO8RA
+ U7BalIxgzuLw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="327392777"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2020 03:52:58 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1k8iBj-00A5k8-Ra; Thu, 20 Aug 2020 13:52:55 +0300
+Date:   Thu, 20 Aug 2020 13:52:55 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
+Cc:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org,
+        lee.jones@linaro.org, thierry.reding@gmail.com,
+        p.zabel@pengutronix.de, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
+        rtanwar@maxlinear.com
+Subject: Re: [PATCH v8 2/2] Add PWM fan controller driver for LGM SoC
+Message-ID: <20200820105255.GB1891694@smile.fi.intel.com>
+References: <cover.1597898872.git.rahul.tanwar@linux.intel.com>
+ <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6d0a65625a2bc231c649c970c0a1af1ff3a5dd5.1597898872.git.rahul.tanwar@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+On Thu, Aug 20, 2020 at 12:50:46PM +0800, Rahul Tanwar wrote:
+> Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
+> This PWM controller does not have any other consumer, it is a
+> dedicated PWM controller for fan attached to the system. Add
+> driver for this PWM fan controller.
 
-commit d9539752d23283db4692384a634034f451261e29 upstream.
+...
 
-Add missed sock updates to compat path via a new helper, which will be
-used more in coming patches. (The net/core/scm.c code is left as-is here
-to assist with -stable backports for the compat path.)
+> +config PWM_INTEL_LGM
+> +	tristate "Intel LGM PWM support"
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +	depends on OF && HAS_IOMEM
+> +	depends on X86 || COMPILE_TEST
 
----
- include/net/sock.h |    4 ++++
- net/compat.c       |    1 +
- net/core/sock.c    |   21 +++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+For better test coverage you may rewrite this
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -816,6 +816,8 @@ static inline int sk_memalloc_socks(void
- {
- 	return static_key_false(&memalloc_socks);
- }
-+
-+void __receive_sock(struct file *file);
- #else
- 
- static inline int sk_memalloc_socks(void)
-@@ -823,6 +825,8 @@ static inline int sk_memalloc_socks(void
- 	return 0;
- }
- 
-+static inline void __receive_sock(struct file *file)
-+{ }
- #endif
- 
- static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -289,6 +289,7 @@ void scm_detach_fds_compat(struct msghdr
- 			break;
- 		}
- 		/* Bump the usage count and install the file. */
-+		__receive_sock(fp[i]);
- 		fd_install(new_fd, get_file(fp[i]));
- 	}
- 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2563,6 +2563,27 @@ int sock_no_mmap(struct file *file, stru
- }
- EXPORT_SYMBOL(sock_no_mmap);
- 
-+/*
-+ * When a file is received (via SCM_RIGHTS, etc), we must bump the
-+ * various sock-based usage counts.
-+ */
-+void __receive_sock(struct file *file)
-+{
-+	struct socket *sock;
-+	int error;
-+
-+	/*
-+	 * The resulting value of "error" is ignored here since we only
-+	 * need to take action when the file is a socket and testing
-+	 * "sock" for NULL is sufficient.
-+	 */
-+	sock = sock_from_file(file, &error);
-+	if (sock) {
-+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-+		sock_update_classid(&sock->sk->sk_cgrp_data);
-+	}
-+}
-+
- ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
- {
- 	ssize_t res;
+	depends on HAS_IOMEM
+	depends on (OF && X86) || COMPILE_TEST
+
+> +	select REGMAP_MMIO
+> +	help
+> +	  Generic PWM fan controller driver for LGM SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-intel-lgm.
+
+...
+
+> +#include <linux/bitfield.h>
+> +#include <linux/clk.h>
+> +#include <linux/module.h>
+
+> +#include <linux/of_device.h>
+
+This should be mod_devicetable.h.
+
+> +#include <linux/pwm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+
+...
+
+> +#define LGM_PWM_PERIOD_2WIRE_NSECS	40000000
+
+NSECS -> NS
+40000000 -> (40 * NSEC_PER_MSEC)
+
+...
+
+> +	if (state->polarity != PWM_POLARITY_NORMAL ||
+> +	    state->period < pc->period)
+
+It can be one line.
+
+> +		return -EINVAL;
+
+...
+
+> +	if (!state->enabled) {
+
+> +		ret = lgm_pwm_enable(chip, 0);
+> +		return ret;
+
+What is the point?
+
+> +	}
+
+...
+
+> +	ret = lgm_pwm_enable(chip, 1);
+> +
+> +	return ret;
+
+Ditto.
+
+...
+
+> +	state->duty_cycle = DIV_ROUND_UP(duty * pc->period,
+> +					 LGM_PWM_MAX_DUTY_CYCLE);
+
+One line?
+
+...
+
+> +	struct lgm_pwm_chip *pc;
+> +	struct device *dev = &pdev->dev;
+
+Use reversed xmas tree order.
+
+> +	void __iomem *io_base;
+> +	int ret;
+
+...
+
+> +	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
+> +	if (IS_ERR(pc->regmap)) {
+
+> +		ret = PTR_ERR(pc->regmap);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to init register map: %pe\n",
+> +				pc->regmap);
+> +		return ret;
+
+dev_err_probe()
+
+> +	}
+
+...
+
+> +	pc->clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(pc->clk)) {
+> +		ret = PTR_ERR(pc->clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get clock: %pe\n", pc->clk);
+> +		return ret;
+
+Ditto.
+
+> +	}
+> +
+> +	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
+> +	if (IS_ERR(pc->rst)) {
+> +		ret = PTR_ERR(pc->rst);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get reset control: %pe\n",
+> +				pc->rst);
+> +		return ret;
+
+Ditto.
+
+> +	}
+> +
+> +	ret = reset_control_deassert(pc->rst);
+> +	if (ret) {
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "cannot deassert reset control: %pe\n",
+> +				ERR_PTR(ret));
+> +		return ret;
+
+Ditto.
+
+> +	}
+
+...
+
+> +	ret = clk_prepare_enable(pc->clk);
+
+Wrap it with devm_add_action_or_reset(). Same for reset_control_deassert().
+You probably can even put them under one function.
+
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		reset_control_assert(pc->rst);
+> +		return ret;
+> +	}
+
+...
+
+> +	ret = pwmchip_add(&pc->chip);
+
+> +	if (ret < 0) {
+
+Does ' < 0' have any meaning?
+
+> +		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
+> +		clk_disable_unprepare(pc->clk);
+> +		reset_control_assert(pc->rst);
+> +		return ret;
+> +	}
+
+...
+
+> +	ret = pwmchip_remove(&pc->chip);
+> +	if (ret < 0)
+
+Ditto.
+
+> +		return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
