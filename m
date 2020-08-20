@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAA4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 240BEC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAA83207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFBC620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926818;
-	bh=7stOTL4c0r0SmATase0Q11SoLc9JM33qxJma8oASAuE=;
+	s=default; t=1597926820;
+	bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mU8OjRc/Q55tQl1sBLU3km94h3ThvAGD4+hugAEEnCMsBcPk79chze62QkAq/K9ug
-	 KicK5MdU7e8XDakiS6NfVrOnD0ZIugsYOEn6pLSgw6vyCco6+zEF92qxSo4i1XCPgC
-	 en0jkIZtd0VrCpEXutFDPSPCawEvmDkxxhNgF7Ak=
+	b=Cx440gLZO0Bg46b4+zQJNLDoBjoUoZKF6KBROhr+a4fMtajMb8BExf7DaCt0x3AGJ
+	 Qa3Y4DjILtsHZI8koZ+dzunXE0eCN9YykboZvI4c106IrL2NOsGNsZgENYkI0Pz6t9
+	 1qv3fomwebs0nm/jCffVzXlovb8CcW9VaurVXrkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgHTMdf (ORCPT
+        id S1730388AbgHTMdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:33:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:33:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgHTJtQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:16 -0400
+        id S1729627AbgHTJtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850E42173E;
-        Thu, 20 Aug 2020 09:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8958320724;
+        Thu, 20 Aug 2020 09:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916956;
-        bh=7stOTL4c0r0SmATase0Q11SoLc9JM33qxJma8oASAuE=;
+        s=default; t=1597916950;
+        bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upyd6Pjgq7Wc6GvDDMOwd4/3LTjV9cL8twMyz8z4SHC7DgRuoV6KHWj0NaE2p8rzA
-         hMrR7vhkIAAsQw2obJjSkxnfzqkxnJspHeiaN/Xu2nG4kGl/lZK3vQ5S5juUip/2oa
-         yqoXaNvURtrX3Oq2p/b0EJ7sLfJt3DzyP8COHPBM=
+        b=1VSBgCjXwIJ8n7Ngs/Gq0w4Q8KEdemMUncNG4O/Pao0/MPZ+EGgOIQ3qbWbMJjZtv
+         SczLvQt4JHELk0599u4RMz5zyqWTjxLF0/KcZiKpOdnJXDg9VQbvlpTxNItPbZbM9A
+         KGDRV+A06uTGUr9j80L/SQKq2Msi0cgPkTZT5NLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/152] crypto: algif_aead - Only wake up when ctx->more is zero
-Date:   Thu, 20 Aug 2020 11:20:44 +0200
-Message-Id: <20200820091557.681528438@linuxfoundation.org>
+Subject: [PATCH 5.4 102/152] selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
+Date:   Thu, 20 Aug 2020 11:21:09 +0200
+Message-Id: <20200820091558.987992661@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,139 +61,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit f3c802a1f30013f8f723b62d7fa49eb9e991da23 ]
+[ Upstream commit 9a11f12e0a6c374b3ef1ce81e32ce477d28eb1b8 ]
 
-AEAD does not support partial requests so we must not wake up
-while ctx->more is set.  In order to distinguish between the
-case of no data sent yet and a zero-length request, a new init
-flag has been added to ctx.
+Rename variable to indicate that they are invalid values which we will
+use to test ptrace update of pkeys.
 
-SKCIPHER has also been modified to ensure that at least a block
-of data is available if there is more data to come.
-
-Fixes: 2d97591ef43d ("crypto: af_alg - consolidation of...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-21-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/af_alg.c         | 11 ++++++++---
- crypto/algif_aead.c     |  4 ++--
- crypto/algif_skcipher.c |  4 ++--
- include/crypto/if_alg.h |  4 +++-
- 4 files changed, 15 insertions(+), 8 deletions(-)
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 26 +++++++++----------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index a3b9df99af6de..ed8ace8675b77 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -635,6 +635,7 @@ void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index bdbbbe8431e03..f9216c7a1829e 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -44,7 +44,7 @@ struct shared_info {
+ 	unsigned long amr2;
  
- 	if (!ctx->used)
- 		ctx->merge = 0;
-+	ctx->init = ctx->more;
- }
- EXPORT_SYMBOL_GPL(af_alg_pull_tsgl);
+ 	/* AMR value that ptrace should refuse to write to the child. */
+-	unsigned long amr3;
++	unsigned long invalid_amr;
  
-@@ -734,9 +735,10 @@ EXPORT_SYMBOL_GPL(af_alg_wmem_wakeup);
-  *
-  * @sk socket of connection to user space
-  * @flags If MSG_DONTWAIT is set, then only report if function would sleep
-+ * @min Set to minimum request size if partial requests are allowed.
-  * @return 0 when writable memory is available, < 0 upon error
-  */
--int af_alg_wait_for_data(struct sock *sk, unsigned flags)
-+int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min)
- {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	struct alg_sock *ask = alg_sk(sk);
-@@ -754,7 +756,9 @@ int af_alg_wait_for_data(struct sock *sk, unsigned flags)
- 		if (signal_pending(current))
- 			break;
- 		timeout = MAX_SCHEDULE_TIMEOUT;
--		if (sk_wait_event(sk, &timeout, (ctx->used || !ctx->more),
-+		if (sk_wait_event(sk, &timeout,
-+				  ctx->init && (!ctx->more ||
-+						(min && ctx->used >= min)),
- 				  &wait)) {
- 			err = 0;
- 			break;
-@@ -843,7 +847,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 	}
- 
- 	lock_sock(sk);
--	if (!ctx->more && ctx->used) {
-+	if (ctx->init && (init || !ctx->more)) {
- 		err = -EINVAL;
- 		goto unlock;
- 	}
-@@ -854,6 +858,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 			memcpy(ctx->iv, con.iv->iv, ivsize);
- 
- 		ctx->aead_assoclen = con.aead_assoclen;
-+		ctx->init = true;
- 	}
- 
- 	while (size) {
-diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
-index 0ae000a61c7f5..d48d2156e6210 100644
---- a/crypto/algif_aead.c
-+++ b/crypto/algif_aead.c
-@@ -106,8 +106,8 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
- 	size_t usedpages = 0;		/* [in]  RX bufs to be used from user */
- 	size_t processed = 0;		/* [in]  TX bufs to be consumed */
- 
--	if (!ctx->used) {
--		err = af_alg_wait_for_data(sk, flags);
-+	if (!ctx->init || ctx->more) {
-+		err = af_alg_wait_for_data(sk, flags, 0);
- 		if (err)
- 			return err;
- 	}
-diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
-index ec5567c87a6df..a51ba22fef58f 100644
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -61,8 +61,8 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
- 	int err = 0;
- 	size_t len = 0;
- 
--	if (!ctx->used) {
--		err = af_alg_wait_for_data(sk, flags);
-+	if (!ctx->init || (ctx->more && ctx->used < bs)) {
-+		err = af_alg_wait_for_data(sk, flags, bs);
- 		if (err)
- 			return err;
- 	}
-diff --git a/include/crypto/if_alg.h b/include/crypto/if_alg.h
-index 864849e942c45..c1a8d4a41bb16 100644
---- a/include/crypto/if_alg.h
-+++ b/include/crypto/if_alg.h
-@@ -135,6 +135,7 @@ struct af_alg_async_req {
-  *			SG?
-  * @enc:		Cryptographic operation to be performed when
-  *			recvmsg is invoked.
-+ * @init:		True if metadata has been sent.
-  * @len:		Length of memory allocated for this data structure.
-  */
- struct af_alg_ctx {
-@@ -151,6 +152,7 @@ struct af_alg_ctx {
- 	bool more;
- 	bool merge;
- 	bool enc;
-+	bool init;
- 
- 	unsigned int len;
+ 	/* IAMR value the parent expects to read from the child. */
+ 	unsigned long expected_iamr;
+@@ -57,8 +57,8 @@ struct shared_info {
+ 	 * (even though they're valid ones) because userspace doesn't have
+ 	 * access to those registers.
+ 	 */
+-	unsigned long new_iamr;
+-	unsigned long new_uamor;
++	unsigned long invalid_iamr;
++	unsigned long invalid_uamor;
  };
-@@ -226,7 +228,7 @@ unsigned int af_alg_count_tsgl(struct sock *sk, size_t bytes, size_t offset);
- void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
- 		      size_t dst_offset);
- void af_alg_wmem_wakeup(struct sock *sk);
--int af_alg_wait_for_data(struct sock *sk, unsigned flags);
-+int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min);
- int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 		   unsigned int ivsize);
- ssize_t af_alg_sendpage(struct socket *sock, struct page *page,
+ 
+ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+@@ -100,7 +100,7 @@ static int child(struct shared_info *info)
+ 
+ 	info->amr1 |= 3ul << pkeyshift(pkey1);
+ 	info->amr2 |= 3ul << pkeyshift(pkey2);
+-	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
++	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
+ 
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+@@ -111,8 +111,8 @@ static int child(struct shared_info *info)
+ 
+ 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+ 				3ul << pkeyshift(pkey2);
+-	info->new_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->new_uamor |= 3ul << pkeyshift(pkey1);
++	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
++	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
+ 
+ 	/*
+ 	 * We won't use pkey3. We just want a plausible but invalid key to test
+@@ -196,9 +196,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	info->amr1 = info->amr2 = info->amr3 = regs[0];
+-	info->expected_iamr = info->new_iamr = regs[1];
+-	info->expected_uamor = info->new_uamor = regs[2];
++	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
++	info->expected_iamr = info->invalid_iamr = regs[1];
++	info->expected_uamor = info->invalid_uamor = regs[2];
+ 
+ 	/* Wake up child so that it can set itself up. */
+ 	ret = prod_child(&info->child_sync);
+@@ -234,10 +234,10 @@ static int parent(struct shared_info *info, pid_t pid)
+ 		return ret;
+ 
+ 	/* Write invalid AMR value in child. */
+-	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
++	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
++	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
+ 
+ 	/* Wake up child so that it can verify it didn't change. */
+ 	ret = prod_child(&info->child_sync);
+@@ -249,7 +249,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 
+ 	/* Try to write to IAMR. */
+ 	regs[0] = info->amr1;
+-	regs[1] = info->new_iamr;
++	regs[1] = info->invalid_iamr;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
+@@ -257,7 +257,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	       ptrace_write_running, regs[0], regs[1]);
+ 
+ 	/* Try to write to IAMR and UAMOR. */
+-	regs[2] = info->new_uamor;
++	regs[2] = info->invalid_uamor;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
 -- 
 2.25.1
 
