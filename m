@@ -2,91 +2,254 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E647C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019FBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9C5207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924034;
-	bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OCZ0e+9SNnGJZruzKuc+m2VfRKsN776vAI8VuIp5Eq00+Cs3+/QwYj8fWmNvsgn9H
-	 FcH0wD579BKV/MmPaQDiKprTHct0CgBExgHRJKDyR4+x6n4Ay3fS9NW6P7GcwXhT79
-	 fXjy15Izic3JjrNXgajZ9Tpy/I4d2BVfJLgdpqyE=
+	by mail.kernel.org (Postfix) with ESMTP id D4C6D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgHTLrL (ORCPT
+        id S1730622AbgHTLr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730610AbgHTKD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F09C2067C;
-        Thu, 20 Aug 2020 10:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917833;
-        bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xB8NvLtsS5kSjJ1sTgjUKqQ06utB4FW8FToHUlp8my6MW+YWtfbnzdR/LQK13zkJ8
-         tYQXKcm/qixDKRWmc0qfBaTClfdaNbASmtwlF3z4mkimrOz7oZFOmUXtNwkwFROnt8
-         9QYgVEI/9wC0mGplBPe7/ERnxKrI7Sf7J1zaDj5w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.9 175/212] xtensa: fix xtensa_pmu_setup prototype
-Date:   Thu, 20 Aug 2020 11:22:28 +0200
-Message-Id: <20200820091611.229908245@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 07:47:27 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9793 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729640AbgHTLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:46:54 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D5DE7A295A6771F01718;
+        Thu, 20 Aug 2020 19:46:44 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 19:46:36 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <darrick.wong@oracle.com>, <cmaiolino@redhat.com>,
+        <dchinner@redhat.com>, <bfoster@redhat.com>,
+        <chandanrlinux@gmail.com>, <sandeen@redhat.com>
+CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] xfs: Convert to use the preferred fallthrough macro
+Date:   Thu, 20 Aug 2020 07:45:31 -0400
+Message-ID: <20200820114531.47465-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+Convert the uses of fallthrough comments to fallthrough macro. Please see
+commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
+keyword for switch/case use") for detail.
 
-commit 6d65d3769d1910379e1cfa61ebf387efc6bfb22c upstream.
-
-Fix the following build error in configurations with
-CONFIG_XTENSA_VARIANT_HAVE_PERF_EVENTS=y:
-
-  arch/xtensa/kernel/perf_event.c:420:29: error: passing argument 3 of
-  ‘cpuhp_setup_state’ from incompatible pointer type
-
-Cc: stable@vger.kernel.org
-Fixes: 25a77b55e74c ("xtensa/perf: Convert the hotplug notifier to state machine callbacks")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- arch/xtensa/kernel/perf_event.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/libxfs/xfs_ag_resv.c  | 4 ++--
+ fs/xfs/libxfs/xfs_da_btree.c | 2 +-
+ fs/xfs/scrub/bmap.c          | 2 +-
+ fs/xfs/scrub/btree.c         | 2 +-
+ fs/xfs/scrub/common.c        | 6 +++---
+ fs/xfs/scrub/dabtree.c       | 2 +-
+ fs/xfs/scrub/repair.c        | 2 +-
+ fs/xfs/xfs_bmap_util.c       | 2 +-
+ fs/xfs/xfs_file.c            | 2 +-
+ fs/xfs/xfs_fsmap.c           | 2 +-
+ fs/xfs/xfs_ioctl.c           | 2 +-
+ fs/xfs/xfs_trans_buf.c       | 2 +-
+ 12 files changed, 15 insertions(+), 15 deletions(-)
 
---- a/arch/xtensa/kernel/perf_event.c
-+++ b/arch/xtensa/kernel/perf_event.c
-@@ -404,7 +404,7 @@ static struct pmu xtensa_pmu = {
- 	.read = xtensa_pmu_read,
- };
+diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
+index fdfe6dc0d307..0b061a027e4e 100644
+--- a/fs/xfs/libxfs/xfs_ag_resv.c
++++ b/fs/xfs/libxfs/xfs_ag_resv.c
+@@ -338,7 +338,7 @@ xfs_ag_resv_alloc_extent(
+ 		break;
+ 	default:
+ 		ASSERT(0);
+-		/* fall through */
++		fallthrough;
+ 	case XFS_AG_RESV_NONE:
+ 		field = args->wasdel ? XFS_TRANS_SB_RES_FDBLOCKS :
+ 				       XFS_TRANS_SB_FDBLOCKS;
+@@ -380,7 +380,7 @@ xfs_ag_resv_free_extent(
+ 		break;
+ 	default:
+ 		ASSERT(0);
+-		/* fall through */
++		fallthrough;
+ 	case XFS_AG_RESV_NONE:
+ 		xfs_trans_mod_sb(tp, XFS_TRANS_SB_FDBLOCKS, (int64_t)len);
+ 		return;
+diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
+index e46bc03365db..5a13bfe0ebbf 100644
+--- a/fs/xfs/libxfs/xfs_da_btree.c
++++ b/fs/xfs/libxfs/xfs_da_btree.c
+@@ -282,7 +282,7 @@ xfs_da3_node_read_verify(
+ 						__this_address);
+ 				break;
+ 			}
+-			/* fall through */
++			fallthrough;
+ 		case XFS_DA_NODE_MAGIC:
+ 			fa = xfs_da3_node_verify(bp);
+ 			if (fa)
+diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
+index 955302e7cdde..6abd469d49d2 100644
+--- a/fs/xfs/scrub/bmap.c
++++ b/fs/xfs/scrub/bmap.c
+@@ -270,7 +270,7 @@ xchk_bmap_iextent_xref(
+ 	case XFS_DATA_FORK:
+ 		if (xfs_is_reflink_inode(info->sc->ip))
+ 			break;
+-		/* fall through */
++		fallthrough;
+ 	case XFS_ATTR_FORK:
+ 		xchk_xref_is_not_shared(info->sc, agbno,
+ 				irec->br_blockcount);
+diff --git a/fs/xfs/scrub/btree.c b/fs/xfs/scrub/btree.c
+index f52a7b8256f9..990a379fc322 100644
+--- a/fs/xfs/scrub/btree.c
++++ b/fs/xfs/scrub/btree.c
+@@ -43,7 +43,7 @@ __xchk_btree_process_error(
+ 		/* Note the badness but don't abort. */
+ 		sc->sm->sm_flags |= errflag;
+ 		*error = 0;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE)
+ 			trace_xchk_ifork_btree_op_error(sc, cur, level,
+diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
+index 18876056e5e0..63f13c8ed8c7 100644
+--- a/fs/xfs/scrub/common.c
++++ b/fs/xfs/scrub/common.c
+@@ -81,7 +81,7 @@ __xchk_process_error(
+ 		/* Note the badness but don't abort. */
+ 		sc->sm->sm_flags |= errflag;
+ 		*error = 0;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		trace_xchk_op_error(sc, agno, bno, *error,
+ 				ret_ip);
+@@ -134,7 +134,7 @@ __xchk_fblock_process_error(
+ 		/* Note the badness but don't abort. */
+ 		sc->sm->sm_flags |= errflag;
+ 		*error = 0;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		trace_xchk_file_op_error(sc, whichfork, offset, *error,
+ 				ret_ip);
+@@ -713,7 +713,7 @@ xchk_get_inode(
+ 		if (error)
+ 			return -ENOENT;
+ 		error = -EFSCORRUPTED;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		trace_xchk_op_error(sc,
+ 				XFS_INO_TO_AGNO(mp, sc->sm->sm_ino),
+diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
+index e56786f0a13c..2b3fb0b37e18 100644
+--- a/fs/xfs/scrub/dabtree.c
++++ b/fs/xfs/scrub/dabtree.c
+@@ -47,7 +47,7 @@ xchk_da_process_error(
+ 		/* Note the badness but don't abort. */
+ 		sc->sm->sm_flags |= XFS_SCRUB_OFLAG_CORRUPT;
+ 		*error = 0;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		trace_xchk_file_op_error(sc, ds->dargs.whichfork,
+ 				xfs_dir2_da_to_db(ds->dargs.geo,
+diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+index 25e86c71e7b9..c814b18efba9 100644
+--- a/fs/xfs/scrub/repair.c
++++ b/fs/xfs/scrub/repair.c
+@@ -944,7 +944,7 @@ xrep_ino_dqattach(
+ 			xrep_force_quotacheck(sc, XFS_DQTYPE_GROUP);
+ 		if (XFS_IS_PQUOTA_ON(sc->mp) && !sc->ip->i_pdquot)
+ 			xrep_force_quotacheck(sc, XFS_DQTYPE_PROJ);
+-		/* fall through */
++		fallthrough;
+ 	case -ESRCH:
+ 		error = 0;
+ 		break;
+diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
+index 73cafc843cd7..6045cc20b0fb 100644
+--- a/fs/xfs/xfs_bmap_util.c
++++ b/fs/xfs/xfs_bmap_util.c
+@@ -244,7 +244,7 @@ xfs_bmap_count_blocks(
+ 		 */
+ 		*count += btblocks - 1;
  
--static int xtensa_pmu_setup(int cpu)
-+static int xtensa_pmu_setup(unsigned int cpu)
- {
- 	unsigned i;
- 
-
+-		/* fall through */
++		fallthrough;
+ 	case XFS_DINODE_FMT_EXTENTS:
+ 		*nextents = xfs_bmap_count_leaves(ifp, count);
+ 		break;
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index c31cd3be9fb2..976306724093 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -772,7 +772,7 @@ xfs_break_layouts(
+ 			error = xfs_break_dax_layouts(inode, &retry);
+ 			if (error || retry)
+ 				break;
+-			/* fall through */
++			fallthrough;
+ 		case BREAK_WRITE:
+ 			error = xfs_break_leased_layouts(inode, iolock, &retry);
+ 			break;
+diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
+index 4eebcec4aae6..c334550aeea7 100644
+--- a/fs/xfs/xfs_fsmap.c
++++ b/fs/xfs/xfs_fsmap.c
+@@ -100,7 +100,7 @@ xfs_fsmap_owner_to_rmap(
+ 		dest->rm_owner = XFS_RMAP_OWN_COW;
+ 		break;
+ 	case XFS_FMR_OWN_DEFECTIVE:	/* not implemented */
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		return -EINVAL;
+ 	}
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index 6f22a66777cd..85d6631f7e99 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -557,7 +557,7 @@ xfs_ioc_attrmulti_one(
+ 	case ATTR_OP_REMOVE:
+ 		value = NULL;
+ 		*len = 0;
+-		/* fall through */
++		fallthrough;
+ 	case ATTR_OP_SET:
+ 		error = mnt_want_write_file(parfilp);
+ 		if (error)
+diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
+index 11cd666cd99a..86ba71580ffd 100644
+--- a/fs/xfs/xfs_trans_buf.c
++++ b/fs/xfs/xfs_trans_buf.c
+@@ -310,7 +310,7 @@ xfs_trans_read_buf_map(
+ 	default:
+ 		if (tp && (tp->t_flags & XFS_TRANS_DIRTY))
+ 			xfs_force_shutdown(tp->t_mountp, SHUTDOWN_META_IO_ERROR);
+-		/* fall through */
++		fallthrough;
+ 	case -ENOMEM:
+ 	case -EAGAIN:
+ 		return error;
+-- 
+2.19.1
 
