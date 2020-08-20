@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43152C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371C522D03
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189B122D04
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915501;
-	bh=gH6ZWWhpXfkRGKnL4proMvWVQJYS9zSHuJPaoWuUJqg=;
+	s=default; t=1597915509;
+	bh=T4Z3xCYTOO33jwQSPYhCIhNvo3hdLHZvnTgHV9v40Bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ns6GOwJ5zWcvI4mYQJLxIJPX3uweUn5ztJ6ZIuhMcHGbRgW3L4OcqOVzmWPL3zR6X
-	 x5LiQHN3neG4pCVg37sgTIqSVZptYDCrcvsCJOjk3GHQysBdOz7UVW27KLcFvCCGbS
-	 hFYtvMREgae1aoZqrrENZRPoI6dxF38R1F2nqHS8=
+	b=Y/sUN1mV6rUynSjaLG+xkILdgSuS6yKG0B1SS1fMczyw8zkFunCRpFiqhhOPSOd5D
+	 OnWOYPorhrXBzTcoX4bTRpYfLqz2IktDJW6XETn/7ZrsftWUlqQBhnkDLFv+WRwMgB
+	 aTrIKBzg6VJKsetS0v+vD/T/Pnr9dvdZSXQ+l42A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHTJY7 (ORCPT
+        id S1727076AbgHTJZH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32798 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:25:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgHTJYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:45 -0400
+        id S1727024AbgHTJYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33F0022CA1;
-        Thu, 20 Aug 2020 09:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F399222CE3;
+        Thu, 20 Aug 2020 09:24:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915484;
-        bh=gH6ZWWhpXfkRGKnL4proMvWVQJYS9zSHuJPaoWuUJqg=;
+        s=default; t=1597915492;
+        bh=T4Z3xCYTOO33jwQSPYhCIhNvo3hdLHZvnTgHV9v40Bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VNmyo/FkcuQN6KrEpoV7b7i3jK73qtu+vogLVhM+TfodxNwTPdzySEKBCgXmDAD04
-         w4ONZwVg0n9vR2sYzXv2rLl399dX7DpPHS6B3ZL/siDWYkikAKHQfl+Jtx9YMjs8IS
-         yf0VMAwm3PGf+KQDL+aj4X3eMdKEZ0l0VGpPGzjo=
+        b=r2y0mcCQ4/Ij92ACIIWT6WsF2oLpXsjLyXUupsoEDDTJT8TqU9FD50uyLR+U2rRw6
+         nZg47IwaudAXVbi3pU81vhNDHLncZnqaEE+rovuu2/omTmuQWwd0CHztvIVZAq8c9t
+         R8sFF5Wis+wGm8a6M/TpyIR2h9QBa6slrz9HPE4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.8 005/232] genirq: Unlock irq descriptor after errors
-Date:   Thu, 20 Aug 2020 11:17:36 +0200
-Message-Id: <20200820091612.970077562@linuxfoundation.org>
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 5.8 008/232] PCI/ATS: Add pci_pri_supported() to check device or associated PF
+Date:   Thu, 20 Aug 2020 11:17:39 +0200
+Message-Id: <20200820091613.107470908@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,47 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Ashok Raj <ashok.raj@intel.com>
 
-commit f107cee94ba4d2c7357fde59a1d84346c73d4958 upstream.
+commit 3f9a7a13fe4cb6e119e4e4745fbf975d30bfac9b upstream.
 
-In irq_set_irqchip_state(), the irq descriptor is not unlocked after an
-error is encountered. While that should never happen in practice, a buggy
-driver may trigger it. This would result in a lockup, so fix it.
+For SR-IOV, the PF PRI is shared between the PF and any associated VFs, and
+the PRI Capability is allowed for PFs but not for VFs.  Searching for the
+PRI Capability on a VF always fails, even if its associated PF supports
+PRI.
 
-Fixes: 1d0326f352bb ("genirq: Check irq_data_get_irq_chip() return value before use")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200811180012.80269-1-linux@roeck-us.net
+Add pci_pri_supported() to check whether device or its associated PF
+supports PRI.
+
+[bhelgaas: commit log, avoid "!!"]
+Fixes: b16d0cb9e2fc ("iommu/vt-d: Always enable PASID/PRI PCI capabilities before ATS")
+Link: https://lore.kernel.org/r/1595543849-19692-1-git-send-email-ashok.raj@intel.com
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Acked-by: Joerg Roedel <jroedel@suse.de>
+Cc: stable@vger.kernel.org	# v4.4+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/manage.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/iommu/intel/iommu.c |    2 +-
+ drivers/pci/ats.c           |   15 +++++++++++++++
+ include/linux/pci-ats.h     |    4 ++++
+ 3 files changed, 20 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -2735,8 +2735,10 @@ int irq_set_irqchip_state(unsigned int i
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -2565,7 +2565,7 @@ static struct dmar_domain *dmar_insert_o
+ 			}
  
- 	do {
- 		chip = irq_data_get_irq_chip(data);
--		if (WARN_ON_ONCE(!chip))
--			return -ENODEV;
-+		if (WARN_ON_ONCE(!chip)) {
-+			err = -ENODEV;
-+			goto out_unlock;
-+		}
- 		if (chip->irq_set_irqchip_state)
- 			break;
- #ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
-@@ -2749,6 +2751,7 @@ int irq_set_irqchip_state(unsigned int i
- 	if (data)
- 		err = chip->irq_set_irqchip_state(data, which, val);
+ 			if (info->ats_supported && ecap_prs(iommu->ecap) &&
+-			    pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_PRI))
++			    pci_pri_supported(pdev))
+ 				info->pri_supported = 1;
+ 		}
+ 	}
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -325,6 +325,21 @@ int pci_prg_resp_pasid_required(struct p
  
-+out_unlock:
- 	irq_put_desc_busunlock(desc, flags);
- 	return err;
+ 	return pdev->pasid_required;
  }
++
++/**
++ * pci_pri_supported - Check if PRI is supported.
++ * @pdev: PCI device structure
++ *
++ * Returns true if PRI capability is present, false otherwise.
++ */
++bool pci_pri_supported(struct pci_dev *pdev)
++{
++	/* VFs share the PF PRI */
++	if (pci_physfn(pdev)->pri_cap)
++		return true;
++	return false;
++}
++EXPORT_SYMBOL_GPL(pci_pri_supported);
+ #endif /* CONFIG_PCI_PRI */
+ 
+ #ifdef CONFIG_PCI_PASID
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -28,6 +28,10 @@ int pci_enable_pri(struct pci_dev *pdev,
+ void pci_disable_pri(struct pci_dev *pdev);
+ int pci_reset_pri(struct pci_dev *pdev);
+ int pci_prg_resp_pasid_required(struct pci_dev *pdev);
++bool pci_pri_supported(struct pci_dev *pdev);
++#else
++static inline bool pci_pri_supported(struct pci_dev *pdev)
++{ return false; }
+ #endif /* CONFIG_PCI_PRI */
+ 
+ #ifdef CONFIG_PCI_PASID
 
 
