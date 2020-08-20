@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D48C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14BFF204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB715204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923593;
-	bh=XNKaTE2ci2wFaOo4QSprTRSo8NpV/zmGFkbk4YYhCi8=;
+	s=default; t=1597923614;
+	bh=RUq5teYFlzLyRTBN1RWFIjEF9wECVq83jJ1/0f2wCX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vciYVEPPbvD9u8/ryMQI+ALu9T3mTbpu+UPCwcJnxRz5m/eQAU6zuN5vGbhxqpOK4
-	 hNLED7OO8gyUyw2wUa3JeqP5xaCq7GlE9r/OzgNxNPXO55K3Pq+AESOgLAC3FmM0BG
-	 JD/x7BYgtP/wqYvzmJzVjJ7C0VzK8e6g+iR4WtGY=
+	b=GQhL9z9qMWO8yIr5OzCfgkLjv7tX9usA8IaR5SuQsQhSv6xkTPUnJ8P4bTTvTY43e
+	 O6BHZF+qGbgJOFxTCSSmCu2BDLCua+FUGN5pbCdPCOC46rzir/TdbWIYDr6j12W5xp
+	 MS+8x/tp1zOg6SUSUKcQ/b43tvKNIoBTuHrVAI/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgHTLjk (ORCPT
+        id S1730420AbgHTLj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:39:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33218 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:39:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730566AbgHTKFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:31 -0400
+        id S1728219AbgHTKFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BC2E206DA;
-        Thu, 20 Aug 2020 10:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10DB022CA1;
+        Thu, 20 Aug 2020 10:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917931;
-        bh=XNKaTE2ci2wFaOo4QSprTRSo8NpV/zmGFkbk4YYhCi8=;
+        s=default; t=1597917916;
+        bh=RUq5teYFlzLyRTBN1RWFIjEF9wECVq83jJ1/0f2wCX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vhszG3m1WzWY+kLEK3IaPogzRG3asVCriF+GeBh86rXHS7gXheDKJ1YVevSCchnnh
-         zKtP/ZfrEWeidlWzzgzh6TgYc+/+4umuaRE4WgWAzXOzY8Wijdvy28M6p/4+SJ10GZ
-         Ki2QaagqZfj/X4e79s9xZ7swSIL+I69k2iZYaJ3Y=
+        b=19M7zTKqMD6fqqsl0Cbq0nvlCzBRMNTYdLB8gsoNsN4jD65LelD/6Z9v5g5ArNTT9
+         Lq7/9cm+11znjtY6neaSoW97SLwshcMCBjBcxwipun9g4MOgTkLYIIqksg+/HfogOh
+         fITDleYBy8YSfK18hLEO37yMInOwiI9IZsAMz9dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 208/212] ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
-Date:   Thu, 20 Aug 2020 11:23:01 +0200
-Message-Id: <20200820091612.851722448@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 172/212] btrfs: only search for left_info if there is no right_info in try_merge_free_space
+Date:   Thu, 20 Aug 2020 11:22:25 +0200
+Message-Id: <20200820091611.078402363@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,45 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit 5a25de6df789cc805a9b8ba7ab5deef5067af47e ]
+commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
 
-Freeing chip on error may lead to an Oops at the next time
-the system goes to resume. Fix this by removing all
-snd_echo_free() calls on error.
+In try_to_merge_free_space we attempt to find entries to the left and
+right of the entry we are adding to see if they can be merged.  We
+search for an entry past our current info (saved into right_info), and
+then if right_info exists and it has a rb_prev() we save the rb_prev()
+into left_info.
 
-Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Link: https://lore.kernel.org/r/20200813074632.17022-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However there's a slight problem in the case that we have a right_info,
+but no entry previous to that entry.  At that point we will search for
+an entry just before the info we're attempting to insert.  This will
+simply find right_info again, and assign it to left_info, making them
+both the same pointer.
+
+Now if right_info _can_ be merged with the range we're inserting, we'll
+add it to the info and free right_info.  However further down we'll
+access left_info, which was right_info, and thus get a use-after-free.
+
+Fix this by only searching for the left entry if we don't find a right
+entry at all.
+
+The CVE referenced had a specially crafted file system that could
+trigger this use-after-free. However with the tree checker improvements
+we no longer trigger the conditions for the UAF.  But the original
+conditions still apply, hence this fix.
+
+Reference: CVE-2019-19448
+Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/pci/echoaudio/echoaudio.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/btrfs/free-space-cache.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index d73ee11a32bd0..db14ee43e461a 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -2215,7 +2215,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (err < 0) {
- 		kfree(commpage_bak);
- 		dev_err(dev, "resume init_hw err=%d\n", err);
--		snd_echo_free(chip);
- 		return err;
- 	}
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -2152,7 +2152,7 @@ out:
+ static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
+ 			  struct btrfs_free_space *info, bool update_stat)
+ {
+-	struct btrfs_free_space *left_info;
++	struct btrfs_free_space *left_info = NULL;
+ 	struct btrfs_free_space *right_info;
+ 	bool merged = false;
+ 	u64 offset = info->offset;
+@@ -2167,7 +2167,7 @@ static bool try_merge_free_space(struct
+ 	if (right_info && rb_prev(&right_info->offset_index))
+ 		left_info = rb_entry(rb_prev(&right_info->offset_index),
+ 				     struct btrfs_free_space, offset_index);
+-	else
++	else if (!right_info)
+ 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
  
-@@ -2242,7 +2241,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
- 		dev_err(chip->card->dev, "cannot grab irq\n");
--		snd_echo_free(chip);
- 		return -EBUSY;
- 	}
- 	chip->irq = pci->irq;
--- 
-2.25.1
-
+ 	if (right_info && !right_info->bitmap) {
 
 
