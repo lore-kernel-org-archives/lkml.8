@@ -2,200 +2,165 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD84C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:41:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60197C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06CDB207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:41:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD752075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:51:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="i322tcU+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kVInyANV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgHTTlr (ORCPT
+        id S1726841AbgHTTvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:41:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38714 "EHLO
+        Thu, 20 Aug 2020 15:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726887AbgHTTlp (ORCPT
+        with ESMTP id S1726666AbgHTTvH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 15:41:45 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 800E3C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 12:41:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id k11so3527330ybp.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 12:41:45 -0700 (PDT)
+        Thu, 20 Aug 2020 15:51:07 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA02AC061385;
+        Thu, 20 Aug 2020 12:51:06 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y2so3465806ljc.1;
+        Thu, 20 Aug 2020 12:51:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=YgM2l06yXFrB/oTTXJnH10cRhyOfMBX9VKKhedx17aA=;
-        b=i322tcU+qBMj6LloIDp+mYxoPICgPx3YYJN6DBJnDWHcw185Xvpj5nEUT3y2gzm6ww
-         I9jfRtD8byBn+K9m80Xg2aIiHFpueYlXQZ2xEhjjeX7wwGZ3gy8n/bKi9RDUOcaVlhBr
-         RNZ+5euCW/9prGh/rl9QHg43THCOCxGPyuT96GJxA9EdPIDsOLJQiOgpslcl5LMCm0Rr
-         fKsCNSK6QvWAlBKlYejiCQLaz5F593k7m8fNPFNhycR49zUNf7rjancd4MrvGPa69VL9
-         /K82sIQxDar5TDhiyf4EPGRCZpNriNPqSpT6aM2ewkFOAaQIy1aGifQfbXDDdQ0VKpOe
-         zaCw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OniJLvMGszqKdZPfnGGPRm6yrJhAzhpZMeh8ipXlA60=;
+        b=kVInyANVqA86ZsupZ+Pb7ttjo0P8NA3R0p3DEzLgJRsTMKMITZei2G3WfZlSDDDOVo
+         Brozzas6ZvHEMSO6RQ7WwIfPzyZXzZCTaGO6sIRzul2WnVUcIu4qdNYnU6EQ9GWkivhM
+         QTGkeebRJE/pgeW85V9eAFS/VGArzEWQd7WIUDnvijv+JOo1PxZqZIJ3N/OfFTlCMK6Q
+         5lFS3LvaE9s+NfL7N0AZ0y0gja4R9roVmkZSMm/4V7djiYtKW0fMsvRVrfErEqK7D0IF
+         jvYrsgGLLa5tUOsuvyse6KRWT+USoZzaP/vuWqauOYwXsCSrWIwjCcleXTCwmdlO3FOW
+         8Eiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YgM2l06yXFrB/oTTXJnH10cRhyOfMBX9VKKhedx17aA=;
-        b=DYDyDzBPOJkGCszKdvl4GgGKWSw8VhOUGCmHPyOuh0UPCeI0NgXvywBff7rRbmWAPO
-         2rA+DeP2PzkT+tw9rmi1uuJJbwhA8tU7bVGlJEAKmHOJTFsBCuWU4KiVGBx+bunIgirT
-         PQUQi0U2XwQleLSoJH4ZX/uRKc49aMtlC7h0Vga/pKMk/HLcfvdup4OOutMTtBqRXTLr
-         fzWY+LRKw7E9x/jXPT3PoBnED8Rlj0w2cNsff/hwdTfpL6nxPYj80VR79vEbwYG4qnKk
-         8XjjVIStavvuoy06vvMu6rFxqQEEoXy12oZrhJKw9zNseqCA5J4AnKQBVFBty1wJPoz9
-         AGXw==
-X-Gm-Message-State: AOAM532d3TsfBEzlGkqXm1Q8wwinN6w0JZsY5HR+ciLHDfh+a4McEg4D
-        rtJw9+6Gcy1EIChD+8afDwyRtjo=
-X-Google-Smtp-Source: ABdhPJwIti/cX9Fu840aWQ8uM7450Te50w1JQejov747b99RObmlZu6IiBiIiCaa4Edd1PbklZXlBGw=
-X-Received: from lpy-goobuntu.mtv.corp.google.com ([2620:15c:211:2:5265:f3ff:fe23:c8be])
- (user=lpy job=sendgmr) by 2002:a25:4b47:: with SMTP id y68mr6381709yba.89.1597952504712;
- Thu, 20 Aug 2020 12:41:44 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 12:41:34 -0700
-In-Reply-To: <20200813175037.48a16064@oasis.local.home>
-Message-Id: <20200820194134.2176242-1-lpy@google.com>
-Mime-Version: 1.0
-References: <20200813175037.48a16064@oasis.local.home>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH v3] Add power/gpu_frequency tracepoint.
-From:   Peiyong Lin <lpy@google.com>
-To:     rostedt@goodmis.org
-Cc:     amit.kucheria@linaro.org, android-kernel@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        lpy@google.com, mingo@redhat.com, paul.walmsley@sifive.com,
-        pavel@ucw.cz, prahladk@google.com, rafael.j.wysocki@intel.com,
-        ulf.hansson@linaro.org, yamada.masahiro@socionext.com,
-        zzyiwei@android.com, sidaths@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OniJLvMGszqKdZPfnGGPRm6yrJhAzhpZMeh8ipXlA60=;
+        b=CbaGztTd0mL/71vTIHnYxHeUrp2W+gK9NjdnrvC+3sk2WzXbMzoxN6SeCR9bP45lvm
+         qA9O4tvzQ8DRmebxLfVKHIac6H3dmo5hHqoO+2EPoC+yRHyw1y8M2N5P9WGs+24ljc+N
+         uvd3QmR1tHUx8z2jsh/0IaRmMuZc/DrO2NRKTK9Fc+cXm0GU3rZ/1j3pgDCJDuRbVaA0
+         75MdVNzb4rLIW4fj3bXAm4R7WUIG+w5qo2HMEg4aBZitFyZm5w/ckctix+Bb9JJBh78R
+         bgzyvhVjBqH0a01PNxMG03celZNnG2RzzAJOKh2HXDcLdxTSB29aSYxi36ekjo22Lrea
+         yOyw==
+X-Gm-Message-State: AOAM532yd8Z8mVd9I7uYypIyeWe4mMqUnnSIlXys3M0BF2izexaEzp6d
+        tZIbVPoBBKFLW+EbAGsnZDC1BYBUmD4=
+X-Google-Smtp-Source: ABdhPJyvIy9bEn51zd/IbZfZTQR3N2YYlmALsIktwWFi5DNbYZ8x8ytUZs/6wT5ORieeLAv6LpyrBA==
+X-Received: by 2002:a05:651c:231:: with SMTP id z17mr2146637ljn.109.1597953064841;
+        Thu, 20 Aug 2020 12:51:04 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id l26sm690804lfj.22.2020.08.20.12.51.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 12:51:03 -0700 (PDT)
+Subject: Re: [PATCH 16/18] staging/media/tegra-vde: Clean up IOMMU workaround
+To:     Robin Murphy <robin.murphy@arm.com>, hch@lst.de, joro@8bytes.org,
+        linux@armlinux.org.uk
+Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
+        matthias.bgg@gmail.com, yong.wu@mediatek.com,
+        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
+        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1597931875.git.robin.murphy@arm.com>
+ <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
+Date:   Thu, 20 Aug 2020 22:51:02 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Historically there is no common trace event for GPU frequency, in
-downstream Android each different hardware vendor implements their own
-way to expose GPU frequency, for example as a debugfs node.  This patch
-standardize it as a common trace event in upstream linux kernel to help
-the ecosystem have a common implementation across hardware vendors.
-Toolings in the Linux ecosystem will benefit from this especially in the
-downstream Android, where this information is critical to graphics
-developers.
+20.08.2020 18:08, Robin Murphy пишет:
+> Now that arch/arm is wired up for default domains and iommu-dma, we no
+> longer need to work around the arch-private mapping.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/staging/media/tegra-vde/iommu.c | 12 ------------
+>  1 file changed, 12 deletions(-)
+> 
+> diff --git a/drivers/staging/media/tegra-vde/iommu.c b/drivers/staging/media/tegra-vde/iommu.c
+> index 6af863d92123..4f770189ed34 100644
+> --- a/drivers/staging/media/tegra-vde/iommu.c
+> +++ b/drivers/staging/media/tegra-vde/iommu.c
+> @@ -10,10 +10,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/platform_device.h>
+>  
+> -#if IS_ENABLED(CONFIG_ARM_DMA_USE_IOMMU)
+> -#include <asm/dma-iommu.h>
+> -#endif
+> -
+>  #include "vde.h"
+>  
+>  int tegra_vde_iommu_map(struct tegra_vde *vde,
+> @@ -70,14 +66,6 @@ int tegra_vde_iommu_init(struct tegra_vde *vde)
+>  	if (!vde->group)
+>  		return 0;
+>  
+> -#if IS_ENABLED(CONFIG_ARM_DMA_USE_IOMMU)
+> -	if (dev->archdata.mapping) {
+> -		struct dma_iommu_mapping *mapping = to_dma_iommu_mapping(dev);
+> -
+> -		arm_iommu_detach_device(dev);
+> -		arm_iommu_release_mapping(mapping);
+> -	}
+> -#endif
+>  	vde->domain = iommu_domain_alloc(&platform_bus_type);
+>  	if (!vde->domain) {
+>  		err = -ENOMEM;
+> 
 
-Signed-off-by: Peiyong Lin <lpy@google.com>
----
+Hello, Robin! Thank you for yours work!
 
-Changelog sice v2:
- - Add more comments to indicate when the event should be emitted.
- - Change state to frequency.
+Some drivers, like this Tegra VDE (Video Decoder Engine) driver for
+example, do not want to use implicit IOMMU domain. Tegra VDE driver
+relies on explicit IOMMU domain in a case of Tegra SMMU because VDE
+hardware can't access last page of the AS and because driver wants to
+reserve some fixed addresses [1].
 
-Changelog since v1:
- - Use %u in TP_printk
+[1]
+https://elixir.bootlin.com/linux/v5.9-rc1/source/drivers/staging/media/tegra-vde/iommu.c#L100
 
- drivers/gpu/Makefile                    |  1 +
- drivers/gpu/trace/Kconfig               |  3 +++
- drivers/gpu/trace/Makefile              |  1 +
- drivers/gpu/trace/trace_gpu_frequency.c | 13 ++++++++++
- include/trace/events/power.h            | 33 +++++++++++++++++++++++++
- 5 files changed, 51 insertions(+)
- create mode 100644 drivers/gpu/trace/trace_gpu_frequency.c
+Tegra30 SoC supports up to 4 domains, hence it's not possible to afford
+wasting unused implicit domains. I think this needs to be addressed
+before this patch could be applied.
 
-diff --git a/drivers/gpu/Makefile b/drivers/gpu/Makefile
-index 835c88318cec..f289a47eb031 100644
---- a/drivers/gpu/Makefile
-+++ b/drivers/gpu/Makefile
-@@ -6,3 +6,4 @@ obj-$(CONFIG_TEGRA_HOST1X)	+= host1x/
- obj-y			+= drm/ vga/
- obj-$(CONFIG_IMX_IPUV3_CORE)	+= ipu-v3/
- obj-$(CONFIG_TRACE_GPU_MEM)		+= trace/
-+obj-$(CONFIG_TRACE_GPU_FREQUENCY)		+= trace/
-diff --git a/drivers/gpu/trace/Kconfig b/drivers/gpu/trace/Kconfig
-index c24e9edd022e..ac4aec8d5845 100644
---- a/drivers/gpu/trace/Kconfig
-+++ b/drivers/gpu/trace/Kconfig
-@@ -2,3 +2,6 @@
- 
- config TRACE_GPU_MEM
- 	bool
-+
-+config TRACE_GPU_FREQUENCY
-+	bool
-diff --git a/drivers/gpu/trace/Makefile b/drivers/gpu/trace/Makefile
-index b70fbdc5847f..2b7ae69327d6 100644
---- a/drivers/gpu/trace/Makefile
-+++ b/drivers/gpu/trace/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_TRACE_GPU_MEM) += trace_gpu_mem.o
-+obj-$(CONFIG_TRACE_GPU_FREQUENCY) += trace_gpu_frequency.o
-diff --git a/drivers/gpu/trace/trace_gpu_frequency.c b/drivers/gpu/trace/trace_gpu_frequency.c
-new file mode 100644
-index 000000000000..f5af5800b52d
---- /dev/null
-+++ b/drivers/gpu/trace/trace_gpu_frequency.c
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * GPU frequency trace points
-+ *
-+ * Copyright (C) 2020 Google, Inc.
-+ */
-+
-+#include <linux/module.h>
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/power.h>
-+
-+EXPORT_TRACEPOINT_SYMBOL(gpu_frequency);
-diff --git a/include/trace/events/power.h b/include/trace/events/power.h
-index af5018aa9517..343825a76953 100644
---- a/include/trace/events/power.h
-+++ b/include/trace/events/power.h
-@@ -500,6 +500,39 @@ DEFINE_EVENT(dev_pm_qos_request, dev_pm_qos_remove_request,
- 
- 	TP_ARGS(name, type, new_value)
- );
-+
-+/**
-+ * gpu_frequency - Reports the GPU frequency in GPU clock domains.
-+ *
-+ * This event should be emitted whenever there's a GPU frequency change happens,
-+ * or a GPU goes from idle state to active state, or vice versa.
-+ *
-+ * When the GPU goes from idle state to active state, this event should report
-+ * the GPU frequency of the active state. When the GPU goes from active state to
-+ * idle state, this event should report a zero frequency value.
-+ *
-+ * @frequency:  New frequency (in KHz)
-+ * @gpu_id: Id for each GPU clock domain
-+ */
-+TRACE_EVENT(gpu_frequency,
-+
-+	TP_PROTO(unsigned int frequency, unsigned int gpu_id),
-+
-+	TP_ARGS(frequency, gpu_id),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, frequency)
-+		__field(unsigned int, gpu_id)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->frequency = frequency;
-+		__entry->gpu_id = gpu_id;
-+	),
-+
-+	TP_printk("frequency=%u gpu_id=%u",
-+		__entry->frequency, __entry->gpu_id)
-+);
- #endif /* _TRACE_POWER_H */
- 
- /* This part must be outside protection */
--- 
-2.28.0.297.g1956fa8f8d-goog
+Would it be possible for IOMMU drivers to gain support for filtering out
+devices in iommu_domain_alloc(dev, type)? Then perhaps Tegra SMMU driver
+could simply return NULL in a case of type=IOMMU_DOMAIN_DMA and
+dev=tegra-vde.
+
+Alternatively, the Tegra SMMU could be changed such that the devices
+will be attached to a domain at the time of a first IOMMU mapping
+invocation instead of attaching at the time of attach_dev() callback
+invocation.
+
+Or maybe even IOMMU core could be changed to attach devices at the time
+of the first IOMMU mapping invocation? This could be a universal
+solution for all drivers.
 
