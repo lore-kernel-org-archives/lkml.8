@@ -2,171 +2,123 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41378C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 153F220758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261BB204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="BER7hRPH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVv6MSZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgHTSKE (ORCPT
+        id S1726976AbgHTSL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:10:04 -0400
-Received: from mail-bn7nam10on2068.outbound.protection.outlook.com ([40.107.92.68]:43232
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726819AbgHTSKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:10:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HKM75xdjPOBxoyxZZCUbhCpQYgOhIDvQaScb/O94ICE5Flb3Gu657NFyTD+RofmnyzUM3tqzgRh69YHMf4ajtM+DNZVWGIQppwCRUuEb3iTQ2qk7o9HRbtlNOVO/HXqgbAh4BEtab1grmLt5ILOYbz/urFzoXpACrwdyHIWtriNkGY+hMxXl8KBlvvlcGYNn5+GMfRx3XL6rOGS2anUWJgTMgoXnpZClDU5RHgA/bGB50fmChc9rkfju0c8x0RfD13k45A5Tvwvcef4KIPLdsW3//RHwKvhv6XWbTyi/OouHJLoyl6G94L+iEl60B+YSLrNWfzs63rtVJOj1pK79wg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
- b=IITf3mS8dGv0rUxgV8vlIxnnNr3xHRqDeHaWjavsCysUuTk2DDmnGjOVDpX448Cmnb8Bvst4na4wBJd2ZytTGuL7NVczTBv/iqH2+JSD3Tkdq0ERn/3ResxvMApWFvmXQfaCzfohauaWEU55AoHAzJEwMGCQOg1iFVxZZgc8sHOiVmqcKvRwV/2rj9+UUB1m0+xrOWX6e0M4Xqsp6OIzfkk69g/FgoSjGNFLsIQYjOw5uqBRgUyPJ8X3JonWAF/Ncqwv/+ZnKDe1wuzict/AaRrOyyyK58hqiFbySTP8yInQstydgZDC5+DKuYLI+GGiRYtFhyYT9a6qIjvrF0L+cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Thu, 20 Aug 2020 14:11:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726819AbgHTSLW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:11:22 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C191C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:11:21 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a5so2993014wrm.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:11:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2V2es0Anfz+eC2uZbriqy6jOeJ12Hq5a3VwcieB39H4=;
- b=BER7hRPH39Q7zEmeNtiiMahT7GRWcMM5et9rQXmEOF0CaKow7RjeazPWiR8PmE7zihFpByPH4HBC9Cq3594RRGG8d3z+2hGPUKF6fibXtyULDfx1hz60N8l1zG8OoNhMOH9zHxXxr7/WJulx0YEht491Ew2uDRUzJAZsRe98fXk=
-Received: from SA0PR11CA0065.namprd11.prod.outlook.com (2603:10b6:806:d2::10)
- by BYAPR02MB5223.namprd02.prod.outlook.com (2603:10b6:a03:67::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Thu, 20 Aug
- 2020 18:09:58 +0000
-Received: from SN1NAM02FT027.eop-nam02.prod.protection.outlook.com
- (2603:10b6:806:d2:cafe::a9) by SA0PR11CA0065.outlook.office365.com
- (2603:10b6:806:d2::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend
- Transport; Thu, 20 Aug 2020 18:09:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT027.mail.protection.outlook.com (10.152.72.99) with Microsoft SMTP
- Server id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 18:09:58
- +0000
-Received: from [149.199.38.66] (port=33806 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8p0K-0002ZE-Tx; Thu, 20 Aug 2020 11:09:36 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8p0g-0007u3-8G; Thu, 20 Aug 2020 11:09:58 -0700
-Received: from xsj-pvapsmtp01 (xsj-smtp1.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 07KI9uO5014545;
-        Thu, 20 Aug 2020 11:09:56 -0700
-Received: from [172.19.2.102] (helo=xsjanandash50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <anand.ashok.dumbre@xilinx.com>)
-        id 1k8p0e-0007ty-2y; Thu, 20 Aug 2020 11:09:56 -0700
-From:   Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-To:     jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, michal.simek@xilinx.com, git@xilinx.com,
-        linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     anandash@xilinx.com,
-        Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
-Subject: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative values
-Date:   Thu, 20 Aug 2020 11:09:44 -0700
-Message-Id: <1597946984-25844-1-git-send-email-anand.ashok.dumbre@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oPlGwJIUawBNMyu0GOt8u+swdga2De9aEs3KqrqQvrs=;
+        b=QVv6MSZ8Sh06WnMusxMgELfzaIEbb2IkEvNAueK335WPwymR2s7FFHdnAs6qw0+41z
+         YucDvXomV/OWqs4SUkwEyzhxh2dS9zJBFLzIARA3RBrRM4kf08+EqfGyeAVtUtpkaV6t
+         Zg1TXHJZKyik23/eXCy/rv/Kb2gOmaARcKGnMgnbNLBKH2QmOSqIYUPZ9qyTuvgunnwL
+         5K/pjUcfgkt0KK0iIDZIOg0G2X79W7y/BYlk6djqWExJ2pQajQ0Z3pn7i8ie2S9CyhGD
+         l3BiPQcBqCIde/rfb6123vgwXvhQsYQPWHUT/ZSLTbgULk/JiKICKi7/lixWk/wKQPcj
+         ekdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oPlGwJIUawBNMyu0GOt8u+swdga2De9aEs3KqrqQvrs=;
+        b=XYqSjexm3LKI+YDQ7U2RijeiiPKn5d59HQKqJQCeUKrKwn+S4pc86kQ0N0akoe3Bdh
+         vR3zNZAiJL9JeCsLkQD8EeT1A26+O3fcPZpCZnVf+0z95LUwygI2hJkRaAop0j6va1P9
+         NHvqzDK6veeOhjvUYfvLo1eaGcBRiuf3ThBes1wdBRzL/0n6LK9Tmi2cNZrP7/IeY6yh
+         jP30OpmNiFj46Cc9iw5y8TAretMFmDc+b0AyxoG93devYP+Cbdr3k9uv8Pp+SpM/4kNl
+         A/NNOH+1vtowUHhVkiDYVBDl7jpHpFrqZDVVmCyhJK3DJtrmeFYjBkfeJQ0uWlKvobpC
+         1IvA==
+X-Gm-Message-State: AOAM533LlZby4Z9YJuxM2xTONxAfLK3NtxHqdonbogzwU09Bg8JM8UL1
+        7tZX4daA8FWVHLxPF1+wzzAgNFyXzESCCS9pgpU=
+X-Google-Smtp-Source: ABdhPJxuIGpO6/AQWt7ia2owpwQILxjXyYzx0hIYF34TL+5QaBNo3srd6VF6rJurt0B1vw0fUdiH500DdzT7oNp8RSk=
+X-Received: by 2002:adf:a351:: with SMTP id d17mr4251209wrb.111.1597947079898;
+ Thu, 20 Aug 2020 11:11:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: a28ec4d3-64f8-498c-0c2d-08d845343fe5
-X-MS-TrafficTypeDiagnostic: BYAPR02MB5223:
-X-Microsoft-Antispam-PRVS: <BYAPR02MB5223E17A8688243180F824A4A95A0@BYAPR02MB5223.namprd02.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: O2c/znD0h5VT1LDLEIrI1Dspp8wjD0DRQLpC1d4VfebpQB3/LMBloo/ilJ2r4iF2eNwd+rEQWW+q+4sXPmpy7pZcwV5r4OCjmpmmwLaH00TcDeRrizbNX9UQ+ABHGkmuA0s0S5WmFijUSbqSVdTAUO+g6LgXhLsPjtvap7DB9O1Oq7Aq5jLs4OMMjGc3sb0gJpgE6BzIviXP45Jm7ut2MteVZ8fddVSBi8Hmvv1aisk8ujkWFtae0DyJSVJ6M6gw85rYfH3xNMipwlqrOqPye5RbdaEpRvU0d+M5NPcgyXWMpoIi0n9O3c3udJFlTXN87Gg57svWGdfrTaBC+yftPVhxPibB7sT96o3EUcvYWRFKILkYvex9pxDH4jFU69Aswgf4YMk8Mn6NMoUqqz2TsQ==
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(136003)(376002)(39860400002)(346002)(396003)(46966005)(5660300002)(8936002)(47076004)(70586007)(8676002)(4326008)(81166007)(70206006)(9786002)(426003)(336012)(356005)(83380400001)(82740400003)(2906002)(82310400002)(2616005)(107886003)(478600001)(186003)(316002)(26005)(7696005)(6666004)(36756003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 18:09:58.5426
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a28ec4d3-64f8-498c-0c2d-08d845343fe5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT027.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5223
+References: <20200819113409.10137-1-wanghai38@huawei.com> <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 20 Aug 2020 14:11:08 -0400
+Message-ID: <CADnq5_O_+GJ6z4gN9nf4pm38v83VCA9paNrumJPSSx-S0wD2eA@mail.gmail.com>
+Subject: Re: [PATCH -next] drm/amd/powerplay: remove duplicate include
+To:     "Quan, Evan" <Evan.Quan@amd.com>
+Cc:     Wang Hai <wanghai38@huawei.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes IIO_VAL_FRACTIONAL calculation for negative
-values where the exponent is 0.
+Applied.  Thanks!
 
-Signed-off-by: Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
----
- drivers/iio/industrialio-core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+Alex
 
-diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-cor=
-e.c
-index f72c2dc..cd43b17 100644
---- a/drivers/iio/industrialio-core.c
-+++ b/drivers/iio/industrialio-core.c
-@@ -554,6 +554,7 @@ static ssize_t __iio_format_value(char *buf, size_t len=
-, unsigned int type,
- {
-        unsigned long long tmp;
-        int tmp0, tmp1;
-+       s64 tmp2;
-        bool scale_db =3D false;
-
-        switch (type) {
-@@ -576,10 +577,13 @@ static ssize_t __iio_format_value(char *buf, size_t l=
-en, unsigned int type,
-                else
-                        return snprintf(buf, len, "%d.%09u", vals[0], vals[=
-1]);
-        case IIO_VAL_FRACTIONAL:
--               tmp =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-+               tmp2 =3D div_s64((s64)vals[0] * 1000000000LL, vals[1]);
-                tmp1 =3D vals[1];
--               tmp0 =3D (int)div_s64_rem(tmp, 1000000000, &tmp1);
--               return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1));
-+               tmp0 =3D (int)div_s64_rem(tmp2, 1000000000, &tmp1);
-+               if ((tmp2 < 0) && (tmp0 =3D=3D 0))
-+                       return snprintf(buf, len, "-%d.%09u", tmp0, abs(tmp=
-1));
-+               else
-+                       return snprintf(buf, len, "%d.%09u", tmp0, abs(tmp1=
-));
-        case IIO_VAL_FRACTIONAL_LOG2:
-                tmp =3D shift_right((s64)vals[0] * 1000000000LL, vals[1]);
-                tmp0 =3D (int)div_s64_rem(tmp, 1000000000LL, &tmp1);
---
-2.7.4
-
-This email and any attachments are intended for the sole use of the named r=
-ecipient(s) and contain(s) confidential information that may be proprietary=
-, privileged or copyrighted under applicable law. If you are not the intend=
-ed recipient, do not read, copy, or forward this email message or any attac=
-hments. Delete this email message and any attachments immediately.
+On Wed, Aug 19, 2020 at 11:00 PM Quan, Evan <Evan.Quan@amd.com> wrote:
+>
+> [AMD Official Use Only - Internal Distribution Only]
+>
+> Reviewed-by: Evan Quan <evan.quan@amd.com>
+>
+> -----Original Message-----
+> From: Wang Hai <wanghai38@huawei.com>
+> Sent: Wednesday, August 19, 2020 7:34 PM
+> To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; airlied@linux.ie; daniel@ffwll.ch
+> Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH -next] drm/amd/powerplay: remove duplicate include
+>
+> Remove asic_reg/nbio/nbio_6_1_offset.h which is included more than once
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Wang Hai <wanghai38@huawei.com>
+> ---
+>  drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
+> index e6d9e84059e1..0d08c57d3bca 100644
+> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
+> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
+> @@ -34,7 +34,6 @@
+>  #include "asic_reg/gc/gc_9_2_1_offset.h"
+>  #include "asic_reg/gc/gc_9_2_1_sh_mask.h"
+>
+> -#include "asic_reg/nbio/nbio_6_1_offset.h"
+>  #include "asic_reg/nbio/nbio_6_1_offset.h"
+>  #include "asic_reg/nbio/nbio_6_1_sh_mask.h"
+>
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
