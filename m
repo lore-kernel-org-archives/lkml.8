@@ -2,111 +2,90 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FE0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D28EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D282076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AD92076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgHTObi (ORCPT
+        id S1727024AbgHTOei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:31:38 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58956 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728148AbgHTOba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:31:30 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A0524680DFEFE3E90D12;
-        Thu, 20 Aug 2020 22:30:51 +0800 (CST)
-Received: from DESKTOP-C3MD9UG.china.huawei.com (10.174.177.253) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 20 Aug 2020 22:30:43 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 4/4] libnvdimm: avoid unnecessary judgments in nvdimm_namespace_disk_name()
-Date:   Thu, 20 Aug 2020 22:30:27 +0800
-Message-ID: <20200820143027.3241-5-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200820143027.3241-1-thunder.leizhen@huawei.com>
-References: <20200820143027.3241-1-thunder.leizhen@huawei.com>
+        Thu, 20 Aug 2020 10:34:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56558 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726854AbgHTOeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:34:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 772DDAF50;
+        Thu, 20 Aug 2020 14:35:01 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 16:34:33 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Suren Baghdasaryan <surenb@google.com>, timmurray@google.com,
+        mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+        esyr@redhat.com, christian@kellner.me, areber@redhat.com,
+        shakeelb@google.com, cyphar@cyphar.com, oleg@redhat.com,
+        adobriyan@gmail.com, akpm@linux-foundation.org,
+        gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820143433.GO5033@dhcp22.suse.cz>
+References: <87zh6pxzq6.fsf@x220.int.ebiederm.org>
+ <20200820124241.GJ5033@dhcp22.suse.cz>
+ <87lfi9xz7y.fsf@x220.int.ebiederm.org>
+ <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+ <20200820141538.GM5033@dhcp22.suse.cz>
+ <42d5645e-0364-c8cd-01dc-93a9aaff5b09@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42d5645e-0364-c8cd-01dc-93a9aaff5b09@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-suffix ? suffix : "" appears three times, it's easy to get rid of it
-by initialize the local variable "suffix" to empty string.
+On Thu 20-08-20 23:26:29, Tetsuo Handa wrote:
+> On 2020/08/20 23:15, Michal Hocko wrote:
+> > I would tend to agree that from the userspace POV it is nice to look at
+> > oom tuning per process but fundamentaly the oom killer operates on the
+> > address space much more than other resources bound to a process because
+> > it is usually the address space hogging the largest portion of the
+> > memory footprint. This is the reason why the oom killer has been
+> > evaluating tasks based on that aspect rather than other potential memory
+> > consumers bound to a task. Mostly due to lack of means to evaluate
+> > those.
+> 
+> We already allow specifying potential memory consumers via oom_task_origin().
 
-To avoid having rows that exceed 80 columns, add a new local variable
-"region_id".
+oom_task_origin is a single purpose hack to handle swapoff situation
+more gracefully. By no means this is something to base the behavior on.
 
-No functional change, but it can reduce the code size.
-Before:
-   text    data     bss     dec     hex filename
-  41749    3697      16   45462    b196 drivers/nvdimm/namespace_devs.o
+> If we change from a property of the task/thread-group to a property of mm,
+> we won't be able to add means to adjust oom score based on other potential
+> memory consumers bound to a task (e.g. pipes) in the future.
 
-After:
-   text    data     bss     dec     hex filename
-  41653    3697      16   45366    b136 drivers/nvdimm/namespace_devs.o
-
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- drivers/nvdimm/namespace_devs.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 6da67f4d641a27c..ef2800c5da4c99c 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -157,7 +157,8 @@ const char *nvdimm_namespace_disk_name(struct nd_namespace_common *ndns,
- 		char *name)
- {
- 	struct nd_region *nd_region = to_nd_region(ndns->dev.parent);
--	const char *suffix = NULL;
-+	const char *suffix = "";
-+	int region_id = nd_region->id;
- 
- 	if (ndns->claim && is_nd_btt(ndns->claim))
- 		suffix = "s";
-@@ -173,17 +174,14 @@ const char *nvdimm_namespace_disk_name(struct nd_namespace_common *ndns,
- 		}
- 
- 		if (nsidx)
--			sprintf(name, "pmem%d.%d%s", nd_region->id, nsidx,
--					suffix ? suffix : "");
-+			sprintf(name, "pmem%d.%d%s", region_id, nsidx, suffix);
- 		else
--			sprintf(name, "pmem%d%s", nd_region->id,
--					suffix ? suffix : "");
-+			sprintf(name, "pmem%d%s", region_id, suffix);
- 	} else if (is_namespace_blk(&ndns->dev)) {
- 		struct nd_namespace_blk *nsblk;
- 
- 		nsblk = to_nd_namespace_blk(&ndns->dev);
--		sprintf(name, "ndblk%d.%d%s", nd_region->id, nsblk->id,
--				suffix ? suffix : "");
-+		sprintf(name, "ndblk%d.%d%s", region_id, nsblk->id, suffix);
- 	} else {
- 		return NULL;
- 	}
+While that would be really nice to achieve I am not really sure this is
+feasible. Mostly because accounting shared resources like pipes but fd
+based resources in general is really hard to do right without any
+surprises. Pipes are not really bound to a specific process for example.
+You are free to hand over fd to a different process for example.
 -- 
-1.8.3
-
-
+Michal Hocko
+SUSE Labs
