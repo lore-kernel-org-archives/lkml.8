@@ -5,50 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB19C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98A8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B49D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BE720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925929;
-	bh=QjGe+u4Tj7ppzgognTnADJBAxd+Zn8/zcCRRhTVVB4U=;
+	s=default; t=1597925945;
+	bh=8oiJfUWAGWX/bCFj33VEYHm5fd1QvU3Tdt/J/MpTiwI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=djbeAkiAWBldFwPeEJJF6bJ8w0aBEA/LN4tYWCr6cy41itHVAjTnVE4qGNwKz8I3J
-	 DWEAL/PzMXgYcyyujUVMbD9J2t5Zwvopke8NyXvPPX4envBbQL+10zTbKtGjBJ4dtH
-	 VyBYyLumOKvT/sM+lSCxv1sajDZQK+YMMG62NCRE=
+	b=v+zZ2/MHGRyknqAkJGzNTyYjjhuvKdYumFUjTriW7X7nFWqShM8/TK6HA9IPEoRsm
+	 qIu/d4VbBhkMW0fXnWBt5nhO4k6nOyu06hLif7+hjH16pdVX48kYH367I4JvSYwGoR
+	 0Ij/wdGWKBtTraFEQ5gSTVNAI1QXoTGQZeuhCqC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgHTMSs (ORCPT
+        id S1730309AbgHTMTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39564 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730251AbgHTJ4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:10 -0400
+        id S1729847AbgHTJ4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2A982067C;
-        Thu, 20 Aug 2020 09:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC1822078D;
+        Thu, 20 Aug 2020 09:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917369;
-        bh=QjGe+u4Tj7ppzgognTnADJBAxd+Zn8/zcCRRhTVVB4U=;
+        s=default; t=1597917366;
+        bh=8oiJfUWAGWX/bCFj33VEYHm5fd1QvU3Tdt/J/MpTiwI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ug4G9XYRRLCWNOtv2qReeHzYohXUBA0JOrIPC4ZP2qz+S1k7/lsFcVPnwwnehOhUu
-         Ss2j1+AVb+/LJCUA+nR3/p7CHdnM1XTLCYUft1WfNTNI6oMJc7tDBOz4kdTlTFkeYi
-         FP/bf4MpAM+QA9DinhmPBJpKyR18EwKhtTRXK7ok=
+        b=ue4niTTQ70zQLGJ4vVP7FWeb/0tlhJy6kpGsTfHd47K6AhAPywwkPqo6SGFHPDlPf
+         K4Dtxy17U6yhXu1qczsBEXsXzHnpclzysEXf+DfQue8W/24WrW/UphaNkfwouXSQWI
+         8topj44zL+kLi5tgiG8xF5/UIGZy5Isz2T0mwR1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 76/92] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
-Date:   Thu, 20 Aug 2020 11:22:01 +0200
-Message-Id: <20200820091541.622531436@linuxfoundation.org>
+Subject: [PATCH 4.19 85/92] perf bench mem: Always memset source before memcpy
+Date:   Thu, 20 Aug 2020 11:22:10 +0200
+Message-Id: <20200820091542.061159843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -61,55 +66,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
+[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
 
-Fix the missing clk_disable_unprepare() before return
-from emac_clks_phase1_init() in the error handling case.
+For memcpy, the source pages are memset to zero only when --cycles is
+used.  This leads to wildly different results with or without --cycles,
+since all sources pages are likely to be mapped to the same zero page
+without explicit writes.
 
-Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Before this fix:
+
+$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
+  mem memcpy -s 1024MB -l 100 -f default"
+$ $cmd
+
+         2,935,826      LLC-loads
+       3.821677452 seconds time elapsed
+
+$ $cmd --cycles
+
+       217,533,436      LLC-loads
+       8.616725985 seconds time elapsed
+
+After this fix:
+
+$ $cmd
+
+       214,459,686      LLC-loads
+       8.674301124 seconds time elapsed
+
+$ $cmd --cycles
+
+       214,758,651      LLC-loads
+       8.644480006 seconds time elapsed
+
+Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel@axis.com
+Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/bench/mem-functions.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
-index 2a0cbc535a2ed..19673ed929e68 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac.c
-@@ -493,13 +493,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
- 
- 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
- 	if (ret)
--		return ret;
-+		goto disable_clk_axi;
- 
- 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
- 	if (ret)
--		return ret;
-+		goto disable_clk_cfg_ahb;
-+
-+	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+	if (ret)
-+		goto disable_clk_cfg_ahb;
- 
--	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+	return 0;
-+
-+disable_clk_cfg_ahb:
-+	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
-+disable_clk_axi:
-+	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
-+
-+	return ret;
+diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
+index 0251dd348124a..4864fc67d01b5 100644
+--- a/tools/perf/bench/mem-functions.c
++++ b/tools/perf/bench/mem-functions.c
+@@ -222,12 +222,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
+ 	return 0;
  }
  
- /* Enable clocks; needs emac_clks_phase1_init to be called before */
+-static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
+ {
+-	u64 cycle_start = 0ULL, cycle_end = 0ULL;
+-	memcpy_t fn = r->fn.memcpy;
+-	int i;
+-
+ 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
+ 	memset(src, 0, size);
+ 
+@@ -236,6 +232,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
+ 	 * to not measure page fault overhead:
+ 	 */
+ 	fn(dst, src, size);
++}
++
++static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++{
++	u64 cycle_start = 0ULL, cycle_end = 0ULL;
++	memcpy_t fn = r->fn.memcpy;
++	int i;
++
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	cycle_start = get_cycles();
+ 	for (i = 0; i < nr_loops; ++i)
+@@ -251,11 +256,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
+ 	memcpy_t fn = r->fn.memcpy;
+ 	int i;
+ 
+-	/*
+-	 * We prefault the freshly allocated memory range here,
+-	 * to not measure page fault overhead:
+-	 */
+-	fn(dst, src, size);
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	BUG_ON(gettimeofday(&tv_start, NULL));
+ 	for (i = 0; i < nr_loops; ++i)
 -- 
 2.25.1
 
