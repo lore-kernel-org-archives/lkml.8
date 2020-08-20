@@ -2,102 +2,74 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E77C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3ADC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFC792076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:30:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="m/yMUiiJ"
+	by mail.kernel.org (Postfix) with ESMTP id 594982076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:31:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHTBar (ORCPT
+        id S1726796AbgHTBbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgHTBap (ORCPT
+        Wed, 19 Aug 2020 21:31:25 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:42429 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726646AbgHTBbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:30:45 -0400
-Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E56C061757;
-        Wed, 19 Aug 2020 18:30:44 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BX6Xw68Hyz9sRN;
-        Thu, 20 Aug 2020 11:30:40 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597887041;
-        bh=TdAJ4cPSBt+M8/z0nQKPFMUV7jka8gqRD4Yx3McuvvU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=m/yMUiiJTQhvMO9gjEi+NVWAMNVB5Bb/KFM3jnkE+Pcr0xYmU1aDpQpHxWyi8JZ6A
-         F7+L3GEaLADOcWFWaFyKVyB0tLaCyHKYZeXF39MBuDSH0/Wzl2JsH6kjpXc1J0dAIv
-         kiYdHA3Hbh3ROmPhNJN0B2FhMkuf8hR0Ic9RIHH+GvXSriKwfYv2ea2QeG1GRVGUPE
-         NwTgTyWA8+1c0uZSsCb91SYMb/UeqVD4Spun3EQRwP7xjt+z63BlXWe/781ycw/Hk0
-         UXIr3tlFiwaq0InQShy9xgp3q3QEW6av1E1KqjWRIuhXtV9EqbFKlk2x3p1hnqbk/U
-         9KeYunDXdA4LQ==
-Date:   Thu, 20 Aug 2020 11:30:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure after merge of the pinctrl-intel tree
-Message-ID: <20200820113039.71120e6a@canb.auug.org.au>
+        Wed, 19 Aug 2020 21:31:24 -0400
+Received: (qmail 202460 invoked by uid 1000); 19 Aug 2020 21:31:22 -0400
+Date:   Wed, 19 Aug 2020 21:31:22 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-usb <linux-usb@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-uvc-devel@lists.sourceforge.net,
+        Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: Protecting uvcvideo againt USB device disconnect [Was: Re:
+ Protecting usb_set_interface() against device removal]
+Message-ID: <20200820013122.GA202178@rowland.harvard.edu>
+References: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
+ <20200815020739.GB52242@rowland.harvard.edu>
+ <20200816003315.GA13826@roeck-us.net>
+ <20200816121816.GC32174@pendragon.ideasonboard.com>
+ <9bb20ed7-b156-f6c2-4d25-6acac1a0021b@roeck-us.net>
+ <20200816235155.GA7729@pendragon.ideasonboard.com>
+ <0684b71c-8ac5-8962-cbd5-c0bcaa8b6881@xs4all.nl>
+ <20200819013002.GL2360@pendragon.ideasonboard.com>
+ <20200819230851.GA222844@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8UAI6lqCqSoD9nqaTUmXgUj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819230851.GA222844@roeck-us.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/8UAI6lqCqSoD9nqaTUmXgUj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Aug 19, 2020 at 04:08:51PM -0700, Guenter Roeck wrote:
 
-Hi all,
+> usb_set_interface() should not be called anymore after uvc_disconnect(),
+> or at east I think so (is that documented anywhere ?).
 
-After merging the pinctrl-intel tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+It may be documented somewhere, but basically it goes without saying.  
 
-x86_64-linux-gnu-ld: drivers/pinctrl/intel/pinctrl-baytrail.o: in function =
-`byt_pinctrl_probe':
-pinctrl-baytrail.c:(.text+0x12bf): undefined reference to `intel_pinctrl_ge=
-t_soc_data'
+A main feature of the device model design is that drivers get bound to 
+devices by having their probe routine called, and they get unbound by 
+having their disconnect routine called.  It should go without saying 
+that once a driver is unbound from a device, it must not communicate 
+with that device any more.
 
-Caused by commit
+It might be nice if this requirement could be enforced (say in the USB 
+core), but doing so is impractical.  It would require every I/O request 
+to include some sort of cookie proving that the caller is authorized to 
+make the request.  That's not how the kernel works; it trusts drivers 
+to generally do the right thing without constant checking.
 
-  2db97df9f29d ("pinctrl: baytrail: Switch to use intel_pinctrl_get_soc_dat=
-a()")
-
-CONFIG_PINCTRL_BAYTRAIL=3Dy
-CONFIG_PINCTRL_INTEL=3Dm
-
-I have ised the pinctrl-intel tree from next-20200819 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8UAI6lqCqSoD9nqaTUmXgUj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl890j8ACgkQAVBC80lX
-0GxQigf/fVhxSDZ0PgozBs+DPVQ4zRlcl+0GBUYmx8gagOoWt4DaFEpP50ZBtd++
-MNFv1GbXGX2BRfPGRpMFrwZoIIGuvkW3qaLL6Z9/Tbx+8Sa8XAg7hnEvaCRZkRP+
-lWWPuTDI7JSrfwps0ggfTe7Gkhvfd1VWwUJFvT/WUhGi1BCktCTVSqQxzmtYzppC
-q6Ei+E7V95p5azhv8gKa2tIllq6R2b5zwLGuILom/b4brIPMrTdGjQ5cgFvhhnFQ
-Wsk+jSgU5d6um/PkX14gwmCXumNley/DS74uo9EHB5/CUyH+eIo1NxFzndZZHYKY
-JCTl4UU7s/ux8c9G1YVkaZYRmXFCkg==
-=4SpN
------END PGP SIGNATURE-----
-
---Sig_/8UAI6lqCqSoD9nqaTUmXgUj--
+Alan Stern
