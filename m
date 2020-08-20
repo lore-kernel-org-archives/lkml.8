@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550A1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F191EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE4020758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE76120724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597932643;
-	bh=A5/9brDvRPF70ERveEC5pLTQSGpg8dEFelBfyXyhmX8=;
+	s=default; t=1597932662;
+	bh=OR7j9qoFQeMiFNy5PaaWKvdEV1b7geYDxd0P+SguzH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wt3a0yYG8NUbHyqJvL0nssz7HOpU7H7zOhS0L6iI7ulluzSn/Ctt7PSLpNMtlmfJp
-	 o45SO9UyLwJq0yg9gYAsOzB5PxRxKEq+9iH+SP67R3Bx3iCu6K5wSS63x6L/Kykz+t
-	 +4uTEDCt4VK7n84roxDxNO4G/orE5vbnBUCX0b58=
+	b=Hz4ZQVcLx3jYf2BWOyk7LBkJUcjHHl6uTONDblp0mdjIOrnGSPlXltV9PYnLGeHSR
+	 gM/WLHh566XQNWfTJ1Ofl1Go/L5jy9P2kxHfwl+WPvTyG5kMILnFmiOQZes/fgtc2W
+	 GOkKTjqXpPVlBSosSDcm1anluxRaUXDg0D9IP9MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbgHTN5j (ORCPT
+        id S1729036AbgHTNyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:57:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgHTJZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:20 -0400
+        id S1727898AbgHTJ0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14C422D07;
-        Thu, 20 Aug 2020 09:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10AF22D00;
+        Thu, 20 Aug 2020 09:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915520;
-        bh=A5/9brDvRPF70ERveEC5pLTQSGpg8dEFelBfyXyhmX8=;
+        s=default; t=1597915594;
+        bh=OR7j9qoFQeMiFNy5PaaWKvdEV1b7geYDxd0P+SguzH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1384vXAv469WmQNv17oDsMyj4oXRBJN/ONLJ7XOaGFQUgwWQlMEkJ4lrzaFiWDXIx
-         RxPNoOUez459yJd+wMZIOaIWbxvIMOwFimeqn62qCFK6qr6WDz0RZoA3LOS3KPdAIQ
-         v+Dd+Xr9OHjFZr0GLKcq8ELI/goH7zyuhnTHLFnI=
+        b=yI1K5NPK1nGgSwLKPdIxFu+3w1h6qAV1BLNFnbnsuVGL8FimmcigmHVNOeLEjwbBs
+         kUppKSAV8ohBiRHSJDZutJCu6jXvfSBltcVCwSvkS1ZJWMOUBOXAuI5Q2noT3KFo4L
+         KXfszU9Ziwyt5sjrcE/C1BybXADU1Zs9sAtSpUXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 5.8 043/232] arm64: perf: Correct the event index in sysfs
-Date:   Thu, 20 Aug 2020 11:18:14 +0200
-Message-Id: <20200820091614.868071475@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 069/232] bcache: use disk_{start,end}_io_acct() to count I/O for bcache device
+Date:   Thu, 20 Aug 2020 11:18:40 +0200
+Message-Id: <20200820091616.139861355@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,62 +59,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Coly Li <colyli@suse.de>
 
-commit 539707caa1a89ee4efc57b4e4231c20c46575ccc upstream.
+commit c5be1f2c5bab1538aa29cd42e226d6b80391e3ff upstream.
 
-When PMU event ID is equal or greater than 0x4000, it will be reduced
-by 0x4000 and it is not the raw number in the sysfs. Let's correct it
-and obtain the raw event ID.
+This patch is a fix to patch "bcache: fix bio_{start,end}_io_acct with
+proper device". The previous patch uses a hack to temporarily set
+bi_disk to bcache device, which is mistaken too.
 
-Before this patch:
-cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
-event=0x001
-After this patch:
-cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
-event=0x4001
+As Christoph suggests, this patch uses disk_{start,end}_io_acct() to
+count I/O for bcache device in the correct way.
 
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1592487344-30555-3-git-send-email-zhangshaokun@hisilicon.com
-[will: fixed formatting of 'if' condition]
-Signed-off-by: Will Deacon <will@kernel.org>
+Fixes: 85750aeb748f ("bcache: use bio_{start,end}_io_acct")
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/perf_event.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/md/bcache/request.c |   37 +++++++++----------------------------
+ 1 file changed, 9 insertions(+), 28 deletions(-)
 
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -155,7 +155,7 @@ armv8pmu_events_sysfs_show(struct device
+--- a/drivers/md/bcache/request.c
++++ b/drivers/md/bcache/request.c
+@@ -617,28 +617,6 @@ static void cache_lookup(struct closure
  
- 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
+ /* Common code for the make_request functions */
  
--	return sprintf(page, "event=0x%03llx\n", pmu_attr->id);
-+	return sprintf(page, "event=0x%04llx\n", pmu_attr->id);
- }
- 
- #define ARMV8_EVENT_ATTR(name, config)						\
-@@ -244,10 +244,13 @@ armv8pmu_event_attr_is_visible(struct ko
- 	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
- 		return attr->mode;
- 
--	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
--	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
--	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
--		return attr->mode;
-+	if (pmu_attr->id >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE) {
-+		u64 id = pmu_attr->id - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
+-static inline void bch_bio_start_io_acct(struct gendisk *acct_bi_disk,
+-					 struct bio *bio,
+-					 unsigned long *start_time)
+-{
+-	struct gendisk *saved_bi_disk = bio->bi_disk;
+-
+-	bio->bi_disk = acct_bi_disk;
+-	*start_time = bio_start_io_acct(bio);
+-	bio->bi_disk = saved_bi_disk;
+-}
+-
+-static inline void bch_bio_end_io_acct(struct gendisk *acct_bi_disk,
+-				       struct bio *bio,
+-				       unsigned long start_time)
+-{
+-	struct gendisk *saved_bi_disk = bio->bi_disk;
+-
+-	bio->bi_disk = acct_bi_disk;
+-	bio_end_io_acct(bio, start_time);
+-	bio->bi_disk = saved_bi_disk;
+-}
+-
+ static void request_endio(struct bio *bio)
+ {
+ 	struct closure *cl = bio->bi_private;
+@@ -690,7 +668,9 @@ static void backing_request_endio(struct
+ static void bio_complete(struct search *s)
+ {
+ 	if (s->orig_bio) {
+-		bch_bio_end_io_acct(s->d->disk, s->orig_bio, s->start_time);
++		/* Count on bcache device */
++		disk_end_io_acct(s->d->disk, bio_op(s->orig_bio), s->start_time);
 +
-+		if (id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
-+		    test_bit(id, cpu_pmu->pmceid_ext_bitmap))
-+			return attr->mode;
-+	}
+ 		trace_bcache_request_end(s->d, s->orig_bio);
+ 		s->orig_bio->bi_status = s->iop.status;
+ 		bio_endio(s->orig_bio);
+@@ -750,8 +730,8 @@ static inline struct search *search_allo
+ 	s->recoverable		= 1;
+ 	s->write		= op_is_write(bio_op(bio));
+ 	s->read_dirty_data	= 0;
+-	bch_bio_start_io_acct(d->disk, bio, &s->start_time);
+-
++	/* Count on the bcache device */
++	s->start_time		= disk_start_io_acct(d->disk, bio_sectors(bio), bio_op(bio));
+ 	s->iop.c		= d->c;
+ 	s->iop.bio		= NULL;
+ 	s->iop.inode		= d->id;
+@@ -1102,7 +1082,8 @@ static void detached_dev_end_io(struct b
+ 	bio->bi_end_io = ddip->bi_end_io;
+ 	bio->bi_private = ddip->bi_private;
  
- 	return 0;
- }
+-	bch_bio_end_io_acct(ddip->d->disk, bio, ddip->start_time);
++	/* Count on the bcache device */
++	disk_end_io_acct(ddip->d->disk, bio_op(bio), ddip->start_time);
+ 
+ 	if (bio->bi_status) {
+ 		struct cached_dev *dc = container_of(ddip->d,
+@@ -1127,8 +1108,8 @@ static void detached_dev_do_request(stru
+ 	 */
+ 	ddip = kzalloc(sizeof(struct detached_dev_io_private), GFP_NOIO);
+ 	ddip->d = d;
+-	bch_bio_start_io_acct(d->disk, bio, &ddip->start_time);
+-
++	/* Count on the bcache device */
++	ddip->start_time = disk_start_io_acct(d->disk, bio_sectors(bio), bio_op(bio));
+ 	ddip->bi_end_io = bio->bi_end_io;
+ 	ddip->bi_private = bio->bi_private;
+ 	bio->bi_end_io = detached_dev_end_io;
 
 
