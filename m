@@ -2,142 +2,118 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B361C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD19C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:19:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F90E207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:18:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29EE5207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:19:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Vd6WnZhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725823AbgHTGSe (ORCPT
+        id S1725977AbgHTGTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 02:18:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60524 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgHTGSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 02:18:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id C6C16B585;
-        Thu, 20 Aug 2020 06:18:58 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 08:18:27 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 3/3] mm: remove superfluous __ClearPageWaiters()
-Message-ID: <20200820061652.GX5422@dhcp22.suse.cz>
-References: <20200818184704.3625199-1-yuzhao@google.com>
- <20200818184704.3625199-3-yuzhao@google.com>
+        Thu, 20 Aug 2020 02:19:13 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:16480 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgHTGTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 02:19:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597904351; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=1Tw/sLiDck9pi6k/ICBYzHQlwO363+orOwakPWPDaPE=;
+ b=Vd6WnZhH3N+rcBtLmHS1gzjNIxKK8jOnjOFVxEz4cDvHFL0Y5CXUHaUbKsMJc61t0qjevJWl
+ m+Aiz1wHbEegP/Ff7ksv9vovHnuyGPhAGEkK0WqtNNcJxgO3HfoFl23qfjlWnJ0o0DUH9Sen
+ p62TQm/QFmKy4q/jdV7d/hDs4mQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f3e15dece76f1f961940236 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 06:19:10
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3F71FC433C6; Thu, 20 Aug 2020 06:19:10 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34332C433CA;
+        Thu, 20 Aug 2020 06:19:09 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200818184704.3625199-3-yuzhao@google.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Aug 2020 11:49:09 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        ulf.hansson@linaro.org, swboyd@chromium.org, dianders@chromium.org,
+        rnayak@codeaurora.org, ilina@codeaurora.org, lsrao@codeaurora.org,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH 1/2] Revert "drivers: qcom: rpmh-rsc: Use rcuidle
+ tracepoints for rpmh"
+In-Reply-To: <1597831670-17401-2-git-send-email-mkshah@codeaurora.org>
+References: <1597831670-17401-1-git-send-email-mkshah@codeaurora.org>
+ <1597831670-17401-2-git-send-email-mkshah@codeaurora.org>
+Message-ID: <8456a8006c0c165bb33dc34219eb7e5e@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18-08-20 12:47:04, Yu Zhao wrote:
-> Presumably __ClearPageWaiters() was added to follow the previously
-> removed __ClearPageActive() pattern.
-
-I do not think so. Please have a look at 62906027091f ("mm: add
-PageWaiters indicating tasks are waiting for a page bit") and a
-discussion when the patch has been proposed. Sorry I do not have a link
-handy but I do remember that the handling was quite subtle.
- 
-> Only flags that are in PAGE_FLAGS_CHECK_AT_FREE needs to be properly
-> cleared because otherwise we think there may be some kind of leak.
-> PG_waiters is not one of those flags and leaving the clearing to
-> PAGE_FLAGS_CHECK_AT_PREP is more appropriate.
-
-What is the point of this patch in the first place? Page waiters is
-quite subtle and I wouldn't touch it without having a very good reason.
-
-> Signed-off-by: Yu Zhao <yuzhao@google.com>
+On 2020-08-19 15:37, Maulik Shah wrote:
+> This change was done based on an test results of unmerged series of
+> adding RSC power domain and using .power_off callback of genpd to
+> invoke rpmh_flush().
+> 
+>      Call trace:
+>       dump_backtrace+0x0/0x174
+>       show_stack+0x20/0x2c
+>       dump_stack+0xc8/0x124
+>       lockdep_rcu_suspicious+0xe4/0x104
+>       __tcs_buffer_write+0x230/0x2d0
+>       rpmh_rsc_write_ctrl_data+0x210/0x270
+>       rpmh_flush+0x84/0x24c
+>       rpmh_domain_power_off+0x78/0x98
+>       _genpd_power_off+0x40/0xc0
+>       genpd_power_off+0x168/0x208
+> 
+> Later the final merged solution is to use CPU PM notification to invoke
+> rpmh_flush() and .power_off callback of genpd is not implemented in the
+> driver.
+> 
+> Remove this change since RCU will not be idle during CPU PM 
+> notifications
+> hence not required to use _rcuidle tracepoint. Using _rcuidle 
+> tracepoint
+> prevented rpmh driver to be loadable module as these are not exported
+> symbols.
+> 
+> This reverts commit efde2659b0fe835732047357b2902cca14f054d9.
+> 
+> Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
 > ---
->  include/linux/page-flags.h | 2 +-
->  mm/filemap.c               | 2 ++
->  mm/memremap.c              | 2 --
->  mm/swap.c                  | 3 ---
->  4 files changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-> index 6be1aa559b1e..dba80a2bdfba 100644
-> --- a/include/linux/page-flags.h
-> +++ b/include/linux/page-flags.h
-> @@ -318,7 +318,7 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
->  	TESTSETFLAG_FALSE(uname) TESTCLEARFLAG_FALSE(uname)
->  
->  __PAGEFLAG(Locked, locked, PF_NO_TAIL)
-> -PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
-> +PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
->  PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
->  PAGEFLAG(Referenced, referenced, PF_HEAD)
->  	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 1aaea26556cc..75240c7ef73f 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -1079,6 +1079,8 @@ static void wake_up_page_bit(struct page *page, int bit_nr)
->  		 * other pages on it.
->  		 *
->  		 * That's okay, it's a rare case. The next waker will clear it.
-> +		 * Otherwise the bit will be cleared by PAGE_FLAGS_CHECK_AT_PREP
-> +		 * when the page is being freed.
->  		 */
->  	}
->  	spin_unlock_irqrestore(&q->lock, flags);
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 3a06eb91cb59..a9d02ffaf9e3 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -451,8 +451,6 @@ void free_devmap_managed_page(struct page *page)
->  		return;
->  	}
->  
-> -	__ClearPageWaiters(page);
-> -
->  	mem_cgroup_uncharge(page);
->  
->  	/*
-> diff --git a/mm/swap.c b/mm/swap.c
-> index 999a84dbe12c..40bf20a75278 100644
-> --- a/mm/swap.c
-> +++ b/mm/swap.c
-> @@ -90,7 +90,6 @@ static void __page_cache_release(struct page *page)
->  		del_page_from_lru_list(page, lruvec, page_off_lru(page));
->  		spin_unlock_irqrestore(&pgdat->lru_lock, flags);
->  	}
-> -	__ClearPageWaiters(page);
->  }
->  
->  static void __put_single_page(struct page *page)
-> @@ -900,8 +899,6 @@ void release_pages(struct page **pages, int nr)
->  			del_page_from_lru_list(page, lruvec, page_off_lru(page));
->  		}
->  
-> -		__ClearPageWaiters(page);
-> -
->  		list_add(&page->lru, &pages_to_free);
->  	}
->  	if (locked_pgdat)
-> -- 
-> 2.28.0.220.ged08abb693-goog
-> 
+
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+
+Thanks,
+Sai
 
 -- 
-Michal Hocko
-SUSE Labs
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
