@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B68C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6865CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3581F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3998D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918631;
-	bh=tIzoCSSLRjt/w8J6hFho8GNxLkMCM5XbRXm84eMaaeY=;
+	s=default; t=1597918643;
+	bh=Mlre0NfdZn5TVHGLM/JcqLK5nl+zozSKCg2mXww6fb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apvNjOGBdwS6IxjLjVM0wFLvORl+L4pLnc6gYE4rHKjRLjfwhp4TerrDcsAv01hl1
-	 ONY2vElapXJKOd/Gg/Jricy8Nzj4lyP3TRq3zTdfZuRJ3dJS7N1Ij2EYQp+xSlmT7g
-	 uZEb9Mi6hkdnRqBcd+u61C5rb3ws6xHn1IxjGpSA=
+	b=e2sMVi7cV/55eQ200Zu1JYK3Sa+jRvvlIkmDEv/P4r5e3MYd1D40NUCQhimPU6FiU
+	 t2IqXUggJw0tYmQQ2yGi/ztZGL7J7B7DP6WbjbwS+OMuUd8Raab8ZugQ5YeWev23nm
+	 KMMH4M4vDamsclZ9xDcOYFqEu3l35DD8+cZ3wmqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731293AbgHTKRG (ORCPT
+        id S1730556AbgHTKRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728737AbgHTKQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:53 -0400
+        id S1728603AbgHTKQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE0A020658;
-        Thu, 20 Aug 2020 10:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EDC020658;
+        Thu, 20 Aug 2020 10:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918612;
-        bh=tIzoCSSLRjt/w8J6hFho8GNxLkMCM5XbRXm84eMaaeY=;
+        s=default; t=1597918606;
+        bh=Mlre0NfdZn5TVHGLM/JcqLK5nl+zozSKCg2mXww6fb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJ4e3MItFu35AoG6AK3JdeWfIXREpuR8vJufPXjytZSmEGOBHk2ZceJ8hvtHcF3HU
-         vg0csJ5zuPRlIGx2tMc3eLA80rpiEIYwXvm4EZLjbfGJyYjdIUA03TPDcX5r8wmi4I
-         P6evo7ca+zhLrydc8xb/yfUA9UrXn6hjdW3UGVX0=
+        b=TuQzP43rdH/7ZyNkq7BbVc71SbH+VOg1b8JAHmR+zEvjRmuVZeYZnOWhjXoPYRI+V
+         3XhoKKl7s2D4cE/HilANZOoqNjdaUM0BdNhZo+dVSEbxSyh0Rofhsz4ofZaZt2fDZy
+         Bk2GAcQELsYw+BRv0B6WxLAQClheZupDW58lqc6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ali Saidi <alisaidi@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frank van der Linden <fllinden@amazon.com>
-Subject: [PATCH 4.14 222/228] genirq/affinity: Handle affinity setting on inactive interrupts correctly
-Date:   Thu, 20 Aug 2020 11:23:17 +0200
-Message-Id: <20200820091618.608293206@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 220/228] sh: landisk: Add missing initialization of sh_io_port_base
+Date:   Thu, 20 Aug 2020 11:23:15 +0200
+Message-Id: <20200820091618.505578616@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,123 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-commit baedb87d1b53532f81b4bd0387f83b05d4f7eb9a upstream.
+[ Upstream commit 0c64a0dce51faa9c706fdf1f957d6f19878f4b81 ]
 
-Setting interrupt affinity on inactive interrupts is inconsistent when
-hierarchical irq domains are enabled. The core code should just store the
-affinity and not call into the irq chip driver for inactive interrupts
-because the chip drivers may not be in a state to handle such requests.
+The Landisk setup code maps the CF IDE area using ioremap_prot(), and
+passes the resulting virtual addresses to the pata_platform driver,
+disguising them as I/O port addresses.  Hence the pata_platform driver
+translates them again using ioport_map().
+As CONFIG_GENERIC_IOMAP=n, and CONFIG_HAS_IOPORT_MAP=y, the
+SuperH-specific mapping code in arch/sh/kernel/ioport.c translates
+I/O port addresses to virtual addresses by adding sh_io_port_base, which
+defaults to -1, thus breaking the assumption of an identity mapping.
 
-X86 has a hacky workaround for that but all other irq chips have not which
-causes problems e.g. on GIC V3 ITS.
+Fix this by setting sh_io_port_base to zero.
 
-Instead of adding more ugly hacks all over the place, solve the problem in
-the core code. If the affinity is set on an inactive interrupt then:
-
-    - Store it in the irq descriptors affinity mask
-    - Update the effective affinity to reflect that so user space has
-      a consistent view
-    - Don't call into the irq chip driver
-
-This is the core equivalent of the X86 workaround and works correctly
-because the affinity setting is established in the irq chip when the
-interrupt is activated later on.
-
-Note, that this is only effective when hierarchical irq domains are enabled
-by the architecture. Doing it unconditionally would break legacy irq chip
-implementations.
-
-For hierarchial irq domains this works correctly as none of the drivers can
-have a dependency on affinity setting in inactive state by design.
-
-Remove the X86 workaround as it is not longer required.
-
-Fixes: 02edee152d6e ("x86/apic/vector: Ignore set_affinity call for inactive interrupts")
-Reported-by: Ali Saidi <alisaidi@amazon.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Ali Saidi <alisaidi@amazon.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200529015501.15771-1-alisaidi@amazon.com
-Link: https://lkml.kernel.org/r/877dv2rv25.fsf@nanos.tec.linutronix.de
-[fllinden@amazon.com - 4.14 never had the x86 workaround, so skip x86 changes]
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 37b7a97884ba64bf ("sh: machvec IO death.")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rich Felker <dalias@libc.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/irq/manage.c |   37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ arch/sh/boards/mach-landisk/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -168,9 +168,9 @@ void irq_set_thread_affinity(struct irq_
- 			set_bit(IRQTF_AFFINITY, &action->thread_flags);
- }
+diff --git a/arch/sh/boards/mach-landisk/setup.c b/arch/sh/boards/mach-landisk/setup.c
+index f1147caebacf0..af69fb7fef7c7 100644
+--- a/arch/sh/boards/mach-landisk/setup.c
++++ b/arch/sh/boards/mach-landisk/setup.c
+@@ -85,6 +85,9 @@ device_initcall(landisk_devices_setup);
  
-+#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
- static void irq_validate_effective_affinity(struct irq_data *data)
+ static void __init landisk_setup(char **cmdline_p)
  {
--#ifdef CONFIG_GENERIC_IRQ_EFFECTIVE_AFF_MASK
- 	const struct cpumask *m = irq_data_get_effective_affinity_mask(data);
- 	struct irq_chip *chip = irq_data_get_irq_chip(data);
++	/* I/O port identity mapping */
++	__set_io_port_base(0);
++
+ 	/* LED ON */
+ 	__raw_writeb(__raw_readb(PA_LED) | 0x03, PA_LED);
  
-@@ -178,9 +178,19 @@ static void irq_validate_effective_affin
- 		return;
- 	pr_warn_once("irq_chip %s did not update eff. affinity mask of irq %u\n",
- 		     chip->name, data->irq);
--#endif
- }
- 
-+static inline void irq_init_effective_affinity(struct irq_data *data,
-+					       const struct cpumask *mask)
-+{
-+	cpumask_copy(irq_data_get_effective_affinity_mask(data), mask);
-+}
-+#else
-+static inline void irq_validate_effective_affinity(struct irq_data *data) { }
-+static inline void irq_init_effective_affinity(struct irq_data *data,
-+					       const struct cpumask *mask) { }
-+#endif
-+
- int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
- 			bool force)
- {
-@@ -205,6 +215,26 @@ int irq_do_set_affinity(struct irq_data
- 	return ret;
- }
- 
-+static bool irq_set_affinity_deactivated(struct irq_data *data,
-+					 const struct cpumask *mask, bool force)
-+{
-+	struct irq_desc *desc = irq_data_to_desc(data);
-+
-+	/*
-+	 * If the interrupt is not yet activated, just store the affinity
-+	 * mask and do not call the chip driver at all. On activation the
-+	 * driver has to make sure anyway that the interrupt is in a
-+	 * useable state so startup works.
-+	 */
-+	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
-+		return false;
-+
-+	cpumask_copy(desc->irq_common_data.affinity, mask);
-+	irq_init_effective_affinity(data, mask);
-+	irqd_set(data, IRQD_AFFINITY_SET);
-+	return true;
-+}
-+
- int irq_set_affinity_locked(struct irq_data *data, const struct cpumask *mask,
- 			    bool force)
- {
-@@ -215,6 +245,9 @@ int irq_set_affinity_locked(struct irq_d
- 	if (!chip || !chip->irq_set_affinity)
- 		return -EINVAL;
- 
-+	if (irq_set_affinity_deactivated(data, mask, force))
-+		return 0;
-+
- 	if (irq_can_move_pcntxt(data)) {
- 		ret = irq_do_set_affinity(data, mask, force);
- 	} else {
+-- 
+2.25.1
+
 
 
