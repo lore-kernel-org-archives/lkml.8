@@ -2,52 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E671DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C52C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB79820855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6141820855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922350;
-	bh=b3ProMthpXoH87cVRKNxK4C2HYtOQ0Qt//W7bkqCIWE=;
+	s=default; t=1597922364;
+	bh=kVRhEtl+UAk4V947xnY62S2SgqgbROmEWjYLUe4PZH4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3DtURYW6zwK/1H6ZVF2nzw4ducKtxUizIqn5mz90Ii3CtRS1a48Ardhm2QLZgp9h
-	 u29TsSla+Oilx4f6qThu7WpD8ZKCD070pDUanHDaqKWX0oR5WQ/y7DOcdHK63aFbyr
-	 q8mZirkeHUiLvnApxDhBGCAU4vKKv+Q+fZ4YR3eQ=
+	b=0+kxfuMurRFkHmVT8hplImeUmUl3BHRL8EFPWIHHXB+JRJ4UOehIKDyY3WbFuS1I6
+	 mwydyMvjdEjNOqesoBQEM0brqEd1FuhcXdLVEbuSelZPdVgsbK2+mlX+Du+7J1K+eV
+	 3wlab4+H0KQy3/iEXjdsVTko8+nkKkA/MQ9L2Zlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgHTLSO (ORCPT
+        id S1730131AbgHTLTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:18:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39730 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730066AbgHTKIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:09 -0400
+        id S1729049AbgHTKH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 487822078D;
-        Thu, 20 Aug 2020 10:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F21232067C;
+        Thu, 20 Aug 2020 10:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918088;
-        bh=b3ProMthpXoH87cVRKNxK4C2HYtOQ0Qt//W7bkqCIWE=;
+        s=default; t=1597918076;
+        bh=kVRhEtl+UAk4V947xnY62S2SgqgbROmEWjYLUe4PZH4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iCkVxr2CyPlt0M2bEmvAsEsN8C4IawZfE+V8Mez54rl+05DBFLeTSCL/GguvJQh0N
-         hU5lN8X+6Hvd4qo0PHFcyPuMW6K6lAb4Wnfh1tOeUB4cL5Ez6OCXDf/1Wx5K/zVBqY
-         WsbdTfGWAMc+VqsGRnCQ99zgEt7w93NtDDw6ofAE=
+        b=HnR+NM4N3uMXyx5U3aSKxRb4uMc1nDbW5uuKoYoEN4xTuP5tlmYBNyeoEj3CDEDqI
+         E+p0O8oc4fURLlD9/+ldWw6/K1XotXq8A7XJmI+j1NDNqFRh5buqvm+TjerhpSLIM3
+         CXUiXassmDJk/bmx1RLzhq+QbamsB7gBJj3+ni3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 048/228] arm64: dts: rockchip: fix rk3399-puma vcc5v0-host gpio
-Date:   Thu, 20 Aug 2020 11:20:23 +0200
-Message-Id: <20200820091610.016532249@linuxfoundation.org>
+        stable@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>,
+        Darren Hart <darren@dvhart.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 4.14 044/228] HID: input: Fix devices that return multiple bytes in battery report
+Date:   Thu, 20 Aug 2020 11:20:19 +0200
+Message-Id: <20200820091609.804574301@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,43 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+From: Grant Likely <grant.likely@secretlab.ca>
 
-[ Upstream commit 7a7184f6cfa9279f1a1c10a1845d247d7fad54ff ]
+commit 4f57cace81438cc873a96f9f13f08298815c9b51 upstream.
 
-The puma vcc5v0_host regulator node currently uses opposite active-values
-for the enable pin. The gpio-declaration uses active-high while the
-separate enable-active-low property marks the pin as active low.
+Some devices, particularly the 3DConnexion Spacemouse wireless 3D
+controllers, return more than just the battery capacity in the battery
+report. The Spacemouse devices return an additional byte with a device
+specific field. However, hidinput_query_battery_capacity() only
+requests a 2 byte transfer.
 
-While on the kernel side this works ok, other DT users may get
-confused - as seen with uboot right now.
+When a spacemouse is connected via USB (direct wire, no wireless dongle)
+and it returns a 3 byte report instead of the assumed 2 byte battery
+report the larger transfer confuses and frightens the USB subsystem
+which chooses to ignore the transfer. Then after 2 seconds assume the
+device has stopped responding and reset it. This can be reproduced
+easily by using a wired connection with a wireless spacemouse. The
+Spacemouse will enter a loop of resetting every 2 seconds which can be
+observed in dmesg.
 
-So bring this in line and make both properties match, similar to the
-gmac fix.
+This patch solves the problem by increasing the transfer request to 4
+bytes instead of 2. The fix isn't particularly elegant, but it is simple
+and safe to backport to stable kernels. A further patch will follow to
+more elegantly handle battery reports that contain additional data.
 
-Fixes: 2c66fc34e945 ("arm64: dts: rockchip: add RK3399-Q7 (Puma) SoM")
-Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
-Link: https://lore.kernel.org/r/20200604091239.424318-1-heiko@sntech.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+Cc: Darren Hart <darren@dvhart.com>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: stable@vger.kernel.org
+Tested-by: Darren Hart <dvhart@infradead.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-input.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-index 1fc5060d7027e..b08a998ca1024 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi
-@@ -138,7 +138,7 @@ vcc3v3_sys: vcc3v3-sys {
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -362,13 +362,13 @@ static int hidinput_query_battery_capaci
+ 	u8 *buf;
+ 	int ret;
  
- 	vcc5v0_host: vcc5v0-host-regulator {
- 		compatible = "regulator-fixed";
--		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_LOW>;
- 		enable-active-low;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&vcc5v0_host_en>;
--- 
-2.25.1
-
+-	buf = kmalloc(2, GFP_KERNEL);
++	buf = kmalloc(4, GFP_KERNEL);
+ 	if (!buf)
+ 		return -ENOMEM;
+ 
+-	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 2,
++	ret = hid_hw_raw_request(dev, dev->battery_report_id, buf, 4,
+ 				 dev->battery_report_type, HID_REQ_GET_REPORT);
+-	if (ret != 2) {
++	if (ret < 2) {
+ 		kfree(buf);
+ 		return -ENODATA;
+ 	}
 
 
