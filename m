@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C260C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387DB20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A76D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919996;
-	bh=FssRAtjvO9q3R2ql3sbZw5EJB0pb70GEDIhbn2tG0Gc=;
+	s=default; t=1597919998;
+	bh=Qh9Gn1/chWCrMEag8LmYI6y/Q9IS7JpKDgajbRxLZGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zDeI6bUkxz7kmBUSHJWj6d65jc4VzgthOJl/AqF4wcxoPJNpJfGr02Wjf0zroY/s
-	 5hfMExfkObT1P8zOnHrZF6ocutX7PrPv9voyzzxsYvG4LwWcpu+e8tQZbGeaJR+f+8
-	 LguUhYN60hwTBW48EfUpuFx+8ihueNurK9tZLXxg=
+	b=2kYG63GxFMpvPt/rLBkydRKU8FfCdhGDM0tv9Vx2OuRV0n9w2/5BLjQzFyk6i6sYI
+	 /xaD5Hq6ripkueNnY8IueicDv2Uy/aoV0MEeJrNBhg00iU0dG+OXzM8+JLNM50f62a
+	 H8k4lBJqZcbDDt/nvAxnc3FxGW1yyl4LBbOf4+5Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgHTKjz (ORCPT
+        id S1731848AbgHTKj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:39:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgHTKR4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:17:56 -0400
+        id S1731380AbgHTKS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62642067C;
-        Thu, 20 Aug 2020 10:17:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B33206DA;
+        Thu, 20 Aug 2020 10:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918675;
-        bh=FssRAtjvO9q3R2ql3sbZw5EJB0pb70GEDIhbn2tG0Gc=;
+        s=default; t=1597918706;
+        bh=Qh9Gn1/chWCrMEag8LmYI6y/Q9IS7JpKDgajbRxLZGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HM0k7QQubnvPSpgtU18u961Y1LaDEYpEHD32vrjwPVYswaGggRjzooQP5AP2EFbla
-         Uk3TRMfhzdVLKyUoUNsFPGoftsU7JqA/rPx4/rWMkhVrrR7YInUhdRqT8gEPpuh3Kv
-         WxkPjuVV4VMVAvRwf6OgASZKtWf9XtDxmVK2nAgA=
+        b=wkYyh8EetP1v9RSq0gHNJFWWCZvU3++YsrBjMSiNKQ5gOQDVmBZVLqk57MvdgmtVT
+         cZRTUAdGavndYZ1QVT9MjOthBH0j43ulBymbL988XEFi0/1gJdCxEJl+jDzrAaJphp
+         kUWH8ltLUOyAJmqa+mVD6VmpVFYg+ZPTtSsGIWRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 025/149] xen-netfront: fix potential deadlock in xennet_remove()
-Date:   Thu, 20 Aug 2020 11:21:42 +0200
-Message-Id: <20200820092126.939313881@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancockrwd@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.4 007/149] PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
+Date:   Thu, 20 Aug 2020 11:21:24 +0200
+Message-Id: <20200820092126.050143228@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,129 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Righi <andrea.righi@canonical.com>
+From: Robert Hancock <hancockrwd@gmail.com>
 
-[ Upstream commit c2c633106453611be07821f53dff9e93a9d1c3f0 ]
+commit b361663c5a40c8bc758b7f7f2239f7a192180e7c upstream.
 
-There's a potential race in xennet_remove(); this is what the driver is
-doing upon unregistering a network device:
+Recently ASPM handling was changed to allow ASPM on PCIe-to-PCI/PCI-X
+bridges.  Unfortunately the ASMedia ASM1083/1085 PCIe to PCI bridge device
+doesn't seem to function properly with ASPM enabled.  On an Asus PRIME
+H270-PRO motherboard, it causes errors like these:
 
-  1. state = read bus state
-  2. if state is not "Closed":
-  3.    request to set state to "Closing"
-  4.    wait for state to be set to "Closing"
-  5.    request to set state to "Closed"
-  6.    wait for state to be set to "Closed"
+  pcieport 0000:00:1c.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
+  pcieport 0000:00:1c.0: AER:   device [8086:a292] error status/mask=00003000/00002000
+  pcieport 0000:00:1c.0: AER:    [12] Timeout
+  pcieport 0000:00:1c.0: AER: Corrected error received: 0000:00:1c.0
+  pcieport 0000:00:1c.0: AER: can't find device of ID00e0
 
-If the state changes to "Closed" immediately after step 1 we are stuck
-forever in step 4, because the state will never go back from "Closed" to
-"Closing".
+In addition to flooding the kernel log, this also causes the machine to
+wake up immediately after suspend is initiated.
 
-Make sure to check also for state == "Closed" in step 4 to prevent the
-deadlock.
+The device advertises ASPM L0s and L1 support in the Link Capabilities
+register, but the ASMedia web page for ASM1083 [1] claims "No PCIe ASPM
+support".
 
-Also add a 5 sec timeout any time we wait for the bus state to change,
-to avoid getting stuck forever in wait_event().
+Windows 10 (build 2004) enables L0s, but it also logs correctable PCIe
+errors.
 
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Add a quirk to disable ASPM for this device.
+
+[1] https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
+
+[bhelgaas: commit log]
+Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208667
+Link: https://lore.kernel.org/r/20200722021803.17958-1-hancockrwd@gmail.com
+Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/xen-netfront.c |   64 +++++++++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 22 deletions(-)
+ drivers/pci/quirks.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/net/xen-netfront.c
-+++ b/drivers/net/xen-netfront.c
-@@ -62,6 +62,8 @@ module_param_named(max_queues, xennet_ma
- MODULE_PARM_DESC(max_queues,
- 		 "Maximum number of queues per virtual interface");
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2273,6 +2273,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AM
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_VIA, 0xa238, quirk_disable_msi);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x5a3f, quirk_disable_msi);
  
-+#define XENNET_TIMEOUT  (5 * HZ)
-+
- static const struct ethtool_ops xennet_ethtool_ops;
- 
- struct netfront_cb {
-@@ -1349,12 +1351,15 @@ static struct net_device *xennet_create_
- 
- 	netif_carrier_off(netdev);
- 
--	xenbus_switch_state(dev, XenbusStateInitialising);
--	wait_event(module_wq,
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateClosed &&
--		   xenbus_read_driver_state(dev->otherend) !=
--		   XenbusStateUnknown);
-+	do {
-+		xenbus_switch_state(dev, XenbusStateInitialising);
-+		err = wait_event_timeout(module_wq,
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateClosed &&
-+				 xenbus_read_driver_state(dev->otherend) !=
-+				 XenbusStateUnknown, XENNET_TIMEOUT);
-+	} while (!err);
-+
- 	return netdev;
- 
-  exit:
-@@ -2166,28 +2171,43 @@ static const struct attribute_group xenn
- };
- #endif /* CONFIG_SYSFS */
- 
--static int xennet_remove(struct xenbus_device *dev)
-+static void xennet_bus_close(struct xenbus_device *dev)
- {
--	struct netfront_info *info = dev_get_drvdata(&dev->dev);
--
--	dev_dbg(&dev->dev, "%s\n", dev->nodename);
-+	int ret;
- 
--	if (xenbus_read_driver_state(dev->otherend) != XenbusStateClosed) {
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosing);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosing ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosing ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
- 
-+	if (xenbus_read_driver_state(dev->otherend) == XenbusStateClosed)
-+		return;
-+
-+	do {
- 		xenbus_switch_state(dev, XenbusStateClosed);
--		wait_event(module_wq,
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateClosed ||
--			   xenbus_read_driver_state(dev->otherend) ==
--			   XenbusStateUnknown);
--	}
-+		ret = wait_event_timeout(module_wq,
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateClosed ||
-+				   xenbus_read_driver_state(dev->otherend) ==
-+				   XenbusStateUnknown,
-+				   XENNET_TIMEOUT);
-+	} while (!ret);
++static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
++{
++	dev_info(&dev->dev, "Disabling ASPM L0s/L1\n");
++	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
 +}
 +
-+static int xennet_remove(struct xenbus_device *dev)
-+{
-+	struct netfront_info *info = dev_get_drvdata(&dev->dev);
- 
-+	xennet_bus_close(dev);
- 	xennet_disconnect_backend(info);
- 
- 	if (info->netdev->reg_state == NETREG_REGISTERED)
++/*
++ * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
++ * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected;
++ * disable both L0s and L1 for now to be safe.
++ */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
++
+ /*
+  * The APC bridge device in AMD 780 family northbridges has some random
+  * OEM subsystem ID in its vendor ID register (erratum 18), so instead
 
 
