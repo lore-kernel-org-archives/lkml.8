@@ -2,106 +2,212 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B55D8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F7B9204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FE88204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Y6lBTbZD"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S6S/ND16"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbgHTLhE (ORCPT
+        id S1727880AbgHTLhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:37:04 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:29940 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730154AbgHTLcv (ORCPT
+        Thu, 20 Aug 2020 07:37:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730790AbgHTLgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:32:51 -0400
-X-UUID: fc157446e9cb41f3bc3de99a6f4896b1-20200820
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=G7pvdWU6ecd0ZELjOP1tjCdcvdakfvhwkNEctXHsX3w=;
-        b=Y6lBTbZDjgKKOj7caJpk1mtzuw3Z0Qn0ZUOokYIMZ3AvqlF1aAX+flQj5HdUBc2zNnKqSERYSZKPglPl706yIqqcrdRs/vfmc25ywYpt6JVRMg1cEHNI/sJelnAZosLxwsG8YJXWhVoGSZEhztyZi6RjGZOvlFxWiMJzvkb3bzc=;
-X-UUID: fc157446e9cb41f3bc3de99a6f4896b1-20200820
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 882762425; Thu, 20 Aug 2020 19:32:22 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 20 Aug 2020 19:32:20 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 20 Aug 2020 19:32:18 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Sasi Kumar <sasi.kumar@broadcom.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 01/11] usb: gadget: bdc: fix improper SPDX comment style for header file
-Date:   Thu, 20 Aug 2020 19:30:36 +0800
-Message-ID: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Thu, 20 Aug 2020 07:36:48 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KB3UlD136298;
+        Thu, 20 Aug 2020 07:36:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=k7KfW0RZAjPIFH/IRXudnl5GCxnyZfPjYnmTz1S/C5Y=;
+ b=S6S/ND16urnI16ekC35Bzim6ncR9qjSNgBt1bQCUxuLhulf81CqteDAov5rK0Ni37LiP
+ yV4TUjgZ93y/cbhvLuDk5ydNxpp3klztxCn6SHypliuaMi/aGQD8gPVcBT3XH82Rnzmo
+ IBoj4l8qR0VJRORlP1hO6gC0qsMV2FdkoLRcTwUuYAtai32QUaS4strshSYKyEMAlem/
+ OstswIVmO34E953Y+tQdVcaT1sU/7f9X50NiWUP9F/TNw2PawHNKFr+v3lBQ5FuLbgye
+ okW6m/foRGI2J9iJeb9HZE0f/YDXv6yqt4zkb8urvmeVaYL1iFFfmy2/eqo9jmnfEOP8 pA== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3317ab369v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 07:36:43 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KBW3hb019650;
+        Thu, 20 Aug 2020 11:36:41 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06ams.nl.ibm.com with ESMTP id 330tbvsseu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 11:36:41 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KBadUD26804618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 11:36:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17C1CA4051;
+        Thu, 20 Aug 2020 11:36:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD2F5A4059;
+        Thu, 20 Aug 2020 11:36:37 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.199.33.217])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 11:36:37 +0000 (GMT)
+From:   Ritesh Harjani <riteshh@linux.ibm.com>
+To:     linux-ext4@vger.kernel.org
+Cc:     jack@suse.cz, tytso@mit.edu, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ritesh Harjani <riteshh@linux.ibm.com>
+Subject: [RFC 0/1] Optimize ext4 DAX overwrites
+Date:   Thu, 20 Aug 2020 17:06:27 +0530
+Message-Id: <cover.1597855360.git.riteshh@linux.ibm.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 921FA67EAD5DF1151DD75AC4BE3FAD03D1FB55737FB5FEAF8748B0F0395FC15B2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_02:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 mlxlogscore=825 phishscore=0 clxscore=1015 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rm9yIEMgaGVhZGVyIGZpbGVzIERvY3VtZW50YXRpb24vcHJvY2Vzcy9saWNlbnNlLXJ1bGVzLnJz
-dA0KbWFuZGF0ZXMgQy1saWtlIGNvbW1lbnRzIChvcHBvc2VkIHRvIEMgc291cmNlIGZpbGVzIHdo
-ZXJlDQpDKysgc3R5bGUgc2hvdWxkIGJlIHVzZWQpLg0KDQpDYzogRmxvcmlhbiBGYWluZWxsaSA8
-Zi5mYWluZWxsaUBnbWFpbC5jb20+DQpTaWduZWQtb2ZmLWJ5OiBDaHVuZmVuZyBZdW4gPGNodW5m
-ZW5nLnl1bkBtZWRpYXRlay5jb20+DQotLS0NCnYyOiBhZGQgQ2MgRmxvcmlhbg0KLS0tDQogZHJp
-dmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmggICAgIHwgMiArLQ0KIGRyaXZlcnMvdXNiL2dh
-ZGdldC91ZGMvYmRjL2JkY19jbWQuaCB8IDIgKy0NCiBkcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2Jk
-Yy9iZGNfZGJnLmggfCAyICstDQogZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2VwLmgg
-IHwgMiArLQ0KIDQgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygt
-KQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmggYi9kcml2
-ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGMuaA0KaW5kZXggYWM3NWUyNS4uZmNiYTc3ZSAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oDQorKysgYi9kcml2ZXJz
-L3VzYi9nYWRnZXQvdWRjL2JkYy9iZGMuaA0KQEAgLTEsNCArMSw0IEBADQotLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjArDQorLyogU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQ
-TC0yLjArICovDQogLyoNCiAgKiBiZGMuaCAtIGhlYWRlciBmb3IgdGhlIEJSQ00gQkRDIFVTQjMu
-MCBkZXZpY2UgY29udHJvbGxlcg0KICAqDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0
-L3VkYy9iZGMvYmRjX2NtZC5oIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2NtZC5o
-DQppbmRleCAyOWNjOTg4Li4zNzNlNjc0IDEwMDY0NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0
-L3VkYy9iZGMvYmRjX2NtZC5oDQorKysgYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNf
-Y21kLmgNCkBAIC0xLDQgKzEsNCBAQA0KLS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwt
-Mi4wKw0KKy8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKyAqLw0KIC8qDQogICog
-YmRjX2NtZC5oIC0gaGVhZGVyIGZvciB0aGUgQkRDIGRlYnVnIGZ1bmN0aW9ucw0KICAqDQpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2RiZy5oIGIvZHJpdmVycy91
-c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2RiZy5oDQppbmRleCAzNzNkNWFiLi44NTlkNTg4IDEwMDY0
-NA0KLS0tIGEvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2RiZy5oDQorKysgYi9kcml2
-ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZGJnLmgNCkBAIC0xLDQgKzEsNCBAQA0KLS8vIFNQ
-RFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0KKy8qIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wKyAqLw0KIC8qDQogICogYmRjX2RiZy5oIC0gaGVhZGVyIGZvciB0aGUgQkRD
-IGRlYnVnIGZ1bmN0aW9ucw0KICAqDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2IvZ2FkZ2V0L3Vk
-Yy9iZGMvYmRjX2VwLmggYi9kcml2ZXJzL3VzYi9nYWRnZXQvdWRjL2JkYy9iZGNfZXAuaA0KaW5k
-ZXggYTM3ZmY4MDMuLjViYmQ3M2YgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQvdWRj
-L2JkYy9iZGNfZXAuaA0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjX2VwLmgN
-CkBAIC0xLDQgKzEsNCBAQA0KLS8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0K
-Ky8qIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKyAqLw0KIC8qDQogICogYmRjX2Vw
-LmggLSBoZWFkZXIgZm9yIHRoZSBCREMgZGVidWcgZnVuY3Rpb25zDQogICoNCi0tIA0KMS45LjEN
-Cg==
+In case of dax writes, currently we start a journal txn irrespective of whether
+it's an overwrite or not. In case of an overwrite we don't need to start a
+jbd2 txn since the blocks are already allocated.
+So this patch optimizes away the txn start in case of DAX overwrites.
+This could significantly boost performance for multi-threaded random write
+(overwrite). Fio script used to collect perf numbers is mentioned below.
+
+Below numbers were calculated on a QEMU setup on ppc64 box with simulated
+pmem device.
+
+Performance numbers with different threads - (~10x improvement)
+==========================================
+
+vanilla_kernel(kIOPS)
+ 60 +-+---------------+-------+--------+--------+--------+-------+------+-+   
+     |                 +       +        +        +**      +       +        |   
+  55 +-+                                          **                     +-+   
+     |                                   **       **                       |   
+     |                                   **       **                       |   
+  50 +-+                                 **       **                     +-+   
+     |                                   **       **                       |   
+  45 +-+                                 **       **                     +-+   
+     |                                   **       **                       |   
+     |                                   **       **                       |   
+  40 +-+                                 **       **                     +-+   
+     |                                   **       **                       |   
+  35 +-+                        **       **       **                     +-+   
+     |                          **       **       **               **      |   
+     |                          **       **       **      **       **      |   
+  30 +-+               **       **       **       **      **       **    +-+   
+     |                 **      +**      +**      +**      **      +**      |   
+  25 +-+---------------**------+**------+**------+**------**------+**----+-+   
+                       1       2        4        8       12      16            
+                                     Threads                                   
+patched_kernel(kIOPS)
+  600 +-+--------------+--------+--------+-------+--------+-------+------+-+   
+      |                +        +        +       +        +       +**      |   
+      |                                                            **      |   
+  500 +-+                                                          **    +-+   
+      |                                                            **      |   
+      |                                                    **      **      |   
+  400 +-+                                                  **      **    +-+   
+      |                                                    **      **      |   
+  300 +-+                                         **       **      **    +-+   
+      |                                           **       **      **      |   
+      |                                           **       **      **      |   
+  200 +-+                                         **       **      **    +-+   
+      |                                  **       **       **      **      |   
+      |                                  **       **       **      **      |   
+  100 +-+                        **      **       **       **      **    +-+   
+      |                          **      **       **       **      **      |   
+      |                +**      +**      **      +**      +**     +**      |   
+    0 +-+--------------+**------+**------**------+**------+**-----+**----+-+   
+                       1        2        4       8       12      16            
+                                     Threads                                   
+fio script
+==========
+[global]
+rw=randwrite
+norandommap=1
+invalidate=0
+bs=4k
+numjobs=16 		--> changed this for different thread options
+time_based=1
+ramp_time=30
+runtime=60
+group_reporting=1
+ioengine=psync
+direct=1
+size=16G
+filename=file1.0.0:file1.0.1:file1.0.2:file1.0.3:file1.0.4:file1.0.5:file1.0.6:file1.0.7:file1.0.8:file1.0.9:file1.0.10:file1.0.11:file1.0.12:file1.0.13:file1.0.14:file1.0.15:file1.0.16:file1.0.17:file1.0.18:file1.0.19:file1.0.20:file1.0.21:file1.0.22:file1.0.23:file1.0.24:file1.0.25:file1.0.26:file1.0.27:file1.0.28:file1.0.29:file1.0.30:file1.0.31
+file_service_type=random
+nrfiles=32
+directory=/mnt/
+
+[name]
+directory=/mnt/
+direct=1
+
+NOTE:
+======
+1. Looking at ~10x perf delta, I probed a bit deeper to understand what's causing
+this scalability problem. It seems when we are starting a jbd2 txn then slab
+alloc code is observing some serious contention around spinlock.
+
+Even though the spinlock contention could be related to some other
+issue (looking into it internally). But I could still see the perf improvement
+of close to ~2x on QEMU setup on x86 with simulated pmem device with the
+patched_kernel v/s vanilla_kernel with same fio workload.
+
+perf report from vanilla_kernel (this is not seen with patched kernel) (ppc64)
+=======================================================================
+
+  47.86%  fio              [kernel.vmlinux]            [k] do_raw_spin_lock
+             |
+             ---do_raw_spin_lock
+                |
+                |--19.43%--_raw_spin_lock
+                |          |
+                |           --19.31%--0
+                |                     |
+                |                     |--9.77%--deactivate_slab.isra.61
+                |                     |          ___slab_alloc
+                |                     |          __slab_alloc
+                |                     |          kmem_cache_alloc
+                |                     |          jbd2__journal_start
+                |                     |          __ext4_journal_start_sb
+<...>
+
+2. Kept this as RFC, since maybe using the ext4_iomap_overwrite_ops,
+will be better here. We could check for overwrite in ext4_dax_write_iter(),
+like how we do for DIO writes. Thoughts?
+
+3. This problem was reported by Dan Williams at [1]
+
+Links
+======
+[1]: https://lore.kernel.org/linux-ext4/20190802144304.GP25064@quack2.suse.cz/T/
+
+Ritesh Harjani (1):
+  ext4: Optimize ext4 DAX overwrites
+
+ fs/ext4/ext4.h  | 1 +
+ fs/ext4/file.c  | 2 +-
+ fs/ext4/inode.c | 8 +++++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+-- 
+2.25.4
 
