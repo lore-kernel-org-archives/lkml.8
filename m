@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A664C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A5BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE672076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4568220724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:50:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ci0/LU6y"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PmmHS9Jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHTFuc (ORCPT
+        id S1726965AbgHTFum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:50:32 -0400
+        Thu, 20 Aug 2020 01:50:42 -0400
 Received: from m43-7.mailgun.net ([69.72.43.7]:38047 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgHTFuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:50:32 -0400
+        id S1726836AbgHTFul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:50:41 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597902631; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597902640; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=WM/BsbfLMGkoy8QU7+MrQG4X+TVPXDcUJnO5tlPi144=; b=ci0/LU6yzl2WTATFHOx5ZucWlwAro11a6rcH/E7KUBs8ddnvL2tuVDAX8nxeRki21htazUyN
- u6UKrlNvG9BWAopzGIJCLcxJcDgi0PwcAdI3qQA/UXYMXk5cKAGtyDmnVwpEtj5UqWL10+so
- 154dWJBGRlDVT/5kbRQS+9iL3Sc=
+ Sender; bh=mUOjlrLip6VeiDERWreWDeLU+6AgtiLzSqSuY/yZENs=; b=PmmHS9JlLzRNY0bHFSE0TBKUjVeWhMT5xx7ntpklzITdaVRfIBkbNx/aIA/5dUHro0CbJLzz
+ GBev3oyvch642TM36zJOK4kof4HUe3khlTspkQ1u0aNIwPOFSX2rH9aj6ff7lNDS95HMIGxq
+ mXzPaw5qpl1je9iuqiB/hF+6dYk=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f3e0f27f729de1078a3cb4b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:50:31
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f3e0f227eb4541d93819985 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:50:26
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ABA77C433AF; Thu, 20 Aug 2020 05:50:30 +0000 (UTC)
+        id 1DADAC43395; Thu, 20 Aug 2020 05:50:24 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A54F2C433BA;
-        Thu, 20 Aug 2020 05:50:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A54F2C433BA
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 18579C4344D;
+        Thu, 20 Aug 2020 05:50:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 18579C4344D
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -64,9 +64,9 @@ Cc:     Kim Phillips <kim.phillips@arm.com>,
         linux-kernel@vger.kernel.org,
         Suzuki K Poulose <Suzuki.Poulose@arm.com>,
         Tingwei Zhang <tingwei@codeaurora.org>
-Subject: [PATCH v9 15/24] coresight: allow replicator driver to be built as module
-Date:   Thu, 20 Aug 2020 13:47:09 +0800
-Message-Id: <20200820054718.20115-16-tingwei@codeaurora.org>
+Subject: [PATCH v9 14/24] coresight: allow funnel driver to be built as module
+Date:   Thu, 20 Aug 2020 13:47:08 +0800
+Message-Id: <20200820054718.20115-15-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200820054718.20115-1-tingwei@codeaurora.org>
 References: <20200820054718.20115-1-tingwei@codeaurora.org>
@@ -79,12 +79,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kim Phillips <kim.phillips@arm.com>
 
-Allow to build coresight-replicator as modules, for ease of development.
+Allow to build coresight-funnel as module, for ease of development.
 
-- Kconfig becomes a tristate, to allow =m
-- combine static and dynamic replicator init into single
+- combine static and dynamic funnel init into single
   module_init/exit call
-- add replicator_remove functions, for module unload
+- add funnel_remove functions, for module unload
 - add a MODULE_DEVICE_TABLE for autoloading on boot
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
@@ -99,158 +98,133 @@ Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
 Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
 Tested-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/Kconfig           |  5 +-
- .../coresight/coresight-replicator.c          | 65 ++++++++++++++++++-
- 2 files changed, 67 insertions(+), 3 deletions(-)
+ .../hwtracing/coresight/coresight-funnel.c    | 64 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index fc48ae086746..f31778dd0b5d 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -17,13 +17,16 @@ menuconfig CORESIGHT
- 
- if CORESIGHT
- config CORESIGHT_LINKS_AND_SINKS
--	bool "CoreSight Link and Sink drivers"
-+	tristate "CoreSight Link and Sink drivers"
- 	help
- 	  This enables support for CoreSight link and sink drivers that are
- 	  responsible for transporting and collecting the trace data
- 	  respectively.  Link and sinks are dynamically aggregated with a trace
- 	  entity at run time to form a complete trace path.
- 
-+	  To compile these drivers as modules, choose M here: the
-+	  modules will be called coresight-funnel and coresight-replicator.
-+
- config CORESIGHT_LINK_AND_SINK_TMC
- 	tristate "Coresight generic TMC driver"
- 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index 78acf29c49ca..62afdde0e5ea 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -291,6 +291,14 @@ static int replicator_probe(struct device *dev, struct resource *res)
+diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
+index 900690a9f7f0..38e0079bd494 100644
+--- a/drivers/hwtracing/coresight/coresight-funnel.c
++++ b/drivers/hwtracing/coresight/coresight-funnel.c
+@@ -274,6 +274,15 @@ static int funnel_probe(struct device *dev, struct resource *res)
  	return ret;
  }
  
-+static int __exit replicator_remove(struct device *dev)
++static int __exit funnel_remove(struct device *dev)
 +{
-+	struct replicator_drvdata *drvdata = dev_get_drvdata(dev);
++	struct funnel_drvdata *drvdata = dev_get_drvdata(dev);
 +
 +	coresight_unregister(drvdata->csdev);
-+	return 0;
-+}
 +
- static int static_replicator_probe(struct platform_device *pdev)
- {
- 	int ret;
-@@ -310,6 +318,13 @@ static int static_replicator_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __exit static_replicator_remove(struct platform_device *pdev)
-+{
-+	replicator_remove(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
 +	return 0;
 +}
 +
  #ifdef CONFIG_PM
- static int replicator_runtime_suspend(struct device *dev)
+ static int funnel_runtime_suspend(struct device *dev)
  {
-@@ -343,24 +358,29 @@ static const struct of_device_id static_replicator_match[] = {
- 	{}
- };
- 
-+MODULE_DEVICE_TABLE(of, static_replicator_match);
-+
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id static_replicator_acpi_ids[] = {
- 	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
- 	{}
- };
-+
-+MODULE_DEVICE_TABLE(acpi, static_replicator_acpi_ids);
- #endif
- 
- static struct platform_driver static_replicator_driver = {
- 	.probe          = static_replicator_probe,
-+	.remove         = static_replicator_remove,
- 	.driver         = {
- 		.name   = "coresight-static-replicator",
-+		.owner	= THIS_MODULE,
- 		.of_match_table = of_match_ptr(static_replicator_match),
- 		.acpi_match_table = ACPI_PTR(static_replicator_acpi_ids),
- 		.pm	= &replicator_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(static_replicator_driver);
- 
- static int dynamic_replicator_probe(struct amba_device *adev,
- 				    const struct amba_id *id)
-@@ -368,19 +388,60 @@ static int dynamic_replicator_probe(struct amba_device *adev,
- 	return replicator_probe(&adev->dev, &adev->res);
+@@ -319,20 +328,32 @@ static int static_funnel_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
-+static int __exit dynamic_replicator_remove(struct amba_device *adev)
++static int __exit static_funnel_remove(struct platform_device *pdev)
 +{
-+	return replicator_remove(&adev->dev);
++	funnel_remove(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	return 0;
 +}
 +
- static const struct amba_id dynamic_replicator_ids[] = {
- 	CS_AMBA_ID(0x000bb909),
- 	CS_AMBA_ID(0x000bb9ec),		/* Coresight SoC-600 */
- 	{},
+ static const struct of_device_id static_funnel_match[] = {
+ 	{.compatible = "arm,coresight-static-funnel"},
+ 	{}
  };
  
-+MODULE_DEVICE_TABLE(amba, dynamic_replicator_ids);
++MODULE_DEVICE_TABLE(of, static_funnel_match);
 +
- static struct amba_driver dynamic_replicator_driver = {
- 	.drv = {
- 		.name	= "coresight-dynamic-replicator",
- 		.pm	= &replicator_dev_pm_ops,
-+		.owner	= THIS_MODULE,
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id static_funnel_ids[] = {
+ 	{"ARMHC9FE", 0},
+ 	{},
+ };
++
++MODULE_DEVICE_TABLE(acpi, static_funnel_ids);
+ #endif
+ 
+ static struct platform_driver static_funnel_driver = {
+ 	.probe          = static_funnel_probe,
++	.probe          = static_funnel_remove,
+ 	.driver         = {
+ 		.name   = "coresight-static-funnel",
+ 		.of_match_table = static_funnel_match,
+@@ -341,7 +362,6 @@ static struct platform_driver static_funnel_driver = {
  		.suppress_bind_attrs = true,
  	},
- 	.probe		= dynamic_replicator_probe,
-+	.remove         = dynamic_replicator_remove,
- 	.id_table	= dynamic_replicator_ids,
  };
--builtin_amba_driver(dynamic_replicator_driver);
+-builtin_platform_driver(static_funnel_driver);
+ 
+ static int dynamic_funnel_probe(struct amba_device *adev,
+ 				const struct amba_id *id)
+@@ -349,6 +369,11 @@ static int dynamic_funnel_probe(struct amba_device *adev,
+ 	return funnel_probe(&adev->dev, &adev->res);
+ }
+ 
++static int __exit dynamic_funnel_remove(struct amba_device *adev)
++{
++	return funnel_remove(&adev->dev);
++}
 +
-+static int __init replicator_init(void)
+ static const struct amba_id dynamic_funnel_ids[] = {
+ 	{
+ 		.id     = 0x000bb908,
+@@ -362,6 +387,8 @@ static const struct amba_id dynamic_funnel_ids[] = {
+ 	{ 0, 0},
+ };
+ 
++MODULE_DEVICE_TABLE(amba, dynamic_funnel_ids);
++
+ static struct amba_driver dynamic_funnel_driver = {
+ 	.drv = {
+ 		.name	= "coresight-dynamic-funnel",
+@@ -370,6 +397,39 @@ static struct amba_driver dynamic_funnel_driver = {
+ 		.suppress_bind_attrs = true,
+ 	},
+ 	.probe		= dynamic_funnel_probe,
++	.remove		= dynamic_funnel_remove,
+ 	.id_table	= dynamic_funnel_ids,
+ };
+-builtin_amba_driver(dynamic_funnel_driver);
++
++static int __init funnel_init(void)
 +{
 +	int ret;
 +
-+	ret = platform_driver_register(&static_replicator_driver);
++	ret = platform_driver_register(&static_funnel_driver);
 +	if (ret) {
 +		pr_info("Error registering platform driver\n");
 +		return ret;
 +	}
 +
-+	ret = amba_driver_register(&dynamic_replicator_driver);
++	ret = amba_driver_register(&dynamic_funnel_driver);
 +	if (ret) {
 +		pr_info("Error registering amba driver\n");
-+		platform_driver_unregister(&static_replicator_driver);
++		platform_driver_unregister(&static_funnel_driver);
 +	}
 +
 +	return ret;
 +}
 +
-+static void __exit replicator_exit(void)
++static void __exit funnel_exit(void)
 +{
-+	platform_driver_unregister(&static_replicator_driver);
-+	amba_driver_unregister(&dynamic_replicator_driver);
++	platform_driver_unregister(&static_funnel_driver);
++	amba_driver_unregister(&dynamic_funnel_driver);
 +}
 +
-+module_init(replicator_init);
-+module_exit(replicator_exit);
++module_init(funnel_init);
++module_exit(funnel_exit);
 +
 +MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
 +MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
-+MODULE_DESCRIPTION("Arm CoreSight Replicator Driver");
++MODULE_DESCRIPTION("Arm CoreSight Funnel Driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
