@@ -2,361 +2,226 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B60C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDB9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA28F207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E550F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EcZCHM8c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="wMrGHODL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHTAUR (ORCPT
+        id S1726911AbgHTAVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:20:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57252 "EHLO
+        Wed, 19 Aug 2020 20:21:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726749AbgHTAUM (ORCPT
+        with ESMTP id S1726749AbgHTAVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:20:12 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1519C061384
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:20:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id t10so530225ejs.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:20:11 -0700 (PDT)
+        Wed, 19 Aug 2020 20:21:05 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A0AC061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:21:04 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id n19so394919ybf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ALU6b4Z2nrBS10m+LDFgzQCHLua9Z/qjoJeUgWzlspg=;
-        b=EcZCHM8cYv8XneQNJzeruMGgCpTlZE7JfEd5FbiWEI7VW5EidJYFVYsB+zisV3uvgp
-         c+wQnOuBmjsG/hw9CLrZPN66inJSvtMarLg0ITU0/bPAEQ/1ea6MD0lfxRcY/dv0l8B+
-         Di4ShGlbVoUtI525v5K0xXaXJZPaELvy0Y4zYL2fcboiOY2OcxMyXG7dcZAJrhATugoh
-         jE20fihWi9KsNJBzxa24CtcbOUgs1ZiDSj3cj6NRyP8JNDttbQtJFMfsXjwf1in/OklR
-         hikv9HrfG1IiBM9QkLbWi94b5oKVQDxRWHyAKdtwRSl4Kyu/uj8jxzZuP00GRzEq6hY4
-         Xpkw==
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=Vnv0SMqgJcbIgs/QdGGWw4qUOL4tuoTWF08V7z/H2vQ=;
+        b=wMrGHODLvxAB04FZ88TjDQYIFXykD4qua/0Y7R7daZ3sfYgVqTTioE5finV49SYUg0
+         z8OWYO1rTaTxecrbi3B85yr745b2LCUgGOuka435aXVNSXU9ALNyseFk/IVUoBnItzCa
+         mFAeEIAb8oKIKWspSBzX19/soN9ERBQIrv+zEhfBi+GtPr+d+qVBOQiZ5IRNZB71PWOC
+         QcVRJNELwF7hafZYPUD/JEtBSMN2zahu9R8lec6CUC0/WYdQ3mdV7//bGBJllbI7CTmF
+         G10m2lmMEGQNqi35P2ruQKAoSzP7VvcadM/OgHPKKK0r3p15hF0wPT+S0kYom+EEOopc
+         HNvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ALU6b4Z2nrBS10m+LDFgzQCHLua9Z/qjoJeUgWzlspg=;
-        b=DTdb/2TTpWYQ4If6Ewv1VOjws4QcBvLLlFemN/25/3YeAzVtSlC1MiPaRyiLrqBMAV
-         VM9orTqDcNxAQbTeK5L1JARYinGVWi6GSvRKNdmzy1HggIaA0ItDiM3pTgS35LPLIaRa
-         HoktJXOJ6xo8rHdy2Ncro810XDRtFBjl5ePcmwsOdt393LODOZjzAHIWVjLkzbnFu9aG
-         FVGJWmzNnC1ehwwsYb84Iq+nR4XX3st/C/Q9gJJjZLr4Xu9TLd4iR39s4E7KfhFIlFqL
-         ltuNSeJezyO3Z2tUEdlF3rKNcZy+MNOC77jHSiK4lnhqWhjYH3cc2JhpEqG5dvU5NAxG
-         g/sA==
-X-Gm-Message-State: AOAM532L1meKq3LP4NcayoyFXY2l99fRDfVjpu1cklZJBQlRgvSrSAk/
-        o4/kwNANT0arSBc3AawU2vs4oK/aMP3S1wJCtYS8gQ==
-X-Google-Smtp-Source: ABdhPJxSKeFM1QwFzWhtVNkbCoAd8X9Th3Da1XgI/FkhD3YGCjktBNVLUNdZ6QCtvRTe+gr5sw2+4ApIXKWreSB6ymY=
-X-Received: by 2002:a17:906:7698:: with SMTP id o24mr869118ejm.182.1597882810007;
- Wed, 19 Aug 2020 17:20:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200807155648.8602-1-graf@amazon.com> <20200807155648.8602-4-graf@amazon.com>
-In-Reply-To: <20200807155648.8602-4-graf@amazon.com>
-From:   Aaron Lewis <aaronlewis@google.com>
-Date:   Wed, 19 Aug 2020 17:19:58 -0700
-Message-ID: <CAAAPnDFhMNDU3zfy2Yvd=Mq=xGpKGm9z3i+O64GOn2qbyZjqGQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] KVM: selftests: Add test for user space MSR handling
-To:     Alexander Graf <graf@amazon.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        kvm list <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=Vnv0SMqgJcbIgs/QdGGWw4qUOL4tuoTWF08V7z/H2vQ=;
+        b=oPTS6sGsqEzpE1EoAgh2jE99SGl91beuqzmHPIAX/LCAbg6sG0p3tDvDu6ddGr/lBi
+         H7QP8gP6bdxlP4SwFDFti+cH6W46oCcbMpWm8bdCjJZmD7VsUb/m3N/RJQoJER2RW9KP
+         nSa07NkMC6N++3GhPNNPVt8HN9uEkJctA3yiAlH/9S4zn8O2BQDQw1yymawVCd+0VSEf
+         IgrS9CsfMiIprNyTAPs9AE9brJnf4diIFeci84fG/HpzI2le/4VDOdMlXTiH8OgOvTIT
+         6M447stwerLbzYZWksCMdTHVRCYQIBV8cxPILsY8zycrvPfVIOxGVO6BcsEWumP+4BBx
+         3UBQ==
+X-Gm-Message-State: AOAM533E8UCiMEnzHXpabLtDov6TXuDH/D+dDuoxSTYNZ5G2D4Ds9FJ+
+        K4WSh+6dlH4/dE1tDcP6u9qkuwFumOQ=
+X-Google-Smtp-Source: ABdhPJxWtvtuuALIVhHDzFDuamSO63tCHSlDXg9xIHnfvJjwkI+jWf/ctIuA00SYC2emSgj96QX5qm8xqZo=
+X-Received: from surenb1.mtv.corp.google.com ([2620:15c:211:0:f693:9fff:fef4:2055])
+ (user=surenb job=sendgmr) by 2002:a25:db8f:: with SMTP id g137mr1287656ybf.489.1597882864112;
+ Wed, 19 Aug 2020 17:21:04 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 17:20:53 -0700
+Message-Id: <20200820002053.1424000-1-surenb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+Subject: [PATCH 1/1] mm, oom_adj: don't loop through tasks in __set_oom_adj
+ when not necessary
+From:   Suren Baghdasaryan <surenb@google.com>
+To:     surenb@google.com
+Cc:     mhocko@suse.com, christian.brauner@ubuntu.com, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, ebiederm@xmission.com,
+        gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 7, 2020 at 8:57 AM Alexander Graf <graf@amazon.com> wrote:
->
-> Now that we have the ability to handle MSRs from user space and also to
-> select which ones we do want to prevent in-kernel KVM code from handling,
-> let's add a selftest to show case and verify the API.
->
-> Signed-off-by: Alexander Graf <graf@amazon.com>
->
-> ---
->
-> v2 -> v3:
->
->   - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
->   - Add test to clear whitelist
->   - Adjust to reply-less API
->   - Fix asserts
->   - Actually trap on MSR_IA32_POWER_CTL writes
-> ---
->  tools/testing/selftests/kvm/Makefile          |   1 +
->  .../selftests/kvm/x86_64/user_msr_test.c      | 221 ++++++++++++++++++
->  2 files changed, 222 insertions(+)
->  create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
->
+Currently __set_oom_adj loops through all processes in the system to
+keep oom_score_adj and oom_score_adj_min in sync between processes
+sharing their mm. This is done for any task with more that one mm_users,
+which includes processes with multiple threads (sharing mm and signals).
+However for such processes the loop is unnecessary because their signal
+structure is shared as well.
+Android updates oom_score_adj whenever a tasks changes its role
+(background/foreground/...) or binds to/unbinds from a service, making
+it more/less important. Such operation can happen frequently.
+We noticed that updates to oom_score_adj became more expensive and after
+further investigation found out that the patch mentioned in "Fixes"
+introduced a regression. Using Pixel 4 with a typical Android workload,
+write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+this regression linearly depends on the number of multi-threaded
+processes running on the system.
+Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
+instead of mm_users to decide whether oom_score_adj update should be
+synchronized between multiple processes. To prevent races between clone()
+and __set_oom_adj(), when oom_score_adj of the process being cloned might
+be modified from userspace, we use oom_adj_mutex. Its scope is changed to
+global and it is renamed into oom_adj_lock for naming consistency with
+oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+used the additional mutex lock in that path of the clone() syscall should
+not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+(when the last process sharing the mm exits) is left out of this patch to
+keep it simple and because it is believed that this threading model is
+rare. Should there ever be a need for optimizing that case as well, it
+can be done by hooking into the exit path, likely following the
+mm_update_next_owner pattern.
+With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
+regression is gone after the change is applied.
 
-Please add user_msr_test to .gitignore.
+Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+Reported-by: Tim Murray <timmurray@google.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+---
+ fs/proc/base.c                 | 7 +++----
+ include/linux/oom.h            | 1 +
+ include/linux/sched/coredump.h | 1 +
+ kernel/fork.c                  | 9 +++++++++
+ mm/oom_kill.c                  | 2 ++
+ 5 files changed, 16 insertions(+), 4 deletions(-)
 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 4a166588d99f..80d5c348354c 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -55,6 +55,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
->  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
->  TEST_GEN_PROGS_x86_64 += x86_64/debug_regs
-> +TEST_GEN_PROGS_x86_64 += x86_64/user_msr_test
->  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->  TEST_GEN_PROGS_x86_64 += demand_paging_test
->  TEST_GEN_PROGS_x86_64 += dirty_log_test
-> diff --git a/tools/testing/selftests/kvm/x86_64/user_msr_test.c b/tools/testing/selftests/kvm/x86_64/user_msr_test.c
-> new file mode 100644
-> index 000000000000..7b149424690d
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/x86_64/user_msr_test.c
-> @@ -0,0 +1,221 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * tests for KVM_CAP_X86_USER_SPACE_MSR and KVM_X86_ADD_MSR_ALLOWLIST
-> + *
-> + * Copyright (C) 2020, Amazon Inc.
-> + *
-> + * This is a functional test to verify that we can deflect MSR events
-> + * into user space.
-> + */
-> +#define _GNU_SOURCE /* for program_invocation_short_name */
-> +#include <fcntl.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/ioctl.h>
-> +
-> +#include "test_util.h"
-> +
-> +#include "kvm_util.h"
-> +#include "processor.h"
-> +
-> +#define VCPU_ID                  5
-> +
-> +u32 msr_reads, msr_writes;
-> +
-> +struct range_desc {
-> +       struct kvm_msr_allowlist allow;
-> +       void (*populate)(struct kvm_msr_allowlist *range);
-> +};
-> +
-> +static void populate_c0000000_read(struct kvm_msr_allowlist *range)
-> +{
-> +       u8 *bitmap = range->bitmap;
-> +       u32 idx = MSR_SYSCALL_MASK & (KVM_MSR_ALLOWLIST_MAX_LEN - 1);
-> +
-> +       bitmap[idx / 8] &= ~(1 << (idx % 8));
-> +}
-> +
-> +static void populate_00000000_write(struct kvm_msr_allowlist *range)
-> +{
-> +       u8 *bitmap = range->bitmap;
-> +       u32 idx = MSR_IA32_POWER_CTL & (KVM_MSR_ALLOWLIST_MAX_LEN - 1);
-> +
-> +       bitmap[idx / 8] &= ~(1 << (idx % 8));
-> +}
-> +
-> +struct range_desc ranges[] = {
-> +       {
-> +               .allow = {
-> +                       .flags = KVM_MSR_ALLOW_READ,
-> +                       .base = 0x00000000,
-> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
-> +               },
-> +       }, {
-> +               .allow = {
-> +                       .flags = KVM_MSR_ALLOW_WRITE,
-> +                       .base = 0x00000000,
-> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
-> +               },
-> +               .populate = populate_00000000_write,
-> +       }, {
-> +               .allow = {
-> +                       .flags = KVM_MSR_ALLOW_READ | KVM_MSR_ALLOW_WRITE,
-> +                       .base = 0x40000000,
-> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
-> +               },
-> +       }, {
-> +               .allow = {
-> +                       .flags = KVM_MSR_ALLOW_READ,
-> +                       .base = 0xc0000000,
-> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
-> +               },
-> +               .populate = populate_c0000000_read,
-> +       }, {
-> +               .allow = {
-> +                       .flags = KVM_MSR_ALLOW_WRITE,
-> +                       .base = 0xc0000000,
-> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
-> +               },
-> +       },
-> +};
-> +
-> +static void guest_msr_calls(bool trapped)
-> +{
-> +       /* This goes into the in-kernel emulation */
-> +       wrmsr(MSR_SYSCALL_MASK, 0);
-> +
-> +       if (trapped) {
-> +               /* This goes into user space emulation */
-> +               GUEST_ASSERT(rdmsr(MSR_SYSCALL_MASK) == MSR_SYSCALL_MASK);
-> +       } else {
-> +               GUEST_ASSERT(rdmsr(MSR_SYSCALL_MASK) != MSR_SYSCALL_MASK);
-> +       }
-> +
-> +       /* If trapped == true, this goes into user space emulation */
-> +       wrmsr(MSR_IA32_POWER_CTL, 0x1234);
-> +
-> +       /* This goes into the in-kernel emulation */
-> +       rdmsr(MSR_IA32_POWER_CTL);
-> +}
-> +
-> +static void guest_code(void)
-> +{
-> +       guest_msr_calls(true);
-> +
-> +       /*
-> +        * Disable allow listing, so that the kernel
-> +        * handles everything in the next round
-> +        */
-> +       GUEST_SYNC(0);
-> +
-> +       guest_msr_calls(false);
-> +
-> +       GUEST_DONE();
-> +}
-> +
-> +static int handle_ucall(struct kvm_vm *vm)
-> +{
-> +       struct ucall uc;
-> +
-> +       switch (get_ucall(vm, VCPU_ID, &uc)) {
-> +       case UCALL_ABORT:
-> +               TEST_FAIL("Guest assertion not met");
-> +               break;
-> +       case UCALL_SYNC:
-> +               vm_ioctl(vm, KVM_X86_CLEAR_MSR_ALLOWLIST, NULL);
-> +               break;
-> +       case UCALL_DONE:
-> +               return 1;
-> +       default:
-> +               TEST_FAIL("Unknown ucall %lu", uc.cmd);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void handle_rdmsr(struct kvm_run *run)
-> +{
-> +       run->msr.data = run->msr.index;
-> +       msr_reads++;
-> +}
-> +
-> +static void handle_wrmsr(struct kvm_run *run)
-> +{
-> +       /* ignore */
-> +       msr_writes++;
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +       struct kvm_enable_cap cap = {
-> +               .cap = KVM_CAP_X86_USER_SPACE_MSR,
-> +               .args[0] = 1,
-> +       };
-> +       struct kvm_vm *vm;
-> +       struct kvm_run *run;
-> +       int rc;
-> +       int i;
-> +
-> +       /* Tell stdout not to buffer its content */
-> +       setbuf(stdout, NULL);
-> +
-> +       /* Create VM */
-> +       vm = vm_create_default(VCPU_ID, 0, guest_code);
-> +       vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-> +       run = vcpu_state(vm, VCPU_ID);
-> +
-> +       rc = kvm_check_cap(KVM_CAP_X86_USER_SPACE_MSR);
-> +       TEST_ASSERT(rc, "KVM_CAP_X86_USER_SPACE_MSR is available");
-> +       vm_enable_cap(vm, &cap);
-> +
-> +       rc = kvm_check_cap(KVM_CAP_X86_MSR_ALLOWLIST);
-> +       TEST_ASSERT(rc, "KVM_CAP_X86_MSR_ALLOWLIST is available");
-> +
-> +       /* Set up MSR allowlist */
-> +       for (i = 0; i < ARRAY_SIZE(ranges); i++) {
-> +               struct kvm_msr_allowlist *a = &ranges[i].allow;
-> +               u32 bitmap_size = a->nmsrs / BITS_PER_BYTE;
-> +               struct kvm_msr_allowlist *range = malloc(sizeof(*a) + bitmap_size);
-> +
-> +               TEST_ASSERT(range, "range alloc failed (%ld bytes)\n", sizeof(*a) + bitmap_size);
-> +
-> +               *range = *a;
-> +
-> +               /* Allow everything by default */
-> +               memset(range->bitmap, 0xff, bitmap_size);
-> +
-> +               if (ranges[i].populate)
-> +                       ranges[i].populate(range);
-> +
-> +               vm_ioctl(vm, KVM_X86_ADD_MSR_ALLOWLIST, range);
-> +       }
-> +
-> +       while (1) {
-> +               rc = _vcpu_run(vm, VCPU_ID);
-> +
-> +               TEST_ASSERT(rc == 0, "vcpu_run failed: %d\n", rc);
-> +
-> +               switch (run->exit_reason) {
-> +               case KVM_EXIT_X86_RDMSR:
-> +                       handle_rdmsr(run);
-> +                       break;
-> +               case KVM_EXIT_X86_WRMSR:
-> +                       handle_wrmsr(run);
-> +                       break;
-> +               case KVM_EXIT_IO:
-> +                       if (handle_ucall(vm))
-> +                               goto done;
-> +                       break;
-> +               }
-> +
-> +       }
-> +
-> +done:
-> +       TEST_ASSERT(msr_reads == 1, "Handled 1 rdmsr in user space");
-> +       TEST_ASSERT(msr_writes == 1, "Handled 1 wrmsr in user space");
-> +
-> +       kvm_vm_free(vm);
-> +
-> +       return 0;
-> +}
-> --
-> 2.17.1
->
->
->
->
-> Amazon Development Center Germany GmbH
-> Krausenstr. 38
-> 10117 Berlin
-> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-> Sitz: Berlin
-> Ust-ID: DE 289 237 879
->
->
->
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 617db4e0faa0..cff1a58a236c 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
+ 
+ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+ {
+-	static DEFINE_MUTEX(oom_adj_mutex);
+ 	struct mm_struct *mm = NULL;
+ 	struct task_struct *task;
+ 	int err = 0;
+@@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+ 	if (!task)
+ 		return -ESRCH;
+ 
+-	mutex_lock(&oom_adj_mutex);
++	mutex_lock(&oom_adj_lock);
+ 	if (legacy) {
+ 		if (oom_adj < task->signal->oom_score_adj &&
+ 				!capable(CAP_SYS_RESOURCE)) {
+@@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+ 		struct task_struct *p = find_lock_task_mm(task);
+ 
+ 		if (p) {
+-			if (atomic_read(&p->mm->mm_users) > 1) {
++			if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
+ 				mm = p->mm;
+ 				mmgrab(mm);
+ 			}
+@@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+ 		mmdrop(mm);
+ 	}
+ err_unlock:
+-	mutex_unlock(&oom_adj_mutex);
++	mutex_unlock(&oom_adj_lock);
+ 	put_task_struct(task);
+ 	return err;
+ }
+diff --git a/include/linux/oom.h b/include/linux/oom.h
+index f022f581ac29..861f22bd4706 100644
+--- a/include/linux/oom.h
++++ b/include/linux/oom.h
+@@ -55,6 +55,7 @@ struct oom_control {
+ };
+ 
+ extern struct mutex oom_lock;
++extern struct mutex oom_adj_lock;
+ 
+ static inline void set_current_oom_origin(void)
+ {
+diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
+index ecdc6542070f..070629b722df 100644
+--- a/include/linux/sched/coredump.h
++++ b/include/linux/sched/coredump.h
+@@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
+ #define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
+ #define MMF_OOM_VICTIM		25	/* mm is the oom victim */
+ #define MMF_OOM_REAP_QUEUED	26	/* mm was queued for oom_reaper */
++#define MMF_PROC_SHARED	27	/* mm is shared while sighand is not */
+ #define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
+ 
+ #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 4d32190861bd..9177a76bf840 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+ 	if (clone_flags & CLONE_VM) {
+ 		mmget(oldmm);
+ 		mm = oldmm;
++		if (!(clone_flags & CLONE_SIGHAND)) {
++			/* We need to synchronize with __set_oom_adj */
++			mutex_lock(&oom_adj_lock);
++			set_bit(MMF_PROC_SHARED, &mm->flags);
++			/* Update the values in case they were changed after copy_signal */
++			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
++			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
++			mutex_unlock(&oom_adj_lock);
++		}
+ 		goto good_mm;
+ 	}
+ 
+diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+index e90f25d6385d..c22f07c986cb 100644
+--- a/mm/oom_kill.c
++++ b/mm/oom_kill.c
+@@ -64,6 +64,8 @@ int sysctl_oom_dump_tasks = 1;
+  * and mark_oom_victim
+  */
+ DEFINE_MUTEX(oom_lock);
++/* Serializes oom_score_adj and oom_score_adj_min updates */
++DEFINE_MUTEX(oom_adj_lock);
+ 
+ static inline bool is_memcg_oom(struct oom_control *oc)
+ {
+-- 
+2.28.0.297.g1956fa8f8d-goog
+
