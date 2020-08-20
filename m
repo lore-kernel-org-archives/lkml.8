@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08720C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03951C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1FE2208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7A60208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926130;
-	bh=rI9ukK79sdWU2qYFx/mVlHc3ikhRS23YlTZqnxgYusM=;
+	s=default; t=1597926133;
+	bh=SbAJcoI/DQ4neylJcbKHGvNYI1M4Oz/LnUp6haNRCWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UU2CyX6Xkuta+m+yo2CKLFPHgXzPoAJ9hp9EF2ZI8YUfjDpdYH0TZX5DM55z0QYVD
-	 j1pMdsXdp7s4VrQ5Dbvd5kw8eM5ae1O8PMNRrf4ClpVQSGju24FZKUlFx/gK/mIids
-	 AjLsh84jonpRKbk/XANzoB6JT7xCnFJyk9FwI2EE=
+	b=Usl7TlX3LIU1SWoyS0188xKTm37De+6uo184S+pr0HxEEnTmPPNkk2hha7rbXWnN8
+	 eRZS+AgMdbjzhc6Q8nCdKBkglEgrslXC5E/xyzIf5SZ0Pjbfa3b3f8VMn5PIkSnw/Z
+	 MVWDD6n+TEPdbiPx7//+fOxIP1Csnyitd/3ukrRY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbgHTMWJ (ORCPT
+        id S1730521AbgHTMWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbgHTJzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:18 -0400
+        id S1730195AbgHTJzT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C7A52075E;
-        Thu, 20 Aug 2020 09:55:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1037C22B43;
+        Thu, 20 Aug 2020 09:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917316;
-        bh=rI9ukK79sdWU2qYFx/mVlHc3ikhRS23YlTZqnxgYusM=;
+        s=default; t=1597917318;
+        bh=SbAJcoI/DQ4neylJcbKHGvNYI1M4Oz/LnUp6haNRCWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXsJvSCw5HZnNcO/2Rx2AgD5Tpp1EkhkH5hwcFhWy92vvOes/ICSYEJbeGnPHrFFp
-         1LpmeaY1DRHxzNSTo8rkiCLJx2Qc6H/6fjqKstcm+GoD8M+ZxX6L/mbrR73yAJAC7M
-         DLi5HAtXG6/agheyS/e7O7LJLKUBqBivMVS44GJQ=
+        b=FHegm4/sjdxHErf0rMUaFAV/sjExNr4t1Lkr0YXpDpxvIsVW+VCnu2YcmVZsr8v49
+         QXe3iSb72tYD+Lv16R1LA3XkgMFmK+ZkavcFOK55dVjQZuYFU0feqi70du87I2i1ro
+         EhqjC2zNu8kOdmndTuP89LkU8LpiN9ckHUAXn7Fo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kheib@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/92] RDMA/ipoib: Fix ABBA deadlock with ipoib_reap_ah()
-Date:   Thu, 20 Aug 2020 11:21:36 +0200
-Message-Id: <20200820091540.297573797@linuxfoundation.org>
+Subject: [PATCH 4.19 52/92] media: rockchip: rga: Introduce color fmt macros and refactor CSC mode logic
+Date:   Thu, 20 Aug 2020 11:21:37 +0200
+Message-Id: <20200820091540.336575742@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,215 +63,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 65936bf25f90fe440bb2d11624c7d10fab266639 ]
+[ Upstream commit ded874ece29d3fe2abd3775810a06056067eb68c ]
 
-ipoib_mcast_carrier_on_task() insanely open codes a rtnl_lock() such that
-the only time flush_workqueue() can be called is if it also clears
-IPOIB_FLAG_OPER_UP.
+This introduces two macros: RGA_COLOR_FMT_IS_YUV and RGA_COLOR_FMT_IS_RGB
+which allow quick checking of the colorspace familily of a RGA color format.
 
-Thus the flush inside ipoib_flush_ah() will deadlock if it gets unlucky
-enough, and lockdep doesn't help us to find it early:
+These macros are then used to refactor the logic for CSC mode selection.
+The two nested tests for input colorspace are simplified into a single one,
+with a logical and, making the whole more readable.
 
-          CPU0               CPU1          CPU2
-   __ipoib_ib_dev_flush()
-      down_read(vlan_rwsem)
-
-                         ipoib_vlan_add()
-                           rtnl_trylock()
-                           down_write(vlan_rwsem)
-
-				      ipoib_mcast_carrier_on_task()
-					 while (!rtnl_trylock())
-					      msleep(20);
-
-      ipoib_flush_ah()
-	flush_workqueue(priv->wq)
-
-Clean up the ah_reaper related functions and lifecycle to make sense:
-
- - Start/Stop of the reaper should only be done in open/stop NDOs, not in
-   any other places
-
- - cancel and flush of the reaper should only happen in the stop NDO.
-   cancel is only functional when combined with IPOIB_STOP_REAPER.
-
- - Non-stop places were flushing the AH's just need to flush out dead AH's
-   synchronously and ignore the background task completely. It is fully
-   locked and harmless to leave running.
-
-Which ultimately fixes the ABBA deadlock by removing the unnecessary
-flush_workqueue() from the problematic place under the vlan_rwsem.
-
-Fixes: efc82eeeae4e ("IB/ipoib: No longer use flush as a parameter")
-Link: https://lore.kernel.org/r/20200625174219.290842-1-kamalheib1@gmail.com
-Reported-by: Kamal Heib <kheib@redhat.com>
-Tested-by: Kamal Heib <kheib@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_ib.c   | 65 ++++++++++-------------
- drivers/infiniband/ulp/ipoib/ipoib_main.c |  2 +
- 2 files changed, 31 insertions(+), 36 deletions(-)
+ drivers/media/platform/rockchip/rga/rga-hw.c | 23 +++++++++-----------
+ drivers/media/platform/rockchip/rga/rga-hw.h |  5 +++++
+ 2 files changed, 15 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-index 925258ffbde3c..82b9c5b6e3e65 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -669,14 +669,13 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
- 	return rc;
- }
+diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
+index 96d1b1b3fe8e8..6d12491b79d78 100644
+--- a/drivers/media/platform/rockchip/rga/rga-hw.c
++++ b/drivers/media/platform/rockchip/rga/rga-hw.c
+@@ -208,22 +208,19 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+ 	dst_info.data.format = ctx->out.fmt->hw_format;
+ 	dst_info.data.swap = ctx->out.fmt->color_swap;
  
--static void __ipoib_reap_ah(struct net_device *dev)
-+static void ipoib_reap_dead_ahs(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
- 	struct ipoib_ah *ah, *tah;
- 	LIST_HEAD(remove_list);
- 	unsigned long flags;
- 
--	netif_tx_lock_bh(dev);
-+	netif_tx_lock_bh(priv->dev);
- 	spin_lock_irqsave(&priv->lock, flags);
- 
- 	list_for_each_entry_safe(ah, tah, &priv->dead_ahs, list)
-@@ -687,37 +686,37 @@ static void __ipoib_reap_ah(struct net_device *dev)
+-	if (ctx->in.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
+-		if (ctx->out.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
+-			switch (ctx->in.colorspace) {
+-			case V4L2_COLORSPACE_REC709:
+-				src_info.data.csc_mode =
+-					RGA_SRC_CSC_MODE_BT709_R0;
+-				break;
+-			default:
+-				src_info.data.csc_mode =
+-					RGA_SRC_CSC_MODE_BT601_R0;
+-				break;
+-			}
++	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
++	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
++		switch (ctx->in.colorspace) {
++		case V4L2_COLORSPACE_REC709:
++			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
++			break;
++		default:
++			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT601_R0;
++			break;
  		}
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
--	netif_tx_unlock_bh(dev);
-+	netif_tx_unlock_bh(priv->dev);
- }
- 
- void ipoib_reap_ah(struct work_struct *work)
- {
- 	struct ipoib_dev_priv *priv =
- 		container_of(work, struct ipoib_dev_priv, ah_reap_task.work);
--	struct net_device *dev = priv->dev;
- 
--	__ipoib_reap_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
- 
- 	if (!test_bit(IPOIB_STOP_REAPER, &priv->flags))
- 		queue_delayed_work(priv->wq, &priv->ah_reap_task,
- 				   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_flush_ah(struct net_device *dev)
-+static void ipoib_start_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	cancel_delayed_work(&priv->ah_reap_task);
--	flush_workqueue(priv->wq);
--	ipoib_reap_ah(&priv->ah_reap_task.work);
-+	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
-+	queue_delayed_work(priv->wq, &priv->ah_reap_task,
-+			   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_stop_ah(struct net_device *dev)
-+static void ipoib_stop_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
- 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	ipoib_flush_ah(dev);
-+	cancel_delayed_work(&priv->ah_reap_task);
-+	/*
-+	 * After ipoib_stop_ah_reaper() we always go through
-+	 * ipoib_reap_dead_ahs() which ensures the work is really stopped and
-+	 * does a final flush out of the dead_ah's list
-+	 */
- }
- 
- static int recvs_pending(struct net_device *dev)
-@@ -846,16 +845,6 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
- 	return 0;
- }
- 
--void ipoib_ib_dev_stop(struct net_device *dev)
--{
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	priv->rn_ops->ndo_stop(dev);
--
--	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_flush_ah(dev);
--}
--
- int ipoib_ib_dev_open_default(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -899,10 +888,7 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 		return -1;
  	}
  
--	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
--	queue_delayed_work(priv->wq, &priv->ah_reap_task,
--			   round_jiffies_relative(HZ));
--
-+	ipoib_start_ah_reaper(priv);
- 	if (priv->rn_ops->ndo_open(dev)) {
- 		pr_warn("%s: Failed to open dev\n", dev->name);
- 		goto dev_stop;
-@@ -913,13 +899,20 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 	return 0;
+-	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
++	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
+ 		switch (ctx->out.colorspace) {
+ 		case V4L2_COLORSPACE_REC709:
+ 			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
+diff --git a/drivers/media/platform/rockchip/rga/rga-hw.h b/drivers/media/platform/rockchip/rga/rga-hw.h
+index ca3c204abe420..3e4b70eb9ced5 100644
+--- a/drivers/media/platform/rockchip/rga/rga-hw.h
++++ b/drivers/media/platform/rockchip/rga/rga-hw.h
+@@ -103,6 +103,11 @@
+ #define RGA_COLOR_FMT_CP_8BPP 15
+ #define RGA_COLOR_FMT_MASK 15
  
- dev_stop:
--	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	cancel_delayed_work(&priv->ah_reap_task);
--	set_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_ib_dev_stop(dev);
-+	ipoib_stop_ah_reaper(priv);
- 	return -1;
- }
- 
-+void ipoib_ib_dev_stop(struct net_device *dev)
-+{
-+	struct ipoib_dev_priv *priv = ipoib_priv(dev);
++#define RGA_COLOR_FMT_IS_YUV(fmt) \
++	(((fmt) >= RGA_COLOR_FMT_YUV422SP) && ((fmt) < RGA_COLOR_FMT_CP_1BPP))
++#define RGA_COLOR_FMT_IS_RGB(fmt) \
++	((fmt) < RGA_COLOR_FMT_YUV422SP)
 +
-+	priv->rn_ops->ndo_stop(dev);
-+
-+	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
-+	ipoib_stop_ah_reaper(priv);
-+}
-+
- void ipoib_pkey_dev_check_presence(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -1230,7 +1223,7 @@ static void __ipoib_ib_dev_flush(struct ipoib_dev_priv *priv,
- 		ipoib_mcast_dev_flush(dev);
- 		if (oper_up)
- 			set_bit(IPOIB_FLAG_OPER_UP, &priv->flags);
--		ipoib_flush_ah(dev);
-+		ipoib_reap_dead_ahs(priv);
- 	}
- 
- 	if (level >= IPOIB_FLUSH_NORMAL)
-@@ -1305,7 +1298,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev)
- 	 * the neighbor garbage collection is stopped and reaped.
- 	 * That should all be done now, so make a final ah flush.
- 	 */
--	ipoib_stop_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
- 
- 	clear_bit(IPOIB_PKEY_ASSIGNED, &priv->flags);
- 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 6093e8268583d..d0c35eb687aeb 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1979,6 +1979,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 
- 	/* no more works over the priv->wq */
- 	if (priv->wq) {
-+		/* See ipoib_mcast_carrier_on_task() */
-+		WARN_ON(test_bit(IPOIB_FLAG_OPER_UP, &priv->flags));
- 		flush_workqueue(priv->wq);
- 		destroy_workqueue(priv->wq);
- 		priv->wq = NULL;
+ #define RGA_COLOR_NONE_SWAP 0
+ #define RGA_COLOR_RB_SWAP 1
+ #define RGA_COLOR_ALPHA_SWAP 2
 -- 
 2.25.1
 
