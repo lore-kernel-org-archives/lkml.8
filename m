@@ -2,124 +2,138 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F838C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:26:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2989C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07D372078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8594A2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ZXTvN+Ad"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lBI80qt1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726938AbgHUA0B (ORCPT
+        id S1726978AbgHUA1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54624 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgHUAZ7 (ORCPT
+        Thu, 20 Aug 2020 20:27:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29882 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725834AbgHUA07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:25:59 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2A9AC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id x6so29286qvr.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1Jw+Cdk9MfRlVtpErJSkzPdykdAR8J99YeYAL5fDmXY=;
-        b=ZXTvN+AdD/Xc4+E53azq1Z+Sin9ZwOE25dkjzCOI4ySw4IoDIc2MR9kKuv0YEkm/Cl
-         Qr+JOpUj3soPeeqsofZLfxhLDXJS7mTznNEwV7bUP2MDuyFgGYwm99ubxd8QX/ZPciMh
-         dH4t1o8fvvuQA3N+Cikg6xbXuTmJIQgGwqGYleYbmvCBnLF0Hp+XsXtxZOSfh0uKdW6Q
-         sTBE57tNVR5lato0L5OI7Vc4DuGYSuC7/+2nipEV5Sp0B+ACQPWYMWQMRORmkqtKuKjn
-         IRAXcu5FbxsEVUTOguRe7eecFIST/zlOpXogIUZn1RTNKtXHXIdmBJtNykHXeqww79a4
-         ltLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1Jw+Cdk9MfRlVtpErJSkzPdykdAR8J99YeYAL5fDmXY=;
-        b=hI9Ns1gZVL2WmAe1ISpSIT+eDadFfSoVx/8UBQC1m+210uFP2tvaWF2i0L53dG+1Rm
-         40K1JTiM7l+fR8TN5+RF8LgZPYzSslBntLiN9sjb16sJbax0ZtLgUZ5rcJSFiybQ1cD6
-         18jfXLPaOjEVZaRUPSRZajl0LuxQCFhMkSwnlUKyVk3faYL5xMlnHxA9vZt5n6TMticT
-         cXZRLQh/rkn/gW3ifsBXyHWAMdwfy6P7SIkHIIjriPMg1jgBj6/AgI9TTrZUpdXdM5Ev
-         FnH3PskV/MvaHKZzS+mSxfNyYqhBY2YopuimP/0GPE2fXwvYZ1r6ihq7PbKpsgp7xzdL
-         /TCg==
-X-Gm-Message-State: AOAM531pdaTeRWre2g67n4oW3ff85eTSNtVK/DQrAoMS3AwMJhMRKHxM
-        WBBmFyCTP3UyS6niomeRXqZkMkXk01kRMg==
-X-Google-Smtp-Source: ABdhPJx/06R+afR/wZQarlnuBNgbGhN7UPE92LHqX/7DKMOiyMcAyKb3rUIeF2vivT+tEX4n73npgg==
-X-Received: by 2002:ad4:5349:: with SMTP id v9mr316429qvs.160.1597969558110;
-        Thu, 20 Aug 2020 17:25:58 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w18sm309816qtk.1.2020.08.20.17.25.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 17:25:57 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 20:25:55 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, catalin.marinas@arm.com,
-        oleg@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH] mm/kmemleak: rely on rcu for task stack scanning
-Message-ID: <20200821002554.GB4622@lca.pw>
-References: <20200820203902.11308-1-dave@stgolabs.net>
+        Thu, 20 Aug 2020 20:26:59 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KNWpEw114447;
+        Thu, 20 Aug 2020 19:46:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=LWvgozH5vCWQa6DI9mHHCsXlRgKTLkBwgr56N3JBteM=;
+ b=lBI80qt1adQ1aj3+OHi0Bfuwb49yLnIKeghJkY4Ank1eu0SO3+wh5tqg6Jvaw6uSErsL
+ Jve/D8qm+Ffyg8/iYTMv7/5+9cqvJtaRASwovGGhukf6dEhqDkc6r3+ygBtfugdHlV9O
+ W+cZo97lOH0JiG2oCZ3xRWeIYcam5N5vHU6Z4AYsK9lFl1Q1reIsLxLBcLGEiwju3pb3
+ mYGEokgkQpxVNyNDrc55D5jj12XqLObxu25PgwQ8wa3pjz9Lo/JW1n4IVgXvHrkfxDdP
+ ejiEspS8ZtasluAPQKpfOjiUjoPkeoamxOgQJh79FX80S98RERpKPmXroQZXOzQbKai0 tg== 
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mx5mpp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 19:46:48 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KNiq1i020052;
+        Thu, 20 Aug 2020 23:46:47 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma01wdc.us.ibm.com with ESMTP id 3304tkyvff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 23:46:47 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KNkkEA53215654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 23:46:47 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF71FAE05C;
+        Thu, 20 Aug 2020 23:46:46 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6FE70AE05F;
+        Thu, 20 Aug 2020 23:46:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.40.195.188])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 23:46:46 +0000 (GMT)
+From:   Tyrel Datwyler <tyreld@linux.ibm.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Jason Yan <yanaijie@huawei.com>, Joe Perches <joe@perches.com>,
+        linuxppc-dev@lists.ozlabs.org (open list:HYPERVISOR VIRTUAL CONSOLE
+        DRIVER), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] tty: hvcs: Don't NULL tty->driver_data until hvcs_cleanup()
+Date:   Thu, 20 Aug 2020 18:46:38 -0500
+Message-Id: <20200820234643.70412-1-tyreld@linux.ibm.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820203902.11308-1-dave@stgolabs.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_07:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 adultscore=0 impostorscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 mlxscore=0 suspectscore=3 mlxlogscore=963 clxscore=1011
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200193
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:39:02PM -0700, Davidlohr Bueso wrote:
-> kmemleak_scan() currently relies on the big tasklist_lock
-> hammer to stabilize iterating through the tasklist. Instead,
-> this patch proposes simply using rcu along with the rcu-safe
-> for_each_process_thread flavor (without changing scan semantics),
-> which doesn't make use of next_thread/p->thread_group and thus
-> cannot race with exit. Furthermore, any races with fork()
-> and not seeing the new child should be benign as it's not
-> running yet and can also be detected by the next scan.
+The code currently NULLs tty->driver_data in hvcs_close() with the
+intent of informing the next call to hvcs_open() that device needs to be
+reconfigured. However, when hvcs_cleanup() is called we copy hvcsd from
+tty->driver_data which was previoulsy NULLed by hvcs_close() and our
+call to tty_port_put(&hvcsd->port) doesn't actually do anything since
+&hvcsd->port ends up translating to NULL by chance. This has the side
+effect that when hvcs_remove() is called we have one too many port
+references preventing hvcs_destuct_port() from ever being called. This
+also prevents us from reusing the /dev/hvcsX node in a future
+hvcs_probe() and we can eventually run out of /dev/hvcsX devices.
 
-It is not entirely clear to me what problem the patch is trying to solve. If
-this is about performance, we will probably need some number.
+Fix this by waiting to NULL tty->driver_data in hvcs_cleanup().
 
-> 
-> Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
-> ---
->  mm/kmemleak.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-> index 5e252d91eb14..c0014d3b91c1 100644
-> --- a/mm/kmemleak.c
-> +++ b/mm/kmemleak.c
-> @@ -1471,15 +1471,15 @@ static void kmemleak_scan(void)
->  	if (kmemleak_stack_scan) {
->  		struct task_struct *p, *g;
->  
-> -		read_lock(&tasklist_lock);
-> -		do_each_thread(g, p) {
-> +		rcu_read_lock();
-> +		for_each_process_thread(g, p) {
->  			void *stack = try_get_task_stack(p);
->  			if (stack) {
->  				scan_block(stack, stack + THREAD_SIZE, NULL);
->  				put_task_stack(p);
->  			}
-> -		} while_each_thread(g, p);
-> -		read_unlock(&tasklist_lock);
-> +		}
-> +		rcu_read_unlock();
->  	}
->  
->  	/*
-> -- 
-> 2.26.2
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+---
+ drivers/tty/hvc/hvcs.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/tty/hvc/hvcs.c b/drivers/tty/hvc/hvcs.c
+index 55105ac38f89..509d1042825a 100644
+--- a/drivers/tty/hvc/hvcs.c
++++ b/drivers/tty/hvc/hvcs.c
+@@ -1216,13 +1216,6 @@ static void hvcs_close(struct tty_struct *tty, struct file *filp)
+ 
+ 		tty_wait_until_sent(tty, HVCS_CLOSE_WAIT);
+ 
+-		/*
+-		 * This line is important because it tells hvcs_open that this
+-		 * device needs to be re-configured the next time hvcs_open is
+-		 * called.
+-		 */
+-		tty->driver_data = NULL;
+-
+ 		free_irq(irq, hvcsd);
+ 		return;
+ 	} else if (hvcsd->port.count < 0) {
+@@ -1237,6 +1230,13 @@ static void hvcs_cleanup(struct tty_struct * tty)
+ {
+ 	struct hvcs_struct *hvcsd = tty->driver_data;
+ 
++	/*
++	 * This line is important because it tells hvcs_open that this
++	 * device needs to be re-configured the next time hvcs_open is
++	 * called.
++	 */
++	tty->driver_data = NULL;
++
+ 	tty_port_put(&hvcsd->port);
+ }
+ 
+-- 
+2.27.0
+
