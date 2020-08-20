@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C470CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5264C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9273A207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA1A207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925275;
-	bh=068LKMYQZjA+IESANMRSpu0RwUD813OMYqEHLN141CQ=;
+	s=default; t=1597925281;
+	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Q3H+dvBywTp06Qh5tKiinu4r/JP3TmlKHzAEFBSljeWIsX4nayOM0znICN7hSpFE
-	 r1qONmcol+eMoZUClXaYGyeHA/WYvwdCQVcL1GHK1+YzbrrioUdMm9W3QTWTJT3z3A
-	 aSySHPmiTpNY9AtsCfPV1b5xyMBNbkTxMY09MPHo=
+	b=Aurg86LYXvNNAYC1OS9LAGxyHt9gyrEGsWiYTSH5Jjgx8COos7UVnl7n1wN1xxjue
+	 UTiWYBfO6OtOK6CdYvGAIUiubBORGbuL4qQm0x20tXSeMODN+Ja+0MdWzubJnSTPIT
+	 QzGP2BeJbjViFZveaD7Nq9MMwawz9VmmDOsKIGGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730387AbgHTMHy (ORCPT
+        id S1730084AbgHTJ6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgHTJ6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:58:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730027AbgHTJ57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D279521775;
-        Thu, 20 Aug 2020 09:58:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE78E22B43;
+        Thu, 20 Aug 2020 09:57:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917494;
-        bh=068LKMYQZjA+IESANMRSpu0RwUD813OMYqEHLN141CQ=;
+        s=default; t=1597917479;
+        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hydhMd10wmS/v5OnKaWXVHSZ0Ho3sWy8S1bzMHiOHgjOB5hilfnPw9b9oqQ9G3DmT
-         7FKdE8jBJBEp5xSx58bADLg+LNBnaxpLvWPP+RvjNVFZd20EgTXcyk6AaxkC+pG4QK
-         QLAfWuHMZqM/H/3ZtwvsQy7DUJh3ozWkpPa2qKyU=
+        b=axZq+jOmz3V16jRSXJrKIrRkFjJgFdgVQfDKeRDco6ihdztoLqToGObBA5u+pOiaK
+         yY02ysj9LOSPFHSyq+3Lz4tHjzzEiRpd0nuzpHsaKF8svOkh5zS0/6jgcW/LlN+KZl
+         q6801/zqBNtu09NUH9E6szrq7E44ofC8oYLbrxZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Ekman <erik@kryo.se>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.9 051/212] USB: serial: qcserial: add EM7305 QDL product ID
-Date:   Thu, 20 Aug 2020 11:20:24 +0200
-Message-Id: <20200820091604.948773144@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 046/212] ARM: percpu.h: fix build error
+Date:   Thu, 20 Aug 2020 11:20:19 +0200
+Message-Id: <20200820091604.699539923@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Ekman <erik@kryo.se>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-commit d2a4309c1ab6df424b2239fe2920d6f26f808d17 upstream.
+commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
 
-When running qmi-firmware-update on the Sierra Wireless EM7305 in a Toshiba
-laptop, it changed product ID to 0x9062 when entering QDL mode:
+Fix build error for the case:
+  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
 
-usb 2-4: new high-speed USB device number 78 using xhci_hcd
-usb 2-4: New USB device found, idVendor=1199, idProduct=9062, bcdDevice= 0.00
-usb 2-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-usb 2-4: Product: EM7305
-usb 2-4: Manufacturer: Sierra Wireless, Incorporated
+config: keystone_defconfig
 
-The upgrade could complete after running
- # echo 1199 9062 > /sys/bus/usb-serial/drivers/qcserial/new_id
+  CC      arch/arm/kernel/signal.o
+  In file included from ../include/linux/random.h:14,
+                    from ../arch/arm/kernel/signal.c:8:
+  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
+  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
+      : "Q" (*(const unsigned long *)current_stack_pointer));
+                                     ^~~~~~~~~~~~~~~~~~~~~
+                                     user_stack_pointer
 
-qcserial 2-4:1.0: Qualcomm USB modem converter detected
-usb 2-4: Qualcomm USB modem converter now attached to ttyUSB0
-
-Signed-off-by: Erik Ekman <erik@kryo.se>
-Link: https://lore.kernel.org/r/20200717185118.3640219-1-erik@kryo.se
-Cc: stable@vger.kernel.org
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/qcserial.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/include/asm/percpu.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/serial/qcserial.c
-+++ b/drivers/usb/serial/qcserial.c
-@@ -159,6 +159,7 @@ static const struct usb_device_id id_tab
- 	{DEVICE_SWI(0x1199, 0x9056)},	/* Sierra Wireless Modem */
- 	{DEVICE_SWI(0x1199, 0x9060)},	/* Sierra Wireless Modem */
- 	{DEVICE_SWI(0x1199, 0x9061)},	/* Sierra Wireless Modem */
-+	{DEVICE_SWI(0x1199, 0x9062)},	/* Sierra Wireless EM7305 QDL */
- 	{DEVICE_SWI(0x1199, 0x9063)},	/* Sierra Wireless EM7305 */
- 	{DEVICE_SWI(0x1199, 0x9070)},	/* Sierra Wireless MC74xx */
- 	{DEVICE_SWI(0x1199, 0x9071)},	/* Sierra Wireless MC74xx */
+--- a/arch/arm/include/asm/percpu.h
++++ b/arch/arm/include/asm/percpu.h
+@@ -16,6 +16,8 @@
+ #ifndef _ASM_ARM_PERCPU_H_
+ #define _ASM_ARM_PERCPU_H_
+ 
++#include <asm/thread_info.h>
++
+ /*
+  * Same as asm-generic/percpu.h, except that we store the per cpu offset
+  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
 
 
