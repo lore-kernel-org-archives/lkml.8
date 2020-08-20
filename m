@@ -2,117 +2,180 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBBFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 443F6207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEED1207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597927307;
+	bh=nuLVN4QynDi1YhgBJ7MBWKP7AHyVPHdF4t3T2ZcG6v0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZtA4TgQu4Se7ojgzWvEpE0GAGtkrmGYfqnVFJ2vWFroIO4vnkn9Aock3oC9NI0TFj
+	 7kZkBBS0j2/AGGQcuDY35u9ZSpMJVWTQrNUQhFxK8aMOqP2SwBf9LiUw5c7/H0X5VR
+	 HHJckXfLXBWcfLpcVQwjDxST5YyFBXg8liuyM0UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbgHTMlc (ORCPT
+        id S1729647AbgHTMli (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:41:32 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37594 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 08:41:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729346AbgHTMlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:41:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5D0EAAF0F;
-        Thu, 20 Aug 2020 12:41:37 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 14:41:09 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Suren Baghdasaryan <surenb@google.com>, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820124109.GI5033@dhcp22.suse.cz>
-References: <20200820002053.1424000-1-surenb@google.com>
- <20200820105555.GA4546@redhat.com>
- <20200820111349.GE5033@dhcp22.suse.cz>
- <20200820113023.rjxque4jveo4nj5o@wittgenstein>
- <20200820114245.GH5033@dhcp22.suse.cz>
+        id S1729279AbgHTJqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7FD822B43;
+        Thu, 20 Aug 2020 09:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916783;
+        bh=nuLVN4QynDi1YhgBJ7MBWKP7AHyVPHdF4t3T2ZcG6v0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kH0CUzuHP28blT9MXC4gWSONixRtnM+xChYkqVNNt6HpW54g9Vg/Y/j5SLSbgI85r
+         IFQlOSsFyNn6P3dSKup8IxCGVxpxloQyIcneUHBOXXU0+y1zQUZrnRbVwpj+qmwsvY
+         31/cUO/v20+FHQJwRE4Dcj376Q1iH0HNoS4c0sFk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 014/152] btrfs: remove no longer needed use of log_writers for the log root tree
+Date:   Thu, 20 Aug 2020 11:19:41 +0200
+Message-Id: <20200820091554.375473600@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820114245.GH5033@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 13:42:56, Michal Hocko wrote:
-> On Thu 20-08-20 13:30:23, Christian Brauner wrote:
-[...]
-> > trying to rely on set_bit() and test_bit() in copy_mm() being atomic and
-> > then calling it where Oleg said after the point of no return.
-> 
-> No objections.
+From: Filipe Manana <fdmanana@suse.com>
 
-Would something like the following work for you?
+commit a93e01682e283f6de09d6ce8f805dc52a2e942fb upstream.
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 9177a76bf840..25b83f0912a6 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1403,15 +1403,6 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
- 	if (clone_flags & CLONE_VM) {
- 		mmget(oldmm);
- 		mm = oldmm;
--		if (!(clone_flags & CLONE_SIGHAND)) {
--			/* We need to synchronize with __set_oom_adj */
--			mutex_lock(&oom_adj_lock);
--			set_bit(MMF_PROC_SHARED, &mm->flags);
--			/* Update the values in case they were changed after copy_signal */
--			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
--			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
--			mutex_unlock(&oom_adj_lock);
--		}
- 		goto good_mm;
+When syncing the log, we used to update the log root tree without holding
+neither the log_mutex of the subvolume root nor the log_mutex of log root
+tree.
+
+We used to have two critical sections delimited by the log_mutex of the
+log root tree, so in the first one we incremented the log_writers of the
+log root tree and on the second one we decremented it and waited for the
+log_writers counter to go down to zero. This was because the update of
+the log root tree happened between the two critical sections.
+
+The use of two critical sections allowed a little bit more of parallelism
+and required the use of the log_writers counter, necessary to make sure
+we didn't miss any log root tree update when we have multiple tasks trying
+to sync the log in parallel.
+
+However after commit 06989c799f0481 ("Btrfs: fix race updating log root
+item during fsync") the log root tree update was moved into a critical
+section delimited by the subvolume's log_mutex. Later another commit
+moved the log tree update from that critical section into the second
+critical section delimited by the log_mutex of the log root tree. Both
+commits addressed different bugs.
+
+The end result is that the first critical section delimited by the
+log_mutex of the log root tree became pointless, since there's nothing
+done between it and the second critical section, we just have an unlock
+of the log_mutex followed by a lock operation. This means we can merge
+both critical sections, as the first one does almost nothing now, and we
+can stop using the log_writers counter of the log root tree, which was
+incremented in the first critical section and decremented in the second
+criticial section, used to make sure no one in the second critical section
+started writeback of the log root tree before some other task updated it.
+
+So just remove the mutex_unlock() followed by mutex_lock() of the log root
+tree, as well as the use of the log_writers counter for the log root tree.
+
+This patch is part of a series that has the following patches:
+
+1/4 btrfs: only commit the delayed inode when doing a full fsync
+2/4 btrfs: only commit delayed items at fsync if we are logging a directory
+3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
+4/4 btrfs: remove no longer needed use of log_writers for the log root tree
+
+After the entire patchset applied I saw about 12% decrease on max latency
+reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
+ram, using kvm and using a raw NVMe device directly (no intermediary fs on
+the host). The test was invoked like the following:
+
+  mkfs.btrfs -f /dev/sdk
+  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
+  dbench -D /mnt/sdk -t 300 8
+  umount /mnt/dsk
+
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/ctree.h    |    1 +
+ fs/btrfs/tree-log.c |   13 -------------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
+
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -990,6 +990,7 @@ struct btrfs_root {
+ 	wait_queue_head_t log_writer_wait;
+ 	wait_queue_head_t log_commit_wait[2];
+ 	struct list_head log_ctxs[2];
++	/* Used only for log trees of subvolumes, not for the log root tree */
+ 	atomic_t log_writers;
+ 	atomic_t log_commit[2];
+ 	/* Used only for log trees of subvolumes, not for the log root tree */
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3140,28 +3140,17 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	btrfs_init_log_ctx(&root_log_ctx, NULL);
+ 
+ 	mutex_lock(&log_root_tree->log_mutex);
+-	atomic_inc(&log_root_tree->log_writers);
+ 
+ 	index2 = log_root_tree->log_transid % 2;
+ 	list_add_tail(&root_log_ctx.list, &log_root_tree->log_ctxs[index2]);
+ 	root_log_ctx.log_transid = log_root_tree->log_transid;
+ 
+-	mutex_unlock(&log_root_tree->log_mutex);
+-
+-	mutex_lock(&log_root_tree->log_mutex);
+-
+ 	/*
+ 	 * Now we are safe to update the log_root_tree because we're under the
+ 	 * log_mutex, and we're a current writer so we're holding the commit
+ 	 * open until we drop the log_mutex.
+ 	 */
+ 	ret = update_log_root(trans, log, &new_root_item);
+-
+-	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
+-		/* atomic_dec_and_test implies a barrier */
+-		cond_wake_up_nomb(&log_root_tree->log_writer_wait);
+-	}
+-
+ 	if (ret) {
+ 		if (!list_empty(&root_log_ctx.list))
+ 			list_del_init(&root_log_ctx.list);
+@@ -3207,8 +3196,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 				root_log_ctx.log_transid - 1);
  	}
  
-@@ -1818,6 +1809,19 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
- 		free_task(tsk);
- }
- 
-+static void copy_oom_score_adj(u64 clone_flags, struct task_struct *tsk)
-+{
-+	if ((clone_flags & (CLONE_VM | CLONE_THREAD | CLONE_VFORK)) == CLONE_VM) {
-+		/* We need to synchronize with __set_oom_adj */
-+		mutex_lock(&oom_adj_lock);
-+		set_bit(MMF_PROC_SHARED, &mm->flags);
-+		/* Update the values in case they were changed after copy_signal */
-+		tsk->signal->oom_score_adj = current->signal->oom_score_adj;
-+		tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
-+		mutex_unlock(&oom_adj_lock);
-+	}
-+}
-+
- /*
-  * This creates a new process as a copy of the old one,
-  * but does not actually start it yet.
-@@ -2290,6 +2294,8 @@ static __latent_entropy struct task_struct *copy_process(
- 	trace_task_newtask(p, clone_flags);
- 	uprobe_copy_process(p, clone_flags);
- 
-+	copy_oom_score_adj(clone_flags, p);
-+
- 	return p;
- 
- bad_fork_cancel_cgroup:
--- 
-Michal Hocko
-SUSE Labs
+-	wait_for_writer(log_root_tree);
+-
+ 	/*
+ 	 * now that we've moved on to the tree of log tree roots,
+ 	 * check the full commit flag again
+
+
