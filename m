@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1057C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80599C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9DE12224D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DFEA2224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927444;
-	bh=hvLq017YKuKJqdlqg6mrYFBEKl8k/M4CsCHwLiU5pmo=;
+	s=default; t=1597927454;
+	bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfRntOqu/iQvnuF8XiNC2WEqygI+20MaISoWVkyQ2lhSTXMuqxy5mWSJR9J3OvLDw
-	 wUzrqloYMudv85ciOw+bRe4GDttB1kDCtgALzAJ1NWYRJlj2qmIXOcZL1BrIoXwXlO
-	 ERdj67inIDaFrRDIIfuTMjSgSqEon/R1/lRoKmzs=
+	b=GGZ3t0+DIk+j36dfZvcDGcE5nRR9iR/iu47jEGsSKaolLg3X518JT411jC4ehHVff
+	 0+S00fjzA4M5riFXIHwF9dijmf4Fq0s/NOv7vEqSIHLaDwX5RMAKTHRFo8JprLT9lP
+	 zlkFedge2J6i2F3PhQzGcc/yMPLYi+L6Y2IT8NLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729185AbgHTMoD (ORCPT
+        id S1729415AbgHTMoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45860 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:44:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729053AbgHTJpx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:45:53 -0400
+        id S1729319AbgHTJpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78C1220724;
-        Thu, 20 Aug 2020 09:45:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF6922BEA;
+        Thu, 20 Aug 2020 09:45:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916753;
-        bh=hvLq017YKuKJqdlqg6mrYFBEKl8k/M4CsCHwLiU5pmo=;
+        s=default; t=1597916747;
+        bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s2XfahqFV0tEuSYmlzg7YPCGu7YpfCWp4pLkqCIQ9a7gfT7uB9wKvO7Axxd/tZhLI
-         F9duT3eLBGrQk9zldIBPYhC6x8iDkjFsniSkXexevNdM0xplQ++BaBq5ex2bOGK82J
-         QMXXSdQluVC0HdLcAW8hh1sL6qebsmwZChWgqVI4=
+        b=R85QHV7HYgtKwD0bHwh5hVRGSp+HdHm/ZoJXx++WG6s1p0Of1xeSWEWq2ccyCIrig
+         e61IGK+bcCfi4SMxhE7f6P9/LTDmgTf69h6rmZcQMxBPQNwLhnZrSj3Ohq1B7yTHGX
+         TZil4PFgBaUKt/gb/LPfzZ4/1SWDMVnlVo5CYmec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 5.4 033/152] xtensa: add missing exclusive access state management
-Date:   Thu, 20 Aug 2020 11:20:00 +0200
-Message-Id: <20200820091555.361883936@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Christian Eggers <ceggers@arri.de>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH 5.4 031/152] dt-bindings: iio: io-channel-mux: Fix compatible string in example code
+Date:   Thu, 20 Aug 2020 11:19:58 +0200
+Message-Id: <20200820091555.246371152@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -58,80 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Christian Eggers <ceggers@arri.de>
 
-commit a0fc1436f1f4f84e93144480bf30e0c958d135b6 upstream.
+commit add48ba425192c6e04ce70549129cacd01e2a09e upstream.
 
-The result of the s32ex opcode is recorded in the ATOMCTL special
-register and must be retrieved with the getex opcode. Context switch
-between s32ex and getex may trash the ATOMCTL register and result in
-duplicate update or missing update of the atomic variable.
-Add atomctl8 field to the struct thread_info and use getex to swap
-ATOMCTL bit 8 as a part of context switch.
-Clear exclusive access monitor on kernel entry.
+The correct compatible string is "gpio-mux" (see
+bindings/mux/gpio-mux.txt).
 
-Cc: stable@vger.kernel.org
-Fixes: f7c34874f04a ("xtensa: add exclusive atomics support")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Cc: stable@vger.kernel.org # v4.13+
+Reviewed-by: Peter Rosin <peda@axentia.se>
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Link: https://lore.kernel.org/r/20200727101605.24384-1-ceggers@arri.de
+Signed-off-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/include/asm/thread_info.h |    4 ++++
- arch/xtensa/kernel/asm-offsets.c      |    3 +++
- arch/xtensa/kernel/entry.S            |   11 +++++++++++
- 3 files changed, 18 insertions(+)
+ Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/xtensa/include/asm/thread_info.h
-+++ b/arch/xtensa/include/asm/thread_info.h
-@@ -55,6 +55,10 @@ struct thread_info {
- 	mm_segment_t		addr_limit;	/* thread address space */
+--- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
++++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
+@@ -21,7 +21,7 @@ controller state. The mux controller sta
  
- 	unsigned long		cpenable;
-+#if XCHAL_HAVE_EXCLUSIVE
-+	/* result of the most recent exclusive store */
-+	unsigned long		atomctl8;
-+#endif
+ Example:
+ 	mux: mux-controller {
+-		compatible = "mux-gpio";
++		compatible = "gpio-mux";
+ 		#mux-control-cells = <0>;
  
- 	/* Allocate storage for extra user states and coprocessor states. */
- #if XTENSA_HAVE_COPROCESSORS
---- a/arch/xtensa/kernel/asm-offsets.c
-+++ b/arch/xtensa/kernel/asm-offsets.c
-@@ -93,6 +93,9 @@ int main(void)
- 	DEFINE(THREAD_RA, offsetof (struct task_struct, thread.ra));
- 	DEFINE(THREAD_SP, offsetof (struct task_struct, thread.sp));
- 	DEFINE(THREAD_CPENABLE, offsetof (struct thread_info, cpenable));
-+#if XCHAL_HAVE_EXCLUSIVE
-+	DEFINE(THREAD_ATOMCTL8, offsetof (struct thread_info, atomctl8));
-+#endif
- #if XTENSA_HAVE_COPROCESSORS
- 	DEFINE(THREAD_XTREGS_CP0, offsetof(struct thread_info, xtregs_cp.cp0));
- 	DEFINE(THREAD_XTREGS_CP1, offsetof(struct thread_info, xtregs_cp.cp1));
---- a/arch/xtensa/kernel/entry.S
-+++ b/arch/xtensa/kernel/entry.S
-@@ -374,6 +374,11 @@ common_exception:
- 	s32i	a2, a1, PT_LCOUNT
- #endif
- 
-+#if XCHAL_HAVE_EXCLUSIVE
-+	/* Clear exclusive access monitor set by interrupted code */
-+	clrex
-+#endif
-+
- 	/* It is now save to restore the EXC_TABLE_FIXUP variable. */
- 
- 	rsr	a2, exccause
-@@ -2024,6 +2029,12 @@ ENTRY(_switch_to)
- 	s32i	a3, a4, THREAD_CPENABLE
- #endif
- 
-+#if XCHAL_HAVE_EXCLUSIVE
-+	l32i	a3, a5, THREAD_ATOMCTL8
-+	getex	a3
-+	s32i	a3, a4, THREAD_ATOMCTL8
-+#endif
-+
- 	/* Flush register file. */
- 
- 	spill_registers_kernel
+ 		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
 
 
