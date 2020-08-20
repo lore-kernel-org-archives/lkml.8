@@ -5,56 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F182320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740C820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919154;
-	bh=WuWUFoM8glOjWZTJLhMfKnsgfVWQ7Vo3QZ4kDFUqIRs=;
+	s=default; t=1597919161;
+	bh=nMJTkO6cj4TOvD4sJ8BX0pSnppY8qiNUN3ChP8pnEHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hk8oennnZjqL1xn5BM307prLLkFRBU8oehte+hwz/pJil4n4l+2CXwwe4Rz3K0jqv
-	 r2hMyPW9AXW2aokMZPaZhCQG7/0eUmHKkDObKu7MikAbylaHrU3idGow3t/uhR7kpz
-	 LR/fYisRJ9TKJUvjd1NPKjgLGtwkIHNHggyLXYp0=
+	b=djLe21fYFsghx78Fs4sb6jZAOr4pLwl0I6IL3C0Y0+pHA/nMyg1EBrhVgVu6MyPS4
+	 XZ0u8GmCFELjrNrxUAju02Cw4mca3dVnx0JWZrXezjI7TESu0OT7EMLjyM6UOnAwV6
+	 qBBVghyJdGqY1Dboc/jCKIRBlTpUDS+oEe1SlSfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729639AbgHTKZw (ORCPT
+        id S1730636AbgHTKZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731717AbgHTKZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:25:28 -0400
+        id S1731703AbgHTKXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 467AA2075E;
-        Thu, 20 Aug 2020 10:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E72FF20658;
+        Thu, 20 Aug 2020 10:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919127;
-        bh=WuWUFoM8glOjWZTJLhMfKnsgfVWQ7Vo3QZ4kDFUqIRs=;
+        s=default; t=1597918993;
+        bh=nMJTkO6cj4TOvD4sJ8BX0pSnppY8qiNUN3ChP8pnEHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pIGqP6QAB0ADSO5hzPWm1fE3Q3Lo3pCeW5lIAIuYXGgQZ8N3+eHu/OYBlWC1bF1Gw
-         pAFQ3MNWNAHVXFd4L3zVHrI8otgEjcc+dyBAaoZtXLra3Q4pHwOMW0dR7gHKpsgDCs
-         tUisIFQ+MBBiSO4yJjL5k8tUa5AuuOTdqGHj0GUU=
+        b=EsUaY7NJF5K03NTD8oNatrHDByu8MWygQnxJnq1RA+lAdiu93ptuNGfqAZnUur8pX
+         ve+yYe0JeBvbVZFrkuBmpWjpiTXZamjilC2CTPi80YgPdwhPeXE/brFr9wP+Rs4+do
+         aoEd1eUQs0JlhyZVylKv38pRyhVsq/r6jSX+sR5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Xu, Wen" <wen.xu@gatech.edu>,
-        Eric Sandeen <sandeen@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 001/149] xfs: dont call xfs_da_shrink_inode with NULL bp
-Date:   Thu, 20 Aug 2020 11:21:18 +0200
-Message-Id: <20200820092125.757209674@linuxfoundation.org>
+Subject: [PATCH 4.4 145/149] mfd: dln2: Run event handler loop under spinlock
+Date:   Thu, 20 Aug 2020 11:23:42 +0200
+Message-Id: <20200820092132.719012294@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,46 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Sandeen <sandeen@sandeen.net>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit bb3d48dcf86a97dc25fe9fc2c11938e19cb4399a ]
+[ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
 
-xfs_attr3_leaf_create may have errored out before instantiating a buffer,
-for example if the blkno is out of range.  In that case there is no work
-to do to remove it, and in fact xfs_da_shrink_inode will lead to an oops
-if we try.
+The event handler loop must be run with interrupts disabled.
+Otherwise we will have a warning:
 
-This also seems to fix a flaw where the original error from
-xfs_attr3_leaf_create gets overwritten in the cleanup case, and it
-removes a pointless assignment to bp which isn't used after this.
+[ 1970.785649] irq 31 handler lineevent_irq_handler+0x0/0x20 enabled interrupts
+[ 1970.792739] WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:159 __handle_irq_event_percpu+0x162/0x170
+[ 1970.860732] RIP: 0010:__handle_irq_event_percpu+0x162/0x170
+...
+[ 1970.946994] Call Trace:
+[ 1970.949446]  <IRQ>
+[ 1970.951471]  handle_irq_event_percpu+0x2c/0x80
+[ 1970.955921]  handle_irq_event+0x23/0x43
+[ 1970.959766]  handle_simple_irq+0x57/0x70
+[ 1970.963695]  generic_handle_irq+0x42/0x50
+[ 1970.967717]  dln2_rx+0xc1/0x210 [dln2]
+[ 1970.971479]  ? usb_hcd_unmap_urb_for_dma+0xa6/0x1c0
+[ 1970.976362]  __usb_hcd_giveback_urb+0x77/0xe0
+[ 1970.980727]  usb_giveback_urb_bh+0x8e/0xe0
+[ 1970.984837]  tasklet_action_common.isra.0+0x4a/0xe0
+...
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=199969
-Reported-by: Xu, Wen <wen.xu@gatech.edu>
-Tested-by: Xu, Wen <wen.xu@gatech.edu>
-Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Recently xHCI driver switched to tasklets in the commit 36dc01657b49
+("usb: host: xhci: Support running urb giveback in tasklet context").
+
+The handle_irq_event_* functions are expected to be called with interrupts
+disabled and they rightfully complain here because we run in tasklet context
+with interrupts enabled.
+
+Use a event spinlock to protect event handler from being interrupted.
+
+Note, that there are only two users of this GPIO and ADC drivers and both of
+them are using generic_handle_irq() which makes above happen.
+
+Fixes: 338a12814297 ("mfd: Add support for Diolan DLN-2 devices")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_attr_leaf.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/mfd/dln2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index 01a5ecfedfcf1..445a3f2f871fb 100644
---- a/fs/xfs/libxfs/xfs_attr_leaf.c
-+++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -779,9 +779,8 @@ xfs_attr_shortform_to_leaf(xfs_da_args_t *args)
- 	ASSERT(blkno == 0);
- 	error = xfs_attr3_leaf_create(args, blkno, &bp);
- 	if (error) {
--		error = xfs_da_shrink_inode(args, 0, bp);
--		bp = NULL;
--		if (error)
-+		/* xfs_attr3_leaf_create may not have instantiated a block */
-+		if (bp && (xfs_da_shrink_inode(args, 0, bp) != 0))
- 			goto out;
- 		xfs_idata_realloc(dp, size, XFS_ATTR_FORK);	/* try to put */
- 		memcpy(ifp->if_u1.if_data, tmpbuffer, size);	/* it back */
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 672831d5ee32e..97a69cd6f1278 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -294,7 +294,11 @@ static void dln2_rx(struct urb *urb)
+ 	len = urb->actual_length - sizeof(struct dln2_header);
+ 
+ 	if (handle == DLN2_HANDLE_EVENT) {
++		unsigned long flags;
++
++		spin_lock_irqsave(&dln2->event_cb_lock, flags);
+ 		dln2_run_event_callbacks(dln2, id, echo, data, len);
++		spin_unlock_irqrestore(&dln2->event_cb_lock, flags);
+ 	} else {
+ 		/* URB will be re-submitted in _dln2_transfer (free_rx_slot) */
+ 		if (dln2_transfer_complete(dln2, urb, handle, echo))
 -- 
 2.25.1
 
