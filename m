@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6A3C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A60C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A291208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2906F22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929805;
-	bh=IiYFq2Urt7CVFWhnRx7Sf4p1sOBGWy+A0gkv82MJwEw=;
+	s=default; t=1597929828;
+	bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gKBZPElm4Pm5e85jBtZSO0DhCUwIPDAU1vObGD83cY0NbXEpqbukY5TKeVdXamF9J
-	 RMv3tC2VuUU6JeD7ivQJtANn3tW9rH9Ox0EogkDuj6CyjXACAc5MiZN/8l/5x/Wmsg
-	 +yjqIcH5lu8zlgMRS3eTetRG0a8dxXZORn6gqYPk=
+	b=yar/woih1WuwfdB7dVoK7RBRerv/MkNqEORk5VnSi4m2GK5BZDuqgs1ltvFn3N+s/
+	 chfcQSmwHiUV53DWP143pSWISD5uWNfB1Iaj6nF63mct8erVLTZwvR3k5DwCPc6/ZW
+	 PWu9Esr/48/1WVJ1d/WWaszKrvbxJEBPbxw8D5uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbgHTNXX (ORCPT
+        id S1729811AbgHTNXr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:23:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:23:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728435AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79135207DE;
-        Thu, 20 Aug 2020 09:33:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2D122BEB;
+        Thu, 20 Aug 2020 09:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916040;
-        bh=IiYFq2Urt7CVFWhnRx7Sf4p1sOBGWy+A0gkv82MJwEw=;
+        s=default; t=1597916031;
+        bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R+BOCZgE/zNav6UOrPkEY+xgp3krx7x6gVbuYJaglHCmWiSMITI1SoJzdKCiQ6MQO
-         /TxSefcLELRozIY/+McKC2HjWJffReFOVbivIpzrhYKzPIL75KpAdzcV1GvAOpMxtq
-         6effkBDWSsluNXkbku0skZewKoLG+/rPsFzjLQm8=
+        b=VYNlzpygUYhQQTeCJ7O2sNSq3XvEzU3dEqC0nebr36TYLvQ5qYsz+3jqQxqptqDTc
+         Qa/QO3WZ8n5CjuY9hi6nItFYBUvoOZNLdKWqmjFroIHhhOa4zKBjSSPv2HsRnV9xg9
+         SRAGhPYbrLEBa8cLp7DM7jEAKErnFnLBJQXg2aJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jin Yao <yao.jin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 193/232] perf record: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-Date:   Thu, 20 Aug 2020 11:20:44 +0200
-Message-Id: <20200820091622.140479237@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 218/232] sh: landisk: Add missing initialization of sh_io_port_base
+Date:   Thu, 20 Aug 2020 11:21:09 +0200
+Message-Id: <20200820091623.350940963@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -65,95 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jin Yao <yao.jin@linux.intel.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1101c872c8c7869c78dc106ae820040f36807eda ]
+[ Upstream commit 0c64a0dce51faa9c706fdf1f957d6f19878f4b81 ]
 
-We received an error report that perf-record caused 'Segmentation fault'
-on a newly system (e.g. on the new installed ubuntu).
+The Landisk setup code maps the CF IDE area using ioremap_prot(), and
+passes the resulting virtual addresses to the pata_platform driver,
+disguising them as I/O port addresses.  Hence the pata_platform driver
+translates them again using ioport_map().
+As CONFIG_GENERIC_IOMAP=n, and CONFIG_HAS_IOPORT_MAP=y, the
+SuperH-specific mapping code in arch/sh/kernel/ioport.c translates
+I/O port addresses to virtual addresses by adding sh_io_port_base, which
+defaults to -1, thus breaking the assumption of an identity mapping.
 
-  (gdb) backtrace
-  #0  __read_once_size (size=4, res=<synthetic pointer>, p=0x14) at /root/0-jinyao/acme/tools/include/linux/compiler.h:139
-  #1  atomic_read (v=0x14) at /root/0-jinyao/acme/tools/include/asm/../../arch/x86/include/asm/atomic.h:28
-  #2  refcount_read (r=0x14) at /root/0-jinyao/acme/tools/include/linux/refcount.h:65
-  #3  perf_mmap__read_init (map=map@entry=0x0) at mmap.c:177
-  #4  0x0000561ce5c0de39 in perf_evlist__poll_thread (arg=0x561ce68584d0) at util/sideband_evlist.c:62
-  #5  0x00007fad78491609 in start_thread (arg=<optimized out>) at pthread_create.c:477
-  #6  0x00007fad7823c103 in clone () at ../sysdeps/unix/sysv/linux/x86_64/clone.S:95
+Fix this by setting sh_io_port_base to zero.
 
-The root cause is, evlist__add_bpf_sb_event() just returns 0 if
-HAVE_LIBBPF_SUPPORT is not defined (inline function path). So it will
-not create a valid evsel for side-band event.
-
-But perf-record still creates BPF side band thread to process the
-side-band event, then the error happpens.
-
-We can reproduce this issue by removing the libelf-dev. e.g.
-1. apt-get remove libelf-dev
-2. perf record -a -- sleep 1
-
-  root@test:~# ./perf record -a -- sleep 1
-  perf: Segmentation fault
-  Obtained 6 stack frames.
-  ./perf(+0x28eee8) [0x5562d6ef6ee8]
-  /lib/x86_64-linux-gnu/libc.so.6(+0x46210) [0x7fbfdc65f210]
-  ./perf(+0x342e74) [0x5562d6faae74]
-  ./perf(+0x257e39) [0x5562d6ebfe39]
-  /lib/x86_64-linux-gnu/libpthread.so.0(+0x9609) [0x7fbfdc990609]
-  /lib/x86_64-linux-gnu/libc.so.6(clone+0x43) [0x7fbfdc73b103]
-  Segmentation fault (core dumped)
-
-To fix this issue,
-
-1. We either install the missing libraries to let HAVE_LIBBPF_SUPPORT
-   be defined.
-   e.g. apt-get install libelf-dev and install other related libraries.
-
-2. Use this patch to skip the side-band event setup if HAVE_LIBBPF_SUPPORT
-   is not set.
-
-Committer notes:
-
-The side band thread is not used just with BPF, it is also used with
---switch-output-event, so narrow the ifdef to the BPF specific part.
-
-Fixes: 23cbb41c939a ("perf record: Move side band evlist setup to separate routine")
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/20200805022937.29184-1-yao.jin@linux.intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 37b7a97884ba64bf ("sh: machvec IO death.")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rich Felker <dalias@libc.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-record.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/sh/boards/mach-landisk/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index a37e7910e9e90..23ea934f30b34 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1489,7 +1489,7 @@ static int record__setup_sb_evlist(struct record *rec)
- 		evlist__set_cb(rec->sb_evlist, record__process_signal_event, rec);
- 		rec->thread_id = pthread_self();
- 	}
--
-+#ifdef HAVE_LIBBPF_SUPPORT
- 	if (!opts->no_bpf_event) {
- 		if (rec->sb_evlist == NULL) {
- 			rec->sb_evlist = evlist__new();
-@@ -1505,7 +1505,7 @@ static int record__setup_sb_evlist(struct record *rec)
- 			return -1;
- 		}
- 	}
--
-+#endif
- 	if (perf_evlist__start_sb_thread(rec->sb_evlist, &rec->opts.target)) {
- 		pr_debug("Couldn't start the BPF side band thread:\nBPF programs starting from now on won't be annotatable\n");
- 		opts->no_bpf_event = true;
+diff --git a/arch/sh/boards/mach-landisk/setup.c b/arch/sh/boards/mach-landisk/setup.c
+index 16b4d8b0bb850..2c44b94f82fb2 100644
+--- a/arch/sh/boards/mach-landisk/setup.c
++++ b/arch/sh/boards/mach-landisk/setup.c
+@@ -82,6 +82,9 @@ device_initcall(landisk_devices_setup);
+ 
+ static void __init landisk_setup(char **cmdline_p)
+ {
++	/* I/O port identity mapping */
++	__set_io_port_base(0);
++
+ 	/* LED ON */
+ 	__raw_writeb(__raw_readb(PA_LED) | 0x03, PA_LED);
+ 
 -- 
 2.25.1
 
