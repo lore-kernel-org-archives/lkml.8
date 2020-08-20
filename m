@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C82FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07EC0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D27BD20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D321D20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930922;
-	bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
+	s=default; t=1597930931;
+	bh=kCmhR+CJ9QTo6q+Nvv/t2fNCrVtHeBPbDvsuZwRkcYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T/ESsYU5U13S6qHr1UAYpu2m654V+F265bQaqUf2k65DNTzvKtr7jJrobPRJu55jO
-	 vHKBYhO+TgV4dD5bEBbwVnl9qzrepCTeR5xrjUQtpXp1NN1l4PpxO3faSXJuTGz8wM
-	 z8WE6sLvviK/9ZcQet1OGk6UE3uxWKb/sl5s8ndc=
+	b=quEylSj1svFpV3srqUcxDwoR31+KwRUWUaO5WNWkkfMY69Niwl1kIHUesTJus8x/W
+	 IOQR0NqI+OzJRYr0TmgxExdfLUgxs+weY5RRmlxuzkzYaTBGcgQRBY+3MeTNZCHeUR
+	 IrguimICS/epkMbloPLeMg6RQE9oD+/5IAWUc/1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbgHTNl6 (ORCPT
+        id S1729890AbgHTNmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:41:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728123AbgHTJ3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:53 -0400
+        id S1728090AbgHTJ3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FD3022B4B;
-        Thu, 20 Aug 2020 09:29:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61BEA2075E;
+        Thu, 20 Aug 2020 09:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915792;
-        bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
+        s=default; t=1597915783;
+        bh=kCmhR+CJ9QTo6q+Nvv/t2fNCrVtHeBPbDvsuZwRkcYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zo4u9rx9hUT/+xzctkRzv3wCb9AuXY5maTh6791hz4bUhCUgZJWbj8gGMhcXX1uqg
-         esKLEa2Kw+yTKlQWaMNsOq9FMBpteU0m6q61XyKnGhtBAImqnFm/JnjWv30K6Wad1r
-         7umMh6SROeocxkPKO+VUU+xzEZjFQoVK0d2xZReU=
+        b=bb+JGaYtiMk9Q3hkHm7BJLMU/7QX1T4P9qIGQD7ySns5Xa7jrwCgIZ/YNBFy3CXJD
+         N2oixHyZRYLUTjlFWQorL0SyRJU/Pi0QXMPntXZAycsrqOnkj6QtLiG6NknsBl2Hml
+         QYxodHNBWjyGvLNL4vysDh0t4HXNEk9Bwwf+i4+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 136/232] USB: serial: ftdi_sio: clean up receive processing
-Date:   Thu, 20 Aug 2020 11:19:47 +0200
-Message-Id: <20200820091619.410965526@linuxfoundation.org>
+Subject: [PATCH 5.8 133/232] selftests/bpf: test_progs use another shell exit on non-actions
+Date:   Thu, 20 Aug 2020 11:19:44 +0200
+Message-Id: <20200820091619.262423482@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,73 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit ce054039ba5e47b75a3be02a00274e52b06a6456 ]
+[ Upstream commit 3220fb667842a9725cbb71656f406eadb03c094b ]
 
-Clean up receive processing by dropping the character pointer and
-keeping the length argument unchanged throughout the function.
+This is a follow up adjustment to commit 6c92bd5cd465 ("selftests/bpf:
+Test_progs indicate to shell on non-actions"), that returns shell exit
+indication EXIT_FAILURE (value 1) when user selects a non-existing test.
 
-Also make it more apparent that sysrq processing can consume a
-characters by adding an explicit continue.
+The problem with using EXIT_FAILURE is that a shell script cannot tell
+the difference between a non-existing test and the test failing.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+This patch uses value 2 as shell exit indication.
+(Aside note unrecognized option parameters use value 64).
+
+Fixes: 6c92bd5cd465 ("selftests/bpf: Test_progs indicate to shell on non-actions")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/159410593992.1093222.90072558386094370.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ tools/testing/selftests/bpf/test_progs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 96b9e2768ac5c..33f1cca7eaa61 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2483,7 +2483,6 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
- {
- 	unsigned char status;
--	unsigned char *ch;
- 	int i;
- 	char flag;
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index 6218b2b5a3f62..0849735ebda8a 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -12,6 +12,8 @@
+ #include <string.h>
+ #include <execinfo.h> /* backtrace */
  
-@@ -2526,8 +2525,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	else
- 		priv->transmit_empty = 0;
++#define EXIT_NO_TEST		2
++
+ /* defined in test_progs.h */
+ struct test_env env = {};
  
--	len -= 2;
--	if (!len)
-+	if (len == 2)
- 		return 0;	/* status only */
+@@ -707,7 +709,7 @@ int main(int argc, char **argv)
+ 	close(env.saved_netns_fd);
  
- 	/*
-@@ -2556,19 +2554,20 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		}
- 	}
+ 	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
+-		return EXIT_FAILURE;
++		return EXIT_NO_TEST;
  
--	port->icount.rx += len;
--	ch = buf + 2;
-+	port->icount.rx += len - 2;
- 
- 	if (port->port.console && port->sysrq) {
--		for (i = 0; i < len; i++, ch++) {
--			if (!usb_serial_handle_sysrq_char(port, *ch))
--				tty_insert_flip_char(&port->port, *ch, flag);
-+		for (i = 2; i < len; i++) {
-+			if (usb_serial_handle_sysrq_char(port, buf[i]))
-+				continue;
-+			tty_insert_flip_char(&port->port, buf[i], flag);
- 		}
- 	} else {
--		tty_insert_flip_string_fixed_flag(&port->port, ch, flag, len);
-+		tty_insert_flip_string_fixed_flag(&port->port, buf + 2, flag,
-+				len - 2);
- 	}
- 
--	return len;
-+	return len - 2;
+ 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
  }
- 
- static void ftdi_process_read_urb(struct urb *urb)
 -- 
 2.25.1
 
