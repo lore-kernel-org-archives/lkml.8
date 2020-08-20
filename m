@@ -2,86 +2,99 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4238DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50003C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 172BE2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D39D2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597921431;
+	bh=nmcxt3WZtflwJ7Qs7MCerLyMF7yzlsKp1exKahSiFsQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PiTitV6FTjM3Ps67s/6uq6LDrdQEskKR5SAUTjkGs3sIbxeGPB3al6k+GavaLy0+Z
+	 y0XCDdxsMmZZdJPUVlG+Tr8cC5xG1S5wz357UTaa6DD29Pzdk7u34p/rfvfkC3fubk
+	 ryy7YnDseOwFxK43ekBZ1Kzj+tURh8nEIipC+y74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbgHTLCJ (ORCPT
+        id S1728875AbgHTLB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:02:09 -0400
-Received: from auth-smtp.nebula.fi ([217.149.52.145]:54815 "EHLO
-        auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731668AbgHTK6t (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:58:49 -0400
-Received: from [192.168.1.109] (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 20 Aug 2020 07:01:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731102AbgHTKNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: xipheracom)
-        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id C5D874065;
-        Thu, 20 Aug 2020 13:58:15 +0300 (EEST)
-Subject: Re: [PATCH 2/3] dt-bindings: rng: add bindings for Xiphera XIP8001B
- hwnrg
-To:     Rob Herring <robh@kernel.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matt Mackall <mpm@selenic.com>, devicetree@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20200819122135.25316-1-atte.tommiska@xiphera.com>
- <20200819122135.25316-3-atte.tommiska@xiphera.com>
- <20200819223733.GA2088539@bogus>
-From:   Atte Tommiska <atte.tommiska@xiphera.com>
-Message-ID: <824023bc-2d91-6a38-cafe-019702186ce4@xiphera.com>
-Date:   Thu, 20 Aug 2020 13:58:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F902075E;
+        Thu, 20 Aug 2020 10:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918424;
+        bh=nmcxt3WZtflwJ7Qs7MCerLyMF7yzlsKp1exKahSiFsQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xmtDr7FI86dZBMmFSsYOeOqBQ44fE0ckdaKKA9h0+lXQfciQxahwj+14fPvP2GZvh
+         ND0I5/RCYw4Dz+yE6QwWSbqEXyi8ETsFEL1BYgA3w0d6JPUo0EbqlFMx/diKQLiLlR
+         9aSP5i55rq6X5S8DpJMQkV+z/fqtR/ri/hMTAxAk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.14 165/228] xen/balloon: make the balloon wait interruptible
+Date:   Thu, 20 Aug 2020 11:22:20 +0200
+Message-Id: <20200820091615.822015614@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200819223733.GA2088539@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/2020 01:37, Rob Herring wrote:
-> On Wed, 19 Aug 2020 15:21:34 +0300, Atte Tommiska wrote:
->> Document the device tree bindings of Xiphera's XIP8001B-trng IP.
->>
->> Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
->> ---
->>  .../bindings/rng/xiphera,xip8001b-trng.yaml   | 30 +++++++++++++++++++
->>  1 file changed, 30 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
->>
-> 
-> 
-> My bot found errors running 'make dt_binding_check' on your patch:
-> 
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml: 'maintainers' is a required property
-> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml: ignoring, error in schema: 
-> warning: no schema found in file: ./Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
-> 
-> 
-> See https://patchwork.ozlabs.org/patch/1347768
-> 
-> If you already ran 'make dt_binding_check' and didn't see the above
-> error(s), then make sure dt-schema is up to date:
-> 
-> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-> 
-> Please check and re-submit.
-> 
+From: Roger Pau Monne <roger.pau@citrix.com>
 
-Thank you.
+commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
 
-Fixed and submitted v2 of the patch.
+So it can be killed, or else processes can get hung indefinitely
+waiting for balloon pages.
+
+Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/xen/balloon.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+--- a/drivers/xen/balloon.c
++++ b/drivers/xen/balloon.c
+@@ -633,11 +633,13 @@ static int add_ballooned_pages(int nr_pa
+ 	if (xen_hotplug_unpopulated) {
+ 		st = reserve_additional_memory();
+ 		if (st != BP_ECANCELED) {
++			int rc;
++
+ 			mutex_unlock(&balloon_mutex);
+-			wait_event(balloon_wq,
++			rc = wait_event_interruptible(balloon_wq,
+ 				   !list_empty(&ballooned_pages));
+ 			mutex_lock(&balloon_mutex);
+-			return 0;
++			return rc ? -ENOMEM : 0;
+ 		}
+ 	}
+ 
+
+
