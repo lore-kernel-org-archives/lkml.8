@@ -2,94 +2,131 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04565C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DB1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA87206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:54:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931696;
-	bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgcAmnCtNxmydGLUMv+08aHsr31p7wmlLFNAI2dFU/vzPUTz2uHDmOvwpmopaV0+V
-	 mP+9LQ1YDC4OJMTqrl0vSRETuIAQTqezTITiMJii+OM6CcdldvJSZShhaxI7q34lK3
-	 w1kcQNarHB4mF2TJ3uHrxntIMEwO0Z3z0ufjWzTk=
+	by mail.kernel.org (Postfix) with ESMTP id 030BE206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="bdquysZz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgHTNyt (ORCPT
+        id S1729641AbgHTNzC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:54:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbgHTJ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:55:02 -0400
+Received: from relayfre-01.paragon-software.com ([176.12.100.13]:60528 "EHLO
+        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727902AbgHTJ0k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:26:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4165322CB1;
-        Thu, 20 Aug 2020 09:26:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915597;
-        bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8eRxaUF4a+1MoA2rovzm41Q36wueq8iSS901+IzC4kl+1UJp3IzXaeI532HO1Sqn
-         cens2YNwEcXrotHEgJELC22zMb9KO9yK59fvN3UDXFb4YqCRRfONdAaodVq/i2aM+4
-         90VK87Nolnz1UqbioP3bAmfdVl1fGJnn6ihYqqbU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.8 070/232] mac80211: fix misplaced while instead of if
-Date:   Thu, 20 Aug 2020 11:18:41 +0200
-Message-Id: <20200820091616.191553035@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id A5F4A1D0C;
+        Thu, 20 Aug 2020 12:26:35 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1597915595;
+        bh=3noQN8rOGv2yyitvWoJV96U2nOW/mwH5Vfw1lzFR83E=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=bdquysZzTTNsEgZmhWWSDjkJ4od2EtH31dCcK9nPTrMFLuzeeog3mPhGfs1+oREns
+         PuDEyKRa+EhK5NcJec2XfOo2MwaqbSbqzuj6zOTyGTAvF8kJJXiNd9IlJbtUNp7on2
+         AtM1BPTLSeGtOwrfni7AkK1uhdE02Os3GOyb2+zQ=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 20 Aug 2020 12:26:35 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 20 Aug 2020 12:26:35 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     "dsterba@suse.cz" <dsterba@suse.cz>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Topic: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Index: AdZyNcmjSkpkGje7R9K6YobJrVDyZ///4zWA//aneKA=
+Date:   Thu, 20 Aug 2020 09:26:35 +0000
+Message-ID: <dc291b0599c4400b9f7776f969ad5a81@paragon-software.com>
+References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+ <20200814134056.GV2026@twin.jikos.cz>
+In-Reply-To: <20200814134056.GV2026@twin.jikos.cz>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
-
-commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
-
-This never was intended to be a 'while' loop, it should've
-just been an 'if' instead of 'while'. Fix this.
-
-I noticed this while applying another patch from Ben that
-intended to fix a busy loop at this spot.
-
-Cc: stable@vger.kernel.org
-Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
-Reported-by: Ben Greear <greearb@candelatech.com>
-Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- net/mac80211/sta_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -1050,7 +1050,7 @@ static void __sta_info_destroy_part2(str
- 	might_sleep();
- 	lockdep_assert_held(&local->sta_mtx);
- 
--	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
-+	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
- 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
- 		WARN_ON_ONCE(ret);
- 	}
-
-
+> From: David Sterba <dsterba@suse.cz>
+> Sent: Friday, August 14, 2020 4:41 PM
+> On Fri, Aug 14, 2020 at 12:29:01PM +0000, Konstantin Komarov wrote:
+> > This patch adds NTFS Read-Write driver to fs/ntfs3.
+> >
+> > Having decades of expertise in commercial file systems development and =
+huge
+> > test coverage, we at Paragon Software GmbH want to make our contributio=
+n to
+> > the Open Source Community by providing implementation of NTFS Read-Writ=
+e
+> > driver for the Linux Kernel.
+> >
+> > This is fully functional NTFS Read-Write driver. Current version works =
+with
+> > NTFS(including v3.1) normal/compressed/sparse files and supports journa=
+l replaying.
+> >
+> > We plan to support this version after the codebase once merged, and add=
+ new
+> > features and fix bugs. For example, full journaling support over JBD wi=
+ll be
+> > added in later updates.
+> >
+> > The patch is too big to handle it within an e-mail body, so it is avail=
+able to download
+> > on our server: https://dl.paragon-software.com/ntfs3/ntfs3.patch
+> >
+> > Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software=
+.com>
+>=20
+> In case somebody wants to compile it, this fixup is needed to let 'make
+> fs/ntfs3/' actually work, besides enabling it in the config.
+>=20
+> diff --git a/fs/Makefile b/fs/Makefile
+> index 1c7b0e3f6daa..b0b4ad8affa0 100644
+> --- a/fs/Makefile
+> +++ b/fs/Makefile
+> @@ -100,6 +100,7 @@ obj-$(CONFIG_SYSV_FS)		+=3D sysv/
+>  obj-$(CONFIG_CIFS)		+=3D cifs/
+>  obj-$(CONFIG_HPFS_FS)		+=3D hpfs/
+>  obj-$(CONFIG_NTFS_FS)		+=3D ntfs/
+> +obj-$(CONFIG_NTFS3_FS)		+=3D ntfs3/
+>  obj-$(CONFIG_UFS_FS)		+=3D ufs/
+>  obj-$(CONFIG_EFS_FS)		+=3D efs/
+>  obj-$(CONFIG_JFFS2_FS)		+=3D jffs2/
+> diff --git a/fs/ntfs3/Makefile b/fs/ntfs3/Makefile
+> index 4d4fe198b8b8..d99dd1af43aa 100644
+> --- a/fs/ntfs3/Makefile
+> +++ b/fs/ntfs3/Makefile
+> @@ -5,7 +5,7 @@
+>=20
+>  obj-$(CONFIG_NTFS3_FS) +=3D ntfs3.o
+>=20
+> -ntfs3-objs :=3D bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
+> +ntfs3-y :=3D bitfunc.o bitmap.o inode.o fsntfs.o frecord.o \
+>  	    index.o attrlist.o record.o attrib.o run.o xattr.o\
+>  	    upcase.o super.o file.o dir.o namei.o lznt.o\
+>  	    fslog.o
+> ---
+Hi David, thanks! Indeed these fixups are needed to the patch (lost them du=
+ring final polishing of the code before submitting). Will be fixed in v2.
