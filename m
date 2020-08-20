@@ -2,56 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAE7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E70C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EFBE20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F0E2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922701;
-	bh=RBmrsqYJE1VOmNErin+yCTp5FmI8o19mCee+EBGo8nU=;
+	s=default; t=1597922716;
+	bh=rHY6bYRMoExjyfEcAUsfa6ZPTbkCpO03krJyyBwM/NM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=koybr38e0M5MyQPyP06IVGeI6JDiyDJxx8iFzp5J58nvyNRuYAAEwl/aBj/0h+XMv
-	 I3xK9vWIyi7kXzlNtbVH11UIrTeX8BLLyOX/t9M8gs0PMIevIgAlZJYQocZ9s0LZx0
-	 SvXAyURbz4YUC3BwHUkTtih6fO0Cs3HDB9gjT1WA=
+	b=hc+NrUMTbCeX4t9ze/7nJmxlNwdN4MhSz2vm5tqh0iXvPX2nmFhOHuVwCK1WMndKR
+	 IU3La+B95KfrNeIHaKbguusAZ2QwUSBjT1pfkdqdAUj3Yv4DW76SZow7PfjNCtxfq/
+	 MkIFxSY3WZuckSBOEM1oQ9dpNqWx/7uvg4jh1JME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728381AbgHTLY6 (ORCPT
+        id S1730672AbgHTKGz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:24:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36404 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:06:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730514AbgHTKG4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:56 -0400
+        id S1728613AbgHTKCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6939C206DA;
-        Thu, 20 Aug 2020 10:06:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B285208E4;
+        Thu, 20 Aug 2020 10:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918015;
-        bh=RBmrsqYJE1VOmNErin+yCTp5FmI8o19mCee+EBGo8nU=;
+        s=default; t=1597917734;
+        bh=rHY6bYRMoExjyfEcAUsfa6ZPTbkCpO03krJyyBwM/NM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QCUy2FGPNqoaEG6PvikPU8O3XQ/JWcYxCktUlItfUwhm5AwDqGseWsCsfbPZNKT0E
-         mUPOaBENPrX+3PqOGUx8/fwdfDTyW6IxmgGPEabbp7KoG3/BXt7+QcJ5wSm5gGbVEF
-         koAHci23+0Nq7GSz//GeXltwqPTtEX8sdya5kLZI=
+        b=xEyd4Vl/BG8NmugjHG/qWpMx75Ml83gFtFAXIwlwxYXYtmKTMK5DBGdA8B7lQ9Ewq
+         FXUcX4vonMHJa/++RCYq/oG7qjz0ga0L2ZFwT5BlfUxHDsNFNER+pKVdvVuMJ8blPN
+         jCQHVUH4/i4O1QgP+Whj08CMSXM19LhKt6tKrFS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH 4.14 007/228] staging: android: ashmem: Fix lockdep warning for write operation
-Date:   Thu, 20 Aug 2020 11:19:42 +0200
-Message-Id: <20200820091607.890615373@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 131/212] drm/imx: tve: fix regulator_disable error path
+Date:   Thu, 20 Aug 2020 11:21:44 +0200
+Message-Id: <20200820091608.964012615@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,77 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suren Baghdasaryan <surenb@google.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-commit 3e338d3c95c735dc3265a86016bb4c022ec7cadc upstream.
+[ Upstream commit 7bb58b987fee26da2a1665c01033022624986b7c ]
 
-syzbot report [1] describes a deadlock when write operation against an
-ashmem fd executed at the time when ashmem is shrinking its cache results
-in the following lock sequence:
+Add missing regulator_disable() as devm_action to avoid dedicated
+unbind() callback and fix the missing error handling.
 
-Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(fs_reclaim);
-                                lock(&sb->s_type->i_mutex_key#13);
-                                lock(fs_reclaim);
-   lock(&sb->s_type->i_mutex_key#13);
-
-kswapd takes fs_reclaim and then inode_lock while generic_perform_write
-takes inode_lock and then fs_reclaim. However ashmem does not support
-writing into backing shmem with a write syscall. The only way to change
-its content is to mmap it and operate on mapped memory. Therefore the race
-that lockdep is warning about is not valid. Resolve this by introducing a
-separate lockdep class for the backing shmem inodes.
-
-[1]: https://lkml.kernel.org/lkml/0000000000000b5f9d059aa2037f@google.com/
-
-Reported-by: syzbot+7a0d9d0b26efefe61780@syzkaller.appspotmail.com
-Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-Cc: stable <stable@vger.kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Link: https://lore.kernel.org/r/20200730192632.3088194-1-surenb@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: fcbc51e54d2a ("staging: drm/imx: Add support for Television Encoder (TVEv2)")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/android/ashmem.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/imx/imx-tve.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
---- a/drivers/staging/android/ashmem.c
-+++ b/drivers/staging/android/ashmem.c
-@@ -100,6 +100,15 @@ static DEFINE_MUTEX(ashmem_mutex);
- static struct kmem_cache *ashmem_area_cachep __read_mostly;
- static struct kmem_cache *ashmem_range_cachep __read_mostly;
+diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
+index 89cf0090feaca..9ae515f3171ec 100644
+--- a/drivers/gpu/drm/imx/imx-tve.c
++++ b/drivers/gpu/drm/imx/imx-tve.c
+@@ -511,6 +511,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
+ 	return 0;
+ }
  
-+/*
-+ * A separate lockdep class for the backing shmem inodes to resolve the lockdep
-+ * warning about the race between kswapd taking fs_reclaim before inode_lock
-+ * and write syscall taking inode_lock and then fs_reclaim.
-+ * Note that such race is impossible because ashmem does not support write
-+ * syscalls operating on the backing shmem.
-+ */
-+static struct lock_class_key backing_shmem_inode_class;
++static void imx_tve_disable_regulator(void *data)
++{
++	struct imx_tve *tve = data;
 +
- static inline unsigned long range_size(struct ashmem_range *range)
++	regulator_disable(tve->dac_reg);
++}
++
+ static bool imx_tve_readable_reg(struct device *dev, unsigned int reg)
  {
- 	return range->pgend - range->pgstart + 1;
-@@ -406,6 +415,7 @@ static int ashmem_mmap(struct file *file
- 	if (!asma->file) {
- 		char *name = ASHMEM_NAME_DEF;
- 		struct file *vmfile;
-+		struct inode *inode;
+ 	return (reg % 4 == 0) && (reg <= 0xdc);
+@@ -635,6 +642,9 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 		ret = regulator_enable(tve->dac_reg);
+ 		if (ret)
+ 			return ret;
++		ret = devm_add_action_or_reset(dev, imx_tve_disable_regulator, tve);
++		if (ret)
++			return ret;
+ 	}
  
- 		if (asma->name[ASHMEM_NAME_PREFIX_LEN] != '\0')
- 			name = asma->name;
-@@ -417,6 +427,8 @@ static int ashmem_mmap(struct file *file
- 			goto out;
- 		}
- 		vmfile->f_mode |= FMODE_LSEEK;
-+		inode = file_inode(vmfile);
-+		lockdep_set_class(&inode->i_rwsem, &backing_shmem_inode_class);
- 		asma->file = vmfile;
- 		/*
- 		 * override mmap operation of the vmfile so that it can't be
+ 	tve->clk = devm_clk_get(dev, "tve");
+@@ -681,18 +691,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ }
+ 
+-static void imx_tve_unbind(struct device *dev, struct device *master,
+-	void *data)
+-{
+-	struct imx_tve *tve = dev_get_drvdata(dev);
+-
+-	if (!IS_ERR(tve->dac_reg))
+-		regulator_disable(tve->dac_reg);
+-}
+-
+ static const struct component_ops imx_tve_ops = {
+ 	.bind	= imx_tve_bind,
+-	.unbind	= imx_tve_unbind,
+ };
+ 
+ static int imx_tve_probe(struct platform_device *pdev)
+-- 
+2.25.1
+
 
 
