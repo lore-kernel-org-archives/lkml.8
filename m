@@ -2,53 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23183C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA57DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F33C82078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905F520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916941;
-	bh=CFfNeosnv87tQONZzW6TrZx7td1xXo6DeJgM4alZ3oE=;
+	s=default; t=1597916948;
+	bh=cNuDETkDJn7hMAFTTiLXvZv8TvT2AnO9lkhlpwq7EHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQe14FfzPu9qw0LcEqXDHhJYp97pABMyBaO/HtkManqq+fQKXV052diFAq3+ZAe2T
-	 WuW0KnJU/MKvhQoVSxnXDe4RByLQqATSdmIy5I6xWXAvRxv9gjJuBuZtyJLIphUNQ8
-	 GiXKkjAEXSnVEr+qAYpsjro5QAehxCW9DiBaE2WI=
+	b=2E6bPg0XVFBrCBkR1J4ytByeMXxUy32gPFXCYoWahs8QMEI54G//EdKMdGqX0P7Vo
+	 yWTYds/leUto+6LznXr8HJ+UuwxWNNxwcpEyKdRXXqAqgkqeS3PE0M+EhKqWaP/V/d
+	 XWIyn8vE1pjGOmHiefqIHY1vGEVpXVTZ4H5tYOx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHTJs5 (ORCPT
+        id S1729622AbgHTJtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:48:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53876 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:49:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729157AbgHTJsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:43 -0400
+        id S1729595AbgHTJsz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9ACF2078D;
-        Thu, 20 Aug 2020 09:48:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BA4D20724;
+        Thu, 20 Aug 2020 09:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916923;
-        bh=CFfNeosnv87tQONZzW6TrZx7td1xXo6DeJgM4alZ3oE=;
+        s=default; t=1597916934;
+        bh=cNuDETkDJn7hMAFTTiLXvZv8TvT2AnO9lkhlpwq7EHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LxG9Gt3cUM77brK0YB1T4AMZUrX3KCQB0+BMX4RSKWUje3sZW7aQaXdMtBJS9sZpg
-         YYU3RK2lpr8Xq2OSaYFzkvZfjN7Jda5N+YunwwezwsvVs6d7gqmbmoXd7Th4iiw5Et
-         ZUurpiTNPXdDa2y8qw5r8PYwUMC0oK/lcpCWPNr0=
+        b=eH7VanwUGecU4l00ZkAPReX7nxWOr+ulXY9/VIs58ofy9Tk7P+uOJ4+pJFnFBuRiw
+         shuj8zecJTYjWJ3iFQhlwkgzsiVJUObrTEM58oVQHnlkD7+2kSlDuncKuR5ULxLr97
+         4MC76STMshHraaxCmm9+WV6cCKi7Vne2qExfvQIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.4 076/152] pinctrl: ingenic: Properly detect GPIO direction when configured for IRQ
-Date:   Thu, 20 Aug 2020 11:20:43 +0200
-Message-Id: <20200820091557.629841938@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 097/152] crypto: caam - Remove broken arc4 support
+Date:   Thu, 20 Aug 2020 11:21:04 +0200
+Message-Id: <20200820091558.726117203@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,39 +61,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 84e7a946da71f678affacea301f6d5cb4d9784e8 upstream.
+[ Upstream commit eeedb618378f8a09779546a3eeac16b000447d62 ]
 
-The PAT1 register contains information about the IRQ type (edge/level)
-for input GPIOs with IRQ enabled, and the direction for non-IRQ GPIOs.
-So it makes sense to read it only if the GPIO has no interrupt
-configured, otherwise input GPIOs configured for level IRQs are
-misdetected as output GPIOs.
+The arc4 algorithm requires storing state in the request context
+in order to allow more than one encrypt/decrypt operation.  As this
+driver does not seem to do that, it means that using it for more
+than one operation is broken.
 
-Fixes: ebd6651418b6 ("pinctrl: ingenic: Implement .get_direction for GPIO chips")
-Reported-by: João Henrique <johnnyonflame@hotmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200622214548.265417-2-paul@crapouillou.net
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: eaed71a44ad9 ("crypto: caam - add ecb(*) support")
+Link: https://lore.kernel.org/linux-crypto/CAMj1kXGvMe_A_iQ43Pmygg9xaAM-RLy=_M=v+eg--8xNmv9P+w@mail.gmail.com
+Link: https://lore.kernel.org/linux-crypto/20200702101947.682-1-ardb@kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ingenic.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/crypto/caam/caamalg.c | 29 -----------------------------
+ drivers/crypto/caam/compat.h  |  1 -
+ 2 files changed, 30 deletions(-)
 
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1644,7 +1644,8 @@ static int ingenic_gpio_get_direction(st
- 	unsigned int pin = gc->base + offset;
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index 4ce9c2b4544a2..fdd994ee55e22 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -818,12 +818,6 @@ static int ctr_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 	return skcipher_setkey(skcipher, key, keylen, ctx1_iv_off);
+ }
  
- 	if (jzpc->version >= ID_JZ4760)
--		return ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1);
-+		return ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_INT) ||
-+			ingenic_get_pin_config(jzpc, pin, JZ4760_GPIO_PAT1);
+-static int arc4_skcipher_setkey(struct crypto_skcipher *skcipher,
+-				const u8 *key, unsigned int keylen)
+-{
+-	return skcipher_setkey(skcipher, key, keylen, 0);
+-}
+-
+ static int des_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 			       const u8 *key, unsigned int keylen)
+ {
+@@ -2058,21 +2052,6 @@ static struct caam_skcipher_alg driver_algs[] = {
+ 		},
+ 		.caam.class1_alg_type = OP_ALG_ALGSEL_3DES | OP_ALG_AAI_ECB,
+ 	},
+-	{
+-		.skcipher = {
+-			.base = {
+-				.cra_name = "ecb(arc4)",
+-				.cra_driver_name = "ecb-arc4-caam",
+-				.cra_blocksize = ARC4_BLOCK_SIZE,
+-			},
+-			.setkey = arc4_skcipher_setkey,
+-			.encrypt = skcipher_encrypt,
+-			.decrypt = skcipher_decrypt,
+-			.min_keysize = ARC4_MIN_KEY_SIZE,
+-			.max_keysize = ARC4_MAX_KEY_SIZE,
+-		},
+-		.caam.class1_alg_type = OP_ALG_ALGSEL_ARC4 | OP_ALG_AAI_ECB,
+-	},
+ };
  
- 	if (ingenic_get_pin_config(jzpc, pin, JZ4740_GPIO_SELECT))
- 		return true;
+ static struct caam_aead_alg driver_aeads[] = {
+@@ -3533,7 +3512,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	int i = 0, err = 0;
+ 	u32 aes_vid, aes_inst, des_inst, md_vid, md_inst, ccha_inst, ptha_inst;
+-	u32 arc4_inst;
+ 	unsigned int md_limit = SHA512_DIGEST_SIZE;
+ 	bool registered = false, gcm_support;
+ 
+@@ -3553,8 +3531,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 			   CHA_ID_LS_DES_SHIFT;
+ 		aes_inst = cha_inst & CHA_ID_LS_AES_MASK;
+ 		md_inst = (cha_inst & CHA_ID_LS_MD_MASK) >> CHA_ID_LS_MD_SHIFT;
+-		arc4_inst = (cha_inst & CHA_ID_LS_ARC4_MASK) >>
+-			    CHA_ID_LS_ARC4_SHIFT;
+ 		ccha_inst = 0;
+ 		ptha_inst = 0;
+ 
+@@ -3575,7 +3551,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		md_inst = mdha & CHA_VER_NUM_MASK;
+ 		ccha_inst = rd_reg32(&priv->ctrl->vreg.ccha) & CHA_VER_NUM_MASK;
+ 		ptha_inst = rd_reg32(&priv->ctrl->vreg.ptha) & CHA_VER_NUM_MASK;
+-		arc4_inst = rd_reg32(&priv->ctrl->vreg.afha) & CHA_VER_NUM_MASK;
+ 
+ 		gcm_support = aesa & CHA_VER_MISC_AES_GCM;
+ 	}
+@@ -3598,10 +3573,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		if (!aes_inst && (alg_sel == OP_ALG_ALGSEL_AES))
+ 				continue;
+ 
+-		/* Skip ARC4 algorithms if not supported by device */
+-		if (!arc4_inst && alg_sel == OP_ALG_ALGSEL_ARC4)
+-			continue;
+-
+ 		/*
+ 		 * Check support for AES modes not available
+ 		 * on LP devices.
+diff --git a/drivers/crypto/caam/compat.h b/drivers/crypto/caam/compat.h
+index 60e2a54c19f11..c3c22a8de4c00 100644
+--- a/drivers/crypto/caam/compat.h
++++ b/drivers/crypto/caam/compat.h
+@@ -43,7 +43,6 @@
+ #include <crypto/akcipher.h>
+ #include <crypto/scatterwalk.h>
+ #include <crypto/skcipher.h>
+-#include <crypto/arc4.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/rsa.h>
+-- 
+2.25.1
+
 
 
