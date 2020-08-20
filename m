@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1AFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2740BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1DD32076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0065F2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931084;
-	bh=ifY08RktxRwj5+E/Tr2wAaVytBAVd0Gw42ZhtSRJAxE=;
+	s=default; t=1597931087;
+	bh=a5Q/TfMPzgWhTjqFhVbz5wffe3ve2vew8FNbAxDury8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bf9jKtQ07JD55pA+FDfKLKhNbcE4sblHYhefwDcKW085AZRZyYtNS6YDE/5uPxe0J
-	 Jc7DA7rljDTCJlIyNWreb+fPx+XQcb235A6hJiTRhG/yQG1E6AInjmITih0k1G+/jH
-	 zOxbSazrqcfVE2e9POcoRsLrJNkkbNDa0+l87B4s=
+	b=ONKAIGL1dOyTCxrS0jg/mC7daenR92jigy/wbddFG/NdQnVpA6aXfGM3Hua14uoht
+	 IkfUBhMnmTLa4COtwSenqayNZBCHpIYqvihqfoXtfrIJ3O5aKSr13zJKyRzvyRdlvL
+	 rHQrB98GLpl3oar7KqtW6Ycetd+QzErM28eZOnUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgHTNom (ORCPT
+        id S1728785AbgHTNop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39390 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:44:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728043AbgHTJ3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:05 -0400
+        id S1727113AbgHTJ24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7B8A2075E;
-        Thu, 20 Aug 2020 09:29:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93AC622D03;
+        Thu, 20 Aug 2020 09:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915745;
-        bh=ifY08RktxRwj5+E/Tr2wAaVytBAVd0Gw42ZhtSRJAxE=;
+        s=default; t=1597915736;
+        bh=a5Q/TfMPzgWhTjqFhVbz5wffe3ve2vew8FNbAxDury8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KibHYYbGH7UxkXmCssSaaDPSYVsVjliLmSqvIc4+sGb0ToqATVvpxr70K0q2HzlAm
-         vVQcr9twatlXhq3b+KF11DhOlXfUb6Uw7YYlG/pyF8GVUCprEhEscw45YErlHjY4ZL
-         andHM43jZHEGYB5AZs8dEEdPU8y5toBcUStUa7Wc=
+        b=L2k8k/8L4hOXRoElXX6nOC6SSUCYnfQBoXFPLDoA21vvQbPzi5+UazKMsQN7OuS9x
+         0bwLk3BpcepLqNhQZzV6YZuczrTT+Pzv8ABh3Evmij+5piRv71fcAJgc/AriyDFeIy
+         J/hysMkAH59Dn9FV8oYjDZBut9RLM5UEsGaaoGAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mathew King <mathewk@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Sunil Goutham <sgoutham@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 119/232] platform/chrome: cros_ec_ishtp: Fix a double-unlock issue
-Date:   Thu, 20 Aug 2020 11:19:30 +0200
-Message-Id: <20200820091618.583013949@linuxfoundation.org>
+Subject: [PATCH 5.8 116/232] octeontx2-af: change (struct qmem)->entry_sz from u8 to u16
+Date:   Thu, 20 Aug 2020 11:19:27 +0200
+Message-Id: <20200820091618.429884773@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,41 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit aaa3cbbac326c95308e315f1ab964a3369c4d07d ]
+[ Upstream commit 393415203f5c916b5907e0a7c89f4c2c5a9c5505 ]
 
-In function cros_ec_ishtp_probe(), "up_write" is already called
-before function "cros_ec_dev_init". But "up_write" will be called
-again after the calling of the function "cros_ec_dev_init" failed.
-Thus add a call of the function “down_write” in this if branch
-for the completion of the exception handling.
+We need to increase TSO_HEADER_SIZE from 128 to 256.
 
-Fixes: 26a14267aff2 ("platform/chrome: Add ChromeOS EC ISHTP driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Tested-by: Mathew King <mathewk@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Since otx2_sq_init() calls qmem_alloc() with TSO_HEADER_SIZE,
+we need to change (struct qmem)->entry_sz to avoid truncation to 0.
+
+Fixes: 7a37245ef23f ("octeontx2-af: NPA block admin queue init")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Sunil Goutham <sgoutham@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_ishtp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/octeontx2/af/common.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index ed794a7ddba9b..81364029af367 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -681,8 +681,10 @@ static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
- 
- 	/* Register croc_ec_dev mfd */
- 	rv = cros_ec_dev_init(client_data);
--	if (rv)
-+	if (rv) {
-+		down_write(&init_lock);
- 		goto end_cros_ec_dev_init_error;
-+	}
- 
- 	return 0;
- 
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/common.h b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+index cd33c2e6ca5fc..f48eb66ed021b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/common.h
++++ b/drivers/net/ethernet/marvell/octeontx2/af/common.h
+@@ -43,7 +43,7 @@ struct qmem {
+ 	void            *base;
+ 	dma_addr_t	iova;
+ 	int		alloc_sz;
+-	u8		entry_sz;
++	u16		entry_sz;
+ 	u8		align;
+ 	u32		qsize;
+ };
 -- 
 2.25.1
 
