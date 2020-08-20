@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D14BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E142BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE83208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C089422B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929921;
-	bh=mS2r6JZi5H4zJrIi0lknmzep8tyuauI0BBhy0kH7gds=;
+	s=default; t=1597929924;
+	bh=HZ8n1v18IYPmsqxlP9MdsQM6TcwUypHENjI4SX7XlMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PL3xt5uyubHb/9uE7IAjbCeP9AgZgmHVhlx5E6ggsPDwA6QJjEPIfiOVQdGcWtGoF
-	 3uSOT43+0y8d5MJP66zGrStAZJtHPTFr/LN+/8w/KkpZzXO/83epJ/Pcms0UrB0J3W
-	 ctlz5ERQhgu/V6gg3t+1h8JxEfW6s7T+tUB/ZPJA=
+	b=MR/VpqXLPuiFElNY5/ay9lE7qbddDhsgsWpj/r4pI0mv0eERxyfoIzVj355OMasyh
+	 v9ZYkdktbIZeWSb/lk7lmd7AC8QXFt8P/faKTqX2pjDMJIYqTU2SBsYMmFsa+jrC2h
+	 Yi0v244xT3UHQA5nipQ144VXcsqMcSvM6scnqYmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbgHTNZQ (ORCPT
+        id S1730835AbgHTNZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46478 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgHTJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:10 -0400
+        id S1727997AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFFA922B4E;
-        Thu, 20 Aug 2020 09:33:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD13F22B43;
+        Thu, 20 Aug 2020 09:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916025;
-        bh=mS2r6JZi5H4zJrIi0lknmzep8tyuauI0BBhy0kH7gds=;
+        s=default; t=1597916028;
+        bh=HZ8n1v18IYPmsqxlP9MdsQM6TcwUypHENjI4SX7XlMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PLvK9UZg7F56OpGfLb3d6plAW+oWq4iNr4DbooagRcRTsl6ONclAuirevgdrk1hgV
-         /+3d6A5ebKkkoLVbDLOFP6Kq5Sl3evCisdZ/Ecv4JvBPlS8fDU6ISNnXz1JibLJhgb
-         u20IC22FxXcD832WN0DLM52PyIWRsYJ/IxKtjUw0=
+        b=CCWNHf/3v/Zq6l5kMPE/2YzOpTuW/Q9yvadwzDkZ+0aPJqY0oxgTBb12fCVfQKINH
+         Q20ayMnPFDsJ0HB/zlYLAspRPQWB4eZLOzsqKE2VWDT9WtmSaqu49ufl5yap/gcFbd
+         A6x0ulmXApuv49BCi689CMl94VBJapNfG1KekpHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nelson Dsouza <nelson.dsouza@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
         Ingo Molnar <mingo@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Len Brown <len.brown@intel.com>, Jiri Olsa <jolsa@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 190/232] x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
-Date:   Thu, 20 Aug 2020 11:20:41 +0200
-Message-Id: <20200820091621.995315719@linuxfoundation.org>
+Subject: [PATCH 5.8 217/232] perf/x86/rapl: Fix missing psys sysfs attributes
+Date:   Thu, 20 Aug 2020 11:21:08 +0200
+Message-Id: <20200820091623.308974872@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -65,76 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Zhang Rui <rui.zhang@intel.com>
 
-[ Upstream commit f29dfa53cc8ae6ad93bae619bcc0bf45cab344f7 ]
+[ Upstream commit 4bb5fcb97a5df0bbc0a27e0252b1e7ce140a8431 ]
 
-On systems that have virtualization disabled or unsupported, sysfs
-mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
+This fixes a problem introduced by commit:
 
-  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
-  KVM: Vulnerable
+  5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
 
-System is not vulnerable to DoS attack from a rogue guest when
-virtualization is disabled or unsupported in the hardware. Change the
-mitigation reporting for these cases.
+that perf event sysfs attributes for psys RAPL domain are missing.
 
-Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Len Brown <len.brown@intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Link: https://lore.kernel.org/r/20200811153149.12242-2-rui.zhang@intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
- arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/events/rapl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-index ba9988d8bce50..140e4cec38c33 100644
---- a/Documentation/admin-guide/hw-vuln/multihit.rst
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -80,6 +80,10 @@ The possible values in this file are:
-        - The processor is not vulnerable.
-      * - KVM: Mitigation: Split huge pages
-        - Software changes mitigate this issue.
-+     * - KVM: Mitigation: VMX unsupported
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
-+     * - KVM: Mitigation: VMX disabled
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
-      * - KVM: Vulnerable
-        - The processor is vulnerable, but no mitigation enabled
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index 0f2bf59f43541..51ff9a3618c95 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -665,7 +665,7 @@ static const struct attribute_group *rapl_attr_update[] = {
+ 	&rapl_events_pkg_group,
+ 	&rapl_events_ram_group,
+ 	&rapl_events_gpu_group,
+-	&rapl_events_gpu_group,
++	&rapl_events_psys_group,
+ 	NULL,
+ };
  
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 0b71970d2d3d2..b0802d45abd30 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -31,6 +31,7 @@
- #include <asm/intel-family.h>
- #include <asm/e820/api.h>
- #include <asm/hypervisor.h>
-+#include <asm/tlbflush.h>
- 
- #include "cpu.h"
- 
-@@ -1556,7 +1557,12 @@ static ssize_t l1tf_show_state(char *buf)
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--	if (itlb_multihit_kvm_mitigation)
-+	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
-+	    !boot_cpu_has(X86_FEATURE_VMX))
-+		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
-+	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
-+		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
-+	else if (itlb_multihit_kvm_mitigation)
- 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
- 	else
- 		return sprintf(buf, "KVM: Vulnerable\n");
 -- 
 2.25.1
 
