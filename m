@@ -2,142 +2,169 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA12C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA1A2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6D92080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VlJOVfot"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PbD2YNA0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726435AbgHTHQ4 (ORCPT
+        id S1726718AbgHTHRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:16:56 -0400
-Received: from mail-dm6nam10on2082.outbound.protection.outlook.com ([40.107.93.82]:21216
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbgHTHQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:16:55 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OHwonqhxxNLh+7dVW541elC9KXVaiVsYrxfvcfcnqRrFuZL05DAXOdB5XY1QTMiBmJqNKI1b4Q5FNs5o9B9D7EPxsWG+zfdlL5A/j5PAXLi40PI55VVdtNFfSXNDnhgOWkWfvO6Xa2z4B2nUPh/76gGaN2/sddV9/EFsa1p8T+UjtFZolZmKPxLYox3R6cyFReyKbZAQTUPWp9FZeYDbc9aGYPqDLfHa28U3EClb6wNVPPDxEfR778EfiLViPgqg6e8UJZLIuczsbJyqEgqmBl7lDhXIo09EL62/ymiv+UnxtBSaTEHNEG2EbypnRjISS0R9cH0RqoG9f5fAyXKbww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0w/0RWwRc26NWiJdkn5nasEeGpSZIfORA9bANmiSFZo=;
- b=GIJwZ0saLCnIQXcwZ+EnEugVv6Lq8gyidYplj2l9LNe8NjDjdcSsxuJVi7/s9LgFmDt27kz4OURxpxJqv4QiA5XejHecKFfcoJTSg6RrUOjoSkby/Yqj4j7FrBFOpwYm/M6A4hBs7TeardUyYnLcTTvPuhnHzdFYds0RaglXKWb5QdzTHcI4RiTwUr9DB7Nn2eRYl2GSSv6uSnH75pGTKYJ5Co6SaayB6JNQQQJJqmmDTJWEqBIfnay6953f1dIG+RJQjU3zVgMSbUqjuu5zReSGzw1jobzwy97XdVDaMUceEtW4XwUfVh0c5JN3751rS/Mk2+nb7+vo76O0evN5bg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 20 Aug 2020 03:17:35 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:49458 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbgHTHRe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:17:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0w/0RWwRc26NWiJdkn5nasEeGpSZIfORA9bANmiSFZo=;
- b=VlJOVfotihUtiJSxYWLn6gqeSnWtkTFRr1QhpJF/tyOcm4Ad5sOdPlzSY8YtnJRgocWdj0e2YdsAhDh9LUnNW1taK415ebvLt45CQJ4IPTee7ZbWPGTu16I/1s0+YVyTpnFbdz0RVeNRjKIKd8i9TOGXZ6vo2MqQyuh0Y45i8vY=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
- by MN2PR12MB4206.namprd12.prod.outlook.com (2603:10b6:208:1d5::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
- 2020 07:16:50 +0000
-Received: from MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
- ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3283.028; Thu, 20 Aug 2020
- 07:16:50 +0000
-Subject: Re: [PATCH] drivers: gpu: amd: Initialize amdgpu_dm_backlight_caps
- object to 0 in amdgpu_dm_update_backlight_caps
-To:     Furquan Shaikh <furquan@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Stylon Wang <stylon.wang@amd.com>, Roman Li <roman.li@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, adurbin@google.com,
-        deepak.sharma@amd.com
-References: <20200820052600.3069895-1-furquan@google.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <4ec56556-299b-31e0-e639-b96e1666b215@amd.com>
-Date:   Thu, 20 Aug 2020 09:16:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200820052600.3069895-1-furquan@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: FR2P281CA0014.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a::24) To MN2PR12MB3775.namprd12.prod.outlook.com
- (2603:10b6:208:159::19)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1597907854; x=1629443854;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=W59BglKGXdUJkCj/066BuyTZwUlLWMs0tlr8zdLJoL8=;
+  b=PbD2YNA0eTQqkB7eWTrFtKw2n732tQdyFclOskO2CN37O3kNjlyEAagA
+   iPBRNZnI7SlEy+/biHNcSALNpCrFLFgpDhgrndjUdEV0mUltYoG/sE7ko
+   fL3bZoGq4bwTWftIQWrH45GpbsNPaiYseF00Zf5w6RdHwd3HkVLiX1U2d
+   8=;
+X-IronPort-AV: E=Sophos;i="5.76,332,1592870400"; 
+   d="scan'208";a="61201794"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 20 Aug 2020 07:17:21 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS id B889BA222B;
+        Thu, 20 Aug 2020 07:17:18 +0000 (UTC)
+Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 20 Aug 2020 07:17:17 +0000
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.162.38) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Thu, 20 Aug 2020 07:17:01 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        <Jonathan.Cameron@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Qian Cai <cai@lca.pw>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "David Hildenbrand" <david@redhat.com>, <dwmw@amazon.com>,
+        "Du, Fan" <fan.du@intel.com>, <foersleo@amazon.de>,
+        Greg Thelen <gthelen@google.com>,
+        Ian Rogers <irogers@google.com>, <jolsa@redhat.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        <mark.rutland@arm.com>, Mel Gorman <mgorman@suse.de>,
+        Minchan Kim <minchan@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, <namhyung@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, <rppt@kernel.org>,
+        <sblbir@amazon.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
+        <snu@amazon.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Huang Ying <ying.huang@intel.com>, <zgf574564920@gmail.com>,
+        <linux-damon@amazon.com>, Linux MM <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v7 06/10] mm/damon: Implement callbacks for physical memory monitoring
+Date:   Thu, 20 Aug 2020 09:16:47 +0200
+Message-ID: <20200820071647.25280-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <CALvZod5ZRUHO+=Bvwj4aEKNL0Egwea2dZKuYDKhkvvUyezbgdg@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by FR2P281CA0014.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.15 via Frontend Transport; Thu, 20 Aug 2020 07:16:47 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 2fcd80ab-4438-47e4-e8a5-08d844d90174
-X-MS-TrafficTypeDiagnostic: MN2PR12MB4206:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB4206EE27675ED52E2F4C1426835A0@MN2PR12MB4206.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Mn4n1HssOwSod8dUzwzEMJ9CwSehjtqUIPeRcOc+aUXfFyztfiQJbsKAoo5Qk54GKjl4PQMZnbGwh5j9+DhNtH8J39E+V7HxAi+kfYDrnReaoN51g10nztdBLA+NhF+nbrULbPJyH3kKuI2QXbcoBPZzZZboypT4kXyiNMDiIqdDzF1sa7fomNDGjQlsFfwx2lRtvQcPSqEo6eGFW8rM/fJuKd544HUosPnM/nLxhqRs3G/XUgrBWbhmJ4OIHFj1gMbsIGIsIsmieJAkPaSrsJv1dXTdWG0Ewj9ZvmZ2a4Ee9OPOLTqfjkNvBhyOkPgt77k471xWriSCme74Hh/Ou8vp/kTjnibBx76+RmGrFvC6Gbirg/5xAIKoxCVGQd3w
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(346002)(376002)(366004)(396003)(136003)(54906003)(2616005)(110136005)(8676002)(36756003)(6636002)(31696002)(8936002)(6666004)(5660300002)(31686004)(66476007)(66946007)(478600001)(83380400001)(2906002)(66556008)(6486002)(316002)(16526019)(86362001)(186003)(4326008)(52116002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: fEdDPwJV4470TtfLoFwbCR0t6WQaLv8usqx4S/jZpNRtTmKHWPr2iwuGW0oMuusmYh2lUrbit1rIO8Gsf/OGbjamHLDHLcJ0hnezKqyUh1SL4juH7OHR05JZyBQHG6x29QqkoCKolEYgrAaDRvG/bYu1oE/VzyDTislg+CmAgF6h8kNBN0IEiBMqvywswTObI+V4RCo4LxGoBzLyrYcTOZ2sOqkigu4uF2/WDkoXSvpdOIOB2SHrcuyfI8Yu6BVahDDK0ws8YPiU7Qdegje4tYBHPn6SnlXrhkm+lcYHp2rbr6E2ysNYN7h/Pf1nkIAyNhjzC8P7uDTykjHRG6OGOM/gGXzwk3fpOubKJoYkCZRwOeypBU+w6FqtxsGUPFZ+qLGsENgrzlVYASP/7Ll2nZgBbSnJp6ROO/O1igbnAemEMfO51DvHSD3KwnscVg9/V+1NOuLP32u706naAV1dVR79UNzzBcf4JF9H6cC3whznduzMBhc+fIQjaZHJlGtJeB9lwvcqAAZwHoMyVuicMKm03eNa0PQeRIOytXXZAmlo1YC4oGeeQ5l+/5Uv7KJcphpRGKPl1fG5rzq1nunxyEks3wK0hRps8ilWJUKC6fNoPH6d8Rn5RHXk1sEjwRBwL2ecVlHl2CgTu83z6Smy2LyEnczGwz72hPj3KPBBYe/F/J/TZU45hZJatZxgz1U9aTgLWegv6hpqN6UUk0VZuA==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fcd80ab-4438-47e4-e8a5-08d844d90174
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 07:16:49.9254
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KyglH5ziOgLRDNd7jG0bDIA/J1srxrIM3ioAiVV72lT99O1R9W7rNLofrXjsPmKV
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4206
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.38]
+X-ClientProxiedBy: EX13D22UWB003.ant.amazon.com (10.43.161.76) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 20.08.20 um 07:26 schrieb Furquan Shaikh:
-> In `amdgpu_dm_update_backlight_caps()`, there is a local
-> `amdgpu_dm_backlight_caps` object that is filled in by
-> `amdgpu_acpi_get_backlight_caps()`. However, this object is
-> uninitialized before the call and hence the subsequent check for
-> aux_support can fail since it is not initialized by
-> `amdgpu_acpi_get_backlight_caps()` as well. This change initializes
-> this local `amdgpu_dm_backlight_caps` object to 0.
->
-> Signed-off-by: Furquan Shaikh <furquan@google.com>
-> ---
->   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> index e4b33c67b634..725d8af634ee 100644
-> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> @@ -2853,7 +2853,7 @@ static int amdgpu_dm_mode_config_init(struct amdgpu_device *adev)
->   static void amdgpu_dm_update_backlight_caps(struct amdgpu_display_manager *dm)
->   {
->   #if defined(CONFIG_ACPI)
-> -	struct amdgpu_dm_backlight_caps caps;
-> +	struct amdgpu_dm_backlight_caps caps = { 0 };
+On Wed, 19 Aug 2020 17:26:15 -0700 Shakeel Butt <shakeelb@google.com> wrote:
 
-Please use memset instead of "{ 0 }" for initialization.
+> On Tue, Aug 18, 2020 at 12:27 AM SeongJae Park <sjpark@amazon.com> wrote:
+> >
+> > From: SeongJae Park <sjpark@amazon.de>
+> >
+> > This commit implements the four callbacks (->init_target_regions,
+> > ->update_target_regions, ->prepare_access_check, and ->check_accesses)
+> > for the basic access monitoring of the physical memory address space.
+> > By setting the callback pointers to point those, users can easily
+> > monitor the accesses to the physical memory.
+> >
+> > Internally, it uses the PTE Accessed bit, as similar to that of the
+> > virtual memory support.  Also, it supports only user memory pages, as
+> > idle page tracking also does, for the same reason.  If the monitoring
+> > target physical memory address range contains non-user memory pages,
+> > access check of the pages will do nothing but simply treat the pages as
+> > not accessed.
+> >
+> > Users who want to use other access check primitives and/or monitor the
+> > non-user memory regions could implement and use their own callbacks.
+> >
+> > Signed-off-by: SeongJae Park <sjpark@amazon.de>
+> [snip]
+> > +static void damon_phys_mkold(unsigned long paddr)
+> > +{
+> > +       struct page *page = damon_phys_get_page(PHYS_PFN(paddr));
+> > +       struct rmap_walk_control rwc = {
+> > +               .rmap_one = damon_page_mkold,
+> > +               .anon_lock = page_lock_anon_vma_read,
+> > +       };
+> > +       bool need_lock;
+> > +
+> > +       if (!page)
+> > +               return;
+> > +
+> > +       if (!page_mapped(page) || !page_rmapping(page))
+> > +               return;
+> 
+> I don't think you want to skip the unmapped pages. The point of
+> physical address space monitoring was to include the monitoring of
+> unmapped pages, so, skipping them invalidates the underlying
+> motivation.
 
-Christian.
+I think my answer to your other mail[1] could be an answer to this.  Let me
+quote some from it:
 
->   
->   	if (dm->backlight_caps.caps_valid)
->   		return;
+```
+Technically speaking, this patchset introduces an implementation of DAMON's low
+level primitives for physical address space of LRU-listed pages.  In other
+words, it is not designed for cgroups case.  Also, please note that this
+patchset is only RFC, because it aims to only show the future plan of DAMON and
+get opinions about the concept before being serious.  It will be serious only
+after the DAMON patchset is merged.  Maybe I didn' made this point clear in the
+CV, sorry.  I will state this clearly in the next spin.
+```
 
+```
+So, DAMON is a framework rather than a tool.  Though it comes with basic
+applications using DAMON as a framework (e.g., the virtual address space low
+primitives implementation, DAMON debugfs interface, and the DAMON user space
+tool) that could be useful in simple use cases, you need to code your
+application on it if your use cases are out of the simple cases.  I will also
+develop more of such applications for more use-cases, but it will be only after
+the framework is complete enough to be merged in the mainline.
+```
+
+Of course, we could prioritize the cgroup support if strongly required, though
+I still prefer focusing on the framework itself for now.
+
+[1] https://lore.kernel.org/linux-mm/20200820071052.24271-1-sjpark@amazon.com/
+
+
+Thanks,
+SeongJae Park
