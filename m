@@ -2,93 +2,213 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072D4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3D6B208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:04:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73AC208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDzQf+cI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbgHTPEc (ORCPT
+        id S1728085AbgHTPGq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:04:32 -0400
-Received: from mga17.intel.com ([192.55.52.151]:21215 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726872AbgHTPEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:04:31 -0400
-IronPort-SDR: I2rWdaiOTiP5mC2wFP2K5t/+8YwdIUqNb1D070nmoeg/8qRQGACV1fOUhLpfe8jwMtQjZHmvhV
- Hl24+Y/TKLJQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="135377345"
-X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="135377345"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 08:04:13 -0700
-IronPort-SDR: +p13r29WI39FhNCUwJHziQkiDYnYaId+PnQ9px8kandaaiCGQrNAFN5RcloADHxi9/Re6SYuzm
- 2B8/xw0GRijQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="327456945"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2020 08:04:11 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8m6s-00007r-9T; Thu, 20 Aug 2020 15:04:10 +0000
-Date:   Thu, 20 Aug 2020 23:03:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Atte Tommiska <atte.tommiska@xiphera.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Atte Tommiska <atte.tommiska@xiphera.com>
-Subject: [PATCH] hwrng: xiphera-trng: fix platform_no_drv_owner.cocci warnings
-Message-ID: <20200820150319.GA61081@b50bd4e4e446>
-References: <fdfe7889bf59f7b2b866ce25cd72ef323f508a3c.1597914503.git.atte.tommiska@xiphera.com>
+        Thu, 20 Aug 2020 11:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgHTPGk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:06:40 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F48C061385;
+        Thu, 20 Aug 2020 08:06:39 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id v16so1177144plo.1;
+        Thu, 20 Aug 2020 08:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pz6ckJJvBO0SLIQWlMyoaxh6BMJszEjENsEEOH3BJrw=;
+        b=kDzQf+cI3PYuXx6yDIBXasPKrKm4dTLnEkIh0qraHWSbaesmVXhCCM9ZajgAGwsGze
+         Ra0RvHciz21M6EnDyvOzDV/Cuoc4FjYB1pzt567xsLxOwsGpzzs+QwD5CpUEvDQEZMe8
+         PLV2+VWEjIBkxevGd44Y/3p9BEvR62gdt714ViCcMaJ9qUvDTuGIID+rCV0CXeVIQlME
+         oOPYfkNJQncuJVEew3U8ySlhnu/gMa5rvN84RDF+exqMlsi64Cy5bLo3MHj18c8mDFZd
+         l5uGVYGbfbxJQ8xf/oIJYhpEe17tB9jroZABZjQva0gKqSz180sabQ86nweutslVJVF7
+         23UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=pz6ckJJvBO0SLIQWlMyoaxh6BMJszEjENsEEOH3BJrw=;
+        b=b5s4Nwj4QnCC29BVsanuJRv1oA9CrgY3widVH0y9vKWOxOl85QPptBRJAwwffNJA1I
+         RbmgePaeWiYMAcqL5NoBXfRqmCsfv7if8Go3MLTo0eF5qlDU3fE7CTkjvFXF2h+tO7Gk
+         mOn6DrCA02AbcmjAcEvej0Edx+MSrLTCLVR+0JGFwwkv/6mB67ptbkuFZIGoQFLrzmaX
+         V5ql4Do0cYBXKTQOVX+v0VHqfCeuv6o5aj8boVXZYHPmG0cWwDzQuG1sJNl2Cs7Q6Qes
+         t8AxRkZWebFCvAO0TLr+SRYGThds4eY5aLEAmhBhAzLno1tII/C+1MjJT8BQ8Q3H+4NV
+         sUjg==
+X-Gm-Message-State: AOAM533xCQ54H7kVOhE8oHDSqug6OpmjT5Pa7YvrRjeOl67UC1+MryV1
+        8yWXPr+xBm4Bkpfu402eyqs=
+X-Google-Smtp-Source: ABdhPJxuh5KfduEVxfZsElkmm4+PzyIZbvlEi/PxnYI244XFJzXihjmKZMtMDyX/mofQBQADSfcIvg==
+X-Received: by 2002:a17:902:aa91:: with SMTP id d17mr2960002plr.27.1597935995853;
+        Thu, 20 Aug 2020 08:06:35 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u15sm2531460pju.42.2020.08.20.08.06.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 08:06:35 -0700 (PDT)
+Subject: Re: [PATCH 4.4 000/149] 4.4.233-rc1 review
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Willy Tarreau <w@1wt.eu>, Kees Cook <keescook@chromium.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+ <CA+G9fYsxQEnACmjP+CUtBq9P+0nWU_19oG62tpCbKtdcGAStfA@mail.gmail.com>
+ <CA+G9fYsavGNPSKyTutADC1itOV4C-3JbidWTJmAJBv0e3rs-Tw@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <fc888e77-9135-a96d-dbc8-80814f3fad25@roeck-us.net>
+Date:   Thu, 20 Aug 2020 08:06:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fdfe7889bf59f7b2b866ce25cd72ef323f508a3c.1597914503.git.atte.tommiska@xiphera.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+G9fYsavGNPSKyTutADC1itOV4C-3JbidWTJmAJBv0e3rs-Tw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+On 8/20/20 7:25 AM, Naresh Kamboju wrote:
+> On Thu, 20 Aug 2020 at 19:49, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>>
+>> On Thu, 20 Aug 2020 at 15:47, Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> This is the start of the stable review cycle for the 4.4.233 release.
+>>> There are 149 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Sat, 22 Aug 2020 09:21:01 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>> The whole patch series can be found in one patch at:
+>>>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.233-rc1.gz
+>>> or in the git tree and branch at:
+>>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+>>> and the diffstat can be found below.
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
+>>
+>> i386 build failed on stable-rc 4.4 branch
+> 
+> The defconfig build pass but the config i am using is breaking.
+> kernel config link,
+> https://builds.tuxbuild.com/xuCFzjgiR3X6wY9KGKQKwA/kernel.config
+> 
 
-drivers/char/hw_random/xiphera-trng.c:141:3-8: No need to set .owner here. The core will do it.
+This configuration WFM as well. I tried with
 
- Remove .owner field if calls are used which set it automatically
+gcc (Ubuntu 6.5.0-2ubuntu1~18.04) 6.5.0 20181026
+gcc-7 (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0
+gcc-8 (Ubuntu 8.4.0-1ubuntu1~18.04) 8.4.0
 
-Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+I tried with and without O=.
 
-CC: Atte Tommiska <atte.tommiska@xiphera.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
+Guenter
 
-url:    https://github.com/0day-ci/linux/commits/Atte-Tommiska/hwrng-add-support-for-Xiphera-XIP8001B/20200820-190349
-base:    bc752d2f345bf55d71b3422a6a24890ea03168dc
+>>
+>> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=i386 HOSTCC=gcc
+>> CC="sccache gcc" O=build
+>> #
+>> In file included from ../samples/seccomp/bpf-direct.c:19:
+>> /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+>> file or directory>>     5 | #include <asm/types.h>
+>>       |          ^~~~~~~~~~~~~
+>> compilation terminated.
+>> In file included from /usr/include/linux/filter.h:10,
+>>                  from ../samples/seccomp/bpf-fancy.c:12:
+>> /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+>> file or directory
+>>     5 | #include <asm/types.h>
+>>       |          ^~~~~~~~~~~~~
+>> compilation terminated.
+>> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-direct.o] Error 1
+>> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-fancy.o] Error 1
+>> In file included from /usr/include/bits/errno.h:26,
+>>                  from /usr/include/errno.h:28,
+>>                  from ../samples/seccomp/dropper.c:17:
+>> /usr/include/linux/errno.h:1:10: fatal error: asm/errno.h: No such
+>> file or directory
+>>     1 | #include <asm/errno.h>
+>>       |          ^~~~~~~~~~~~~
+>> compilation terminated.
+>> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/dropper.o] Error 1
+>> In file included from ../samples/seccomp/bpf-helper.c:16:
+>> ../samples/seccomp/bpf-helper.h:17:10: fatal error: asm/bitsperlong.h:
+>> No such file or directory
+>>    17 | #include <asm/bitsperlong.h> /* for __BITS_PER_LONG */
+>>       |          ^~~~~~~~~~~~~~~~~~~
+>>
+>>
+>> --
+>> Linaro LKFT
+>> https://lkft.linaro.org
 
- xiphera-trng.c |    1 -
- 1 file changed, 1 deletion(-)
-
---- a/drivers/char/hw_random/xiphera-trng.c
-+++ b/drivers/char/hw_random/xiphera-trng.c
-@@ -138,7 +138,6 @@ MODULE_DEVICE_TABLE(of, xiphera_trng_of_
- static struct platform_driver xiphera_trng_driver = {
- 	.driver = {
- 		.name = "xiphera-trng",
--		.owner = THIS_MODULE,
- 		.of_match_table	= xiphera_trng_of_match,
- 	},
- 	.probe = xiphera_trng_probe,
