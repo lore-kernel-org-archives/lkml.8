@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8682AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D41BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6314E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C9620658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919649;
-	bh=7Z67yiuQegVjWrCGGCo7BKtRbYxNROfYlA/TcJ0SUjw=;
+	s=default; t=1597919657;
+	bh=o9Sn3xaHKCAzMTdqGvBWLQH5M6n1P9EPHhFgTTMgUTA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x4rvYMbetFZlEVZHgiPyMxhP3Yx7toLxmPejxpXpV9m30nzxjJvSZqech8TlyNNpS
-	 F14N4dyAugbZBa2WLTESx4xmNvg4G5sypQ4RwUVgLHQhYmiacuzAK9fXzzo9t3ymUs
-	 jjTQcjqdQ4bUvM6a9Cj+tEP/n62zBXmHXfhfDTNk=
+	b=E+F5ksBowKxyJA89UFm5B1VGLqtSVs8uZwQpzS0grKmebuXOWsVqtzYzbsOBVOKba
+	 seqw7rUJot1eifk9ls2bfNqiVzBCwKuyOsNW14rjL5kGGG93FN8jD+kaNgDAZtmyO4
+	 7NesW0QQDWmGAR5cP6/OqNO0PWnUIQx3pKKiw6Z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbgHTKeG (ORCPT
+        id S1730898AbgHTKeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43270 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:34:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731438AbgHTKTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:30 -0400
+        id S1731434AbgHTKT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12FBE2067C;
-        Thu, 20 Aug 2020 10:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D40A2078D;
+        Thu, 20 Aug 2020 10:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918770;
-        bh=7Z67yiuQegVjWrCGGCo7BKtRbYxNROfYlA/TcJ0SUjw=;
+        s=default; t=1597918768;
+        bh=o9Sn3xaHKCAzMTdqGvBWLQH5M6n1P9EPHhFgTTMgUTA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iOzSExO0ZV0KCLYYcs+jczZXQ1plL/yH9JBgVYHf+tksu6l8TWM2PB/Ghu1+fDwsy
-         zfdXKQHiKkDzlzs5476g0hDYS++kXADPFEWbnabXVDn1QjmFx2uzeo5Mvgnz2rzU1n
-         PWM0A0oJ6BAOByn4dUJph3DIRUkrGCC1KmmJB06Q=
+        b=g+dx2cVdmP0NAdChKATb74Xq9S5B7w+O7wSdSVYKc4xX5OhpTRIZWpaQQbgCT08DH
+         PCSIT4m0qrqsCUC+XWTTRPjVQJ89aqGsWRjIZ5IhcEck2iYAwW+eJm6b/L4PqvA5j3
+         6wa/h3Shi9pArvrY2bmZw9VaKCrbanQBFikFR/5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 060/149] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Thu, 20 Aug 2020 11:22:17 +0200
-Message-Id: <20200820092128.640860493@linuxfoundation.org>
+Subject: [PATCH 4.4 059/149] m68k: mac: Fix IOP status/control register writes
+Date:   Thu, 20 Aug 2020 11:22:16 +0200
+Message-Id: <20200820092128.592711684@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,62 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+When writing values to the IOP status/control register make sure those
+values do not have any extraneous bits that will clear interrupt flags.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+To place the SCC IOP into bypass mode would be desirable but this is not
+achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
+to the control register. Drop this ineffective register write.
+
+Remove the flawed and unused iop_bypass() function. Make use of the
+unused iop_stop() function.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/m68k/mac/iop.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 84eefbc2b4f93..5923f2ca510be 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -393,13 +393,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index c89ed66908f91..358ca965cf824 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -173,7 +173,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
  
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
- 
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -407,12 +407,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
- 
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
-+
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
+ static __inline__ void iop_stop(volatile struct mac_iop *iop)
+ {
+-	iop->status_ctrl &= ~IOP_RUN;
++	iop->status_ctrl = IOP_AUTOINC;
  }
  
- static void __init at91_pm_init(void)
+ static __inline__ void iop_start(volatile struct mac_iop *iop)
+@@ -181,14 +181,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
+ 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
+ }
+ 
+-static __inline__ void iop_bypass(volatile struct mac_iop *iop)
+-{
+-	iop->status_ctrl |= IOP_BYPASS;
+-}
+-
+ static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
+ {
+-	iop->status_ctrl |= IOP_IRQ;
++	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
+ }
+ 
+ static int iop_alive(volatile struct mac_iop *iop)
+@@ -239,7 +234,6 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
+ 		iop_scc_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_SCC] = NULL;
+@@ -251,7 +245,7 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
++		iop_stop(iop_base[IOP_NUM_ISM]);
+ 		iop_ism_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_ISM] = NULL;
 -- 
 2.25.1
 
