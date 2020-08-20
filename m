@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 168B7C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8ED7207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6A8208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881883;
-	bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
+	s=default; t=1597881888;
+	bh=E9RoHVS97+ZIu745TjSEl0N6lC02FWnHn7mS2W69IC4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b4RlDtCKmnGWV8T78lS1rN+u8MCtyf6S0XFMonudXlMagQvuVxfkP7Ky13pezLJoT
-	 qenmj23eD+jwcx1LkjIcHJ2KVEzWpEkk3KNnedUfb525r6F2CMD/3zpRTfe0I8KMI/
-	 QwfDS5jZ8dxj2t+g1sxl5p4Xt2NaCb3xRGe+MrGM=
+	b=YOApvx7ylaDSFlhvrjtBOY4eXf5kXwIcbX0xCgepyz4c6DZQssGrrXf98NhfaJ6v/
+	 njgJuf7DM0N/aBGykacsoV/O0ZpPhK0+HXUgN1oQGct926FMLGaY0OMyvLKdzmK0Jh
+	 OubPus7ldi8L7mwZFtfvmxn/JTaGhtDKQ5P+ZGuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHTAES (ORCPT
+        id S1728508AbgHTAEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:04:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728413AbgHTAEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:04:06 -0400
+        id S1728433AbgHTAES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:04:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A06621741;
-        Thu, 20 Aug 2020 00:04:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3936022B47;
+        Thu, 20 Aug 2020 00:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881845;
-        bh=4hK1erPQRlP1+oL9gdRiB7F0rzjISyPy6USi40HgIjg=;
+        s=default; t=1597881858;
+        bh=E9RoHVS97+ZIu745TjSEl0N6lC02FWnHn7mS2W69IC4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=worbw+W+Yq9COCnANiXAn/AO43Bt/qEtZNLuvaKQ3NQ6XyQmeSz3kTsOFn/2H4laS
-         JutPSGNHM5r+nIkIC2k4g+fQV5b5wAw4/UoqyC4TtTxc7tptQ5vbSV3N2Fo292xa2G
-         WVeue6Z622cTT3LXqMNKp8wIWU8cbxv2LqTU6HIE=
+        b=Jn+ti9+s9zUEautka75mDqCj2WmzBjbCOwFUKul6uBpeGtdg1oa9pdO6alKgqkbIf
+         +TbtIZ3EAUkae4zSeMNfmgIA5YAldUnNuCpioP/fcY6tivl5gzl9ORpoqDtGaf7Zjk
+         WgAeoRT+oyhxsipNJ7TCcyxq79Eki7IQorlHaQr8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        kernel test robot <lkp@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-alpha@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/11] alpha: fix annotation of io{read,write}{16,32}be()
-Date:   Wed, 19 Aug 2020 20:03:48 -0400
-Message-Id: <20200820000348.215911-11-sashal@kernel.org>
+Cc:     Mao Wenan <wenan.mao@linux.alibaba.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.4 08/10] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+Date:   Wed, 19 Aug 2020 20:04:04 -0400
+Message-Id: <20200820000406.216050-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
-References: <20200820000348.215911-1-sashal@kernel.org>
+In-Reply-To: <20200820000406.216050-1-sashal@kernel.org>
+References: <20200820000406.216050-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,55 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Mao Wenan <wenan.mao@linux.alibaba.com>
 
-[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
+[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
 
-These accessors must be used to read/write a big-endian bus.  The value
-returned or written is native-endian.
+The loop may exist if vq->broken is true,
+virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
+will return NULL, so virtnet_poll will reschedule napi to
+receive packet, it will lead cpu usage(si) to 100%.
 
-However, these accessors are defined using be{16,32}_to_cpu() or
-cpu_to_be{16,32}() to make the endian conversion but these expect a
-__be{16,32} when none is present.  Keeping them would need a force cast
-that would solve nothing at all.
+call trace as below:
+virtnet_poll
+	virtnet_receive
+		virtqueue_get_buf_ctx
+			virtqueue_get_buf_ctx_packed
+			virtqueue_get_buf_ctx_split
+	virtqueue_napi_complete
+		virtqueue_poll           //return true
+		virtqueue_napi_schedule //it will reschedule napi
 
-So, do the conversion using swab{16,32}, like done in asm-generic for
-similar situations.
+to fix this, return false if vq is broken in virtqueue_poll.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Richard Henderson <rth@twiddle.net>
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/alpha/include/asm/io.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/virtio/virtio_ring.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
-index ff4049155c840..355aec0867f4d 100644
---- a/arch/alpha/include/asm/io.h
-+++ b/arch/alpha/include/asm/io.h
-@@ -491,10 +491,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index a01a41a412693..6b3565feddb21 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -603,6 +603,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
+ {
+ 	struct vring_virtqueue *vq = to_vvq(_vq);
+ 
++	if (unlikely(vq->broken))
++		return false;
++
+ 	virtio_mb(vq->weak_barriers);
+ 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
  }
- #endif
- 
--#define ioread16be(p) be16_to_cpu(ioread16(p))
--#define ioread32be(p) be32_to_cpu(ioread32(p))
--#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
--#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
-+#define ioread16be(p) swab16(ioread16(p))
-+#define ioread32be(p) swab32(ioread32(p))
-+#define iowrite16be(v,p) iowrite16(swab16(v), (p))
-+#define iowrite32be(v,p) iowrite32(swab32(v), (p))
- 
- #define inb_p		inb
- #define inw_p		inw
 -- 
 2.25.1
 
