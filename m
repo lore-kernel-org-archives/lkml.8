@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F01C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C715C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF9B9207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60A32078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927746;
-	bh=j6E6+JIiRA2NDzuvQbLHoMgItM2Fu7Ye9Fc5ZrEKl08=;
+	s=default; t=1597927758;
+	bh=+kH4ogI01XWXBJxV5v3pH33kZ3F0o0zBZ5/4elUM6ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WulzVWnpghMRjq0g8a6ZOl+UnksE509Gj9mwRmT/k43ZJBE+lRXM5n8+hoLbDVvvP
-	 JN6sJpT9uGrykD0cdrFHuhf6PCiq7T/SRthPuvoK4ay86HrslJgLyI5nsfFG8/QUSW
-	 8mLJPLI0D0+Zsw5mnPfeVysa1bHv0W2F9VkIXZ98=
+	b=KrGPs4xtu6O0kZCZH3ncZ//F2gfJrmwyPvBawrV8lM7j0pjYj02CpleRYGQsYspZ3
+	 6+aWXoqhmXs+qkctvzYn/2DgDE3XrOe6P0o3OpG1sTXycW7jEtLFqIiRJGdRJcv33z
+	 W7GHoEerHvjhYU6v+/v0mL5/MrLU73yO8jOiDJE0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHTMtC (ORCPT
+        id S1730090AbgHTMs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729196AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728758AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AE3A22CB3;
-        Thu, 20 Aug 2020 09:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7214022BEA;
+        Thu, 20 Aug 2020 09:44:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916673;
-        bh=j6E6+JIiRA2NDzuvQbLHoMgItM2Fu7Ye9Fc5ZrEKl08=;
+        s=default; t=1597916650;
+        bh=+kH4ogI01XWXBJxV5v3pH33kZ3F0o0zBZ5/4elUM6ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eT48EKssXQ7bh4TtYH5CODRfG6FRpHkMliF4Y/3qsc+1bH+DytAGW4uQPwfnHQM1k
-         efaHi6kq0RblqUd0o0u96I0gslv92KKgDnn+3ijFQJudh+mCxKA98mSXavvVUrbCR6
-         N0rvIr5lFy4ekqzUrD3B0U38IPNInKZZCRCSZedQ=
+        b=wmJTlJqHPZ/UbELE2YiRo116Zdpfe0ot9L2JskM2MDmUu/2Eh3rscuM4pdolMiC66
+         5N/C5mVTBN+yE7C/K4lfB3FUm5W6es6XNDi/0MSFoSTs2g/d/MEz3iJIOMfbKTEikF
+         1bA5P8qDH4azzmtBTiENRtALTUwW706rfk+M3uOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
-        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 5.7 196/204] drm/dp_mst: Fix the DDC I2C device registration of an MST port
-Date:   Thu, 20 Aug 2020 11:21:33 +0200
-Message-Id: <20200820091615.970343025@linuxfoundation.org>
+        stable@vger.kernel.org, Hersen Wu <hersenxs.wu@amd.com>,
+        Aric Cyr <Aric.Cyr@amd.com>, Eryk Brol <eryk.brol@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 204/204] drm/amd/display: dchubbub p-state warning during surface planes switch
+Date:   Thu, 20 Aug 2020 11:21:41 +0200
+Message-Id: <20200820091616.369178049@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,112 +60,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: hersen wu <hersenxs.wu@amd.com>
 
-commit d8bd15b37d328a935a4fc695fed8b19157503950 upstream.
+commit 8b0379a85762b516c7b46aed7dbf2a4947c00564 upstream.
 
-During the initial MST probing an MST port's I2C device will be
-registered using the kdev of the DRM device as a parent. Later after MST
-Connection Status Notifications this I2C device will be re-registered
-with the kdev of the port's connector. This will also move
-inconsistently the I2C device's sysfs entry from the DRM device's sysfs
-dir to the connector's dir.
+[Why]
+ramp_up_dispclk_with_dpp is to change dispclk, dppclk and dprefclk
+according to bandwidth requirement. call stack: rv1_update_clocks -->
+update_clocks --> dcn10_prepare_bandwidth / dcn10_optimize_bandwidth
+--> prepare_bandwidth / optimize_bandwidth. before change dcn hw,
+prepare_bandwidth will be called first to allow enough clock,
+watermark for change, after end of dcn hw change, optimize_bandwidth
+is executed to lower clock to save power for new dcn hw settings.
 
-Fix the above by keeping the DRM kdev as the parent of the I2C device.
+below is sequence of commit_planes_for_stream:
+step 1: prepare_bandwidth - raise clock to have enough bandwidth
+step 2: lock_doublebuffer_enable
+step 3: pipe_control_lock(true) - make dchubp register change will
+not take effect right way
+step 4: apply_ctx_for_surface - program dchubp
+step 5: pipe_control_lock(false) - dchubp register change take effect
+step 6: optimize_bandwidth --> dc_post_update_surfaces_to_stream
+for full_date, optimize clock to save power
 
-Ideally the connector's kdev would be used as a parent, similarly to
-non-MST connectors, however that needs some more refactoring to ensure
-the connector's kdev is already available early enough. So keep the
-existing (initial) behavior for now.
+at end of step 1, dcn clocks (dprefclk, dispclk, dppclk) may be
+changed for new dchubp configuration. but real dcn hub dchubps are
+still running with old configuration until end of step 5. this need
+clocks settings at step 1 should not less than that before step 1.
+this is checked by two conditions: 1. if (should_set_clock(safe_to_lower
+, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) ||
+new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz)
+2. request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200607212522.16935-2-imre.deak@intel.com
+the second condition is based on new dchubp configuration. dppclk
+for new dchubp may be different from dppclk before step 1.
+for example, before step 1, dchubps are as below:
+pipe 0: recout=(0,40,1920,980) viewport=(0,0,1920,979)
+pipe 1: recout=(0,0,1920,1080) viewport=(0,0,1920,1080)
+for dppclk for pipe0 need dppclk = dispclk
+
+new dchubp pipe split configuration:
+pipe 0: recout=(0,0,960,1080) viewport=(0,0,960,1080)
+pipe 1: recout=(960,0,960,1080) viewport=(960,0,960,1080)
+dppclk only needs dppclk = dispclk /2.
+
+dispclk, dppclk are not lock by otg master lock. they take effect
+after step 1. during this transition, dispclk are the same, but
+dppclk is changed to half of previous clock for old dchubp
+configuration between step 1 and step 6. This may cause p-state
+warning intermittently.
+
+[How]
+for new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz, we
+need make sure dppclk are not changed to less between step 1 and 6.
+for new_clocks->dispclk_khz > clk_mgr_base->clks.dispclk_khz,
+new display clock is raised, but we do not know ratio of
+new_clocks->dispclk_khz and clk_mgr_base->clks.dispclk_khz,
+new_clocks->dispclk_khz /2 does not guarantee equal or higher than
+old dppclk. we could ignore power saving different between
+dppclk = displck and dppclk = dispclk / 2 between step 1 and step 6.
+as long as safe_to_lower = false, set dpclk = dispclk to simplify
+condition check.
+
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Hersen Wu <hersenxs.wu@amd.com>
+Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
+Acked-by: Eryk Brol <eryk.brol@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |   28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c |   69 ++++++++++++-
+ 1 file changed, 67 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -88,8 +88,8 @@ static int drm_dp_send_enum_path_resourc
- static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
- 				 u8 *guid);
- 
--static int drm_dp_mst_register_i2c_bus(struct drm_dp_aux *aux);
--static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_aux *aux);
-+static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port);
-+static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port);
- static void drm_dp_mst_kick_tx(struct drm_dp_mst_topology_mgr *mgr);
- 
- #define DBG_PREFIX "[dp_mst]"
-@@ -1981,7 +1981,7 @@ drm_dp_port_set_pdt(struct drm_dp_mst_po
- 			}
- 
- 			/* remove i2c over sideband */
--			drm_dp_mst_unregister_i2c_bus(&port->aux);
-+			drm_dp_mst_unregister_i2c_bus(port);
- 		} else {
- 			mutex_lock(&mgr->lock);
- 			drm_dp_mst_topology_put_mstb(port->mstb);
-@@ -1996,7 +1996,7 @@ drm_dp_port_set_pdt(struct drm_dp_mst_po
- 	if (port->pdt != DP_PEER_DEVICE_NONE) {
- 		if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
- 			/* add i2c over sideband */
--			ret = drm_dp_mst_register_i2c_bus(&port->aux);
-+			ret = drm_dp_mst_register_i2c_bus(port);
- 		} else {
- 			lct = drm_dp_calculate_rad(port, rad);
- 			mstb = drm_dp_add_mst_branch_device(lct, rad);
-@@ -5406,22 +5406,26 @@ static const struct i2c_algorithm drm_dp
- 
- /**
-  * drm_dp_mst_register_i2c_bus() - register an I2C adapter for I2C-over-AUX
-- * @aux: DisplayPort AUX channel
-+ * @port: The port to add the I2C bus on
-  *
-  * Returns 0 on success or a negative error code on failure.
-  */
--static int drm_dp_mst_register_i2c_bus(struct drm_dp_aux *aux)
-+static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
- {
-+	struct drm_dp_aux *aux = &port->aux;
-+	struct device *parent_dev = port->mgr->dev->dev;
-+
- 	aux->ddc.algo = &drm_dp_mst_i2c_algo;
- 	aux->ddc.algo_data = aux;
- 	aux->ddc.retries = 3;
- 
- 	aux->ddc.class = I2C_CLASS_DDC;
- 	aux->ddc.owner = THIS_MODULE;
--	aux->ddc.dev.parent = aux->dev;
--	aux->ddc.dev.of_node = aux->dev->of_node;
-+	/* FIXME: set the kdev of the port's connector as parent */
-+	aux->ddc.dev.parent = parent_dev;
-+	aux->ddc.dev.of_node = parent_dev->of_node;
- 
--	strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(aux->dev),
-+	strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(parent_dev),
- 		sizeof(aux->ddc.name));
- 
- 	return i2c_add_adapter(&aux->ddc);
-@@ -5429,11 +5433,11 @@ static int drm_dp_mst_register_i2c_bus(s
- 
- /**
-  * drm_dp_mst_unregister_i2c_bus() - unregister an I2C-over-AUX adapter
-- * @aux: DisplayPort AUX channel
-+ * @port: The port to remove the I2C bus from
-  */
--static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_aux *aux)
-+static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port)
- {
--	i2c_del_adapter(&aux->ddc);
-+	i2c_del_adapter(&port->aux.ddc);
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c
+@@ -85,12 +85,77 @@ static int rv1_determine_dppclk_threshol
+ 	return disp_clk_threshold;
  }
  
- /**
+-static void ramp_up_dispclk_with_dpp(struct clk_mgr_internal *clk_mgr, struct dc *dc, struct dc_clocks *new_clocks)
++static void ramp_up_dispclk_with_dpp(
++		struct clk_mgr_internal *clk_mgr,
++		struct dc *dc,
++		struct dc_clocks *new_clocks,
++		bool safe_to_lower)
+ {
+ 	int i;
+ 	int dispclk_to_dpp_threshold = rv1_determine_dppclk_threshold(clk_mgr, new_clocks);
+ 	bool request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz;
+ 
++	/* this function is to change dispclk, dppclk and dprefclk according to
++	 * bandwidth requirement. Its call stack is rv1_update_clocks -->
++	 * update_clocks --> dcn10_prepare_bandwidth / dcn10_optimize_bandwidth
++	 * --> prepare_bandwidth / optimize_bandwidth. before change dcn hw,
++	 * prepare_bandwidth will be called first to allow enough clock,
++	 * watermark for change, after end of dcn hw change, optimize_bandwidth
++	 * is executed to lower clock to save power for new dcn hw settings.
++	 *
++	 * below is sequence of commit_planes_for_stream:
++	 *
++	 * step 1: prepare_bandwidth - raise clock to have enough bandwidth
++	 * step 2: lock_doublebuffer_enable
++	 * step 3: pipe_control_lock(true) - make dchubp register change will
++	 * not take effect right way
++	 * step 4: apply_ctx_for_surface - program dchubp
++	 * step 5: pipe_control_lock(false) - dchubp register change take effect
++	 * step 6: optimize_bandwidth --> dc_post_update_surfaces_to_stream
++	 * for full_date, optimize clock to save power
++	 *
++	 * at end of step 1, dcn clocks (dprefclk, dispclk, dppclk) may be
++	 * changed for new dchubp configuration. but real dcn hub dchubps are
++	 * still running with old configuration until end of step 5. this need
++	 * clocks settings at step 1 should not less than that before step 1.
++	 * this is checked by two conditions: 1. if (should_set_clock(safe_to_lower
++	 * , new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) ||
++	 * new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz)
++	 * 2. request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz
++	 *
++	 * the second condition is based on new dchubp configuration. dppclk
++	 * for new dchubp may be different from dppclk before step 1.
++	 * for example, before step 1, dchubps are as below:
++	 * pipe 0: recout=(0,40,1920,980) viewport=(0,0,1920,979)
++	 * pipe 1: recout=(0,0,1920,1080) viewport=(0,0,1920,1080)
++	 * for dppclk for pipe0 need dppclk = dispclk
++	 *
++	 * new dchubp pipe split configuration:
++	 * pipe 0: recout=(0,0,960,1080) viewport=(0,0,960,1080)
++	 * pipe 1: recout=(960,0,960,1080) viewport=(960,0,960,1080)
++	 * dppclk only needs dppclk = dispclk /2.
++	 *
++	 * dispclk, dppclk are not lock by otg master lock. they take effect
++	 * after step 1. during this transition, dispclk are the same, but
++	 * dppclk is changed to half of previous clock for old dchubp
++	 * configuration between step 1 and step 6. This may cause p-state
++	 * warning intermittently.
++	 *
++	 * for new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz, we
++	 * need make sure dppclk are not changed to less between step 1 and 6.
++	 * for new_clocks->dispclk_khz > clk_mgr_base->clks.dispclk_khz,
++	 * new display clock is raised, but we do not know ratio of
++	 * new_clocks->dispclk_khz and clk_mgr_base->clks.dispclk_khz,
++	 * new_clocks->dispclk_khz /2 does not guarantee equal or higher than
++	 * old dppclk. we could ignore power saving different between
++	 * dppclk = displck and dppclk = dispclk / 2 between step 1 and step 6.
++	 * as long as safe_to_lower = false, set dpclk = dispclk to simplify
++	 * condition check.
++	 * todo: review this change for other asic.
++	 **/
++	if (!safe_to_lower)
++		request_dpp_div = false;
++
+ 	/* set disp clk to dpp clk threshold */
+ 
+ 	clk_mgr->funcs->set_dispclk(clk_mgr, dispclk_to_dpp_threshold);
+@@ -209,7 +274,7 @@ static void rv1_update_clocks(struct clk
+ 	/* program dispclk on = as a w/a for sleep resume clock ramping issues */
+ 	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)
+ 			|| new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz) {
+-		ramp_up_dispclk_with_dpp(clk_mgr, dc, new_clocks);
++		ramp_up_dispclk_with_dpp(clk_mgr, dc, new_clocks, safe_to_lower);
+ 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
+ 		send_request_to_lower = true;
+ 	}
 
 
