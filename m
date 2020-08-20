@@ -2,138 +2,114 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50375C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C37C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D07207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:04:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UPxACiMB"
+	by mail.kernel.org (Postfix) with ESMTP id D066D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597928707;
+	bh=SZvPBRzilFSWQsUwBrp/oT8mvvxNfp7riXtTnZ+NGLI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gb8atQE9QPbMPhuF+1bYEloGUkG0EovxWi2rtppkKARGsfU4qiPoQoVhiODfV1WbZ
+	 2crqHx7ThlY85S02l++l1PjuJXfks5Mzf68orulF0ssLKT3DchXYIQBZLNkUmmRm/+
+	 Nwf+0m1KqQcgKQYFeQFz2uGeudjEVxnDDEpJq1bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgHTNEq (ORCPT
+        id S1728939AbgHTJjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:04:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:32223 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730028AbgHTNET (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:04:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597928658;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=CJnfEEPsHTayufcqPRv869AJ8y4aZylFQ/z6R8psu84=;
-        b=UPxACiMBxNxZKKUPQFu+PLJNdf7byO6EDqF1XmvvgISBNLd4RcyIIY3j1O05xec/rlwGOg
-        Lo5AscxcF7r31vtNX+sv3ib4NmEcgDCHJ/daVBpFbn2Jfuf3+/11mVQMu6FbJfJ9EsuTyF
-        gqIjrQX6qCANDD9GEET7IWzHHgzU2Lg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-457-VVfH2K2cNdKSB7y61NNuZA-1; Thu, 20 Aug 2020 09:04:16 -0400
-X-MC-Unique: VVfH2K2cNdKSB7y61NNuZA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 05:39:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728901AbgHTJiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B42A81F02B;
-        Thu, 20 Aug 2020 13:04:14 +0000 (UTC)
-Received: from llong.com (unknown [10.10.115.249])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CAC0A600DD;
-        Thu, 20 Aug 2020 13:04:12 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH 3/3] mm/memcg: Unify swap and memsw page counters
-Date:   Thu, 20 Aug 2020 09:03:50 -0400
-Message-Id: <20200820130350.3211-4-longman@redhat.com>
-In-Reply-To: <20200820130350.3211-1-longman@redhat.com>
-References: <20200820130350.3211-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id D948B2075E;
+        Thu, 20 Aug 2020 09:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916331;
+        bh=SZvPBRzilFSWQsUwBrp/oT8mvvxNfp7riXtTnZ+NGLI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Op+4RJOpSF8Zz4E+4wnl72Jf88ghTveds4+vW9KZsNxXRhTVWTzZHVBzFHa2Roz2n
+         q0xoVjldmomco+Arn4gDk5C4e4UDqjYoLe5p268FgyxYgWIRBRyaWrVbuvJ7oY48zp
+         RMcxS33lZyH9xG5Mlw9GVmcybmTTmiwtEQpZfVk0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Subject: [PATCH 5.7 062/204] driver core: Avoid binding drivers to dead devices
+Date:   Thu, 20 Aug 2020 11:19:19 +0200
+Message-Id: <20200820091609.364387087@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The swap page counter is v2 only while memsw is v1 only. As v1 and v2
-controllers cannot be active at the same time, there is no point to keep
-both swap and memsw page counters in mem_cgroup. The previous patch has
-made sure that memsw page counter is updated and accessed only when in
-v1 code paths. So it is now safe to alias the v1 memsw page counter to v2
-swap page counter. This saves 14 long's in the size of mem_cgroup. This
-is a saving of 112 bytes for 64-bit archs.
+From: Lukas Wunner <lukas@wunner.de>
 
-Signed-off-by: Waiman Long <longman@redhat.com>
+commit 654888327e9f655a9d55ad477a9583e90e8c9b5c upstream.
+
+Commit 3451a495ef24 ("driver core: Establish order of operations for
+device_add and device_del via bitflag") sought to prevent asynchronous
+driver binding to a device which is being removed.  It added a
+per-device "dead" flag which is checked in the following code paths:
+
+* asynchronous binding in __driver_attach_async_helper()
+*  synchronous binding in device_driver_attach()
+* asynchronous binding in __device_attach_async_helper()
+
+It did *not* check the flag upon:
+
+*  synchronous binding in __device_attach()
+
+However __device_attach() may also be called asynchronously from:
+
+deferred_probe_work_func()
+  bus_probe_device()
+    device_initial_probe()
+      __device_attach()
+
+So if the commit's intention was to check the "dead" flag in all
+asynchronous code paths, then a check is also necessary in
+__device_attach().  Add the missing check.
+
+Fixes: 3451a495ef24 ("driver core: Establish order of operations for device_add and device_del via bitflag")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v5.1+
+Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Link: https://lore.kernel.org/r/de88a23a6fe0ef70f7cfd13c8aea9ab51b4edab6.1594214103.git.lukas@wunner.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/memcontrol.h | 3 +--
- mm/memcontrol.c            | 8 +++++---
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/base/dd.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index d0b036123c6a..d2a819d7db70 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -216,10 +216,9 @@ struct mem_cgroup {
+--- a/drivers/base/dd.c
++++ b/drivers/base/dd.c
+@@ -846,7 +846,9 @@ static int __device_attach(struct device
+ 	int ret = 0;
  
- 	/* Accounted resources */
- 	struct page_counter memory;
--	struct page_counter swap;
-+	struct page_counter swap;	/* memsw (memory+swap) for v1 */
- 
- 	/* Legacy consumer-oriented counters */
--	struct page_counter memsw;
- 	struct page_counter kmem;
- 	struct page_counter tcpmem;
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d219dca5239f..04c3794cdc98 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -68,6 +68,11 @@
- 
- #include <trace/events/vmscan.h>
- 
-+/*
-+ * The v1 memsw page counter is aliased to the v2 swap page counter.
-+ */
-+#define memsw	swap
-+
- struct cgroup_subsys memory_cgrp_subsys __read_mostly;
- EXPORT_SYMBOL(memory_cgrp_subsys);
- 
-@@ -5279,13 +5284,11 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
- 		memcg->use_hierarchy = true;
- 		page_counter_init(&memcg->memory, &parent->memory);
- 		page_counter_init(&memcg->swap, &parent->swap);
--		page_counter_init(&memcg->memsw, &parent->memsw);
- 		page_counter_init(&memcg->kmem, &parent->kmem);
- 		page_counter_init(&memcg->tcpmem, &parent->tcpmem);
- 	} else {
- 		page_counter_init(&memcg->memory, NULL);
- 		page_counter_init(&memcg->swap, NULL);
--		page_counter_init(&memcg->memsw, NULL);
- 		page_counter_init(&memcg->kmem, NULL);
- 		page_counter_init(&memcg->tcpmem, NULL);
- 		/*
-@@ -5414,7 +5417,6 @@ static void mem_cgroup_css_reset(struct cgroup_subsys_state *css)
- 
- 	page_counter_set_max(&memcg->memory, PAGE_COUNTER_MAX);
- 	page_counter_set_max(&memcg->swap, PAGE_COUNTER_MAX);
--	page_counter_set_max(&memcg->memsw, PAGE_COUNTER_MAX);
- 	page_counter_set_max(&memcg->kmem, PAGE_COUNTER_MAX);
- 	page_counter_set_max(&memcg->tcpmem, PAGE_COUNTER_MAX);
- 	page_counter_set_min(&memcg->memory, 0);
--- 
-2.18.1
+ 	device_lock(dev);
+-	if (dev->driver) {
++	if (dev->p->dead) {
++		goto out_unlock;
++	} else if (dev->driver) {
+ 		if (device_is_bound(dev)) {
+ 			ret = 1;
+ 			goto out_unlock;
+
 
