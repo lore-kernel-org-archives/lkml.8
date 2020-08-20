@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3433BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F228B2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8AC12078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918338;
-	bh=wGZchrSH3dIrJJUpcb6n0gXdysEqtu52XwnzPoROvzw=;
+	s=default; t=1597918341;
+	bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w64D3v2ZtZhw7BYEDex9ngrbyEnOtOL4DUFBpLovMOSwzEoG0eVKTfAs0qTPZ35My
-	 s042RI3c3YR8Hkiz/zV967+dEQfNJlEqd/QQxqrZFywaAlvtm2B0hSyNJYtmOXGrl/
-	 ligYtKTMzDtfPBkBmSa04iU2C94W5qpuYJEjOHwk=
+	b=Z3RXQPxvTp3GKXN5+4/5O+PLr/z0lq7fM81CK2wb6QhCbNrGHi5DVpQ0TQ1GGsMQH
+	 Lq+U3zZkp0ZH5uZCXyeqyFZaY//ZA7iIpOoe/j1eZ3Jfzq7D7mlvsPF53nLCSjlOu/
+	 3itsLAuf7LhEnFzla4NTQd1bYayi0FgCY5ySsRG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbgHTKMQ (ORCPT
+        id S1731046AbgHTKMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52778 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbgHTKMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:09 -0400
+        id S1728160AbgHTKMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C326A2078D;
-        Thu, 20 Aug 2020 10:12:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91838206DA;
+        Thu, 20 Aug 2020 10:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918327;
-        bh=wGZchrSH3dIrJJUpcb6n0gXdysEqtu52XwnzPoROvzw=;
+        s=default; t=1597918336;
+        bh=IzTK1brHvbzYGCLGKWtVUX/++/DgFMolRIjMEhdKywU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xZ1iYpe1bvnTEOxvJLsgiKIP2OyGOeoZW+EWpK3aSLg/7PXQGZN4h84n6MHcJ0QMo
-         BQtbdj4e/SiDjh9KyClFlZ4nvhSfznOSXZmCzqhxNbVfGspxMt0yTvgIIFdGhigdnG
-         7pfWkqe7RDVRJl36fMKbsEw2+SoS9xGXo6Z/7TV4=
+        b=hBHDD41Qg+qSC+pNhskUYmTAIcDLPHJQ21pVo2XM0klxFuqvXm4tS5gjzQyFZ6c+o
+         z0371RLGjOn+RSsanGgrMcxb6KzdCQXwfrvfci1r2sDFhoP2iSAqoUJmzohbw5kmkB
+         5lxBU6eW1GfTPTJCCKL9g5QXoX9UZ7Sf7dh6pvV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florinel Iordache <florinel.iordache@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 131/228] fsl/fman: fix dereference null return value
-Date:   Thu, 20 Aug 2020 11:21:46 +0200
-Message-Id: <20200820091614.135964881@linuxfoundation.org>
+Subject: [PATCH 4.14 134/228] fsl/fman: fix eth hash table allocation
+Date:   Thu, 20 Aug 2020 11:21:49 +0200
+Message-Id: <20200820091614.281959075@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -63,46 +63,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
+[ Upstream commit 3207f715c34317d08e798e11a10ce816feb53c0f ]
 
-Check before using returned value to avoid dereferencing null pointer.
+Fix memory allocation for ethernet address hash table.
+The code was wrongly allocating an array for eth hash table which
+is incorrect because this is the main structure for eth hash table
+(struct eth_hash_t) that contains inside a number of elements.
 
-Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
+Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
 Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fman/fman_mac.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
-index 495190764155a..ac3d791f52821 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.c
-@@ -1744,6 +1744,7 @@ static int fman_port_probe(struct platform_device *of_dev)
- 	struct fman_port *port;
- 	struct fman *fman;
- 	struct device_node *fm_node, *port_node;
-+	struct platform_device *fm_pdev;
- 	struct resource res;
- 	struct resource *dev_res;
- 	u32 val;
-@@ -1768,8 +1769,14 @@ static int fman_port_probe(struct platform_device *of_dev)
- 		goto return_err;
- 	}
+diff --git a/drivers/net/ethernet/freescale/fman/fman_mac.h b/drivers/net/ethernet/freescale/fman/fman_mac.h
+index dd6d0526f6c1f..19f327efdaff3 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_mac.h
++++ b/drivers/net/ethernet/freescale/fman/fman_mac.h
+@@ -252,7 +252,7 @@ static inline struct eth_hash_t *alloc_hash_table(u16 size)
+ 	struct eth_hash_t *hash;
  
--	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
-+	fm_pdev = of_find_device_by_node(fm_node);
- 	of_node_put(fm_node);
-+	if (!fm_pdev) {
-+		err = -EINVAL;
-+		goto return_err;
-+	}
-+
-+	fman = dev_get_drvdata(&fm_pdev->dev);
- 	if (!fman) {
- 		err = -EINVAL;
- 		goto return_err;
+ 	/* Allocate address hash table */
+-	hash = kmalloc_array(size, sizeof(struct eth_hash_t *), GFP_KERNEL);
++	hash = kmalloc(sizeof(*hash), GFP_KERNEL);
+ 	if (!hash)
+ 		return NULL;
+ 
 -- 
 2.25.1
 
