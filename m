@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D57FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F29EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 055C922D00
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F51C22CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916769;
-	bh=olZ68WhNvG83HX80HgxGvok04QTPvwlYFeyVJu0yG0Y=;
+	s=default; t=1597916774;
+	bh=BvelV7rj7pX8LClD7CfT1GkoCmXsCtbsF1V8T+D2ddY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lIzshtm7ZbuatV4Nwtly867X0yhCfPlV1g4EGmMnjjvBIwxh6jMWM9ueNzMd0fB9O
-	 QY9MHV8i7ymoxbtRl4Egc0PnYl+TmTezCnUgLV+3vdv9VuJ8EtgHeLA8HAruw+MgQ5
-	 nQThFnpp/jGA/+u+XnEkwMOyVazQc3Ly6ea0khAM=
+	b=myf9HpX+BZNWgZNHBAgWHZ1i1KHWDmGr/+Kbol/9fTA+7ektG9lU/S+NbDYaBsk2i
+	 ppsB/xYKYYobi8NZAmKGTzHDtgXXLVCN3f4U8kro3n8izQ2x9FV0uGU8aziMbpA9Aa
+	 Ycrjsi3RJNo8aF/uAn7H8oyYVj2VvwK/rupOWbVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbgHTJqC (ORCPT
+        id S1729272AbgHTJqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38576 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729170AbgHTJmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:40 -0400
+        id S1729156AbgHTJmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5B0322CA1;
-        Thu, 20 Aug 2020 09:42:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24140207DE;
+        Thu, 20 Aug 2020 09:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916558;
-        bh=olZ68WhNvG83HX80HgxGvok04QTPvwlYFeyVJu0yG0Y=;
+        s=default; t=1597916552;
+        bh=BvelV7rj7pX8LClD7CfT1GkoCmXsCtbsF1V8T+D2ddY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M3zV1X/1jcFzjPsGYix8cSdbATwWBFjxkyHMPOKab0I1hoBA2BdDqkEzAku7Y94eD
-         FmLwVud1JBIGpSPtJHHaNjIYkiYKlO8gxHg7oVO9SDGtVrJOgn1TBlZfcTPIT94V1A
-         wGs+tOje1mxtZoEjOA3xN/x9UEVgxwjQ9ryHRkDE=
+        b=b+2QBgfRmbBCqZi18+YWJIHZ4ZIHMgVnbOxlS0yi5+vKEt9vsn5gX4a4iJNOsYIL4
+         99IfSnBWreFQ8gM9lgzpkrCxpHH8snLDLtKQTaH+nNf/2BUV4ygQzUjr4LiULGrj0T
+         vGa61MDJw598nNv75zyywfIdzOXKar/NcsrDZ0RM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Roland Scheidegger <sroland@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 171/204] s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
-Date:   Thu, 20 Aug 2020 11:21:08 +0200
-Message-Id: <20200820091614.748444536@linuxfoundation.org>
+Subject: [PATCH 5.7 169/204] drm/vmwgfx: Fix two list_for_each loop exit tests
+Date:   Thu, 20 Aug 2020 11:21:06 +0200
+Message-Id: <20200820091614.652651134@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,46 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 929a343b858612100cb09443a8aaa20d4a4706d3 ]
+[ Upstream commit 4437c1152ce0e57ab8f401aa696ea6291cc07ab1 ]
 
-The VFIO_AP uses ap_driver_register() (and deregister) functions
-implemented in ap_bus.c (compiled into ap.o).  However the ap.o will be
-built only if CONFIG_ZCRYPT is selected.
+These if statements are supposed to be true if we ended the
+list_for_each_entry() loops without hitting a break statement but they
+don't work.
 
-This was not visible before commit e93a1695d7fb ("iommu: Enable compile
-testing for some of drivers") because the CONFIG_VFIO_AP depends on
-CONFIG_S390_AP_IOMMU which depends on the missing CONFIG_ZCRYPT.  After
-adding COMPILE_TEST, it is possible to select a configuration with
-VFIO_AP and S390_AP_IOMMU but without the ZCRYPT.
+In the first loop, we increment "i" after the "if (i == unit)" condition
+so we don't necessarily know that "i" is not equal to unit at the end of
+the loop.
 
-Add proper dependency to the VFIO_AP to fix build errors:
+In the second loop we exit when mode is not pointing to a valid
+drm_display_mode struct so it doesn't make sense to check "mode->type".
 
-ERROR: modpost: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
-ERROR: modpost: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
-
-Reported-by: kernel test robot <lkp@intel.com>
-Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Roland Scheidegger <sroland@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/vmwgfx/vmwgfx_kms.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index ae01be202204b..03e491c103e76 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -769,6 +769,7 @@ config VFIO_AP
- 	def_tristate n
- 	prompt "VFIO support for AP devices"
- 	depends on S390_AP_IOMMU && VFIO_MDEV_DEVICE && KVM
-+	depends on ZCRYPT
- 	help
- 		This driver grants access to Adjunct Processor (AP) devices
- 		via the VFIO mediated device interface.
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
+index 04d66592f6050..b7a9cee69ea72 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
+@@ -2578,7 +2578,7 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
+ 		++i;
+ 	}
+ 
+-	if (i != unit) {
++	if (&con->head == &dev_priv->dev->mode_config.connector_list) {
+ 		DRM_ERROR("Could not find initial display unit.\n");
+ 		ret = -EINVAL;
+ 		goto out_unlock;
+@@ -2602,13 +2602,13 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
+ 			break;
+ 	}
+ 
+-	if (mode->type & DRM_MODE_TYPE_PREFERRED)
+-		*p_mode = mode;
+-	else {
++	if (&mode->head == &con->modes) {
+ 		WARN_ONCE(true, "Could not find initial preferred mode.\n");
+ 		*p_mode = list_first_entry(&con->modes,
+ 					   struct drm_display_mode,
+ 					   head);
++	} else {
++		*p_mode = mode;
+ 	}
+ 
+  out_unlock:
 -- 
 2.25.1
 
