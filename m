@@ -2,135 +2,104 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21625C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 895B3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEECC208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66053208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:09:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G40t2fYW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bo+7UCzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbgHTRJj (ORCPT
+        id S1730472AbgHTRJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:09:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
+        Thu, 20 Aug 2020 13:09:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730447AbgHTRIP (ORCPT
+        with ESMTP id S1730407AbgHTRHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:08:15 -0400
-Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA78C061387;
-        Thu, 20 Aug 2020 10:07:11 -0700 (PDT)
-Received: by mail-yb1-xb44.google.com with SMTP id m200so1489233ybf.10;
-        Thu, 20 Aug 2020 10:07:11 -0700 (PDT)
+        Thu, 20 Aug 2020 13:07:00 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B42AC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:06:57 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id i10so2927587ljn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:06:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=glbSY9AfO3c8Ilt34Mm40yHeC6Eq+qmYUQCGg5s1K0U=;
-        b=G40t2fYW0FhXMcs05aomQTRQxrdlOpkX/PnxGcUCLWyKhms/BoNlmCrutAjwhgn3gW
-         kr6hbH7rHVs77A+tTAmg5+CfvNiTNs+2ZXOHPCAYMXybwieTG7aFMImHSW5rgfcOjtzt
-         mWMtIZBvvy346pwDG2jYbKAKbXr5z0AuQGYagW8fOYtnkG9ymeh6Cyek+XgM8BH8hGkz
-         ko7pWuBxDlR4c8L299wc4COwVSVc8KE4HIlR5vzvV0f2UxO/VvpAeHiMmpPzfYMuZI+0
-         er1AUffqw/sjoKcBRhgQbk/rlui05AToJrRrgel0WfvCJxmCtvt+aavfjXNXEGhSwK3A
-         RkAg==
+        bh=j6WgqePZAKFwWv7oibyf66OC3S+SA0EwtLkT0KHMn7s=;
+        b=bo+7UCzu3XtlLDsIdFcX5T2SOSSTsIkuEKVjv+td78vJUz4Qxj8E6pMzu0KujU0A8E
+         wEY9X0HcNUH4MKDpEJcRCVekv731AB5t41ds1k6HDNgEAnDfiMuAYEd0JBMBCKkPIAls
+         1ofwEbhEVneHVJ6n0purqzcbgSFawo2aR5Qj0bawUT6gizMqMxUdTu5Dax0QynHmnjhd
+         hdB/1ctAxAaeD4O9/Pq7Bw19oxiBt6p7riIhI2gRNppDgxaBqie0QR49HWNaHkfr4pZR
+         PmOswhZhm3v8rhV4eoYr9SX2GbowE+xyG+XqtRWsKplLcBdxMd2TZogrYKHaEzvA8E9/
+         12yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=glbSY9AfO3c8Ilt34Mm40yHeC6Eq+qmYUQCGg5s1K0U=;
-        b=MLHoFEaqUHzmdUGwRWYQnJ5gfq/h0ArUO1fvPHN8Ln5AMxXAfJeUQouERqPHXPtnhr
-         HX7CwkJJ79LbvriCy06lf9n2O86MDtm8bdilGGU8UjSN1eo6ZHqBRbWvRy+aB1oRqpDQ
-         3AyEVNRU8798aHTQ+ZQcCnx1qlR8TSbOPHxHdBY6nlPUJgxXsom6SezMURts6ldrIIWr
-         +Z1AgjJ7Td+IHUm+CdxtDhmnwtgcV0Wi7ZH+ayse9JQB4bvxxniU6NhJBmXUBWh2TErB
-         Ti1rbAMsaPQaKPFyxVgbtklVhcgwlnGXpz3BmCh0D7uS8lZb6+o0SwbK5D9D2LVV3XEb
-         pkOQ==
-X-Gm-Message-State: AOAM533EYimiw6LAXNz7/k2SQkNrIlhABJDClymqF+iG3/9ivGItiC9a
-        stQGhsTlF+W02jhKNcf9+uvfaWuK5ZjnVB4qK/k=
-X-Google-Smtp-Source: ABdhPJxVweS8wTcW+9Gn3U434vsgVIpBXkGRmzYW1MOeLGuvJQyj3w61ppDG3Iinwf6rEdXgfkSObizgTjEYOLgziAI=
-X-Received: by 2002:a25:84cd:: with SMTP id x13mr5973103ybm.425.1597943231062;
- Thu, 20 Aug 2020 10:07:11 -0700 (PDT)
+        bh=j6WgqePZAKFwWv7oibyf66OC3S+SA0EwtLkT0KHMn7s=;
+        b=hOpgN2UVWBT4yB6o+2sN2mpFnlhWKTHMCWxiK12wKoxxFBoOsRorxacv1A7boPXHFt
+         TziaKmhUmbd3dqUMldo+xcPcte5CpyXCNgqq4BM5M8FzBYN9v49eQNswq5s7YB4oRYQI
+         uiG5M87hLweqky8p8q/2f/+SbDNq+ZwWyEUlhZBDGOA+e5XDAcIcm0S+G+QxpLI77PlF
+         HeR2FMojmw3cPrsdPSCKYI5GMB88u5zy26jVdyxiQ8QnV12jojcl4U3xjtvH1DVxhkZz
+         Z/5F5aHv9s97cJgAtRz4mxhiBZCvI8/QYyTJ6SpTXgKd9zkQGqrez32tOOS9hZ5yIWCz
+         FWMQ==
+X-Gm-Message-State: AOAM533fS69aoo4CUK2fPgSU7G6oDkYllWrYOXDgDFr0iQFC7/DuMzBu
+        n+EEJd8sYxul11WMZJkSdg2FtaPKwehXm2iCUIKO7Q==
+X-Google-Smtp-Source: ABdhPJziUJGXBSB9o6ksa6wt3btAspt3JpWrpRS8ydIXvVTIxvdXw64pBpOlKiXdI5HRmfJyA09t5CJD1wgjuiuMX0o=
+X-Received: by 2002:a2e:9396:: with SMTP id g22mr2214071ljh.446.1597943215596;
+ Thu, 20 Aug 2020 10:06:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000568fc005ad3b57c3@google.com> <CACT4Y+bxvHp9gq_OEBAYdMTsm9vxw3CuviuDpxHCXcZHv_A0nw@mail.gmail.com>
-In-Reply-To: <CACT4Y+bxvHp9gq_OEBAYdMTsm9vxw3CuviuDpxHCXcZHv_A0nw@mail.gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 20 Aug 2020 10:07:00 -0700
-Message-ID: <CAEf4BzYHJgAtO2+6R70MYKQmXjiGy8OVgojNpvEPJ+FQb_DnKg@mail.gmail.com>
-Subject: Re: unregister_netdevice: waiting for DEV to become free (4)
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzbot <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>
+References: <20200528135444.11508-1-schatzberg.dan@gmail.com>
+In-Reply-To: <20200528135444.11508-1-schatzberg.dan@gmail.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 20 Aug 2020 10:06:44 -0700
+Message-ID: <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
+To:     Dan Schatzberg <schatzberg.dan@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>, Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:06 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+On Thu, May 28, 2020 at 6:55 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
 >
-> On Wed, Aug 19, 2020 at 3:54 PM syzbot
-> <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following issue on:
-> >
-> > HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1710d97a900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=df400f2f24a1677cd7e0
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15859986900000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1228fea1900000
-> >
-> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > Reported-by: syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com
-> >
-> > unregister_netdevice: waiting for lo to become free. Usage count = 1
->
-> Based on the repro, it looks bpf/bpf link related:
->
-> syz_emit_ethernet(0x86, &(0x7f0000000000)={@local, @empty=[0x2],
-> @void, {@ipv4={0x800, @udp={{0x5, 0x4, 0x0, 0x0, 0x78, 0x0, 0x0, 0x0,
-> 0x11, 0x0, @empty, @empty}, {0x0, 0x1b59, 0x64, 0x0,
-> @wg=@response={0x5, 0x0, 0x0, "020000010865390406030500000000010900",
-> "9384bbeb3018ad591b661fe808b21b77",
-> {"694c875dfb1be5d2a0057a62022a1564",
-> "a329d3a73b8268129e5fa4316a5d8c69"}}}}}}}, 0x0)
-> mkdirat(0xffffffffffffff9c, &(0x7f0000000000)='./file0\x00', 0x0)
-> mount(0x0, &(0x7f0000000080)='./file0\x00',
-> &(0x7f0000000040)='cgroup2\x00', 0x0, 0x0)
-> r0 = openat$cgroup_root(0xffffffffffffff9c, &(0x7f0000000000), 0x200002, 0x0)
-> r1 = bpf$PROG_LOAD(0x5, &(0x7f0000000080)={0x9, 0x4,
-> &(0x7f0000000000)=@framed={{}, [@alu={0x8000000201a7f19, 0x0, 0x6,
-> 0x2, 0x1}]}, &(0x7f0000000100)='GPL\x00', 0x0, 0x0, 0x0, 0x0, 0x0, [],
-> 0x0, 0x0, 0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0}, 0x70)
-> bpf$BPF_LINK_CREATE(0x1c, &(0x7f0000000100)={r1, r0, 0x2}, 0x10)
+> Much of the discussion about this has died down. There's been a
+> concern raised that we could generalize infrastructure across loop,
+> md, etc. This may be possible, in the future, but it isn't clear to me
+> how this would look like. I'm inclined to fix the existing issue with
+> loop devices now (this is a problem we hit at FB) and address
+> consolidation with other cases if and when those need to be addressed.
 >
 
-The only place where BPF link-related code is bumping refcount for
-net_device is in bpf_xdp_link_attach(), but both success and failure
-code paths always do dev_put() in the end. bpf_link itself has a
-pointer on net_device, but it's protected by rtnl_lock() only, no
-refcnt associated with it. So I don't see how bpf_link can cause this.
-I also couldn't reproduce this locally, using the provided C
-reproducer.
-
-> > ---
-> > This report is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this issue. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > syzbot can test patches for this issue, for details see:
-> > https://goo.gl/tpsmEJ#testing-patches
+What's the status of this series?
