@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3541EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D47C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0532020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21C322075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916162;
-	bh=CB91mRZZtwRX5Rs6Z2McPo2ROvipo0Nrx6PjkXAUo9k=;
+	s=default; t=1597916166;
+	bh=+Nv6csKMBWGiy1e80R3z4GTu13tZAaLYToez1KLYUvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l1fsnTAOEOUWwQNTe9OGziZJ8DquHwseHYWpI2bf/wfGy5zl5yyZblyBlOVrFv/wq
-	 bTPbedmzDRv7zOwN0Ml/Jk9OKS0uX5z88lcqur8A3Yre3tAHxlBxDSBr+t+higCvFh
-	 8UOs49pJBebYNTzcTA9mZF8hsRygA3LUATcJBT5Q=
+	b=p/sGwtnHUXGk1WPjFYloFVdxFgDM7nhRnVWEGa0RcOImWjm1qby3KgYJk0ih/x+/7
+	 lQ4jtLosOJ5xcp4AgnFVaMp4Na6JW4RALTrpC6J+YyW7EQ9lNJUnolY/vRI/BxOySV
+	 JzaNorCoCNo76/HkuYHjImjF4SJJelMMau8hWOmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgHTJf6 (ORCPT
+        id S1728570AbgHTJgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49610 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:36:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgHTJfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:46 -0400
+        id S1728414AbgHTJfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:35:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3B2208E4;
-        Thu, 20 Aug 2020 09:35:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA51122B49;
+        Thu, 20 Aug 2020 09:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916146;
-        bh=CB91mRZZtwRX5Rs6Z2McPo2ROvipo0Nrx6PjkXAUo9k=;
+        s=default; t=1597916154;
+        bh=+Nv6csKMBWGiy1e80R3z4GTu13tZAaLYToez1KLYUvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i236QKnVf4iU0Z2sSij8NInA0MXCeF/o8Te4VdEoNCg3ScqboZgdoYJniDd9lhkfE
-         Sfx/+27AUopK2+CvijBSmw8KB3SzIKAf1cggv8/mm/+uZJ82g5OYH0O7TJJlAUJ4ju
-         Fk2QmMJ3nEuVGA0XEkWGWTtlFwPfNmUGW2SmiMbc=
+        b=Q7KI4kfiwhxHz9Gmwg58qAysUM0py0JBy+B9ZhBbQduMKTofUgwVMBL/PAATmkWaC
+         Eurl4M3JZSWAL4/pthJUkwO3hv23RV0l4/8htO+uM1FeD7noKGI3jgEsacZFa+6JbD
+         hI85AqEVC838B+iEhConM5EF9Kwqf9cRYvZ+f71Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 004/204] PCI: hotplug: ACPI: Fix context refcounting in acpiphp_grab_context()
-Date:   Thu, 20 Aug 2020 11:18:21 +0200
-Message-Id: <20200820091606.425774608@linuxfoundation.org>
+        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.7 007/204] PCI: Add device even if driver attach failed
+Date:   Thu, 20 Aug 2020 11:18:24 +0200
+Message-Id: <20200820091606.567342367@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,51 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Rajat Jain <rajatja@google.com>
 
-commit dae68d7fd4930315389117e9da35b763f12238f9 upstream.
+commit 2194bc7c39610be7cabe7456c5f63a570604f015 upstream.
 
-If context is not NULL in acpiphp_grab_context(), but the
-is_going_away flag is set for the device's parent, the reference
-counter of the context needs to be decremented before returning
-NULL or the context will never be freed, so make that happen.
+device_attach() returning failure indicates a driver error while trying to
+probe the device. In such a scenario, the PCI device should still be added
+in the system and be visible to the user.
 
-Fixes: edf5bf34d408 ("ACPI / dock: Use callback pointers from devices' ACPI hotplug contexts")
-Reported-by: Vasily Averin <vvs@virtuozzo.com>
-Cc: 3.15+ <stable@vger.kernel.org> # 3.15+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+When device_attach() fails, merely warn about it and keep the PCI device in
+the system.
+
+This partially reverts ab1a187bba5c ("PCI: Check device_attach() return
+value always").
+
+Link: https://lore.kernel.org/r/20200706233240.3245512-1-rajatja@google.com
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org	# v4.6+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/hotplug/acpiphp_glue.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/pci/bus.c |    6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/drivers/pci/hotplug/acpiphp_glue.c
-+++ b/drivers/pci/hotplug/acpiphp_glue.c
-@@ -122,13 +122,21 @@ static struct acpiphp_context *acpiphp_g
- 	struct acpiphp_context *context;
+--- a/drivers/pci/bus.c
++++ b/drivers/pci/bus.c
+@@ -322,12 +322,8 @@ void pci_bus_add_device(struct pci_dev *
  
- 	acpi_lock_hp_context();
-+
- 	context = acpiphp_get_context(adev);
--	if (!context || context->func.parent->is_going_away) {
--		acpi_unlock_hp_context();
--		return NULL;
-+	if (!context)
-+		goto unlock;
-+
-+	if (context->func.parent->is_going_away) {
-+		acpiphp_put_context(context);
-+		context = NULL;
-+		goto unlock;
- 	}
-+
- 	get_bridge(context->func.parent);
- 	acpiphp_put_context(context);
-+
-+unlock:
- 	acpi_unlock_hp_context();
- 	return context;
+ 	dev->match_driver = true;
+ 	retval = device_attach(&dev->dev);
+-	if (retval < 0 && retval != -EPROBE_DEFER) {
++	if (retval < 0 && retval != -EPROBE_DEFER)
+ 		pci_warn(dev, "device attach failed (%d)\n", retval);
+-		pci_proc_detach_device(dev);
+-		pci_remove_sysfs_dev_files(dev);
+-		return;
+-	}
+ 
+ 	pci_dev_assign_added(dev, true);
  }
 
 
