@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B08C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49775208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0F122BEF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881972;
-	bh=lw1yL5+D0GFS7k/22hM9f0lnHRnDEgM0C2akrp065PU=;
+	s=default; t=1597881975;
+	bh=1IES0gm3oirDe7IZ79Li86odL9lbx2TB4xRbdXUVcBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJtIB54qmkgqufmvbC97V6Fe0SsmWpn/zyr0rnjnfAhu7VvVuMiVg7gddILg7oPng
-	 ikauRMpvSJUCeBIl4qqUj0RmFD7V0ipHanag7qpfa8ldo0QO0QEK6/wWd0D7xSyy0V
-	 T7rvaXpdb90kiGjQJePp+gRWWewHiMjdvcVasTYk=
+	b=Z8qDBklKL+5UtI0WcttF6U2/hwb6trIz6BwwH0d8hASRpKPtoyD1YigLi2N8PH9i2
+	 Oy1yTN3DiWkYy7OtIGTU4MirQpINnR5ioYlwPULKNd7w28aj+mk+sB/LsXDtu42SDL
+	 2+qtEd1rEjk8HNuoUvRzuzWm4ae2sbuIJ+rgy7+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbgHTAGK (ORCPT
+        id S1728578AbgHTAGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:06:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728380AbgHTADz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:55 -0400
+        id S1728353AbgHTADy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:54 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EDEF21775;
-        Thu, 20 Aug 2020 00:03:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E441208E4;
+        Thu, 20 Aug 2020 00:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881835;
-        bh=lw1yL5+D0GFS7k/22hM9f0lnHRnDEgM0C2akrp065PU=;
+        s=default; t=1597881834;
+        bh=1IES0gm3oirDe7IZ79Li86odL9lbx2TB4xRbdXUVcBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYZJtHWHi3a3qGb8bI0ETDleH/SxRcQOjc8EMfVx+2hCp8QeL6Xmhxc317FTriLms
-         wZCvtluoCMZhSxnmeo0XbdFkOgpkI9/T8vOFkn0ot//GspC72eWR146lXSnaNMFLpt
-         GijgnQINZGPN+eYtvyQiEQ5aoDqD6YwkK3h+NfTM=
+        b=juifaw2aWVj1gv+AMcaiIzx0tdsRVsYX6aRyODCCc3jYv2Hn3zz6Syfajl2EqzYV2
+         uq20+BQKgyrZkU/RwcRWcaWxG/4eHDSKI91SLZTNoxKPn0O/7y4NlCz+sIOwc0AZDF
+         77cjOw9p65oWVocRWjxODnb1Y1g+a/bQ15C8qhZI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/11] Input: psmouse - add a newline when printing 'proto' by sysfs
-Date:   Wed, 19 Aug 2020 20:03:41 -0400
-Message-Id: <20200820000348.215911-4-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/11] media: vpss: clean up resources in init
+Date:   Wed, 19 Aug 2020 20:03:40 -0400
+Message-Id: <20200820000348.215911-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
 References: <20200820000348.215911-1-sashal@kernel.org>
@@ -59,37 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-When I cat parameter 'proto' by sysfs, it displays as follows. It's
-better to add a newline for easy reading.
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
-autoroot@syzkaller:~#
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/psmouse-base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index 5cbf17aa84439..597ecae02c405 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -1909,7 +1909,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index c2c68988e38ac..9884b34d6f406 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -519,19 +519,31 @@ static void vpss_exit(void)
+ 
+ static int __init vpss_init(void)
  {
- 	int type = *((unsigned int *)kp->arg);
++	int ret;
++
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
  
--	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
-+	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
+ 	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
  }
- 
- static int __init psmouse_init(void)
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
