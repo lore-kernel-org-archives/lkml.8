@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F42DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B60C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D6852075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377AE20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931962;
-	bh=qa81hbu0Agd/1qd/MfyLyNtBj4h/m46pZZEe2uwWhqE=;
+	s=default; t=1597931958;
+	bh=YSUFFkzo1IRc9kLJKQO0QnOVSFTbls6wjcq3y8rqPiY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ID7YlFqjl9P5vU3oZaN+t5LFBRPiJQFVPfJvNHr0fSgO7ueC1549RiS2vUH8lHgyi
-	 KFsWYjsQopcQErw7l+Apmu/Ucoud8d1Xu9pAmSEf4T2bA/4Z+IglalSIaMj3d2KI60
-	 Y2HActcpVT7CR6dbGUuDXfIlrEXdUgjfcQ0+2wVs=
+	b=AMm7eMzr9ZrTr2GAlwQrMKbmAfi3AwKb16FPMkcVlf3TbLlnI0HBcjr3OFampOZgn
+	 r7ZhKCzDB50poSR8kUqFW2n02WRqjckzrnYQvkVkOXfA+2FK5lUQJozNtqh5vRFHoh
+	 jAwVuXK7G0CJ4KdnxMoC81by9aq9ecDDD9cg/qyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgHTN7S (ORCPT
+        id S1731244AbgHTN6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:59:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:58:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbgHTJYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:11 -0400
+        id S1726968AbgHTJYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 084F822CA1;
-        Thu, 20 Aug 2020 09:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC26522CB1;
+        Thu, 20 Aug 2020 09:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915450;
-        bh=qa81hbu0Agd/1qd/MfyLyNtBj4h/m46pZZEe2uwWhqE=;
+        s=default; t=1597915473;
+        bh=YSUFFkzo1IRc9kLJKQO0QnOVSFTbls6wjcq3y8rqPiY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOzSdEncSINDNwHu2uiwaPeJ87sUpWFTeXBQ65JUgWIW3U/uUx2QLdINQDfRxS95F
-         bIEsS01nCTb3TCBxgHysgjYfL2zQW35+AmIyETb7rupSOSaZAiAgTZ9i27zsJzw5br
-         W5oWLrgr0Y4F54ys8x+Uyftw0g0EsvgrifUZLORE=
+        b=E7sBqxX53TmUdnPbapPWNFlmmVzw9vvS/3Z703aB2c1fmyP1iSuT0m8Nee27GjX7n
+         MzvEDSVZgKGwo4Wk4ktlZnpznWBmqZC2yXQ4+r+fO1QM5x/Z3iuDR/CjyarHxBXjUU
+         SNsvyn0KhSW7M6nVbTVDGi5Ve3t3/oGagW4WseUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 018/232] btrfs: only commit the delayed inode when doing a full fsync
-Date:   Thu, 20 Aug 2020 11:17:49 +0200
-Message-Id: <20200820091613.620881772@linuxfoundation.org>
+Subject: [PATCH 5.8 025/232] btrfs: move the chunk_mutex in btrfs_read_chunk_tree
+Date:   Thu, 20 Aug 2020 11:17:56 +0200
+Message-Id: <20200820091613.969994621@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,88 +60,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 8c8648dd1f6d62aeb912deeb788b6ac33cb782e7 upstream.
+commit 01d01caf19ff7c537527d352d169c4368375c0a1 upstream.
 
-Commit 2c2c452b0cafdc ("Btrfs: fix fsync when extend references are added
-to an inode") forced a commit of the delayed inode when logging an inode
-in order to ensure we would end up logging the inode item during a full
-fsync. By committing the delayed inode, we updated the inode item in the
-fs/subvolume tree and then later when copying items from leafs modified in
-the current transaction into the log tree (with copy_inode_items_to_log())
-we ended up copying the inode item from the fs/subvolume tree into the log
-tree. Logging an up to date version of the inode item is required to make
-sure at log replay time we get the link count fixup triggered among other
-things (replay xattr deletes, etc). The test case generic/040 from fstests
-exercises the bug which that commit fixed.
+We are currently getting this lockdep splat in btrfs/161:
 
-However for a fast fsync we don't need to commit the delayed inode because
-we always log an up to date version of the inode item based on the struct
-btrfs_inode we have in-memory. We started doing this for fast fsyncs since
-commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc5+ #20 Tainted: G            E
+  ------------------------------------------------------
+  mount/678048 is trying to acquire lock:
+  ffff9b769f15b6e0 (&fs_devs->device_list_mutex){+.+.}-{3:3}, at: clone_fs_devices+0x4d/0x170 [btrfs]
 
-So just stop committing the delayed inode if we are doing a fast fsync,
-we are only wasting time and adding contention on fs/subvolume tree.
+  but task is already holding lock:
+  ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
 
-This patch is part of a series that has the following patches:
+  which lock already depends on the new lock.
 
-1/4 btrfs: only commit the delayed inode when doing a full fsync
-2/4 btrfs: only commit delayed items at fsync if we are logging a directory
-3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
-4/4 btrfs: remove no longer needed use of log_writers for the log root tree
+  the existing dependency chain (in reverse order) is:
 
-After the entire patchset applied I saw about 12% decrease on max latency
-reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
-ram, using kvm and using a raw NVMe device directly (no intermediary fs on
-the host). The test was invoked like the following:
+  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
+	 __mutex_lock+0x8b/0x8f0
+	 btrfs_init_new_device+0x2d2/0x1240 [btrfs]
+	 btrfs_ioctl+0x1de/0x2d20 [btrfs]
+	 ksys_ioctl+0x87/0xc0
+	 __x64_sys_ioctl+0x16/0x20
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-  mkfs.btrfs -f /dev/sdk
-  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
-  dbench -D /mnt/sdk -t 300 8
-  umount /mnt/dsk
+  -> #0 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
+	 __lock_acquire+0x1240/0x2460
+	 lock_acquire+0xab/0x360
+	 __mutex_lock+0x8b/0x8f0
+	 clone_fs_devices+0x4d/0x170 [btrfs]
+	 btrfs_read_chunk_tree+0x330/0x800 [btrfs]
+	 open_ctree+0xb7c/0x18ce [btrfs]
+	 btrfs_mount_root.cold+0x13/0xfa [btrfs]
+	 legacy_get_tree+0x30/0x50
+	 vfs_get_tree+0x28/0xc0
+	 fc_mount+0xe/0x40
+	 vfs_kern_mount.part.0+0x71/0x90
+	 btrfs_mount+0x13b/0x3e0 [btrfs]
+	 legacy_get_tree+0x30/0x50
+	 vfs_get_tree+0x28/0xc0
+	 do_mount+0x7de/0xb30
+	 __x64_sys_mount+0x8e/0xd0
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(&fs_info->chunk_mutex);
+				 lock(&fs_devs->device_list_mutex);
+				 lock(&fs_info->chunk_mutex);
+    lock(&fs_devs->device_list_mutex);
+
+   *** DEADLOCK ***
+
+  3 locks held by mount/678048:
+   #0: ffff9b75ff5fb0e0 (&type->s_umount_key#63/1){+.+.}-{3:3}, at: alloc_super+0xb5/0x380
+   #1: ffffffffc0c2fbc8 (uuid_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x54/0x800 [btrfs]
+   #2: ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
+
+  stack backtrace:
+  CPU: 2 PID: 678048 Comm: mount Tainted: G            E     5.8.0-rc5+ #20
+  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
+  Call Trace:
+   dump_stack+0x96/0xd0
+   check_noncircular+0x162/0x180
+   __lock_acquire+0x1240/0x2460
+   ? asm_sysvec_apic_timer_interrupt+0x12/0x20
+   lock_acquire+0xab/0x360
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   __mutex_lock+0x8b/0x8f0
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? cpumask_next+0x16/0x20
+   ? module_assert_mutex_or_preempt+0x14/0x40
+   ? __module_address+0x28/0xf0
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   ? static_obj+0x4f/0x60
+   ? lockdep_init_map_waits+0x43/0x200
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   clone_fs_devices+0x4d/0x170 [btrfs]
+   btrfs_read_chunk_tree+0x330/0x800 [btrfs]
+   open_ctree+0xb7c/0x18ce [btrfs]
+   ? super_setup_bdi_name+0x79/0xd0
+   btrfs_mount_root.cold+0x13/0xfa [btrfs]
+   ? vfs_parse_fs_string+0x84/0xb0
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? kfree+0x2b5/0x310
+   legacy_get_tree+0x30/0x50
+   vfs_get_tree+0x28/0xc0
+   fc_mount+0xe/0x40
+   vfs_kern_mount.part.0+0x71/0x90
+   btrfs_mount+0x13b/0x3e0 [btrfs]
+   ? cred_has_capability+0x7c/0x120
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? legacy_get_tree+0x30/0x50
+   legacy_get_tree+0x30/0x50
+   vfs_get_tree+0x28/0xc0
+   do_mount+0x7de/0xb30
+   ? memdup_user+0x4e/0x90
+   __x64_sys_mount+0x8e/0xd0
+   do_syscall_64+0x52/0xb0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This is because btrfs_read_chunk_tree() can come upon DEV_EXTENT's and
+then read the device, which takes the device_list_mutex.  The
+device_list_mutex needs to be taken before the chunk_mutex, so this is a
+problem.  We only really need the chunk mutex around adding the chunk,
+so move the mutex around read_one_chunk.
+
+An argument could be made that we don't even need the chunk_mutex here
+as it's during mount, and we are protected by various other locks.
+However we already have special rules for ->device_list_mutex, and I'd
+rather not have another special case for ->chunk_mutex.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -5130,7 +5130,7 @@ static int btrfs_log_inode(struct btrfs_
- 	struct btrfs_key max_key;
- 	struct btrfs_root *log = root->log_root;
- 	int err = 0;
--	int ret;
-+	int ret = 0;
- 	bool fast_search = false;
- 	u64 ino = btrfs_ino(inode);
- 	struct extent_map_tree *em_tree = &inode->extent_tree;
-@@ -5167,14 +5167,16 @@ static int btrfs_log_inode(struct btrfs_
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -7064,7 +7064,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	 * otherwise we don't need it.
+ 	 */
+ 	mutex_lock(&uuid_mutex);
+-	mutex_lock(&fs_info->chunk_mutex);
  
  	/*
- 	 * Only run delayed items if we are a dir or a new file.
--	 * Otherwise commit the delayed inode only, which is needed in
--	 * order for the log replay code to mark inodes for link count
--	 * fixup (create temporary BTRFS_TREE_LOG_FIXUP_OBJECTID items).
-+	 * Otherwise commit the delayed inode only if the full sync flag is set,
-+	 * as we want to make sure an up to date version is in the subvolume
-+	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
-+	 * it to the log tree. For a non full sync, we always log the inode item
-+	 * based on the in-memory struct btrfs_inode which is always up to date.
- 	 */
- 	if (S_ISDIR(inode->vfs_inode.i_mode) ||
- 	    inode->generation > fs_info->last_trans_committed)
- 		ret = btrfs_commit_inode_delayed_items(trans, inode);
--	else
-+	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
- 		ret = btrfs_commit_inode_delayed_inode(inode);
+ 	 * It is possible for mount and umount to race in such a way that
+@@ -7109,7 +7108,9 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 		} else if (found_key.type == BTRFS_CHUNK_ITEM_KEY) {
+ 			struct btrfs_chunk *chunk;
+ 			chunk = btrfs_item_ptr(leaf, slot, struct btrfs_chunk);
++			mutex_lock(&fs_info->chunk_mutex);
+ 			ret = read_one_chunk(&found_key, leaf, chunk);
++			mutex_unlock(&fs_info->chunk_mutex);
+ 			if (ret)
+ 				goto error;
+ 		}
+@@ -7139,7 +7140,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	}
+ 	ret = 0;
+ error:
+-	mutex_unlock(&fs_info->chunk_mutex);
+ 	mutex_unlock(&uuid_mutex);
  
- 	if (ret) {
+ 	btrfs_free_path(path);
 
 
