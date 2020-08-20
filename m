@@ -2,52 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B5FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8061FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B462B208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F7D22B49
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916402;
-	bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
+	s=default; t=1597916412;
+	bh=9iIh+itXFCiJpzJCgY8kQPXUYNArH99tHwymyYCggEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LfaKkeocrSArs4Y/TZwIGzjOxlIljMWbawo/+SlS3Oq2w3MkLnbO8uekIgUdwPeuo
-	 OYtv94fSXM2fIbjcNDlpHsPLHtHKtqweb0R+ZNQHmWFHfhGA68QL1okEUC26ANgxPb
-	 2tdI+lWqjct/cWatexQ8x+meUBqb7JTxJmOlUMQo=
+	b=ADL/ogERMEX9SMK8xGPNxT26xGyXQt/e4JT1tOJzQ2gz0l8xapUGmn8NY40hDaGhw
+	 9e9itwOAWSlw2it2c1LfIEbUcUruExNV2EN1P5ia329J0oAHR54QgemcpysMb+QjPr
+	 tKMP7St22xn45EShBZMdwAu/lMrxrl1FW8JU2cB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgHTJkB (ORCPT
+        id S1728689AbgHTJkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:40:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59208 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726923AbgHTJjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:39:42 -0400
+        id S1728991AbgHTJjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:39:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C07C20724;
-        Thu, 20 Aug 2020 09:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4653B20724;
+        Thu, 20 Aug 2020 09:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916381;
-        bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
+        s=default; t=1597916387;
+        bh=9iIh+itXFCiJpzJCgY8kQPXUYNArH99tHwymyYCggEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tDm63S0ciSxkmJaGmjdoClPR6GZJo/2ILuVCujIjHQqBq3IrrAQ2R28l+00JmKzCe
-         mOcj5yed24Ep5+iAyLDKEkbKKEBluumBimUlT0HxqnaysK3VyTQyiCwbcHJhwPGGO2
-         wxDUaIDD6+2Y7LShRGjqwqQ5cBVKbv7ZZZmW47Q8=
+        b=Me2fqTJmJYMBrbN8/59y4xvaMtow2gUCpf39oP1zH9rvueYVJo/RALCEOzegXipku
+         X/VdoGlLQtskw3FhPMdY8SM+Ft8hLxdWuOuYqOqJOsqm8pNyzmpdO6n0f85XyemGfy
+         uGtfr3U/p7dV245eY/ME19tS+d/4RKaEPZFN1V9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.7 091/204] perf intel-pt: Fix FUP packet state
-Date:   Thu, 20 Aug 2020 11:19:48 +0200
-Message-Id: <20200820091610.879027405@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 110/204] media: rockchip: rga: Only set output CSC mode for RGB input
+Date:   Thu, 20 Aug 2020 11:20:07 +0200
+Message-Id: <20200820091611.810174248@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,76 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-commit 401136bb084fd021acd9f8c51b52fe0a25e326b2 upstream.
+[ Upstream commit 0f879bab72f47e8ba2421a984e7acfa763d3e84e ]
 
-While walking code towards a FUP ip, the packet state is
-INTEL_PT_STATE_FUP or INTEL_PT_STATE_FUP_NO_TIP. That was mishandled
-resulting in the state becoming INTEL_PT_STATE_IN_SYNC prematurely.  The
-result was an occasional lost EXSTOP event.
+Setting the output CSC mode is required for a YUV output, but must not
+be set when the input is also YUV. Doing this (as tested with a YUV420P
+to YUV420P conversion) results in wrong colors.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200710151104.15137-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Adapt the logic to only set the output CSC mode when the output is YUV and
+the input is RGB. Also add a comment to clarify the rationale.
 
+Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   21 ++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ drivers/media/platform/rockchip/rga/rga-hw.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1164,6 +1164,7 @@ static int intel_pt_walk_fup(struct inte
- 			return 0;
- 		if (err == -EAGAIN ||
- 		    intel_pt_fup_with_nlip(decoder, &intel_pt_insn, ip, err)) {
-+			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			if (intel_pt_fup_event(decoder))
- 				return 0;
- 			return -EAGAIN;
-@@ -1942,17 +1943,13 @@ next:
- 			}
- 			if (decoder->set_fup_mwait)
- 				no_tip = true;
-+			if (no_tip)
-+				decoder->pkt_state = INTEL_PT_STATE_FUP_NO_TIP;
-+			else
-+				decoder->pkt_state = INTEL_PT_STATE_FUP;
- 			err = intel_pt_walk_fup(decoder);
--			if (err != -EAGAIN) {
--				if (err)
--					return err;
--				if (no_tip)
--					decoder->pkt_state =
--						INTEL_PT_STATE_FUP_NO_TIP;
--				else
--					decoder->pkt_state = INTEL_PT_STATE_FUP;
--				return 0;
--			}
-+			if (err != -EAGAIN)
-+				return err;
- 			if (no_tip) {
- 				no_tip = false;
- 				break;
-@@ -2599,15 +2596,11 @@ const struct intel_pt_state *intel_pt_de
- 			err = intel_pt_walk_tip(decoder);
- 			break;
- 		case INTEL_PT_STATE_FUP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_fup_tip(decoder);
--			else if (!err)
--				decoder->pkt_state = INTEL_PT_STATE_FUP;
- 			break;
- 		case INTEL_PT_STATE_FUP_NO_TIP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_trace(decoder);
+diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
+index 5607ee8d19176..aaa96f256356b 100644
+--- a/drivers/media/platform/rockchip/rga/rga-hw.c
++++ b/drivers/media/platform/rockchip/rga/rga-hw.c
+@@ -200,6 +200,11 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+ 	dst_info.data.format = ctx->out.fmt->hw_format;
+ 	dst_info.data.swap = ctx->out.fmt->color_swap;
+ 
++	/*
++	 * CSC mode must only be set when the colorspace families differ between
++	 * input and output. It must remain unset (zeroed) if both are the same.
++	 */
++
+ 	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
+ 	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
+ 		switch (ctx->in.colorspace) {
+@@ -212,7 +217,8 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+ 		}
+ 	}
+ 
+-	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
++	if (RGA_COLOR_FMT_IS_RGB(ctx->in.fmt->hw_format) &&
++	    RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
+ 		switch (ctx->out.colorspace) {
+ 		case V4L2_COLORSPACE_REC709:
+ 			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
+-- 
+2.25.1
+
 
 
