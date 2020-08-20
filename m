@@ -5,54 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F14C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8803A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B95208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882159;
-	bh=v9H/VNClXTCOSayoDs+ffigBMW2X2b5UbOg2dweTYX4=;
+	s=default; t=1597882162;
+	bh=2piNqjgMF8RHhqlBhK0HIYSunlesgNni0vdGlmvyMoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JXl//JNt1re5E80V0Ix5X0HxLhG+wYy17NPA8NX623oRa7KKr8OiRmC5URbcihFqC
-	 0Irp6bcY4lzwz5aP/6xmZ+uFj/LWSI+qtGt7pByrrHvSc6qL6MWiI8P2VFR4ntt73p
-	 CyukuTeVDjt3E3bgWFrP1wACvjg66YuJq08mrUHg=
+	b=TZ8EsZOhMILfS4qmGnvgfgiSAYvqCKaBj07pXI1L9HEUGnjSLuCHDun1Z+gqt5Qi1
+	 mN+5GH7huyWU+MNeWlW8j8Zsr2V8x2D2lDLNxEMZrH6DxF19j2Uk+oVz+f/6u+Lf/M
+	 mhpepwC/BUJQEu3FGqEfMcSJ2Gw3k3Gq6xneSxWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgHTAJS (ORCPT
+        id S1728695AbgHTAJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59812 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbgHTACr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:47 -0400
+        id S1728077AbgHTACp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B37E621775;
-        Thu, 20 Aug 2020 00:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AFA1214F1;
+        Thu, 20 Aug 2020 00:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881767;
-        bh=v9H/VNClXTCOSayoDs+ffigBMW2X2b5UbOg2dweTYX4=;
+        s=default; t=1597881765;
+        bh=2piNqjgMF8RHhqlBhK0HIYSunlesgNni0vdGlmvyMoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VIQU/v6KYZz+QfIV3QiAbOrK6QzjzVMOLnQbkaS/faQwV05810ClCpendA6u8Bs+f
-         r0lmbIC9/sMlvEMi7WB/XzyB6WUK2FpoYsRj6PIbRYHdPDWiAnIMWgYl8JZvtrpw2I
-         EMl+unqcD8nK2TVBTafvnL03Q/Kyiztqo5IJWKpM=
+        b=pCMfCHDDcWT6RkO93BxA8ayHdRLQ1SET16sEgqxkPNelW0yaVV5HaP1a46ooyKLWI
+         812QD+YGp22Ny1vSk1shErHZT1/+s+wErtgtSQjmeS5e/KKN8VI4dTJV4cu2ZgcDNV
+         fDLLXqMykZnqGM0xpbLQzPtHZFxa7WSn0UMc6D9M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>,
-        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 13/22] ceph: fix use-after-free for fsc->mdsc
-Date:   Wed, 19 Aug 2020 20:02:20 -0400
-Message-Id: <20200820000229.215333-13-sashal@kernel.org>
+Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
+        Laurent Morichetti <laurent.morichetti@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 11/22] drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
+Date:   Wed, 19 Aug 2020 20:02:18 -0400
+Message-Id: <20200820000229.215333-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,42 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Felix Kuehling <Felix.Kuehling@amd.com>
 
-[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
+[ Upstream commit c0001213d195d1bac83e0744c06ff06dd5a8ba53 ]
 
-If the ceph_mdsc_init() fails, it will free the mdsc already.
+VMAs with a pg_offs that's offset from the start of the vma_node need
+to adjust the offset within the BO accordingly. This matches the
+offset calculation in ttm_bo_vm_fault_reserved.
 
-Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Tested-by: Laurent Morichetti <laurent.morichetti@amd.com>
+Signed-off-by: Christian König <christian.koenig@amd.com>
+Link: https://patchwork.freedesktop.org/patch/381169/
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/ttm/ttm_bo_vm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index b79fe6549df6f..676e4ff1df2f3 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -4141,7 +4141,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 		return -ENOMEM;
- 	}
+diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+index 46dc3de7e81bf..f2bad14ac04ab 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
++++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
+@@ -358,8 +358,10 @@ static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
+ static int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
+ 			    void *buf, int len, int write)
+ {
+-	unsigned long offset = (addr) - vma->vm_start;
+ 	struct ttm_buffer_object *bo = vma->vm_private_data;
++	unsigned long offset = (addr) - vma->vm_start +
++		((vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node))
++		 << PAGE_SHIFT);
+ 	int ret;
  
--	fsc->mdsc = mdsc;
- 	init_completion(&mdsc->safe_umount_waiters);
- 	init_waitqueue_head(&mdsc->session_close_wq);
- 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
-@@ -4193,6 +4192,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 
- 	strscpy(mdsc->nodename, utsname()->nodename,
- 		sizeof(mdsc->nodename));
-+
-+	fsc->mdsc = mdsc;
- 	return 0;
- }
- 
+ 	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->num_pages)
 -- 
 2.25.1
 
