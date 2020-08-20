@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF0CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CFEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2A82054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73932054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923727;
-	bh=enhf8k01R4vt8Qqq7cJmRsJN44nJ6ydLCnUF7N1rXQ8=;
+	s=default; t=1597923732;
+	bh=puWvOMlmgi4jua7udip/zrZ8awzz7XWq4lc8Kq/DmDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XRJehdC5HQ3i2QoQyqpnKh3ITGPsTYLIcaAVjdlcGNqmwrnm8dfDQ9e5NY43uiNw
-	 PvsZAtwCIySmSdxD5QQsvF+ovnmIH7Mxf5Rw4L0jcHGGX7jVLkHlbaPl4YcVQa4r8m
-	 tm9/RiLRlCLkt5Kh+8PVw5c5C+rjadz97LRA/LLk=
+	b=QURLKsGcUaA5+Jjr2AbwwDMiTqrx7VAURUB6FBvHz5hIB1oYcJIJ72nJD6VwHQfqp
+	 jhNE8KxGV+20L/jmb6/JYJYNTCirJc4/5yT/pzPTFWTkyQy9WmIB+ejq+RiOxsSz9M
+	 JVGbxWAwG6Pb6PgiQQ9YOsYGYjYsI7h/fw3+0M7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbgHTLmG (ORCPT
+        id S1730791AbgHTLmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:42:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56284 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:42:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730356AbgHTKE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:29 -0400
+        id S1729719AbgHTKEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D3A22C9F;
-        Thu, 20 Aug 2020 10:04:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFBEE2173E;
+        Thu, 20 Aug 2020 10:04:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917869;
-        bh=enhf8k01R4vt8Qqq7cJmRsJN44nJ6ydLCnUF7N1rXQ8=;
+        s=default; t=1597917863;
+        bh=puWvOMlmgi4jua7udip/zrZ8awzz7XWq4lc8Kq/DmDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phVZ5qTnIXhFaap8Ysn4uOvFK8Qff4f+xIyTMSaWS6pDVM/Ds5nhfl5rP0qbdc0zA
-         qFUXeyTni/yaRMPq7vg4btaIWttBSuq5wTh8IhsLa9iNzxXqIf9Hz5PY/j0aQPLOsS
-         VqgI/5b3u7wK+ctL0UrSivy8t3c9qgNk8lxPC1gU=
+        b=By7I/AgSzfS8xsAR6UqZs9juDv60uBg5Q1YXDoECgWkrK6nWIJ+oKikFdF89E9ADH
+         4HGGIqvZgH1GTe5NDOetpqawafnG5Z/bb/mMswkAlpARHVSIVYnGpIr05T81k9PSIo
+         KKDtPIO//nzO+fv87xoNB3lTpd+D2kAIlnS+xxuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.9 186/212] ftrace: Setup correct FTRACE_FL_REGS flags for module
-Date:   Thu, 20 Aug 2020 11:22:39 +0200
-Message-Id: <20200820091611.784423456@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.9 184/212] ext2: fix missing percpu_counter_inc
+Date:   Thu, 20 Aug 2020 11:22:37 +0200
+Message-Id: <20200820091611.683238943@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,58 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 8a224ffb3f52b0027f6b7279854c71a31c48fc97 upstream.
+commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
 
-When module loaded and enabled, we will use __ftrace_replace_code
-for module if any ftrace_ops referenced it found. But we will get
-wrong ftrace_addr for module rec in ftrace_get_addr_new, because
-rec->flags has not been setup correctly. It can cause the callback
-function of a ftrace_ops has FTRACE_OPS_FL_SAVE_REGS to be called
-with pt_regs set to NULL.
-So setup correct FTRACE_FL_REGS flags for rec when we call
-referenced_filters to find ftrace_ops references it.
+sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
+increased. This patch fixes it.
 
-Link: https://lkml.kernel.org/r/20200728180554.65203-1-zhouchengming@bytedance.com
+Note that sbi->s_freeinodes_counter is only used in the algorithm that
+tries to find the group for new allocations, so this bug is not easily
+visible (the only visibility is that the group finding algorithm selects
+inoptinal result).
 
+Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 8c4f3c3fa9681 ("ftrace: Check module functions being traced on reload")
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ fs/ext2/ialloc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -4987,8 +4987,11 @@ static int referenced_filters(struct dyn
- 	int cnt = 0;
- 
- 	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
--		if (ops_references_rec(ops, rec))
--		    cnt++;
-+		if (ops_references_rec(ops, rec)) {
-+			cnt++;
-+			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
-+				rec->flags |= FTRACE_FL_REGS;
-+		}
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -79,6 +79,7 @@ static void ext2_release_inode(struct su
+ 	if (dir)
+ 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
+ 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
++	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
+ 	if (dir)
+ 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
+ 	mark_buffer_dirty(bh);
+@@ -530,7 +531,7 @@ got:
+ 		goto fail;
  	}
  
- 	return cnt;
-@@ -5084,8 +5087,8 @@ void ftrace_module_enable(struct module
- 		if (ftrace_start_up)
- 			cnt += referenced_filters(rec);
+-	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
++	percpu_counter_dec(&sbi->s_freeinodes_counter);
+ 	if (S_ISDIR(mode))
+ 		percpu_counter_inc(&sbi->s_dirs_counter);
  
--		/* This clears FTRACE_FL_DISABLED */
--		rec->flags = cnt;
-+		rec->flags &= ~FTRACE_FL_DISABLED;
-+		rec->flags += cnt;
- 
- 		if (ftrace_start_up && cnt) {
- 			int failed = __ftrace_replace_code(rec, 1);
 
 
