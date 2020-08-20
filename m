@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4589C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63DF320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A670F2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918518;
-	bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+	s=default; t=1597918523;
+	bh=HyOIHmSDJ15NT7/szmLfX12OAORiTgw/DRPWArtZKGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0YCiZMxseLtpOE+LjhZ0GaWaTrLP2NHj+A5gXuf8uhVI/ccbyKPUKmQHa7CCANRib
-	 xIcq0Le5DDJrHp54jrHTiLCk1bxUPE5XCDW+gCaVt8sdAkG/V/N7bpCmeRgV1me2Zw
-	 4frhhR7IG7MgJ+kkHp4+wpSU+32tN7LfkNnsee7E=
+	b=tovvneIKQM4Urxj48eR3czF1PrwSDP9O52zPbtj9h90s8ZYHaZtK7AouMeQLyB0Ci
+	 fnm+L6PUXpRUNP7YP5JLET1n/9R1CiNrtWFGYlaovtleqXcBBbEjP4FKb0otPXm/+D
+	 o/tSABCRY9Zw3lGQvrI+PBJ2OVS8HebI7CT/XBYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbgHTKPQ (ORCPT
+        id S1731247AbgHTKPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:15:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33728 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:15:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731219AbgHTKOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:54 -0400
+        id S1731227AbgHTKO7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA21520738;
-        Thu, 20 Aug 2020 10:14:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD02B2067C;
+        Thu, 20 Aug 2020 10:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918493;
-        bh=WE+uSikW384/lDpstgKl9Ks5l2pEQaqvx23IxVZjKmA=;
+        s=default; t=1597918498;
+        bh=HyOIHmSDJ15NT7/szmLfX12OAORiTgw/DRPWArtZKGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OlfL8qYVE8lpGP/Ra+gAIEfSLabUtO5yIRSJMLo/+wSqfGELGSaSYNV1vUzf+JZvX
-         x+RIk0vhldeteNzqcIzH+zb5sNTnOS8WqYZZwLPJWtkqLTohQC8NDyt0Ae87RPmy7k
-         ilSPQS8LyeJTJQ+tnPAvWM81/7nxz/7Yanl0Vry0=
+        b=k1610iFOTEpHACmHOZjcqvKSDews/Jaa4OnwYT00P2k7Vq6VmqKDaQo1foJvJskof
+         YhBd4w1GB154EmOgez4p1mYmDDNnnNXGv6o0XrKACIpbrkzCvs3A4Eg26QPHmZHTyG
+         duGejT4FQsuccfm5pd5w0NihK+yswXBkcv3bTQOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.14 160/228] parisc: Implement __smp_store_release and __smp_load_acquire barriers
-Date:   Thu, 20 Aug 2020 11:22:15 +0200
-Message-Id: <20200820091615.573630580@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 185/228] ftrace: Setup correct FTRACE_FL_REGS flags for module
+Date:   Thu, 20 Aug 2020 11:22:40 +0200
+Message-Id: <20200820091616.819992188@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,92 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John David Anglin <dave.anglin@bell.net>
+From: Chengming Zhou <zhouchengming@bytedance.com>
 
-commit e96ebd589debd9a6a793608c4ec7019c38785dea upstream.
+commit 8a224ffb3f52b0027f6b7279854c71a31c48fc97 upstream.
 
-This patch implements the __smp_store_release and __smp_load_acquire barriers
-using ordered stores and loads.  This avoids the sync instruction present in
-the generic implementation.
+When module loaded and enabled, we will use __ftrace_replace_code
+for module if any ftrace_ops referenced it found. But we will get
+wrong ftrace_addr for module rec in ftrace_get_addr_new, because
+rec->flags has not been setup correctly. It can cause the callback
+function of a ftrace_ops has FTRACE_OPS_FL_SAVE_REGS to be called
+with pt_regs set to NULL.
+So setup correct FTRACE_FL_REGS flags for rec when we call
+referenced_filters to find ftrace_ops references it.
 
-Cc: <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Dave Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Link: https://lkml.kernel.org/r/20200728180554.65203-1-zhouchengming@bytedance.com
+
+Cc: stable@vger.kernel.org
+Fixes: 8c4f3c3fa9681 ("ftrace: Check module functions being traced on reload")
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/include/asm/barrier.h |   61 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ kernel/trace/ftrace.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/parisc/include/asm/barrier.h
-+++ b/arch/parisc/include/asm/barrier.h
-@@ -26,6 +26,67 @@
- #define __smp_rmb()	mb()
- #define __smp_wmb()	mb()
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5721,8 +5721,11 @@ static int referenced_filters(struct dyn
+ 	int cnt = 0;
  
-+#define __smp_store_release(p, v)					\
-+do {									\
-+	typeof(p) __p = (p);						\
-+        union { typeof(*p) __val; char __c[1]; } __u =			\
-+                { .__val = (__force typeof(*p)) (v) };			\
-+	compiletime_assert_atomic_type(*p);				\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile("stb,ma %0,0(%1)"				\
-+				: : "r"(*(__u8 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile("sth,ma %0,0(%1)"				\
-+				: : "r"(*(__u16 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile("stw,ma %0,0(%1)"				\
-+				: : "r"(*(__u32 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 8:								\
-+		if (IS_ENABLED(CONFIG_64BIT))				\
-+			asm volatile("std,ma %0,0(%1)"			\
-+				: : "r"(*(__u64 *)__u.__c), "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	}								\
-+} while (0)
-+
-+#define __smp_load_acquire(p)						\
-+({									\
-+	union { typeof(*p) __val; char __c[1]; } __u;			\
-+	typeof(p) __p = (p);						\
-+	compiletime_assert_atomic_type(*p);				\
-+	switch (sizeof(*p)) {						\
-+	case 1:								\
-+		asm volatile("ldb,ma 0(%1),%0"				\
-+				: "=r"(*(__u8 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 2:								\
-+		asm volatile("ldh,ma 0(%1),%0"				\
-+				: "=r"(*(__u16 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 4:								\
-+		asm volatile("ldw,ma 0(%1),%0"				\
-+				: "=r"(*(__u32 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	case 8:								\
-+		if (IS_ENABLED(CONFIG_64BIT))				\
-+			asm volatile("ldd,ma 0(%1),%0"			\
-+				: "=r"(*(__u64 *)__u.__c) : "r"(__p)	\
-+				: "memory");				\
-+		break;							\
-+	}								\
-+	__u.__val;							\
-+})
- #include <asm-generic/barrier.h>
+ 	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
+-		if (ops_references_rec(ops, rec))
+-		    cnt++;
++		if (ops_references_rec(ops, rec)) {
++			cnt++;
++			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
++				rec->flags |= FTRACE_FL_REGS;
++		}
+ 	}
  
- #endif /* !__ASSEMBLY__ */
+ 	return cnt;
+@@ -5871,8 +5874,8 @@ void ftrace_module_enable(struct module
+ 		if (ftrace_start_up)
+ 			cnt += referenced_filters(rec);
+ 
+-		/* This clears FTRACE_FL_DISABLED */
+-		rec->flags = cnt;
++		rec->flags &= ~FTRACE_FL_DISABLED;
++		rec->flags += cnt;
+ 
+ 		if (ftrace_start_up && cnt) {
+ 			int failed = __ftrace_replace_code(rec, 1);
 
 
