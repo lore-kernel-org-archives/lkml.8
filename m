@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4435C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB14C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B532D22B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6F42173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916999;
-	bh=hRXr8wczIZrt0cJy0jW7KdOBS7YZgK4GYprUqa0cFWM=;
+	s=default; t=1597917003;
+	bh=/c93ZfB+XrmMLeM8TvHb1bxs80RE4wBz1BARLnLMhDc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SABWVokmX1gW+BcMa+yMvb4DnKUIfG/Q/TB5CFjnsjHWb2vDMvXUNf1jHV4TzFq7u
-	 BsM7ZAj5N8mD7YYY+5G3hqG+sxPs4FIg/K6MpCEdxE3arz//5eHtcKWjtXg53vcLjq
-	 4wU70B4c4yN2gAlYYxwqhJX7CLnvWePoxaX41mcE=
+	b=ODez/4XYjfIq/+xJNqRm4trS4GfH9sy3YIVrel7d50hT2ID9ztZ+r9kVqw7l4Mhts
+	 rvW2Nr2IUsW6Wb8wFYnMKIa2qvhKdNgcQd0oCLpceLKYuaCHk4+MEkHURtpFoZ9fc1
+	 zmo0CnlieY+eKuX5u3t55Jpn5NgEbpzGYBPkdcqA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729668AbgHTJt6 (ORCPT
+        id S1729404AbgHTJuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:49:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55916 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:50:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729674AbgHTJtg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:36 -0400
+        id S1729680AbgHTJtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B99820724;
-        Thu, 20 Aug 2020 09:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92FB120724;
+        Thu, 20 Aug 2020 09:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916976;
-        bh=hRXr8wczIZrt0cJy0jW7KdOBS7YZgK4GYprUqa0cFWM=;
+        s=default; t=1597916979;
+        bh=/c93ZfB+XrmMLeM8TvHb1bxs80RE4wBz1BARLnLMhDc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E4lvxI6OP10eBmLNYe88BEVVNVSSBoz9mtSCYN52sLXJ3Ikeg6wuXk7L4JDwy7qeM
-         DjrQcMyhxAUYIXoquY9cELzNp/gNR7ixyKtrSbMr+SmTLXEI5Sr0qAKatXV1BpvOzL
-         CWGoAvSzfL10IZUZ1jw13Pc8wRVY65ZsAIWY7rHM=
+        b=kILkSOYuurXYrd5VhqMR/JTHk9fa37VJxbBODlvxWGz7d/72aG+drwHHhfZUTvy2A
+         m+WwIwzBflZ0FQwwh9JUDbBBgEDKa57pC7LodBIMinF3tjF+bqd3g+k7qVqH/jH/sp
+         0hUBLHLFIDdLGwz23ivm62aDxW3O76GFYiKJtRgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mathew King <mathewk@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Kamal Heib <kamalheib1@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 081/152] platform/chrome: cros_ec_ishtp: Fix a double-unlock issue
-Date:   Thu, 20 Aug 2020 11:20:48 +0200
-Message-Id: <20200820091557.890172669@linuxfoundation.org>
+Subject: [PATCH 5.4 082/152] RDMA/ipoib: Return void from ipoib_ib_dev_stop()
+Date:   Thu, 20 Aug 2020 11:20:49 +0200
+Message-Id: <20200820091557.943194392@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,41 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Kamal Heib <kamalheib1@gmail.com>
 
-[ Upstream commit aaa3cbbac326c95308e315f1ab964a3369c4d07d ]
+[ Upstream commit 95a5631f6c9f3045f26245e6045244652204dfdb ]
 
-In function cros_ec_ishtp_probe(), "up_write" is already called
-before function "cros_ec_dev_init". But "up_write" will be called
-again after the calling of the function "cros_ec_dev_init" failed.
-Thus add a call of the function “down_write” in this if branch
-for the completion of the exception handling.
+The return value from ipoib_ib_dev_stop() is always 0 - change it to be
+void.
 
-Fixes: 26a14267aff2 ("platform/chrome: Add ChromeOS EC ISHTP driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Tested-by: Mathew King <mathewk@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Link: https://lore.kernel.org/r/20200623105236.18683-1-kamalheib1@gmail.com
+Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_ishtp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/ulp/ipoib/ipoib.h    | 2 +-
+ drivers/infiniband/ulp/ipoib/ipoib_ib.c | 4 +---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index 25ca2c894b4de..ab0662a33b41a 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -645,8 +645,10 @@ static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib.h b/drivers/infiniband/ulp/ipoib/ipoib.h
+index 0e5f27caf2b2d..50a3557386090 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib.h
++++ b/drivers/infiniband/ulp/ipoib/ipoib.h
+@@ -515,7 +515,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev);
  
- 	/* Register croc_ec_dev mfd */
- 	rv = cros_ec_dev_init(client_data);
--	if (rv)
-+	if (rv) {
-+		down_write(&init_lock);
- 		goto end_cros_ec_dev_init_error;
-+	}
- 
+ int ipoib_ib_dev_open_default(struct net_device *dev);
+ int ipoib_ib_dev_open(struct net_device *dev);
+-int ipoib_ib_dev_stop(struct net_device *dev);
++void ipoib_ib_dev_stop(struct net_device *dev);
+ void ipoib_ib_dev_up(struct net_device *dev);
+ void ipoib_ib_dev_down(struct net_device *dev);
+ int ipoib_ib_dev_stop_default(struct net_device *dev);
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+index da3c5315bbb51..6ee64c25aaff4 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+@@ -846,7 +846,7 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
  	return 0;
+ }
  
+-int ipoib_ib_dev_stop(struct net_device *dev)
++void ipoib_ib_dev_stop(struct net_device *dev)
+ {
+ 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+ 
+@@ -854,8 +854,6 @@ int ipoib_ib_dev_stop(struct net_device *dev)
+ 
+ 	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
+ 	ipoib_flush_ah(dev);
+-
+-	return 0;
+ }
+ 
+ int ipoib_ib_dev_open_default(struct net_device *dev)
 -- 
 2.25.1
 
