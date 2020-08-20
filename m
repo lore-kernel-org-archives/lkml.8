@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF4C433E3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220B6C433E5
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC4D3206DA
+	by mail.kernel.org (Postfix) with ESMTP id F1B1120738
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931957;
-	bh=v0dwlY5SBRqPHG9bP2zvvxz+zgQcDfU5lnL0b2EymNE=;
+	s=default; t=1597931958;
+	bh=Cm2feadPvPt9PmnUf0EuHHArp78fgf63sITjvIEfr3E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JfyCs+fPInSOzpnvGTmv9mYhQ6uaCZU/YleoxHkVsPE6mCE7Yn0uSGTyRqFn2Y6A4
-	 NYWw5HPVomq/cFD7tHkQHy/Eixq98bqJcQshVHLYG5o6ALrM4Ot0a6PVfKsZalEgr/
-	 5M4Khbpni6pxSMZEQusxbx1qBc5Zik+lzXbZqpwc=
+	b=NZgH3Tstd7jm9R0NUMg7x93RjQoCKpBC4890Wxx0HeCTeScWV9PJTDW2fXT/O9jiZ
+	 mM2CUSp7jx2BY8SIWxjfUFhSAjZpN0H/TYZ1lhZ4XPgZ4xCLUWSctFeMKcLrNCbafw
+	 0UQq1bdhhX332rorWLnwSU2dCkjLZc8A0vcKfYuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731147AbgHTN6C (ORCPT
+        id S1731197AbgHTN6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:58:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726905AbgHTJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:17 -0400
+        id S1726959AbgHTJY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14EE722CA1;
-        Thu, 20 Aug 2020 09:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD51922CB2;
+        Thu, 20 Aug 2020 09:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915517;
-        bh=v0dwlY5SBRqPHG9bP2zvvxz+zgQcDfU5lnL0b2EymNE=;
+        s=default; t=1597915467;
+        bh=Cm2feadPvPt9PmnUf0EuHHArp78fgf63sITjvIEfr3E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FOw8DsafumJwOZScOs7ez460REee9hzAdxESB+A/5zFeLCKv3r68iDHBZdycRAUlU
-         xRg//4oRa0GpCQIdHkG3r8HEzoMbQ3Dn6DvdUvJ0/Af4ecjLBc+q3orXvM2Xdseev3
-         ZNQHvW/FlGucKUtMgkAC25AkmE2hzuBbLLbgM+T4=
+        b=glUCWX8MrLfx1p0Uz2090itJcZtYlZMExJtpV65J6B0pxKAbdFaPWDvdsxwcOUF+g
+         wrL/W7At2Xk4+6ZGqeubsRTpp2y68NCN3nV79+8G+Uuci9vUa4CssliUUiKN2itPuP
+         EjPESar8+HEEKXFn3/vdJgU28EUMbFTt3ld+O4N4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.8 042/232] arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
-Date:   Thu, 20 Aug 2020 11:18:13 +0200
-Message-Id: <20200820091614.821682067@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 023/232] btrfs: pass checksum type via BTRFS_IOC_FS_INFO ioctl
+Date:   Thu, 20 Aug 2020 11:17:54 +0200
+Message-Id: <20200820091613.872804938@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,55 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-commit 08257610302159e08fd4f5d33787807374ea63c7 upstream.
+commit 137c541821a83debb63b3fa8abdd1cbc41bdf3a1 upstream.
 
-Having a non-MSA (Modem Self-Authentication) SID bypassed breaks modem
-sandboxing i.e if a transaction were to originate from it, the hardware
-memory protections units (XPUs) would fail to flag them (any transaction
-originating from modem are historically termed as an MSA transaction).
-Drop the unused non-MSA modem SID on SC7180 SoCs and cheza so that SMMU
-continues to block them.
+With the recent addition of filesystem checksum types other than CRC32c,
+it is not anymore hard-coded which checksum type a btrfs filesystem uses.
 
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Fixes: bec71ba243e95 ("arm64: dts: qcom: sc7180: Update Q6V5 MSS node")
-Fixes: 68aee4af5f620 ("arm64: dts: qcom: sdm845-cheza: Add iommus property")
-Cc: stable@vger.kernel.org
-Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200630081938.8131-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Up to now there is no good way to read the filesystem checksum, apart from
+reading the filesystem UUID and then query sysfs for the checksum type.
+
+Add a new csum_type and csum_size fields to the BTRFS_IOC_FS_INFO ioctl
+command which usually is used to query filesystem features. Also add a
+flags member indicating that the kernel responded with a set csum_type and
+csum_size field.
+
+For compatibility reasons, only return the csum_type and csum_size if
+the BTRFS_FS_INFO_FLAG_CSUM_INFO flag was passed to the kernel. Also
+clear any unknown flags so we don't pass false positives to user-space
+newer than the kernel.
+
+To simplify further additions to the ioctl, also switch the padding to a
+u8 array. Pahole was used to verify the result of this switch:
+
+The csum members are added before flags, which might look odd, but this
+is to keep the alignment requirements and not to introduce holes in the
+structure.
+
+  $ pahole -C btrfs_ioctl_fs_info_args fs/btrfs/btrfs.ko
+  struct btrfs_ioctl_fs_info_args {
+	  __u64                      max_id;               /*     0     8 */
+	  __u64                      num_devices;          /*     8     8 */
+	  __u8                       fsid[16];             /*    16    16 */
+	  __u32                      nodesize;             /*    32     4 */
+	  __u32                      sectorsize;           /*    36     4 */
+	  __u32                      clone_alignment;      /*    40     4 */
+	  __u16                      csum_type;            /*    44     2 */
+	  __u16                      csum_size;            /*    46     2 */
+	  __u64                      flags;                /*    48     8 */
+	  __u8                       reserved[968];        /*    56   968 */
+
+	  /* size: 1024, cachelines: 16, members: 10 */
+  };
+
+Fixes: 3951e7f050ac ("btrfs: add xxhash64 to checksumming algorithms")
+Fixes: 3831bf0094ab ("btrfs: add sha256 to checksumming algorithm")
+CC: stable@vger.kernel.org # 5.5+
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/sc7180-idp.dts    |    2 +-
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/ioctl.c           |   16 +++++++++++++---
+ include/uapi/linux/btrfs.h |   14 ++++++++++++--
+ 2 files changed, 25 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-+++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-@@ -312,7 +312,7 @@
- &remoteproc_mpss {
- 	status = "okay";
- 	compatible = "qcom,sc7180-mss-pil";
--	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x3>;
-+	iommus = <&apps_smmu 0x461 0x0>, <&apps_smmu 0x444 0x3>;
- 	memory-region = <&mba_mem &mpss_mem>;
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -3217,11 +3217,15 @@ static long btrfs_ioctl_fs_info(struct b
+ 	struct btrfs_ioctl_fs_info_args *fi_args;
+ 	struct btrfs_device *device;
+ 	struct btrfs_fs_devices *fs_devices = fs_info->fs_devices;
++	u64 flags_in;
+ 	int ret = 0;
+ 
+-	fi_args = kzalloc(sizeof(*fi_args), GFP_KERNEL);
+-	if (!fi_args)
+-		return -ENOMEM;
++	fi_args = memdup_user(arg, sizeof(*fi_args));
++	if (IS_ERR(fi_args))
++		return PTR_ERR(fi_args);
++
++	flags_in = fi_args->flags;
++	memset(fi_args, 0, sizeof(*fi_args));
+ 
+ 	rcu_read_lock();
+ 	fi_args->num_devices = fs_devices->num_devices;
+@@ -3237,6 +3241,12 @@ static long btrfs_ioctl_fs_info(struct b
+ 	fi_args->sectorsize = fs_info->sectorsize;
+ 	fi_args->clone_alignment = fs_info->sectorsize;
+ 
++	if (flags_in & BTRFS_FS_INFO_FLAG_CSUM_INFO) {
++		fi_args->csum_type = btrfs_super_csum_type(fs_info->super_copy);
++		fi_args->csum_size = btrfs_super_csum_size(fs_info->super_copy);
++		fi_args->flags |= BTRFS_FS_INFO_FLAG_CSUM_INFO;
++	}
++
+ 	if (copy_to_user(arg, fi_args, sizeof(*fi_args)))
+ 		ret = -EFAULT;
+ 
+--- a/include/uapi/linux/btrfs.h
++++ b/include/uapi/linux/btrfs.h
+@@ -243,6 +243,13 @@ struct btrfs_ioctl_dev_info_args {
+ 	__u8 path[BTRFS_DEVICE_PATH_NAME_MAX];	/* out */
  };
  
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -634,7 +634,7 @@ ap_ts_i2c: &i2c14 {
++/*
++ * Retrieve information about the filesystem
++ */
++
++/* Request information about checksum type and size */
++#define BTRFS_FS_INFO_FLAG_CSUM_INFO			(1 << 0)
++
+ struct btrfs_ioctl_fs_info_args {
+ 	__u64 max_id;				/* out */
+ 	__u64 num_devices;			/* out */
+@@ -250,8 +257,11 @@ struct btrfs_ioctl_fs_info_args {
+ 	__u32 nodesize;				/* out */
+ 	__u32 sectorsize;			/* out */
+ 	__u32 clone_alignment;			/* out */
+-	__u32 reserved32;
+-	__u64 reserved[122];			/* pad to 1k */
++	/* See BTRFS_FS_INFO_FLAG_* */
++	__u16 csum_type;			/* out */
++	__u16 csum_size;			/* out */
++	__u64 flags;				/* in/out */
++	__u8 reserved[968];			/* pad to 1k */
  };
  
- &mss_pil {
--	iommus = <&apps_smmu 0x780 0x1>,
-+	iommus = <&apps_smmu 0x781 0x0>,
- 		 <&apps_smmu 0x724 0x3>;
- };
- 
+ /*
 
 
