@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2076C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2D9207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5102075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916524;
-	bh=zYYp3C2CTnV6KL7DGFZEL0ktlMcY9rMHH+wVkETx7r8=;
+	s=default; t=1597916532;
+	bh=raWJJA6x4ZbEavM1RWR+iCgk2M8/9qEcmjWQtjyRcOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mp8E85XNxEhDR0SHAYkZpjWtESMcpaL8Xwil8THdV+2yCliUU9I41L1HSi/SX7mdK
-	 a0Qs2XK+SWvxNL9839gaAMIuIJb6aAbXriC9kxTDtBkf9vVO4XVe9VXnPowvZG5AlZ
-	 c5f9bQ1r/Wgczd+ayG+B/3r9TPag2dJ74ATqagEg=
+	b=XMD22P5cN8hnCOhuxAMQ8g5EHC0wjJXhN65VYFt13rc2lkJU1G21Mfyl3tH/Ie+PO
+	 SZvsmYIhI0+zepfakr7zMaOK2v/Jewh4LsxIeIXKEQweLHDsmldCLGqMqEiyRBBRk1
+	 kkvgBreH2dFp9ie1AE+En6AtsuYMM6oV3Tmpf3OE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729133AbgHTJl7 (ORCPT
+        id S1729134AbgHTJmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgHTJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:48 -0400
+        id S1729128AbgHTJlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C38520724;
-        Thu, 20 Aug 2020 09:41:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E15DF2075E;
+        Thu, 20 Aug 2020 09:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916508;
-        bh=zYYp3C2CTnV6KL7DGFZEL0ktlMcY9rMHH+wVkETx7r8=;
+        s=default; t=1597916511;
+        bh=raWJJA6x4ZbEavM1RWR+iCgk2M8/9qEcmjWQtjyRcOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jj7xngC8n1Vxtd8qlGx9s7s3vRBRtqNEwlcsM9CNOsQ3U4B49yTGvVvCpaGQMIe2v
-         WwrBPREItbz/wmsj3VfAa+5juECcGrVk75Ah5YDIT2IZDjFpgnL6RH2qzaX1e42gI3
-         Y3RZkSVYxCkRXB1dXF6YOjlqOTc+5BPMOm05kanA=
+        b=yAUzPSLjWGURKroHNsJdB84pkWqo8/iZcW29tDDzgHUpL6x3rCtTJKGq8tmb6OonG
+         9gTfQoHAHhjXHKNBSy8pCV6/seGLLxYR8q4kALRoUJs3GvVv3c4UWFVRVKhwOxmj+4
+         6J/Bvv5YthN1uaSKBqVvTcrEUOpK8rvzm38kPtaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 125/204] rtw88: pci: disable aspm for platform inter-op with module parameter
-Date:   Thu, 20 Aug 2020 11:20:22 +0200
-Message-Id: <20200820091612.534416503@linuxfoundation.org>
+Subject: [PATCH 5.7 152/204] clk: bcm2835: Do not use prediv with bcm2711s PLLs
+Date:   Thu, 20 Aug 2020 11:20:49 +0200
+Message-Id: <20200820091613.834101105@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,67 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 68aa716b7dd36f55e080da9e27bc594346334c41 ]
+[ Upstream commit f34e4651ce66a754f41203284acf09b28b9dd955 ]
 
-Some platforms cannot read the DBI register successfully for the
-ASPM settings. After the read failed, the bus could be unstable,
-and the device just became unavailable [1]. For those platforms,
-the ASPM should be disabled. But as the ASPM can help the driver
-to save the power consumption in power save mode, the ASPM is still
-needed. So, add a module parameter for them to disable it, then
-the device can still work, while others can benefit from the less
-power consumption that brings by ASPM enabled.
+Contrary to previous SoCs, bcm2711 doesn't have a prescaler in the PLL
+feedback loop. Bypass it by zeroing fb_prediv_mask when running on
+bcm2711.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=206411
-[2] Note that my lenovo T430 is the same.
+Note that, since the prediv configuration bits were re-purposed, this
+was triggering miscalculations on all clocks hanging from the VPU clock,
+notably the aux UART, making its output unintelligible.
 
-Fixes: 3dff7c6e3749 ("rtw88: allows to enable/disable HCI link PS mechanism")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200605074703.32726-1-yhchuang@realtek.com
+Fixes: 42de9ad400af ("clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/20200730182619.23246-1-nsaenzjulienne@suse.de
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index d735f3127fe8f..6c24ddc2a9751 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -14,8 +14,11 @@
- #include "debug.h"
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 7c845c293af00..798f0b419c79f 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -314,6 +314,7 @@ struct bcm2835_cprman {
+ 	struct device *dev;
+ 	void __iomem *regs;
+ 	spinlock_t regs_lock; /* spinlock for all clocks */
++	unsigned int soc;
  
- static bool rtw_disable_msi;
-+static bool rtw_pci_disable_aspm;
- module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
-+module_param_named(disable_aspm, rtw_pci_disable_aspm, bool, 0644);
- MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
-+MODULE_PARM_DESC(disable_aspm, "Set Y to disable PCI ASPM support");
+ 	/*
+ 	 * Real names of cprman clock parents looked up through
+@@ -525,6 +526,20 @@ static int bcm2835_pll_is_on(struct clk_hw *hw)
+ 		A2W_PLL_CTRL_PRST_DISABLE;
+ }
  
- static u32 rtw_pci_tx_queue_idx_addr[] = {
- 	[RTW_TX_QUEUE_BK]	= RTK_PCI_TXBD_IDX_BKQ,
-@@ -1189,6 +1192,9 @@ static void rtw_pci_clkreq_set(struct rtw_dev *rtwdev, bool enable)
- 	u8 value;
- 	int ret;
- 
-+	if (rtw_pci_disable_aspm)
-+		return;
++static u32 bcm2835_pll_get_prediv_mask(struct bcm2835_cprman *cprman,
++				       const struct bcm2835_pll_data *data)
++{
++	/*
++	 * On BCM2711 there isn't a pre-divisor available in the PLL feedback
++	 * loop. Bits 13:14 of ANA1 (PLLA,PLLB,PLLC,PLLD) have been re-purposed
++	 * for to for VCO RANGE bits.
++	 */
++	if (cprman->soc & SOC_BCM2711)
++		return 0;
 +
- 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to read CLKREQ_L1, ret=%d", ret);
-@@ -1208,6 +1214,9 @@ static void rtw_pci_aspm_set(struct rtw_dev *rtwdev, bool enable)
- 	u8 value;
- 	int ret;
- 
-+	if (rtw_pci_disable_aspm)
-+		return;
++	return data->ana->fb_prediv_mask;
++}
 +
- 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to read ASPM, ret=%d", ret);
+ static void bcm2835_pll_choose_ndiv_and_fdiv(unsigned long rate,
+ 					     unsigned long parent_rate,
+ 					     u32 *ndiv, u32 *fdiv)
+@@ -582,7 +597,7 @@ static unsigned long bcm2835_pll_get_rate(struct clk_hw *hw,
+ 	ndiv = (a2wctrl & A2W_PLL_CTRL_NDIV_MASK) >> A2W_PLL_CTRL_NDIV_SHIFT;
+ 	pdiv = (a2wctrl & A2W_PLL_CTRL_PDIV_MASK) >> A2W_PLL_CTRL_PDIV_SHIFT;
+ 	using_prediv = cprman_read(cprman, data->ana_reg_base + 4) &
+-		data->ana->fb_prediv_mask;
++		       bcm2835_pll_get_prediv_mask(cprman, data);
+ 
+ 	if (using_prediv) {
+ 		ndiv *= 2;
+@@ -665,6 +680,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	struct bcm2835_pll *pll = container_of(hw, struct bcm2835_pll, hw);
+ 	struct bcm2835_cprman *cprman = pll->cprman;
+ 	const struct bcm2835_pll_data *data = pll->data;
++	u32 prediv_mask = bcm2835_pll_get_prediv_mask(cprman, data);
+ 	bool was_using_prediv, use_fb_prediv, do_ana_setup_first;
+ 	u32 ndiv, fdiv, a2w_ctl;
+ 	u32 ana[4];
+@@ -682,7 +698,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	for (i = 3; i >= 0; i--)
+ 		ana[i] = cprman_read(cprman, data->ana_reg_base + i * 4);
+ 
+-	was_using_prediv = ana[1] & data->ana->fb_prediv_mask;
++	was_using_prediv = ana[1] & prediv_mask;
+ 
+ 	ana[0] &= ~data->ana->mask0;
+ 	ana[0] |= data->ana->set0;
+@@ -692,10 +708,10 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	ana[3] |= data->ana->set3;
+ 
+ 	if (was_using_prediv && !use_fb_prediv) {
+-		ana[1] &= ~data->ana->fb_prediv_mask;
++		ana[1] &= ~prediv_mask;
+ 		do_ana_setup_first = true;
+ 	} else if (!was_using_prediv && use_fb_prediv) {
+-		ana[1] |= data->ana->fb_prediv_mask;
++		ana[1] |= prediv_mask;
+ 		do_ana_setup_first = false;
+ 	} else {
+ 		do_ana_setup_first = true;
+@@ -2232,6 +2248,7 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, cprman);
+ 
+ 	cprman->onecell.num = asize;
++	cprman->soc = pdata->soc;
+ 	hws = cprman->onecell.hws;
+ 
+ 	for (i = 0; i < asize; i++) {
 -- 
 2.25.1
 
