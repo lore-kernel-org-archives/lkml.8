@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5496C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D311C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3C4E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47D102078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927850;
-	bh=Bgf8F92t/ZAyenynqhNM6Yf/xAbcyUQKG4+V7kmmPnQ=;
+	s=default; t=1597927858;
+	bh=Jz2TqGB+t3NpsqrwkafQ0cJY9nsMIM6mZHXjxl9L9ik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FI3mfhqFVN8MdTH/diJZyJ2H34/6iBytKUoi/C/Q7vLF/0dF5GIbkbzgAu62B7gM8
-	 CS5GjfBbcSZbPNkkF/DMinr2etJ1ExzJfAWqYPCDyXWlzcTBsqq3fhlIvWM1BQXfwI
-	 qfUQo9M+PHB22WTSsegzTUjPDvCJU5c1B5ikwoLk=
+	b=eNU/TgZUzGMEHmc7eVH0Q3ehpd110tEHn5umEudo99QoQA9iZw8fRJQ+YLWHhZqKe
+	 B/KyRrmwjprxpHcKNxlFYPSmbH6U2xEMsBYSQvpTQm/dx+ygaBsRe1xpAcOJq7eQ2Z
+	 YHIYR6WZYjIOa25UOOcyy2SHuKlNnV5334TEhk+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729951AbgHTMut (ORCPT
+        id S1730235AbgHTMuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:50:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:50:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729003AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022D922D08;
-        Thu, 20 Aug 2020 09:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5670222CB1;
+        Thu, 20 Aug 2020 09:44:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916670;
-        bh=Bgf8F92t/ZAyenynqhNM6Yf/xAbcyUQKG4+V7kmmPnQ=;
+        s=default; t=1597916658;
+        bh=Jz2TqGB+t3NpsqrwkafQ0cJY9nsMIM6mZHXjxl9L9ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r2Uo7GwTX8OH3ioNvPrE4QtJv0UZhiml2VVYQMnnOYMcjujxytheCMUZyGd6H99Vl
-         V3Al9V3CifVabkrrgGMh1RFCM0Jd8oHGhuUXtsz9yH3W3BOE9R8ZmQTVjP/iauURZB
-         wxOiVM4xTS4WDoJnimrevc0BS+H76DPKRweAqG4Y=
+        b=TuxMHlTWCuqmMvZIL90HMoJszx0yDQna8w/YUUJq1pFHbDXySqYkc/1DqtkKGy0Rk
+         dbgfrseqIS5fkl+Uu/FHerTsdidwtJIAe8lZ7grKHKmEfoGUp9jcrM73jiPfZFz4Nw
+         P98VVx5uKAHjfgTZR0BMYED8UTeGw7HC/+Aw9rek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH 5.7 195/204] drm/panfrost: Use kvfree() to free bo->sgts
-Date:   Thu, 20 Aug 2020 11:21:32 +0200
-Message-Id: <20200820091615.921958132@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.7 191/204] ASoC: tegra: Add audio mclk parent configuration
+Date:   Thu, 20 Aug 2020 11:21:28 +0200
+Message-Id: <20200820091615.733460520@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,47 +61,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-commit 114427b8927a4def2942b2b886f7e4aeae289ccb upstream.
+commit 1e4e0bf136aa4b4aa59c1e6af19844bd6d807794 upstream.
 
-Use kvfree() to free bo->sgts, because the memory is allocated with
-kvmalloc_array() in panfrost_mmu_map_fault_addr().
+Tegra PMC clock clk_out_1 is dedicated for audio mclk from Tegra30
+through Tegra210 and currently Tegra clock driver does the initial
+parent configuration for audio mclk and keeps it enabled by default.
 
-Fixes: 187d2929206e ("drm/panfrost: Add support for GPU heap allocations")
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200608151728.234026-1-efremov@linux.com
+With the move of PMC clocks from clock driver into PMC driver, audio
+clocks parent configuration can be specified through the device tree
+using assigned-clock-parents property and audio mclk control should be
+taken care of by the audio driver.
+
+This patch has implementation for parent configuration when default
+parent configuration through assigned-clock-parents property is not
+specified in the device tree.
+
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Sameer Pujar <spujar@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/panfrost/panfrost_gem.c |    2 +-
- drivers/gpu/drm/panfrost/panfrost_mmu.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/tegra/tegra_asoc_utils.c |   68 +++++++++++++++++++++----------------
+ 1 file changed, 40 insertions(+), 28 deletions(-)
 
---- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-@@ -46,7 +46,7 @@ static void panfrost_gem_free_object(str
- 				sg_free_table(&bo->sgts[i]);
- 			}
- 		}
--		kfree(bo->sgts);
-+		kvfree(bo->sgts);
+--- a/sound/soc/tegra/tegra_asoc_utils.c
++++ b/sound/soc/tegra/tegra_asoc_utils.c
+@@ -60,8 +60,6 @@ int tegra_asoc_utils_set_rate(struct teg
+ 	data->set_mclk = 0;
+ 
+ 	clk_disable_unprepare(data->clk_cdev1);
+-	clk_disable_unprepare(data->clk_pll_a_out0);
+-	clk_disable_unprepare(data->clk_pll_a);
+ 
+ 	err = clk_set_rate(data->clk_pll_a, new_baseclock);
+ 	if (err) {
+@@ -77,18 +75,6 @@ int tegra_asoc_utils_set_rate(struct teg
+ 
+ 	/* Don't set cdev1/extern1 rate; it's locked to pll_a_out0 */
+ 
+-	err = clk_prepare_enable(data->clk_pll_a);
+-	if (err) {
+-		dev_err(data->dev, "Can't enable pll_a: %d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_prepare_enable(data->clk_pll_a_out0);
+-	if (err) {
+-		dev_err(data->dev, "Can't enable pll_a_out0: %d\n", err);
+-		return err;
+-	}
+-
+ 	err = clk_prepare_enable(data->clk_cdev1);
+ 	if (err) {
+ 		dev_err(data->dev, "Can't enable cdev1: %d\n", err);
+@@ -109,8 +95,6 @@ int tegra_asoc_utils_set_ac97_rate(struc
+ 	int err;
+ 
+ 	clk_disable_unprepare(data->clk_cdev1);
+-	clk_disable_unprepare(data->clk_pll_a_out0);
+-	clk_disable_unprepare(data->clk_pll_a);
+ 
+ 	/*
+ 	 * AC97 rate is fixed at 24.576MHz and is used for both the host
+@@ -130,18 +114,6 @@ int tegra_asoc_utils_set_ac97_rate(struc
+ 
+ 	/* Don't set cdev1/extern1 rate; it's locked to pll_a_out0 */
+ 
+-	err = clk_prepare_enable(data->clk_pll_a);
+-	if (err) {
+-		dev_err(data->dev, "Can't enable pll_a: %d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_prepare_enable(data->clk_pll_a_out0);
+-	if (err) {
+-		dev_err(data->dev, "Can't enable pll_a_out0: %d\n", err);
+-		return err;
+-	}
+-
+ 	err = clk_prepare_enable(data->clk_cdev1);
+ 	if (err) {
+ 		dev_err(data->dev, "Can't enable cdev1: %d\n", err);
+@@ -158,6 +130,7 @@ EXPORT_SYMBOL_GPL(tegra_asoc_utils_set_a
+ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+ 			  struct device *dev)
+ {
++	struct clk *clk_out_1, *clk_extern1;
+ 	int ret;
+ 
+ 	data->dev = dev;
+@@ -193,6 +166,45 @@ int tegra_asoc_utils_init(struct tegra_a
+ 		return PTR_ERR(data->clk_cdev1);
  	}
  
- 	drm_gem_shmem_free_object(obj);
---- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-@@ -486,7 +486,7 @@ static int panfrost_mmu_map_fault_addr(s
- 		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
- 				       sizeof(struct page *), GFP_KERNEL | __GFP_ZERO);
- 		if (!pages) {
--			kfree(bo->sgts);
-+			kvfree(bo->sgts);
- 			bo->sgts = NULL;
- 			mutex_unlock(&bo->base.pages_lock);
- 			ret = -ENOMEM;
++	/*
++	 * If clock parents are not set in DT, configure here to use clk_out_1
++	 * as mclk and extern1 as parent for Tegra30 and higher.
++	 */
++	if (!of_find_property(dev->of_node, "assigned-clock-parents", NULL) &&
++	    data->soc > TEGRA_ASOC_UTILS_SOC_TEGRA20) {
++		dev_warn(data->dev,
++			 "Configuring clocks for a legacy device-tree\n");
++		dev_warn(data->dev,
++			 "Please update DT to use assigned-clock-parents\n");
++		clk_extern1 = devm_clk_get(dev, "extern1");
++		if (IS_ERR(clk_extern1)) {
++			dev_err(data->dev, "Can't retrieve clk extern1\n");
++			return PTR_ERR(clk_extern1);
++		}
++
++		ret = clk_set_parent(clk_extern1, data->clk_pll_a_out0);
++		if (ret < 0) {
++			dev_err(data->dev,
++				"Set parent failed for clk extern1\n");
++			return ret;
++		}
++
++		clk_out_1 = devm_clk_get(dev, "pmc_clk_out_1");
++		if (IS_ERR(clk_out_1)) {
++			dev_err(data->dev, "Can't retrieve pmc_clk_out_1\n");
++			return PTR_ERR(clk_out_1);
++		}
++
++		ret = clk_set_parent(clk_out_1, clk_extern1);
++		if (ret < 0) {
++			dev_err(data->dev,
++				"Set parent failed for pmc_clk_out_1\n");
++			return ret;
++		}
++
++		data->clk_cdev1 = clk_out_1;
++	}
++
+ 	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
+ 	if (ret)
+ 		return ret;
 
 
