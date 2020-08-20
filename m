@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F14C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08850C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24B95208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98E1207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882162;
-	bh=2piNqjgMF8RHhqlBhK0HIYSunlesgNni0vdGlmvyMoU=;
+	s=default; t=1597882168;
+	bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TZ8EsZOhMILfS4qmGnvgfgiSAYvqCKaBj07pXI1L9HEUGnjSLuCHDun1Z+gqt5Qi1
-	 mN+5GH7huyWU+MNeWlW8j8Zsr2V8x2D2lDLNxEMZrH6DxF19j2Uk+oVz+f/6u+Lf/M
-	 mhpepwC/BUJQEu3FGqEfMcSJ2Gw3k3Gq6xneSxWY=
+	b=zB9nrJWUtf3I7Lbewz3Xwn9u/k/w7wbW2ufeNWDC/UoK3DmrBmoT8a8Jyqc5MTOiQ
+	 MkDsi677xRA1ojkZLCP/9ZhXJnt3u+oumcOrLu/Ddv5SNGjyzKguh+pJ4nAUuKfxZ3
+	 5Mjoe1cjgSOKSfvU38TsEfyhEaChstfsHhFOC2gU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgHTAJU (ORCPT
+        id S1728089AbgHTACp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:09:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728077AbgHTACp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 20:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728052AbgHTACj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AFA1214F1;
-        Thu, 20 Aug 2020 00:02:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40E0E221E2;
+        Thu, 20 Aug 2020 00:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881765;
-        bh=2piNqjgMF8RHhqlBhK0HIYSunlesgNni0vdGlmvyMoU=;
+        s=default; t=1597881759;
+        bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pCMfCHDDcWT6RkO93BxA8ayHdRLQ1SET16sEgqxkPNelW0yaVV5HaP1a46ooyKLWI
-         812QD+YGp22Ny1vSk1shErHZT1/+s+wErtgtSQjmeS5e/KKN8VI4dTJV4cu2ZgcDNV
-         fDLLXqMykZnqGM0xpbLQzPtHZFxa7WSn0UMc6D9M=
+        b=jy2ODICs+dc9aS1KHT+vgyr9QIqcMuInM9uFN7lDt+j9UFpeHy0KlFCbkWASW+APb
+         ZCksJRVqOPxGn4ugqQZzDGSV/odwgcOc+BHEIVzbnbyFOrqGPvkBpa8MQ3T/9Vj5MM
+         +/Kob7GUTzM3svqXA057KpgVRw/nzW9cXLEJ2EUY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Laurent Morichetti <laurent.morichetti@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 11/22] drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
-Date:   Wed, 19 Aug 2020 20:02:18 -0400
-Message-Id: <20200820000229.215333-11-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 06/22] Input: psmouse - add a newline when printing 'proto' by sysfs
+Date:   Wed, 19 Aug 2020 20:02:13 -0400
+Message-Id: <20200820000229.215333-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,39 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit c0001213d195d1bac83e0744c06ff06dd5a8ba53 ]
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-VMAs with a pg_offs that's offset from the start of the vma_node need
-to adjust the offset within the BO accordingly. This matches the
-offset calculation in ttm_bo_vm_fault_reserved.
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Laurent Morichetti <laurent.morichetti@amd.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/381169/
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
+
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 46dc3de7e81bf..f2bad14ac04ab 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -358,8 +358,10 @@ static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
- static int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
- 			    void *buf, int len, int write)
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index 527ae0b9a191e..0b4a3039f312f 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -2042,7 +2042,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
  {
--	unsigned long offset = (addr) - vma->vm_start;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	unsigned long offset = (addr) - vma->vm_start +
-+		((vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node))
-+		 << PAGE_SHIFT);
- 	int ret;
+ 	int type = *((unsigned int *)kp->arg);
  
- 	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->num_pages)
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ }
+ 
+ static int __init psmouse_init(void)
 -- 
 2.25.1
 
