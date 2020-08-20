@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 192F1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AE3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E151E208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F76208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882190;
-	bh=88Xw40YC1QnjNuLG/+6YqfiY2ut1djo/oaUujd9yOWg=;
+	s=default; t=1597882196;
+	bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01nRxH9o6BBPA3PHRB4U9o27LCGe8LGM7/CxLCs8HmW1uttcgivCet1prdUWOND4y
-	 T8Pmf6mYUk33jYyfQhp+F9IFdJCDldsVphQ/D4iTUhAukri/593qdPbXKCNtJkjwxe
-	 52+2VtMW4qZ+T1lIQe7RoAbdkikIcE8DjHw3zyIo=
+	b=kVMEmCswwFsIuRp/gn9FggV62Ibx0H3DR2iAtZ+RwWzvbJ/75+RZWGXPuNOKXwkuE
+	 dr9MQf3Vif/HOsMzH5gFFHVyFVe+65Rs4oHYh/9qNF4sHCVu9McKw03K0xgiiA7Kh2
+	 wrd5qOt4DepHyLYFvmA+7GWcKSyfr1Ne3wAHqD0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgHTAJt (ORCPT
+        id S1728561AbgHTAJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:09:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59698 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:09:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgHTACk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:40 -0400
+        id S1726806AbgHTACi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C8142224D;
-        Thu, 20 Aug 2020 00:02:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E277C2184D;
+        Thu, 20 Aug 2020 00:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881760;
-        bh=88Xw40YC1QnjNuLG/+6YqfiY2ut1djo/oaUujd9yOWg=;
+        s=default; t=1597881757;
+        bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/7W16xXaMXyV5vg22pc7PLHGeL+XWmOZqBEjpeqUjIbpqK0rQ8Mi99SnCOJMNQd1
-         QYuSerAnuhOEDyMrvPgsW84r1toDHyi+cUBXvVrV2yzdLrtXWN3y5nt8YJQdzOhi7k
-         ZARQv2gJbo7t3gcJRr8h4T+BRQjmUlGI2BTQJvW4=
+        b=R9qYpldfhG0bzWZj60xIFxE2WsrIZw0xiyCmRcuUPF+PHV8oGhGrHyl6NSsnc0JWv
+         7EBAZPkvk5Y4CCljO+VNm5KcgULLW01pMuGTkD5nA0/hVdkYxequc/QQ+fgBLB0y97
+         U7ZlFRhFzhFg+M6I8NxbD+9SLQLYjPB1vr8Hq37o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jinyang He <hejinyang@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/22] MIPS: Fix unable to reserve memory for Crash kernel
-Date:   Wed, 19 Aug 2020 20:02:14 -0400
-Message-Id: <20200820000229.215333-7-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 05/22] media: vpss: clean up resources in init
+Date:   Wed, 19 Aug 2020 20:02:12 -0400
+Message-Id: <20200820000229.215333-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,77 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jinyang He <hejinyang@loongson.cn>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit b1ce9716f3b5ed3b49badf1f003b9e34b7ead0f9 ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-Use 0 as the align parameter in memblock_find_in_range() is
-incorrect when we reserve memory for Crash kernel.
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-The environment as follows:
-[    0.000000] MIPS: machine is loongson,loongson64c-4core-rs780e
-...
-[    1.951016]     crashkernel=64M@128M
+Found by Linux Driver Verification project (linuxtesting.org).
 
-The warning as follows:
-[    0.000000] Invalid memory region reserved for crash kernel
-
-And the iomem as follows:
-00200000-0effffff : System RAM
-  04000000-0484009f : Kernel code
-  048400a0-04ad7fff : Kernel data
-  04b40000-05c4c6bf : Kernel bss
-1a000000-1bffffff : pci@1a000000
-...
-
-The align parameter may be finally used by round_down() or round_up().
-Like the following call tree:
-
-mips-next: mm/memblock.c
-
-memblock_find_in_range
-└── memblock_find_in_range_node
-    ├── __memblock_find_range_bottom_up
-    │   └── round_up
-    └── __memblock_find_range_top_down
-        └── round_down
-\#define round_up(x, y) ((((x)-1) | __round_mask(x, y))+1)
-\#define round_down(x, y) ((x) & ~__round_mask(x, y))
-\#define __round_mask(x, y) ((__typeof__(x))((y)-1))
-
-The round_down(or round_up)'s second parameter must be a power of 2.
-If the second parameter is 0, it both will return 0.
-
-Use 1 as the parameter to fix the bug and the iomem as follows:
-00200000-0effffff : System RAM
-  04000000-0484009f : Kernel code
-  048400a0-04ad7fff : Kernel data
-  04b40000-05c4c6bf : Kernel bss
-  08000000-0bffffff : Crash kernel
-1a000000-1bffffff : pci@1a000000
-...
-
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 7b06e6ee6817d..b8884de89c81e 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -494,7 +494,7 @@ static void __init mips_parse_crashkernel(void)
- 	if (ret != 0 || crash_size <= 0)
- 		return;
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index d38d2bbb6f0f8..7000f0bf0b353 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -505,19 +505,31 @@ static void vpss_exit(void)
  
--	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 0)) {
-+	if (!memblock_find_in_range(crash_base, crash_base + crash_size, crash_size, 1)) {
- 		pr_warn("Invalid memory region reserved for crash kernel\n");
- 		return;
+ static int __init vpss_init(void)
+ {
++	int ret;
++
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
+ 
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
  	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
+ }
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
