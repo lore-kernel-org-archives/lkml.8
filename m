@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0A9C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527F022B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4186422B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927484;
-	bh=+kIHDLQ6VjW0ccUQkRNIQolnSfnUt5jKKnYmxmGxmxs=;
+	s=default; t=1597927488;
+	bh=f9rXPAQaNcbv4cfIA5Asq/mz1mnROIrze4c9fJmGeOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GaV1PhsJb76wu3UP9kTqQWTS266MRFN5ZGQRDI4GlKgWlkfBKP2TtP3pZP3YYNPJU
-	 DR5tvz9UvvVmgD2S7nsvDgcCuua74PlcF2O+XbmRTF467P6yvdkr1WhGOoO6VSpXqU
-	 65LaPql3KBScFr8HiSwxhBXIVkGdWk0fKUlRSOis=
+	b=cdcLSXvj/5Ipsxic2sgwTFdk8XVk07pQmkbRQZGu6EM0Oo1ZnpkQ5OiSl1Ekk2TjQ
+	 uL+MgsKGEayS/XPGEODpXTUz4CSEGK3/gAH7sHv9XHm/SDeCHXdSHqcjN1buHmyigu
+	 vay2cruWKXaOfjrGSYd5t+qB68+Y2B4fA+QBCljI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729933AbgHTMom (ORCPT
+        id S1729480AbgHTMog (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:44:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729311AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729309AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3BDA20724;
-        Thu, 20 Aug 2020 09:45:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B0F222CBE;
+        Thu, 20 Aug 2020 09:45:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916741;
-        bh=+kIHDLQ6VjW0ccUQkRNIQolnSfnUt5jKKnYmxmGxmxs=;
+        s=default; t=1597916731;
+        bh=f9rXPAQaNcbv4cfIA5Asq/mz1mnROIrze4c9fJmGeOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=abqGIfqdjbVuA12K39TXsYSW96IIlJBllcNMtYWdauJjgRJuT5aAF6nUEVxHuLv4Q
-         Q3fe7MAJZcYDUOVzGAR8rzHNdyU6qir761PPzdkr8qgSh72hrzHAr5ioheHQAXveIj
-         uE4thZhQ3tVK3emJEzvQ3D60N09JWi1Jbpe0mnmI=
+        b=0cGd5Nhi5CHsqzlXXa18I8dWBW4e78LWN4PlsIdstvK13ez+3OlIrOVcnrKQgJdZV
+         U5YAr+NfEJnvpzwnlFXf61g/cW1hUvzgnrD/tANEV3FMvGxagt3oEFDXN9jPCyCyds
+         ibpZRBdSiDDQCv8nI7CGOQAZ6ZFfx56s3YGEDTU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        "Pavel Machek (CIP)" <pavel@denx.de>,
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 029/152] btrfs: fix return value mixup in btrfs_get_extent
-Date:   Thu, 20 Aug 2020 11:19:56 +0200
-Message-Id: <20200820091555.151988769@linuxfoundation.org>
+Subject: [PATCH 5.4 027/152] btrfs: fix memory leaks after failure to lookup checksums during inode logging
+Date:   Thu, 20 Aug 2020 11:19:54 +0200
+Message-Id: <20200820091555.054984961@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,35 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Machek <pavel@denx.de>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 881a3a11c2b858fe9b69ef79ac5ee9978a266dc9 upstream.
+commit 4f26433e9b3eb7a55ed70d8f882ae9cd48ba448b upstream.
 
-btrfs_get_extent() sets variable ret, but out: error path expect error
-to be in variable err so the error code is lost.
+While logging an inode, at copy_items(), if we fail to lookup the checksums
+for an extent we release the destination path, free the ins_data array and
+then return immediately. However a previous iteration of the for loop may
+have added checksums to the ordered_sums list, in which case we leak the
+memory used by them.
 
-Fixes: 6bf9e4bd6a27 ("btrfs: inode: Verify inode mode to avoid NULL pointer dereference")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Pavel Machek (CIP) <pavel@denx.de>
+So fix this by making sure we iterate the ordered_sums list and free all
+its checksums before returning.
+
+Fixes: 3650860b90cc2a ("Btrfs: remove almost all of the BUG()'s from tree-log.c")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/tree-log.c |    8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -7194,7 +7194,7 @@ struct extent_map *btrfs_get_extent(stru
- 	    extent_type == BTRFS_FILE_EXTENT_PREALLOC) {
- 		/* Only regular file could have regular/prealloc extent */
- 		if (!S_ISREG(inode->vfs_inode.i_mode)) {
--			ret = -EUCLEAN;
-+			err = -EUCLEAN;
- 			btrfs_crit(fs_info,
- 		"regular/prealloc extent found for non-regular inode %llu",
- 				   btrfs_ino(inode));
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4040,11 +4040,8 @@ static noinline int copy_items(struct bt
+ 						fs_info->csum_root,
+ 						ds + cs, ds + cs + cl - 1,
+ 						&ordered_sums, 0);
+-				if (ret) {
+-					btrfs_release_path(dst_path);
+-					kfree(ins_data);
+-					return ret;
+-				}
++				if (ret)
++					break;
+ 			}
+ 		}
+ 	}
+@@ -4057,7 +4054,6 @@ static noinline int copy_items(struct bt
+ 	 * we have to do this after the loop above to avoid changing the
+ 	 * log tree while trying to change the log tree.
+ 	 */
+-	ret = 0;
+ 	while (!list_empty(&ordered_sums)) {
+ 		struct btrfs_ordered_sum *sums = list_entry(ordered_sums.next,
+ 						   struct btrfs_ordered_sum,
 
 
