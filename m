@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46541C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643B3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAA8208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 378B72173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917465;
-	bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
+	s=default; t=1597917471;
+	bh=qnaBYUjvGUjG4EwYsGZIGob0s5WCAJNqm2B67vsURKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bK4oGl/gfBMylAaRAgTXQofkn/LM7wrcoePtAbldXl7fxsAaVF/ScC20q7t8iOKYK
-	 qpIC7mgiuTqEYzzFkh0TIcqiFVYi9pdh3Dyra9ldmKqss7aHESOPul6qLQnnl2VHYr
-	 PzYdjeK9+1GvViPByWwKeTS9pgd3KLT+MWutJ8co=
+	b=zkNl0gQnxn497PaKjJd3jC/Hywg4ElG4KQE0gwIBqKOb8zloDIDHOhtBKklC/pw9a
+	 uqbDfFAVe1lIsgid7o72UV53dPIwJRjWGQk9cO/A9T6CEV8BPOCUVPEPyaEzgSZD8Z
+	 b3jAbRluWfbC/SPZVSdgXimRB/vsNEj9ctUqWzFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgHTJ5g (ORCPT
+        id S1730345AbgHTJ5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:57:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:57:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729684AbgHTJ5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:05 -0400
+        id S1730286AbgHTJ5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FF39207FB;
-        Thu, 20 Aug 2020 09:57:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 061AC2067C;
+        Thu, 20 Aug 2020 09:57:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917424;
-        bh=p6TsHCvvkp3SLABaDg9z5pQt9RWPKGLg3o7T1fgNJ4E=;
+        s=default; t=1597917437;
+        bh=qnaBYUjvGUjG4EwYsGZIGob0s5WCAJNqm2B67vsURKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWBxhVCm5/oz3ZK7spiqxA2/9zD5tAcCOx7H1fyDrSQpSVSq0CY0ZtSHEgnfeJSd+
-         IHbhcnWAC69r+nLKAn9OUbo0f4Gw7s05UlNOrcjNg3nsmbWyj6dAQoVk9hnSQLC7z9
-         ue60B/8mMpWOTJnWSw5B3PeF7bJCEBRf331OpXds=
+        b=fDRhPT7imWEv8PspDY6ylA0spU8uRLypc8F2iL8yx9FDJmfI2MGyLm2OnyLU5zQGd
+         HSpjn7nOQtQCLp5hEWL53CzI44YWWBONTyxfIbvjaSQzQC89dr/vAou8XvE8NVoGNN
+         UF25rn3PA1w+ukeFLOjjTFkI3xeRxYaEPFN2kdjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 026/212] sh: Fix validation of system call number
-Date:   Thu, 20 Aug 2020 11:19:59 +0200
-Message-Id: <20200820091603.663937357@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 030/212] mlxsw: core: Increase scope of RCU read-side critical section
+Date:   Thu, 20 Aug 2020 11:20:03 +0200
+Message-Id: <20200820091603.871846929@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,55 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 04a8a3d0a73f51c7c2da84f494db7ec1df230e69 ]
+[ Upstream commit 7d8e8f3433dc8d1dc87c1aabe73a154978fb4c4d ]
 
-The slow path for traced system call entries accessed a wrong memory
-location to get the number of the maximum allowed system call number.
-Renumber the numbered "local" label for the correct location to avoid
-collisions with actual local labels.
+The lifetime of the Rx listener item ('rxl_item') is managed using RCU,
+but is dereferenced outside of RCU read-side critical section, which can
+lead to a use-after-free.
 
-Signed-off-by: Michael Karcher <kernel@mkarcher.dialup.fu-berlin.de>
-Tested-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Fixes: f3a8308864f920d2 ("sh: Add a few missing irqflags tracing markers.")
-Signed-off-by: Rich Felker <dalias@libc.org>
+Fix this by increasing the scope of the RCU read-side critical section.
+
+Fixes: 93c1edb27f9e ("mlxsw: Introduce Mellanox switch driver core")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/kernel/entry-common.S | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sh/kernel/entry-common.S b/arch/sh/kernel/entry-common.S
-index 28cc61216b649..ed5b758c650d7 100644
---- a/arch/sh/kernel/entry-common.S
-+++ b/arch/sh/kernel/entry-common.S
-@@ -203,7 +203,7 @@ syscall_trace_entry:
- 	mov.l	@(OFF_R7,r15), r7   ! arg3
- 	mov.l	@(OFF_R3,r15), r3   ! syscall_nr
- 	!
--	mov.l	2f, r10			! Number of syscalls
-+	mov.l	6f, r10			! Number of syscalls
- 	cmp/hs	r10, r3
- 	bf	syscall_call
- 	mov	#-ENOSYS, r0
-@@ -357,7 +357,7 @@ ENTRY(system_call)
- 	tst	r9, r8
- 	bf	syscall_trace_entry
- 	!
--	mov.l	2f, r8			! Number of syscalls
-+	mov.l	6f, r8			! Number of syscalls
- 	cmp/hs	r8, r3
- 	bt	syscall_badsys
- 	!
-@@ -396,7 +396,7 @@ syscall_exit:
- #if !defined(CONFIG_CPU_SH2)
- 1:	.long	TRA
- #endif
--2:	.long	NR_syscalls
-+6:	.long	NR_syscalls
- 3:	.long	sys_call_table
- 7:	.long	do_syscall_trace_enter
- 8:	.long	do_syscall_trace_leave
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index aa33d58b9f81c..6ebe88deab62a 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1584,9 +1584,10 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
+ 			break;
+ 		}
+ 	}
+-	rcu_read_unlock();
+-	if (!found)
++	if (!found) {
++		rcu_read_unlock();
+ 		goto drop;
++	}
+ 
+ 	pcpu_stats = this_cpu_ptr(mlxsw_core->pcpu_stats);
+ 	u64_stats_update_begin(&pcpu_stats->syncp);
+@@ -1597,6 +1598,7 @@ void mlxsw_core_skb_receive(struct mlxsw_core *mlxsw_core, struct sk_buff *skb,
+ 	u64_stats_update_end(&pcpu_stats->syncp);
+ 
+ 	rxl->func(skb, local_port, rxl_item->priv);
++	rcu_read_unlock();
+ 	return;
+ 
+ drop:
 -- 
 2.25.1
 
