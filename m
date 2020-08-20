@@ -2,51 +2,50 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45CDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC08C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCBA204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9892054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923652;
-	bh=n/0+0UGv4O9BLXYPaeUxV3WyDmPOcZAe99nVn9byrSg=;
+	s=default; t=1597923656;
+	bh=WiomYjt9sZvDbsHFAxtIDGIRJxfXz3CVkvFJZ7f488c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2K5cMz6gtFqsUJe3LPaEHm363uQC6D37Qsvji878G14wDGLw2kHZdkUZDVvp0JP2v
-	 PamN+Zgs8k64nT4mOBbJKAQAicu4Esc2Wcym2E1ftOF4kGteASWozu8TmHr44eWqfB
-	 zZwrSnrCaJSa4h9CppyArnNB+0NQbUjFOYA+F5UQ=
+	b=zpFqMyzOvxaXrvFAay/101nefAuKu4K/BQTWJliGXMkcBiTs0FRJgmQNDBhb0gMZq
+	 pTytPfEOJLThbRdPSyXfZa0q05dlsbPx6C+b3SOki/n1Xxzz0L2nk6M5GQmp4ph/NU
+	 hYj3EOOOXmhobBEAqY5kblC09We8Xw1OCnmFlvcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730572AbgHTLkv (ORCPT
+        id S1728994AbgHTLkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:40:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730637AbgHTKE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:59 -0400
+        id S1730557AbgHTKFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54CB02173E;
-        Thu, 20 Aug 2020 10:04:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC7E022BEF;
+        Thu, 20 Aug 2020 10:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917898;
-        bh=n/0+0UGv4O9BLXYPaeUxV3WyDmPOcZAe99nVn9byrSg=;
+        s=default; t=1597917908;
+        bh=WiomYjt9sZvDbsHFAxtIDGIRJxfXz3CVkvFJZ7f488c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2aGC7uCH8g7Ci3UA2LbeUUBVmS1saPr0PfgJ0OZyBOGEBYqZ4PRyF7G0COSQ3wmWk
-         PQl0oCjTydL8MjvTHPHY2qGpAg5yQ2yv0VpywtRm1AgR9+U2A2ZCYqaVQDSf0CykgY
-         PG4cMex2hC3vPx6dO2r9kcTgQCcGU/2+4tbO/2so=
+        b=TJ7S766XMm2ErCzmIMKF9V/3rdLwLTV9G9G7DbsMKeFJab/amiKZm/9ORMF4PoNUr
+         VaSIGPbqLJy9E2hzs4dEKslYAnrm2+zIyEPV+1F83q/rZ/aFcCYumBJ1nCVmwMBoXX
+         MorszOAZArfXpWeAszxIeXDdQ0NgUD9+6d1uIDDw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 195/212] USB: serial: ftdi_sio: fix break and sysrq handling
-Date:   Thu, 20 Aug 2020 11:22:48 +0200
-Message-Id: <20200820091612.210419265@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.9 169/212] smb3: warn on confusing error scenario with sec=krb5
+Date:   Thu, 20 Aug 2020 11:22:22 +0200
+Message-Id: <20200820091610.925346715@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,87 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Steve French <stfrench@microsoft.com>
 
-[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
+commit 0a018944eee913962bce8ffebbb121960d5125d9 upstream.
 
-Only the last NUL in a packet should be flagged as a break character,
-for example, to avoid dropping unrelated characters when IGNBRK is set.
+When mounting with Kerberos, users have been confused about the
+default error returned in scenarios in which either keyutils is
+not installed or the user did not properly acquire a krb5 ticket.
+Log a warning message in the case that "ENOKEY" is returned
+from the get_spnego_key upcall so that users can better understand
+why mount failed in those two cases.
 
-Also make sysrq work by consuming the break character instead of having
-it immediately cancel the sysrq request, and by not processing it
-prematurely to avoid triggering a sysrq based on an unrelated character
-received in the same packet (which was received *before* the break).
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that the break flag can be left set also for a packet received
-immediately following a break and that and an ending NUL in such a
-packet will continue to be reported as a break as there's no good way to
-tell it apart from an actual break.
-
-Tested on FT232R and FT232H.
-
-Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ fs/cifs/smb2pdu.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 0c8b24ff44a05..bb29d5fd032fd 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2054,6 +2054,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
- {
- 	unsigned char status;
-+	bool brkint = false;
- 	int i;
- 	char flag;
- 
-@@ -2105,13 +2106,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 */
- 	flag = TTY_NORMAL;
- 	if (buf[1] & FTDI_RS_ERR_MASK) {
--		/* Break takes precedence over parity, which takes precedence
--		 * over framing errors */
--		if (buf[1] & FTDI_RS_BI) {
--			flag = TTY_BREAK;
-+		/*
-+		 * Break takes precedence over parity, which takes precedence
-+		 * over framing errors. Note that break is only associated
-+		 * with the last character in the buffer and only when it's a
-+		 * NUL.
-+		 */
-+		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
- 			port->icount.brk++;
--			usb_serial_handle_break(port);
--		} else if (buf[1] & FTDI_RS_PE) {
-+			brkint = true;
-+		}
-+		if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
- 		} else if (buf[1] & FTDI_RS_FE) {
-@@ -2127,8 +2132,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 
- 	port->icount.rx += len - 2;
- 
--	if (port->port.console && port->sysrq) {
-+	if (brkint || (port->port.console && port->sysrq)) {
- 		for (i = 2; i < len; i++) {
-+			if (brkint && i == len - 1) {
-+				if (usb_serial_handle_break(port))
-+					return len - 3;
-+				flag = TTY_BREAK;
-+			}
- 			if (usb_serial_handle_sysrq_char(port, buf[i]))
- 				continue;
- 			tty_insert_flip_char(&port->port, buf[i], flag);
--- 
-2.25.1
-
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -776,6 +776,8 @@ SMB2_auth_kerberos(struct SMB2_sess_data
+ 	spnego_key = cifs_get_spnego_key(ses);
+ 	if (IS_ERR(spnego_key)) {
+ 		rc = PTR_ERR(spnego_key);
++		if (rc == -ENOKEY)
++			cifs_dbg(VFS, "Verify user has a krb5 ticket and keyutils is installed\n");
+ 		spnego_key = NULL;
+ 		goto out;
+ 	}
 
 
