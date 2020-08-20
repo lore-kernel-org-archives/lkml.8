@@ -2,84 +2,176 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECCDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9325F20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:40:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1783220674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597930857;
+	bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lF7nclJMfKVJBkyywdrPxx3rmdSzuc+giKuypFK/Dp6S0Q9HvTee5XB4VyGlBqvR7
+	 6mtp6ryRQ5DiTrihI+F84y3QbhCQpWf2FR1mT1I/S8usvQwNg9PAy5PCnPBry3LD5J
+	 9szOv1nUrOFktMJpR09Q5Rq7McBptvjq86c9Xzh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729114AbgHTNkq (ORCPT
+        id S1730605AbgHTNkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:40:46 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:51600 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbgHTJaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727807AbgHTJaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:30:22 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5661E68EB82655C34646;
-        Thu, 20 Aug 2020 17:30:19 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.56) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 20 Aug 2020 17:30:09 +0800
-From:   Tian Tao <tiantao6@hisilicon.com>
-To:     <srinivas.kandagatla@linaro.org>, <linux-kernel@vger.kernel.org>
-CC:     <linuxarm@huawei.com>
-Subject: [PATCH] nvmem: core: Use kobj_to_dev() instead of container_of()
-Date:   Thu, 20 Aug 2020 17:28:03 +0800
-Message-ID: <1597915683-44794-1-git-send-email-tiantao6@hisilicon.com>
-X-Mailer: git-send-email 2.7.4
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68791206FA;
+        Thu, 20 Aug 2020 09:30:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915821;
+        bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lgMXzSgVhFE0ViP6ibgE6isxuSKx9WUp9/6srzoawbUO8F7mHdUVZQk4ygh1fF+gO
+         MQRQhlfJIKtQFYOtE3MIGen18TKFc+uUFB6TBntLNW3uJfnJq7K3C6Re6nKeq1qSOd
+         4zUuRwo77qFlv7BuTt72Y3epexZVaB8BeBq0G7y0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 145/232] crypto: caam - Remove broken arc4 support
+Date:   Thu, 20 Aug 2020 11:19:56 +0200
+Message-Id: <20200820091619.842249128@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.56]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use kobj_to_dev() instead of container_of()
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+[ Upstream commit eeedb618378f8a09779546a3eeac16b000447d62 ]
+
+The arc4 algorithm requires storing state in the request context
+in order to allow more than one encrypt/decrypt operation.  As this
+driver does not seem to do that, it means that using it for more
+than one operation is broken.
+
+Fixes: eaed71a44ad9 ("crypto: caam - add ecb(*) support")
+Link: https://lore.kernel.org/linux-crypto/CAMj1kXGvMe_A_iQ43Pmygg9xaAM-RLy=_M=v+eg--8xNmv9P+w@mail.gmail.com
+Link: https://lore.kernel.org/linux-crypto/20200702101947.682-1-ardb@kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/crypto/caam/caamalg.c | 29 -----------------------------
+ drivers/crypto/caam/compat.h  |  1 -
+ 2 files changed, 30 deletions(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 6cd3edb..7641e56 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -128,7 +128,7 @@ static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
- 	if (attr->private)
- 		dev = attr->private;
- 	else
--		dev = container_of(kobj, struct device, kobj);
-+		dev = kobj_to_dev(kobj);
- 	nvmem = to_nvmem_device(dev);
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index bf90a4fcabd1f..8149ac4d6ef22 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -810,12 +810,6 @@ static int ctr_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 	return skcipher_setkey(skcipher, key, keylen, ctx1_iv_off);
+ }
  
- 	/* Stop the user from reading */
-@@ -168,7 +168,7 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
- 	if (attr->private)
- 		dev = attr->private;
- 	else
--		dev = container_of(kobj, struct device, kobj);
-+		dev = kobj_to_dev(kobj);
- 	nvmem = to_nvmem_device(dev);
- 
- 	/* Stop the user from writing */
-@@ -219,7 +219,7 @@ static umode_t nvmem_bin_attr_get_umode(struct nvmem_device *nvmem)
- static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
- 					 struct bin_attribute *attr, int i)
+-static int arc4_skcipher_setkey(struct crypto_skcipher *skcipher,
+-				const u8 *key, unsigned int keylen)
+-{
+-	return skcipher_setkey(skcipher, key, keylen, 0);
+-}
+-
+ static int des_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 			       const u8 *key, unsigned int keylen)
  {
--	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct device *dev = kobj_to_dev(kobj);
- 	struct nvmem_device *nvmem = to_nvmem_device(dev);
+@@ -1967,21 +1961,6 @@ static struct caam_skcipher_alg driver_algs[] = {
+ 		},
+ 		.caam.class1_alg_type = OP_ALG_ALGSEL_3DES | OP_ALG_AAI_ECB,
+ 	},
+-	{
+-		.skcipher = {
+-			.base = {
+-				.cra_name = "ecb(arc4)",
+-				.cra_driver_name = "ecb-arc4-caam",
+-				.cra_blocksize = ARC4_BLOCK_SIZE,
+-			},
+-			.setkey = arc4_skcipher_setkey,
+-			.encrypt = skcipher_encrypt,
+-			.decrypt = skcipher_decrypt,
+-			.min_keysize = ARC4_MIN_KEY_SIZE,
+-			.max_keysize = ARC4_MAX_KEY_SIZE,
+-		},
+-		.caam.class1_alg_type = OP_ALG_ALGSEL_ARC4 | OP_ALG_AAI_ECB,
+-	},
+ };
  
- 	return nvmem_bin_attr_get_umode(nvmem);
+ static struct caam_aead_alg driver_aeads[] = {
+@@ -3457,7 +3436,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	int i = 0, err = 0;
+ 	u32 aes_vid, aes_inst, des_inst, md_vid, md_inst, ccha_inst, ptha_inst;
+-	u32 arc4_inst;
+ 	unsigned int md_limit = SHA512_DIGEST_SIZE;
+ 	bool registered = false, gcm_support;
+ 
+@@ -3477,8 +3455,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 			   CHA_ID_LS_DES_SHIFT;
+ 		aes_inst = cha_inst & CHA_ID_LS_AES_MASK;
+ 		md_inst = (cha_inst & CHA_ID_LS_MD_MASK) >> CHA_ID_LS_MD_SHIFT;
+-		arc4_inst = (cha_inst & CHA_ID_LS_ARC4_MASK) >>
+-			    CHA_ID_LS_ARC4_SHIFT;
+ 		ccha_inst = 0;
+ 		ptha_inst = 0;
+ 
+@@ -3499,7 +3475,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		md_inst = mdha & CHA_VER_NUM_MASK;
+ 		ccha_inst = rd_reg32(&priv->ctrl->vreg.ccha) & CHA_VER_NUM_MASK;
+ 		ptha_inst = rd_reg32(&priv->ctrl->vreg.ptha) & CHA_VER_NUM_MASK;
+-		arc4_inst = rd_reg32(&priv->ctrl->vreg.afha) & CHA_VER_NUM_MASK;
+ 
+ 		gcm_support = aesa & CHA_VER_MISC_AES_GCM;
+ 	}
+@@ -3522,10 +3497,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		if (!aes_inst && (alg_sel == OP_ALG_ALGSEL_AES))
+ 				continue;
+ 
+-		/* Skip ARC4 algorithms if not supported by device */
+-		if (!arc4_inst && alg_sel == OP_ALG_ALGSEL_ARC4)
+-			continue;
+-
+ 		/*
+ 		 * Check support for AES modes not available
+ 		 * on LP devices.
+diff --git a/drivers/crypto/caam/compat.h b/drivers/crypto/caam/compat.h
+index 60e2a54c19f11..c3c22a8de4c00 100644
+--- a/drivers/crypto/caam/compat.h
++++ b/drivers/crypto/caam/compat.h
+@@ -43,7 +43,6 @@
+ #include <crypto/akcipher.h>
+ #include <crypto/scatterwalk.h>
+ #include <crypto/skcipher.h>
+-#include <crypto/arc4.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/rsa.h>
 -- 
-2.7.4
+2.25.1
+
+
 
