@@ -2,44 +2,42 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D07CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B148120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:21:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69CA620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:23:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHTOVi (ORCPT
+        id S1728008AbgHTOXu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 10:23:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgHTOVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:21:34 -0400
+        id S1725916AbgHTOXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:23:50 -0400
 Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE15620738;
-        Thu, 20 Aug 2020 14:21:32 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 10:21:31 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id F400820738;
+        Thu, 20 Aug 2020 14:23:48 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 10:23:47 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Nicolas Boichat <drinkcat@chromium.org>
 Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Todor Tomov <todor.too@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 1/3, RESEND] media: camss: vfe: Use trace_printk for
- debugging only
-Message-ID: <20200820102131.3cd3c08e@oasis.local.home>
-In-Reply-To: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+Subject: Re: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Message-ID: <20200820102347.15d2f610@oasis.local.home>
+In-Reply-To: <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
 References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+        <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,72 +47,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 17:14:10 +0800
+On Thu, 20 Aug 2020 17:14:12 +0800
 Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-> trace_printk should not be used in production code. Since
-> tracing interrupts is presumably latency sensitive, pr_dbg is
-> not appropriate, so guard the call with a preprocessor symbol
-> that can be defined for debugging purpose.
-> 
-> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> ---
-> 
-> (resending this patch as part of the whole series, since we need a new
-> patch 3/3 now).
-> 
->  drivers/media/platform/qcom/camss/camss-vfe-4-1.c | 2 ++
->  drivers/media/platform/qcom/camss/camss-vfe-4-7.c | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-> index 174a36be6f5d866..0c57171fae4f9e9 100644
-> --- a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-> +++ b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
-> @@ -936,8 +936,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
->  
->  	vfe->ops->isr_read(vfe, &value0, &value1);
->  
-> +#ifdef CAMSS_VFE_TRACE_IRQ
->  	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
->  		     value0, value1);
+> Technically, we could only initialize the trace_printk buffers
+> when the print env is switched, to avoid the build error and
+> unconditional boot-time warning, but I assume this printing
+> framework will eventually get removed when the driver moves out
+> of staging?
 
-Why are these not trace events?
+Perhaps this should be converting into a trace event. Look at what bpf
+did for their bpf_trace_printk().
 
-The reason I have that ugly banner is to keep people from doing EXACTLY THIS!
-
-trace_printk() is really easy to add, but it also is not configurable.
-When a trace_printk() is in the code, it is always enabled (well, you
-can turn trace_printk off, but that's an all or nothing. That is, by
-turning trace_printk off, you turn off *all* trace_printks).
-
-Instead, people should add trace events. This here is a perfect place
-to have a trace event. You don't need to add #ifdef around trace events
-because when not enabled, they are simply a nop. When enabled, the nop
-is turned into a jump to the tracing code. It should not affect
-performance. And as a trace event, you get a bunch of features with it
-(filtering, histograms, etc).
+The more I think about it, the less I like this series.
 
 -- Steve
-
-
-> +#endif
->  
->  	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
->  		vfe->isr_ops.reset_ack(vfe);
-> diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-> index 0dca8bf9281e774..307675925e5c779 100644
-> --- a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-> +++ b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
-> @@ -1058,8 +1058,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
->  
->  	vfe->ops->isr_read(vfe, &value0, &value1);
->  
-> +#ifdef CAMSS_VFE_TRACE_IRQ
->  	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
->  		     value0, value1);
-> +#endif
->  
->  	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
->  		vfe->isr_ops.reset_ack(vfe);
-
