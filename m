@@ -2,147 +2,88 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C34C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA308C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:20:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F702075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:19:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="PNZ8e/AI";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gIw5doON"
+	by mail.kernel.org (Postfix) with ESMTP id 8B37620738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 06:20:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHUGTe (ORCPT
+        id S1726872AbgHUGU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 02:19:34 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:19490 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725958AbgHUGTc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 02:19:32 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 07L6IQgv020225;
-        Thu, 20 Aug 2020 23:19:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=qSaNSKJZDxeT1oqdi8e6Nh3ubGvTqmvuHlbHapoqzCQ=;
- b=PNZ8e/AIzqWRisUtaTSIl3MGObK6YBKO7Z1hEwIV0zTcfo352ngTGaHKJUeODBmSc16T
- P9Vzbe05QN9ox2BZQumy3sIC2dENyAtd099hJQU8ZaIGN+2WVIY0L95EUQuagiTKimTk
- 0TnL26moKKVmiu3SEydoUnl0qvM/C4MRP6U= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 3304jjjrn6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Thu, 20 Aug 2020 23:19:28 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Thu, 20 Aug 2020 23:19:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gbc6mH3x/Q3HaR6G75Vs6O6/KqH7iMrO3Dc6npC21x1n7pd2xGV58S93+iZ/hJ/MA8tuh/Eb3FqO+WaTPuYOVAC2mp4yxxzhbwy7lKZ545T2b/D2Ez2LQJoucNsqkGfPQulrZ5PLhTmolMn9PFei/sfL0aBju98pDZquaXnukOROotugwfk/OCkrtrUEcRtOSMFsublzWCN3Jw0Zj0hCXgtBHhMKsM+4BIJNhhwomIgUfuPwjFGxhRukdwb6H3L0XUbWibPohLx2/2/u/rF2HMRlYvkilQeMk3W8acwyNqoVI5AMMzcS5wyMvVFOWhyBL4vGLFZjr+noOcTZ0Z6XLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qSaNSKJZDxeT1oqdi8e6Nh3ubGvTqmvuHlbHapoqzCQ=;
- b=B20MNuxNdCvGD3iuGPo+4wjNLxP17+s12vda4WT8H6QVImB6f35d/sTHTqsPwIVhB7inrlhjD4XCPdSrtSRLgyMQCl1tfS3m5tuueEpKn5PwhP2bObJK1lcI/0on49JlROPXi9tziOur6BNfpeCWg+2IackrebrA6cr/A2DGgki+YXxW/OMJaMODnUUbGRyKBhcZT+m3jJqhujMDtGSR0QJe/G2hMpfVC3qgrAfx072rrrvHvvhUlr6ONAn0MKEyvPC/S/RZ158du0zsvkLCe+GB+OmdwDbK6+L6I4XgZPiutbj8Y/kahSTMLx7xmjZmLk4m5FqX4IUcETBs8Wrj+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qSaNSKJZDxeT1oqdi8e6Nh3ubGvTqmvuHlbHapoqzCQ=;
- b=gIw5doONKDu8jrhzz+bVHMq3ZCe58++eNylY0yru//L5OcenRfGhZv5hD0QDzWRjS+cQ7LQWe8JSn6ziwW9hvcDL7jUP5sxkWs67vChaQUvs6FmgW1eo3/vz2a0pGZ1MouN1PVC1Z5ub0VW0V06i+lGcXfQYG0nHNQu7WAq20XE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB4087.namprd15.prod.outlook.com (2603:10b6:a02:bd::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
- 2020 06:19:25 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
- 06:19:25 +0000
-Subject: Re: [PATCH v2 bpf 2/2] selftests/bpf: add test for freplace program
- with write access
-To:     Udip Pant <udippant@fb.com>, Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200821002804.546826-1-udippant@fb.com>
- <20200821002804.546826-2-udippant@fb.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <4b521b2a-a431-2ca1-46ab-a6ddba9e65cb@fb.com>
-Date:   Thu, 20 Aug 2020 23:19:21 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
-In-Reply-To: <20200821002804.546826-2-udippant@fb.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MN2PR07CA0011.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::21) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by MN2PR07CA0011.namprd07.prod.outlook.com (2603:10b6:208:1a0::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Fri, 21 Aug 2020 06:19:23 +0000
-X-Originating-IP: [2620:10d:c091:480::1:a192]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 36c5c61b-c33e-46f3-b795-08d8459a2722
-X-MS-TrafficTypeDiagnostic: BYAPR15MB4087:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB408724739C585DBF5358DDA1D35B0@BYAPR15MB4087.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 8vcMuAfHk2F/8jPod4sDpuF3ndvIy4rQYhDDhAM2zF2y/hYWjgrTJH618uLai/q9Kz/6Zhd8bTNu2CGNnP6HYs3V0mOfjT2nkfwDhI2H9+SFqlbkoi+m4ygZQE56icvRstsw3lfA+r9GjqHDd33yQKDL8Ed413WRa0FTsTnwI7t/DuYT1/RAXHiPkhjarZxKKSVQxrseQz31E6Fq3lR2uKVOEY1HyX7FmuikJNdiTYJxmvkx+P8cpWd5v9tPgd5R+D5hpMZaaZ7zaP+7XsDzFaEGPs7AzdqWG/kgRP7PfGHl8IExVrX3WcU8jH7TPyNL383t7YQvA/QvEIgI+a6TB2FjKv96BfRyZfnzCrw6UccbxfwHU1ZX4a09HupaH2GDT1mk3wpuH0sD75OyDslzoww02O1ChVFC3arFezmC/c0=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(366004)(376002)(39860400002)(66476007)(31696002)(66556008)(66946007)(2906002)(83380400001)(86362001)(53546011)(2616005)(5660300002)(36756003)(478600001)(6486002)(186003)(4326008)(956004)(52116002)(8676002)(31686004)(316002)(4744005)(110136005)(8936002)(16576012)(110011004)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: x+fyUVXUYcoi+jrF6eeNJbPjPfQOgENvhovLLoyfjxUf2ZzQ634cvod3kKHZSgx19YjVjfnDE5WH+tfdtMd1C6/r+pCJfDoEir14tqMpnpK3STuSk1lXnYiEt+fYgorsn1AdU7GjDGJXAeTklkgVyLBluZ5CHuUXa/8yfuKVnRoITWJMdXEjYV1HOW4UQvtVrIJyr9etrAw66bnJkFB+tVFRWOYSzkGUZd/3aHJXkZu7dQW4lIsAf4PioxbOqrDVc/uiJaz5U86FICRFRcjYOtzb70IFFKAyLFiUYlbiKDy/cCydUQJi4fFDSkbtdge/FoRP46lC6bdyUjP0/Jv+dHZOq8qD2rNUIg3XQQj32Z2mTZeb9DWRlLwC3EOAD4dOMgSboNDQfrhIZtl1A4b3btQa0qFyC7vILFMtyg2YZxPohN0dCxrZxA3WSmRoak/fUOB6RIy7Ua0etJDqehBmc1aLVX/WtQ9JDciIsEsgTZy9FKt52LCTY6BtFVkwYfESg4eo0ER/yk2iYKj8OORGPu6MKDQSFBvPj3bwo7tp+ybV7MXAf/4NA7wZqS1abO/K+vA3rKIkzy/JqNkXd9UdXPkUdJhe6nw4RaGrDZjQNzlGKiRqVpaWKHO43f6Iuu38HjsqOdkcNDpNBZy5rR4IkDzv52SyXq3d91BXPRvuKrlV0H1wdR0asMyA/yy96zrX
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36c5c61b-c33e-46f3-b795-08d8459a2722
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 06:19:25.8830
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /Wz5jOJl4HPLdq9ZWVDKYvzVALWpqnuaYAIJ/FIE4NM4rb6b96hgImGWgW8O/rrY
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4087
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-21_05:2020-08-19,2020-08-21 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- impostorscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- clxscore=1015 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008210060
-X-FB-Internal: deliver
+        Fri, 21 Aug 2020 02:20:26 -0400
+Received: from mga09.intel.com ([134.134.136.24]:45666 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgHUGUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 02:20:25 -0400
+IronPort-SDR: 1aZMjrMzUK9vIHNa0YiWUJOHl3mhXlNuQ4ciYLUPIjTKhOsyuDYQVET8S1neay4OQ7bIMU9raw
+ u0hW5OZELhlw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="156524799"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="156524799"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 23:20:25 -0700
+IronPort-SDR: U0DBVFQZ8l4s4pVTM75D/8kaWBPPPnt00N/YpaEif6AORZeTGCWbMaV3TD66HkonUx7ICsWSwB
+ 49NxDK21S+GQ==
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="498427098"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 23:20:21 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH v2 0/3] soundwire: fix port_ready[] dynamic allocation
+Date:   Fri, 21 Aug 2020 02:26:36 +0800
+Message-Id: <20200820182639.11572-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The existing code allocates memory for the total number of ports.
+This only works if the ports are contiguous, but will break if e.g. a
+Devices uses port0, 1, and 14. The port_ready[] array would contain 3
+elements, which would lead to an out-of-bounds access. Conversely in
+other cases, the wrong port index would be used leading to timeouts on
+prepare.
 
+This can be fixed by allocating for the worst-case of 15
+ports (DP0..DP14). In addition since the number is now fixed, we can
+use an array instead of a dynamic allocation.
 
-On 8/20/20 5:28 PM, Udip Pant wrote:
-> This adds a selftest that tests the behavior when a freplace target program
-> attempts to make a write access on a packet. The expectation is that the read or write
-> access is granted based on the program type of the linked program and
-> not itself (which is of type, for e.g., BPF_PROG_TYPE_EXT).
-> 
-> This test fails without the associated patch on the verifier.
-> 
-> Signed-off-by: Udip Pant <udippant@fb.com>
-> ---
+Changes in v2:
+- Split patches into sdw and asoc patches. Please note that "soundwire:
+  fix port_ready[] dynamic allocation in mipi_disco" and "ASoC: codecs:
+  fix port_ready[] dynamic allocation in ASoC codecs" should be merged
+  at the same time.
 
-Acked-by: Yonghong Song <yhs@fb.com>
+Pierre-Louis Bossart (3):
+  soundwire: add definition for maximum number of ports
+  soundwire: fix port_ready[] dynamic allocation in mipi_disco
+  ASoC: codecs: fix port_ready[] dynamic allocation in ASoC codecs
+
+ drivers/soundwire/mipi_disco.c  | 18 +-----------------
+ drivers/soundwire/slave.c       |  4 ++++
+ include/linux/soundwire/sdw.h   |  5 +++--
+ sound/soc/codecs/max98373-sdw.c | 15 +--------------
+ sound/soc/codecs/rt1308-sdw.c   | 14 +-------------
+ sound/soc/codecs/rt5682-sdw.c   | 15 +--------------
+ sound/soc/codecs/rt700-sdw.c    | 15 +--------------
+ sound/soc/codecs/rt711-sdw.c    | 15 +--------------
+ sound/soc/codecs/rt715-sdw.c    | 33 +--------------------------------
+ 9 files changed, 14 insertions(+), 120 deletions(-)
+
+-- 
+2.17.1
+
