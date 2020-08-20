@@ -2,53 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6328CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F898C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 313D7208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D608520855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917417;
-	bh=wSQ905qIcYrBu8ojjWqQQsd29Mn2s/Q36mPEZZuoQ5k=;
+	s=default; t=1597917421;
+	bh=M+1+zlegeMYvTNTb3WfSmsAd4BXj05tPC2metWwEjtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xH5ph5K/LXBSAFoGzewr4M6Xjd512fTpwpNqkxeNxZHjNHdnW6yAOu3Abpw1x5XGN
-	 HdMcNLFJuR73UlOeo8x1WQri23HJRGnM9/LbxJCwE0jKuVLz0QZowb7Y4+vFQiPTwF
-	 6QIeM0UzdOBK4G4zqZNUAhwbQ0ryfR/o0eawpv/w=
+	b=oLSPbCapYvAPl4YXN1D8OtqiGtk+UHRJR2I9wsiYnzZjnVd6maSsXQXzDqaYCz417
+	 wlZrk31/akSrwSKbpHFb/tzh5KEdrkrVsKE+L/83Al/bnvDl1naDXCLH+TR4C1U5zg
+	 urx/hYoFXqzqBgDOX+d1+MX54OqtMxWBcdnS1ZCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgHTJ4o (ORCPT
+        id S1730076AbgHTJ47 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:56:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:56:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730254AbgHTJ4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730095AbgHTJ4Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:56:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931042067C;
-        Thu, 20 Aug 2020 09:56:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74635207FB;
+        Thu, 20 Aug 2020 09:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917378;
-        bh=wSQ905qIcYrBu8ojjWqQQsd29Mn2s/Q36mPEZZuoQ5k=;
+        s=default; t=1597917384;
+        bh=M+1+zlegeMYvTNTb3WfSmsAd4BXj05tPC2metWwEjtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vYag3h3a7maXpuiWbE1VphWeY9odiO0fhOmAqtcxwMIN/e+uyAJwwV4iNR6RvFLzs
-         k0oqJmyBvJUTthgb4mPFdO7utw680y4ASKyyQj03M/Ga+mb2W1et285GYYierIDL9Q
-         WtWA7W9e1RTb+L9NZV3xNi7Ij8otzxJHTDzS7Klg=
+        b=SGuuyoOab/4q8CXU6pYrbqjv0YEZW1feGJnKZU2H5Sqzlh+eHADlLvCMYIAMbjtCE
+         s5cuDMPFzI9xQi+ukvcOUDncfNA6m2VLCJQjSJedHykulefL1BCTwrJk+X1FLyHUjM
+         XkMz/ZEL2aNTRjHa6QJQy6oxH4wijqt5MuafgNyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 4.9 011/212] drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
-Date:   Thu, 20 Aug 2020 11:19:44 +0200
-Message-Id: <20200820091602.898810381@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 013/212] f2fs: check memory boundary by insane namelen
+Date:   Thu, 20 Aug 2020 11:19:46 +0200
+Message-Id: <20200820091603.001144682@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,43 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-commit 543e8669ed9bfb30545fd52bc0e047ca4df7fb31 upstream.
+[ Upstream commit 4e240d1bab1ead280ddf5eb05058dba6bbd57d10 ]
 
-Compiler leaves a 4-byte hole near the end of `dev_info`, causing
-amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
-when `size` is greater than 356.
+If namelen is corrupted to have very long value, fill_dentries can copy
+wrong memory area.
 
-In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
-unfortunately does not initialize that 4-byte hole. Fix it by using
-memset() instead.
-
-Cc: stable@vger.kernel.org
-Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
-Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/dir.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -452,8 +452,9 @@ static int amdgpu_info_ioctl(struct drm_
- 		return n ? -EFAULT : 0;
- 	}
- 	case AMDGPU_INFO_DEV_INFO: {
--		struct drm_amdgpu_info_device dev_info = {};
-+		struct drm_amdgpu_info_device dev_info;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index b414892be08b7..79d138756acb5 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -843,6 +843,16 @@ bool f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
+ 		de_name.name = d->filename[bit_pos];
+ 		de_name.len = le16_to_cpu(de->name_len);
  
-+		memset(&dev_info, 0, sizeof(dev_info));
- 		dev_info.device_id = dev->pdev->device;
- 		dev_info.chip_rev = adev->rev_id;
- 		dev_info.external_rev = adev->external_rev_id;
++		/* check memory boundary before moving forward */
++		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
++		if (unlikely(bit_pos > d->max)) {
++			f2fs_msg(F2FS_I_SB(d->inode)->sb, KERN_WARNING,
++				"%s: corrupted namelen=%d, run fsck to fix.",
++				__func__, le16_to_cpu(de->name_len));
++			set_sbi_flag(F2FS_I_SB(d->inode)->sb->s_fs_info, SBI_NEED_FSCK);
++			return -EINVAL;
++		}
++
+ 		if (f2fs_encrypted_inode(d->inode)) {
+ 			int save_len = fstr->len;
+ 			int err;
+@@ -861,7 +871,6 @@ bool f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
+ 					le32_to_cpu(de->ino), d_type))
+ 			return true;
+ 
+-		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
+ 		ctx->pos = start_pos + bit_pos;
+ 	}
+ 	return false;
+-- 
+2.25.1
+
 
 
