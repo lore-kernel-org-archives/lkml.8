@@ -2,121 +2,113 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B48C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B28CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C216520724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920982;
-	bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWpIvck6WODT9DJhjfLgqEA92xMSuBoXs9D39Hqnhwf1v7Qbo6pOBAkawJ4/KixFd
-	 duyXrxLjBDPpzdhn8eImb+9xs1c5V8TGCXLJXmugXZGFhysZm0n5sv8qYAdKJZlJlR
-	 hguLGi2uEuSgEscXdX5qzj9ByflsYeQrMnUmuXvk=
+	by mail.kernel.org (Postfix) with ESMTP id E42BD20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tl+eqpzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730365AbgHTK4V (ORCPT
+        id S1731273AbgHTK4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:56:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731156AbgHTKN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 06:56:30 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56169 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731309AbgHTK4R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:56:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597920976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zXZn0ptz4OdIcD8qJiz0sPtwyG4FrJg7hkfvx+FDmUI=;
+        b=Tl+eqpzMq8xCFHLkgOHKU/ajmyruQ71vpw/yhFc0gFDjvWAzjTtIsabEyLml1rdkGe9HZt
+        a3p1r63051d3A05sZR2vKNBOGOppwiux6+LcS3S7VK8Y99kCnDS/6x6LU5kP6OIKVValVQ
+        +ekdk7LvGzqM3TAX/y1pP/Cml1i/hzg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-558-P_V1LyLiOz2MfwMupSW5mw-1; Thu, 20 Aug 2020 06:56:12 -0400
+X-MC-Unique: P_V1LyLiOz2MfwMupSW5mw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4906C206DA;
-        Thu, 20 Aug 2020 10:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918438;
-        bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khuJ8vI3D1vtXNGL41XEvj8PeI4WkMbfAG6+JdfnQkl9mYhE4xfCV57p1sg26bZ2+
-         oIpSzObLr+gDwshToHCT4gPYJSrZQvrbX42fzjEjeyLF/lCcHHy2BipiQFgvszHn4N
-         udeTOkNf2uSNxz/InUIG9r18ItFHGRSq0JuBrtJk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 170/228] btrfs: only search for left_info if there is no right_info in try_merge_free_space
-Date:   Thu, 20 Aug 2020 11:22:25 +0200
-Message-Id: <20200820091616.074540114@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29506871803;
+        Thu, 20 Aug 2020 10:56:07 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.73])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 5E00C5D9F1;
+        Thu, 20 Aug 2020 10:55:57 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 20 Aug 2020 12:56:06 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 12:55:56 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     mhocko@suse.com, christian.brauner@ubuntu.com, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
+        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820105555.GA4546@redhat.com>
+References: <20200820002053.1424000-1-surenb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820002053.1424000-1-surenb@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+On 08/19, Suren Baghdasaryan wrote:
+>
+> Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> used the additional mutex lock in that path of the clone() syscall should
+> not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> (when the last process sharing the mm exits) is left out of this patch to
+> keep it simple and because it is believed that this threading model is
+> rare.
 
-commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
+vfork() ?
 
-In try_to_merge_free_space we attempt to find entries to the left and
-right of the entry we are adding to see if they can be merged.  We
-search for an entry past our current info (saved into right_info), and
-then if right_info exists and it has a rb_prev() we save the rb_prev()
-into left_info.
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+>  	if (clone_flags & CLONE_VM) {
+>  		mmget(oldmm);
+>  		mm = oldmm;
+> +		if (!(clone_flags & CLONE_SIGHAND)) {
 
-However there's a slight problem in the case that we have a right_info,
-but no entry previous to that entry.  At that point we will search for
-an entry just before the info we're attempting to insert.  This will
-simply find right_info again, and assign it to left_info, making them
-both the same pointer.
+I agree with Christian, you need CLONE_THREAD
 
-Now if right_info _can_ be merged with the range we're inserting, we'll
-add it to the info and free right_info.  However further down we'll
-access left_info, which was right_info, and thus get a use-after-free.
+> +			/* We need to synchronize with __set_oom_adj */
+> +			mutex_lock(&oom_adj_lock);
+> +			set_bit(MMF_PROC_SHARED, &mm->flags);
+> +			/* Update the values in case they were changed after copy_signal */
+> +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+> +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+> +			mutex_unlock(&oom_adj_lock);
 
-Fix this by only searching for the left entry if we don't find a right
-entry at all.
+I don't understand how this can close the race with __set_oom_adj...
 
-The CVE referenced had a specially crafted file system that could
-trigger this use-after-free. However with the tree checker improvements
-we no longer trigger the conditions for the UAF.  But the original
-conditions still apply, hence this fix.
+What if __set_oom_adj() is called right after mutex_unlock() ? It will see
+MMF_PROC_SHARED, but for_each_process() won't find the new child until
+copy_process() does list_add_tail_rcu(&p->tasks, &init_task.tasks) ?
 
-Reference: CVE-2019-19448
-Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/free-space-cache.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2169,7 +2169,7 @@ out:
- static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
- 			  struct btrfs_free_space *info, bool update_stat)
- {
--	struct btrfs_free_space *left_info;
-+	struct btrfs_free_space *left_info = NULL;
- 	struct btrfs_free_space *right_info;
- 	bool merged = false;
- 	u64 offset = info->offset;
-@@ -2184,7 +2184,7 @@ static bool try_merge_free_space(struct
- 	if (right_info && rb_prev(&right_info->offset_index))
- 		left_info = rb_entry(rb_prev(&right_info->offset_index),
- 				     struct btrfs_free_space, offset_index);
--	else
-+	else if (!right_info)
- 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
- 
- 	if (right_info && !right_info->bitmap) {
-
+Oleg.
 
