@@ -5,52 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE44FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E148E20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8765420885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922815;
-	bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
+	s=default; t=1597922825;
+	bh=068LKMYQZjA+IESANMRSpu0RwUD813OMYqEHLN141CQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imYynLrOcTYLUY3b7lTSltHF4vkNX0p+yBuxQ1lX1D9So8bMT6ObiRL2TA1Op2bjO
-	 iGT6cmroVbqfDfQNxy+OCxUT3AopdbsluPcyFdHTq0oKoEn57bTM3NEncyIVgTcQkn
-	 2qKpdtTlcURr9nvOh8mp/P+K0yp6rEj8iSsR8Q3I=
+	b=RNhgL6p63SVLR2QlQq4D+ekbq5T+giLIk4khRErZouLe7OOmRgFomZHGJoYFF9y8k
+	 gilSl/iORzSo8JP2WzU7Csbkr55Bw+3ELAkStZELb7J1EQrQpcK3UTx9peViX/P63E
+	 VthS803XJZXv2cz94yzXnKgMOdG0IUk2jmdN8Cr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgHTL0w (ORCPT
+        id S1730281AbgHTL1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbgHTKGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:15 -0400
+        id S1730655AbgHTKGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8B022B43;
-        Thu, 20 Aug 2020 10:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76D93208E4;
+        Thu, 20 Aug 2020 10:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917975;
-        bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
+        s=default; t=1597917972;
+        bh=068LKMYQZjA+IESANMRSpu0RwUD813OMYqEHLN141CQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mFgvfccokP+Ob12Stb+RXCFacKfhPgky0vMZ7XcHkV1Cd2LDCXHB2J+1Qkqy+ZaVa
-         dvTlsfBVPrdNal4CnzEXcmTNL6tH0YXPw290hXMgZ8T6MvaBOUzAXiTrRIexQj1A2+
-         mCsSOnvWHiAkibIIMquW5No/JhPrmvAF6/6t/8gs=
+        b=EsczmMBvfiZZfxo6WXk+5HWzLGqtrLl8sZZPG7QC6fg5AZldYiEellfZtoGMvtdex
+         egL9+t+aczDo9s9Zu//UwrGagj+v3zhT3Dw2APc3lofMYogp6vw4O6A9gECEC5kk7z
+         WMfByTKKmkF+l/fiRGA2awcniXwaFkscu5jMmQtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.14 010/228] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_with_rssi_evt()
-Date:   Thu, 20 Aug 2020 11:19:45 +0200
-Message-Id: <20200820091608.041870411@linuxfoundation.org>
+        stable@vger.kernel.org, Erik Ekman <erik@kryo.se>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 001/228] USB: serial: qcserial: add EM7305 QDL product ID
+Date:   Thu, 20 Aug 2020 11:19:36 +0200
+Message-Id: <20200820091607.606558951@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,50 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Erik Ekman <erik@kryo.se>
 
-commit 629b49c848ee71244203934347bd7730b0ddee8d upstream.
+commit d2a4309c1ab6df424b2239fe2920d6f26f808d17 upstream.
 
-Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
+When running qmi-firmware-update on the Sierra Wireless EM7305 in a Toshiba
+laptop, it changed product ID to 0x9062 when entering QDL mode:
 
+usb 2-4: new high-speed USB device number 78 using xhci_hcd
+usb 2-4: New USB device found, idVendor=1199, idProduct=9062, bcdDevice= 0.00
+usb 2-4: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+usb 2-4: Product: EM7305
+usb 2-4: Manufacturer: Sierra Wireless, Incorporated
+
+The upgrade could complete after running
+ # echo 1199 9062 > /sys/bus/usb-serial/drivers/qcserial/new_id
+
+qcserial 2-4:1.0: Qualcomm USB modem converter detected
+usb 2-4: Qualcomm USB modem converter now attached to ttyUSB0
+
+Signed-off-by: Erik Ekman <erik@kryo.se>
+Link: https://lore.kernel.org/r/20200717185118.3640219-1-erik@kryo.se
 Cc: stable@vger.kernel.org
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_event.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/serial/qcserial.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3623,6 +3623,9 @@ static void hci_inquiry_result_with_rssi
- 		struct inquiry_info_with_rssi_and_pscan_mode *info;
- 		info = (void *) (skb->data + 1);
- 
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-@@ -3644,6 +3647,9 @@ static void hci_inquiry_result_with_rssi
- 	} else {
- 		struct inquiry_info_with_rssi *info = (void *) (skb->data + 1);
- 
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-@@ -3664,6 +3670,7 @@ static void hci_inquiry_result_with_rssi
- 		}
- 	}
- 
-+unlock:
- 	hci_dev_unlock(hdev);
- }
- 
+--- a/drivers/usb/serial/qcserial.c
++++ b/drivers/usb/serial/qcserial.c
+@@ -159,6 +159,7 @@ static const struct usb_device_id id_tab
+ 	{DEVICE_SWI(0x1199, 0x9056)},	/* Sierra Wireless Modem */
+ 	{DEVICE_SWI(0x1199, 0x9060)},	/* Sierra Wireless Modem */
+ 	{DEVICE_SWI(0x1199, 0x9061)},	/* Sierra Wireless Modem */
++	{DEVICE_SWI(0x1199, 0x9062)},	/* Sierra Wireless EM7305 QDL */
+ 	{DEVICE_SWI(0x1199, 0x9063)},	/* Sierra Wireless EM7305 */
+ 	{DEVICE_SWI(0x1199, 0x9070)},	/* Sierra Wireless MC74xx */
+ 	{DEVICE_SWI(0x1199, 0x9071)},	/* Sierra Wireless MC74xx */
 
 
