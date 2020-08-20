@@ -5,74 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D87C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C088720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431FA20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926690;
-	bh=Ne0socCZGcwrMblGJ2DwvxH0Vsev8VfPF/bS/K0PF6A=;
+	s=default; t=1597926698;
+	bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tcVzoRkySYdrj/yjQeGKjHUQKjEKncHUa0k131e35cf8JyfQyFM6mrE96JV1dDp49
-	 sXOisGPPsbYjlqplzSVzniRvt2nResfkdAoqHbSPMwLWqCri7+kYsJodjh35hTJdJ+
-	 p7DlFXBEH39ACh6jDg/Wc+JrSUWtZarMu5gRgbjE=
+	b=GkiFHU+76i8NdKn8jFIVQtPmWFQD2Zb7r78+AQRkiZszEh4Hh/19HaL+tIdyTr9bz
+	 ESSfhvcfFBI/mcqgDBDv13B7dTd2dz3ECBcpdOkH/UdT++vbRZlm80yFBiiM6+lc1I
+	 GU2W1lwrOK2aGMAb99WbwFOAnq+YiTME+KC1le2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgHTMb2 (ORCPT
+        id S1729828AbgHTMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:31:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58834 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729750AbgHTJup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:45 -0400
+        id S1729457AbgHTJuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A34BC206B5;
-        Thu, 20 Aug 2020 09:50:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32BA92067C;
+        Thu, 20 Aug 2020 09:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917044;
-        bh=Ne0socCZGcwrMblGJ2DwvxH0Vsev8VfPF/bS/K0PF6A=;
+        s=default; t=1597917038;
+        bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ci76go+lY92QttRGqiEz0237HuErTIFKK291avKlaU9luNA/hdi8axZtbiCYmWl6s
-         R5KaHwxqo1Ucywg3EjmYv0g9erAAS/2+1j7gECjL9WmRogKXE4NXackaCCaMudVvtL
-         mcWJel7OmMavjJqkDO3iyRgtNThmEdzNEU+mjYCA=
+        b=Ne7UqZn1/ZrletE781nFNMDODLCtE7z4JAk47kdbEBbnJ4cQRz11jBt4sUad2DPQx
+         Vnr79XhUcTcp5oHiaPF9zu6aiNPrAjRqZttCOH5ZDAEwPwNyXFEZ6KF4PohHaGO15H
+         gAQfjVqLcriD0TLnnyxDAE2lDjHqtucK9VIM9Opk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tony Vroon <chainsaw@gentoo.org>,
-        Christoph Hellwig <hch@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 136/152] test_kmod: avoid potential double free in trigger_config_run_type()
-Date:   Thu, 20 Aug 2020 11:21:43 +0200
-Message-Id: <20200820091600.774879189@linuxfoundation.org>
+Subject: [PATCH 5.4 134/152] fs/minix: remove expected error message in block_to_path()
+Date:   Thu, 20 Aug 2020 11:21:41 +0200
+Message-Id: <20200820091600.672650245@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -85,63 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 0776d1231bec0c7ab43baf440a3f5ef5f49dd795 ]
+[ Upstream commit f666f9fb9a36f1c833b9d18923572f0e4d304754 ]
 
-Reset the member "test_fs" of the test configuration after a call of the
-function "kfree_const" to a null pointer so that a double memory release
-will not be performed.
+When truncating a file to a size within the last allowed logical block,
+block_to_path() is called with the *next* block.  This exceeds the limit,
+causing the "block %ld too big" error message to be printed.
 
-Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+This case isn't actually an error; there are just no more blocks past that
+point.  So, remove this error message.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: J. Bruce Fields <bfields@fieldses.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Sergei Trofimovich <slyfox@gentoo.org>
-Cc: Sergey Kvachonok <ravenexp@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Tony Vroon <chainsaw@gentoo.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Link: http://lkml.kernel.org/r/20200610154923.27510-4-mcgrof@kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Link: http://lkml.kernel.org/r/20200628060846.682158-7-ebiggers@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/minix/itree_v1.c | 12 ++++++------
+ fs/minix/itree_v2.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/lib/test_kmod.c b/lib/test_kmod.c
-index 9cf77628fc913..87a0cc750ea23 100644
---- a/lib/test_kmod.c
-+++ b/lib/test_kmod.c
-@@ -745,7 +745,7 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
- 		break;
- 	case TEST_KMOD_FS_TYPE:
- 		kfree_const(config->test_fs);
--		config->test_driver = NULL;
-+		config->test_fs = NULL;
- 		copied = config_copy_test_fs(config, test_str,
- 					     strlen(test_str));
- 		break;
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index 405573a79aab4..1fed906042aa8 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,12 +29,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, inode->i_sb->s_bdev);
+-	} else if (block < 7) {
++		return 0;
++	}
++	if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes)
++		return 0;
++
++	if (block < 7) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= 7) < 512) {
+ 		offsets[n++] = 7;
+diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
+index ee8af2f9e2828..9d00f31a2d9d1 100644
+--- a/fs/minix/itree_v2.c
++++ b/fs/minix/itree_v2.c
+@@ -32,12 +32,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, sb->s_bdev);
+-	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, sb->s_bdev);
+-	} else if (block < DIRCOUNT) {
++		return 0;
++	}
++	if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes)
++		return 0;
++
++	if (block < DIRCOUNT) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= DIRCOUNT) < INDIRCOUNT(sb)) {
+ 		offsets[n++] = DIRCOUNT;
 -- 
 2.25.1
 
