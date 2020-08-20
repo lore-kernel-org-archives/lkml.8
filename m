@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ACAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEC0D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C5F22B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931141;
-	bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
+	s=default; t=1597931147;
+	bh=xYZFrxz2rOk+HHlaipfAhKHpLbGhnQdZtYRZaRvmBy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fcpCeK7sSMzn0WLkmyVwRO4psIXGyXBpOm8+3SO2lOhqkKjDnrPsTrHgEtbty/Mfc
-	 V1z65dtTSsGH+fDOF6nmhnboR/7VGLKK7wucvwD9zJjRigJfffWfNEF3xQHKsIzjBq
-	 MAD3VP7Hrc22fOeJBgBJp18PH3CzPmC3TPW5hYyg=
+	b=xs8zU8bvRh7MvowQSKPcV/hQPnMn8FwTvLys91ReW1R9JRjABd1FCOQbLFahq51Sj
+	 yjG6J7rQOb3LfzBQDagxHyMQXsVqcywqTS57rllMwR8o437zOiOMC58U3aZ6ZJyObU
+	 VzZnpd9fStezBsRwNU9pF/mkvEcIP09MsRjS9EdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgHTNpk (ORCPT
+        id S1730100AbgHTNpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37886 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:45:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgHTJ2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:28:04 -0400
+        id S1726956AbgHTJ1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:27:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F017522D2A;
-        Thu, 20 Aug 2020 09:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A2222D08;
+        Thu, 20 Aug 2020 09:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915683;
-        bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
+        s=default; t=1597915668;
+        bh=xYZFrxz2rOk+HHlaipfAhKHpLbGhnQdZtYRZaRvmBy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kIylcYC0/btL0GZmefYETxKB9CtLcabqCTLlNmEe3kdEebCvUl+Zft1L7efRJZtzM
-         klI2O1Ry/rDVNwcRDalqjofrs6QL3J/spC/GG4mdKeuv8IzAYnO2skZfSGrtGH5Nh8
-         sgxrsvyulasPIusLcbdq8SASvP2JI8AU6/FJEyiE=
+        b=P9dvpcPMgfBvApVeX0edlxCJAY5X/7Nh6kMNCRIG+nntcRJA+SFbRLuICxTUH5snd
+         OEXJId7Kzsj6IovOuFI9Zms7W7GRX+YlmHl4ZWMgK5AjgGxowf6Q0pcyG5hbS47oU5
+         eAAFv349s32YS+qIOpogL1n9w6bQDR9VelNKZxV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 5.8 059/232] irqchip/loongson-liointc: Fix misuse of gc->mask_cache
-Date:   Thu, 20 Aug 2020 11:18:30 +0200
-Message-Id: <20200820091615.649467700@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
+        BingJing Chang <bingjingc@synology.com>,
+        Danny Shih <dannyshih@synology.com>,
+        ChangSyun Peng <allenpeng@synology.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 5.8 064/232] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
+Date:   Thu, 20 Aug 2020 11:18:35 +0200
+Message-Id: <20200820091615.894873996@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,60 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: ChangSyun Peng <allenpeng@synology.com>
 
-commit c9c73a05413ea4a465cae1cb3593b01b190a233f upstream.
+commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
 
-In gc->mask_cache bits, 1 means enabled and 0 means disabled, but in the
-loongson-liointc driver mask_cache is misused by reverting its meaning.
-This patch fix the bug and update the comments as well.
+In degraded raid5, we need to read parity to do reconstruct-write when
+data disks fail. However, we can not read parity from
+handle_stripe_dirtying() in force reconstruct-write mode.
 
-Fixes: dbb152267908c4b2c3639492a ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1596099090-23516-4-git-send-email-chenhc@lemote.com
+Reproducible Steps:
+
+1. Create degraded raid5
+mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
+2. Set rmw_level to 0
+echo 0 > /sys/block/md2/md/rmw_level
+3. IO to raid5
+
+Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
+the parity in this situation.
+
+Cc: <stable@vger.kernel.org> # v4.4+
+Reviewed-by: Alex Wu <alexwu@synology.com>
+Reviewed-by: BingJing Chang <bingjingc@synology.com>
+Reviewed-by: Danny Shih <dannyshih@synology.com>
+Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-loongson-liointc.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/md/raid5.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -60,7 +60,7 @@ static void liointc_chained_handle_irq(s
- 	if (!pending) {
- 		/* Always blame LPC IRQ if we have that bug */
- 		if (handler->priv->has_lpc_irq_errata &&
--			(handler->parent_int_map & ~gc->mask_cache &
-+			(handler->parent_int_map & gc->mask_cache &
- 			BIT(LIOINTC_ERRATA_IRQ)))
- 			pending = BIT(LIOINTC_ERRATA_IRQ);
- 		else
-@@ -132,11 +132,11 @@ static void liointc_resume(struct irq_ch
- 	irq_gc_lock_irqsave(gc, flags);
- 	/* Disable all at first */
- 	writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
--	/* Revert map cache */
-+	/* Restore map cache */
- 	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
- 		writeb(priv->map_cache[i], gc->reg_base + i);
--	/* Revert mask cache */
--	writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
-+	/* Restore mask cache */
-+	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
- 	irq_gc_unlock_irqrestore(gc, flags);
- }
- 
-@@ -244,7 +244,7 @@ int __init liointc_of_init(struct device
- 	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
- 	ct->chip.irq_set_type = liointc_set_type;
- 
--	gc->mask_cache = 0xffffffff;
-+	gc->mask_cache = 0;
- 	priv->gc = gc;
- 
- 	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3607,6 +3607,7 @@ static int need_this_block(struct stripe
+ 	 * is missing/faulty, then we need to read everything we can.
+ 	 */
+ 	if (sh->raid_conf->level != 6 &&
++	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
+ 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
+ 		/* reconstruct-write isn't being forced */
+ 		return 0;
+@@ -4842,7 +4843,7 @@ static void handle_stripe(struct stripe_
+ 	 * or to load a block that is being partially written.
+ 	 */
+ 	if (s.to_read || s.non_overwrite
+-	    || (conf->level == 6 && s.to_write && s.failed)
++	    || (s.to_write && s.failed)
+ 	    || (s.syncing && (s.uptodate + s.compute < disks))
+ 	    || s.replacing
+ 	    || s.expanding)
 
 
