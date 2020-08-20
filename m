@@ -2,193 +2,112 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E30DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9ABC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E006C22D03
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:36:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QObrXnat"
+	by mail.kernel.org (Postfix) with ESMTP id 1CB1D22B3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597930638;
+	bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=y5hjbE1BfMo8e7tBLptf41tHIZ5gVWwwpLFj6OKF5P8/xKjGBFvYPrx6bC5zNW47k
+	 s2o4+JvtgIDUIL/Gdckb+W6WFNgW29kwkMmhG2Lf+f2O8Dh2jL4BDYJgq03M6DAXsx
+	 5FWxXrI6DLOCPBMCqqzWl5rsMgtMGCyd5d1CjtlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgHTNgz (ORCPT
+        id S1728196AbgHTNdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:36:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:20044 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729234AbgHTNeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:34:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597930441;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7Yyscg0IgzS3tYfn9p5DuhBrze23+wuoqGiIUiUy3zc=;
-        b=QObrXnatWcM7jezZo5KgOs5joQvgYYcOPgotBOeWG0evVfwABfOCNyPbYLeIoo7L556pDp
-        YfLfuJ2+fFqhy5g/mq0V+IGvazk6rKZN9IAhWVrqSPAlL0x7+vXJ+qy78Y0p9AW7xeiqxl
-        eF2WmzwAbwk/eZauiTrSueSCcegfWPU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-394-Uex2xth2OcO2QF0aSok5Nw-1; Thu, 20 Aug 2020 09:33:57 -0400
-X-MC-Unique: Uex2xth2OcO2QF0aSok5Nw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 09:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728190AbgHTJau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9565A800FFF;
-        Thu, 20 Aug 2020 13:33:55 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.35.206.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E7D2216E21;
-        Thu, 20 Aug 2020 13:33:51 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Jim Mattson <jmattson@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT)), "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v2 3/7] KVM: SVM: refactor msr permission bitmap allocation
-Date:   Thu, 20 Aug 2020 16:33:35 +0300
-Message-Id: <20200820133339.372823-4-mlevitsk@redhat.com>
-In-Reply-To: <20200820133339.372823-1-mlevitsk@redhat.com>
-References: <20200820133339.372823-1-mlevitsk@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 75523207DE;
+        Thu, 20 Aug 2020 09:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915849;
+        bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=N0YkF4dUR4AcpAj0qzjv3EwIrbuaCM/4kTsWMyH651WyJDJINAlH/Z0j8LPWP9VTk
+         A4scw0gWOCBjMXzWLYhAKnVBIlYeu+gVN5C6NxTDBGzecZjHXzRawVxf2idme6+5Eu
+         9qy10tSyrLil7WyaWxMaFXBlySmFkokpRRdg9gtU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 154/232] selftests/powerpc: ptrace-pkey: Dont update expected UAMOR value
+Date:   Thu, 20 Aug 2020 11:20:05 +0200
+Message-Id: <20200820091620.269436164@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace svm_vcpu_init_msrpm with svm_vcpu_alloc_msrpm, that also allocates
-the msr bitmap and add svm_vcpu_free_msrpm to free it.
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-This will be used later to move the nested msr permission bitmap allocation
-to nested.c
+[ Upstream commit 3563b9bea0ca7f53e4218b5e268550341a49f333 ]
 
-No functional change intended.
+With commit 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation
+must not change pkey registers") we are not updating UAMOR on key
+allocation. So don't update the expected uamor value in the test.
 
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Fixes: 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation must not change pkey registers")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-23-aneesh.kumar@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/svm/svm.c | 45 +++++++++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 22 deletions(-)
+ tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index d33013b9b4d7..7bb094bf6494 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -609,18 +609,29 @@ static void set_msr_interception(u32 *msrpm, unsigned msr,
- 	msrpm[offset] = tmp;
- }
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index bc33d748d95b4..3694613f418f6 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -101,15 +101,20 @@ static int child(struct shared_info *info)
+ 	 */
+ 	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
  
--static void svm_vcpu_init_msrpm(u32 *msrpm)
-+static u32 *svm_vcpu_alloc_msrpm(void)
- {
- 	int i;
-+	u32 *msrpm;
-+	struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
-+
-+	if (!pages)
-+		return NULL;
++	/*
++	 * if PKEY_DISABLE_EXECUTE succeeded we should update the expected_iamr
++	 */
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+ 	else
+ 		info->expected_iamr &= ~(1ul << pkeyshift(pkey1));
  
-+	msrpm = page_address(pages);
- 	memset(msrpm, 0xff, PAGE_SIZE * (1 << MSRPM_ALLOC_ORDER));
+-	info->expected_iamr &= ~(1ul << pkeyshift(pkey2) | 1ul << pkeyshift(pkey3));
++	/*
++	 * We allocated pkey2 and pkey 3 above. Clear the IAMR bits.
++	 */
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey2));
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey3));
  
- 	for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++) {
- 		if (!direct_access_msrs[i].always)
- 			continue;
--
- 		set_msr_interception(msrpm, direct_access_msrs[i].index, 1, 1);
- 	}
-+	return msrpm;
-+}
-+
-+static void svm_vcpu_free_msrpm(u32 *msrpm)
-+{
-+	__free_pages(virt_to_page(msrpm), MSRPM_ALLOC_ORDER);
- }
- 
- static void add_msr_offset(u32 offset)
-@@ -1172,9 +1183,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm;
- 	struct page *vmcb_page;
--	struct page *msrpm_pages;
- 	struct page *hsave_page;
--	struct page *nested_msrpm_pages;
- 	int err;
- 
- 	BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
-@@ -1185,21 +1194,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 	if (!vmcb_page)
- 		goto out;
- 
--	msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
--	if (!msrpm_pages)
--		goto free_page1;
--
--	nested_msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
--	if (!nested_msrpm_pages)
--		goto free_page2;
--
- 	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
- 	if (!hsave_page)
--		goto free_page3;
-+		goto free_page1;
- 
- 	err = avic_init_vcpu(svm);
- 	if (err)
--		goto free_page4;
-+		goto free_page2;
- 
- 	/* We initialize this flag to true to make sure that the is_running
- 	 * bit would be set the first time the vcpu is loaded.
-@@ -1210,11 +1211,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 	svm->nested.hsave = page_address(hsave_page);
- 	clear_page(svm->nested.hsave);
- 
--	svm->msrpm = page_address(msrpm_pages);
--	svm_vcpu_init_msrpm(svm->msrpm);
-+	svm->msrpm = svm_vcpu_alloc_msrpm();
-+	if (!svm->msrpm)
-+		goto free_page2;
- 
--	svm->nested.msrpm = page_address(nested_msrpm_pages);
--	svm_vcpu_init_msrpm(svm->nested.msrpm);
-+	svm->nested.msrpm = svm_vcpu_alloc_msrpm();
-+	if (!svm->nested.msrpm)
-+		goto free_page3;
- 
- 	svm->vmcb = page_address(vmcb_page);
- 	clear_page(svm->vmcb);
-@@ -1227,12 +1230,10 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
- 
- 	return 0;
- 
--free_page4:
--	__free_page(hsave_page);
- free_page3:
--	__free_pages(nested_msrpm_pages, MSRPM_ALLOC_ORDER);
-+	svm_vcpu_free_msrpm(svm->msrpm);
- free_page2:
--	__free_pages(msrpm_pages, MSRPM_ALLOC_ORDER);
-+	__free_page(hsave_page);
- free_page1:
- 	__free_page(vmcb_page);
- out:
+-	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+-				3ul << pkeyshift(pkey2);
+ 	/*
+ 	 * Create an IAMR value different from expected value.
+ 	 * Kernel will reject an IAMR and UAMOR change.
 -- 
-2.26.2
+2.25.1
+
+
 
