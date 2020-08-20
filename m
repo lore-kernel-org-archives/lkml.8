@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E809C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C580E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1AD620658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919036;
-	bh=woRjvQMWZSHzJeQHe1qRaTxqDw8BUnNLYf05/32UtA8=;
+	s=default; t=1597919041;
+	bh=oSg29O4EE7wm26TO9QUIlPQlcXSOZytFhnc5IbOB+N4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N4uuMDJgi9cYq3xMtul/SLa8NiqDnp8429zqLcT24i5grDMc8xEndApDlmyRy0EHx
-	 TnnNmtXH/eTavqjd+1KOnNFgYUxKsK1fu5V4UGvxlTpnVVz/hELCDwZl5vol0UPV79
-	 lVW4jv+jGR51tsrYpo7W4Ba1QeKO17LDQ4zPkEhA=
+	b=RcCcbD64BCfjZfEZlL8w8rYq12dINaEzbeJlVVYN8KfFbAIWZBUoEPElrWG24Cphi
+	 +t73z1GJEgEApKDfKCHmKu8DPES5sGWCegQ9DUJQuFINTRaqID/DMjVQrZHL6P8Tib
+	 XfIeyUWBZbzJSNGFK/YjuQx9kK1rJyip9kDhjV+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731544AbgHTKXy (ORCPT
+        id S1731804AbgHTKYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:23:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53192 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731752AbgHTKXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:33 -0400
+        id S1731766AbgHTKXk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:23:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2436020658;
-        Thu, 20 Aug 2020 10:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A88972072D;
+        Thu, 20 Aug 2020 10:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919012;
-        bh=woRjvQMWZSHzJeQHe1qRaTxqDw8BUnNLYf05/32UtA8=;
+        s=default; t=1597919020;
+        bh=oSg29O4EE7wm26TO9QUIlPQlcXSOZytFhnc5IbOB+N4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AWwDCZSV7L5mtlunb4UG+UOoLoL0BHS8ETJnArfoArZ325XvVFDxFrUEPDsHjaQvT
-         /ljuvx0qt2xb8xROinbnPu+57y0bMbyz1kKnFmZ7I2HEREKH1V6y2FViXZ7c/TUUwc
-         Foc6Oj8WCuBU2KzrASi2pYmzSNwqpWkJ5ahF+ltA=
+        b=Mij2w/GygRv1FLvn/YKtcdm4ZZiJtH+m8CTDVDjPDFimR5ENqN6SLInqrsyb/AgBF
+         qX6d/Rum4f8QP+O9Ie6qGSBy4L83saPf9VZHZ+O8+3Edk01WKddNMgB5vBHNynpCs0
+         h7VbyVJMiunS02Y0fK+IVXFhJbWzHXNl9Hy43Guc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 138/149] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Thu, 20 Aug 2020 11:23:35 +0200
-Message-Id: <20200820092132.379105328@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 141/149] Input: sentelic - fix error return when fsp_reg_write fails
+Date:   Thu, 20 Aug 2020 11:23:38 +0200
+Message-Id: <20200820092132.523073369@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,38 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
+[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
 
-Set proper masks to avoid invalid input spillover to reserved bits.
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/sentelic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 27dbab59f034c..d86ac620f0aac 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -317,8 +317,8 @@ enum {
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index 11c32ac8234b2..779d0b9341c0d 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -454,7 +454,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
  
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
+ 	fsp_reg_write_enable(psmouse, false);
+ 
+-	return count;
++	return retval;
+ }
+ 
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
 -- 
 2.25.1
 
