@@ -4,49 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84624C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9464C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CF7C20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5C2220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926343;
-	bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
+	s=default; t=1597926353;
+	bh=Rmv470bmgUS7+vIi8DvLOsrP7vf16lYWdL3eGMa12cg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IqeSzlz31eMQLJVFeDoFl8LR1P02NsthfUy6q7U2jOjK3Tj0P8bQDqzlhc2YAqqDk
-	 3NQM/WSPFG+9dmqQksTzYCqWGZf+4FW5DBI5DUEW0XU0ZK+QhCWYfMBIIsDSyUDuR4
-	 FIiVVtQKeYXfjSHSkKr8XBeLilomhF/nRJr4y4nQ=
+	b=y/f1rTjmRXlti1BB7HMCwTfzoAfcwZPjv4X3nk8qpiZUbI5d9HQWNHcLj/Z8htRoB
+	 4UuS+5R9aI/37W4iK+14MiVXkj9TSxOynb9iiSbohV3HGgxp4fbdcJj4iIfvIGydJA
+	 /CAV89c+Nqg2PJ7t2Zj5vBKlnxB8esZwTwhl/kgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgHTJxR (ORCPT
+        id S1729455AbgHTMZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:53:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbgHTJxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:06 -0400
+        id S1729956AbgHTJxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3E372075E;
-        Thu, 20 Aug 2020 09:53:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AF012075E;
+        Thu, 20 Aug 2020 09:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917186;
-        bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
+        s=default; t=1597917192;
+        bh=Rmv470bmgUS7+vIi8DvLOsrP7vf16lYWdL3eGMa12cg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mXbTcMRc1G8fZqu2uvWNcAHX6PpQNPd6B02tOaiPy8lGB6IjXmsI/D2ZlRlIJDwKs
-         HNMsToqXjVPdfI6SlGA5anTn+sV2ErS6aZltdu+/hLRCp4yhfVcNM88QWWnmg2VIkc
-         nVT7OOSKC43p9YB6inSxzpw+1BYewM7W21WKUjbg=
+        b=P/Sz8vnVWV2H21V61Al9weCRbiH6ZhryBh40U0icNrv0e+Q/bPFcYB6e7Ocv1oCmR
+         HjJjot+TKaAsBRmv/9UBU/AsQJJuS3rl94RQJ8PexhjeV0x8l1eotcwX1pTTtny0v9
+         zpHAIKKmXEx7UZtqikpMHnY78gqImsIQwgjXePdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 4.19 33/92] MIPS: CPU#0 is not hotpluggable
-Date:   Thu, 20 Aug 2020 11:21:18 +0200
-Message-Id: <20200820091539.317589293@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Changwei Ge <gechangwei@live.cn>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 35/92] ocfs2: change slot number type s16 to u16
+Date:   Thu, 20 Aug 2020 11:21:20 +0200
+Message-Id: <20200820091539.424033180@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,32 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit 9cce844abf07b683cff5f0273977d5f8d0af94c7 upstream.
+commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
 
-Now CPU#0 is not hotpluggable on MIPS, so prevent to create /sys/devices
-/system/cpu/cpu0/online which confuses some user-space tools.
+Dan Carpenter reported the following static checker warning.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
+	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
+	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
+
+That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
+never negative, so change s16 to u16.
+
+Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reviewed-by: Gang He <ghe@suse.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/topology.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ocfs2/ocfs2.h    |    4 ++--
+ fs/ocfs2/suballoc.c |    4 ++--
+ fs/ocfs2/super.c    |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
---- a/arch/mips/kernel/topology.c
-+++ b/arch/mips/kernel/topology.c
-@@ -20,7 +20,7 @@ static int __init topology_init(void)
- 	for_each_present_cpu(i) {
- 		struct cpu *c = &per_cpu(cpu_devices, i);
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -338,8 +338,8 @@ struct ocfs2_super
+ 	spinlock_t osb_lock;
+ 	u32 s_next_generation;
+ 	unsigned long osb_flags;
+-	s16 s_inode_steal_slot;
+-	s16 s_meta_steal_slot;
++	u16 s_inode_steal_slot;
++	u16 s_meta_steal_slot;
+ 	atomic_t s_num_inodes_stolen;
+ 	atomic_t s_num_meta_stolen;
  
--		c->hotpluggable = 1;
-+		c->hotpluggable = !!i;
- 		ret = register_cpu(c, i);
- 		if (ret)
- 			printk(KERN_WARNING "topology_init: register_cpu %d "
+--- a/fs/ocfs2/suballoc.c
++++ b/fs/ocfs2/suballoc.c
+@@ -893,9 +893,9 @@ static void __ocfs2_set_steal_slot(struc
+ {
+ 	spin_lock(&osb->osb_lock);
+ 	if (type == INODE_ALLOC_SYSTEM_INODE)
+-		osb->s_inode_steal_slot = slot;
++		osb->s_inode_steal_slot = (u16)slot;
+ 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
+-		osb->s_meta_steal_slot = slot;
++		osb->s_meta_steal_slot = (u16)slot;
+ 	spin_unlock(&osb->osb_lock);
+ }
+ 
+--- a/fs/ocfs2/super.c
++++ b/fs/ocfs2/super.c
+@@ -92,7 +92,7 @@ struct mount_options
+ 	unsigned long	commit_interval;
+ 	unsigned long	mount_opt;
+ 	unsigned int	atime_quantum;
+-	signed short	slot;
++	unsigned short	slot;
+ 	int		localalloc_opt;
+ 	unsigned int	resv_level;
+ 	int		dir_resv_level;
+@@ -1384,7 +1384,7 @@ static int ocfs2_parse_options(struct su
+ 				goto bail;
+ 			}
+ 			if (option)
+-				mopt->slot = (s16)option;
++				mopt->slot = (u16)option;
+ 			break;
+ 		case Opt_commit:
+ 			if (match_int(&args[0], &option)) {
 
 
