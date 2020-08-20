@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C92C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F8DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9942F2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD612067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918292;
-	bh=AqHO05MUPQSBKdjWbw9CaOzDvbfgQrIVSuuDFO54vZ4=;
+	s=default; t=1597918293;
+	bh=xjcrObf4mN7gNPTFMw+wXKdHvmzDyVR5jK6iKPHu5FI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qi5YtPxe2bP29wrWEixRBP1UxnoFN9xu0oXAcgTyZlSaUhO4gpigX9X2QVKXmagSp
-	 1YtlGbb/sawVo9ALgFdBPZYDhIjnLM1U2wHV6SYhwDud3+qTvHUhqVHQ9ewoIPz7lI
-	 aX1YruACraFu0SqYTQ50IeoCVmlCTESRk+QPGVCc=
+	b=x6z95Tg0mPiTVN7g+tg+nQY4h+8F17QA72aX8/QfBLAANf1fwCKTaBDA7Bg14920m
+	 j4iqqMT1s/4Ob/1Xtr+5tyNXqSdOV4alMzsqEkmEtZqUuqRSdYDT7aYWB1PFxSbkId
+	 sa0bABGL6RdKJAF831em4mp85gpK7SeS9Ojmj9rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgHTKLY (ORCPT
+        id S1730978AbgHTKLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbgHTKLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:11:11 -0400
+        id S1730958AbgHTKLR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:11:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698BD2067C;
-        Thu, 20 Aug 2020 10:11:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44A05206DA;
+        Thu, 20 Aug 2020 10:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918270;
-        bh=AqHO05MUPQSBKdjWbw9CaOzDvbfgQrIVSuuDFO54vZ4=;
+        s=default; t=1597918276;
+        bh=xjcrObf4mN7gNPTFMw+wXKdHvmzDyVR5jK6iKPHu5FI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E0iSpCx9sj603TD9FLp6N2FErMR0rYEJMeoPaR0A1zIv7WReRJhJnVBSi3TfWMx9L
-         NOGKi9V524r2zPSTFG64cYaRtAo9nIuDVp7R3sXRp60GprW0PkLA0uZOmLdbxlP2Al
-         SAs/NehEMcTZVig06uL7Ta15vEIZS/3OX7dOs27s=
+        b=cebYvtTzFOOcdOjZ2VcC4Ahkz3xBYTc+hM3nsYXcIY85xa2lt2sQ0V9Q1/blhxVuN
+         jP22TrFXWyQP9w0cExVM7zxE69ASEkaZ92LLTkJwXxlf7G0RZ1lnnqpStdWlWGxqt/
+         r5wYXYiu90KbfDJh3XFxDzRMadcnnDLdN1MQSfuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 111/228] thermal: ti-soc-thermal: Fix reversed condition in ti_thermal_expose_sensor()
-Date:   Thu, 20 Aug 2020 11:21:26 +0200
-Message-Id: <20200820091613.135402120@linuxfoundation.org>
+Subject: [PATCH 4.14 113/228] MIPS: OCTEON: add missing put_device() call in dwc3_octeon_device_init()
+Date:   Thu, 20 Aug 2020 11:21:28 +0200
+Message-Id: <20200820091613.242981944@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,34 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Yu Kuai <yukuai3@huawei.com>
 
-[ Upstream commit 0f348db01fdf128813fdd659fcc339038fb421a4 ]
+[ Upstream commit e8b9fc10f2615b9a525fce56981e40b489528355 ]
 
-This condition is reversed and will cause breakage.
+if of_find_device_by_node() succeed, dwc3_octeon_device_init() doesn't have
+a corresponding put_device(). Thus add put_device() to fix the exception
+handling for this function implementation.
 
-Fixes: 7440f518dad9 ("thermal/drivers/ti-soc-thermal: Avoid dereferencing ERR_PTR")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200616091949.GA11940@mwanda
+Fixes: 93e502b3c2d4 ("MIPS: OCTEON: Platform support for OCTEON III USB controller")
+Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thermal/ti-soc-thermal/ti-thermal-common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/cavium-octeon/octeon-usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-index fa98c398d70f3..d43fbe4ad767e 100644
---- a/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-+++ b/drivers/thermal/ti-soc-thermal/ti-thermal-common.c
-@@ -183,7 +183,7 @@ int ti_thermal_expose_sensor(struct ti_bandgap *bgp, int id,
+diff --git a/arch/mips/cavium-octeon/octeon-usb.c b/arch/mips/cavium-octeon/octeon-usb.c
+index bfdfaf32d2c49..75189ff2f3c78 100644
+--- a/arch/mips/cavium-octeon/octeon-usb.c
++++ b/arch/mips/cavium-octeon/octeon-usb.c
+@@ -517,6 +517,7 @@ static int __init dwc3_octeon_device_init(void)
  
- 	data = ti_bandgap_get_sensor_data(bgp, id);
+ 			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 			if (res == NULL) {
++				put_device(&pdev->dev);
+ 				dev_err(&pdev->dev, "No memory resources\n");
+ 				return -ENXIO;
+ 			}
+@@ -528,8 +529,10 @@ static int __init dwc3_octeon_device_init(void)
+ 			 * know the difference.
+ 			 */
+ 			base = devm_ioremap_resource(&pdev->dev, res);
+-			if (IS_ERR(base))
++			if (IS_ERR(base)) {
++				put_device(&pdev->dev);
+ 				return PTR_ERR(base);
++			}
  
--	if (!IS_ERR_OR_NULL(data))
-+	if (IS_ERR_OR_NULL(data))
- 		data = ti_thermal_build_data(bgp, id);
- 
- 	if (!data)
+ 			mutex_lock(&dwc3_octeon_clocks_mutex);
+ 			dwc3_octeon_clocks_start(&pdev->dev, (u64)base);
 -- 
 2.25.1
 
