@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBCEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD90BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 186D822D04
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9561F2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915660;
-	bh=d2MQWqK4nO9dHOGm66JEcLmRTjtTA5AAhr23qVhwR/Q=;
+	s=default; t=1597915700;
+	bh=qJmEpL7tQCrTn65OLAj/uvcxZFClayXp+iHkQUQEPGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfDGrltGRthx2RHy6zl0DDLFqIUey4RONkmreXI5tCAFtdr/EZOc43OeQhiCbtWfi
-	 eLef1iiqAnpUIj4/C/E/NMEfpNMeaiME0ISdSMLMUVbz/8lejTLOZIoU5bxAhF/pJR
-	 qKHcWN7EZnD5OlDfML7iFzAn6W/xWnbqbkS6z7FE=
+	b=yZWs9fXZr2AFwhLEfIc67S0c7YjUNyl+GWqBtC30ToXKLZpElLhyTdQ+hEKlKRiFX
+	 Ptzs0YIb0kGeDAiR1P5Bu8s2ZS0tt8JNlccG36ZA2+gn7SyuOgp9/knZcJHb9VTRXl
+	 O4r2Q57JPtAXh40tdejdcVEL/mJdBpzyv6TVqSi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgHTJ1g (ORCPT
+        id S1726930AbgHTJ2O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:27:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:28:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726803AbgHTJ0O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:14 -0400
+        id S1727936AbgHTJ04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFC3F22D06;
-        Thu, 20 Aug 2020 09:26:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1367322D2C;
+        Thu, 20 Aug 2020 09:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915574;
-        bh=d2MQWqK4nO9dHOGm66JEcLmRTjtTA5AAhr23qVhwR/Q=;
+        s=default; t=1597915615;
+        bh=qJmEpL7tQCrTn65OLAj/uvcxZFClayXp+iHkQUQEPGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GkJlE32TuAwhYMxyIRPhNLxz3/tbte9TWHiC6UxdPpJLRfavJtvTbNoayAb30MRGq
-         9OxRDjBzT1j6ApTsazCgMRGadDF1BJTLOmEEaHj3NlW2vUa36/aClg6noEhW6dOYUE
-         1OMiiDE8XqEfjJtAnOQeNjzg+ZaCU7RFPpIIDMGw=
+        b=SElX8l4P0ygjJRsOue7LR99wPuglwvyOqANe5RQ2mV/l3gpwqc8CmeXCmAqGLpAEi
+         1X6TXyRgu4g8qMQc/n3rcLiYB6P8Q+Yze6Z76JkkZaAVedAchi+dVKVDzWaGZlno1m
+         srJYnuL/C0ihMRe0GyvdkBos6vjlwtgfg2l77W7Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 032/232] btrfs: fix race between page release and a fast fsync
-Date:   Thu, 20 Aug 2020 11:18:03 +0200
-Message-Id: <20200820091614.317899495@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.8 076/232] ext2: fix missing percpu_counter_inc
+Date:   Thu, 20 Aug 2020 11:18:47 +0200
+Message-Id: <20200820091616.491366598@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,92 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 3d6448e631591756da36efb3ea6355ff6f383c3a upstream.
+commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
 
-When releasing an extent map, done through the page release callback, we
-can race with an ongoing fast fsync and cause the fsync to miss a new
-extent and not log it. The steps for this to happen are the following:
+sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
+increased. This patch fixes it.
 
-1) A page is dirtied for some inode I;
+Note that sbi->s_freeinodes_counter is only used in the algorithm that
+tries to find the group for new allocations, so this bug is not easily
+visible (the only visibility is that the group finding algorithm selects
+inoptinal result).
 
-2) Writeback for that page is triggered by a path other than fsync, for
-   example by the system due to memory pressure;
-
-3) When the ordered extent for the extent (a single 4K page) finishes,
-   we unpin the corresponding extent map and set its generation to N,
-   the current transaction's generation;
-
-4) The btrfs_releasepage() callback is invoked by the system due to
-   memory pressure for that no longer dirty page of inode I;
-
-5) At the same time, some task calls fsync on inode I, joins transaction
-   N, and at btrfs_log_inode() it sees that the inode does not have the
-   full sync flag set, so we proceed with a fast fsync. But before we get
-   into btrfs_log_changed_extents() and lock the inode's extent map tree:
-
-6) Through btrfs_releasepage() we end up at try_release_extent_mapping()
-   and we remove the extent map for the new 4Kb extent, because it is
-   neither pinned anymore nor locked. By calling remove_extent_mapping(),
-   we remove the extent map from the list of modified extents, since the
-   extent map does not have the logging flag set. We unlock the inode's
-   extent map tree;
-
-7) The task doing the fast fsync now enters btrfs_log_changed_extents(),
-   locks the inode's extent map tree and iterates its list of modified
-   extents, which no longer has the 4Kb extent in it, so it does not log
-   the extent;
-
-8) The fsync finishes;
-
-9) Before transaction N is committed, a power failure happens. After
-   replaying the log, the 4K extent of inode I will be missing, since
-   it was not logged due to the race with try_release_extent_mapping().
-
-So fix this by teaching try_release_extent_mapping() to not remove an
-extent map if it's still in the list of modified extents.
-
-Fixes: ff44c6e36dc9dc ("Btrfs: do not hold the write_lock on the extent tree while logging")
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ fs/ext2/ialloc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4502,15 +4502,25 @@ int try_release_extent_mapping(struct pa
- 				free_extent_map(em);
- 				break;
- 			}
--			if (!test_range_bit(tree, em->start,
--					    extent_map_end(em) - 1,
--					    EXTENT_LOCKED, 0, NULL)) {
-+			if (test_range_bit(tree, em->start,
-+					   extent_map_end(em) - 1,
-+					   EXTENT_LOCKED, 0, NULL))
-+				goto next;
-+			/*
-+			 * If it's not in the list of modified extents, used
-+			 * by a fast fsync, we can remove it. If it's being
-+			 * logged we can safely remove it since fsync took an
-+			 * extra reference on the em.
-+			 */
-+			if (list_empty(&em->list) ||
-+			    test_bit(EXTENT_FLAG_LOGGING, &em->flags)) {
- 				set_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
- 					&btrfs_inode->runtime_flags);
- 				remove_extent_mapping(map, em);
- 				/* once for the rb tree */
- 				free_extent_map(em);
- 			}
-+next:
- 			start = extent_map_end(em);
- 			write_unlock(&map->lock);
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -80,6 +80,7 @@ static void ext2_release_inode(struct su
+ 	if (dir)
+ 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
+ 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
++	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
+ 	if (dir)
+ 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
+ 	mark_buffer_dirty(bh);
+@@ -528,7 +529,7 @@ got:
+ 		goto fail;
+ 	}
+ 
+-	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
++	percpu_counter_dec(&sbi->s_freeinodes_counter);
+ 	if (S_ISDIR(mode))
+ 		percpu_counter_inc(&sbi->s_dirs_counter);
  
 
 
