@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AFFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64CF020658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2708820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919715;
-	bh=He8D27RUgtVkrpdDKqvL1ZvbxJaLrXCDhhWsBSygfEE=;
+	s=default; t=1597919730;
+	bh=rsS7iYMZ9uLWCuAoUsi0+YzxxAfcsR+b698xOdF/ndM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mw02hzNDJzhiG6uIL5zjPN01mpREWov44rcIoeqy7YeEsQTDpItezeaxNFnlilh/S
-	 KhRNKXo/yGlbFf2k59ad7LzmFGqlpoLVkUXApBGeynntTWhuz2uVJG2H3Qfyl6S16d
-	 dhuEZhcEiniNWYSgYD1DPxCA2Zw04TdHo8eAe8fo=
+	b=M++eUt/goW9i4btSSqoRsCJbWeEteilZ73gqsj1fvaTmqyR5wIc6RPKypBfTclIKQ
+	 dHYwtGNl84nC/iNzoJYSNZtBMb3d/9KaLp6EqykplJ5U/FjC5Hke5z6Q+XKtCrN0Zb
+	 oxWj5xwn8kLXvTw/7aMA5+pZXLpJkAe4Q7hNim6U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgHTKfM (ORCPT
+        id S1731637AbgHTKfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:35:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731343AbgHTKTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:05 -0400
+        id S1731318AbgHTKTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E73EA20658;
-        Thu, 20 Aug 2020 10:19:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD1F32067C;
+        Thu, 20 Aug 2020 10:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918745;
-        bh=He8D27RUgtVkrpdDKqvL1ZvbxJaLrXCDhhWsBSygfEE=;
+        s=default; t=1597918742;
+        bh=rsS7iYMZ9uLWCuAoUsi0+YzxxAfcsR+b698xOdF/ndM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIXhx60Lg6FBQcvyXQFlkXWqT+WaHQnU8ICDqiNCLS/xhA6MoQXbU48hGmEiOU7Z1
-         n3EJyiuoHYYH89w/cRH8gVrMfs85ReSiHYxmvBdCOx+0NYAGg0EQbsirSF8loEgCtg
-         ROlun66XvAvRFkjnRZJrBGUJBQCT6dlg/+x5o7t0=
+        b=ePIq2r6c1Aikyd5+oAcvkWo6IZXSrImS6UOE2k3y5Ip2RIvtMtgN2OeE02YgffG4a
+         EedP/CO4Tp0wdmLZNt77GAVuU9qosQvF9vL/IpL4aScKFMC1NiLm8evcFCgQGDAnf8
+         4Pt0IduR3F+/nVDh0Nsf7snZF7n8ZxjdqgyNnQEk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rustam Kovhaev <rkovhaev@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 051/149] usb: hso: check for return value in hso_serial_common_create()
-Date:   Thu, 20 Aug 2020 11:22:08 +0200
-Message-Id: <20200820092128.201332561@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 050/149] net: lan78xx: replace bogus endpoint lookup
+Date:   Thu, 20 Aug 2020 11:22:07 +0200
+Message-Id: <20200820092128.157431043@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,48 +59,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rustam Kovhaev <rkovhaev@gmail.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit e911e99a0770f760377c263bc7bac1b1593c6147 ]
+[ Upstream commit ea060b352654a8de1e070140d25fe1b7e4d50310 ]
 
-in case of an error tty_register_device_attr() returns ERR_PTR(),
-add IS_ERR() check
+Drop the bogus endpoint-lookup helper which could end up accepting
+interfaces based on endpoints belonging to unrelated altsettings.
 
-Reported-and-tested-by: syzbot+67b2bd0e34f952d0321e@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?extid=67b2bd0e34f952d0321e
-Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Note that the returned bulk pipes and interrupt endpoint descriptor
+were never actually used. Instead the bulk-endpoint numbers are
+hardcoded to 1 and 2 (matching the specification), while the interrupt-
+endpoint descriptor was assumed to be the third descriptor created by
+USB core.
+
+Try to bring some order to this by dropping the bogus lookup helper and
+adding the missing endpoint sanity checks while keeping the interrupt-
+descriptor assumption for now.
+
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/hso.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/usb/lan78xx.c |  116 +++++++++++-----------------------------------
+ 1 file changed, 30 insertions(+), 86 deletions(-)
 
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -2280,12 +2280,14 @@ static int hso_serial_common_create(stru
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -251,10 +251,6 @@ struct lan78xx_net {
+ 	struct tasklet_struct	bh;
+ 	struct delayed_work	wq;
  
- 	minor = get_free_serial_index();
- 	if (minor < 0)
--		goto exit;
-+		goto exit2;
+-	struct usb_host_endpoint *ep_blkin;
+-	struct usb_host_endpoint *ep_blkout;
+-	struct usb_host_endpoint *ep_intr;
+-
+ 	int			msg_enable;
  
- 	/* register our minor number */
- 	serial->parent->dev = tty_port_register_device_attr(&serial->port,
- 			tty_drv, minor, &serial->parent->interface->dev,
- 			serial->parent, hso_serial_dev_groups);
-+	if (IS_ERR(serial->parent->dev))
-+		goto exit2;
- 	dev = serial->parent->dev;
- 
- 	/* fill in specific data for later use */
-@@ -2335,6 +2337,7 @@ static int hso_serial_common_create(stru
- 	return 0;
- exit:
- 	hso_serial_tty_unregister(serial);
-+exit2:
- 	hso_serial_common_free(serial);
- 	return -1;
+ 	struct urb		*urb_intr;
+@@ -2180,77 +2176,12 @@ netdev_tx_t lan78xx_start_xmit(struct sk
+ 	return NETDEV_TX_OK;
  }
+ 
+-int lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
+-{
+-	int tmp;
+-	struct usb_host_interface *alt = NULL;
+-	struct usb_host_endpoint *in = NULL, *out = NULL;
+-	struct usb_host_endpoint *status = NULL;
+-
+-	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
+-		unsigned ep;
+-
+-		in = NULL;
+-		out = NULL;
+-		status = NULL;
+-		alt = intf->altsetting + tmp;
+-
+-		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
+-			struct usb_host_endpoint *e;
+-			int intr = 0;
+-
+-			e = alt->endpoint + ep;
+-			switch (e->desc.bmAttributes) {
+-			case USB_ENDPOINT_XFER_INT:
+-				if (!usb_endpoint_dir_in(&e->desc))
+-					continue;
+-				intr = 1;
+-				/* FALLTHROUGH */
+-			case USB_ENDPOINT_XFER_BULK:
+-				break;
+-			default:
+-				continue;
+-			}
+-			if (usb_endpoint_dir_in(&e->desc)) {
+-				if (!intr && !in)
+-					in = e;
+-				else if (intr && !status)
+-					status = e;
+-			} else {
+-				if (!out)
+-					out = e;
+-			}
+-		}
+-		if (in && out)
+-			break;
+-	}
+-	if (!alt || !in || !out)
+-		return -EINVAL;
+-
+-	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
+-				       in->desc.bEndpointAddress &
+-				       USB_ENDPOINT_NUMBER_MASK);
+-	dev->pipe_out = usb_sndbulkpipe(dev->udev,
+-					out->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	dev->ep_intr = status;
+-
+-	return 0;
+-}
+-
+ static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
+ {
+ 	struct lan78xx_priv *pdata = NULL;
+ 	int ret;
+ 	int i;
+ 
+-	ret = lan78xx_get_endpoints(dev, intf);
+-	if (ret) {
+-		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
+-			    ret);
+-		return ret;
+-	}
+-
+ 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
+ 
+ 	pdata = (struct lan78xx_priv *)(dev->data[0]);
+@@ -2926,6 +2857,7 @@ static const struct net_device_ops lan78
+ static int lan78xx_probe(struct usb_interface *intf,
+ 			 const struct usb_device_id *id)
+ {
++	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
+ 	struct lan78xx_net *dev;
+ 	struct net_device *netdev;
+ 	struct usb_device *udev;
+@@ -2969,32 +2901,44 @@ static int lan78xx_probe(struct usb_inte
+ 	netdev->watchdog_timeo = TX_TIMEOUT_JIFFIES;
+ 	netdev->ethtool_ops = &lan78xx_ethtool_ops;
+ 
+-	ret = lan78xx_bind(dev, intf);
+-	if (ret < 0)
+-		goto out2;
+-	strcpy(netdev->name, "eth%d");
+-
+-	if (netdev->mtu > (dev->hard_mtu - netdev->hard_header_len))
+-		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
+-	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+-
+ 	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
+ 		ret = -ENODEV;
+-		goto out3;
++		goto out2;
+ 	}
+ 
+-	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
+-	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
+-	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+-
+ 	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
++	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
++	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
+ 	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
++	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
++	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
++
++	ep_intr = &intf->cur_altsetting->endpoint[2];
++	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
++		ret = -ENODEV;
++		goto out2;
++	}
+ 
+ 	dev->pipe_intr = usb_rcvintpipe(dev->udev,
+-					dev->ep_intr->desc.bEndpointAddress &
+-					USB_ENDPOINT_NUMBER_MASK);
+-	period = dev->ep_intr->desc.bInterval;
++					usb_endpoint_num(&ep_intr->desc));
++
++	ret = lan78xx_bind(dev, intf);
++	if (ret < 0)
++		goto out2;
++	strcpy(netdev->name, "eth%d");
++
++	if (netdev->mtu > (dev->hard_mtu - netdev->hard_header_len))
++		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
++	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+ 
++	period = ep_intr->desc.bInterval;
+ 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
+ 	buf = kmalloc(maxp, GFP_KERNEL);
+ 	if (buf) {
 
 
