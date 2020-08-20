@@ -2,73 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04565C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776BF2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBA87206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:54:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597931696;
+	bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tgcAmnCtNxmydGLUMv+08aHsr31p7wmlLFNAI2dFU/vzPUTz2uHDmOvwpmopaV0+V
+	 mP+9LQ1YDC4OJMTqrl0vSRETuIAQTqezTITiMJii+OM6CcdldvJSZShhaxI7q34lK3
+	 w1kcQNarHB4mF2TJ3uHrxntIMEwO0Z3z0ufjWzTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgHTNxa (ORCPT
+        id S1730615AbgHTNyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:53:30 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:33484 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgHTNwB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:52:01 -0400
-Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
-  by alexa-out.qualcomm.com with ESMTP; 20 Aug 2020 06:51:59 -0700
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Aug 2020 06:51:58 -0700
-Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Aug 2020 19:21:33 +0530
-Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
-        id 8207C440F; Thu, 20 Aug 2020 19:21:31 +0530 (IST)
-From:   satya priya <skakit@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
-        satya priya <skakit@codeaurora.org>
-Subject: [PATCH V3 0/3] Add wakeup support over UART RX
-Date:   Thu, 20 Aug 2020 19:21:04 +0530
-Message-Id: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Aug 2020 09:54:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727905AbgHTJ0k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4165322CB1;
+        Thu, 20 Aug 2020 09:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915597;
+        bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f8eRxaUF4a+1MoA2rovzm41Q36wueq8iSS901+IzC4kl+1UJp3IzXaeI532HO1Sqn
+         cens2YNwEcXrotHEgJELC22zMb9KO9yK59fvN3UDXFb4YqCRRfONdAaodVq/i2aM+4
+         90VK87Nolnz1UqbioP3bAmfdVl1fGJnn6ihYqqbU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.8 070/232] mac80211: fix misplaced while instead of if
+Date:   Thu, 20 Aug 2020 11:18:41 +0200
+Message-Id: <20200820091616.191553035@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes in V2:
- - As per Matthias's comment added wakeup support for all the UARTs
-   of SC7180.
- - Added sleep state in sc7180-idp.dts file.
- - Modify the if check in set_mctrl API in serial driver to avoid
-   making RFR high during suspend.
+From: Johannes Berg <johannes.berg@intel.com>
 
-Changes in V3:
- - As per Matthias's comments modify the idp dts pin config to keep
-   only the required pin settings.
- - Remove the extra parentheses from serial driver patch.
+commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
 
-satya priya (3):
-  arm64: dts: sc7180: Add wakeup support over UART RX
-  arm64: dts: qcom: sc7180: Add sleep pin ctrl for BT uart
-  tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+This never was intended to be a 'while' loop, it should've
+just been an 'if' instead of 'while'. Fix this.
 
- arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 +++++++++++++++---
- arch/arm64/boot/dts/qcom/sc7180.dtsi    | 98 ++++++++++++++++++++++++++++-----
- drivers/tty/serial/qcom_geni_serial.c   |  2 +-
- 3 files changed, 130 insertions(+), 24 deletions(-)
+I noticed this while applying another patch from Ben that
+intended to fix a busy loop at this spot.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+Cc: stable@vger.kernel.org
+Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
+Reported-by: Ben Greear <greearb@candelatech.com>
+Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/mac80211/sta_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -1050,7 +1050,7 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
+-	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
+ 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+ 		WARN_ON_ONCE(ret);
+ 	}
+
 
