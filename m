@@ -2,116 +2,196 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9073C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3C20C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B6B02080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A2E207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YI3WGBlj"
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="gD/PAM/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgHTINX (ORCPT
+        id S1726871AbgHTIPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45008 "EHLO
+        Thu, 20 Aug 2020 04:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbgHTIMo (ORCPT
+        with ESMTP id S1726853AbgHTIOq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:12:44 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D0CC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:12:44 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id r13so941187iln.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:12:44 -0700 (PDT)
+        Thu, 20 Aug 2020 04:14:46 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8FAC061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:14:45 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id bo3so1414758ejb.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:14:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=wFUfLu1wjKpBcBk58rANEq0OhljlSviFHmqAjjNj9gA=;
-        b=YI3WGBljcqmJjBpWibWaA1B3PdJw1iIoruN9qxmTnnOwEnMPvjd8UrydeCNmL1LGO9
-         2CWeQFOt7O5NJgOlte+c26lUQGofhonJ9wgiZZyh22da0Idj1QgvGnPm56HPpKerw8RN
-         CbsDUcyZ6DOOYjYKjeLIoOk/W7nwe73sAVTWWNHzypZky90EveXh9IIdse94xbAd9aqs
-         AmxjFUZK/1dpqCJNq9aFxv8/fRipPVX0D+iZteyeOAVyj0KL0B1qEKDSkWjSWtf7gttZ
-         kjttykSDilJzpT4rHIbLKC28g68kIpugSzXYre7+RF7FeHdVtjLOUXUiO0aJwnvLTrTs
-         VAEw==
+        bh=g0v1TVbYwAwmSoj7QGga3H4kAFy2bpvMW+yENdu88bQ=;
+        b=gD/PAM/5z1gJRM2L/hhs83u2G6dxhrlGRNjPZAcXA3Ps9AmnRfVlDkONc+Q8/z3MqF
+         r7CLU1FiuK5MYHIjYMmYsZNiOXnJ40x7r+54XF3GM5ZDO0+q6Nfl1TycK48mzcYKZxHj
+         Neuc0LfbNED/FWHLB6rJseceEqy3BbaZXj9aF38/V2eTs7cW+D8J27UMsyUIIJFpEWDD
+         kTjTdv1yUm3JFqAEuxmPgQzq+0pC/rDTM9iWveV5N/muRWClRvxBK9H70Ew42Dn9aDw8
+         gh/tDB2uatVehzTr5FzdomsNecR8voBgz6+mW+JUwFtSdENL6cVmGxjrJmf3lDuaAwHX
+         ChAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=wFUfLu1wjKpBcBk58rANEq0OhljlSviFHmqAjjNj9gA=;
-        b=aBHCTgcIQZBgveVaaaB9Vv8HNH1ph85FKmMrcuNGVywRJf6l/WfrYxaPvBJXe6a+mu
-         ROFiIQ8XPtQE1/0XiqLnu7twoiljv7GQNOEn20OYz+Ib11WDFheHSaUBYKwii2yAaoK3
-         eSX7bagEh1GwOnCxXbqGs8ZzOmtWvgz5uDF0IK4cz+ppKjXucZWp68Lk1U07sDr6syad
-         +mtTUtSd7GmIqpwSjqTWO6tk0o4PM4pBVfwl4h0itZ9+lXJqtAoolJqXXvWNFOe3h/h7
-         tC7OMpU+JLYnAhOGg2KFd/05o3FYpuQ9pt9D8f3r9Y/tLiSC96ShKVgOPSiSioimcddk
-         KF7A==
-X-Gm-Message-State: AOAM533EIke4xc1yIcRfb3TfzibVVBvN3Gz6xV0bv9qF9mAKxSoEm2ll
-        XBQF2zIKylY82ulglVbADx422Q==
-X-Google-Smtp-Source: ABdhPJw2SI8b0KzEmhQCtckhElBztVNQOXgYYM311s7TbnGafxbeEmNS2ZxuwtamEQox7CCHEQAC/A==
-X-Received: by 2002:a92:35da:: with SMTP id c87mr1611116ilf.61.1597911163628;
-        Thu, 20 Aug 2020 01:12:43 -0700 (PDT)
-Received: from google.com ([2620:15c:183:200:7220:84ff:fe09:2d90])
-        by smtp.gmail.com with ESMTPSA id c24sm990383iom.46.2020.08.20.01.12.42
+        bh=g0v1TVbYwAwmSoj7QGga3H4kAFy2bpvMW+yENdu88bQ=;
+        b=ZU6+xGQMLQgvb33zdqMKY7XP0fB17PywW1ulXAEVvG87ELmsTmRbx+TTCZNMyqE/zs
+         /O8Dlt+xoGqfmUueLf3c+ESWMqoZJKiQ8U6/BVvI6HJ0QuQ0CRoAzHMhNocYOyBMDHFL
+         ctUn1r6y56m9a31N3WuAF9agWNnYwH+VFJP+cPjKVX8hPhabpCwgLDAEgKdK37Yq0X7y
+         acR8oserVce+QCjurnwP8j/gqzc7Z6PrNR9jdNmvq9vlm++plKZ3IXiYN4p8HBEIsaGu
+         nf0Y8Z6AXDvIqsiG86XuaRmpCvZKEd1lSFTgXSytY9XNImPCUIsrC3xiBXoKBMNbgkvc
+         Y6pw==
+X-Gm-Message-State: AOAM532ulrLtTUC69+6RH8qHzKdrxIJzgTaTftrOhOft2pEFw/WEv4/i
+        LnJuyST/PxjTHT4Aksfz5p7aZA==
+X-Google-Smtp-Source: ABdhPJyn8U936iLeaPbvcl7H9ouAf63VVQN83bsoVOmETCnR61Of4Sv7JsOqloslCk6sXLAbzCclGg==
+X-Received: by 2002:a17:906:1757:: with SMTP id d23mr1017684eje.126.1597911284556;
+        Thu, 20 Aug 2020 01:14:44 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id v7sm912049edd.48.2020.08.20.01.14.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 01:12:42 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 02:12:38 -0600
-From:   Yu Zhao <yuzhao@google.com>
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
-        Mel Gorman <mgorman@suse.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Hugh Dickins <hughd@google.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Subject: Re: [PATCH v2 3/3] mm: remove superfluous __ClearPageWaiters()
-Message-ID: <20200820081238.GA2576494@google.com>
-References: <20200818184704.3625199-1-yuzhao@google.com>
- <20200818184704.3625199-3-yuzhao@google.com>
- <20200820061652.GX5422@dhcp22.suse.cz>
+        Thu, 20 Aug 2020 01:14:43 -0700 (PDT)
+From:   Javier Gonzalez <javier@javigon.com>
+X-Google-Original-From: Javier Gonzalez <javier.gonz@samsung.com>
+Date:   Thu, 20 Aug 2020 10:14:43 +0200
+To:     Kanchan Joshi <joshiiitr@gmail.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        David Fugate <david.fugate@linux.intel.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+Message-ID: <20200820081443.fwu7z3webjkhpeuv@mpHalley.local>
+References: <20200818052936.10995-1-joshi.k@samsung.com>
+ <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
+ <20200818052936.10995-3-joshi.k@samsung.com>
+ <20200818071249.GB2544@lst.de>
+ <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
+ <20200819214248.GA26769@dhcp-10-100-145-180.wdl.wdc.com>
+ <CA+1E3rJgvvebEex-zVBGtqK_BAaQUtcwq9nDoFm+Rd=DD20zxg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200820061652.GX5422@dhcp22.suse.cz>
+In-Reply-To: <CA+1E3rJgvvebEex-zVBGtqK_BAaQUtcwq9nDoFm+Rd=DD20zxg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:18:27AM +0200, Michal Hocko wrote:
-> On Tue 18-08-20 12:47:04, Yu Zhao wrote:
-> > Presumably __ClearPageWaiters() was added to follow the previously
-> > removed __ClearPageActive() pattern.
-> 
-> I do not think so. Please have a look at 62906027091f ("mm: add
-> PageWaiters indicating tasks are waiting for a page bit") and a
-> discussion when the patch has been proposed. Sorry I do not have a link
-> handy but I do remember that the handling was quite subtle.
->  
-> > Only flags that are in PAGE_FLAGS_CHECK_AT_FREE needs to be properly
-> > cleared because otherwise we think there may be some kind of leak.
-> > PG_waiters is not one of those flags and leaving the clearing to
-> > PAGE_FLAGS_CHECK_AT_PREP is more appropriate.
-> 
-> What is the point of this patch in the first place? Page waiters is
-> quite subtle and I wouldn't touch it without having a very good reason.
+On 20.08.2020 13:07, Kanchan Joshi wrote:
+>On Thu, Aug 20, 2020 at 3:22 AM Keith Busch <kbusch@kernel.org> wrote:
+>>
+>> On Wed, Aug 19, 2020 at 01:11:58PM -0600, David Fugate wrote:
+>> > Intel does not support making *optional* NVMe spec features *required*
+>> > by the NVMe driver.
+>>
+>> This is inaccurate. As another example, the spec optionally allows a
+>> zone size to be a power of 2, but linux requires a power of 2 if you
+>> want to use it with this driver.
+>>
+>> > Provided there's no glaring technical issues
+>>
+>> There are many. Some may be improved through a serious review process,
+>> but the mess it makes out of the fast path is measurably harmful to
+>> devices that don't subscribe to this. That issue is not so easily
+>> remedied.
+>>
+>> Since this patch is a copy of the scsi implementation, the reasonable
+>> thing is take this fight to the generic block layer for a common
+>> solution. We're not taking this in the nvme driver.
+>
+>I sincerely want to minimize any adverse impact to the fast-path of
+>non-zoned devices.
+>My understanding of that aspect is (I feel it is good to confirm,
+>irrespective of the future of this patch):
+>
+>1. Submission path:
+>There is no extra code for non-zoned device IO. For append, there is
+>this "ns->append_emulate = 1" check.
+>Snippet -
+>        case REQ_OP_ZONE_APPEND:
+>-               ret = nvme_setup_rw(ns, req, cmd, nvme_cmd_zone_append);
+>+               if (!nvme_is_append_emulated(ns))
+>+                       ret = nvme_setup_rw(ns, req, cmd, nvme_cmd_zone_append);
+>+               else {
+>+                       /* prepare append like write, and adjust lba
+>afterwards */
+>
+>2. Completion:
+> Not as clean as submission for sure.
+>The extra check is "ns && ns->append_emulate == 1" for completions if
+>CONFIG_ZONED is enabled.
+>A slightly better completion-handling version (than the submitted patch) is -
+>
+>-       } else if (IS_ENABLED(CONFIG_BLK_DEV_ZONED) &&
+>-                  req_op(req) == REQ_OP_ZONE_APPEND) {
+>-               req->__sector = nvme_lba_to_sect(req->q->queuedata,
+>-                       le64_to_cpu(nvme_req(req)->result.u64));
+>+       } else if (IS_ENABLED(CONFIG_BLK_DEV_ZONED)) {
+>+               struct nvme_ns *ns = req->q->queuedata;
+>+               /* append-emulation requires wp update for some cmds*/
+>+               if (ns && nvme_is_append_emulated(ns)) {
+>+                       if (nvme_need_zone_wp_update(req))
+>+                               nvme_zone_wp_update(ns, req, status);
+>+               }
+>+               else if (req_op(req) == REQ_OP_ZONE_APPEND)
+>+                       req->__sector = nvme_lba_to_sect(ns,
+>+                                       le64_to_cpu(nvme_req(req)->result.u64));
+>
+>Am I missing any other fast-path pain-points?
+>
+>A quick 1 minute 4K randwrite run (QD 64, 4 jobs,libaio) shows :
+>before: IOPS=270k, BW=1056MiB/s (1107MB/s)(61.9GiB/60002msec)
+>after:  IOPS=270k, BW=1055MiB/s (1106MB/s)(61.8GiB/60005msec)
 
-I appreciate your caution. And I just studied the history [1] (I admit
-this is something I should have done beforehand), and didn't find any
-discussion on __ClearPageWaiters() specifically. So I would ask why it
-was added originally. I was hoping Nicholas could help us.
+It is good to use the QEMU "simulation" path that we implemented to test
+performance with different delays, etc., but for these numbers to make
+sense we need to put them in contrast to the simulated NAND speed, etc.
 
-[1] https://lore.kernel.org/lkml/20161225030030.23219-3-npiggin@gmail.com/
+>
+>This maynot be the best test to see the cost, and I am happy to
+>conduct more and improvise.
+>
+>As for the volume of the code - it is same as SCSI emulation. And I
+>can make efforts to reduce that by moving common code to blk-zone, and
+>reuse in SCSI/NVMe emulation.
+>In the patch I tried to isolate append-emulation by keeping everything
+>into "nvme_za_emul". It contains nothing nvme'ish except nvme_ns,
+>which can be turned into "driver_data".
+>
+>+#ifdef CONFIG_BLK_DEV_ZONED
+>+struct nvme_za_emul {
+>+       unsigned int nr_zones;
+>+       spinlock_t zones_wp_offset_lock;
+>+       u32 *zones_wp_offset;
+>+       u32 *rev_wp_offset;
+>+       struct work_struct zone_wp_offset_work;
+>+       char *zone_wp_update_buf;
+>+       struct mutex rev_mutex;
+>+       struct nvme_ns *ns;
+>+};
+>+#endif
+>
+>Will that be an acceptable line of further work/discussions?
 
-Given its triviality, I can't argue how useful this patch is. So I'll
-go with how evident it is: we are removing __ClearPageWaiters() from
-paths where pages have no references left -- they can't have any
-waiters or be on any wait queues.
+I know we spent time enabling this path, but I don't think that moving
+the discussion to the block layer will have much more benefit.
+
+Let's keep the support for these non-append devices in xNVMe and focus
+on the support for the append-enabled ones in Linux. We have a lot of
+good stuff in the backlog that we can start pushing.
+
