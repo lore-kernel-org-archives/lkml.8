@@ -2,53 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBC1C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51F16208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EB1208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917591;
-	bh=n+n8NkrHJ2HWvE4B677OiYeKujjie+S6BlRnqfhaS0Q=;
+	s=default; t=1597917597;
+	bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TnuJqMR5vK/Vf0rMc2FbfAxclNEY8EYWxeCD2bwoAvyMA8Pp8V3D904050kZtGUPp
-	 LPPdpKesd+ELnzfBz9UDfUZP6N2qF12ndo4mcWtEfpE3NoVdqztwrsWyjNBuTN7OoE
-	 8ARD82VWYeF1d48cqfU3hgahP8oCewLb3YhnGqRE=
+	b=HPf0coF3P0/SX9oKebnmYY4KKph5H42efNhpiHS9kQLq0Cnx4dsmlxGlhfATADlht
+	 cifXW6WsaDDv4SoEjQC0HJ3c6OjZ+NjHMJSrRqMHbcUSLTrc9Y+am0QYOarLpopg4h
+	 m/GnutkHCwMlnoEabYhBpI4xoPJwD4hC815iE5N8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbgHTJ7u (ORCPT
+        id S1728060AbgHTJ74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:59:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgHTJ7a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:30 -0400
+        id S1729362AbgHTJ7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60ED42067C;
-        Thu, 20 Aug 2020 09:59:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25123208DB;
+        Thu, 20 Aug 2020 09:59:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917570;
-        bh=n+n8NkrHJ2HWvE4B677OiYeKujjie+S6BlRnqfhaS0Q=;
+        s=default; t=1597917580;
+        bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pxSkafZEr4a7m1+jn/DO0OtcFWA8qvw5rfC5b5MSSrbMcDGO4+piUsQLmmGJlIzB+
-         5ehoz9OEnYRleg2ON1eYuG6saReUj1EEoQws9onyxJO4vLKmLac12k+AX1rWcA62HV
-         3IjyGiMlYpZckyfTNxhI/cG5yrFclOOzz5Y3lW0Y=
+        b=vRi8R1Ppwxfrr9et1ynmS4tbqMjQuKCBfQbGJxw5NGeZy0E7Avsnnf1N4yH3nbmd6
+         8wM41VrAGDZ9O3/6i3YmMxjcaHOxpC+fPDzwVIzpuZeUTftQVm9bHWOTTIVqXta3GR
+         ipuKo24sQOkm075vblnt/rfAvVhvtNbs6q02WCmM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 4.9 078/212] Smack: fix use-after-free in smk_write_relabel_self()
-Date:   Thu, 20 Aug 2020 11:20:51 +0200
-Message-Id: <20200820091606.305515947@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 082/212] EDAC: Fix reference count leaks
+Date:   Thu, 20 Aug 2020 11:20:55 +0200
+Message-Id: <20200820091606.504127526@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,79 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit beb4ee6770a89646659e6a2178538d2b13e2654e upstream.
+[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
 
-smk_write_relabel_self() frees memory from the task's credentials with
-no locking, which can easily cause a use-after-free because multiple
-tasks can share the same credentials structure.
+When kobject_init_and_add() returns an error, it should be handled
+because kobject_init_and_add() takes a reference even when it fails. If
+this function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-Fix this by using prepare_creds() and commit_creds() to correctly modify
-the task's credentials.
+Therefore, replace calling kfree() and call kobject_put() and add a
+missing kobject_put() in the edac_device_register_sysfs_main_kobj()
+error path.
 
-Reproducer for "BUG: KASAN: use-after-free in smk_write_relabel_self":
+ [ bp: Massage and merge into a single patch. ]
 
-	#include <fcntl.h>
-	#include <pthread.h>
-	#include <unistd.h>
-
-	static void *thrproc(void *arg)
-	{
-		int fd = open("/sys/fs/smackfs/relabel-self", O_WRONLY);
-		for (;;) write(fd, "foo", 3);
-	}
-
-	int main()
-	{
-		pthread_t t;
-		pthread_create(&t, NULL, thrproc, NULL);
-		thrproc(NULL);
-	}
-
-Reported-by: syzbot+e6416dabb497a650da40@syzkaller.appspotmail.com
-Fixes: 38416e53936e ("Smack: limited capability for changing process label")
-Cc: <stable@vger.kernel.org> # v4.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
+Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/smack/smackfs.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/edac/edac_device_sysfs.c | 1 +
+ drivers/edac/edac_pci_sysfs.c    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -2741,7 +2741,6 @@ static int smk_open_relabel_self(struct
- static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
- 				size_t count, loff_t *ppos)
- {
--	struct task_smack *tsp = current_security();
- 	char *data;
- 	int rc;
- 	LIST_HEAD(list_tmp);
-@@ -2766,11 +2765,21 @@ static ssize_t smk_write_relabel_self(st
- 	kfree(data);
+diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
+index 93da1a45c7161..470b02fc2de96 100644
+--- a/drivers/edac/edac_device_sysfs.c
++++ b/drivers/edac/edac_device_sysfs.c
+@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
  
- 	if (!rc || (rc == -EINVAL && list_empty(&list_tmp))) {
-+		struct cred *new;
-+		struct task_smack *tsp;
-+
-+		new = prepare_creds();
-+		if (!new) {
-+			rc = -ENOMEM;
-+			goto out;
-+		}
-+		tsp = new->security;
- 		smk_destroy_label_list(&tsp->smk_relabel);
- 		list_splice(&list_tmp, &tsp->smk_relabel);
-+		commit_creds(new);
- 		return count;
- 	}
--
-+out:
- 	smk_destroy_label_list(&list_tmp);
- 	return rc;
- }
+ 	/* Error exit stack */
+ err_kobj_reg:
++	kobject_put(&edac_dev->kobj);
+ 	module_put(edac_dev->owner);
+ 
+ err_out:
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 6e3428ba400f3..622d117e25335 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
+ 
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
+ 
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
+-- 
+2.25.1
+
 
 
