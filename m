@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 801B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E299CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C11A22CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD97122B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924922;
-	bh=VV39/e+5QHHtPRI8mr7TPAiaSliMBkOT1PdczhdxBf0=;
+	s=default; t=1597924932;
+	bh=9dXlDKGLbrOgIRkHFz31a5WQZiJQracrBZxkjz0LR6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TYXnmT8SgKx6clmoUAT3aS4c6yUFVoTBQ4V+9wIsez/eNlcgNdi1cf8Nxwb+MHbqH
-	 IJ2EdwFC9zTiQifqNYGTXShjk2+MHHXlCiVCKvK+RA4jGmpsxjUI+pXhrpEZrUuTzZ
-	 XE8quIJMf/KxrmZ08jTa+EM6LomXPV7isG5vkMvo=
+	b=cyls4egnoQyUi6BULxPsM6PnuYS0Lf4FWsXYb2dDFpixftFQ2wcmbi+/L4QuClxk3
+	 y5yVod20zsM/sVa6WlOZCBKo+ojhPQum5YtfPJ8GyLxW0orOKWIvXVp5XRB+c6/3Vt
+	 VmoiqRFVFD0mG5pWs+F7LW80qWnxUzhbXAy5xHjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgHTMB7 (ORCPT
+        id S1730388AbgHTMB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:01:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47564 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbgHTKAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:04 -0400
+        id S1730097AbgHTKAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FCFE208DB;
-        Thu, 20 Aug 2020 10:00:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7696F22B49;
+        Thu, 20 Aug 2020 10:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917604;
-        bh=VV39/e+5QHHtPRI8mr7TPAiaSliMBkOT1PdczhdxBf0=;
+        s=default; t=1597917608;
+        bh=9dXlDKGLbrOgIRkHFz31a5WQZiJQracrBZxkjz0LR6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKAP9NjB4jJhefLbf4WUONrLCcimxvpo7P7VtqV+tYgy2nctE1FRFt9En+jUC/Nrf
-         e0IKg1JtlTQDxJ/AspWtX29eoNNaR5bh3nfJn7T3YHcRcIOZ1fVl1NITiMZHymYSvK
-         4g7+pR+22VFLXmtppGI2wiznSHRUzm3o6ojQDUWs=
+        b=NKp2C1Njj/YrnNHtkjHcYoazxKROptWfDlObD/ZhchGfc4PL7ozkHtK/wxztid/Yk
+         2THAFESKqJ/HsOUAkFYSXRmZmx0OaPxoM0/x/grDMwdqnxGwUcllDfJyLS9KjJrwAz
+         FwPRj+sQf/M2c9kIVz1goH7VqvpDU9UZGPS49HfQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yu kuai <yukuai3@huawei.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 089/212] ARM: at91: pm: add missing put_device() call in at91_pm_sram_init()
-Date:   Thu, 20 Aug 2020 11:21:02 +0200
-Message-Id: <20200820091606.844090402@linuxfoundation.org>
+Subject: [PATCH 4.9 091/212] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
+Date:   Thu, 20 Aug 2020 11:21:04 +0200
+Message-Id: <20200820091606.947638418@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,62 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit f87a4f022c44e5b87e842a9f3e644fba87e8385f ]
+[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
 
-if of_find_device_by_node() succeed, at91_pm_sram_init() doesn't have
-a corresponding put_device(). Thus add a jump target to fix the exception
-handling for this function implementation.
+If videomode_from_timings() returns true, the mode allocated with
+drm_mode_create will be leaked.
 
-Fixes: d2e467905596 ("ARM: at91: pm: use the mmio-sram pool to access SRAM")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Link: https://lore.kernel.org/r/20200604123301.3905837-1-yukuai3@huawei.com
+Also, the return value of drm_mode_create() is never checked, and thus
+could cause NULL deref.
+
+Fix these two issues.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-at91/pm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-at91/pm.c b/arch/arm/mach-at91/pm.c
-index 8ba0e2e5ad97c..0efac1404418e 100644
---- a/arch/arm/mach-at91/pm.c
-+++ b/arch/arm/mach-at91/pm.c
-@@ -411,13 +411,13 @@ static void __init at91_pm_sram_init(void)
- 	sram_pool = gen_pool_get(&pdev->dev, NULL);
- 	if (!sram_pool) {
- 		pr_warn("%s: sram pool unavailable!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+index 2134bb20fbe9d..2836154dbb126 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+@@ -159,12 +159,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
+ 	int i;
  
- 	sram_base = gen_pool_alloc(sram_pool, at91_pm_suspend_in_sram_sz);
- 	if (!sram_base) {
- 		pr_warn("%s: unable to alloc sram!\n", __func__);
--		return;
-+		goto out_put_device;
- 	}
+ 	for (i = 0; i < timings->num_timings; i++) {
+-		struct drm_display_mode *mode = drm_mode_create(dev);
++		struct drm_display_mode *mode;
+ 		struct videomode vm;
  
- 	sram_pbase = gen_pool_virt_to_phys(sram_pool, sram_base);
-@@ -425,12 +425,17 @@ static void __init at91_pm_sram_init(void)
- 					at91_pm_suspend_in_sram_sz, false);
- 	if (!at91_suspend_sram_fn) {
- 		pr_warn("SRAM: Could not map\n");
--		return;
-+		goto out_put_device;
- 	}
+ 		if (videomode_from_timings(timings, &vm, i))
+ 			break;
  
- 	/* Copy the pm suspend handler to SRAM */
- 	at91_suspend_sram_fn = fncpy(at91_suspend_sram_fn,
- 			&at91_pm_suspend_in_sram, at91_pm_suspend_in_sram_sz);
-+	return;
++		mode = drm_mode_create(dev);
++		if (!mode)
++			break;
 +
-+out_put_device:
-+	put_device(&pdev->dev);
-+	return;
- }
+ 		drm_display_mode_from_videomode(&vm, mode);
  
- static const struct of_device_id atmel_pmc_ids[] __initconst = {
+ 		mode->type = DRM_MODE_TYPE_DRIVER;
 -- 
 2.25.1
 
