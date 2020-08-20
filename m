@@ -2,52 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2EF5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D13C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7BCE22CB2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1193121744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915805;
-	bh=Jen+qfOZNmYM0kSGwzovdZBTZXKl8VbilUIN2LKYbyg=;
+	s=default; t=1597915818;
+	bh=WbXt8Ib5yN5cpTvhe/9oHmMjDtvq/mhODJSbnCMBbf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHe6KAXUnvg2cImSMSBsnmOg7zzoG8rm6iM/jKnsuBv8s3qWdeNAFQHhPYsfs/O9w
-	 2i6SfiUYWSwIbOvzqI+IYnXpV4nHm+ClkOx2yY7uzRQvdQ5+W22bsjVZNoudb/iKr1
-	 Q0SFpDL4m3XFV7OGTgo4wUl7bP4QNrBq7KP6ZdtU=
+	b=vVlq8IDdeYfWLbXvabtSCCKj0MI344osBJiheUbh6lUzczorlt9T24JiBj81FK4yR
+	 8onzm0F/a6szixg6JiUQFzpmwf9vM2kPd4CJ3bK38fRnlN7fk6LIXyVn6fLGVp7OLK
+	 z1dVy++HDiilSqMQ4IWPZBC0BdLKDNcx4a6Y/HdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgHTJ35 (ORCPT
+        id S1728148AbgHTJaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39544 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbgHTJ3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:11 -0400
+        id S1728127AbgHTJ36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A14CF21744;
-        Thu, 20 Aug 2020 09:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A547422CA1;
+        Thu, 20 Aug 2020 09:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915751;
-        bh=Jen+qfOZNmYM0kSGwzovdZBTZXKl8VbilUIN2LKYbyg=;
+        s=default; t=1597915798;
+        bh=WbXt8Ib5yN5cpTvhe/9oHmMjDtvq/mhODJSbnCMBbf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fc4YBdMT2Fqcelr5PzAAPc0b98nnN9fjXSIY5mckynUfi9gZbMGPD8jg/BkeW+2vy
-         EgyukgnhaLqg0znCllSwORIALjTH51H7eRKWurka4v2IkqpIxoCjmlRCmlpOrgWPYy
-         FfYpsgwFBS1FlEA0rHqt9Do8QfMAEVbm29+eAans=
+        b=LSSLjHSdgznU75octr1s+1JRBd78A6F1dgBBtgIwcvfbVg77MsOnhEzkneXkbEb5j
+         +9Nv+cRwTc5hxYw34i/AbukMvkFYSYH+KHeV8sPGMQz6FxNLTjmyErPWfyO3xaJ6R7
+         8dl0PdjxjUMKP1z92yWYn4mEHm84IuGriyDPcuYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.8 094/232] watchdog: f71808e_wdt: clear watchdog timeout occurred flag
-Date:   Thu, 20 Aug 2020 11:19:05 +0200
-Message-Id: <20200820091617.390038716@linuxfoundation.org>
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 138/232] crypto: af_alg - Fix regression on empty requests
+Date:   Thu, 20 Aug 2020 11:19:49 +0200
+Message-Id: <20200820091619.509042985@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,51 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 4f39d575844148fbf3081571a1f3b4ae04150958 upstream.
+[ Upstream commit 662bb52f50bca16a74fe92b487a14d7dccb85e1a ]
 
-The flag indicating a watchdog timeout having occurred normally persists
-till Power-On Reset of the Fintek Super I/O chip. The user can clear it
-by writing a `1' to the bit.
+Some user-space programs rely on crypto requests that have no
+control metadata.  This broke when a check was added to require
+the presence of control metadata with the ctx->init flag.
 
-The driver doesn't offer a restart method, so regular system reboot
-might not reset the Super I/O and if the watchdog isn't enabled, we
-won't touch the register containing the bit on the next boot.
-In this case all subsequent regular reboots will be wrongly flagged
-by the driver as being caused by the watchdog.
+This patch fixes the regression by setting ctx->init as long as
+one sendmsg(2) has been made, with or without a control message.
 
-Fix this by having the flag cleared after read. This is also done by
-other drivers like those for the i6300esb and mpc8xxx_wdt.
-
-Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-5-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/f71808e_wdt.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ crypto/af_alg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -706,6 +706,13 @@ static int __init watchdog_init(int sioa
- 	wdt_conf = superio_inb(sioaddr, F71808FG_REG_WDT_CONF);
- 	watchdog.caused_reboot = wdt_conf & BIT(F71808FG_FLAG_WDTMOUT_STS);
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index 9fcb91ea10c41..5882ed46f1adb 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -851,6 +851,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 		err = -EINVAL;
+ 		goto unlock;
+ 	}
++	ctx->init = true;
  
-+	/*
-+	 * We don't want WDTMOUT_STS to stick around till regular reboot.
-+	 * Write 1 to the bit to clear it to zero.
-+	 */
-+	superio_outb(sioaddr, F71808FG_REG_WDT_CONF,
-+		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
-+
- 	superio_exit(sioaddr);
+ 	if (init) {
+ 		ctx->enc = enc;
+@@ -858,7 +859,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 			memcpy(ctx->iv, con.iv->iv, ivsize);
  
- 	err = watchdog_set_timeout(timeout);
+ 		ctx->aead_assoclen = con.aead_assoclen;
+-		ctx->init = true;
+ 	}
+ 
+ 	while (size) {
+-- 
+2.25.1
+
 
 
