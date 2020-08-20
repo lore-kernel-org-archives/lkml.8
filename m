@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 136E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EB1208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9540B21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917597;
-	bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
+	s=default; t=1597917604;
+	bh=y9ShighU1IxoGurbS7G9NRZYkUnFsrUe92tmo3VmKjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HPf0coF3P0/SX9oKebnmYY4KKph5H42efNhpiHS9kQLq0Cnx4dsmlxGlhfATADlht
-	 cifXW6WsaDDv4SoEjQC0HJ3c6OjZ+NjHMJSrRqMHbcUSLTrc9Y+am0QYOarLpopg4h
-	 m/GnutkHCwMlnoEabYhBpI4xoPJwD4hC815iE5N8=
+	b=m/fH6gqR19UOOpV/jpB9oQiinYK47jcwPo3yKaw/gYNG7IybWL/UOC1t7JNqby38M
+	 +yOxN+V2QSuqinYE17/dv+kQhozJamty2zUEnO0VQwJxwSDGYbPXc9bbRUEyKNafHw
+	 UZrnFs64wbab3c+YO9Ng3Y/u0zqq4UIjq3tEJqCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgHTJ74 (ORCPT
+        id S1730456AbgHTJ77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46448 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:59:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbgHTJ7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:41 -0400
+        id S1727794AbgHTJ7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25123208DB;
-        Thu, 20 Aug 2020 09:59:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 539372067C;
+        Thu, 20 Aug 2020 09:59:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917580;
-        bh=BmFvSYOC5avABBb19lAm61NvJ0ZOipqaWWp6VsdLIJA=;
+        s=default; t=1597917588;
+        bh=y9ShighU1IxoGurbS7G9NRZYkUnFsrUe92tmo3VmKjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vRi8R1Ppwxfrr9et1ynmS4tbqMjQuKCBfQbGJxw5NGeZy0E7Avsnnf1N4yH3nbmd6
-         8wM41VrAGDZ9O3/6i3YmMxjcaHOxpC+fPDzwVIzpuZeUTftQVm9bHWOTTIVqXta3GR
-         ipuKo24sQOkm075vblnt/rfAvVhvtNbs6q02WCmM=
+        b=KN1JNKYgYezvCCwNvElB8Ae8YVOix5srGiJgI7sTRD9x1faY8Yg65bilZ+6KNQjza
+         60aQrwt2CwtUr5dxI+CjVny128+Gweb3KAaHIatGdwJIyAN4L+9zLE2xYH5sMLZ8EX
+         PTZR2QTuBWdo+FuYbJQgXxolxh/BECcjA/FUll88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 082/212] EDAC: Fix reference count leaks
-Date:   Thu, 20 Aug 2020 11:20:55 +0200
-Message-Id: <20200820091606.504127526@linuxfoundation.org>
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 084/212] arm64: dts: exynos: Fix silent hang after boot on Espresso
+Date:   Thu, 20 Aug 2020 11:20:57 +0200
+Message-Id: <20200820091606.601139326@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,57 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
+[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
 
-When kobject_init_and_add() returns an error, it should be handled
-because kobject_init_and_add() takes a reference even when it fails. If
-this function returns an error, kobject_put() must be called to properly
-clean up the memory associated with the object.
+Once regulators are disabled after kernel boot, on Espresso board silent
+hang observed because of LDO7 being disabled.  LDO7 actually provide
+power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
+always-on to fix this hang.
 
-Therefore, replace calling kfree() and call kobject_put() and add a
-missing kobject_put() in the edac_device_register_sysfs_main_kobj()
-error path.
-
- [ bp: Massage and merge into a single patch. ]
-
-Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
-Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
+Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_device_sysfs.c | 1 +
- drivers/edac/edac_pci_sysfs.c    | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
-index 93da1a45c7161..470b02fc2de96 100644
---- a/drivers/edac/edac_device_sysfs.c
-+++ b/drivers/edac/edac_device_sysfs.c
-@@ -275,6 +275,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index c528dd52ba2d3..2f7d144d556da 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -131,6 +131,7 @@ ldo7_reg: LDO7 {
+ 				regulator-min-microvolt = <700000>;
+ 				regulator-max-microvolt = <1150000>;
+ 				regulator-enable-ramp-delay = <125>;
++				regulator-always-on;
+ 			};
  
- 	/* Error exit stack */
- err_kobj_reg:
-+	kobject_put(&edac_dev->kobj);
- 	module_put(edac_dev->owner);
- 
- err_out:
-diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
-index 6e3428ba400f3..622d117e25335 100644
---- a/drivers/edac/edac_pci_sysfs.c
-+++ b/drivers/edac/edac_pci_sysfs.c
-@@ -386,7 +386,7 @@ static int edac_pci_main_kobj_setup(void)
- 
- 	/* Error unwind statck */
- kobject_init_and_add_fail:
--	kfree(edac_pci_top_main_kobj);
-+	kobject_put(edac_pci_top_main_kobj);
- 
- kzalloc_fail:
- 	module_put(THIS_MODULE);
+ 			ldo8_reg: LDO8 {
 -- 
 2.25.1
 
