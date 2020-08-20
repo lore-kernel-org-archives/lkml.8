@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C715C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15494C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D60A32078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBA1B2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:49:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927758;
-	bh=+kH4ogI01XWXBJxV5v3pH33kZ3F0o0zBZ5/4elUM6ks=;
+	s=default; t=1597927766;
+	bh=CBItiV+ncK2sEwjebH3R9xKeqirIkCsYTLz+7WjFaA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KrGPs4xtu6O0kZCZH3ncZ//F2gfJrmwyPvBawrV8lM7j0pjYj02CpleRYGQsYspZ3
-	 6+aWXoqhmXs+qkctvzYn/2DgDE3XrOe6P0o3OpG1sTXycW7jEtLFqIiRJGdRJcv33z
-	 W7GHoEerHvjhYU6v+/v0mL5/MrLU73yO8jOiDJE0=
+	b=tXBrvLcA1uBU09YvuGYWenhPegflWipcy0f8W/m7jHqQHVu2HJ4Fa/g4U42Iu6QqZ
+	 +rGOfw/78k/nanrl9Gx6FclO+nptfbQcZdti5E1Uv0mGCBh/4T3OhId08480NevJzQ
+	 nqzyiQQ6VF72dUGl6YhXKQVT+xAeeke8BDAJhp6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgHTMs7 (ORCPT
+        id S1729312AbgHTMtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:48:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:49:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728758AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729201AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7214022BEA;
-        Thu, 20 Aug 2020 09:44:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2ACF22D0B;
+        Thu, 20 Aug 2020 09:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916650;
-        bh=+kH4ogI01XWXBJxV5v3pH33kZ3F0o0zBZ5/4elUM6ks=;
+        s=default; t=1597916679;
+        bh=CBItiV+ncK2sEwjebH3R9xKeqirIkCsYTLz+7WjFaA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wmJTlJqHPZ/UbELE2YiRo116Zdpfe0ot9L2JskM2MDmUu/2Eh3rscuM4pdolMiC66
-         5N/C5mVTBN+yE7C/K4lfB3FUm5W6es6XNDi/0MSFoSTs2g/d/MEz3iJIOMfbKTEikF
-         1bA5P8qDH4azzmtBTiENRtALTUwW706rfk+M3uOw=
+        b=ZPNPvU1yDZK+sckG18DRfMWQYvwrssey6Me6oZOT88lngfRtBwBJ67euJ8kTdzUUH
+         qqJMwdMYxz77Wx/uspEENTqASm9ly5ZfXnY+1fjqtd/qopqatQozIgF6R4fL1RxfOz
+         +9ndgfinTbyzia8fqV6RLSniFh9NHWaF+maZTJdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hersen Wu <hersenxs.wu@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>, Eryk Brol <eryk.brol@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 204/204] drm/amd/display: dchubbub p-state warning during surface planes switch
-Date:   Thu, 20 Aug 2020 11:21:41 +0200
-Message-Id: <20200820091616.369178049@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 001/152] smb3: warn on confusing error scenario with sec=krb5
+Date:   Thu, 20 Aug 2020 11:19:28 +0200
+Message-Id: <20200820091553.699874152@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,168 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: hersen wu <hersenxs.wu@amd.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit 8b0379a85762b516c7b46aed7dbf2a4947c00564 upstream.
+commit 0a018944eee913962bce8ffebbb121960d5125d9 upstream.
 
-[Why]
-ramp_up_dispclk_with_dpp is to change dispclk, dppclk and dprefclk
-according to bandwidth requirement. call stack: rv1_update_clocks -->
-update_clocks --> dcn10_prepare_bandwidth / dcn10_optimize_bandwidth
---> prepare_bandwidth / optimize_bandwidth. before change dcn hw,
-prepare_bandwidth will be called first to allow enough clock,
-watermark for change, after end of dcn hw change, optimize_bandwidth
-is executed to lower clock to save power for new dcn hw settings.
-
-below is sequence of commit_planes_for_stream:
-step 1: prepare_bandwidth - raise clock to have enough bandwidth
-step 2: lock_doublebuffer_enable
-step 3: pipe_control_lock(true) - make dchubp register change will
-not take effect right way
-step 4: apply_ctx_for_surface - program dchubp
-step 5: pipe_control_lock(false) - dchubp register change take effect
-step 6: optimize_bandwidth --> dc_post_update_surfaces_to_stream
-for full_date, optimize clock to save power
-
-at end of step 1, dcn clocks (dprefclk, dispclk, dppclk) may be
-changed for new dchubp configuration. but real dcn hub dchubps are
-still running with old configuration until end of step 5. this need
-clocks settings at step 1 should not less than that before step 1.
-this is checked by two conditions: 1. if (should_set_clock(safe_to_lower
-, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) ||
-new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz)
-2. request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz
-
-the second condition is based on new dchubp configuration. dppclk
-for new dchubp may be different from dppclk before step 1.
-for example, before step 1, dchubps are as below:
-pipe 0: recout=(0,40,1920,980) viewport=(0,0,1920,979)
-pipe 1: recout=(0,0,1920,1080) viewport=(0,0,1920,1080)
-for dppclk for pipe0 need dppclk = dispclk
-
-new dchubp pipe split configuration:
-pipe 0: recout=(0,0,960,1080) viewport=(0,0,960,1080)
-pipe 1: recout=(960,0,960,1080) viewport=(960,0,960,1080)
-dppclk only needs dppclk = dispclk /2.
-
-dispclk, dppclk are not lock by otg master lock. they take effect
-after step 1. during this transition, dispclk are the same, but
-dppclk is changed to half of previous clock for old dchubp
-configuration between step 1 and step 6. This may cause p-state
-warning intermittently.
-
-[How]
-for new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz, we
-need make sure dppclk are not changed to less between step 1 and 6.
-for new_clocks->dispclk_khz > clk_mgr_base->clks.dispclk_khz,
-new display clock is raised, but we do not know ratio of
-new_clocks->dispclk_khz and clk_mgr_base->clks.dispclk_khz,
-new_clocks->dispclk_khz /2 does not guarantee equal or higher than
-old dppclk. we could ignore power saving different between
-dppclk = displck and dppclk = dispclk / 2 between step 1 and step 6.
-as long as safe_to_lower = false, set dpclk = dispclk to simplify
-condition check.
+When mounting with Kerberos, users have been confused about the
+default error returned in scenarios in which either keyutils is
+not installed or the user did not properly acquire a krb5 ticket.
+Log a warning message in the case that "ENOKEY" is returned
+from the get_spnego_key upcall so that users can better understand
+why mount failed in those two cases.
 
 CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Hersen Wu <hersenxs.wu@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Eryk Brol <eryk.brol@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c |   69 ++++++++++++-
- 1 file changed, 67 insertions(+), 2 deletions(-)
+ fs/cifs/smb2pdu.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn10/rv1_clk_mgr.c
-@@ -85,12 +85,77 @@ static int rv1_determine_dppclk_threshol
- 	return disp_clk_threshold;
- }
- 
--static void ramp_up_dispclk_with_dpp(struct clk_mgr_internal *clk_mgr, struct dc *dc, struct dc_clocks *new_clocks)
-+static void ramp_up_dispclk_with_dpp(
-+		struct clk_mgr_internal *clk_mgr,
-+		struct dc *dc,
-+		struct dc_clocks *new_clocks,
-+		bool safe_to_lower)
- {
- 	int i;
- 	int dispclk_to_dpp_threshold = rv1_determine_dppclk_threshold(clk_mgr, new_clocks);
- 	bool request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz;
- 
-+	/* this function is to change dispclk, dppclk and dprefclk according to
-+	 * bandwidth requirement. Its call stack is rv1_update_clocks -->
-+	 * update_clocks --> dcn10_prepare_bandwidth / dcn10_optimize_bandwidth
-+	 * --> prepare_bandwidth / optimize_bandwidth. before change dcn hw,
-+	 * prepare_bandwidth will be called first to allow enough clock,
-+	 * watermark for change, after end of dcn hw change, optimize_bandwidth
-+	 * is executed to lower clock to save power for new dcn hw settings.
-+	 *
-+	 * below is sequence of commit_planes_for_stream:
-+	 *
-+	 * step 1: prepare_bandwidth - raise clock to have enough bandwidth
-+	 * step 2: lock_doublebuffer_enable
-+	 * step 3: pipe_control_lock(true) - make dchubp register change will
-+	 * not take effect right way
-+	 * step 4: apply_ctx_for_surface - program dchubp
-+	 * step 5: pipe_control_lock(false) - dchubp register change take effect
-+	 * step 6: optimize_bandwidth --> dc_post_update_surfaces_to_stream
-+	 * for full_date, optimize clock to save power
-+	 *
-+	 * at end of step 1, dcn clocks (dprefclk, dispclk, dppclk) may be
-+	 * changed for new dchubp configuration. but real dcn hub dchubps are
-+	 * still running with old configuration until end of step 5. this need
-+	 * clocks settings at step 1 should not less than that before step 1.
-+	 * this is checked by two conditions: 1. if (should_set_clock(safe_to_lower
-+	 * , new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz) ||
-+	 * new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz)
-+	 * 2. request_dpp_div = new_clocks->dispclk_khz > new_clocks->dppclk_khz
-+	 *
-+	 * the second condition is based on new dchubp configuration. dppclk
-+	 * for new dchubp may be different from dppclk before step 1.
-+	 * for example, before step 1, dchubps are as below:
-+	 * pipe 0: recout=(0,40,1920,980) viewport=(0,0,1920,979)
-+	 * pipe 1: recout=(0,0,1920,1080) viewport=(0,0,1920,1080)
-+	 * for dppclk for pipe0 need dppclk = dispclk
-+	 *
-+	 * new dchubp pipe split configuration:
-+	 * pipe 0: recout=(0,0,960,1080) viewport=(0,0,960,1080)
-+	 * pipe 1: recout=(960,0,960,1080) viewport=(960,0,960,1080)
-+	 * dppclk only needs dppclk = dispclk /2.
-+	 *
-+	 * dispclk, dppclk are not lock by otg master lock. they take effect
-+	 * after step 1. during this transition, dispclk are the same, but
-+	 * dppclk is changed to half of previous clock for old dchubp
-+	 * configuration between step 1 and step 6. This may cause p-state
-+	 * warning intermittently.
-+	 *
-+	 * for new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz, we
-+	 * need make sure dppclk are not changed to less between step 1 and 6.
-+	 * for new_clocks->dispclk_khz > clk_mgr_base->clks.dispclk_khz,
-+	 * new display clock is raised, but we do not know ratio of
-+	 * new_clocks->dispclk_khz and clk_mgr_base->clks.dispclk_khz,
-+	 * new_clocks->dispclk_khz /2 does not guarantee equal or higher than
-+	 * old dppclk. we could ignore power saving different between
-+	 * dppclk = displck and dppclk = dispclk / 2 between step 1 and step 6.
-+	 * as long as safe_to_lower = false, set dpclk = dispclk to simplify
-+	 * condition check.
-+	 * todo: review this change for other asic.
-+	 **/
-+	if (!safe_to_lower)
-+		request_dpp_div = false;
-+
- 	/* set disp clk to dpp clk threshold */
- 
- 	clk_mgr->funcs->set_dispclk(clk_mgr, dispclk_to_dpp_threshold);
-@@ -209,7 +274,7 @@ static void rv1_update_clocks(struct clk
- 	/* program dispclk on = as a w/a for sleep resume clock ramping issues */
- 	if (should_set_clock(safe_to_lower, new_clocks->dispclk_khz, clk_mgr_base->clks.dispclk_khz)
- 			|| new_clocks->dispclk_khz == clk_mgr_base->clks.dispclk_khz) {
--		ramp_up_dispclk_with_dpp(clk_mgr, dc, new_clocks);
-+		ramp_up_dispclk_with_dpp(clk_mgr, dc, new_clocks, safe_to_lower);
- 		clk_mgr_base->clks.dispclk_khz = new_clocks->dispclk_khz;
- 		send_request_to_lower = true;
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -1323,6 +1323,8 @@ SMB2_auth_kerberos(struct SMB2_sess_data
+ 	spnego_key = cifs_get_spnego_key(ses);
+ 	if (IS_ERR(spnego_key)) {
+ 		rc = PTR_ERR(spnego_key);
++		if (rc == -ENOKEY)
++			cifs_dbg(VFS, "Verify user has a krb5 ticket and keyutils is installed\n");
+ 		spnego_key = NULL;
+ 		goto out;
  	}
 
 
