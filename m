@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04162C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19372C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC99E2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E139F2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728261AbgHTOa7 (ORCPT
+        id S1728305AbgHTObB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:30:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:58952 "EHLO huawei.com"
+        Thu, 20 Aug 2020 10:31:01 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58976 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727885AbgHTOaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:30:55 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 99608B060FFF36059465;
+        id S1727881AbgHTOay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:30:54 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C998F799B7358370849E;
         Thu, 20 Aug 2020 22:30:51 +0800 (CST)
 Received: from DESKTOP-C3MD9UG.china.huawei.com (10.174.177.253) by
  DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 20 Aug 2020 22:30:42 +0800
+ 14.3.487.0; Thu, 20 Aug 2020 22:30:43 +0800
 From:   Zhen Lei <thunder.leizhen@huawei.com>
 To:     Oliver O'Halloran <oohall@gmail.com>,
         Dan Williams <dan.j.williams@intel.com>,
@@ -35,9 +35,9 @@ To:     Oliver O'Halloran <oohall@gmail.com>,
         linux-nvdimm <linux-nvdimm@lists.01.org>,
         linux-kernel <linux-kernel@vger.kernel.org>
 CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 2/4] libnvdimm: eliminate a meaningless spinlock operation
-Date:   Thu, 20 Aug 2020 22:30:25 +0800
-Message-ID: <20200820143027.3241-3-thunder.leizhen@huawei.com>
+Subject: [PATCH 3/4] libnvdimm: eliminate two unnecessary zero initializations in badrange.c
+Date:   Thu, 20 Aug 2020 22:30:26 +0800
+Message-ID: <20200820143027.3241-4-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
 In-Reply-To: <20200820143027.3241-1-thunder.leizhen@huawei.com>
 References: <20200820143027.3241-1-thunder.leizhen@huawei.com>
@@ -51,72 +51,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-badrange_add() take the lock "badrange->lock", but it's released
-immediately in add_badrange(), protect nothing. Because the static
-function add_badrange() is only called by badrange_add(), so spread its
-content into badrange_add(), and move "kfree(bre_new)" out of the lock
-protection.
+Currently, the "struct badrange_entry" has three members: start, length,
+list. In append_badrange_entry(), "start" and "length" will be assigned
+later, and "list" does not need to be initialized before calling
+list_add_tail(). That means, the kzalloc() in badrange_add() or
+alloc_and_append_badrange_entry() can be replaced with kmalloc(), because
+the zero initialization is not required.
 
-Fixes: b3b454f694db ("libnvdimm: fix clear poison locking with spinlock ...")
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- drivers/nvdimm/badrange.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+ drivers/nvdimm/badrange.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/nvdimm/badrange.c b/drivers/nvdimm/badrange.c
-index 9fdba8c43e8605e..7f78b659057902d 100644
+index 7f78b659057902d..13145001c52ff39 100644
 --- a/drivers/nvdimm/badrange.c
 +++ b/drivers/nvdimm/badrange.c
-@@ -45,12 +45,12 @@ static int alloc_and_append_badrange_entry(struct badrange *badrange,
- 	return 0;
- }
+@@ -37,7 +37,7 @@ static int alloc_and_append_badrange_entry(struct badrange *badrange,
+ {
+ 	struct badrange_entry *bre;
  
--static int add_badrange(struct badrange *badrange, u64 addr, u64 length)
-+int badrange_add(struct badrange *badrange, u64 addr, u64 length)
+-	bre = kzalloc(sizeof(*bre), flags);
++	bre = kmalloc(sizeof(*bre), flags);
+ 	if (!bre)
+ 		return -ENOMEM;
+ 
+@@ -49,7 +49,7 @@ int badrange_add(struct badrange *badrange, u64 addr, u64 length)
  {
  	struct badrange_entry *bre, *bre_new;
  
--	spin_unlock(&badrange->lock);
- 	bre_new = kzalloc(sizeof(*bre_new), GFP_KERNEL);
-+
+-	bre_new = kzalloc(sizeof(*bre_new), GFP_KERNEL);
++	bre_new = kmalloc(sizeof(*bre_new), GFP_KERNEL);
+ 
  	spin_lock(&badrange->lock);
- 
- 	/*
-@@ -63,6 +63,7 @@ static int add_badrange(struct badrange *badrange, u64 addr, u64 length)
- 			/* If length has changed, update this list entry */
- 			if (bre->length != length)
- 				bre->length = length;
-+			spin_unlock(&badrange->lock);
- 			kfree(bre_new);
- 			return 0;
- 		}
-@@ -72,22 +73,15 @@ static int add_badrange(struct badrange *badrange, u64 addr, u64 length)
- 	 * as any overlapping ranges will get resolved when the list is consumed
- 	 * and converted to badblocks
- 	 */
--	if (!bre_new)
-+	if (!bre_new) {
-+		spin_unlock(&badrange->lock);
- 		return -ENOMEM;
--	append_badrange_entry(badrange, bre_new, addr, length);
--
--	return 0;
--}
--
--int badrange_add(struct badrange *badrange, u64 addr, u64 length)
--{
--	int rc;
-+	}
- 
--	spin_lock(&badrange->lock);
--	rc = add_badrange(badrange, addr, length);
-+	append_badrange_entry(badrange, bre_new, addr, length);
- 	spin_unlock(&badrange->lock);
- 
--	return rc;
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(badrange_add);
  
 -- 
 1.8.3
