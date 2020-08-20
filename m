@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7A1C433EA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A227BC433EB
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53DF0206DA
+	by mail.kernel.org (Postfix) with ESMTP id 7902A20738
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597931958;
-	bh=kNgCBFBfSxz7ugVSsubOOTo6lfh4ohoZlx1eQ7qlYBI=;
+	bh=hKw4VeEPTvlU9LP6XXahCcYoetS6SUJD6tZ/nSvmgRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IvsMohkRhYNud3T09YjCxFrzhoVlbVzH1uEq97qHOftY8xUHyNoAA1BJzJhYpB0+P
-	 ywiEA8T+rhZZpbL9oLFzjh5N2gKkwWyPG5VxN9TuiUxztCr66hnr5RiNIS8WRl6mRr
-	 WHphE5V12Sx8NDn0vcs81YCLSMYGtUOQRy+dvkNU=
+	b=FWEQuzLJurIXC3gIpEa1y8JJA0s/er2d2gFbWuxxMQuYdV5PhkBDCsGkPOJDPEmiW
+	 MniQ4om1q2riMQrvIf0cR6U+KZjfsghly71YShlfUDQxKUcMVsdCDWPr43IU2IyLve
+	 DqjMNfTgcuJIwsjjjMhvD6YE1LzUhqxgG3qO5W1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbgHTN7B (ORCPT
+        id S1731346AbgHTN7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:59:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33466 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:59:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727062AbgHTJZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:09 -0400
+        id S1726896AbgHTJYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A91822CF6;
-        Thu, 20 Aug 2020 09:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 239B522CF6;
+        Thu, 20 Aug 2020 09:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915508;
-        bh=kNgCBFBfSxz7ugVSsubOOTo6lfh4ohoZlx1eQ7qlYBI=;
+        s=default; t=1597915447;
+        bh=hKw4VeEPTvlU9LP6XXahCcYoetS6SUJD6tZ/nSvmgRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9fGYYNjwmjnGTY7df4M3URxXX6UbpaCYWMcVuKR0hwHuTlK3ZOuFPUglK66hie8k
-         j66eFbe5REQ0pAmyLmapApju9LcGN8ErX8tKgbGOsoVFq5HXom2jk6kO4GRLvaeNyq
-         jg+QQ1y4ySG2H54RCC1cK+QbCEcJJ1xPJdZg3PW8=
+        b=LPtI0BEjeMUjWA0aI0Q0iQAWGx80fQKRRJHxpkfj1VcJuFdSGmElNPZoAFvxwQpea
+         DzS9rHJVx2fA4A+Y4jlbeTOBmXClqeMU3k27PUZNbmUG3VNERvxrWRHsPUWI5MH1k7
+         KQbmCXvzumKTs5IQGwmM8E7MtQ6JM1Oqpl1fqEMo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 039/232] btrfs: make sure SB_I_VERSION doesnt get unset by remount
-Date:   Thu, 20 Aug 2020 11:18:10 +0200
-Message-Id: <20200820091614.669649341@linuxfoundation.org>
+Subject: [PATCH 5.8 017/232] btrfs: ref-verify: fix memory leak in add_block_entry
+Date:   Thu, 20 Aug 2020 11:17:48 +0200
+Message-Id: <20200820091613.569935200@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,44 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Tom Rix <trix@redhat.com>
 
-commit faa008899a4db21a2df99833cb4ff6fa67009a20 upstream.
+commit d60ba8de1164e1b42e296ff270c622a070ef8fe7 upstream.
 
-There's some inconsistency around SB_I_VERSION handling with mount and
-remount.  Since we don't really want it to be off ever just work around
-this by making sure we don't get the flag cleared on remount.
+clang static analysis flags this error
 
-There's a tiny cpu cost of setting the bit, otherwise all changes to
-i_version also change some of the times (ctime/mtime) so the inode needs
-to be synced. We wouldn't save anything by disabling it.
+fs/btrfs/ref-verify.c:290:3: warning: Potential leak of memory pointed to by 're' [unix.Malloc]
+                kfree(be);
+                ^~~~~
 
-Reported-by: Eric Sandeen <sandeen@redhat.com>
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+The problem is in this block of code:
+
+	if (root_objectid) {
+		struct root_entry *exist_re;
+
+		exist_re = insert_root_entry(&exist->roots, re);
+		if (exist_re)
+			kfree(re);
+	}
+
+There is no 'else' block freeing when root_objectid is 0. Add the
+missing kfree to the else branch.
+
+Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Tom Rix <trix@redhat.com>
 Reviewed-by: David Sterba <dsterba@suse.com>
-[ add perf impact analysis ]
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/btrfs/ref-verify.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1897,6 +1897,12 @@ static int btrfs_remount(struct super_bl
- 		set_bit(BTRFS_FS_OPEN, &fs_info->flags);
- 	}
- out:
-+	/*
-+	 * We need to set SB_I_VERSION here otherwise it'll get cleared by VFS,
-+	 * since the absence of the flag means it can be toggled off by remount.
-+	 */
-+	*flags |= SB_I_VERSION;
-+
- 	wake_up_process(fs_info->transaction_kthread);
- 	btrfs_remount_cleanup(fs_info, old_opts);
- 	return 0;
+--- a/fs/btrfs/ref-verify.c
++++ b/fs/btrfs/ref-verify.c
+@@ -286,6 +286,8 @@ static struct block_entry *add_block_ent
+ 			exist_re = insert_root_entry(&exist->roots, re);
+ 			if (exist_re)
+ 				kfree(re);
++		} else {
++			kfree(re);
+ 		}
+ 		kfree(be);
+ 		return exist;
 
 
