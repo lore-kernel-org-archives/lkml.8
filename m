@@ -2,68 +2,79 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4B6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916FFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 748DA2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 785202078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgHTHPt (ORCPT
+        id S1726325AbgHTHPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:15:49 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:48934 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725797AbgHTHPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:15:48 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1k8enC-000612-KO; Thu, 20 Aug 2020 17:15:23 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 20 Aug 2020 17:15:22 +1000
-Date:   Thu, 20 Aug 2020 17:15:22 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     trix@redhat.com
-Cc:     davem@davemloft.net, smueller@chronox.de,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: drbg: check blocklen is non zero
-Message-ID: <20200820071522.GA21511@gondor.apana.org.au>
-References: <20200802171247.16558-1-trix@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200802171247.16558-1-trix@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Aug 2020 03:15:55 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:46832 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725797AbgHTHPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:15:54 -0400
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9BxG+QeIz5fbm0LAA--.378S2;
+        Thu, 20 Aug 2020 15:15:44 +0800 (CST)
+From:   Kaige Li <likaige@loongson.cn>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <james.smart@broadcom.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: lpfc: fix typo
+Date:   Thu, 20 Aug 2020 15:15:42 +0800
+Message-Id: <1597907742-15388-1-git-send-email-likaige@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9BxG+QeIz5fbm0LAA--.378S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrZF13Ww4UAF43Ww43Cw4UJwb_yoW3JrbE9a
+        1vyFW7Xwn2yryxWFyxKr1vqayq9ay5WFn29Fnaqr1fuw45X3s8Xr4kurs8Xr45ZryDAF9x
+        Aas2qry8Ar1rKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2kYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
+        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
+        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4xMxAIw28I
+        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI
+        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
+        IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0na93UUUUU==
+X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 02, 2020 at 10:12:47AM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> Clang static analysis reports this error
-> 
-> crypto/drbg.c:441:40: warning: Division by zero
->         padlen = (inputlen + sizeof(L_N) + 1) % (drbg_blocklen(drbg));
->                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
-> 
-> When drbg_bocklen fails it returns 0.
-> 
-> 	if (drbg && drbg->core)
-> 		return drbg->core->blocklen_bytes;
-> 	return 0;
+Fix spelling mistake: "Cant" -> "Can't"
 
-Yes but it can only fail if the drbg is not instantiated.  If
-you're hitting the generate path with an uninstantiated drbg you've
-got bigger problems than a divide by zero.
+Signed-off-by: Kaige Li <likaige@loongson.cn>
+---
+ drivers/scsi/lpfc/lpfc_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So how is this even possible?
-
-Cheers,
+diff --git a/drivers/scsi/lpfc/lpfc_debugfs.c b/drivers/scsi/lpfc/lpfc_debugfs.c
+index ae0a825..d6c07ee 100644
+--- a/drivers/scsi/lpfc/lpfc_debugfs.c
++++ b/drivers/scsi/lpfc/lpfc_debugfs.c
+@@ -5944,7 +5944,7 @@ lpfc_debugfs_initialize(struct lpfc_vport *vport)
+ 					    phba, &lpfc_debugfs_op_lockstat);
+ 		if (!phba->debug_lockstat) {
+ 			lpfc_printf_vlog(vport, KERN_ERR, LOG_INIT,
+-					 "4610 Cant create debugfs lockstat\n");
++					 "4610 Can't create debugfs lockstat\n");
+ 			goto debug_failed;
+ 		}
+ #endif
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.1.0
+
