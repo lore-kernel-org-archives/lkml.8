@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C116C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B972C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07BBA20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD7A208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916385;
-	bh=NxMp6abjy8xTlR5yqGiFRuvZAaLxlVIyUALxmIvN0ck=;
+	s=default; t=1597916396;
+	bh=ffdK+kkecl1OQb9W/5JFKuO9NO+PSRETHtdMz7xayp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xecp/oUvjdNyxXVGiyPu5+Ogj9LBcwxUgqiSrnlXD8LFh9V3lmzFATEyrHtzpctSw
-	 m/UsBlPomKF+YXb47VngCkV+cM8FBgSEzRCcIEXxkUNRzRcq9h8fIs++d2yElh62Po
-	 2tWGlNr5mOiTVriZnFDyPeBaEr6aQoUG1oarix40=
+	b=tnGArxGW0FYHKVKDoDtoVxTswLaGJpDttCaR+MIXX2kl4j+mdfClK7tD1LIi8l7kc
+	 aWtL/bTUHWnAFzvXT2H6wozS3FoZHOouhjEjYS204FiWJSfOIcgbm8lL372/dumvxP
+	 ZV5r7qLJkzCY16VPvUODOQx/zAtS2mcIGRt/QmeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgHTJjn (ORCPT
+        id S1728146AbgHTJjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:39:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58596 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:39:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbgHTJj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:39:27 -0400
+        id S1727826AbgHTJjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:39:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E27820724;
-        Thu, 20 Aug 2020 09:39:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1B782173E;
+        Thu, 20 Aug 2020 09:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916366;
-        bh=NxMp6abjy8xTlR5yqGiFRuvZAaLxlVIyUALxmIvN0ck=;
+        s=default; t=1597916372;
+        bh=ffdK+kkecl1OQb9W/5JFKuO9NO+PSRETHtdMz7xayp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5f1Iou373/HDkXyZ4h19XhkTdVpeXm1a8IWzzxFYLgHDbGZOGzNC8NO+6ACBRwVu
-         EomC22YI9Hs1GHBpflg4kMRELeh+vf6r0jvAQ3t9lSubC3JOsjNmejhNIzpm3bZjTX
-         dMkuFyLp6A7OtWSIlYjuKQJeArCv/OQOxmugFkcE=
+        b=olxiDgys1+lYxkUFvsGrIgb2VNVgotYBIxWd2OlbPEruSvFZ1AyOAvw7L/LYsSqXP
+         8czy4um4/KijJH6h95GMah8M+SYuvUXA3fdupaBNW0HwcZl1KAyvoYvRA8+IvtfA/C
+         aF7P0+lJFJpcDuJyGyZPT99XDZgGAsSvplX4ziAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mathew King <mathewk@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Kamal Heib <kheib@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 104/204] platform/chrome: cros_ec_ishtp: Fix a double-unlock issue
-Date:   Thu, 20 Aug 2020 11:20:01 +0200
-Message-Id: <20200820091611.515635319@linuxfoundation.org>
+Subject: [PATCH 5.7 106/204] RDMA/ipoib: Fix ABBA deadlock with ipoib_reap_ah()
+Date:   Thu, 20 Aug 2020 11:20:03 +0200
+Message-Id: <20200820091611.619507476@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,41 +60,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Jason Gunthorpe <jgg@nvidia.com>
 
-[ Upstream commit aaa3cbbac326c95308e315f1ab964a3369c4d07d ]
+[ Upstream commit 65936bf25f90fe440bb2d11624c7d10fab266639 ]
 
-In function cros_ec_ishtp_probe(), "up_write" is already called
-before function "cros_ec_dev_init". But "up_write" will be called
-again after the calling of the function "cros_ec_dev_init" failed.
-Thus add a call of the function “down_write” in this if branch
-for the completion of the exception handling.
+ipoib_mcast_carrier_on_task() insanely open codes a rtnl_lock() such that
+the only time flush_workqueue() can be called is if it also clears
+IPOIB_FLAG_OPER_UP.
 
-Fixes: 26a14267aff2 ("platform/chrome: Add ChromeOS EC ISHTP driver")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Tested-by: Mathew King <mathewk@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Thus the flush inside ipoib_flush_ah() will deadlock if it gets unlucky
+enough, and lockdep doesn't help us to find it early:
+
+          CPU0               CPU1          CPU2
+   __ipoib_ib_dev_flush()
+      down_read(vlan_rwsem)
+
+                         ipoib_vlan_add()
+                           rtnl_trylock()
+                           down_write(vlan_rwsem)
+
+				      ipoib_mcast_carrier_on_task()
+					 while (!rtnl_trylock())
+					      msleep(20);
+
+      ipoib_flush_ah()
+	flush_workqueue(priv->wq)
+
+Clean up the ah_reaper related functions and lifecycle to make sense:
+
+ - Start/Stop of the reaper should only be done in open/stop NDOs, not in
+   any other places
+
+ - cancel and flush of the reaper should only happen in the stop NDO.
+   cancel is only functional when combined with IPOIB_STOP_REAPER.
+
+ - Non-stop places were flushing the AH's just need to flush out dead AH's
+   synchronously and ignore the background task completely. It is fully
+   locked and harmless to leave running.
+
+Which ultimately fixes the ABBA deadlock by removing the unnecessary
+flush_workqueue() from the problematic place under the vlan_rwsem.
+
+Fixes: efc82eeeae4e ("IB/ipoib: No longer use flush as a parameter")
+Link: https://lore.kernel.org/r/20200625174219.290842-1-kamalheib1@gmail.com
+Reported-by: Kamal Heib <kheib@redhat.com>
+Tested-by: Kamal Heib <kheib@redhat.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_ishtp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/infiniband/ulp/ipoib/ipoib_ib.c   | 65 ++++++++++-------------
+ drivers/infiniband/ulp/ipoib/ipoib_main.c |  2 +
+ 2 files changed, 31 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_ishtp.c b/drivers/platform/chrome/cros_ec_ishtp.c
-index 93a71e93a2f15..41d60af618c9d 100644
---- a/drivers/platform/chrome/cros_ec_ishtp.c
-+++ b/drivers/platform/chrome/cros_ec_ishtp.c
-@@ -660,8 +660,10 @@ static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+index 6ee64c25aaff4..494f413dc3c6c 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
+@@ -670,13 +670,12 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
+ 	return rc;
+ }
  
- 	/* Register croc_ec_dev mfd */
- 	rv = cros_ec_dev_init(client_data);
--	if (rv)
-+	if (rv) {
-+		down_write(&init_lock);
- 		goto end_cros_ec_dev_init_error;
-+	}
+-static void __ipoib_reap_ah(struct net_device *dev)
++static void ipoib_reap_dead_ahs(struct ipoib_dev_priv *priv)
+ {
+-	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+ 	struct ipoib_ah *ah, *tah;
+ 	unsigned long flags;
  
+-	netif_tx_lock_bh(dev);
++	netif_tx_lock_bh(priv->dev);
+ 	spin_lock_irqsave(&priv->lock, flags);
+ 
+ 	list_for_each_entry_safe(ah, tah, &priv->dead_ahs, list)
+@@ -687,37 +686,37 @@ static void __ipoib_reap_ah(struct net_device *dev)
+ 		}
+ 
+ 	spin_unlock_irqrestore(&priv->lock, flags);
+-	netif_tx_unlock_bh(dev);
++	netif_tx_unlock_bh(priv->dev);
+ }
+ 
+ void ipoib_reap_ah(struct work_struct *work)
+ {
+ 	struct ipoib_dev_priv *priv =
+ 		container_of(work, struct ipoib_dev_priv, ah_reap_task.work);
+-	struct net_device *dev = priv->dev;
+ 
+-	__ipoib_reap_ah(dev);
++	ipoib_reap_dead_ahs(priv);
+ 
+ 	if (!test_bit(IPOIB_STOP_REAPER, &priv->flags))
+ 		queue_delayed_work(priv->wq, &priv->ah_reap_task,
+ 				   round_jiffies_relative(HZ));
+ }
+ 
+-static void ipoib_flush_ah(struct net_device *dev)
++static void ipoib_start_ah_reaper(struct ipoib_dev_priv *priv)
+ {
+-	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+-
+-	cancel_delayed_work(&priv->ah_reap_task);
+-	flush_workqueue(priv->wq);
+-	ipoib_reap_ah(&priv->ah_reap_task.work);
++	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
++	queue_delayed_work(priv->wq, &priv->ah_reap_task,
++			   round_jiffies_relative(HZ));
+ }
+ 
+-static void ipoib_stop_ah(struct net_device *dev)
++static void ipoib_stop_ah_reaper(struct ipoib_dev_priv *priv)
+ {
+-	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+-
+ 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
+-	ipoib_flush_ah(dev);
++	cancel_delayed_work(&priv->ah_reap_task);
++	/*
++	 * After ipoib_stop_ah_reaper() we always go through
++	 * ipoib_reap_dead_ahs() which ensures the work is really stopped and
++	 * does a final flush out of the dead_ah's list
++	 */
+ }
+ 
+ static int recvs_pending(struct net_device *dev)
+@@ -846,16 +845,6 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
+ 	return 0;
+ }
+ 
+-void ipoib_ib_dev_stop(struct net_device *dev)
+-{
+-	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+-
+-	priv->rn_ops->ndo_stop(dev);
+-
+-	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
+-	ipoib_flush_ah(dev);
+-}
+-
+ int ipoib_ib_dev_open_default(struct net_device *dev)
+ {
+ 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+@@ -899,10 +888,7 @@ int ipoib_ib_dev_open(struct net_device *dev)
+ 		return -1;
+ 	}
+ 
+-	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
+-	queue_delayed_work(priv->wq, &priv->ah_reap_task,
+-			   round_jiffies_relative(HZ));
+-
++	ipoib_start_ah_reaper(priv);
+ 	if (priv->rn_ops->ndo_open(dev)) {
+ 		pr_warn("%s: Failed to open dev\n", dev->name);
+ 		goto dev_stop;
+@@ -913,13 +899,20 @@ int ipoib_ib_dev_open(struct net_device *dev)
  	return 0;
  
+ dev_stop:
+-	set_bit(IPOIB_STOP_REAPER, &priv->flags);
+-	cancel_delayed_work(&priv->ah_reap_task);
+-	set_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
+-	ipoib_ib_dev_stop(dev);
++	ipoib_stop_ah_reaper(priv);
+ 	return -1;
+ }
+ 
++void ipoib_ib_dev_stop(struct net_device *dev)
++{
++	struct ipoib_dev_priv *priv = ipoib_priv(dev);
++
++	priv->rn_ops->ndo_stop(dev);
++
++	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
++	ipoib_stop_ah_reaper(priv);
++}
++
+ void ipoib_pkey_dev_check_presence(struct net_device *dev)
+ {
+ 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
+@@ -1230,7 +1223,7 @@ static void __ipoib_ib_dev_flush(struct ipoib_dev_priv *priv,
+ 		ipoib_mcast_dev_flush(dev);
+ 		if (oper_up)
+ 			set_bit(IPOIB_FLAG_OPER_UP, &priv->flags);
+-		ipoib_flush_ah(dev);
++		ipoib_reap_dead_ahs(priv);
+ 	}
+ 
+ 	if (level >= IPOIB_FLUSH_NORMAL)
+@@ -1305,7 +1298,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev)
+ 	 * the neighbor garbage collection is stopped and reaped.
+ 	 * That should all be done now, so make a final ah flush.
+ 	 */
+-	ipoib_stop_ah(dev);
++	ipoib_reap_dead_ahs(priv);
+ 
+ 	clear_bit(IPOIB_PKEY_ASSIGNED, &priv->flags);
+ 
+diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+index ceec24d451858..29ad4129d2f48 100644
+--- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
++++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
+@@ -1975,6 +1975,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
+ 
+ 	/* no more works over the priv->wq */
+ 	if (priv->wq) {
++		/* See ipoib_mcast_carrier_on_task() */
++		WARN_ON(test_bit(IPOIB_FLAG_OPER_UP, &priv->flags));
+ 		flush_workqueue(priv->wq);
+ 		destroy_workqueue(priv->wq);
+ 		priv->wq = NULL;
 -- 
 2.25.1
 
