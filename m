@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D670C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAC5B2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A26020674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930293;
-	bh=qFl7Iy+52Gchs3UMwFRTr9Ko4Q5HlQTP0GJLrl82L6U=;
+	s=default; t=1597930298;
+	bh=rOZmfox11fUmQvakmoBgObEEml7gBuYfZpBmV3cPfbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdrPzkV9yrjtd1I6yX4utkhxqAaPex18RNZGV1JYeEpVRDdV75tqQoeQNjyzxogTk
-	 yYFdf8SbaDuS13TJbFWMdkpJbk6BsrFZ7tUO5B3d3bOY31LppP80118hCrasR1KFXq
-	 dONL0lmP7+91mDM98msZm1r1judNgzAFkArGWQLg=
+	b=rs1SU5Wg1HkNn6sQcYLYtF7I0coksNNl/RFSCusI1WxaLdSyPrgfI3P8Aqj+geqk6
+	 fAvvYD2DOEQq4EpVZ6Yl6efhmGOPpJHGzocnPia3O4HOA/P/yJ7deH1yO4R7Hy9YzT
+	 8ZKepoij/RelncaQpqJpExCfTlAnzevob67aKRRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbgHTNb0 (ORCPT
+        id S1728368AbgHTNbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:31:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:31:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728344AbgHTJcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:32:43 -0400
+        id S1728272AbgHTJce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:32:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C32C207DE;
-        Thu, 20 Aug 2020 09:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FB822BEF;
+        Thu, 20 Aug 2020 09:32:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915962;
-        bh=qFl7Iy+52Gchs3UMwFRTr9Ko4Q5HlQTP0GJLrl82L6U=;
+        s=default; t=1597915954;
+        bh=rOZmfox11fUmQvakmoBgObEEml7gBuYfZpBmV3cPfbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+P2oz4iSFwYoExS6xvJQEJ6M+Q7VMJvEMNtcDhNVRCfk/V3gXTBF3e/O/gUlTKX2
-         aidyQQN/mNHxEta2LxoeZ/co7U2iwXTzl+ighlkxTlJjGPWxoaw7RNJR7j1ZZ4EHeq
-         Dq53YRLiHsemRMaJsjfx2aVYVkGSZotL1e+snkp0=
+        b=fuFN5He1zIBZY4WzSuACAmtTyZjGfLjXGK3nxX4XfH0719iQjm3KnI3Nr20Ol/5Wr
+         xbFw2UkudGAYMiZ5ir2TJJhmv0Jkz9gPMQ3cMo8DI6JVEujHD9wCuY7ei6zHQg5PaT
+         MStcHyHllepw4lFM4l/mv/D1B1g8NXCiRvIk0nxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Muchun Song <songmuchun@bytedance.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 188/232] kprobes: Fix compiler warning for !CONFIG_KPROBES_ON_FTRACE
-Date:   Thu, 20 Aug 2020 11:20:39 +0200
-Message-Id: <20200820091621.901039914@linuxfoundation.org>
+Subject: [PATCH 5.8 163/232] f2fs: compress: fix to update isize when overwriting compressed file
+Date:   Thu, 20 Aug 2020 11:20:14 +0200
+Message-Id: <20200820091620.706719697@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -63,63 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 10de795a5addd1962406796a6e13ba6cc0fc6bee ]
+[ Upstream commit 944dd22ea4475bd11180fd2f431a4a547ca4d8f5 ]
 
-Fix compiler warning(as show below) for !CONFIG_KPROBES_ON_FTRACE.
+We missed to update isize of compressed file in write_end() with
+below case:
 
-kernel/kprobes.c: In function 'kill_kprobe':
-kernel/kprobes.c:1116:33: warning: statement with no effect
-[-Wunused-value]
- 1116 | #define disarm_kprobe_ftrace(p) (-ENODEV)
-      |                                 ^
-kernel/kprobes.c:2154:3: note: in expansion of macro
-'disarm_kprobe_ftrace'
- 2154 |   disarm_kprobe_ftrace(p);
+cluster size is 16KB
 
-Link: https://lore.kernel.org/r/20200805142136.0331f7ea@canb.auug.org.au
-Link: https://lkml.kernel.org/r/20200805172046.19066-1-songmuchun@bytedance.com
+- write 14KB data from offset 0
+- overwrite 16KB data from offset 0
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Fixes: 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ fs/f2fs/data.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index f54d4a29fc26e..72af5d37e9ff1 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1079,9 +1079,20 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
- 		ipmodify ? &kprobe_ipmodify_enabled : &kprobe_ftrace_enabled);
- }
- #else	/* !CONFIG_KPROBES_ON_FTRACE */
--#define prepare_kprobe(p)	arch_prepare_kprobe(p)
--#define arm_kprobe_ftrace(p)	(-ENODEV)
--#define disarm_kprobe_ftrace(p)	(-ENODEV)
-+static inline int prepare_kprobe(struct kprobe *p)
-+{
-+	return arch_prepare_kprobe(p);
-+}
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 326c63879ddc8..6e9017e6a8197 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3432,6 +3432,10 @@ static int f2fs_write_end(struct file *file,
+ 	if (f2fs_compressed_file(inode) && fsdata) {
+ 		f2fs_compress_write_end(inode, fsdata, page->index, copied);
+ 		f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
 +
-+static inline int arm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int disarm_kprobe_ftrace(struct kprobe *p)
-+{
-+	return -ENODEV;
-+}
++		if (pos + copied > i_size_read(inode) &&
++				!f2fs_verity_in_progress(inode))
++			f2fs_i_size_write(inode, pos + copied);
+ 		return copied;
+ 	}
  #endif
- 
- /* Arm a kprobe with text_mutex */
 -- 
 2.25.1
 
