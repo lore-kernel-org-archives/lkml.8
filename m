@@ -2,159 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B278C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0C32207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:39:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Byh29kc4"
+	by mail.kernel.org (Postfix) with ESMTP id 36207207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:41:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597952460;
+	bh=3Lsjp1e96C8mu/TL+Rnxj2VWX5AqkHFI6+trsDCXMiI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dwPcs2ufxEWpQTgaeA9KZx2NqJ/D5vhNHicz4s7j+wabwpqXQTc163Ac3rf7/AOLH
+	 /vPllPEhvu17ag0USW3KqVB9QMJ5B3C4zq9wp7NSMVcS6SgksZTmXHJrdeapTpkI7M
+	 bOOs046skIT1HMieQLyrADXv+BUGwLQTI91UMvHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgHTTjr (ORCPT
+        id S1728061AbgHTTk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:39:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38400 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbgHTTjo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 15:39:44 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 203D7C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 12:39:44 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so1638539pgf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 12:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wXIlJgCi0Hc+qjW3EmvatA+4YXMKzONFgX9ZK9vfGVU=;
-        b=Byh29kc4cV3ARFPI/Wlk0/U6LwFlY3do928FTIcxGaxbCcgFUm40Fzo6EZmoH3jf45
-         +KHAV91KvPEzkBIC7pCOmnlKjPlO9OUxadtclYKUsLIjezrJ5oPyqd+OsJBpn6tvS2gD
-         VCLQnLIrRJqQajFge2GUlSju3XU+/A55+NmWf00MIxOvw0bxwSdj3zAI5bL5tGNznh6z
-         VHQsBRta/AHkcLLRJV/d9fgZ7ctTUA7xvEWhJGEkw/i6rv0IFX6M62y1ovizLidR9Ypg
-         IGYdP77Gjil0K1X56UqtZ8ROL3LlqTumNtyDnnHVrIJ5Clw03mIbYH0jxLXG63DW8k/5
-         alKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wXIlJgCi0Hc+qjW3EmvatA+4YXMKzONFgX9ZK9vfGVU=;
-        b=SPHwjckkkJ4LrGmFL5RS8Yiiu4M5LKzYdg4T4dmTzA8LXgj+1uIZYu7xhXk/m410cs
-         2l649CMfzfzvfKtjDkK9Zd/HKSsO0I1jeB6SCQgiNVwglI1g7WAd4Uqf5BVS33FHnloi
-         HuCHJa/WZjO9xGxlayeFN5FhJONt+Lrb3emQjEeqR8omQNafHEpMe+McCtUxJv+MQ0GV
-         KQx1EaN2wgMXOF4zKoQF6K5knYyM/abyBZNiY9DLN7ze8dgb8ejsemx07xCPi7NnQsMH
-         X9sjDbo/aPrGU9m7YEj0UzpBSTvhSYaTXrGvHqRZFmpXoCx9AHYJVj6ANgkkk1ztPRn4
-         sQmg==
-X-Gm-Message-State: AOAM5327EoknjEJu8XOmCmmTWo/v4OZtjT7aFPqOshbuQnECWBo3NF5K
-        80y/Fa1cFh+Rdb/vLN+J0JVE7NbERcszzaTioOeBaOce+qI=
-X-Google-Smtp-Source: ABdhPJym/FbUKNACd+sG+GCzf3AR9j9nUiLJQxeLO2wEIc43GF74XHG+gaLLRAbnKyQMsx9vmJyOQlV2oIBMWjeQigQ=
-X-Received: by 2002:a63:fa09:: with SMTP id y9mr271539pgh.0.1597952383386;
- Thu, 20 Aug 2020 12:39:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200819161907.1155110-1-enric.balletbo@collabora.com>
- <C9E59107-CE83-4554-9447-5DE5BEE09A3B@fw-web.de> <CAGETcx9_A-E5b-JxT2G142mGxqoo8xqFNEgT+CNWt=oOv0Z5+w@mail.gmail.com>
- <a23bac35d20eb002bdfb5263bf5dd213@kernel.org> <CAGETcx-NpRzzeXYN-UBP1eAsC3s_AofSQ9rXOEmCjhLhKLnxWg@mail.gmail.com>
- <14b8f4b9667d29ee25e25eb19c69e3f7@kernel.org>
-In-Reply-To: <14b8f4b9667d29ee25e25eb19c69e3f7@kernel.org>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Thu, 20 Aug 2020 12:39:07 -0700
-Message-ID: <CAGETcx9TB9HNd3WKwQ=p8VYy1-gLYqpGCtvk9QsdG1fvprROYQ@mail.gmail.com>
-Subject: Re: [PATCH] Revert "irqchip/mtk-sysirq: Convert to a platform driver"
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Frank Wunderlich <wichtig@fw-web.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Frank Wunderlich <linux@fw-web.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Hanks Chen <hanks.chen@mediatek.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Aug 2020 15:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726887AbgHTTkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 15:40:55 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6009A207DE;
+        Thu, 20 Aug 2020 19:40:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597952455;
+        bh=3Lsjp1e96C8mu/TL+Rnxj2VWX5AqkHFI6+trsDCXMiI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qYktKyEgLOhKAlwk2PazXastWirp+ue0OuDXI6J1jtkaTbOpdTLtApiH+AMfyZa5h
+         PS1zLOcxITWkUW3cttfOI2SpLQL0rkjji2xz88g7CiWG5zuv3zWO86OspTnlB45LhD
+         rRPHeUcjq04mQWk/Z4Vog/DOd9HIP9/a3/NNpPZI=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ath9k: Do not select MAC80211_LEDS by default
+Date:   Thu, 20 Aug 2020 21:40:49 +0200
+Message-Id: <20200820194049.28055-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 7:53 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> On 2020-08-20 09:07, Saravana Kannan wrote:
-> > On Thu, Aug 20, 2020 at 12:56 AM Marc Zyngier <maz@kernel.org> wrote:
-> >>
-> >> On 2020-08-19 19:51, Saravana Kannan wrote:
-> >> > On Wed, Aug 19, 2020 at 9:52 AM Frank Wunderlich <wichtig@fw-web.de>
-> >> > wrote:
-> >> >>
-> >> >> hi,
-> >> >>
-> >> >> does the fix you've linked to my revert [1] not work in your case?
-> >> >>
-> >> >> [1] https://patchwork.kernel.org/patch/11718481/
-> >> >
-> >> > Thanks for pointing it out Frank. Also, might want to avoid top
-> >> > posting in the future.
-> >> >
-> >> > Enric, Can you please try that other fix and see if that solves your
-> >> > issue?
-> >>
-> >> I think Enric was clear that the driver does probe correctly
-> >> (meaning that he has the fix in his tree). It is everything else
-> >> that breaks, because none of the drivers on the platform are
-> >> equipped to defer their own probing.
-> >>
-> >> I think we need to change this works right now, meaning that we can't
-> >> blindly change the behaviour of *built-in* drivers. I'll see if I can
-> >> come up with something quickly, but I'll otherwise take Enric patch.
-> >
-> > Sounds fair Marc.
-> >
-> > Btw, Enric, out of curiosity, can you try adding "fw_devlink=on" to
-> > your kernel command line to see if it helps? It basically ensures
-> > proper probe ordering without depending on the drivers. There are some
-> > corner cases where it still can't work properly (too much to explain
-> > for a late night email), but if the platforms don't have those corner
-> > cases it'll work perfectly.
-> >
-> > I'm fine with the revert if Marc isn't able to find a quick fix to the
-> > drivers, but this might also fix your problem right away.
->
-> I'm afraid there is no quick fix if we want to preserve the current
-> behavior with built-in drivers,
+The ath9k driver hides all LEDs related code behind CONFIG_MAC80211_LEDS
+ifdefs so it does not really require the MAC80211_LEDS.  The code builds
+fine.  Convert the "select" into "imply" to allow disabling LED trigger
+when not needed.
 
-> and not having "fw_devlink=on" by
-> default makes it irrelevant for most people.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Agreed.
+---
 
-> fw_devlink also prevents my test platforms from booting (my rk3399
-> doesn't find its PCI devices with it), while the same kernel boots
-> just fine without it. It could well be that the corner case is
-> likely to be more prevalent than you seem to expect.
+Not tested on HW.
 
-Yeah, I know it has a few corner cases I need to deal with.
+Continuation of: https://lore.kernel.org/lkml/20200820120444.8809-1-krzk@kernel.org/
+---
+ drivers/net/wireless/ath/ath9k/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> I will probably end-up end-up queuing reverts for both mtk-sysirq,
-> mtk-cirq, and qcom-pdc (the first two can't be built as module with
-> mainline anyway, and I seem to remember that the latter caused some
-> controversy as well).
->
-> As an experiment, I have pushed out a branch[1] that implements
-> a "hybrid" probe, retaining the previous early probe mechanism when
-> the driver is built-in, and letting things rip when built as a
-> module (if you do that, you hopefully know what you are doing).
-> I'd welcome some testing on affected platforms (I don't have
-> anything I can run mainline on that'd be affected).
+diff --git a/drivers/net/wireless/ath/ath9k/Kconfig b/drivers/net/wireless/ath/ath9k/Kconfig
+index 5effb3886631..a84bb9b6573f 100644
+--- a/drivers/net/wireless/ath/ath9k/Kconfig
++++ b/drivers/net/wireless/ath/ath9k/Kconfig
+@@ -22,10 +22,10 @@ config ATH9K
+ 	tristate "Atheros 802.11n wireless cards support"
+ 	depends on MAC80211 && HAS_DMA
+ 	select ATH9K_HW
+-	select MAC80211_LEDS
+-	select LEDS_CLASS
+-	select NEW_LEDS
+ 	select ATH9K_COMMON
++	imply NEW_LEDS
++	imply LEDS_CLASS
++	imply MAC80211_LEDS
+ 	help
+ 	  This module adds support for wireless adapters based on
+ 	  Atheros IEEE 802.11n AR5008, AR9001 and AR9002 family
+-- 
+2.17.1
 
-I like [1] and the code looks good. Hopefully, we can stick with that.
-
--Saravana
