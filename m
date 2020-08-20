@@ -2,54 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9905320758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9582072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921717;
-	bh=ghHQ8uxGEmM1g14tRjmI8nKfOmNVTf0mTKT1Pd66Dg4=;
+	s=default; t=1597921731;
+	bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flN668H9+4LwF/6On11NrojgrGGMrcbfpa+SIebZBk1/uAfyy9nL68L33Rx0xg8xI
-	 AW9o9oU3R1CVfzdyM3epk/ITRS5k//r7f/yfmwcQPyF7B2USJLwcsJvQ7fbDm8MANu
-	 e9fbR2YG+sVPtV+DL+EOim1kjvPavFBxxJBqgh7E=
+	b=geCOnn3zLtmjzvY0Lj0Ot5knXDRYL4NrIGNMj34inOYr9NtxNiYpKOABDjRt+JF0g
+	 2BQttq/FCCwrQ3y3N0zPyotZHEbhgk3k1kyocUd/Bzw8ChwWBWZ2fqfdRF6w8x41s4
+	 3Fc5gk73/4jKVweKI/JGLfco4Da18xQZw1MXMiFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbgHTLIg (ORCPT
+        id S1730881AbgHTKKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:08:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730909AbgHTKKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:24 -0400
+        id S1730867AbgHTKKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6859D2067C;
-        Thu, 20 Aug 2020 10:10:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BDA62067C;
+        Thu, 20 Aug 2020 10:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918224;
-        bh=ghHQ8uxGEmM1g14tRjmI8nKfOmNVTf0mTKT1Pd66Dg4=;
+        s=default; t=1597918209;
+        bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJ2O1LnnJUbSPI1CSbqD4CyjFZBodFkysZszQv8m5rv2+OptAeXgWYsWnhqkyqs2q
-         kOu/8ORsO9f/5udBIj6Y5Wv+eTPAX7P5e1ZO60+uAyO7uGoNvT2UdOfBX+ISI9V0Ez
-         fTZUmUvAlDHzgKjWAk4DBdbaAwoXK76L2zWfoFgI=
+        b=joRJZRE8bV/Q9NUCeKG+7Ge0XCwrmAY8dK+YbdUes1ml9IAICqNb0+RnSKaSDaYE/
+         uzxpXZkgvmmSP/bQTwSiRqLmq3sj9+7EKn6L3APA7gykNDTrBLsz3BeBMOrRR2p96b
+         KNC3TQ7uFejUDyoYXSvKpZ7EKe1IQBGuhz37QDX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YangYuxi <yx.atom1@gmail.com>,
-        Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 096/228] ipvs: allow connection reuse for unconfirmed conntrack
-Date:   Thu, 20 Aug 2020 11:21:11 +0200
-Message-Id: <20200820091612.423387804@linuxfoundation.org>
+Subject: [PATCH 4.14 060/228] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
+Date:   Thu, 20 Aug 2020 11:20:35 +0200
+Message-Id: <20200820091610.605460401@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,125 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Anastasov <ja@ssi.bg>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit f0a5e4d7a594e0fe237d3dfafb069bb82f80f42f ]
+[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
 
-YangYuxi is reporting that connection reuse
-is causing one-second delay when SYN hits
-existing connection in TIME_WAIT state.
-Such delay was added to give time to expire
-both the IPVS connection and the corresponding
-conntrack. This was considered a rare case
-at that time but it is causing problem for
-some environments such as Kubernetes.
+If videomode_from_timings() returns true, the mode allocated with
+drm_mode_create will be leaked.
 
-As nf_conntrack_tcp_packet() can decide to
-release the conntrack in TIME_WAIT state and
-to replace it with a fresh NEW conntrack, we
-can use this to allow rescheduling just by
-tuning our check: if the conntrack is
-confirmed we can not schedule it to different
-real server and the one-second delay still
-applies but if new conntrack was created,
-we are free to select new real server without
-any delays.
+Also, the return value of drm_mode_create() is never checked, and thus
+could cause NULL deref.
 
-YangYuxi lists some of the problem reports:
+Fix these two issues.
 
-- One second connection delay in masquerading mode:
-https://marc.info/?t=151683118100004&r=1&w=2
-
-- IPVS low throughput #70747
-https://github.com/kubernetes/kubernetes/issues/70747
-
-- Apache Bench can fill up ipvs service proxy in seconds #544
-https://github.com/cloudnativelabs/kube-router/issues/544
-
-- Additional 1s latency in `host -> service IP -> pod`
-https://github.com/kubernetes/kubernetes/issues/90854
-
-Fixes: f719e3754ee2 ("ipvs: drop first packet to redirect conntrack")
-Co-developed-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: YangYuxi <yx.atom1@gmail.com>
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Reviewed-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
+Reviewed-by: Jyri Sarha <jsarha@ti.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/ip_vs.h             | 10 ++++------
- net/netfilter/ipvs/ip_vs_core.c | 12 +++++++-----
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-index f4e5ac8aa3668..1fb79c78e2007 100644
---- a/include/net/ip_vs.h
-+++ b/include/net/ip_vs.h
-@@ -1607,18 +1607,16 @@ static inline void ip_vs_conn_drop_conntrack(struct ip_vs_conn *cp)
- }
- #endif /* CONFIG_IP_VS_NFCT */
+diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+index 1813a3623ce60..0484b2cf0e2b5 100644
+--- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
++++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
+@@ -152,12 +152,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
+ 	int i;
  
--/* Really using conntrack? */
--static inline bool ip_vs_conn_uses_conntrack(struct ip_vs_conn *cp,
--					     struct sk_buff *skb)
-+/* Using old conntrack that can not be redirected to another real server? */
-+static inline bool ip_vs_conn_uses_old_conntrack(struct ip_vs_conn *cp,
-+						 struct sk_buff *skb)
- {
- #ifdef CONFIG_IP_VS_NFCT
- 	enum ip_conntrack_info ctinfo;
- 	struct nf_conn *ct;
+ 	for (i = 0; i < timings->num_timings; i++) {
+-		struct drm_display_mode *mode = drm_mode_create(dev);
++		struct drm_display_mode *mode;
+ 		struct videomode vm;
  
--	if (!(cp->flags & IP_VS_CONN_F_NFCT))
--		return false;
- 	ct = nf_ct_get(skb, &ctinfo);
--	if (ct)
-+	if (ct && nf_ct_is_confirmed(ct))
- 		return true;
- #endif
- 	return false;
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 2156571455dbf..a95fe5fe9f046 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -1916,14 +1916,14 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
+ 		if (videomode_from_timings(timings, &vm, i))
+ 			break;
  
- 	conn_reuse_mode = sysctl_conn_reuse_mode(ipvs);
- 	if (conn_reuse_mode && !iph.fragoffs && is_new_conn(skb, &iph) && cp) {
--		bool uses_ct = false, resched = false;
-+		bool old_ct = false, resched = false;
++		mode = drm_mode_create(dev);
++		if (!mode)
++			break;
++
+ 		drm_display_mode_from_videomode(&vm, mode);
  
- 		if (unlikely(sysctl_expire_nodest_conn(ipvs)) && cp->dest &&
- 		    unlikely(!atomic_read(&cp->dest->weight))) {
- 			resched = true;
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 		} else if (is_new_conn_expected(cp, conn_reuse_mode)) {
--			uses_ct = ip_vs_conn_uses_conntrack(cp, skb);
-+			old_ct = ip_vs_conn_uses_old_conntrack(cp, skb);
- 			if (!atomic_read(&cp->n_control)) {
- 				resched = true;
- 			} else {
-@@ -1931,15 +1931,17 @@ ip_vs_in(struct netns_ipvs *ipvs, unsigned int hooknum, struct sk_buff *skb, int
- 				 * that uses conntrack while it is still
- 				 * referenced by controlled connection(s).
- 				 */
--				resched = !uses_ct;
-+				resched = !old_ct;
- 			}
- 		}
- 
- 		if (resched) {
-+			if (!old_ct)
-+				cp->flags &= ~IP_VS_CONN_F_NFCT;
- 			if (!atomic_read(&cp->n_control))
- 				ip_vs_conn_expire_now(cp);
- 			__ip_vs_conn_put(cp);
--			if (uses_ct)
-+			if (old_ct)
- 				return NF_DROP;
- 			cp = NULL;
- 		}
+ 		mode->type = DRM_MODE_TYPE_DRIVER;
 -- 
 2.25.1
 
