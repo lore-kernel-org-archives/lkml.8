@@ -2,103 +2,141 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C65DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82421C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321D120786
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:36:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58A3320786
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:37:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="1oTpqa9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgHTGgw (ORCPT
+        id S1726899AbgHTGhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 02:36:52 -0400
-Received: from mail.zju.edu.cn ([61.164.42.155]:41552 "EHLO zju.edu.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725778AbgHTGgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 02:36:52 -0400
-Received: by ajax-webmail-mail-app3 (Coremail) ; Thu, 20 Aug 2020 14:36:35
- +0800 (GMT+08:00)
-X-Originating-IP: [10.192.85.18]
-Date:   Thu, 20 Aug 2020 14:36:35 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From:   dinghao.liu@zju.edu.cn
-To:     "Lee Jones" <lee.jones@linaro.org>
-Cc:     "Markus Elfring" <Markus.Elfring@web.de>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        "Bartlomiej Zolnierkiewicz" <b.zolnierkie@samsung.com>,
-        "Bryan Wu" <cooloney@gmail.com>,
-        "Daniel Thompson" <daniel.thompson@linaro.org>,
-        "Gyungoh Yoo" <jack.yoo@skyworksinc.com>,
-        "Jingoo Han" <jingoohan1@gmail.com>, "Kangjie Lu" <kjlu@umn.edu>
-Subject: Re: Re: Re: [PATCH] video: backlight: sky81452-backlight: Fix
- reference count imbalance on error
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
- Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
-In-Reply-To: <20200820062301.GD3248864@dell>
-References: <321fb03d-2307-7f60-f437-cfb99184dfd6@web.de>
- <20200819165702.GC3248864@dell>
- <217e3c0c.b58c.17409fd7496.Coremail.dinghao.liu@zju.edu.cn>
- <20200820062301.GD3248864@dell>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+        Thu, 20 Aug 2020 02:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58612 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgHTGhW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 02:37:22 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36E5FC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 23:37:22 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id di22so704755edb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 23:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=sLKrzH9MwPqGsgXwtk2KOdG5Y1PUaWmaOENzy3RDTWI=;
+        b=1oTpqa9mewNECohmMsYj+eRveSfefrahN/JWuEtdN5qZYeRSPgiHk+r5DSeOlqKXJ2
+         xHZTqWPH4bMVTL9qtKpvEdwNg9cNFu8ni1UIgCkF0UdcIgEA9Y/JZa+241+kJALWMWdd
+         A3ilCshO5/+M08eJSNj3KoovGweA4lFzvl8yWhS7WmXTWdD/q7KhlYVAtm2N6SwLPyrp
+         fhcLdYR2jYUoYZaUjtpUVir7zG58kru94mQ8sxSoGPDhnF4a60y1PGoAPiaDD6e6BzR+
+         EWrsad8bF6eimra08ezmAAp4jY5onVm5vyIIQq6jFMv0IiIE9KjkYcn4ML9mcknToqFn
+         l1lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sLKrzH9MwPqGsgXwtk2KOdG5Y1PUaWmaOENzy3RDTWI=;
+        b=dVps1A3eal7WTlcNoqHaGto6oJ6esJ9SqvdTVBc2nzQSva/gcJIig8NuyPvhUWUkNO
+         6piyW7fbRSv4ZdbpEQCWfeTCcGFpQPIzDC1eJ6qcgZ5+zr1b1gK+yjJJyq2cvvNJ6DBA
+         gY3fBvQWwLqXDwHe2uAGC7Sko3rTSJHwNi/M6i8Py9BcXJpsBHxBv+2xkHhRP8ovw7cu
+         LRar2iF9fZ8+zQRCNzghB5D/2/Fd4+CBYNMOtdwrp7FaPT8j0pEzeOmGEtLXEKGTo1Su
+         e7QtCdpGJhWVgPA3tgfVm1JqpwSaG+DvO1/5sAk1PO7u2yZtSuj7kGwNH/G0oBhRiw9Z
+         UxzA==
+X-Gm-Message-State: AOAM530Z/y16k6xIKX8AX2JKEt3CVlB4hD9Prw7aXLs8mK0aq9iSeZUo
+        acTPZPJ6SwUES9qN1pRu8NqngQ==
+X-Google-Smtp-Source: ABdhPJw1f+/LS3aQnQufiPMLSgWv3ikzJM2mUKgAo9msFfUJoqiNImvZgYem58Wk3tvok8hu+xBWaw==
+X-Received: by 2002:aa7:d607:: with SMTP id c7mr1500254edr.184.1597905440828;
+        Wed, 19 Aug 2020 23:37:20 -0700 (PDT)
+Received: from localhost ([194.62.217.57])
+        by smtp.gmail.com with ESMTPSA id g9sm712181edk.97.2020.08.19.23.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 23:37:20 -0700 (PDT)
+From:   Javier Gonzalez <javier@javigon.com>
+X-Google-Original-From: Javier Gonzalez <javier.gonz@samsung.com>
+Date:   Thu, 20 Aug 2020 08:37:19 +0200
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     david.fugate@linux.intel.com, Christoph Hellwig <hch@lst.de>,
+        Kanchan Joshi <joshi.k@samsung.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
+        Nitesh Shetty <nj.shetty@samsung.com>,
+        SelvaKumar S <selvakuma.s1@samsung.com>
+Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
+Message-ID: <20200820063719.q6wftb23op45wigk@MacBook-Pro.localdomain>
+References: <20200818052936.10995-1-joshi.k@samsung.com>
+ <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
+ <20200818052936.10995-3-joshi.k@samsung.com>
+ <20200818071249.GB2544@lst.de>
+ <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
+ <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
 MIME-Version: 1.0
-Message-ID: <3f9fbdb1.bc96.1740a9560d5.Coremail.dinghao.liu@zju.edu.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID: cC_KCgA3Ut7zGT5fQkbuAg--.44418W
-X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAUsL
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbAvS07vEb7Iv0x
-        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
-        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
-        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
-        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
-        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
-        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
-        6r4UMIAIbVACI402YVCY1x02628vn2kIc2xKxwCS07vE7I0Y64k_MIAIbVCY0x0Ix7I2Y4
-        AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY
-        6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s
-        026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0
-        I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIAIbV
-        CI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lV2xY6IIF0xvEx4A2jsIE14v26r1j6r4U
-        MIAIbVCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73U
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBUaHUsIDIwIEF1ZyAyMDIwLCBkaW5naGFvLmxpdUB6anUuZWR1LmNuIHdyb3RlOgo+IAo+
-ID4gPiBPbiBXZWQsIDE5IEF1ZyAyMDIwLCBNYXJrdXMgRWxmcmluZyB3cm90ZToKPiA+ID4gCj4g
-PiA+ID4gPiBXaGVuIG9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KCkgcmV0dXJucyBhbiBlcnJv
-ciBjb2RlLAo+ID4gPiA+ID4gYSBwYWlyaW5nIHJlZmNvdW50IGRlY3JlbWVudCBpcyBuZWVkZWQg
-dG8ga2VlcCBucCdzIHJlZmNvdW50IGJhbGFuY2VkLgo+ID4gPiA+IAo+ID4gPiA+IENhbiBhbm90
-aGVyIGltcGVyYXRpdmUgd29yZGluZyBiZSBoZWxwZnVsIGZvciB0aGUgY2hhbmdlIGRlc2NyaXB0
-aW9uPwo+ID4gPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwv
-Z2l0L3RvcnZhbGRzL2xpbnV4LmdpdC90cmVlL0RvY3VtZW50YXRpb24vcHJvY2Vzcy9zdWJtaXR0
-aW5nLXBhdGNoZXMucnN0P2lkPTE4NDQ1YmY0MDVjYjMzMTExN2JjOTg0MjdiMWJhNmYxMjQxOGFk
-MTcjbjE1MQo+ID4gPiA+IAo+ID4gPiA+IFdvdWxkIGFuIG90aGVyIGNvbW1pdCBtZXNzYWdlIGJl
-IGEgYml0IG5pY2VyPwo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IOKApgo+ID4gPiA+ID4gKysr
-IGIvZHJpdmVycy92aWRlby9iYWNrbGlnaHQvc2t5ODE0NTItYmFja2xpZ2h0LmMKPiA+ID4gPiA+
-IEBAIC0yMTcsNiArMjE3LDcgQEAgc3RhdGljIHN0cnVjdCBza3k4MTQ1Ml9ibF9wbGF0Zm9ybV9k
-YXRhICpza3k4MTQ1Ml9ibF9wYXJzZV9kdCgKPiA+ID4gPiA+ICAJCQkJCW51bV9lbnRyeSk7Cj4g
-PiA+ID4gPiAgCQlpZiAocmV0IDwgMCkgewo+ID4gPiA+ID4gIAkJCWRldl9lcnIoZGV2LCAibGVk
-LXNvdXJjZXMgbm9kZSBpcyBpbnZhbGlkLlxuIik7Cj4gPiA+ID4gPiArCQkJb2Zfbm9kZV9wdXQo
-bnApOwo+ID4gPiA+ID4gIAkJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwo+ID4gPiA+ID4gIAkJ
-fQo+ID4gPiA+IAo+ID4gPiA+IEkgcHJvcG9zZSB0byBhZGQgdGhlIGp1bXAgdGFyZ2V0IOKAnHB1
-dF9ub2Rl4oCdIHNvIHRoYXQgYSBiaXQgb2YgY29tbW9uIGV4Y2VwdGlvbgo+ID4gPiA+IGhhbmRs
-aW5nIGNvZGUgY2FuIGJlIGJldHRlciByZXVzZWQgYXQgdGhlIGVuZCBvZiB0aGlzIGZ1bmN0aW9u
-IGltcGxlbWVudGF0aW9uLgo+ID4gPiA+IAo+ID4gPiA+IFJlZ2FyZHMsCj4gPiA+ID4gTWFya3Vz
-Cj4gPiA+IAo+ID4gPiBZb3UgY2FuIHNhZmVseSBpZ25vcmUgYW55IHJldmlldyBjb21tZW50cyBm
-cm9tIE1hcmt1cyEKPiA+ID4gCj4gPiA+IEhvd2V2ZXIsIHRoaXMgcGF0Y2ggZG9lc24ndCBhcHBl
-YXIgdG8gYmUgaW4gbXkgaW5ib3guCj4gPiA+IAo+ID4gPiBBbnkgaWRlYXMgYXMgdG8gd2h5Pwo+
-ID4gPiAKPiA+IAo+ID4gVGhhbmsgeW91IGZvciB5b3VyIGFkdmljZS4gTXkgb3V0Ym94IHNob3dz
-IHRoYXQgdGhpcyBwYXRjaAo+ID4gaGFzIHJlYWNoZWQgeW91ciBlbWFpbCBzZXJ2ZXIgc3VjY2Vz
-c2Z1bGx5LiBNYXliZSB0aGlzCj4gPiBlbmRlZCB1cCBpbiB5b3VyIGp1bmsgbWFpbCBmaWxlPwo+
-IAo+IFRoaXMgaGFzIGhhcHBlbmVkIHJlY2VudGx5LCBzbyBJIHdhcyBzdXJlIHRvIGNoZWNrLgo+
-IAo+IE5vdCB0aGVyZSBlaXRoZXIgdW5mb3J0dW5hdGVseS4KPiAKPiBXb3VsZCB5b3UgYmUga2lu
-ZCBlbm91Z2ggdG8gYm91bmNlL3Jlc2VuZCBwbGVhc2U/Cj4gCgpTdXJlLgo=
+On 19.08.2020 13:25, Jens Axboe wrote:
+>On 8/19/20 12:11 PM, David Fugate wrote:
+>> On Tue, 2020-08-18 at 07:12 +0000, Christoph Hellwig wrote:
+>>> On Tue, Aug 18, 2020 at 10:59:36AM +0530, Kanchan Joshi wrote:
+>>>> If drive does not support zone-append natively, enable emulation
+>>>> using
+>>>> regular write.
+>>>> Make emulated zone-append cmd write-lock the zone, preventing
+>>>> concurrent append/write on the same zone.
+>>>
+>>> I really don't think we should add this.  ZNS and the Linux support
+>>> were all designed with Zone Append in mind, and then your company did
+>>> the nastiest possible move violating the normal NVMe procedures to
+>>> make
+>>> it optional.  But that doesn't change the fact the Linux should keep
+>>> requiring it, especially with the amount of code added here and how
+>>> it
+>>> hooks in the fast path.
+>>
+>> Intel does not support making *optional* NVMe spec features *required*
+>> by the NVMe driver.
+>
+>It's not required, the driver will function quite fine without it. If you
+>want to use ZNS it's required. The Linux driver thankfully doesn't need
+>any vendor to sign off on what it can or cannot do, or what features
+>are acceptable.
+>
+>> It's forgivable WDC's accepted contribution didn't work with other
+>> vendors' devices choosing not to implement the optional Zone Append,
+>> but it's not OK to reject contributions remedying this.  Provided
+>> there's no glaring technical issues, Samsung's contribution should be
+>> accepted to maintain both spec compliance as well as vendor neutrality.
+>
+>It's *always* ok to reject contributions, if those contributions cause
+>maintainability issues, unacceptable slowdowns, or whatever other issue
+>that the maintainers of said driver don't want to deal with. Any
+>contribution should be judged on merit, not based on political decisions
+>or opinions. Obviously this thread reeks of it.
+>
+
+I'll reply here, where the discussion diverges from this particular
+patch.
+
+We will stop pushing for this emulation. We have a couple of SSDs where
+we disabled Append, we implemented support for them, and we wanted to
+push the changes upstream. That's it. This is no politics not a
+conspiracy against the current ZNS spec. We spent a lot of time working
+on this spec and are actually doing a fair amount of work to support
+Append other places in the stack. In any case, the fuzz stops here.
+
+Javier
