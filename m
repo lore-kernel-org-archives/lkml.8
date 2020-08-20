@@ -2,148 +2,109 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D146DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF558C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B53B12072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF4E20758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgHTE4V (ORCPT
+        id S1726664AbgHTFCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:56:21 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:54206 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgHTE4P (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:56:15 -0400
-Received: by mail-il1-f197.google.com with SMTP id o18so732419ill.20
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 21:56:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IV+LyH+BPu5J+Dtv08XtTCzIg9KfbMGVvqfxRyaesJ0=;
-        b=QKUui3vsnTQm0/Z+fnOEIuHs0CzD+2znzAG+i4RUCL2jUheXJ9CnxXezc061VCjWrj
-         QMlkO5n//bYVdxsAjGBOIaUkKkhNDHAlikNPVAXVeP5vl+Q0EbLhnEsl+whIr4u93zZl
-         vp/GwLkTnQsapTLXlFRQCZJfNhZ8LBcWYUTBWmh7Iq9LYlwhc6VM8Le8PA0QbHtgXO+0
-         iSPbh6cO9bDw5ZL7ymBTQbhiFKnq0prj5Q7TZLUoab5uwhJhj63Gecbb8dcvbk9dcYcM
-         52E5ikBjvWGmAkyd99fRLv6Q97skMZndK/qcx/xTPaibhJ1/RO4QE3qOIm00FuAw/OkF
-         zQeQ==
-X-Gm-Message-State: AOAM532sVyGLf+o4En16hz9MQMBm5ki9Gip9zGfvFpM6aTaoLn6yh8ML
-        wh2b5vgZt9VzXDNtkTQbl4q6DifzohEbo0N/RXXDzsbL6/hn
-X-Google-Smtp-Source: ABdhPJzvndFcEzOxi42FfsPZucM5ZTRPrmX++CIV+o19zD4YzElcu7VQEdDp9jZRR2wIDznxF50kvGcjvyJefBVZTcytpRGmI6Nz
+        Thu, 20 Aug 2020 01:02:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:40485 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHTFCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:02:20 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 7DCC068BEB; Thu, 20 Aug 2020 07:02:14 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 07:02:14 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Tomasz Figa <tfiga@chromium.org>, Christoph Hellwig <hch@lst.de>,
+        alsa-devel@alsa-project.org, linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org, Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        linux-mips@vger.kernel.org
+Subject: Re: [PATCH 05/28] media/v4l2: remove
+ V4L2-FLAG-MEMORY-NON-CONSISTENT
+Message-ID: <20200820050214.GA4815@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de> <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com> <62e4f4fc-c8a5-3ee8-c576-fe7178cb4356@arm.com> <CAAFQd5AcCTDguB2C9KyDiutXWoEvBL8tL7+a==Uo8vj_8CLOJw@mail.gmail.com> <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:9307:: with SMTP id d7mr1628969jah.71.1597899374117;
- Wed, 19 Aug 2020 21:56:14 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 21:56:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000094c57905ad47f05e@google.com>
-Subject: KMSAN: uninit-value in soft_cursor
-From:   syzbot <syzbot+2741e4d93bff16ad8d4d@syzkaller.appspotmail.com>
-To:     b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
-        glider@google.com, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2b32f1d8-16f7-3352-40a5-420993d52fb5@arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Aug 19, 2020 at 03:07:04PM +0100, Robin Murphy wrote:
+>> FWIW, I asked back in time what the plan is for non-coherent
+>> allocations and it seemed like DMA_ATTR_NON_CONSISTENT and
+>> dma_sync_*() was supposed to be the right thing to go with. [2] The
+>> same thread also explains why dma_alloc_pages() isn't suitable for the
+>> users of dma_alloc_attrs() and DMA_ATTR_NON_CONSISTENT.
+>
+> AFAICS even back then Christoph was implying getting rid of NON_CONSISTENT 
+> and *replacing* it with something streaming-API-based - i.e. this series - 
+> not encouraging mixing the existing APIs. It doesn't seem impossible to 
+> implement a remapping version of this new dma_alloc_pages() for 
+> IOMMU-backed ops if it's really warranted (although at that point it seems 
+> like "non-coherent" vb2-dc starts to have significant conceptual overlap 
+> with vb2-sg).
 
-syzbot found the following issue on:
+You can alway vmap the returned pages from dma_alloc_pages, but it will
+make cache invalidation hell - you'll need to use
+invalidate_kernel_vmap_range and flush_kernel_vmap_range to properly
+handle virtually indexed caches.
 
-HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=14dcd116900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=2741e4d93bff16ad8d4d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103f7891900000
+Or with remapping you mean using the iommu do de-scatter/gather?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+2741e4d93bff16ad8d4d@syzkaller.appspotmail.com
+You can implement that trivially implement it yourself for the iommu
+case:
 
-=====================================================
-BUG: KMSAN: uninit-value in soft_cursor+0xa89/0x13f0 drivers/video/fbdev/core/softcursor.c:61
-CPU: 0 PID: 12272 Comm: syz-executor.2 Not tainted 5.8.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x21c/0x280 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
- __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
- soft_cursor+0xa89/0x13f0 drivers/video/fbdev/core/softcursor.c:61
- bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
- fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
- set_cursor drivers/tty/vt/vt.c:915 [inline]
- redraw_screen+0x28ee/0x2980 drivers/tty/vt/vt.c:1031
- vc_do_resize+0x36a8/0x38f0 drivers/tty/vt/vt.c:1314
- vc_resize+0xc3/0xe0 drivers/tty/vt/vt.c:1334
- fbcon_modechanged+0xdc1/0x1320 drivers/video/fbdev/core/fbcon.c:2990
- fbcon_update_vcs+0x86/0xa0 drivers/video/fbdev/core/fbcon.c:3048
- fb_set_var+0x1420/0x1850 drivers/video/fbdev/core/fbmem.c:1056
- do_fb_ioctl+0xc00/0x1150 drivers/video/fbdev/core/fbmem.c:1109
- fb_ioctl+0x1e4/0x210 drivers/video/fbdev/core/fbmem.c:1185
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl fs/ioctl.c:753 [inline]
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl+0x319/0x4d0 fs/ioctl.c:760
- __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:760
- do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d239
-Code: Bad RIP value.
-RSP: 002b:00007ff9aafacc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 000000000000d580 RCX: 000000000045d239
-RDX: 0000000020000000 RSI: 0000000000004601 RDI: 0000000000000003
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 000000000169fb6f R14: 00007ff9aafad9c0 R15: 000000000118cf4c
+{
+	merge_boundary = dma_get_merge_boundary(dev);
+	if (!merge_boundary || merge_boundary > chunk_size - 1) {
+		/* can't coalesce */
+		return -EINVAL;
+	}
 
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- soft_cursor+0x44d/0x13f0 drivers/video/fbdev/core/softcursor.c:50
- bit_cursor+0x38c6/0x3a40 drivers/video/fbdev/core/bitblit.c:386
- fbcon_cursor+0x195e/0x1a60 drivers/video/fbdev/core/fbcon.c:1411
- set_cursor drivers/tty/vt/vt.c:915 [inline]
- redraw_screen+0x28ee/0x2980 drivers/tty/vt/vt.c:1031
- vc_do_resize+0x36a8/0x38f0 drivers/tty/vt/vt.c:1314
- vc_resize+0xc3/0xe0 drivers/tty/vt/vt.c:1334
- fbcon_modechanged+0xdc1/0x1320 drivers/video/fbdev/core/fbcon.c:2990
- fbcon_update_vcs+0x86/0xa0 drivers/video/fbdev/core/fbcon.c:3048
- fb_set_var+0x1420/0x1850 drivers/video/fbdev/core/fbmem.c:1056
- do_fb_ioctl+0xc00/0x1150 drivers/video/fbdev/core/fbmem.c:1109
- fb_ioctl+0x1e4/0x210 drivers/video/fbdev/core/fbmem.c:1185
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl fs/ioctl.c:753 [inline]
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl+0x319/0x4d0 fs/ioctl.c:760
- __x64_sys_ioctl+0x4a/0x70 fs/ioctl.c:760
- do_syscall_64+0xad/0x160 arch/x86/entry/common.c:386
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+	
+	nents = DIV_ROUND_UP(total_size, chunk_size);
+	sg = sgl_alloc();
+	for_each_sgl() {
+		sg->page = __alloc_pages(get_order(chunk_size))
+		sg->len = chunk_size;
+	}
+	dma_map_sg(sg, DMA_ATTR_SKIP_CPU_SYNC);
+	// you are guaranteed to get a single dma_addr out
+}
 
-Local variable ----cursor@bit_cursor created at:
- bit_cursor+0xe3/0x3a40 drivers/video/fbdev/core/bitblit.c:239
- bit_cursor+0xe3/0x3a40 drivers/video/fbdev/core/bitblit.c:239
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Of course this still uses the scatterlist structure with its annoying
+mix of input and output parametes, so I'd rather not expose it as
+an official API at the DMA layer.
