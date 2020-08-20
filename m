@@ -2,119 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CA2C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215D9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8C82075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GZgsINVj"
+	by mail.kernel.org (Postfix) with ESMTP id E88E02075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597882460;
+	bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=w5iZzfXO8DjBT1+vyoOKuQ0d8Zbo9rdt5rpWK/kRkKXZIiSKsS6uxhAhn/BzHX3+k
+	 D1tuNfmFec7EkgVh5qNkK2bbxIz0ptgkZ08FBiaplZboLoc9tX9aMkokDT/gAYuiRi
+	 1p5Y1JzgZ4AUTZlt/8JmgdESWrHNqvi1KyQwMXp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgHTAOI (ORCPT
+        id S1728580AbgHTAOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:14:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbgHTAOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:14:00 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38313C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:14:00 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y6so205949plt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:14:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fSEYrX5ACCj62ngKp36MmVum7AWiPuR/R+X34o+7xuE=;
-        b=GZgsINVjA/iPVwpqT/wdawM2LvRnSYS0j70GlPgoxgV9M4sanwWBFOsmDMGbuAVIRa
-         fInE81nFqMhoKq8aeK2wXF23ckv+8mvNAsIAMNsaEXyznMXVLd+MFeyWTryUYHfbHhoL
-         kS9sYMtCAKiqoxBbxYxGEpzZdonBKqbwUdIwbuasbQS/1Reg518ZvopiGNEAOnVxezPZ
-         0fc1L1znuoVPGemAh7QXesW7icu7VBfCaj9yWLu28K5Ix0mIvzQPh6O3AT9pCabC9Qlt
-         bd32bNMb1gX+jDIWkWEa7SXABnbuMe2PsEgAvpvtqbTRKy6kOBIF4TCyzYtrGbZrqAki
-         rq8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fSEYrX5ACCj62ngKp36MmVum7AWiPuR/R+X34o+7xuE=;
-        b=AoZsqWxKccKreyCfRWbjz4yjb1YaYbp63kSO7vh1NQu77DDvYhPRCVf5LFIGAu0L9B
-         9dK0MddhmoSdQVE6ngDo80DEaB6WJN0zaL9DUF+8eSzMMnt510n90lqeNrYACiGC4enf
-         4dLGevI8tf30MrUyacBpUsA5GqMt8L0DXs25p3jOgk1FhzYAngmwLTNy4k3Tk1HJTEcg
-         GplRGTTnQQBY8ktoZptlIMJ0aIbM6ke3jL/mE7+LUrZxaQReU2WkxBHdn/y6ziCH/jc0
-         HEQqgkdA/PLgA7uGmAlBItXP2OMts4LmDEXpCSd6nfz4G3rPRnVNzExEHPrzQS0SAOD6
-         ev6w==
-X-Gm-Message-State: AOAM533H8GFqSOf1+JeeJ1x5VSZl4fRkGrXoDh606MiPe515Y5ECNb8n
-        h0xBx/wBcFiVl+vEgJF0mEPU94mU1w3r0hVvgrQkgA==
-X-Google-Smtp-Source: ABdhPJzl6F5E2iWMKn+8J0GL89vR8SvenD67R1x0TWLjRLW3Uw/3w3cewKL6RgzutABpZ4MtNfBH5ztYpmF9l9LEG8A=
-X-Received: by 2002:a17:90a:a10c:: with SMTP id s12mr340778pjp.32.1597882439098;
- Wed, 19 Aug 2020 17:13:59 -0700 (PDT)
+        Wed, 19 Aug 2020 20:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726872AbgHTAB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86980208E4;
+        Thu, 20 Aug 2020 00:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597881689;
+        bh=bTH5iXVwhap6MKUOjysl2NNrLylw8YNHEzLt+9lZNL0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=af/5tOSC7TEwuEOQ+Wn+GNHQH2Vt+AUePWw4HC0ynqIYlX75rkagpvfypK30VrXYl
+         pW8ghPT5N7rKGcodIbYXGPnVN4OrHkAxjfeclOd6B7Q4XmatKwxGrmoW2K9YegGGsC
+         vOyfJzKay3V6LGPX3UnISMV4LgS/wmyGhRIVh3C0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 09/27] Input: psmouse - add a newline when printing 'proto' by sysfs
+Date:   Wed, 19 Aug 2020 20:00:58 -0400
+Message-Id: <20200820000116.214821-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
+References: <20200820000116.214821-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200730205112.2099429-1-ndesaulniers@google.com>
- <20200730205112.2099429-3-ndesaulniers@google.com> <CAN=-Rxty=Ux5rj-VQSZH-ryj1RiNJvy7mRE7uyx_YAndGtcq7Q@mail.gmail.com>
- <CAKwvOdkNLK2cRfY+DA0u3KuY5PuEss5Qox6X3zzpL053pARfrA@mail.gmail.com>
-In-Reply-To: <CAKwvOdkNLK2cRfY+DA0u3KuY5PuEss5Qox6X3zzpL053pARfrA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 19 Aug 2020 17:13:47 -0700
-Message-ID: <CAKwvOdnDyUw7TZ-ZsWQ=d7ZNPM_ziFnimmbYoVAexWmg2DL36A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: backtrace-clang: add fixup for lr dereference
-To:     Nathan Huckleberry <nhuck15@gmail.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Lvqiang Huang <lvqiang.huang@unisoc.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        "# 3.4.x" <stable@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 3:33 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Thu, Aug 6, 2020 at 3:39 PM Nathan Huckleberry <nhuck15@gmail.com> wrote:
-> >
-> > Mostly looks good to me. Just a minor nit.
-> >
-> > On Thu, Jul 30, 2020 at 3:51 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > > +/*
-> > > + * Accessing the address pointed to by the link register triggered an
-> > > + * exception, don't try to unwind through it.
-> > > + */
-> > > +bad_lr:                mov     sv_fp, #0
-> >
-> > It might be nice to emit a warning here since we'll
-> > only hit this case if something fishy is going on
-> > with the saved lr.
->
-> Yeah, something fishy is going on if that ever happens.  Let me create
-> a V2 with an additional print.
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-FWIW, I ran into another bug on -next when trying to update this.
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-Report:
-https://lore.kernel.org/lkml/20200811204729.1116341-1-ndesaulniers@google.com/
-Fix:
-https://lore.kernel.org/lkml/20200814212525.6118-1-john.ogness@linutronix.de/T/#t
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-Then I got bogged down in planning for plumbers and other fires. I
-hope to revisit the series after plumbers.
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
+
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index 527ae0b9a191e..0b4a3039f312f 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -2042,7 +2042,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
+ {
+ 	int type = *((unsigned int *)kp->arg);
+ 
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ }
+ 
+ static int __init psmouse_init(void)
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.1
+
