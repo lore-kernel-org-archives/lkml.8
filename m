@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30BD422B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50FD022B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929861;
-	bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
+	s=default; t=1597929867;
+	bh=ayR58E/HkqMTNKquLhSI45UEGPZWQDPCo6KAuDomwQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O4jPsm+p3jyqYA+fkXMns7T5aziImua7ef0jtZqiLmaG5VFNxnCvAI/eLkzRpBedi
-	 cMCcLx8iSXWqYI3M/EaneBg8QxvBCB15KFPxJ92kVWGWVw44eslHbt7/6+yhPhmG49
-	 87RUycqPXrnTm6oGK7d2NAU2MewETPNuRcV4VCcs=
+	b=OewbwzaV6ie18NdZ6tm0SwIOQ5IxaI05DjO9OvcQk0mbeE/JpZp2fBRlhyt4D1IYl
+	 VSkds54IlUh/zKrqSIe7PgK1JblMx/CcbwDndmskDV6T0bVpu8wzaVP7D0BF6Ul87b
+	 fbyGnWkHiZjsojVPkTuhwPZ72s80eatRekHnnPAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730502AbgHTNYO (ORCPT
+        id S1730563AbgHTNYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbgHTJdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:33:41 -0400
+        id S1728398AbgHTJdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:33:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A523207DE;
-        Thu, 20 Aug 2020 09:33:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A898922B43;
+        Thu, 20 Aug 2020 09:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916001;
-        bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
+        s=default; t=1597915987;
+        bh=ayR58E/HkqMTNKquLhSI45UEGPZWQDPCo6KAuDomwQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHJc4fH/KJsLbtHLqz0SOsVh8sH6i2EnVqFM/yGMUfVpeD8JgZaR9qlolsttZHMZg
-         zJNdPCx6zt/ECBNTJqXgujRaJSgv/cMe0c4eMWgoc19bqShHr/GI5Vggas43jXXkYJ
-         xvZbrXiTV7PzBjeG+ut2dU+J5TDv9a1LJnJAxVvs=
+        b=L+1kDLtXpYJYGDKK+WLCmROCP1GCxfta20+l+Y8QzESEiLfaPisXoRy2rTq94DGll
+         Ryg3ryZF33+PNx6QHzIaQPA7SiPygw7ezdJxpJgeugzz8ytdQJhY7OZNSqJY51G2Ct
+         Zv+4GRJTewChjKmGAy3mUj48Df3u2lccnty+WpH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 209/232] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:21:00 +0200
-Message-Id: <20200820091622.934009523@linuxfoundation.org>
+Subject: [PATCH 5.8 205/232] lib/test_lockup.c: fix return value of test_lockup_init()
+Date:   Thu, 20 Aug 2020 11:20:56 +0200
+Message-Id: <20200820091622.740690835@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -63,42 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+[ Upstream commit 3adf3bae0d612357da516d39e1584f1547eb6e86 ]
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+Since filp_open() returns an error pointer, we should use IS_ERR() to
+check the return value and then return PTR_ERR() if failed to get the
+actual return value instead of always -EINVAL.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+E.g. without this patch:
+
+[root@localhost loongson]# ls no_such_file
+ls: cannot access no_such_file: No such file or directory
+[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+modprobe: ERROR: could not insert 'test_lockup': Invalid argument
+[root@localhost loongson]# dmesg | tail -1
+[  126.100596] test_lockup: cannot find file_path
+
+With this patch:
+
+[root@localhost loongson]# ls no_such_file
+ls: cannot access no_such_file: No such file or directory
+[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+modprobe: ERROR: could not insert 'test_lockup': Unknown symbol in module, or unknown parameter (see dmesg)
+[root@localhost loongson]# dmesg | tail -1
+[   95.134362] test_lockup: failed to open no_such_file: -2
+
+Fixes: aecd42df6d39 ("lib/test_lockup.c: add parameters for locking generic vfs locks")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Kees Cook <keescook@chromium.org>
+Link: http://lkml.kernel.org/r/1595555407-29875-2-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ufs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_lockup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index 1da0be667409b..e3b69fb280e8c 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -101,7 +101,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
- 
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
- 
- 	inode = ufs_iget(sb, ino);
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index bd7c7ff39f6be..e7202763a1688 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -512,8 +512,8 @@ static int __init test_lockup_init(void)
+ 	if (test_file_path[0]) {
+ 		test_file = filp_open(test_file_path, O_RDONLY, 0);
+ 		if (IS_ERR(test_file)) {
+-			pr_err("cannot find file_path\n");
+-			return -EINVAL;
++			pr_err("failed to open %s: %ld\n", test_file_path, PTR_ERR(test_file));
++			return PTR_ERR(test_file);
+ 		}
+ 		test_inode = file_inode(test_file);
+ 	} else if (test_lock_inode ||
 -- 
 2.25.1
 
