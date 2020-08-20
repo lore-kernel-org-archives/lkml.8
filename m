@@ -2,53 +2,56 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989B1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41363C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A9C20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14EB120855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922369;
-	bh=HVJC6K6oUqf0NTWf0N29VA5BeABOH0MfAAvmGv5LN8s=;
+	s=default; t=1597922389;
+	bh=KF+GuQztWDvaQBGOE1HeqpVVHLeZgbDx9dY40x+uHY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0zceh39iow2n7gHTDPQLYiNbUhd5d6qmrE9wx29vMClWj2XI6/e00T6gx04uxDZtS
-	 1ktgBiSrQ6vQarlcRimu0jFClUqMFwd4LH8DCsItjxvKd0O1eDTfuP2JaAT4XLMZcu
-	 uai1E5MW6JSifPz0Eztdr+H2ZvCvvFo4eVaerXlw=
+	b=DSOWT40w3AUy80UC7KnMlVfOovB+FhOw5hTcOMF9iVRma/3VSkVo99VxLfYdQnQzK
+	 wbpMd+yxrWFB1K62TNoAf0f5mEkiG+u+HZbuxdvSLquEkCU71K6jan3yeXRxp7KemH
+	 v35x8rqWvZpkPNB90X3TW+5arbGMiQxEQYdKUrHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgHTLT1 (ORCPT
+        id S1729211AbgHTLTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39472 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:19:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729790AbgHTKIC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:02 -0400
+        id S1726731AbgHTKHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03A5B2078D;
-        Thu, 20 Aug 2020 10:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C15E20724;
+        Thu, 20 Aug 2020 10:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918082;
-        bh=HVJC6K6oUqf0NTWf0N29VA5BeABOH0MfAAvmGv5LN8s=;
+        s=default; t=1597918074;
+        bh=KF+GuQztWDvaQBGOE1HeqpVVHLeZgbDx9dY40x+uHY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FaTYYZhbJbUUZ6+x15bk4sseRYUtYqiV2U8/HZUBbfmnj1ZV4EE0UabwLH5DaEvEF
-         7GfR3bf7jGzDYJeyE7U0jBHZCekeDRkrtdMkCcm2eL4uYUVZUo6fYtQd2+3ue3sSQm
-         1YrzcfIsjs6IULnNlFtGKEA11R+AGiA1kf36US4c=
+        b=HtAHmF84Wh3uOyryK0bm6FKIWNoGXZYwgpZmYAy6E8CzZUrnFgPPyWekdWe6MIy3i
+         0YWUMuXmDGDTEJvH0gZwNTitVy+2UmIhjD5uu7ejAY7NGylRDgpngTLW9xQgNG5r82
+         v+8sW0JeemWM1tpOT3D0LiYJKc5RTTJ9edXDznWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 046/228] x86/mce/inject: Fix a wrong assignment of i_mce.status
-Date:   Thu, 20 Aug 2020 11:20:21 +0200
-Message-Id: <20200820091609.915096064@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Simon MacMullen <simonmacm@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 043/228] tracepoint: Mark __tracepoint_strings __used
+Date:   Thu, 20 Aug 2020 11:20:18 +0200
+Message-Id: <20200820091609.736830467@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,38 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 5d7f7d1d5e01c22894dee7c9c9266500478dca99 ]
+commit f3751ad0116fb6881f2c3c957d66a9327f69cefb upstream.
 
-The original code is a nop as i_mce.status is or'ed with part of itself,
-fix it.
+__tracepoint_string's have their string data stored in .rodata, and an
+address to that data stored in the "__tracepoint_str" section. Functions
+that refer to those strings refer to the symbol of the address. Compiler
+optimization can replace those address references with references
+directly to the string data. If the address doesn't appear to have other
+uses, then it appears dead to the compiler and is removed. This can
+break the /tracing/printk_formats sysfs node which iterates the
+addresses stored in the "__tracepoint_str" section.
 
-Fixes: a1300e505297 ("x86/ras/mce_amd_inj: Trigger deferred and thresholding errors interrupts")
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Link: https://lkml.kernel.org/r/20200611023238.3830-1-zhenzhong.duan@gmail.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Like other strings stored in custom sections in this header, mark these
+__used to inform the compiler that there are other non-obvious users of
+the address, so they should still be emitted.
+
+Link: https://lkml.kernel.org/r/20200730224555.2142154-2-ndesaulniers@google.com
+
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 102c9323c35a8 ("tracing: Add __tracepoint_string() to export string pointers")
+Reported-by: Tim Murray <timmurray@google.com>
+Reported-by: Simon MacMullen <simonmacm@google.com>
+Suggested-by: Greg Hackmann <ghackmann@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kernel/cpu/mcheck/mce-inject.c | 2 +-
+ include/linux/tracepoint.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mcheck/mce-inject.c b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-index e57b59762f9f5..94aa91b09c288 100644
---- a/arch/x86/kernel/cpu/mcheck/mce-inject.c
-+++ b/arch/x86/kernel/cpu/mcheck/mce-inject.c
-@@ -518,7 +518,7 @@ static void do_inject(void)
- 	 */
- 	if (inj_type == DFR_INT_INJ) {
- 		i_mce.status |= MCI_STATUS_DEFERRED;
--		i_mce.status |= (i_mce.status & ~MCI_STATUS_UC);
-+		i_mce.status &= ~MCI_STATUS_UC;
- 	}
- 
- 	/*
--- 
-2.25.1
-
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -318,7 +318,7 @@ extern void syscall_unregfunc(void);
+ 		static const char *___tp_str __tracepoint_string = str; \
+ 		___tp_str;						\
+ 	})
+-#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
++#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
+ #else
+ /*
+  * tracepoint_string() is used to save the string address for userspace
 
 
