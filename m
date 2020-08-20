@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E7DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F5B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B79D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6185420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931123;
-	bh=hYpdoeMtS7l6OvSWp7k6NO+QjgxRPzAZL6142S/BCYE=;
+	s=default; t=1597931129;
+	bh=qlZatptjxTirg4Rm1dhbqHVFHrmeSZ2GGI51mK8nO1g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D76k+mxlW37ADyKpUEO0i3Vtd5cQFDjVEQ4C6g1HjR3Qsg+wMad53+6RlUe2obdxR
-	 tPA9L97r/94iI6oGzfoj8gBbspAWx5AWLv030ZhipMkKFRZdGik8gkXch2eNH01KEr
-	 fN3OqTTtUL05cLkHh9PiIvkaYwFwOLdVSIMWwm5w=
+	b=HwgCcQfjTiwNiCuBK1flu6bTDAZBZvh2iEV8B0PVlGrY1tcN+tjVcTcraABDIAttG
+	 aCeSkEHB1CtRrxXD+1IRaBwqUeCHz5n9ypnv4YVpeCQrUrxLkyvU92vjPR3qIVgJWa
+	 WvwxpUdEAnsd3ber+n/c/ilCj8AQ5Ys7qvmnPzw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgHTNpV (ORCPT
+        id S1730102AbgHTNp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:45:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726815AbgHTJ2V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:28:21 -0400
+        id S1726858AbgHTJ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A90F22D0B;
-        Thu, 20 Aug 2020 09:28:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A0B22D37;
+        Thu, 20 Aug 2020 09:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915694;
-        bh=hYpdoeMtS7l6OvSWp7k6NO+QjgxRPzAZL6142S/BCYE=;
+        s=default; t=1597915686;
+        bh=qlZatptjxTirg4Rm1dhbqHVFHrmeSZ2GGI51mK8nO1g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jp8en4IZ6/S8DJRYd18oorp6MxKhHvmQopGDRIeX0r4J1Rx/ETu8CwROG0BZ9M/DF
-         YIuplCcHHz9w23IMMoung7HBoGb7U48gwL4i6RWAZS2OsksFhFm1QdlIrx65S5OzbV
-         YQ0/TcWycCork0r4sjqEO1Hw5j4wnV93WlwrMIkk=
+        b=npjHmCvQH6+oO79WX0pRh3KODBoCddGD8jQjLxBcXZHk4z6Yr/8fJjbDfxy/VgWzW
+         Tqa5rfsZ3Y77CY6Z/ulAOokyhLmcL/U1in3C/pRv6gD8yJMevLtlCqEKFE9TE3TwCO
+         iZvXeQlY72pxEdfx+alGuqdloOauTUk5kzyYDXBI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 5.8 103/232] perf probe: Fix memory leakage when the probe point is not found
-Date:   Thu, 20 Aug 2020 11:19:14 +0200
-Message-Id: <20200820091617.814266024@linuxfoundation.org>
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.8 092/232] watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
+Date:   Thu, 20 Aug 2020 11:19:03 +0200
+Message-Id: <20200820091617.292866001@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,48 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-commit 12d572e785b15bc764e956caaa8a4c846fd15694 upstream.
+commit e871e93fb08a619dfc015974a05768ed6880fd82 upstream.
 
-Fix the memory leakage in debuginfo__find_trace_events() when the probe
-point is not found in the debuginfo. If there is no probe point found in
-the debuginfo, debuginfo__find_probes() will NOT return -ENOENT, but 0.
+The driver supports populating bootstatus with WDIOF_CARDRESET, but so
+far userspace couldn't portably determine whether absence of this flag
+meant no watchdog reset or no driver support. Or-in the bit to fix this.
 
-Thus the caller of debuginfo__find_probes() must check the tf.ntevs and
-release the allocated memory for the array of struct probe_trace_event.
-
-The current code releases the memory only if the debuginfo__find_probes()
-hits an error but not checks tf.ntevs. In the result, the memory allocated
-on *tevs are not released if tf.ntevs == 0.
-
-This fixes the memory leakage by checking tf.ntevs == 0 in addition to
-ret < 0.
-
-Fixes: ff741783506c ("perf probe: Introduce debuginfo to encapsulate dwarf information")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
+Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
 Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/159438668346.62703.10887420400718492503.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200611191750.28096-3-a.fatoum@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/probe-finder.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/f71808e_wdt.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1467,7 +1467,7 @@ int debuginfo__find_trace_events(struct
- 	if (ret >= 0 && tf.pf.skip_empty_arg)
- 		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
+--- a/drivers/watchdog/f71808e_wdt.c
++++ b/drivers/watchdog/f71808e_wdt.c
+@@ -692,7 +692,8 @@ static int __init watchdog_init(int sioa
+ 	watchdog.sioaddr = sioaddr;
+ 	watchdog.ident.options = WDIOC_SETTIMEOUT
+ 				| WDIOF_MAGICCLOSE
+-				| WDIOF_KEEPALIVEPING;
++				| WDIOF_KEEPALIVEPING
++				| WDIOF_CARDRESET;
  
--	if (ret < 0) {
-+	if (ret < 0 || tf.ntevs == 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
- 		zfree(tevs);
+ 	snprintf(watchdog.ident.identity,
+ 		sizeof(watchdog.ident.identity), "%s watchdog",
 
 
