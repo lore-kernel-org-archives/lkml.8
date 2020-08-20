@@ -2,202 +2,216 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C9AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5734C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2FBF22B4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919615;
-	bh=2R3z984rFOdN8uqAPoe8cJ/10YD+Q32bNKUVBayTgo8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIFYAaN5UPMUbmyFFj2YMQVkx9YlPE+Q9pSHf4aSk0s4wz5jmhqbcn4Rue2np4Nff
-	 bUg0OUZ2DG4eZtrlAPFlIgohGDTghHj42SmKwBduebjobyvbBf0lXVsqO7KguaJjSF
-	 woNqo+9QZWx02XGeRgw60iXF53WzcKhY/VSSOMhI=
+	by mail.kernel.org (Postfix) with ESMTP id 6E86220658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbgHTKdc (ORCPT
+        id S1730888AbgHTKdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:33:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43586 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731416AbgHTKTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFE07206DA;
-        Thu, 20 Aug 2020 10:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918778;
-        bh=2R3z984rFOdN8uqAPoe8cJ/10YD+Q32bNKUVBayTgo8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YJUE2w4lRrHc2CYsYxNz+IaplJevHnO2fcyck3CDq6VQe5gMvcnSQMNDS9F0tyj9e
-         W93EpmR5tKP7BwoynK3ozFYMT4DK624Lafpa/qi+FEJz3KnkZZTusflpmjE6BZdMHP
-         h1HeVUzfF7ygys+5ZNifoMqmjt8aQaq4MkuFwmLk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
-        Lihong Kou <koulihong@huawei.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 063/149] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
-Date:   Thu, 20 Aug 2020 11:22:20 +0200
-Message-Id: <20200820092128.793137454@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
-References: <20200820092125.688850368@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 06:33:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38234 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731652AbgHTKdQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:33:16 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k8hsH-0003ho-Hd; Thu, 20 Aug 2020 10:32:49 +0000
+Date:   Thu, 20 Aug 2020 12:32:48 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, ebiederm@xmission.com,
+        gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820103248.vkzrndewvy5vlncz@wittgenstein>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <20200820084654.jdl6jqgxsga7orvf@wittgenstein>
+ <20200820090901.GD5033@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200820090901.GD5033@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lihong Kou <koulihong@huawei.com>
+On Thu, Aug 20, 2020 at 11:09:01AM +0200, Michal Hocko wrote:
+> On Thu 20-08-20 10:46:54, Christian Brauner wrote:
+> > On Wed, Aug 19, 2020 at 05:20:53PM -0700, Suren Baghdasaryan wrote:
+> > > Currently __set_oom_adj loops through all processes in the system to
+> > > keep oom_score_adj and oom_score_adj_min in sync between processes
+> > > sharing their mm. This is done for any task with more that one mm_users,
+> > > which includes processes with multiple threads (sharing mm and signals).
+> > > However for such processes the loop is unnecessary because their signal
+> > > structure is shared as well.
+> > > Android updates oom_score_adj whenever a tasks changes its role
+> > > (background/foreground/...) or binds to/unbinds from a service, making
+> > > it more/less important. Such operation can happen frequently.
+> > > We noticed that updates to oom_score_adj became more expensive and after
+> > > further investigation found out that the patch mentioned in "Fixes"
+> > > introduced a regression. Using Pixel 4 with a typical Android workload,
+> > > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+> > > this regression linearly depends on the number of multi-threaded
+> > > processes running on the system.
+> > > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+> > > CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
+> > > instead of mm_users to decide whether oom_score_adj update should be
+> > > synchronized between multiple processes. To prevent races between clone()
+> > > and __set_oom_adj(), when oom_score_adj of the process being cloned might
+> > > be modified from userspace, we use oom_adj_mutex. Its scope is changed to
+> > > global and it is renamed into oom_adj_lock for naming consistency with
+> > > oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> > > used the additional mutex lock in that path of the clone() syscall should
+> > > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> > > (when the last process sharing the mm exits) is left out of this patch to
+> > > keep it simple and because it is believed that this threading model is
+> > > rare. Should there ever be a need for optimizing that case as well, it
+> > > can be done by hooking into the exit path, likely following the
+> > > mm_update_next_owner pattern.
+> > > With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
+> > > regression is gone after the change is applied.
+> > > 
+> > > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+> > > Reported-by: Tim Murray <timmurray@google.com>
+> > > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > > ---
+> > >  fs/proc/base.c                 | 7 +++----
+> > >  include/linux/oom.h            | 1 +
+> > >  include/linux/sched/coredump.h | 1 +
+> > >  kernel/fork.c                  | 9 +++++++++
+> > >  mm/oom_kill.c                  | 2 ++
+> > >  5 files changed, 16 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > > index 617db4e0faa0..cff1a58a236c 100644
+> > > --- a/fs/proc/base.c
+> > > +++ b/fs/proc/base.c
+> > > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
+> > >  
+> > >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >  {
+> > > -	static DEFINE_MUTEX(oom_adj_mutex);
+> > >  	struct mm_struct *mm = NULL;
+> > >  	struct task_struct *task;
+> > >  	int err = 0;
+> > > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >  	if (!task)
+> > >  		return -ESRCH;
+> > >  
+> > > -	mutex_lock(&oom_adj_mutex);
+> > > +	mutex_lock(&oom_adj_lock);
+> > >  	if (legacy) {
+> > >  		if (oom_adj < task->signal->oom_score_adj &&
+> > >  				!capable(CAP_SYS_RESOURCE)) {
+> > > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >  		struct task_struct *p = find_lock_task_mm(task);
+> > >  
+> > >  		if (p) {
+> > > -			if (atomic_read(&p->mm->mm_users) > 1) {
+> > > +			if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
+> > >  				mm = p->mm;
+> > >  				mmgrab(mm);
+> > >  			}
+> > > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> > >  		mmdrop(mm);
+> > >  	}
+> > >  err_unlock:
+> > > -	mutex_unlock(&oom_adj_mutex);
+> > > +	mutex_unlock(&oom_adj_lock);
+> > >  	put_task_struct(task);
+> > >  	return err;
+> > >  }
+> > > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > > index f022f581ac29..861f22bd4706 100644
+> > > --- a/include/linux/oom.h
+> > > +++ b/include/linux/oom.h
+> > > @@ -55,6 +55,7 @@ struct oom_control {
+> > >  };
+> > >  
+> > >  extern struct mutex oom_lock;
+> > > +extern struct mutex oom_adj_lock;
+> > >  
+> > >  static inline void set_current_oom_origin(void)
+> > >  {
+> > > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
+> > > index ecdc6542070f..070629b722df 100644
+> > > --- a/include/linux/sched/coredump.h
+> > > +++ b/include/linux/sched/coredump.h
+> > > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
+> > >  #define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
+> > >  #define MMF_OOM_VICTIM		25	/* mm is the oom victim */
+> > >  #define MMF_OOM_REAP_QUEUED	26	/* mm was queued for oom_reaper */
+> > > +#define MMF_PROC_SHARED	27	/* mm is shared while sighand is not */
+> > >  #define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
+> > >  
+> > >  #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
+> > > diff --git a/kernel/fork.c b/kernel/fork.c
+> > > index 4d32190861bd..9177a76bf840 100644
+> > > --- a/kernel/fork.c
+> > > +++ b/kernel/fork.c
+> > > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+> > >  	if (clone_flags & CLONE_VM) {
+> > >  		mmget(oldmm);
+> > >  		mm = oldmm;
+> > > +		if (!(clone_flags & CLONE_SIGHAND)) {
+> > > +			/* We need to synchronize with __set_oom_adj */
+> > > +			mutex_lock(&oom_adj_lock);
+> > > +			set_bit(MMF_PROC_SHARED, &mm->flags);
+> > 
+> > This seems fine.
+> > 
+> > > +			/* Update the values in case they were changed after copy_signal */
+> > > +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+> > > +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+> > 
+> > But this seems wrong to me.
+> > copy_signal() should be the only place where ->signal is set. Just from
+> > a pure conceptual perspective. The copy_*() should be as self-contained
+> > as possible imho.
+> > Also, now I have to remember/look for two different locations where
+> > oom_score_adj{_min} is initialized during fork. And this also creates a
+> > dependency between copy_signal() and copy_mm() that doesn't need to be
+> > there imho. I'm not a fan.
+> 
+> Yes, this is not great but we will need it because the __set_oom_adj
+> might happen between copy_signal and copy_mm. If that happens then
+> __set_oom_adj misses this newly created task and so it will have a
+> disagreeing oom_score_adj.
 
-[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
+One more clarification. The commit message states that
 
-In the case we set or free the global value listen_chan in
-different threads, we can encounter the UAF problems because
-the method is not protected by any lock, add one to avoid
-this bug.
+> > > which includes processes with multiple threads (sharing mm and signals).
+> > > However for such processes the loop is unnecessary because their signal
+> > > structure is shared as well.
 
-BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
-net/bluetooth/l2cap_core.c:730
-Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+and it seems you want to exclude threads, i.e. only update mm that is
+shared not among threads in the same thread-group.
+But struct signal and struct sighand_struct are different things, i.e.
+they can be shared or not independent of each other. A non-shared
+signal_struct where oom_score_adj{_min} live is only implied by
+!CLONE_THREAD. So shouldn't this be:
 
-CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine,
-BIOS Google 01/01/2011
-Workqueue: events do_enable_set
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
- l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
- do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+if (!(clone_flags & CLONE_THREAD)) rather than CLONE_SIGHAND?
 
-Allocated by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
- chan_create net/bluetooth/6lowpan.c:640 [inline]
- bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
- do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Freed by task 2870:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
- kref_put include/linux/kref.h:65 [inline]
- l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
- do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
- process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
- worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-The buggy address belongs to the object at ffff888096950000
- which belongs to the cache kmalloc-2k of size 2048
-The buggy address is located 0 bytes inside of
- 2048-byte region [ffff888096950000, ffff888096950800)
-The buggy address belongs to the page:
-page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
-raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
-Signed-off-by: Lihong Kou <koulihong@huawei.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/bluetooth/6lowpan.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
-index 4cd6b8d811ffa..11602902884ba 100644
---- a/net/bluetooth/6lowpan.c
-+++ b/net/bluetooth/6lowpan.c
-@@ -57,6 +57,7 @@ static bool enable_6lowpan;
- /* We are listening incoming connections via this channel
-  */
- static struct l2cap_chan *listen_chan;
-+static DEFINE_MUTEX(set_lock);
- 
- struct lowpan_peer {
- 	struct list_head list;
-@@ -1195,12 +1196,14 @@ static void do_enable_set(struct work_struct *work)
- 
- 	enable_6lowpan = set_enable->flag;
- 
-+	mutex_lock(&set_lock);
- 	if (listen_chan) {
- 		l2cap_chan_close(listen_chan, 0);
- 		l2cap_chan_put(listen_chan);
- 	}
- 
- 	listen_chan = bt_6lowpan_listen();
-+	mutex_unlock(&set_lock);
- 
- 	kfree(set_enable);
- }
-@@ -1252,11 +1255,13 @@ static ssize_t lowpan_control_write(struct file *fp,
- 		if (ret == -EINVAL)
- 			return ret;
- 
-+		mutex_lock(&set_lock);
- 		if (listen_chan) {
- 			l2cap_chan_close(listen_chan, 0);
- 			l2cap_chan_put(listen_chan);
- 			listen_chan = NULL;
- 		}
-+		mutex_unlock(&set_lock);
- 
- 		if (conn) {
- 			struct lowpan_peer *peer;
--- 
-2.25.1
-
-
-
+I might be missing something obvious though...
+Christian
