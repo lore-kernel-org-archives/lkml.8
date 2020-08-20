@@ -2,212 +2,164 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED38C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEEBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE88204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17A8A207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S6S/ND16"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JJ6R5nT+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbgHTLhm (ORCPT
+        id S1730829AbgHTLe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:37:42 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730790AbgHTLgs (ORCPT
+        Thu, 20 Aug 2020 07:34:58 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:38207 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730646AbgHTLcz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:36:48 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KB3UlD136298;
-        Thu, 20 Aug 2020 07:36:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=k7KfW0RZAjPIFH/IRXudnl5GCxnyZfPjYnmTz1S/C5Y=;
- b=S6S/ND16urnI16ekC35Bzim6ncR9qjSNgBt1bQCUxuLhulf81CqteDAov5rK0Ni37LiP
- yV4TUjgZ93y/cbhvLuDk5ydNxpp3klztxCn6SHypliuaMi/aGQD8gPVcBT3XH82Rnzmo
- IBoj4l8qR0VJRORlP1hO6gC0qsMV2FdkoLRcTwUuYAtai32QUaS4strshSYKyEMAlem/
- OstswIVmO34E953Y+tQdVcaT1sU/7f9X50NiWUP9F/TNw2PawHNKFr+v3lBQ5FuLbgye
- okW6m/foRGI2J9iJeb9HZE0f/YDXv6yqt4zkb8urvmeVaYL1iFFfmy2/eqo9jmnfEOP8 pA== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3317ab369v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 07:36:43 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KBW3hb019650;
-        Thu, 20 Aug 2020 11:36:41 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 330tbvsseu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 11:36:41 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KBadUD26804618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 11:36:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17C1CA4051;
-        Thu, 20 Aug 2020 11:36:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD2F5A4059;
-        Thu, 20 Aug 2020 11:36:37 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.33.217])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 11:36:37 +0000 (GMT)
-From:   Ritesh Harjani <riteshh@linux.ibm.com>
-To:     linux-ext4@vger.kernel.org
-Cc:     jack@suse.cz, tytso@mit.edu, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ritesh Harjani <riteshh@linux.ibm.com>
-Subject: [RFC 0/1] Optimize ext4 DAX overwrites
-Date:   Thu, 20 Aug 2020 17:06:27 +0530
-Message-Id: <cover.1597855360.git.riteshh@linux.ibm.com>
-X-Mailer: git-send-email 2.25.4
+        Thu, 20 Aug 2020 07:32:55 -0400
+X-UUID: eb612c2d69074348b962c3ebf894ee40-20200820
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=drhq8ynCbXVhWs8r6yh8nKpt9bGbhMWwhKCx82Pwiqk=;
+        b=JJ6R5nT+5Xr60au9o3UV1sGbcDJDsS8+Lzcca8WvMReYqDMmkAxumRt49jMfvJiK+rhZv5Vcc3U77rY9Uy2JNQh0vWGR6eOhDoM6AifNLQCchB8+A+eUuRstV05NhFNPpcBLQ6lKzibhjDB1ca/5oHh4qAGVxBtraT2DKwYYvgk=;
+X-UUID: eb612c2d69074348b962c3ebf894ee40-20200820
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1962004783; Thu, 20 Aug 2020 19:32:31 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 20 Aug 2020 19:32:31 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 20 Aug 2020 19:32:28 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Sasi Kumar <sasi.kumar@broadcom.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v2 08/11] usb: gadget: bdc: use the BIT macro to define bit filed
+Date:   Thu, 20 Aug 2020 19:30:43 +0800
+Message-ID: <1597923046-12535-8-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_02:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=825 phishscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200093
+Content-Type: text/plain
+X-TM-SNTS-SMTP: EA14887C2B3D21C29D691B0CE71B29C3719D003B1B6A56953F59595A0225AB102000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of dax writes, currently we start a journal txn irrespective of whether
-it's an overwrite or not. In case of an overwrite we don't need to start a
-jbd2 txn since the blocks are already allocated.
-So this patch optimizes away the txn start in case of DAX overwrites.
-This could significantly boost performance for multi-threaded random write
-(overwrite). Fio script used to collect perf numbers is mentioned below.
-
-Below numbers were calculated on a QEMU setup on ppc64 box with simulated
-pmem device.
-
-Performance numbers with different threads - (~10x improvement)
-==========================================
-
-vanilla_kernel(kIOPS)
- 60 +-+---------------+-------+--------+--------+--------+-------+------+-+   
-     |                 +       +        +        +**      +       +        |   
-  55 +-+                                          **                     +-+   
-     |                                   **       **                       |   
-     |                                   **       **                       |   
-  50 +-+                                 **       **                     +-+   
-     |                                   **       **                       |   
-  45 +-+                                 **       **                     +-+   
-     |                                   **       **                       |   
-     |                                   **       **                       |   
-  40 +-+                                 **       **                     +-+   
-     |                                   **       **                       |   
-  35 +-+                        **       **       **                     +-+   
-     |                          **       **       **               **      |   
-     |                          **       **       **      **       **      |   
-  30 +-+               **       **       **       **      **       **    +-+   
-     |                 **      +**      +**      +**      **      +**      |   
-  25 +-+---------------**------+**------+**------+**------**------+**----+-+   
-                       1       2        4        8       12      16            
-                                     Threads                                   
-patched_kernel(kIOPS)
-  600 +-+--------------+--------+--------+-------+--------+-------+------+-+   
-      |                +        +        +       +        +       +**      |   
-      |                                                            **      |   
-  500 +-+                                                          **    +-+   
-      |                                                            **      |   
-      |                                                    **      **      |   
-  400 +-+                                                  **      **    +-+   
-      |                                                    **      **      |   
-  300 +-+                                         **       **      **    +-+   
-      |                                           **       **      **      |   
-      |                                           **       **      **      |   
-  200 +-+                                         **       **      **    +-+   
-      |                                  **       **       **      **      |   
-      |                                  **       **       **      **      |   
-  100 +-+                        **      **       **       **      **    +-+   
-      |                          **      **       **       **      **      |   
-      |                +**      +**      **      +**      +**     +**      |   
-    0 +-+--------------+**------+**------**------+**------+**-----+**----+-+   
-                       1        2        4       8       12      16            
-                                     Threads                                   
-fio script
-==========
-[global]
-rw=randwrite
-norandommap=1
-invalidate=0
-bs=4k
-numjobs=16 		--> changed this for different thread options
-time_based=1
-ramp_time=30
-runtime=60
-group_reporting=1
-ioengine=psync
-direct=1
-size=16G
-filename=file1.0.0:file1.0.1:file1.0.2:file1.0.3:file1.0.4:file1.0.5:file1.0.6:file1.0.7:file1.0.8:file1.0.9:file1.0.10:file1.0.11:file1.0.12:file1.0.13:file1.0.14:file1.0.15:file1.0.16:file1.0.17:file1.0.18:file1.0.19:file1.0.20:file1.0.21:file1.0.22:file1.0.23:file1.0.24:file1.0.25:file1.0.26:file1.0.27:file1.0.28:file1.0.29:file1.0.30:file1.0.31
-file_service_type=random
-nrfiles=32
-directory=/mnt/
-
-[name]
-directory=/mnt/
-direct=1
-
-NOTE:
-======
-1. Looking at ~10x perf delta, I probed a bit deeper to understand what's causing
-this scalability problem. It seems when we are starting a jbd2 txn then slab
-alloc code is observing some serious contention around spinlock.
-
-Even though the spinlock contention could be related to some other
-issue (looking into it internally). But I could still see the perf improvement
-of close to ~2x on QEMU setup on x86 with simulated pmem device with the
-patched_kernel v/s vanilla_kernel with same fio workload.
-
-perf report from vanilla_kernel (this is not seen with patched kernel) (ppc64)
-=======================================================================
-
-  47.86%  fio              [kernel.vmlinux]            [k] do_raw_spin_lock
-             |
-             ---do_raw_spin_lock
-                |
-                |--19.43%--_raw_spin_lock
-                |          |
-                |           --19.31%--0
-                |                     |
-                |                     |--9.77%--deactivate_slab.isra.61
-                |                     |          ___slab_alloc
-                |                     |          __slab_alloc
-                |                     |          kmem_cache_alloc
-                |                     |          jbd2__journal_start
-                |                     |          __ext4_journal_start_sb
-<...>
-
-2. Kept this as RFC, since maybe using the ext4_iomap_overwrite_ops,
-will be better here. We could check for overwrite in ext4_dax_write_iter(),
-like how we do for DIO writes. Thoughts?
-
-3. This problem was reported by Dan Williams at [1]
-
-Links
-======
-[1]: https://lore.kernel.org/linux-ext4/20190802144304.GP25064@quack2.suse.cz/T/
-
-Ritesh Harjani (1):
-  ext4: Optimize ext4 DAX overwrites
-
- fs/ext4/ext4.h  | 1 +
- fs/ext4/file.c  | 2 +-
- fs/ext4/inode.c | 8 +++++++-
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
--- 
-2.25.4
+UHJlZmVyIHVzaW5nIHRoZSBCSVQgbWFjcm8gdG8gZGVmaW5lIGJpdCBmaWxlZHMNCg0KQ2M6IEZs
+b3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0KU2lnbmVkLW9mZi1ieTogQ2h1
+bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KLS0tDQp2MjogYWRkIENjIEZs
+b3JpYW4NCi0tLQ0KIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oIHwgODQgKysrKysr
+KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0MiBp
+bnNlcnRpb25zKCspLCA0MiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
+L2dhZGdldC91ZGMvYmRjL2JkYy5oIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmgN
+CmluZGV4IGY4ZDU5NTguLjhkMDBiMTIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQv
+dWRjL2JkYy9iZGMuaA0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmgNCkBA
+IC0xMDIsNyArMTAyLDcgQEANCiAjZGVmaW5lIEJEQ19TUEIocCkJKChwKSAmIDB4NykNCiANCiAv
+KiBCREMgQ2FwYWJpbGl0eTEgKi8NCi0jZGVmaW5lIEJEQ19QNjQJCSgxIDw8IDApDQorI2RlZmlu
+ZSBCRENfUDY0CQlCSVQoMCkNCiANCiAvKiBCREMgQ29tbWFuZCByZWdpc3RlciAqLw0KICNkZWZp
+bmUgQkRDX0NNRF9GSAkweGUNCkBAIC0xMTEsNyArMTExLDcgQEANCiAjZGVmaW5lIEJEQ19DTURf
+QkxBCTB4Mw0KICNkZWZpbmUgQkRDX0NNRF9FUEMJMHgyDQogI2RlZmluZSBCRENfQ01EX0RWQwkw
+eDENCi0jZGVmaW5lIEJEQ19DTURfQ1dTCQkoMHgxIDw8IDUpDQorI2RlZmluZSBCRENfQ01EX0NX
+UwkJQklUKDUpDQogI2RlZmluZSBCRENfQ01EX0NTVChwKQkJKCgocCkgJiAoMHhmIDw8IDYpKT4+
+NikNCiAjZGVmaW5lIEJEQ19DTURfRVBOKHApCQkoKChwKSAmIDB4MWYpIDw8IDEwKQ0KICNkZWZp
+bmUgQkRDX1NVQl9DTURfQURECQkoMHgxIDw8IDE3KQ0KQEAgLTEyNCw3ICsxMjQsNyBAQA0KICNk
+ZWZpbmUgQkRDX1NVQl9DTURfRVBfU1RQCSgweDIgPDwgMTcpDQogI2RlZmluZSBCRENfU1VCX0NN
+RF9FUF9TVEwJKDB4NCA8PCAxNykNCiAjZGVmaW5lIEJEQ19TVUJfQ01EX0VQX1JTVAkoMHgxIDw8
+IDE3KQ0KLSNkZWZpbmUgQkRDX0NNRF9TUkQJCSgxIDw8IDI3KQ0KKyNkZWZpbmUgQkRDX0NNRF9T
+UkQJCUJJVCgyNykNCiANCiAvKiBDTUQgY29tcGxldGlvbiBzdGF0dXMgKi8NCiAjZGVmaW5lIEJE
+Q19DTURTX1NVQ0MJMHgxDQpAQCAtMTQxLDE5ICsxNDEsMTkgQEANCiAjZGVmaW5lIEVQTV9TSElG
+VAk0DQogDQogLyogQkRDIFVTUFNDICovDQotI2RlZmluZSBCRENfVkJDCQkoMSA8PCAzMSkNCi0j
+ZGVmaW5lIEJEQ19QUkMJCSgxIDw8IDMwKQ0KLSNkZWZpbmUgQkRDX1BDRQkJKDEgPDwgMjkpDQot
+I2RlZmluZSBCRENfQ0ZDCQkoMSA8PCAyOCkNCi0jZGVmaW5lIEJEQ19QQ0MJCSgxIDw8IDI3KQ0K
+LSNkZWZpbmUgQkRDX1BTQwkJKDEgPDwgMjYpDQotI2RlZmluZSBCRENfVkJTCQkoMSA8PCAyNSkN
+Ci0jZGVmaW5lIEJEQ19QUlMJCSgxIDw8IDI0KQ0KLSNkZWZpbmUgQkRDX1BDUwkJKDEgPDwgMjMp
+DQorI2RlZmluZSBCRENfVkJDCQlCSVQoMzEpDQorI2RlZmluZSBCRENfUFJDCQlCSVQoMzApDQor
+I2RlZmluZSBCRENfUENFCQlCSVQoMjkpDQorI2RlZmluZSBCRENfQ0ZDCQlCSVQoMjgpDQorI2Rl
+ZmluZSBCRENfUENDCQlCSVQoMjcpDQorI2RlZmluZSBCRENfUFNDCQlCSVQoMjYpDQorI2RlZmlu
+ZSBCRENfVkJTCQlCSVQoMjUpDQorI2RlZmluZSBCRENfUFJTCQlCSVQoMjQpDQorI2RlZmluZSBC
+RENfUENTCQlCSVQoMjMpDQogI2RlZmluZSBCRENfUFNQKHApCSgoKHApICYgKDB4NyA8PCAyMCkp
+Pj4yMCkNCi0jZGVmaW5lIEJEQ19TQ04JCSgxIDw8IDgpDQotI2RlZmluZSBCRENfU0RDCQkoMSA8
+PCA3KQ0KLSNkZWZpbmUgQkRDX1NXUwkJKDEgPDwgNCkNCisjZGVmaW5lIEJEQ19TQ04JCUJJVCg4
+KQ0KKyNkZWZpbmUgQkRDX1NEQwkJQklUKDcpDQorI2RlZmluZSBCRENfU1dTCQlCSVQoNCkNCiAN
+CiAjZGVmaW5lIEJEQ19VU1BTQ19SVwkoQkRDX1NDTnxCRENfU0RDfEJEQ19TV1N8MHhmKQ0KICNk
+ZWZpbmUgQkRDX1BTUChwKQkoKChwKSAmICgweDcgPDwgMjApKT4+MjApDQpAQCAtMTY3LDE3ICsx
+NjcsMTcgQEANCiAjZGVmaW5lIEJEQ19QU1RfTUFTSwkweGYNCiANCiAvKiBVU1BQTVMgKi8NCi0j
+ZGVmaW5lIEJEQ19VMkUJCSgweDEgPDwgMzEpDQotI2RlZmluZSBCRENfVTFFCQkoMHgxIDw8IDMw
+KQ0KLSNkZWZpbmUgQkRDX1UyQQkJKDB4MSA8PCAyOSkNCi0jZGVmaW5lIEJEQ19QT1JUX1cxUwko
+MHgxIDw8IDE3KQ0KKyNkZWZpbmUgQkRDX1UyRQkJQklUKDMxKQ0KKyNkZWZpbmUgQkRDX1UxRQkJ
+QklUKDMwKQ0KKyNkZWZpbmUgQkRDX1UyQQkJQklUKDI5KQ0KKyNkZWZpbmUgQkRDX1BPUlRfVzFT
+CUJJVCgxNykNCiAjZGVmaW5lIEJEQ19VMVQocCkJKChwKSAmIDB4ZmYpDQogI2RlZmluZSBCRENf
+VTJUKHApCSgoKHApICYgMHhmZikgPDwgOCkNCiAjZGVmaW5lIEJEQ19VMVRfTUFTSwkweGZmDQog
+DQogLyogVVNCUE0yICovDQogLyogSGFyZHdhcmUgTFBNIEVuYWJsZSAqLw0KLSNkZWZpbmUgQkRD
+X0hMRQkJKDEgPDwgMTYpDQorI2RlZmluZSBCRENfSExFCQlCSVQoMTYpDQogDQogLyogQkRDIFN0
+YXR1cyBhbmQgQ29udHJvbCAqLw0KICNkZWZpbmUgQkRDX0NPUF9SU1QJKDEgPDwgMjkpDQpAQCAt
+MTg2LDExICsxODYsMTEgQEANCiANCiAjZGVmaW5lIEJEQ19DT1BfTUFTSyAoQkRDX0NPUF9SU1R8
+QkRDX0NPUF9SVU58QkRDX0NPUF9TVFApDQogDQotI2RlZmluZSBCRENfQ09TCQkoMSA8PCAyOCkN
+CisjZGVmaW5lIEJEQ19DT1MJCUJJVCgyOCkNCiAjZGVmaW5lIEJEQ19DU1RTKHApCSgoKHApICYg
+KDB4NyA8PCAyMCkpID4+IDIwKQ0KLSNkZWZpbmUgQkRDX01BU0tfTUNXCSgxIDw8IDcpDQotI2Rl
+ZmluZSBCRENfR0lFCQkoMSA8PCAxKQ0KLSNkZWZpbmUgQkRDX0dJUAkJKDEgPDwgMCkNCisjZGVm
+aW5lIEJEQ19NQVNLX01DVwlCSVQoNykNCisjZGVmaW5lIEJEQ19HSUUJCUJJVCgxKQ0KKyNkZWZp
+bmUgQkRDX0dJUAkJQklUKDApDQogDQogI2RlZmluZSBCRENfSExUCTENCiAjZGVmaW5lIEJEQ19O
+T1IJMg0KQEAgLTIwMSwxOSArMjAxLDE5IEBADQogI2RlZmluZSBCRF9DSEFJTgkweGYNCiANCiAj
+ZGVmaW5lIEJEX1RGU19TSElGVAk0DQotI2RlZmluZSBCRF9TT1QJCSgxIDw8IDI2KQ0KLSNkZWZp
+bmUgQkRfRU9UCQkoMSA8PCAyNykNCi0jZGVmaW5lIEJEX0lTUAkJKDEgPDwgMjkpDQotI2RlZmlu
+ZSBCRF9JT0MJCSgxIDw8IDMwKQ0KLSNkZWZpbmUgQkRfU0JGCQkoMSA8PCAzMSkNCisjZGVmaW5l
+IEJEX1NPVAkJQklUKDI2KQ0KKyNkZWZpbmUgQkRfRU9UCQlCSVQoMjcpDQorI2RlZmluZSBCRF9J
+U1AJCUJJVCgyOSkNCisjZGVmaW5lIEJEX0lPQwkJQklUKDMwKQ0KKyNkZWZpbmUgQkRfU0JGCQlC
+SVQoMzEpDQogDQogI2RlZmluZSBCRF9JTlRSX1RBUkdFVChwKQkoKChwKSAmIDB4MWYpIDw8IDI3
+KQ0KIA0KLSNkZWZpbmUgQkRDX1NSUl9SV1MJCSgxIDw8IDQpDQotI2RlZmluZSBCRENfU1JSX1JT
+VAkJKDEgPDwgMykNCi0jZGVmaW5lIEJEQ19TUlJfSVNSCQkoMSA8PCAyKQ0KLSNkZWZpbmUgQkRD
+X1NSUl9JRQkJKDEgPDwgMSkNCi0jZGVmaW5lIEJEQ19TUlJfSVAJCSgxIDw8IDApDQorI2RlZmlu
+ZSBCRENfU1JSX1JXUwkJQklUKDQpDQorI2RlZmluZSBCRENfU1JSX1JTVAkJQklUKDMpDQorI2Rl
+ZmluZSBCRENfU1JSX0lTUgkJQklUKDIpDQorI2RlZmluZSBCRENfU1JSX0lFCQlCSVQoMSkNCisj
+ZGVmaW5lIEJEQ19TUlJfSVAJCUJJVCgwKQ0KICNkZWZpbmUgQkRDX1NSUl9FUEkocCkJKCgocCkg
+JiAoMHhmZiA8PCAyNCkpID4+IDI0KQ0KICNkZWZpbmUgQkRDX1NSUl9EUEkocCkgKCgocCkgJiAo
+MHhmZiA8PCAxNikpID4+IDE2KQ0KICNkZWZpbmUgQkRDX1NSUl9EUElfTUFTSwkweDAwZmYwMDAw
+DQpAQCAtMjIxLDcgKzIyMSw3IEBADQogI2RlZmluZSBNQVJLX0NIQUlOX0JECShCRF9DSEFJTnxC
+RF9FT1R8QkRfU09UKQ0KIA0KIC8qIENvbnRyb2wgdHJhbnNmZXIgQkQgc3BlY2lmaWMgZmllbGRz
+ICovDQotI2RlZmluZSBCRF9ESVJfSU4JCSgxIDw8IDI1KQ0KKyNkZWZpbmUgQkRfRElSX0lOCQlC
+SVQoMjUpDQogDQogI2RlZmluZSBCRENfUFRDX01BU0sJMHhmMDAwMDAwMA0KIA0KQEAgLTI0MSwx
+MyArMjQxLDEzIEBADQogDQogLyogVHJhbnNmZXIgQkQgZmllbGRzICovDQogI2RlZmluZSBCRF9M
+RU4ocCkgKChwKSAmIDB4MWZmZmYpDQotI2RlZmluZSBCRF9MVEYJCSgxIDw8IDI1KQ0KKyNkZWZp
+bmUgQkRfTFRGCQlCSVQoMjUpDQogI2RlZmluZSBCRF9UWVBFX0RTCTB4MQ0KICNkZWZpbmUgQkRf
+VFlQRV9TUwkweDINCiANCi0jZGVmaW5lIEJEQ19FUF9FTkFCTEVEICAgICAoMSA8PCAwKQ0KLSNk
+ZWZpbmUgQkRDX0VQX1NUQUxMICAgICAgICgxIDw8IDEpDQotI2RlZmluZSBCRENfRVBfU1RPUCAg
+ICAgICAgKDEgPDwgMikNCisjZGVmaW5lIEJEQ19FUF9FTkFCTEVEICAgICBCSVQoMCkNCisjZGVm
+aW5lIEJEQ19FUF9TVEFMTCAgICAgICBCSVQoMSkNCisjZGVmaW5lIEJEQ19FUF9TVE9QICAgICAg
+ICBCSVQoMikNCiANCiAvKiBPbmUgQkQgY2FuIHRyYW5zZmVyIG1heCA2NTUzNiBieXRlcyAqLw0K
+ICNkZWZpbmUgQkRfTUFYX0JVRkZfU0laRQkoMSA8PCAxNikNCkBAIC0yNjYsOSArMjY2LDkgQEAN
+CiAvKiBGVU5DVElPTiBXQUtFIERFViBOT1RJRklDQVRJT04gaW50ZXJ2YWwsIFVTQjMgc3BlYyB0
+YWJsZSA4LjEzICovDQogI2RlZmluZSBCRENfVE5PVElGWSAyNTAwIC8qaW4gbXMqLw0KIC8qIERl
+dnN0YXR1cyBiaXRmaWVsZHMgKi8NCi0jZGVmaW5lIFJFTU9URV9XQUtFVVBfSVNTVUVECSgxIDw8
+IDE2KQ0KLSNkZWZpbmUgREVWSUNFX1NVU1BFTkRFRAkoMSA8PCAxNykNCi0jZGVmaW5lIEZVTkNf
+V0FLRV9JU1NVRUQJKDEgPDwgMTgpDQorI2RlZmluZSBSRU1PVEVfV0FLRVVQX0lTU1VFRAlCSVQo
+MTYpDQorI2RlZmluZSBERVZJQ0VfU1VTUEVOREVECUJJVCgxNykNCisjZGVmaW5lIEZVTkNfV0FL
+RV9JU1NVRUQJQklUKDE4KQ0KICNkZWZpbmUgUkVNT1RFX1dBS0VfRU5BQkxFCSgxIDw8IFVTQl9E
+RVZJQ0VfUkVNT1RFX1dBS0VVUCkNCiANCiAvKiBPbiBkaXNjb25uZWN0LCBwcmVzZXJ2ZSB0aGVz
+ZSBiaXRzIGFuZCBjbGVhciByZXN0ICovDQotLSANCjEuOS4xDQo=
 
