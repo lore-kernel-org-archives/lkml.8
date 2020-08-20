@@ -2,52 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF85C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA26720658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E39020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919505;
-	bh=ZzqLaqW48l/4hRln/x8+EwmEHc5lQTyYnJO4GEmknOI=;
+	s=default; t=1597919511;
+	bh=BH4EgUBXqCSKKBSJ4WJk4gUi3wBwFwK4qnMhCc55oyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNcq1LL2XdY67X/SPCoM+6NJl0lQFFRK0PRueYLSExahtv7sAipDdkk6f8lUx8vYI
-	 J3uxA130IpuRMQzlwbpCf230XaL0xA76nmG+shQ4Va+CGHkMjs60mt1KJp40kqfnfr
-	 WWge5T4ydQzf6LJypi6ZFCNJCS5HvWvQ2MF6+o94=
+	b=lG7W0fdiIYv/op8kzkqDOjbFux0Ns2j3ev1dcrB1/GSa6YWcL1KDR/XsVr3Q7KE6t
+	 myg3nVI7a3eqoIMiCvLxqABzquaKmPLo7CzxM3pTpRDxyimFUYyEVnOQNOVVZmYbPf
+	 7wne+OodzjGwdQDYPLx7nEw2njWgF86eAJk1PsLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbgHTKbn (ORCPT
+        id S1731570AbgHTKbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:31:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45930 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:31:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731477AbgHTKUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:37 -0400
+        id S1731301AbgHTKUf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6149D20658;
-        Thu, 20 Aug 2020 10:20:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A15EE2067C;
+        Thu, 20 Aug 2020 10:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918836;
-        bh=ZzqLaqW48l/4hRln/x8+EwmEHc5lQTyYnJO4GEmknOI=;
+        s=default; t=1597918834;
+        bh=BH4EgUBXqCSKKBSJ4WJk4gUi3wBwFwK4qnMhCc55oyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wm68BIVhLc/3cGgfVaNYxB0O8Rm1vi5bkPNrvuCV/Nm0B9KAwF1I/EIVqFEhnt2Cq
-         WWph0RLntRbNE0fJPHvhvKBGL6EsLmIZiQVnMuFFB/uJB947jKPV0WirLEMt+Ndv6q
-         oRKgc3HIoNn93+OQzQFSFkAms+r8OMZNktxR3Wf4=
+        b=qvMrzIZ9zxwGYOB1IqlzKsMStkhIK16FfmEnRi2c902tVgHz/IPUuA/WDJ/qFZ/WC
+         N0m14MkVctQVxahdVOcPOUSpFCK7fLMOt9f0VVNvyoSM97tAfl7p/iFvS7wFKvUY3p
+         IjQnHIwRPjqKP0zkDzpeJwnZnVVtYbO4U5aK1Pn0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 085/149] drm/radeon: fix array out-of-bounds read and write issues
-Date:   Thu, 20 Aug 2020 11:22:42 +0200
-Message-Id: <20200820092129.840801643@linuxfoundation.org>
+Subject: [PATCH 4.4 084/149] cxl: Fix kobject memleak
+Date:   Thu, 20 Aug 2020 11:22:41 +0200
+Message-Id: <20200820092129.791728489@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,39 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 7ee78aff9de13d5dccba133f4a0de5367194b243 ]
+[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
 
-There is an off-by-one bounds check on the index into arrays
-table->mc_reg_address and table->mc_reg_table_entry[k].mc_data[j] that
-can lead to reads and writes outside of arrays. Fix the bound checking
-off-by-one error.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Addresses-Coverity: ("Out-of-bounds read/write")
-Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/cxl/sysfs.c |    5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index e7a245d7bdbcb..8e1bf9ed8efff 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -4345,7 +4345,7 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
- 					table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
- 			}
- 			j++;
--			if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
-+			if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
- 				return -EINVAL;
+--- a/drivers/misc/cxl/sysfs.c
++++ b/drivers/misc/cxl/sysfs.c
+@@ -539,7 +539,7 @@ static struct afu_config_record *cxl_sys
+ 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
+ 				  &afu->dev.kobj, "cr%i", cr->cr);
+ 	if (rc)
+-		goto err;
++		goto err1;
  
- 			if (!pi->mem_gddr5) {
--- 
-2.25.1
-
+ 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
+ 	if (rc)
+@@ -555,9 +555,6 @@ err2:
+ err1:
+ 	kobject_put(&cr->kobj);
+ 	return ERR_PTR(rc);
+-err:
+-	kfree(cr);
+-	return ERR_PTR(rc);
+ }
+ 
+ void cxl_sysfs_afu_remove(struct cxl_afu *afu)
 
 
