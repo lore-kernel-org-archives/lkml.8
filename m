@@ -2,182 +2,186 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A86C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B30B207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069E52076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:51:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fbr2cB4K"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kSs9AFV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgHTFvT (ORCPT
+        id S1726347AbgHTFvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:51:19 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58129 "EHLO ozlabs.org"
+        Thu, 20 Aug 2020 01:51:25 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:57742 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726734AbgHTFvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:51:18 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727033AbgHTFvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:51:23 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597902683; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=MVSR5eo3ekzMPEuamuESKWHSSG+RGv5XuMCArPFpmFo=; b=kSs9AFV8/jfAflWpNsjJTQRhISpumjsPQmI2kLKLeiXXCYCF8lZA38DVNGoN5yTEZDDI3RzK
+ wyOEVz53DqIazn36wZp2NtfJ9nu2J2ebb2ZS8BNMPht03xX27I3GqzMMH3s/XiO4eQCOCfDy
+ NIDKnjUyHS03foTsk6kMwFgUp5U=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f3e0f5ae8bbfbec10d39c63 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:51:22
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7C63BC433AD; Thu, 20 Aug 2020 05:51:21 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BXDKZ6l9bz9sRN;
-        Thu, 20 Aug 2020 15:51:14 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597902675;
-        bh=PDDXXLzDsesoBGtDsKFJIP1oinLz/y0QOw45ZXbN8lM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=fbr2cB4K7pctLNKlRj52MZVPu9ScCmj27Bo0lRp9JmabAvFcz1lnBYZnWVjKyE7OZ
-         s65A6RnyaDVjR+SjDKQqwDMBvB2X7u+XJ3gyL6H0Sqfi7Yq7xbSPJM1vRvW2JA7MOv
-         y4PrRa00EyC6O/9dDUZSrbtiRRUWo7rwNvlo+oDjvBdp+/MrFvNcHzmHtXbgOcCgBj
-         T5Otv6TsWq/ktGzN+JQOfjTc+ipP5Q6WdRtjwIg/6maN1aCksL1X2aDiuXpHdDih/P
-         O3FesizZcabycJOSzhFg0z0LGDX71ORRuwfablztagngXEPHdtJRhSP/E26lpS8J+p
-         thAWi3XPXq1Cw==
-Date:   Thu, 20 Aug 2020 15:51:12 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: linux-next: boot failure after merge of the dma-mapping tree
-Message-ID: <20200820155112.29459f41@canb.auug.org.au>
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33267C433BA;
+        Thu, 20 Aug 2020 05:51:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33267C433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Mian Yousaf Kaukab <ykaukab@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Kim Phillips <kim.phillips@arm.com>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Tingwei Zhang <tingwei@codeaurora.org>
+Subject: [PATCH v9 22/24] coresight: tmc-etr: add function to register catu ops
+Date:   Thu, 20 Aug 2020 13:47:16 +0800
+Message-Id: <20200820054718.20115-23-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200820054718.20115-1-tingwei@codeaurora.org>
+References: <20200820054718.20115-1-tingwei@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/FueENkLviib2t9bhQAff9HD";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/FueENkLviib2t9bhQAff9HD
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Mian Yousaf Kaukab <ykaukab@suse.de>
 
-Hi all,
+Make etr_catu_buf_ops static. Instead of directly accessing it in
+etr_buf_ops[], add a function to let catu driver register the ops at
+runtime. Break circular dependency between tmc-etr and catu drivers.
 
-After merging the dma-mapping tree, today's linux-next build (powerpc
-pseries_le_defconfig) failed like this:
+Signed-off-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/hwtracing/coresight/coresight-catu.c  | 22 +++++++++++++++++--
+ drivers/hwtracing/coresight/coresight-catu.h  |  2 --
+ .../hwtracing/coresight/coresight-tmc-etr.c   | 15 +++++++++++--
+ drivers/hwtracing/coresight/coresight-tmc.h   |  3 +++
+ 4 files changed, 36 insertions(+), 6 deletions(-)
 
-[    1.829053][    T1] ------------[ cut here ]------------
-[    1.829629][    T1] kernel BUG at include/linux/iommu-helper.h:21!
-[    1.830182][    T1] Oops: Exception in kernel mode, sig: 5 [#1]
-[    1.830302][    T1] LE PAGE_SIZE=3D64K MMU=3DHash SMP NR_CPUS=3D2048 NUM=
-A pSeries
-[    1.830436][    T1] Modules linked in:
-[    1.830879][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.9.0-rc1 =
-#2
-[    1.831042][    T1] NIP:  c0000000006f4944 LR: c0000000006f4924 CTR: c00=
-000000004aa10
-[    1.831174][    T1] REGS: c00000007e3a31e0 TRAP: 0700   Not tainted  (5.=
-9.0-rc1)
-[    1.831243][    T1] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  C=
-R: 44022422  XER: 20000000
-[    1.831574][    T1] CFAR: c0000000006b3084 IRQMASK: 1=20
-[    1.831574][    T1] GPR00: c0000000006f4924 c00000007e3a3470 c0000000012=
-89000 0000000000000001=20
-[    1.831574][    T1] GPR04: 0000000000000000 0000000000000003 00000000000=
-00040 0000000000000000=20
-[    1.831574][    T1] GPR08: 0000000000000001 0000000000000000 fffffffffff=
-ffffe c00c000000000000=20
-[    1.831574][    T1] GPR12: 0000000024028420 c0000000014b0000 c00000007e9=
-cd000 0000000000000001=20
-[    1.831574][    T1] GPR16: 0000000000000000 0000000000000000 c00000007e9=
-cd100 c00000007e9cd118=20
-[    1.831574][    T1] GPR20: 00000000ffffffff 0000000000000000 00000000000=
-00001 0000000000000000=20
-[    1.831574][    T1] GPR24: 0000000000000000 ffffffffffffffff c00000007eb=
-20000 0000000000000000=20
-[    1.831574][    T1] GPR28: 0000000000000001 000000000000bfff 00000000000=
-00000 0000000000000001=20
-[    1.833145][    T1] NIP [c0000000006f4944] iommu_area_alloc+0xa4/0x170
-[    1.833271][    T1] LR [c0000000006f4924] iommu_area_alloc+0x84/0x170
-[    1.833494][    T1] Call Trace:
-[    1.833686][    T1] [c00000007e3a3470] [c0000000006f4924] iommu_area_all=
-oc+0x84/0x170 (unreliable)
-[    1.833961][    T1] [c00000007e3a34e0] [c00000000004b034] iommu_range_al=
-loc+0x1a4/0x410
-[    1.834116][    T1] [c00000007e3a35a0] [c00000000004b650] iommu_alloc+0x=
-60/0x130
-[    1.834248][    T1] [c00000007e3a35f0] [c00000000004c6c8] iommu_map_page=
-+0xd8/0x210
-[    1.834381][    T1] [c00000007e3a3680] [c00000000004aa70] dma_iommu_map_=
-page+0x60/0x80
-[    1.834502][    T1] [c00000007e3a36a0] [c0000000001cce30] dma_map_page_a=
-ttrs+0x190/0x260
-[    1.834628][    T1] [c00000007e3a3750] [c00000000086195c] ibmvscsi_probe=
-+0x12c/0xa2c
-[    1.834768][    T1] [c00000007e3a3830] [c0000000000e049c] vio_bus_probe+=
-0x9c/0x460
-[    1.834880][    T1] [c00000007e3a38d0] [c0000000007f2cbc] really_probe+0=
-x12c/0x4e0
-[    1.834993][    T1] [c00000007e3a3970] [c0000000007f3308] driver_probe_d=
-evice+0x88/0x120
-[    1.835108][    T1] [c00000007e3a39a0] [c0000000007f36ec] device_driver_=
-attach+0xcc/0xe0
-[    1.835220][    T1] [c00000007e3a39e0] [c0000000007f3780] __driver_attac=
-h+0x80/0x140
-[    1.835321][    T1] [c00000007e3a3a20] [c0000000007ef9a8] bus_for_each_d=
-ev+0xa8/0x130
-[    1.835429][    T1] [c00000007e3a3a80] [c0000000007f2394] driver_attach+=
-0x34/0x50
-[    1.835534][    T1] [c00000007e3a3aa0] [c0000000007f1878] bus_add_driver=
-+0x1e8/0x2b0
-[    1.835647][    T1] [c00000007e3a3b30] [c0000000007f47f8] driver_registe=
-r+0x98/0x1a0
-[    1.835782][    T1] [c00000007e3a3ba0] [c0000000000df4bc] __vio_register=
-_driver+0x4c/0x60
-[    1.835938][    T1] [c00000007e3a3bc0] [c000000000f8d924] ibmvscsi_modul=
-e_init+0xa4/0xdc
-[    1.836056][    T1] [c00000007e3a3c00] [c000000000012430] do_one_initcal=
-l+0x60/0x2b0
-[    1.836175][    T1] [c00000007e3a3cd0] [c000000000f44740] kernel_init_fr=
-eeable+0x2e0/0x378
-[    1.836287][    T1] [c00000007e3a3db0] [c000000000012a24] kernel_init+0x=
-2c/0x158
-[    1.836509][    T1] [c00000007e3a3e20] [c00000000000d9d0] ret_from_kerne=
-l_thread+0x5c/0x6c
-[    1.836717][    T1] Instruction dump:
-[    1.836904][    T1] 2da90000 f8010010 f821ff91 4bfbe669 60000000 7c3d184=
-0 7c7f1b78 40810074=20
-[    1.837082][    T1] 60000000 60000000 60000000 40920010 <0fe00000> 60000=
-000 60000000 408efff4=20
-[    1.838497][    T1] ---[ end trace e9dbc52052087399 ]---
+diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
+index 1801804a7762..47696a7d24a7 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.c
++++ b/drivers/hwtracing/coresight/coresight-catu.c
+@@ -358,7 +358,7 @@ static int catu_alloc_etr_buf(struct tmc_drvdata *tmc_drvdata,
+ 	return 0;
+ }
+ 
+-const struct etr_buf_operations etr_catu_buf_ops = {
++static const struct etr_buf_operations etr_catu_buf_ops = {
+ 	.alloc = catu_alloc_etr_buf,
+ 	.free = catu_free_etr_buf,
+ 	.sync = catu_sync_etr_buf,
+@@ -582,4 +582,22 @@ static struct amba_driver catu_driver = {
+ 	.id_table			= catu_ids,
+ };
+ 
+-builtin_amba_driver(catu_driver);
++static int __init catu_init(void)
++{
++	int ret;
++
++	ret = amba_driver_register(&catu_driver);
++	if (ret)
++		pr_info("Error registering catu driver\n");
++	tmc_etr_set_catu_ops(&etr_catu_buf_ops);
++	return ret;
++}
++
++static void __exit catu_exit(void)
++{
++	tmc_etr_remove_catu_ops();
++	amba_driver_unregister(&catu_driver);
++}
++
++module_init(catu_init);
++module_exit(catu_exit);
+diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
+index 80ceee3c739c..6160c2d75a56 100644
+--- a/drivers/hwtracing/coresight/coresight-catu.h
++++ b/drivers/hwtracing/coresight/coresight-catu.h
+@@ -108,6 +108,4 @@ static inline bool coresight_is_catu_device(struct coresight_device *csdev)
+ 	return true;
+ }
+ 
+-extern const struct etr_buf_operations etr_catu_buf_ops;
+-
+ #endif
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index ad991a37e2d2..714f9e867e5f 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -794,10 +794,21 @@ static inline void tmc_etr_disable_catu(struct tmc_drvdata *drvdata)
+ static const struct etr_buf_operations *etr_buf_ops[] = {
+ 	[ETR_MODE_FLAT] = &etr_flat_buf_ops,
+ 	[ETR_MODE_ETR_SG] = &etr_sg_buf_ops,
+-	[ETR_MODE_CATU] = IS_ENABLED(CONFIG_CORESIGHT_CATU)
+-						? &etr_catu_buf_ops : NULL,
++	[ETR_MODE_CATU] = NULL,
+ };
+ 
++void tmc_etr_set_catu_ops(const struct etr_buf_operations *catu)
++{
++	etr_buf_ops[ETR_MODE_CATU] = catu;
++}
++EXPORT_SYMBOL_GPL(tmc_etr_set_catu_ops);
++
++void tmc_etr_remove_catu_ops(void)
++{
++	etr_buf_ops[ETR_MODE_CATU] = NULL;
++}
++EXPORT_SYMBOL_GPL(tmc_etr_remove_catu_ops);
++
+ static inline int tmc_etr_mode_alloc_buf(int mode,
+ 					 struct tmc_drvdata *drvdata,
+ 					 struct etr_buf *etr_buf, int node,
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index 6e8d2dc33d17..b91ec7dde7bc 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -326,4 +326,7 @@ tmc_sg_table_buf_size(struct tmc_sg_table *sg_table)
+ 
+ struct coresight_device *tmc_etr_get_catu_device(struct tmc_drvdata *drvdata);
+ 
++void tmc_etr_set_catu_ops(const struct etr_buf_operations *catu);
++void tmc_etr_remove_catu_ops(void);
++
+ #endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-The BUG is
-
-  BUG_ON(!is_power_of_2(boundary_size));
-
-in iommu_is_span_boundary()
-
-Bisected to commit
-
-  04d324bf549d ("dma-mapping: set default segment_boundary_mask to ULONG_MA=
-X")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/FueENkLviib2t9bhQAff9HD
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl8+D1AACgkQAVBC80lX
-0GxJDQf+M2lLNo9bKXhxvPwlmrS29qqiZY0v5z38LkmoIqrn5XnjjQQDm39Ct/Ry
-DC1BnExF14hIBy/XZ8n6VXcjXXwpWnEH/AOyVo/SuB5A1kV6lzSnUmEb9WyA4+Ew
-SFcFbvJEsGl9Rd0p4Q9rQsBNnlzniPNoIo7LXCzQ1AvJnF3W+YuOl7sGcWhQK0bP
-v9Z29Zg9MuSiO4mfAk432VEVg+xEYSVLLjtPci6Bw7j8vDqcF2ZNyJ/G21wSjn7Y
-mql5NZn+lVQyFAosdClFVehFVRwk5x5aatqKqlsIgxfgiaSSMC4YnyVahC3r2wqg
-48rWJnsXXkEmJY3jZFGY8eUFxKa2bg==
-=Ww36
------END PGP SIGNATURE-----
-
---Sig_/FueENkLviib2t9bhQAff9HD--
