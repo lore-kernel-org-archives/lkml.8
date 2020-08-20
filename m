@@ -5,51 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DCDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 798A820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4CC20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928183;
-	bh=KGzPf/rdCRUwBSQBvzEttjBkAfBjvfkrfl5505s+/ic=;
+	s=default; t=1597928186;
+	bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wiMH4Pd2/UgdzvklwhWAaFo829tbwvInvubAhcFmS89IOkm6iD41TX36ad82/p7Uo
-	 M9zgdismQPhQMsAvZroz5US+E8wTLJXLCJPcCqnKr7xxzVS3BiiP3NHWQBQyvUqP6G
-	 BebHGoAT2DwGrxEyEJuskwkkFpW/GqODk9MMEmW0=
+	b=b3U1hQq1BqkZq/29eu7yQsYOgsv4BhAephq0PA61hHb+5HDAlkfvSAiOKIl+IjKOz
+	 l0UkexUBdCx4jOftWJbzNSVAauOMQmtQvTBAeej1yHD8jKqUybxVL/Qy16g2eup2bk
+	 S/3vPmcXKle3TzE1LSVQxZmkX+KZ8hpyAEYejXno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgHTM4W (ORCPT
+        id S1729112AbgHTJlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:56:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729114AbgHTJlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:55 -0400
+        id S1728710AbgHTJlf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7D1020724;
-        Thu, 20 Aug 2020 09:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D4C2075E;
+        Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916514;
-        bh=KGzPf/rdCRUwBSQBvzEttjBkAfBjvfkrfl5505s+/ic=;
+        s=default; t=1597916493;
+        bh=tl+cUgc5OR6puSRkQCFPVS3w587cIlAO4ks3kHm9LrM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=urh7Wwn9yX4CHYoe9w0EdM03pjaPGSagVeqTO2uwG8/gtcp3ILR6Vm0VVholJm0lo
-         cjJnHHWKQuTeD5X1fXCN0QTdGltu3kOwspzjEayCTR53oiK0HHQ0dWTOflsjxaK3ma
-         Gvt+iT9xLJuXjOReuF43CH/4AvcYo3ALMWzKyv0s=
+        b=LR0f1NqBJL1sYoUh+ORFu+AD7OFmw+muA6j523+HuvjYdRgdleTg75yqqPzAfztRg
+         ZSrUcYWoYf2n8D5n8itmcl01d8ijKIRawF2B46i6Gun07aAK0tLuXOz6F+vtFXyMrf
+         FInxHZs5gXQMVBcGC3rmb8LnnAGbeqsmsUCfcapg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        stable@vger.kernel.org,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Ray Jui <ray.jui@broadcom.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 153/204] libnvdimm/security: fix a typo
-Date:   Thu, 20 Aug 2020 11:20:50 +0200
-Message-Id: <20200820091613.883056922@linuxfoundation.org>
+Subject: [PATCH 5.7 147/204] pwm: bcm-iproc: handle clk_get_rate() return
+Date:   Thu, 20 Aug 2020 11:20:44 +0200
+Message-Id: <20200820091613.588844723@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,38 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jane Chu <jane.chu@oracle.com>
+From: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
 
-[ Upstream commit dad42d17558f316e9e807698cd4207359b636084 ]
+[ Upstream commit 6ced5ff0be8e94871ba846dfbddf69d21363f3d7 ]
 
-commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
-introduced a typo, causing a 'nvdimm->sec.flags' update being overwritten
-by the subsequent update meant for 'nvdimm->sec.ext_flags'.
+Handle clk_get_rate() returning 0 to avoid possible division by zero.
 
-Link: https://lore.kernel.org/r/1596494499-9852-1-git-send-email-jane.chu@oracle.com
-Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Fixes: daa5abc41c80 ("pwm: Add support for Broadcom iProc PWM controller")
+Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/security.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pwm/pwm-bcm-iproc.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 89b85970912db..acfd211c01b9c 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
- 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
- 	put_device(&nvdimm->dev);
- 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
--	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-+	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
- }
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 1f829edd8ee70..d392a828fc493 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -85,8 +85,6 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	u64 tmp, multi, rate;
+ 	u32 value, prescale;
  
- void nvdimm_security_overwrite_query(struct work_struct *work)
+-	rate = clk_get_rate(ip->clk);
+-
+ 	value = readl(ip->base + IPROC_PWM_CTRL_OFFSET);
+ 
+ 	if (value & BIT(IPROC_PWM_CTRL_EN_SHIFT(pwm->hwpwm)))
+@@ -99,6 +97,13 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		state->polarity = PWM_POLARITY_INVERSED;
+ 
++	rate = clk_get_rate(ip->clk);
++	if (rate == 0) {
++		state->period = 0;
++		state->duty_cycle = 0;
++		return;
++	}
++
+ 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+ 	prescale = value >> IPROC_PWM_PRESCALE_SHIFT(pwm->hwpwm);
+ 	prescale &= IPROC_PWM_PRESCALE_MAX;
 -- 
 2.25.1
 
