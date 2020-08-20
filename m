@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79502C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01251C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B1C20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D565220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919198;
-	bh=B7ux/Zar9QOX1U4UMuNZ5OZh9VvIW5IXpQ6OL3ZjA3g=;
+	s=default; t=1597919201;
+	bh=IhIlyU5ImtlJe/dTnjvpXCpLAWNMPYqiVpzS4s4ET7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pZ8fHxYg4bdwb9vLhBxeDOQq3YtSxaqRL2uv/JHxRYw9aDRb1RC+UlAFxPgpfpBNh
-	 6heOhV7qI0e0Hc14vX19/85Xbrhn3YXSvX45D6JJeuJhCOJqAIE1dD46zRJLdaUIDG
-	 IDKmjvrSKSicems1TGSXZXHEjlRK9qe+WiWjgYF4=
+	b=gs+czFCWyVs3HxdmniGuF0hnJXIpVJo5W6XbHaB2IfQMVxiTkokeDm5hSNpkQJfJi
+	 uHnuGpncVUogU6xdjMeZOgsS7K2yQIWk4qdv1iRHR16MSi10tPx2kmoM3u6JZ9fMmq
+	 zX+cs3pFATlbx88bJYNTH5yuozYtvJZdvXbh9Hho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731783AbgHTK0h (ORCPT
+        id S1730679AbgHTK0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51508 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731724AbgHTKWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:54 -0400
+        id S1731720AbgHTKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9E2D20738;
-        Thu, 20 Aug 2020 10:22:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F1B220658;
+        Thu, 20 Aug 2020 10:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918974;
-        bh=B7ux/Zar9QOX1U4UMuNZ5OZh9VvIW5IXpQ6OL3ZjA3g=;
+        s=default; t=1597918971;
+        bh=IhIlyU5ImtlJe/dTnjvpXCpLAWNMPYqiVpzS4s4ET7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0bLNb8vdCavVAOHC7YncYo15HZNQX8AAIxY68RwnJS01vNx7eN449QgQr0KwSuTQ
-         q3UT+PDK2nZ8bnj+3hfkZlZMbOhlNTfctVcjOLeGC77gUGTur3mfycNPN4un6HdUCJ
-         aYqmrTQlVZ4QsAoG0odJ0Tfv1p4rSp0z3jqs0vcI=
+        b=PCx88MXLaUi4ncGZaxpWNK54e8SEphi+Utk76ldxlLcSHT68OkTQ8/WdRJMriKHl/
+         WuRahvhb18min79HecOizyz/ilEXBQstxhrE79i/ReFNF9DBB/E/HH/d+j125mOSiE
+         WVrX1FzDXGiOzPHVQina5st9ww3BdVLXMr2AN2Ac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mirko Dietrich <buzz@l4m1.de>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 107/149] ALSA: usb-audio: Creative USB X-Fi Pro SB1095 volume knob support
-Date:   Thu, 20 Aug 2020 11:23:04 +0200
-Message-Id: <20200820092130.889220771@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 106/149] net: Set fput_needed iff FDPUT_FPUT is set
+Date:   Thu, 20 Aug 2020 11:23:03 +0200
+Message-Id: <20200820092130.840109869@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,34 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mirko Dietrich <buzz@l4m1.de>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit fec9008828cde0076aae595ac031bfcf49d335a4 upstream.
+[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
 
-Adds an entry for Creative USB X-Fi to the rc_config array in
-mixer_quirks.c to allow use of volume knob on the device.
-Adds support for newer X-Fi Pro card, known as "Model No. SB1095"
-with USB ID "041e:3263"
+We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+accordingly.
 
-Signed-off-by: Mirko Dietrich <buzz@l4m1.de>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200806124850.20334-1-buzz@l4m1.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/mixer_quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -195,6 +195,7 @@ static const struct rc_config {
- 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
- 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
-+	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
- 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
- };
- 
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -456,7 +456,7 @@ static struct socket *sockfd_lookup_ligh
+ 	if (f.file) {
+ 		sock = sock_from_file(f.file, err);
+ 		if (likely(sock)) {
+-			*fput_needed = f.flags;
++			*fput_needed = f.flags & FDPUT_FPUT;
+ 			return sock;
+ 		}
+ 		fdput(f);
 
 
