@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39513C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20B2421775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9962067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917525;
-	bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
+	s=default; t=1597917540;
+	bh=HJjCP81rywixE/GLZjXGg0JY6wNzwcv1jdYMv2+9i1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wfLGTJ/WWY26ZBDOpQHNHBWh4Du0h5OenmQcx9XzvB3thwgbViM+Js3gB81okGsn2
-	 GU43GaG49kx5/9B2h/HBGl4/9y30oBIa4xYq/5bvROX//zI5cebGdnajObeEDljAf9
-	 3JkJhnTeNzrRiS6I0L7rZQuustacXt177A7aV6zs=
+	b=WFdBaeOXExLENhYs5SNqKi/pgUkTormNVxDqqhHe9fBgYjTVuDsvL6mvFhQQI2xuR
+	 4CypjadWcZaRy7b1Bnj/6eyeiGjRvjeDQiYiWaVBZCanGkp6AMlQdOWJW/5FppDZOO
+	 /HBDUgplccoAhpodh+WHD+I+sELbko2VvvSs88cI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgHTJ6l (ORCPT
+        id S1730256AbgHTJ6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:58:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42900 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:58:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbgHTJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:32 -0400
+        id S1730420AbgHTJ6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5D9622B3F;
-        Thu, 20 Aug 2020 09:58:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D53172173E;
+        Thu, 20 Aug 2020 09:58:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917512;
-        bh=2LkuLw7hc5amWcJudiBTDsOVkeurjDE/qsPZWPVYzm4=;
+        s=default; t=1597917520;
+        bh=HJjCP81rywixE/GLZjXGg0JY6wNzwcv1jdYMv2+9i1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KGrGVB4pf90/PZfr3BIUHtjcoYGs0KD8GLv4Ph1KGzjR0LOPAT73G9nt5MWyZsJfh
-         biKJL+Z1ZSLdKHj+0yPuEucONHgKCNfpyFhZhHwS4LfGvVCWzM7TMGSmt1ryi2OyrF
-         JuUatsOD9uErv3GysrqKrkmH9aaoXSPsuuGQPzxo=
+        b=2d0n9tGpB5YEzU+sxus1TKHtoVMgsFDTf/egLgjkYHytBVQNkK7rd3Mwnus5Bt6xE
+         tYITn7tphoSg9XFZUa+VWm36BPnlIbem66tJAqSn4v7x2d8gQkm59xmn9BH7bxgszh
+         OQmthpxJK33V61mB2e9qJERO+f/p7T0cS9YTAAOo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.9 056/212] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_with_rssi_evt()
-Date:   Thu, 20 Aug 2020 11:20:29 +0200
-Message-Id: <20200820091605.201121887@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        stable <stable@kernel.org>
+Subject: [PATCH 4.9 059/212] mtd: properly check all write ioctls for permissions
+Date:   Thu, 20 Aug 2020 11:20:32 +0200
+Message-Id: <20200820091605.350471878@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,50 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit 629b49c848ee71244203934347bd7730b0ddee8d upstream.
+commit f7e6b19bc76471ba03725fe58e0c218a3d6266c3 upstream.
 
-Check `num_rsp` before using it as for-loop counter. Add `unlock` label.
+When doing a "write" ioctl call, properly check that we have permissions
+to do so before copying anything from userspace or anything else so we
+can "fail fast".  This includes also covering the MEMWRITE ioctl which
+previously missed checking for this.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: stable <stable@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[rw: Fixed locking issue]
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_event.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/mtd/mtdchar.c |   56 +++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 9 deletions(-)
 
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -3623,6 +3623,9 @@ static void hci_inquiry_result_with_rssi
- 		struct inquiry_info_with_rssi_and_pscan_mode *info;
- 		info = (void *) (skb->data + 1);
+--- a/drivers/mtd/mtdchar.c
++++ b/drivers/mtd/mtdchar.c
+@@ -372,9 +372,6 @@ static int mtdchar_writeoob(struct file
+ 	uint32_t retlen;
+ 	int ret = 0;
  
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
+-	if (!(file->f_mode & FMODE_WRITE))
+-		return -EPERM;
+-
+ 	if (length > 4096)
+ 		return -EINVAL;
  
-@@ -3644,6 +3647,9 @@ static void hci_inquiry_result_with_rssi
- 	} else {
- 		struct inquiry_info_with_rssi *info = (void *) (skb->data + 1);
- 
-+		if (skb->len < num_rsp * sizeof(*info) + 1)
-+			goto unlock;
-+
- 		for (; num_rsp; num_rsp--, info++) {
- 			u32 flags;
- 
-@@ -3664,6 +3670,7 @@ static void hci_inquiry_result_with_rssi
- 		}
+@@ -681,6 +678,48 @@ static int mtdchar_ioctl(struct file *fi
+ 			return -EFAULT;
  	}
  
-+unlock:
- 	hci_dev_unlock(hdev);
- }
++	/*
++	 * Check the file mode to require "dangerous" commands to have write
++	 * permissions.
++	 */
++	switch (cmd) {
++	/* "safe" commands */
++	case MEMGETREGIONCOUNT:
++	case MEMGETREGIONINFO:
++	case MEMGETINFO:
++	case MEMREADOOB:
++	case MEMREADOOB64:
++	case MEMLOCK:
++	case MEMUNLOCK:
++	case MEMISLOCKED:
++	case MEMGETOOBSEL:
++	case MEMGETBADBLOCK:
++	case MEMSETBADBLOCK:
++	case OTPSELECT:
++	case OTPGETREGIONCOUNT:
++	case OTPGETREGIONINFO:
++	case OTPLOCK:
++	case ECCGETLAYOUT:
++	case ECCGETSTATS:
++	case MTDFILEMODE:
++	case BLKPG:
++	case BLKRRPART:
++		break;
++
++	/* "dangerous" commands */
++	case MEMERASE:
++	case MEMERASE64:
++	case MEMWRITEOOB:
++	case MEMWRITEOOB64:
++	case MEMWRITE:
++		if (!(file->f_mode & FMODE_WRITE))
++			return -EPERM;
++		break;
++
++	default:
++		return -ENOTTY;
++	}
++
+ 	switch (cmd) {
+ 	case MEMGETREGIONCOUNT:
+ 		if (copy_to_user(argp, &(mtd->numeraseregions), sizeof(int)))
+@@ -728,9 +767,6 @@ static int mtdchar_ioctl(struct file *fi
+ 	{
+ 		struct erase_info *erase;
  
+-		if(!(file->f_mode & FMODE_WRITE))
+-			return -EPERM;
+-
+ 		erase=kzalloc(sizeof(struct erase_info),GFP_KERNEL);
+ 		if (!erase)
+ 			ret = -ENOMEM;
+@@ -1051,9 +1087,6 @@ static int mtdchar_ioctl(struct file *fi
+ 		ret = 0;
+ 		break;
+ 	}
+-
+-	default:
+-		ret = -ENOTTY;
+ 	}
+ 
+ 	return ret;
+@@ -1097,6 +1130,11 @@ static long mtdchar_compat_ioctl(struct
+ 		struct mtd_oob_buf32 buf;
+ 		struct mtd_oob_buf32 __user *buf_user = argp;
+ 
++		if (!(file->f_mode & FMODE_WRITE)) {
++			ret = -EPERM;
++			break;
++		}
++
+ 		if (copy_from_user(&buf, argp, sizeof(buf)))
+ 			ret = -EFAULT;
+ 		else
 
 
