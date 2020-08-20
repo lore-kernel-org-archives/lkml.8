@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAB8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D90C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3C6208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 352CC208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:59:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917555;
-	bh=DkVXnVt7u6fmRfPOHCdUfUeOBDxtqXkAcojtf0bbp9A=;
+	s=default; t=1597917565;
+	bh=AfPknJHdAKb1a61IvJ8rVc97ePVa5CPPTQ/JFx7t1yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzE14DjXyQMOeWCnI0P0392/YUgGLD01KWL0qfZwEPcQSoSNjmFdJ6M8cNTC1XS+G
-	 EAhS+k0Y7f0g7hYdRX3SqDhs+YyiCvzCzTh8/e4oAiva6OW9JkXihWDfAXdChMTiMV
-	 Z4hQP3wJ8lFd9Ldg53CL/W6oXmcZJ+wxfuXiiSfI=
+	b=KLQspjNMl+ows3W+6eTZiWUAMhD/xwJaJjut3K3zkoRyEV07yKr9A0DpTxtXt6F9/
+	 MCzyU9O+txdAyILJYEheJ0vrf0S86JS5f9lq8YvLqghTzdPhacc4QSyEVwMhWLG5ST
+	 xDBb1ef8Us4KHdgA58NLUpQaTSyoazgyn1WdGnI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgHTJ7O (ORCPT
+        id S1730414AbgHTJ7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44556 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgHTJ7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:04 -0400
+        id S1729977AbgHTJ7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCDE12067C;
-        Thu, 20 Aug 2020 09:59:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42C5B20855;
+        Thu, 20 Aug 2020 09:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917544;
-        bh=DkVXnVt7u6fmRfPOHCdUfUeOBDxtqXkAcojtf0bbp9A=;
+        s=default; t=1597917547;
+        bh=AfPknJHdAKb1a61IvJ8rVc97ePVa5CPPTQ/JFx7t1yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ig29uh2QKGeHR1IOJbd1z0nUSi0JuxbE2/dQ1z0kfCFVSyHGTARPi18mBRuldLiMv
-         GwD5qSUZfqdoVDRr2iNw4cQHCZ6wZ1oyiezYGAV0QEeE4vT27T8u2EgTRM8CBoy959
-         UDcXc20ITZN28MQfbmxwayrBGM5cNl959jxgmmig=
+        b=NKdOM1iSeznX+CzyAvPnQ/zXzQfW/YBjLEA9bX0U88JF+hgMJjUAC5EY41iDVwWvX
+         hu3L5ii4mnQYChDC3uHegGFdX4iN87CVnaEW0mvgzUjV92/m1TUIEX4r8JmpNWmsuQ
+         PysQiljIQVJP//JzeFIDuvYbk6dJmoILmtHlrIag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Liam Beguin <liambeguin@gmail.com>,
-        Dave Anglin <dave.anglin@bell.net>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/212] parisc: add support for cmpxchg on u8 pointers
-Date:   Thu, 20 Aug 2020 11:20:12 +0200
-Message-Id: <20200820091604.344134389@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 040/212] net: ethernet: ravb: exit if re-initialization fails in tx timeout
+Date:   Thu, 20 Aug 2020 11:20:13 +0200
+Message-Id: <20200820091604.386819049@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,72 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liam Beguin <liambeguin@gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit b344d6a83d01c52fddbefa6b3b4764da5b1022a0 ]
+[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
 
-The kernel test bot reported[1] that using set_mask_bits on a u8 causes
-the following issue on parisc:
+According to the report of [1], this driver is possible to cause
+the following error in ravb_tx_timeout_work().
 
-	hppa-linux-ld: drivers/phy/ti/phy-tusb1210.o: in function `tusb1210_probe':
-	>> (.text+0x2f4): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	>> hppa-linux-ld: (.text+0x324): undefined reference to `__cmpxchg_called_with_bad_pointer'
-	hppa-linux-ld: (.text+0x354): undefined reference to `__cmpxchg_called_with_bad_pointer'
+ravb e6800000.ethernet ethernet: failed to switch device to config mode
 
-Add support for cmpxchg on u8 pointers.
+This error means that the hardware could not change the state
+from "Operation" to "Configuration" while some tx and/or rx queue
+are operating. After that, ravb_config() in ravb_dmac_init() will fail,
+and then any descriptors will be not allocaled anymore so that NULL
+pointer dereference happens after that on ravb_start_xmit().
 
-[1] https://lore.kernel.org/patchwork/patch/1272617/#1468946
+To fix the issue, the ravb_tx_timeout_work() should check
+the return values of ravb_stop_dma() and ravb_dmac_init().
+If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
+and just exits. If ravb_dmac_init() fails, just exits.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Liam Beguin <liambeguin@gmail.com>
-Tested-by: Dave Anglin <dave.anglin@bell.net>
-Signed-off-by: Helge Deller <deller@gmx.de>
+[1]
+https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
+
+Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/include/asm/cmpxchg.h |  2 ++
- arch/parisc/lib/bitops.c          | 12 ++++++++++++
- 2 files changed, 14 insertions(+)
+ drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index 90253bdc2ee5e..536690a68917c 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -59,6 +59,7 @@ extern void __cmpxchg_called_with_bad_pointer(void);
- extern unsigned long __cmpxchg_u32(volatile unsigned int *m, unsigned int old,
- 				   unsigned int new_);
- extern u64 __cmpxchg_u64(volatile u64 *ptr, u64 old, u64 new_);
-+extern u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new_);
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 545cb6262cffd..93d3152752ff4 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1444,6 +1444,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 	struct ravb_private *priv = container_of(work, struct ravb_private,
+ 						 work);
+ 	struct net_device *ndev = priv->ndev;
++	int error;
  
- /* don't worry...optimizer will get rid of most of this */
- static inline unsigned long
-@@ -70,6 +71,7 @@ __cmpxchg(volatile void *ptr, unsigned long old, unsigned long new_, int size)
- #endif
- 	case 4: return __cmpxchg_u32((unsigned int *)ptr,
- 				     (unsigned int)old, (unsigned int)new_);
-+	case 1: return __cmpxchg_u8((u8 *)ptr, (u8)old, (u8)new_);
- 	}
- 	__cmpxchg_called_with_bad_pointer();
- 	return old;
-diff --git a/arch/parisc/lib/bitops.c b/arch/parisc/lib/bitops.c
-index 8e45b0a97abf6..3284a7adb0a35 100644
---- a/arch/parisc/lib/bitops.c
-+++ b/arch/parisc/lib/bitops.c
-@@ -78,3 +78,15 @@ unsigned long __cmpxchg_u32(volatile unsigned int *ptr, unsigned int old, unsign
- 	_atomic_spin_unlock_irqrestore(ptr, flags);
- 	return (unsigned long)prev;
- }
-+
-+u8 __cmpxchg_u8(volatile u8 *ptr, u8 old, u8 new)
-+{
-+	unsigned long flags;
-+	u8 prev;
-+
-+	_atomic_spin_lock_irqsave(ptr, flags);
-+	if ((prev = *ptr) == old)
-+		*ptr = new;
-+	_atomic_spin_unlock_irqrestore(ptr, flags);
-+	return prev;
-+}
+ 	netif_tx_stop_all_queues(ndev);
+ 
+@@ -1452,15 +1453,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 		ravb_ptp_stop(ndev);
+ 
+ 	/* Wait for DMA stopping */
+-	ravb_stop_dma(ndev);
++	if (ravb_stop_dma(ndev)) {
++		/* If ravb_stop_dma() fails, the hardware is still operating
++		 * for TX and/or RX. So, this should not call the following
++		 * functions because ravb_dmac_init() is possible to fail too.
++		 * Also, this should not retry ravb_stop_dma() again and again
++		 * here because it's possible to wait forever. So, this just
++		 * re-enables the TX and RX and skip the following
++		 * re-initialization procedure.
++		 */
++		ravb_rcv_snd_enable(ndev);
++		goto out;
++	}
+ 
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
+ 
+ 	/* Device init */
+-	ravb_dmac_init(ndev);
++	error = ravb_dmac_init(ndev);
++	if (error) {
++		/* If ravb_dmac_init() fails, descriptors are freed. So, this
++		 * should return here to avoid re-enabling the TX and RX in
++		 * ravb_emac_init().
++		 */
++		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
++			   __func__, error);
++		return;
++	}
+ 	ravb_emac_init(ndev);
+ 
++out:
+ 	/* Initialise PTP Clock driver */
+ 	if (priv->chip_id == RCAR_GEN2)
+ 		ravb_ptp_init(ndev, priv->pdev);
 -- 
 2.25.1
 
