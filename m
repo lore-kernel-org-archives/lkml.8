@@ -2,314 +2,110 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA860C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5D722078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lkupn2ml"
+	by mail.kernel.org (Postfix) with ESMTP id 199C82087D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgHTV5j (ORCPT
+        id S1728208AbgHTWA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59634 "EHLO
+        Thu, 20 Aug 2020 18:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgHTV5i (ORCPT
+        with ESMTP id S1726938AbgHTWAw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:57:38 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 422F0C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:57:37 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ba10so2858066edb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:57:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5sviuv+X0eAsiZiEmZuhmbloJAvhEyc5WFuO1Rz+TUE=;
-        b=Lkupn2ml+C7DdOtGP0lOruDZjCFfwnzZiuPeCknEHAgkiKMiLp80Ja6hMjPtqmGwRg
-         TT8F0Wv4g0HogaPz3hrOrlrcVWXhd1IsuC5JePZNOf/kssSmniZdTvwFdRgaGt4YaZ0Q
-         rFCWRB0OQPj4jKB7KQ6hJY+o7KyG/cTRE0A4+++Ykt6dzIeMPlNjBtQrsXICMScwq4PL
-         j9LUtUltHPypHsbW0emiMMNTs0MTP1rQV21k+kiczIU+SB1vHp9kNDKV8/u23whPDOGK
-         r4xKo/s2KKKV37pqz1MX9++vknCXJidYRfJ3BzYN2w4lmxL9z8PwNp2GBhxP3mRPmmjn
-         TgtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5sviuv+X0eAsiZiEmZuhmbloJAvhEyc5WFuO1Rz+TUE=;
-        b=AqP3siNIWENwhuZ3CVERzs1B62Z30BsSVSeQz62zuNcI57Z81AcmxbTkB45Lq3yoBE
-         okUuy8OtYz64sUA0VpN5EO3y8WyoPGP8acbT+oN/qaqaCiisEcZbqk800ABA4FYUTNi/
-         ViM8xtRSzGHYdlyaIWI5YfcWqri4+On2eQ5fadWCobN2oxGmV3C2VuoXV5awCdLaB8lM
-         EIl8zBZQbKxstuOnhhvJ0pHfPjyUBFNFGuO42x6964mSlqfCrkT68knisVrvPXDApYs1
-         A6p81aZWgdXoD4Lzfy1nhdgeytjJqcnYqVWHqKmfDX7Wo/8L2Rudpy6Go+jNjGpVSMFF
-         Uvlg==
-X-Gm-Message-State: AOAM533nr6PgklqRwRUceCyDaK/a/XEkX8PkBwecvLlKaBby24/71AGZ
-        GWM98xU5jss+PCcq0Gyn/TkmkmApkXXXRPY6aSA=
-X-Google-Smtp-Source: ABdhPJzKrnmPWoJ3402kaH5MO+iUdtgoRHgzZkmiw5vnRW2kpH0g12SVDvfqxXIyPzkglcjdj6Pwl4UAvV9zN8cfV3E=
-X-Received: by 2002:aa7:d983:: with SMTP id u3mr657139eds.366.1597960655895;
- Thu, 20 Aug 2020 14:57:35 -0700 (PDT)
+        Thu, 20 Aug 2020 18:00:52 -0400
+Received: from mail-out.m-online.net (mail-out.m-online.net [IPv6:2001:a60:0:28:0:1:25:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AACFC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:00:52 -0700 (PDT)
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 4BXdrD3wFDz1rt4M;
+        Fri, 21 Aug 2020 00:00:44 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 4BXdrD1vjSz1qw6h;
+        Fri, 21 Aug 2020 00:00:44 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id Ym_BFar1tcee; Fri, 21 Aug 2020 00:00:43 +0200 (CEST)
+X-Auth-Info: AaAWNRy8nwRPJM7jJzxHA0w20Zi5hogQa4/6xekBaI6YU6fk6AqWnGyPEgtqCrsv
+Received: from igel.home (ppp-46-244-162-139.dynamic.mnet-online.de [46.244.162.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Fri, 21 Aug 2020 00:00:43 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id BDB002C28BC; Fri, 21 Aug 2020 00:00:42 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] powerpc/32s: Only leave NX unset on segments
+ used for modules
+References: <cover.1593428200.git.christophe.leroy@csgroup.eu>
+        <7172c0f5253419315e434a1816ee3d6ed6505bc0.1593428200.git.christophe.leroy@csgroup.eu>
+X-Yow:  ..Wait 'til those  ITALIAN TEENAGERS get back to their HONDAS &
+ discover them to be FILLED to the BRIM with MAZOLA!!
+Date:   Fri, 21 Aug 2020 00:00:42 +0200
+In-Reply-To: <7172c0f5253419315e434a1816ee3d6ed6505bc0.1593428200.git.christophe.leroy@csgroup.eu>
+        (Christophe Leroy's message of "Mon, 29 Jun 2020 11:15:22 +0000
+        (UTC)")
+Message-ID: <87eeo1kmet.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-References: <20200818184122.29C415DF@viggo.jf.intel.com> <20200818184126.B8E91F10@viggo.jf.intel.com>
-In-Reply-To: <20200818184126.B8E91F10@viggo.jf.intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 20 Aug 2020 14:57:24 -0700
-Message-ID: <CAHbLzkrLwaV1mi0wSU=XQ+mqkaPuP=4tmvwOBe6kiO2qendVdQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 2/9] mm/numa: automatically generate node migration order
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 11:50 AM Dave Hansen
-<dave.hansen@linux.intel.com> wrote:
->
->
-> From: Dave Hansen <dave.hansen@linux.intel.com>
->
-> When memory fills up on a node, memory contents can be
-> automatically migrated to another node.  The biggest problems are
-> knowing when to migrate and to where the migration should be
-> targeted.
->
-> The most straightforward way to generate the "to where" list
-> would be to follow the page allocator fallback lists.  Those
-> lists already tell us if memory is full where to look next.  It
-> would also be logical to move memory in that order.
->
-> But, the allocator fallback lists have a fatal flaw: most nodes
-> appear in all the lists.  This would potentially lead to
-> migration cycles (A->B, B->A, A->B, ...).
->
-> Instead of using the allocator fallback lists directly, keep a
-> separate node migration ordering.  But, reuse the same data used
-> to generate page allocator fallback in the first place:
-> find_next_best_node().
->
-> This means that the firmware data used to populate node distances
-> essentially dictates the ordering for now.  It should also be
-> architecture-neutral since all NUMA architectures have a working
-> find_next_best_node().
->
-> The protocol for node_demotion[] access and writing is not
-> standard.  It has no specific locking and is intended to be read
-> locklessly.  Readers must take care to avoid observing changes
-> that appear incoherent.  This was done so that node_demotion[]
-> locking has no chance of becoming a bottleneck on large systems
-> with lots of CPUs in direct reclaim.
->
-> This code is unused for now.  It will be called later in the
-> series.
->
-> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Huang Ying <ying.huang@intel.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> ---
->
->  b/mm/internal.h   |    1
->  b/mm/migrate.c    |  137 +++++++++++++++++++++++++++++++++++++++++++++++++++++-
->  b/mm/page_alloc.c |    2
->  3 files changed, 138 insertions(+), 2 deletions(-)
->
-> diff -puN mm/internal.h~auto-setup-default-migration-path-from-firmware mm/internal.h
-> --- a/mm/internal.h~auto-setup-default-migration-path-from-firmware     2020-08-18 11:36:48.960583188 -0700
-> +++ b/mm/internal.h     2020-08-18 11:36:48.968583188 -0700
-> @@ -203,6 +203,7 @@ extern int user_min_free_kbytes;
->
->  extern void zone_pcp_update(struct zone *zone);
->  extern void zone_pcp_reset(struct zone *zone);
-> +extern int find_next_best_node(int node, nodemask_t *used_node_mask);
->
->  #if defined CONFIG_COMPACTION || defined CONFIG_CMA
->
-> diff -puN mm/migrate.c~auto-setup-default-migration-path-from-firmware mm/migrate.c
-> --- a/mm/migrate.c~auto-setup-default-migration-path-from-firmware      2020-08-18 11:36:48.962583188 -0700
-> +++ b/mm/migrate.c      2020-08-18 11:36:48.970583188 -0700
-> @@ -1160,6 +1160,10 @@ out:
->         return rc;
->  }
->
-> +/*
-> + * Writes to this array occur without locking.  READ_ONCE()
-> + * is recommended for readers to ensure consistent reads.
-> + */
->  static int node_demotion[MAX_NUMNODES] = {[0 ...  MAX_NUMNODES - 1] = NUMA_NO_NODE};
->
->  /**
-> @@ -1173,7 +1177,13 @@ static int node_demotion[MAX_NUMNODES] =
->   */
->  int next_demotion_node(int node)
->  {
-> -       return node_demotion[node];
-> +       /*
-> +        * node_demotion[] is updated without excluding
-> +        * this function from running.  READ_ONCE() avoids
-> +        * reading multiple, inconsistent 'node' values
-> +        * during an update.
-> +        */
-> +       return READ_ONCE(node_demotion[node]);
->  }
->
->  /*
-> @@ -3001,3 +3011,128 @@ void migrate_vma_finalize(struct migrate
->  }
->  EXPORT_SYMBOL(migrate_vma_finalize);
->  #endif /* CONFIG_DEVICE_PRIVATE */
-> +
-> +/* Disable reclaim-based migration. */
-> +static void disable_all_migrate_targets(void)
-> +{
-> +       int node;
-> +
-> +       for_each_online_node(node)
-> +               node_demotion[node] = NUMA_NO_NODE;
-> +}
-> +
-> +/*
-> + * Find an automatic demotion target for 'node'.
-> + * Failing here is OK.  It might just indicate
-> + * being at the end of a chain.
-> + */
-> +static int establish_migrate_target(int node, nodemask_t *used)
-> +{
-> +       int migration_target;
-> +
-> +       /*
-> +        * Can not set a migration target on a
-> +        * node with it already set.
-> +        *
-> +        * No need for READ_ONCE() here since this
-> +        * in the write path for node_demotion[].
-> +        * This should be the only thread writing.
-> +        */
-> +       if (node_demotion[node] != NUMA_NO_NODE)
-> +               return NUMA_NO_NODE;
-> +
-> +       migration_target = find_next_best_node(node, used);
-> +       if (migration_target == NUMA_NO_NODE)
-> +               return NUMA_NO_NODE;
-> +
-> +       node_demotion[node] = migration_target;
-> +
-> +       return migration_target;
-> +}
-> +
-> +/*
-> + * When memory fills up on a node, memory contents can be
-> + * automatically migrated to another node instead of
-> + * discarded at reclaim.
-> + *
-> + * Establish a "migration path" which will start at nodes
-> + * with CPUs and will follow the priorities used to build the
-> + * page allocator zonelists.
-> + *
-> + * The difference here is that cycles must be avoided.  If
-> + * node0 migrates to node1, then neither node1, nor anything
-> + * node1 migrates to can migrate to node0.
-> + *
-> + * This function can run simultaneously with readers of
-> + * node_demotion[].  However, it can not run simultaneously
-> + * with itself.  Exclusion is provided by memory hotplug events
-> + * being single-threaded.
-> + */
-> +void __set_migration_target_nodes(void)
-> +{
-> +       nodemask_t next_pass    = NODE_MASK_NONE;
-> +       nodemask_t this_pass    = NODE_MASK_NONE;
-> +       nodemask_t used_targets = NODE_MASK_NONE;
-> +       int node;
-> +
-> +       /*
-> +        * Avoid any oddities like cycles that could occur
-> +        * from changes in the topology.  This will leave
-> +        * a momentary gap when migration is disabled.
-> +        */
-> +       disable_all_migrate_targets();
-> +
-> +       /*
-> +        * Ensure that the "disable" is visible across the system.
-> +        * Readers will see either a combination of before+disable
-> +        * state or disable+after.  They will never see before and
-> +        * after state together.
-> +        *
-> +        * The before+after state together might have cycles and
-> +        * could cause readers to do things like loop until this
-> +        * function finishes.  This ensures they can only see a
-> +        * single "bad" read and would, for instance, only loop
-> +        * once.
-> +        */
-> +       smp_wmb();
+On Jun 29 2020, Christophe Leroy wrote:
 
-Sounds better to move sp_wmb() into disable_all_migrate_targets()? I
-thought we need the barrier everytime disable_all_migrate_targets() is
-called, if so why not put them together to avoid overlooking?
+> Instead of leaving NX unset on all segments above the start
+> of vmalloc space, only leave NX unset on segments used for
+> modules.
 
-> +
-> +       /*
-> +        * Allocations go close to CPUs, first.  Assume that
-> +        * the migration path starts at the nodes with CPUs.
-> +        */
-> +       next_pass = node_states[N_CPU];
-> +again:
-> +       this_pass = next_pass;
-> +       next_pass = NODE_MASK_NONE;
-> +       /*
-> +        * To avoid cycles in the migration "graph", ensure
-> +        * that migration sources are not future targets by
-> +        * setting them in 'used_targets'.  Do this only
-> +        * once per pass so that multiple source nodes can
-> +        * share a target node.
-> +        *
-> +        * 'used_targets' will become unavailable in future
-> +        * passes.  This limits some opportunities for
-> +        * multiple source nodes to share a desintation.
-> +        */
-> +       nodes_or(used_targets, used_targets, this_pass);
-> +       for_each_node_mask(node, this_pass) {
-> +               int target_node = establish_migrate_target(node, &used_targets);
-> +
-> +               if (target_node == NUMA_NO_NODE)
-> +                       continue;
-> +
-> +               /* Visit targets from this pass in the next pass: */
-> +               node_set(target_node, next_pass);
-> +       }
-> +       /* Is another pass necessary? */
-> +       if (!nodes_empty(next_pass))
-> +               goto again;
-> +}
-> +
-> +void set_migration_target_nodes(void)
-> +{
-> +       get_online_mems();
-> +       __set_migration_target_nodes();
-> +       put_online_mems();
-> +}
-> diff -puN mm/page_alloc.c~auto-setup-default-migration-path-from-firmware mm/page_alloc.c
-> --- a/mm/page_alloc.c~auto-setup-default-migration-path-from-firmware   2020-08-18 11:36:48.964583188 -0700
-> +++ b/mm/page_alloc.c   2020-08-18 11:36:48.972583188 -0700
-> @@ -5607,7 +5607,7 @@ static int node_load[MAX_NUMNODES];
->   *
->   * Return: node id of the found node or %NUMA_NO_NODE if no node is found.
->   */
-> -static int find_next_best_node(int node, nodemask_t *used_node_mask)
-> +int find_next_best_node(int node, nodemask_t *used_node_mask)
->  {
->         int n, val;
->         int min_val = INT_MAX;
-> _
+I'm getting this crash:
+
+kernel tried to execute exec-protected page (f294b000) - exploit attempt (uid: 0)
+BUG: Unable to handle kernel instruction fetch
+Faulting instruction address: 0xf294b000
+Oops: Kernel access of bad area, sig: 11 [#1]
+BE PAGE_SIZE=4K MMU=Hash PowerMac
+Modules linked in: pata_macio(+)
+CPU: 0 PID: 87 Comm: udevd Not tainted 5.8.0-rc2-test #49
+NIP:  f294b000 LR: 0005c60 CTR: f294b000
+REGS: f18d9cc0 TRAP: 0400  Not tainted  (5.8.0-rc2-test)
+MSR:  10009032 <E,ME,IR,DR,RI>  CR: 84222422  XER: 20000000
+GPR00: c0005c14 f18d9d78 ef30ca20 00000000 ef0000e0 c00993d0 ef6da038 0000005e
+GPR08: c09050b8 c08b0000 00000000 f18d9d78 44222422 10072070 00000000 0fefaca4
+GPR16: 1006a00c f294d50b 00000120 00000124 c0096ea8 0000000e ef2776c0 ef2776e4
+GPR24: f18fd6e8 00000001 c086fe64 c086fe04 00000000 c08b0000 f294b000 ffffffff
+NIP [f294b000] pata_macio_init+0x0/0xc0 [pata_macio]
+LR [c0005c60] do_one_initcall+0x6c/0x160
+Call Trace:
+[f18d9d78] [c0005c14] do_one_initcall+0x20/0x160 (unreliable)
+[f18d9dd8] [c009a22c] do_init_module+0x60/0x1c0
+[f18d9df8] [c00993d8] load_module+0x16a8/0x1c14
+[f18d9ea8] [c0099aa4] sys_finit_module+0x8c/0x94
+[f18d9f38] [c0012174] ret_from_syscall+0x0/0x34
+--- interrupt: c01 at 0xfdb4318
+   LR = 0xfeee9c0
+Instruction dump:
+XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
+XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX <3d20c08b> 3d40c086 9421ffe0 8129106c
+---[ end trace 85a98cc836109871 ]---
+
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
