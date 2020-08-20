@@ -2,71 +2,89 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B10CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:28:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2123DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9E4207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:28:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE0F8207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgHTQ2k (ORCPT
+        id S1729875AbgHTQaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:28:40 -0400
-Received: from smtp13.smtpout.orange.fr ([80.12.242.135]:28178 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729759AbgHTQ2b (ORCPT
+        Thu, 20 Aug 2020 12:30:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54201 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgHTQ37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:28:31 -0400
-Received: from [192.168.42.210] ([93.22.135.164])
-        by mwinf5d72 with ME
-        id HsUS2300B3YzEb903sUSQW; Thu, 20 Aug 2020 18:28:29 +0200
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 20 Aug 2020 18:28:29 +0200
-X-ME-IP: 93.22.135.164
-Subject: Re: [PATCH] epic100: switch from 'pci_' to 'dma_' API
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, snelson@pensando.io, mhabets@solarflare.com,
-        vaibhavgupta40@gmail.com, mst@redhat.com, mkubecek@suse.cz,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200806201935.733641-1-christophe.jaillet@wanadoo.fr>
- <20200806.142311.94169513118353100.davem@davemloft.net>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <9b8ad131-3c2e-37b7-392c-79fab1a2f2bb@wanadoo.fr>
-Date:   Thu, 20 Aug 2020 18:28:25 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 12:29:59 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k8nRR-00052d-F1; Thu, 20 Aug 2020 16:29:29 +0000
+Date:   Thu, 20 Aug 2020 18:29:27 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820162927.s275qsr4lkwizutu@wittgenstein>
+References: <87lfi9xz7y.fsf@x220.int.ebiederm.org>
+ <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+ <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+ <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200806.142311.94169513118353100.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200820162645.GP5033@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 06/08/2020 à 23:23, David Miller a écrit :
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Date: Thu,  6 Aug 2020 22:19:35 +0200
+On Thu, Aug 20, 2020 at 06:26:45PM +0200, Michal Hocko wrote:
+> On Thu 20-08-20 08:56:53, Suren Baghdasaryan wrote:
+> [...]
+> > Catching up on the discussion which was going on while I was asleep...
+> > So it sounds like there is a consensus that oom_adj should be moved to
+> > mm_struct rather than trying to synchronize it among tasks sharing mm.
+> > That sounds reasonable to me too. Michal answered all the earlier
+> > questions about this patch, so I won't be reiterating them, thanks
+> > Michal. If any questions are still lingering about the original patch
+> > I'll be glad to answer them.
 > 
->> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> Christophe, the net-next tree is closed so I'd like to ask that you
-> defer submitting these conversion patches until the net-next
-> tree opens back up again.
-> 
-> Thank you.
-> 
-> 
+> I think it still makes some sense to go with a simpler (aka less tricky)
+> solution which would be your original patch with an incremental fix for
+> vfork and the proper ordering (http://lkml.kernel.org/r/20200820124109.GI5033@dhcp22.suse.cz)
+> and then make a more complex shift to mm struct on top of that. The
+> former will be less tricky to backport to stable IMHO.
 
-Hi,
-should I resend the few conversion patches sent at the wrong time or are 
-they stored somewhere, and will be processed when some time is available 
-for it?
+/me nods
 
-CJ
+Christian
