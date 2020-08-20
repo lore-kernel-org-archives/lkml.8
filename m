@@ -2,105 +2,255 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92687C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19BBA2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925761;
-	bh=MKw2zkMoNR52NXZ05/K5N9/DFpLHpLYLSmvRfyKtOcU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LT2/5pxUq6dPlEHmiuqlGd2Ai/9V8uMzABxNrkhuMH5yl0zuB0NZ0Mi0ZZ74v6TLD
-	 gSc7uOe+HPodXS0QJ+zUf3TT9C5S2WQ22fQvxEiRkuUJaJ9YtGVC+OEojgx2g5Xb8q
-	 l47tKYKwL8pZxrbo0GlJPyElSgTy3d3Uj4dMuGUk=
+	by mail.kernel.org (Postfix) with ESMTP id 6DFDF20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="dQ0Su/Id"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgHTMPz (ORCPT
+        id S1730280AbgHTMQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:15:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40800 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:16:20 -0400
+Received: from m12-13.163.com ([220.181.12.13]:55685 "EHLO m12-13.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730277AbgHTJ5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B68682067C;
-        Thu, 20 Aug 2020 09:57:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917427;
-        bh=MKw2zkMoNR52NXZ05/K5N9/DFpLHpLYLSmvRfyKtOcU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S/iCbZxjVyJfkrkoOehky7EPzM810w/fpb5yV2WZURX+Y1IGi2NjN+h5kJu4jPUKf
-         h3U5xIY+MbZjBPSrMSR1mR7hhMIls8r208Aoo2SrjsA5njpNa6DGuZcm7MrnhflVfZ
-         CyW2KBW8HevhQg3UB1iq4qCwXdQOlWtAMikgXSPc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 027/212] net: lan78xx: add missing endpoint sanity check
-Date:   Thu, 20 Aug 2020 11:20:00 +0200
-Message-Id: <20200820091603.715508712@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1730254AbgHTJ5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:06 -0400
+X-Greylist: delayed 6414 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 05:57:01 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=zh3BcAV+VPoSPllH0M
+        6u5wgwqBFhydicUtJNSNo6k0A=; b=dQ0Su/Id+ScorRnxqvOUNDmqEcCmvclewL
+        /iANzNAWCQ4TAWd6xynRfdGX5z6ffkRKPNed4JwHYD5TbbN5PtvGhLdfgakMQjO3
+        sRofhHp2Lga/xBF1aPLeGgq3JX/gYoqtP2RW96il4tUPqGuciX4+KgwsdQNoUW5x
+        ZvdRCwJ6g=
+Received: from localhost.localdomain (unknown [182.149.198.204])
+        by smtp9 (Coremail) with SMTP id DcCowAA3sygTLD5fhvmqCQ--.55333S4;
+        Thu, 20 Aug 2020 15:53:56 +0800 (CST)
+From:   Sheng Long Wang <china_shenglong@163.com>
+To:     johan@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jan.kiszka@siemens.com,
+        Wang Sheng Long <shenglong.wang.ext@siemens.com>
+Subject: [PATCH v3] usb-serial:cp210x: add support to software flow control
+Date:   Thu, 20 Aug 2020 15:52:40 +0800
+Message-Id: <20200820075240.13321-1-china_shenglong@163.com>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: DcCowAA3sygTLD5fhvmqCQ--.55333S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3JF45Jw18Jr45GFWftFyrZwb_yoW7ZFW7pF
+        W8trWfKF4DZF4fWa1rAF4Uu3sxuanaqry2yFy3G39I9a13Jr1fKF1Ika4Yvr1UArW7G345
+        Jrs8tayDur4qyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bY6pPUUUUU=
+X-Originating-IP: [182.149.198.204]
+X-CM-SenderInfo: xfkl0tpbvkv0xjor0wi6rwjhhfrp/1tbiNA+GslaD5MEDugABsH
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Wang Sheng Long <shenglong.wang.ext@siemens.com>
 
-[ Upstream commit 8d8e95fd6d69d774013f51e5f2ee10c6e6d1fc14 ]
+When data is transmitted between two serial ports,
+the phenomenon of data loss often occurs. The two kinds
+of flow control commonly used in serial communication
+are hardware flow control and software flow control.
 
-Add the missing endpoint sanity check to prevent a NULL-pointer
-dereference should a malicious device lack the expected endpoints.
+In serial communication, If you only use RX/TX/GND Pins, you
+can't do hardware flow. So we often used software flow control
+and prevent data loss. The user sets the software flow control
+through the application program, and the application program
+sets the software flow control mode for the serial port
+chip through the driver.
 
-Note that the driver has a broken endpoint-lookup helper,
-lan78xx_get_endpoints(), which can end up accepting interfaces in an
-altsetting without endpoints as long as *some* altsetting has a bulk-in
-and a bulk-out endpoint.
+For the cp210 serial port chip, its driver lacks the
+software flow control setting code, so the user cannot set
+the software flow control function through the application
+program. This adds the missing software flow control.
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Wang Sheng Long <shenglong.wang.ext@siemens.com>
+
+Changes in v3:
+-fixed code style, It mainly adjusts the code style acccording
+ to kernel specification.
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/serial/cp210x.c | 118 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 113 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 65e94dffaabc9..fd144a513e1fe 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -3392,6 +3392,11 @@ static int lan78xx_probe(struct usb_interface *intf,
- 		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+diff --git a/drivers/usb/serial/cp210x.c b/drivers/usb/serial/cp210x.c
+index e732949f65..c66a0e0fb9 100644
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -380,6 +380,9 @@ static struct usb_serial_driver * const serial_drivers[] = {
+ #define CP210X_PARTNUM_CP2102N_QFN20	0x22
+ #define CP210X_PARTNUM_UNKNOWN	0xFF
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
-+		ret = -ENODEV;
-+		goto out3;
++#define CP210X_VSTART	0x11
++#define CP210X_VSTOP	0x13
++
+ /* CP210X_GET_COMM_STATUS returns these 0x13 bytes */
+ struct cp210x_comm_status {
+ 	__le32   ulErrors;
+@@ -391,6 +394,15 @@ struct cp210x_comm_status {
+ 	u8       bReserved;
+ } __packed;
+ 
++struct cp210x_chars_response {
++	u8	eofchar;
++	u8	errochar;
++	u8	breakchar;
++	u8	eventchar;
++	u8	xonchar;
++	u8	xoffchar;
++} __packed;
++
+ /*
+  * CP210X_PURGE - 16 bits passed in wValue of USB request.
+  * SiLabs app note AN571 gives a strange description of the 4 bits:
+@@ -624,6 +636,45 @@ static int cp210x_read_vendor_block(struct usb_serial *serial, u8 type, u16 val,
+ 	return result;
+ }
+ 
++/*
++ * Read and Write Character Responses operate
++ * Register SET_CHARS/GET_CHATS
++ */
++static int cp210x_operate_chars_block(struct usb_serial_port *port,
++				u8 req, u8 type, void *buf, int bufsize)
++{
++	struct usb_serial *serial = port->serial;
++	struct cp210x_port_private *port_priv = usb_get_serial_port_data(port);
++	void *dmabuf;
++	int result;
++
++	dmabuf = kmemdup(buf, bufsize, GFP_KERNEL);
++	if (!dmabuf)
++		return -ENOMEM;
++
++	result = usb_control_msg(serial->dev,
++				usb_rcvctrlpipe(serial->dev, 0),
++				req, type, 0, port_priv->bInterfaceNumber,
++				dmabuf, bufsize, USB_CTRL_SET_TIMEOUT);
++
++	if (result == bufsize) {
++		if (type == REQTYPE_DEVICE_TO_HOST)
++			memcpy(buf, dmabuf, bufsize);
++
++		result = 0;
++	} else {
++		dev_err(&port->dev, "failed get req 0x%x size %d status: %d\n",
++			req, bufsize, result);
++		if (result >= 0)
++			result = -EIO;
++
 +	}
 +
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
- 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
++	kfree(dmabuf);
++
++	return result;
++}
++
+ /*
+  * Writes any 16-bit CP210X_ register (req) whose value is passed
+  * entirely in the wValue field of the USB request.
+@@ -1134,11 +1185,17 @@ static void cp210x_set_termios(struct tty_struct *tty,
+ 		struct usb_serial_port *port, struct ktermios *old_termios)
+ {
+ 	struct device *dev = &port->dev;
+-	unsigned int cflag, old_cflag;
++	struct cp210x_chars_response charsres;
++	struct cp210x_flow_ctl flow_ctl;
++	unsigned int cflag, old_cflag, iflag;
+ 	u16 bits;
++	int result;
++	u32 ctl_hs;
++	u32 flow_repl;
+ 
+ 	cflag = tty->termios.c_cflag;
+ 	old_cflag = old_termios->c_cflag;
++	iflag = tty->termios.c_iflag;
+ 
+ 	if (tty->termios.c_ospeed != old_termios->c_ospeed)
+ 		cp210x_change_speed(tty, port, old_termios);
+@@ -1212,10 +1269,6 @@ static void cp210x_set_termios(struct tty_struct *tty,
+ 	}
+ 
+ 	if ((cflag & CRTSCTS) != (old_cflag & CRTSCTS)) {
+-		struct cp210x_flow_ctl flow_ctl;
+-		u32 ctl_hs;
+-		u32 flow_repl;
+-
+ 		cp210x_read_reg_block(port, CP210X_GET_FLOW, &flow_ctl,
+ 				sizeof(flow_ctl));
+ 		ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
+@@ -1252,6 +1305,61 @@ static void cp210x_set_termios(struct tty_struct *tty,
+ 				sizeof(flow_ctl));
+ 	}
+ 
++	/*
++	 * Set Software  Flow  Control
++	 * Check the IXOFF/IXON status in the iflag component of the
++	 * termios structure.
++	 *
++	 */
++	if ((iflag & IXOFF) || (iflag & IXON)) {
++
++		result = cp210x_operate_chars_block(port,
++						CP210X_GET_CHARS,
++						REQTYPE_DEVICE_TO_HOST,
++						&charsres,
++						sizeof(charsres));
++
++		if (result < 0) {
++			dev_err(dev, "Read Characrter Responses failed\n");
++			return;
++		}
++		charsres.xonchar  = CP210X_VSTART;
++		charsres.xoffchar = CP210X_VSTOP;
++		result = cp210x_operate_chars_block(port,
++						CP210X_SET_CHARS,
++						REQTYPE_HOST_TO_INTERFACE,
++						&charsres,
++						sizeof(charsres));
++		if (result < 0) {
++			memset(&charsres, 0, sizeof(charsres));
++			dev_err(dev, "Write Characrter Responses failed\n");
++			return;
++		}
++
++		/*Set  Rx/Tx Flow Contrl  Flag in ulFlowReplace*/
++		cp210x_read_reg_block(port,
++					CP210X_GET_FLOW,
++					&flow_ctl,
++					sizeof(flow_ctl));
++
++		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
++
++		if (iflag & IXOFF)
++			flow_repl |= CP210X_SERIAL_AUTO_RECEIVE;
++		else
++			flow_repl &= ~CP210X_SERIAL_AUTO_RECEIVE;
++
++		if (iflag & IXON)
++			flow_repl |= CP210X_SERIAL_AUTO_TRANSMIT;
++		else
++			flow_repl &= ~CP210X_SERIAL_AUTO_TRANSMIT;
++
++		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
++		cp210x_write_reg_block(port,
++					CP210X_SET_FLOW,
++					&flow_ctl,
++					sizeof(flow_ctl));
++	}
+ }
+ 
+ static int cp210x_tiocmset(struct tty_struct *tty,
 -- 
-2.25.1
-
+2.17.1
 
 
