@@ -2,160 +2,98 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBFCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 212DC2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60898207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgHTHTu (ORCPT
+        id S1725925AbgHTHVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:19:50 -0400
-Received: from mga04.intel.com ([192.55.52.120]:43607 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgHTHTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:19:49 -0400
-IronPort-SDR: Vzq931gK2ewnWoaAweJboEguMUL+8yk5BfRZ1FEtCb+OUlLWm+GZpY4I+OEhsc5S+zGavFRNyG
- 2lxgtv2tj5Fw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152665982"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="152665982"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 00:19:49 -0700
-IronPort-SDR: lyN4M0Qq2OQ6VJSjwJE1ETmlpzh2W0VqsJxCkYjeJyl/JiSm94APIEXmRtX+QCya8XuUi9iESB
- 7GhMTbOVvtUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="337207228"
-Received: from lkp-server01.sh.intel.com (HELO d467096e982a) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 20 Aug 2020 00:19:47 -0700
-Received: from kbuild by d467096e982a with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8erS-00003J-UF; Thu, 20 Aug 2020 07:19:46 +0000
-Date:   Thu, 20 Aug 2020 15:19:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 5f4a1c4ea44728aa80be21dbf3a0469b5ca81d88
-Message-ID: <5f3e2402.BwUejQoCLVUZ5XMj%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 20 Aug 2020 03:21:16 -0400
+Received: from mail.netline.ch ([148.251.143.178]:42204 "EHLO
+        netline-mail3.netline.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgHTHVO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:21:14 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by netline-mail3.netline.ch (Postfix) with ESMTP id 9BE3A2A6042;
+        Thu, 20 Aug 2020 09:21:11 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at netline-mail3.netline.ch
+Received: from netline-mail3.netline.ch ([127.0.0.1])
+        by localhost (netline-mail3.netline.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with LMTP id mT6Tvc2NwglX; Thu, 20 Aug 2020 09:21:11 +0200 (CEST)
+Received: from thor (212.174.63.188.dynamic.wline.res.cust.swisscom.ch [188.63.174.212])
+        by netline-mail3.netline.ch (Postfix) with ESMTPSA id 0ADF22A6016;
+        Thu, 20 Aug 2020 09:21:09 +0200 (CEST)
+Received: from localhost ([::1])
+        by thor with esmtp (Exim 4.94)
+        (envelope-from <michel@daenzer.net>)
+        id 1k8esn-002Aez-Ao; Thu, 20 Aug 2020 09:21:09 +0200
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Sam Ravnborg <sam@ravnborg.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        mauro.chehab@huawei.com, Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        netdev@vger.kernel.org, Rongrong Zou <zourongrong@gmail.com>,
+        bpf@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org> <20200819174027.70b39ee9@coco.lan>
+ <20200819204800.GA110118@ravnborg.org>
+From:   =?UTF-8?Q?Michel_D=c3=a4nzer?= <michel@daenzer.net>
+Message-ID: <0ddfd309-46d8-b69b-d1c6-e22384b78070@daenzer.net>
+Date:   Thu, 20 Aug 2020 09:21:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200819204800.GA110118@ravnborg.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  sched/core
-branch HEAD: 5f4a1c4ea44728aa80be21dbf3a0469b5ca81d88  sched/topology: Mark SD_NUMA as SDF_NEEDS_GROUPS
+On 2020-08-19 10:48 p.m., Sam Ravnborg wrote:
+> Hi Mauro.
+> 
+> It seems my review comments failed to reach dri-devel - likely due to
+> the size of the mail.
 
-elapsed time: 787m
+Right, some e-mails in this thread went through the dri-devel moderation
+queue due to their sizes. This mail of yours did as well, because you
+didn't trim the quoted text (hint, hint).
 
-configs tested: 89
-configs skipped: 3
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                          pcm027_defconfig
-arm                        mvebu_v7_defconfig
-arm                          pxa168_defconfig
-powerpc                     skiroot_defconfig
-powerpc                     powernv_defconfig
-sh                         ap325rxa_defconfig
-arc                 nsimosci_hs_smp_defconfig
-microblaze                      mmu_defconfig
-arm                         vf610m4_defconfig
-arm                           h5000_defconfig
-mips                        nlm_xlp_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a005-20200818
-i386                 randconfig-a001-20200818
-i386                 randconfig-a006-20200818
-i386                 randconfig-a003-20200818
-i386                 randconfig-a004-20200818
-i386                 randconfig-a002-20200818
-i386                 randconfig-a002-20200820
-i386                 randconfig-a004-20200820
-i386                 randconfig-a005-20200820
-i386                 randconfig-a003-20200820
-i386                 randconfig-a006-20200820
-i386                 randconfig-a001-20200820
-x86_64               randconfig-a013-20200818
-x86_64               randconfig-a016-20200818
-x86_64               randconfig-a012-20200818
-x86_64               randconfig-a011-20200818
-x86_64               randconfig-a014-20200818
-x86_64               randconfig-a015-20200818
-x86_64               randconfig-a015-20200820
-x86_64               randconfig-a012-20200820
-x86_64               randconfig-a016-20200820
-x86_64               randconfig-a014-20200820
-x86_64               randconfig-a011-20200820
-x86_64               randconfig-a013-20200820
-i386                 randconfig-a016-20200818
-i386                 randconfig-a011-20200818
-i386                 randconfig-a015-20200818
-i386                 randconfig-a013-20200818
-i386                 randconfig-a012-20200818
-i386                 randconfig-a014-20200818
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-- 
+Earthling Michel Dänzer               |               https://redhat.com
+Libre software enthusiast             |             Mesa and X developer
