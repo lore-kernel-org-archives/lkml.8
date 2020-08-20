@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22183C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE39C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C3E207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A6D207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881931;
-	bh=8vKLAkZ6WxQt+UZuDbu0chFB9hMbtXM+qxhcHfoNxr4=;
+	s=default; t=1597881939;
+	bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=132v/4Ilvp3OyRrcmkiOvHspUBz186Nk++EWvMwiIcgbckzZaIz0dfiD4ljs6G7Sf
-	 tf3SEBWpy4q0O4rJkpx16s7MteQjEWaW14lJX1Y9Rg84iszeX7PCcPhhoj1B3Rdnc1
-	 bx6YzCDKOZWop2PbjQoXZhZ0V28FTO/S/kuOI5nE=
+	b=FNRKDuCqI+BIniWOtV8hkECuhvbAqEoJ7FhJH+OKTMyTLs/bplCwVDr0kQw61/JSe
+	 U4I+YjG/8rRaHtVpbcD0AU50Gv0yM8mxgiXDOFWrcr+qQGCmHsmo6eVar8SDee5QyR
+	 EJmZszXZYDthsecFB/dhjeKzWsFurSvQThOgGzBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgHTAED (ORCPT
+        id S1728553AbgHTAFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33582 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:05:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726841AbgHTADn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:43 -0400
+        id S1728397AbgHTAEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:04:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C584921741;
-        Thu, 20 Aug 2020 00:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE10822B40;
+        Thu, 20 Aug 2020 00:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881823;
-        bh=8vKLAkZ6WxQt+UZuDbu0chFB9hMbtXM+qxhcHfoNxr4=;
+        s=default; t=1597881841;
+        bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noPVAgm2EFL1zk2JP0Lz+d5x4rTXa/W5f/CafaaqRhfJuQ9OO3M+3DZ7GtAaAHhJX
-         SCHMHvHbhpTOvtICXd9qfpQHUhx9y6t34yb0UgzN1Um9XYhXrkjnEQJPbnuR5yPc3F
-         RkTS7dPTWfpbc+H4DRwDUxs4M7w09VAlnEmS0/5U=
+        b=l9XZjSe60iOvlYVnKPakrqqgBQ9scElwkYMusTjzMg5nWdym8jtxDnh4Fw4rPNH0H
+         HZbab7MZmpcK9+gO+S/cqGYwLGGwR6MhphshVDO4Uk8K6lTvshfSPNvQp+ZeA/2Zxr
+         lKFdG0lWMB6qqUF+o9hWunqA6SwKgF64RYecnT/w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Javed Hasan <jhasan@marvell.com>,
@@ -48,12 +48,12 @@ Cc:     Javed Hasan <jhasan@marvell.com>,
         Shyam Sundar <ssundar@marvell.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/13] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-Date:   Wed, 19 Aug 2020 20:03:25 -0400
-Message-Id: <20200820000328.215755-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 08/11] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Wed, 19 Aug 2020 20:03:45 -0400
+Message-Id: <20200820000348.215911-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000328.215755-1-sashal@kernel.org>
-References: <20200820000328.215755-1-sashal@kernel.org>
+In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
+References: <20200820000348.215911-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -85,11 +85,11 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 28b50ab2fbb01..62f83cc151b22 100644
+index 880a9068ca126..ef06af4e3611d 100644
 --- a/drivers/scsi/libfc/fc_disc.c
 +++ b/drivers/scsi/libfc/fc_disc.c
-@@ -605,8 +605,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 
+@@ -595,8 +595,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 	mutex_lock(&disc->disc_mutex);
  	if (PTR_ERR(fp) == -FC_EX_CLOSED)
  		goto out;
 -	if (IS_ERR(fp))
@@ -103,24 +103,24 @@ index 28b50ab2fbb01..62f83cc151b22 100644
  
  	cp = fc_frame_payload_get(fp, sizeof(*cp));
  	if (!cp)
-@@ -633,7 +637,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
  				new_rdata->disc_id = disc->disc_id;
- 				fc_rport_login(new_rdata);
+ 				lport->tt.rport_login(new_rdata);
  			}
 -			goto out;
 +			goto free_fp;
  		}
  		rdata->disc_id = disc->disc_id;
- 		mutex_unlock(&rdata->rp_mutex);
-@@ -650,6 +654,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 		lport->tt.rport_login(rdata);
+@@ -635,6 +639,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ redisc:
  		fc_disc_restart(disc);
- 		mutex_unlock(&disc->disc_mutex);
  	}
 +free_fp:
 +	fc_frame_free(fp);
  out:
- 	kref_put(&rdata->kref, fc_rport_destroy);
- 	if (!IS_ERR(fp))
+ 	mutex_unlock(&disc->disc_mutex);
+ 	kref_put(&rdata->kref, lport->tt.rport_destroy);
 -- 
 2.25.1
 
