@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ED8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD90FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93CB62078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76FC2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924237;
-	bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
+	s=default; t=1597924249;
+	bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=quuw1tUlet7aldixbbPZkodxMui3xftwDegLWqsR2VTIYNqb8UU53q/cRn+7HoK+u
-	 I4geRzda+wQMtnu2EPkS+6f4cZUA7TLJKA85Z0hLSurjI7M2zTRJJFlvfRa9YhcXCg
-	 7NcyHkLu9IohrB5uVxYX6oFaYoVB5/wPcduuIPqA=
+	b=zoTAV7aIJfd11cDpYb5p5gkA1G8VmCcfrZd5ZUANV8sTJ41k2DZK3SUjZ1OwTIyWW
+	 11za3hkvKb5fxnnJ370M9uzCcOen/oDr5op28yEAm0P/XAnC2UrPC/iWX/TTyKvsKX
+	 tet33rsFhA0AVefP9rxGHfdt49732BU7YINshgZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbgHTLub (ORCPT
+        id S1731008AbgHTLus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:50:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:50:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgHTKDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:17 -0400
+        id S1730597AbgHTKDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:03:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59C1B208E4;
-        Thu, 20 Aug 2020 10:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BB6320738;
+        Thu, 20 Aug 2020 10:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917796;
-        bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
+        s=default; t=1597917788;
+        bh=KtlD/dHbQX6e0yXtT9SBli8K4ds5ERxe2N5v+WXJC4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GDZpkHiFZI6xg0JnVPRMEhxUXWL/IMnJMW+fb5VzJ9s705FAmBTEy45oXx6ItUKvU
-         Kxc/Lm6iWBvAiEghnMEzOA45flAzYMRlYMXXE3wghhTgMQdAtWUMKT6SQq9QSSYmDv
-         LiUh7mPLj34eIuvEOuOZn1FsWGey6nMsLsfAAnBc=
+        b=jYCc+7Q6GKXMb1CovygOLeiPhCRo5t99QM5DL4xLkRbDIyrYQ1crnba/uzEvAxXtj
+         O8+KGuFjiXopOaXf13wJLY/sze8Cxu4UQU0mYQvYFIfhScprSUcRVH1OTDPR2uBDbi
+         eP1khIFkzsMzed71FAvPFvHsxk3sWE6X48WiQqEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 160/212] fs/minix: check return value of sb_getblk()
-Date:   Thu, 20 Aug 2020 11:22:13 +0200
-Message-Id: <20200820091610.482578393@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.9 158/212] crypto: qat - fix double free in qat_uclo_create_batch_init_list
+Date:   Thu, 20 Aug 2020 11:22:11 +0200
+Message-Id: <20200820091610.379571401@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -64,78 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Tom Rix <trix@redhat.com>
 
-commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
+commit c06c76602e03bde24ee69a2022a829127e504202 upstream.
 
-Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
+clang static analysis flags this error
 
-This series fixes all syzbot bugs in the minix filesystem:
+qat_uclo.c:297:3: warning: Attempt to free released memory
+  [unix.Malloc]
+                kfree(*init_tab_base);
+                ^~~~~~~~~~~~~~~~~~~~~
 
-	KASAN: null-ptr-deref Write in get_block
-	KASAN: use-after-free Write in get_block
-	KASAN: use-after-free Read in get_block
-	WARNING in inc_nlink
-	KMSAN: uninit-value in get_block
-	WARNING in drop_nlink
+When input *init_tab_base is null, the function allocates memory for
+the head of the list.  When there is problem allocating other list
+elements the list is unwound and freed.  Then a check is made if the
+list head was allocated and is also freed.
 
-It also fixes the minix filesystem to set s_maxbytes correctly, so that
-userspace sees the correct behavior when exceeding the max file size.
+Keeping track of the what may need to be freed is the variable 'tail_old'.
+The unwinding/freeing block is
 
-This patch (of 6):
+	while (tail_old) {
+		mem_init = tail_old->next;
+		kfree(tail_old);
+		tail_old = mem_init;
+	}
 
-sb_getblk() can fail, so check its return value.
+The problem is that the first element of tail_old is also what was
+allocated for the list head
 
-This fixes a NULL pointer dereference.
+		init_header = kzalloc(sizeof(*init_header), GFP_KERNEL);
+		...
+		*init_tab_base = init_header;
+		flag = 1;
+	}
+	tail_old = init_header;
 
-Originally from Qiujun Huang.
+So *init_tab_base/init_header are freed twice.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+There is another problem.
+When the input *init_tab_base is non null the tail_old is calculated by
+traveling down the list to first non null entry.
+
+	tail_old = init_header;
+	while (tail_old->next)
+		tail_old = tail_old->next;
+
+When the unwinding free happens, the last entry of the input list will
+be freed.
+
+So the freeing needs a general changed.
+If locally allocated the first element of tail_old is freed, else it
+is skipped.  As a bit of cleanup, reset *init_tab_base if it came in
+as null.
+
+Fixes: b4b7e67c917f ("crypto: qat - Intel(R) QAT ucode part of fw loader")
 Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/itree_common.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/crypto/qat/qat_common/qat_uclo.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -74,6 +74,7 @@ static int alloc_branch(struct inode *in
- 	int n = 0;
- 	int i;
- 	int parent = minix_new_block(inode);
-+	int err = -ENOSPC;
- 
- 	branch[0].key = cpu_to_block(parent);
- 	if (parent) for (n = 1; n < num; n++) {
-@@ -84,6 +85,11 @@ static int alloc_branch(struct inode *in
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, nr);
-+			err = -ENOMEM;
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
-@@ -102,7 +108,7 @@ static int alloc_branch(struct inode *in
- 		bforget(branch[i].bh);
- 	for (i = 0; i < n; i++)
- 		minix_free_block(inode, block_to_cpu(branch[i].key));
--	return -ENOSPC;
-+	return err;
+--- a/drivers/crypto/qat/qat_common/qat_uclo.c
++++ b/drivers/crypto/qat/qat_common/qat_uclo.c
+@@ -332,13 +332,18 @@ static int qat_uclo_create_batch_init_li
+ 	}
+ 	return 0;
+ out_err:
++	/* Do not free the list head unless we allocated it. */
++	tail_old = tail_old->next;
++	if (flag) {
++		kfree(*init_tab_base);
++		*init_tab_base = NULL;
++	}
++
+ 	while (tail_old) {
+ 		mem_init = tail_old->next;
+ 		kfree(tail_old);
+ 		tail_old = mem_init;
+ 	}
+-	if (flag)
+-		kfree(*init_tab_base);
+ 	return -ENOMEM;
  }
  
- static inline int splice_branch(struct inode *inode,
 
 
