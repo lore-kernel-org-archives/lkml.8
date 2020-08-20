@@ -2,122 +2,118 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05CFAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1762204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05D30204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597927840;
+	bh=EIgqOuqjx6hxxb++cuTMR5Swu+gKbpESkR9jw59FFbg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=evGipJTw8A7ulzFJmpS22AHlGlLu1AzeCNCtIfPCT8NvlZV7vPqYvLJaAdYICb7Cz
+	 miBnUr+IdxYstDh5HqY4yFK9iRZrX88DiSLT0eIZJw9edEBpjslWONjeuhYyRZHasO
+	 ZgK3P+4OyA5AMhQy91JlO8jjdax2l+7KXZf4G4/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730003AbgHTMuZ (ORCPT
+        id S1729754AbgHTMuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:50:25 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:40948 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728152AbgHTMt1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:49:27 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k8k0I-00Adm1-K2; Thu, 20 Aug 2020 06:49:14 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1k8k0H-0004wa-Os; Thu, 20 Aug 2020 06:49:14 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
-        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <20200820002053.1424000-1-surenb@google.com>
-        <87zh6pxzq6.fsf@x220.int.ebiederm.org>
-        <20200820124241.GJ5033@dhcp22.suse.cz>
-Date:   Thu, 20 Aug 2020 07:45:37 -0500
-In-Reply-To: <20200820124241.GJ5033@dhcp22.suse.cz> (Michal Hocko's message of
-        "Thu, 20 Aug 2020 14:42:41 +0200")
-Message-ID: <87lfi9xz7y.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 20 Aug 2020 08:50:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728644AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E78C420724;
+        Thu, 20 Aug 2020 09:44:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916648;
+        bh=EIgqOuqjx6hxxb++cuTMR5Swu+gKbpESkR9jw59FFbg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Da55pZk7YSvcEsGoFl/CDl8LzyXmbr07/0wPspsR/iQrhF/BjkR57MBibII2zDxJt
+         9//UT+BXVXJkwpOENtNde8FfMAL7DZWrn5WUrZVm3THMIsZ7K+TWwlIp4LbLMMSYlX
+         AVIG8gYhBv4oKiKF+jgTS8L6T54ZllJahI09Xn88=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
+        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
+        Eryk Brol <eryk.brol@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.7 203/204] drm/amd/display: Fix dmesg warning from setting abm level
+Date:   Thu, 20 Aug 2020 11:21:40 +0200
+Message-Id: <20200820091616.320085317@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1k8k0H-0004wa-Os;;;mid=<87lfi9xz7y.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+DAdP7WXJ3+fqaabHe/txON167hJBjJH8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in __set_oom_adj when not necessary
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@suse.com> writes:
+From: Stylon Wang <stylon.wang@amd.com>
 
-> On Thu 20-08-20 07:34:41, Eric W. Biederman wrote:
->> Suren Baghdasaryan <surenb@google.com> writes:
->> 
->> > Currently __set_oom_adj loops through all processes in the system to
->> > keep oom_score_adj and oom_score_adj_min in sync between processes
->> > sharing their mm. This is done for any task with more that one mm_users,
->> > which includes processes with multiple threads (sharing mm and signals).
->> > However for such processes the loop is unnecessary because their signal
->> > structure is shared as well.
->> > Android updates oom_score_adj whenever a tasks changes its role
->> > (background/foreground/...) or binds to/unbinds from a service, making
->> > it more/less important. Such operation can happen frequently.
->> > We noticed that updates to oom_score_adj became more expensive and after
->> > further investigation found out that the patch mentioned in "Fixes"
->> > introduced a regression. Using Pixel 4 with a typical Android workload,
->> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
->> > this regression linearly depends on the number of multi-threaded
->> > processes running on the system.
->> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
->> > CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
->> > instead of mm_users to decide whether oom_score_adj update should be
->> > synchronized between multiple processes. To prevent races between clone()
->> > and __set_oom_adj(), when oom_score_adj of the process being cloned might
->> > be modified from userspace, we use oom_adj_mutex. Its scope is changed to
->> > global and it is renamed into oom_adj_lock for naming consistency with
->> > oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
->> > used the additional mutex lock in that path of the clone() syscall should
->> > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
->> > (when the last process sharing the mm exits) is left out of this patch to
->> > keep it simple and because it is believed that this threading model is
->> > rare. Should there ever be a need for optimizing that case as well, it
->> > can be done by hooking into the exit path, likely following the
->> > mm_update_next_owner pattern.
->> > With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
->> > regression is gone after the change is applied.
->> 
->> So I am confused.
->> 
->> Is there any reason why we don't simply move signal->oom_score_adj to
->> mm->oom_score_adj and call it a day?
->
-> Yes. Please read through 44a70adec910 ("mm, oom_adj: make sure processes
-> sharing mm have same view of oom_score_adj")
+commit c5892a10218214d729699ab61bad6fc109baf0ce upstream.
 
-That explains why the scores are synchronized.
+[Why]
+Setting abm level does not correctly update CRTC state. As a result
+no surface update is added to dc stream state and triggers warning.
 
-It doesn't explain why we don't do the much simpler thing and move
-oom_score_adj from signal_struct to mm_struct. Which is my question.
+[How]
+Correctly update CRTC state when setting abm level property.
 
-Why not put the score where we need it to ensure that the oom score
-is always synchronized?  AKA on the mm_struct, not the signal_struct.
+CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Stylon Wang <stylon.wang@amd.com>
+Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
+Acked-by: Eryk Brol <eryk.brol@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Eric
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -8458,6 +8458,29 @@ static int amdgpu_dm_atomic_check(struct
+ 		if (ret)
+ 			goto fail;
+ 
++	/* Check connector changes */
++	for_each_oldnew_connector_in_state(state, connector, old_con_state, new_con_state, i) {
++		struct dm_connector_state *dm_old_con_state = to_dm_connector_state(old_con_state);
++		struct dm_connector_state *dm_new_con_state = to_dm_connector_state(new_con_state);
++
++		/* Skip connectors that are disabled or part of modeset already. */
++		if (!old_con_state->crtc && !new_con_state->crtc)
++			continue;
++
++		if (!new_con_state->crtc)
++			continue;
++
++		new_crtc_state = drm_atomic_get_crtc_state(state, new_con_state->crtc);
++		if (IS_ERR(new_crtc_state)) {
++			ret = PTR_ERR(new_crtc_state);
++			goto fail;
++		}
++
++		if (dm_old_con_state->abm_level !=
++		    dm_new_con_state->abm_level)
++			new_crtc_state->connectors_changed = true;
++	}
++
+ #if defined(CONFIG_DRM_AMD_DC_DCN)
+ 		if (!compute_mst_dsc_configs_for_state(state, dm_state->context))
+ 			goto fail;
+
 
