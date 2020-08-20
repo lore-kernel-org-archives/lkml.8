@@ -2,103 +2,110 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B332C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0641E20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMcUsxYz"
+	by mail.kernel.org (Postfix) with ESMTP id 2218320885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:48:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgHTRry (ORCPT
+        id S1727078AbgHTRss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:47:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726745AbgHTRrr (ORCPT
+        Thu, 20 Aug 2020 13:48:48 -0400
+Received: from smtprelay0106.hostedemail.com ([216.40.44.106]:45654 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726723AbgHTRsp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:47:47 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70020C061385;
-        Thu, 20 Aug 2020 10:47:46 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r2so2873943wrs.8;
-        Thu, 20 Aug 2020 10:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fk/SGva3wWZfGU3gf3Sv9kCw+jo4I9saj87ClFJhRJ0=;
-        b=RMcUsxYzOS4wFYyb+sWGcbhU9tt8IJhVvuIa4+Bj1Y2fea3W4oYsGhz+07/yqcxNLR
-         Bw1RXCUlpPzSxnWU7EtjR3lxTEbIVczNiMOBhHWK6AZugnwZJgzZwSigTbg5wPD5fyD4
-         k492vxOqhMsjEoJn8HdEJ9T51FGjlhREqERbvyNstUWj5nVevQ4oEzt7r7MKyxzNzipU
-         Z0f1fmO8UZFBgrVAEhTwndhP0VTyEJnRYM5U9b09Rk31ZnSt/2rZmMmrtDhI2CmlYdUO
-         hx73sCmneCp8f9q6BN5JObY7TmMGOB4slNQFzBFqeMtOL+aN60HwfLCYa5W1evV1xlZ1
-         OB1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fk/SGva3wWZfGU3gf3Sv9kCw+jo4I9saj87ClFJhRJ0=;
-        b=JtJ0YftLEZ3C1gmC6eCjvKareNrQlYhK7F3vgIADRBVJRvxepquWFYy7H/dkEBz2Vs
-         q+6tBd3KrtqTdK52TIigfw6WMpQ2Vok50symQwfdzfaSb6Ux2CAW1a9JE08+fDcOt48x
-         jolFCMlBPxXntEIopFH0UEh2XRX4aiHTCN5yF9ykgyZ/7nUHd4PT0pKw8HCVjSIsgYtO
-         fKOG9PDdqUQQbwNI0Nb3zMgUEGx28Kp4n4h8f9//FX+jmxKHy/DkyXk2CHMoEi5DAv9C
-         yDlSh83gJt1FN8WteeFSgGhaFRvhhnbADgSf6nBwXPuJCFvBgfeeuOruc9U/+28OyAt4
-         G/RQ==
-X-Gm-Message-State: AOAM530kBu+tO5wqWyt1BZuHH7fYOPeyKQolsj6A+QQ3ITDy4KuQygFy
-        lAG6JtnOLA/AQGqdiTcciVQ=
-X-Google-Smtp-Source: ABdhPJyOIFHOMkHKNMf3DG9SR12YnxRsY6B5NKFQmWsKkCYTchqUz4CTtGemsf1taqGwR7fE/V8Lcg==
-X-Received: by 2002:a5d:6541:: with SMTP id z1mr4063117wrv.320.1597945665131;
-        Thu, 20 Aug 2020 10:47:45 -0700 (PDT)
-Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
-        by smtp.gmail.com with ESMTPSA id b123sm5373801wme.20.2020.08.20.10.47.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 10:47:44 -0700 (PDT)
-From:   Alex Dewar <alex.dewar90@gmail.com>
-To:     Ariel Elior <aelior@marvell.com>, GR-everest-linux-l2@marvell.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Alex Dewar <alex.dewar90@gmail.com>
-Subject: [PATCH] net: qed: Remove unnecessary cast
-Date:   Thu, 20 Aug 2020 18:47:25 +0100
-Message-Id: <20200820174725.823353-1-alex.dewar90@gmail.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 20 Aug 2020 13:48:45 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay06.hostedemail.com (Postfix) with ESMTP id DBFAA1800B86B;
+        Thu, 20 Aug 2020 17:48:42 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: name45_221863b27032
+X-Filterd-Recvd-Size: 2754
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 20 Aug 2020 17:48:41 +0000 (UTC)
+Message-ID: <472f2e553805b52d9834d64e4056db965edee329.camel@perches.com>
+Subject: Re: [RFC PATCH 2/5] sysrq: use pr_cont_t for cont messages
+From:   Joe Perches <joe@perches.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        John Ogness <john.ogness@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Aug 2020 10:48:40 -0700
+In-Reply-To: <CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+         <20200819232632.13418-3-john.ogness@linutronix.de>
+         <CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In qed_rdma_destroy_cq() the result of dma_alloc_coherent() is cast from
-void* unnecessarily. Remove cast.
+On Wed, 2020-08-19 at 18:03 -0700, Linus Torvalds wrote:
+> On Wed, Aug 19, 2020 at 4:26 PM John Ogness <john.ogness@linutronix.de> wrote:
+> > Use the new pr_cont_t mechanism.
+> 
+> This looks actively much worse than the old code.
 
-Issue identified with Coccinelle.
+Isn't this just a generic mechanism to simplify
+the accumulation of
+logging message chunks?
 
-Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+It does seem straightforward enough to me.
+
+And here it seems like the 'for (j =...)' loop is superfluous.
+
+Maybe something like this would be reasonable:
 ---
- drivers/net/ethernet/qlogic/qed/qed_rdma.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/tty/sysrq.c | 19 ++++++-------------
+ 1 file changed, 6 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index a4bcde522cdf..4394a4d77224 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -1151,7 +1151,6 @@ qed_rdma_destroy_cq(void *rdma_cxt,
- 	DP_VERBOSE(p_hwfn, QED_MSG_RDMA, "icid = %08x\n", in_params->icid);
- 
- 	p_ramrod_res =
--	    (struct rdma_destroy_cq_output_params *)
- 	    dma_alloc_coherent(&p_hwfn->cdev->pdev->dev,
- 			       sizeof(struct rdma_destroy_cq_output_params),
- 			       &ramrod_res_phys, GFP_KERNEL);
--- 
-2.28.0
+diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+index a8e39b2cdd55..a145e4fc1a2a 100644
+--- a/drivers/tty/sysrq.c
++++ b/drivers/tty/sysrq.c
+@@ -572,21 +572,14 @@ void __handle_sysrq(int key, bool check_mask)
+ 			console_loglevel = orig_log_level;
+ 		}
+ 	} else {
+-		pr_info("HELP : ");
+-		/* Only print the help msg once per handler */
++		pr_context c;
++		pr_info_start(&c, "HELP :");
+ 		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
+-			if (sysrq_key_table[i]) {
+-				int j;
+-
+-				for (j = 0; sysrq_key_table[i] !=
+-						sysrq_key_table[j]; j++)
+-					;
+-				if (j != i)
+-					continue;
+-				pr_cont("%s ", sysrq_key_table[i]->help_msg);
+-			}
++			if (!sysrq_key_table[i])
++				continue;
++			pr_next(&c, " %s", sysrq_key_table[i]->help_msg);
+ 		}
+-		pr_cont("\n");
++		pr_end(&c, "\n");
+ 		console_loglevel = orig_log_level;
+ 	}
+ 	rcu_read_unlock();
+
 
