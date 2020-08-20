@@ -2,137 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEFBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B32AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9E722075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="DCpO1J0q"
+	by mail.kernel.org (Postfix) with ESMTP id 2F9F0206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgHTTGN (ORCPT
+        id S1727811AbgHTTSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:06:13 -0400
-Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:57632 "EHLO
-        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726772AbgHTTGJ (ORCPT
+        Thu, 20 Aug 2020 15:18:45 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34726 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbgHTTSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 15:06:09 -0400
-X-Greylist: delayed 3036 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 15:06:09 EDT
-Received: from pps.filterd (m0122332.ppops.net [127.0.0.1])
-        by mx0a-00190b01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KID7hr012646;
-        Thu, 20 Aug 2020 19:13:30 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=jan2016.eng;
- bh=2H2U0bUzfzUQI2EwcnLmDOGu7A2f0Nk6jcVUHu0KIR4=;
- b=DCpO1J0qltxZE6OUrYuqD2jB8y5SuEslvWabCZf70G2oVyGZeMlv5qLAqH1wcxw0K4J/
- VaEwr5mXYAgP7eXdJbbNHV4bOJ/s+wsd02Qg6RN5rF/Jiajd84NDq7Oz72bk2vLF5HDg
- Y8PvRHRGKGFBsh3R4Eo1SN9ju8quTfh3CFtd74PbR8NsKcDH69pRJQZqdoc9vT02o74n
- 2f/m3RR8hLqJR/DmFWvQVEs9KJZy7qcf0FAmVSMGkV+AUV0E++6xLl+WSInzMp/Ql/RL
- ujoeOHYdHylLF2IB9r+kHlprLyr4EgvaNUFASc3n+R3kAMw6wsh1in8VriB1fmV1V82q nw== 
-Received: from prod-mail-ppoint8 (a72-247-45-34.deploy.static.akamaitechnologies.com [72.247.45.34] (may be forged))
-        by mx0a-00190b01.pphosted.com with ESMTP id 331cy2tkr6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 19:13:30 +0100
-Received: from pps.filterd (prod-mail-ppoint8.akamai.com [127.0.0.1])
-        by prod-mail-ppoint8.akamai.com (8.16.0.42/8.16.0.42) with SMTP id 07KI5SRP005048;
-        Thu, 20 Aug 2020 14:13:29 -0400
-Received: from prod-mail-relay19.dfw02.corp.akamai.com ([172.27.165.173])
-        by prod-mail-ppoint8.akamai.com with ESMTP id 32xb1yke91-1;
-        Thu, 20 Aug 2020 14:13:29 -0400
-Received: from [0.0.0.0] (prod-ssh-gw01.bos01.corp.akamai.com [172.27.119.138])
-        by prod-mail-relay19.dfw02.corp.akamai.com (Postfix) with ESMTP id AE0D26015C;
-        Thu, 20 Aug 2020 18:13:27 +0000 (GMT)
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Jike Song <albcamus@gmail.com>
-Cc:     Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        kehuan.feng@gmail.com
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com>
- <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com>
- <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
- <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
-From:   Josh Hunt <johunt@akamai.com>
-Message-ID: <74921739-d344-38eb-aa19-c078783b6328@akamai.com>
-Date:   Thu, 20 Aug 2020 11:13:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 15:18:44 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id A797C29AC9B;
+        Thu, 20 Aug 2020 20:18:42 +0100 (BST)
+Date:   Thu, 20 Aug 2020 21:18:39 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "vitor.soares@synopsys.com" <vitor.soares@synopsys.com>,
+        Przemyslaw Gaj <pgaj@cadence.com>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Milind Parab <mparab@cadence.com>,
+        "praneeth@ti.com" <praneeth@ti.com>
+Subject: Re: [PATCH v3] i3c: master: fix for SETDASA and DAA process
+Message-ID: <20200820211839.54a42cf6@collabora.com>
+In-Reply-To: <20200820210311.5934fc2a@collabora.com>
+References: <1597930706-15744-1-git-send-email-pthombar@cadence.com>
+        <20200820164820.4fec97b3@collabora.com>
+        <DM5PR07MB3196085F8628478E7E2F5FC8C15A0@DM5PR07MB3196.namprd07.prod.outlook.com>
+        <20200820210311.5934fc2a@collabora.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=0
- mlxscore=0 spamscore=0 mlxlogscore=907 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200146
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 adultscore=0 impostorscore=0 mlxlogscore=769
- clxscore=1011 bulkscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jike
+On Thu, 20 Aug 2020 21:03:11 +0200
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-On 8/20/20 12:43 AM, Jike Song wrote:
-> Hi Josh,
+> On Thu, 20 Aug 2020 18:16:14 +0000
+> Parshuram Raju Thombare <pthombar@cadence.com> wrote:
 > 
+> > >Hm, not sure that qualifies as a fix. The current implementation was
+> > >correct, it was just reserving a slot in the device table for devices
+> > >that didn't have an init address or on which SETDASA failed.    
+> > If I3C controllers like ours use hardware slots to store slave devices info, 
+> > due to limited available slots this can cause issue. 
+> >  If some slots are lost due to
+> > 1. only init_dyn_addr and no static_addr in DT 
+> > OR
+> > 2. SETDASA failed  
 > 
-> We met possibly the same problem when testing nvidia/mellanox's
-> GPUDirect RDMA product, we found that changing NET_SCH_DEFAULT to
-> DEFAULT_FQ_CODEL mitigated the problem, having no idea why. Maybe you
-> can also have a try?
-
-We also did something similar where we've switched over to using the fq 
-scheduler everywhere for now. We believe the bug is in the nolock code 
-which only pfifo_fast uses atm, but we've been unable to come up with a 
-satisfactory solution.
-
+> Well, having a slot with a static address is valid, though I agree
+> it's not really useful.
 > 
-> Besides, our testing is pretty complex, do you have a quick test to
-> reproduce it?
+> > at the end of DAA some devices may be left without dyn_addr allocated from master
+> > and hence can't work properly.  
 > 
+> My point is, there's no address or device slot leak, it's just that
+> reserving a slot for I3C devices that only have a static address is
+> kind of useless. But let's be honest, given the number of I3C devices
+> available out there, I don't think it will hurt us before quite some
+> time :P. That's not to say we shouldn't address that, I just don't
+> think it deserves a Fixes tag.
+> 
+> > I think during our discussion we recognized this change as a bug.  
+> 
+> IIRC, I was talking about the first patch in the series.
+> 
+> > That is the reason I added fixes tag, but if you think otherwise I can remove this tag.
+> >    
+> > >> -static void i3c_master_pre_assign_dyn_addr(struct i3c_dev_desc *dev)
+> > >> +static int i3c_master_pre_assign_dyn_addr(struct i3c_master_controller    
+> > >That function now does more than just assigning a dynamic address: it
+> > >also creates the i3c_dev_desc. It should be renamed accordingly
+> > >(i3c_master_early_i3c_dev_add() maybe).    
+> > Ok
+> >   
+> > >You should reserve the address before calling
+> > >i3c_master_pre_assign_dyn_addr():
+> > >
+> > >		/*
+> > >		 * We don't attach devices which are not addressable
+> > >		 * (no static_addr and dyn_addr) and devices with
+> > >		 * static_addr but no init_dyn_addr will participate in DAA.
+> > >		 */
+> > >		if (!i3cboardinfo->init_dyn_addr ||
+> > >		    !i3cboardinfo->static_addr)
+> > >			continue;    
+> > Don't we want to cover the case when only init_dyn_addr is present ?  
+> 
+> Uh, yes, my bad.
+> 
+> > I am not sure if we can't have init_dyn_addr without static_addr.  
+> 
+> You can, when you want to assign a specific dynamic address to a device
+> that doesn't have a static address (see the 'try to assign init_addr
+> dance' in i3c_dev_add()).
+> 
+> > May be what we need is 
+> > 		if (!i3cboardinfo->init_dyn_addr)
+> > 			continue;
+> > 
+> > 		ret = i3c_bus_get_addr_slot_status(&master->bus,
+> > 						   i3cboardinfo->init_dyn_addr);
+> > 		if (ret != I3C_ADDR_SLOT_FREE) {
+> > 			ret = -EBUSY;
+> > 			goto err_rstdaa;
+> > 		}
+> > 
+> > 		i3c_bus_set_addr_slot_status(&master->bus,
+> > 					     i3cboardinfo->init_dyn_addr,
+> > 					     I3C_ADDR_SLOT_I3C_DEV);
+> > 
+> > 		if (i3cboardinfo->static_addr)
+> > 			i3c_master_pre_assign_dyn_addr(master, i3cboardinfo);  
+> 
+> Yep, that's correct.
+> 
+> > IMHO this is functionally same to what I sent. Just that init_dyn_addr is reserved before,
+> > and we leverage the change in reattach to bypass failure due to second attempt
+> > to get init_dyn_addr in reattach called from i3c_master_pre_assign_dyn_addr().  
+> 
+> Unless I'm missing something, your solution didn't reserve the
+> init address when there's no static address, and we definitely want
+> that to happen, otherwise another device might steal it during DAA.
 
-Unfortunately we don't have a simple test case either. Our current 
-reproducer is complex as well, although it would seem like we should be 
-able to come up with something where you have maybe 2 threads trying to 
-send on the same tx queue running pfifo_fast every few hundred 
-milliseconds and not much else/no other tx traffic on that queue. IIRC 
-we believe the scenario is when one thread is in the process of 
-dequeuing a packet while another is enqueuing, the enqueue-er (word? :)) 
-sees the dequeue is in progress and so does not xmit the packet assuming 
-the dequeue operation will take care of it. However b/c the dequeue is 
-in the process of completing it doesn't and the newly enqueued packet 
-stays in the qdisc until another packet is enqueued pushing both out.
-
-Given that we have a workaround with using fq or any other qdisc not 
-named pfifo_fast this has gotten bumped down in priority for us. I would 
-like to work on a reproducer at some point, but won't likely be for a 
-few weeks :(
-
-Josh
+My bad, it did. This being said, I find it much easier to follow when
+the reservation happens in one place, so I'm still in favor of the new
+version.
