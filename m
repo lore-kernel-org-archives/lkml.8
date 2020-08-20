@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9BAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61423C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A11AE207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EAD2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916127;
-	bh=JmvoH12REXjL9EBO/7KCFCSOXI0pWy/npFzouLzuJbQ=;
+	s=default; t=1597916135;
+	bh=MgDLou4NXDVSrSWRd/UD2JVn5Kkx3PWf5+imuE7k5Pg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UuCcz1gy/iP8xMi0xH1QwNdDXbcDrE4wLhEwlDaW+d9dRotciKfPCDsueuAPLUA8A
-	 nhZCS7O22e2L8WR2dn1+q/LLkb+LBe8FJGFtExOBHwEWsyzEJXoeJe22cv5FkW0nhD
-	 QXlZ7pVF49k693FV/UDpy2K6B8Ozbyxw+/cikgJE=
+	b=bGlPspMO9t0k6wkqk2i4jZIWGngd8gVB513rQHjVHnumj4JG3wLzHalb3i17JxzJf
+	 buu+MTEHuBXbucr8vuSRtiXBksgW0qW031a/6RHrneUwcDugDMTJPRVbY+eoblhGQf
+	 WaHeXZEiNhU8kc1YItXuBIYMTlNSLNcaTkNPG4jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgHTJfZ (ORCPT
+        id S1728306AbgHTJfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:35:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47290 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:35:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728341AbgHTJeX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:23 -0400
+        id S1728510AbgHTJfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:35:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84C4222B3F;
-        Thu, 20 Aug 2020 09:34:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9482920724;
+        Thu, 20 Aug 2020 09:35:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916063;
-        bh=JmvoH12REXjL9EBO/7KCFCSOXI0pWy/npFzouLzuJbQ=;
+        s=default; t=1597916119;
+        bh=MgDLou4NXDVSrSWRd/UD2JVn5Kkx3PWf5+imuE7k5Pg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Bptu01YFBhu4anD7ZF6DtuJwO+WYNJbU+pbi9bdoc11WkioiNjEH7z8NxiMFY3Tn
-         aCk4K5ThN+bWDVhtyZMwFV9mgPQFa2gKmXYXlyDhsfj88OaTbuXZsKDpA/37y7FDyw
-         u0BTm1z3H+2v2sRSp1EN3nentQXaSjRBNO6zdFwE=
+        b=A2mL/QEZV31GgfKX6olrBp+vV0af6e8e4PmhtjRoeqMsxYRWtNTUUhbZqXLbn0cxV
+         7puwNrrVWW1jezzefSavjWI1GKfIToANQX3jSsYvDb+ZdQuJ0hWsFQKVgYinP2AjEY
+         bJs7jzwpLw3oRRSsxLqneqMX77YoGdqsnv9lU4UY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Eryk Brol <eryk.brol@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.8 231/232] drm/amd/display: Fix dmesg warning from setting abm level
-Date:   Thu, 20 Aug 2020 11:21:22 +0200
-Message-Id: <20200820091623.965829893@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 018/204] btrfs: dont traverse into the seed devices in show_devname
+Date:   Thu, 20 Aug 2020 11:18:35 +0200
+Message-Id: <20200820091607.157635711@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,59 +61,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stylon Wang <stylon.wang@amd.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit c5892a10218214d729699ab61bad6fc109baf0ce upstream.
+commit 4faf55b03823e96c44dc4e364520000ed3b12fdb upstream.
 
-[Why]
-Setting abm level does not correctly update CRTC state. As a result
-no surface update is added to dc stream state and triggers warning.
+->show_devname currently shows the lowest devid in the list. As the seed
+devices have the lowest devid in the sprouted filesystem, the userland
+tool such as findmnt end up seeing seed device instead of the device from
+the read-writable sprouted filesystem. As shown below.
 
-[How]
-Correctly update CRTC state when setting abm level property.
+ mount /dev/sda /btrfs
+ mount: /btrfs: WARNING: device write-protected, mounted read-only.
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Stylon Wang <stylon.wang@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Eryk Brol <eryk.brol@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+
+ btrfs dev add -f /dev/sdb /btrfs
+
+ umount /btrfs
+ mount /dev/sdb /btrfs
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+
+All sprouts from a single seed will show the same seed device and the
+same fsid. That's confusing.
+This is causing problems in our prototype as there isn't any reference
+to the sprout file-system(s) which is being used for actual read and
+write.
+
+This was added in the patch which implemented the show_devname in btrfs
+commit 9c5085c14798 ("Btrfs: implement ->show_devname").
+I tried to look for any particular reason that we need to show the seed
+device, there isn't any.
+
+So instead, do not traverse through the seed devices, just show the
+lowest devid in the sprouted fsid.
+
+After the patch:
+
+ mount /dev/sda /btrfs
+ mount: /btrfs: WARNING: device write-protected, mounted read-only.
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+
+ btrfs dev add -f /dev/sdb /btrfs
+ mount -o rw,remount /dev/sdb /btrfs
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sdb /btrfs 595ca0e6-b82e-46b5-b9e2-c72a6928be48
+
+ mount /dev/sda /btrfs1
+ mount: /btrfs1: WARNING: device write-protected, mounted read-only.
+
+ btrfs dev add -f /dev/sdc /btrfs1
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs1
+ SOURCE   TARGET  UUID
+ /dev/sdc /btrfs1 ca1dbb7a-8446-4f95-853c-a20f3f82bdbb
+
+ cat /proc/self/mounts | grep btrfs
+ /dev/sdb /btrfs btrfs rw,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
+ /dev/sdc /btrfs1 btrfs ro,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
+
+Reported-by: Martin K. Petersen <martin.petersen@oracle.com>
+CC: stable@vger.kernel.org # 4.19+
+Tested-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ fs/btrfs/super.c |   21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -8686,6 +8686,29 @@ static int amdgpu_dm_atomic_check(struct
- 		if (ret)
- 			goto fail;
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2294,9 +2294,7 @@ static int btrfs_unfreeze(struct super_b
+ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(root->d_sb);
+-	struct btrfs_fs_devices *cur_devices;
+ 	struct btrfs_device *dev, *first_dev = NULL;
+-	struct list_head *head;
  
-+	/* Check connector changes */
-+	for_each_oldnew_connector_in_state(state, connector, old_con_state, new_con_state, i) {
-+		struct dm_connector_state *dm_old_con_state = to_dm_connector_state(old_con_state);
-+		struct dm_connector_state *dm_new_con_state = to_dm_connector_state(new_con_state);
-+
-+		/* Skip connectors that are disabled or part of modeset already. */
-+		if (!old_con_state->crtc && !new_con_state->crtc)
+ 	/*
+ 	 * Lightweight locking of the devices. We should not need
+@@ -2306,18 +2304,13 @@ static int btrfs_show_devname(struct seq
+ 	 * least until the rcu_read_unlock.
+ 	 */
+ 	rcu_read_lock();
+-	cur_devices = fs_info->fs_devices;
+-	while (cur_devices) {
+-		head = &cur_devices->devices;
+-		list_for_each_entry_rcu(dev, head, dev_list) {
+-			if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
+-				continue;
+-			if (!dev->name)
+-				continue;
+-			if (!first_dev || dev->devid < first_dev->devid)
+-				first_dev = dev;
+-		}
+-		cur_devices = cur_devices->seed;
++	list_for_each_entry_rcu(dev, &fs_info->fs_devices->devices, dev_list) {
++		if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
 +			continue;
-+
-+		if (!new_con_state->crtc)
++		if (!dev->name)
 +			continue;
-+
-+		new_crtc_state = drm_atomic_get_crtc_state(state, new_con_state->crtc);
-+		if (IS_ERR(new_crtc_state)) {
-+			ret = PTR_ERR(new_crtc_state);
-+			goto fail;
-+		}
-+
-+		if (dm_old_con_state->abm_level !=
-+		    dm_new_con_state->abm_level)
-+			new_crtc_state->connectors_changed = true;
-+	}
-+
- #if defined(CONFIG_DRM_AMD_DC_DCN)
- 		if (!compute_mst_dsc_configs_for_state(state, dm_state->context))
- 			goto fail;
++		if (!first_dev || dev->devid < first_dev->devid)
++			first_dev = dev;
+ 	}
+ 
+ 	if (first_dev)
 
 
