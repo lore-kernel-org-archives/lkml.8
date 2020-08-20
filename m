@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362B4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D15BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1E320724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B882E21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915837;
-	bh=35Y1yK73NzvRtzpwyUtT0/Z20fJ7kT4w3A82Zq3Gq6M=;
+	s=default; t=1597915854;
+	bh=vUMlRPXZX8LWcxjNTSMNJN5QyXqT7sG8LtdI37FiEJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K/zzoCbSb6Wo40TCa57Vf38Qo9u4OSuoN/hV/6loFBfms+jO4TgQ8D92Rd/VeHDdP
-	 Llfa5CDVWgGydLmTXhxwSbslYFTNeKk8f7wT1NZWBkNKRqwDZIDGABXAWqf5UhRNFB
-	 y9LmrJ3WeEzD7de9dtWLGiAMOmRCblMIqPo4n6ss=
+	b=fvFytSWBOAyBLInhQ3yiBkYHP4XPu1cxmlesea6YEyFXlKSVqIA3jvJPm8xl5/zqL
+	 zD7bb9sKYgxq8ifbwXfSS2eRh5k1d1HRqOS9JMcEXGDr4NJGVjX7yhrR4l0hZpjTMN
+	 xdqobMS7Who7wdkoMg/O+SSp/3dX0rgkBM5Ptf04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgHTJac (ORCPT
+        id S1727838AbgHTJau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbgHTJaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:12 -0400
+        id S1728169AbgHTJaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2363C206FA;
-        Thu, 20 Aug 2020 09:30:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1FDE20855;
+        Thu, 20 Aug 2020 09:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915812;
-        bh=35Y1yK73NzvRtzpwyUtT0/Z20fJ7kT4w3A82Zq3Gq6M=;
+        s=default; t=1597915830;
+        bh=vUMlRPXZX8LWcxjNTSMNJN5QyXqT7sG8LtdI37FiEJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C6fsCNLoHW7WUifMz5cbcYsbrmHltMszz0miZ/EKzx278rrnmDWk+JYBGRaIttPjv
-         s0centa/srt5DYTUoyiAyVD3nDquSor+19KnLwpIIHpql0XjhsojoMOXvqIlqdzPwl
-         G5cpqAaEz8m+hMzprA40iDd5aWr691zffzVyWXCg=
+        b=GjYlkHjqXdGJd7msDAHoN3DUSE8fAYDzdgIkBYVpjR8JdhpxQcK+I+x5nY6jXSLEB
+         fwR6iCgNqMUm1aMaZc6Rhm/8UCrto3KvBCyON83H5DHvVUscJVHzSMndybc/EjgEKC
+         890j0+aRWwClrCh5Yep4Kbyg4mClPolAv82EUmwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Helen Koike <helen.koike@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 125/232] media: staging: rkisp1: rename macros RKISP1_DIR_* to RKISP1_ISP_SD_*
-Date:   Thu, 20 Aug 2020 11:19:36 +0200
-Message-Id: <20200820091618.871297853@linuxfoundation.org>
+Subject: [PATCH 5.8 148/232] dm rq: dont call blk_mq_queue_stopped() in dm_stop_queue()
+Date:   Thu, 20 Aug 2020 11:19:59 +0200
+Message-Id: <20200820091619.981973887@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -64,206 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit c247818a873adcb8488021eed38c330ea8b288a3 ]
+[ Upstream commit e766668c6cd49d741cfb49eaeb38998ba34d27bc ]
 
-The macros 'RKISP1_DIR_*' are flags that indicate on which
-pads of the isp subdevice the media bus code is supported. So the
-prefix RKISP1_ISP_SD_ is better.
+dm_stop_queue() only uses blk_mq_quiesce_queue() so it doesn't
+formally stop the blk-mq queue; therefore there is no point making the
+blk_mq_queue_stopped() check -- it will never be stopped.
 
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+In addition, even though dm_stop_queue() actually tries to quiesce hw
+queues via blk_mq_quiesce_queue(), checking with blk_queue_quiesced()
+to avoid unnecessary queue quiesce isn't reliable because: the
+QUEUE_FLAG_QUIESCED flag is set before synchronize_rcu() and
+dm_stop_queue() may be called when synchronize_rcu() from another
+blk_mq_quiesce_queue() is in-progress.
+
+Fixes: 7b17c2f7292ba ("dm: Fix a race condition related to stopping and starting queues")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/media/rkisp1/rkisp1-isp.c | 46 +++++++++++------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ drivers/md/dm-rq.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
-index 93ba2dd2fcda0..abfedb604303f 100644
---- a/drivers/staging/media/rkisp1/rkisp1-isp.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
-@@ -23,8 +23,8 @@
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 85e0daabad49c..20745e2e34b94 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -70,9 +70,6 @@ void dm_start_queue(struct request_queue *q)
  
- #define RKISP1_ISP_DEV_NAME	RKISP1_DRIVER_NAME "_isp"
+ void dm_stop_queue(struct request_queue *q)
+ {
+-	if (blk_mq_queue_stopped(q))
+-		return;
+-
+ 	blk_mq_quiesce_queue(q);
+ }
  
--#define RKISP1_DIR_SRC BIT(0)
--#define RKISP1_DIR_SINK BIT(1)
-+#define RKISP1_ISP_SD_SRC BIT(0)
-+#define RKISP1_ISP_SD_SINK BIT(1)
- 
- /*
-  * NOTE: MIPI controller and input MUX are also configured in this file.
-@@ -61,119 +61,119 @@ static const struct rkisp1_isp_mbus_info rkisp1_isp_formats[] = {
- 	{
- 		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
- 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
--		.direction	= RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SRGGB10_1X10,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
- 		.bayer_pat	= RKISP1_RAW_RGGB,
- 		.bus_width	= 10,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SBGGR10_1X10,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
- 		.bayer_pat	= RKISP1_RAW_BGGR,
- 		.bus_width	= 10,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGBRG10_1X10,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
- 		.bayer_pat	= RKISP1_RAW_GBRG,
- 		.bus_width	= 10,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGRBG10_1X10,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
- 		.bayer_pat	= RKISP1_RAW_GRBG,
- 		.bus_width	= 10,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SRGGB12_1X12,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
- 		.bayer_pat	= RKISP1_RAW_RGGB,
- 		.bus_width	= 12,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SBGGR12_1X12,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
- 		.bayer_pat	= RKISP1_RAW_BGGR,
- 		.bus_width	= 12,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGBRG12_1X12,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
- 		.bayer_pat	= RKISP1_RAW_GBRG,
- 		.bus_width	= 12,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGRBG12_1X12,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
- 		.bayer_pat	= RKISP1_RAW_GRBG,
- 		.bus_width	= 12,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SRGGB8_1X8,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
- 		.bayer_pat	= RKISP1_RAW_RGGB,
- 		.bus_width	= 8,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SBGGR8_1X8,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
- 		.bayer_pat	= RKISP1_RAW_BGGR,
- 		.bus_width	= 8,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGBRG8_1X8,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
- 		.bayer_pat	= RKISP1_RAW_GBRG,
- 		.bus_width	= 8,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_SGRBG8_1X8,
- 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
- 		.bayer_pat	= RKISP1_RAW_GRBG,
- 		.bus_width	= 8,
--		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
-+		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_YUYV8_1X16,
- 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
- 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_YCBYCR,
- 		.bus_width	= 16,
--		.direction	= RKISP1_DIR_SINK,
-+		.direction	= RKISP1_ISP_SD_SINK,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_YVYU8_1X16,
- 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
- 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_YCRYCB,
- 		.bus_width	= 16,
--		.direction	= RKISP1_DIR_SINK,
-+		.direction	= RKISP1_ISP_SD_SINK,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_UYVY8_1X16,
- 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
- 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_CBYCRY,
- 		.bus_width	= 16,
--		.direction	= RKISP1_DIR_SINK,
-+		.direction	= RKISP1_ISP_SD_SINK,
- 	}, {
- 		.mbus_code	= MEDIA_BUS_FMT_VYUY8_1X16,
- 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
- 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
- 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_CRYCBY,
- 		.bus_width	= 16,
--		.direction	= RKISP1_DIR_SINK,
-+		.direction	= RKISP1_ISP_SD_SINK,
- 	},
- };
- 
-@@ -573,9 +573,9 @@ static int rkisp1_isp_enum_mbus_code(struct v4l2_subdev *sd,
- 	int pos = 0;
- 
- 	if (code->pad == RKISP1_ISP_PAD_SINK_VIDEO) {
--		dir = RKISP1_DIR_SINK;
-+		dir = RKISP1_ISP_SD_SINK;
- 	} else if (code->pad == RKISP1_ISP_PAD_SOURCE_VIDEO) {
--		dir = RKISP1_DIR_SRC;
-+		dir = RKISP1_ISP_SD_SRC;
- 	} else {
- 		if (code->index > 0)
- 			return -EINVAL;
-@@ -660,7 +660,7 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
- 
- 	src_fmt->code = format->code;
- 	mbus_info = rkisp1_isp_mbus_info_get(src_fmt->code);
--	if (!mbus_info || !(mbus_info->direction & RKISP1_DIR_SRC)) {
-+	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SRC)) {
- 		src_fmt->code = RKISP1_DEF_SRC_PAD_FMT;
- 		mbus_info = rkisp1_isp_mbus_info_get(src_fmt->code);
- 	}
-@@ -744,7 +744,7 @@ static void rkisp1_isp_set_sink_fmt(struct rkisp1_isp *isp,
- 					  which);
- 	sink_fmt->code = format->code;
- 	mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
--	if (!mbus_info || !(mbus_info->direction & RKISP1_DIR_SINK)) {
-+	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SINK)) {
- 		sink_fmt->code = RKISP1_DEF_SINK_PAD_FMT;
- 		mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
- 	}
 -- 
 2.25.1
 
