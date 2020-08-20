@@ -2,71 +2,133 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F49EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1C522B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A5122B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597925120;
+	bh=e45O64EGQzQMOrrWcSMj0I5jzsqG5i/oLqrPSK2fkXQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0WINxyH+AMNwK8TyldCk2QC9rWyThThjdn1EECONswG8/K/Ps8IGjmQozm/6fp2EU
+	 7lki7RZmMbCoZnPJPzpugAciFoxPwT9+7oupz3pOsWlyKAssW0+gVDggwpg+WrC+80
+	 kWkJ1PvBa4cYnPgIsBpIClSa2EGpmDFh6ADnrns4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730696AbgHTME5 (ORCPT
+        id S1730339AbgHTMFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:04:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45958 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 08:05:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728855AbgHTMEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:04:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 6909CAC23;
-        Thu, 20 Aug 2020 12:05:04 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 14:04:36 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org,
-        linux-doc@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] docs: vmcoreinfo: add lockless printk ringbuffer
- vmcoreinfo
-Message-ID: <20200820120436.GH4353@alley>
-References: <20200814213316.6394-1-john.ogness@linutronix.de>
+        id S1729984AbgHTJ7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:11 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B28442067C;
+        Thu, 20 Aug 2020 09:59:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917550;
+        bh=e45O64EGQzQMOrrWcSMj0I5jzsqG5i/oLqrPSK2fkXQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w9dndAOZPeqGDKfyegyVecBytgy04xfMXewT9nXZnkbXPKZIya/R1nUOBjtafNDqL
+         Q22J2pHWsKcvInU/j1Mw3ZTyj46VIQSXutrtHoRaOaEH6B2jfU7OURjjq4azMhKBJN
+         kozN4z/bxTUrvjGGuYfHJZd/THCsw/b1c+yDpk0c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 041/212] Revert "i2c: cadence: Fix the hold bit setting"
+Date:   Thu, 20 Aug 2020 11:20:14 +0200
+Message-Id: <20200820091604.435281791@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814213316.6394-1-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-08-14 23:39:16, John Ogness wrote:
-> With the introduction of the lockless printk ringbuffer, the
-> VMCOREINFO relating to the kernel log buffer was changed. Update the
-> documentation to match those changes.
-> 
-> Fixes: ("printk: use the lockless ringbuffer")
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
 
-Looks nice.
+[ Upstream commit 0db9254d6b896b587759e2c844c277fb1a6da5b9 ]
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+This reverts commit d358def706880defa4c9e87381c5bf086a97d5f9.
 
-Thanks a lot for taking care of the crashdump related stuff.
-It helps a lot.
+There are two issues with "i2c: cadence: Fix the hold bit setting" commit.
 
-Best Regards,
-Petr
+1. In case of combined message request from user space, when the HOLD
+bit is cleared in cdns_i2c_mrecv function, a STOP condition is sent
+on the bus even before the last message is started. This is because when
+the HOLD bit is cleared, the FIFOS are empty and there is no pending
+transfer. The STOP condition should occur only after the last message
+is completed.
+
+2. The code added by the commit is redundant. Driver is handling the
+setting/clearing of HOLD bit in right way before the commit.
+
+The setting of HOLD bit based on 'bus_hold_flag' is taken care in
+cdns_i2c_master_xfer function even before cdns_i2c_msend/cdns_i2c_recv
+functions.
+
+The clearing of HOLD bit is taken care at the end of cdns_i2c_msend and
+cdns_i2c_recv functions based on bus_hold_flag and byte count.
+Since clearing of HOLD bit is done after the slave address is written to
+the register (writing to address register triggers the message transfer),
+it is ensured that STOP condition occurs at the right time after
+completion of the pending transfer (last message).
+
+Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-cadence.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
+index 59c08d5b75d6a..45d6771fac8ce 100644
+--- a/drivers/i2c/busses/i2c-cadence.c
++++ b/drivers/i2c/busses/i2c-cadence.c
+@@ -382,10 +382,8 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
++	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+ 
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+@@ -442,11 +440,8 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
+ 	 * Check for the message size against FIFO depth and set the
+ 	 * 'hold bus' bit if it is greater than FIFO depth.
+ 	 */
+-	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
++	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
+ 		ctrl_reg |= CDNS_I2C_CR_HOLD;
+-	else
+-		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+-
+ 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+ 
+ 	/* Clear the interrupts in interrupt status register. */
+-- 
+2.25.1
+
+
+
