@@ -2,173 +2,142 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB09DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5462AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92BA72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D14C21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:00:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="coWwyHF6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbgHTC7w (ORCPT
+        id S1726879AbgHTDAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:59:52 -0400
-Received: from smtpbgsg2.qq.com ([54.254.200.128]:49141 "EHLO smtpbgsg2.qq.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgHTC7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:59:51 -0400
-X-QQ-mid: bizesmtp20t1597892367tn1degxx
-Received: from localhost.localdomain.info (unknown [103.37.140.45])
-        by esmtp6.qq.com (ESMTP) with 
-        id ; Thu, 20 Aug 2020 10:59:22 +0800 (CST)
-X-QQ-SSF: 01100000002000E0Z000B00A0001000
-X-QQ-FEAT: 9W4TTyWj0GPg03owh0ocBhZJGDp9froOm3u11QDwX/8s26Qa2LOKslI420QkJ
-        tiIPItLxJfLGJd8H/qu6WvfqP+nGNpFWW4z5K80n8ERPeYIhKSxMxruXEqr9lZe8SGfvUZ+
-        YiSnOsoW3NuIkh17v+0jQlYbIt8fV6w1k6wgxaLd8Lac17fceav6Ss53De2cXHWXaKXvwG+
-        PcmLujj1JcYVym7KRYKcgd6LXmSFVwLcc181uQu+HL2bH79fJ/j/8IG4texemuS/YEZ06tf
-        9MGySk+OWmNnokjs2N0A2mnaBaM3yNFxO9K1Lypt1NP1ekspAvAq/DU0tU+MijDyblOgjfL
-        J/exmieKDIM9zLDOOI=
-X-QQ-GoodBg: 0
-From:   Wang Long <w@laoqinren.net>
-To:     tglx@linutronix.de
-Cc:     john.stultz@linaro.org, sboyd@kernel.org,
-        linux-kernel@vger.kernel.org, w@laoqinren.net
-Subject: [PATCH] timer: use raw_spin_unlock_irqrestore and raw_spin_lock_irqsave instead of raw_spin_{lock|unlock}
-Date:   Thu, 20 Aug 2020 10:59:17 +0800
-Message-Id: <1597892357-1349-1-git-send-email-w@laoqinren.net>
-X-Mailer: git-send-email 1.8.3.1
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:laoqinren.net:qybgforeign:qybgforeign6
-X-QQ-Bgrelay: 1
+        Wed, 19 Aug 2020 23:00:01 -0400
+Received: from mail-co1nam11on2042.outbound.protection.outlook.com ([40.107.220.42]:4256
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgHTC76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:59:58 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jGlpWlUGhr5uVo54/ZHZQVMx/daRcKiZkDD6su6RJXVSGBZPi0jFsrznvTSVWCny4Ma3KyPDjaTl8LpXASoP1qNNXB9PNMxexeekSCr8ptBhOH556a1AkqW9LPB4RobdMDpEO46ZrX6bYUN3kYx06Dg9d1aZHpykGuqX/tPvtLadl00xgxoXAwVTLenpeTJcGV8b3UogwQk83CGpQsIPaac5I4Bqf/00v+HnsCpaxFYRD1Qs51wSfDVc8KQ6WqgLIArbBe3Q0IBMxbCo5UBDUnNQavAtnchrK9KCokpsHmcr5NPx2XGtW1ngDupwJENYDgDj8CnBGOA2iTpd2PD3TA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gTWYB5AU39T+AQexcHBb6OAjgXaKbh80lkRMaYWS0a8=;
+ b=jzzPUc3UAoMQR5QV8GhmpkcLFpD4SY+dF2M+yD/kZkvvZsAo6dX/f08PjbOYKh3zp2Qz91VzdKggryRnFX8aqEZm2Tsw/tDpI7gYRn2EB2NKj/k0s7hUVP7p9Xd4BQ+/0CJN1p7/8cs7J/6vLe4cLc5Eft9eI4BZ49FlsIHd71I4UG5+eRgFrq4ua3UwRObgeN2Orvip2Ltvy/qqCkbErO8q3gcvh0RjvbJPZM8HLbg6sCwSewPx0FpgahR328NFYd9+34dXXjxHYj1zCumTyKyuqlt48PijGjH36WbaYhG10Ithgyr9+SWsqSVHhb+D/eUdKT18w0gnfIZk0FnLdQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gTWYB5AU39T+AQexcHBb6OAjgXaKbh80lkRMaYWS0a8=;
+ b=coWwyHF6O3hAn64BwFb54Ds8b8upMardZO/xyZT+KADr5uFDHQh/E8P6NVE2AMAwXuSPHVNgmsHKhuTKz8wCEE6s0a9B1PU/u+aMU+oEduZecUaxgnWdVgUGZWEluM502Hfrh/kqn0BBCU/Ph95Wn+E0BvsjOKrCCA0MwUilGu0=
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com (2603:10b6:5:45::18) by
+ DM5PR12MB1356.namprd12.prod.outlook.com (2603:10b6:3:74::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3261.19; Thu, 20 Aug 2020 02:59:56 +0000
+Received: from DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::fcd0:74a:b9d0:6b66]) by DM6PR12MB2619.namprd12.prod.outlook.com
+ ([fe80::fcd0:74a:b9d0:6b66%2]) with mapi id 15.20.3283.026; Thu, 20 Aug 2020
+ 02:59:56 +0000
+From:   "Quan, Evan" <Evan.Quan@amd.com>
+To:     Wang Hai <wanghai38@huawei.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH -next] drm/amd/powerplay: remove duplicate include
+Thread-Topic: [PATCH -next] drm/amd/powerplay: remove duplicate include
+Thread-Index: AQHWdhz6t3RSCj4X8E+n6Pti7n7aUalAT6IQ
+Date:   Thu, 20 Aug 2020 02:59:56 +0000
+Message-ID: <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
+References: <20200819113409.10137-1-wanghai38@huawei.com>
+In-Reply-To: <20200819113409.10137-1-wanghai38@huawei.com>
+Accept-Language: en-US, zh-CN
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ActionId=936cf408-d795-4856-ae9c-dc635f54881d;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_ContentBits=0;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Enabled=true;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Method=Standard;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_Name=Internal
+ Use Only -
+ Unrestricted;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SetDate=2020-08-20T02:59:34Z;MSIP_Label_76546daa-41b6-470c-bb85-f6f40f044d7f_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+authentication-results: huawei.com; dkim=none (message not signed)
+ header.d=none;huawei.com; dmarc=none action=none header.from=amd.com;
+x-originating-ip: [58.247.170.242]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 018f8301-41ec-47e8-3cd3-08d844b51e7a
+x-ms-traffictypediagnostic: DM5PR12MB1356:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB1356D9966B4B54CA9FE5F613E45A0@DM5PR12MB1356.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:296;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gKF1HsZ6E09K09pxDtp5nkLTGi54FbLU9F310sKoFjWUB0xbjyoNPtG+j7su/UnvQr0YSGgqi0Iiii60XGNfNjmdeOY671RORbtAsuTil1xmgWaGuA7/4ACUXVtdpf2zNLibEhso4T0EnmOmbLV1Hn3XpceWAp2robyFkqdm8ZidiUX04IOVlwMaI0hs3VT7YapdSaXCOxIWFRGxVTsNkNcfwLBXf7LkYEfZrz6SexX04A73M6l5m+LAWZrzS8d0Yuk2iaJrt/n+ipIFenbbVFtrV1yvlyeJhWpx0NCx3n3mybHJmzye8gBgQzSqv6eIe7+WRviWBrOPWz0KKbquXg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2619.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(366004)(8676002)(110136005)(66556008)(76116006)(26005)(5660300002)(66946007)(6506007)(53546011)(8936002)(33656002)(71200400001)(4326008)(7696005)(316002)(86362001)(54906003)(2906002)(66476007)(66446008)(478600001)(83380400001)(64756008)(9686003)(55016002)(52536014)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: Xa343Dc+BL7Fc4xt0NhqBMMqpIlGXABXP/tZ2Pd1yrgm1/+F0eZyML69X7nSo9tXB69IaIAuGhEsdCDmUEQbiAtLWwdyy0L44opSMo3UsrJsuGndfIqu2wwEBCD+v0rXIS6AQB0GfXg7iGhrcWdGZA0OKsIrsS1C/YMoschdtwCBFEX8FOo7H1MPleRDKRLvFldYvockBhWrJ1OQWL9DgJW6UrqzKeDUp/fOPbn/JLc9rnWJomtHUaZS+mbxsHytdAvSjy+1txJpLJ+hWPUMnrSkPdIAzm8zVp7Nn9XV4JS8wxECt/gFgQpkQ136Kkav/SUI0cdjbcuPbO0QfdonNn6mHYPFWSPPzRPTKjrYsvxWKunAx/iWASSlS3GrIk5r4W7xfEZaWiAY3ucOxzn5u5M9hVjMqXf9N4X4g73AWRkV25vBGdeGq6xZv3/6T6Wb2wA0XqixC6ahBl18vy7F7okQZ0HHJVlQJW0uuFnRuQQoZFcmudfE6c/b7l0abyyv+fvoBH2ibMUFMXtMzASgZyAciwTzFnhOlOL/YhsbBuIXahsUVPaZ39maV8sIJvi4SHtO/s30jjQwc2t+AvqSpz558ABh+r27tn6bSU/Ui1RpGrEaHEM64UnaSOAU8uWmdYCxLVyVrpXqJWJbJi7u1A==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2619.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 018f8301-41ec-47e8-3cd3-08d844b51e7a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 02:59:56.2672
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qdbe8hCX8nSPGFGk6a8JaPtDrt+JcW0Lqw4H6j1tUZTugzUY3bz5tDyFv/XQyFsP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1356
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code in function __mod_timer(https://github.com/torvalds/linux/blob/master/kernel/time/timer.c#L961):
+[AMD Official Use Only - Internal Distribution Only]
 
-994		base = lock_timer_base(timer, &flags);   ----------------------(1)
-		forward_timer_base(base);
+Reviewed-by: Evan Quan <evan.quan@amd.com>
 
-		if (timer_pending(timer) && (options & MOD_TIMER_REDUCE) &&
-		    time_before_eq(timer->expires, expires)) {
-			ret = 1;
-			goto out_unlock;
-		}
+-----Original Message-----
+From: Wang Hai <wanghai38@huawei.com>
+Sent: Wednesday, August 19, 2020 7:34 PM
+To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander <Alexander.Deucher@a=
+md.com>; Koenig, Christian <Christian.Koenig@amd.com>; airlied@linux.ie; da=
+niel@ffwll.ch
+Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-k=
+ernel@vger.kernel.org
+Subject: [PATCH -next] drm/amd/powerplay: remove duplicate include
 
-		clk = base->clk;
-		idx = calc_wheel_index(expires, clk, &bucket_expiry);
+Remove asic_reg/nbio/nbio_6_1_offset.h which is included more than once
 
-		/*
-		 * Retrieve and compare the array index of the pending
-		 * timer. If it matches set the expiry to the new value so a
-		 * subsequent call will exit in the expires check above.
-		 */
-		if (idx == timer_get_idx(timer)) {
-			if (!(options & MOD_TIMER_REDUCE))
-				timer->expires = expires;
-			else if (time_after(timer->expires, expires))
-				timer->expires = expires;
-			ret = 1;
-			goto out_unlock;
-		}
-	} else {
-1021		base = lock_timer_base(timer, &flags); ------------------------(2)
-		forward_timer_base(base);
-	}
-
-	ret = detach_if_pending(timer, base, false);
-	if (!ret && (options & MOD_TIMER_PENDING_ONLY))
-		goto out_unlock;
-
-	new_base = get_target_base(base, timer->flags);
-
-	if (base != new_base) {
-		/*
-		 * We are trying to schedule the timer on the new base.
-		 * However we can't change timer's base while it is running,
-		 * otherwise del_timer_sync() can't detect that the timer's
-		 * handler yet has not finished. This also guarantees that the
-		 * timer is serialized wrt itself.
-		 */
-		if (likely(base->running_timer != timer)) {
-			/* See the comment in lock_timer_base() */
-			timer->flags |= TIMER_MIGRATING;
-
-1042			raw_spin_unlock(&base->lock); -----------------------(3)
-			base = new_base;
-			raw_spin_lock(&base->lock); -------------------------(4)
-			WRITE_ONCE(timer->flags,
-				   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
-			forward_timer_base(base);
-		}
-	}
-
-	debug_timer_activate(timer);
-
-	timer->expires = expires;
-	/*
-	 * If 'idx' was calculated above and the base time did not advance
-	 * between calculating 'idx' and possibly switching the base, only
-	 * enqueue_timer() is required. Otherwise we need to (re)calculate
-	 * the wheel index via internal_add_timer().
-	 */
-	if (idx != UINT_MAX && clk == base->clk)
-		enqueue_timer(base, timer, idx, bucket_expiry);
-	else
-		internal_add_timer(base, timer);
-
-out_unlock:
-1066	raw_spin_unlock_irqrestore(&base->lock, flags); ---------------------(5)
-
-	return ret;
-}
-
-The code in (1)(2) lock the base with raw_spin_lock_irqsave(&base->lock, flag),
-if base != new_base,  the code in (3) unlock the old base, the code in (4) lock the
-new base. at the end of the function(5), use raw_spin_unlock_irqrestore(&base->lock, flags);
-to unlock the new_base.
-
-Consider the following situation:
-
-	CPU0					CPU1
-base = lock_timer_base(timer, &flags);								(1)(2)
-raw_spin_unlock(&base->lock);									(3)
-base = new_base;
-					raw_spin_lock(&base->lock);				(4)
-					raw_spin_unlock_irqrestore(&base->lock, flags);		(5)
-
-The flags save from CPU0, and restore to CPU1. Is this wrong?
-
-we encountered a kernel panic, and we suspect that it is the problem. How about the following patch to fix.
-
-Signed-off-by: Wang Long <w@laoqinren.net>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
 ---
- kernel/time/timer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index a16764b..4153766 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1039,9 +1039,9 @@ static struct timer_base *lock_timer_base(struct timer_list *timer,
- 			/* See the comment in lock_timer_base() */
- 			timer->flags |= TIMER_MIGRATING;
- 
--			raw_spin_unlock(&base->lock);
-+			raw_spin_unlock_irqrestore(&base->lock, flags);
- 			base = new_base;
--			raw_spin_lock(&base->lock);
-+			raw_spin_lock_irqsave(&base->lock, flags);
- 			WRITE_ONCE(timer->flags,
- 				   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
- 			forward_timer_base(base);
--- 
-1.8.3.1
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h b/drivers/gpu=
+/drm/amd/powerplay/hwmgr/vega12_inc.h
+index e6d9e84059e1..0d08c57d3bca 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
+@@ -34,7 +34,6 @@
+ #include "asic_reg/gc/gc_9_2_1_offset.h"
+ #include "asic_reg/gc/gc_9_2_1_sh_mask.h"
 
+-#include "asic_reg/nbio/nbio_6_1_offset.h"
+ #include "asic_reg/nbio/nbio_6_1_offset.h"
+ #include "asic_reg/nbio/nbio_6_1_sh_mask.h"
 
-
+--
+2.17.1
 
