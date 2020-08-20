@@ -2,91 +2,163 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D46C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A7522B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB3E208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:30:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926659;
+	bh=saIfEHG1GHEzf/+wjr30BPnCjZhXRuhKW1yiXlQKbAQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zUAIOgkh4n6evQSRJSZEz6Zz494PtIP65eTpqMJpeVddSEtAMyCKjISpzJlMQXcDM
+	 LjDn46dTUuHz8cPvJ55Cxbc7cxntHl9eL+c9SEcUyFTE2CE1ibQT7JJG1+jPnhNWaG
+	 OnqvtWBnuNiJS12vpjB/VWItieP39oqYsN3X113w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730060AbgHTMaz (ORCPT
+        id S1727073AbgHTJvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:30:55 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:49010 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729791AbgHTJvL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:11 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U6IvpVk_1597917064;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6IvpVk_1597917064)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 20 Aug 2020 17:51:05 +0800
-Subject: Re: [RFC PATCH v2 4/5] mm: Split release_pages work into 3 passes
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042730.23414.41309.stgit@localhost.localdomain>
- <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
- <CAKgT0UepdfjXn=j8e4xEBFmsNJdzJyN57em8dscr-Er4OBZCOg@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <a88eef1b-242d-78c6-fecb-35ea00cd739b@linux.alibaba.com>
-Date:   Thu, 20 Aug 2020 17:49:49 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 20 Aug 2020 05:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729763AbgHTJuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B009E2075E;
+        Thu, 20 Aug 2020 09:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917050;
+        bh=saIfEHG1GHEzf/+wjr30BPnCjZhXRuhKW1yiXlQKbAQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g5SayGW9hz+L/Xp5XyZvXl3sEgqmWiQujI0qMviylzopyBFvwMMMl9Yyx2iVXW7K7
+         B2qtuNZjRgfwp0BF7wwINCFYzzl7+thv36opDnt+uI7klfxlxwX4urJZye6St13eoC
+         ZqhmL4Cg/7TVEblMkZC1bTbVHFBJvLFnu4QIPPtI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 137/152] i2c: iproc: fix race between client unreg and isr
+Date:   Thu, 20 Aug 2020 11:21:44 +0200
+Message-Id: <20200820091600.827736817@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0UepdfjXn=j8e4xEBFmsNJdzJyN57em8dscr-Er4OBZCOg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Dhananjay Phadke <dphadke@linux.microsoft.com>
+
+[ Upstream commit b1eef236f50ba6afea680da039ef3a2ca9c43d11 ]
+
+When i2c client unregisters, synchronize irq before setting
+iproc_i2c->slave to NULL.
+
+(1) disable_irq()
+(2) Mask event enable bits in control reg
+(3) Erase slave address (avoid further writes to rx fifo)
+(4) Flush tx and rx FIFOs
+(5) Clear pending event (interrupt) bits in status reg
+(6) enable_irq()
+(7) Set client pointer to NULL
+
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
+
+[  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+[  371.030309] sp : ffff800010003e40
+[  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+[  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+[  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+[  371.050165] x23: 0000000000000003 x22: 0000000001600000
+[  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+[  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+[  371.066603] x17: 0000000000000000 x16: 0000000000000000
+[  371.072082] x15: 0000000000000000 x14: 0000000000000000
+[  371.077561] x13: 0000000000000000 x12: 0000000000000001
+[  371.083040] x11: 0000000000000000 x10: 0000000000000040
+[  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+[  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+[  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+[  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+[  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
+
+[  371.115916] Call trace:
+[  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+[  371.127606]  handle_irq_event_percpu+0x34/0x88
+[  371.132189]  handle_irq_event+0x40/0x120
+[  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+[  371.140459]  generic_handle_irq+0x24/0x38
+[  371.144594]  __handle_domain_irq+0x60/0xb8
+[  371.148820]  gic_handle_irq+0xc0/0x158
+[  371.152687]  el1_irq+0xb8/0x140
+[  371.155927]  arch_cpu_idle+0x10/0x18
+[  371.159615]  do_idle+0x204/0x290
+[  371.162943]  cpu_startup_entry+0x24/0x60
+[  371.166990]  rest_init+0xb0/0xbc
+[  371.170322]  arch_call_rest_init+0xc/0x14
+[  371.174458]  start_kernel+0x404/0x430
+
+Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
+
+Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index 03475f1799730..dd9661c11782a 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -1037,7 +1037,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (!iproc_i2c->slave)
+ 		return -EINVAL;
+ 
+-	iproc_i2c->slave = NULL;
++	disable_irq(iproc_i2c->irq);
+ 
+ 	/* disable all slave interrupts */
+ 	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+@@ -1050,6 +1050,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+ 	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
+ 
++	/* flush TX/RX FIFOs */
++	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
++	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
++
++	/* clear all pending slave interrupts */
++	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
++
++	iproc_i2c->slave = NULL;
++
++	enable_irq(iproc_i2c->irq);
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
 
-在 2020/8/19 下午10:57, Alexander Duyck 写道:
->>>       lruvec = relock_page_lruvec_irqsave(page, lruvec, &flags);
->> the lock bounce is better with the patch, would you like to do further
->> like using add_lruvecs to reduce bounce more?
->>
->> Thanks
->> Alex
-> I'm not sure how much doing something like that would add. In my case
-> I had a very specific issue that this is addressing which is the fact
-> that every compound page was taking the LRU lock and zone lock
-> separately. With this patch that is reduced to one LRU lock per 15
-> pages and then the zone lock per page. By adding or sorting pages by
-> lruvec I am not sure there will be much benefit as I am not certain
-> how often we will end up with pages being interleaved between multiple
-> lruvecs. In addition as I am limiting the quantity to a pagevec which
-> limits the pages to 15 I am not sure there will be much benefit to be
-> seen for sorting the pages beforehand.
-> 
 
-the relock will unlock and get another lock again, the cost in that, the 2nd
-lock need to wait for fairness for concurrency lruvec locking.
-If we can do sort before, we should remove the fairness waiting here. Of course, 
-perf result depends on scenarios.
-
-Thanks
-Alex
