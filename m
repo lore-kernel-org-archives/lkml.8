@@ -2,117 +2,117 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2471C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFCE02067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918845;
-	bh=xm8dGOL3MbBbXctBckHxO53cRD7TlCl9qAdlABiPdy0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VKFlp99sXJwuQa4L4xmv8HaIX7duntyISAaVahUs48rrR0Je0Dcyfn9QhEUOM9c8W
-	 ZdTdGy1xrDt36Q+4gmrIp89JVBKizR3da/rI+gnNllEXp0lynTJz2Np6CIOt8CHWhI
-	 J/OyWEk1wtGSty4B/nVWRIcqH0v1f7sParzLquhs=
+	by mail.kernel.org (Postfix) with ESMTP id E16D42078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="AznunsBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbgHTKUo (ORCPT
+        id S1731483AbgHTKUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:20:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbgHTKU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B64962067C;
-        Thu, 20 Aug 2020 10:20:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918826;
-        bh=xm8dGOL3MbBbXctBckHxO53cRD7TlCl9qAdlABiPdy0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rI6r8Rbphy8JBZDuOi8+frtXrvaERauhdhlz0Ihi0i81eHZRJGBDlFpy/zS3Lkxxx
-         YRpOyek2+WDf5trRyspo/i5nC0iKBvB9lQqMwHEE5fweiiScsioY4/AGjYcem9heAv
-         S9WFLMArNFkoRsqr3ICIDQTNEUIpYygXf51lGiZg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 081/149] leds: lm355x: avoid enum conversion warning
-Date:   Thu, 20 Aug 2020 11:22:38 +0200
-Message-Id: <20200820092129.649983396@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
-References: <20200820092125.688850368@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 06:20:48 -0400
+Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:6917 "EHLO
+        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731463AbgHTKUZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1597918825;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Sv68RoNLXVff/6n8GJVDTzUndQIzSGsto9tYosUgXbw=;
+  b=AznunsBUonXknv9jqFhp3YXSxxZ1uxt+H2KvV61dWsm3G53n7J9AZfB1
+   qI5+ZDDA2P2NSnYRnXsek+Mw1LrafRrGJ/GzDe9OYYJTzOq6F5tXg5Cum
+   gFvG5mX5UVjPLVpFrvTPq9CfnVmyHE5f/Mqv16VHSh2ZO3g3qs5XjbrxI
+   4=;
+Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: g5He4ply494ZRa/EGg7MaC71UzA0BjHI1c7YSwZBTDzTp9vpey0jdtGIFSsbMxA1X6JsEBAvkw
+ B26jNrEgbiFdR1wvCVK0z3EhFmTTq4XgjmQ4hJTQKN/YHmJkqr3oqEq7fo7nByDE/78nF//jET
+ ail+DgQVD5LgeIS6TGXJHGPHn3r/NmlyoYNxzeNv9wZ5nmrHZHIqKJpLTa/azaYJygb0agovIt
+ sOBNqo3hgPUzC/dFP+lUPEmbSTg+MmbWcdS+RPQkTjx3SN4flHaKnhszEvO84y4Le8Yy5jVL1n
+ qaI=
+X-SBRS: 2.7
+X-MesageID: 24943558
+X-Ironport-Server: esa2.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,332,1592884800"; 
+   d="scan'208";a="24943558"
+Date:   Thu, 20 Aug 2020 12:20:16 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+CC:     Norbert Kaminski <norbert.kaminski@3mdeb.com>,
+        Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
+        <xen-devel@lists.xenproject.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Maciej Pijanowski <maciej.pijanowski@3mdeb.com>,
+        <piotr.krol@3mdeb.com>
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+Message-ID: <20200820102016.GU828@Air-de-Roger>
+References: <20200817090013.GN975@Air-de-Roger>
+ <20200818120135.GK1679@mail-itl>
+ <20200818124710.GK828@Air-de-Roger>
+ <20200818150020.GL1679@mail-itl>
+ <20200818172114.GO828@Air-de-Roger>
+ <20200818184018.GN1679@mail-itl>
+ <20200819081930.GQ828@Air-de-Roger>
+ <3d405b0c-4e2b-0d29-56bb-e315f4c21d03@3mdeb.com>
+ <20200820093025.GT828@Air-de-Roger>
+ <20200820093454.GS1626@mail-itl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200820093454.GS1626@mail-itl>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Aug 20, 2020 at 11:34:54AM +0200, Marek Marczykowski-Górecki wrote:
+> On Thu, Aug 20, 2020 at 11:30:25AM +0200, Roger Pau Monné wrote:
+> > Right, so you only need access to the ESRT table, that's all. Then I
+> > think we need to make sure Xen doesn't use this memory for anything
+> > else, which will require some changes in Xen (or at least some
+> > checks?).
+> > 
+> > We also need to decide what to do if the table turns out to be placed
+> > in a wrong region. How are we going to prevent dom0 from using it
+> > then? My preference would be to completely hide it from dom0 in that
+> > case, such that it believes there's no ESRT at all if possible.
+> 
+> Yes, that makes sense. As discussed earlier, that probably means
+> re-constructing SystemTable before giving it to dom0. We'd need to do
+> that in PVH case anyway, to adjust addresses, right?
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+Not really, on PVH dom0 we should be able to identity map the required
+EFI regions in the dom0 p2m, so the only difference between a classic
+PV dom0 is that we need to assure that those regions are correctly
+identity mapped in the p2m, but that shouldn't require any change to
+the SystemTable unless we need to craft custom tables (see below).
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+> Is there something
+> like this in the Xen codebase already, or it needs to be written from
+> scratch?
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+AFAICT it needs to be written for EFI. For the purposes here I think
+you could copy the SystemTable and modify the NumberOfTableEntries and
+ConfigurationTable fields in the copy in order to delete the ESRT if
+found to be placed in a non suitable region?
 
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
+At that point we can remove the checks from Linux since Xen will
+assert that whatever gets passed to dom0 is in a suitable region. It
+would be nice to have a way to signal that the placement of the ESRT
+has been checked, but I'm not sure how to do this, do you have any
+ideas?
 
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index 48872997d6b4b..533b255c27cd6 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -177,18 +177,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
- 
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
--- 
-2.25.1
-
-
-
+Roger.
