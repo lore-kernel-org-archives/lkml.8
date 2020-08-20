@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94715C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D417DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66EBF208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BFA22CAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916631;
-	bh=nr/2VzfFW/HOWdF78Zd5ouU6Ua0NDBxDOqvDSXOvJ9Q=;
+	s=default; t=1597916638;
+	bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rtY1JYN3W4GJS66OclPjvgUhq/rSTnppOE8xUog6zIkCnUwppDlBJoax6SyfGiw1G
-	 9D69hB+f60A19ewyjg4uIQ8xSQHffK+3O4aUQwbbz6ZoZX+rRHwdNxrDnvGmKTgaQQ
-	 qjWmBnbbgTaCINjsi7eAjofPaSl/d2Mi3cj80EUg=
+	b=VNS1M8129RZh3BGOIfTbCzoiOL+I+k4cdI1sdr6i/awgnHJtxj8gobzFer683a49k
+	 akyTTWJPeple5nCpGUf2CHaSKXE+Ma2261tQQMPGvCrAM1xWybanVSscleti4KuPez
+	 IyeB5wTf1fUZAHe/9UNnW4OfU9BPjp1AzYZmhg3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbgHTJns (ORCPT
+        id S1728949AbgHTJnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:43:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbgHTJmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:21 -0400
+        id S1728997AbgHTJmY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A521E20855;
-        Thu, 20 Aug 2020 09:42:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20AEF22BEA;
+        Thu, 20 Aug 2020 09:42:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916541;
-        bh=nr/2VzfFW/HOWdF78Zd5ouU6Ua0NDBxDOqvDSXOvJ9Q=;
+        s=default; t=1597916543;
+        bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGOD8rxHUSrbo+cMycOh3CloluEwCc+tvb0d+euU/n4VVYJ0REo46QMaprlZNaLnO
-         LH1FOUDSM+ntCYihJ1Qf7sZuva2j+ut3nF/ObQxnMr/oANkdf6UrkBzQJudBld/KRb
-         gX8vQ1GSqww7DZMuLhFXi68rzvDFLJV0th3bsWV0=
+        b=pFBOBono2t80N7J7IZq4zR9xCh6JaR5rMcIeWA9zUFwUv1BMxe6IufGSRAvfpPZr8
+         Z+t/kXXPWH57exdbzryd9lgMm33jE9NobHFihXvBZZ9hYE5nfSGOn55Qsb54KfJl0I
+         pR1aFzVgXBjhbQmHcQ6uX3tMCWC9jdy08V2rTQh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Gregory Herrero <gregory.herrero@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 165/204] vdpa_sim: init iommu lock
-Date:   Thu, 20 Aug 2020 11:21:02 +0200
-Message-Id: <20200820091614.460785917@linuxfoundation.org>
+Subject: [PATCH 5.7 166/204] recordmcount: Fix build failure on non arm64
+Date:   Thu, 20 Aug 2020 11:21:03 +0200
+Message-Id: <20200820091614.509210298@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,35 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael S. Tsirkin <mst@redhat.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit 1e3e792650d2c0df8dd796906275b7c79e278664 ]
+[ Upstream commit 3df14264ad9930733a8166e5bd0eccc1727564bb ]
 
-The patch adding the iommu lock did not initialize it.
-The struct is zero-initialized so this is mostly a problem
-when using lockdep.
+Commit ea0eada45632 leads to the following build failure on powerpc:
 
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Cc: Max Gurtovoy <maxg@mellanox.com>
-Fixes: 0ea9ee430e74 ("vdpasim: protect concurrent access to iommu iotlb")
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+  HOSTCC  scripts/recordmcount
+scripts/recordmcount.c: In function 'arm64_is_fake_mcount':
+scripts/recordmcount.c:440: error: 'R_AARCH64_CALL26' undeclared (first use in this function)
+scripts/recordmcount.c:440: error: (Each undeclared identifier is reported only once
+scripts/recordmcount.c:440: error: for each function it appears in.)
+make[2]: *** [scripts/recordmcount] Error 1
+
+Make sure R_AARCH64_CALL26 is always defined.
+
+Fixes: ea0eada45632 ("recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Gregory Herrero <gregory.herrero@oracle.com>
+Cc: Gregory Herrero <gregory.herrero@oracle.com>
+Link: https://lore.kernel.org/r/5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 1 +
- 1 file changed, 1 insertion(+)
+ scripts/recordmcount.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index e2dc8edd680e0..3554f8de00e64 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -330,6 +330,7 @@ static struct vdpasim *vdpasim_create(void)
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index e59022b3f1254..b9c2ee7ab43fa 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -42,6 +42,8 @@
+ #define R_ARM_THM_CALL		10
+ #define R_ARM_CALL		28
  
- 	INIT_WORK(&vdpasim->work, vdpasim_work);
- 	spin_lock_init(&vdpasim->lock);
-+	spin_lock_init(&vdpasim->iommu_lock);
- 
- 	dev = &vdpasim->vdpa.dev;
- 	dev->coherent_dma_mask = DMA_BIT_MASK(64);
++#define R_AARCH64_CALL26	283
++
+ static int fd_map;	/* File descriptor for file being modified. */
+ static int mmap_failed; /* Boolean flag. */
+ static char gpfx;	/* prefix for global symbol name (sometimes '_') */
 -- 
 2.25.1
 
