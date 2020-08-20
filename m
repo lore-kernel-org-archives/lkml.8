@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC890C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EA042173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D7C32173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916976;
-	bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
+	s=default; t=1597916977;
+	bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M2nOoEZPjaLvrAVWKpJE3LELVERcFhlNaJHIxD3cdh+9jlCxe+g4deD+YmZkMCg0S
-	 k3ALHBskgB/58nPb5tDyYfzux9eQ2gr0YojsAjm1Adz1gAyl0+SWif9qLalDk+Ftgr
-	 4MqbkaxgGjeBmBKfi7GPtO3N031ViH2Mp8ruJszM=
+	b=GnHL4WIH+mcp767i/13btT1GyEtkWMLGXmi7dM7wJr9lUxU4Hzd407dl5Aa2zxsV/
+	 eELlAjrzjuVQukttYkJiXlNKDblep8BKDg9JUJxuU1wX2IKgtsYJnavsMjaYGVIEiu
+	 PjlPG+3Ppsh8JDfwMc3ktWLRnll6b8edxcOON//c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgHTJtf (ORCPT
+        id S1729676AbgHTJtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:49:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55140 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgHTJtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:19 -0400
+        id S1729640AbgHTJtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11CDA20724;
-        Thu, 20 Aug 2020 09:49:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 536BC22CBE;
+        Thu, 20 Aug 2020 09:49:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916958;
-        bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
+        s=default; t=1597916961;
+        bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=az+WDyqsGYPuFsrJDR0yxqIkl4o2oXK5s5OncRgCc+x8VjNlwRrRmA+PhOriNNoqf
-         L2Nj4cIL27heq75RUzBbPubbSK2CTDizy+VGPvth1tFko82OOqpKi4XwW8k/+IdoE8
-         4mW+3rrZX6Dewo1y3R5tqgxFNnKzC8y50vLw4kW8=
+        b=FPQtRy/0xQiXuLdAxRgunGW9JA+etA6nMOXxzqLJ+lLpMqnFk9k9LSxCuo3aN7gkA
+         N7XyBBUM8rbJ0PWkNe/WyZUi1EpfpzFUMh/3CU5luCJZlRKn5F0E9ymvmQ30WaeZPh
+         FYOoQ8G2p1fJ4jl534STdxh/7tXIjTi4OvI0nrHU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 104/152] selftests/powerpc: ptrace-pkey: Dont update expected UAMOR value
-Date:   Thu, 20 Aug 2020 11:21:11 +0200
-Message-Id: <20200820091559.091775062@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 105/152] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
+Date:   Thu, 20 Aug 2020 11:21:12 +0200
+Message-Id: <20200820091559.145307562@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,51 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3563b9bea0ca7f53e4218b5e268550341a49f333 ]
+[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
 
-With commit 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation
-must not change pkey registers") we are not updating UAMOR on key
-allocation. So don't update the expected uamor value in the test.
+It is possible for the call to omap_iommu_dump_ctx to return
+a negative error number, so check for the failure and return
+the error number rather than pass the negative value to
+simple_read_from_buffer.
 
-Fixes: 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation must not change pkey registers")
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-23-aneesh.kumar@linux.ibm.com
+Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
+Addresses-Coverity: ("Improper use of negative value")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/iommu/omap-iommu-debug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index bc33d748d95b4..3694613f418f6 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -101,15 +101,20 @@ static int child(struct shared_info *info)
- 	 */
- 	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
+diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
+index 8e19bfa94121e..a99afb5d9011c 100644
+--- a/drivers/iommu/omap-iommu-debug.c
++++ b/drivers/iommu/omap-iommu-debug.c
+@@ -98,8 +98,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
+ 	mutex_lock(&iommu_debug_lock);
  
-+	/*
-+	 * if PKEY_DISABLE_EXECUTE succeeded we should update the expected_iamr
-+	 */
- 	if (disable_execute)
- 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
- 	else
- 		info->expected_iamr &= ~(1ul << pkeyshift(pkey1));
+ 	bytes = omap_iommu_dump_ctx(obj, p, count);
++	if (bytes < 0)
++		goto err;
+ 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
  
--	info->expected_iamr &= ~(1ul << pkeyshift(pkey2) | 1ul << pkeyshift(pkey3));
-+	/*
-+	 * We allocated pkey2 and pkey 3 above. Clear the IAMR bits.
-+	 */
-+	info->expected_iamr &= ~(1ul << pkeyshift(pkey2));
-+	info->expected_iamr &= ~(1ul << pkeyshift(pkey3));
++err:
+ 	mutex_unlock(&iommu_debug_lock);
+ 	kfree(buf);
  
--	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
--				3ul << pkeyshift(pkey2);
- 	/*
- 	 * Create an IAMR value different from expected value.
- 	 * Kernel will reject an IAMR and UAMOR change.
 -- 
 2.25.1
 
