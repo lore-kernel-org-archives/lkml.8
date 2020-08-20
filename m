@@ -2,202 +2,118 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F0DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4EE2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921554;
-	bh=OhCnyEGNkDaKfgca2OXRG6T83JJkSQNLRIyv8z42H40=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1yFhzbUZrsFstbfaiXdn4IZNp44ydVTJPBlj6P6yipotXvd+UGBmlT5XdSGXhhbKV
-	 e5Zo1GGhcF53ecnrm3FU30N5R4riy3Xyjl5NFwVC0L/hXKzfTFkQtW6c9cjju/PXfL
-	 7unhJjapeRDFe4Mxg114FuL7LdeofQPrOLZoaKns=
+	by mail.kernel.org (Postfix) with ESMTP id 4BE702072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4ll16vi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbgHTLFv (ORCPT
+        id S1729322AbgHTLF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731049AbgHTKMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924702067C;
-        Thu, 20 Aug 2020 10:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918342;
-        bh=OhCnyEGNkDaKfgca2OXRG6T83JJkSQNLRIyv8z42H40=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qCVAgVO2whUUT6YVkDxFWEBfkBNTpfR+DXmLutSZZX/4Odpn+H+ISWXaNAVOtjccC
-         OW5od4Z9Ot3O712IPooom3I/WvCisOsB8rJa/ZK93sfPbcrPl06KmDW9XlFb7eUR0g
-         OwG3fbzcGcQO0GsVwgwtGbmz4OjDmAiWXzgJM9kY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Drew Fustini <drew@beagleboard.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 136/228] pinctrl-single: fix pcs_parse_pinconf() return value
-Date:   Thu, 20 Aug 2020 11:21:51 +0200
-Message-Id: <20200820091614.384399253@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 07:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728976AbgHTLFc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:05:32 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59909C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 04:05:29 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id h4so1737160ioe.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 04:05:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ki1WQNTHcThUFIdfEkntkrGULJACUJ9yJz/bmSD9Zk4=;
+        b=T4ll16vitP366qklDX50f3YJzjIWVqhIPBxyHOXoytwEHnmw5TXRhyruxNl25YYGv1
+         drxoowiA08/SofODXLrxwlo+/T4BP9gCbFFq8vUQWigeMopmJM0JoaIrftZTItta8Lm0
+         AHhxpM4P9BvWA9b5Vo7U79Oqj82MezCBEnA7yMW4U728fP5/YxpZrTZAEk0PnEVhROOY
+         fAWSUnNgXFNn0mISMiB0CLB8ne+1yvt5Xf479kIDAZg+krVxehKGrtPndcD+hupW7h1W
+         kMox2AJibyI0Y6rc0JxsNTaiObDyh1TMZ1X1aAw2e0w4KqHM0bas/mAOXfjcvuVEchVK
+         OgQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ki1WQNTHcThUFIdfEkntkrGULJACUJ9yJz/bmSD9Zk4=;
+        b=EVVVzS96ld/s5cNusGI313Y4nt0kV+4/Mb0L9t/CeNgzFKBRyWFYjhtdgFD9+L3hKh
+         Lk1l0c+jTwJ4O5ydzQluYfaFclmwQ/gr2w7AJVrvZj4ScD2OSnSIfkkhB1wcRWCteqOD
+         sbCOYo5sxdJZQ9pMlf0xVcBHvDhDsfm6KUw853RF04A6Igas4qJSnBisu2WmT5AIGH31
+         3q/e//ysJoo1XJ/vMzFnAIT0ht+AwrxYIQ2QaKgf9TaInAeyg1E8p9dCsrX0UD6+Za5L
+         aw/6m8KmBzcmvs2d/OuOn90scavB9e/5ombCAzpTVg1LolHJJEyY3INjWHYTbEliIVQC
+         EE3w==
+X-Gm-Message-State: AOAM533fioHYjjuvqgOLKsqX/coGqjaeY5wpMoz2eeS12QYIzsP58tVH
+        mqFp0po6S8pkwUHI+/OkYY1h3AXmYo3IU5nzkVxAUlnVp01M+Q==
+X-Google-Smtp-Source: ABdhPJy8/B73Rwis0rcIrLcmnezpMOZs5TSkb/gxeBASX1Y68sIG9u8fggt3cVgCb7QgHUrLjqugAPGdHve9mLdVjAk=
+X-Received: by 2002:a05:6602:2409:: with SMTP id s9mr1985839ioa.98.1597921528654;
+ Thu, 20 Aug 2020 04:05:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200820021641.3188-1-thunder.leizhen@huawei.com> <20200820021641.3188-7-thunder.leizhen@huawei.com>
+In-Reply-To: <20200820021641.3188-7-thunder.leizhen@huawei.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Thu, 20 Aug 2020 13:05:17 +0200
+Message-ID: <CAM9Jb+jrzR3Q7JcYJKpjHr6_xXCrMUybRc3+hzM1zRd9dETmPA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/7] libnvdimm: make sure EXPORT_SYMBOL_GPL(nvdimm_flush)
+ close to its function
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     "Oliver O'Halloran" <oohall@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Drew Fustini <drew@beagleboard.org>
+> Move EXPORT_SYMBOL_GPL(nvdimm_flush) close to nvdimm_flush(), currently
+> it's near to generic_nvdimm_flush().
+>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  drivers/nvdimm/region_devs.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
+> index 49be115c9189eff..909bf03edb132cf 100644
+> --- a/drivers/nvdimm/region_devs.c
+> +++ b/drivers/nvdimm/region_devs.c
+> @@ -1183,6 +1183,8 @@ int nvdimm_flush(struct nd_region *nd_region, struct bio *bio)
+>
+>         return rc;
+>  }
+> +EXPORT_SYMBOL_GPL(nvdimm_flush);
+> +
+>  /**
+>   * nvdimm_flush - flush any posted write queues between the cpu and pmem media
+>   * @nd_region: blk or interleaved pmem region
+> @@ -1214,7 +1216,6 @@ int generic_nvdimm_flush(struct nd_region *nd_region)
+>
+>         return 0;
+>  }
+> -EXPORT_SYMBOL_GPL(nvdimm_flush);
+>
+>  /**
+>   * nvdimm_has_flush - determine write flushing requirements
+> --
 
-[ Upstream commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f ]
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
-pinctrl_map is added.  The current behavior is to return 0 when
-!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
-incorrectly assumes that a map was added and sets num_maps = 2.
-
-Analysis:
-=========
-The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
-if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
-returns 0 to indicate there was no error and num_maps is then set to 2:
-
- 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
- 981                                                 struct device_node *np,
- 982                                                 struct pinctrl_map **map,
- 983                                                 unsigned *num_maps,
- 984                                                 const char **pgnames)
- 985 {
-<snip>
-1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
-1054         (*map)->data.mux.group = np->name;
-1055         (*map)->data.mux.function = np->name;
-1056
-1057         if (PCS_HAS_PINCONF && function) {
-1058                 res = pcs_parse_pinconf(pcs, np, function, map);
-1059                 if (res)
-1060                         goto free_pingroups;
-1061                 *num_maps = 2;
-1062         } else {
-1063                 *num_maps = 1;
-1064         }
-
-However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
-!nconfs.  I believe these conditions should indicate that no map was
-added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
-will set num_maps = 2 even though no maps were successfully added, as
-it does not reach "m++" on line 940:
-
- 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- 896                              struct pcs_function *func,
- 897                              struct pinctrl_map **map)
- 898
- 899 {
- 900         struct pinctrl_map *m = *map;
-<snip>
- 917         /* If pinconf isn't supported, don't parse properties in below. */
- 918         if (!PCS_HAS_PINCONF)
- 919                 return 0;
- 920
- 921         /* cacluate how much properties are supported in current node */
- 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
- 923                 if (of_find_property(np, prop2[i].name, NULL))
- 924                         nconfs++;
- 925         }
- 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
- 927                 if (of_find_property(np, prop4[i].name, NULL))
- 928                         nconfs++;
- 929         }
- 930         if (!nconfs)
- 919                 return 0;
- 932
- 933         func->conf = devm_kcalloc(pcs->dev,
- 934                                   nconfs, sizeof(struct pcs_conf_vals),
- 935                                   GFP_KERNEL);
- 936         if (!func->conf)
- 937                 return -ENOMEM;
- 938         func->nconfs = nconfs;
- 939         conf = &(func->conf[0]);
- 940         m++;
-
-This situtation will cause a boot failure [0] on the BeagleBone Black
-(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
-has compatible = "pinconf-single" instead of "pinctrl-single".
-
-The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
-or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
-map was added.
-
-Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
-between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
-is set to 1 as it is valid for pinconf to be enabled and a given pin
-group to not any pinconf properties.
-
-[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
-
-Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Link: https://lore.kernel.org/r/20200608125143.GA2789203@x1
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/pinctrl-single.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index b8b3d932cd73a..f751b5c3bf7e8 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -888,7 +888,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- 
- 	/* If pinconf isn't supported, don't parse properties in below. */
- 	if (!PCS_HAS_PINCONF)
--		return 0;
-+		return -ENOTSUPP;
- 
- 	/* cacluate how much properties are supported in current node */
- 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
-@@ -900,7 +900,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
- 			nconfs++;
- 	}
- 	if (!nconfs)
--		return 0;
-+		return -ENOTSUPP;
- 
- 	func->conf = devm_kzalloc(pcs->dev,
- 				  sizeof(struct pcs_conf_vals) * nconfs,
-@@ -1024,9 +1024,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
- 
- 	if (PCS_HAS_PINCONF) {
- 		res = pcs_parse_pinconf(pcs, np, function, map);
--		if (res)
-+		if (res == 0)
-+			*num_maps = 2;
-+		else if (res == -ENOTSUPP)
-+			*num_maps = 1;
-+		else
- 			goto free_pingroups;
--		*num_maps = 2;
- 	} else {
- 		*num_maps = 1;
- 	}
--- 
-2.25.1
-
-
-
+> 1.8.3
+>
+> _______________________________________________
+> Linux-nvdimm mailing list -- linux-nvdimm@lists.01.org
+> To unsubscribe send an email to linux-nvdimm-leave@lists.01.org
