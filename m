@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2375C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134CB2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC222078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928116;
-	bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
+	s=default; t=1597928119;
+	bh=cFSsyY+N9kTR0Cd7a0UjjTB3fTM2An8IueZiXLqrQhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WqYPnmwRQaeN7AJrmfAvU+EAgp26llU9jXzNIU9sA3zSG2ux5VzfeT67et1Qzd/Z2
-	 39D1J1VV9n7viC0ESk+YfNdtO58aH5GkNkQfQhBrOlXaq8zqbF2V+7pzdZpleN3kuP
-	 sN5yZolSfvg47StyzwZumndzo8E30eecwVSAgfw0=
+	b=AJKzWeGyOBE0HcMJ2CO4rhKtP0gH59necdGfWZl/RHXLHgq6Ij9sEDIeIkP2y5AmQ
+	 ZaFC/WwttdmfrSszuBndwiyh1qt2WXIpKkMzXcy0+QnW0b4+foQpcImMB49oCQknVu
+	 HhZiKYiSk5870Je566bXCdCc/SfBOAP+kYqWUGtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728972AbgHTJnN (ORCPT
+        id S1730168AbgHTMzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:43:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37006 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:55:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729150AbgHTJmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:19 -0400
+        id S1728789AbgHTJnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF9A2075E;
-        Thu, 20 Aug 2020 09:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0814A208E4;
+        Thu, 20 Aug 2020 09:43:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916538;
-        bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
+        s=default; t=1597916590;
+        bh=cFSsyY+N9kTR0Cd7a0UjjTB3fTM2An8IueZiXLqrQhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jPWkqFAWpodNfWG/XIkkcqYEt0eknpP/Oo0ixQxl2cESrMdYguk3mW1DgkpPZJtAz
-         UojZiM0BO3PVKDYNKz6bTotQqzm77D2JYg+7rFAvK2e5zzydud/3zMyIYt6S6wzZXc
-         J2Nk12nHOowVH9AVw8s0EeYLXspOCOX8Zw0T4em0=
+        b=B1ViXoWB1AcZkhv+MRo30zaSeN/AkkHkH6VtjZsJAGkYTEQ+IoRL7T326VvUQoPId
+         CmA7yaw3G9k6mlZVvBbEyNEG4YWow47frSwOcnXUq5IbvZKhnEVlXwmwRIA+1xsfWh
+         ULNpNdrJK/QBdOssIDKncymPPdey5uPfoIIE9skI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 164/204] Input: sentelic - fix error return when fsp_reg_write fails
-Date:   Thu, 20 Aug 2020 11:21:01 +0200
-Message-Id: <20200820091614.411816259@linuxfoundation.org>
+Subject: [PATCH 5.7 182/204] mfd: dln2: Run event handler loop under spinlock
+Date:   Thu, 20 Aug 2020 11:21:19 +0200
+Message-Id: <20200820091615.290159493@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,37 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
+[ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
 
-Currently when the call to fsp_reg_write fails -EIO is not being returned
-because the count is being returned instead of the return value in retval.
-Fix this by returning the value in retval instead of count.
+The event handler loop must be run with interrupts disabled.
+Otherwise we will have a warning:
 
-Addresses-Coverity: ("Unused value")
-Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+[ 1970.785649] irq 31 handler lineevent_irq_handler+0x0/0x20 enabled interrupts
+[ 1970.792739] WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:159 __handle_irq_event_percpu+0x162/0x170
+[ 1970.860732] RIP: 0010:__handle_irq_event_percpu+0x162/0x170
+...
+[ 1970.946994] Call Trace:
+[ 1970.949446]  <IRQ>
+[ 1970.951471]  handle_irq_event_percpu+0x2c/0x80
+[ 1970.955921]  handle_irq_event+0x23/0x43
+[ 1970.959766]  handle_simple_irq+0x57/0x70
+[ 1970.963695]  generic_handle_irq+0x42/0x50
+[ 1970.967717]  dln2_rx+0xc1/0x210 [dln2]
+[ 1970.971479]  ? usb_hcd_unmap_urb_for_dma+0xa6/0x1c0
+[ 1970.976362]  __usb_hcd_giveback_urb+0x77/0xe0
+[ 1970.980727]  usb_giveback_urb_bh+0x8e/0xe0
+[ 1970.984837]  tasklet_action_common.isra.0+0x4a/0xe0
+...
+
+Recently xHCI driver switched to tasklets in the commit 36dc01657b49
+("usb: host: xhci: Support running urb giveback in tasklet context").
+
+The handle_irq_event_* functions are expected to be called with interrupts
+disabled and they rightfully complain here because we run in tasklet context
+with interrupts enabled.
+
+Use a event spinlock to protect event handler from being interrupted.
+
+Note, that there are only two users of this GPIO and ADC drivers and both of
+them are using generic_handle_irq() which makes above happen.
+
+Fixes: 338a12814297 ("mfd: Add support for Diolan DLN-2 devices")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/sentelic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/dln2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
-index e99d9bf1a267d..e78c4c7eda34d 100644
---- a/drivers/input/mouse/sentelic.c
-+++ b/drivers/input/mouse/sentelic.c
-@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
+diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
+index 39276fa626d2b..83e676a096dc1 100644
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -287,7 +287,11 @@ static void dln2_rx(struct urb *urb)
+ 	len = urb->actual_length - sizeof(struct dln2_header);
  
- 	fsp_reg_write_enable(psmouse, false);
- 
--	return count;
-+	return retval;
- }
- 
- PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
+ 	if (handle == DLN2_HANDLE_EVENT) {
++		unsigned long flags;
++
++		spin_lock_irqsave(&dln2->event_cb_lock, flags);
+ 		dln2_run_event_callbacks(dln2, id, echo, data, len);
++		spin_unlock_irqrestore(&dln2->event_cb_lock, flags);
+ 	} else {
+ 		/* URB will be re-submitted in _dln2_transfer (free_rx_slot) */
+ 		if (dln2_transfer_complete(dln2, urb, handle, echo))
 -- 
 2.25.1
 
