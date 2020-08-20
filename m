@@ -2,151 +2,222 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 751DCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4891AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 527D022BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200D3208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ht5gtNDT"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ipCf1MHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730721AbgHTNqT (ORCPT
+        id S1730804AbgHTNqX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730583AbgHTNkO (ORCPT
+        Thu, 20 Aug 2020 09:46:23 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41406 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730626AbgHTNlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:40:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC072C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=M7LhfTKr/6e64b8f6hHsV3cvhzdJCa8nrqjNCiRKjWo=; b=ht5gtNDT2NQZYe0CQtBrRTqED7
-        rT6HAsJ5h0qOe1WgVmpqvxXibeM5KfYyR5d47CDCT7hOuJfTixAT4a7gj64V3iVbion/QGrFXQLcN
-        2n6R/BNgMypzS6rssVVTrM4BtO8hG5GZFce2p+xbtUBn3IWUPK74jsMJkX17dtaaY+OZhRiasQn5p
-        hJUTenjorBK8m6ByBV5ltRW3WJl5jM2y79cKdE4Iw9xAdV2lQwHwObMnkY2VX1mIyFVZDcFpwLqjo
-        c2IOHzv3p09atfkzHAY36qQhOQ5mZ4n+fYofow1XetxmO93zCLwSFGEQIN6vokI7vPyGkbuFgyxvJ
-        tlMrt3Ag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8knT-0005Uz-GU; Thu, 20 Aug 2020 13:40:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 06307302526;
-        Thu, 20 Aug 2020 15:40:01 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D1D902BE72362; Thu, 20 Aug 2020 15:40:01 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 15:40:01 +0200
-From:   peterz@infradead.org
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     mingo@kernel.org, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, will@kernel.org, paulmck@kernel.org,
-        axboe@kernel.dk, chris@chris-wilson.co.uk, davem@davemloft.net,
-        kuba@kernel.org, fweisbec@gmail.com, oleg@redhat.com,
-        vincent.guittot@linaro.org
-Subject: Re: [RFC][PATCH v2 08/10] smp,irq_work: Use the new irq_work API
-Message-ID: <20200820134001.GV2674@hirez.programming.kicks-ass.net>
-References: <20200818105102.926463950@infradead.org>
- <20200818112418.460474861@infradead.org>
- <20200820061927.GA6447@lst.de>
+        Thu, 20 Aug 2020 09:41:05 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KDevGI046097;
+        Thu, 20 Aug 2020 08:40:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597930857;
+        bh=mCqsC8I7TNN41Xg66/1Y1+1+wh+JFrJTfp3db0LJpjs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ipCf1MHpGpcSVa5KXgsYhmukQmfffwOT9EJEJCrit4p1UPb5E5bNY2pmK7gKsY42g
+         o9j17wR8VAIAR4LUSxTt8rnHDzd8ptD/T1D+LnRy5AhP/WH4sqwwyr5ReJ8uIsRwxs
+         QxoXGlc+pbw6wZ9Wo6R8QlLkZPjPDnHMViPPFN0s=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KDevoZ068958
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 08:40:57 -0500
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
+ Aug 2020 08:40:57 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 20 Aug 2020 08:40:57 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KDetFR019331;
+        Thu, 20 Aug 2020 08:40:56 -0500
+Subject: Re: [PATCH v4 1/3] dt-binding: phy: convert ti,omap-usb2 to YAML
+To:     <kishon@ti.com>
+CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20200716082252.21266-1-rogerq@ti.com>
+ <20200716082252.21266-2-rogerq@ti.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <4032ac86-5f2e-98ca-180b-73a483bae6b6@ti.com>
+Date:   Thu, 20 Aug 2020 16:40:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820061927.GA6447@lst.de>
+In-Reply-To: <20200716082252.21266-2-rogerq@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:19:27AM +0200, Christoph Hellwig wrote:
-> On Tue, Aug 18, 2020 at 12:51:10PM +0200, Peter Zijlstra wrote:
-> >  	if (blk_mq_complete_need_ipi(rq)) {
-> > -		INIT_CSD(&rq->csd, __blk_mq_complete_request_remote, rq);
-> > -		smp_call_function_single_async(rq->mq_ctx->cpu, &rq->csd);
-> > +		rq->work = IRQ_WORK_INIT_HARD(__blk_mq_complete_request_remote);
-> > +		irq_work_queue_remote_static(rq->mq_ctx->cpu, &rq->work);
+Kishon,
+
+On 16/07/2020 11:22, Roger Quadros wrote:
+> Move ti,omap-usb2 to its own YAML schema.
 > 
-> So given the caller synchronization / use once semantics does it even
-> make sense to split the init vs call part here?  What about:
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Can you please pick just this one patch from this series for -next? Thanks.
+
+cheers,
+-roger
+
+> ---
+>   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
+>   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+>   2 files changed, 72 insertions(+), 37 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
 > 
-> 		irq_work_queue_remote_static(&rq->work, rq->mq_ctx->cpu,
-> 					    __blk_mq_complete_request_remote);
+> diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> new file mode 100644
+> index 000000000000..a05110351814
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> @@ -0,0 +1,72 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: OMAP USB2 PHY
+> +
+> +maintainers:
+> + - Kishon Vijay Abraham I <kishon@ti.com>
+> + - Roger Quadros <rogerq@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - items:
+> +        - enum:
+> +          - ti,dra7x-usb2
+> +          - ti,dra7x-usb2-phy2
+> +          - ti,am654-usb2
+> +        - enum:
+> +          - ti,omap-usb2
+> +      - items:
+> +        - const: ti,omap-usb2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    minItems: 1
+> +    items:
+> +      - description: wakeup clock
+> +      - description: reference clock
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    items:
+> +      - const: wkupclk
+> +      - const: refclk
+> +
+> +  syscon-phy-power:
+> +    $ref: /schemas/types.yaml#definitions/phandle-array
+> +    description:
+> +      phandle/offset pair. Phandle to the system control module and
+> +      register offset to power on/off the PHY.
+> +
+> +  ctrl-module:
+> +    $ref: /schemas/types.yaml#definitions/phandle
+> +    description:
+> +      (deprecated) phandle of the control module used by PHY driver
+> +      to power on the PHY. Use syscon-phy-power instead.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    usb0_phy: phy@4100000 {
+> +      compatible = "ti,am654-usb2", "ti,omap-usb2";
+> +      reg = <0x4100000 0x54>;
+> +      syscon-phy-power = <&scm_conf 0x4000>;
+> +      clocks = <&k3_clks 151 0>, <&k3_clks 151 1>;
+> +      clock-names = "wkupclk", "refclk";
+> +      #phy-cells = <0>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> index 8f93c3b694a7..60c9d0ac75e6 100644
+> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+> @@ -27,43 +27,6 @@ omap_control_usb: omap-control-usb@4a002300 {
+>           reg-names = "otghs_control";
+>   };
+>   
+> -OMAP USB2 PHY
+> -
+> -Required properties:
+> - - compatible: Should be "ti,omap-usb2"
+> -	       Should be "ti,dra7x-usb2" for the 1st instance of USB2 PHY on
+> -	       DRA7x
+> -	       Should be "ti,dra7x-usb2-phy2" for the 2nd instance of USB2 PHY
+> -	       in DRA7x
+> -	       Should be "ti,am654-usb2" for the USB2 PHYs on AM654.
+> - - reg : Address and length of the register set for the device.
+> - - #phy-cells: determine the number of cells that should be given in the
+> -   phandle while referencing this phy.
+> - - clocks: a list of phandles and clock-specifier pairs, one for each entry in
+> -   clock-names.
+> - - clock-names: should include:
+> -   * "wkupclk" - wakeup clock.
+> -   * "refclk" - reference clock (optional).
+> -
+> -Deprecated properties:
+> - - ctrl-module : phandle of the control module used by PHY driver to power on
+> -   the PHY.
+> -
+> -Recommended properies:
+> -- syscon-phy-power : phandle/offset pair. Phandle to the system control
+> -  module and the register offset to power on/off the PHY.
+> -
+> -This is usually a subnode of ocp2scp to which it is connected.
+> -
+> -usb2phy@4a0ad080 {
+> -	compatible = "ti,omap-usb2";
+> -	reg = <0x4a0ad080 0x58>;
+> -	ctrl-module = <&omap_control_usb>;
+> -	#phy-cells = <0>;
+> -	clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
+> -	clock-names = "wkupclk", "refclk";
+> -};
+> -
+>   TI PIPE3 PHY
+>   
+>   Required properties:
 > 
-> instead?  And btw, I'm not sure what the "static" stand for.  Maybe
-> irq_work_queue_remote_once?
 
-The 'static' came from static storage, but I agree that the naming is
-pretty random/poor.
-
-One argument against your proposal is that it makes it even harder to
-add warnings that try and catch bad/broken usage.
-
-Also, given Linus' email I now wonder if we still want the
-irq_work_remote variant at all.
-
-
-So the initial use-case was something like:
-
-struct foo {
-	struct irq_work work;
-	...
-};
-
-void foo_func(struct irq_work *work)
-{
-	struct foo *f = container_of(work, struct foo, work);
-
-	...
-}
-
-DEFINE_PER_CPU(struct foo, foo) = IRQ_WORK_INIT_HARD(foo_func);
-
-void raise_foo(int cpu)
-{
-	irq_work_queue_remote(per_cpu_ptr(&foo, cpu), cpu);
-}
-
-Where you can, with IRQs disabled, call raise_foo(cpu) for a remote CPU
-and have the guarantee that foo_func() will observe whatever you did
-before calling raise_foo().
-
-Specifically, I needed this for what is now __ttwu_queue_wakelist(),
-which used to rely on smp_send_reschedule() but needed to be pulled out
-of the regular scheduler IPI.
-
-While sorting through the wreckage of me getting this horribly wrong, I
-noticed that generic_smp_call_function_single_interrupt() was
-unconditionally loading _2_ cachelines, one for the regular CSD llist
-and one for the remote irq_work llist.
-
-I then realized we could merge those two lists, and regain the original
-intent of that IPI to only touch one line.
-
-At that point I could build the above, but then I realized that since I
-already had a mixed type list, I could put the ttwu entries on it as
-well, which is cheaper than doing the above.
-
-
-Anyway, tl;dr, what do we actually want? Do we favour the embedded
-irq_work variant over smp_call_function_single_asyn() ?
-
-There's a few subtle differences, where smp_call_function_single_async()
-will directly call @func when @cpu == smp_processor_id(),
-irq_work_remote will give you WARN -- since irq_work to the local CPU is
-defined as a self-IPI, which isn't implemented on all architectures and
-is a distinctly different behaviour.
-
-That said, most (if not all) users seem to actually only care about
-running things on another CPU, so that seems to not matter (much).
-
-
-
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
