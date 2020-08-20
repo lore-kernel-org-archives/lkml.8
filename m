@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22FD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F135C20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01F1020738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926253;
-	bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+	s=default; t=1597926263;
+	bh=LvNYnM+Edoc6JYWBGUXA6P+JWoJFIlVZpUBRwTssFYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h5iaqF3ARFNOjZCsRVv+JLGc7uuPcOgu99hw1hJ9A5D79RXcDOY+SZ15Qgw3eAb4H
-	 jZt+yKJDO/+dCrC3VaWjk2FeRpyp7OhJhNwrZkbB6CZKVjZjx7jWUiayHV9MzE61Hw
-	 Ub4Ab+3XfLhbikJwAmOmsL///St/CRYPmK08N7TM=
+	b=uBpTbxwKrMDpdVwUllSCtWMo7UTMFyHoSRjkBbwpms/eSejKp0duL48kQUqGOeVfO
+	 r7is7kfD49KMgXCp+EgrrErRknBju/jguE8HpSMhpbm09hty+a9Ul86IX9RoRl6L9R
+	 QDpwiMedVEgvMjOrvqm2+teSROZWRkbES1jxeZ44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730458AbgHTMYM (ORCPT
+        id S1730525AbgHTMYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:24:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36754 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730101AbgHTJyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:20 -0400
+        id S1730068AbgHTJyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22C41207FB;
-        Thu, 20 Aug 2020 09:54:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DCA62075E;
+        Thu, 20 Aug 2020 09:54:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917259;
-        bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+        s=default; t=1597917253;
+        bh=LvNYnM+Edoc6JYWBGUXA6P+JWoJFIlVZpUBRwTssFYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pPFqXoTzl0DmzcnHcH2XVNVuDvygqm3qhRjndOCwm6+6g48tpVcbVrkwe0IgBVPOh
-         RSOEPceBDRD3zLNcT59UwTwN1LA36EZ1KZFsKcps+peJ0qiWQKMo2lb/Zu9XaarZEE
-         drN/V/QpfQ8ZTmBb3Zm3wvVL9CwX6kSB/zbtPpkU=
+        b=r19uRXaoJpLmxANMu/1RyG89jgzi2E1ao11oOWzAvQu3Pl5H7QFI6zMSEfpdSRc1h
+         WlTcJ7c/+uO0dyYG4v3J75g0w7O4rkd3hOI4A/rWy7Aj3/JtanEuQ7rI9d93A3lXsM
+         yhwl/5K1jziMS16uAuGbUOMqY2f8Ae5zWGSGRhCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 60/92] selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
-Date:   Thu, 20 Aug 2020 11:21:45 +0200
-Message-Id: <20200820091540.742447410@linuxfoundation.org>
+Subject: [PATCH 4.19 58/92] gpu: ipu-v3: image-convert: Combine rotate/no-rotate irq handlers
+Date:   Thu, 20 Aug 2020 11:21:43 +0200
+Message-Id: <20200820091540.640659114@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -61,109 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 
-[ Upstream commit 9a11f12e0a6c374b3ef1ce81e32ce477d28eb1b8 ]
+[ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
 
-Rename variable to indicate that they are invalid values which we will
-use to test ptrace update of pkeys.
+Combine the rotate_irq() and norotate_irq() handlers into a single
+eof_irq() handler.
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-21-aneesh.kumar@linux.ibm.com
+Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/powerpc/ptrace/ptrace-pkey.c    | 26 +++++++++----------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 58 +++++++++-----------------
+ 1 file changed, 20 insertions(+), 38 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index bdbbbe8431e03..f9216c7a1829e 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -44,7 +44,7 @@ struct shared_info {
- 	unsigned long amr2;
+diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
+index 91653adc41cc4..cdaf1d74e31a2 100644
+--- a/drivers/gpu/ipu-v3/ipu-image-convert.c
++++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
+@@ -998,9 +998,10 @@ static irqreturn_t do_irq(struct ipu_image_convert_run *run)
+ 	return IRQ_WAKE_THREAD;
+ }
  
- 	/* AMR value that ptrace should refuse to write to the child. */
--	unsigned long amr3;
-+	unsigned long invalid_amr;
+-static irqreturn_t norotate_irq(int irq, void *data)
++static irqreturn_t eof_irq(int irq, void *data)
+ {
+ 	struct ipu_image_convert_chan *chan = data;
++	struct ipu_image_convert_priv *priv = chan->priv;
+ 	struct ipu_image_convert_ctx *ctx;
+ 	struct ipu_image_convert_run *run;
+ 	unsigned long flags;
+@@ -1017,45 +1018,26 @@ static irqreturn_t norotate_irq(int irq, void *data)
  
- 	/* IAMR value the parent expects to read from the child. */
- 	unsigned long expected_iamr;
-@@ -57,8 +57,8 @@ struct shared_info {
- 	 * (even though they're valid ones) because userspace doesn't have
- 	 * access to those registers.
- 	 */
--	unsigned long new_iamr;
--	unsigned long new_uamor;
-+	unsigned long invalid_iamr;
-+	unsigned long invalid_uamor;
- };
+ 	ctx = run->ctx;
  
- static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
-@@ -100,7 +100,7 @@ static int child(struct shared_info *info)
+-	if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
+-		/* this is a rotation operation, just ignore */
+-		spin_unlock_irqrestore(&chan->irqlock, flags);
+-		return IRQ_HANDLED;
+-	}
+-
+-	ret = do_irq(run);
+-out:
+-	spin_unlock_irqrestore(&chan->irqlock, flags);
+-	return ret;
+-}
+-
+-static irqreturn_t rotate_irq(int irq, void *data)
+-{
+-	struct ipu_image_convert_chan *chan = data;
+-	struct ipu_image_convert_priv *priv = chan->priv;
+-	struct ipu_image_convert_ctx *ctx;
+-	struct ipu_image_convert_run *run;
+-	unsigned long flags;
+-	irqreturn_t ret;
+-
+-	spin_lock_irqsave(&chan->irqlock, flags);
+-
+-	/* get current run and its context */
+-	run = chan->current_run;
+-	if (!run) {
++	if (irq == chan->out_eof_irq) {
++		if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
++			/* this is a rotation op, just ignore */
++			ret = IRQ_HANDLED;
++			goto out;
++		}
++	} else if (irq == chan->rot_out_eof_irq) {
++		if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
++			/* this was NOT a rotation op, shouldn't happen */
++			dev_err(priv->ipu->dev,
++				"Unexpected rotation interrupt\n");
++			ret = IRQ_HANDLED;
++			goto out;
++		}
++	} else {
++		dev_err(priv->ipu->dev, "Received unknown irq %d\n", irq);
+ 		ret = IRQ_NONE;
+ 		goto out;
+ 	}
  
- 	info->amr1 |= 3ul << pkeyshift(pkey1);
- 	info->amr2 |= 3ul << pkeyshift(pkey2);
--	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
-+	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
+-	ctx = run->ctx;
+-
+-	if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
+-		/* this was NOT a rotation operation, shouldn't happen */
+-		dev_err(priv->ipu->dev, "Unexpected rotation interrupt\n");
+-		spin_unlock_irqrestore(&chan->irqlock, flags);
+-		return IRQ_HANDLED;
+-	}
+-
+ 	ret = do_irq(run);
+ out:
+ 	spin_unlock_irqrestore(&chan->irqlock, flags);
+@@ -1148,7 +1130,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
+ 						  chan->out_chan,
+ 						  IPU_IRQ_EOF);
  
- 	if (disable_execute)
- 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
-@@ -111,8 +111,8 @@ static int child(struct shared_info *info)
+-	ret = request_threaded_irq(chan->out_eof_irq, norotate_irq, do_bh,
++	ret = request_threaded_irq(chan->out_eof_irq, eof_irq, do_bh,
+ 				   0, "ipu-ic", chan);
+ 	if (ret < 0) {
+ 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
+@@ -1161,7 +1143,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
+ 						     chan->rotation_out_chan,
+ 						     IPU_IRQ_EOF);
  
- 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
- 				3ul << pkeyshift(pkey2);
--	info->new_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
--	info->new_uamor |= 3ul << pkeyshift(pkey1);
-+	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
-+	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
- 
- 	/*
- 	 * We won't use pkey3. We just want a plausible but invalid key to test
-@@ -196,9 +196,9 @@ static int parent(struct shared_info *info, pid_t pid)
- 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	info->amr1 = info->amr2 = info->amr3 = regs[0];
--	info->expected_iamr = info->new_iamr = regs[1];
--	info->expected_uamor = info->new_uamor = regs[2];
-+	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
-+	info->expected_iamr = info->invalid_iamr = regs[1];
-+	info->expected_uamor = info->invalid_uamor = regs[2];
- 
- 	/* Wake up child so that it can set itself up. */
- 	ret = prod_child(&info->child_sync);
-@@ -234,10 +234,10 @@ static int parent(struct shared_info *info, pid_t pid)
- 		return ret;
- 
- 	/* Write invalid AMR value in child. */
--	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
-+	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
-+	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
- 
- 	/* Wake up child so that it can verify it didn't change. */
- 	ret = prod_child(&info->child_sync);
-@@ -249,7 +249,7 @@ static int parent(struct shared_info *info, pid_t pid)
- 
- 	/* Try to write to IAMR. */
- 	regs[0] = info->amr1;
--	regs[1] = info->new_iamr;
-+	regs[1] = info->invalid_iamr;
- 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
- 	PARENT_FAIL_IF(!ret, &info->child_sync);
- 
-@@ -257,7 +257,7 @@ static int parent(struct shared_info *info, pid_t pid)
- 	       ptrace_write_running, regs[0], regs[1]);
- 
- 	/* Try to write to IAMR and UAMOR. */
--	regs[2] = info->new_uamor;
-+	regs[2] = info->invalid_uamor;
- 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
- 	PARENT_FAIL_IF(!ret, &info->child_sync);
- 
+-	ret = request_threaded_irq(chan->rot_out_eof_irq, rotate_irq, do_bh,
++	ret = request_threaded_irq(chan->rot_out_eof_irq, eof_irq, do_bh,
+ 				   0, "ipu-ic", chan);
+ 	if (ret < 0) {
+ 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
 -- 
 2.25.1
 
