@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A83620639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89612078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922120;
-	bh=02CiQExdNNZ7mSv4dQbRS2MJTkgMN0xCXrym5xVxl7s=;
+	s=default; t=1597922134;
+	bh=Z791Hw3g3+zFUkOer+xUwNtRyRJX1ucFG2EkH+hTXxs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GqIRaw8nUg5dsq9JLfN1RmKGhmdCfKWgP7Gsk+AbTRnkYmKzaowlioBE0V7DBlElP
-	 YtzM/Ms4Tzdnog496R5WveNoS2rcWetsqaeagVxd8YO1k/l8gK8ZonKlXkVQQoW+Pn
-	 9T1tuev8+Q/xSI/OfInzQ4CkuCAN9bDhicHPw1xk=
+	b=EMOp2Jlsln3UC0ocwJ8RMVFjsu8MX/eUbt0+yDiOUMSW26CuP54TZcIl6GXNrD+eh
+	 WkrasyxmYmoMIFEvhvie4+D7G9hjJlzxnLREdZ2+Cw0wcSUvTUrzKTW5vz0gJz+LB3
+	 sDpKGaUr7Q+95VgL3SsIjUGXuQ4uRWSXtJHEGBqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbgHTKI7 (ORCPT
+        id S1730751AbgHTKIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:08:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:08:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729662AbgHTKIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:46 -0400
+        id S1730724AbgHTKIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E752120738;
-        Thu, 20 Aug 2020 10:08:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9250206DA;
+        Thu, 20 Aug 2020 10:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918125;
-        bh=02CiQExdNNZ7mSv4dQbRS2MJTkgMN0xCXrym5xVxl7s=;
+        s=default; t=1597918123;
+        bh=Z791Hw3g3+zFUkOer+xUwNtRyRJX1ucFG2EkH+hTXxs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mww1af+hokm4/0NLzcumyRpJAN1dh8n7YUvOOarqRg9XpKvzR54tETEjEhmAt3zpO
-         HO8loDrmvRmoei+bNYQjXzA4zLuBGP0nbAIAJMmhOxPRIjS6oUXj2LRwTuTIH16zPH
-         Rg0cvVvihrRLF7bZA7UAIz7efwlqgmtZv11Xrjmk=
+        b=wKmlvJP3pbYJXvVsDpAwyF0DGUG/XBUCX0TxEowj9s27nhRJ7bUa24jT4cJxBIF+M
+         //vejf3oVlFUiSanmbBW3PYLmFDbkzOBq4up5wyIs8p67ViaTPOH1L0ew9keRJwB7X
+         sJXZ83HEkY3EHfyAuBnR2l7nvkYigac/bcJvJ7fE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 062/228] fs/btrfs: Add cond_resched() for try_release_extent_mapping() stalls
-Date:   Thu, 20 Aug 2020 11:20:37 +0200
-Message-Id: <20200820091610.705722590@linuxfoundation.org>
+Subject: [PATCH 4.14 053/228] m68k: mac: Dont send IOP message until channel is idle
+Date:   Thu, 20 Aug 2020 11:20:28 +0200
+Message-Id: <20200820091610.265182186@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,60 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit 9f47eb5461aaeb6cb8696f9d11503ae90e4d5cb0 ]
+[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
 
-Very large I/Os can cause the following RCU CPU stall warning:
+In the following sequence of calls, iop_do_send() gets called when the
+"send" channel is not in the IOP_MSG_IDLE state:
 
-RIP: 0010:rb_prev+0x8/0x50
-Code: 49 89 c0 49 89 d1 48 89 c2 48 89 f8 e9 e5 fd ff ff 4c 89 48 10 c3 4c =
-89 06 c3 4c 89 40 10 c3 0f 1f 00 48 8b 0f 48 39 cf 74 38 <48> 8b 47 10 48 85 c0 74 22 48 8b 50 08 48 85 d2 74 0c 48 89 d0 48
-RSP: 0018:ffffc9002212bab0 EFLAGS: 00000287 ORIG_RAX: ffffffffffffff13
-RAX: ffff888821f93630 RBX: ffff888821f93630 RCX: ffff888821f937e0
-RDX: 0000000000000000 RSI: 0000000000102000 RDI: ffff888821f93630
-RBP: 0000000000103000 R08: 000000000006c000 R09: 0000000000000238
-R10: 0000000000102fff R11: ffffc9002212bac8 R12: 0000000000000001
-R13: ffffffffffffffff R14: 0000000000102000 R15: ffff888821f937e0
- __lookup_extent_mapping+0xa0/0x110
- try_release_extent_mapping+0xdc/0x220
- btrfs_releasepage+0x45/0x70
- shrink_page_list+0xa39/0xb30
- shrink_inactive_list+0x18f/0x3b0
- shrink_lruvec+0x38e/0x6b0
- shrink_node+0x14d/0x690
- do_try_to_free_pages+0xc6/0x3e0
- try_to_free_mem_cgroup_pages+0xe6/0x1e0
- reclaim_high.constprop.73+0x87/0xc0
- mem_cgroup_handle_over_high+0x66/0x150
- exit_to_usermode_loop+0x82/0xd0
- do_syscall_64+0xd4/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+	iop_ism_irq()
+		iop_handle_send()
+			(msg->handler)()
+				iop_send_message()
+			iop_do_send()
 
-On a PREEMPT=n kernel, the try_release_extent_mapping() function's
-"while" loop might run for a very long time on a large I/O.  This commit
-therefore adds a cond_resched() to this loop, providing RCU any needed
-quiescent states.
+Avoid this by testing the channel state before calling iop_do_send().
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+When sending, and iop_send_queue is empty, call iop_do_send() because
+the channel is idle. If iop_send_queue is not empty, iop_do_send() will
+get called later by iop_handle_send().
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent_io.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/m68k/mac/iop.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index 6d2bfbb63d9ba..ef1fd6a09d8e5 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4323,6 +4323,8 @@ int try_release_extent_mapping(struct extent_map_tree *map,
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index 4c1e606e7d03b..fb61af5ac4ab8 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
+ 	msg->status = IOP_MSGSTATUS_UNUSED;
+ 	msg = msg->next;
+ 	iop_send_queue[iop_num][chan] = msg;
+-	if (msg) iop_do_send(msg);
++	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
++		iop_do_send(msg);
+ }
  
- 			/* once for us */
- 			free_extent_map(em);
-+
-+			cond_resched(); /* Allow large-extent preemption. */
- 		}
+ /*
+@@ -490,16 +491,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
+ 
+ 	if (!(q = iop_send_queue[iop_num][chan])) {
+ 		iop_send_queue[iop_num][chan] = msg;
++		iop_do_send(msg);
+ 	} else {
+ 		while (q->next) q = q->next;
+ 		q->next = msg;
  	}
- 	return try_release_extent_state(map, tree, page, mask);
+ 
+-	if (iop_readb(iop_base[iop_num],
+-	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
+-		iop_do_send(msg);
+-	}
+-
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
