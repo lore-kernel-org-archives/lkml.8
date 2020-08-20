@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53ED8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E778FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 23A8C207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3CDB20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916470;
-	bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
+	s=default; t=1597916476;
+	bh=U4KrGCQb7/GOL6p3/wipQV9B3LdWGiw+bPEaYyFKaq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=05whLY7n4Cf1FvASK4BpPPWg8JDwbHtcj3ph0B240GuG19BiKg8mOoYwgG7u4EAHR
-	 OyBqRf+PcuE0q/WrC50rAPeo5h3Od2yNeWbMmr9i4NRAakc1Bz2t00MCQn1j8kwuQY
-	 6Yr3fqYvakQ9SHmUHkAvUdihr0bDn2l2ihhWht/c=
+	b=CE95u04IP8XmrEsQVCv61YcnNW0U/gWwgTMRT3CwBfM4Ctai1mYTO/j3YlW0ebrzM
+	 4kpozvxeS5GDJspSpcDk4Z7NZomFvJZ245x819MdIVIAGhrQ7Wir9ftnP0diUd05gC
+	 cUk5LmkPRkjNDWhdY8KoRMCqgnHAmg5A59Eu/f1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbgHTJlF (ORCPT
+        id S1728415AbgHTJlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33508 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgHTJkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:51 -0400
+        id S1727033AbgHTJlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCBE620724;
-        Thu, 20 Aug 2020 09:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D270E207DE;
+        Thu, 20 Aug 2020 09:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916451;
-        bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
+        s=default; t=1597916470;
+        bh=U4KrGCQb7/GOL6p3/wipQV9B3LdWGiw+bPEaYyFKaq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QNVteTn9SrrhSPtPIJiPCZp3ZA3kTFQjeHNWkpyL0MNDWaPtTQnqnCDeS2sbtep5
-         3mi57GGSBTQrfl7IGTTedh0e9wLCb/e5qSy3ny/eREXDSMSg0RGfCKcc6UL7z5ZgrN
-         JkdxYRHQez4tRd1gSL/hE7ZUGWPHJNVv+KBE7oRg=
+        b=KfwSal5CkFrNqzsxH74HX4yWfs4UYEkljw6mFh43mO8VDw0OgGoBUB9PfXTjUTgoI
+         Qb0izUa26NoXmTEgSYxbu1GHlXX6+uwLRr1UtWWUVgCiE3SmillTNoGNa0LWIrkg4L
+         eKHU7A/01yJYjtFg4e9LCofJy9RTR3ABxbO36TKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 133/204] clk: actions: Fix h_clk for Actions S500 SoC
-Date:   Thu, 20 Aug 2020 11:20:30 +0200
-Message-Id: <20200820091612.920283039@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 140/204] iommu/vt-d: Enforce PASID devTLB field mask
+Date:   Thu, 20 Aug 2020 11:20:37 +0200
+Message-Id: <20200820091613.248324405@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,36 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+From: Liu Yi L <yi.l.liu@intel.com>
 
-[ Upstream commit f47ee279d25fb0e010cae5d6e758e39b40eb6378 ]
+[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
 
-The h_clk clock in the Actions Semi S500 SoC clock driver has an
-invalid parent. Replace with the correct one.
+Set proper masks to avoid invalid input spillover to reserved bits.
 
-Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/c57e7ebabfa970014f073b92fe95b47d3e5a70b1.1593788312.git.cristian.ciocaltea@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/actions/owl-s500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/intel-iommu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-index e2007ac4d235d..0eb83a0b70bcc 100644
---- a/drivers/clk/actions/owl-s500.c
-+++ b/drivers/clk/actions/owl-s500.c
-@@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
- static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index 64a5335046b00..bc1abbc041092 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -363,8 +363,8 @@ enum {
  
- /* divider clocks */
--static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-+static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
- static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
- 
- /* factor clocks */
+ #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+ #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+-#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+-#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
++#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
++#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
+ #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
+ #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
+ #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
 -- 
 2.25.1
 
