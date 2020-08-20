@@ -2,80 +2,172 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C92E0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F27C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9153720639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="oF1Ef0jp"
+	by mail.kernel.org (Postfix) with ESMTP id 6502120639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919976;
+	bh=+tGt9QvKfbJmgHO7ABz1hcb4WZF2zIHG+IUSXqmo5a8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TnfIkOujfMeds/pg8bn+hJyz0DoowtNUZbrfOIOjgaH5wgJsPV4wV1LVjZoveSZyB
+	 0h5pZzXZPvEGrzJnW/WjvczV+wKDEKvJPmTnYb78Q9+4a43QBgLCJTNZfGutgQOB/C
+	 qtYIVFCoo/xgfNNNRMhrvYhrEbtjvSCgwzAaxmkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731388AbgHTKjG (ORCPT
+        id S1731834AbgHTKje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:39:06 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:33602 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731229AbgHTKiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:38:10 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id F36F1223;
-        Thu, 20 Aug 2020 13:38:07 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1597919888;
-        bh=gfXFV6bh+3dm6WwUV1c/R0J8KdjOdJb/YfS20DcA1TQ=;
-        h=From:To:Subject:Date:References:In-Reply-To;
-        b=oF1Ef0jpdMP0PGiW8jcwI7pSE+y5loGhZ6e3E76Np9uAYmnWtuQ/xykBU/3rdmAqD
-         ecXo+pXUyjPwrmtbyQFX/1S7I7R4TMUA3bEGcgV2EUuqUxcca5uHeDK5HT6cdj8xFF
-         VffkE1PfN3Qcjzx6U94UDjxbRaMEdR7d8dBy3hYM=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 20 Aug 2020 13:38:07 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Thu, 20 Aug 2020 13:38:07 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     =?utf-8?B?QXVyw6lsaWVuIEFwdGVs?= <aaptel@suse.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
- Software.
-Thread-Topic: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
- Software.
-Thread-Index: AdZyNcmjSkpkGje7R9K6YobJrVDyZwAAOBcAASmx1XA=
-Date:   Thu, 20 Aug 2020 10:38:07 +0000
-Message-ID: <5588b1f433bb4844ae4db776030d323f@paragon-software.com>
-References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
- <87h7t5454n.fsf@suse.com>
-In-Reply-To: <87h7t5454n.fsf@suse.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 20 Aug 2020 06:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39882 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730718AbgHTKSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:01 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B461206DA;
+        Thu, 20 Aug 2020 10:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918680;
+        bh=+tGt9QvKfbJmgHO7ABz1hcb4WZF2zIHG+IUSXqmo5a8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Kq7xYh7EMraWPFpNEUZ7LPhSJB8EVWfKWN+BdSvXW8X/N9ImQfi1iEML7OY6VLjoy
+         4zyBU4Q6/DBISUDYjfw+KzWlBfTykllWxgNZRsYBNJjVDSUp64Tbvr73N8KA1Vh/un
+         8GGA3D3R1+0Ye9RSRERGVxFagOlvIuldMhXMG6xw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amit Klein <aksecurity@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH 4.4 027/149] random32: update the net random state on interrupt and activity
+Date:   Thu, 20 Aug 2020 11:21:44 +0200
+Message-Id: <20200820092127.037471387@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXVyw6lsaWVuIEFwdGVsIDxhYXB0ZWxAc3VzZS5jb20+DQpTZW50OiBGcmlkYXksIEF1
-Z3VzdCAxNCwgMjAyMCA2OjMwIFBNDQo+IEkndmUgdHJpZWQgdGhpcyB1c2luZyBsaWJudGZzLTNn
-IG1rZnMubnRmcw0KPiANCj4gIyBta2ZzLm50ZnMgL2Rldi92YjENCj4gIyBtb3VudCAtdCBudGZz
-MyAvZGV2L3ZiMSAvbW50DQo+IA0KPiBUaGlzIGFscmVhZHkgdHJpZ2dlcmVkIFVCU0FOOg0KPiBU
-aGVuIEkndmUgdHJpZWQgdG8gY29weSAvZXRjIGludG8gaXQ6DQo+IC4uLg0KPiAjIGNwIC1ycCAv
-ZXRjIC9tbnQNCj4gDQo+IEJ1dCB0aGlzIHRyaWdnZXJlZCBhIE5VTEwgcHRyIGRlcmVmOg0KPiAN
-Cj4gIEJVRzoga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSwgYWRkcmVzczogMDAwMDAw
-MDAwMDAwMDAyOA0KDQpUaGFua3MhIFRoaXMgd2lsbCBiZSBmaXhlZCBpbiB2Mi4gVG8gZ2l2ZSBz
-b21lIGNvbnRleHQ6IHdlIHVzZSBvdXIgbWtmcyB1dGlsaXR5IGluIHRlc3RzLCBjb3VwbGVkIHdp
-dGggYSBXaW5kb3dzLW5hdGl2ZSBvbmUgYXMgYSByZWZlcmVuY2UuIFAuUy4gQWxyZWFkeSBoYXZl
-IGV4dGVuZGVkIHRoaXMgYXBwcm9hY2ggd2l0aCB0aGUgY3VycmVudCBta2ZzLm50ZnMgdXRpbGl0
-eSBhcyB3ZWxsLg0K
+From: Willy Tarreau <w@1wt.eu>
+
+commit f227e3ec3b5cad859ad15666874405e8c1bbc1d4 upstream.
+
+This modifies the first 32 bits out of the 128 bits of a random CPU's
+net_rand_state on interrupt or CPU activity to complicate remote
+observations that could lead to guessing the network RNG's internal
+state.
+
+Note that depending on some network devices' interrupt rate moderation
+or binding, this re-seeding might happen on every packet or even almost
+never.
+
+In addition, with NOHZ some CPUs might not even get timer interrupts,
+leaving their local state rarely updated, while they are running
+networked processes making use of the random state.  For this reason, we
+also perform this update in update_process_times() in order to at least
+update the state when there is user or system activity, since it's the
+only case we care about.
+
+Reported-by: Amit Klein <aksecurity@gmail.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Willy Tarreau <w@1wt.eu>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/char/random.c  |    1 +
+ include/linux/random.h |    3 +++
+ kernel/time/timer.c    |    8 ++++++++
+ lib/random32.c         |    2 +-
+ 4 files changed, 13 insertions(+), 1 deletion(-)
+
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -923,6 +923,7 @@ void add_interrupt_randomness(int irq, i
+ 
+ 	fast_mix(fast_pool);
+ 	add_interrupt_bench(cycles);
++	this_cpu_add(net_rand_state.s1, fast_pool->pool[cycles & 3]);
+ 
+ 	if ((fast_pool->count < 64) &&
+ 	    !time_after(now, fast_pool->last + HZ))
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -8,6 +8,7 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -46,6 +47,8 @@ struct rnd_state {
+ 	__u32 s1, s2, s3, s4;
+ };
+ 
++DECLARE_PER_CPU(struct rnd_state, net_rand_state) __latent_entropy;
++
+ u32 prandom_u32_state(struct rnd_state *state);
+ void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+--- a/kernel/time/timer.c
++++ b/kernel/time/timer.c
+@@ -42,6 +42,7 @@
+ #include <linux/sched/sysctl.h>
+ #include <linux/slab.h>
+ #include <linux/compat.h>
++#include <linux/random.h>
+ 
+ #include <asm/uaccess.h>
+ #include <asm/unistd.h>
+@@ -1431,6 +1432,13 @@ void update_process_times(int user_tick)
+ #endif
+ 	scheduler_tick();
+ 	run_posix_cpu_timers(p);
++
++	/* The current CPU might make use of net randoms without receiving IRQs
++	 * to renew them often enough. Let's update the net_rand_state from a
++	 * non-constant value that's not affine to the number of calls to make
++	 * sure it's updated when there's some activity (we don't care in idle).
++	 */
++	this_cpu_add(net_rand_state.s1, rol32(jiffies, 24) + user_tick);
+ }
+ 
+ /*
+--- a/lib/random32.c
++++ b/lib/random32.c
+@@ -47,7 +47,7 @@ static inline void prandom_state_selftes
+ }
+ #endif
+ 
+-static DEFINE_PER_CPU(struct rnd_state, net_rand_state);
++DEFINE_PER_CPU(struct rnd_state, net_rand_state);
+ 
+ /**
+  *	prandom_u32_state - seeded pseudo-random number generator.
+
+
