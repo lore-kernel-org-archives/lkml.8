@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E77BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C29C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BCA120738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D041220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926209;
-	bh=RmLckhIPfgcJl8zmFnS8sQ6RL1VKiWUn8UZASjLEwOM=;
+	s=default; t=1597926213;
+	bh=YJIOkrnDLtvjSdQPBkT7qqKl3C3DwVHsZlnDQUDsGLk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gyAh8bQyz/uTOOyG4KzfAt2eM/J9i9N5MMB1gH9hY6Qv03g6eCFnoXKwcaHZlfKbj
-	 3z8j4sdfghonEg9T2Pv7a4i3XkspgoR022Pltu9k15I9XHbxxqGJXdt8gu1YJlO+ig
-	 5IBOgcjUUZ9Xrk9113kEA2yD8n+XOgmWxxef1nqM=
+	b=zAaoFlOwRs7l4NOASUb91n7aLim6G5MOCD6ixpPwYNljgKupmS0fHKQrH894jyJwc
+	 /h3QT8MoniXbpzdn5A+V/ml4+/+bRK3+ir4/1csPOV1/rklrPxrhIHFl/ZfoerJWLV
+	 4opo4UBlk1d52jfc7D4mvNh4JcU4F8KNAPLvCLeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgHTMX0 (ORCPT
+        id S1730157AbgHTMXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:23:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37210 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729985AbgHTJyo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:44 -0400
+        id S1730143AbgHTJyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEDD62067C;
-        Thu, 20 Aug 2020 09:54:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C2B72075E;
+        Thu, 20 Aug 2020 09:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917283;
-        bh=RmLckhIPfgcJl8zmFnS8sQ6RL1VKiWUn8UZASjLEwOM=;
+        s=default; t=1597917276;
+        bh=YJIOkrnDLtvjSdQPBkT7qqKl3C3DwVHsZlnDQUDsGLk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpAhENYVFiWkEaY5LPL93zN+0ydB2Z0sS1xwbRp4yt9cVDlHa6kAxLUMgRhsNe+lO
-         T3bDK89XL7VP/lict5GqzGPCP/ZWRdvvFCOYnyLl/vuPs4nNtDuT4uhATyxhPNgCOf
-         jNSNQDxAI2+kwkdqI5ZKc62MT0xl9epkd0PpB/KY=
+        b=2stVS8f+R60QbN6Hl8x9k6FzIQiZFbed6QusRKBVk1sfvg+xG6SnKF/AMGc2b3FcJ
+         749L/wITYUklEvEhKmZlxbS11o9WrIF02bgeRPWWz2lD9reOjGorAKRh+yTAtU/WVI
+         pQanElE306P9ntwJKHzlUYI+krEcGQfHVCnD2Ug0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        David Carrillo-Cisneros <davidcc@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 68/92] tools build feature: Use CC and CXX from parent
-Date:   Thu, 20 Aug 2020 11:21:53 +0200
-Message-Id: <20200820091541.153941323@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 65/92] i2c: rcar: slave: only send STOP event when we have been addressed
+Date:   Thu, 20 Aug 2020 11:21:50 +0200
+Message-Id: <20200820091540.998682796@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -68,89 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit e3232c2f39acafd5a29128425bc30b9884642cfa ]
+[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
 
-commit c8c188679ccf ("tools build: Use the same CC for feature detection
-and actual build") changed these assignments from unconditional (:=) to
-conditional (?=) so that they wouldn't clobber values from the
-environment. However, conditional assignment does not work properly for
-variables that Make implicitly sets, among which are CC and CXX. To
-quote tools/scripts/Makefile.include, which handles this properly:
+When the SSR interrupt is activated, it will detect every STOP condition
+on the bus, not only the ones after we have been addressed. So, enable
+this interrupt only after we have been addressed, and disable it
+otherwise.
 
-  # Makefiles suck: This macro sets a default value of $(2) for the
-  # variable named by $(1), unless the variable has been set by
-  # environment or command line. This is necessary for CC and AR
-  # because make sets default values, so the simpler ?= approach
-  # won't work as expected.
-
-In other words, the conditional assignments will not run even if the
-variables are not overridden in the environment; Make will set CC to
-"cc" and CXX to "g++" when it starts[1], meaning the variables are not
-empty by the time the conditional assignments are evaluated. This breaks
-cross-compilation when CROSS_COMPILE is set but CC isn't, since "cc"
-gets used for feature detection instead of the cross compiler (and
-likewise for CXX).
-
-To fix the issue, just pass down the values of CC and CXX computed by
-the parent Makefile, which gets included by the Makefile that actually
-builds whatever we're detecting features for and so is guaranteed to
-have good values. This is a better solution anyway, since it means we
-aren't trying to replicate the logic of the parent build system and so
-don't risk it getting out of sync.
-
-Leave PKG_CONFIG alone, since 1) there's no common logic to compute it
-in Makefile.include, and 2) it's not an implicit variable, so
-conditional assignment works properly.
-
-[1] https://www.gnu.org/software/make/manual/html_node/Implicit-Variables.html
-
-Fixes: c8c188679ccf ("tools build: Use the same CC for feature detection and actual build")
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: David Carrillo-Cisneros <davidcc@google.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Igor Lubashev <ilubashe@akamai.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <quentin@isovalent.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: thomas hebb <tommyhebb@gmail.com>
-Link: http://lore.kernel.org/lkml/0a6e69d1736b0fa231a648f50b0cce5d8a6734ef.1595822871.git.tommyhebb@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature | 2 +-
- tools/build/feature/Makefile | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-rcar.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 42a787856cd87..7d9d70c0b3800 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -7,7 +7,7 @@ endif
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 6e49e438ef5a5..11d1977616858 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -587,13 +587,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
+ 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
+ 		}
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+-		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
++		/* Clear SSR, too, because of old STOPs to other clients than us */
++		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
+ 	}
  
- feature_set = $(eval $(feature_set_code))
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index bf8a8ebcca1eb..c4845b66b9baa 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -62,8 +62,6 @@ FILES=                                          \
+ 	/* master sent stop */
+ 	if (ssr_filtered & SSR) {
+ 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
+-		rcar_i2c_write(priv, ICSIER, SAR | SSR);
++		rcar_i2c_write(priv, ICSIER, SAR);
+ 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
+ 	}
  
- FILES := $(addprefix $(OUTPUT),$(FILES))
+@@ -848,7 +849,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
+ 	priv->slave = slave;
+ 	rcar_i2c_write(priv, ICSAR, slave->addr);
+ 	rcar_i2c_write(priv, ICSSR, 0);
+-	rcar_i2c_write(priv, ICSIER, SAR | SSR);
++	rcar_i2c_write(priv, ICSIER, SAR);
+ 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
  
--CC ?= $(CROSS_COMPILE)gcc
--CXX ?= $(CROSS_COMPILE)g++
- PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
- LLVM_CONFIG ?= llvm-config
- 
+ 	return 0;
 -- 
 2.25.1
 
