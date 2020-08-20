@@ -2,365 +2,226 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 985EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9829B207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NoqVG2GS"
+	by mail.kernel.org (Postfix) with ESMTP id 75F642076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597882548;
+	bh=sk+S3Fr21tKJgcwY1YXzpsiM/9GAWEGKg/lYjMSui+4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=YYsxjC4+v1mHxiDlIUvds50r42kPNIWhy6ziNOdBOKtcEGFZdXhR7RwXgxdJHxfKz
+	 7H2TI1/eoCvNxix1euS7cs9KeitegtlkImZ+cuHQUJ+yYu3o0oZTub6CXkkRAeqlxK
+	 723uq1iWN53U2w0ODNMEYBwPUWnygII6YOGUs7+w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbgHTAPU (ORCPT
+        id S1727082AbgHTAPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56490 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbgHTAPS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:15:18 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAF9C061757;
-        Wed, 19 Aug 2020 17:15:18 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id i26so269824edv.4;
-        Wed, 19 Aug 2020 17:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:date:from:to:cc:message-id:in-reply-to:references;
-        bh=qlZrZsyJKktoPbDCVlirtzb5dFKCXFnC9zbiDtQnGUQ=;
-        b=NoqVG2GSt5HdYyByd+EcS60uDgK8AuE33cwqwg9Bk0XRaNFFCO/Xo7v3pPP7W6J7vD
-         P7V+htl42otoC88y37oHutbnI69YBq/PjncSQUbq5qAHYLC/7Toso0q6YYT9n31SN7+J
-         JsrirqkddZgzcHkMFocf7Yy6jW6wLpWH64jWGtfEy10tqouk0rq4INm8Tefj+t9uGVV9
-         Q8L4p/Cy8iZnsBEI5gqt+s3BhDdzD4lJIkaepFvxlkY+xjdK0ihzEkEDlsW592zay9bg
-         X0aAEcNtDSovCM55ydTBl0jePrRVx8au3eQ0v0hXveDEmZBhzQz9YMZUJPEWvKKRnkv/
-         obrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:date:from:to:cc:message-id:in-reply-to
-         :references;
-        bh=qlZrZsyJKktoPbDCVlirtzb5dFKCXFnC9zbiDtQnGUQ=;
-        b=ULrRJiipGEb8A/R8+WkG8NaBPPFtGPYXTfw4ArJh1brEVpfwgUs0a0QOVzjWeOA+MV
-         KN+jE1W6dX4TKfqFK9mtJXUpyl5YcAMX3obiv6A7WkEJgw/nz4Um6a3GkYFDiGicHrZl
-         kxRA7X4+MQtNmnfz9YpIZa+fAG/mTx/2Fton60Ii3J+mU7TEvrCGgiAAs5QteOnOFE+1
-         KoPQRAHs+1OISUoDXB2z2eaKTswhJT/JreildkclV/PCwUW1NOBwzqJkeEj5tFGxyhDC
-         4/tUBPofTYq05RWHpTrgecfufHNeCaiIFfnhm/w5WwDpce+8kVfZGKU1FmvIAWYm55Vd
-         3Gdg==
-X-Gm-Message-State: AOAM533IZCaSncdYrrqxIdkGCKU8XSI5EJA2cuXRXP/9GdtJvBfP4gHT
-        tiU5LppBAqhKCo3+AH99XnV50gp6+Z92ARIi
-X-Google-Smtp-Source: ABdhPJx6Fy1bUmCWVz+4/DP7eijLtSvBnTTxgMa8pFG9ZAe/CrnQ7R0QZvcAYanoxiI7ng6pC+JyLQ==
-X-Received: by 2002:a05:6402:c12:: with SMTP id co18mr495503edb.297.1597882516185;
-        Wed, 19 Aug 2020 17:15:16 -0700 (PDT)
-Received: from gmail.com ([185.191.126.240])
-        by smtp.gmail.com with ESMTPSA id d23sm271734ejj.74.2020.08.19.17.15.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 17:15:15 -0700 (PDT)
-Subject: [RFC v2] kbuild: Introduce "Warnings for maintainers"
-Date:   Thu, 20 Aug 2020 00:15:00 -0000
-From:   Michael Witten <mfwitten@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Ingo Molnar <mingo@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Levon <john.levon@joyent.com>,
-        John Levon <levon@movementarian.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Sam Ravnborg <sam@ravnborg.org>
-Message-ID: <6f33e183801543429ebf8dea4a009694@gmail.com>
-In-Reply-To: <3b508e7d9d2a44079d161707819dfd88@gmail.com>
-References: <c6fda26e8d134264b04fadc3386d6c32@gmail.com>
-  <20200816175303.GB1236603@ZenIV.linux.org.uk>
-  <20200817204223.GB12414@amd>
-  <87lfid6kpi.fsf@x220.int.ebiederm.org>
-  <CAHk-=wj04wKCjHz6b6d7N58xoS4AftnwTUBaXsEekQ5RhfWVnw@mail.gmail.com>
-  <20200817220908.GA3701@amd>
-  <CAHk-=wh7Rn=8mVi_KWV71ZaQ2HrCz240DbjEJMDdARTwB3CYvA@mail.gmail.com>
-  <20200818051717.GA3134537@gmail.com>
-  <e986450210154d49aee1a3885d76c862@AcuMS.aculab.com>
-  <61f8da080e5fac1bc23cdd68c43f199029c0a788.camel@perches.com>
-  <23e2e6c2d3a24954bccb67a3186019b9@gmail.com>
-  <5820d82432a0485b9a0d40bc093cfeb8@gmail.com>
-  <3b508e7d9d2a44079d161707819dfd88@gmail.com>
+        Wed, 19 Aug 2020 20:15:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbgHTAPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:15:46 -0400
+Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76FA8207DA;
+        Thu, 20 Aug 2020 00:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597882545;
+        bh=sk+S3Fr21tKJgcwY1YXzpsiM/9GAWEGKg/lYjMSui+4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=1l7z5wvibXgXvTSEJvgDjsKkdtIW7G0UBv7pTYBqzxxj0CAReCzMLu3M/pIJ1cFlQ
+         c8iZM5tGhGTSPgSKrQUN4czMkXQkCCGhh0tJZxhic+A3M8iSLQN1U/sqCnsE1u19Mp
+         Ha4qbTBTnGr7DI4byNKS8SSMTZEOk4rxczFlCBgo=
+From:   Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, stable@vger.kernel.org
+Subject: [PATCH] x86/debug: Allow a single level of #DB recursion
+Date:   Wed, 19 Aug 2020 17:15:43 -0700
+Message-Id: <8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org>
+X-Mailer: git-send-email 2.25.4
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This revision of the patch makes the following notable changes:
+Trying to clear DR7 around a #DB from usermode malfunctions if we
+schedule when delivering SIGTRAP.  Rather than trying to define a
+special no-recursion region, just allow a single level of recursion.
+We do the same thing for NMI, and it hasn't caused any problems yet.
 
-  * The high-level control is placed in:
-
-      scripts/Makefile.extrawarn
-
-  * Interactions between "make W=2" and CONFIG_* are handled
-    explicitly.
-
-  * The new conditional logic within the makefiles uses 2 spaces
-    for indentation rather than a tab character; this is because
-    the tab character has special meaning in a makefile, and it
-    is therefore best not to use it unless necessary.
-
-  * The files under the following directory have been left alone:
-
-      tools/
-
-    It appears more work needs to be done to communicate ".config"
-    settings to the build infastructure in that subtree.
-
-  * This patch has been lightly tested on my machine:
-
-      $ b()
-        {
-          make "$@" V=1 2>&1 |
-            grep --color=always \
-              -e declaration-after-statement \
-              -e maybe-uninitialized \
-              -e no-maybe-uninitialized \
-              -e ^
-        }
-      $ b
-      [...]
-      $ b W=2
-      [...]
-
-    Look for the highlighted "-W" names; also, note that the
-    following option gets passed to the compiler when required:
-
-      -Wno-maybe-uninitialized
-
-Sincerely,
-Michael Witten
-
----8<------8<------8<------8<------8<------8<------8<------8<---
-This commit introduces the following new Kconfig options:
-
-  CONFIG_MAINTAINERS_WARNINGS
-    |
-    +-> CONFIG_WARN_DECLARATION_AFTER_STATEMENT
-    |
-    +-> CONFIG_WARN_MAYBE_UNINITIALIZED
-
-These produce the following menu items:
-
-  -> Kernel hacking
-    -> Compile-time checks and compiler options
-      * Warnings for maintainers                                [NEW]
-        * Warn about mixing variable definitions and statements [NEW]
-        * Warn about use of potentially uninitialized variables [NEW]
-
-In short:
-
-  * CONFIG_MAINTAINERS_WARNINGS (default: y)
-      is the umbrella control.
-
-  * CONFIG_WARN_DECLARATION_AFTER_STATEMENT (default: y)
-      determines whether "-Wdeclaration-after-statement" is used.
-
-  * CONFIG_WARN_MAYBE_UNINITIALIZED (default: n)
-      determines whether "-Wmaybe-uninitialized" is used.
-
-Currently, the default is "y" for CONFIG_MAINTAINERS_WARNINGS,
-which should lead to the same warning behavior that existed before
-this commit; however, it is intended that eventually the default
-will be "n" for CONFIG_MAINTAINERS_WARNINGS.
-
-Running "make" with "W=2" should turn on both warnings, unless
-they are thwarted by some other Kbuild logic.
-
-Signed-off-by: Michael Witten <mfwitten@gmail.com>
+Reported-by: Kyle Huey <me@kylehuey.com>
+Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Fixes: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
 ---
- lib/Kconfig.debug                 | 64 +++++++++++++++++++++++++++++++++++++++
- Makefile                          |  6 ----
- scripts/Makefile.extrawarn        | 28 +++++++++++++++++
- arch/arm64/kernel/vdso32/Makefile |  7 ++++-
- 4 files changed, 98 insertions(+), 7 deletions(-)
+ arch/x86/kernel/traps.c | 69 +++++++++++++++++++++++------------------
+ 1 file changed, 38 insertions(+), 31 deletions(-)
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index e068c3c7189a..b59185dc85bd 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -308,6 +308,70 @@ config FRAME_WARN
- 	  Setting this too low will cause a lot of warnings.
- 	  Setting it to 0 disables the warning.
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 1f66d2d1e998..bf852b72f15c 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -729,20 +729,9 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
+ #endif
+ }
  
-+config MAINTAINERS_WARNINGS
-+	bool "Warnings for maintainers"
-+	default y
-+	help
-+	  These warnings may be useful to maintainers and contributors
-+	  when patches are being prepared and reviewed; they may yield
-+	  false positives, and are therefore intended to be turned off
-+	  for a normal build.
-+
-+config WARN_DECLARATION_AFTER_STATEMENT
-+	bool "Warn about mixing variable definitions and statements"
-+	depends on MAINTAINERS_WARNINGS
-+	default y
-+	help
-+	  Turn on the following gcc command-line option:
-+
-+	    -Wdeclaration-after-statement
-+
-+	  Traditionally, C code has been written such that variables
-+	  are defined at the top of a block (e.g., at the top of a
-+	  function body); C99 removed this requirement, allowing the
-+	  mixing of variable definitions and statements, but the
-+	  tradition has remained a convention of the kernel's coding
-+	  style.
-+
-+	  When reviewing patches, a maintainer may wish to turn this
-+	  warning on, in order to catch variable definitions that have
-+	  been placed unnecessarily among the statements, and thereby
-+	  enforce the dominant coding style.
-+
-+	  Of course, sometimes it is useful to define a variable among
-+	  the statements, especially in the following cases:
-+
-+	    * Declaring a const variable.
-+	    * Dealing with conditional compilation.
-+
-+	  Therefore, this warning is intended to be turned off for a
-+	  normal build, where all of the code has already been merged
-+	  succesfully into the repository.
-+
-+config WARN_MAYBE_UNINITIALIZED
-+	bool "Warn about use of potentially uninitialized variables"
-+	depends on MAINTAINERS_WARNINGS
-+	default n
-+	help
-+	  Turn on the following gcc command-line option:
-+
-+	    -Wmaybe-uninitialized
-+
-+	  Serious bugs can result from using a variable whose value
-+	  has never been explicitly initialized. When this warning
-+	  is turned on, the compiler will use heuristic analyses of
-+	  the code to determine whether a variable has been properly
-+	  initialized before it is ever used.
-+
-+	  However, the heuristic nature of the analyses has often
-+	  caused many false positive warnings that programmers find
-+	  irritating; sometimes, bugs are introduced in the process
-+	  of simply trying to silence the warning.
-+
-+	  Therefore, this warning is intended to be turned off for a
-+	  normal build, where all of the code has already been merged
-+	  succesfully into the repository.
-+
- config STRIP_ASM_SYMS
- 	bool "Strip assembler-generated symbols during link"
- 	default n
-diff --git a/Makefile b/Makefile
-index 9cac6fde3479..51a503411d5b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -900,9 +900,6 @@ endif
- # arch Makefile may override CC so keep this after arch Makefile is included
- NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
+-static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
++static __always_inline unsigned long debug_read_clear_dr6(void)
+ {
+-	/*
+-	 * Disable breakpoints during exception handling; recursive exceptions
+-	 * are exceedingly 'fun'.
+-	 *
+-	 * Since this function is NOKPROBE, and that also applies to
+-	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
+-	 * HW_BREAKPOINT_W on our stack)
+-	 *
+-	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
+-	 * includes the entry stack is excluded for everything.
+-	 */
+-	*dr7 = local_db_save();
++	unsigned long dr6;
  
--# warn about C99 declaration after statement
--KBUILD_CFLAGS += -Wdeclaration-after-statement
+ 	/*
+ 	 * The Intel SDM says:
+@@ -755,15 +744,21 @@ static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
+ 	 *
+ 	 * Keep it simple: clear DR6 immediately.
+ 	 */
+-	get_debugreg(*dr6, 6);
++	get_debugreg(dr6, 6);
+ 	set_debugreg(0, 6);
+ 	/* Filter out all the reserved bits which are preset to 1 */
+-	*dr6 &= ~DR6_RESERVED;
++	dr6 &= ~DR6_RESERVED;
++
++	return dr6;
++}
++
++static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
++{
++	*dr6 = debug_read_clear_dr6();
+ }
+ 
+ static __always_inline void debug_exit(unsigned long dr7)
+ {
+-	local_db_restore(dr7);
+ }
+ 
+ /*
+@@ -863,6 +858,19 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
+ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 					     unsigned long dr6)
+ {
++	/*
++	 * Disable breakpoints during exception handling; recursive exceptions
++	 * are exceedingly 'fun'.
++	 *
++	 * Since this function is NOKPROBE, and that also applies to
++	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
++	 * HW_BREAKPOINT_W on our stack)
++	 *
++	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
++	 * includes the entry stack is excluded for everything.
++	 */
++	unsigned long dr7 = local_db_save();
++
+ 	bool irq_state = idtentry_enter_nmi(regs);
+ 	instrumentation_begin();
+ 
+@@ -883,6 +891,8 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
+ 
+ 	instrumentation_end();
+ 	idtentry_exit_nmi(regs, irq_state);
++
++	local_db_restore(dr7);
+ }
+ 
+ static __always_inline void exc_debug_user(struct pt_regs *regs,
+@@ -894,6 +904,15 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
+ 	 */
+ 	WARN_ON_ONCE(!user_mode(regs));
+ 
++	/*
++	 * NB: We can't easily clear DR7 here because
++	 * idtentry_exit_to_usermode() can invoke ptrace, schedule, access
++	 * user memory, etc.  This means that a recursive #DB is possible.  If
++	 * this happens, that #DB will hit exc_debug_kernel() and clear DR7.
++	 * Since we're not on the IST stack right now, everything will be
++	 * fine.
++	 */
++
+ 	irqentry_enter_from_user_mode(regs);
+ 	instrumentation_begin();
+ 
+@@ -907,36 +926,24 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
+ /* IST stack entry */
+ DEFINE_IDTENTRY_DEBUG(exc_debug)
+ {
+-	unsigned long dr6, dr7;
 -
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
+-	debug_enter(&dr6, &dr7);
+-	exc_debug_kernel(regs, dr6);
+-	debug_exit(dr7);
++	exc_debug_kernel(regs, debug_read_clear_dr6());
+ }
  
-@@ -920,9 +917,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, stringop-overflow)
- # Another good warning that we'll want to enable eventually
- KBUILD_CFLAGS += $(call cc-disable-warning, restrict)
- 
--# Enabled with W=2, disabled by default as noisy
--KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ /* User entry, runs on regular task stack */
+ DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
+ {
+-	unsigned long dr6, dr7;
 -
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+-	debug_enter(&dr6, &dr7);
+-	exc_debug_user(regs, dr6);
+-	debug_exit(dr7);
++	exc_debug_user(regs, debug_read_clear_dr6());
+ }
+ #else
+ /* 32 bit does not have separate entry points. */
+ DEFINE_IDTENTRY_RAW(exc_debug)
+ {
+-	unsigned long dr6, dr7;
+-
+-	debug_enter(&dr6, &dr7);
++	unsigned long dr6 = debug_read_clear_dr6();
  
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 62c275685b75..a9c90a50785b 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -4,6 +4,8 @@
- #
- # There are three warning groups enabled by W=1, W=2, W=3.
- # They are independent, and can be combined like W=12 or W=123.
-+#
-+# Also, this adds other warnings that can be switched on via .config
- # ==========================================================================
+ 	if (user_mode(regs))
+ 		exc_debug_user(regs, dr6);
+ 	else
+ 		exc_debug_kernel(regs, dr6);
+-
+-	debug_exit(dr7);
+ }
+ #endif
  
- KBUILD_CFLAGS += $(call cc-disable-warning, packed-not-aligned)
-@@ -17,6 +19,9 @@ endif
- 
- export KBUILD_EXTRA_WARN
- 
-+extrawarn_already_added_-Wdeclaration-after-statement := n
-+extrawarn_already_added_-Wmaybe-uninitialized := n
-+
- #
- # W=1 - warnings which may be relevant and do not occur too often
- #
-@@ -68,7 +73,13 @@ KBUILD_CFLAGS += $(call cc-option, -Wlogical-op)
- KBUILD_CFLAGS += -Wmissing-field-initializers
- KBUILD_CFLAGS += -Wsign-compare
- KBUILD_CFLAGS += -Wtype-limits
-+
-+KBUILD_CFLAGS += -Wdeclaration-after-statement
-+extrawarn_already_added_-Wdeclaration-after-statement := y
-+
- KBUILD_CFLAGS += $(call cc-option, -Wmaybe-uninitialized)
-+extrawarn_already_added_-Wmaybe-uninitialized := y
-+
- KBUILD_CFLAGS += $(call cc-option, -Wunused-macros)
- 
- KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN2
-@@ -93,3 +104,20 @@ KBUILD_CFLAGS += $(call cc-option, -Wpacked-bitfield-compat)
- KBUILD_CPPFLAGS += -DKBUILD_EXTRA_WARN3
- 
- endif
-+
-+#
-+# Maintainers' Warnings
-+#
-+ifeq ($(extrawarn_already_added_-Wdeclaration-after-statement), n)
-+  ifeq ($(CONFIG_WARN_DECLARATION_AFTER_STATEMENT), y)
-+      KBUILD_CFLAGS += -Wdeclaration-after-statement
-+  endif
-+endif
-+
-+ifeq ($(extrawarn_already_added_-Wmaybe-uninitialized), n)
-+  ifeq ($(CONFIG_WARN_MAYBE_UNINITIALIZED), y)
-+    KBUILD_CFLAGS += $(call cc-option,-Wmaybe-uninitialized)
-+  else
-+    KBUILD_CFLAGS += $(call cc-disable-warning,maybe-uninitialized)
-+  endif
-+endif
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 5139a5f19256..561f98f27edd 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -88,7 +88,12 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-                -std=gnu89
- VDSO_CFLAGS  += -O2
- # Some useful compiler-dependent flags from top-level Makefile
--VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
-+ifeq ($(CONFIG_WARN_DECLARATION_AFTER_STATEMENT), y)
-+  VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement)
-+endif
-+ifeq ($(CONFIG_WARN_MAYBE_UNINITIALIZED), y)
-+  VDSO_CFLAGS += $(call cc32-option,-Wmaybe-uninitialized)
-+endif
- VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
- VDSO_CFLAGS += $(call cc32-option,-fno-strict-overflow)
- VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
---
-2.22.0
+-- 
+2.25.4
 
