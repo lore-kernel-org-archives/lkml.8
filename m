@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7062C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 912E22075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550F92075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882381;
-	bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
+	s=default; t=1597882389;
+	bh=8hxAY/ez0AI4ber36LIJeoh29mu4g8ODN0OrS542L3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M0QvC/hd2xNumwCogZxHxCNhiB/5iQ8o9eP6CemKxYsEvKqQy7IxK5Og8Kk9ox83l
-	 YkbBLdhIF0AiDfsm8nM+uK4eAYz4yd2U4S/lHaNOtWLYXX0IU17tZOCOGnwoqfBP+m
-	 kcfroOO6aAamXYygoz3VoNEc/FLzvRF8xxdA1lks=
+	b=MleRkkwQEuZ2Dh6wrQavwxA0kllk+Z/RieGjUi5NFzOR8B00okdvnyCzncLuTtU4M
+	 14pkm4UBUUk7AZPvHdNPqq6i0enWTtu5owlMhSzgVjXYHHBesQ2Q9zOUWM5VpACQW2
+	 2P2XJi++16Tdv+3jbkR1EUMWz2BSr846K/ocaIXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbgHTAM7 (ORCPT
+        id S1728760AbgHTANI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:12:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726938AbgHTABl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:01:41 -0400
+        id S1726919AbgHTABh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22CF621775;
-        Thu, 20 Aug 2020 00:01:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A4DB207DA;
+        Thu, 20 Aug 2020 00:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881701;
-        bh=/S/5fcNXp1qF0dj5Sh7EBvrVNQQbog7E1B1vZS/c6vk=;
+        s=default; t=1597881696;
+        bh=8hxAY/ez0AI4ber36LIJeoh29mu4g8ODN0OrS542L3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UL8pE1I4ZQDqAImmRtg4skD02jMIjFvneVDTdLfMYuOJeQ/nKjqUSFDKZDJR0rHbP
-         +1aRDNmqMwNpckqtGIl8R0HA5YeksLdEE04yTMtuCzwJYEV1TW/DonTAubE2N/iv7E
-         O8D9JnWlGGkYR9tExbA0JAy2Rxf6aJJuP2Nga9jY=
+        b=v2JxtcBJ8KWGLihK4aQn5GzqgN8kWFC08BI9co6wU3v8H6j1Prq1YP8LDX12b8Vkf
+         7eDVjrs0yjyTcmunz7jZwypv74NQB4epXLDDalOrdIzBMM6UAUIP2wtkNTE63X5NIF
+         jnK+YDZkMjZTkGluzH5h6Vj9N0bOIEJO8kMoAodk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <stefano.stabellini@xilinx.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Roman Shaposhnik <roman@zededa.com>,
-        Juergen Gross <jgross@suse.com>,
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 5.8 18/27] swiotlb-xen: use vmalloc_to_page on vmalloc virt addresses
-Date:   Wed, 19 Aug 2020 20:01:07 -0400
-Message-Id: <20200820000116.214821-18-sashal@kernel.org>
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 15/27] riscv: Fixup static_obj() fail
+Date:   Wed, 19 Aug 2020 20:01:04 -0400
+Message-Id: <20200820000116.214821-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
 References: <20200820000116.214821-1-sashal@kernel.org>
@@ -63,61 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 8b1e868f66076490189a36d984fcce286cdd6295 ]
+[ Upstream commit 6184358da0004c8fd940afda6c0a0fa4027dc911 ]
 
-xen_alloc_coherent_pages might return pages for which virt_to_phys and
-virt_to_page don't work, e.g. ioremap'ed pages.
+When enable LOCKDEP, static_obj() will cause error. Because some
+__initdata static variables is before _stext:
 
-So in xen_swiotlb_free_coherent we can't assume that virt_to_page works.
-Instead add a is_vmalloc_addr check and use vmalloc_to_page on vmalloc
-virt addresses.
+static int static_obj(const void *obj)
+{
+        unsigned long start = (unsigned long) &_stext,
+                      end   = (unsigned long) &_end,
+                      addr  = (unsigned long) obj;
 
-This patch fixes the following crash at boot on RPi4 (the underlying
-issue is not RPi4 specific):
-https://marc.info/?l=xen-devel&m=158862573216800
+        /*
+         * static variable?
+         */
+        if ((addr >= start) && (addr < end))
+                return 1;
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Tested-by: Corey Minyard <cminyard@mvista.com>
-Tested-by: Roman Shaposhnik <roman@zededa.com>
-Link: https://lore.kernel.org/r/20200710223427.6897-1-sstabellini@kernel.org
-Signed-off-by: Juergen Gross <jgross@suse.com>
+[    0.067192] INFO: trying to register non-static key.
+[    0.067325] the code is fine but needs lockdep annotation.
+[    0.067449] turning off the locking correctness validator.
+[    0.067718] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7-dirty #44
+[    0.067945] Call Trace:
+[    0.068369] [<ffffffe00020323c>] walk_stackframe+0x0/0xa4
+[    0.068506] [<ffffffe000203422>] show_stack+0x2a/0x34
+[    0.068631] [<ffffffe000521e4e>] dump_stack+0x94/0xca
+[    0.068757] [<ffffffe000255a4e>] register_lock_class+0x5b8/0x5bc
+[    0.068969] [<ffffffe000255abe>] __lock_acquire+0x6c/0x1d5c
+[    0.069101] [<ffffffe0002550fe>] lock_acquire+0xae/0x312
+[    0.069228] [<ffffffe000989a8e>] _raw_spin_lock_irqsave+0x40/0x5a
+[    0.069357] [<ffffffe000247c64>] complete+0x1e/0x50
+[    0.069479] [<ffffffe000984c38>] rest_init+0x1b0/0x28a
+[    0.069660] [<ffffffe0000016a2>] 0xffffffe0000016a2
+[    0.069779] [<ffffffe000001b84>] 0xffffffe000001b84
+[    0.069953] [<ffffffe000001092>] 0xffffffe000001092
+
+static __initdata DECLARE_COMPLETION(kthreadd_done);
+
+noinline void __ref rest_init(void)
+{
+	...
+	complete(&kthreadd_done);
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/swiotlb-xen.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index b6d27762c6f8c..5fbadd07819bd 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -335,6 +335,7 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	int order = get_order(size);
- 	phys_addr_t phys;
- 	u64 dma_mask = DMA_BIT_MASK(32);
-+	struct page *page;
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index e6f8016b366ab..f3586e31ed1ec 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -22,6 +22,7 @@ SECTIONS
+ 	/* Beginning of code and text segment */
+ 	. = LOAD_OFFSET;
+ 	_start = .;
++	_stext = .;
+ 	HEAD_TEXT_SECTION
+ 	. = ALIGN(PAGE_SIZE);
  
- 	if (hwdev && hwdev->coherent_dma_mask)
- 		dma_mask = hwdev->coherent_dma_mask;
-@@ -346,9 +347,14 @@ xen_swiotlb_free_coherent(struct device *hwdev, size_t size, void *vaddr,
- 	/* Convert the size to actually allocated. */
- 	size = 1UL << (order + XEN_PAGE_SHIFT);
- 
-+	if (is_vmalloc_addr(vaddr))
-+		page = vmalloc_to_page(vaddr);
-+	else
-+		page = virt_to_page(vaddr);
-+
- 	if (!WARN_ON((dev_addr + size - 1 > dma_mask) ||
- 		     range_straddles_page_boundary(phys, size)) &&
--	    TestClearPageXenRemapped(virt_to_page(vaddr)))
-+	    TestClearPageXenRemapped(page))
- 		xen_destroy_contiguous_region(phys, order);
- 
- 	xen_free_coherent_pages(hwdev, size, vaddr, (dma_addr_t)phys, attrs);
+@@ -54,7 +55,6 @@ SECTIONS
+ 	. = ALIGN(SECTION_ALIGN);
+ 	.text : {
+ 		_text = .;
+-		_stext = .;
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+ 		CPUIDLE_TEXT
 -- 
 2.25.1
 
