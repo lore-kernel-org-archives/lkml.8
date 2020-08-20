@@ -2,163 +2,515 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 421ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA7F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05863207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="x8sJzjCS"
+	by mail.kernel.org (Postfix) with ESMTP id AC90C206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727882AbgHTSnX (ORCPT
+        id S1727913AbgHTSnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:43:23 -0400
-Received: from mga05.intel.com ([192.55.52.43]:37920 "EHLO mga05.intel.com"
+        Thu, 20 Aug 2020 14:43:33 -0400
+Received: from namei.org ([65.99.196.166]:60328 "EHLO namei.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbgHTSnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:43:21 -0400
-IronPort-SDR: xdvgu4FJr+QQ5ziH+viTcoY8/KzY15+T4YNbCWTz9DnWulA4BHl1HU9rCEyUEQdkWSUCL+kJDn
- YTT2PFbg2KVQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="240208720"
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="240208720"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 11:43:20 -0700
-IronPort-SDR: BVz6pYtoPT0JDFge2U3cbJR7Ku4s3ZPEuVXVEn0rIE+3UWLjlLvsbcHxSHGKW9wIPGUhoIwOHn
- TEo07lQ2eKcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="293579572"
-Received: from fmsmsx601-2.cps.intel.com (HELO fmsmsx601.amr.corp.intel.com) ([10.18.84.211])
-  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2020 11:43:19 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Thu, 20 Aug 2020 11:43:17 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Thu, 20 Aug 2020 11:43:17 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Thu, 20 Aug 2020 11:43:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jOQCFwrS+XatWD8NCKpeoU27YWA8WE4Wvnb6l9tP4Do/odQfR1904MuZOAHushXMi279cl8oLH83GxUuLagMJdrRc29hWxsg2Ihl7e96RahnJGgEQnj6lCkKrrwPQWudyRnsIMW6uW59SGtGpoylUPskDufmCtz36ZrKMNchr1HzRbOx87rWmwsNqgloVsbGsaDiYBaV7pscD9xl/g6c3H82Jg6Cxru7EtfhKTEXkgGy8PqS1QRZavaTAYToNqK7Tt8SSQDxyeXfm5QSIPPRo9mo7K/3h9c0dOoW6H/bSZFDzN9Af6K+4pVDFqLDfFMJ52qoaWsENFHVuLB+ld9gaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dg4Idkj7Du7d7AJUiJGQBo5enbJHrkYh+IzJN+s7LvI=;
- b=dKUxQxCtS4aIWRJ5Ab4je3EvcdTuRoWtAVi/O5lyHlHVYmzwZuyQBTREjG8AMcHT2vMlO1t1vjjcxNL19lazhdNw9zqKr+DIej9Vyl9R+qdzyKJExj4cVsyDI+4aw40mmOxeWXO+L/aMmau7usUTOI3cmzYrzhkWIt6lKEpcey1IQfGuHZH9XP+KtbND5Bvs5nrm8/0A7J3+KU+jIqsSxuYjhnU9odP7PmfK1l5yOl3KvoXUY8rOPIuQrntcpQhud2Lw5aMEQ0AtU3viPPoHfE3ymaKPB420XLO4irCcJnckyNUylUCbnuZZqKxis7CEL4NT3Yq9aedtoeYoviWdEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dg4Idkj7Du7d7AJUiJGQBo5enbJHrkYh+IzJN+s7LvI=;
- b=x8sJzjCSsc0xiBDVXgcrz+sJBmoSG8qFlTd55VlCLA6C2zVjuTjY5zhl7/9suNoMDh+7YhvynmyYxyCtnvt0WTZK3bqlgoVkdiCA6rbBJOs60043OrQtRIYWmg1UVRarwvicTAQZcvVblhi0P7WVmh1hL6xuoupjoIo8PmSLHG4=
-Received: from BY5PR11MB4056.namprd11.prod.outlook.com (2603:10b6:a03:18c::17)
- by BYAPR11MB2774.namprd11.prod.outlook.com (2603:10b6:a02:c1::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 20 Aug
- 2020 18:43:10 +0000
-Received: from BY5PR11MB4056.namprd11.prod.outlook.com
- ([fe80::b8cb:b59f:8cbb:75a7]) by BY5PR11MB4056.namprd11.prod.outlook.com
- ([fe80::b8cb:b59f:8cbb:75a7%6]) with mapi id 15.20.3283.027; Thu, 20 Aug 2020
- 18:43:10 +0000
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Tom Lendacky <thomas.lendacky@amd.com>
-CC:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
-Subject: Re: FSGSBASE causing panic on 5.9-rc1
-Thread-Topic: FSGSBASE causing panic on 5.9-rc1
-Thread-Index: AQHWdlOaEZ0YyP9OxUGfkNFdu56IAKk/vf6AgAAzyICAADFJgIAA+HaAgAAC/YCAADhWgA==
-Date:   Thu, 20 Aug 2020 18:43:10 +0000
-Message-ID: <5D0385FC-D535-457A-A0D9-E5F013F301BE@intel.com>
-References: <39d57e4d-5db4-f536-6f5e-6b0414c0dccc@amd.com>
- <7dedb0ab-56a6-5d96-577b-21ab1ecdad24@amd.com>
- <CALCETrUArZ04UqJjp2mEheuMpZyPwLeEgGM7mdDdmWxmx=GN4Q@mail.gmail.com>
- <CALCETrWcXgp+GzFNrOKcX740+R-57FgNu3Wt3g=_sRCMYFzbMg@mail.gmail.com>
- <20200820151049.GA26595@sjchrist-ice>
- <362f5a45-b808-25ad-b99b-449e05717c4a@amd.com>
-In-Reply-To: <362f5a45-b808-25ad-b99b-449e05717c4a@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.120.23.2.1)
-authentication-results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [73.189.248.82]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 67ba1fdd-8c0d-4c49-e6bd-08d84538e33c
-x-ms-traffictypediagnostic: BYAPR11MB2774:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR11MB277484ECADB7EB660B84BF9AD85A0@BYAPR11MB2774.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mOWGX2wo7/h2x8AXoHZGmeRVNibFAwNpbR65EDPHZJnW/1AHIF1EcuCwI9jeDTJNCE7SPFbIyAKbr3MYaBVEnYZH9qhxs6FWhcB2lQp7FWik1JZxhYxW/UcRGIZEvIkS7DCG9/Aso0vaoomlfW0++5Q2vSyJyzZSZu6vHUAhnP+W8wyzOwFDJeHSSsQbuTz/KawNmITeLCTe2ffS8Lc74WLG9aVLEIR9IPfr6uNU3mGzFr1M6EkAUcbaEX2XF09wW6PzK1W7j1U1KjDymJFDlzbk7lIocxF5MZWr2kWPIl0tnXZGd9Y4xJqUlPrt4CKY
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4056.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(2906002)(66446008)(316002)(64756008)(66946007)(66556008)(71200400001)(86362001)(66476007)(5660300002)(6486002)(76116006)(6512007)(4744005)(26005)(6916009)(36756003)(186003)(478600001)(53546011)(8936002)(54906003)(33656002)(7416002)(107886003)(4326008)(8676002)(2616005)(6506007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: VP/KD8r46PGijifRsp/+Oah/rcE8/SaRTvygPNllcYYxUDYpZu9EpVjuLuMmEvxvuHmytzrvo6LtpAYlAxQ+g8dU/z4qPFem/wMmoDEMjP3GH0lYQuPEHd0H/fJIzTLr9qliag7ipJuovhOFtI/5U9DalXUovgJvmDoLUn07NPyuTJ1oH2fBm0OMqycQpBsOKB6sNjxO4g4tIbvUNnO86ZZNLwQKfFsonBe5omoE9UrRxPNvlOJ+Le20H6vPsAQGay4nmoVatn8bT+/M+dLNgUFYY67URMlYRKe2rUtYQ98bpkEjyo3NQmlQ8AtJjZpdWzBURE6vkDKmP9KJZi/WSiKqe+8Da1zbsQMhWtr36yh3+nlW/vRzmH+LuU18/Rb+F/oUmHjVLWqZeI6ioQd4kg3fjWI+nNojlELHjd9/nQ5xMHbJckFQaQof3Xs7Cd2g88JmExoFqiQKJQiN7g0Uk6jfj9Q1gWIvbfCPF56G84pvRMegOTiVJesRO7sL/WPt5W8sSsA15QPjNuDLcBFsz5Xy1x+MWdtNGEbufQ2tEL2GI5WBAKiHz//NSohdvFhHJKVANeRIGcB5/rRuWswCf0qsYWRFipeu3cFwzEBKLQK4st7IleiQ1SEwjqwOccBXSjW5AhRzuBs3X4y9jJ/gGA==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <72FC2BC180CFE74998EA790EAA6D1DF7@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726836AbgHTSnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:43:33 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id 07KIh6ST030601;
+        Thu, 20 Aug 2020 18:43:06 GMT
+Date:   Fri, 21 Aug 2020 04:43:06 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Brendan Jackman <jackmanb@chromium.org>
+cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Paul Renauld <renauld@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, pjt@google.com,
+        jannh@google.com, peterz@infradead.org, rafael.j.wysocki@intel.com,
+        keescook@chromium.org, thgarnie@chromium.org, kpsingh@google.com,
+        paul.renauld.epfl@gmail.com, Brendan Jackman <jackmanb@google.com>
+Subject: Re: [RFC] security: replace indirect calls with static calls
+In-Reply-To: <20200820164753.3256899-1-jackmanb@chromium.org>
+Message-ID: <alpine.LRH.2.21.2008210439190.29407@namei.org>
+References: <20200820164753.3256899-1-jackmanb@chromium.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4056.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 67ba1fdd-8c0d-4c49-e6bd-08d84538e33c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 18:43:10.4990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xyO7ViY+cOiQdhpar4k2YLHbrSpjAMAw4QBC7Q3k+1siq4q8aD+rEMu1cJutdBzPutce7T/0WG6Z/Kw8xQpXYBw1ZIingsWcKhaIcjgn8wQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2774
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 20 Aug 2020, Brendan Jackman wrote:
 
-> On Aug 20, 2020, at 08:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
-> On 8/20/20 10:10 AM, Sean Christopherson wrote:
->>=20
->> Pretty sure current->thread.gsbase can be stale, i.e. this needs:
->> 	current_save_fsgs();
->=20
-> I did try adding current_save_fsgs() in svm_vcpu_load(), saving the curre=
-nt->thread.gsbase value to a new variable in the svm struct. I then used th=
-at variable in the wrmsrl below, but it still crashed.
+> With this implementation, any overhead of the indirect call in the LSM
+> framework is completely mitigated (performance results: [7]). This
+> facilitates the adoption of "bpf" LSM on production machines and also
+> benefits all other LSMs.
 
-Then, current->thread.gsbase is from __rdgsbase_inactive() which is
-user GSBASE.
+This looks like a potentially useful improvement, although I wonder if it 
+would be overshadowed by an LSM hook doing real work.
 
-If you do the wrmsrl below, it overwrites the current GSBASE with the=20
-user value.
+Do you have any more benchmarking beyond eventfd_write() ?
 
->> 	wrmsrl(MSR_KERNEL_GS_BASE, current->thread.gsbase);
 
-Thanks,
-Chang=
+
+> 
+> [1]: https://lwn.net/ml/linux-kernel/20200710133831.943894387@infradead.org/
+> [2]: https://lwn.net/Articles/798157/
+> [3] measurements: https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/62437b1416829ca0e8a0ed9101530bc90fd42d69/lsm-performance.png
+> protocol: https://gist.github.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5#file-measurement-protocol-md
+> [4]: https://lwn.net/Articles/813261/
+> [5]: git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/static_call
+> [6]: https://lwn.net/ml/linux-kernel/20200710133831.943894387@infradead.org/#t
+> [7]: https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/00e414b73e0c38c2eae8f05d5363a745179ba285/faster-lsm-results.png
+> 
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: pjt@google.com
+> Cc: jannh@google.com
+> Cc: peterz@infradead.org
+> Cc: rafael.j.wysocki@intel.com
+> Cc: keescook@chromium.org
+> Cc: thgarnie@chromium.org
+> Cc: kpsingh@google.com
+> Cc: paul.renauld.epfl@gmail.com
+> 
+> Signed-off-by: Paul Renauld <renauld@google.com>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Signed-off-by: Brendan Jackman <jackmanb@google.com>
+> ---
+>  include/linux/lsm_hooks.h       |   1 +
+>  include/linux/lsm_static_call.h | 134 ++++++++++++++++++++
+>  security/security.c             | 217 ++++++++++++++++++++++++++++----
+>  3 files changed, 331 insertions(+), 21 deletions(-)
+>  create mode 100644 include/linux/lsm_static_call.h
+> 
+> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> index 95b7c1d32062..d11e116b588e 100644
+> --- a/include/linux/lsm_hooks.h
+> +++ b/include/linux/lsm_hooks.h
+> @@ -1524,6 +1524,7 @@ union security_list_options {
+>  	#define LSM_HOOK(RET, DEFAULT, NAME, ...) RET (*NAME)(__VA_ARGS__);
+>  	#include "lsm_hook_defs.h"
+>  	#undef LSM_HOOK
+> +	void *generic_func;
+>  };
+>  
+>  struct security_hook_heads {
+> diff --git a/include/linux/lsm_static_call.h b/include/linux/lsm_static_call.h
+> new file mode 100644
+> index 000000000000..f5f5698292e0
+> --- /dev/null
+> +++ b/include/linux/lsm_static_call.h
+> @@ -0,0 +1,134 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (C) 2020 Google LLC.
+> + */
+> +
+> +#ifndef __LINUX_LSM_STATIC_CALL_H
+> +#define __LINUX_LSM_STATIC_CALL_H
+> +
+> +/*
+> + * Static slots are used in security/security.c to avoid costly
+> + * indirect calls by replacing them with static calls.
+> + * The number of static calls for each LSM hook is fixed.
+> + */
+> +#define SECURITY_STATIC_SLOT_COUNT 11
+> +
+> +/*
+> + * Identifier for the LSM static slots.
+> + * HOOK is an LSM hook as defined in linux/lsm_hookdefs.h
+> + * IDX is the index of the slot. 0 <= NUM < SECURITY_STATIC_SLOT_COUNT
+> + */
+> +#define STATIC_SLOT(HOOK, IDX) security_static_slot_##HOOK##_##IDX
+> +
+> +/*
+> + * Call the macro M for each LSM hook slot.
+> + * M should take as first argument the index and then
+> + * the same __VA_ARGS__
+> + * Essentially, this will expand to:
+> + *	M(0, ...)
+> + *	M(1, ...)
+> + *	M(2, ...)
+> + *	...
+> + * Note that no trailing semicolon is placed so M should be defined
+> + * accordingly.
+> + * This adapts to a change to SECURITY_STATIC_SLOT_COUNT.
+> + */
+> +#define SECURITY_FOREACH_STATIC_SLOT(M, ...)		\
+> +	UNROLL_MACRO_LOOP(SECURITY_STATIC_SLOT_COUNT, M, __VA_ARGS__)
+> +
+> +/*
+> + * Intermediate macros to expand SECURITY_STATIC_SLOT_COUNT
+> + */
+> +#define UNROLL_MACRO_LOOP(N, MACRO, ...)		\
+> +	_UNROLL_MACRO_LOOP(N, MACRO, __VA_ARGS__)
+> +
+> +#define _UNROLL_MACRO_LOOP(N, MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP(N, MACRO, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP(N, MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_##N(MACRO, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_0(MACRO, ...)
+> +
+> +#define __UNROLL_MACRO_LOOP_1(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_0(MACRO, __VA_ARGS__)	\
+> +	MACRO(0, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_2(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_1(MACRO, __VA_ARGS__)	\
+> +	MACRO(1, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_3(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_2(MACRO, __VA_ARGS__)	\
+> +	MACRO(2, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_4(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_3(MACRO, __VA_ARGS__)	\
+> +	MACRO(3, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_5(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_4(MACRO, __VA_ARGS__)	\
+> +	MACRO(4, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_6(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_5(MACRO, __VA_ARGS__)	\
+> +	MACRO(5, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_7(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_6(MACRO, __VA_ARGS__)	\
+> +	MACRO(6, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_8(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_7(MACRO, __VA_ARGS__)	\
+> +	MACRO(7, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_9(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_8(MACRO, __VA_ARGS__)	\
+> +	MACRO(8, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_10(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_9(MACRO, __VA_ARGS__)	\
+> +	MACRO(9, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_11(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_10(MACRO, __VA_ARGS__)	\
+> +	MACRO(10, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_12(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_11(MACRO, __VA_ARGS__)	\
+> +	MACRO(11, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_13(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_12(MACRO, __VA_ARGS__)	\
+> +	MACRO(12, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_14(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_13(MACRO, __VA_ARGS__)	\
+> +	MACRO(13, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_15(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_14(MACRO, __VA_ARGS__)	\
+> +	MACRO(14, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_16(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_15(MACRO, __VA_ARGS__)	\
+> +	MACRO(15, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_17(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_16(MACRO, __VA_ARGS__)	\
+> +	MACRO(16, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_18(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_17(MACRO, __VA_ARGS__)	\
+> +	MACRO(17, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_19(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_18(MACRO, __VA_ARGS__)	\
+> +	MACRO(18, __VA_ARGS__)
+> +
+> +#define __UNROLL_MACRO_LOOP_20(MACRO, ...)		\
+> +	__UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__)	\
+> +	MACRO(19, __VA_ARGS__)
+> +
+> +#endif /* __LINUX_LSM_STATIC_CALL_H */
+> diff --git a/security/security.c b/security/security.c
+> index 70a7ad357bc6..15026bc716f2 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -28,6 +28,8 @@
+>  #include <linux/string.h>
+>  #include <linux/msg.h>
+>  #include <net/flow.h>
+> +#include <linux/static_call.h>
+> +#include <linux/lsm_static_call.h>
+>  
+>  #define MAX_LSM_EVM_XATTR	2
+>  
+> @@ -86,6 +88,128 @@ static __initconst const char * const builtin_lsm_order = CONFIG_LSM;
+>  static __initdata struct lsm_info **ordered_lsms;
+>  static __initdata struct lsm_info *exclusive;
+>  
+> +/*
+> + * Necessary information about a static
+> + * slot to call __static_call_update
+> + */
+> +struct static_slot {
+> +	/* static call key as defined by STATIC_CALL_KEY */
+> +	struct static_call_key *key;
+> +	/* static call trampoline as defined by STATIC_CALL_TRAMP */
+> +	void *trampoline;
+> +};
+> +
+> +/*
+> + * Table of the static calls for each LSM hook.
+> + * Once the LSMs are initialized, their callbacks will be copied to these
+> + * tables such that the slots are filled backwards (from last to first).
+> + * This way, we can jump directly to the first used slot, and execute
+> + * all of them after. This essentially makes the entry point point
+> + * dynamic to adapt the number of slot to the number of callbacks.
+> + */
+> +struct static_slot_list {
+> +	#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
+> +		struct static_slot NAME[SECURITY_STATIC_SLOT_COUNT];
+> +	#include <linux/lsm_hook_defs.h>
+> +	#undef LSM_HOOK
+> +} __randomize_layout;
+> +
+> +/*
+> + * Index of the first used static call for each LSM hook
+> + * in the corresponding static_slot_list table.
+> + * All slots with greater indices are used.
+> + * If no slot is used, the default value is INT_MAX.
+> + */
+> +struct base_slot_idx {
+> +	#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
+> +		int NAME;
+> +	#include <linux/lsm_hook_defs.h>
+> +	#undef LSM_HOOK
+> +} __randomize_layout;
+> +
+> +/*
+> + * Create the static slots for each LSM hook, initially empty.
+> + * This will expand to:
+> + *
+> + * [...]
+> + *
+> + * DEFINE_STATIC_CALL_NULL(security_static_slot_file_permission_0,
+> + *			   *((int(*)(struct file *file, int mask)))NULL);
+> + * DEFINE_STATIC_CALL_NULL(security_static_slot_file_permission_1, ...);
+> + *
+> + * [...]
+> + */
+> +#define CREATE_STATIC_SLOT(NUM, NAME, RET, ...)				\
+> +	DEFINE_STATIC_CALL_NULL(STATIC_SLOT(NAME, NUM),			\
+> +				*((RET(*)(__VA_ARGS__))NULL));
+> +
+> +#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
+> +	SECURITY_FOREACH_STATIC_SLOT(CREATE_STATIC_SLOT, NAME, RET, __VA_ARGS__)
+> +#include <linux/lsm_hook_defs.h>
+> +#undef LSM_HOOK
+> +#undef CREATE_STATIC_SLOT
+> +
+> +/*
+> + * Initialise a table of static slots for each LSM hook.
+> + * When defined with DEFINE_STATIC_CALL_NULL as above, a static call is
+> + * a key and a trampoline. Both are needed to use __static_call_update.
+> + * This will expand to:
+> + * struct static_slot_list static_slots = {
+> + *	[...]
+> + *	.file_permission = {
+> + *		(struct static_slot) {
+> + *			.key = &STATIC_CALL_KEY(
+> + *				security_static_slot_file_permission_0),
+> + *			.trampoline = &STATIC_CALL_TRAMP(
+> + *				security_static_slot_file_permission_0)
+> + *		},
+> + *		(struct static_slot) {
+> + *			.key = &STATIC_CALL_KEY(
+> + *				security_static_slot_file_permission_1),
+> + *			.trampoline = &STATIC_CALL_TRAMP(
+> + *				security_static_slot_file_permission_1)
+> + *		},
+> + *		[...]
+> + *	},
+> + *	.file_alloc_security = {
+> + *		[...]
+> + *	},
+> + *	[...]
+> + * }
+> + */
+> +static struct static_slot_list static_slots __initdata = {
+> +#define DEFINE_SLOT(NUM, NAME)						\
+> +	(struct static_slot) {					\
+> +		.key = &STATIC_CALL_KEY(STATIC_SLOT(NAME, NUM)),	\
+> +		.trampoline = &STATIC_CALL_TRAMP(STATIC_SLOT(NAME, NUM))\
+> +	},
+> +#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
+> +	.NAME = {							\
+> +		SECURITY_FOREACH_STATIC_SLOT(DEFINE_SLOT, NAME)		\
+> +	},
+> +#include <linux/lsm_hook_defs.h>
+> +#undef LSM_HOOK
+> +#undef DEFINE_SLOT
+> +};
+> +
+> +/*
+> + * The base slot index for each is initially INT_MAX, which means
+> + * that no slot is used yet.
+> + * When expanded, this results in:
+> + * struct base_slot_idx base_slot_idx = {
+> + *	[...]
+> + *	.file_permission = INT_MAX,
+> + *	.file_alloc_security = INT_MAX,
+> + *	[...]
+> + * }
+> + */
+> +static struct base_slot_idx base_slot_idx __lsm_ro_after_init = {
+> +#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
+> +	.NAME = INT_MAX,
+> +#include <linux/lsm_hook_defs.h>
+> +#undef LSM_HOOK
+> +};
+> +
+>  static __initdata bool debug;
+>  #define init_debug(...)						\
+>  	do {							\
+> @@ -307,6 +431,46 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+>  	kfree(sep);
+>  }
+>  
+> +static void __init lsm_init_hook_static_slot(struct static_slot *slots,
+> +					     struct hlist_head *head,
+> +					     int *first_slot_idx)
+> +{
+> +	struct security_hook_list *pos;
+> +	struct static_slot *slot;
+> +	int slot_cnt;
+> +
+> +	slot_cnt = 0;
+> +	hlist_for_each_entry_rcu(pos, head, list)
+> +		slot_cnt++;
+> +
+> +	if (slot_cnt > SECURITY_STATIC_SLOT_COUNT)
+> +		panic("%s - No static hook slot remaining to add LSM hook.\n",
+> +		      __func__);
+> +
+> +	if (slot_cnt == 0) {
+> +		*first_slot_idx = INT_MAX;
+> +		return;
+> +	}
+> +
+> +	*first_slot_idx = SECURITY_STATIC_SLOT_COUNT - slot_cnt;
+> +	slot = slots + *first_slot_idx;
+> +	hlist_for_each_entry_rcu(pos, head, list) {
+> +		__static_call_update(slot->key, slot->trampoline,
+> +				     pos->hook.generic_func);
+> +		slot++;
+> +	}
+> +}
+> +
+> +static void __init lsm_init_static_slots(void)
+> +{
+> +#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
+> +	lsm_init_hook_static_slot(static_slots.NAME,			\
+> +				  &security_hook_heads.NAME,		\
+> +				  &base_slot_idx.NAME);
+> +#include <linux/lsm_hook_defs.h>
+> +#undef LSM_HOOK
+> +}
+> +
+>  static void __init lsm_early_cred(struct cred *cred);
+>  static void __init lsm_early_task(struct task_struct *task);
+>  
+> @@ -354,6 +518,7 @@ static void __init ordered_lsm_init(void)
+>  	lsm_early_task(current);
+>  	for (lsm = ordered_lsms; *lsm; lsm++)
+>  		initialize_lsm(*lsm);
+> +	lsm_init_static_slots();
+>  
+>  	kfree(ordered_lsms);
+>  }
+> @@ -374,6 +539,7 @@ int __init early_security_init(void)
+>  		prepare_lsm(lsm);
+>  		initialize_lsm(lsm);
+>  	}
+> +	lsm_init_static_slots();
+>  
+>  	return 0;
+>  }
+> @@ -696,27 +862,36 @@ static void __init lsm_early_task(struct task_struct *task)
+>   * call_int_hook:
+>   *	This is a hook that returns a value.
+>   */
+> -
+> -#define call_void_hook(FUNC, ...)				\
+> -	do {							\
+> -		struct security_hook_list *P;			\
+> -								\
+> -		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
+> -			P->hook.FUNC(__VA_ARGS__);		\
+> -	} while (0)
+> -
+> -#define call_int_hook(FUNC, IRC, ...) ({			\
+> -	int RC = IRC;						\
+> -	do {							\
+> -		struct security_hook_list *P;			\
+> -								\
+> -		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
+> -			RC = P->hook.FUNC(__VA_ARGS__);		\
+> -			if (RC != 0)				\
+> -				break;				\
+> -		}						\
+> -	} while (0);						\
+> -	RC;							\
+> +#define __CASE_CALL_STATIC_VOID(NUM, HOOK, ...)				\
+> +	case NUM:							\
+> +		static_call(STATIC_SLOT(HOOK, NUM))(__VA_ARGS__);	\
+> +		fallthrough;
+> +
+> +#define call_void_hook(FUNC, ...) do {					\
+> +	switch (base_slot_idx.FUNC) {					\
+> +	SECURITY_FOREACH_STATIC_SLOT(__CASE_CALL_STATIC_VOID,		\
+> +				     FUNC, __VA_ARGS__)			\
+> +	default :							\
+> +		break;							\
+> +	}								\
+> +} while (0)
+> +
+> +#define __CASE_CALL_STATIC_INT(NUM, R, HOOK, ...)			\
+> +	case NUM:							\
+> +		R = static_call(STATIC_SLOT(HOOK, NUM))(__VA_ARGS__);	\
+> +		if (R != 0)						\
+> +			break;						\
+> +		fallthrough;
+> +
+> +#define call_int_hook(FUNC, IRC, ...) ({				\
+> +	int RC = IRC;							\
+> +	switch (base_slot_idx.FUNC) {					\
+> +	SECURITY_FOREACH_STATIC_SLOT(__CASE_CALL_STATIC_INT,		\
+> +				     RC, FUNC, __VA_ARGS__)		\
+> +	default :							\
+> +		break;							\
+> +	}								\
+> +	RC;								\
+>  })
+>  
+>  /* Security operations */
+> 
+
+-- 
+James Morris
+<jmorris@namei.org>
+
