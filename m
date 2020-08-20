@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6958C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C49BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8970A20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85732078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926405;
-	bh=lBNttqA3EORBs1vjmPPFPnFN6nVGZSBZZd8Eaj570Y4=;
+	s=default; t=1597926410;
+	bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q6I+IN3BXED+mg6ur3KNP3oC3L0VmAUyxVg6d2x//SZHINUXEX4cR3R4U2DvqRiW0
-	 URIRVv9crCmTywhdGvObDI1DRQ0AYSH2S+vw9+Fw1AiaK/LtrMYbICo9kTwQ2VMCg+
-	 PeRcKbL8fjqhllk4SuVeZqUlASpVOwPbBUNy2neA=
+	b=1b0wreaCjMR5w+x9Nm9/iNAu4q6Y7CRBwpkv9QDNnez+sbBYh3y1ULCpG+lijh4nf
+	 CnaGQESoG7eJ3pkfc7bO/cMB0bl4tPLBYHIsftK6WS1D50TgCYR1vOLqICRPlSSkqm
+	 aN34hhyrANG3U/P4HjQxmk+9Z3b8BmqzjqLaTewQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHTM0o (ORCPT
+        id S1730014AbgHTJwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34344 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbgHTJwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:52:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729938AbgHTJwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 150572075E;
-        Thu, 20 Aug 2020 09:52:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20DCE2078D;
+        Thu, 20 Aug 2020 09:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917168;
-        bh=lBNttqA3EORBs1vjmPPFPnFN6nVGZSBZZd8Eaj570Y4=;
+        s=default; t=1597917153;
+        bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=phu1p1+P+6XJJUjrlqsTDdu+S4m8qWSdTvu16ydxQxh8/7+GsLLS9JpC5gPcZnHUM
-         2F8KjtjASdtKlHyb3kvw80w81d5+ovehE9wnIzlocU197zHjdG7+sFPZcGe0IUT3iD
-         hPiph90EXrUPIb93oPZ9JjA+EOhAeh20hrNlrDFU=
+        b=svwJVFqQ9up7G0BeoVSl+PhcsBchVvC5LiKlbkLGtCjp6pY3oOr2m90m5jGdRLiK4
+         f8i/SfrPILllmmu0h1D3CO2YKCb5dU/2B+uyLTr8LjXZSb5l3VGYy+hb5EKoFEZ/eH
+         hjbt6A/QqDy+Jmg1FM+v2q5YEkH3EtUp/yN7ZgIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
-        BingJing Chang <bingjingc@synology.com>,
-        Danny Shih <dannyshih@synology.com>,
-        ChangSyun Peng <allenpeng@synology.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.19 28/92] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
-Date:   Thu, 20 Aug 2020 11:21:13 +0200
-Message-Id: <20200820091539.010171532@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.19 23/92] powerpc: Fix circular dependency between percpu.h and mmu.h
+Date:   Thu, 20 Aug 2020 11:21:08 +0200
+Message-Id: <20200820091538.765451827@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -62,55 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChangSyun Peng <allenpeng@synology.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
+commit 0c83b277ada72b585e6a3e52b067669df15bcedb upstream.
 
-In degraded raid5, we need to read parity to do reconstruct-write when
-data disks fail. However, we can not read parity from
-handle_stripe_dirtying() in force reconstruct-write mode.
+Recently random.h started including percpu.h (see commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity")), which broke corenet64_smp_defconfig:
 
-Reproducible Steps:
+  In file included from /linux/arch/powerpc/include/asm/paca.h:18,
+                   from /linux/arch/powerpc/include/asm/percpu.h:13,
+                   from /linux/include/linux/random.h:14,
+                   from /linux/lib/uuid.c:14:
+  /linux/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
+    139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
 
-1. Create degraded raid5
-mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
-2. Set rmw_level to 0
-echo 0 > /sys/block/md2/md/rmw_level
-3. IO to raid5
+This is due to a circular header dependency:
+  asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
+  includes asm/mmu.h
 
-Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
-the parity in this situation.
+Which means DECLARE_PER_CPU() isn't defined when mmu.h needs it.
 
-Cc: <stable@vger.kernel.org> # v4.4+
-Reviewed-by: Alex Wu <alexwu@synology.com>
-Reviewed-by: BingJing Chang <bingjingc@synology.com>
-Reviewed-by: Danny Shih <dannyshih@synology.com>
-Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+We can fix it by moving the include of paca.h below the include of
+asm-generic/percpu.h.
+
+This moves the include of paca.h out of the #ifdef __powerpc64__, but
+that is OK because paca.h is almost entirely inside #ifdef
+CONFIG_PPC64 anyway.
+
+It also moves the include of paca.h out of the #ifdef CONFIG_SMP,
+which could possibly break something, but seems to have no ill
+effects.
+
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Cc: stable@vger.kernel.org # v5.8
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200804130558.292328-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/percpu.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3596,6 +3596,7 @@ static int need_this_block(struct stripe
- 	 * is missing/faulty, then we need to read everything we can.
- 	 */
- 	if (sh->raid_conf->level != 6 &&
-+	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
- 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
- 		/* reconstruct-write isn't being forced */
- 		return 0;
-@@ -4832,7 +4833,7 @@ static void handle_stripe(struct stripe_
- 	 * or to load a block that is being partially written.
- 	 */
- 	if (s.to_read || s.non_overwrite
--	    || (conf->level == 6 && s.to_write && s.failed)
-+	    || (s.to_write && s.failed)
- 	    || (s.syncing && (s.uptodate + s.compute < disks))
- 	    || s.replacing
- 	    || s.expanding)
+--- a/arch/powerpc/include/asm/percpu.h
++++ b/arch/powerpc/include/asm/percpu.h
+@@ -10,8 +10,6 @@
+ 
+ #ifdef CONFIG_SMP
+ 
+-#include <asm/paca.h>
+-
+ #define __my_cpu_offset local_paca->data_offset
+ 
+ #endif /* CONFIG_SMP */
+@@ -19,4 +17,6 @@
+ 
+ #include <asm-generic/percpu.h>
+ 
++#include <asm/paca.h>
++
+ #endif /* _ASM_POWERPC_PERCPU_H_ */
 
 
