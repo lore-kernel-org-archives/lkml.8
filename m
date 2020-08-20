@@ -4,56 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60122C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44104C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29D5E2184D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFF3E214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881813;
-	bh=KU1Yu0QAZX0uxEKw7gvY6AXsp9BPLpZRafmjwAOBZHA=;
+	s=default; t=1597881827;
+	bh=Rb8dpyBVkPJBOLdqZaBKluQsV2XUws3PR6snB0G3e5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IBYItC9e+BoGXifog0bazrVfw/FeJFZlHq46dDQkwXbLRUoFiE1sFZls6ITwhvgO2
-	 bKHuNua0TNbesQGH0ep5czDTo+bQdwghAWEzaI8b1EQ2vbijbycx5/55a0fHX0pHtF
-	 BfT7SljQMgCqxfbokoEw4EJj4lB8MjV63ewtrllo=
+	b=2HPHnm6pSxHYsGnU3xeoLK5AjZ2uvvyo8+u89aFdGfeQ8pW3JPenqtbDtg9ZcNrH/
+	 WfMR1XSFe7M9lmTtLE1pUXbHVGZy1//+VSGbtckIE8Uz5M04E31+fQT0rAC9QLAQ6D
+	 bMgsqFfEImsxsvCuUhMxLchE7v4V1ojTMcmo/IPU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgHTAD3 (ORCPT
+        id S1726675AbgHTADm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:03:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728260AbgHTADU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:20 -0400
+        id S1728307AbgHTADg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE272207FB;
-        Thu, 20 Aug 2020 00:03:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C132221E2;
+        Thu, 20 Aug 2020 00:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881800;
-        bh=KU1Yu0QAZX0uxEKw7gvY6AXsp9BPLpZRafmjwAOBZHA=;
+        s=default; t=1597881816;
+        bh=Rb8dpyBVkPJBOLdqZaBKluQsV2XUws3PR6snB0G3e5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wX02stB0pVAWkuf4Kng0vcPg5FHhnXo65QDi3E6pjEWGkdMiQN0Er8UErwserRIyK
-         LuaSQa8isA5VaXa3rR/uOyiVGNF8aCIxw+QP5N/m9RlDCSoON3EfL+czXun3+RtKpL
-         /gFUTs9xwP9JNmcP3f/kjj2gH4sOqdLYeXbsrAdg=
+        b=O+ekG0+Bq2PN2gBn2GYKHJdbqnw4EMgKcmkUuPmA9znAOAL01k0nu2AEfQkxK3JoR
+         c3t4UUPvkgOS+Qwq6klZXBLC4h+ok7p6RbEKFwpRfv3PTnQlsy+sdo7XEl7skvLVRI
+         nxoG7x1djKfMCbZC5yiD2MBGmT/q6QXl6KRN3B3k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javed Hasan <jhasan@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 13/18] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-Date:   Wed, 19 Aug 2020 20:02:56 -0400
-Message-Id: <20200820000302.215560-13-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 05/13] Input: psmouse - add a newline when printing 'proto' by sysfs
+Date:   Wed, 19 Aug 2020 20:03:20 -0400
+Message-Id: <20200820000328.215755-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
-References: <20200820000302.215560-1-sashal@kernel.org>
+In-Reply-To: <20200820000328.215755-1-sashal@kernel.org>
+References: <20200820000328.215755-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,64 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
-for PTR_ERR. However, in some cases it didn't.
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-This fix is to call fc_frame_free(fp) before function returns.
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
 
-Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 8839f509b19ab..78cf5b32bca67 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -593,8 +593,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index 8ac9e03c05b45..ca8f726dab2e7 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -2012,7 +2012,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
+ {
+ 	int type = *((unsigned int *)kp->arg);
  
- 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
- 		goto out;
--	if (IS_ERR(fp))
--		goto redisc;
-+	if (IS_ERR(fp)) {
-+		mutex_lock(&disc->disc_mutex);
-+		fc_disc_restart(disc);
-+		mutex_unlock(&disc->disc_mutex);
-+		goto out;
-+	}
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ }
  
- 	cp = fc_frame_payload_get(fp, sizeof(*cp));
- 	if (!cp)
-@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 				new_rdata->disc_id = disc->disc_id;
- 				fc_rport_login(new_rdata);
- 			}
--			goto out;
-+			goto free_fp;
- 		}
- 		rdata->disc_id = disc->disc_id;
- 		mutex_unlock(&rdata->rp_mutex);
-@@ -638,6 +642,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 		fc_disc_restart(disc);
- 		mutex_unlock(&disc->disc_mutex);
- 	}
-+free_fp:
-+	fc_frame_free(fp);
- out:
- 	kref_put(&rdata->kref, fc_rport_destroy);
- 	if (!IS_ERR(fp))
+ static int __init psmouse_init(void)
 -- 
 2.25.1
 
