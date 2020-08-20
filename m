@@ -2,151 +2,135 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A74F2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51C2220885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312FF207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GEbXAnjy"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RnXKPDEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728600AbgHTU7C (ORCPT
+        id S1728605AbgHTVBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 16:59:02 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:19712 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728255AbgHTU7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:59:00 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597957140; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=FJnUZ8hSOEwfDswhjf6p3X1DWgepHwpYrB7MhBJr5Ig=; b=GEbXAnjy8S9iqjwWM9XTXLkzF0xuYd9pvOFwSL+TbQsNIwZT1gcYOvSNbRJjzUEj1ICys0Lk
- he/7MntKdFS81M+G6zj7L8WtF5HZQw3WrLCHydaLLFqO6v4fJLlnyb93amcYsRTTNr1IzMlK
- voLDzi9dPgwqG560IC+K8cvoh7k=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f3ee3d6f37da9fb0e87a338 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 20:57:58
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 5E9DDC4339C; Thu, 20 Aug 2020 20:57:57 +0000 (UTC)
-Received: from localhost (unknown [202.46.22.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: prsood)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9FBB1C433CB;
-        Thu, 20 Aug 2020 20:57:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9FBB1C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=prsood@codeaurora.org
-From:   Prateek Sood <prsood@codeaurora.org>
-To:     tiwai@suse.de, mcgrof@kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Prateek Sood <prsood@codeaurora.org>
-Subject: [PATCH v3] firmware_loader: fix memory leak for paged buffer
-Date:   Fri, 21 Aug 2020 02:27:50 +0530
-Message-Id: <1597957070-27185-1-git-send-email-prsood@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <s5h364lpj3d.wl-tiwai@suse.de>
-References: <s5h364lpj3d.wl-tiwai@suse.de>
+        Thu, 20 Aug 2020 17:01:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728255AbgHTVBI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 17:01:08 -0400
+Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F14CC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:01:07 -0700 (PDT)
+Received: by mail-oi1-x243.google.com with SMTP id n128so3135448oif.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b+3Ln31i8a6+ZKWFc7O5Q805fFIpbqFGnXfp+JT2jZE=;
+        b=RnXKPDEsmDEN0w2peAI9EVJvs5JicwgJffVB9D6emIEnf/GxYS0JafKwbnr/a8rkNK
+         Xhb1nVn7Wu1ID8MmHaZZoRlPORlWzyIiBkFUS9TxUtVoZ/o1ejNfC0476MwKOfTQ0Qvt
+         NY/WaA+n6TXdpwi/+6Z28qqa6l4eaDqOwI0cgKsW/KVExRCBt7NCYBdZzkF31hf3qDhr
+         zc3M1jaXh/oOwAO4nu5M+QTJorLN621yUm8d8sLvCAkf0pEyPaCPhFnrjorGbps29npy
+         jUugX7QA2QA3SQL1TUKAMlk46Jbsta2ee5mW8BkaTwEkMzuw9+tavYqsW2wLjNdqWpdr
+         5WIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b+3Ln31i8a6+ZKWFc7O5Q805fFIpbqFGnXfp+JT2jZE=;
+        b=MG/C/B6a7vezuEL6cBu0EUU9O+ZWmjjZvcsLNAx+VudU9VK1RHUGbd9EPgI6/U67X2
+         hWc5BjKOUUC1/JoMjio0Di/HeS+/lA9/ZcTDhzAQ2acXUJeG30vkmLHMU1kDxs9VCENP
+         V41KEGh+whpIdO0zaXRqk0ScLpyyCPPEFnVH+i4XNoKN6LB9SQ5le1bmJPHnoV+4jk52
+         MLcqX9vcbUsV69aE8P5zleVxkEEC83Eku65RF4M2yLXG3RklhKnPbzS9wBPK2rOe2imr
+         xuIO2QJFPQwNvuE7yyk3HQYD1IaeWTI3jz/FQYNjP9PDTtg4atzmJSJT1Uh0zmK0iZn8
+         ecAQ==
+X-Gm-Message-State: AOAM5301HMHbXoG6oc0jrxqREUYZSIosRIm/ibRTvtAkOATKVx6s3Qum
+        7Lits9isT0JxnpEpSkci0m/mPspApDJtFghmFp3LpeyRSfc=
+X-Google-Smtp-Source: ABdhPJzXe+KtJ7t8KrxIrZ9FUoQpuTEo5DCEz/sbYRPxsLdQJEIX2u1oeMuogZzFNt5m05MuMJt6l9wY8b7zWQu+EQI=
+X-Received: by 2002:aca:b942:: with SMTP id j63mr180088oif.28.1597957266525;
+ Thu, 20 Aug 2020 14:01:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200820133339.372823-1-mlevitsk@redhat.com> <20200820133339.372823-3-mlevitsk@redhat.com>
+In-Reply-To: <20200820133339.372823-3-mlevitsk@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 20 Aug 2020 14:00:55 -0700
+Message-ID: <CALMp9eQycCn-wTUfFkqH3M7vzsRsYphO=GU8EwHt3tomnp=mng@mail.gmail.com>
+Subject: Re: [PATCH v2 2/7] KVM: nSVM: rename nested 'vmcb' to vmcb12_gpa in
+ few places
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vfree() is being called on paged buffer allocated
-using alloc_page() and mapped using vmap().
+On Thu, Aug 20, 2020 at 6:33 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+>
+> No functional changes.
+>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/svm/nested.c | 10 +++++-----
+>  arch/x86/kvm/svm/svm.c    | 13 +++++++------
+>  arch/x86/kvm/svm/svm.h    |  2 +-
+>  3 files changed, 13 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+> index fb68467e6049..f5b17920a2ca 100644
+> --- a/arch/x86/kvm/svm/nested.c
+> +++ b/arch/x86/kvm/svm/nested.c
+> @@ -431,7 +431,7 @@ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+For consistency, should the vmcb_gpa argument be renamed to vmcb12_gpa as well?
 
-Freeing of pages in vfree() relies on nr_pages of
-struct vm_struct. vmap() does not update nr_pages.
-It can lead to memory leaks.
 
-Fixes: ddaf29fd9bb6 ("firmware: Free temporary page table after vmapping")
-Signed-off-by: Prateek Sood <prsood@codeaurora.org>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Cc: stable@vger.kernel.org
----
- drivers/base/firmware_loader/firmware.h |  2 ++
- drivers/base/firmware_loader/main.c     | 17 +++++++++++------
- 2 files changed, 13 insertions(+), 6 deletions(-)
+> @@ -579,7 +579,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+>
+>         /* Exit Guest-Mode */
+>         leave_guest_mode(&svm->vcpu);
+> -       svm->nested.vmcb = 0;
+> +       svm->nested.vmcb12_gpa = 0;
+Perhaps in a follow-up change, this could be set to an illegal value
+rather than 0?
 
-diff --git a/drivers/base/firmware_loader/firmware.h b/drivers/base/firmware_loader/firmware.h
-index 933e2192..d08efc7 100644
---- a/drivers/base/firmware_loader/firmware.h
-+++ b/drivers/base/firmware_loader/firmware.h
-@@ -142,10 +142,12 @@ static inline void fw_state_done(struct fw_priv *fw_priv)
- void fw_free_paged_buf(struct fw_priv *fw_priv);
- int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed);
- int fw_map_paged_buf(struct fw_priv *fw_priv);
-+bool fw_is_paged_buf(struct fw_priv *fw_priv);
- #else
- static inline void fw_free_paged_buf(struct fw_priv *fw_priv) {}
- static inline int fw_grow_paged_buf(struct fw_priv *fw_priv, int pages_needed) { return -ENXIO; }
- static inline int fw_map_paged_buf(struct fw_priv *fw_priv) { return -ENXIO; }
-+static inline bool fw_is_paged_buf(struct fw_priv *fw_priv) { return false; }
- #endif
- 
- #endif /* __FIRMWARE_LOADER_H */
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index ca871b1..36bf455 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -252,9 +252,11 @@ static void __free_fw_priv(struct kref *ref)
- 	list_del(&fw_priv->list);
- 	spin_unlock(&fwc->lock);
- 
--	fw_free_paged_buf(fw_priv); /* free leftover pages */
--	if (!fw_priv->allocated_size)
-+	if (fw_is_paged_buf(fw_priv))
-+		fw_free_paged_buf(fw_priv);
-+	else if (!fw_priv->allocated_size)
- 		vfree(fw_priv->data);
-+
- 	kfree_const(fw_priv->fw_name);
- 	kfree(fw_priv);
- }
-@@ -268,6 +270,11 @@ static void free_fw_priv(struct fw_priv *fw_priv)
- }
- 
- #ifdef CONFIG_FW_LOADER_PAGED_BUF
-+bool fw_is_paged_buf(struct fw_priv *fw_priv)
-+{
-+	return fw_priv->is_paged_buf;
-+}
-+
- void fw_free_paged_buf(struct fw_priv *fw_priv)
- {
- 	int i;
-@@ -275,6 +282,8 @@ void fw_free_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->pages)
- 		return;
- 
-+	vunmap(fw_priv->data);
-+
- 	for (i = 0; i < fw_priv->nr_pages; i++)
- 		__free_page(fw_priv->pages[i]);
- 	kvfree(fw_priv->pages);
-@@ -328,10 +337,6 @@ int fw_map_paged_buf(struct fw_priv *fw_priv)
- 	if (!fw_priv->data)
- 		return -ENOMEM;
- 
--	/* page table is no longer needed after mapping, let's free */
--	kvfree(fw_priv->pages);
--	fw_priv->pages = NULL;
--
- 	return 0;
- }
- #endif
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., 
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
+> @@ -1018,7 +1018,7 @@ static int svm_get_nested_state(struct kvm_vcpu *vcpu,
+>
+>         /* First fill in the header and copy it out.  */
+>         if (is_guest_mode(vcpu)) {
+> -               kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb;
+> +               kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb12_gpa;
+It's unfortunate that we have "_pa" on the LHS on "_gpa" on the RHS. Oh, well.
+
+
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index 562a79e3e63a..d33013b9b4d7 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -1102,7 +1102,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+>         }
+>         svm->asid_generation = 0;
+>
+> -       svm->nested.vmcb = 0;
+> +       svm->nested.vmcb12_gpa = 0;
+Here, too, perhaps this could be changed from 0 to an illegal value in
+a follow-up change.
+
+Reviewed-by: Jim Mattson <jmattson@google.com>
