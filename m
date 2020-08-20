@@ -2,66 +2,85 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7188C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E777C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3740207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:21:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134EB2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHTCVO convert rfc822-to-8bit (ORCPT
+        id S1726817AbgHTCYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:21:14 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3488 "EHLO huawei.com"
+        Wed, 19 Aug 2020 22:24:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9789 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726578AbgHTCVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:21:14 -0400
-Received: from dggeme701-chm.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 1B3B915757EFECA11230;
-        Thu, 20 Aug 2020 10:21:12 +0800 (CST)
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme701-chm.china.huawei.com (10.1.199.97) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 20 Aug 2020 10:21:11 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
- Thu, 20 Aug 2020 10:21:11 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-CC:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: Convert to use the preferred fallthrough macro
-Thread-Topic: [PATCH] nfsd: Convert to use the preferred fallthrough macro
-Thread-Index: AdZ2mG6NaArBcemRGUaC0UhtB11ztg==
-Date:   Thu, 20 Aug 2020 02:21:11 +0000
-Message-ID: <66f183ce1fa4499dac09bf552038baa5@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.176.142]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726578AbgHTCYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:24:04 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EA9B2982E81175518C99;
+        Thu, 20 Aug 2020 10:24:00 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.108) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 10:23:57 +0800
+Subject: Re: [PATCH v2] net: stmmac: Fix signedness bug in
+ stmmac_probe_config_dt()
+To:     Andrew Lunn <andrew@lunn.ch>
+References: <20200818143952.50752-1-yuehaibing@huawei.com>
+ <20200818151500.51548-1-yuehaibing@huawei.com>
+ <20200818170448.GH2330298@lunn.ch>
+CC:     <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <joabreu@synopsys.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <ajayg@nvidia.com>,
+        <netdev@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <07d81dd7-f59a-b7ca-64e9-ac1ab9aa4758@huawei.com>
+Date:   Thu, 20 Aug 2020 10:23:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
+In-Reply-To: <20200818170448.GH2330298@lunn.ch>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.108]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chuck Lever <chuck.lever@oracle.com> wrote:
->> On Aug 19, 2020, at 5:26 AM, Miaohe Lin <linmiaohe@huawei.com> wrote:
->> 
->> Convert the uses of fallthrough comments to fallthrough macro.
->
->The patch description would be more helpful if it referenced the commit that added the fallthrough macro to the kernel, or a permanent mailing list link that described its appropriate usage.
->
->Thanks!
->
+On 2020/8/19 1:04, Andrew Lunn wrote:
+> On Tue, Aug 18, 2020 at 11:15:00PM +0800, YueHaibing wrote:
+>> The "plat->phy_interface" variable is an enum and in this context GCC
+>> will treat it as an unsigned int so the error handling is never
+>> triggered.
+>>
+>> Fixes: b9f0b2f634c0 ("net: stmmac: platform: fix probe for ACPI devices")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> 
+> Hi YueHaibing
+> 
+> Please take a look at:
+> 
+> commit 0c65b2b90d13c1deaee6449304dd367c5d4eb8ae
+> Author: Andrew Lunn <andrew@lunn.ch>
+> Date:   Mon Nov 4 02:40:33 2019 +0100
+> 
+>     net: of_get_phy_mode: Change API to solve int/unit warnings
+> 
+> You probably want to follow this basic idea.
+> 
 
-Will add the commit that added the fallthrough macro to the kernel to commit log. Many thanks.
+Thanks, will rework following this.
+
+>     Andrew
+> 
+> .
+> 
 
