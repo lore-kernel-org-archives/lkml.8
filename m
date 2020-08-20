@@ -2,107 +2,173 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60F64C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:14:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC49207DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:10:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F10E208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:14:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaI2XwvN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MR8aElz8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbgHTUKe (ORCPT
+        id S1728353AbgHTUOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 16:10:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
+        Thu, 20 Aug 2020 16:14:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbgHTUKc (ORCPT
+        with ESMTP id S1726908AbgHTUOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:10:32 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D2C9C061385;
-        Thu, 20 Aug 2020 13:10:31 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t23so3520391ljc.3;
-        Thu, 20 Aug 2020 13:10:31 -0700 (PDT)
+        Thu, 20 Aug 2020 16:14:20 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E131C061385;
+        Thu, 20 Aug 2020 13:14:18 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id bh1so1428743plb.12;
+        Thu, 20 Aug 2020 13:14:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aGDq3G61oS7LkIVvcYe8gs5DEBUj3X0IY6+Ho7L4bXc=;
-        b=aaI2XwvNa4jYT+ZP++lm8ICOT30vbHbYUWZ2eapjPgVOrbFZiW0JrsNRnHrkHauDAe
-         F+tXGAAqJ4vzEu+ctIrX4IM+yBsxNUqux5EEMIr8tDiF5nelEImI1pAGijUjDb9sdpr+
-         3jhTQx0pxPCjI9Yjxp5eOYRJHWEFTz3Q/JDopYi/d21uwf6ydkQJd8zd0nrYHrBm51gj
-         IJ251b8BXCu/KouQNs7VyVjZaRoQ6EfqJzBBwEfbvaelF0x0hTDyx36zN9EiD0UZhoes
-         jE4vU9heUNNm5TPrDjhlMPFoFqDRVuH+5P+XTNd0kuG1aP3MnluFFFC7ajaNVZ0Eb9HZ
-         g3JQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=H5L27zf4P6SheNXckuyDWH+nD0z6n3zy3Qk7L/fAGpU=;
+        b=MR8aElz8PdCJ7uST0lKGECpno+C0nfBYRRZwPgd7US8Cj4+5UkAMXi8cr1agnsy4VU
+         oa1EbZI+RJVramO8KNyQgstkTvg5sba78HcNAhjWOkeR1P4xMXb/jnKGRz/6SY6KXzUN
+         mAHkYgf4S8YNLqppUp64lOFmDjlaITI1Wqp+UzaxVp0F3014FaipAQlEKQKxn09ox+Km
+         YeYo453ZK6SEjhyQ9DY85LmXKGDEl5shyMLgXWhOtIuOmFZ0tKe+K7ZbRs9D4dUR5AmN
+         TYXvygqr/lxM+3O4nyjJQJhii0OGbG9IC7w8UWmU8mLuQgEHfWkcBgAigD6gEyb0jssm
+         xD7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aGDq3G61oS7LkIVvcYe8gs5DEBUj3X0IY6+Ho7L4bXc=;
-        b=UFRwC7JdxU4LSgFhJO3IYezDLwGVjyRuW8fVoLjVjD7Z82LD6xMFuELxtiL82UjWGK
-         Yp1j2JjA/cNUFAjJk0QUOXMEGwAiUtA/PbSsbpQ1sMLKkBiU7+EyULcMVbv4xwfXB+Xw
-         6XNMTo2+B9J0qfH+etdcZ4xW/NTZHJlQXSpMUggcAxW5BBEPvpNn+7XBPNcXfLET6Th0
-         TU5Jlp8BKhG21o8zp9h4cUPWpO+qz9yXSXE+lxzqh1p3Ztl4d0ma46rdnWiURH6t4UC3
-         Sn2M1/P5BkQXGa0qVbDkfhBdA9VM4r0IY5NzYz/6T3IrpmUfQqH1WpiMWWAdMKQLvKCV
-         nBBg==
-X-Gm-Message-State: AOAM530+foEzpgeJ87L+z5BmUErLmNAWQWsG6X1WfjUwKikjM9qRZMKR
-        /RoFioN50VZngixOBYTlhITuuHsd+rw=
-X-Google-Smtp-Source: ABdhPJwerR6+NSwUtwLl00X9aib7HLlZlj50J5PUAv4AGloGJDrAm7Kb1tk696rJXQBYokDQvzy/bw==
-X-Received: by 2002:a2e:9886:: with SMTP id b6mr684ljj.258.1597954226414;
-        Thu, 20 Aug 2020 13:10:26 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id f23sm633489ljk.74.2020.08.20.13.10.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 13:10:25 -0700 (PDT)
-Subject: Re: [PATCH 16/18] staging/media/tegra-vde: Clean up IOMMU workaround
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Robin Murphy <robin.murphy@arm.com>, hch@lst.de, joro@8bytes.org,
-        linux@armlinux.org.uk
-Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
-        matthias.bgg@gmail.com, yong.wu@mediatek.com,
-        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
-        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <3535c205b9bce52556abbf2f63384fb38e009df9.1597931876.git.robin.murphy@arm.com>
- <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
-Message-ID: <ebc9c605-b986-daef-9f2c-1834437fd292@gmail.com>
-Date:   Thu, 20 Aug 2020 23:10:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=H5L27zf4P6SheNXckuyDWH+nD0z6n3zy3Qk7L/fAGpU=;
+        b=uRGh1VP10taGp2RknVTiPpGLJ1NoXkcUmyHlaDndN1Q65Xq96OtQxdAexMzqUnLikP
+         E6gnxfm7oUIbmppndDbz0ve4JPWcseWgb4VqKGyxkn3d031//kOlsQtyWgtptCvsfhwk
+         9Ky1KhxyH5HVGocyy1YsOv5Zdf7rv3bxKYhrtpTHS5/lg6QAMhnKPPCdL2om2PA/7M/z
+         V96Ac6dYlIvPeEO+BTHRt+LIMDuodnU/pUc1B0MmYPKopxXvlgvu3BBaUFRinas7Ef0a
+         k5Epjg/A9tj5GeaDTB8qTKuBxDmiM1Wduv5AM1RMr8JeekasVgfX+shMUljhsNPeHv6I
+         yyjg==
+X-Gm-Message-State: AOAM532Cu84XHEnMPLnOtxi+TH/uVBPRHLx1O2RPkJwxvHp0MilwXuDi
+        N1OcBqEBNOnWka61cXkBhx1cajUFfFc=
+X-Google-Smtp-Source: ABdhPJwqLGsUlU2TU8VUvuJMCQWQzOiheLv7U6G1Q7/4+bDMXf7HP+Cguin8vpMR8Q7yT1KSs6TbAQ==
+X-Received: by 2002:a17:902:b681:: with SMTP id c1mr55585pls.214.1597954458267;
+        Thu, 20 Aug 2020 13:14:18 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z9sm3631585pfn.59.2020.08.20.13.14.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 13:14:17 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 13:14:16 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wang Wensheng <wangwensheng4@huawei.com>
+Cc:     linux-watchdog@vger.kernel.org, wim@linux-watchdog.org,
+        linux-kernel@vger.kernel.org, rui.xiang@huawei.com,
+        guohanjun@huawei.com, lizefan@huawei.com
+Subject: Re: [PATCH] watchdog: Add interface to config timeout and pretimeout
+ in sysfs
+Message-ID: <20200820201416.GK84616@roeck-us.net>
+References: <20200820023858.10873-1-wangwensheng4@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <07135a55-cbc9-83e5-60dc-731282192554@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820023858.10873-1-wangwensheng4@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-20.08.2020 22:51, Dmitry Osipenko пишет:
-> Alternatively, the Tegra SMMU could be changed such that the devices
-> will be attached to a domain at the time of a first IOMMU mapping
-> invocation instead of attaching at the time of attach_dev() callback
-> invocation.
+On Thu, Aug 20, 2020 at 02:38:58AM +0000, Wang Wensheng wrote:
+> Those interfaces exist already in sysfs of watchdog driver core, but
+> they are readonly. This patch add write hook so we can config timeout
+> and pretimeout by writing those files.
 > 
-> Or maybe even IOMMU core could be changed to attach devices at the time
-> of the first IOMMU mapping invocation? This could be a universal
-> solution for all drivers.
+> Signed-off-by: Wang Wensheng <wangwensheng4@huawei.com>
 
-Although, please scratch this :) I'll need to revisit how DMA mapping
-API works.
+This is problematic. For example, if a user changes the timeout on
+a running watchdog, the application pinging the watchdog would not
+know about it. Set the timeout to 1 second using the sysfs attribute,
+and the system will trigger the watchdog almost immediately.
+
+The only somewhat "safe" means to use this attribute would be to set
+the timeout before a userspace application opens the watchdog device.
+But then this application could just as well update the timeout
+after opening the device. What is the use case ?
+
+Thanks,
+Guenter
+
+> ---
+>  drivers/watchdog/watchdog_dev.c | 48 +++++++++++++++++++++++++++++++--
+>  1 file changed, 46 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 10b2090f3e5e..bb8ddc71d4ea 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -485,7 +485,29 @@ static ssize_t timeout_show(struct device *dev, struct device_attribute *attr,
+>  
+>  	return sprintf(buf, "%u\n", wdd->timeout);
+>  }
+> -static DEVICE_ATTR_RO(timeout);
+> +
+> +static ssize_t timeout_store(struct device *dev, struct device_attribute *attr,
+> +				const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	unsigned int val;
+> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+> +	struct watchdog_core_data *wd_data = wdd->wd_data;
+> +
+> +	ret = kstrtouint(buf, 0, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mutex_lock(&wd_data->lock);
+> +	ret = watchdog_set_timeout(wdd, val);
+> +	mutex_unlock(&wd_data->lock);
+> +
+> +	if (!ret)
+> +		ret = count;
+> +
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_RW(timeout);
+>  
+>  static ssize_t pretimeout_show(struct device *dev,
+>  			       struct device_attribute *attr, char *buf)
+> @@ -494,7 +516,29 @@ static ssize_t pretimeout_show(struct device *dev,
+>  
+>  	return sprintf(buf, "%u\n", wdd->pretimeout);
+>  }
+> -static DEVICE_ATTR_RO(pretimeout);
+> +
+> +static ssize_t pretimeout_store(struct device *dev,
+> +		struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int ret;
+> +	unsigned int val;
+> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
+> +	struct watchdog_core_data *wd_data = wdd->wd_data;
+> +
+> +	ret = kstrtouint(buf, 0, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mutex_lock(&wd_data->lock);
+> +	ret = watchdog_set_pretimeout(wdd, val);
+> +	mutex_unlock(&wd_data->lock);
+> +
+> +	if (!ret)
+> +		ret = count;
+> +
+> +	return ret;
+> +}
+> +static DEVICE_ATTR_RW(pretimeout);
+>  
+>  static ssize_t identity_show(struct device *dev, struct device_attribute *attr,
+>  				char *buf)
+> -- 
+> 2.25.0
+> 
