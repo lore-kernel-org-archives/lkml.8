@@ -2,180 +2,152 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D46C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01A1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804CE20639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB4220639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:33:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KpEwD66y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbgHTDcp (ORCPT
+        id S1726934AbgHTDdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:32:45 -0400
-Received: from mga06.intel.com ([134.134.136.31]:60344 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726698AbgHTDcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 23:32:43 -0400
-IronPort-SDR: 4SRboyQGcOy9J7mluKLMzczxS02sZUQlSlNLLRBDGjDXHIzvYu23P5G52r8kXlfr3FxHtFVHcW
- RMfPKjWDdmDg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="216765273"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="216765273"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 20:32:42 -0700
-IronPort-SDR: axVaO01PiEwdrsY0XR0Zs3O9fWoXIXfcdqJr+2+0OrOhS2gTJz67WfqAXaLG9BdFPh2R/m8ouo
- ZkY7Asw5Ghhg==
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="472477121"
-Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 20:32:36 -0700
-Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
- counter for guest PEBS
-To:     Peter Zijlstra <peterz@infradead.org>,
-        "Paolo Bonzini (KVM Super Maintainer)" <pbonzini@redhat.com>
-Cc:     "Kang, Luwei" <luwei.kang@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "pawan.kumar.gupta@linux.intel.com" 
-        <pawan.kumar.gupta@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>
-References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
- <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
- <20200306135317.GD12561@hirez.programming.kicks-ass.net>
- <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
- <20200309100443.GG12561@hirez.programming.kicks-ass.net>
- <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
- <20200309150526.GI12561@hirez.programming.kicks-ass.net>
- <DM5PR1101MB22667E832B3E9C1EF5389F2280810@DM5PR1101MB2266.namprd11.prod.outlook.com>
-From:   Like Xu <like.xu@linux.intel.com>
-Organization: Intel OTC
-Message-ID: <34cb1d8c-d7c0-0dc1-49b2-072147f37379@linux.intel.com>
-Date:   Thu, 20 Aug 2020 11:32:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 23:33:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58638 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726872AbgHTDdW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 23:33:22 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0184CC061757;
+        Wed, 19 Aug 2020 20:33:21 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id p4so510390qkf.0;
+        Wed, 19 Aug 2020 20:33:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=U70M0DthPhvBPm+JwSxLRJEdOyYLX1RXRnFN4J4OreQ=;
+        b=KpEwD66yBrruBO3QsYyaOwDCrPWzetFsZPTJHveDTAvV1wImb3iajyGumgOLMInvG7
+         1CqtCH/mQh0g1h+p6uDlkosEkWf6vH2BS75hPQl8PQ5k7+kZkyYFgbO7cG9y+PPErHx/
+         zdYz540CUfXWEFO2pCSN9B0kvqTLx5NoIDqLKqE4n+1K8Zggfon6oG3WWwlDYDQL7qq7
+         /WhzyMaJB6+wCB7FTbgpyEnk6t1MNmt++2xRVZ01/lA2DlkQ2tfq77V1PiHiEIyTmiML
+         U0sbQ7Xfyksip8Kv5pqhnnuDcVTY6tf3Z64dMyGspTd6AsrkMNsPk1kLcILoMFJbHXFK
+         mVwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=U70M0DthPhvBPm+JwSxLRJEdOyYLX1RXRnFN4J4OreQ=;
+        b=s10v2pZa5FLmZT+DGgEYckrgccI18iIceUOvZrSDIJa7jyouSLTrkVIh9SCWGWm1zq
+         ztg7waEZvmZTqqCmwmKXpGB2Y3A0RHC9AV42Llh6vyVMesAlFCD+egeC2DK/T5jKxbzJ
+         t3Kk9lU4K0apSMpuLFzJRifmFXEPBXYE6dlpH2dbZv4cXwBred0EoMfiNRflGDYZiVr2
+         9cGKTDIx++Y7cMwqqpgukrF+sbw180oJwWp/8dD7xWYFW2pBuwzjzH5OinC3PX4tS8QN
+         SYJMcLNMO1botiEUy2dznTHUJ7hz3+9xYyJ6gne4o3Bpz9OEaC0ME8QFsRQK2y8NMi3d
+         4CUg==
+X-Gm-Message-State: AOAM532bYB8j3IWTICNwwW5TY/PmrIo0m5n9dnNoXp7Lb1zcEmGGUKQn
+        NcR0fvldGG6GXZsusDqiUP8=
+X-Google-Smtp-Source: ABdhPJzRVPFYZRfVAtXW6RVInl7yWIxXxbXikBLG/HFjIjUou4gqQQBd089gpfngD73D+Yu+O6Iudw==
+X-Received: by 2002:a05:620a:12ef:: with SMTP id f15mr1079654qkl.120.1597894399877;
+        Wed, 19 Aug 2020 20:33:19 -0700 (PDT)
+Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id t32sm1713805qtb.3.2020.08.19.20.33.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 20:33:18 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 20:33:17 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joe Perches <joe@perches.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Axtens <dja@axtens.net>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Bruce Ashfield <bruce.ashfield@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
+        Andi Kleen <ak@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
+        Eli Friedman <efriedma@quicinc.com>, stable@vger.kernel.org,
+        Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH v2 1/5] Makefile: add -fno-builtin-stpcpy
+Message-ID: <20200820033317.GA2167124@ubuntu-n2-xlarge-x86>
+References: <20200819191654.1130563-1-ndesaulniers@google.com>
+ <20200819191654.1130563-2-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <DM5PR1101MB22667E832B3E9C1EF5389F2280810@DM5PR1101MB2266.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200819191654.1130563-2-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Wed, Aug 19, 2020 at 12:16:50PM -0700, Nick Desaulniers wrote:
+> LLVM implemented a recent "libcall optimization" that lowers calls to
+> `sprintf(dest, "%s", str)` where the return value is used to
+> `stpcpy(dest, str) - dest`. This generally avoids the machinery involved
+> in parsing format strings. This optimization was introduced into
+> clang-12. Because the kernel does not provide an implementation of
+> stpcpy, we observe linkage failures for almost all targets when building
+> with ToT clang.
+> 
+> The interface is unsafe as it does not perform any bounds checking.
+> Disable this "libcall optimization" via `-fno-builtin-stpcpy`.
+> 
+> Cc: stable@vger.kernel.org # 4.4
+> Link: https://bugs.llvm.org/show_bug.cgi?id=47162
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1126
+> Link: https://reviews.llvm.org/D85963
+> Reported-by: Sami Tolvanen <samitolvanen@google.com>
+> Suggested-by: Dávid Bolvanský <david.bolvansky@gmail.com>
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-On 2020/6/12 13:28, Kang, Luwei wrote:
->>>> Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random
->>>> PEBS event, and then the host wants to use PREC_DIST.. Then one of
->>>> them will be screwed for no reason what so ever.
->>>>
->>>
->>> The multiplexing should be triggered.
->>>
->>> For host, if both user A and user B requires PREC_DIST, the
->>> multiplexing should be triggered for them.
->>> Now, the user B is KVM. I don't think there is difference. The
->>> multiplexing should still be triggered. Why it is screwed?
->>
->> Becuase if KVM isn't PREC_DIST we should be able to reschedule it to a
->> different counter.
->>
->>>> How is that not destroying scheduling freedom? Any other situation
->>>> we'd have moved the !PREC_DIST PEBS event to another counter.
->>>>
->>>
->>> All counters are equivalent for them. It doesn't matter if we move it
->>> to another counter. There is no impact for the user.
->>
->> But we cannot move it to another counter, because you're pinning it.
-> 
-> Hi Peter,
-> 
-> To avoid the pinning counters, I have tried to do some evaluation about
-> patching the PEBS record for guest in KVM. In this approach, about ~30%
-> time increased on guest PEBS PMI handler latency (
-> e.g.perf record -e branch-loads:p -c 1000 ~/Tools/br_instr a).
-> 
-> Some implementation details as below:
-> 1. Patching the guest PEBS records "Applicable Counters" filed when the guest
->       required counter is not the same with the host. Because the guest PEBS
->       driver will drop these PEBS records if the "Applicable Counters" not the
->       same with the required counter index.
-> 2. Traping the guest driver's behavior(VM-exit) of disabling PEBS.
->       It happens before reading PEBS records (e.g. PEBS PMI handler, before
->       application exit and so on)
-> 3. To patch the Guest PEBS records in KVM, we need to get the HPA of the
->       guest PEBS buffer.
->       <1> Trapping the guest write of IA32_DS_AREA register and get the GVA
->               of guest DS_AREA.
->       <2> Translate the DS AREA GVA to GPA(kvm_mmu_gva_to_gpa_read)
->               and get the GVA of guest PEBS buffer from DS AREA
->               (kvm_vcpu_read_guest_atomic).
->       <3> Although we have got the GVA of PEBS buffer, we need to do the
->               address translation(GVA->GPA->HPA) for each page. Because we can't
->               assume the GPAs of Guest PEBS buffer are always continuous.
-> 	
-> But we met another issue about the PEBS counter reset field in DS AREA.
-> pebs_event_reset in DS area has to be set for auto reload, which is per
-> counter. Guest and Host may use different counters. Let's say guest wants to
-> use counter 0, but host assign counter 1 to guest. Guest sets the reset value to
-> pebs_event_reset[0]. However, since counter 1 is the one which is eventually
-> scheduled, HW will use  pebs_event_reset[1] as reset value.
-> 
-> We can't copy the value of the guest pebs_event_reset[0] to
-> pebs_event_reset[1] directly(Patching DS AREA) because the guest driver may
-> confused, and we can't assume the guest counter 0 and 1 are not used for this
-> PEBS task at the same time. And what's more, KVM can't aware the guest
-> read/write to the DS AREA because it just a general memory for guest.
-> 
-> What is your opinion or do you have a better proposal?
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Do we have any update or clear attitude
-on this "patching the PEBS record for guest in KVM" proposal ï¼Ÿ
-
-Thanks,
-Like Xu
-
+> ---
+>  Makefile | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Thanks,
-> Luwei Kang
+> diff --git a/Makefile b/Makefile
+> index 9cac6fde3479..e523dc8d30e0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -578,6 +578,7 @@ ifneq ($(LLVM_IAS),1)
+>  CLANG_FLAGS	+= -no-integrated-as
+>  endif
+>  CLANG_FLAGS	+= -Werror=unknown-warning-option
+> +CLANG_FLAGS	+= -fno-builtin-stpcpy
+>  KBUILD_CFLAGS	+= $(CLANG_FLAGS)
+>  KBUILD_AFLAGS	+= $(CLANG_FLAGS)
+>  export CLANG_FLAGS
+> -- 
+> 2.28.0.297.g1956fa8f8d-goog
 > 
->>
->>> In the new proposal, KVM user is treated the same as other host events
->>> with event constraint. The scheduler is free to choose whether or not
->>> to assign a counter for it.
->>
->> That's what it does, I understand that. I'm saying that that is creating artificial
->> contention.
->>
->>
->> Why is this needed anyway? Can't we force the guest to flush and then move it
->> over to a new counter?
-
