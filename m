@@ -2,117 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56999C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E16D42078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="AznunsBU"
+	by mail.kernel.org (Postfix) with ESMTP id 2975720658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597918859;
+	bh=DCP153UuCuLNtr0k7Pe5NsMiXDM87xdDviXKXADwZ44=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dUmZFk5MZEQXNq9Gwtr++Gsd8ukmsLq+7NIJfLzES6jixIZ5XlkEvq0Ta6KmOiT96
+	 0W6QANFT+ppQ0QwHkQcLdWFh6kA1Z4ea4PnPvCuDL6YnGVKpENrlgTkWOTaARHjoxp
+	 YkpzQ8ScYK6EenpBh1Lz0UYudvxcYqkeOXRbVCTY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731483AbgHTKUs (ORCPT
+        id S1731520AbgHTKU6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:20:48 -0400
-Received: from esa2.hc3370-68.iphmx.com ([216.71.145.153]:6917 "EHLO
-        esa2.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731463AbgHTKUZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1597918825;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Sv68RoNLXVff/6n8GJVDTzUndQIzSGsto9tYosUgXbw=;
-  b=AznunsBUonXknv9jqFhp3YXSxxZ1uxt+H2KvV61dWsm3G53n7J9AZfB1
-   qI5+ZDDA2P2NSnYRnXsek+Mw1LrafRrGJ/GzDe9OYYJTzOq6F5tXg5Cum
-   gFvG5mX5UVjPLVpFrvTPq9CfnVmyHE5f/Mqv16VHSh2ZO3g3qs5XjbrxI
-   4=;
-Authentication-Results: esa2.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: g5He4ply494ZRa/EGg7MaC71UzA0BjHI1c7YSwZBTDzTp9vpey0jdtGIFSsbMxA1X6JsEBAvkw
- B26jNrEgbiFdR1wvCVK0z3EhFmTTq4XgjmQ4hJTQKN/YHmJkqr3oqEq7fo7nByDE/78nF//jET
- ail+DgQVD5LgeIS6TGXJHGPHn3r/NmlyoYNxzeNv9wZ5nmrHZHIqKJpLTa/azaYJygb0agovIt
- sOBNqo3hgPUzC/dFP+lUPEmbSTg+MmbWcdS+RPQkTjx3SN4flHaKnhszEvO84y4Le8Yy5jVL1n
- qaI=
-X-SBRS: 2.7
-X-MesageID: 24943558
-X-Ironport-Server: esa2.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.76,332,1592884800"; 
-   d="scan'208";a="24943558"
-Date:   Thu, 20 Aug 2020 12:20:16 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-CC:     Norbert Kaminski <norbert.kaminski@3mdeb.com>,
-        Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
-        <xen-devel@lists.xenproject.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Maciej Pijanowski <maciej.pijanowski@3mdeb.com>,
-        <piotr.krol@3mdeb.com>
-Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
-Message-ID: <20200820102016.GU828@Air-de-Roger>
-References: <20200817090013.GN975@Air-de-Roger>
- <20200818120135.GK1679@mail-itl>
- <20200818124710.GK828@Air-de-Roger>
- <20200818150020.GL1679@mail-itl>
- <20200818172114.GO828@Air-de-Roger>
- <20200818184018.GN1679@mail-itl>
- <20200819081930.GQ828@Air-de-Roger>
- <3d405b0c-4e2b-0d29-56bb-e315f4c21d03@3mdeb.com>
- <20200820093025.GT828@Air-de-Roger>
- <20200820093454.GS1626@mail-itl>
+        Thu, 20 Aug 2020 06:20:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731502AbgHTKUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52FDA20658;
+        Thu, 20 Aug 2020 10:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918851;
+        bh=DCP153UuCuLNtr0k7Pe5NsMiXDM87xdDviXKXADwZ44=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Z9Euzh9M7aAjDsBXEzFgZW3UQ+4GsnDrNYqCKqKZDcvLpI2xfXIUea5cDW9PNTKDl
+         pDZcHYY8fi0UTkPqBPGpgLxSKihu80N/mO9m/sZIH3DnhJ344F+DBbSiknBOeSBpNe
+         RhzmE9Q9Vqtqcqk9ySurCNUODv7LBbJHazc5XVok=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 089/149] media: exynos4-is: Add missed check for pinctrl_lookup_state()
+Date:   Thu, 20 Aug 2020 11:22:46 +0200
+Message-Id: <20200820092130.037191704@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200820093454.GS1626@mail-itl>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:34:54AM +0200, Marek Marczykowski-Górecki wrote:
-> On Thu, Aug 20, 2020 at 11:30:25AM +0200, Roger Pau Monné wrote:
-> > Right, so you only need access to the ESRT table, that's all. Then I
-> > think we need to make sure Xen doesn't use this memory for anything
-> > else, which will require some changes in Xen (or at least some
-> > checks?).
-> > 
-> > We also need to decide what to do if the table turns out to be placed
-> > in a wrong region. How are we going to prevent dom0 from using it
-> > then? My preference would be to completely hide it from dom0 in that
-> > case, such that it believes there's no ESRT at all if possible.
-> 
-> Yes, that makes sense. As discussed earlier, that probably means
-> re-constructing SystemTable before giving it to dom0. We'd need to do
-> that in PVH case anyway, to adjust addresses, right?
+From: Chuhong Yuan <hslester96@gmail.com>
 
-Not really, on PVH dom0 we should be able to identity map the required
-EFI regions in the dom0 p2m, so the only difference between a classic
-PV dom0 is that we need to assure that those regions are correctly
-identity mapped in the p2m, but that shouldn't require any change to
-the SystemTable unless we need to craft custom tables (see below).
+[ Upstream commit 18ffec750578f7447c288647d7282c7d12b1d969 ]
 
-> Is there something
-> like this in the Xen codebase already, or it needs to be written from
-> scratch?
+fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
+Add the missed check to fix it.
 
-AFAICT it needs to be written for EFI. For the purposes here I think
-you could copy the SystemTable and modify the NumberOfTableEntries and
-ConfigurationTable fields in the copy in order to delete the ESRT if
-found to be placed in a non suitable region?
+Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/platform/exynos4-is/media-dev.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-At that point we can remove the checks from Linux since Xen will
-assert that whatever gets passed to dom0 is in a suitable region. It
-would be nice to have a way to signal that the placement of the ESRT
-has been checked, but I'm not sure how to do this, do you have any
-ideas?
+diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
+index 4f5586a4cbffa..31cc7d94064e3 100644
+--- a/drivers/media/platform/exynos4-is/media-dev.c
++++ b/drivers/media/platform/exynos4-is/media-dev.c
+@@ -1172,6 +1172,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+ 
+ 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
+ 					PINCTRL_STATE_IDLE);
++	if (IS_ERR(pctl->state_idle))
++		return PTR_ERR(pctl->state_idle);
++
+ 	return 0;
+ }
+ 
+-- 
+2.25.1
 
-Roger.
+
+
