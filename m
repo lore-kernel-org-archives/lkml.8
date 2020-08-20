@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5CEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE29C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 098A522BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA2E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919664;
-	bh=XwsNyU6mQKwsM1c/uaHrs4pZwZYGuE8hG/wttSzrgKc=;
+	s=default; t=1597919670;
+	bh=HOXa4eD0bvE5fye5g9+SaQbqIgVHHLMvawfQXnpAunQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZbrzMUJmbDRqDSFFoLELylnYPqCVv6Z+lnwr4+u2/HJiY+lv/1MUW4Nqsf4bN5OH
-	 u+FHaMa3jrdp1VwwzRkfOlslyzZ2YNkJ0W4OzSLVlDMWoVkQicbRVrC934DoZpXtEl
-	 7KlM6dwPuQcRGb0p9+g4FRx//E9u/7KMJQCCzMUc=
+	b=qOvxkaqwco1iHbTqC/nuIeCF4ANIkNUJhMG8ElnSOY0DIaLuIwFwGhX+6RHHnAnOR
+	 /i6Ohrji8rr0GL/cQSTa7t48PrG1vKbv68MUicECioCzRcjnWhv33xYiBaRNOuV127
+	 6t9qmmJSlQjOY/bWTC0PQabRFI1NBPdW3sISERbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbgHTKeU (ORCPT
+        id S1731500AbgHTKe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:34:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:34:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730399AbgHTKT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:26 -0400
+        id S1729483AbgHTKTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDDB620658;
-        Thu, 20 Aug 2020 10:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A12C22075E;
+        Thu, 20 Aug 2020 10:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918765;
-        bh=XwsNyU6mQKwsM1c/uaHrs4pZwZYGuE8hG/wttSzrgKc=;
+        s=default; t=1597918763;
+        bh=HOXa4eD0bvE5fye5g9+SaQbqIgVHHLMvawfQXnpAunQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kJGYTeRwepHUqfAgmcpRpVFUSVwlnH95WOKpyVlIhs0rx/cFnkP1P4Km+NBgadoYr
-         1UDcCanM0HqF9ix5OKt+NDj05P5BtQsZIJ1Z4aAewkmCyDv2fRLKTrXg+pb0Th0D5Y
-         LB4VBnQeN4EV/esaE9hlpELG2cXAAe3jJUOAqVak=
+        b=oxwY8C8vfyp8ou8zpg5gNbEzk8Hf+sKRNHi4/bxUTNGW03aIhCF7y0augH40AivWQ
+         XPbveRulRU5ZnzkVrqrS2QWnQYlZLN8Q8VQPlnevwatiojMALRSa1rM+OEbThj1bvJ
+         BcH6C02FVFVXPxpvqvpE8QN1SRM8d1oCoaQKNfSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 058/149] m68k: mac: Dont send IOP message until channel is idle
-Date:   Thu, 20 Aug 2020 11:22:15 +0200
-Message-Id: <20200820092128.542804314@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 057/149] EDAC: Fix reference count leaks
+Date:   Thu, 20 Aug 2020 11:22:14 +0200
+Message-Id: <20200820092128.494145328@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,68 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
+[ Upstream commit 17ed808ad243192fb923e4e653c1338d3ba06207 ]
 
-In the following sequence of calls, iop_do_send() gets called when the
-"send" channel is not in the IOP_MSG_IDLE state:
+When kobject_init_and_add() returns an error, it should be handled
+because kobject_init_and_add() takes a reference even when it fails. If
+this function returns an error, kobject_put() must be called to properly
+clean up the memory associated with the object.
 
-	iop_ism_irq()
-		iop_handle_send()
-			(msg->handler)()
-				iop_send_message()
-			iop_do_send()
+Therefore, replace calling kfree() and call kobject_put() and add a
+missing kobject_put() in the edac_device_register_sysfs_main_kobj()
+error path.
 
-Avoid this by testing the channel state before calling iop_do_send().
+ [ bp: Massage and merge into a single patch. ]
 
-When sending, and iop_send_queue is empty, call iop_do_send() because
-the channel is idle. If iop_send_queue is not empty, iop_do_send() will
-get called later by iop_handle_send().
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: b2ed215a3338 ("Kobject: change drivers/edac to use kobject_init_and_add")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200528202238.18078-1-wu000273@umn.edu
+Link: https://lkml.kernel.org/r/20200528203526.20908-1-wu000273@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/edac/edac_device_sysfs.c | 1 +
+ drivers/edac/edac_pci_sysfs.c    | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index 4d2adfb32a2ab..c89ed66908f91 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
- 	iop_free_msg(msg2);
+diff --git a/drivers/edac/edac_device_sysfs.c b/drivers/edac/edac_device_sysfs.c
+index fb68a06ad6837..18991cfec2af4 100644
+--- a/drivers/edac/edac_device_sysfs.c
++++ b/drivers/edac/edac_device_sysfs.c
+@@ -280,6 +280,7 @@ int edac_device_register_sysfs_main_kobj(struct edac_device_ctl_info *edac_dev)
  
- 	iop_send_queue[iop_num][chan] = msg;
--	if (msg) iop_do_send(msg);
-+	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
-+		iop_do_send(msg);
- }
+ 	/* Error exit stack */
+ err_kobj_reg:
++	kobject_put(&edac_dev->kobj);
+ 	module_put(edac_dev->owner);
  
- /*
-@@ -497,16 +498,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
+ err_mod_get:
+diff --git a/drivers/edac/edac_pci_sysfs.c b/drivers/edac/edac_pci_sysfs.c
+index 24d877f6e5775..c56128402bc67 100644
+--- a/drivers/edac/edac_pci_sysfs.c
++++ b/drivers/edac/edac_pci_sysfs.c
+@@ -394,7 +394,7 @@ static int edac_pci_main_kobj_setup(void)
  
- 	if (!(q = iop_send_queue[iop_num][chan])) {
- 		iop_send_queue[iop_num][chan] = msg;
-+		iop_do_send(msg);
- 	} else {
- 		while (q->next) q = q->next;
- 		q->next = msg;
- 	}
+ 	/* Error unwind statck */
+ kobject_init_and_add_fail:
+-	kfree(edac_pci_top_main_kobj);
++	kobject_put(edac_pci_top_main_kobj);
  
--	if (iop_readb(iop_base[iop_num],
--	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
--		iop_do_send(msg);
--	}
--
- 	return 0;
- }
- 
+ kzalloc_fail:
+ 	module_put(THIS_MODULE);
 -- 
 2.25.1
 
