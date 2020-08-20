@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91040C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC7A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BA1C2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918950;
-	bh=DSpyrDd0pvgB0JJb39Kn4RsjnrkWqMxaES3Es1Yq/wk=;
+	s=default; t=1597918962;
+	bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sXLUfGdc2xc2jWN3UbzGtPnjh00RXmSR6A6BSPxDWUwsC0kz1w4zpSNIPqcBMJy+i
-	 afZBtWpNtnmDTJssFuGdwH97RR+025/Yx/814Ih2CYIQy8H6kp13pMqEaf7HJ+Ly2D
-	 AKDzsBtK8MAy480335kJpBLf94W4GxfRprdJAPeQ=
+	b=LhMNMN8IiuOI93hxihpwSRMNm3X7+8MhzTseLyGMNq3q7JTbO42v83FJEOGOYSgCX
+	 SPvqW1e0wSz7OwkeOudxC4XUv4zfgWfxsclihOen8yDeWCjiLJv0DXX1H9AmXQGHQU
+	 2EG0+LEBLk1ClyAbCGk1DbSjuTrM2zZW1fgA/Ayc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731625AbgHTKW2 (ORCPT
+        id S1731631AbgHTKWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731444AbgHTKWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:08 -0400
+        id S1731608AbgHTKWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97DEF20658;
-        Thu, 20 Aug 2020 10:22:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B0F620658;
+        Thu, 20 Aug 2020 10:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918928;
-        bh=DSpyrDd0pvgB0JJb39Kn4RsjnrkWqMxaES3Es1Yq/wk=;
+        s=default; t=1597918932;
+        bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KfTfOOfEo8M6Qo2U6nHNd7Pj0AI1ZqB4kyB1wbAW0lf19CgSb/I/wwEi/wVHEPB48
-         PVoc6x3MLfwY6fP9SUHo9kOmAUyt67z9Bp06RucNuuXhUMN0I2wARBKh6mAuOTyOMH
-         1ulyLV1LCbfYgsEjiqRgPi729DxxEY2R9NC4urUk=
+        b=S5EPJ0Cp6TfPcm4PrCYZbRs33XyRhg1rOryN/M1vmyM+QhWPPLI05KyEwWvb7zpf0
+         ET5vSs2BW4WaHZcBQ/M26WJO6N5uDFjNeKnnzylY05rDfhV9kJH1Ep604gPiv49Art
+         nbtHikPxIA/p/f1BI9yiL1P1SU4K/1Go3WgUN31w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.4 118/149] xen/balloon: fix accounting in alloc_xenballooned_pages error path
-Date:   Thu, 20 Aug 2020 11:23:15 +0200
-Message-Id: <20200820092131.414972833@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 120/149] PCI: hotplug: ACPI: Fix context refcounting in acpiphp_grab_context()
+Date:   Thu, 20 Aug 2020 11:23:17 +0200
+Message-Id: <20200820092131.511561023@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,40 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 1951fa33ec259abdf3497bfee7b63e7ddbb1a394 upstream.
+commit dae68d7fd4930315389117e9da35b763f12238f9 upstream.
 
-target_unpopulated is incremented with nr_pages at the start of the
-function, but the call to free_xenballooned_pages will only subtract
-pgno number of pages, and thus the rest need to be subtracted before
-returning or else accounting will be skewed.
+If context is not NULL in acpiphp_grab_context(), but the
+is_going_away flag is set for the device's parent, the reference
+counter of the context needs to be decremented before returning
+NULL or the context will never be freed, so make that happen.
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200727091342.52325-2-roger.pau@citrix.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Fixes: edf5bf34d408 ("ACPI / dock: Use callback pointers from devices' ACPI hotplug contexts")
+Reported-by: Vasily Averin <vvs@virtuozzo.com>
+Cc: 3.15+ <stable@vger.kernel.org> # 3.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/balloon.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/hotplug/acpiphp_glue.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -683,6 +683,12 @@ int alloc_xenballooned_pages(int nr_page
-  out_undo:
- 	mutex_unlock(&balloon_mutex);
- 	free_xenballooned_pages(pgno, pages);
-+	/*
-+	 * NB: free_xenballooned_pages will only subtract pgno pages, but since
-+	 * target_unpopulated is incremented with nr_pages at the start we need
-+	 * to remove the remaining ones also, or accounting will be screwed.
-+	 */
-+	balloon_stats.target_unpopulated -= nr_pages - pgno;
- 	return ret;
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -136,13 +136,21 @@ static struct acpiphp_context *acpiphp_g
+ 	struct acpiphp_context *context;
+ 
+ 	acpi_lock_hp_context();
++
+ 	context = acpiphp_get_context(adev);
+-	if (!context || context->func.parent->is_going_away) {
+-		acpi_unlock_hp_context();
+-		return NULL;
++	if (!context)
++		goto unlock;
++
++	if (context->func.parent->is_going_away) {
++		acpiphp_put_context(context);
++		context = NULL;
++		goto unlock;
+ 	}
++
+ 	get_bridge(context->func.parent);
+ 	acpiphp_put_context(context);
++
++unlock:
+ 	acpi_unlock_hp_context();
+ 	return context;
  }
- EXPORT_SYMBOL(alloc_xenballooned_pages);
 
 
