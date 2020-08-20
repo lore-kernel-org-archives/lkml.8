@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A1AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3909DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7A620855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15016207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:55:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917319;
-	bh=qzRfePih8sv+ogj1ftU8VO8sROoCsfG8JpG1hFZ8SUY=;
+	s=default; t=1597917324;
+	bh=OQ5gB70SunnoGAffLgoSQDAhBIGDZetpQ3oM1WKZpYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FleyTsTU5JSsHpuB1Yo50mFot+snHZLZufGpNKYCHYcdhNcNTKUQCebN9i+/Q2n+9
-	 tObTgOeYWOkZphYSnToJ8SfDqcZVAgQWIYh+oBmECZU2hUL3a6iAfAvQJ5NydMKp2D
-	 9z83UFpxyUiuyeDAgFOnTTyMX8XfsAB/Ov17eBio=
+	b=RyvNGO0xP2dSptDJzN7v40jOJ6gNuwwJnNPtzKgqclQEXkQIBZ+a6ZOcMuKuzsQux
+	 KVo9zCfmhdZ84jDRHrxMiA2HmoDhosXsqWq9TxLCmcCY4fgEYuF2jNDxoRKBINp3Yc
+	 J7BxDLG/JiP11GohLKaw+zufG/zGfP7efnAqjMfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgHTJzS (ORCPT
+        id S1730200AbgHTJzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:55:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730153AbgHTJy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:56 -0400
+        id S1730182AbgHTJzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 736C52078D;
-        Thu, 20 Aug 2020 09:54:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F60F2067C;
+        Thu, 20 Aug 2020 09:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917294;
-        bh=qzRfePih8sv+ogj1ftU8VO8sROoCsfG8JpG1hFZ8SUY=;
+        s=default; t=1597917303;
+        bh=OQ5gB70SunnoGAffLgoSQDAhBIGDZetpQ3oM1WKZpYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A3sQfBuoXieUtLlQa6npDVhSCyuxNHblyAziT6CFmh7+6EuMyNtT5S53nEmrzEL4A
-         Om+wvXjitudSErFmgmXe3UquPScqQsbfWdqGLpRG0od3MlHCO5LVq7zxh+6Yi6SDxX
-         gEFLXtT/8pDOyP36JGwRMgqnENQF+xZsBEYjNNyg=
+        b=P9fuko200WgZutsoWJ6rvsPoA0TXVc94UUkGEpcR8HO032NMU/bmvIa4XsBSvdCQF
+         /10xSp+zclEeLfyiEJGIgJpIn0NEBkhwoT2uq3+1BHxHMJtuda+2GLToMqz/BvkYit
+         6Y8D1fjMChm0ELqCzjbxXWxjdAg54uqLiJ7lvslE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Krzysztof Sobota <krzysztof.sobota@nokia.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Roland Scheidegger <sroland@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 72/92] watchdog: initialize device before misc_register
-Date:   Thu, 20 Aug 2020 11:21:57 +0200
-Message-Id: <20200820091541.413970193@linuxfoundation.org>
+Subject: [PATCH 4.19 74/92] drm/vmwgfx: Use correct vmw_legacy_display_unit pointer
+Date:   Thu, 20 Aug 2020 11:21:59 +0200
+Message-Id: <20200820091541.525191966@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -62,117 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Sobota <krzysztof.sobota@nokia.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit cb36e29bb0e4b0c33c3d5866a0a4aebace4c99b7 ]
+[ Upstream commit 1d2c0c565bc0da25f5e899a862fb58e612b222df ]
 
-When watchdog device is being registered, it calls misc_register that
-makes watchdog available for systemd to open. This is a data race
-scenario, because when device is open it may still have device struct
-not initialized - this in turn causes a crash. This patch moves
-device initialization before misc_register call and it solves the
-problem printed below.
+The "entry" pointer is an offset from the list head and it doesn't
+point to a valid vmw_legacy_display_unit struct.  Presumably the
+intent was to point to the last entry.
 
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 1 at lib/kobject.c:612 kobject_get+0x50/0x54
-kobject: '(null)' ((ptrval)): is not initialized, yet kobject_get() is being called.
-Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
-CPU: 3 PID: 1 Comm: systemd Tainted: G           O      4.19.113-g2579778-fsm4_k2 #1
-Hardware name: Keystone
-[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
-[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
-[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
-[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
-[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd394>] (kobject_get+0x50/0x54)
-[<c07fd394>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
-[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
-[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
-[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
-[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
-[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
-[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
-[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
-[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd2ceffa8 to 0xd2cefff0)
-ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
-ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
-ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
----[ end trace 7b16eb105513974f ]---
+Also the "i++" wasn't used so I have removed that as well.
 
-------------[ cut here ]------------
-WARNING: CPU: 3 PID: 1 at lib/refcount.c:153 kobject_get+0x24/0x54
-refcount_t: increment on 0; use-after-free.
-Modules linked in: k2_reset_status(O) davinci_wdt(+) sfn_platform_hwbcn(O) fsmddg_sfn(O) clk_misc_mmap(O) clk_sw_bcn(O) fsp_reset(O) cma_mod(O) slave_sup_notif(O) fpga_master(O) latency(O+) evnotify(O) enable_arm_pmu(O) xge(O) rio_mport_cdev br_netfilter bridge stp llc nvrd_checksum(O) ipv6
-CPU: 3 PID: 1 Comm: systemd Tainted: G        W  O      4.19.113-g2579778-fsm4_k2 #1
-Hardware name: Keystone
-[<c02126c4>] (unwind_backtrace) from [<c020da94>] (show_stack+0x18/0x1c)
-[<c020da94>] (show_stack) from [<c07f87d8>] (dump_stack+0xb4/0xe8)
-[<c07f87d8>] (dump_stack) from [<c0221f70>] (__warn+0xfc/0x114)
-[<c0221f70>] (__warn) from [<c0221fd8>] (warn_slowpath_fmt+0x50/0x74)
-[<c0221fd8>] (warn_slowpath_fmt) from [<c07fd368>] (kobject_get+0x24/0x54)
-[<c07fd368>] (kobject_get) from [<c0602ce8>] (get_device+0x1c/0x24)
-[<c0602ce8>] (get_device) from [<c06961e0>] (watchdog_open+0x90/0xf0)
-[<c06961e0>] (watchdog_open) from [<c06001dc>] (misc_open+0x130/0x17c)
-[<c06001dc>] (misc_open) from [<c0388228>] (chrdev_open+0xec/0x1a8)
-[<c0388228>] (chrdev_open) from [<c037fa98>] (do_dentry_open+0x204/0x3cc)
-[<c037fa98>] (do_dentry_open) from [<c0391e2c>] (path_openat+0x330/0x1148)
-[<c0391e2c>] (path_openat) from [<c0394518>] (do_filp_open+0x78/0xec)
-[<c0394518>] (do_filp_open) from [<c0381100>] (do_sys_open+0x130/0x1f4)
-[<c0381100>] (do_sys_open) from [<c0201000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd2ceffa8 to 0xd2cefff0)
-ffa0:                   b6f69968 00000000 ffffff9c b6ebd210 000a0001 00000000
-ffc0: b6f69968 00000000 00000000 00000142 fffffffd ffffffff 00b65530 bed7bb78
-ffe0: 00000142 bed7ba70 b6cc2503 b6cc41d6
----[ end trace 7b16eb1055139750 ]---
-
-Fixes: 72139dfa2464 ("watchdog: Fix the race between the release of watchdog_core_data and cdev")
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Krzysztof Sobota <krzysztof.sobota@nokia.com>
-Link: https://lore.kernel.org/r/20200717103109.14660-1-krzysztof.sobota@nokia.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Fixes: d7e1958dbe4a ("drm/vmwgfx: Support older hardware.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Roland Scheidegger <sroland@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/watchdog_dev.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index 10b2090f3e5e7..1c322caecf7f1 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -947,6 +947,15 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
- 	if (IS_ERR_OR_NULL(watchdog_kworker))
- 		return -ENODEV;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+index 7235781171912..0743a73117000 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+@@ -79,7 +79,7 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 	struct vmw_legacy_display_unit *entry;
+ 	struct drm_framebuffer *fb = NULL;
+ 	struct drm_crtc *crtc = NULL;
+-	int i = 0;
++	int i;
  
-+	device_initialize(&wd_data->dev);
-+	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
-+	wd_data->dev.class = &watchdog_class;
-+	wd_data->dev.parent = wdd->parent;
-+	wd_data->dev.groups = wdd->groups;
-+	wd_data->dev.release = watchdog_core_data_release;
-+	dev_set_drvdata(&wd_data->dev, wdd);
-+	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
-+
- 	kthread_init_work(&wd_data->work, watchdog_ping_work);
- 	hrtimer_init(&wd_data->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	wd_data->timer.function = watchdog_timer_expired;
-@@ -967,15 +976,6 @@ static int watchdog_cdev_register(struct watchdog_device *wdd)
+ 	/* If there is no display topology the host just assumes
+ 	 * that the guest will set the same layout as the host.
+@@ -90,12 +90,11 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 			crtc = &entry->base.crtc;
+ 			w = max(w, crtc->x + crtc->mode.hdisplay);
+ 			h = max(h, crtc->y + crtc->mode.vdisplay);
+-			i++;
  		}
- 	}
  
--	device_initialize(&wd_data->dev);
--	wd_data->dev.devt = MKDEV(MAJOR(watchdog_devt), wdd->id);
--	wd_data->dev.class = &watchdog_class;
--	wd_data->dev.parent = wdd->parent;
--	wd_data->dev.groups = wdd->groups;
--	wd_data->dev.release = watchdog_core_data_release;
--	dev_set_drvdata(&wd_data->dev, wdd);
--	dev_set_name(&wd_data->dev, "watchdog%d", wdd->id);
--
- 	/* Fill in the data structures */
- 	cdev_init(&wd_data->cdev, &watchdog_fops);
+ 		if (crtc == NULL)
+ 			return 0;
+-		fb = entry->base.crtc.primary->state->fb;
++		fb = crtc->primary->state->fb;
  
+ 		return vmw_kms_write_svga(dev_priv, w, h, fb->pitches[0],
+ 					  fb->format->cpp[0] * 8,
 -- 
 2.25.1
 
