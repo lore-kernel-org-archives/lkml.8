@@ -2,112 +2,162 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65139C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 513DF2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5482078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927500;
-	bh=3QpRcK+mDvHWXX9GbNnxpfogGwfRiDJijcfq160llu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GQQSNSgBJBoZxQC+rCcDL75OM1fh0K2Gcc2XAxwF8POplnJq624d7lQl537YfLWjP
-	 YGV85bUnSGGR8WA8Ah30P0L/V1VzOyIZ17raI7mQCjkuYOPpIR5zLzgvj4oxfoMwyY
-	 3P2eiCwJ1uTWUydQqtBlr/gJW68Al+/fvSJTK5eo=
+	s=default; t=1597927523;
+	bh=RaKFugCKuZ3leuKfF6Xlf6z2dztIZXYGEQs17Aqa4uA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d4ayr3rxmZONusy6n4Yg8p1FChXPP/RSDg6z9W/y1dinJ/qRf/vH0rXzRGcob4Hc/
+	 0nYswbZzODaUnUMsbLTpC4yR7WXw6UKJg+CUM1rENXltECwpXPNujxjcZSWiuM9BsO
+	 3mnoG48/wmarCJOpOWb24ZATUHfkmQr1xU5wZi8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgHTMo5 (ORCPT
+        id S1729648AbgHTMpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57976 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:45:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729648AbgHTMoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:44:25 -0400
+        id S1729068AbgHTJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 213542224D;
-        Thu, 20 Aug 2020 12:44:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9C7A22CF6;
+        Thu, 20 Aug 2020 09:45:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597927464;
-        bh=3QpRcK+mDvHWXX9GbNnxpfogGwfRiDJijcfq160llu0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EQJPdEDRCE9+UODEN8vduKuUk/lcabOD4u9C5BkcBtcBeBy/chlTwXJUligAoPKAL
-         Y7w1fkqACc0VdG2q0fNUCewsSELHMIjjMZWBJwW67NoU/siWnc2wx02AniPEgERnlU
-         YixcvZ+kcsN/ancZp2kUZblBik+TREebqbabKnsM=
-Date:   Thu, 20 Aug 2020 14:44:45 +0200
+        s=default; t=1597916729;
+        bh=RaKFugCKuZ3leuKfF6Xlf6z2dztIZXYGEQs17Aqa4uA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=v+mopblLt6FAm8ds8m+JV/YYZpZatPP2JFV6AMhhqAyUIuAsaSbnBJwQVCNMqQQkk
+         MWYLa/OyUB62+R8xslWiBhqgvRyNMdF2xIwlBvfCHn9CCuWWu10mpjEpHDGrpOC1tw
+         PN5/me1uCPXLHaCfAYyGzsXP0wGs3Q31ZnBH4ZU4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 4.14 000/228] 4.14.194-rc1 review
-Message-ID: <20200820124445.GB1482630@kroah.com>
-References: <20200820091607.532711107@linuxfoundation.org>
- <a6b632f8-b327-3f8d-5306-12989cfaf4e3@nvidia.com>
- <20200820123828.GA1465682@kroah.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Luciano Chavez <chavez@us.ibm.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 026/152] btrfs: inode: fix NULL pointer dereference if inode doesnt need compression
+Date:   Thu, 20 Aug 2020 11:19:53 +0200
+Message-Id: <20200820091555.001479760@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820123828.GA1465682@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 02:38:28PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 20, 2020 at 12:57:36PM +0100, Jon Hunter wrote:
-> > 
-> > On 20/08/2020 10:19, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 4.14.194 release.
-> > > There are 228 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.194-rc1.gz
-> > > or in the git tree and branch at:
-> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> > > and the diffstat can be found below.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > > 
-> > > -------------
-> > > Pseudo-Shortlog of commits:
-> > 
-> > ...
-> > 
-> > > Tomasz Maciej Nowak <tmn505@gmail.com>
-> > >     arm64: dts: marvell: espressobin: add ethernet alias
-> > 
-> > 
-> > The above change is causing the following build failure for ARM64 ...
-> > 
-> > arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb: ERROR (path_references): Reference to non-existent node or label "uart1"
-> > ERROR: Input tree has errors, aborting (use -f to force output)
-> > scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb' failed
-> > make[3]: *** [arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb] Error 2
-> > 
-> > Reverting this fixes the problem.
-> 
-> Thanks, now dropping it.  Sad as it said it was to be backported here...
-> 
-> Will go push out a -rc2 with that fixed.
+From: Qu Wenruo <wqu@suse.com>
 
-Well, will push out -rc2 once kernel.org's maintenance is finished,
-might be an hour or so...
+commit 1e6e238c3002ea3611465ce5f32777ddd6a40126 upstream.
 
-thanks,
+[BUG]
+There is a bug report of NULL pointer dereference caused in
+compress_file_extent():
 
-greg k-h
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Workqueue: btrfs-delalloc btrfs_delalloc_helper [btrfs]
+  NIP [c008000006dd4d34] compress_file_range.constprop.41+0x75c/0x8a0 [btrfs]
+  LR [c008000006dd4d1c] compress_file_range.constprop.41+0x744/0x8a0 [btrfs]
+  Call Trace:
+  [c000000c69093b00] [c008000006dd4d1c] compress_file_range.constprop.41+0x744/0x8a0 [btrfs] (unreliable)
+  [c000000c69093bd0] [c008000006dd4ebc] async_cow_start+0x44/0xa0 [btrfs]
+  [c000000c69093c10] [c008000006e14824] normal_work_helper+0xdc/0x598 [btrfs]
+  [c000000c69093c80] [c0000000001608c0] process_one_work+0x2c0/0x5b0
+  [c000000c69093d10] [c000000000160c38] worker_thread+0x88/0x660
+  [c000000c69093db0] [c00000000016b55c] kthread+0x1ac/0x1c0
+  [c000000c69093e20] [c00000000000b660] ret_from_kernel_thread+0x5c/0x7c
+  ---[ end trace f16954aa20d822f6 ]---
+
+[CAUSE]
+For the following execution route of compress_file_range(), it's
+possible to hit NULL pointer dereference:
+
+ compress_file_extent()
+ |- pages = NULL;
+ |- start = async_chunk->start = 0;
+ |- end = async_chunk = 4095;
+ |- nr_pages = 1;
+ |- inode_need_compress() == false; <<< Possible, see later explanation
+ |  Now, we have nr_pages = 1, pages = NULL
+ |- cont:
+ |- 		ret = cow_file_range_inline();
+ |- 		if (ret <= 0) {
+ |-		for (i = 0; i < nr_pages; i++) {
+ |-			WARN_ON(pages[i]->mapping);	<<< Crash
+
+To enter above call execution branch, we need the following race:
+
+    Thread 1 (chattr)     |            Thread 2 (writeback)
+--------------------------+------------------------------
+                          | btrfs_run_delalloc_range
+                          | |- inode_need_compress = true
+                          | |- cow_file_range_async()
+btrfs_ioctl_set_flag()    |
+|- binode_flags |=        |
+   BTRFS_INODE_NOCOMPRESS |
+                          | compress_file_range()
+                          | |- inode_need_compress = false
+                          | |- nr_page = 1 while pages = NULL
+                          | |  Then hit the crash
+
+[FIX]
+This patch will fix it by checking @pages before doing accessing it.
+This patch is only designed as a hot fix and easy to backport.
+
+More elegant fix may make btrfs only check inode_need_compress() once to
+avoid such race, but that would be another story.
+
+Reported-by: Luciano Chavez <chavez@us.ibm.com>
+Fixes: 4d3a800ebb12 ("btrfs: merge nr_pages input and output parameter in compress_pages")
+CC: stable@vger.kernel.org # 4.14.x: cecc8d9038d16: btrfs: Move free_pages_out label in inline extent handling branch in compress_file_range
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/inode.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -641,12 +641,18 @@ cont:
+ 						     page_error_op |
+ 						     PAGE_END_WRITEBACK);
+ 
+-			for (i = 0; i < nr_pages; i++) {
+-				WARN_ON(pages[i]->mapping);
+-				put_page(pages[i]);
++			/*
++			 * Ensure we only free the compressed pages if we have
++			 * them allocated, as we can still reach here with
++			 * inode_need_compress() == false.
++			 */
++			if (pages) {
++				for (i = 0; i < nr_pages; i++) {
++					WARN_ON(pages[i]->mapping);
++					put_page(pages[i]);
++				}
++				kfree(pages);
+ 			}
+-			kfree(pages);
+-
+ 			return 0;
+ 		}
+ 	}
+
+
