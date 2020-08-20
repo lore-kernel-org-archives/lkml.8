@@ -2,66 +2,91 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4179FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84923C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22955206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6998A20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgHTODL (ORCPT
+        id S1726741AbgHTOFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:03:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbgHTNy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:54:59 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2780206DA;
-        Thu, 20 Aug 2020 13:54:57 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 09:54:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rjw@rjwysocki.net, joel@joelfernandes.org,
-        svens@linux.ibm.com, tglx@linutronix.de
-Subject: Re: [PATCH 1/9] lockdep: Use raw_cpu_*() for per-cpu variables
-Message-ID: <20200820095456.6550b78a@oasis.local.home>
-In-Reply-To: <20200820074640.342269393@infradead.org>
-References: <20200820073031.886217423@infradead.org>
-        <20200820074640.342269393@infradead.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Thu, 20 Aug 2020 10:05:38 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47579 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbgHTOBZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:01:25 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k8l7f-0000JS-Nv; Thu, 20 Aug 2020 14:00:55 +0000
+Date:   Thu, 20 Aug 2020 16:00:54 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>, timmurray@google.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
+        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <87zh6pxzq6.fsf@x220.int.ebiederm.org>
+ <20200820124241.GJ5033@dhcp22.suse.cz>
+ <87lfi9xz7y.fsf@x220.int.ebiederm.org>
+ <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 09:30:32 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Aug 20, 2020 at 10:48:43PM +0900, Tetsuo Handa wrote:
+> On 2020/08/20 22:34, Christian Brauner wrote:
+> > On Thu, Aug 20, 2020 at 03:26:31PM +0200, Michal Hocko wrote:
+> >> If you can handle vfork by other means then I am all for it. There were
+> >> no patches in that regard proposed yet. Maybe it will turn out simpler
+> >> then the heavy lifting we have to do in the oom specific code.
+> > 
+> > Eric's not wrong. I fiddled with this too this morning but since
+> > oom_score_adj is fiddled with in a bunch of places this seemed way more
+> > code churn then what's proposed here.
+> 
+> I prefer simply reverting commit 44a70adec910d692 ("mm, oom_adj: make sure
+> processes sharing mm have same view of oom_score_adj").
+> 
+>   https://lore.kernel.org/patchwork/patch/1037208/
 
-> +++ b/include/linux/lockdep.h
-> @@ -535,19 +535,27 @@ do {									\
->  DECLARE_PER_CPU(int, hardirqs_enabled);
->  DECLARE_PER_CPU(int, hardirq_context);
->  
-> +/*
-> + * The below lockdep_assert_*() macros se raw_cpu_read() to access the above
+I guess this is a can of worms but just or the sake of getting more
+background: the question seems to be whether the oom adj score is a
+property of the task/thread-group or a property of the mm. I always
+thought the oom score is a property of the task/thread-group and not the
+mm which is also why it lives in struct signal_struct and not in struct
+mm_struct. But
 
- s/se/use/ ?
+44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
 
--- Steve
-	
-> + * per-cpu variables. This is required because this_cpu_read() will potentially
-> + * call into preempt/irq-disable and that obviously isn't right. This is also
-> + * correct because when IRQs are enabled, it doesn't matter if we accidentally
-> + * read the value from our previous CPU.
-> + */
+reads like it is supposed to be a property of the mm or at least the
+change makes it so.
+
+Christian
