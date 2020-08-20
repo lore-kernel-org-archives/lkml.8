@@ -2,101 +2,120 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6034DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E43422D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BCC22CA1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597915461;
+	bh=o3GEtbF7J4dd7KKdh4+PSwmiQQzvpHvgZJWT9a1RhaI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CKw4K/UGehWMyiKdcMN+Q/VdjZ5XDU0CLvRNDiEGJp2/of23PcC7i4bsx8JM2OyT3
+	 WTVbvJMauDNWqUyKeelVWITZxnumK66/+GUGk/NyU3ZF3jyVi4xxWTbD2ie1aVp2lw
+	 wr3PncXNxgQvRYI3N4rq73q9WOmtOZIdqIY4vv+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgHTJYG (ORCPT
+        id S1726925AbgHTJYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:24:06 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:57024 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbgHTJXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:23:55 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 273591C0BD6; Thu, 20 Aug 2020 11:23:50 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 11:23:49 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dave Airlie <airlied@gmail.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-gfx] 5.9-rc1: graphics regression moved from -next to
- mainline
-Message-ID: <20200820092349.GA3792@amd>
-References: <20200817161132.GA4711@amd>
- <CAHk-=wh6_eWwvpL=AhOeY0btf_dkpu+0joNzPZWfbBWgAeAhMA@mail.gmail.com>
- <CAPM=9tw8LVWsuA6m_nkUDgm00iz2txYRNZY0b0WWZbyiUVzLEw@mail.gmail.com>
- <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
+        Thu, 20 Aug 2020 05:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59748 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726786AbgHTJXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:23:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 366D622CA1;
+        Thu, 20 Aug 2020 09:23:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915433;
+        bh=o3GEtbF7J4dd7KKdh4+PSwmiQQzvpHvgZJWT9a1RhaI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gVzKOthQU9PsDLS1Wm4lFLBuaperGy3cPAE/179HTumc9izIwunZbamB1F1FE5Pq+
+         7oQI5gcqpv8Y+Oc8RvvjAag1CE1fRkhT/FTNcJ4mobT+5yt5vGG5bnI1vd3eaZ3lhT
+         695Had1U5BKT0Feo7wtJZ8FJSMWu8grYIWX+XQAc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 5.8 012/232] PCI: qcom: Add support for tx term offset for rev 2.1.0
+Date:   Thu, 20 Aug 2020 11:17:43 +0200
+Message-Id: <20200820091613.315050948@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wg34bw1ude07nC_XCPOJHZ21-v6117p4574d5S7iP4gxw@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit de3c4bf648975ea0b1d344d811e9b0748907b47c upstream.
 
-Hi!
+Add tx term offset support to pcie qcom driver need in some revision of
+the ipq806x SoC. Ipq8064 needs tx term offset set to 7.
 
-> > I think there's been some discussion about reverting that change for
-> > other reasons, but it's quite likely the culprit.
->=20
-> Hmm. It reverts cleanly, but the end result doesn't work, because of
-> other changes.
->=20
-> Reverting all of
->=20
->    763fedd6a216 ("drm/i915: Remove i915_gem_object_get_dirty_page()")
->    7ac2d2536dfa ("drm/i915/gem: Delete unused code")
->    9e0f9464e2ab ("drm/i915/gem: Async GPU relocations only")
->=20
-> seems to at least build.
->=20
-> Pavel, does doing those three reverts make things work for you?
+Link: https://lore.kernel.org/r/20200615210608.21469-9-ansuelsmth@gmail.com
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v4.5+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Yes, it seems they make things work. (Chris asked for new patch to be
-tested, so I am switching to his kernel, but it survived longer than
-it usually does.)
+---
+ drivers/pci/controller/dwc/pcie-qcom.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-Thanks and best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -45,7 +45,13 @@
+ #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+ 
+ #define PCIE20_PARF_PHY_CTRL			0x40
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
++
+ #define PCIE20_PARF_PHY_REFCLK			0x4C
++#define PHY_REFCLK_SSP_EN			BIT(16)
++#define PHY_REFCLK_USE_PAD			BIT(12)
++
+ #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+ #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+ #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+@@ -354,9 +360,18 @@ static int qcom_pcie_init_2_1_0(struct q
+ 		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+ 	}
+ 
++	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
++		/* set TX termination offset */
++		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
++		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
++		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	}
++
+ 	/* enable external reference clock */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+-	val |= BIT(16);
++	val &= ~PHY_REFCLK_USE_PAD;
++	val |= PHY_REFCLK_SSP_EN;
+ 	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
+ 
+ 	ret = reset_control_deassert(res->phy_reset);
 
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl8+QSUACgkQMOfwapXb+vJNIwCeI5looH84mvmfbwh947kCWZjp
-DrYAoMLxcp9yPQh16oheciyRdFHfmJdf
-=/piO
------END PGP SIGNATURE-----
-
---EeQfGwPcQSOJBaQU--
