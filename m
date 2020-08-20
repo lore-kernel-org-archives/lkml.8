@@ -5,56 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E55DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD334C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE3E208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DD6A20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922770;
-	bh=igrc9LS6KgOqAWwGySkc8AsRthglM0xdy+TPaKJVD3k=;
+	s=default; t=1597922796;
+	bh=zo6pltTSim6Y8TsnJDxGpq+mDQQrhpbRbxryvqJAlSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lGODD45chbjnz2nI/YlN/YBWN6ExzcS/RYoHYW6G72GGnyaBjRzDEKTxrT1/JQgHb
-	 EX4ILRxlOvcdvop2M4iL+DMI7YddNI3ingkz73Ia+WRypyjWyTkhWAyKRgYgF6pC5u
-	 FXgF2cyhrbed2tdpTnaToOhIv5TnOGGdyRFCtucI=
+	b=J2yJAnQydOD0jWYj1lxeo56alHa5J0z7Urs8pGgoT7Sz+xXjnca6ah7JyLgwe+JEj
+	 snDocCDITSWHU2YFq+sMpfbKny8+wWZRLbWGZeRp3AZ5l1KM6V2TRSa/t2/eWXnjjK
+	 BROa14o1uxn9lhXR6U8RjqVDKfyzLcxkCT7hSLGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgHTL0H (ORCPT
+        id S1728455AbgHTL00 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35104 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:26:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730661AbgHTKGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:25 -0400
+        id S1729742AbgHTKGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE462075E;
-        Thu, 20 Aug 2020 10:06:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81C57206DA;
+        Thu, 20 Aug 2020 10:06:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917984;
-        bh=igrc9LS6KgOqAWwGySkc8AsRthglM0xdy+TPaKJVD3k=;
+        s=default; t=1597917979;
+        bh=zo6pltTSim6Y8TsnJDxGpq+mDQQrhpbRbxryvqJAlSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I6jDBOvTtIZDVrHXhQ+Tk3gzRW64dr9JE4gPUNv8JTN4+7HNsfZssiWAOafcNu1G9
-         IeYTZqL8J4A6u84FX5ot+f724dO8tifC8t4g1l9FjDlK5SW5qLc+2XedtuqpddhwC1
-         Xf7WNel8LX97CqPYtD8UsAq0E9ZAZnD57T2ria04=
+        b=wYeZEU78IpYpfba3XcWmgKWKv5amnR0hqKvmv04tcuoU4sfTIE7pEP4apB3o7wk6X
+         PCo7mj+k+JQkQctLgMWMPp9fs4jJ1mkEX2Hv7tfzQlTGzhQpVAJDX/KD3FzT6LqGFN
+         K86295YOSpF3NBz8a4bJxvNKNabFvjvLqgHOCC74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?=E5=BC=A0=E4=BA=91=E6=B5=B7?= <zhangyunhai@nsfocus.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Kyungtae Kim <kt0755@gmail.com>, linux-fbdev@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Solar Designer <solar@openwall.com>,
-        "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH 4.14 013/228] vgacon: Fix for missing check in scrollback handling
-Date:   Thu, 20 Aug 2020 11:19:48 +0200
-Message-Id: <20200820091608.192283912@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: [PATCH 4.14 011/228] omapfb: dss: Fix max fclk divider for omap36xx
+Date:   Thu, 20 Aug 2020 11:19:46 +0200
+Message-Id: <20200820091608.088999708@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -67,85 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunhai Zhang <zhangyunhai@nsfocus.com>
+From: Adam Ford <aford173@gmail.com>
 
-commit ebfdfeeae8c01fcb2b3b74ffaf03876e20835d2d upstream.
+commit 254503a2b186caa668a188dbbd7ab0d25149c0a5 upstream.
 
-vgacon_scrollback_update() always leaves enbough room in the scrollback
-buffer for the next call, but if the console size changed that room
-might not actually be enough, and so we need to re-check.
+The drm/omap driver was fixed to correct an issue where using a
+divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+number.  Through experimentation, it appears that 31 works, and
+it is consistent with the value used by the drm/omap driver.
 
-The check should be in the loop since vgacon_scrollback_cur->tail is
-updated in the loop and count may be more than 1 when triggered by CSI M,
-as Jiri's PoC:
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
+This patch fixes the divider for fbdev driver instead of the drm.
 
-int main(int argc, char** argv)
-{
-        int fd = open("/dev/tty1", O_RDWR);
-        unsigned short size[3] = {25, 200, 0};
-        ioctl(fd, 0x5609, size); // VT_RESIZE
-
-        write(fd, "\e[1;1H", 6);
-        for (int i = 0; i < 30; i++)
-                write(fd, "\e[10M", 5);
-}
-
-It leads to various crashes as vgacon_scrollback_update writes out of
-the buffer:
- BUG: unable to handle page fault for address: ffffc900001752a0
- #PF: supervisor write access in kernel mode
- #PF: error_code(0x0002) - not-present page
- RIP: 0010:mutex_unlock+0x13/0x30
-...
- Call Trace:
-  n_tty_write+0x1a0/0x4d0
-  tty_write+0x1a0/0x2e0
-
-Or to KASAN reports:
-BUG: KASAN: slab-out-of-bounds in vgacon_scroll+0x57a/0x8ed
-
-This fixes CVE-2020-14331.
-
-Reported-by: 张云海 <zhangyunhai@nsfocus.com>
-Reported-by: Yang Yingliang <yangyingliang@huawei.com>
-Reported-by: Kyungtae Kim <kt0755@gmail.com>
-Fixes: 15bdab959c9b ([PATCH] vgacon: Add support for soft scrollback)
-Cc: stable@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Solar Designer <solar@openwall.com>
-Cc: "Srivatsa S. Bhat" <srivatsa@csail.mit.edu>
-Cc: Anthony Liguori <aliguori@amazon.com>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Signed-off-by: Yunhai Zhang <zhangyunhai@nsfocus.com>
-Link: https://lore.kernel.org/r/9fb43895-ca91-9b07-ebfd-808cf854ca95@nsfocus.com
+Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+Cc: <stable@vger.kernel.org> #4.5+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Dave Airlie <airlied@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>
+[b.zolnierkie: mark patch as applicable to stable 4.5+ (was 4.9+)]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630182636.439015-1-aford173@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/video/console/vgacon.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/video/console/vgacon.c
-+++ b/drivers/video/console/vgacon.c
-@@ -246,6 +246,10 @@ static void vgacon_scrollback_update(str
- 	p = (void *) (c->vc_origin + t * c->vc_size_row);
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -843,7 +843,7 @@ static const struct dss_features omap34x
+ };
  
- 	while (count--) {
-+		if ((vgacon_scrollback_cur->tail + c->vc_size_row) >
-+		    vgacon_scrollback_cur->size)
-+			vgacon_scrollback_cur->tail = 0;
-+
- 		scr_memcpyw(vgacon_scrollback_cur->data +
- 			    vgacon_scrollback_cur->tail,
- 			    p, c->vc_size_row);
+ static const struct dss_features omap3630_dss_feats = {
+-	.fck_div_max		=	32,
++	.fck_div_max		=	31,
+ 	.dss_fck_multiplier	=	1,
+ 	.parent_clk_name	=	"dpll4_ck",
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
 
 
