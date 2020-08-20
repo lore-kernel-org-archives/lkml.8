@@ -2,117 +2,179 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3FDC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE4CC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F197F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:25:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7637520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:29:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sba2bQKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726925AbgHTDZU (ORCPT
+        id S1726947AbgHTD3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:25:20 -0400
-Received: from mail1.windriver.com ([147.11.146.13]:43284 "EHLO
-        mail1.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726741AbgHTDZU (ORCPT
+        Wed, 19 Aug 2020 23:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726884AbgHTD27 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 23:25:20 -0400
-Received: from ALA-HCA.corp.ad.wrs.com (ala-hca.corp.ad.wrs.com [147.11.189.40])
-        by mail1.windriver.com (8.15.2/8.15.2) with ESMTPS id 07K3Ous8008591
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL);
-        Wed, 19 Aug 2020 20:24:56 -0700 (PDT)
-Received: from pek-qzhang2-d1.wrs.com (128.224.162.183) by
- ALA-HCA.corp.ad.wrs.com (147.11.189.40) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 19 Aug 2020 20:24:55 -0700
-From:   <qiang.zhang@windriver.com>
-To:     <tglx@linutronix.de>, <elver@google.com>, <longman@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH] debugobjects: install cpu hotplug callback
-Date:   Thu, 20 Aug 2020 11:24:53 +0800
-Message-ID: <20200820032453.5222-1-qiang.zhang@windriver.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 19 Aug 2020 23:28:59 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76791C061386
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id h16so380413oti.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
+        b=sba2bQKZNNe3zs7DYGbWWnjDeDgJKgdgFl32qpVY2IcZo+5it6qr30pLargiHNS1VF
+         9N2ljSuI1xb3X3jUO3hdYU4FwW/zbxBKCLHKGFFsylv7KVY9AwKKe/OCHH7ah7bgWAFP
+         0V/R+fYE35vhDbNT1QyHmR93yxMFHFfQuxa+rksura1/kna69BSVHKM97tFjQwmJg6Xu
+         1e73cN9AHHnV7VLtkVZmiIYzq2UYw7luIiq9vXs3LcbNgGTzGCdWCnbhSJyxl00LgsnJ
+         hcclkwsEGFVhEzVEODFZJQ+fBkc8rglEjeeUhLVeARy2aLUwp5EkeZXVFgo5EOUBJLA9
+         mH3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
+        b=pNrHkYICAHLZASK0TneTAR9NT6Vpm/m90gtEbnJ1FZ/Xq0yFvdXBiq3PQrVxwn/Lco
+         LQe/ZMPRSiskCmCe1pkfUlYOGiYQPZC+sjrKIOpL852m1odDSd8hNdnq/wFAHiPipB5e
+         nbiGarDUArSxU4FINTjmfPkjCVw9H/qMgwVho7yDncpqqsye629tORwkph+kqp1zgOgx
+         Waf5T3h2RjQRgqkBPA7C9aCD0lSkLmHP3/S6Ok3IqzIuVmxwIX5Az3X8mFMEIN5L2cTG
+         rc2drwim842Ot+NbIs5lZxDZN0QZnU4Gjos3l4tGkWYRCpMTjcXxYDOQIpM/4B3Moo84
+         VNZA==
+X-Gm-Message-State: AOAM531O+XhhDPLEpYM/JjVwq7YCnic632IoHcyGNeNDjUr4t8SW9IrO
+        FO2aUClcqgZpHSszuKDAk4ZN94ZOsWJsEorQ+g6CvA==
+X-Google-Smtp-Source: ABdhPJxZ7nw2s4Dxik9WLGdcKtJi9XiOGz8t6RoivsF5sQizqu4GALCfVQirCeiffIuh9kOf+5CS/1tORO2ndusgNc4=
+X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr722568oth.352.1597894136679;
+ Wed, 19 Aug 2020 20:28:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com> <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
+In-Reply-To: <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 19 Aug 2020 20:28:44 -0700
+Message-ID: <CALAqxLULQvW3UikCHpEzSDnpeYnBy8wDSsWZNbSrmivQTW3_Sg@mail.gmail.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Liuyao An <anliuyao@huawei.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zqiang <qiang.zhang@windriver.com>
+On Wed, Aug 19, 2020 at 7:01 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Aug 19, 2020 at 2:36 PM John Stultz <john.stultz@linaro.org> wrote:
+> >
+> > On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:
+> > > So, IMO, the best is to keep it on staging for a while, until those
+> > > remaining bugs gets solved.
+> > >
+> > > I added this series, together with the regulator driver and
+> > > a few other patches (including a hack to fix a Kernel 5.8
+> > > regression at WiFi ) at:
+> > >
+> > >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
+> >
+> > Sorry, one more small request: Could you create a branch that only has
+> > the DRM driver changes in it?
+> >
+> > The reason I ask, is that since the HiKey960 isn't affected by the
+> > majority of the problems you listed as motivation for going through
+> > staging. So if we can validate that your tree works fine on HiKey960,
+> > the series can be cleaned up and submitted properly upstream to enable
+> > that SoC, and the outstanding 970 issues can be worked out afterwards
+> > against mainline.
+>
+> Just as a heads up, I tried testing your tree with my HiKey960, and
+> after fixing the compat string inconsistency, the drivers seem to load
+> properly. However the drm_hwcomposer seems to have some trouble with
+> the driver:
+> 01-01 00:12:41.456   345   345 E hwc-drm-display-compositor: Commit
+> test failed for display 0, FIXME
+> 01-01 00:12:41.456   345   345 E hwc-drm-two: Failed to apply the
+> frame composition ret=-22
+> 01-01 00:12:41.456   351   351 E HWComposer:
+> presentAndGetReleaseFences: present failed for display 0: BadParameter
+> (4)
+>
+> I'll dig in a bit further as to why, but wanted to give you a heads up.
 
-When a cpu going offline, we should free objects in "percpu_obj_pool"
-free_objs list which corresponding to this cpu.
+Ok, I've mostly gotten it sorted out:
+  - You're missing a few color formats.
+  - And I re-discovered a crash that was already fixed in my tree.
 
-Signed-off-by: Zqiang <qiang.zhang@windriver.com>
----
- include/linux/cpuhotplug.h |  1 +
- lib/debugobjects.c         | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+I'll send those patches in a few here.
 
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index a2710e654b64..2e77db655cfa 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -36,6 +36,7 @@ enum cpuhp_state {
- 	CPUHP_X86_MCE_DEAD,
- 	CPUHP_VIRT_NET_DEAD,
- 	CPUHP_SLUB_DEAD,
-+	CPUHP_DEBUG_OBJ_DEAD,
- 	CPUHP_MM_WRITEBACK_DEAD,
- 	CPUHP_MM_VMSTAT_DEAD,
- 	CPUHP_SOFTIRQ_DEAD,
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index fe4557955d97..50e21ed0519e 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -19,6 +19,7 @@
- #include <linux/slab.h>
- #include <linux/hash.h>
- #include <linux/kmemleak.h>
-+#include <linux/cpu.h>
- 
- #define ODEBUG_HASH_BITS	14
- #define ODEBUG_HASH_SIZE	(1 << ODEBUG_HASH_BITS)
-@@ -433,6 +434,23 @@ static void free_object(struct debug_obj *obj)
- 	}
- }
- 
-+#if defined(CONFIG_HOTPLUG_CPU)
-+static int object_cpu_offline(unsigned int cpu)
-+{
-+	struct debug_percpu_free *percpu_pool;
-+	struct hlist_node *tmp;
-+	struct debug_obj *obj;
-+
-+	percpu_pool = per_cpu_ptr(&percpu_obj_pool, cpu);
-+	hlist_for_each_entry_safe(obj, tmp, &percpu_pool->free_objs, node) {
-+		hlist_del(&obj->node);
-+		kmem_cache_free(obj_cache, obj);
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
- /*
-  * We run out of memory. That means we probably have tons of objects
-  * allocated.
-@@ -1367,6 +1385,11 @@ void __init debug_objects_mem_init(void)
- 	} else
- 		debug_objects_selftest();
- 
-+#if defined(CONFIG_HOTPLUG_CPU)
-+	cpuhp_setup_state_nocalls(CPUHP_DEBUG_OBJ_DEAD, "object:offline", NULL,
-+					object_cpu_offline);
-+#endif
-+
- 	/*
- 	 * Increase the thresholds for allocating and freeing objects
- 	 * according to the number of possible CPUs available in the system.
--- 
-2.17.1
+That said even with the patches I've got on top of your series, I
+still see a few issues:
+1) I'm seeing red-blue swap with your driver.  I need to dig a bit to
+see what the difference is, I know gralloc has a config option for
+this, and maybe the version of the driver I'm carrying has it wrong?
+2) Performance is noticeably worse. Whereas with my tree, I see close
+to 60fps (that clk issue we mentioned earlier is why it's not exactly
+60) in most tests, but with yours it mostly hovers around 30some fps,
+occasionally speeding up to 40 and then back down.
 
+Obviously with some work I suspect we'll be able to sort these out,
+but I also do feel that the set you're starting with for upstreaming
+is pretty old. The driver I'm carrying was heavily refactored around
+5.0 to share code with the existing kirin driver, in the hopes of
+making usptreaming easier, and it seems a shame to throw that out and
+focus your efforts on the older tree.
+
+But to be fair, I've not had time to upstream the driver myself, and
+it's obviously your choice on how you spend your time.  I am really
+excited to see your efforts here, regardless of which driver you end
+up pushing.
+
+thanks
+-john
