@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E893C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3934C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7811A22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A62D922BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929143;
-	bh=6Wt2/OLbFhN8zLqB45FFfmCoC7Jels6mZihiQFznnqI=;
+	s=default; t=1597929179;
+	bh=qSvUBKDi00WIyAyry/sv6rrACXvKCMoL036mv2tgZ7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o+uTKQJCKBHnLIiWtHZet4rOMRX2kceKL6ubtTsMZBnYAsDZcban0wPxxaKaD1cak
-	 eFCUT16I6Ji3m1cKwHS3wrMxF0M1pATIhptZwk8Eo2hOO4zt35qH9BH9TP5/eGUTYf
-	 QrK7l+iRqhQQfnZE/X9SsF7mapb3H/Izpx8HfqBQ=
+	b=t19CjrFa7JxWgdkFfgUYx/nQlMfEYYQUVyrLOzixQJy6Sj49L/hqMO3LF3qaLvytT
+	 fmcpR45azRsi3peHRwQicaDk+gbYeL+CaHMzhIJonhweL3f7CprZWfNoZ9W2dd7oVv
+	 zrQ2LtIle9Ll1tX2bUPpXGaWA7nv2kYdzZZZZfrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgHTNMB (ORCPT
+        id S1728675AbgHTJhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:12:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:37:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgHTJhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:17 -0400
+        id S1728660AbgHTJgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922E822B3F;
-        Thu, 20 Aug 2020 09:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B55052075E;
+        Thu, 20 Aug 2020 09:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916237;
-        bh=6Wt2/OLbFhN8zLqB45FFfmCoC7Jels6mZihiQFznnqI=;
+        s=default; t=1597916213;
+        bh=qSvUBKDi00WIyAyry/sv6rrACXvKCMoL036mv2tgZ7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q51JtRMUjNlzQKcL4nRSmxWJbAJl8KwKVqauyWzLE/6XwsjkEyG6lcYeeGCArGVay
-         /TvN1xKeTO4BvDc4aIejSfU0X2zQs4eGX56OvM/NuTCG9WoQs3J0XHhAbPNhPUtEo1
-         eu6lz8QOr5kfN7IrlpKLkrS14mlblc8J3sugC0JM=
+        b=twaGhq5pcbfFrgjJN4sEq33JRCSTbRfYHeZ/nx/IXIDhRxs35mp1UoNhxilwrUfgl
+         OsWb/D8/+P8+HQhjA4+h65eTAajYkrOUrAncnlvYU93L3ErRoTOkMyjYhBqNG6fAs/
+         eM/4Q4xdGyIxKQi6P2n3HrqAtVdHjJl1c9TKrc1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Murphy <chris@colorremedies.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 029/204] btrfs: dont show full path of bind mounts in subvol=
-Date:   Thu, 20 Aug 2020 11:18:46 +0200
-Message-Id: <20200820091607.716450842@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Mansur Alisha Shaik <mansur@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.7 049/204] media: venus: fix multiple encoder crash
+Date:   Thu, 20 Aug 2020 11:19:06 +0200
+Message-Id: <20200820091608.728610360@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,63 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Mansur Alisha Shaik <mansur@codeaurora.org>
 
-commit 3ef3959b29c4a5bd65526ab310a1a18ae533172a upstream.
+commit e0eb34810113dbbf1ace57440cf48d514312a373 upstream.
 
-Chris Murphy reported a problem where rpm ostree will bind mount a bunch
-of things for whatever voodoo it's doing.  But when it does this
-/proc/mounts shows something like
+Currently we are considering the instances which are available
+in core->inst list for load calculation in min_loaded_core()
+function, but this is incorrect because by the time we call
+decide_core() for second instance, the third instance not
+filled yet codec_freq_data pointer.
 
-  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
-  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo/bar 0 0
+Solve this by considering the instances whose session has started.
 
-Despite subvolid=256 being subvol=/foo.  This is because we're just
-spitting out the dentry of the mount point, which in the case of bind
-mounts is the source path for the mountpoint.  Instead we should spit
-out the path to the actual subvol.  Fix this by looking up the name for
-the subvolid we have mounted.  With this fix the same test looks like
-this
-
-  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
-  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
-
-Reported-by: Chris Murphy <chris@colorremedies.com>
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org # v5.7+
+Fixes: 4ebf969375bc ("media: venus: introduce core selection")
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/platform/qcom/venus/pm_helpers.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1310,6 +1310,7 @@ static int btrfs_show_options(struct seq
- {
- 	struct btrfs_fs_info *info = btrfs_sb(dentry->d_sb);
- 	const char *compress_type;
-+	const char *subvol_name;
- 
- 	if (btrfs_test_opt(info, DEGRADED))
- 		seq_puts(seq, ",degraded");
-@@ -1396,8 +1397,13 @@ static int btrfs_show_options(struct seq
- 		seq_puts(seq, ",ref_verify");
- 	seq_printf(seq, ",subvolid=%llu",
- 		  BTRFS_I(d_inode(dentry))->root->root_key.objectid);
--	seq_puts(seq, ",subvol=");
--	seq_dentry(seq, dentry, " \t\n\\");
-+	subvol_name = btrfs_get_subvol_name_from_objectid(info,
-+			BTRFS_I(d_inode(dentry))->root->root_key.objectid);
-+	if (!IS_ERR(subvol_name)) {
-+		seq_puts(seq, ",subvol=");
-+		seq_escape(seq, subvol_name, " \t\n\\");
-+		kfree(subvol_name);
-+	}
- 	return 0;
- }
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -496,6 +496,10 @@ min_loaded_core(struct venus_inst *inst,
+ 	list_for_each_entry(inst_pos, &core->instances, list) {
+ 		if (inst_pos == inst)
+ 			continue;
++
++		if (inst_pos->state != INST_START)
++			continue;
++
+ 		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
+ 		coreid = inst_pos->clk_data.core_id;
  
 
 
