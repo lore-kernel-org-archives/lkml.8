@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3CDC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E77272072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F1320674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930285;
-	bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
+	s=default; t=1597930291;
+	bh=gVKeEKKY+TbImxEgUxvijJBzrR3by6I8snMip+JEKHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z78fdrJSofK7bZmv9z3RA5tAarhWoFgMLkJMR0kzjDnueYeFrerlz0KxdVrUuHt70
-	 Xu3vjnXYwqDyKKHjSDao9hMw19lPRWmaJY7TmNmkTOo5ZfmNSPRLqky3ajvID+xOcz
-	 EZIMpzRS+7E4jMkidOPjWiykcJVf053e5Coo42zI=
+	b=XnjqMSu9csQK3fh+vYH579ZHedq3KDG1BFM3uyyINg1CtJ8UNYkLToag+eLQdZJfB
+	 iZL15Ul71E6PwxWVt2DGblu5sR9JdZMkMxcw0nwygG2yIfrTbxN6hdtqFGkR6dn2JR
+	 +YyRjMLf48snzjTvSKA5DXO3dxzNOkHY7ymkT3sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbgHTNbV (ORCPT
+        id S1729160AbgHTNba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:31:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44430 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:31:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbgHTJck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:32:40 -0400
+        id S1728300AbgHTJci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:32:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EFFD22B49;
-        Thu, 20 Aug 2020 09:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17B41208E4;
+        Thu, 20 Aug 2020 09:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915960;
-        bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
+        s=default; t=1597915957;
+        bh=gVKeEKKY+TbImxEgUxvijJBzrR3by6I8snMip+JEKHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7WC2qozEZbbECcjCSd5JMPA5RuQQ0TRONm8QhrnNJUneA42MGSeJzCFYEikzpqkv
-         IsjydxV7u46LfUKMquTW3ciJ0xxSRLXRTnZngWTAjF2TlKnz6zkTVwW00PwORRpgIK
-         YiKFhL2KefWo17YvGs5hgqM+GYFvN1q7D7qWUpUg=
+        b=aq0XPipQV5FFwTljU+cMAi92i7XB+hwI3NuO76UQha5RWUXS23bMtRRSl3FARlzJh
+         mLRYcyi/sHrkC1b4nV1GD9qR99T4F6JwG4ITB+X13LcYM9KUyexozSQuZzxCa2f8sH
+         zA6LjN0Q7oIgZnuVTQU0myOZGNGtlddAv4kxiaaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 155/232] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
-Date:   Thu, 20 Aug 2020 11:20:06 +0200
-Message-Id: <20200820091620.319305365@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 164/232] PCI: hv: Fix a timing issue which causes kdump to fail occasionally
+Date:   Thu, 20 Aug 2020 11:20:15 +0200
+Message-Id: <20200820091620.754492308@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,40 +61,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Wei Hu <weh@microsoft.com>
 
-[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
+[ Upstream commit d6af2ed29c7c1c311b96dac989dcb991e90ee195 ]
 
-It is possible for the call to omap_iommu_dump_ctx to return
-a negative error number, so check for the failure and return
-the error number rather than pass the negative value to
-simple_read_from_buffer.
+Kdump could fail sometime on Hyper-V guest because the retry in
+hv_pci_enter_d0() releases child device structures in hv_pci_bus_exit().
 
-Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
-Addresses-Coverity: ("Improper use of negative value")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Although there is a second asynchronous device relations message sending
+from the host, if this message arrives to the guest after
+hv_send_resource_allocated() is called, the retry would fail.
+
+Fix the problem by moving retry to hv_pci_probe() and start the retry
+from hv_pci_query_relations() call.  This will cause a device relations
+message to arrive to the guest synchronously; the guest would then be
+able to rebuild the child device structures before calling
+hv_send_resource_allocated().
+
+Link: https://lore.kernel.org/r/20200727071731.18516-1-weh@microsoft.com
+Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+Signed-off-by: Wei Hu <weh@microsoft.com>
+[lorenzo.pieralisi@arm.com: fixed a comment and commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/omap-iommu-debug.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
+ 1 file changed, 37 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 8e19bfa94121e..a99afb5d9011c 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -98,8 +98,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
- 	mutex_lock(&iommu_debug_lock);
+diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+index bf40ff09c99d6..d0033ff6c1437 100644
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -2759,10 +2759,8 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	struct pci_bus_d0_entry *d0_entry;
+ 	struct hv_pci_compl comp_pkt;
+ 	struct pci_packet *pkt;
+-	bool retry = true;
+ 	int ret;
  
- 	bytes = omap_iommu_dump_ctx(obj, p, count);
-+	if (bytes < 0)
-+		goto err;
- 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
+-enter_d0_retry:
+ 	/*
+ 	 * Tell the host that the bus is ready to use, and moved into the
+ 	 * powered-on state.  This includes telling the host which region
+@@ -2789,38 +2787,6 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+ 	if (ret)
+ 		goto exit;
  
-+err:
- 	mutex_unlock(&iommu_debug_lock);
- 	kfree(buf);
+-	/*
+-	 * In certain case (Kdump) the pci device of interest was
+-	 * not cleanly shut down and resource is still held on host
+-	 * side, the host could return invalid device status.
+-	 * We need to explicitly request host to release the resource
+-	 * and try to enter D0 again.
+-	 */
+-	if (comp_pkt.completion_status < 0 && retry) {
+-		retry = false;
+-
+-		dev_err(&hdev->device, "Retrying D0 Entry\n");
+-
+-		/*
+-		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+-		 * to free up resources of its child devices.
+-		 * In the kdump kernel we need to set the
+-		 * wslot_res_allocated to 255 so it scans all child
+-		 * devices to release resources allocated in the
+-		 * normal kernel before panic happened.
+-		 */
+-		hbus->wslot_res_allocated = 255;
+-
+-		ret = hv_pci_bus_exit(hdev, true);
+-
+-		if (ret == 0) {
+-			kfree(pkt);
+-			goto enter_d0_retry;
+-		}
+-		dev_err(&hdev->device,
+-			"Retrying D0 failed with ret %d\n", ret);
+-	}
+-
+ 	if (comp_pkt.completion_status < 0) {
+ 		dev_err(&hdev->device,
+ 			"PCI Pass-through VSP failed D0 Entry with status %x\n",
+@@ -3058,6 +3024,7 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	struct hv_pcibus_device *hbus;
+ 	u16 dom_req, dom;
+ 	char *name;
++	bool enter_d0_retry = true;
+ 	int ret;
+ 
+ 	/*
+@@ -3178,11 +3145,47 @@ static int hv_pci_probe(struct hv_device *hdev,
+ 	if (ret)
+ 		goto free_fwnode;
+ 
++retry:
+ 	ret = hv_pci_query_relations(hdev);
+ 	if (ret)
+ 		goto free_irq_domain;
+ 
+ 	ret = hv_pci_enter_d0(hdev);
++	/*
++	 * In certain case (Kdump) the pci device of interest was
++	 * not cleanly shut down and resource is still held on host
++	 * side, the host could return invalid device status.
++	 * We need to explicitly request host to release the resource
++	 * and try to enter D0 again.
++	 * Since the hv_pci_bus_exit() call releases structures
++	 * of all its child devices, we need to start the retry from
++	 * hv_pci_query_relations() call, requesting host to send
++	 * the synchronous child device relations message before this
++	 * information is needed in hv_send_resources_allocated()
++	 * call later.
++	 */
++	if (ret == -EPROTO && enter_d0_retry) {
++		enter_d0_retry = false;
++
++		dev_err(&hdev->device, "Retrying D0 Entry\n");
++
++		/*
++		 * Hv_pci_bus_exit() calls hv_send_resources_released()
++		 * to free up resources of its child devices.
++		 * In the kdump kernel we need to set the
++		 * wslot_res_allocated to 255 so it scans all child
++		 * devices to release resources allocated in the
++		 * normal kernel before panic happened.
++		 */
++		hbus->wslot_res_allocated = 255;
++		ret = hv_pci_bus_exit(hdev, true);
++
++		if (ret == 0)
++			goto retry;
++
++		dev_err(&hdev->device,
++			"Retrying D0 failed with ret %d\n", ret);
++	}
+ 	if (ret)
+ 		goto free_irq_domain;
  
 -- 
 2.25.1
