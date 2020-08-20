@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252F8C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BECDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE7922BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D42A722BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930369;
-	bh=D9DNfhMsTz15k1jPQJBicJhju+SA7iaChukrI5WFEkI=;
+	s=default; t=1597930380;
+	bh=glrZ8+Vz8mqHzTmrL71cuHD1+DnBP22ANxGQaarC4NQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXTZZ8FxQx8gYwJvFHSFWu7Q/6CGp4AFRCFB+rmp0aW1G1vvRepEB4sxZUlYGXm4O
-	 5qfbRGbKPgHK3UtOyN2n69GY5KBmw5PMimXt3p0+CpVwbFCHuVi46Q752RwM2RW6LG
-	 25e3Jd4DpdSFIw33liNNzs8MwpaGUewem8a9uN34=
+	b=jgjCVGvKYSsGgB9aRKOlGSntQsVfX7tRPhF1nxtA3zL3PiE8t0ApMCwbwWo9d6/f6
+	 tOttdNvDDSMuLwv/6/dSkt9OO9c/J7VxLZLExCAd3cBOYaAN4yA6mQF62gVDkwPXG2
+	 ZDUAZFg6AaChxXKb6Ov6G19KQ+l0Ppl/7avTewzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgHTNcT (ORCPT
+        id S1729405AbgHTNc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44796 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbgHTJcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:32:22 -0400
+        id S1728033AbgHTJbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B450B22B4E;
-        Thu, 20 Aug 2020 09:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63EB720724;
+        Thu, 20 Aug 2020 09:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915942;
-        bh=D9DNfhMsTz15k1jPQJBicJhju+SA7iaChukrI5WFEkI=;
+        s=default; t=1597915870;
+        bh=glrZ8+Vz8mqHzTmrL71cuHD1+DnBP22ANxGQaarC4NQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+9MioD11iZ7YBvA6XsT4ooMbA+LdQW4DntKaewwXlb7VtAr8QoUzOFoOyVCZ8baz
-         AuZK7s8f80Ced4v/mhhT2WMIO1N1IKHkQe2IR+TX+w81P/KAe8nCkgwavLPA44vLsP
-         Pi4N8DxvskOPiMh7z9yfRaGT41WQvWwOSvOR4mQ0=
+        b=WJdB0Wu+7+/KQVI9y9pluyzgIERKEBJFrODVEf9hvkrEM/Bs5gg7Omg7D4gZI/g3X
+         H9ncCMuBYUGySpOzvzk7Oj0kvo2Ju4n8R39/w3RxeQ6tF3pW43SVucDvT4jY0SYKPy
+         781gFIn1v0IZeCExGnBl69jyS4/bjds2gb4tWwA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 159/232] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Thu, 20 Aug 2020 11:20:10 +0200
-Message-Id: <20200820091620.513899086@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 156/232] clk: qcom: gcc: fix sm8150 GPU and NPU clocks
+Date:   Thu, 20 Aug 2020 11:20:07 +0200
+Message-Id: <20200820091620.367063405@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,38 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+From: Jonathan Marek <jonathan@marek.ca>
 
-[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
+[ Upstream commit 667f39b59b494d96ae70f4217637db2ebbee3df0 ]
 
-Set proper masks to avoid invalid input spillover to reserved bits.
+Fix the parents and set BRANCH_HALT_SKIP. From the downstream driver it
+should be a 500us delay and not skip, however this matches what was done
+for other clocks that had 500us delay in downstream.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: f73a4230d5bb ("clk: qcom: gcc: Add GPU and NPU clocks for SM8150")
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Link: https://lore.kernel.org/r/20200709135251.643-2-jonathan@marek.ca
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 04bd9279c3fb3..711bdca975be3 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -381,8 +381,8 @@ enum {
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 72524cf110487..55e9d6d75a0cd 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -1617,6 +1617,7 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
+ };
  
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
+ static struct clk_branch gcc_gpu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(15),
+@@ -1632,13 +1633,14 @@ static struct clk_branch gcc_gpu_gpll0_clk_src = {
+ };
+ 
+ static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(16),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_gpu_gpll0_div_clk_src",
+ 			.parent_hws = (const struct clk_hw *[]){
+-				&gcc_gpu_gpll0_clk_src.clkr.hw },
++				&gpll0_out_even.clkr.hw },
+ 			.num_parents = 1,
+ 			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+@@ -1729,6 +1731,7 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
+ };
+ 
+ static struct clk_branch gcc_npu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(18),
+@@ -1744,13 +1747,14 @@ static struct clk_branch gcc_npu_gpll0_clk_src = {
+ };
+ 
+ static struct clk_branch gcc_npu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(19),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_npu_gpll0_div_clk_src",
+ 			.parent_hws = (const struct clk_hw *[]){
+-				&gcc_npu_gpll0_clk_src.clkr.hw },
++				&gpll0_out_even.clkr.hw },
+ 			.num_parents = 1,
+ 			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
 -- 
 2.25.1
 
