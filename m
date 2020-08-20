@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 378352173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064D322BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916820;
-	bh=t7QQ+H33mo6eZ63X2f6jUu77Uht3ePV6CRkL8tYfkLs=;
+	s=default; t=1597916827;
+	bh=ERX7nxT/qU+q9mUGONITiBEF8Kuwqk6p+kmLb994YJc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nbBKONAujY3i90Vl2pQW6yEtdXli3UGm2znSDYK3tREMqT9lIuamtWMppYztzDK4a
-	 7gpVdp5IzQ+8q22MFyFOYF5NJvygg4oi7dGNQmN+RRyCcQ524TzGhONicTkpS4FY9E
-	 4OVb2+5q8FxiN2/GKFiXK66GJQw/KL9cEsNr/HyE=
+	b=k3PY8vkb+hnoz9ozoynR0EA47yEvFzj8Ww4jkPFJXt3eheHZ8eazl03KerveWqaCB
+	 f22GMMsBScwIDTfMEfDODEON03uFrDoVVMetRFwztKr0D0w60xahbkkJpd/3tSzmIo
+	 o7jIzBQ2+eof0TFNinv3BxNF2o0zCGqPQIVJ0oQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbgHTJq7 (ORCPT
+        id S1729381AbgHTJrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729332AbgHTJqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:46:35 -0400
+        id S1729344AbgHTJql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74BE520724;
-        Thu, 20 Aug 2020 09:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 409132173E;
+        Thu, 20 Aug 2020 09:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916795;
-        bh=t7QQ+H33mo6eZ63X2f6jUu77Uht3ePV6CRkL8tYfkLs=;
+        s=default; t=1597916800;
+        bh=ERX7nxT/qU+q9mUGONITiBEF8Kuwqk6p+kmLb994YJc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RStXzMsYbjALsyQ1kyJgM3erRdTdBDqhG90UjEBf5qsvKM+DnnOhZyWuD9kEWUidL
-         hUcaf/FZstYIqUQjFwzbBMXLC1aCFim7fvgWhkIompLt3EkRRkP8/vVolfjUoL8dnU
-         VlUt8JsSM+sGq6beIrusJcXMQKORyJFS2jGMBGjc=
+        b=Ik0C3WUat7X1RcKMQ8sub/UuLeVIEmHqlSuVKR8fzdjY9xTtTz+kKvJd75Q8OllQT
+         wUtT+wRlpZp288ygXo68Ml8bX9xCDpvJ+sAgoq02r8L2SAJ/U+o5thLBL4ngtXWgki
+         X90Ed8fzQB8g49wQV+HLsk5c0XzAAMyX9FQFBKZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 018/152] btrfs: relocation: review the call sites which can be interrupted by signal
-Date:   Thu, 20 Aug 2020 11:19:45 +0200
-Message-Id: <20200820091554.580138411@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.4 043/152] net/compat: Add missing sock updates for SCM_RIGHTS
+Date:   Thu, 20 Aug 2020 11:20:10 +0200
+Message-Id: <20200820091555.874277038@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,104 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 44d354abf33e92a5e73b965c84caf5a5d5e58a0b upstream.
+commit d9539752d23283db4692384a634034f451261e29 upstream.
 
-Since most metadata reservation calls can return -EINTR when get
-interrupted by fatal signal, we need to review the all the metadata
-reservation call sites.
+Add missed sock updates to compat path via a new helper, which will be
+used more in coming patches. (The net/core/scm.c code is left as-is here
+to assist with -stable backports for the compat path.)
 
-In relocation code, the metadata reservation happens in the following
-sites:
-
-- btrfs_block_rsv_refill() in merge_reloc_root()
-  merge_reloc_root() is a pretty critical section, we don't want to be
-  interrupted by signal, so change the flush status to
-  BTRFS_RESERVE_FLUSH_LIMIT, so it won't get interrupted by signal.
-  Since such change can be ENPSPC-prone, also shrink the amount of
-  metadata to reserve least amount avoid deadly ENOSPC there.
-
-- btrfs_block_rsv_refill() in reserve_metadata_space()
-  It calls with BTRFS_RESERVE_FLUSH_LIMIT, which won't get interrupted
-  by signal.
-
-- btrfs_block_rsv_refill() in prepare_to_relocate()
-
-- btrfs_block_rsv_add() in prepare_to_relocate()
-
-- btrfs_block_rsv_refill() in relocate_block_group()
-
-- btrfs_delalloc_reserve_metadata() in relocate_file_extent_cluster()
-
-- btrfs_start_transaction() in relocate_block_group()
-
-- btrfs_start_transaction() in create_reloc_inode()
-  Can be interrupted by fatal signal and we can handle it easily.
-  For these call sites, just catch the -EINTR value in btrfs_balance()
-  and count them as canceled.
-
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/relocation.c |   12 ++++++++++--
- fs/btrfs/volumes.c    |   17 ++++++++++++++++-
- 2 files changed, 26 insertions(+), 3 deletions(-)
+ include/net/sock.h |    4 ++++
+ net/compat.c       |    1 +
+ net/core/sock.c    |   21 +++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
---- a/fs/btrfs/relocation.c
-+++ b/fs/btrfs/relocation.c
-@@ -2312,12 +2312,20 @@ static noinline_for_stack int merge_relo
- 		btrfs_unlock_up_safe(path, 0);
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -849,6 +849,8 @@ static inline int sk_memalloc_socks(void
+ {
+ 	return static_branch_unlikely(&memalloc_socks_key);
+ }
++
++void __receive_sock(struct file *file);
+ #else
+ 
+ static inline int sk_memalloc_socks(void)
+@@ -856,6 +858,8 @@ static inline int sk_memalloc_socks(void
+ 	return 0;
+ }
+ 
++static inline void __receive_sock(struct file *file)
++{ }
+ #endif
+ 
+ static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -291,6 +291,7 @@ void scm_detach_fds_compat(struct msghdr
+ 			break;
+ 		}
+ 		/* Bump the usage count and install the file. */
++		__receive_sock(fp[i]);
+ 		fd_install(new_fd, get_file(fp[i]));
  	}
  
--	min_reserved = fs_info->nodesize * (BTRFS_MAX_LEVEL - 1) * 2;
-+	/*
-+	 * In merge_reloc_root(), we modify the upper level pointer to swap the
-+	 * tree blocks between reloc tree and subvolume tree.  Thus for tree
-+	 * block COW, we COW at most from level 1 to root level for each tree.
-+	 *
-+	 * Thus the needed metadata size is at most root_level * nodesize,
-+	 * and * 2 since we have two trees to COW.
-+	 */
-+	min_reserved = fs_info->nodesize * btrfs_root_level(root_item) * 2;
- 	memset(&next_key, 0, sizeof(next_key));
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2736,6 +2736,27 @@ int sock_no_mmap(struct file *file, stru
+ }
+ EXPORT_SYMBOL(sock_no_mmap);
  
- 	while (1) {
- 		ret = btrfs_block_rsv_refill(root, rc->block_rsv, min_reserved,
--					     BTRFS_RESERVE_FLUSH_ALL);
-+					     BTRFS_RESERVE_FLUSH_LIMIT);
- 		if (ret) {
- 			err = ret;
- 			goto out;
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -4261,7 +4261,22 @@ int btrfs_balance(struct btrfs_fs_info *
- 	mutex_lock(&fs_info->balance_mutex);
- 	if (ret == -ECANCELED && atomic_read(&fs_info->balance_pause_req))
- 		btrfs_info(fs_info, "balance: paused");
--	else if (ret == -ECANCELED && atomic_read(&fs_info->balance_cancel_req))
++/*
++ * When a file is received (via SCM_RIGHTS, etc), we must bump the
++ * various sock-based usage counts.
++ */
++void __receive_sock(struct file *file)
++{
++	struct socket *sock;
++	int error;
++
 +	/*
-+	 * Balance can be canceled by:
-+	 *
-+	 * - Regular cancel request
-+	 *   Then ret == -ECANCELED and balance_cancel_req > 0
-+	 *
-+	 * - Fatal signal to "btrfs" process
-+	 *   Either the signal caught by wait_reserve_ticket() and callers
-+	 *   got -EINTR, or caught by btrfs_should_cancel_balance() and
-+	 *   got -ECANCELED.
-+	 *   Either way, in this case balance_cancel_req = 0, and
-+	 *   ret == -EINTR or ret == -ECANCELED.
-+	 *
-+	 * So here we only check the return value to catch canceled balance.
++	 * The resulting value of "error" is ignored here since we only
++	 * need to take action when the file is a socket and testing
++	 * "sock" for NULL is sufficient.
 +	 */
-+	else if (ret == -ECANCELED || ret == -EINTR)
- 		btrfs_info(fs_info, "balance: canceled");
- 	else
- 		btrfs_info(fs_info, "balance: ended with status: %d", ret);
++	sock = sock_from_file(file, &error);
++	if (sock) {
++		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
++		sock_update_classid(&sock->sk->sk_cgrp_data);
++	}
++}
++
+ ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
+ {
+ 	ssize_t res;
 
 
