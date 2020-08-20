@@ -7,53 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953CDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6339BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710B42173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304C02078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916750;
-	bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+	s=default; t=1597916758;
+	bh=o5V+TZzJ4oLw40P7fnqae4aYSj8Ai1i0CGcdbBn5HyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wq0sxPrhZjzP6z7PPw5tWflEJ127yxwVSISVAiSavchM7oz3d68hNZ0F6FOanwz1I
-	 yHnu0v4lse6kjCvI664pl1tYsDdVjWJsZZFqIkr7zdt9PYOtkAjk6WwlPW4r6MLMPk
-	 mnNlDJYH9tBitPTFLGLGQ0kizHPA0WuVnDSx7XmQ=
+	b=X7vScPCuPx+3e1yNut2c52IsV3wwusddLhkCqpucgRBhNZ8himLABtQL83+lEuVF0
+	 9sJ4XU3DsZWgljyQR83SxjD6BccPO+Vujn1DvVfKGAT36JhYQ4dyqzmA10OpVsfg9E
+	 J/7GbSvz+5y+iZ3L0k1dIO+nYCPH0fmXZpWkQtSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgHTJps (ORCPT
+        id S1728990AbgHTJp4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:45:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40986 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:45:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729237AbgHTJnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:23 -0400
+        id S1729154AbgHTJm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946BD2173E;
-        Thu, 20 Aug 2020 09:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB2ED2173E;
+        Thu, 20 Aug 2020 09:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916602;
-        bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+        s=default; t=1597916549;
+        bh=o5V+TZzJ4oLw40P7fnqae4aYSj8Ai1i0CGcdbBn5HyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imJp3Olux2Gtf1MSftCoXJJGVPDZ0GkK1kF0AiOqzYPGX/uucUrzlDBVUZrmL2Y9b
-         XZQFKGkYShKJIGHFQZu29p9Un/nEsgNKgzM4kaj4ZkBP4LbIbFw2kTkZ7IzaTEI779
-         S6bLMsrT/J6RcTeqleN9vDGMvDguwmx2wjATBFng=
+        b=14KAbc5NcZ30SwSnOWgovAedJAf4MZluFxI2aqW5hpVF5kZhvsFOJqzifYH9dIuS+
+         3LBAwWdl3Xvf24exSIXJUTOEFpdvzPt9R8MeOxNWgLzQ/MDqhqv6CrOkVUeE0T1Vrd
+         +GoPkXZ3UGe9y/pOcED0DB25mGoGUWQwwiwuYUTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Roland Scheidegger <sroland@vmware.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 185/204] perf bench mem: Always memset source before memcpy
-Date:   Thu, 20 Aug 2020 11:21:22 +0200
-Message-Id: <20200820091615.427174598@linuxfoundation.org>
+Subject: [PATCH 5.7 168/204] drm/vmwgfx: Use correct vmw_legacy_display_unit pointer
+Date:   Thu, 20 Aug 2020 11:21:05 +0200
+Message-Id: <20200820091614.604780507@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -66,103 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
+[ Upstream commit 1d2c0c565bc0da25f5e899a862fb58e612b222df ]
 
-For memcpy, the source pages are memset to zero only when --cycles is
-used.  This leads to wildly different results with or without --cycles,
-since all sources pages are likely to be mapped to the same zero page
-without explicit writes.
+The "entry" pointer is an offset from the list head and it doesn't
+point to a valid vmw_legacy_display_unit struct.  Presumably the
+intent was to point to the last entry.
 
-Before this fix:
+Also the "i++" wasn't used so I have removed that as well.
 
-$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
-  mem memcpy -s 1024MB -l 100 -f default"
-$ $cmd
-
-         2,935,826      LLC-loads
-       3.821677452 seconds time elapsed
-
-$ $cmd --cycles
-
-       217,533,436      LLC-loads
-       8.616725985 seconds time elapsed
-
-After this fix:
-
-$ $cmd
-
-       214,459,686      LLC-loads
-       8.674301124 seconds time elapsed
-
-$ $cmd --cycles
-
-       214,758,651      LLC-loads
-       8.644480006 seconds time elapsed
-
-Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel@axis.com
-Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: d7e1958dbe4a ("drm/vmwgfx: Support older hardware.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Roland Scheidegger <sroland@vmware.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/mem-functions.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index 9235b76501be8..19d45c377ac18 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -223,12 +223,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
- 	return 0;
- }
- 
--static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
- {
--	u64 cycle_start = 0ULL, cycle_end = 0ULL;
--	memcpy_t fn = r->fn.memcpy;
--	int i;
--
- 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
- 	memset(src, 0, size);
- 
-@@ -237,6 +233,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
- 	 * to not measure page fault overhead:
- 	 */
- 	fn(dst, src, size);
-+}
-+
-+static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+{
-+	u64 cycle_start = 0ULL, cycle_end = 0ULL;
-+	memcpy_t fn = r->fn.memcpy;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+index 16dafff5cab19..009f1742bed51 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+@@ -81,7 +81,7 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 	struct vmw_legacy_display_unit *entry;
+ 	struct drm_framebuffer *fb = NULL;
+ 	struct drm_crtc *crtc = NULL;
+-	int i = 0;
 +	int i;
-+
-+	memcpy_prefault(fn, size, src, dst);
  
- 	cycle_start = get_cycles();
- 	for (i = 0; i < nr_loops; ++i)
-@@ -252,11 +257,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
- 	memcpy_t fn = r->fn.memcpy;
- 	int i;
+ 	/* If there is no display topology the host just assumes
+ 	 * that the guest will set the same layout as the host.
+@@ -92,12 +92,11 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 			crtc = &entry->base.crtc;
+ 			w = max(w, crtc->x + crtc->mode.hdisplay);
+ 			h = max(h, crtc->y + crtc->mode.vdisplay);
+-			i++;
+ 		}
  
--	/*
--	 * We prefault the freshly allocated memory range here,
--	 * to not measure page fault overhead:
--	 */
--	fn(dst, src, size);
-+	memcpy_prefault(fn, size, src, dst);
+ 		if (crtc == NULL)
+ 			return 0;
+-		fb = entry->base.crtc.primary->state->fb;
++		fb = crtc->primary->state->fb;
  
- 	BUG_ON(gettimeofday(&tv_start, NULL));
- 	for (i = 0; i < nr_loops; ++i)
+ 		return vmw_kms_write_svga(dev_priv, w, h, fb->pitches[0],
+ 					  fb->format->cpp[0] * 8,
 -- 
 2.25.1
 
