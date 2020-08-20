@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D17C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8796DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60A0920855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2882078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917208;
-	bh=4fjuAju3y/Vzzr4UicVS1vpNwRoZzGP9qAPLUIelW40=;
+	s=default; t=1597917215;
+	bh=7rs0DGOGXSOavQi90SfnLQVIxV16ME5jLXm/6qbDOuA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IED4mkhLnBssvAbVeQ3I5P3QIt3p7b4bENCrZW0llLyrYwi3SV91mDixlzxgsUww8
-	 4xbww1ucBun8O4PDsjCQ/XdModrJWgC2pUasp/qwsQF2Ovby9Hc9ay/Rt0zT2X1ULM
-	 zj/6zG1hujOizok295EwPr310xIrKNJ0hlKcl5pg=
+	b=lir6TBMWOzB5pOVXU/oifOgVpov5TCjGRRYpVR6rcvaoMmthwPDHgr9oiVktQBeHy
+	 cq3aRvrg14Ik4/3rVbnNV8qqF6VFTRfe3MBWZt1KFxpYWTQixLwOPM4+1STjrEYhEA
+	 l2orq6JiOfLEWnU91gS0oA5dQyocfaOIaehnF1mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729769AbgHTJx0 (ORCPT
+        id S1730066AbgHTJxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:53:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35110 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:53:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgHTJxW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:22 -0400
+        id S1729260AbgHTJwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E31F82067C;
-        Thu, 20 Aug 2020 09:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34AB42067C;
+        Thu, 20 Aug 2020 09:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917200;
-        bh=4fjuAju3y/Vzzr4UicVS1vpNwRoZzGP9qAPLUIelW40=;
+        s=default; t=1597917136;
+        bh=7rs0DGOGXSOavQi90SfnLQVIxV16ME5jLXm/6qbDOuA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y92eykk6++WeRCiX2IugDRy19MQKitVyOnOUa6fUSmQNYKOzqv/lHENGQqC23HQCW
-         k3fMLt4hoUZtpi3acJd2F7iGuWcyaZhaJ/Iv7x90OpBmaJbPXs7eZJq178CwOTDmgn
-         oVmTWIOwIAp15O0fRFk1EuDrFtGDdqV3EALM0bb8=
+        b=etF8/ERUvKl19dCipGr2G1Uj5fnA1rdp2Lf29z6BMCa3e3Zq0s8aOY21grxvUJfJX
+         qVrX0QduxoTpyeyReVZ24mrXzr2VCG4n9DbVpQRlgF3XNMIwJGcxDgH1AiF0Wrr1+x
+         OIsC61ejjw9M0bYxFeolowLX2bnJTEjjFA9OFfZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Muchun Song <songmuchun@bytedance.com>,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 38/92] kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
-Date:   Thu, 20 Aug 2020 11:21:23 +0200
-Message-Id: <20200820091539.592290034@linuxfoundation.org>
+        stable@vger.kernel.org, Yandong Xu <xuyandong2@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Ofer Hayut <ofer@lightbitslabs.com>,
+        Roy Shterman <roys@lightbitslabs.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Dima Stepanov <dimastep@yandex-team.ru>
+Subject: [PATCH 4.19 08/92] PCI: Probe bridge window attributes once at enumeration-time
+Date:   Thu, 20 Aug 2020 11:20:53 +0200
+Message-Id: <20200820091537.936056109@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -61,94 +66,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-commit 0cb2f1372baa60af8456388a574af6133edd7d80 upstream.
+commit 51c48b310183ab6ba5419edfc6a8de889cc04521 upstream.
 
-We found a case of kernel panic on our server. The stack trace is as
-follows(omit some irrelevant information):
+pci_bridge_check_ranges() determines whether a bridge supports the optional
+I/O and prefetchable memory windows and sets the flag bits in the bridge
+resources.  This *could* be done once during enumeration except that the
+resource allocation code completely clears the flag bits, e.g., in the
+pci_assign_unassigned_bridge_resources() path.
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000080
-  RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
-  RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
-  RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
-  RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
-  RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <IRQ>
-   ftrace_ops_assist_func+0x56/0xe0
-   ftrace_call+0x5/0x34
-   tcpa_statistic_send+0x5/0x130 [ttcp_engine]
+The problem with pci_bridge_check_ranges() in the resource allocation path
+is that we may allocate resources after devices have been claimed by
+drivers, and pci_bridge_check_ranges() *changes* the window registers to
+determine whether they're writable.  This may break concurrent accesses to
+devices behind the bridge.
 
-The tcpa_statistic_send is the function being kprobed. After analysis,
-the root cause is that the fourth parameter regs of kprobe_ftrace_handler
-is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
+Add a new pci_read_bridge_windows() to determine whether a bridge supports
+the optional windows, call it once during enumeration, remember the
+results, and change pci_bridge_check_ranges() so it doesn't touch the
+bridge windows but sets the flag bits based on those remembered results.
 
-  crash> dis tcpa_statistic_send -r
-         <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
-
-The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
-So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
-is NULL. In theory, we should call the ftrace_regs_caller instead of the
-ftrace_caller. After in-depth analysis, we found a reproducible path.
-
-  Writing a simple kernel module which starts a periodic timer. The
-  timer's handler is named 'kprobe_test_timer_handler'. The module
-  name is kprobe_test.ko.
-
-  1) insmod kprobe_test.ko
-  2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-  3) echo 0 > /proc/sys/kernel/ftrace_enabled
-  4) rmmod kprobe_test
-  5) stop step 2) kprobe
-  6) insmod kprobe_test.ko
-  7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
-
-We mark the kprobe as GONE but not disarm the kprobe in the step 4).
-The step 5) also do not disarm the kprobe when unregister kprobe. So
-we do not remove the ip from the filter. In this case, when the module
-loads again in the step 6), we will replace the code to ftrace_caller
-via the ftrace_module_enable(). When we register kprobe again, we will
-not replace ftrace_caller to ftrace_regs_caller because the ftrace is
-disabled in the step 3). So the step 7) will trigger kernel panic. Fix
-this problem by disarming the kprobe when the module is going away.
-
-Link: https://lkml.kernel.org/r/20200728064536.24405-1-songmuchun@bytedance.com
-
-Cc: stable@vger.kernel.org
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/linux-pci/1506151482-113560-1-git-send-email-wangzhou1@hisilicon.com
+Link: https://lists.gnu.org/archive/html/qemu-devel/2018-12/msg02082.html
+Reported-by: Yandong Xu <xuyandong2@huawei.com>
+Tested-by: Yandong Xu <xuyandong2@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Sagi Grimberg <sagi@grimberg.me>
+Cc: Ofer Hayut <ofer@lightbitslabs.com>
+Cc: Roy Shterman <roys@lightbitslabs.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Zhou Wang <wangzhou1@hisilicon.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208371
+Signed-off-by: Dima Stepanov <dimastep@yandex-team.ru>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kprobes.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/pci/probe.c     |   52 ++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/setup-bus.c |   45 +++--------------------------------------
+ include/linux/pci.h     |    3 ++
+ 3 files changed, 59 insertions(+), 41 deletions(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2077,6 +2077,13 @@ static void kill_kprobe(struct kprobe *p
- 	 * the original probed function (which will be freed soon) any more.
- 	 */
- 	arch_remove_kprobe(p);
-+
-+	/*
-+	 * The module is going away. We should disarm the kprobe which
-+	 * is using ftrace.
-+	 */
-+	if (kprobe_ftrace(p))
-+		disarm_kprobe_ftrace(p);
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -348,6 +348,57 @@ static void pci_read_bases(struct pci_de
+ 	}
  }
  
- /* Disable one kprobe */
++static void pci_read_bridge_windows(struct pci_dev *bridge)
++{
++	u16 io;
++	u32 pmem, tmp;
++
++	pci_read_config_word(bridge, PCI_IO_BASE, &io);
++	if (!io) {
++		pci_write_config_word(bridge, PCI_IO_BASE, 0xe0f0);
++		pci_read_config_word(bridge, PCI_IO_BASE, &io);
++		pci_write_config_word(bridge, PCI_IO_BASE, 0x0);
++	}
++	if (io)
++		bridge->io_window = 1;
++
++	/*
++	 * DECchip 21050 pass 2 errata: the bridge may miss an address
++	 * disconnect boundary by one PCI data phase.  Workaround: do not
++	 * use prefetching on this device.
++	 */
++	if (bridge->vendor == PCI_VENDOR_ID_DEC && bridge->device == 0x0001)
++		return;
++
++	pci_read_config_dword(bridge, PCI_PREF_MEMORY_BASE, &pmem);
++	if (!pmem) {
++		pci_write_config_dword(bridge, PCI_PREF_MEMORY_BASE,
++					       0xffe0fff0);
++		pci_read_config_dword(bridge, PCI_PREF_MEMORY_BASE, &pmem);
++		pci_write_config_dword(bridge, PCI_PREF_MEMORY_BASE, 0x0);
++	}
++	if (!pmem)
++		return;
++
++	bridge->pref_window = 1;
++
++	if ((pmem & PCI_PREF_RANGE_TYPE_MASK) == PCI_PREF_RANGE_TYPE_64) {
++
++		/*
++		 * Bridge claims to have a 64-bit prefetchable memory
++		 * window; verify that the upper bits are actually
++		 * writable.
++		 */
++		pci_read_config_dword(bridge, PCI_PREF_BASE_UPPER32, &pmem);
++		pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32,
++				       0xffffffff);
++		pci_read_config_dword(bridge, PCI_PREF_BASE_UPPER32, &tmp);
++		pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32, pmem);
++		if (tmp)
++			bridge->pref_64_window = 1;
++	}
++}
++
+ static void pci_read_bridge_io(struct pci_bus *child)
+ {
+ 	struct pci_dev *dev = child->self;
+@@ -1712,6 +1763,7 @@ int pci_setup_device(struct pci_dev *dev
+ 		pci_read_irq(dev);
+ 		dev->transparent = ((dev->class & 0xff) == 1);
+ 		pci_read_bases(dev, 2, PCI_ROM_ADDRESS1);
++		pci_read_bridge_windows(dev);
+ 		set_pcie_hotplug_bridge(dev);
+ 		pos = pci_find_capability(dev, PCI_CAP_ID_SSVID);
+ 		if (pos) {
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -735,58 +735,21 @@ int pci_claim_bridge_resource(struct pci
+    base/limit registers must be read-only and read as 0. */
+ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ {
+-	u16 io;
+-	u32 pmem;
+ 	struct pci_dev *bridge = bus->self;
+-	struct resource *b_res;
++	struct resource *b_res = &bridge->resource[PCI_BRIDGE_RESOURCES];
+ 
+-	b_res = &bridge->resource[PCI_BRIDGE_RESOURCES];
+ 	b_res[1].flags |= IORESOURCE_MEM;
+ 
+-	pci_read_config_word(bridge, PCI_IO_BASE, &io);
+-	if (!io) {
+-		pci_write_config_word(bridge, PCI_IO_BASE, 0xe0f0);
+-		pci_read_config_word(bridge, PCI_IO_BASE, &io);
+-		pci_write_config_word(bridge, PCI_IO_BASE, 0x0);
+-	}
+-	if (io)
++	if (bridge->io_window)
+ 		b_res[0].flags |= IORESOURCE_IO;
+ 
+-	/*  DECchip 21050 pass 2 errata: the bridge may miss an address
+-	    disconnect boundary by one PCI data phase.
+-	    Workaround: do not use prefetching on this device. */
+-	if (bridge->vendor == PCI_VENDOR_ID_DEC && bridge->device == 0x0001)
+-		return;
+-
+-	pci_read_config_dword(bridge, PCI_PREF_MEMORY_BASE, &pmem);
+-	if (!pmem) {
+-		pci_write_config_dword(bridge, PCI_PREF_MEMORY_BASE,
+-					       0xffe0fff0);
+-		pci_read_config_dword(bridge, PCI_PREF_MEMORY_BASE, &pmem);
+-		pci_write_config_dword(bridge, PCI_PREF_MEMORY_BASE, 0x0);
+-	}
+-	if (pmem) {
++	if (bridge->pref_window) {
+ 		b_res[2].flags |= IORESOURCE_MEM | IORESOURCE_PREFETCH;
+-		if ((pmem & PCI_PREF_RANGE_TYPE_MASK) ==
+-		    PCI_PREF_RANGE_TYPE_64) {
++		if (bridge->pref_64_window) {
+ 			b_res[2].flags |= IORESOURCE_MEM_64;
+ 			b_res[2].flags |= PCI_PREF_RANGE_TYPE_64;
+ 		}
+ 	}
+-
+-	/* double check if bridge does support 64 bit pref */
+-	if (b_res[2].flags & IORESOURCE_MEM_64) {
+-		u32 mem_base_hi, tmp;
+-		pci_read_config_dword(bridge, PCI_PREF_BASE_UPPER32,
+-					 &mem_base_hi);
+-		pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32,
+-					       0xffffffff);
+-		pci_read_config_dword(bridge, PCI_PREF_BASE_UPPER32, &tmp);
+-		if (!tmp)
+-			b_res[2].flags &= ~IORESOURCE_MEM_64;
+-		pci_write_config_dword(bridge, PCI_PREF_BASE_UPPER32,
+-				       mem_base_hi);
+-	}
+ }
+ 
+ /* Helper function for sizing routines: find first available
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -373,6 +373,9 @@ struct pci_dev {
+ 	bool		match_driver;		/* Skip attaching driver */
+ 
+ 	unsigned int	transparent:1;		/* Subtractive decode bridge */
++	unsigned int	io_window:1;		/* Bridge has I/O window */
++	unsigned int	pref_window:1;		/* Bridge has pref mem window */
++	unsigned int	pref_64_window:1;	/* Pref mem window is 64-bit */
+ 	unsigned int	multifunction:1;	/* Multi-function device */
+ 
+ 	unsigned int	is_busmaster:1;		/* Is busmaster */
 
 
