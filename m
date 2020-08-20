@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9613CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4EFE2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600CF206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918447;
-	bh=nLLYUBUWCRpFXe2Wu7VJ/KUG5pyqVVVZ2tDy6TkbfxI=;
+	s=default; t=1597918455;
+	bh=fHlcARBscWrbi6Cfe41srC03El6M9OA2QK3vLjYD0no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HNYvP5/Jj2nrJH4qWy65LeTwU7GoM4v/7ZL6D5RYnuTBuBM+iega8w9Mn+WXBVVFh
-	 ShjcsqZOAh6SJp3y0CIQLhJTiYJ+S21M98au9Qb8Zn79tf6CbEXM2zatchbl3f5tgI
-	 T87uiuL2cYqW10OXMXtjwe32PgSp1AnWmulsBWSE=
+	b=PvCt44Ufveq+Ttf9w0cAFQTF2HxrQTfEACbTLb3YuQW50s/7gpM30Uif1dMxreyfW
+	 464InAYPyYJlsLbnwpjmfD9b66hrf/dMvNAqE6L10YYLXb2JAngGeVU/is9PnpuvFN
+	 lWrqqU0bXVdVJsaDnBxkYuEXTdyeqTOUAp0L4m9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730930AbgHTKOE (ORCPT
+        id S1729845AbgHTKOM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57264 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:14:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731119AbgHTKNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:19 -0400
+        id S1731123AbgHTKNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C5ED2067C;
-        Thu, 20 Aug 2020 10:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30BBD206DA;
+        Thu, 20 Aug 2020 10:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918399;
-        bh=nLLYUBUWCRpFXe2Wu7VJ/KUG5pyqVVVZ2tDy6TkbfxI=;
+        s=default; t=1597918401;
+        bh=fHlcARBscWrbi6Cfe41srC03El6M9OA2QK3vLjYD0no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocJ4//6sceqx3xRSL09y12U1BHqrR+tXIscsKihoF3A16xi1EIa70OIOCYoGjDxJW
-         ph3Ttr89NSPeuv7dw2yqHtzPp5LMxqV7qC7QrMqSbRAKOvAfDkJruT31iAY3TGRx4Z
-         QScHgB4EmeS3Ql8SnZUup+4KGllJwfSPAKnRm4+U=
+        b=NcgHoPS8dm/4sRGHdCVG0Xf4Rubw/NtaqP/nBUBDc4c+UNBvw7aEVMYLTFp9uRwn9
+         pnkbkvMsaUtmSr8odg2XfWsvD3WpGeBY3MiXQE0hvVEikMC8Tinn/tTa0ejCcZ6uqs
+         m3JkRyPi09o6QDvInsxTkzmZzzpYaL+7wxuG6Pco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 125/228] wl1251: fix always return 0 error
-Date:   Thu, 20 Aug 2020 11:21:40 +0200
-Message-Id: <20200820091613.844868556@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 126/228] tools, build: Propagate build failures from tools/build/Makefile.build
+Date:   Thu, 20 Aug 2020 11:21:41 +0200
+Message-Id: <20200820091613.886042839@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,36 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-[ Upstream commit 20e6421344b5bc2f97b8e2db47b6994368417904 ]
+[ Upstream commit a278f3d8191228212c553a5d4303fa603214b717 ]
 
-wl1251_event_ps_report() should not always return 0 because
-wl1251_ps_set_mode() may fail. Change it to return 'ret'.
+The '&&' command seems to have a bad effect when $(cmd_$(1)) exits with
+non-zero effect: the command failure is masked (despite `set -e`) and all but
+the first command of $(dep-cmd) is executed (successfully, as they are mostly
+printfs), thus overall returning 0 in the end.
 
-Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200730073939.33704-1-wanghai38@huawei.com
+This means in practice that despite compilation errors, tools's build Makefile
+will return success. We see this very reliably with libbpf's Makefile, which
+doesn't get compilation error propagated properly. This in turns causes issues
+with selftests build, as well as bpftool and other projects that rely on
+building libbpf.
+
+The fix is simple: don't use &&. Given `set -e`, we don't need to chain
+commands with &&. The shell will exit on first failure, giving desired
+behavior and propagating error properly.
+
+Fixes: 275e2d95591e ("tools build: Move dependency copy into function")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Link: https://lore.kernel.org/bpf/20200731024244.872574-1-andriin@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ti/wl1251/event.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/build/Build.include | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
-index f5acd24d0e2b1..988abb49771f9 100644
---- a/drivers/net/wireless/ti/wl1251/event.c
-+++ b/drivers/net/wireless/ti/wl1251/event.c
-@@ -84,7 +84,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
- 		break;
- 	}
+diff --git a/tools/build/Build.include b/tools/build/Build.include
+index d9048f145f97a..63bb9752612a8 100644
+--- a/tools/build/Build.include
++++ b/tools/build/Build.include
+@@ -74,7 +74,8 @@ dep-cmd = $(if $(wildcard $(fixdep)),
+ #                   dependencies in the cmd file
+ if_changed_dep = $(if $(strip $(any-prereq) $(arg-check)),         \
+                   @set -e;                                         \
+-                  $(echo-cmd) $(cmd_$(1)) && $(dep-cmd))
++                  $(echo-cmd) $(cmd_$(1));                         \
++                  $(dep-cmd))
  
--	return 0;
-+	return ret;
- }
- 
- static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
+ # if_changed      - execute command if any prerequisite is newer than
+ #                   target, or command line has changed
 -- 
 2.25.1
 
