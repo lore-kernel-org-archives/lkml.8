@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983D8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA702C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 724B320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40E220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:27:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926414;
-	bh=RC22bk4RqaXRBDXXm7/9pkd7kocs1SVyiUWvdKLVKDA=;
+	s=default; t=1597926428;
+	bh=Fs+JoK8/M8yAb9+zWAqCpaVCtCSJyL1vmeAN0FStg2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NjA3CABhp55fw64hFsC4TIpMW4divofVKjnr3fsaEX2UpEboaiN5JtmoDfWgeGX1Q
-	 hc2btkQ6yqCeasvpqB2W4RhwXLR479EWO/y5LHcJfHJq/obbfGciM2LB3kvlYkIf4/
-	 BoDLm0bDcbOZV6AmBcjHiUI6F+QKHzOVDkZPTSis=
+	b=t8xlm8XEAR/It6HMXzkP5095fY39KAvdPBoEKWHR5L4pkUisRZBNbNwxDCgb7KBy5
+	 U7tCd41cs+xCQlPPEMV7jNrSZZZOtDwX9Wy5dWUmsWWoMduwi40F0TPwC9q2ZTNdEr
+	 IcBfvDMTS3HSj/bVWs/KvUptHFOTNpbMLXN0RLkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgHTJws (ORCPT
+        id S1729643AbgHTM1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:27:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbgHTJwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:31 -0400
+        id S1730004AbgHTJwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656122067C;
-        Thu, 20 Aug 2020 09:52:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77B22067C;
+        Thu, 20 Aug 2020 09:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917150;
-        bh=RC22bk4RqaXRBDXXm7/9pkd7kocs1SVyiUWvdKLVKDA=;
+        s=default; t=1597917165;
+        bh=Fs+JoK8/M8yAb9+zWAqCpaVCtCSJyL1vmeAN0FStg2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aBCrCtvDgK5tO1GSAhUS/fGmw6QXcfLKsGCCo/2oOwbh2x0eVlStUH9Bk3Db7cXAl
-         WyswSJAzCXI9UvH80BTW76ipketjpm4CnOzGH7jEZhEyFvaVhu6Y3fWTRLMNvZ6Jbt
-         8acK1EJviGs3caDAhFzRu7M5X70fPe/3G1/FjGFo=
+        b=nWTEvPhvi78/fQ6ncuXJBCtTC6SAJXSD07mnZbVfnPWlR/MdWMfJS0ouSdezn3tLe
+         BbnXHT9MDtQQESD1Lchuqre20pp87wJM28l9OxCdYT7eO3RkjRX70sm6m1oJUpWPtU
+         abRT901QnR0bXWWqLIrUSQdMQijXrRPg6AIvrM3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lane <tgl@sss.pgh.pa.us>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 22/92] powerpc: Allow 4224 bytes of stack expansion for the signal frame
-Date:   Thu, 20 Aug 2020 11:21:07 +0200
-Message-Id: <20200820091538.715949385@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 27/92] net/compat: Add missing sock updates for SCM_RIGHTS
+Date:   Thu, 20 Aug 2020 11:21:12 +0200
+Message-Id: <20200820091538.955608072@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,184 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Kees Cook <keescook@chromium.org>
 
-commit 63dee5df43a31f3844efabc58972f0a206ca4534 upstream.
+commit d9539752d23283db4692384a634034f451261e29 upstream.
 
-We have powerpc specific logic in our page fault handling to decide if
-an access to an unmapped address below the stack pointer should expand
-the stack VMA.
+Add missed sock updates to compat path via a new helper, which will be
+used more in coming patches. (The net/core/scm.c code is left as-is here
+to assist with -stable backports for the compat path.)
 
-The code was originally added in 2004 "ported from 2.4". The rough
-logic is that the stack is allowed to grow to 1MB with no extra
-checking. Over 1MB the access must be within 2048 bytes of the stack
-pointer, or be from a user instruction that updates the stack pointer.
-
-The 2048 byte allowance below the stack pointer is there to cover the
-288 byte "red zone" as well as the "about 1.5kB" needed by the signal
-delivery code.
-
-Unfortunately since then the signal frame has expanded, and is now
-4224 bytes on 64-bit kernels with transactional memory enabled. This
-means if a process has consumed more than 1MB of stack, and its stack
-pointer lies less than 4224 bytes from the next page boundary, signal
-delivery will fault when trying to expand the stack and the process
-will see a SEGV.
-
-The total size of the signal frame is the size of struct rt_sigframe
-(which includes the red zone) plus __SIGNAL_FRAMESIZE (128 bytes on
-64-bit).
-
-The 2048 byte allowance was correct until 2008 as the signal frame
-was:
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1440 */
-        /* --- cacheline 11 boundary (1408 bytes) was 32 bytes ago --- */
-        long unsigned int          _unused[2];           /*  1440    16 */
-        unsigned int               tramp[6];             /*  1456    24 */
-        struct siginfo *           pinfo;                /*  1480     8 */
-        void *                     puc;                  /*  1488     8 */
-        struct siginfo     info;                         /*  1496   128 */
-        /* --- cacheline 12 boundary (1536 bytes) was 88 bytes ago --- */
-        char                       abigap[288];          /*  1624   288 */
-
-        /* size: 1920, cachelines: 15, members: 7 */
-        /* padding: 8 */
-};
-
-1920 + 128 = 2048
-
-Then in commit ce48b2100785 ("powerpc: Add VSX context save/restore,
-ptrace and signal support") (Jul 2008) the signal frame expanded to
-2304 bytes:
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */	<--
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        long unsigned int          _unused[2];           /*  1696    16 */
-        unsigned int               tramp[6];             /*  1712    24 */
-        struct siginfo *           pinfo;                /*  1736     8 */
-        void *                     puc;                  /*  1744     8 */
-        struct siginfo     info;                         /*  1752   128 */
-        /* --- cacheline 14 boundary (1792 bytes) was 88 bytes ago --- */
-        char                       abigap[288];          /*  1880   288 */
-
-        /* size: 2176, cachelines: 17, members: 7 */
-        /* padding: 8 */
-};
-
-2176 + 128 = 2304
-
-At this point we should have been exposed to the bug, though as far as
-I know it was never reported. I no longer have a system old enough to
-easily test on.
-
-Then in 2010 commit 320b2b8de126 ("mm: keep a guard page below a
-grow-down stack segment") caused our stack expansion code to never
-trigger, as there was always a VMA found for a write up to PAGE_SIZE
-below r1.
-
-That meant the bug was hidden as we continued to expand the signal
-frame in commit 2b0a576d15e0 ("powerpc: Add new transactional memory
-state to the signal context") (Feb 2013):
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        struct ucontext    uc_transact;                  /*  1696  1696 */	<--
-        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
-        long unsigned int          _unused[2];           /*  3392    16 */
-        unsigned int               tramp[6];             /*  3408    24 */
-        struct siginfo *           pinfo;                /*  3432     8 */
-        void *                     puc;                  /*  3440     8 */
-        struct siginfo     info;                         /*  3448   128 */
-        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
-        char                       abigap[288];          /*  3576   288 */
-
-        /* size: 3872, cachelines: 31, members: 8 */
-        /* padding: 8 */
-        /* last cacheline: 32 bytes */
-};
-
-3872 + 128 = 4000
-
-And commit 573ebfa6601f ("powerpc: Increase stack redzone for 64-bit
-userspace to 512 bytes") (Feb 2014):
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        struct ucontext    uc_transact;                  /*  1696  1696 */
-        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
-        long unsigned int          _unused[2];           /*  3392    16 */
-        unsigned int               tramp[6];             /*  3408    24 */
-        struct siginfo *           pinfo;                /*  3432     8 */
-        void *                     puc;                  /*  3440     8 */
-        struct siginfo     info;                         /*  3448   128 */
-        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
-        char                       abigap[512];          /*  3576   512 */	<--
-
-        /* size: 4096, cachelines: 32, members: 8 */
-        /* padding: 8 */
-};
-
-4096 + 128 = 4224
-
-Then finally in 2017, commit 1be7107fbe18 ("mm: larger stack guard
-gap, between vmas") exposed us to the existing bug, because it changed
-the stack VMA to be the correct/real size, meaning our stack expansion
-code is now triggered.
-
-Fix it by increasing the allowance to 4224 bytes.
-
-Hard-coding 4224 is obviously unsafe against future expansions of the
-signal frame in the same way as the existing code. We can't easily use
-sizeof() because the signal frame structure is not in a header. We
-will either fix that, or rip out all the custom stack expansion
-checking logic entirely.
-
-Fixes: ce48b2100785 ("powerpc: Add VSX context save/restore, ptrace and signal support")
-Cc: stable@vger.kernel.org # v2.6.27+
-Reported-by: Tom Lane <tgl@sss.pgh.pa.us>
-Tested-by: Daniel Axtens <dja@axtens.net>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200724092528.1578671-2-mpe@ellerman.id.au
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/fault.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/net/sock.h |    4 ++++
+ net/compat.c       |    1 +
+ net/core/sock.c    |   21 +++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -233,6 +233,9 @@ static bool bad_kernel_fault(bool is_exe
- 	return is_exec || (address >= TASK_SIZE);
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -845,6 +845,8 @@ static inline int sk_memalloc_socks(void
+ {
+ 	return static_branch_unlikely(&memalloc_socks_key);
+ }
++
++void __receive_sock(struct file *file);
+ #else
+ 
+ static inline int sk_memalloc_socks(void)
+@@ -852,6 +854,8 @@ static inline int sk_memalloc_socks(void
+ 	return 0;
  }
  
-+// This comes from 64-bit struct rt_sigframe + __SIGNAL_FRAMESIZE
-+#define SIGFRAME_MAX_SIZE	(4096 + 128)
-+
- static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
- 				struct vm_area_struct *vma, unsigned int flags,
- 				bool *must_retry)
-@@ -240,7 +243,7 @@ static bool bad_stack_expansion(struct p
- 	/*
- 	 * N.B. The POWER/Open ABI allows programs to access up to
- 	 * 288 bytes below the stack pointer.
--	 * The kernel signal delivery code writes up to about 1.5kB
-+	 * The kernel signal delivery code writes a bit over 4KB
- 	 * below the stack pointer (r1) before decrementing it.
- 	 * The exec code can write slightly over 640kB to the stack
- 	 * before setting the user r1.  Thus we allow the stack to
-@@ -265,7 +268,7 @@ static bool bad_stack_expansion(struct p
- 		 * between the last mapped region and the stack will
- 		 * expand the stack rather than segfaulting.
- 		 */
--		if (address + 2048 >= uregs->gpr[1])
-+		if (address + SIGFRAME_MAX_SIZE >= uregs->gpr[1])
- 			return false;
++static inline void __receive_sock(struct file *file)
++{ }
+ #endif
  
- 		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
+ static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -289,6 +289,7 @@ void scm_detach_fds_compat(struct msghdr
+ 			break;
+ 		}
+ 		/* Bump the usage count and install the file. */
++		__receive_sock(fp[i]);
+ 		fd_install(new_fd, get_file(fp[i]));
+ 	}
+ 
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2636,6 +2636,27 @@ int sock_no_mmap(struct file *file, stru
+ }
+ EXPORT_SYMBOL(sock_no_mmap);
+ 
++/*
++ * When a file is received (via SCM_RIGHTS, etc), we must bump the
++ * various sock-based usage counts.
++ */
++void __receive_sock(struct file *file)
++{
++	struct socket *sock;
++	int error;
++
++	/*
++	 * The resulting value of "error" is ignored here since we only
++	 * need to take action when the file is a socket and testing
++	 * "sock" for NULL is sufficient.
++	 */
++	sock = sock_from_file(file, &error);
++	if (sock) {
++		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
++		sock_update_classid(&sock->sk->sk_cgrp_data);
++	}
++}
++
+ ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
+ {
+ 	ssize_t res;
 
 
