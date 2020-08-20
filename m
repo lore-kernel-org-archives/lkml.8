@@ -2,199 +2,179 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DE4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73C372054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="NtPHvi10"
+	by mail.kernel.org (Postfix) with ESMTP id 3F9832054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:38:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgHTQh7 (ORCPT
+        id S1729980AbgHTQie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38532 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbgHTQhx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:37:53 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DF4C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:37:53 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id bh1so1173617plb.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=j2sbZKOunUPIGK510Ugi3zbe+NKV7WregpDvTrZZO3M=;
-        b=NtPHvi10EOcyYIgrMLzQKtYZHfhYnX0kv7C1qjMsiWY7LO4GGRn2nvySgtSGevrgk/
-         S5c6Ev2gtYc8YfHMg4Uox928yUxIIbmFHum2B8DBWk3TfuqyuIrRYc+HMF/HiEtSOBAT
-         o8CRbM0AOR30tIzu3uWz2wM6nURVSMpR5Fr1c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=j2sbZKOunUPIGK510Ugi3zbe+NKV7WregpDvTrZZO3M=;
-        b=qPLpnnhTkFu/K66QAAUhUK6TTahMZAdr4mhkTd2v5K8kcjZb6WHnzWhnX6As+qstX3
-         cIXUgfXzFR7OCPG1BeOAYirgAmUcntGTCCb/8xCCbxuXAINfmaRlr9Vwq3UZwvYaBrIV
-         CfF14GaU5eGv32BLUqfwBZt2dhO8La9XbKjig5nZVUtciJ381DBjfKExkhls5l7qifX1
-         IXYtHF5MZ3T0jy8hpWGkohhsQ+m4RRrmhslYJYybeUauh+ATERMOvUO3BPCSS1w9E9rf
-         +36d+2ASMkEwmOcS+8sCEISlQ3JybRQClyuWfZ8gkrZxPYfFzDrfNfympiQ4Mi28tv+z
-         pSQQ==
-X-Gm-Message-State: AOAM532sYKeDGLPXhYd+n/oleAn0H92tA+9hSaY0HaSw92ZmlydDFQ9Z
-        lMQIRCTHDhObG6QuC2W7zlimwU+mRhcVavq7
-X-Google-Smtp-Source: ABdhPJwBUFRJHDaiJTeIfbOcXiJStO7WcAzgyrbSctsBiBcYV2vC12oTNzAL2jL5rPa0l9qO8VuT3w==
-X-Received: by 2002:a17:902:bd8d:: with SMTP id q13mr3134756pls.142.1597941472847;
-        Thu, 20 Aug 2020 09:37:52 -0700 (PDT)
-Received: from [10.136.13.65] ([192.19.228.250])
-        by smtp.gmail.com with ESMTPSA id bj18sm2619461pjb.5.2020.08.20.09.37.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 09:37:52 -0700 (PDT)
-Subject: Re: [PATCH v2 1/3] bcm-vk: add bcm_vk UAPI
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
-References: <20200806004631.8102-1-scott.branden@broadcom.com>
- <20200806004631.8102-2-scott.branden@broadcom.com>
- <20200818135313.GB495837@kroah.com>
- <8894c3c4-4d5c-cb94-bc90-a26833ebf268@broadcom.com>
- <20200818174451.GA749919@kroah.com>
- <4adbd70e-c49b-c2d4-84c7-5e910f05e449@broadcom.com>
- <20200819070044.GA1004396@kroah.com>
-From:   Scott Branden <scott.branden@broadcom.com>
-Message-ID: <fdbb7404-03c3-22b1-d409-5b6d8745ff2b@broadcom.com>
-Date:   Thu, 20 Aug 2020 09:37:46 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 12:38:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:42636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728753AbgHTQiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:38:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C367E31B;
+        Thu, 20 Aug 2020 09:38:09 -0700 (PDT)
+Received: from e119603-lin.cambridge.arm.com (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 120893F6CF;
+        Thu, 20 Aug 2020 09:38:08 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 17:38:44 +0100
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: core: add of_match_full_name boolean flag
+Message-ID: <20200820163844.GA7292@e119603-lin.cambridge.arm.com>
+References: <20200819140448.51373-1-cristian.marussi@arm.com>
+ <20200819182245.GE5441@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200819070044.GA1004396@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-CA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819182245.GE5441@sirena.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Hi Mark 
 
-On 2020-08-19 12:00 a.m., Greg Kroah-Hartman wrote:
-> On Tue, Aug 18, 2020 at 05:35:04PM -0700, Scott Branden wrote:
->>
->> On 2020-08-18 10:44 a.m., Greg Kroah-Hartman wrote:
->>> On Tue, Aug 18, 2020 at 10:23:42AM -0700, Scott Branden wrote:
->>>> Hi Greg,
->>>>
->>>> On 2020-08-18 6:53 a.m., Greg Kroah-Hartman wrote:
->>>>> On Wed, Aug 05, 2020 at 05:46:29PM -0700, Scott Branden wrote:
->>>>>> Add user space api for bcm-vk driver.
->>>>>>
->>>>>> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
->>>>>> ---
->>>>>>  include/uapi/linux/misc/bcm_vk.h | 99 ++++++++++++++++++++++++++++++++
->>>>>>  1 file changed, 99 insertions(+)
->>>>>>  create mode 100644 include/uapi/linux/misc/bcm_vk.h
->>>>>>
->>>>>> diff --git a/include/uapi/linux/misc/bcm_vk.h b/include/uapi/linux/misc/bcm_vk.h
->>>>>> new file mode 100644
->>>>>> index 000000000000..783087b7c31f
->>>>>> --- /dev/null
->>>>>> +++ b/include/uapi/linux/misc/bcm_vk.h
->>>>>> @@ -0,0 +1,99 @@
->>>>>> +/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-2-Clause) */
->>>>>> +/*
->>>>>> + * Copyright 2018-2020 Broadcom.
->>>>>> + */
->>>>>> +
->>>>>> +#ifndef __UAPI_LINUX_MISC_BCM_VK_H
->>>>>> +#define __UAPI_LINUX_MISC_BCM_VK_H
->>>>>> +
->>>>>> +#include <linux/ioctl.h>
->>>>>> +#include <linux/types.h>
->>>>>> +
->>>>>> +#define BCM_VK_MAX_FILENAME 64
->>>>>> +
->>>>>> +struct vk_image {
->>>>>> +	__u32 type; /* Type of image */
->>>>>> +#define VK_IMAGE_TYPE_BOOT1 1 /* 1st stage (load to SRAM) */
->>>>>> +#define VK_IMAGE_TYPE_BOOT2 2 /* 2nd stage (load to DDR) */
->>>>>> +	char filename[BCM_VK_MAX_FILENAME]; /* Filename of image */
->>>>>> +};
->>>>>> +
->>>>>> +struct vk_reset {
->>>>>> +	__u32 arg1;
->>>>>> +	__u32 arg2;
->>>>>> +};
->>>>>> +
->>>>>> +#define VK_MAGIC		0x5e
->>>>>> +
->>>>>> +/* Load image to Valkyrie */
->>>>>> +#define VK_IOCTL_LOAD_IMAGE	_IOW(VK_MAGIC, 0x2, struct vk_image)
->>>>>> +
->>>>>> +/* Send Reset to Valkyrie */
->>>>>> +#define VK_IOCTL_RESET		_IOW(VK_MAGIC, 0x4, struct vk_reset)
->>>>>> +
->>>>>> +/*
->>>>>> + * message block - basic unit in the message where a message's size is always
->>>>>> + *		   N x sizeof(basic_block)
->>>>>> + */
->>>>>> +struct vk_msg_blk {
->>>>>> +	__u8 function_id;
->>>>>> +#define VK_FID_TRANS_BUF	5
->>>>>> +#define VK_FID_SHUTDOWN		8
->>>>>> +	__u8 size;
->>>>>> +	__u16 trans_id; /* transport id, queue & msg_id */
->>>>>> +	__u32 context_id;
->>>>>> +	__u32 args[2];
->>>>>> +#define VK_CMD_PLANES_MASK	0x000f /* number of planes to up/download */
->>>>>> +#define VK_CMD_UPLOAD		0x0400 /* memory transfer to vk */
->>>>>> +#define VK_CMD_DOWNLOAD		0x0500 /* memory transfer from vk */
->>>>>> +#define VK_CMD_MASK		0x0f00 /* command mask */
->>>>>> +};
->>>>>> +
->>>>>> +#define VK_BAR_FWSTS			0x41c
->>>>>> +#define VK_BAR_COP_FWSTS		0x428
->>>>>> +/* VK_FWSTS definitions */
->>>>>> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
->>>>> <snip>
->>>>>
->>>>> I thought BIT() was not allowed in uapi .h files, this really works
->>>>> properly???
->>>> I did some investigation and it looks like a few other header files in include/uapi also use the BIT() macro:
->>>> include/uapi/misc/uacce/uacce.h
->>>> include/uapi/linux/psci.h
->>>> include/uapi/linux/v4l2-subdev.h
->>> Does the header install test target now fail for these?
->> I do not understand the question above.  make headers_install works.
->> But I guess the above headers would have similar issue with the BIT macro.
-> Try enabling CONFIG_UAPI_HEADER_TEST and see what happens :)
-I enabled CONFIG_UAPI_HEADER_TEST and then
-built using "make" and "make headers_install".
+thanks for the review.
 
-There didn't appear to be any issue with the BIT macro in the headers.
->
->>>> tools/include/uapi/linux/pkt_sched.h
->>> That doesn't count :)
->>>
->>>> It does look like we end up defining the BIT() macro in our user space app that includes the header file.
->>>>
->>>> So, what is the proper thing to be done?
->>>> 1) Move the BIT() macro somewhere in include/uapi and include it in the necessary header files
->>>> 2) Use the _BITUL macro in include/uapi/linux/const.h instead?
->>>> 3) something else?
->>> open-code it for now please, that's the best way as I am pretty sure we
->>> can not contaminate the global C namespace with out BIT() macro, no
->>> matter how much we would like to...
->> OK, I will open-code it instead.
-> Great!
->
-> greg k-h
+On Wed, Aug 19, 2020 at 07:22:45PM +0100, Mark Brown wrote:
+> On Wed, Aug 19, 2020 at 03:04:48PM +0100, Cristian Marussi wrote:
+> 
+> > Property 'regulator-compatible' is now deprecated (even if still widely
+> > used in the code base), and the node-name fallback works fine only as long
+> 
+> I'm seeing a very small number of DTs using it, the majority of which
+> are pretty old - the arm64 ones are just mistakes on the part of
+> reviewers.
+> 
+
+Yes indeed 'widely' was a bit of an exaggeration, what I (poorly) meant to point
+out was that beside still used is deprecated and so not a viable option to solve
+my issue.
+
+> > as the nodes are named in an unique way; if it makes sense to use a common
+> > name and identifying them using an index through a 'reg' property the
+> > standard advices to use a naming in the form <common-name>@<unit>.
+> 
+> > In this case the above matching mechanism based on the simple (common) name
+> > will fail and the only viable alternative would be to properly define the
+> > deprecrated 'regulator-compatible' property equal to the full name
+> > <common-name>@<unit>.
+> 
+> This seems like a massive jump.  You appear to be saying that the reg
+> property is unusable which doesn't seem right to me?
+> 
+
+The 'issue' I observed while working on another series was that with the
+following example DT:
+
+firmware {
+	scmi {
+		...
+		scmi_voltage: scmi_protocol@17 {
+			reg = <0x17>;
+			
+			regulators {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				regulator_scmi_discrete: regulator_scmi_discrete@0 {
+					reg = <0>;
+				};
+				
+				regulator_scmi_range: regulator_scmi_range@2 {
+					reg = <2>;
+				};
+				
+				regulator_scmi_vd3: regulator_scmi@3 {
+					reg = <3>;
+				};
+
+				regulator_scmi_vd4: regulator_scmi@4 {
+					reg = <4>;
+				};
+			};
+		};
+};
+
+and the struct regulator_desc configured roughly as:
+
+	sreg->desc.regulators_node = "regulators";
+	sreg->desc.of_match = sreg->of_node->name;    <<< This being the regulator_* nodes
+
+the regulator framework standard initialization routines were able to match univocally the
+first two regulators above (and parse autonomously the constraints without me explicitly
+calling of_get_regulator_init_data() as in a previous version of the series), but got fooled
+by the last two since the node name is the same and they differ only by the index, which in
+turn anyway seemed to me a sensible thing to be able to do when a node uses reg indexing.
+
+Note that with these SCMI regulators this .of_match configuration happens dynamically at
+run-time (as above) since it is defined by the DT and the SCMI fw platform which regulators are
+visible and defined and the common SCMI regulator driver handles them all if defined in the DT
+and known to the SCMI fw, while with the normal regulators the .of_match setup happens statically
+at compile time with macros driver by driver, since the DT defines what is present and the driver
+declares what can support.
+
+With this patch you could support both the above naming instead configuring like:
+
+	sreg->desc.regulators_node = "regulators";
+	sreg->desc.of_match_full_name = true;
+	sreg->desc.of_match = sreg->of_node->full_name;
+
+but I'm not sure that this is needed and worth the effort sincerely at this point,
+and probably makes more sense to look at this possible naming issue after I post
+the whole original series (without this patch) just to be sure I'm not getting
+something wrong somewhere else instead.
+
+> > In order to address this case without using such deprecated property,
+> > define a new boolean flag .of_match_full_name in struct regulator_desc to
+> > force the core to match against the node full-name instead.
+> 
+> I can't tell from this description what this change is intended to do,
+> and I suspect it'd be difficult for anyone trying to figure out if they
+> should use this or not.  What is a full name and what should people put
+> in there?  What would one look like for example?  I have to look at the
+> code to see that this is changing to compare against the full_name field
+> in the node and there's no kerneldoc for struct device_node.
+> 
+
+Yes I agree it is hard to understand how to use this from the commit log and if
+it is useful or not in a specific use case.
+
+> I'm also wondering why we can't just add this to the list of fallbacks
+> rather than requiring some custom per driver thing?
+> 
+
+It's an option but it would have doubled the following strncmp() if we just started
+checking against full_name every time we fail to find against name so I thought
+to make it configurable with the new of_match_full_name....but, given it is far from
+clear with this proposed patch, maybe it's better to use a default fallback as you said.
+
+> > -			name = child->name;
+> > +			name = !desc->of_match_full_name ?
+> > +				child->name : child->full_name;
+> 
+> Please write normal conditional statements for the benefits of people
+> who have to read this code, the extra ! in there isn't adding anything
+> here either.
+
+At this point I could just hold this patch and post the original series ignoring
+the above issue at first and discuss around that code if this is needed at all
+(so to have more context to discuss this), or simplify the patch as above if you
+think this fix is still worth.
+
+Regards
+
+Cristian
+
 
