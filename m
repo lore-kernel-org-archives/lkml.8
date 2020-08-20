@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC70C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED0FE2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F42B207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927528;
-	bh=n/aoNVZjfCE/diuBa2MGG510bp8Ugndra1dCjBCqQjQ=;
+	s=default; t=1597927536;
+	bh=L5/aIVK9OucMl9O80aIiHExcX4Jerz8nTzXEwXa3isY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t/wfB/SO4xVqibMHr10p0h7+OQrDG2mG8fdf9QXlEYw3O6y/FE7LsNvtvmShAivhC
-	 yKPJow7CLX8f45tiGL3CltEpw9u4KAo52oSpoJGXhW6MJEpKqyB77QrUOiaEwADMl6
-	 mvFewxyvXZzeCUI2GTOP8YL/9V42W0Cdq8VpDLDc=
+	b=evixgcjy9OJekVzIt4hp0JLIecdRck10iZc8SlaZqs+SBm6mGbJHTE8UNUsL8AsTY
+	 uClRQ4Sm9WmPT/t+bV7WvkZYLHEb9rXaYASOTp0KYUA18g10dvCbLGnmqbbP+RvAE2
+	 E2PMX5n80YDzqcYDhCxdvjg4gkz4IYwLHVmy6H9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgHTMpZ (ORCPT
+        id S1730088AbgHTMpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42314 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:45:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbgHTJpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728847AbgHTJpl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE9442173E;
-        Thu, 20 Aug 2020 09:45:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248DF22CAF;
+        Thu, 20 Aug 2020 09:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916723;
-        bh=n/aoNVZjfCE/diuBa2MGG510bp8Ugndra1dCjBCqQjQ=;
+        s=default; t=1597916726;
+        bh=L5/aIVK9OucMl9O80aIiHExcX4Jerz8nTzXEwXa3isY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kAlrIKjDSlBcgUssn/26swpfSmNuZH0+TjrztdIiojbTGtWST0jcjUBSYgosJqgH2
-         xSXgfCqt5O1g4bt7E+PospSSdflQSTJn/6Fa9Bn1VlOCxwHG9QSeabjmPm7qi0Mg/a
-         vuKtjhrN+c3J9c7ZVdtMHuaG+ZE/jDqjuWgs43D8=
+        b=insirguK5CGs4V15m5K3DM99F9wUOgwPG6oE9qz6NJ/0Tej1vutaLL2Fi6yjADwrh
+         isjmVy0CNCzFp8GYhuY4GvLwWNHmYYizbD7NpjVemHRQSrmRIm302OubeM4K4hMNjC
+         ag/w1rynotnUwAWp8jwMSW9mhUmio1kB72s0Qb1c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 024/152] btrfs: fix messages after changing compression level by remount
-Date:   Thu, 20 Aug 2020 11:19:51 +0200
-Message-Id: <20200820091554.880192147@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 025/152] btrfs: only search for left_info if there is no right_info in try_merge_free_space
+Date:   Thu, 20 Aug 2020 11:19:52 +0200
+Message-Id: <20200820091554.934269841@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -58,84 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 27942c9971cc405c60432eca9395e514a2ae9f5e upstream.
+commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
 
-Reported by Forza on IRC that remounting with compression options does
-not reflect the change in level, or at least it does not appear to do so
-according to the messages:
+In try_to_merge_free_space we attempt to find entries to the left and
+right of the entry we are adding to see if they can be merged.  We
+search for an entry past our current info (saved into right_info), and
+then if right_info exists and it has a rb_prev() we save the rb_prev()
+into left_info.
 
-  mount -o compress=zstd:1 /dev/sda /mnt
-  mount -o remount,compress=zstd:15 /mnt
+However there's a slight problem in the case that we have a right_info,
+but no entry previous to that entry.  At that point we will search for
+an entry just before the info we're attempting to insert.  This will
+simply find right_info again, and assign it to left_info, making them
+both the same pointer.
 
-does not print the change to the level to syslog:
+Now if right_info _can_ be merged with the range we're inserting, we'll
+add it to the info and free right_info.  However further down we'll
+access left_info, which was right_info, and thus get a use-after-free.
 
-  [   41.366060] BTRFS info (device vda): use zstd compression, level 1
-  [   41.368254] BTRFS info (device vda): disk space caching is enabled
-  [   41.390429] BTRFS info (device vda): disk space caching is enabled
+Fix this by only searching for the left entry if we don't find a right
+entry at all.
 
-What really happens is that the message is lost but the level is actualy
-changed.
+The CVE referenced had a specially crafted file system that could
+trigger this use-after-free. However with the tree checker improvements
+we no longer trigger the conditions for the UAF.  But the original
+conditions still apply, hence this fix.
 
-There's another weird output, if compression is reset to 'no':
-
-  [   45.413776] BTRFS info (device vda): use no compression, level 4
-
-To fix that, save the previous compression level and print the message
-in that case too and use separate message for 'no' compression.
-
-CC: stable@vger.kernel.org # 4.19+
+Reference: CVE-2019-19448
+Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ fs/btrfs/free-space-cache.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -435,6 +435,7 @@ int btrfs_parse_options(struct btrfs_fs_
- 	char *compress_type;
- 	bool compress_force = false;
- 	enum btrfs_compression_type saved_compress_type;
-+	int saved_compress_level;
- 	bool saved_compress_force;
- 	int no_compress = 0;
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -2166,7 +2166,7 @@ out:
+ static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
+ 			  struct btrfs_free_space *info, bool update_stat)
+ {
+-	struct btrfs_free_space *left_info;
++	struct btrfs_free_space *left_info = NULL;
+ 	struct btrfs_free_space *right_info;
+ 	bool merged = false;
+ 	u64 offset = info->offset;
+@@ -2181,7 +2181,7 @@ static bool try_merge_free_space(struct
+ 	if (right_info && rb_prev(&right_info->offset_index))
+ 		left_info = rb_entry(rb_prev(&right_info->offset_index),
+ 				     struct btrfs_free_space, offset_index);
+-	else
++	else if (!right_info)
+ 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
  
-@@ -517,6 +518,7 @@ int btrfs_parse_options(struct btrfs_fs_
- 				info->compress_type : BTRFS_COMPRESS_NONE;
- 			saved_compress_force =
- 				btrfs_test_opt(info, FORCE_COMPRESS);
-+			saved_compress_level = info->compress_level;
- 			if (token == Opt_compress ||
- 			    token == Opt_compress_force ||
- 			    strncmp(args[0].from, "zlib", 4) == 0) {
-@@ -561,6 +563,8 @@ int btrfs_parse_options(struct btrfs_fs_
- 				no_compress = 0;
- 			} else if (strncmp(args[0].from, "no", 2) == 0) {
- 				compress_type = "no";
-+				info->compress_level = 0;
-+				info->compress_type = 0;
- 				btrfs_clear_opt(info->mount_opt, COMPRESS);
- 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
- 				compress_force = false;
-@@ -581,11 +585,11 @@ int btrfs_parse_options(struct btrfs_fs_
- 				 */
- 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
- 			}
--			if ((btrfs_test_opt(info, COMPRESS) &&
--			     (info->compress_type != saved_compress_type ||
--			      compress_force != saved_compress_force)) ||
--			    (!btrfs_test_opt(info, COMPRESS) &&
--			     no_compress == 1)) {
-+			if (no_compress == 1) {
-+				btrfs_info(info, "use no compression");
-+			} else if ((info->compress_type != saved_compress_type) ||
-+				   (compress_force != saved_compress_force) ||
-+				   (info->compress_level != saved_compress_level)) {
- 				btrfs_info(info, "%s %s compression, level %d",
- 					   (compress_force) ? "force" : "use",
- 					   compress_type, info->compress_level);
+ 	if (right_info && !right_info->bitmap) {
 
 
