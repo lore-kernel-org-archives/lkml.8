@@ -5,51 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9783C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8B4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A90A921741
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E285208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881978;
-	bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
+	s=default; t=1597881987;
+	bh=sKzyCTVQt3yNjcURrQLuKLdMEI//B2JxQ9HvMAck5Os=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M8xwh30bdsvMe4Br4D7coVM2tnLjsXZzx52a5cfpW0zL9iw9uHYQupAXxTTIpqYaZ
-	 k+Ltz0l84fdQD/dYZrcLeTEfBF7JdFWrvh/Ey720YyyU8wUsB7e55S4AVJ/Sqlvubr
-	 B9PUMjHk8/XmVpvaOUT++vbnFbJUMD0KZW6rSK1I=
+	b=L4nIIFw/zZjXdw5D4vS64U5FxvF3zxhueAgCGbg/3lLHyZ5ajUvZHTs1HLP862rxO
+	 jLdQN7ZRtwtijVm1h4r7wLXy0hhz0Skqg8DfhqsfvK0NZdU8ndXaHTycdhr9HXDZ9J
+	 3tsTjNlLKc+QCN/cFMXr5EMqz+kVNZcaoXYKvrxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgHTAGQ (ORCPT
+        id S1728251AbgHTAG0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:06:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33900 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:06:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728226AbgHTADx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:53 -0400
+        id S1728367AbgHTADs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B867C214F1;
-        Thu, 20 Aug 2020 00:03:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00D8821744;
+        Thu, 20 Aug 2020 00:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881832;
-        bh=n1+9m2n7172uOMg3lvseFpnMd+Ks2CYysIdtH0BAK0c=;
+        s=default; t=1597881827;
+        bh=sKzyCTVQt3yNjcURrQLuKLdMEI//B2JxQ9HvMAck5Os=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Htfe4RwHbajfiq0aoogIPeyyx5EXAflkLoD6LWDspyiCXPPW76UU5Tmd4kNhW1yVe
-         0XTmgTQ8/R01LMNFeNFvwJ+JDKYeCGa6tg1GRSU3RSH3Z7TCImiWDX9LuEfGBb2oun
-         oRnF+ufW1DUAk7is3iIRZdxCQ7uDDG0V2yFfRKp8=
+        b=pyxo1btYSm/EycyPJi5NentV+zPSvSRgjCO3AJJAZ0ERXFB/Z1ThEJ8jy2E9or1TX
+         t/T3Z/tVjTsEhddVuEDvWavIShCDjdYKh65g6PvGsiLEf6A2bMSQ/bjwKvjjIOGkoA
+         970BHAXuWHQSMse6VpwfZTuk/3jAF9AZs05WzsCs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 02/11] media: budget-core: Improve exception handling in budget_register()
-Date:   Wed, 19 Aug 2020 20:03:39 -0400
-Message-Id: <20200820000348.215911-2-sashal@kernel.org>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        kernel test robot <lkp@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-alpha@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 13/13] alpha: fix annotation of io{read,write}{16,32}be()
+Date:   Wed, 19 Aug 2020 20:03:28 -0400
+Message-Id: <20200820000328.215755-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
-References: <20200820000348.215911-1-sashal@kernel.org>
+In-Reply-To: <20200820000328.215755-1-sashal@kernel.org>
+References: <20200820000328.215755-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,54 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
+[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
 
-budget_register() has no error handling after its failure.
-Add the missed undo functions for error handling to fix it.
+These accessors must be used to read/write a big-endian bus.  The value
+returned or written is native-endian.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+However, these accessors are defined using be{16,32}_to_cpu() or
+cpu_to_be{16,32}() to make the endian conversion but these expect a
+__be{16,32} when none is present.  Keeping them would need a force cast
+that would solve nothing at all.
+
+So, do the conversion using swab{16,32}, like done in asm-generic for
+similar situations.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/alpha/include/asm/io.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
-index 6d42dcfd4825b..e7bdfc4e4aa83 100644
---- a/drivers/media/pci/ttpci/budget-core.c
-+++ b/drivers/media/pci/ttpci/budget-core.c
-@@ -386,20 +386,25 @@ static int budget_register(struct budget *budget)
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	budget->mem_frontend.source = DMX_MEMORY_FE;
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
- 
- 	return 0;
-+
-+err_release_dmx:
-+	dvb_dmxdev_release(&budget->dmxdev);
-+	dvb_dmx_release(&budget->demux);
-+	return ret;
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index d123ff90f7a83..9995bed6e92e2 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -493,10 +493,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
  }
+ #endif
  
- static void budget_unregister(struct budget *budget)
+-#define ioread16be(p) be16_to_cpu(ioread16(p))
+-#define ioread32be(p) be32_to_cpu(ioread32(p))
+-#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
+-#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
++#define ioread16be(p) swab16(ioread16(p))
++#define ioread32be(p) swab32(ioread32(p))
++#define iowrite16be(v,p) iowrite16(swab16(v), (p))
++#define iowrite32be(v,p) iowrite32(swab32(v), (p))
+ 
+ #define inb_p		inb
+ #define inw_p		inw
 -- 
 2.25.1
 
