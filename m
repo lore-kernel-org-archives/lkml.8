@@ -2,120 +2,132 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F286CC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD39C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D760820758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68AB720758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hMnnSDvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725910AbgHTFFq (ORCPT
+        id S1725977AbgHTFIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:05:46 -0400
-Received: from mga05.intel.com ([192.55.52.43]:17883 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725768AbgHTFFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:05:45 -0400
-IronPort-SDR: wehtcBhL0Sbn4S/1dLRB32iaRmCMYILlCo9/+1N079sEIwpNKWeQOHp95/9fFIDMElrw+RIJL7
- hZzNFQmPkoEw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="240065053"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="240065053"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:05:45 -0700
-IronPort-SDR: OZXJvMO5PQiH3Cf2UlhbyGFZwCTjlc8v6u8s9AzvCb+Q1uF/+A1WFMIKnvpDPlYKARZ2UU4xK2
- FFp6QNT31ZVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="320731690"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
-  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 22:05:43 -0700
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Gao Xiang <hsiangkao@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
-Date:   Thu, 20 Aug 2020 13:05:42 +0800
-In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com> (Gao Xiang's message
-        of "Thu, 20 Aug 2020 12:53:23 +0800")
-Message-ID: <87wo1tx5y1.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 20 Aug 2020 01:08:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbgHTFIa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:08:30 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA3CC061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 22:08:30 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id ds1so466761pjb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 22:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Wl+znekrpMZrhKgF03OEXg1dwyzi76Esp+ribqdDlGI=;
+        b=hMnnSDvu0c3nlgbn6bO0Ai9bdqHLyURvdDarPxav6NYqulkykK7Ji7H4AIMy6wxGQ+
+         0HOumv9F4HsnLJZ9PRzXDkawxZgcJtyod6Ut6vSktmKbsB+4ZvFr7MB3ejwSXIs3gSMy
+         2Iri5tCLqYVpky2RTREaMTIvRU51Z9HoaZ8l5nJfSkLtVLDygxT2l1vhq5Jl+BtM0u+u
+         6SGBD/hlIFbPzepHk6YwLnW4en1ikPDDzUvZzE4itaCdt2avtmj69NP+1Mq5LzpLSV7h
+         gmhq8Kz+WHIRRX0l5e/jXGB5WGezJ4RgOVn1bo5bx9G7BDNSckHiKmjnPHMTkP911Xlt
+         6KsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wl+znekrpMZrhKgF03OEXg1dwyzi76Esp+ribqdDlGI=;
+        b=uKgEB/sfUXBS/iGtoihjxzvQchSLxLhaI8T+AYIJKNHSgkCnLj6QnyWgiqeHQKeSeG
+         0YfBDJH9kMYcL36pCbvDr0AzHGM3GuyBSGRjmrp43hUqswgUflfOHW4OxcWMPWnNPcig
+         Qe0ASHIrly5AyW5hZTWKEqKQwQ56CJQAxJf0kQcDt9wiJBBn261C6diXrjzD0QYwK0bY
+         40RuUL/oEGj0TOuxYGuVKDoMFV4Vfzfo5krqKxT0KQOPyYrgOruSeES0ilhSIXzdt17C
+         Zc3QwcIw7sYSoBIznAPhHoCbX5i44T2CMr73QCzjKRByNyo01QxSEjvHqjUic18Buh3a
+         4xIg==
+X-Gm-Message-State: AOAM533+O+uq01J4QfcHxz8LvmhwZ8Fn073XYj0HMZuKb2Zr6HFE4Dgk
+        OYwuHWCjpLOm+PSHrM9LLFedPIlXg0vp0fwjsziT7YR05WyGIQ==
+X-Google-Smtp-Source: ABdhPJyb/CUZZAjXRGXkCMrx3gc4Hq9Q1vCQjk897voR1EdUHjCbmr0J5pdB+Op0uCen5iCbowfdrR5sJ18YlrVhOaY=
+X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr1333959plt.21.1597900109539;
+ Wed, 19 Aug 2020 22:08:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <20200819070530.GJ18179@shao2-debian>
+In-Reply-To: <20200819070530.GJ18179@shao2-debian>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 19 Aug 2020 22:07:53 -0700
+Message-ID: <CAGETcx9mctL_51Cgq9rWQuQhPpRixfqCt8fp4jyH0MP-Eg4p=w@mail.gmail.com>
+Subject: Re: [driver core] e2ae9bcc4a: unixbench.score -2.2% regression
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, LKP <lkp@lists.01.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gao Xiang <hsiangkao@redhat.com> writes:
+On Wed, Aug 19, 2020 at 12:06 AM kernel test robot
+<rong.a.chen@intel.com> wrote:
+>
+> Greeting,
+>
+> FYI, we noticed a -2.2% regression of unixbench.score due to commit:
+>
+>
+> commit: e2ae9bcc4aaacda04edb75c4eea93384719efaa5 ("driver core: Add support for linking devices during device addition")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>
+>
+> in testcase: unixbench
+> on test machine: 96 threads Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz with 192G memory
+> with following parameters:
+>
+>         runtime: 300s
+>         nr_task: 1
+>         test: syscall
+>         cpufreq_governor: performance
+>         ucode: 0x5002f01
+>
+> test-description: UnixBench is the original BYTE UNIX benchmark suite aims to test performance of Unix-like system.
+> test-url: https://github.com/kdlucas/byte-unixbench
+>
+> In addition to that, the commit also has significant impact on the following tests:
+>
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+>
+>
+> Details are as below:
+> -------------------------------------------------------------------------------------------------->
+>
+>
+> To reproduce:
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         bin/lkp install job.yaml  # job file is attached in this email
+>         bin/lkp run     job.yaml
+>
+> =========================================================================================
+> compiler/cpufreq_governor/kconfig/nr_task/rootfs/runtime/tbox_group/test/testcase/ucode:
+>   gcc-9/performance/x86_64-rhel-8.3/1/debian-10.4-x86_64-20200603.cgz/300s/lkp-csl-2sp8/syscall/unixbench/0x5002f01
+>
+> commit:
+>   372a67c0c5 ("driver core: Add fwnode_to_dev() to look up device from fwnode")
+>   e2ae9bcc4a ("driver core: Add support for linking devices during device addition")
 
-> SWP_FS is used to make swap_{read,write}page() go through
-> the filesystem, and it's only used for swap files over
-> NFS. So, !SWP_FS means non NFS for now, it could be either
-> file backed or device backed. Something similar goes with
-> legacy SWP_FILE.
->
-> So in order to achieve the goal of the original patch,
-> SWP_BLKDEV should be used instead.
->
-> FS corruption can be observed with SSD device + XFS +
-> fragmented swapfile due to CONFIG_THP_SWAP=y.
->
-> I reproduced the issue with the following details:
->
-> Environment:
-> QEMU + upstream kernel + buildroot + NVMe (2 GB)
->
-> Kernel config:
-> CONFIG_BLK_DEV_NVME=y
-> CONFIG_THP_SWAP=y
->
-> Some reproducable steps:
-> mkfs.xfs -f /dev/nvme0n1
-> mkdir /tmp/mnt
-> mount /dev/nvme0n1 /tmp/mnt
-> bs="32k"
-> sz="1024m"    # doesn't matter too much, I also tried 16m
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
->
-> mkswap /tmp/mnt/sw
-> swapon /tmp/mnt/sw
->
-> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
->
-> Symptoms:
->  - FS corruption (e.g. checksum failure)
->  - memory corruption at: 0xd2808010
->  - segfault
->
-> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
-> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
-> Cc: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Rafael Aquini <aquini@redhat.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+I'm ignoring this report for the following reasons:
+1. These commits are almost a year old.
+2. Code added by these commits have been changed quite a bit since
+them to make them faster.
+3. And most importantly, this code is effectively a NOP in a system
+without devicetree firmware. I'm fairly certain this x86 Xeon system
+isn't running off a DT firmware :)
 
-Thanks!
-
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-
-Best Regards,
-Huang, Ying
+-Saravana
