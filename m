@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D48C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 984CEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C22B02078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:11:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 668F92078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921918;
-	bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
+	s=default; t=1597921941;
+	bh=O9Hex2PI3iQ6/NXORTRno+6ERGMI/L7zK73tXL6N1SE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CqrnO7Meq95rlIjS1IaORkxXA71io2OA9ggvgXfuNK3aLRKSVc7q/gipc/GMCbpbI
-	 eyJzJBEiw9CaOCtDXRtbRfLWzJ+8m8W0/sV223qMW+Q02x7v/PVA+r/v+MduWB72Yj
-	 nzD/IQNuusTuZAW87m0S+/zldwm/Gz9ExOHDYuMw=
+	b=KhqyY3CtkkwZkyHWH9zbOG3pn43TvKKtXGDsWxF9zMwvk+a+OR+QOAYbFm/GfKfSm
+	 faBTwcISHMEMqDEyVBW/8bTnV+9othoIrou7fsAQQFYN1DmKGJDnmGUJjAKp0GBXVr
+	 IbL3unjbdEGkklXWSWGzQ9AY7/GZuoveMLf0GrZM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgHTLL4 (ORCPT
+        id S1729900AbgHTKJo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:11:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44836 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:09:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbgHTKJt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:09:49 -0400
+        id S1730790AbgHTKJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:09:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 311D82067C;
-        Thu, 20 Aug 2020 10:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA1D20738;
+        Thu, 20 Aug 2020 10:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918188;
-        bh=wZTTDXN94OPRSyIKRJ0VX5ReB40jjaAt7edMTIPRpWg=;
+        s=default; t=1597918170;
+        bh=O9Hex2PI3iQ6/NXORTRno+6ERGMI/L7zK73tXL6N1SE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nA0K8Fk9EIpuln+2zspbL1+a1lr1qF9h67BtPRQZp3xYjFMDyDRLxqi0vn+ip5VQk
-         OwoXesc1LQ0KaYE5hkE7v6ww9C1XL1GHtvQ6AkEbBc0UBGsb2RFtbWgJP+L/JCM8pN
-         bLnVS+j/Y0YqvAmmBo5GHk+YJ9ZrhDFqIGy9UFgg=
+        b=CQuXXR5nIQ4gHJ8fdCS2z2qPmwkdzBVgS/BfDBt6kDRoeTigEXPPtAH79ctAi5aE1
+         iykb3yl9CQvW/cgC97Gc3Wotq+CfQgs5GWYOvdyhJ2Ar8Qe7H6pFzrbPu9tYIrvrbX
+         2XE6x4BPG79qgJr/LcrVGTr8ibdQanoMSBeU8nf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Danesh Petigara <danesh.petigara@broadcom.com>,
+        Al Cooper <alcooperx@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 082/228] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
-Date:   Thu, 20 Aug 2020 11:20:57 +0200
-Message-Id: <20200820091611.709021565@linuxfoundation.org>
+Subject: [PATCH 4.14 077/228] usb: bdc: Halt controller on suspend
+Date:   Thu, 20 Aug 2020 11:20:52 +0200
+Message-Id: <20200820091611.452811488@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -64,40 +63,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Danesh Petigara <danesh.petigara@broadcom.com>
 
-[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
+[ Upstream commit 5fc453d7de3d0c345812453823a3a56783c5f82c ]
 
-the sfb->fb->screen_base is not save the value get by iounmap() when
-the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
-is not right.
+GISB bus error kernel panics have been observed during S2 transition
+tests on the 7271t platform. The errors are a result of the BDC
+interrupt handler trying to access BDC register space after the
+system's suspend callbacks have completed.
 
-Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
+Adding a suspend hook to the BDC driver that halts the controller before
+S2 entry thus preventing unwanted access to the BDC register space during
+this transition.
+
+Signed-off-by: Danesh Petigara <danesh.petigara@broadcom.com>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index f1dcc6766d1ef..1781ca697f66b 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1429,6 +1429,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- static void smtc_unmap_smem(struct smtcfb_info *sfb)
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 2660cc2e42a08..58ba04d858bab 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -613,9 +613,14 @@ static int bdc_remove(struct platform_device *pdev)
+ static int bdc_suspend(struct device *dev)
  {
- 	if (sfb && sfb->fb->screen_base) {
-+		if (sfb->chip_id == 0x720)
-+			sfb->fb->screen_base -= 0x00200000;
- 		iounmap(sfb->fb->screen_base);
- 		sfb->fb->screen_base = NULL;
- 	}
+ 	struct bdc *bdc = dev_get_drvdata(dev);
++	int ret;
+ 
+-	clk_disable_unprepare(bdc->clk);
+-	return 0;
++	/* Halt the controller */
++	ret = bdc_stop(bdc);
++	if (!ret)
++		clk_disable_unprepare(bdc->clk);
++
++	return ret;
+ }
+ 
+ static int bdc_resume(struct device *dev)
 -- 
 2.25.1
 
