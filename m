@@ -2,105 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA373C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6AF020724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB3F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:47:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Nyfk+hqC"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="We3+v1Nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbgHTFry (ORCPT
+        id S1726918AbgHTFrj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:47:54 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:55879 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbgHTFrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:47:46 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597902466; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=awGFRa1c/LI9oXWKnZbTKZ4uqjnhLkrk0YY3yOEz6Wg=; b=Nyfk+hqCkeiUe1cMI29mWgP1xnzALM+SJLetcwSNH57qRGRL+7bZxbGLYxgO7chgX74rtzU0
- mRsYs72l5AZugs7jVzYUAU8w/MfnVfMu+qEXrmJSyB9SLe1PIhI8VwYTuDFgPw6jSDHCAz8k
- KjuuGnnl6/w/DfkuBN76EoVEO6A=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f3e0e82f32ee2c46a2584ce (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:47:46
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CAC97C433B1; Thu, 20 Aug 2020 05:47:44 +0000 (UTC)
-Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A7C6BC433A0;
-        Thu, 20 Aug 2020 05:47:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A7C6BC433A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
-From:   Tingwei Zhang <tingwei@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 01/24] coresight: cpu_debug: add module name in Kconfig
-Date:   Thu, 20 Aug 2020 13:46:55 +0800
-Message-Id: <20200820054718.20115-2-tingwei@codeaurora.org>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200820054718.20115-1-tingwei@codeaurora.org>
-References: <20200820054718.20115-1-tingwei@codeaurora.org>
+        Thu, 20 Aug 2020 01:47:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:35207 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726862AbgHTFra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:47:30 -0400
+X-UUID: 1cba0d79c5554c598132f0ff3e6fb5d8-20200820
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=mfOPutSE6t3EaQRTKeVOvlEGn3YWjiY/ElOxoormrZk=;
+        b=We3+v1Nvj9oN8DK3QTXuabzhb2rVYTQoIctrmpgvFv9e/LVjzNbv09IZCCcYeY0x1hDIAJOVWrh/AUB/W0IfkVGVa4Qno8+VYvVrJXOWXpJJ9cWVWfwsbembh1SZfc6DngWH9buCDXcrfIWUQCqSqp+dpnsKHyPncg0DDj5P228=;
+X-UUID: 1cba0d79c5554c598132f0ff3e6fb5d8-20200820
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 207991710; Thu, 20 Aug 2020 13:47:20 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 20 Aug 2020 13:47:18 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 20 Aug 2020 13:47:17 +0800
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <balbi@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 09/11] usb: phy: phy-mv-usb: convert to readl_poll_timeout_atomic()
+Date:   Thu, 20 Aug 2020 13:45:47 +0800
+Message-ID: <1597902349-8998-9-git-send-email-chunfeng.yun@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
+In-Reply-To: <1597902349-8998-1-git-send-email-chunfeng.yun@mediatek.com>
+References: <1597902349-8998-1-git-send-email-chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 536A387A30F093BE5F77A6E11585C2A14747E88712010E4B0B5B9729BCE4B7B72000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide name of cpu_debug module in Kconfig help section.
-
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
----
- drivers/hwtracing/coresight/Kconfig | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 02dbb5ca3bcf..4663fd1bbffc 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -110,6 +110,9 @@ config CORESIGHT_CPU_DEBUG
- 	  properly, please refer Documentation/trace/coresight/coresight-cpu-debug.rst
- 	  for detailed description and the example for usage.
- 
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called coresight-cpu-debug.
-+
- config CORESIGHT_CTI
- 	bool "CoreSight Cross Trigger Interface (CTI) driver"
- 	depends on ARM || ARM64
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+VXNlIHJlYWRsX3BvbGxfdGltZW91dF9hdG9taWMoKSB0byBzaW1wbGlmeSBjb2RlDQoNClNpZ25l
+ZC1vZmYtYnk6IENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVuQG1lZGlhdGVrLmNvbT4NCi0tLQ0K
+djI6IHVkZWxheSAxMHVzIGluc3RlYWQgb2YgMjB1cyBhY2NvcmRpbmcgdG8ga2VybmVsZG9jDQot
+LS0NCiBkcml2ZXJzL3VzYi9waHkvcGh5LW12LXVzYi5jIHwgMTYgKysrKysrKy0tLS0tLS0tLQ0K
+IDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQoNCmRpZmYg
+LS1naXQgYS9kcml2ZXJzL3VzYi9waHkvcGh5LW12LXVzYi5jIGIvZHJpdmVycy91c2IvcGh5L3Bo
+eS1tdi11c2IuYw0KaW5kZXggY2U3NjdlYy4uZTgwMTU2OSAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
+dXNiL3BoeS9waHktbXYtdXNiLmMNCisrKyBiL2RyaXZlcnMvdXNiL3BoeS9waHktbXYtdXNiLmMN
+CkBAIC04LDYgKzgsNyBAQA0KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCiAjaW5jbHVkZSA8
+bGludXgva2VybmVsLmg+DQogI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQorI2luY2x1ZGUgPGxpbnV4
+L2lvcG9sbC5oPg0KICNpbmNsdWRlIDxsaW51eC91YWNjZXNzLmg+DQogI2luY2x1ZGUgPGxpbnV4
+L2RldmljZS5oPg0KICNpbmNsdWRlIDxsaW51eC9wcm9jX2ZzLmg+DQpAQCAtMTM1LDggKzEzNiw4
+IEBAIHN0YXRpYyBpbnQgbXZfb3RnX3NldF90aW1lcihzdHJ1Y3QgbXZfb3RnICptdm90ZywgdW5z
+aWduZWQgaW50IGlkLA0KIA0KIHN0YXRpYyBpbnQgbXZfb3RnX3Jlc2V0KHN0cnVjdCBtdl9vdGcg
+Km12b3RnKQ0KIHsNCi0JdW5zaWduZWQgaW50IGxvb3BzOw0KIAl1MzIgdG1wOw0KKwlpbnQgcmV0
+Ow0KIA0KIAkvKiBTdG9wIHRoZSBjb250cm9sbGVyICovDQogCXRtcCA9IHJlYWRsKCZtdm90Zy0+
+b3BfcmVncy0+dXNiY21kKTsNCkBAIC0xNDYsMTUgKzE0NywxMiBAQCBzdGF0aWMgaW50IG12X290
+Z19yZXNldChzdHJ1Y3QgbXZfb3RnICptdm90ZykNCiAJLyogUmVzZXQgdGhlIGNvbnRyb2xsZXIg
+dG8gZ2V0IGRlZmF1bHQgdmFsdWVzICovDQogCXdyaXRlbChVU0JDTURfQ1RSTF9SRVNFVCwgJm12
+b3RnLT5vcF9yZWdzLT51c2JjbWQpOw0KIA0KLQlsb29wcyA9IDUwMDsNCi0Jd2hpbGUgKHJlYWRs
+KCZtdm90Zy0+b3BfcmVncy0+dXNiY21kKSAmIFVTQkNNRF9DVFJMX1JFU0VUKSB7DQotCQlpZiAo
+bG9vcHMgPT0gMCkgew0KLQkJCWRldl9lcnIoJm12b3RnLT5wZGV2LT5kZXYsDQorCXJldCA9IHJl
+YWRsX3BvbGxfdGltZW91dF9hdG9taWMoJm12b3RnLT5vcF9yZWdzLT51c2JjbWQsIHRtcCwNCisJ
+CQkJKHRtcCAmIFVTQkNNRF9DVFJMX1JFU0VUKSwgMTAsIDEwMDAwKTsNCisJaWYgKHJldCA8IDAp
+IHsNCisJCWRldl9lcnIoJm12b3RnLT5wZGV2LT5kZXYsDQogCQkJCSJXYWl0IGZvciBSRVNFVCBj
+b21wbGV0ZWQgVElNRU9VVFxuIik7DQotCQkJcmV0dXJuIC1FVElNRURPVVQ7DQotCQl9DQotCQls
+b29wcy0tOw0KLQkJdWRlbGF5KDIwKTsNCisJCXJldHVybiByZXQ7DQogCX0NCiANCiAJd3JpdGVs
+KDB4MCwgJm12b3RnLT5vcF9yZWdzLT51c2JpbnRyKTsNCi0tIA0KMS45LjENCg==
 
