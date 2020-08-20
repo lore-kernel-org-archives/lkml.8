@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF22C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B49C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F4A22CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8E722CF8
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924632;
-	bh=LAo3eUTJ8Bt40oLpcmUz9zx4hJiT9FLsAnd1QJarXcM=;
+	s=default; t=1597924639;
+	bh=1RQboElryscxaZVY3rCkjmLS/FTmACys91c/rUfHpoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0R6BAJ7AYUydEkRpkOsz/u3n8DxEsLshr8dairUPIBXnFBwedcD+qgEOTnb6JDPH
-	 zcLFJDrDt2on5ELY1nK/vA7EBYsuiBjJS3u/obLq9omW57rlB4aOfV8J0TBxXYVCm+
-	 NLfzvftJ45Cj63JzAlLOQ7zZvaqBftBOyuWYuIoA=
+	b=TDVdObWqwyKuUGyPJfVNXHpyXE0+JiWTv5Z0yqbOlu44Mp2QvN/FgvStfQHCN3ZdC
+	 XCwZHPS3sLoxvr2o7pbUx4nrAQAR0X2ZK+iEXXMyPBg5ZyulFNSEzsnIRpM8TUKF4j
+	 gC473nNfvjXXE2nO7yGYNDmNTp0DZkNb9DqE/vcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbgHTL5K (ORCPT
+        id S1729821AbgHTL46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:57:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:56:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbgHTKA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:59 -0400
+        id S1730484AbgHTKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 034C122B40;
-        Thu, 20 Aug 2020 10:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B022B22B43;
+        Thu, 20 Aug 2020 10:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917658;
-        bh=LAo3eUTJ8Bt40oLpcmUz9zx4hJiT9FLsAnd1QJarXcM=;
+        s=default; t=1597917669;
+        bh=1RQboElryscxaZVY3rCkjmLS/FTmACys91c/rUfHpoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xuIsCzGU5URhu7OHbLYMmGY9ycj0gpiZthR9gttwMxBdCEElccfowPQ5ONAXf9owe
-         /g1uPfYPoFCTs2T+yrU6sFOEuHeQYVv35RFXm3xA8N1GVVOUcpcFYuBr5/8Eb3EPhi
-         WHggG9EadxBnUsIIoXvadQXetM0YRpyUBh1fR0iY=
+        b=C9kvaQrLAFNKeA/A0BJVwptmF5j6ehVE8YKE03N9w+aoQOi5rhlaYJXnbm8km0rAQ
+         fK1jjoMo221dwrmGL+bThEqo5v8QNNAa74SIZpRfphzd49LoMRZJudujLjo3RkysQA
+         4lhDpfjcyQZiotHe2LcqInCu8nmVM4dJy0MD/qEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
-        Matt Ranostay <matt.ranostay@konsulko.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        stable@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 111/212] iio: improve IIO_CONCENTRATION channel type description
-Date:   Thu, 20 Aug 2020 11:21:24 +0200
-Message-Id: <20200820091607.951901676@linuxfoundation.org>
+Subject: [PATCH 4.9 115/212] drm/mipi: use dcs write for mipi_dsi_dcs_set_tear_scanline
+Date:   Thu, 20 Aug 2020 11:21:28 +0200
+Message-Id: <20200820091608.158286369@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,41 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+From: Emil Velikov <emil.velikov@collabora.com>
 
-[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
+[ Upstream commit 7a05c3b6d24b8460b3cec436cf1d33fac43c8450 ]
 
-IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
-raw concentrations of pollutants. Raw value should be meaningless
-before being properly scaled. Because of that description shouldn't
-mention raw value unit whatsoever.
+The helper uses the MIPI_DCS_SET_TEAR_SCANLINE, although it's currently
+using the generic write. This does not look right.
 
-Fix this by rephrasing existing description so it follows conventions
-used throughout IIO ABI docs.
+Perhaps some platforms don't distinguish between the two writers?
 
-Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
-Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
-Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Robert Chiras <robert.chiras@nxp.com>
+Cc: Vinay Simha BN <simhavcs@gmail.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Fixes: e83950816367 ("drm/dsi: Implement set tear scanline")
+Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200505160329.2976059-3-emil.l.velikov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_mipi_dsi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
-index 0406076e44059..743ffbcc6b5f0 100644
---- a/Documentation/ABI/testing/sysfs-bus-iio
-+++ b/Documentation/ABI/testing/sysfs-bus-iio
-@@ -1491,7 +1491,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
- KernelVersion:	4.3
- Contact:	linux-iio@vger.kernel.org
- Description:
--		Raw (unscaled no offset etc.) percentage reading of a substance.
-+		Raw (unscaled no offset etc.) reading of a substance. Units
-+		after application of scale and offset are percents.
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 1160a579e0dc0..99415808e9f91 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -1029,11 +1029,11 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_pixel_format);
+  */
+ int mipi_dsi_dcs_set_tear_scanline(struct mipi_dsi_device *dsi, u16 scanline)
+ {
+-	u8 payload[3] = { MIPI_DCS_SET_TEAR_SCANLINE, scanline >> 8,
+-			  scanline & 0xff };
++	u8 payload[2] = { scanline >> 8, scanline & 0xff };
+ 	ssize_t err;
  
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
- What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
+-	err = mipi_dsi_generic_write(dsi, payload, sizeof(payload));
++	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_SCANLINE, payload,
++				 sizeof(payload));
+ 	if (err < 0)
+ 		return err;
+ 
 -- 
 2.25.1
 
