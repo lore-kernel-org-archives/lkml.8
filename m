@@ -7,47 +7,70 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA46EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD15FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33E8207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A770E207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927073;
-	bh=ZCIaIKK+Z3e8lovzmRzIhNjqbW5hwoLUWSXfDgGyKBk=;
+	s=default; t=1597927078;
+	bh=rn+mRAUbQfU39heNWrpzHI1QdsejG3kZgRmgd5msWDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iz1O9TXXG7LtxXf4Vr+PLX/kyZMOYKv0SL8L7G/P27TZ9uzTaPt2mWW23rQd0sUMw
-	 hwXH7Y7lpGEM2ZFCmTUmsIabuDgBOzweLFZD7+O1+LD+q3nt5iGjJE+Jc5k/K7GwCI
-	 YWpAtiO9owdXCBjxRJv1dzDdKPvgSjO9gFApVWM4=
+	b=FkUXGAszaQGZuh9pXle1Ww9GBqAF/MS/vF/9zRNIVWThxatK/7yns5Pv0QL+s+YtN
+	 Ny0TB8EOgVLRPevo4Jxr1PeDhewS2ZqKFJrPfyIujFwLbEKylL7R0phiAWOLP0vP/r
+	 uwG8Re4sPi0BrVvxR9Jl9bwmTMWXwkdBg3Ap2UNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgHTMhw (ORCPT
+        id S1729419AbgHTJrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51134 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729439AbgHTJrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:25 -0400
+        id S1729368AbgHTJqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9327322B43;
-        Thu, 20 Aug 2020 09:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40DEC20724;
+        Thu, 20 Aug 2020 09:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916845;
-        bh=ZCIaIKK+Z3e8lovzmRzIhNjqbW5hwoLUWSXfDgGyKBk=;
+        s=default; t=1597916814;
+        bh=rn+mRAUbQfU39heNWrpzHI1QdsejG3kZgRmgd5msWDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S7oMXOBuqA28TWrlo5UFOwQrGufdXPZs5GOnw4j0NGKjMoc8IQQgw3EsJ5ZClYWHd
-         oAREbGZYJgARpo023WvxPUdxFQnlL88wPFTksTuiHvindhtGzmE4S0IwHM526yVd4j
-         C3GfedXLXp3cddE+pFydPUV4kPgx4m0FxUjOLNsc=
+        b=Rq4a9bsXOTDhuye77SpSrvkW5LRTeL8YKbd5P3wa43l2OicCZ0d+K/x1wH4EQ4XYn
+         9xcYwFzlSKzsSPrFmq0TyPIroexx6Kp8rIWpS43KNaLiWEPQ2V24KNs98WScfKGvth
+         QAMzkdxC9isxPEp89tq5DyPKWl/BiMyykEy1V3VQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Patrick Donnelly <pdonnell@redhat.com>
-Subject: [PATCH 5.4 066/152] ceph: handle zero-length feature mask in session messages
-Date:   Thu, 20 Aug 2020 11:20:33 +0200
-Message-Id: <20200820091557.110918167@linuxfoundation.org>
+        stable@vger.kernel.org, Jia He <justin.he@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, Baoquan He <bhe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Kaly Xin <Kaly.Xin@arm.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rich Felker <dalias@libc.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 056/152] mm/memory_hotplug: fix unpaired mem_hotplug_begin/done
+Date:   Thu, 20 Aug 2020 11:20:23 +0200
+Message-Id: <20200820091556.591399331@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,47 +83,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Jia He <justin.he@arm.com>
 
-commit 02e37571f9e79022498fd0525c073b07e9d9ac69 upstream.
+commit b4223a510e2ab1bf0f971d50af7c1431014b25ad upstream.
 
-Most session messages contain a feature mask, but the MDS will
-routinely send a REJECT message with one that is zero-length.
+When check_memblock_offlined_cb() returns failed rc(e.g. the memblock is
+online at that time), mem_hotplug_begin/done is unpaired in such case.
 
-Commit 0fa8263367db ("ceph: fix endianness bug when handling MDS
-session feature bits") fixed the decoding of the feature mask,
-but failed to account for the MDS sending a zero-length feature
-mask. This causes REJECT message decoding to fail.
+Therefore a warning:
+ Call Trace:
+  percpu_up_write+0x33/0x40
+  try_remove_memory+0x66/0x120
+  ? _cond_resched+0x19/0x30
+  remove_memory+0x2b/0x40
+  dev_dax_kmem_remove+0x36/0x72 [kmem]
+  device_release_driver_internal+0xf0/0x1c0
+  device_release_driver+0x12/0x20
+  bus_remove_device+0xe1/0x150
+  device_del+0x17b/0x3e0
+  unregister_dev_dax+0x29/0x60
+  devm_action_release+0x15/0x20
+  release_nodes+0x19a/0x1e0
+  devres_release_all+0x3f/0x50
+  device_release_driver_internal+0x100/0x1c0
+  driver_detach+0x4c/0x8f
+  bus_remove_driver+0x5c/0xd0
+  driver_unregister+0x31/0x50
+  dax_pmem_exit+0x10/0xfe0 [dax_pmem]
 
-Skip trying to decode a feature mask if the word count is zero.
-
-Cc: stable@vger.kernel.org
-URL: https://tracker.ceph.com/issues/46823
-Fixes: 0fa8263367db ("ceph: fix endianness bug when handling MDS session feature bits")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Tested-by: Patrick Donnelly <pdonnell@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Fixes: f1037ec0cc8a ("mm/memory_hotplug: fix remove_memory() lockdep splat")
+Signed-off-by: Jia He <justin.he@arm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Dan Williams <dan.j.williams@intel.com>
+Cc: <stable@vger.kernel.org>	[5.6+]
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Chuhong Yuan <hslester96@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Kaly Xin <Kaly.Xin@arm.com>
+Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rich Felker <dalias@libc.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Link: http://lkml.kernel.org/r/20200710031619.18762-3-justin.he@arm.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/memory_hotplug.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3091,8 +3091,10 @@ static void handle_session(struct ceph_m
- 			goto bad;
- 		/* version >= 3, feature bits */
- 		ceph_decode_32_safe(&p, end, len, bad);
--		ceph_decode_64_safe(&p, end, features, bad);
--		p += len - sizeof(features);
-+		if (len) {
-+			ceph_decode_64_safe(&p, end, features, bad);
-+			p += len - sizeof(features);
-+		}
- 	}
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1751,7 +1751,7 @@ static int __ref try_remove_memory(int n
+ 	 */
+ 	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
+ 	if (rc)
+-		goto done;
++		return rc;
  
- 	mutex_lock(&mdsc->mutex);
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+@@ -1771,9 +1771,8 @@ static int __ref try_remove_memory(int n
+ 
+ 	try_offline_node(nid);
+ 
+-done:
+ 	mem_hotplug_done();
+-	return rc;
++	return 0;
+ }
+ 
+ /**
 
 
