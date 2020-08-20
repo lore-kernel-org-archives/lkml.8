@@ -2,51 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EC7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0FA2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E0D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926562;
-	bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
+	s=default; t=1597926564;
+	bh=EqK1nmioHLRXP/FPoASKUhIIOzl5voHdIypZ8eFMvrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNBhHVs9ik7yV2y9gFg11kVE48vAyHzSX7q+HlYdrQmTBr/uAdUi2oh1f7Ln6kqZ5
-	 gPp1C2MAcU2hcFFuXiC3RSHFLUgeeimVFfOW0SJi4O8qW1WUkL2yYSI+6R8/m68cMF
-	 0FHx6o7fDiH+YU1wsnOd9Ku2j59CoPNwGM/CCOaQ=
+	b=164/MQuf722Ba1aa5dsJKmF8v9N/zDxIp4r0WUhJAPtAH0ugc0xTu04/IY0uBkYh2
+	 DgZ9SWYU5i3Jua+p2N8iUVU7wtFAXuzdELaa8EOSe50wQZeRdSDAiENjgt/XcB5aHw
+	 XlwV8DbkYXpxWBoXeC2pnaJ5CWEdlycr/JFkXdUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgHTJvj (ORCPT
+        id S1729604AbgHTJvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:51:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60144 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:51:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729795AbgHTJvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:17 -0400
+        id S1729789AbgHTJvJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2852067C;
-        Thu, 20 Aug 2020 09:51:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49B3F2067C;
+        Thu, 20 Aug 2020 09:51:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917076;
-        bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
+        s=default; t=1597917068;
+        bh=EqK1nmioHLRXP/FPoASKUhIIOzl5voHdIypZ8eFMvrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DAXifZWN/ui39O7rLZtehbBg7cTCZB4suqdpzSw+K6CkzedIInkei1xmlRCm3wjKa
-         DPIWL5MQInnSwbAMToH63WExv5tg35nK+N3ixqMehf4hARIxs7vcJ1d5RDiqMa7Zzr
-         73XLR3StS26fY5nfzZUR+69RCbpqSuMu/zs8z7rI=
+        b=TbcolSkwpipLw2o0k6w/qTEMtslLWpTCdDAWcg8ZmXRyswTo8sPEnofQg+Gqi2hnx
+         7Ghj724wdI/c150vSnW4e3IISCrw7VtkPpHDmsoCI0MYyp4c7RwQPRzV+5pvfXGgFC
+         81SoebcTeZIW+wGj1csTmeMjR8SYipl1SMcQtLlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marius Iacob <themariusus@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: [PATCH 5.4 149/152] drm: Added orientation quirk for ASUS tablet model T103HAF
-Date:   Thu, 20 Aug 2020 11:21:56 +0200
-Message-Id: <20200820091601.454836276@linuxfoundation.org>
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 116/152] ubifs: Fix wrong orphan node deletion in ubifs_jnl_update|rename
+Date:   Thu, 20 Aug 2020 11:21:23 +0200
+Message-Id: <20200820091559.703357874@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,34 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marius Iacob <themariusus@gmail.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-commit b5ac98cbb8e5e30c34ebc837d1e5a3982d2b5f5c upstream.
+[ Upstream commit 094b6d1295474f338201b846a1f15e72eb0b12cf ]
 
-Signed-off-by: Marius Iacob <themariusus@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200801123445.1514567-1-themariusus@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+There a wrong orphan node deleting in error handling path in
+ubifs_jnl_update() and ubifs_jnl_rename(), which may cause
+following error msg:
 
+  UBIFS error (ubi0:0 pid 1522): ubifs_delete_orphan [ubifs]:
+  missing orphan ino 65
+
+Fix this by checking whether the node has been operated for
+adding to orphan list before being deleted,
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Fixes: 823838a486888cf484e ("ubifs: Add hashes to the tree node cache")
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/ubifs/journal.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -121,6 +121,12 @@ static const struct dmi_system_id orient
- 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T101HA"),
- 		},
- 		.driver_data = (void *)&lcd800x1280_rightside_up,
-+	}, {	/* Asus T103HAF */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T103HAF"),
-+		},
-+		.driver_data = (void *)&lcd800x1280_rightside_up,
- 	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
- 		.matches = {
- 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
+diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+index 826dad0243dcc..a6ae2428e4c96 100644
+--- a/fs/ubifs/journal.c
++++ b/fs/ubifs/journal.c
+@@ -539,7 +539,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+ 		     const struct fscrypt_name *nm, const struct inode *inode,
+ 		     int deletion, int xent)
+ {
+-	int err, dlen, ilen, len, lnum, ino_offs, dent_offs;
++	int err, dlen, ilen, len, lnum, ino_offs, dent_offs, orphan_added = 0;
+ 	int aligned_dlen, aligned_ilen, sync = IS_DIRSYNC(dir);
+ 	int last_reference = !!(deletion && inode->i_nlink == 0);
+ 	struct ubifs_inode *ui = ubifs_inode(inode);
+@@ -630,6 +630,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+ 			goto out_finish;
+ 		}
+ 		ui->del_cmtno = c->cmt_no;
++		orphan_added = 1;
+ 	}
+ 
+ 	err = write_head(c, BASEHD, dent, len, &lnum, &dent_offs, sync);
+@@ -702,7 +703,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
+ 	kfree(dent);
+ out_ro:
+ 	ubifs_ro_mode(c, err);
+-	if (last_reference)
++	if (orphan_added)
+ 		ubifs_delete_orphan(c, inode->i_ino);
+ 	finish_reservation(c);
+ 	return err;
+@@ -1217,7 +1218,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
+ 	void *p;
+ 	union ubifs_key key;
+ 	struct ubifs_dent_node *dent, *dent2;
+-	int err, dlen1, dlen2, ilen, lnum, offs, len;
++	int err, dlen1, dlen2, ilen, lnum, offs, len, orphan_added = 0;
+ 	int aligned_dlen1, aligned_dlen2, plen = UBIFS_INO_NODE_SZ;
+ 	int last_reference = !!(new_inode && new_inode->i_nlink == 0);
+ 	int move = (old_dir != new_dir);
+@@ -1333,6 +1334,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
+ 			goto out_finish;
+ 		}
+ 		new_ui->del_cmtno = c->cmt_no;
++		orphan_added = 1;
+ 	}
+ 
+ 	err = write_head(c, BASEHD, dent, len, &lnum, &offs, sync);
+@@ -1414,7 +1416,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
+ 	release_head(c, BASEHD);
+ out_ro:
+ 	ubifs_ro_mode(c, err);
+-	if (last_reference)
++	if (orphan_added)
+ 		ubifs_delete_orphan(c, new_inode->i_ino);
+ out_finish:
+ 	finish_reservation(c);
+-- 
+2.25.1
+
 
 
