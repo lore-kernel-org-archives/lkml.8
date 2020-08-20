@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F63C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D531C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 658932078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF5C2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917239;
-	bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+	s=default; t=1597917243;
+	bh=crriVwRzruW/S6F9UNpL/puyd/CplqrZrX/VuKY9V9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ko4rKvF5CvEolQeB+u1l0cWqQRhrccz7TEcCLQCJBCWANhAPyr2dDnXoHNLgIoUH4
-	 Cm+D2vqlJ4RNilkCZ/wUyTMZEaT+ZLpbWxCZ56aRJ6F/JJdk4hnIgdwRv9dlCGXqvd
-	 EAzyp4sarkgXo2IQFwncURGUCrUS2XMq0na7GxPU=
+	b=1Hua+5JqmjMN68xDAavTM2TEoC2EYYvhJ+wB+4NoRKMA4qs63AqLPNrFX6EHVRLKr
+	 EVxAzyl7j04p5DFzXI3YK/AUET3lSChYlNcMf+5G7WBA22TlpfoKainNlC+aqCBEvT
+	 VZiHp8HmjAnWGpuzNHYNWhl71KzJwsWODHHdB4IM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgHTJx5 (ORCPT
+        id S1729458AbgHTJyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:53:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbgHTJxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:49 -0400
+        id S1730085AbgHTJx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295F12067C;
-        Thu, 20 Aug 2020 09:53:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134B72067C;
+        Thu, 20 Aug 2020 09:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917227;
-        bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+        s=default; t=1597917236;
+        bh=crriVwRzruW/S6F9UNpL/puyd/CplqrZrX/VuKY9V9w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRRrb8zr/3sCzTA/5YoqZpiB7zbYb2s6p6WZ4Ko26/gkn26L9yTNqjhEb/0DAG+vQ
-         22/3YhMLUDlye4CTRCAcBszq9N8+xZ8OKCRbuU2fcjoFOpIYWwBKWC0B/JZF5C/kdt
-         asSMhXMqGGvbOoz6U/Ys+7XRgzDk8J0PBL+23lOY=
+        b=mJdW9Q3mXSRC/5/I3iFxCIrZmeLnsFCqJkkDS9UCdNuHfFFUOU9dQH3cQ3Yxd9sda
+         rbvHuqhk/y4vvOCCFMkC/xw+z01IdfleV0zJ+MKeU8HPTxcdTL3XVd3ZF+DhWtJV4y
+         dUQNxi0lxTnyHEO5mmdIq6ykcCzypKOfLEA0hR8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Christian Eggers <ceggers@arri.de>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.19 18/92] dt-bindings: iio: io-channel-mux: Fix compatible string in example code
-Date:   Thu, 20 Aug 2020 11:21:03 +0200
-Message-Id: <20200820091538.504723836@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 11/92] btrfs: ref-verify: fix memory leak in add_block_entry
+Date:   Thu, 20 Aug 2020 11:20:56 +0200
+Message-Id: <20200820091538.100290697@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,34 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Eggers <ceggers@arri.de>
+From: Tom Rix <trix@redhat.com>
 
-commit add48ba425192c6e04ce70549129cacd01e2a09e upstream.
+commit d60ba8de1164e1b42e296ff270c622a070ef8fe7 upstream.
 
-The correct compatible string is "gpio-mux" (see
-bindings/mux/gpio-mux.txt).
+clang static analysis flags this error
 
-Cc: stable@vger.kernel.org # v4.13+
-Reviewed-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-Link: https://lore.kernel.org/r/20200727101605.24384-1-ceggers@arri.de
-Signed-off-by: Rob Herring <robh@kernel.org>
+fs/btrfs/ref-verify.c:290:3: warning: Potential leak of memory pointed to by 're' [unix.Malloc]
+                kfree(be);
+                ^~~~~
+
+The problem is in this block of code:
+
+	if (root_objectid) {
+		struct root_entry *exist_re;
+
+		exist_re = insert_root_entry(&exist->roots, re);
+		if (exist_re)
+			kfree(re);
+	}
+
+There is no 'else' block freeing when root_objectid is 0. Add the
+missing kfree to the else branch.
+
+Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/ref-verify.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-+++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-@@ -21,7 +21,7 @@ controller state. The mux controller sta
- 
- Example:
- 	mux: mux-controller {
--		compatible = "mux-gpio";
-+		compatible = "gpio-mux";
- 		#mux-control-cells = <0>;
- 
- 		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+--- a/fs/btrfs/ref-verify.c
++++ b/fs/btrfs/ref-verify.c
+@@ -297,6 +297,8 @@ static struct block_entry *add_block_ent
+ 			exist_re = insert_root_entry(&exist->roots, re);
+ 			if (exist_re)
+ 				kfree(re);
++		} else {
++			kfree(re);
+ 		}
+ 		kfree(be);
+ 		return exist;
 
 
