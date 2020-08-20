@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62576C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5874521744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36AC322D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:29:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915749;
-	bh=38NG1pLsR1xbT2PYTatK5byj3+e/BDO/FjEFfRGY0Zg=;
+	s=default; t=1597915757;
+	bh=kWnBaufKUqvCtbG/HZ7TugvbLVyRRBhbOYdabkB1sKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNLjxN4oHK/t4o+GFvOKlrzIdBX5lXPNtGJU+Xdu3fgmgClIP81riE1ZBTW4Y+Pu3
-	 fti5sQ+t8xk5X39wpZVbwyEgrzh10yFZrSq9nuq8dhL+37u+0Eqm+2OZK1V/7Bo3BZ
-	 PJ/bqKQn2FFSWP/n2hBDxA4VWjXF9AqUQsBQtgvw=
+	b=B8+/KC1eMJgcwTu556aXJBnWvL3g0WRBBixkzszgkRW5rSpARZ303Q/8Z7GwC3jyP
+	 /fGZ0I18C4XuzGNEfJWBRzOpGeeyb4V/MNsY1iqms5uDWX5KNAgoJKlcLMLt2Z+W8Y
+	 flpnpD3H+HcbefotUu8iLfZc1kw8oYRiZ7y0IhIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgHTJ3H (ORCPT
+        id S1728052AbgHTJ3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37768 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728017AbgHTJ15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:57 -0400
+        id S1727075AbgHTJ2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F22E22D2B;
-        Thu, 20 Aug 2020 09:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DE6421744;
+        Thu, 20 Aug 2020 09:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915677;
-        bh=38NG1pLsR1xbT2PYTatK5byj3+e/BDO/FjEFfRGY0Zg=;
+        s=default; t=1597915706;
+        bh=kWnBaufKUqvCtbG/HZ7TugvbLVyRRBhbOYdabkB1sKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ku5VpqWhEGKChEvsB7DRQYTc4gutAWsDoZNVifKOOZCNScYugEQ4t9ibYRpVCmAHr
-         VBs2C8V75cOkDykobbpxKEPcc05UVh+VhdOrrW6qw8ALf4S+qkXZLC4ueinEBHUuOL
-         5OmtyMJVcoI3GZm9nQdEwD9yJKpKohWZeQt8mKXY=
+        b=e6TjaJO7PHpmagGMuHiTwW+I8bT9IWd6LeAuPmuNPpALs3yxKH2dolbdB8ujjPqRl
+         uXfiFvFsb/Q/UhUMXwSiNexgQAkzrSrlj0jk77ExVJ/yLrbLd5CGDBlLMrl5sf1Csh
+         1eXIXMp0NiLddCuGb/xcW5sCiU3yqKlwzKXQlB04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Ken Raeburn <raeburn@redhat.com>
-Subject: [PATCH 5.8 067/232] bcache: avoid nr_stripes overflow in bcache_device_init()
-Date:   Thu, 20 Aug 2020 11:18:38 +0200
-Message-Id: <20200820091616.044644356@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.8 107/232] gfs2: Never call gfs2_block_zero_range with an open transaction
+Date:   Thu, 20 Aug 2020 11:19:18 +0200
+Message-Id: <20200820091618.004892206@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,58 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Bob Peterson <rpeterso@redhat.com>
 
-commit 65f0f017e7be8c70330372df23bcb2a407ecf02d upstream.
+commit 70499cdfeb3625c87eebe4f7a7ea06fa7447e5df upstream.
 
-For some block devices which large capacity (e.g. 8TB) but small io_opt
-size (e.g. 8 sectors), in bcache_device_init() the stripes number calcu-
-lated by,
-	DIV_ROUND_UP_ULL(sectors, d->stripe_size);
-might be overflow to the unsigned int bcache_device->nr_stripes.
+Before this patch, some functions started transactions then they called
+gfs2_block_zero_range. However, gfs2_block_zero_range, like writes, can
+start transactions, which results in a recursive transaction error.
+For example:
 
-This patch uses the uint64_t variable to store DIV_ROUND_UP_ULL()
-and after the value is checked to be available in unsigned int range,
-sets it to bache_device->nr_stripes. Then the overflow is avoided.
+do_shrink
+   trunc_start
+      gfs2_trans_begin <------------------------------------------------
+         gfs2_block_zero_range
+            iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
+               iomap_apply ... iomap_zero_range_actor
+                  iomap_begin
+                     gfs2_iomap_begin
+                        gfs2_iomap_begin_write
+                  actor (iomap_zero_range_actor)
+		     iomap_zero
+			iomap_write_begin
+			   gfs2_iomap_page_prepare
+			      gfs2_trans_begin <------------------------
 
-Reported-and-tested-by: Ken Raeburn <raeburn@redhat.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+This patch reorders the callers of gfs2_block_zero_range so that they
+only start their transactions after the call. It also adds a BUG_ON to
+ensure this doesn't happen again.
+
+Fixes: 2257e468a63b ("gfs2: implement gfs2_block_zero_range using iomap_zero_range")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/super.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ fs/gfs2/bmap.c |   69 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 39 insertions(+), 30 deletions(-)
 
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -826,19 +826,19 @@ static int bcache_device_init(struct bca
- 	struct request_queue *q;
- 	const size_t max_stripes = min_t(size_t, INT_MAX,
- 					 SIZE_MAX / sizeof(atomic_t));
--	size_t n;
-+	uint64_t n;
- 	int idx;
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1351,9 +1351,15 @@ int gfs2_extent_map(struct inode *inode,
+ 	return ret;
+ }
  
- 	if (!d->stripe_size)
- 		d->stripe_size = 1 << 31;
++/*
++ * NOTE: Never call gfs2_block_zero_range with an open transaction because it
++ * uses iomap write to perform its actions, which begin their own transactions
++ * (iomap_begin, page_prepare, etc.)
++ */
+ static int gfs2_block_zero_range(struct inode *inode, loff_t from,
+ 				 unsigned int length)
+ {
++	BUG_ON(current->journal_info);
+ 	return iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
+ }
  
--	d->nr_stripes = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
+@@ -1414,6 +1420,16 @@ static int trunc_start(struct inode *ino
+ 	u64 oldsize = inode->i_size;
+ 	int error;
+ 
++	if (!gfs2_is_stuffed(ip)) {
++		unsigned int blocksize = i_blocksize(inode);
++		unsigned int offs = newsize & (blocksize - 1);
++		if (offs) {
++			error = gfs2_block_zero_range(inode, newsize,
++						      blocksize - offs);
++			if (error)
++				return error;
++		}
++	}
+ 	if (journaled)
+ 		error = gfs2_trans_begin(sdp, RES_DINODE + RES_JDATA, GFS2_JTRUNC_REVOKES);
+ 	else
+@@ -1427,19 +1443,10 @@ static int trunc_start(struct inode *ino
+ 
+ 	gfs2_trans_add_meta(ip->i_gl, dibh);
+ 
+-	if (gfs2_is_stuffed(ip)) {
++	if (gfs2_is_stuffed(ip))
+ 		gfs2_buffer_clear_tail(dibh, sizeof(struct gfs2_dinode) + newsize);
+-	} else {
+-		unsigned int blocksize = i_blocksize(inode);
+-		unsigned int offs = newsize & (blocksize - 1);
+-		if (offs) {
+-			error = gfs2_block_zero_range(inode, newsize,
+-						      blocksize - offs);
+-			if (error)
+-				goto out;
+-		}
++	else
+ 		ip->i_diskflags |= GFS2_DIF_TRUNC_IN_PROG;
+-	}
+ 
+ 	i_size_write(inode, newsize);
+ 	ip->i_inode.i_mtime = ip->i_inode.i_ctime = current_time(&ip->i_inode);
+@@ -2448,25 +2455,7 @@ int __gfs2_punch_hole(struct file *file,
+ 	loff_t start, end;
+ 	int error;
+ 
+-	start = round_down(offset, blocksize);
+-	end = round_up(offset + length, blocksize) - 1;
+-	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
+-	if (error)
+-		return error;
 -
--	if (!d->nr_stripes || d->nr_stripes > max_stripes) {
--		pr_err("nr_stripes too large or invalid: %u (start sector beyond end of disk?)\n",
--			(unsigned int)d->nr_stripes);
-+	n = DIV_ROUND_UP_ULL(sectors, d->stripe_size);
-+	if (!n || n > max_stripes) {
-+		pr_err("nr_stripes too large or invalid: %llu (start sector beyond end of disk?)\n",
-+			n);
- 		return -ENOMEM;
- 	}
-+	d->nr_stripes = n;
+-	if (gfs2_is_jdata(ip))
+-		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
+-					 GFS2_JTRUNC_REVOKES);
+-	else
+-		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
+-	if (error)
+-		return error;
+-
+-	if (gfs2_is_stuffed(ip)) {
+-		error = stuffed_zero_range(inode, offset, length);
+-		if (error)
+-			goto out;
+-	} else {
++	if (!gfs2_is_stuffed(ip)) {
+ 		unsigned int start_off, end_len;
  
- 	n = d->nr_stripes * sizeof(atomic_t);
- 	d->stripe_sectors_dirty = kvzalloc(n, GFP_KERNEL);
+ 		start_off = offset & (blocksize - 1);
+@@ -2489,6 +2478,26 @@ int __gfs2_punch_hole(struct file *file,
+ 		}
+ 	}
+ 
++	start = round_down(offset, blocksize);
++	end = round_up(offset + length, blocksize) - 1;
++	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
++	if (error)
++		return error;
++
++	if (gfs2_is_jdata(ip))
++		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
++					 GFS2_JTRUNC_REVOKES);
++	else
++		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
++	if (error)
++		return error;
++
++	if (gfs2_is_stuffed(ip)) {
++		error = stuffed_zero_range(inode, offset, length);
++		if (error)
++			goto out;
++	}
++
+ 	if (gfs2_is_jdata(ip)) {
+ 		BUG_ON(!current->journal_info);
+ 		gfs2_journaled_truncate_range(inode, offset, length);
 
 
