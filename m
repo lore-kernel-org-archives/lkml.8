@@ -2,125 +2,138 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AE2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63BCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58BDA208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9233B207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+WGG4b4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WJVp6uka"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgHTRmD (ORCPT
+        id S1728477AbgHTRmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48420 "EHLO
+        Thu, 20 Aug 2020 13:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgHTRlo (ORCPT
+        with ESMTP id S1728067AbgHTRmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:41:44 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831C4C061385;
-        Thu, 20 Aug 2020 10:41:42 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id a79so1381762pfa.8;
-        Thu, 20 Aug 2020 10:41:42 -0700 (PDT)
+        Thu, 20 Aug 2020 13:42:20 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A72FC061387
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:18 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b2so979208edw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=oDyvq15BnfthkLtUukIEJz89Sj2Uqn2+fWCc9qUql5I=;
-        b=Z+WGG4b4dkuKHsVtQe1i9WduYBqyH8S4uKxDElpd5cXsi4H11GIlZWCcZgd657XegK
-         uXT4JpFirhXkXu2XTJxbGr5kFdHmoP1OHsrCr6Qthuzimm9pMZzi5zXTgR6Sv5BgXyDs
-         hAhjr2OCzC2ulfDbsdYYA0LsBy0GFR/kM86YP/n5Exz7CmfTxKOvL7qShI/d6Ll+fa8n
-         Bi/NHJ8ocQ4qJoBa0SbGaagVawc0sq0uBEW8OKbSQRZBvqrd/tBRPv8bIRqvQdvoLMZ/
-         mSZXUw6GLC8ziVIN0UOUCm0rcnPhT9ElfrcwW67Ze23Tq2PGkJi5fpezXOZP/Ac4DgTY
-         Hliw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=++DU+mGMau0wCVk26WL7BRudLdRoW/TdcNVBaFfSVeo=;
+        b=WJVp6ukadTpNcM9SYJpDROIRN+tD3gRH5NoPQs0+HAsQmLtJTImp5dRFMc7wGC3HgN
+         R/lFt0vUnPt7BGWZ9GyHNRaZ0vNwnvZs2Kqg3u8nexS2ZBfKmw9OlPBaaVZioiS7BHsl
+         YQ4r7w5vrJPUKxgqdugvjbGIbRfRLzSot++CY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=oDyvq15BnfthkLtUukIEJz89Sj2Uqn2+fWCc9qUql5I=;
-        b=frW0kT98idrzSCKRULlgMqg+MqEfS9aoBzoJm1oOg3FOwPII3sz6wa3fpilCtAuLqB
-         qxU050XFz/2lZK7uqQb3oFYPPt+UTSsPTikmpzHRMQlAdtPNY+lFn/pQP7ovDKkFHD4w
-         Up1gsrW28cYI29rxNwPDW0mv4lDAZBYhpIOG1vyZk7dMt4lSPamDd8/3ND2H9gZg1EQL
-         PKDH7wJ48cI720SoTNan5wyebpbIbNQgqe7CRB9BTbiulb4QTvuRE+afPFvlTIXPxWkE
-         MPS2ZLVQbx+kXA/yjNZw7iEmWoqVdlWjjlCt/1+omX3VlR5HGmGmdjr60P56Zwo/URyo
-         QjCA==
-X-Gm-Message-State: AOAM530mVA5GLWxNoIpmrU752bgKffDOfWSyfjiykmqbyt1rgI2jmLwu
-        l5LzXSYe/HNZ2tF/s6+8JZY=
-X-Google-Smtp-Source: ABdhPJwLc9pERZHVMQlxakOJ6eWDFDhXz9bYZmx7M4I1O/HKPbfxjfH2YWKYleJW+BZ4TawkiN2DPg==
-X-Received: by 2002:a62:fc8c:: with SMTP id e134mr3018219pfh.113.1597945301788;
-        Thu, 20 Aug 2020 10:41:41 -0700 (PDT)
-Received: from gmail.com ([2601:600:9b7f:872e:a655:30fb:7373:c762])
-        by smtp.gmail.com with ESMTPSA id y10sm2698316pjv.55.2020.08.20.10.41.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 10:41:41 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:41:39 -0700
-From:   Andrei Vagin <avagin@gmail.com>
-To:     Eugene Lubarsky <elubarsky.linux@gmail.com>
-Cc:     linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, adobriyan@gmail.com,
-        dsahern@gmail.com, Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [RFC PATCH 0/5] Introduce /proc/all/ to gather stats from all
- processes
-Message-ID: <20200820174139.GA919358@gmail.com>
-References: <20200810145852.9330-1-elubarsky.linux@gmail.com>
- <20200812075135.GA191218@gmail.com>
- <20200814010100.3e9b6423@eug-lubuntu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=++DU+mGMau0wCVk26WL7BRudLdRoW/TdcNVBaFfSVeo=;
+        b=IZEd22bpdlEhisVAjFQPaHpOtSqfTMKM9y0D4ddeXFhYyuaZJYzy2zKsCIDRBXodZr
+         PbNZed+g8AkQyzfq8Y6Ecd9BHjClb5F0DDOu3woIBmcxvuwhxCXgdwOmi/xojQs+DfyY
+         WGe0qqwWuVhs0hcuwmk02/bd2HPk63RkvlcbXnDllygIr74JAHqE5xj6MWUlZ5sIrgZ7
+         sEujS/uMWdNdG/sT/o/M+i0tyYvneucpXZpDZuU7oQiEWdq4SHovfHySXh3l6EaBF/SX
+         A4sbUo4brMlZdr5fTdjSEAikFEk2gUVzxJUK3pR3y3gIAy18M32usqkbazHlSm99sN+D
+         C2kw==
+X-Gm-Message-State: AOAM531a6NBl6lqqXwe66HRz6gZx15WQJZZUtrvvr2EnrQW10JCgJx0u
+        YoPDQx8kKHgHb8FXny3KHceEprH+REpmcQ==
+X-Google-Smtp-Source: ABdhPJzhwDmx9HXVO6sfDFfdOpOkJHK90ObGBKI76s04d3pqBHAGkR3JU5F1v3JEEcu1BbhK8f0Zpg==
+X-Received: by 2002:aa7:c544:: with SMTP id s4mr3943651edr.51.1597945337308;
+        Thu, 20 Aug 2020 10:42:17 -0700 (PDT)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
+        by smtp.gmail.com with ESMTPSA id p21sm1676781edr.59.2020.08.20.10.42.16
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 10:42:17 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id 88so2876042wrh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:16 -0700 (PDT)
+X-Received: by 2002:adf:ec4f:: with SMTP id w15mr4013793wrn.385.1597944841643;
+ Thu, 20 Aug 2020 10:34:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=koi8-r
-Content-Disposition: inline
-In-Reply-To: <20200814010100.3e9b6423@eug-lubuntu>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de>
+ <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
+ <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
+ <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
+ <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com> <20200820165407.GD12693@lst.de>
+In-Reply-To: <20200820165407.GD12693@lst.de>
+From:   Tomasz Figa <tfiga@chromium.org>
+Date:   Thu, 20 Aug 2020 19:33:48 +0200
+X-Gmail-Original-Message-ID: <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
+Message-ID: <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
+Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     alsa-devel@alsa-project.org, linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        linux-mips@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 14, 2020 at 01:01:00AM +1000, Eugene Lubarsky wrote:
-> On Wed, 12 Aug 2020 00:51:35 -0700
-> Andrei Vagin <avagin@gmail.com> wrote:
-> 
-> > Maybe we need resurrect the task_diag series instead of inventing
-> > another less-effective interface...
-> 
-> I would certainly welcome the resurrection of task_diag - it is clearly
-> more efficient than this /proc/all/ idea. It would be good to find out
-> if there's anything in particular that's currently blocking it.
+On Thu, Aug 20, 2020 at 6:54 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Thu, Aug 20, 2020 at 12:05:29PM +0200, Tomasz Figa wrote:
+> > The UAPI and V4L2/videobuf2 changes are in good shape and the only
+> > wrong part is the use of DMA API, which was based on an earlier email
+> > guidance anyway, and a change to the synchronization part . I find
+> > conclusions like the above insulting for people who put many hours
+> > into designing and implementing the related functionality, given the
+> > complexity of the videobuf2 framework and how ill-defined the DMA API
+> > was, and would feel better if such could be avoided in future
+> > communication.
+>
+> It wasn't meant to be too insulting, but I found this out when trying
+> to figure out how to just disable it.  But it also ends up using
+> the actual dma attr flags for it's own consistency checks, so just
+> not setting the flag did not turn out to work that easily.
+>
 
-Unfotunatly, I don't have enough time to lead a process of pushing
-task_diag into the upstream. So if it is interesting for you, you can
-restart this process and I am ready to help as much as time will permit.
+Yes, sadly the videobuf2 ended up becoming quite counterintuitive
+after growing for the long years and that is reflected in the design
+of this feature as well. I think we need to do something about it.
 
-I think the main blocking issue was a lack of interest from the wide
-audience to this. The slow proc is the problem just for a few users, but
-task_diag is a big subsystem that repeats functionality of another
-subsystem with all derived problems like code duplication.
+> But in general it helps to add a few more people to the Cc list for
+> such things that do stranger things.  Especially if you think you did
+> it based on the advice of those people.
 
-Another blocking issue is a new interface. There was no consensus on
-this. Initially, I suggested to use netlink sockets, but developers from
-non-network subsystem objected on this, so the transaction file
-interface was introduced. The main idea similar to netlink sockets is
-that we write a request and read a response.
+Indeed, we should have CCed you and other DMA folks. Sergey who worked
+on this series is quite new to these areas of the kernel (although not
+to the kernel itself) and it's my fault for not explicitly letting him
+know to do that.
 
-There were some security concerns but I think I fixed them.
-
-> 
-> This RFC is mainly meant to check whether such an addition would
-> be acceptable from an API point of view. It currently has an obvious
-> performance issue in that seq_file seems to only return one page at a
-> time so lots of read syscalls are still required. However I may not
-> have the time to figure out a proposed fix for this by myself.
-> Regardless, text-based formats can't match the efficiency of task_diag,
-> but binary ones are also possible.
-
-I don't have objections to this series. It can be an option if we
-will decide that we don't want to do a major rework here.
-
-
-Thanks,
-Andrei
+Best regards,
+Tomasz
