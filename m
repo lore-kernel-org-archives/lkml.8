@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B081C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C399820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1099E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919567;
-	bh=GrXqHisVAEBfsmqbEkU2lfCyTUGM/JkarYuagrRTCc8=;
+	s=default; t=1597919582;
+	bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GUNL6x2q3o9pxymh74I48tV3Q798N0QIZKWtzTL9HjF5xTtBuCGHP7ldupOmFSvIh
-	 MB8bMCvVnnwxRIZFP+mucfP07IvgiC2iT76Ks2QfimwFIpP5sTl+OcyZV508hy6SpT
-	 FZhqBvlpGE2Cux63ajXuI2QlC7/dWkrNb+rU4xdQ=
+	b=BA6bedGGKIrF458ajKorYRQCOfusps3leHRcTPoZ96uj6Y8pUMy+cXwVSoD5eTSH6
+	 SkpwKpAiPdIk8XTQIoK+hl5SMgRvgnuCFmTIYTrlx3gMPmtIbiky9Tof0oaYq8xesg
+	 26jvC5nB+vGbrI+hD0kimPD3AkcMizURVDSfmh9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbgHTKco (ORCPT
+        id S1731755AbgHTKc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:32:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44384 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731326AbgHTKT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:56 -0400
+        id S1731307AbgHTKTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB01E2067C;
-        Thu, 20 Aug 2020 10:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49CEF20658;
+        Thu, 20 Aug 2020 10:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918795;
-        bh=GrXqHisVAEBfsmqbEkU2lfCyTUGM/JkarYuagrRTCc8=;
+        s=default; t=1597918792;
+        bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L5psh+jiONlkrdCVVFmShkF1pxhL89GoitcIFdxs/KRkYoZg3paTgFbPBid2fquFM
-         c/9HT7DrTQ4QAneVz98ZfTeWC90cdLxv3hZ1QI+wG673ZS77pwweR9hmCsMFFx8bam
-         sttqUXxUYWX9nOH25n6/x1auLcj5ql+2QSXIupdY=
+        b=VqX44m/rV1H+1AXQ5wCBVrLXVrPEqyXZhiz4QhGnTRYwsUxdnAOJHRcl/sNJGA+1d
+         Qe7AVuAlPGz7Urcq5lAQQk8Swll/m6myU9dUq01OJrxswHQcpy07QiExSvTOM0l2xV
+         HE0NnhlpLiSqLLsuREwO8LK8VTT5q2mIjBbw6bvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dominique Martinet <asmadeus@codewreck.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 040/149] net/9p: validate fds in p9_fd_open
-Date:   Thu, 20 Aug 2020 11:21:57 +0200
-Message-Id: <20200820092127.675555741@linuxfoundation.org>
+Subject: [PATCH 4.4 067/149] drm/nouveau: fix multiple instances of reference count leaks
+Date:   Thu, 20 Aug 2020 11:22:24 +0200
+Message-Id: <20200820092128.986200888@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,68 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
+[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
 
-p9_fd_open just fgets file descriptors passed in from userspace, but
-doesn't verify that they are valid for read or writing.  This gets
-cought down in the VFS when actually attempting a read or write, but
-a new warning added in linux-next upsets syzcaller.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+ref count before returning the error.
 
-Fix this by just verifying the fds early on.
-
-Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
-Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Dominique: amend goto as per Doug Nazar's review]
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
+ drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 2f68ffda3715b..eab058f93ec97 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -793,20 +793,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
- 		return -ENOMEM;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 91a61d2cca889..a90840e391100 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -805,8 +805,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
  
- 	ts->rd = fget(rfd);
-+	if (!ts->rd)
-+		goto out_free_ts;
-+	if (!(ts->rd->f_mode & FMODE_READ))
-+		goto out_put_rd;
- 	ts->wr = fget(wfd);
--	if (!ts->rd || !ts->wr) {
--		if (ts->rd)
--			fput(ts->rd);
--		if (ts->wr)
--			fput(ts->wr);
--		kfree(ts);
--		return -EIO;
--	}
-+	if (!ts->wr)
-+		goto out_put_rd;
-+	if (!(ts->wr->f_mode & FMODE_WRITE))
-+		goto out_put_wr;
+ 	/* need to bring up power immediately if opening device */
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- 	client->trans = ts;
- 	client->status = Connected;
+ 	get_task_comm(tmpname, current);
+ 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
+@@ -894,8 +896,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	long ret;
  
- 	return 0;
-+
-+out_put_wr:
-+	fput(ts->wr);
-+out_put_rd:
-+	fput(ts->rd);
-+out_free_ts:
-+	kfree(ts);
-+	return -EIO;
- }
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- static int p9_socket_open(struct p9_client *client, struct socket *csocket)
+ 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
+ 	case DRM_NOUVEAU_NVIF:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
+index ae560f5977fca..e5db2a385cb65 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_gem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
+@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (WARN_ON(ret < 0 && ret != -EACCES))
++	if (WARN_ON(ret < 0 && ret != -EACCES)) {
++		pm_runtime_put_autosuspend(dev);
+ 		return;
++	}
+ 
+ 	if (gem->import_attach)
+ 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
 -- 
 2.25.1
 
