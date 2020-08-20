@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BAFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4067206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8C8206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931429;
-	bh=G8rhF9apG+AdZqSCv9FBn+Mx5ebhxeDDJwMTOenTdMc=;
+	s=default; t=1597931443;
+	bh=MHhUlzLlI69tOcSkrDiQ7ZqvzmpcP6BrO37C/4ObuX4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N1GzVL0nieFDpxpghHMd5KjCvi0IcCBB92wz8Y3SaSLsALsPpUVdx6cBytCwbmRvf
-	 xQANHRsx/mEEhC2f6VYx+Ql0RfQ/Nbs79I554KO1h/LkCP/pSaV/cAB5BBjS+bmvOP
-	 VdkSqHvdobgxgLAzbmUHu9Rog/rdsBy9YIx3QyGA=
+	b=V+Ub671RKrvy+UuVsfZplyPZTTZj9gMvy6CG3OtFj8qwmGlzAcp5EmSXUuQy7OkpQ
+	 uzYOyOsG/DxqinsIi2oW88LxMJ8Qi6rOxebwflm/Mg994vu069QspuZrhvs+avzw5R
+	 vM8IqB3LUly5qToERf0dCXyWKjtEMK/kX2xcZTPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgHTNuU (ORCPT
+        id S1727012AbgHTNum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35540 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:50:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbgHTJ1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:19 -0400
+        id S1727964AbgHTJ1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B4AF21744;
-        Thu, 20 Aug 2020 09:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F0202075E;
+        Thu, 20 Aug 2020 09:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915638;
-        bh=G8rhF9apG+AdZqSCv9FBn+Mx5ebhxeDDJwMTOenTdMc=;
+        s=default; t=1597915629;
+        bh=MHhUlzLlI69tOcSkrDiQ7ZqvzmpcP6BrO37C/4ObuX4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQrEjc2V6cuLxHZsuhY1L3AIk1gctsNN3ZjKVd2Si/ht4IG+NXOl/icMVTpggRaJ6
-         JUAG/0wYrvZiDc6u5VnUtsyfIOkxBuVYUQg3zyjyY+5MJgNEcrrO3eR2OForqPQ+kZ
-         SaiPphM09tiU121sZMVoCrzsCdUoouqSQ9mpm8qo=
+        b=s32Be73Ffwh+Mv8Q2hxPlOvJKjHNT3k6QTZ5EbfeGj1b0LQf3LVfZSOQXgIdG5gX5
+         vuFQpY+kQJkJ1azpUUaEApgN1EEivAMzG53omd3rqH53gSpjvrw7a2P5MRAca2okl+
+         VPVhSoIRfiXiHvP3142yNuXUeHk/Pj2SdN6z3yFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Will Deacon <will@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 083/232] mm: fix kthread_use_mm() vs TLB invalidate
-Date:   Thu, 20 Aug 2020 11:18:54 +0200
-Message-Id: <20200820091616.833467322@linuxfoundation.org>
+Subject: [PATCH 5.8 080/232] khugepaged: retract_page_tables() remember to test exit
+Date:   Thu, 20 Aug 2020 11:18:51 +0200
+Message-Id: <20200820091616.689152030@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -67,103 +64,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Hugh Dickins <hughd@google.com>
 
-commit 38cf307c1f2011d413750c5acb725456f47d9172 upstream.
+commit 18e77600f7a1ed69f8ce46c9e11cad0985712dfa upstream.
 
-For SMP systems using IPI based TLB invalidation, looking at
-current->active_mm is entirely reasonable.  This then presents the
-following race condition:
+Only once have I seen this scenario (and forgot even to notice what forced
+the eventual crash): a sequence of "BUG: Bad page map" alerts from
+vm_normal_page(), from zap_pte_range() servicing exit_mmap();
+pmd:00000000, pte values corresponding to data in physical page 0.
 
-  CPU0			CPU1
+The pte mappings being zapped in this case were supposed to be from a huge
+page of ext4 text (but could as well have been shmem): my belief is that
+it was racing with collapse_file()'s retract_page_tables(), found *pmd
+pointing to a page table, locked it, but *pmd had become 0 by the time
+start_pte was decided.
 
-  flush_tlb_mm(mm)	use_mm(mm)
-    <send-IPI>
-			  tsk->active_mm = mm;
-			  <IPI>
-			    if (tsk->active_mm == mm)
-			      // flush TLBs
-			  </IPI>
-			  switch_mm(old_mm,mm,tsk);
+In most cases, that possibility is excluded by holding mmap lock; but
+exit_mmap() proceeds without mmap lock.  Most of what's run by khugepaged
+checks khugepaged_test_exit() after acquiring mmap lock:
+khugepaged_collapse_pte_mapped_thps() and hugepage_vma_revalidate() do so,
+for example.  But retract_page_tables() did not: fix that.
 
-Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
-because the IPI lands before we actually switched.
+The fix is for retract_page_tables() to check khugepaged_test_exit(),
+after acquiring mmap lock, before doing anything to the page table.
+Getting the mmap lock serializes with __mmput(), which briefly takes and
+drops it in __khugepaged_exit(); then the khugepaged_test_exit() check on
+mm_users makes sure we don't touch the page table once exit_mmap() might
+reach it, since exit_mmap() will be proceeding without mmap lock, not
+expecting anyone to be racing with it.
 
-Avoid this by disabling IRQs across changing ->active_mm and
-switch_mm().
-
-Of the (SMP) architectures that have IPI based TLB invalidate:
-
-  Alpha    - checks active_mm
-  ARC      - ASID specific
-  IA64     - checks active_mm
-  MIPS     - ASID specific flush
-  OpenRISC - shoots down world
-  PARISC   - shoots down world
-  SH       - ASID specific
-  SPARC    - ASID specific
-  x86      - N/A
-  xtensa   - checks active_mm
-
-So at the very least Alpha, IA64 and Xtensa are suspect.
-
-On top of this, for scheduler consistency we need at least preemption
-disabled across changing tsk->mm and doing switch_mm(), which is
-currently provided by task_lock(), but that's not sufficient for
-PREEMPT_RT.
-
-[akpm@linux-foundation.org: add comment]
-
-Reported-by: Andy Lutomirski <luto@amacapital.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: f3f0e1d2150b ("khugepaged: add support of collapse for tmpfs/shmem pages")
+Signed-off-by: Hugh Dickins <hughd@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200721154106.GE10769@hirez.programming.kicks-ass.net
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021215400.27773@eggly.anvils
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kthread.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ mm/khugepaged.c |   24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
 
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -1239,13 +1239,16 @@ void kthread_use_mm(struct mm_struct *mm
- 	WARN_ON_ONCE(tsk->mm);
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1532,6 +1532,7 @@ out:
+ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ {
+ 	struct vm_area_struct *vma;
++	struct mm_struct *mm;
+ 	unsigned long addr;
+ 	pmd_t *pmd, _pmd;
  
- 	task_lock(tsk);
-+	/* Hold off tlb flush IPIs while switching mm's */
-+	local_irq_disable();
- 	active_mm = tsk->active_mm;
- 	if (active_mm != mm) {
- 		mmgrab(mm);
- 		tsk->active_mm = mm;
+@@ -1560,7 +1561,8 @@ static void retract_page_tables(struct a
+ 			continue;
+ 		if (vma->vm_end < addr + HPAGE_PMD_SIZE)
+ 			continue;
+-		pmd = mm_find_pmd(vma->vm_mm, addr);
++		mm = vma->vm_mm;
++		pmd = mm_find_pmd(mm, addr);
+ 		if (!pmd)
+ 			continue;
+ 		/*
+@@ -1570,17 +1572,19 @@ static void retract_page_tables(struct a
+ 		 * mmap_lock while holding page lock. Fault path does it in
+ 		 * reverse order. Trylock is a way to avoid deadlock.
+ 		 */
+-		if (mmap_write_trylock(vma->vm_mm)) {
+-			spinlock_t *ptl = pmd_lock(vma->vm_mm, pmd);
+-			/* assume page table is clear */
+-			_pmd = pmdp_collapse_flush(vma, addr, pmd);
+-			spin_unlock(ptl);
+-			mmap_write_unlock(vma->vm_mm);
+-			mm_dec_nr_ptes(vma->vm_mm);
+-			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
++		if (mmap_write_trylock(mm)) {
++			if (!khugepaged_test_exit(mm)) {
++				spinlock_t *ptl = pmd_lock(mm, pmd);
++				/* assume page table is clear */
++				_pmd = pmdp_collapse_flush(vma, addr, pmd);
++				spin_unlock(ptl);
++				mm_dec_nr_ptes(mm);
++				pte_free(mm, pmd_pgtable(_pmd));
++			}
++			mmap_write_unlock(mm);
+ 		} else {
+ 			/* Try again later */
+-			khugepaged_add_pte_mapped_thp(vma->vm_mm, addr);
++			khugepaged_add_pte_mapped_thp(mm, addr);
+ 		}
  	}
- 	tsk->mm = mm;
--	switch_mm(active_mm, mm, tsk);
-+	switch_mm_irqs_off(active_mm, mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- #ifdef finish_arch_post_lock_switch
- 	finish_arch_post_lock_switch();
-@@ -1274,9 +1277,11 @@ void kthread_unuse_mm(struct mm_struct *
- 
- 	task_lock(tsk);
- 	sync_mm_rss(mm);
-+	local_irq_disable();
- 	tsk->mm = NULL;
- 	/* active_mm is still 'mm' */
- 	enter_lazy_tlb(mm, tsk);
-+	local_irq_enable();
- 	task_unlock(tsk);
- }
- EXPORT_SYMBOL_GPL(kthread_unuse_mm);
+ 	i_mmap_unlock_write(mapping);
 
 
