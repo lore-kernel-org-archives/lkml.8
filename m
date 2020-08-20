@@ -2,91 +2,152 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A4DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB1C207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACDBF207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgHTMIn (ORCPT
+        id S1730571AbgHTMIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:08:43 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:36079 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729885AbgHTJ57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:59 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R721e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0U6IpR5A_1597917472;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U6IpR5A_1597917472)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 20 Aug 2020 17:57:54 +0800
-Subject: Re: [RFC PATCH v2 5/5] mm: Split move_pages_to_lru into 3 separate
- passes
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042738.23414.60815.stgit@localhost.localdomain>
- <084c58a7-7aac-820c-9606-19391c35b9b5@linux.alibaba.com>
- <CAKgT0Ud3CZ8KHLXCrWNGJAX85x23-EWLnAV63-NMmJ+5vD1JAA@mail.gmail.com>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <87ded438-e908-117d-ecfb-1af7224d46da@linux.alibaba.com>
-Date:   Thu, 20 Aug 2020 17:56:36 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.7.0
+        Thu, 20 Aug 2020 08:08:52 -0400
+Received: from mga12.intel.com ([192.55.52.136]:46326 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730486AbgHTMI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:08:29 -0400
+IronPort-SDR: cNJhpmmZYHzpR+XXnCiEoC4o4US7hEOlcyW+QIJaYo5+HG3fFH++CDEq6k6ffBxPjjxq9lqCWW
+ mnlbZAHtFSlg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="134810897"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="134810897"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 05:08:26 -0700
+IronPort-SDR: 3/Dyycd6QdTlaUFlmPkr07zoPMXZLTCiu5jZ+TSZahhEAI8FLNcFbUmgcmbSuF4BIhRP9Hc0as
+ h1pWGKojsfJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="329678982"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Aug 2020 05:08:23 -0700
+Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+To:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de
+Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+References: <20200814213842.31151-1-ashok.raj@intel.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <563d77c0-ab5b-df9c-8f4d-b16a0d1211a2@linux.intel.com>
+Date:   Thu, 20 Aug 2020 15:11:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAKgT0Ud3CZ8KHLXCrWNGJAX85x23-EWLnAV63-NMmJ+5vD1JAA@mail.gmail.com>
+In-Reply-To: <20200814213842.31151-1-ashok.raj@intel.com>
 Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/8/19 下午10:42, Alexander Duyck 写道:
->> It's actually changed the meaning from current func. which I had seen a bug if no relock.
->> but after move to 5.9 kernel, I can not reprodce the bug any more. I am not sure if 5.9 fixed
->> the problem, and we don't need relock here.
-> So I am not sure what you mean here about "changed the meaning from
-> the current func". Which function are you referring to and what
-> changed?
+On 15.8.2020 0.38, Ashok Raj wrote:
+> When offlining CPU's, fixup_irqs() migrates all interrupts away from the
+> outgoing CPU to an online CPU. Its always possible the device sent an
+> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> lapic identifies such interrupts. apic_soft_disable() will not capture any
+> new interrupts in IRR. This causes interrupts from device to be lost during
+> cpu offline. The issue was found when explicitly setting MSI affinity to a
+> CPU and immediately offlining it. It was simple to recreate with a USB
+> ethernet device and doing I/O to it while the CPU is offlined. Lost
+> interrupts happen even when Interrupt Remapping is enabled.
 > 
-> From what I can tell the pages cannot change memcg because they were
-> isolated and had the LRU flag stripped. They shouldn't be able to
-> change destination LRU vector as a result. Assuming that, then they
-> can all be processed under same LRU lock and we can avoid having to
-> release it until we are forced to do so to call putback_lru_page or
-> destroy the compound pages that were freed while we were shrinking the
-> LRU lists.
+> Current code does apic_soft_disable() before migrating interrupts.
 > 
+> native_cpu_disable()
+> {
+> 	...
+> 	apic_soft_disable();
+> 	cpu_disable_common();
+> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> }
+> 
+> Just fliping the above call sequence seems to hit the IRR checks
+> and the lost interrupt is fixed for both legacy MSI and when
+> interrupt remapping is enabled.
+> 
+> 
+> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> 
+> To: linux-kernel@vger.kernel.org
+> To: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: stable@vger.kernel.org
+> ---
 
-I had sent a bug which base on 5.8 kernel.
-https://lkml.org/lkml/2020/7/28/465
+This fixes the lost xhci interrupt for me.
+Before this patch a msi interupt was lost after ~200 cycles of toggling CPUs
+offline/online under heavy usb traffic.
 
-I am not sure it was fixed in new kernel. The original line was introduced by Hugh Dickins
-I believe it would be great if you can get comments from him.
+With this patch I ran 3x2000 cycles without any issues (Comet lake, patch on top of 5.8)
+Tried both with and without CONFIG_IRQ_REMAP. No issues seen.
 
-Thanks
-Alex
+Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
