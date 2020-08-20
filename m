@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA94C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5119C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B9B207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADF220724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925393;
-	bh=JsURKU+at4PyZKU9WGEk0JLiJmJsdg1SxQO1vPdg47s=;
+	s=default; t=1597925437;
+	bh=C2iYf0ypaFI5ARPAfe2GCMFTbJDJ0PIUh6HCGhP0Q3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vglMObW09wScTU55llXyBI8Oqp1ThmDcHMskNagD2H3fAXYhvkQ/Hmr4UeIEkC51m
-	 IV3OI59XMckPATtP0wRn0ptygHXgwFlFpOlhXtnFVTIXFVaA1R5q2QgwUElaPGDoLx
-	 z4AS2R3XvwqMGHA6XXDOJkBHlr+BnYKMilLmxvK0=
+	b=r91QWuDesMG/WhQhPQNbYBnqGMkjVXgHroBffIapcDrP2Ltzeis/zPvo5IYimg3R8
+	 cRSub3KaaL4RQAMvVc2ThDV9Z3GEXmVUlWVoTKNGg2e5KsJUAcSce+URj9GtQaTBI6
+	 kX4CPrIHfgSpJAmGInvJGnxznoN5XNnzzK5eUxtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729628AbgHTMJv (ORCPT
+        id S1729844AbgHTMKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:09:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42418 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:10:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730396AbgHTJ6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:20 -0400
+        id S1730067AbgHTJ5y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C68BE2067C;
-        Thu, 20 Aug 2020 09:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 212F82173E;
+        Thu, 20 Aug 2020 09:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917500;
-        bh=JsURKU+at4PyZKU9WGEk0JLiJmJsdg1SxQO1vPdg47s=;
+        s=default; t=1597917473;
+        bh=C2iYf0ypaFI5ARPAfe2GCMFTbJDJ0PIUh6HCGhP0Q3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYEG1Yc9nQBcqPc0lVHfbIN5gv3llaqCC6w74AJmlmapeOGg4Z5ZsqTCcs4+TSIXX
-         CmfNN88tgXSZ4auqfOCnRMG5VZmhoUFcN5SpUGtIPx4xYXHDxlPZ0xTW+iYT/pqr1E
-         dAhxLRM9gSB+RjfUAPIHaQ04XzQZER2R/Gygvzzc=
+        b=VNFC4JOr+EauFWi84clgxq8h/g20gZNHUxwFkW5Ie8kdDpuqA+DUOYV9C9bO9wg9/
+         LMkt+SAj5cEHOPIwzgU5PPxZiTBZyHa55cRlw5wSfG++jxd0A3Iq7BFz4QUC3Mg5uD
+         0Qd3HM+URHcI3NhTRl+tVHtrBiyHd6Tpn4xJvy/8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.9 052/212] net/mlx5e: Dont support phys switch id if not in switchdev mode
-Date:   Thu, 20 Aug 2020 11:20:25 +0200
-Message-Id: <20200820091604.996996071@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.9 044/212] x86/i8259: Use printk_deferred() to prevent deadlock
+Date:   Thu, 20 Aug 2020 11:20:17 +0200
+Message-Id: <20200820091604.594853618@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,37 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Thomas Gleixner <tglx@linutronix.de>
 
-From: Roi Dayan <roid@mellanox.com>
+commit bdd65589593edd79b6a12ce86b3b7a7c6dae5208 upstream.
 
-Support for phys switch id ndo added for representors and if
-we do not have representors there is no need to support it.
-Since each port return different switch id supporting this
-block support for creating bond over PFs and attaching to bridge
-in legacy mode.
+0day reported a possible circular locking dependency:
 
-This bug doesn't exist upstream as the code got refactored and the
-netdev api is totally different.
+Chain exists of:
+  &irq_desc_lock_class --> console_owner --> &port_lock_key
 
-Fixes: cb67b832921c ("net/mlx5e: Introduce SRIOV VF representors")
-Signed-off-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock(&port_lock_key);
+                               lock(console_owner);
+                               lock(&port_lock_key);
+  lock(&irq_desc_lock_class);
+
+The reason for this is a printk() in the i8259 interrupt chip driver
+which is invoked with the irq descriptor lock held, which reverses the
+lock operations vs. printk() from arbitrary contexts.
+
+Switch the printk() to printk_deferred() to avoid that.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/87365abt2v.fsf@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |    2 +-
+ arch/x86/kernel/i8259.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -139,7 +139,7 @@ int mlx5e_attr_get(struct net_device *de
- 	struct mlx5_eswitch_rep *rep = priv->ppriv;
- 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
- 
--	if (esw->mode == SRIOV_NONE)
-+	if (esw->mode != SRIOV_OFFLOADS)
- 		return -EOPNOTSUPP;
- 
- 	switch (attr->id) {
+--- a/arch/x86/kernel/i8259.c
++++ b/arch/x86/kernel/i8259.c
+@@ -205,7 +205,7 @@ spurious_8259A_irq:
+ 		 * lets ACK and report it. [once per IRQ]
+ 		 */
+ 		if (!(spurious_irq_mask & irqmask)) {
+-			printk(KERN_DEBUG
++			printk_deferred(KERN_DEBUG
+ 			       "spurious 8259A interrupt: IRQ%d.\n", irq);
+ 			spurious_irq_mask |= irqmask;
+ 		}
 
 
