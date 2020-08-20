@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3F4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D039F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0297A20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928269;
-	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
+	s=default; t=1597928293;
+	bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cdDa4BmHgNgAu36SzpU0Gk7Vn2K9hturz7rU6aZFmYnKHMSaN7EgIfaF7jzKOviNJ
-	 WL7l0DsD9LgpEqeGMasNKKAM2HpyVUv6Jl7ifp6A9VJEKiqfqDuQpXdtQMH3j2HZRs
-	 82ze2qZ6n6T1UobagQa9DyPLOp58AfZSupV5FVk8=
+	b=PryBXkt/EyldyHgm3PHvRdQTeU4dZDS7SdOXCU8J6ZaKgcSfwrQ9TUi239Kq/zplq
+	 syQ5uuDs72Wdt3ohjXyj/TZvESExEY2kKE8R1ZsnbwGj2znjG+Jloo47t91xQnl/XI
+	 N3cSTuufUqbMK5spO25akBlFTjohISWA0di+zu+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgHTM5s (ORCPT
+        id S1728958AbgHTM6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:57:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33718 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:58:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728208AbgHTJk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:57 -0400
+        id S1729060AbgHTJky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F408D20724;
-        Thu, 20 Aug 2020 09:40:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E528207DE;
+        Thu, 20 Aug 2020 09:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916456;
-        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
+        s=default; t=1597916453;
+        bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KjEIXiuyN6tphESEzs8p0sZONgJxX3tif+JVyOxJukGUawVGL+nzlpJcoN4/DIrPK
-         fafN2G8ghbLWhK3lDHjN4uDxupNL20OaJS67FMYXCzYVVIipWSqwEma+0rAqEAknOp
-         yNRLDi9NN7kSx67TDXqUoHKN/Ra/sUucxb3YrD54=
+        b=XM50L5LYJ6fWp8GmtNqmHYY3CHdEFbLa8SoXgJjB0dV3pdjEBAjPTO+Q7+eyTqnUp
+         ZMzaI+80xTyBH5CuFsr6qjh6TcJuk7YyJjP8hT5M7/1rs6yumh1W/6eJBtpqeDUt17
+         yQNDPgV3iD/rDyLQvFaBz9uHlXMG48thBxlidZqs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 135/204] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
-Date:   Thu, 20 Aug 2020 11:20:32 +0200
-Message-Id: <20200820091613.004423837@linuxfoundation.org>
+Subject: [PATCH 5.7 134/204] selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
+Date:   Thu, 20 Aug 2020 11:20:31 +0200
+Message-Id: <20200820091612.964479699@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -63,80 +63,107 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
+[ Upstream commit 9a11f12e0a6c374b3ef1ce81e32ce477d28eb1b8 ]
+
+Rename variable to indicate that they are invalid values which we will
+use to test ptrace update of pkeys.
 
 Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
+Link: https://lore.kernel.org/r/20200709032946.881753-21-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 26 +++++++++----------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index f9216c7a1829e..bc33d748d95b4 100644
+index bdbbbe8431e03..f9216c7a1829e 100644
 --- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
 +++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
- 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
- }
+@@ -44,7 +44,7 @@ struct shared_info {
+ 	unsigned long amr2;
  
--static int sys_pkey_free(int pkey)
--{
--	return syscall(__NR_pkey_free, pkey);
--}
--
- static int child(struct shared_info *info)
- {
- 	unsigned long reg;
-@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
+ 	/* AMR value that ptrace should refuse to write to the child. */
+-	unsigned long amr3;
++	unsigned long invalid_amr;
+ 
+ 	/* IAMR value the parent expects to read from the child. */
+ 	unsigned long expected_iamr;
+@@ -57,8 +57,8 @@ struct shared_info {
+ 	 * (even though they're valid ones) because userspace doesn't have
+ 	 * access to those registers.
+ 	 */
+-	unsigned long new_iamr;
+-	unsigned long new_uamor;
++	unsigned long invalid_iamr;
++	unsigned long invalid_uamor;
+ };
+ 
+ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+@@ -100,7 +100,7 @@ static int child(struct shared_info *info)
  
  	info->amr1 |= 3ul << pkeyshift(pkey1);
  	info->amr2 |= 3ul << pkeyshift(pkey2);
--	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
-+	/*
-+	 * invalid amr value where we try to force write
-+	 * things which are deined by a uamor setting.
-+	 */
-+	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
+-	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
++	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
  
  	if (disable_execute)
  		info->expected_iamr |= 1ul << pkeyshift(pkey1);
-@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
+@@ -111,8 +111,8 @@ static int child(struct shared_info *info)
  
  	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
  				3ul << pkeyshift(pkey2);
--	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
--	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
--
- 	/*
--	 * We won't use pkey3. We just want a plausible but invalid key to test
--	 * whether ptrace will let us write to AMR bits we are not supposed to.
--	 *
--	 * This also tests whether the kernel restores the UAMOR permissions
--	 * after a key is freed.
-+	 * Create an IAMR value different from expected value.
-+	 * Kernel will reject an IAMR and UAMOR change.
- 	 */
--	sys_pkey_free(pkey3);
-+	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
-+	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
+-	info->new_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->new_uamor |= 3ul << pkeyshift(pkey1);
++	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
++	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
  
- 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
- 	       user_write, info->amr1, pkey1, pkey2, pkey3);
-@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	/*
+ 	 * We won't use pkey3. We just want a plausible but invalid key to test
+@@ -196,9 +196,9 @@ static int parent(struct shared_info *info, pid_t pid)
  	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
  	PARENT_FAIL_IF(ret, &info->child_sync);
  
--	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
--	info->expected_iamr = info->invalid_iamr = regs[1];
--	info->expected_uamor = info->invalid_uamor = regs[2];
-+	info->amr1 = info->amr2 = regs[0];
-+	info->expected_iamr = regs[1];
-+	info->expected_uamor = regs[2];
+-	info->amr1 = info->amr2 = info->amr3 = regs[0];
+-	info->expected_iamr = info->new_iamr = regs[1];
+-	info->expected_uamor = info->new_uamor = regs[2];
++	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
++	info->expected_iamr = info->invalid_iamr = regs[1];
++	info->expected_uamor = info->invalid_uamor = regs[2];
  
  	/* Wake up child so that it can set itself up. */
  	ret = prod_child(&info->child_sync);
+@@ -234,10 +234,10 @@ static int parent(struct shared_info *info, pid_t pid)
+ 		return ret;
+ 
+ 	/* Write invalid AMR value in child. */
+-	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
++	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
++	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
+ 
+ 	/* Wake up child so that it can verify it didn't change. */
+ 	ret = prod_child(&info->child_sync);
+@@ -249,7 +249,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 
+ 	/* Try to write to IAMR. */
+ 	regs[0] = info->amr1;
+-	regs[1] = info->new_iamr;
++	regs[1] = info->invalid_iamr;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
+@@ -257,7 +257,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	       ptrace_write_running, regs[0], regs[1]);
+ 
+ 	/* Try to write to IAMR and UAMOR. */
+-	regs[2] = info->new_uamor;
++	regs[2] = info->invalid_uamor;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
 -- 
 2.25.1
 
