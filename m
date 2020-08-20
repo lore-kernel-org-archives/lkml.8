@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F41FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA19AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA3F206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B3982075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918162;
-	bh=ox3YvlEDmwP7VTNyhPPlqumKr30V+TKNRbSXV9BJ594=;
+	s=default; t=1597918168;
+	bh=uRyO4yW0oWApsXVUw1zk0cQsJJLPndkA72/KstVeyrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1tBWpXKDooVrBRVLIvNs3v9oxsVEWxgfZaZaVsRSXHi0OnGsBPxSz/T0hDLV8Igf9
-	 l1eRt9H8EGcooEeXPUvKKJR3gUukPno+YG6NpV8thayIVSOcjfm1Ap4sITfe0E35u1
-	 mQceZozyFKbBlHIJ5AgWIkGNR8R0jJy64v35jAq0=
+	b=TYd8CwAaC78uMjI0o6XI03rBlTUeRs99ww6LigMNUHgi/cQQ4OwWRxrlIFmeSDpfy
+	 WZe5xdDwhAO8X5TsBYUtqttLRGt20K4iVu6rRJYyQwR7Dc6kND07DllbRP0zZLcG8c
+	 tT/E5mMmKmfb1tier7R1iNcg4vhRPyQqZwj/xDT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730796AbgHTKJU (ORCPT
+        id S1730801AbgHTKJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:09:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42896 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbgHTKJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:09:13 -0400
+        id S1730488AbgHTKJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:09:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF982067C;
-        Thu, 20 Aug 2020 10:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 924C1206DA;
+        Thu, 20 Aug 2020 10:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918153;
-        bh=ox3YvlEDmwP7VTNyhPPlqumKr30V+TKNRbSXV9BJ594=;
+        s=default; t=1597918159;
+        bh=uRyO4yW0oWApsXVUw1zk0cQsJJLPndkA72/KstVeyrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K3x93DMw1ajjncL4F7SKnHXvgdET2C3/Uzuc0K1WN4mXlE9+orVLrH11AF3CID3yh
-         jt4X6eo1QrTcekiHOvcv3Bo84JQXO3yp+qSUBzeIyQrlQKr1BLBP6mtcca48qfk0kU
-         0Zvcf4OHmtR+EB9Q12xEBtsC1+l7M8zR9okae1MQ=
+        b=Bl6aml7x5enR5s+deMJP/txkjV/vZT0HCHQ8ynlsWVzil6Yd8z1sI3IxZu0t3teVu
+         3wThbc8oj14G5RKubed2OJ23gz6GVQfF9SE97V9H68S0wGKWZUCybQHNfzwBb1kVt6
+         Te1gP1a0NLPxKcOFbdOt3POXNM2/revqeu28wFMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
+        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 054/228] m68k: mac: Fix IOP status/control register writes
-Date:   Thu, 20 Aug 2020 11:20:29 +0200
-Message-Id: <20200820091610.315605613@linuxfoundation.org>
+Subject: [PATCH 4.14 073/228] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Thu, 20 Aug 2020 11:20:48 +0200
+Message-Id: <20200820091611.252377169@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,77 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-When writing values to the IOP status/control register make sure those
-values do not have any extraneous bits that will clear interrupt flags.
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-To place the SCC IOP into bypass mode would be desirable but this is not
-achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
-to the control register. Drop this ineffective register write.
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
 
-Remove the flawed and unused iop_bypass() function. Make use of the
-unused iop_stop() function.
+Check the return value of pcie_capability_read_dword() to ensure success.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index fb61af5ac4ab8..0b94f6672c5f3 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
- 
- static __inline__ void iop_stop(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl &= ~IOP_RUN;
-+	iop->status_ctrl = IOP_AUTOINC;
- }
- 
- static __inline__ void iop_start(volatile struct mac_iop *iop)
-@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
- 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
- }
- 
--static __inline__ void iop_bypass(volatile struct mac_iop *iop)
--{
--	iop->status_ctrl |= IOP_BYPASS;
--}
--
- static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
- {
--	iop->status_ctrl |= IOP_IRQ;
-+	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
- }
- 
- static int iop_alive(volatile struct mac_iop *iop)
-@@ -244,7 +239,6 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
- 		iop_scc_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_SCC] = NULL;
-@@ -256,7 +250,7 @@ void __init iop_preinit(void)
- 		} else {
- 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
- 		}
--		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
-+		iop_stop(iop_base[IOP_NUM_ISM]);
- 		iop_ism_present = 1;
- 	} else {
- 		iop_base[IOP_NUM_ISM] = NULL;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index 6e6b124f0d5e3..3ca84577803cc 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4302,8 +4302,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
