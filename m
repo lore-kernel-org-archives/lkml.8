@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933D3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D465C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5331F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB0B22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929330;
-	bh=9wY0bvHnP823z5bTKju7vuT8yhn2NEW7Ay9LUlzPZQQ=;
+	s=default; t=1597929337;
+	bh=o3GEtbF7J4dd7KKdh4+PSwmiQQzvpHvgZJWT9a1RhaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7ogR3aGbOni0rswY9UTZaeqHyjO+TcvzVcZeJzlPbOqgurTrC6B94qt5Y/40zt5l
-	 ETOgOeuSrtvl59rRg/HyjlzmEGs79s2J3yoeSJWSgd9CKwEDNxG9LSbtpv09P8CuHt
-	 IrXMn9J5FMkDZdavKuZiZ5oYdYACyb61JlsqsxnQ=
+	b=lJGrNvvbGjMtEoTp15/U8pZqtTjKsMNpLF0ZDrih6HFaw4vw9UYXe+Xube/YJ2APP
+	 dl57C0i9Zs1ipze1hGczi5L3T/MXpQ3+MmID5koPJXEdioz26IPfYxq8/3srbVCIiO
+	 DcYu3ocX1Z3/o87NpF256mF0RHklWqZhvmhoGdGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728558AbgHTJgD (ORCPT
+        id S1728538AbgHTNPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:15:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728080AbgHTJfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:44 -0400
+        id S1728379AbgHTJgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45EB0207DE;
-        Thu, 20 Aug 2020 09:35:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D6AC2075E;
+        Thu, 20 Aug 2020 09:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916142;
-        bh=9wY0bvHnP823z5bTKju7vuT8yhn2NEW7Ay9LUlzPZQQ=;
+        s=default; t=1597916160;
+        bh=o3GEtbF7J4dd7KKdh4+PSwmiQQzvpHvgZJWT9a1RhaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0E+xcpYL3bPW/iMRmO+cOtLXxaiQ2SuW2zkKWmUU/4A2rk1XKcUB1DtPyPdg6NYM
-         n6Lyn4XO2uXWIL2sOpz/HmSiEBJwyu50blC+JRrX5HwmllS9/hGqIlrbVj/SH2xaIC
-         gRHI3lXKm5o9oPe1JInaeANk7XoZIFZjryiihey4=
+        b=0s2F9fz0i6r5105R/fKpzCaygh4YOPc0qoPZ7Cx6Trk8+LDHbr48MIkAN9qJFAHWk
+         PGoh2gMfgnVt0lBFgQGX8VGM7xwL16Vh33xmgrUjik39GX/pCCUOgnEqzzchX3CiFs
+         sD3ECNsuL5t7X3UH2pvQHdf9ApxMmezZh3Rhbmio=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.7 003/204] genirq/PM: Always unlock IRQ descriptor in rearm_wake_irq()
-Date:   Thu, 20 Aug 2020 11:18:20 +0200
-Message-Id: <20200820091606.374065369@linuxfoundation.org>
+        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 5.7 009/204] PCI: qcom: Add support for tx term offset for rev 2.1.0
+Date:   Thu, 20 Aug 2020 11:18:26 +0200
+Message-Id: <20200820091606.673610358@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,49 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-commit e27b1636e9337d1a1d174b191e53d0f86421a822 upstream.
+commit de3c4bf648975ea0b1d344d811e9b0748907b47c upstream.
 
-rearm_wake_irq() does not unlock the irq descriptor if the interrupt
-is not suspended or if wakeup is not enabled on it.
+Add tx term offset support to pcie qcom driver need in some revision of
+the ipq806x SoC. Ipq8064 needs tx term offset set to 7.
 
-Restucture the exit conditions so the unlock is always ensured.
-
-Fixes: 3a79bc63d9075 ("PCI: irq: Introduce rearm_wake_irq()")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200811180001.80203-1-linux@roeck-us.net
+Link: https://lore.kernel.org/r/20200615210608.21469-9-ansuelsmth@gmail.com
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v4.5+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/pm.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/pm.c
-+++ b/kernel/irq/pm.c
-@@ -185,14 +185,18 @@ void rearm_wake_irq(unsigned int irq)
- 	unsigned long flags;
- 	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -45,7 +45,13 @@
+ #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
  
--	if (!desc || !(desc->istate & IRQS_SUSPENDED) ||
--	    !irqd_is_wakeup_set(&desc->irq_data))
-+	if (!desc)
- 		return;
- 
-+	if (!(desc->istate & IRQS_SUSPENDED) ||
-+	    !irqd_is_wakeup_set(&desc->irq_data))
-+		goto unlock;
+ #define PCIE20_PARF_PHY_CTRL			0x40
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
++#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
 +
- 	desc->istate &= ~IRQS_SUSPENDED;
- 	irqd_set(&desc->irq_data, IRQD_WAKEUP_ARMED);
- 	__enable_irq(desc);
+ #define PCIE20_PARF_PHY_REFCLK			0x4C
++#define PHY_REFCLK_SSP_EN			BIT(16)
++#define PHY_REFCLK_USE_PAD			BIT(12)
++
+ #define PCIE20_PARF_DBI_BASE_ADDR		0x168
+ #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+ #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
+@@ -354,9 +360,18 @@ static int qcom_pcie_init_2_1_0(struct q
+ 		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
+ 	}
  
-+unlock:
- 	irq_put_desc_busunlock(desc, flags);
- }
++	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
++		/* set TX termination offset */
++		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
++		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
++		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	}
++
+ 	/* enable external reference clock */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+-	val |= BIT(16);
++	val &= ~PHY_REFCLK_USE_PAD;
++	val |= PHY_REFCLK_SSP_EN;
+ 	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
  
+ 	ret = reset_control_deassert(res->phy_reset);
 
 
