@@ -2,246 +2,87 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C87C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D8CA2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922566;
-	bh=bKxvU/68aujMKO/GHEG9gCT1jesjN2t6mC42V5jHUic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G88S3Y2cpvnGJG5s3K0xi8hNJ/J6DKO+HcvBAPgIp+Oqu8ebVJvaXqFMk3uy7N29f
-	 3dhx3Sc7FmNKurofR7weNgXAZCw3eYg7ia8RpUNxtzatuupGIVUneeUm5W6P6CMCCV
-	 nItFHsTsVN5Q3Q20CNVEs7WstzCNgolGs+GJWQkI=
+	by mail.kernel.org (Postfix) with ESMTP id 217262078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jGbkrces"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgHTLWf (ORCPT
+        id S1729772AbgHTLXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:22:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730540AbgHTKHZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:07:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA00D20724;
-        Thu, 20 Aug 2020 10:07:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918044;
-        bh=bKxvU/68aujMKO/GHEG9gCT1jesjN2t6mC42V5jHUic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rOMaNQRUM1OjO8ersWd1hm3udPgrpZXwWTSpsqU49vPLFaq7+25SIVaM4d+RlJvSe
-         5ON806P34kOUZaKMjEY9j4vlGAX+skw6JatifsivazBrVoNeiGlvgq+53MUY1EPlXg
-         03q/EBIaOM917imO/J5SHvDcb7YkkFi1admlKZ1M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 034/228] net: lan78xx: replace bogus endpoint lookup
-Date:   Thu, 20 Aug 2020 11:20:09 +0200
-Message-Id: <20200820091609.242439123@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 07:23:01 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:57527 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730549AbgHTLWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:22:33 -0400
+X-UUID: af4d0888a4f647dab8a88998ad979dc4-20200820
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=S1Y+0IiFS8nO4Trq+5CEEIC6sfUAEGt90ibukYT0b9E=;
+        b=jGbkrcesOI3wVd2mXfBAN9w/vHttcOMif6TLelF36AnrYNIbu55x54Z9wbExfm2m7KZQkrxUyQgsAXig34choBQ3fGTPRRg37vcuOuxQrWJdOP5di3NTP4Ep5GB6lvuAx9O0gQE5iA+1Jkd7fcO70uTcZwOJMbLMQMwQKXvjVX4=;
+X-UUID: af4d0888a4f647dab8a88998ad979dc4-20200820
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1994942789; Thu, 20 Aug 2020 19:22:31 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Thu, 20 Aug 2020 19:22:27 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 20 Aug 2020 19:22:27 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, CC Hwang <cc.hwang@mediatek.com>,
+        sin_jieyang <sin_jieyang@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>
+Subject: [PATCH v2] pinctrl: mediatek: check mtk_is_virt_gpio input parameter
+Date:   Thu, 20 Aug 2020 19:22:25 +0800
+Message-ID: <1597922546-29633-1-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TM-SNTS-SMTP: F88F058F9D588338A2C62533E12951333599251915843B08FD4ABEB0C93057CF2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
-
-[ Upstream commit ea060b352654a8de1e070140d25fe1b7e4d50310 ]
-
-Drop the bogus endpoint-lookup helper which could end up accepting
-interfaces based on endpoints belonging to unrelated altsettings.
-
-Note that the returned bulk pipes and interrupt endpoint descriptor
-were never actually used. Instead the bulk-endpoint numbers are
-hardcoded to 1 and 2 (matching the specification), while the interrupt-
-endpoint descriptor was assumed to be the third descriptor created by
-USB core.
-
-Try to bring some order to this by dropping the bogus lookup helper and
-adding the missing endpoint sanity checks while keeping the interrupt-
-descriptor assumption for now.
-
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/lan78xx.c |  117 +++++++++++-----------------------------------
- 1 file changed, 30 insertions(+), 87 deletions(-)
-
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -363,10 +363,6 @@ struct lan78xx_net {
- 	struct tasklet_struct	bh;
- 	struct delayed_work	wq;
- 
--	struct usb_host_endpoint *ep_blkin;
--	struct usb_host_endpoint *ep_blkout;
--	struct usb_host_endpoint *ep_intr;
--
- 	int			msg_enable;
- 
- 	struct urb		*urb_intr;
-@@ -2751,78 +2747,12 @@ lan78xx_start_xmit(struct sk_buff *skb,
- 	return NETDEV_TX_OK;
- }
- 
--static int
--lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
--{
--	int tmp;
--	struct usb_host_interface *alt = NULL;
--	struct usb_host_endpoint *in = NULL, *out = NULL;
--	struct usb_host_endpoint *status = NULL;
--
--	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
--		unsigned ep;
--
--		in = NULL;
--		out = NULL;
--		status = NULL;
--		alt = intf->altsetting + tmp;
--
--		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
--			struct usb_host_endpoint *e;
--			int intr = 0;
--
--			e = alt->endpoint + ep;
--			switch (e->desc.bmAttributes) {
--			case USB_ENDPOINT_XFER_INT:
--				if (!usb_endpoint_dir_in(&e->desc))
--					continue;
--				intr = 1;
--				/* FALLTHROUGH */
--			case USB_ENDPOINT_XFER_BULK:
--				break;
--			default:
--				continue;
--			}
--			if (usb_endpoint_dir_in(&e->desc)) {
--				if (!intr && !in)
--					in = e;
--				else if (intr && !status)
--					status = e;
--			} else {
--				if (!out)
--					out = e;
--			}
--		}
--		if (in && out)
--			break;
--	}
--	if (!alt || !in || !out)
--		return -EINVAL;
--
--	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
--				       in->desc.bEndpointAddress &
--				       USB_ENDPOINT_NUMBER_MASK);
--	dev->pipe_out = usb_sndbulkpipe(dev->udev,
--					out->desc.bEndpointAddress &
--					USB_ENDPOINT_NUMBER_MASK);
--	dev->ep_intr = status;
--
--	return 0;
--}
--
- static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- {
- 	struct lan78xx_priv *pdata = NULL;
- 	int ret;
- 	int i;
- 
--	ret = lan78xx_get_endpoints(dev, intf);
--	if (ret) {
--		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
--			    ret);
--		return ret;
--	}
--
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
- 	pdata = (struct lan78xx_priv *)(dev->data[0]);
-@@ -3567,6 +3497,7 @@ static void lan78xx_stat_monitor(unsigne
- static int lan78xx_probe(struct usb_interface *intf,
- 			 const struct usb_device_id *id)
- {
-+	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
- 	struct lan78xx_net *dev;
- 	struct net_device *netdev;
- 	struct usb_device *udev;
-@@ -3617,6 +3548,34 @@ static int lan78xx_probe(struct usb_inte
- 
- 	mutex_init(&dev->stats.access_lock);
- 
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
-+	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
-+	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
-+	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
-+	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
-+	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
-+	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
-+	ep_intr = &intf->cur_altsetting->endpoint[2];
-+	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
-+	dev->pipe_intr = usb_rcvintpipe(dev->udev,
-+					usb_endpoint_num(&ep_intr->desc));
-+
- 	ret = lan78xx_bind(dev, intf);
- 	if (ret < 0)
- 		goto out2;
-@@ -3629,23 +3588,7 @@ static int lan78xx_probe(struct usb_inte
- 	netdev->max_mtu = MAX_SINGLE_PACKET_SIZE;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
- 
--	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
--		ret = -ENODEV;
--		goto out3;
--	}
--
--	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
--	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
--	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
--
--	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
--	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
--
--	dev->pipe_intr = usb_rcvintpipe(dev->udev,
--					dev->ep_intr->desc.bEndpointAddress &
--					USB_ENDPOINT_NUMBER_MASK);
--	period = dev->ep_intr->desc.bInterval;
--
-+	period = ep_intr->desc.bInterval;
- 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
- 	buf = kmalloc(maxp, GFP_KERNEL);
- 	if (buf) {
-
+Y2hlY2sgbXRrX2lzX3ZpcnRfZ3BpbyBpbnB1dCBwYXJhbWV0ZXIsDQp2aXJ0dWFsIGdwaW8gbmVl
+ZCB0byBzdXBwb3J0IGVpbnQgbW9kZS4NCg0KYWRkIGVycm9yIGhhbmRsZXIgZm9yIHRoZSBrbyBj
+YXNlDQp0byBmaXggdGhpcyBib290IGZhaWw6DQpwYyA6IG10a19pc192aXJ0X2dwaW8rMHgyMC8w
+eDM4IFtwaW5jdHJsX210a19jb21tb25fdjJdDQpsciA6IG10a19ncGlvX2dldF9kaXJlY3Rpb24r
+MHg0NC8weGIwIFtwaW5jdHJsX3BhcmlzXQ0KDQpGaXhlczogZWRkNTQ2NDY1MDAyICgicGluY3Ry
+bDogbWVkaWF0ZWs6IGF2b2lkIHZpcnR1YWwgZ3BpbyB0cnlpbmcgdG8gc2V0IHJlZyIpDQpTaW5n
+ZWQtb2ZmLWJ5OiBKaWUgWWFuZyA8c2luX2ppZXlhbmdAbWVkaWF0ZWsuY29tPg0KU2lnbmVkLW9m
+Zi1ieTogSGFua3MgQ2hlbiA8aGFua3MuY2hlbkBtZWRpYXRlay5jb20+DQoNCi0tLQ0KQ2hhbmdl
+cyBzaW5jZSB2MToNCi0gdXBkYXRlIFNpbmdlZC1vZmYtYnkNCi0gYWxpZ24gd2l0aCBwaW5jdHJs
+L21lZGlhdGVrL3BpbmN0cmwtbXRrLW10Ki5oIA0KDQotLS0NCiBkcml2ZXJzL3BpbmN0cmwvbWVk
+aWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMgfCA0ICsrKysNCiAxIGZpbGUgY2hhbmdlZCwg
+NCBpbnNlcnRpb25zKCspDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsv
+cGluY3RybC1tdGstY29tbW9uLXYyLmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdGstY29tbW9uLXYyLmMNCmluZGV4IGM1M2UyYzM5MWUzMi4uYTQ4NWQ3OWY1MWExIDEwMDY0
+NA0KLS0tIGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5j
+DQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdGstY29tbW9uLXYyLmMN
+CkBAIC0yNTksNiArMjU5LDEwIEBAIGJvb2wgbXRrX2lzX3ZpcnRfZ3BpbyhzdHJ1Y3QgbXRrX3Bp
+bmN0cmwgKmh3LCB1bnNpZ25lZCBpbnQgZ3Bpb19uKQ0KIA0KIAlkZXNjID0gKGNvbnN0IHN0cnVj
+dCBtdGtfcGluX2Rlc2MgKikmaHctPnNvYy0+cGluc1tncGlvX25dOw0KIA0KKwkvKiBpZiB0aGUg
+R1BJTyBpcyBub3Qgc3VwcG9ydGVkIGZvciBlaW50IG1vZGUgKi8NCisJaWYgKGRlc2MtPmVpbnQu
+ZWludF9tID09IE5PX0VJTlRfU1VQUE9SVCkNCisJCXJldHVybiB2aXJ0X2dwaW87DQorDQogCWlm
+IChkZXNjLT5mdW5jcyAmJiAhZGVzYy0+ZnVuY3NbZGVzYy0+ZWludC5laW50X21dLm5hbWUpDQog
+CQl2aXJ0X2dwaW8gPSB0cnVlOw0KIA0KLS0gDQoyLjE4LjANCg==
 
