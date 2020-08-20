@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63B8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F858C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9597A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B91222CA1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917261;
-	bh=LOeZxS1Ik54NTymdAlZXLImRnEuchAyPUrQZ0Fv6d0k=;
+	s=default; t=1597917268;
+	bh=UAdRs/xd3kDB6nNW0CxswZ+v+M6hsKlHKOPy/WeTee4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0gUmW7v5/Ko0Z3mLqXcn418xzHPnS/mEe+zCSqpE4FJnHaS2GdITD/1VwibfrPSA
-	 VrwHOY8EU1ecONlMxbJgGPuRzp8kx+ehTACKobAiBIlngk9pPm6jVnV6Kilgc3t0C6
-	 NVhS++DW9mU9ATGb1yJnK2Tag9eOVLUz88D8tq3c=
+	b=lOeYY96fgvwoh8gMd2ethoaHHXTDW28GpIhdWCZ8wo0xUKXH5JMZF5RJMMLBce+/3
+	 1AiplFzwEtcryZLAnTcsp/qYXlPhFnZfHZHNZlV21lcwtBQaUeKqi8f3eXW6Ij8Su5
+	 l1IX2rnNExNg2qAr4Dgqx+dTi/sqBTSmwpRB+8Vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730106AbgHTJyU (ORCPT
+        id S1729900AbgHTJy0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:54:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36388 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbgHTJyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:08 -0400
+        id S1730089AbgHTJyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92B5A2075E;
-        Thu, 20 Aug 2020 09:54:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FB22075E;
+        Thu, 20 Aug 2020 09:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917248;
-        bh=LOeZxS1Ik54NTymdAlZXLImRnEuchAyPUrQZ0Fv6d0k=;
+        s=default; t=1597917239;
+        bh=UAdRs/xd3kDB6nNW0CxswZ+v+M6hsKlHKOPy/WeTee4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8G0WrCFNJ4BnXktfAbk7fDUg55Q6OCxqM1dH9BTGKZOGZ6U2Ht3ffORsKxSHm609
-         GVyBZRVabEx5POXOMcDQi4YUO6lY4AaC1K8V7vwsshFe3qjhiy4N1GT4NzgCiWuoGp
-         EFaRa6YFqjMocFoUJHRSIaxj1Mgga6VX48GBIkQg=
+        b=jehXs8fgJOiZSy/LMADcWvrYCQmBXNsDcCcDYSEg4NVwyGDHSssv6IKiRWKVaEeqR
+         Yc4HJGc9oaunYyUq40OL+49sBgOCL58w6rAKrm8j1uv2JcT6WF6rfOPukRCQaDq7Kg
+         FEaK2mMsOerFp1r91QbzGwAA/fxqvuHEozvTCUK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/92] USB: serial: ftdi_sio: fix break and sysrq handling
-Date:   Thu, 20 Aug 2020 11:21:41 +0200
-Message-Id: <20200820091540.540245631@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.19 45/92] module: Correctly truncate sysfs sections output
+Date:   Thu, 20 Aug 2020 11:21:30 +0200
+Message-Id: <20200820091539.969826443@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,87 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
+commit 11990a5bd7e558e9203c1070fc52fb6f0488e75b upstream.
 
-Only the last NUL in a packet should be flagged as a break character,
-for example, to avoid dropping unrelated characters when IGNBRK is set.
+The only-root-readable /sys/module/$module/sections/$section files
+did not truncate their output to the available buffer size. While most
+paths into the kernfs read handlers end up using PAGE_SIZE buffers,
+it's possible to get there through other paths (e.g. splice, sendfile).
+Actually limit the output to the "count" passed into the read function,
+and report it back correctly. *sigh*
 
-Also make sysrq work by consuming the break character instead of having
-it immediately cancel the sysrq request, and by not processing it
-prematurely to avoid triggering a sysrq based on an unrelated character
-received in the same packet (which was received *before* the break).
-
-Note that the break flag can be left set also for a packet received
-immediately following a break and that and an ending NUL in such a
-packet will continue to be reported as a break as there's no good way to
-tell it apart from an actual break.
-
-Tested on FT232R and FT232H.
-
-Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/20200805002015.GE23458@shao2-debian
+Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
+Cc: stable@vger.kernel.org
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ kernel/module.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index ce9cc1f90b052..aa72ce2642bf1 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2040,6 +2040,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1461,18 +1461,34 @@ struct module_sect_attrs {
+ 	struct module_sect_attr attrs[0];
+ };
+ 
++#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
+ static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
+ 				struct bin_attribute *battr,
+ 				char *buf, loff_t pos, size_t count)
  {
- 	unsigned char status;
-+	bool brkint = false;
- 	int i;
- 	char flag;
+ 	struct module_sect_attr *sattr =
+ 		container_of(battr, struct module_sect_attr, battr);
++	char bounce[MODULE_SECT_READ_SIZE + 1];
++	size_t wrote;
  
-@@ -2091,13 +2092,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 */
- 	flag = TTY_NORMAL;
- 	if (buf[1] & FTDI_RS_ERR_MASK) {
--		/* Break takes precedence over parity, which takes precedence
--		 * over framing errors */
--		if (buf[1] & FTDI_RS_BI) {
--			flag = TTY_BREAK;
-+		/*
-+		 * Break takes precedence over parity, which takes precedence
-+		 * over framing errors. Note that break is only associated
-+		 * with the last character in the buffer and only when it's a
-+		 * NUL.
-+		 */
-+		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
- 			port->icount.brk++;
--			usb_serial_handle_break(port);
--		} else if (buf[1] & FTDI_RS_PE) {
-+			brkint = true;
-+		}
-+		if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
- 		} else if (buf[1] & FTDI_RS_FE) {
-@@ -2113,8 +2118,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	if (pos != 0)
+ 		return -EINVAL;
  
- 	port->icount.rx += len - 2;
+-	return sprintf(buf, "0x%px\n",
+-		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
++	/*
++	 * Since we're a binary read handler, we must account for the
++	 * trailing NUL byte that sprintf will write: if "buf" is
++	 * too small to hold the NUL, or the NUL is exactly the last
++	 * byte, the read will look like it got truncated by one byte.
++	 * Since there is no way to ask sprintf nicely to not write
++	 * the NUL, we have to use a bounce buffer.
++	 */
++	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
++			 kallsyms_show_value(file->f_cred)
++				? (void *)sattr->address : NULL);
++	count = min(count, wrote);
++	memcpy(buf, bounce, count);
++
++	return count;
+ }
  
--	if (port->port.console && port->sysrq) {
-+	if (brkint || (port->port.console && port->sysrq)) {
- 		for (i = 2; i < len; i++) {
-+			if (brkint && i == len - 1) {
-+				if (usb_serial_handle_break(port))
-+					return len - 3;
-+				flag = TTY_BREAK;
-+			}
- 			if (usb_serial_handle_sysrq_char(port, buf[i]))
- 				continue;
- 			tty_insert_flip_char(&port->port, buf[i], flag);
--- 
-2.25.1
-
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+@@ -1521,7 +1537,7 @@ static void add_sect_attrs(struct module
+ 			goto out;
+ 		sect_attrs->nsections++;
+ 		sattr->battr.read = module_sect_read;
+-		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
++		sattr->battr.size = MODULE_SECT_READ_SIZE;
+ 		sattr->battr.attr.mode = 0400;
+ 		*(gattr++) = &(sattr++)->battr;
+ 	}
 
 
