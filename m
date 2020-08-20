@@ -2,107 +2,116 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB330C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9325D20FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E412075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRTJ34s9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAHsE1M3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHTVoM (ORCPT
+        id S1728757AbgHTVpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57534 "EHLO
+        Thu, 20 Aug 2020 17:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTVoJ (ORCPT
+        with ESMTP id S1726435AbgHTVp3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:44:09 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E4FC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:44:08 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a65so26104otc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:44:08 -0700 (PDT)
+        Thu, 20 Aug 2020 17:45:29 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3796C061385;
+        Thu, 20 Aug 2020 14:45:28 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id 185so3727541ljj.7;
+        Thu, 20 Aug 2020 14:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JYwHUMqrgisA2MC9phgyUn1/pNwWsiB0gxz1VRA/k7U=;
-        b=qRTJ34s9UkOAnZaN8ZPr0d9ptggsR0srmk4FHFiwxaPgrwPW65Uv4h8OJZMvJEcN4k
-         atZXkG4wSxcl+XsWGOvXHY7lWD3jNyIpWol1leSAgdXjtxxffsJDaov4iQEjpoq1lf02
-         OePZRyyoMmNKPmwP4/WNNuafraSZD/dPy1S+zycbpE1tr8OkfpA3JtUqhBT8YJ1/MJA0
-         wplcl5+UQ8Y8vjlefu7xs+DRfdyS9fqSXXH9YnlYK3zHAtaROi2l1OzNOgnFjfGj+NI5
-         rtpSrST4mPzyNubWEsIrkhHCQa38sJr6cz/40TvVG/c0xfFAsO3fC8MtFvw24bxxLrXS
-         Zurw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QZOnv7vWdfjv3SqHEA46nQHDVbKjndfvS9Fptn5c3EE=;
+        b=lAHsE1M3z56gY4Q01f/VtsJo8BTVYHuvYw9FurVaiCEvDgjhF2RqBPY9jc6I2xX9hc
+         6Y4AuxToEMZioijEfL6AzNbzf1iBjyD3n22+84o3gpj43ECPttL1qTIhSn/tTPfPoRD3
+         L91qSWhcnPYSPXOR9ePmDpgj9Taq8gewoiYomUTozjZT4xHjc6YNBgawbN49kZcDhUOU
+         Szd0+BD5jRxO8aooUyA6pvkK0ZOoLOBBS4kcwgAWQlYWffi25Mih85FNvAECRpd+fMkm
+         BvCF1pVI7K7PuK+0aH8zH8FkL+T7XkSQgjMksGQe7nhnVnTZuGn2uoi+rEs33pN8WAX6
+         wxsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JYwHUMqrgisA2MC9phgyUn1/pNwWsiB0gxz1VRA/k7U=;
-        b=DcGiSwnG0h+VT4NEPBOfAUn+257zrTqx2l/OW289unYLmH+NuIzhtwNatHueaAQLow
-         GzfGxElJgHbKMhvoC6XmV9qnAOOYtHg0KrJpvT5BELn2bVp0S0iKpfge3o6fW6THaqKx
-         wh8h+5eGtyUcAEBjt11htr3oq1St6LBnMJcZ8dfga7ZKQy+pU9s+qdnmmNjO9CU05fIi
-         +BQhoGhTa4GQEagPlt01OHGtmXn7IRauxsDbK2l9K/jQL4nAd2s0NnaGOfzoAbflYp6l
-         IH9hK52tyT1GkyihJlZkbmfB1Bx7+/PwgmONpCyXkaCAAbYObBEwMqwFP9mURvjfwin+
-         JlPA==
-X-Gm-Message-State: AOAM532iaK5FD+UMbfVoj2qMxl+zyL3XC+kmLCdZoHWYKyMXrn1ITO3M
-        Q6oug/JwxLV442SgUW9+MTtm3bPe/O0mcgdF05ldIA==
-X-Google-Smtp-Source: ABdhPJwlOoE+a01uhmSNQmRIKx7rD3ktKBhwaFSOIAol1TcsX1kjG+yaIUwY1dec23S16b3xJbV9RzNwat2fKYyWVsA=
-X-Received: by 2002:a9d:65ca:: with SMTP id z10mr513440oth.295.1597959847966;
- Thu, 20 Aug 2020 14:44:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QZOnv7vWdfjv3SqHEA46nQHDVbKjndfvS9Fptn5c3EE=;
+        b=B9cBRwsT05QplP/5thb1K/wkqO2sqfTxkCOQr5aVaoVpG/9gue/dDQpvTb3v4RP/Rj
+         ytXwFNOhp6Noj6EJwiUbpTT4zp1xUSWLr8KDt10KCi2RwS/oQ60keYqFS0TsUO0k3D+a
+         aAgSOOGU2XeP1sqzAmbdCw6jwQwQvOOfXJ/FLx7Ge6DkfXF2PipQOfuUhh1aiu0/yN9K
+         8Bz4WN+bon0HuiSPPJxecKd6JBjlYdo32wLZt0PyoJnfgQdU+9goaq81Uh4ooROf2Pd7
+         U1k/lHP2L9uXJNWrEpFa6Re36VxBhApbZUB3VUrUIfEir+jZkqqPQn5RsN7aKw4aoUs2
+         6szQ==
+X-Gm-Message-State: AOAM533TOz7iMLofVrMVangapiiPo6ZZR+voXU8Z80NArsvROD3pzHtg
+        Uw2WGfrYrYwDsidNeBgWEDY=
+X-Google-Smtp-Source: ABdhPJzPoxlP4SPY+LCj/KkElp/gHlvve5jFOm8dtSPmsQQY+NzL90YrPzmVQtcFyAMf8IbB3+gtOw==
+X-Received: by 2002:a2e:9003:: with SMTP id h3mr143345ljg.185.1597959926761;
+        Thu, 20 Aug 2020 14:45:26 -0700 (PDT)
+Received: from grain.localdomain ([5.18.103.226])
+        by smtp.gmail.com with ESMTPSA id l24sm675558ljb.43.2020.08.20.14.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 14:45:25 -0700 (PDT)
+Received: by grain.localdomain (Postfix, from userid 1000)
+        id 03ECC1A0078; Fri, 21 Aug 2020 00:45:24 +0300 (MSK)
+Date:   Fri, 21 Aug 2020 00:45:24 +0300
+From:   Cyrill Gorcunov <gorcunov@gmail.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        criu@openvz.org, bpf@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jann@thejh.net>,
+        Kees Cook <keescook@chromium.org>,
+        Daniel =?iso-8859-1?Q?P=2E_Berrang=E9?= <berrange@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Matthew Wilcox <willy@debian.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Matthew Wilcox <matthew@wil.cx>,
+        Trond Myklebust <trond.myklebust@fys.uio.no>,
+        Chris Wright <chrisw@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Subject: Re: [PATCH 04/17] kcmp: In kcmp_epoll_target use fget_task
+Message-ID: <20200820214524.GS2074@grain>
+References: <87ft8l6ic3.fsf@x220.int.ebiederm.org>
+ <20200817220425.9389-4-ebiederm@xmission.com>
 MIME-Version: 1.0
-References: <20200820133339.372823-1-mlevitsk@redhat.com> <20200820133339.372823-5-mlevitsk@redhat.com>
-In-Reply-To: <20200820133339.372823-5-mlevitsk@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 20 Aug 2020 14:43:56 -0700
-Message-ID: <CALMp9eRNLjj5cs1xj44WVRoKK0ZrcGXn7ffdH+bEeDHkLE9nSA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/7] KVM: x86: allow kvm_x86_ops.set_efer to return a value
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817220425.9389-4-ebiederm@xmission.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
->
-> This will be used later to return an error when setting this msr fails.
->
-> For VMX, it already has an error condition when EFER is
-> not in the shared MSR list, so return an error in this case.
->
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
+On Mon, Aug 17, 2020 at 05:04:12PM -0500, Eric W. Biederman wrote:
+> Use the helper fget_task and simplify the code.
+> 
+> As well as simplifying the code this removes one unnecessary increment of
+> struct files_struct.  This unnecessary increment of files_struct.count can
+> result in exec unnecessarily unsharing files_struct and breaking posix
+> locks, and it can result in fget_light having to fallback to fget reducing
+> performance.
+> 
+> Suggested-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Reviewed-by: Cyrill Gorcunov <gorcunov@gmail.com>
 
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1471,7 +1471,8 @@ static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->         efer &= ~EFER_LMA;
->         efer |= vcpu->arch.efer & EFER_LMA;
->
-> -       kvm_x86_ops.set_efer(vcpu, efer);
-> +       if (kvm_x86_ops.set_efer(vcpu, efer))
-> +               return 1;
-
-This seems like a userspace ABI change to me. Previously, it looks
-like userspace could always use KVM_SET_MSRS to set MSR_EFER to 0 or
-EFER_SCE, and it would always succeed. Now, it looks like it will fail
-on CPUs that don't support EFER in hardware. (Perhaps it should fail,
-but it didn't before, AFAICT.)
+I really like this simplification!
