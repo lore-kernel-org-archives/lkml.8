@@ -2,35 +2,36 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F9FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CB5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59CAA2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACFE2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbgHTQjW (ORCPT
+        id S1730038AbgHTQjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:39:22 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:41938 "EHLO
+        Thu, 20 Aug 2020 12:39:25 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47954 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbgHTQjL (ORCPT
+        with ESMTP id S1728979AbgHTQjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 12:39:11 -0400
 Received: from 89-64-87-57.dynamic.chello.pl (89.64.87.57) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
- id 48e50a6e30a2fd8e; Thu, 20 Aug 2020 18:39:06 +0200
+ id 7dcc2d20ba34ff81; Thu, 20 Aug 2020 18:39:08 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Doug Smythies <dsmythies@telus.net>
-Subject: [PATCH 4/4] cpufreq: intel_pstate: Free memory only when turning off
-Date:   Thu, 20 Aug 2020 18:38:40 +0200
-Message-ID: <5545992.MujegtMJko@kreacher>
+Subject: [PATCH 2/4] cpufreq: intel_pstate: Always return last EPP value from sysfs
+Date:   Thu, 20 Aug 2020 18:37:11 +0200
+Message-ID: <2549178.0mQMFifXHc@kreacher>
 In-Reply-To: <2283366.Lr8yYYnyev@kreacher>
 References: <2283366.Lr8yYYnyev@kreacher>
 MIME-Version: 1.0
@@ -43,143 +44,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-When intel_pstate switches the operation mode from "active" to
-"passive" or the other way around, freeing its data structures
-representing CPUs and allocating them again from scratch is not
-necessary and wasteful.  Moreover, if these data structures are
-preserved, the cached HWP Request MSR value from there may be
-written to the MSR to start with to reinitialize it and help to
-restore the EPP value set previously (it is set to 0xFF when CPUs
-go offline to allow their SMT siblings to use the full range of
-EPP values and that also happens when the driver gets unregistered).
-
-Accordingly, modify the driver to only do a full cleanup on driver
-object registration errors and when its status is changed to "off"
-via sysfs and to write the cached HWP Request MSR value back to
-the MSR on CPU init if the data structure representing the given
-CPU is still there.
+Make the energy_performance_preference policy attribute in sysfs
+always return the last EPP value written to it instead of the one
+currently in the HWP Request MSR to avoid possible confusion when
+the performance scaling algorithm is used in the active mode with
+HWP enabled (in which case the EPP is forced to 0 regardless of
+what value it has been set to via sysfs).
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/cpufreq/intel_pstate.c | 51 +++++++++++++---------------------
- 1 file changed, 19 insertions(+), 32 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index aca0587b176f..a7c6491f2b4a 100644
+index bcda1e700a73..3d18934fa975 100644
 --- a/drivers/cpufreq/intel_pstate.c
 +++ b/drivers/cpufreq/intel_pstate.c
-@@ -2091,30 +2091,32 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
+@@ -606,13 +606,10 @@ static const unsigned int epp_values[] = {
  
- 	cpu = all_cpu_data[cpunum];
+ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data, int *raw_epp)
+ {
+-	s16 epp;
++	s16 epp = cpu_data->epp_cached;
+ 	int index = -EINVAL;
  
--	if (!cpu) {
-+	if (cpu) {
-+		if (hwp_active)
-+			wrmsrl_on_cpu(cpunum, MSR_HWP_REQUEST,
-+				      cpu->hwp_req_cached);
-+	} else {
- 		cpu = kzalloc(sizeof(*cpu), GFP_KERNEL);
- 		if (!cpu)
- 			return -ENOMEM;
+ 	*raw_epp = 0;
+-	epp = intel_pstate_get_epp(cpu_data, 0);
+-	if (epp < 0)
+-		return epp;
  
- 		all_cpu_data[cpunum] = cpu;
+ 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+ 		if (epp == HWP_EPP_PERFORMANCE)
+@@ -644,6 +641,8 @@ static int intel_pstate_get_energy_pref_index(struct cpudata *cpu_data, int *raw
  
-+		cpu->cpu = cpunum;
+ static int intel_pstate_set_epp(struct cpudata *cpu, u32 epp)
+ {
++	int ret;
 +
- 		cpu->epp_default = -EINVAL;
- 		cpu->epp_powersave = -EINVAL;
- 		cpu->epp_saved = -EINVAL;
--	}
--
--	cpu = all_cpu_data[cpunum];
- 
--	cpu->cpu = cpunum;
-+		if (hwp_active) {
-+			const struct x86_cpu_id *id;
- 
--	if (hwp_active) {
--		const struct x86_cpu_id *id;
-+			intel_pstate_hwp_enable(cpu);
- 
--		intel_pstate_hwp_enable(cpu);
--
--		id = x86_match_cpu(intel_pstate_hwp_boost_ids);
--		if (id && intel_pstate_acpi_pm_profile_server())
--			hwp_boost = true;
-+			id = x86_match_cpu(intel_pstate_hwp_boost_ids);
-+			if (id && intel_pstate_acpi_pm_profile_server())
-+				hwp_boost = true;
-+		}
- 	}
- 
- 	intel_pstate_get_cpu_pstates(cpu);
-@@ -2701,9 +2703,6 @@ static void intel_pstate_driver_cleanup(void)
- 	}
- 	put_online_cpus();
- 
--	if (intel_pstate_driver == &intel_pstate)
--		intel_pstate_sysfs_hide_hwp_dynamic_boost();
--
- 	intel_pstate_driver = NULL;
+ 	/*
+ 	 * Use the cached HWP Request MSR value, because in the active mode the
+ 	 * register itself may be updated by intel_pstate_hwp_boost_up() or
+@@ -659,7 +658,11 @@ static int intel_pstate_set_epp(struct cpudata *cpu, u32 epp)
+ 	 * function, so it cannot run in parallel with the update below.
+ 	 */
+ 	WRITE_ONCE(cpu->hwp_req_cached, value);
+-	return wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
++	ret = wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
++	if (!ret)
++		cpu->epp_cached = epp;
++
++	return ret;
  }
  
-@@ -2729,14 +2728,6 @@ static int intel_pstate_register_driver(struct cpufreq_driver *driver)
+ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
+@@ -762,10 +765,8 @@ static ssize_t store_energy_performance_preference(
+ 			cpufreq_stop_governor(policy);
+ 			ret = intel_pstate_set_epp(cpu, epp);
+ 			err = cpufreq_start_governor(policy);
+-			if (!ret) {
+-				cpu->epp_cached = epp;
++			if (!ret)
+ 				ret = err;
+-			}
+ 		}
+ 	}
+ 
+@@ -2378,6 +2379,13 @@ static int intel_pstate_cpu_init(struct cpufreq_policy *policy)
+ 	 */
+ 	policy->policy = CPUFREQ_POLICY_POWERSAVE;
+ 
++
++	if (hwp_active) {
++		struct cpudata *cpu = all_cpu_data[policy->cpu];
++
++		cpu->epp_cached = intel_pstate_get_epp(cpu, 0);
++	}
++
  	return 0;
  }
  
--static int intel_pstate_unregister_driver(void)
--{
--	cpufreq_unregister_driver(intel_pstate_driver);
--	intel_pstate_driver_cleanup();
--
--	return 0;
--}
--
- static ssize_t intel_pstate_show_status(char *buf)
- {
- 	if (!intel_pstate_driver)
-@@ -2748,8 +2739,6 @@ static ssize_t intel_pstate_show_status(char *buf)
- 
- static int intel_pstate_update_status(const char *buf, size_t size)
- {
--	int ret;
--
- 	if (size == 3 && !strncmp(buf, "off", size)) {
- 		if (!intel_pstate_driver)
- 			return -EINVAL;
-@@ -2757,7 +2746,8 @@ static int intel_pstate_update_status(const char *buf, size_t size)
- 		if (hwp_active)
- 			return -EBUSY;
- 
--		return intel_pstate_unregister_driver();
-+		cpufreq_unregister_driver(intel_pstate_driver);
-+		intel_pstate_driver_cleanup();
- 	}
- 
- 	if (size == 6 && !strncmp(buf, "active", size)) {
-@@ -2765,9 +2755,7 @@ static int intel_pstate_update_status(const char *buf, size_t size)
- 			if (intel_pstate_driver == &intel_pstate)
- 				return 0;
- 
--			ret = intel_pstate_unregister_driver();
--			if (ret)
--				return ret;
-+			cpufreq_unregister_driver(intel_pstate_driver);
- 		}
- 
- 		return intel_pstate_register_driver(&intel_pstate);
-@@ -2778,9 +2766,8 @@ static int intel_pstate_update_status(const char *buf, size_t size)
- 			if (intel_pstate_driver == &intel_cpufreq)
- 				return 0;
- 
--			ret = intel_pstate_unregister_driver();
--			if (ret)
--				return ret;
-+			cpufreq_unregister_driver(intel_pstate_driver);
-+			intel_pstate_sysfs_hide_hwp_dynamic_boost();
- 		}
- 
- 		return intel_pstate_register_driver(&intel_cpufreq);
+@@ -2585,7 +2593,7 @@ static int intel_cpufreq_cpu_init(struct cpufreq_policy *policy)
+ 		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY_HWP;
+ 		rdmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, &value);
+ 		WRITE_ONCE(cpu->hwp_req_cached, value);
+-		cpu->epp_cached = (value & GENMASK_ULL(31, 24)) >> 24;
++		cpu->epp_cached = intel_pstate_get_epp(cpu, value);
+ 	} else {
+ 		turbo_max = cpu->pstate.turbo_pstate;
+ 		policy->transition_delay_us = INTEL_CPUFREQ_TRANSITION_DELAY;
 -- 
 2.26.2
 
