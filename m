@@ -5,52 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A11C20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 503E7207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928157;
-	bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+	s=default; t=1597928161;
+	bh=J0DXJSQCt/AEQ4kWcc4CEH9PFV6o+FDOPj9pZhVlWp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZmpAt6jNxD8gWRoetke3FLfLvhycQS/RypmMABaz6U9s7E0vYgtYfzvFhJakyS8tQ
-	 FFjcCdV+zuO3uUYTbALwtqCEv31MYM+TW+ET4XTOrLwWTO+cmusG8Fvo8CpRILLRSQ
-	 x7l+L0wleAHTJPx13V81IItlNcWbGCdxx2e8vbNI=
+	b=LAH2g2L10BrJTWm213n/xDnJknongumTdnO0mXNsJLN7fIk3gV4hwc9GQzpPuYc20
+	 t3IHhnqjSPKXKfwfFPocHnn0w2MwSWxl5QaPDASBPq54yG2m4JuEtH8HnoNUzv40I+
+	 +7D2qY2BppywUHI3JHBpHLwJUUyHZBsmXjw9HC0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729250AbgHTMzz (ORCPT
+        id S1729257AbgHTMz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:55:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:55:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgHTJm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:57 -0400
+        id S1729218AbgHTJmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F98E22CAF;
-        Thu, 20 Aug 2020 09:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2E620724;
+        Thu, 20 Aug 2020 09:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916576;
-        bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+        s=default; t=1597916571;
+        bh=J0DXJSQCt/AEQ4kWcc4CEH9PFV6o+FDOPj9pZhVlWp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tEFBcOzUVmycW9Xz7YCCHlApfXzHq5Q2aphTOgLlWd2snx6LmD28w7SmPc9bbPOLW
-         R4lfHPPwOfK5cmm7LqAvnEvEcWxhJcKZ5//XBAtDpJ0MrPZo2HcJY+SDGpUq1p8Xx2
-         TeETvp3GbQw6ZtzxwPoknnezV97BaWpZbbvLmMZw=
+        b=EbS7m+eGPtPek3Kei9DBW8jwgPBmXEf/suW3DYZr6A8EpWc0VB4WV2Oa1JGhSH0iR
+         OnuEvRS3TeEz/pvyJzk7G1PawiGUZWsFfx8WPYkOnaxdlr07lo3aqH3ZmE4dErZCkL
+         N4MIH7csFpVeIEwRjG1OiU7UbqqtynyGdFxV/8Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Kees Cook <keescook@chromium.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 177/204] fs/minix: fix block limit check for V1 filesystems
-Date:   Thu, 20 Aug 2020 11:21:14 +0200
-Message-Id: <20200820091615.045879304@linuxfoundation.org>
+Subject: [PATCH 5.7 175/204] lib/test_lockup.c: fix return value of test_lockup_init()
+Date:   Thu, 20 Aug 2020 11:21:12 +0200
+Message-Id: <20200820091614.947103996@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -63,41 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-[ Upstream commit 0a12c4a8069607247cb8edc3b035a664e636fd9a ]
+[ Upstream commit 3adf3bae0d612357da516d39e1584f1547eb6e86 ]
 
-The minix filesystem reads its maximum file size from its on-disk
-superblock.  This value isn't necessarily a multiple of the block size.
-When it's not, the V1 block mapping code doesn't allow mapping the last
-possible block.  Commit 6ed6a722f9ab ("minixfs: fix block limit check")
-fixed this in the V2 mapping code.  Fix it in the V1 mapping code too.
+Since filp_open() returns an error pointer, we should use IS_ERR() to
+check the return value and then return PTR_ERR() if failed to get the
+actual return value instead of always -EINVAL.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+E.g. without this patch:
+
+[root@localhost loongson]# ls no_such_file
+ls: cannot access no_such_file: No such file or directory
+[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+modprobe: ERROR: could not insert 'test_lockup': Invalid argument
+[root@localhost loongson]# dmesg | tail -1
+[  126.100596] test_lockup: cannot find file_path
+
+With this patch:
+
+[root@localhost loongson]# ls no_such_file
+ls: cannot access no_such_file: No such file or directory
+[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
+modprobe: ERROR: could not insert 'test_lockup': Unknown symbol in module, or unknown parameter (see dmesg)
+[root@localhost loongson]# dmesg | tail -1
+[   95.134362] test_lockup: failed to open no_such_file: -2
+
+Fixes: aecd42df6d39 ("lib/test_lockup.c: add parameters for locking generic vfs locks")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Link: http://lkml.kernel.org/r/20200628060846.682158-6-ebiggers@kernel.org
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: Kees Cook <keescook@chromium.org>
+Link: http://lkml.kernel.org/r/1595555407-29875-2-git-send-email-yangtiezhu@loongson.cn
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/minix/itree_v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ lib/test_lockup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
-index c0d418209ead1..405573a79aab4 100644
---- a/fs/minix/itree_v1.c
-+++ b/fs/minix/itree_v1.c
-@@ -29,7 +29,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
- 	if (block < 0) {
- 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
- 			block, inode->i_sb->s_bdev);
--	} else if (block >= inode->i_sb->s_maxbytes/BLOCK_SIZE) {
-+	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
- 		if (printk_ratelimit())
- 			printk("MINIX-fs: block_to_path: "
- 			       "block %ld too big on dev %pg\n",
+diff --git a/lib/test_lockup.c b/lib/test_lockup.c
+index ea09ca335b214..69ef1c17edf64 100644
+--- a/lib/test_lockup.c
++++ b/lib/test_lockup.c
+@@ -512,8 +512,8 @@ static int __init test_lockup_init(void)
+ 	if (test_file_path[0]) {
+ 		test_file = filp_open(test_file_path, O_RDONLY, 0);
+ 		if (IS_ERR(test_file)) {
+-			pr_err("cannot find file_path\n");
+-			return -EINVAL;
++			pr_err("failed to open %s: %ld\n", test_file_path, PTR_ERR(test_file));
++			return PTR_ERR(test_file);
+ 		}
+ 		test_inode = file_inode(test_file);
+ 	} else if (test_lock_inode ||
 -- 
 2.25.1
 
