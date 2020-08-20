@@ -2,110 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D885C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFC0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D237207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A922F207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q9GkWeLn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LFBm+FCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgHTCgQ (ORCPT
+        id S1726754AbgHTChz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:36:16 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36327 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgHTCgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:36:13 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BX80R5lnrz9sRN;
-        Thu, 20 Aug 2020 12:36:07 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1597890971;
-        bh=vULF1V6e0f1yAmziZlk663aZWqAbdESm0QzRgsSJSXg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=q9GkWeLnxRMya8G/Fbwsb/rU3kXcaVyIudfMZ/PFBaH5yRw/Mg1mQMb3XfPlkRK3x
-         VvLmQ+0DYOAFyoGgN7H6qMBumPcO2J7ZjonRaq3FuGs/B6G7rVMCQOn0/a6M9cFKL+
-         1qtjLnXKLu7XOx1pHG5+Y/tUXvYpaTiHILM5Fa5wFVCbKKbYFgl2Wtd3Fcoac+OPe0
-         wy0m/sOHRKlQd5eLgequXO5ndbzg9562Svw8wqqWFKL+3JdVj3Fd7JroqRSNnUMuT2
-         U1m+g67y1b3y9C3g3fKjZt4nS/LdsiXf2PoGPM8Sb0JZ5iS1DrjPiwILLU18kmRffg
-         VqWDLhKtz8j8Q==
-Date:   Thu, 20 Aug 2020 12:36:06 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
-        Kent Overstreet <kent.overstreet@gmail.com>
-Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
- interrupt - RIP: 0010:security_port_sid
-Message-ID: <20200820123606.772691e0@canb.auug.org.au>
-In-Reply-To: <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
-References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
-        <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
-        <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
-        <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
-        <20200820083111.46e81b4c@canb.auug.org.au>
-        <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
+        Wed, 19 Aug 2020 22:37:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50138 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbgHTChz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:37:55 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442F1C061757;
+        Wed, 19 Aug 2020 19:37:53 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id j15so195311lfg.7;
+        Wed, 19 Aug 2020 19:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sUjnzZV5m+ARna7xY+BiV+mxbOU+kCqv+Puf4T5BzIg=;
+        b=LFBm+FCUm/dIhquQdxHMfkroC3TqWMlFvuHkerELBRGXTmh9V16Nn59iA06VULsA7S
+         rweSmH1yZXIog7LuPKY31lavRyNbkmrRBz9bQYxg5iKO4T1bIBZCMc5EFr1fsFCPozk1
+         8hjz1pt/ZMJyUrvaAqYyuHpKQsnCfZOpkke74/XQPszUPl4ehL4yh4aWg+8bANsrR81e
+         9KVmOAW7mlGf3WKoWOVZiYlyeGXJGkcOZiEF6VUy62Axf5qDG9HkgcNgdJSawDzilwDg
+         VcS65Ja9rJiQnyN3bEhaNlcI8kflmhMpeFFdu2P5PJnZHWM6N1YIS36/Hc2GSoPZiNC8
+         +KHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sUjnzZV5m+ARna7xY+BiV+mxbOU+kCqv+Puf4T5BzIg=;
+        b=Cn/CZEqHtZ/SGPtEQTbzNqTHI/EJTaZtF0rk00BqyXL4NKfSZ9Q9eLGTQcuQ2GXxkf
+         7KVjnFe9VI3CHBzUe7Sz02DcleDDRrolEflLpEoleEP4imloKJuzIIZSgWNKgEMXxwf5
+         jKgTRfjGiSxTbck++W3R9PhSAXLEINk0vQ6WaP0N3Pfjryrf4jxnT4u60K4CiaIcz/2p
+         +ybFH+kjw3yXwFNyGjmzBuK5nKAd2JRb0n8rU8zXoJSzaRiYQ9TJI7/dx+3XdTPXkwuk
+         mOtRJGu19zB6u/X9Uq4M7ZGE5sOQ1ptUjiVw0UMkl2uS8udbFen8BAT+gtv4bdzzCZrF
+         Hdvg==
+X-Gm-Message-State: AOAM531uRzhGoGVDI2K/D27yhEqMSkcTpxaxmjT4EyxplKO7/CjFcQUZ
+        d4jdkulfO9fEBXNq+oDlqsiFwHvnpjuskvhzvCm/yMkp
+X-Google-Smtp-Source: ABdhPJz4XLTTVO1b6bZO2DcQVd/uXc3LpmxSDEzBE1Ry0fNqxbae0vYrQR1gY3z7RIo8+BZwLkTlX4Naq8ymMMWrmWQ=
+X-Received: by 2002:ac2:4ecc:: with SMTP id p12mr491396lfr.212.1597891071643;
+ Wed, 19 Aug 2020 19:37:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hvV3_WwiiS1IDDfSXsR+NWi";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200817022746.3115005-1-cphealy@gmail.com> <CAOMZO5D=g-_+gmZ+=tDvEOZNqW9zBFTkKOWamzSoFWgm_fvkAQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5D=g-_+gmZ+=tDvEOZNqW9zBFTkKOWamzSoFWgm_fvkAQ@mail.gmail.com>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Wed, 19 Aug 2020 19:37:40 -0700
+Message-ID: <CAFXsbZqGX-FFnf+_-HoFLzo4uZPOiaj-q4iAfokvgeuzj0n5fA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: vfxxx: Add syscon compatible with ocotp
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Stefan Agner <stefan@agner.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hvV3_WwiiS1IDDfSXsR+NWi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Paul,
-
-On Wed, 19 Aug 2020 21:21:29 -0400 Paul Moore <paul@paul-moore.com> wrote:
+On Wed, Aug 19, 2020 at 3:08 PM Fabio Estevam <festevam@gmail.com> wrote:
 >
-> On Wed, Aug 19, 2020 at 6:31 PM Stephen Rothwell <sfr@canb.auug.org.au> w=
-rote:
-> FYI, I just merged that patch into the selinux/next tree.
+> Hi Chris,
+>
+> On Sun, Aug 16, 2020 at 11:28 PM Chris Healy <cphealy@gmail.com> wrote:
+> >
+> > From: Chris Healy <cphealy@gmail.com>
+> >
+> > Add syscon compatibility with Vybrid ocotp node. This is required to
+> > access the UID.
+> >
+> > Signed-off-by: Chris Healy <cphealy@gmail.com>
+>
+> Would a Fixes tag be appropriate here so that it can be backported to
+> older stable kernels?
 
-Thanks, I will drop my copy from my tree tomorrow.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hvV3_WwiiS1IDDfSXsR+NWi
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl894ZYACgkQAVBC80lX
-0Gz5GAf8DJ3zLB6L2nDSdO6q6Dthrh1QZ3leXhW3V6v5RczxX/z/1zakE14IfcfK
-U7vftIP+pQ/CNhnuMzeiWvVWI5flz6ZoZyr1cq+5qfqJ/8LaYXPqLIYUNjqpzn/y
-lSdBgJxlnfqk91HRB1fnRY7/7CaOMH6UZB409OsFte03QAqBGjOnsvgDObtCCbz9
-9+HWRiJjXGbzi+d/76CUUyzQdWI0V85dLbyuNZwqMg3rHR0eWmuj/ndBv0+Yk3XV
-wsjp9NkjqULzaCdtK/PJpnLWzNsO0TXin28W3M2y31XMa+MrWgkjY5HwemmiDtaJ
-5DRF7usTn/0O1ZYJKj1ZM8f1sGeT/w==
-=frR/
------END PGP SIGNATURE-----
-
---Sig_/hvV3_WwiiS1IDDfSXsR+NWi--
+Good point, I will add that in v2.
