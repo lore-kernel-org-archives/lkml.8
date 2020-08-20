@@ -2,160 +2,174 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0533C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83A8B20758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041A020758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FAGJH2JE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726884AbgHTSDW (ORCPT
+        id S1726923AbgHTSEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:03:22 -0400
-Received: from mga12.intel.com ([192.55.52.136]:23326 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgHTSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:03:21 -0400
-IronPort-SDR: ckvVtIyXCCNdUqG5Td2US2h7b8JR+DgPfPhSgcH7mYLRnPNXr5UDzbQtnsJzc1sqeQE7T9E0W3
- bXuLmw0xkQ2A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="134902117"
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="134902117"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 11:03:21 -0700
-IronPort-SDR: S4p126MCiKlIxJsIsWUV3tm82b5hHCiHGuZgAZOxjmaZdNzFnwNc8osQDQKeb2Q+QIxiM7Oauz
- lGNVkIxPohrg==
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="472741700"
-Received: from ideak-desk.fi.intel.com ([10.237.68.141])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 11:03:18 -0700
-Date:   Thu, 20 Aug 2020 21:03:12 +0300
-From:   Imre Deak <imre.deak@intel.com>
-To:     Sam McNally <sammc@chromium.org>, Wayne Lin <Wayne.Lin@amd.com>,
-        Lyude Paul <lyude@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/dp_mst: Add ddc i2c device links for DP MST
- connectors
-Message-ID: <20200820180312.GC2423@ideak-desk.fi.intel.com>
-Reply-To: imre.deak@intel.com
-References: <20200729161510.1.Iaa9c3d7c4332cf8717653f3d3ae6f2b955aa3fc6@changeid>
- <20200814145956.GA12962@ideak-desk.fi.intel.com>
- <CAJqEsoCAR-3NNL+pD4QeUWioq-uLdEdZwNrPVkzjULM39KiayA@mail.gmail.com>
+        Thu, 20 Aug 2020 14:04:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51894 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgHTSEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:04:05 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB9DC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:04:04 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a14so2974426wra.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:04:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LeRFjvgtCyux0Evs7yc9oix8Hrc6YHLHgKJRYeIXm9g=;
+        b=FAGJH2JEUEHoCpdJw0cm0l3P4WYL3CMpFPdt/cXsAiWunaoSJDC99Yn/qyuqxeqmiW
+         W02MYpgl8MdBhhC3brLb94opDv9BFtKvYAd7Z/xuwM1nQ9bW6ZaEtwVsQIhgN5SihIAs
+         YJMnNrtYLoDlm18vYsX5W7ygrcaX+W2iN5ljtsOtP2yKTGa5FTm5x/axEDPPpZhe52u8
+         RsQyi70djMGrTcUhSGcjMi0YxESh6TTuIlCZ+sF/14PnMp1hVCRhgR0IFjZyDLrDCbY9
+         +FxnW2I9LOREnPga+AqrlhdAfpQ5+zdOXOiCBMm7CI+vdKFdTXzbWso0SmbZoIAvJOxS
+         2+KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LeRFjvgtCyux0Evs7yc9oix8Hrc6YHLHgKJRYeIXm9g=;
+        b=Nh9rSeBlM7q+iQT54pN01eb1isLiIednxObLZbYYzJjZWBgVgRUYlBrjjMRHPdhMIv
+         Iio1nmNdgCTlFg6y/ZuGaYfAGvkjCvfZ2zf8pjTuDmtWYcdBf0840DZgd5Ru291pToBb
+         fqTZ2OM64R6ccb5/OW38zaN2aY6vjmsg7wTPpyRSLX8Sx1CMVVLQ5tT9JjbEGl60vr9Q
+         tuObXFA8v+ZU79wBv0yWblY5IO5Y6BXJTI8NPoXO3mYyPKzJHwM13NYrpF+HGia3ExAI
+         NMAc4F/u2LYYzExHAR4MmivE5k3A+1mtxvOE6h4661RmCOHSQ8BbyfRfZ46J/82KSp/r
+         ev0Q==
+X-Gm-Message-State: AOAM532qg9pTb/WNehSvjcNkzXqvu0DwaP/1Z5lofQY6CTtTSpcDSOu3
+        5eQsw3tkHkuAW4+wcKXwR4MgnkFBsSV4HFiInzrF8TZ8
+X-Google-Smtp-Source: ABdhPJwFnxDVqryk2d5u+r3zOBTy3CQLKMNm1UXJVNWqLw1pNA8KPsrtB2vGwU+fkyhUIVCSBQXWSnYpAJOS0XhlCqg=
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr4587835wrs.124.1597946643168;
+ Thu, 20 Aug 2020 11:04:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJqEsoCAR-3NNL+pD4QeUWioq-uLdEdZwNrPVkzjULM39KiayA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200819081808.26796-1-lukas.bulwahn@gmail.com> <f0d3f57c-416c-6a6a-0e9e-d3dc308f2b52@amd.com>
+In-Reply-To: <f0d3f57c-416c-6a6a-0e9e-d3dc308f2b52@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Thu, 20 Aug 2020 14:03:52 -0400
+Message-ID: <CADnq5_NXykUUP8j53EEzo0uDtheokCkjEvjOF+DPaOT=a40=9Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: remove unintended executable mode
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Dennis Li <Dennis.Li@amd.com>, Jerry Zuo <Jerry.Zuo@amd.com>,
+        Guchun Chen <guchun.chen@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 12:27:03PM +1000, Sam McNally wrote:
-> > > [...]
-> > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > index 1ac874e4e7a1..73a2299c2faa 100644
-> > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> > > @@ -2161,11 +2161,23 @@ static void build_mst_prop_path(const struct drm_dp_mst_branch *mstb,
-> > >  int drm_dp_mst_connector_late_register(struct drm_connector *connector,
-> > >                                      struct drm_dp_mst_port *port)
-> > >  {
-> > > +     int ret;
-> > >       DRM_DEBUG_KMS("registering %s remote bus for %s\n",
-> > >                     port->aux.name, connector->kdev->kobj.name);
-> > >
-> > >       port->aux.dev = connector->kdev;
-> > > -     return drm_dp_aux_register_devnode(&port->aux);
-> > > +     ret = drm_dp_aux_register_devnode(&port->aux);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (port->pdt != DP_PEER_DEVICE_NONE &&
-> > > +         drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
+Applied.  Thanks!
+
+Alex
+
+On Wed, Aug 19, 2020 at 4:53 AM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
+>
+> Am 19.08.20 um 10:18 schrieb Lukas Bulwahn:
+> > Besides the intended change, commit 4cc1178e166a ("drm/amdgpu: replace =
+DRM
+> > prefix with PCI device info for gfx/mmhub") also set the source files
+> > mmhub_v1_0.c and gfx_v9_4.c to be executable, i.e., changed fromold mod=
+e
+> > 644 to new mode 755.
 > >
-> > How can we get here when drm_dp_mst_is_end_device(port) is not true?
-> > AFAICS that's only case where we should create a connector and an i2c
-> > device. (IOW we don't create them for branch ports.)
-> 
-> I'm not sure what you mean. Wouldn't this condition be checked during
-> the registration of any MST connector? This follows the pattern used
-> in drm_dp_mst_port_add_connector() [0], which seems like it's invoked
-> in the same cases as drm_dp_mst_connector_late_register(), modulo
-> early outs for errors.
-
-Re-reading the code, a DRM connector is created whenever the MST port is
-an output port, so even in the case of an output branch port.
-
-I'm still not sure why we can't register/unregister the I2C bus whenever
-creating/removing the DRM connector. That's also the scope of the AUX
-bus, which is what I2C depends on, and if a port doesn't support I2C
-messaging then the corresponding AUX messages would be NAKed.
-
---Imre
-
-> 
-> [0] https://cgit.freedesktop.org/drm-tip/tree/drivers/gpu/drm/drm_dp_mst_topology.c?id=1939e049a8ec6cef03a098f7cc99cb0bbcff21c6#n2188
-> 
-> 
-> 
-> > > +             ret = sysfs_create_link(&port->connector->kdev->kobj,
-> > > +                                     &port->aux.ddc.dev.kobj, "ddc");
-> > > +             if (ret)
-> > > +                     drm_dp_aux_unregister_devnode(&port->aux);
-> > > +     }
-> > > +     return ret;
-> > >  }
-> > >  EXPORT_SYMBOL(drm_dp_mst_connector_late_register);
-> > >
-> > > @@ -5490,6 +5502,7 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
-> > >  {
-> > >       struct drm_dp_aux *aux = &port->aux;
-> > >       struct device *parent_dev = port->mgr->dev->dev;
-> > > +     int ret;
-> > >
-> > >       aux->ddc.algo = &drm_dp_mst_i2c_algo;
-> > >       aux->ddc.algo_data = aux;
-> > > @@ -5504,7 +5517,17 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
-> > >       strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(parent_dev),
-> > >               sizeof(aux->ddc.name));
-> > >
-> > > -     return i2c_add_adapter(&aux->ddc);
-> > > +     ret = i2c_add_adapter(&aux->ddc);
-> > > +     if (ret)
-> > > +             return ret;
-> > > +
-> > > +     if (port->connector && port->connector->kdev) {
-> > > +             ret = sysfs_create_link(&port->connector->kdev->kobj,
-> > > +                                     &port->aux.ddc.dev.kobj, "ddc");
-> > > +             if (ret)
-> > > +                     i2c_del_adapter(&port->aux.ddc);
-> > > +     }
-> > > +     return ret;
-> > >  }
-> > >
-> > >  /**
-> > > @@ -5513,6 +5536,8 @@ static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
-> > >   */
-> > >  static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port)
-> > >  {
-> > > +     if (port->connector && port->connector->kdev)
-> > > +             sysfs_remove_link(&port->connector->kdev->kobj, "ddc");
-> > >       i2c_del_adapter(&port->aux.ddc);
-> > >  }
-> > >
-> > > --
-> > > 2.28.0.rc0.142.g3c755180ce-goog
-> > >
+> > Commit 241b2ec9317e ("drm/amd/display: Add dcn30 Headers (v2)") added t=
+he
+> > four header files {dpcs,dcn}_3_0_0_{offset,sh_mask}.h as executable, i.=
+e.,
+> > mode 755.
+> >
+> > Set to the usual modes for source and headers files and clean up those
+> > mistakes. No functional change.
+> >
+> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
+> > ---
+> > applies cleanly on current master and next-20200819
+> >
+> > Alex, Christian, please pick this minor non-urgent cleanup patch.
+>
+> Alex is usually the one picking those up. If he misses something feel
+> free to ping us once more.
+>
+> Thanks,
+> Christian.
+>
+> >
+> > Dennis, Jerry, please ack.
+> >
+> > Dennis, Jerry, you might want to check your development environment
+> > introducing those executable modes on files.
+> >
+> >   drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c                         | 0
+> >   drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.c                       | 0
+> >   drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_offset.h   | 0
+> >   drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_sh_mask.h  | 0
+> >   drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_offset.h  | 0
+> >   drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_sh_mask.h | 0
+> >   6 files changed, 0 insertions(+), 0 deletions(-)
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.=
+c
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/include/asic_reg/d=
+cn/dcn_3_0_0_offset.h
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/include/asic_reg/d=
+cn/dcn_3_0_0_sh_mask.h
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/include/asic_reg/d=
+cn/dpcs_3_0_0_offset.h
+> >   mode change 100755 =3D> 100644 drivers/gpu/drm/amd/include/asic_reg/d=
+cn/dpcs_3_0_0_sh_mask.h
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_4.c b/drivers/gpu/drm/am=
+d/amdgpu/gfx_v9_4.c
+> > old mode 100755
+> > new mode 100644
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/mmhub_v1_0.c b/drivers/gpu/drm/=
+amd/amdgpu/mmhub_v1_0.c
+> > old mode 100755
+> > new mode 100644
+> > diff --git a/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_offset.=
+h b/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_offset.h
+> > old mode 100755
+> > new mode 100644
+> > diff --git a/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_sh_mask=
+.h b/drivers/gpu/drm/amd/include/asic_reg/dcn/dcn_3_0_0_sh_mask.h
+> > old mode 100755
+> > new mode 100644
+> > diff --git a/drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_offset=
+.h b/drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_offset.h
+> > old mode 100755
+> > new mode 100644
+> > diff --git a/drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_sh_mas=
+k.h b/drivers/gpu/drm/amd/include/asic_reg/dcn/dpcs_3_0_0_sh_mask.h
+> > old mode 100755
+> > new mode 100644
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
