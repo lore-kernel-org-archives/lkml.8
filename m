@@ -2,155 +2,180 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76798C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD98C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5610522D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5ED22D02
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2Ohspes"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PhnkoGYs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbgHTPvp (ORCPT
+        id S1729402AbgHTPwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:51:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43123 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728209AbgHTPvl (ORCPT
+        Thu, 20 Aug 2020 11:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728209AbgHTPwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:51:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597938699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R6ghZf9v2o9kk/8rogKtOdOOtqVr3hm3Y5dvwh2/Dy0=;
-        b=g2Ohspesn9N6QBM2rCCWapOMELf6QJeDDGE/+h4SCmV9gtrJwFk8HsP6tcYK50tjeS6wJN
-        LQ9ZdLCcfg/rvZofEN1P8Jln5gui54Y61l+uj+QojFe9fn1vJsTb/6TanAe3Svp8Jwh9jl
-        NTEU0jbjlM5kZbuYuLyfmEVsuXbY/vE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-265-lMVDHeFMMuKcctS_nkLwSg-1; Thu, 20 Aug 2020 11:51:37 -0400
-X-MC-Unique: lMVDHeFMMuKcctS_nkLwSg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24DE08030B1;
-        Thu, 20 Aug 2020 15:51:36 +0000 (UTC)
-Received: from optiplex-lnx (unknown [10.3.128.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBDDD19C66;
-        Thu, 20 Aug 2020 15:51:27 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 11:51:25 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Gao Xiang <hsiangkao@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Dave Chinner <david@fromorbit.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
- mistake
-Message-ID: <20200820155125.GB3071325@optiplex-lnx>
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
+        Thu, 20 Aug 2020 11:52:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E7CC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=SjTmJ9XwsS/HKzjcdQ/ubxMW0x/y/rl3M8LO4B6tTQE=; b=PhnkoGYstN9oYVI933xixhJIxY
+        rDByQzHQRIeoMFGefAk7eV2VUp+/ICyHHU1lpO6louXO57rw8wO/Cj6rS1QWnDfIVrM9jAELM6sEh
+        A0F4/Z9o4HZgHYagJGUoqFP4hXRU6Bl6tHm6a2PjVpqsNsrSKYjO0oJUb/fvh0F5G6bGS1w73Thie
+        aycn78pa3168nMPTZ+FI3nnj/w+xBQvXujzreRyAUfjehOKdMPLHKS+RVIEHtKjXRXEQRY1iLqXJK
+        pc+lGt3ccVMC2LdkNATSrWLMvfq4RNRUSBOU6pr3gSh4+ddZsjGuKSNe6mUNwvcoHURhDEY1Dp1Mj
+        VdtHegkA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8mqm-0007uF-1g; Thu, 20 Aug 2020 15:51:36 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 11F2B303271;
+        Thu, 20 Aug 2020 17:51:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F0E6E2C37D878; Thu, 20 Aug 2020 17:51:34 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 17:51:34 +0200
+From:   peterz@infradead.org
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC][PATCH 4/7] x86/debug: Move historical SYSENTER junk into
+ exc_debug_kernel()
+Message-ID: <20200820155134.GD1362448@hirez.programming.kicks-ass.net>
+References: <20200820103832.486877479@infradead.org>
+ <20200820104905.294802764@infradead.org>
+ <20200820152828.tvluka3lvmzof5xt@holly.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200820152828.tvluka3lvmzof5xt@holly.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
-> SWP_FS is used to make swap_{read,write}page() go through
-> the filesystem, and it's only used for swap files over
-> NFS. So, !SWP_FS means non NFS for now, it could be either
-> file backed or device backed. Something similar goes with
-> legacy SWP_FILE.
+On Thu, Aug 20, 2020 at 04:28:28PM +0100, Daniel Thompson wrote:
+> On Thu, Aug 20, 2020 at 12:38:36PM +0200, Peter Zijlstra wrote:
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  arch/x86/kernel/traps.c |   24 ++++++++++++------------
+> >  1 file changed, 12 insertions(+), 12 deletions(-)
+> > 
+> > --- a/arch/x86/kernel/traps.c
+> > +++ b/arch/x86/kernel/traps.c
+> > @@ -820,18 +820,6 @@ static void handle_debug(struct pt_regs
+> >  		goto out;
+> >  	}
+> >  
+> > -	if (WARN_ON_ONCE((dr6 & DR_STEP) && !user_mode(regs))) {
+> > -		/*
+> > -		 * Historical junk that used to handle SYSENTER single-stepping.
+> > -		 * This should be unreachable now.  If we survive for a while
+> > -		 * without anyone hitting this warning, we'll turn this into
+> > -		 * an oops.
+> > -		 */
+> > -		tsk->thread.debugreg6 &= ~DR_STEP;
+> > -		set_tsk_thread_flag(tsk, TIF_SINGLESTEP);
+> > -		regs->flags &= ~X86_EFLAGS_TF;
+> > -	}
+> > -
+> >  	si_code = get_si_code(tsk->thread.debugreg6);
+> >  	if (tsk->thread.debugreg6 & (DR_STEP | DR_TRAP_BITS) || user_icebp)
+> >  		send_sigtrap(regs, 0, si_code);
+> > @@ -874,6 +862,18 @@ static __always_inline void exc_debug_ke
+> >  	if (kprobe_debug_handler(regs))
+> >  		goto out;
+> >  
+> > +	if (WARN_ON_ONCE(dr6 & DR_STEP)) {
+> > +		/*
+> > +		 * Historical junk that used to handle SYSENTER single-stepping.
+> > +		 * This should be unreachable now.  If we survive for a while
+> > +		 * without anyone hitting this warning, we'll turn this into
+> > +		 * an oops.
+> > +		 */
+> > +		dr6 &= ~DR_STEP;
+> > +		set_thread_flag(TIF_SINGLESTEP);
+> > +		regs->flags &= ~X86_EFLAGS_TF;
+> > +	}
+> > +
 > 
-> So in order to achieve the goal of the original patch,
-> SWP_BLKDEV should be used instead.
-> 
-> FS corruption can be observed with SSD device + XFS +
-> fragmented swapfile due to CONFIG_THP_SWAP=y.
-> 
-> I reproduced the issue with the following details:
-> 
-> Environment:
-> QEMU + upstream kernel + buildroot + NVMe (2 GB)
-> 
-> Kernel config:
-> CONFIG_BLK_DEV_NVME=y
-> CONFIG_THP_SWAP=y
-> 
-> Some reproducable steps:
-> mkfs.xfs -f /dev/nvme0n1
-> mkdir /tmp/mnt
-> mount /dev/nvme0n1 /tmp/mnt
-> bs="32k"
-> sz="1024m"    # doesn't matter too much, I also tried 16m
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
-> 
-> mkswap /tmp/mnt/sw
-> swapon /tmp/mnt/sw
-> 
-> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
-> 
-> Symptoms:
->  - FS corruption (e.g. checksum failure)
->  - memory corruption at: 0xd2808010
->  - segfault
-> 
-> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
-> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
-> Cc: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Rafael Aquini <aquini@redhat.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
-> ---
-> v1: https://lore.kernel.org/r/20200819195613.24269-1-hsiangkao@redhat.com
-> 
-> changes since v1:
->  - improve commit message description
-> 
-> Hi Andrew,
-> Kindly consider this one instead if no other concerns...
-> 
-> Thanks,
-> Gao Xiang
-> 
->  mm/swapfile.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 6c26916e95fd..2937daf3ca02 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
->  			goto nextsi;
->  		}
->  		if (size == SWAPFILE_CLUSTER) {
-> -			if (!(si->flags & SWP_FS))
-> +			if (si->flags & SWP_BLKDEV)
->  				n_ret = swap_alloc_cluster(si, swp_entries);
->  		} else
->  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
-> -- 
-> 2.18.1
-> 
-Acked-by: Rafael Aquini <aquini@redhat.com>
+> I was hoping just to share a Tested-by: on the patchset but
+> unfortunately it wasn't to be. After a quick bisect this patch comes
+> back as causing kdb single stepping to fail.
 
+Yeah, Josh just asked me about this:
+
+  https://lkml.kernel.org/r/20200820152111.GC1362448@hirez.programming.kicks-ass.net
+
+How's this on top of the lot?
+
+---
+
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -828,25 +828,24 @@ static __always_inline void exc_debug_ke
+ 	if (kprobe_debug_handler(regs))
+ 		goto out;
+ 
+-	if (WARN_ON_ONCE(dr6 & DR_STEP)) {
+-		/*
+-		 * Historical junk that used to handle SYSENTER single-stepping.
+-		 * This should be unreachable now.  If we survive for a while
+-		 * without anyone hitting this warning, we'll turn this into
+-		 * an oops.
+-		 */
+-		dr6 &= ~DR_STEP;
+-		set_thread_flag(TIF_SINGLESTEP);
+-		regs->flags &= ~X86_EFLAGS_TF;
+-	}
+-
+ 	/*
+ 	 * The kernel doesn't use INT1
+ 	 */
+ 	if (!dr6)
+ 		goto out;
+ 
+-	notify_debug(regs, dr6);
++	if (notify_debug(regs, dr6))
++		goto out;
++
++	/*
++	 * The kernel doesn't use TF single-step outside of:
++	 *
++	 *  - Kprobes, consumed through kprobe_debug_handler()
++	 *  - KGDB, consumed through notify_debug()
++	 *
++	 * So if we get here with DR_STEP set, something is wonky.
++	 */
++	BUG_ON(current->thread.debugreg6 & DR_STEP);
+ 
+ out:
+ 	instrumentation_end();
