@@ -2,100 +2,130 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E901C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC9F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920582;
-	bh=51+C5WjjY05GozuMsva3zXv/OAw3yNnmnI86X3jKi3M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shvPWhp7Fd31QTJ2nk5xCAfiVf/qi9TkmPvien8JdZNW5JaEhiRyE7wkRc5LdZLrr
-	 5djtYqQf7vvdYk2olsiJOIEcEdIVxJnfnd7b3FhYng7u627vt95YBsZWcTZ6eFXAPk
-	 CSWL9rWzN2uUU6W1gq7Wpa6eGaocQYiQsDaX9L7M=
+	by mail.kernel.org (Postfix) with ESMTP id 31B7520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:49:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="aVOB/NFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgHTKtk (ORCPT
+        id S1729270AbgHTKtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbgHTKP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:15:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F24982067C;
-        Thu, 20 Aug 2020 10:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918527;
-        bh=51+C5WjjY05GozuMsva3zXv/OAw3yNnmnI86X3jKi3M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vm4NBvz1h+N0ATqicjPkG17aeJdRbNA0ifPJ1lGzwgnFSaSx1zwCL41CiZ8ALst5
-         z9fj8wP+9EXFHIMMNF+awgKbM0gwsjat9wVKQka5h/zyx7Qpo17wLfHJsNJJVex/IT
-         +dHxbKsmTRWeGRYWg/e9wVjdrJUBZk37zW1L0vR4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 203/228] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Thu, 20 Aug 2020 11:22:58 +0200
-Message-Id: <20200820091617.690726153@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 06:49:45 -0400
+Received: from relayfre-01.paragon-software.com ([176.12.100.13]:33814 "EHLO
+        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731233AbgHTKsx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:48:53 -0400
+Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
+        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id 3A701223;
+        Thu, 20 Aug 2020 13:48:50 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paragon-software.com; s=mail; t=1597920530;
+        bh=9cTYIIJs4bB6m90q1Q33yf9+CsB+AZVqOTe8LJv4/ww=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=aVOB/NFoG4pG0LP5c29U+0JbKiEmNLTgguYMcNnw8D/mSNHFjhy86Frui5j9mCU4B
+         x0jgGpZW/4eUidx3C0zPQbegivfE93OMslZzvamvQtg0qT5BjfxFpV0wRB14lCxG5n
+         aWSXN7XhoMwCZUDeNtxZRyvL02/gtiAqN4dgIF4g=
+Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
+ vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Thu, 20 Aug 2020 13:48:49 +0300
+Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
+ by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
+ id 15.01.1847.003; Thu, 20 Aug 2020 13:48:49 +0300
+From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+To:     "dsterba@suse.cz" <dsterba@suse.cz>
+CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Topic: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
+ Software.
+Thread-Index: AdZyNcmjSkpkGje7R9K6YobJrVDyZwA6EcIAAPAHtmA=
+Date:   Thu, 20 Aug 2020 10:48:49 +0000
+Message-ID: <a8fa5b2b31b349f2858306af01269eda@paragon-software.com>
+References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
+ <20200815190642.GZ2026@twin.jikos.cz>
+In-Reply-To: <20200815190642.GZ2026@twin.jikos.cz>
+Accept-Language: ru-RU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.30.8.36]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+From: David Sterba <dsterba@suse.cz>
+Sent: Saturday, August 15, 2020 10:07 PM
+>=20
+> 1. check existing support in kernel
+>=20
+> There is fs/ntfs with read-only support from Tuxera, last change in the
+> git tree is 3 years ago. The driver lacks read-write support so there's
+> not 100% functionality duplication but there's still driver for the same
+> filesystem.
+>=20
+> I don't know what's the feature parity, how much the in-kernel driver is
+> used (or what are business relations of Tuxera and Paragon), compared to
+> the FUSE-based driver, but ideally there's just one NTFS driver in linux
+> kernel.
+>=20
+> The question I'd ask:
+>=20
+> - what are users of current fs/ntfs driver going to lose, if the driver
+>   is going to be completely replaced by your driver
+>=20
+>   If the answer is 'nothing' then, the straightfowrad plan is to just
+>   replace it. Otherwise, we'll have to figure that out.
 
-[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
+Hi! Regarding the comparison with fs/ntfs driver - we of course did the ana=
+lysis. There are two main points which make the difference: full read-write=
+ support (including compressed/sparse files) and journal replaying. The one=
+ thing which is missing in fs/ntfs3 in the inital patch is the appropriate =
+processing of hybernated volumes (mounting them read-only to avoid corrupti=
+ons). This, however, is considered as trivial change and will be added eith=
+er in v2, or in v3. In general, we want to have the community's feedback on=
+ the topic, and if it's more suitable for the Linux Kernel not to have two =
+implementations in Kernel, then the 'fs/ntfs' may be replaced. =20
 
-Set proper masks to avoid invalid input spillover to reserved bits.
+>=20
+> 2. split the patch
+>=20
+> One patch of 27k lines of code is way too much to anybody to look at.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The patch will be splitted in v2 file-wise. Wasn't clear initially which wa=
+y will be more convenient to review.
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 4def15c32a018..d2364ba99f6ce 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -304,8 +304,8 @@ enum {
- 
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
--- 
-2.25.1
+> 3. determine support status
+>=20
+> You state intentions to work on the driver and there's a new entry in
+> MAINTAINERS file with 'Supported', so that's a good sign that it's not
+> just one-time dump of code. Fixing bugs or adding functionality is
+> expected.
+>=20
+> 4. development git tree
+>=20
+> Once the filesystem is merged, you'd be getting mails from people
+> running eg. static checkers, build tests, sending cleanups or other
+> tree-wide changes.  The entry in MAINTAINER file does not point to any
+> git tree, so that's not clear to me what's the expected way to get the
+> fixes to Linus' tree or where are people supposed to look for 'is this
+> fixed already'.
 
-
+The external git repo for the code is currently being prepared, so it's the=
+ matter of time to have it. Will add the appropriate links to the MAINTERS =
+once done.
 
