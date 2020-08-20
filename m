@@ -2,115 +2,93 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECDDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D877207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929010;
-	bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQcmhlzfuJALI5dLKsxT94LmAZv//DzTEV88ZMPtUYF6uQMmviqdWtQIGav3Ijda3
-	 caZt3bwLp6D0DEiNZ8UbdTmUpCEeNtfQxeh/aF425HAvs1h/3TsshptK3UL0DyvThO
-	 RxMOeNWZKaohrdcAfqNrLpCXzqM7/OE6x/NIlX74=
+	by mail.kernel.org (Postfix) with ESMTP id DDBEF207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kf51tNS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgHTNKI (ORCPT
+        id S1727099AbgHTNKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728746AbgHTJhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8371D20724;
-        Thu, 20 Aug 2020 09:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916258;
-        bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEuS1csmrEoeFEBs0uQPq6DkFlDJxXeenv37dDMMGag+IpRIo4HgNca4XeXpp96FP
-         og1hXG0EuVag110QNYrabRTpjuZOa3tVuob0x8oji1v+XnIn392ZDTgQMJ2rWTYo7N
-         u4W18yQCA4+YGSGsV61CfVuJKpr3dcj4TND7cDdk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
-        BingJing Chang <bingjingc@synology.com>,
-        Danny Shih <dannyshih@synology.com>,
-        ChangSyun Peng <allenpeng@synology.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.7 058/204] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
-Date:   Thu, 20 Aug 2020 11:19:15 +0200
-Message-Id: <20200820091609.166505068@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:10:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728947AbgHTNJz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:09:55 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B9DC061385;
+        Thu, 20 Aug 2020 06:09:55 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id h2so1027769plr.0;
+        Thu, 20 Aug 2020 06:09:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rcpRkVJoKyVY/3B/RffNTzv0GP7F/59KL5DNPGHvfJo=;
+        b=Kf51tNS8rKp5fAVzk8nTv6XAPFRnqZ12quyqy90P+iGzGjaHGiEmXk215a5rwrkSjP
+         A9fpL2d/oKHqMZuzlceR1N+yUW37/wGUuyGI2rqGbYRU4IfIu5Y5Xr36e6nNOACeKDpE
+         hfe6IgfeFgaMbOu9luA8b0ZnspPXVfd/jy/6pJSbyFsGc1+Ta5JD6ea2V5uans9mXq7m
+         l6TwHmRnHyAJU+1xiDgPliP16TTvr+pXxZ8kr6J5VOUDEERoejv26SWpqR4NShZ/2zwd
+         lepX0NPt7T5uK2lT7kOUp6EYB2b1xwt0bdWHRlJ/+qcEwRRLSwYtreuJh/ptx6IZcWPF
+         VAUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rcpRkVJoKyVY/3B/RffNTzv0GP7F/59KL5DNPGHvfJo=;
+        b=XDR6QuSRZND/3w/D4H2bucl7ZHvbuNEiGyYGGjxY/NkQpwL9QdobTgu5JHX7+ouuSk
+         WiuXVp04bWdYqVhseZxYsoNOqAZ4NGr7YmEi54+jjtAVddfOiUZU4Ef1/F4j99Gio4wK
+         RZ50DV9tUfwoRiM1dZOMhJesoJke0dW3p01K4qqnPfDSFYK/dy2JeNMiLT3psJl3TLA5
+         0icNCbmXmLRIXNz8f8oKEqIgISBuyp5piiEfusF/4nfXGyw/3X89BylJwkKRD0vq6J+t
+         HMuIDG3xZ+g4oA8qFHhk8MQUlCDjqR+Bc/UalyRYks6TsLhmuovYdzJMdUGIBbJ5Fy8W
+         9FSg==
+X-Gm-Message-State: AOAM533JAHufeMrL2Lb8k/tai78dj+LmJYQ7kjqsUPkBbkXibhfjec5l
+        2nH6R17amEu3iVgCBZLXw4bnwGgOH8JMtDEq3W0=
+X-Google-Smtp-Source: ABdhPJyu0tldf5JCV8BFWNDw6/Y2eW0lJLDaQEyv+8zGx6tjmMIqt1bgmh6TEetWI13G8rBzfiKhrUCbyej3YoEdjxk=
+X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2347505pjv.181.1597928994060;
+ Thu, 20 Aug 2020 06:09:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+In-Reply-To: <1597912282-31254-1-git-send-email-anand.ashok.dumbre@xilinx.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 20 Aug 2020 16:09:37 +0300
+Message-ID: <CAHp75VeHut83MwpN8VNycXetcH1W0uu0TNm7o5BHrqp-9BB_gQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: Fixed IIO_VAL_FRACTIONAL calcuation for negative values
+To:     Anand Ashok Dumbre <anand.ashok.dumbre@xilinx.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>, git <git@xilinx.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChangSyun Peng <allenpeng@synology.com>
+On Thu, Aug 20, 2020 at 11:32 AM Anand Ashok Dumbre
+<anand.ashok.dumbre@xilinx.com> wrote:
 
-commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
+> This email and any attachments are intended for the sole use of the named=
+ recipient(s) and contain(s) confidential information that may be proprieta=
+ry, privileged or copyrighted under applicable law. If you are not the inte=
+nded recipient, do not read, copy, or forward this email message or any att=
+achments. Delete this email message and any attachments immediately.
 
-In degraded raid5, we need to read parity to do reconstruct-write when
-data disks fail. However, we can not read parity from
-handle_stripe_dirtying() in force reconstruct-write mode.
+This is not the footer that allows you to do open source.
 
-Reproducible Steps:
-
-1. Create degraded raid5
-mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
-2. Set rmw_level to 0
-echo 0 > /sys/block/md2/md/rmw_level
-3. IO to raid5
-
-Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
-the parity in this situation.
-
-Cc: <stable@vger.kernel.org> # v4.4+
-Reviewed-by: Alex Wu <alexwu@synology.com>
-Reviewed-by: BingJing Chang <bingjingc@synology.com>
-Reviewed-by: Danny Shih <dannyshih@synology.com>
-Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/raid5.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3604,6 +3604,7 @@ static int need_this_block(struct stripe
- 	 * is missing/faulty, then we need to read everything we can.
- 	 */
- 	if (sh->raid_conf->level != 6 &&
-+	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
- 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
- 		/* reconstruct-write isn't being forced */
- 		return 0;
-@@ -4839,7 +4840,7 @@ static void handle_stripe(struct stripe_
- 	 * or to load a block that is being partially written.
- 	 */
- 	if (s.to_read || s.non_overwrite
--	    || (conf->level == 6 && s.to_write && s.failed)
-+	    || (s.to_write && s.failed)
- 	    || (s.syncing && (s.uptodate + s.compute < disks))
- 	    || s.replacing
- 	    || s.expanding)
-
-
+--=20
+With Best Regards,
+Andy Shevchenko
