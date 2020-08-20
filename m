@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168B7C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB362C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB6A8208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A0B9207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881888;
-	bh=E9RoHVS97+ZIu745TjSEl0N6lC02FWnHn7mS2W69IC4=;
+	s=default; t=1597881894;
+	bh=zzPswJhfQd/4W/b2P8W2qrcTfu+qr2gLdqmk0us4tzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YOApvx7ylaDSFlhvrjtBOY4eXf5kXwIcbX0xCgepyz4c6DZQssGrrXf98NhfaJ6v/
-	 njgJuf7DM0N/aBGykacsoV/O0ZpPhK0+HXUgN1oQGct926FMLGaY0OMyvLKdzmK0Jh
-	 OubPus7ldi8L7mwZFtfvmxn/JTaGhtDKQ5P+ZGuQ=
+	b=KKJ+PtGJWO3SXVnelMTCTS4Digh+sPqRciiDBnTUNWtgVU+vZp1XCa+/oSa9/9O6D
+	 c6RO9wP3LF0M0yK8aB0+O+3pL5r0ykPbA6ZEi8IhY9+ZC4q1kGI0P2nXpDAj6vtKa3
+	 HA1jxL6Bah0M/keBwWotbWUYanyDvM36amIApNKs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728508AbgHTAEr (ORCPT
+        id S1728533AbgHTAEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:04:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34678 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:04:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgHTAES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:04:18 -0400
+        id S1728420AbgHTAEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:04:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3936022B47;
-        Thu, 20 Aug 2020 00:04:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B4C2184D;
+        Thu, 20 Aug 2020 00:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881858;
-        bh=E9RoHVS97+ZIu745TjSEl0N6lC02FWnHn7mS2W69IC4=;
+        s=default; t=1597881851;
+        bh=zzPswJhfQd/4W/b2P8W2qrcTfu+qr2gLdqmk0us4tzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jn+ti9+s9zUEautka75mDqCj2WmzBjbCOwFUKul6uBpeGtdg1oa9pdO6alKgqkbIf
-         +TbtIZ3EAUkae4zSeMNfmgIA5YAldUnNuCpioP/fcY6tivl5gzl9ORpoqDtGaf7Zjk
-         WgAeoRT+oyhxsipNJ7TCcyxq79Eki7IQorlHaQr8=
+        b=vWPLof0mUWqoTxzuNl6xTMUK/S5QAutenDfK5ZaVwPK5hBLJ1EsyP0xJ76LweuhCz
+         DFDudgq9ci2qNXri36R4FFvWkGprguHlwdCZ3Kg8UNWE99rRLB4v/vNPyO+2Sw1NJ3
+         eLziqsYClIypTpT+bKzDaO5V17dqLCQjbLn0rb0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <wenan.mao@linux.alibaba.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.4 08/10] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-Date:   Wed, 19 Aug 2020 20:04:04 -0400
-Message-Id: <20200820000406.216050-8-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 03/10] Input: psmouse - add a newline when printing 'proto' by sysfs
+Date:   Wed, 19 Aug 2020 20:03:59 -0400
+Message-Id: <20200820000406.216050-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000406.216050-1-sashal@kernel.org>
 References: <20200820000406.216050-1-sashal@kernel.org>
@@ -61,51 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <wenan.mao@linux.alibaba.com>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-The loop may exist if vq->broken is true,
-virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
-will return NULL, so virtnet_poll will reschedule napi to
-receive packet, it will lead cpu usage(si) to 100%.
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-call trace as below:
-virtnet_poll
-	virtnet_receive
-		virtqueue_get_buf_ctx
-			virtqueue_get_buf_ctx_packed
-			virtqueue_get_buf_ctx_split
-	virtqueue_napi_complete
-		virtqueue_poll           //return true
-		virtqueue_napi_schedule //it will reschedule napi
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
 
-to fix this, return false if vq is broken in virtqueue_poll.
-
-Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index a01a41a412693..6b3565feddb21 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -603,6 +603,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index ad18dab0ac476..5bd9633541b07 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -1911,7 +1911,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
  {
- 	struct vring_virtqueue *vq = to_vvq(_vq);
+ 	int type = *((unsigned int *)kp->arg);
  
-+	if (unlikely(vq->broken))
-+		return false;
-+
- 	virtio_mb(vq->weak_barriers);
- 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
  }
+ 
+ static int __init psmouse_init(void)
 -- 
 2.25.1
 
