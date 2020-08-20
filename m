@@ -2,111 +2,102 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98BBC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C41E8208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083FC22CAD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931215;
-	bh=DdzytfS0sYS9PAdc783Qb9uZwlhhAQv9K11zCUSSmlA=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=WCAYrWQsPPKv+78EssvoUOB6Pv8MVZLt3NWU4DejJq5hhC9nneNWMdmUv39H7+pMr
-	 mSzph31FIOm5s8o/UlZZr7/YTjRAF/pmI7E2vk2lA2SPfQ5+V/xCnil8/LEfu4+2bc
-	 HJQWrR+qqsK5SBjUI6bxTHsmimGddqlGoHwRXO8E=
+	s=default; t=1597931220;
+	bh=nibtvUdmYlYfzAmksvOuc+YpD990OolnyT4nsyqRArQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rs91NVGUqmQZQOkm1iNBE9ZrBb6eIn4pjKM5PgF+WzkGKLSfFE4lIvEmYRMnUFIcu
+	 Hxe8akssUx6o27k9OftXh7oqr/JaFjuE3v/oYL7DIzy2XNjJz9FTpeHOF6XZu3ZSVD
+	 EGsdZYocx87UknGaUQmoJMJQanH50Cd1VLQ3L9b8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgHTNqC (ORCPT
+        id S1730504AbgHTNpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:46:02 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53019 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbgHTJaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x5so976710wmi.2;
-        Thu, 20 Aug 2020 02:30:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tUnRntDeM2Z0wZOlftJYnlbiTXDqBXyNsySaCh9zCmY=;
-        b=SvJm8/wDP+0NcFQQ6EcJiW2c1pBJodLfRnSCUH214i0B5bACBo/O0iTE+g6fMmP8xk
-         Pf9wsIVGgID6O8tuWskHpwHk8mkIhVIZrbF1yK00ZDNlP/QDshVMiBaHQrM+YjwLv2X7
-         U0xDcXE1ywTYcuu4qt1EdB5HJGdEfkK7CQbVs23P6lZmtlI4XNqKexGPthkqDA4hPcJc
-         IhPBcRS2Xz8vNoFtrNXsB0TnqzLvka+lthDfV0tOZLSOFOrIJ7Osfc+oVjPA290S3jF2
-         p8bJ8XriUzi8vDx9d1pe4ipOluGshbj1omGRrVb/C4vZWPKaBOenM/vsW2N2ljP5TCtV
-         hS5A==
-X-Gm-Message-State: AOAM533mZhB3cZ8YRh5T1ZgqMYGEYrJyQyvRg7/+2sYukQZMTzyaKYDq
-        l1/IrY5OgxO0SDTIW7dLYUI=
-X-Google-Smtp-Source: ABdhPJyodhIy3b6biA58amHmZjnvQq4nyDVjNDGAvrKAsLjjKYeZihDIwmPPHhe2+ewpkCAnODpbww==
-X-Received: by 2002:a1c:2808:: with SMTP id o8mr2510138wmo.108.1597915813392;
-        Thu, 20 Aug 2020 02:30:13 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id z8sm3045868wmf.10.2020.08.20.02.30.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 02:30:12 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 11:30:10 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [RESEND PATCH 5/5] ARM: dts: zx: Align L2 cache-controller
- nodename with dtschema
-Message-ID: <20200820093010.GA15884@kozik-lap>
-References: <20200819175853.21492-1-krzk@kernel.org>
- <20200819175853.21492-5-krzk@kernel.org>
+        Thu, 20 Aug 2020 09:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728124AbgHTJaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23D8322BEB;
+        Thu, 20 Aug 2020 09:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915818;
+        bh=nibtvUdmYlYfzAmksvOuc+YpD990OolnyT4nsyqRArQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=02h011X0haOlRI72Nbs7oianmCMazDs3/HWravs2JnIm78fABiQV3geV9KBhr5Mdt
+         Ut96Rcysar2YN6w3F+1mlDmBreI+s3sv/FewMyrTP8tg/Wbht+dvTESasqxiT0BnnH
+         9pIR60IRkgGb86Kjev3bGr7nxpWW0s2OvbBeBjiA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 144/232] rtc: pl031: fix set_alarm by adding back call to alarm_irq_enable
+Date:   Thu, 20 Aug 2020 11:19:55 +0200
+Message-Id: <20200820091619.798300902@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200819175853.21492-5-krzk@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 07:58:53PM +0200, Krzysztof Kozlowski wrote:
-> Fix dtschema validator warnings like:
->     l2-cache-controller@c00000: $nodename:0:
->         'l2-cache-controller@c00000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-I forgot to add the tag from Jun provided on previous submission:
-Reviewed-by: Jun Nie <jun.nie@linaro.org>
+[ Upstream commit 4df2ef85f0efe44505f511ca5e4455585f53a2da ]
 
-Best regards,
-Krzysztof
+Commit c8ff5841a90b ("rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64")
+seemed to have accidentally removed the call to pl031_alarm_irq_enable
+from pl031_set_alarm while switching to 64-bit apis.
 
-> ---
->  arch/arm/boot/dts/zx296702.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/zx296702.dtsi b/arch/arm/boot/dts/zx296702.dtsi
-> index afd98de029be..f378c661b3bf 100644
-> --- a/arch/arm/boot/dts/zx296702.dtsi
-> +++ b/arch/arm/boot/dts/zx296702.dtsi
-> @@ -58,7 +58,7 @@
->  			clocks = <&topclk ZX296702_A9_PERIPHCLK>;
->  		};
->  
-> -		l2cc: l2-cache-controller@c00000 {
-> +		l2cc: cache-controller@c00000 {
->  			compatible = "arm,pl310-cache";
->  			reg = <0x00c00000 0x1000>;
->  			cache-unified;
-> -- 
-> 2.17.1
-> 
+Let us add back the same to get the set alarm functionality back.
+
+Fixes: c8ff5841a90b ("rtc: pl031: switch to rtc_time64_to_tm/rtc_tm_to_time64")
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Tested-by: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/20200714124556.20294-1-sudeep.holla@arm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/rtc/rtc-pl031.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/rtc/rtc-pl031.c b/drivers/rtc/rtc-pl031.c
+index 40d7450a1ce49..c6b89273feba8 100644
+--- a/drivers/rtc/rtc-pl031.c
++++ b/drivers/rtc/rtc-pl031.c
+@@ -275,6 +275,7 @@ static int pl031_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+ 	struct pl031_local *ldata = dev_get_drvdata(dev);
+ 
+ 	writel(rtc_tm_to_time64(&alarm->time), ldata->base + RTC_MR);
++	pl031_alarm_irq_enable(dev, alarm->enabled);
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
+
+
+
