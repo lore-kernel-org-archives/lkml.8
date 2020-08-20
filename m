@@ -2,173 +2,66 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9EAC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4179FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAF922B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22955206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729354AbgHTOEQ (ORCPT
+        id S1728530AbgHTODL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:04:16 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:41974 "EHLO raptor.unsafe.ru"
+        Thu, 20 Aug 2020 10:03:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729742AbgHTN4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:56:04 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1730653AbgHTNy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:54:59 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 5D625209DD;
-        Thu, 20 Aug 2020 13:55:54 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Cc:     Alexey Gladkov <legion@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 1/2] proc: Relax check of mount visibility
-Date:   Thu, 20 Aug 2020 15:53:33 +0200
-Message-Id: <d05ce34f1254b96cdae45fa87087750604510f43.1597931457.git.gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1597931457.git.gladkov.alexey@gmail.com>
-References: <cover.1597931457.git.gladkov.alexey@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B2780206DA;
+        Thu, 20 Aug 2020 13:54:57 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 09:54:56 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
+        npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rjw@rjwysocki.net, joel@joelfernandes.org,
+        svens@linux.ibm.com, tglx@linutronix.de
+Subject: Re: [PATCH 1/9] lockdep: Use raw_cpu_*() for per-cpu variables
+Message-ID: <20200820095456.6550b78a@oasis.local.home>
+In-Reply-To: <20200820074640.342269393@infradead.org>
+References: <20200820073031.886217423@infradead.org>
+        <20200820074640.342269393@infradead.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 20 Aug 2020 13:55:54 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow to mount of procfs with subset=pid option even if the entire
-procfs is not fully accessible to the user.
+On Thu, 20 Aug 2020 09:30:32 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
----
- fs/namespace.c     | 27 ++++++++++++++++-----------
- fs/proc/root.c     | 16 +++++++++-------
- include/linux/fs.h |  1 +
- 3 files changed, 26 insertions(+), 18 deletions(-)
+> +++ b/include/linux/lockdep.h
+> @@ -535,19 +535,27 @@ do {									\
+>  DECLARE_PER_CPU(int, hardirqs_enabled);
+>  DECLARE_PER_CPU(int, hardirq_context);
+>  
+> +/*
+> + * The below lockdep_assert_*() macros se raw_cpu_read() to access the above
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index 4a0f600a3328..ab9d607921da 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -3949,18 +3949,23 @@ static bool mnt_already_visible(struct mnt_namespace *ns,
- 		    ((mnt_flags & MNT_ATIME_MASK) != (new_flags & MNT_ATIME_MASK)))
- 			continue;
- 
--		/* This mount is not fully visible if there are any
--		 * locked child mounts that cover anything except for
--		 * empty directories.
-+		/* If this filesystem is completely dynamic, then it
-+		 * makes no sense to check for any child mounts.
- 		 */
--		list_for_each_entry(child, &mnt->mnt_mounts, mnt_child) {
--			struct inode *inode = child->mnt_mountpoint->d_inode;
--			/* Only worry about locked mounts */
--			if (!(child->mnt.mnt_flags & MNT_LOCKED))
--				continue;
--			/* Is the directory permanetly empty? */
--			if (!is_empty_dir_inode(inode))
--				goto next;
-+		if (!(sb->s_iflags & SB_I_DYNAMIC)) {
-+			/* This mount is not fully visible if there are any
-+			 * locked child mounts that cover anything except for
-+			 * empty directories.
-+			 */
-+			list_for_each_entry(child, &mnt->mnt_mounts, mnt_child) {
-+				struct inode *inode = child->mnt_mountpoint->d_inode;
-+				/* Only worry about locked mounts */
-+				if (!(child->mnt.mnt_flags & MNT_LOCKED))
-+					continue;
-+				/* Is the directory permanetly empty? */
-+				if (!is_empty_dir_inode(inode))
-+					goto next;
-+			}
- 		}
- 		/* Preserve the locked attributes */
- 		*new_mnt_flags |= mnt_flags & (MNT_LOCK_READONLY | \
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 5e444d4f9717..c6bf74de1906 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -145,18 +145,21 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 	return 0;
- }
- 
--static void proc_apply_options(struct proc_fs_info *fs_info,
-+static void proc_apply_options(struct super_block *s,
- 			       struct fs_context *fc,
- 			       struct user_namespace *user_ns)
- {
- 	struct proc_fs_context *ctx = fc->fs_private;
-+	struct proc_fs_info *fs_info = proc_sb_info(s);
- 
- 	if (ctx->mask & (1 << Opt_gid))
- 		fs_info->pid_gid = make_kgid(user_ns, ctx->gid);
- 	if (ctx->mask & (1 << Opt_hidepid))
- 		fs_info->hide_pid = ctx->hidepid;
--	if (ctx->mask & (1 << Opt_subset))
-+	if (ctx->mask & (1 << Opt_subset)) {
- 		fs_info->pidonly = ctx->pidonly;
-+		s->s_iflags |= SB_I_DYNAMIC;
-+	}
- }
- 
- static int proc_fill_super(struct super_block *s, struct fs_context *fc)
-@@ -170,9 +173,6 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- 	if (!fs_info)
- 		return -ENOMEM;
- 
--	fs_info->pid_ns = get_pid_ns(ctx->pid_ns);
--	proc_apply_options(fs_info, fc, current_user_ns());
--
- 	/* User space would break if executables or devices appear on proc */
- 	s->s_iflags |= SB_I_USERNS_VISIBLE | SB_I_NOEXEC | SB_I_NODEV;
- 	s->s_flags |= SB_NODIRATIME | SB_NOSUID | SB_NOEXEC;
-@@ -183,6 +183,9 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- 	s->s_time_gran = 1;
- 	s->s_fs_info = fs_info;
- 
-+	fs_info->pid_ns = get_pid_ns(ctx->pid_ns);
-+	proc_apply_options(s, fc, current_user_ns());
-+
- 	/*
- 	 * procfs isn't actually a stacking filesystem; however, there is
- 	 * too much magic going on inside it to permit stacking things on
-@@ -216,11 +219,10 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- static int proc_reconfigure(struct fs_context *fc)
- {
- 	struct super_block *sb = fc->root->d_sb;
--	struct proc_fs_info *fs_info = proc_sb_info(sb);
- 
- 	sync_filesystem(sb);
- 
--	proc_apply_options(fs_info, fc, current_user_ns());
-+	proc_apply_options(sb, fc, current_user_ns());
- 	return 0;
- }
- 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f5abba86107d..aff5ed9e8f82 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1413,6 +1413,7 @@ extern int send_sigurg(struct fown_struct *fown);
- #define SB_I_USERNS_VISIBLE		0x00000010 /* fstype already mounted */
- #define SB_I_IMA_UNVERIFIABLE_SIGNATURE	0x00000020
- #define SB_I_UNTRUSTED_MOUNTER		0x00000040
-+#define SB_I_DYNAMIC			0x00000080
- 
- #define SB_I_SKIP_SYNC	0x00000100	/* Skip superblock at global sync */
- 
--- 
-2.25.4
+ s/se/use/ ?
 
+-- Steve
+	
+> + * per-cpu variables. This is required because this_cpu_read() will potentially
+> + * call into preempt/irq-disable and that obviously isn't right. This is also
+> + * correct because when IRQs are enabled, it doesn't matter if we accidentally
+> + * read the value from our previous CPU.
+> + */
