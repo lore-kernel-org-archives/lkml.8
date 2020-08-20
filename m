@@ -5,74 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EACC433F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0876C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD0D22B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A734208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929782;
-	bh=K9KMQFAcyvXCpKGPLlOIGzdhg4xgO8vb0fMc0YLqKwA=;
+	s=default; t=1597929803;
+	bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GaA0j8GFZTaJi9tqoWa617xdLR3jvMdu8sQLh3TA5lus0/aS8NKgAcAwDytGIn5AU
-	 5cur5gIFlnN8rXc5pxrfl6oCcGx6ncyaXg5BGyncv0TpWxzH2f0iWuxFhNJ4bCizv8
-	 YivpmvJa/AcjV/M5H9fN6tEmJY3zNvJHdQm9cdf4=
+	b=NKHDcWJctxGsuOMRAKhcW66MF2o8id06ZGgPp9wrHQHEwpQ4G30puPUPvkT0OMf0p
+	 AlDZwECAJcyy1yUOLAFFuj3g3/eP+SxcRaBvw1eKETzF9ocWodxlKc0gyXNfMgi35c
+	 eO+UBXYBkz2L0vFwbNmJYBqL2/e8YiSRmONixfxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgHTNW7 (ORCPT
+        id S1730777AbgHTNXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:23:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbgHTJdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:33:47 -0400
+        id S1728035AbgHTJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6602B22B49;
-        Thu, 20 Aug 2020 09:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4D522C9F;
+        Thu, 20 Aug 2020 09:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916005;
-        bh=K9KMQFAcyvXCpKGPLlOIGzdhg4xgO8vb0fMc0YLqKwA=;
+        s=default; t=1597916019;
+        bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCd9f/Sz5efkJPkhyADsA6KX85bQ68hfJOHSW2oKEkeF2dk6IaR/BqbakOnHrAuxf
-         OVXUq1t9lYuAZeQWCAgccbszAq3GSoC/CKOtKeKyGjO9uwSOb4ZIUhYbJPDAHG3Y7T
-         hx3dmLP4n35kAv7g/AVl2WFbwp+bfBMVi27SzDQg=
+        b=z0K6eMO3IBhmyJfVKc1PmZGMxR9m5gTy+naIrEj7vSUDgKB2Ki2AHXXT5LdhaeUGd
+         vXtxb9JBgv9YMdoBRuMZm7etqlGt8v+Kt4WZFdQCly7/Vr27M4DlkgtKy0TdFX6J2E
+         sXQbpdvT+YAcOmjtFxHGFEOYiLmJfj3exO5ZONRM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Kees Cook <keescook@chromium.org>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Sergei Trofimovich <slyfox@gentoo.org>,
-        Sergey Kvachonok <ravenexp@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tony Vroon <chainsaw@gentoo.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 210/232] test_kmod: avoid potential double free in trigger_config_run_type()
-Date:   Thu, 20 Aug 2020 11:21:01 +0200
-Message-Id: <20200820091622.982699256@linuxfoundation.org>
+Subject: [PATCH 5.8 215/232] perf bench mem: Always memset source before memcpy
+Date:   Thu, 20 Aug 2020 11:21:06 +0200
+Message-Id: <20200820091623.210335929@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -85,63 +66,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 
-[ Upstream commit 0776d1231bec0c7ab43baf440a3f5ef5f49dd795 ]
+[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
 
-Reset the member "test_fs" of the test configuration after a call of the
-function "kfree_const" to a null pointer so that a double memory release
-will not be performed.
+For memcpy, the source pages are memset to zero only when --cycles is
+used.  This leads to wildly different results with or without --cycles,
+since all sources pages are likely to be mapped to the same zero page
+without explicit writes.
 
-Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: James Morris <jmorris@namei.org>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: J. Bruce Fields <bfields@fieldses.org>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Josh Triplett <josh@joshtriplett.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: Philipp Reisner <philipp.reisner@linbit.com>
-Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Sergei Trofimovich <slyfox@gentoo.org>
-Cc: Sergey Kvachonok <ravenexp@gmail.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Tony Vroon <chainsaw@gentoo.org>
-Cc: Christoph Hellwig <hch@infradead.org>
-Link: http://lkml.kernel.org/r/20200610154923.27510-4-mcgrof@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Before this fix:
+
+$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
+  mem memcpy -s 1024MB -l 100 -f default"
+$ $cmd
+
+         2,935,826      LLC-loads
+       3.821677452 seconds time elapsed
+
+$ $cmd --cycles
+
+       217,533,436      LLC-loads
+       8.616725985 seconds time elapsed
+
+After this fix:
+
+$ $cmd
+
+       214,459,686      LLC-loads
+       8.674301124 seconds time elapsed
+
+$ $cmd --cycles
+
+       214,758,651      LLC-loads
+       8.644480006 seconds time elapsed
+
+Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: kernel@axis.com
+Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_kmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/bench/mem-functions.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/lib/test_kmod.c b/lib/test_kmod.c
-index e651c37d56dbd..eab52770070d6 100644
---- a/lib/test_kmod.c
-+++ b/lib/test_kmod.c
-@@ -745,7 +745,7 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
- 		break;
- 	case TEST_KMOD_FS_TYPE:
- 		kfree_const(config->test_fs);
--		config->test_driver = NULL;
-+		config->test_fs = NULL;
- 		copied = config_copy_test_fs(config, test_str,
- 					     strlen(test_str));
- 		break;
+diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
+index 9235b76501be8..19d45c377ac18 100644
+--- a/tools/perf/bench/mem-functions.c
++++ b/tools/perf/bench/mem-functions.c
+@@ -223,12 +223,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
+ 	return 0;
+ }
+ 
+-static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
+ {
+-	u64 cycle_start = 0ULL, cycle_end = 0ULL;
+-	memcpy_t fn = r->fn.memcpy;
+-	int i;
+-
+ 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
+ 	memset(src, 0, size);
+ 
+@@ -237,6 +233,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
+ 	 * to not measure page fault overhead:
+ 	 */
+ 	fn(dst, src, size);
++}
++
++static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
++{
++	u64 cycle_start = 0ULL, cycle_end = 0ULL;
++	memcpy_t fn = r->fn.memcpy;
++	int i;
++
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	cycle_start = get_cycles();
+ 	for (i = 0; i < nr_loops; ++i)
+@@ -252,11 +257,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
+ 	memcpy_t fn = r->fn.memcpy;
+ 	int i;
+ 
+-	/*
+-	 * We prefault the freshly allocated memory range here,
+-	 * to not measure page fault overhead:
+-	 */
+-	fn(dst, src, size);
++	memcpy_prefault(fn, size, src, dst);
+ 
+ 	BUG_ON(gettimeofday(&tv_start, NULL));
+ 	for (i = 0; i < nr_loops; ++i)
 -- 
 2.25.1
 
