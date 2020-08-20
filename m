@@ -2,70 +2,69 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA48C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02902C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0D7F20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A68207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:47:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="BaVr2ND3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="urcCyii1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mymailcheap.com header.i=@mymailcheap.com header.b="LJzveso3";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="Kwi2FqS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgHTArg (ORCPT
+        id S1726766AbgHTArj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:47:36 -0400
-Received: from relay1.mymailcheap.com ([144.217.248.102]:47558 "EHLO
-        relay1.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbgHTArg (ORCPT
+        Wed, 19 Aug 2020 20:47:39 -0400
+Received: from relay4.mymailcheap.com ([137.74.80.156]:49986 "EHLO
+        relay4.mymailcheap.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726617AbgHTAri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:47:36 -0400
+        Wed, 19 Aug 2020 20:47:38 -0400
 Received: from filter1.mymailcheap.com (filter1.mymailcheap.com [149.56.130.247])
-        by relay1.mymailcheap.com (Postfix) with ESMTPS id 0A51C3F157;
-        Wed, 19 Aug 2020 20:47:34 -0400 (EDT)
+        by relay4.mymailcheap.com (Postfix) with ESMTPS id AFB4D3F1CF;
+        Thu, 20 Aug 2020 02:47:34 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by filter1.mymailcheap.com (Postfix) with ESMTP id DFDC92A3B9;
+        by filter1.mymailcheap.com (Postfix) with ESMTP id D133F2A347;
         Wed, 19 Aug 2020 20:47:33 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=mymailcheap.com;
         s=default; t=1597884453;
-        bh=J9JScJSbjxuW0cyxqgEmt85ZvWaBbF7FA9Mv/L55Rqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BaVr2ND3MXzxRKENbZZcsGKx3TtFz+MjzJaUAi/WBBNexpaRaoDUmmHVvaTvG73a/
-         u2KSiV34IOghgG9ViryivcILOWHYATARa+uzVpygCIpBA7GMgLBsfP92XYjBeRNKB5
-         n5VK8gz1zgt+C7WjK1sphqkeQp1phHRO/sEXNKoU=
+        bh=mik3lkRm3XRBmorjbLDSLfkE+H+yosrvlTUTCU822gE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LJzveso3gj8dnZsFw+VJpm5yBKI2WKywUBQddHpAPUT0azZYIQRC3UhnSu2zB4KWf
+         feO0KHEVsM5p1oONBEZzMAlajWhnuEjCrfRvK0rE3Z4dvDm2AALzmrd6F9Ptuehqml
+         bNiP7/pxuC6xbDnEnarx05AKOYB8HulrJjNEM4II=
 X-Virus-Scanned: Debian amavisd-new at filter1.mymailcheap.com
 Received: from filter1.mymailcheap.com ([127.0.0.1])
         by localhost (filter1.mymailcheap.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id OOeexP1UEHWo; Wed, 19 Aug 2020 20:47:32 -0400 (EDT)
+        with ESMTP id qv2Em2NnE3zr; Wed, 19 Aug 2020 20:47:32 -0400 (EDT)
 Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
         (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         by filter1.mymailcheap.com (Postfix) with ESMTPS;
         Wed, 19 Aug 2020 20:47:32 -0400 (EDT)
 Received: from [148.251.23.173] (ml.mymailcheap.com [148.251.23.173])
-        by mail20.mymailcheap.com (Postfix) with ESMTP id B0B1E41184;
+        by mail20.mymailcheap.com (Postfix) with ESMTP id 4175041737;
         Thu, 20 Aug 2020 00:47:30 +0000 (UTC)
 Authentication-Results: mail20.mymailcheap.com;
-        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="urcCyii1";
+        dkim=pass (1024-bit key; unprotected) header.d=flygoat.com header.i=@flygoat.com header.b="Kwi2FqS8";
         dkim-atps=neutral
 AI-Spam-Status: Not processed
 Received: from localhost.localdomain (unknown [117.136.8.126])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 05DCE4085B;
-        Thu, 20 Aug 2020 00:43:10 +0000 (UTC)
+        by mail20.mymailcheap.com (Postfix) with ESMTPSA id 1D5F741184;
+        Thu, 20 Aug 2020 00:43:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=flygoat.com;
-        s=default; t=1597884195;
-        bh=J9JScJSbjxuW0cyxqgEmt85ZvWaBbF7FA9Mv/L55Rqo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=urcCyii16Z/YTh/IPIcfqwHQMw/KmAMQ095cPmcVdcoYNT3iTb+kv0iyoWGpNW2RL
-         tzzelV0Poxb0xYAqzNAdcBz86ou9fl2h35BtQw5YqoGVPnzZ7NLDDo0TzqiQ0VO++O
-         AnoD63WNTyv8qgJOIJmKGJMyvw/ZLHV5ISK9Xytw=
+        s=default; t=1597884186;
+        bh=mik3lkRm3XRBmorjbLDSLfkE+H+yosrvlTUTCU822gE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Kwi2FqS8GCKvfVLdPIhmnkSV/mg4bRYyGlAFcnobZVNJHsSK9mJ2fyAXjup75YFr0
+         tiGoMYp293OwUeMdkZaZayZ5AX1hxfNr3C2T97fkLJp5Sdw16fwC5XOHyyZ16s4ze8
+         lC3PsDfnr6z1j3dcCOI2MpEBf9jIweP4pKmX+91o=
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -74,15 +73,13 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
         Paul Burton <paulburton@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 1/2] MIPS: cacheinfo: Add missing VCache
-Date:   Thu, 20 Aug 2020 08:42:49 +0800
-Message-Id: <20200820004253.3418-2-jiaxun.yang@flygoat.com>
+Subject: [PATCH RESEND 0/2] Fix cacheinfo
+Date:   Thu, 20 Aug 2020 08:42:48 +0800
+Message-Id: <20200820004253.3418-1-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820004253.3418-1-jiaxun.yang@flygoat.com>
-References: <20200820004253.3418-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: B0B1E41184
+X-Rspamd-Queue-Id: 4175041737
 X-Spamd-Result: default: False [4.90 / 10.00];
          RCVD_VIA_SMTP_AUTH(0.00)[];
          ARC_NA(0.00)[];
@@ -114,78 +111,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Victim Cache is defined by Loongson as per-core unified
-private Cache.
-Add this into cacheinfo and make cache levels selfincrement
-instead of hardcode levels.
+This is causing lscpu segfault. So probably worthy to
+include it as a part of mips-fixes. 
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
+Jiaxun Yang (2):
+  MIPS: cacheinfo: Add missing VCache
+  MIPS: Loongson64: Set cluster for cores
+
  arch/mips/kernel/cacheinfo.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+ arch/mips/loongson64/smp.c   |  2 ++
+ 2 files changed, 28 insertions(+), 8 deletions(-)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index 47312c529410..83548331ee94 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -35,6 +35,11 @@ static int __init_cache_level(unsigned int cpu)
- 
- 	leaves += (c->icache.waysize) ? 2 : 1;
- 
-+	if (c->vcache.waysize) {
-+		levels++;
-+		leaves++;
-+	}
-+
- 	if (c->scache.waysize) {
- 		levels++;
- 		leaves++;
-@@ -74,25 +79,38 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	struct cpuinfo_mips *c = &current_cpu_data;
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
-+	int level = 1;
- 
- 	if (c->icache.waysize) {
--		/* L1 caches are per core */
-+		/* D/I caches are per core */
- 		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
--		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
-+		populate_cache(dcache, this_leaf, level, CACHE_TYPE_DATA);
- 		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
--		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
-+		populate_cache(icache, this_leaf, level, CACHE_TYPE_INST);
-+		level++;
- 	} else {
--		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
-+		populate_cache(dcache, this_leaf, level, CACHE_TYPE_UNIFIED);
-+		level++;
-+	}
-+
-+	if (c->vcache.waysize) {
-+		/* Vcache is per core as well */
-+		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
-+		populate_cache(vcache, this_leaf, level, CACHE_TYPE_UNIFIED);
-+		level++;
- 	}
- 
- 	if (c->scache.waysize) {
--		/* L2 cache is per cluster */
-+		/* Scache is per cluster */
- 		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
--		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
-+		populate_cache(scache, this_leaf, level, CACHE_TYPE_UNIFIED);
-+		level++;
- 	}
- 
--	if (c->tcache.waysize)
--		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
-+	if (c->tcache.waysize) {
-+		populate_cache(tcache, this_leaf, level, CACHE_TYPE_UNIFIED);
-+		level++;
-+	}
- 
- 	this_cpu_ci->cpu_map_populated = true;
- 
 -- 
 2.28.0
