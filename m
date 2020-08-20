@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83C2BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD38C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D80720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5974E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:34:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919642;
-	bh=/gOzTMPZIOTgJFu167RPmJPiUuZ4b9Oq/6VRU/ZXW68=;
+	s=default; t=1597919645;
+	bh=6KMASYgSY9mZsiOFd5G1ReOXX0yDHm7t+VKPImhwBiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/60ZTEIDRJ6g0E6dZxLlr2u9nyRNlf2bkPzoBRQmCRU22K4H1xaUbR/4JDen0CTI
-	 Ixl7okDx700kbmQdtV8yR5PNbnHJoRUVzumdbA4ZW9Y9FWO2Oa9r4lBok19wXylt1C
-	 JG8KVjTiB1slgqjFfPS/f3penR7M5DyUk5tXbPiU=
+	b=YHb7n+D40ZQ2DaegG8EkYfVnoeTGMs16k033cvc+3UQHI3wHGx8q+vkB8k813hudf
+	 z1Xo3LFDU7xrVY4y+GrdSsj9P2WoH/d10TA8Ana9SvSKtuZBn9yH1ZGwe1KXvy9H9I
+	 s+9CaJvHlKglugY3tFzaF7xkggaXg+al1d8rGuJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbgHTKd5 (ORCPT
+        id S1729583AbgHTKTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:33:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43470 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:19:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731449AbgHTKTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:36 -0400
+        id S1731291AbgHTKS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7628C2067C;
-        Thu, 20 Aug 2020 10:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35A520658;
+        Thu, 20 Aug 2020 10:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918776;
-        bh=/gOzTMPZIOTgJFu167RPmJPiUuZ4b9Oq/6VRU/ZXW68=;
+        s=default; t=1597918737;
+        bh=6KMASYgSY9mZsiOFd5G1ReOXX0yDHm7t+VKPImhwBiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AYzN2/WcSNQnhryNynt66/diSt3HMNR1YVYEARcaQEKJoZp13AAMUBO0DtEP+uz+d
-         YP1uEmE4z9xQMAesAw7+98qvDVs9pW3HDWPRsaWNRe6JBx3OdPi69FaoGgPK1ljsaR
-         XWwWQuY0fxpbV8D46Y734275tY0d+CQgSX4fA0gw=
+        b=s4dKzQodZ8eXVWXvFrpRbddQVPXnG1vbpOAzvVsqEQ6JQV7U+3e+h0Hnl/+o/5mjv
+         LViWnZ73ubWk8FVhUsk9IKyCegKouszwd+9ti3O6IMwzu4278YeOaaYYOMVZu22pz+
+         cxbvSrS9EQbl42cYQMqVYljPE0PL2a6I/lbdR1lI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 062/149] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Thu, 20 Aug 2020 11:22:19 +0200
-Message-Id: <20200820092128.741390964@linuxfoundation.org>
+        stable@vger.kernel.org, ch3332xr@gmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 048/149] ipv6: fix memory leaks on IPV6_ADDRFORM path
+Date:   Thu, 20 Aug 2020 11:22:05 +0200
+Message-Id: <20200820092128.066065707@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,51 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit 8c0de6e96c9794cb523a516c465991a70245da1c ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+IPV6_ADDRFORM causes resource leaks when converting an IPv6 socket
+to IPv4, particularly struct ipv6_ac_socklist. Similar to
+struct ipv6_mc_socklist, we should just close it on this path.
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
+This bug can be easily reproduced with the following C program:
 
-Fix these two issues.
+  #include <stdio.h>
+  #include <string.h>
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <arpa/inet.h>
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  int main()
+  {
+    int s, value;
+    struct sockaddr_in6 addr;
+    struct ipv6_mreq m6;
+
+    s = socket(AF_INET6, SOCK_DGRAM, 0);
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(5000);
+    inet_pton(AF_INET6, "::ffff:192.168.122.194", &addr.sin6_addr);
+    connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+    inet_pton(AF_INET6, "fe80::AAAA", &m6.ipv6mr_multiaddr);
+    m6.ipv6mr_interface = 5;
+    setsockopt(s, SOL_IPV6, IPV6_JOIN_ANYCAST, &m6, sizeof(m6));
+
+    value = AF_INET;
+    setsockopt(s, SOL_IPV6, IPV6_ADDRFORM, &value, sizeof(value));
+
+    close(s);
+    return 0;
+  }
+
+Reported-by: ch3332xr@gmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/net/addrconf.h   |    1 +
+ net/ipv6/anycast.c       |   17 ++++++++++++-----
+ net/ipv6/ipv6_sockglue.c |    1 +
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 0af8bed7ce1ee..08d8f608be632 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -177,12 +177,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+--- a/include/net/addrconf.h
++++ b/include/net/addrconf.h
+@@ -239,6 +239,7 @@ int ipv6_sock_ac_join(struct sock *sk, i
+ 		      const struct in6_addr *addr);
+ int ipv6_sock_ac_drop(struct sock *sk, int ifindex,
+ 		      const struct in6_addr *addr);
++void __ipv6_sock_ac_close(struct sock *sk);
+ void ipv6_sock_ac_close(struct sock *sk);
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
+ int __ipv6_dev_ac_inc(struct inet6_dev *idev, const struct in6_addr *addr);
+--- a/net/ipv6/anycast.c
++++ b/net/ipv6/anycast.c
+@@ -170,7 +170,7 @@ int ipv6_sock_ac_drop(struct sock *sk, i
+ 	return 0;
+ }
  
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
+-void ipv6_sock_ac_close(struct sock *sk)
++void __ipv6_sock_ac_close(struct sock *sk)
+ {
+ 	struct ipv6_pinfo *np = inet6_sk(sk);
+ 	struct net_device *dev = NULL;
+@@ -178,10 +178,7 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 	struct net *net = sock_net(sk);
+ 	int	prev_index;
  
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
+-	if (!np->ipv6_ac_list)
+-		return;
+-
+-	rtnl_lock();
++	ASSERT_RTNL();
+ 	pac = np->ipv6_ac_list;
+ 	np->ipv6_ac_list = NULL;
+ 
+@@ -198,6 +195,16 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 		sock_kfree_s(sk, pac, sizeof(*pac));
+ 		pac = next;
+ 	}
++}
 +
- 		drm_display_mode_from_videomode(&vm, mode);
++void ipv6_sock_ac_close(struct sock *sk)
++{
++	struct ipv6_pinfo *np = inet6_sk(sk);
++
++	if (!np->ipv6_ac_list)
++		return;
++	rtnl_lock();
++	__ipv6_sock_ac_close(sk);
+ 	rtnl_unlock();
+ }
  
- 		mode->type = DRM_MODE_TYPE_DRIVER;
--- 
-2.25.1
-
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -207,6 +207,7 @@ static int do_ipv6_setsockopt(struct soc
+ 
+ 			fl6_free_socklist(sk);
+ 			__ipv6_sock_mc_close(sk);
++			__ipv6_sock_ac_close(sk);
+ 
+ 			/*
+ 			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
 
 
