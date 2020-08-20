@@ -2,76 +2,103 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BE9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4920DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA6F420855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189CE22B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:21:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926077;
+	bh=Mlre0NfdZn5TVHGLM/JcqLK5nl+zozSKCg2mXww6fb8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=oR2k+eb4tBPiI3EbzBshkiV4PeicxsqkZdY2w3hZFbLEDV2mSVI424zPS83bIY+qJ
+	 3AYc5pfofeyfMVVMGPlPMZeHRVflQqGqbdBcf5biQmt9Rrzc60NWBrmhaaZKIzuG2M
+	 XOuUSqQVvCvPTxE6674nRRHgAAUdmLfPbRsJYyu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbgHTMVA (ORCPT
+        id S1730527AbgHTMVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:21:00 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:12052 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729609AbgHTMUm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:20:42 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.13]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85f3e6a814ba-e3f62; Thu, 20 Aug 2020 20:20:18 +0800 (CST)
-X-RM-TRANSID: 2ee85f3e6a814ba-e3f62
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[223.112.105.130])
-        by rmsmtp-syy-appsvr07-12007 (RichMail) with SMTP id 2ee75f3e6a7f13e-2fed8;
-        Thu, 20 Aug 2020 20:20:17 +0800 (CST)
-X-RM-TRANSID: 2ee75f3e6a7f13e-2fed8
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Subject: [PATCH] usb: hcd: fix the error check
-Date:   Thu, 20 Aug 2020 20:20:38 +0800
-Message-Id: <20200820122038.18704-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Thu, 20 Aug 2020 08:21:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38628 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729887AbgHTJzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 201C92067C;
+        Thu, 20 Aug 2020 09:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917331;
+        bh=Mlre0NfdZn5TVHGLM/JcqLK5nl+zozSKCg2mXww6fb8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J02/VjroLimRdxFRp2+LCkjDNNs/QUR00NlPbbtUHTrHsbpT5RP3V49pxKrl5iLFN
+         hTl66QPIvD4447XbmAm1JK7h+kXTD1Nq9PBrmYLerDWeQos5xlM6Cpa2gOLfycWovw
+         YnHRXz3oj8upX3ZA7l1XlH8qzCslUbj0lr1uR3jA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 87/92] sh: landisk: Add missing initialization of sh_io_port_base
+Date:   Thu, 20 Aug 2020 11:22:12 +0200
+Message-Id: <20200820091542.165410520@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the function usb_add_hcd(), usb_phy_roothub_alloc()
-can return NULL in some cases, so IS_ERR() doesn't meet
-the requirements. Thus fix it.
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
----
- drivers/usb/core/hcd.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index aa45840d8..b73a92ee1 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2633,8 +2633,9 @@ int usb_add_hcd(struct usb_hcd *hcd,
+[ Upstream commit 0c64a0dce51faa9c706fdf1f957d6f19878f4b81 ]
+
+The Landisk setup code maps the CF IDE area using ioremap_prot(), and
+passes the resulting virtual addresses to the pata_platform driver,
+disguising them as I/O port addresses.  Hence the pata_platform driver
+translates them again using ioport_map().
+As CONFIG_GENERIC_IOMAP=n, and CONFIG_HAS_IOPORT_MAP=y, the
+SuperH-specific mapping code in arch/sh/kernel/ioport.c translates
+I/O port addresses to virtual addresses by adding sh_io_port_base, which
+defaults to -1, thus breaking the assumption of an identity mapping.
+
+Fix this by setting sh_io_port_base to zero.
+
+Fixes: 37b7a97884ba64bf ("sh: machvec IO death.")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rich Felker <dalias@libc.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/sh/boards/mach-landisk/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/sh/boards/mach-landisk/setup.c b/arch/sh/boards/mach-landisk/setup.c
+index f1147caebacf0..af69fb7fef7c7 100644
+--- a/arch/sh/boards/mach-landisk/setup.c
++++ b/arch/sh/boards/mach-landisk/setup.c
+@@ -85,6 +85,9 @@ device_initcall(landisk_devices_setup);
  
- 	if (!hcd->skip_phy_initialization && usb_hcd_is_primary_hcd(hcd)) {
- 		hcd->phy_roothub = usb_phy_roothub_alloc(hcd->self.sysdev);
--		if (IS_ERR(hcd->phy_roothub))
--			return PTR_ERR(hcd->phy_roothub);
-+		if (IS_ERR_OR_NULL(hcd->phy_roothub))
-+			return hcd->phy_roothub ?
-+					PTR_ERR(hcd->phy_roothub) : -ENODEV;
+ static void __init landisk_setup(char **cmdline_p)
+ {
++	/* I/O port identity mapping */
++	__set_io_port_base(0);
++
+ 	/* LED ON */
+ 	__raw_writeb(__raw_readb(PA_LED) | 0x03, PA_LED);
  
- 		retval = usb_phy_roothub_init(hcd->phy_roothub);
- 		if (retval)
 -- 
-2.20.1.windows.1
+2.25.1
 
 
 
