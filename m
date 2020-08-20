@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D90C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E89612078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0532078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:15:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922134;
-	bh=Z791Hw3g3+zFUkOer+xUwNtRyRJX1ucFG2EkH+hTXxs=;
+	s=default; t=1597922147;
+	bh=tFtOHLlSmr0ZanRNrVBLZNCQ6z4elVuV4Sbo6SmXFGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EMOp2Jlsln3UC0ocwJ8RMVFjsu8MX/eUbt0+yDiOUMSW26CuP54TZcIl6GXNrD+eh
-	 WkrasyxmYmoMIFEvhvie4+D7G9hjJlzxnLREdZ2+Cw0wcSUvTUrzKTW5vz0gJz+LB3
-	 sDpKGaUr7Q+95VgL3SsIjUGXuQ4uRWSXtJHEGBqQ=
+	b=AdCPsGEnihovF8o+7+PeJZRbv1d8J58dA9gVVQo0Ashil4g6VqZub4OaeVzE8wDiA
+	 wzHgMrIKpzP624f2rAjKIqVvIAtPgE1TAPRWr1RYJBBIVdJib8YnzY86YXFbNPTMKV
+	 MQhJnNvp+eaDJ6cnaKJBHuJg3Z/FrFfuSvSf9Es4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgHTKIx (ORCPT
+        id S1730741AbgHTKIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:08:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41408 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:08:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730724AbgHTKIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:43 -0400
+        id S1730681AbgHTKIf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9250206DA;
-        Thu, 20 Aug 2020 10:08:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C4182067C;
+        Thu, 20 Aug 2020 10:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918123;
-        bh=Z791Hw3g3+zFUkOer+xUwNtRyRJX1ucFG2EkH+hTXxs=;
+        s=default; t=1597918115;
+        bh=tFtOHLlSmr0ZanRNrVBLZNCQ6z4elVuV4Sbo6SmXFGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKmlvJP3pbYJXvVsDpAwyF0DGUG/XBUCX0TxEowj9s27nhRJ7bUa24jT4cJxBIF+M
-         //vejf3oVlFUiSanmbBW3PYLmFDbkzOBq4up5wyIs8p67ViaTPOH1L0ew9keRJwB7X
-         sJXZ83HEkY3EHfyAuBnR2l7nvkYigac/bcJvJ7fE=
+        b=tcOo56vokw0eNBK9rVpZEyXTBrxwDxBUc4lvLdGtXNi13ORvK++3hEnnI4RTUqeLb
+         T2lvMuzvHoIZRPEFfPGY2R8uiNTDB/xnd9TZGGQ8G1F9xcdDbesh/SqLgO7s4qJypA
+         Yahmo4uKd4gJc5BjINjN53K4OhKTJzH5kEyUfvS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
-        Stan Johnson <userm57@yahoo.com>,
-        Joshua Thompson <funaho@jurai.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
+        stable@vger.kernel.org,
+        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 053/228] m68k: mac: Dont send IOP message until channel is idle
-Date:   Thu, 20 Aug 2020 11:20:28 +0200
-Message-Id: <20200820091610.265182186@linuxfoundation.org>
+Subject: [PATCH 4.14 027/228] tools lib traceevent: Fix memory leak in process_dynamic_array_len
+Date:   Thu, 20 Aug 2020 11:20:02 +0200
+Message-Id: <20200820091608.891200333@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,67 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Finn Thain <fthain@telegraphics.com.au>
+From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
 
-[ Upstream commit aeb445bf2194d83e12e85bf5c65baaf1f093bd8f ]
+[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
 
-In the following sequence of calls, iop_do_send() gets called when the
-"send" channel is not in the IOP_MSG_IDLE state:
+I compiled with AddressSanitizer and I had these memory leaks while I
+was using the tep_parse_format function:
 
-	iop_ism_irq()
-		iop_handle_send()
-			(msg->handler)()
-				iop_send_message()
-			iop_do_send()
+    Direct leak of 28 byte(s) in 4 object(s) allocated from:
+        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
+        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
+        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
+        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
+        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
+        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
+        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
+        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
+        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
+        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
+        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
+        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
+        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
+        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
+        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
+        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
+        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
+        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
+        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
+        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
+        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
+        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
+        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
+        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
+        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
+        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
+        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
 
-Avoid this by testing the channel state before calling iop_do_send().
+The token variable in the process_dynamic_array_len function is
+allocated in the read_expect_type function, but is not freed before
+calling the read_token function.
 
-When sending, and iop_send_queue is empty, call iop_do_send() because
-the channel is idle. If iop_send_queue is not empty, iop_do_send() will
-get called later by iop_handle_send().
+Free the token variable before calling read_token in order to plug the
+leak.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Joshua Thompson <funaho@jurai.org>
-Link: https://lore.kernel.org/r/6d667c39e53865661fa5a48f16829d18ed8abe54.1590880333.git.fthain@telegraphics.com.au
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/mac/iop.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ tools/lib/traceevent/event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
-index 4c1e606e7d03b..fb61af5ac4ab8 100644
---- a/arch/m68k/mac/iop.c
-+++ b/arch/m68k/mac/iop.c
-@@ -416,7 +416,8 @@ static void iop_handle_send(uint iop_num, uint chan)
- 	msg->status = IOP_MSGSTATUS_UNUSED;
- 	msg = msg->next;
- 	iop_send_queue[iop_num][chan] = msg;
--	if (msg) iop_do_send(msg);
-+	if (msg && iop_readb(iop, IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE)
-+		iop_do_send(msg);
- }
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 8211e8010e09b..d260ca680f074 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2780,6 +2780,7 @@ process_dynamic_array_len(struct event_format *event, struct print_arg *arg,
+ 	if (read_expected(EVENT_DELIM, ")") < 0)
+ 		goto out_err;
  
- /*
-@@ -490,16 +491,12 @@ int iop_send_message(uint iop_num, uint chan, void *privdata,
- 
- 	if (!(q = iop_send_queue[iop_num][chan])) {
- 		iop_send_queue[iop_num][chan] = msg;
-+		iop_do_send(msg);
- 	} else {
- 		while (q->next) q = q->next;
- 		q->next = msg;
- 	}
- 
--	if (iop_readb(iop_base[iop_num],
--	    IOP_ADDR_SEND_STATE + chan) == IOP_MSG_IDLE) {
--		iop_do_send(msg);
--	}
--
- 	return 0;
- }
++	free_token(token);
+ 	type = read_token(&token);
+ 	*tok = token;
  
 -- 
 2.25.1
