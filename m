@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7E2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBDFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 734702078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 425382078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922235;
-	bh=+zDpPbsEofBM6hOQiy5RXX2FSkEn+jD+Km0gej71kOk=;
+	s=default; t=1597922275;
+	bh=uQVXhEjnRhpD+xpU3IyQVRFvKWZSPkxnjSZK5N8DzPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sz0Fhqy+tk3lr9dqtJ5AT++7hJi7RnBteuax15DvfYiM2Kx//yV3rb8Mq468fPkYP
-	 taw/KkNUxs4u6O/8iCpbIXwRoQLciUI9P0hVLvZubHvFfKrJ8j13lDfRmYHcJDoC6S
-	 kZTJBBcqVAr3vrmUVWduJgqx9M3yQJKoTVydRbJk=
+	b=bma5E5kgaoWZif0wnwIMH4tc1gmU9SLROWbA2Wa+fgXCwkhlvrQXH62KnCKZ5e3qO
+	 u7NrtvpEgdHSCyq+Qqojcrvh1TxPGn5MjvWIacGjDibNGVismSmrsjRDEQ6S24A1EG
+	 f88UdIpHotMr29zN4g7Z/AgL7Bs8Kz5oNVRnd1wM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbgHTLRN (ORCPT
+        id S1730404AbgHTKIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:17:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40648 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:08:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729223AbgHTKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:29 -0400
+        id S1729660AbgHTKIA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3B3C2067C;
-        Thu, 20 Aug 2020 10:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42B9220738;
+        Thu, 20 Aug 2020 10:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918109;
-        bh=+zDpPbsEofBM6hOQiy5RXX2FSkEn+jD+Km0gej71kOk=;
+        s=default; t=1597918079;
+        bh=uQVXhEjnRhpD+xpU3IyQVRFvKWZSPkxnjSZK5N8DzPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLw+TjB+e8YDNxr+fJRGd505gR8udcNg2hrCSptwbqKIy481gfzldo7SXLE5kPoEI
-         nhxwG5yqkzVzqaGzpfIJh5XOjuOGOw3YEXPAgjoXjZgD3lm8eiJy1TWW57ua5W3i60
-         61cnBxr4hGVJkgPZY6L3Wl4xqgZ7nM46ejskbD6I=
+        b=yQb1sNJZBJGIUtxTlEb/pGARUgzFIDJXXqxkRa7rMN9qB7+xcbNgk4lzqliNE/klN
+         FHdv6P92Q9aiB2LggNJY7z64ltiWgMXcnT7yz4Wh9+kbmxEs3vP4hTW8whSvel6IvP
+         9CkfWfW69T5uJow3IyJjNr/Bv41eo+9hAAyzm1eI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 025/228] igb: reinit_locked() should be called with rtnl_lock
-Date:   Thu, 20 Aug 2020 11:20:00 +0200
-Message-Id: <20200820091608.791747381@linuxfoundation.org>
+Subject: [PATCH 4.14 045/228] cgroup: add missing skcd->no_refcnt check in cgroup_sk_clone()
+Date:   Thu, 20 Aug 2020 11:20:20 +0200
+Message-Id: <20200820091609.863261417@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,90 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Francesco Ruggeri <fruggeri@arista.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
+Add skcd->no_refcnt check which is missed when backporting
+ad0f75e5f57c ("cgroup: fix cgroup_sk_alloc() for sk_clone_lock()").
 
-We observed two panics involving races with igb_reset_task.
-The first panic is caused by this race condition:
+This patch is needed in stable-4.9, stable-4.14 and stable-4.19.
 
-	kworker			reboot -f
-
-	igb_reset_task
-	igb_reinit_locked
-	igb_down
-	napi_synchronize
-				__igb_shutdown
-				igb_clear_interrupt_scheme
-				igb_free_q_vectors
-				igb_free_q_vector
-				adapter->q_vector[v_idx] = NULL;
-	napi_disable
-	Panics trying to access
-	adapter->q_vector[v_idx].napi_state
-
-The second panic (a divide error) is caused by this race:
-
-kworker		reboot -f	tx packet
-
-igb_reset_task
-		__igb_shutdown
-		rtnl_lock()
-		...
-		igb_clear_interrupt_scheme
-		igb_free_q_vectors
-		adapter->num_tx_queues = 0
-		...
-		rtnl_unlock()
-rtnl_lock()
-igb_reinit_locked
-igb_down
-igb_up
-netif_tx_start_all_queues
-				dev_hard_start_xmit
-				igb_xmit_frame
-				igb_tx_queue_mapping
-				Panics on
-				r_idx % adapter->num_tx_queues
-
-This commit applies to igb_reset_task the same changes that
-were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
-adds support for DCB to the kernel and ixgbe driver"),
-commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
-rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
-reset subtask").
-
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/cgroup/cgroup.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 9c7e75b3b6c7a..50fa0401c7014 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -5487,9 +5487,18 @@ static void igb_reset_task(struct work_struct *work)
- 	struct igb_adapter *adapter;
- 	adapter = container_of(work, struct igb_adapter, reset_task);
- 
-+	rtnl_lock();
-+	/* If we're already down or resetting, just bail */
-+	if (test_bit(__IGB_DOWN, &adapter->state) ||
-+	    test_bit(__IGB_RESETTING, &adapter->state)) {
-+		rtnl_unlock();
-+		return;
-+	}
-+
- 	igb_dump(adapter);
- 	netdev_err(adapter->netdev, "Reset adapter\n");
- 	igb_reinit_locked(adapter);
-+	rtnl_unlock();
- }
- 
- /**
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index a2fed8fbd2bde..ada060e628ce3 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -5827,6 +5827,8 @@ void cgroup_sk_clone(struct sock_cgroup_data *skcd)
+ {
+ 	/* Socket clone path */
+ 	if (skcd->val) {
++		if (skcd->no_refcnt)
++			return;
+ 		/*
+ 		 * We might be cloning a socket which is left in an empty
+ 		 * cgroup and the cgroup might have already been rmdir'd.
 -- 
 2.25.1
 
