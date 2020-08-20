@@ -2,56 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A521C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04316C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6907720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C972D20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919589;
-	bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
+	s=default; t=1597919596;
+	bh=33xtOSQzAKscQ6rBqSHuBqUHIaqVnIAJOecHSLLlMsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=01s4B4ox9+lp7rpYbQ+gFdw72pLizLpH7VNxdBKE+4Cku+7g9cse1zZDpxk4I2zpx
-	 UVLbvpSXUbFvDkOVrYAQ53RILHf6kVYMWT75mT0LjYNC5SjesYugMM7sAjjgSWMOz4
-	 PlAn/IrHQ05OuaHu7rU/qIuW/LkAipvUy1P47fI0=
+	b=xZOu7F7qd3mJTAAMvFeHcFfBdaVs5GhSn2wfAxrCZbTCdYpTXneTkM6xSDp1k8sYO
+	 Tn5RrsLSUcCBJ1Sj7w+S8fQM+pFhOcaknRquIL26fr69p42Ss7KJ2PZeYVQxL5nMS3
+	 VeMP4cRZz2cD0ZMIRYg/64y01ieFo8pf2STnJ8Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgHTKdG (ORCPT
+        id S1731758AbgHTKdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:33:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731457AbgHTKTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:50 -0400
+        id S1731454AbgHTKTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0169B2067C;
-        Thu, 20 Aug 2020 10:19:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 583CB20658;
+        Thu, 20 Aug 2020 10:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918789;
-        bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
+        s=default; t=1597918786;
+        bh=33xtOSQzAKscQ6rBqSHuBqUHIaqVnIAJOecHSLLlMsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOtwcwFPcWC0olisKkra5qwZHkjc6i5NTGyn2S5PtPTKjka6ZMz2OtslooqPC/OSE
-         se49cwXuZgT/dQrWhUWMQ8jYVUdbSsR8ys5ngKB97ASFpqG01fnsjwLc+CVnYgAXN5
-         AOMSKXk3dF4DuLe5nOI6q7tbcCBzrCT/tqGCFb5w=
+        b=kez1jSyWYG6FCdGGE/4lpam3BHXluKbrpKO3TJ75Os9IdrX84uuVdFdEuuq2fuV6a
+         G+twrClPufucKkUkLI9dGWJpstGzxdY0ws60WhI55F/tJrhhXLKF/+EA7sz84XqPPe
+         k+hsUAh8pw5WLKsy1M9+tZe1VwHoNCtCc8U+IqzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 066/149] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
-Date:   Thu, 20 Aug 2020 11:22:23 +0200
-Message-Id: <20200820092128.936586439@linuxfoundation.org>
+        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        stable <stable@kernel.org>
+Subject: [PATCH 4.4 039/149] mtd: properly check all write ioctls for permissions
+Date:   Thu, 20 Aug 2020 11:21:56 +0200
+Message-Id: <20200820092127.626813517@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -64,46 +61,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
+commit f7e6b19bc76471ba03725fe58e0c218a3d6266c3 upstream.
 
-neofb_probe() calls neo_scan_monitor() that can successfully allocate a
-memory for info->monspecs.modedb and proceed to case 0x03. There it does
-not free the memory and returns -1. neofb_probe() goes to label
-err_scan_monitor, thus, it does not free this memory through calling
-fb_destroy_modedb() as well. We can not go to label err_init_hw since
-neo_scan_monitor() can fail during memory allocation. So, the patch frees
-the memory directly for case 0x03.
+When doing a "write" ioctl call, properly check that we have permissions
+to do so before copying anything from userspace or anything else so we
+can "fail fast".  This includes also covering the MEMWRITE ioctl which
+previously missed checking for this.
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Richard Weinberger <richard@nod.at>
+Cc: Vignesh Raghavendra <vigneshr@ti.com>
+Cc: stable <stable@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[rw: Fixed locking issue]
+Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/neofb.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/mtd/mtdchar.c |   56 +++++++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 47 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
-index db023a97d1eae..e243254a57214 100644
---- a/drivers/video/fbdev/neofb.c
-+++ b/drivers/video/fbdev/neofb.c
-@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
- #else
- 		printk(KERN_ERR
- 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
-+		kfree(info->monspecs.modedb);
- 		return -1;
- #endif
- 	default:
--- 
-2.25.1
-
+--- a/drivers/mtd/mtdchar.c
++++ b/drivers/mtd/mtdchar.c
+@@ -372,9 +372,6 @@ static int mtdchar_writeoob(struct file
+ 	uint32_t retlen;
+ 	int ret = 0;
+ 
+-	if (!(file->f_mode & FMODE_WRITE))
+-		return -EPERM;
+-
+ 	if (length > 4096)
+ 		return -EINVAL;
+ 
+@@ -608,6 +605,48 @@ static int mtdchar_ioctl(struct file *fi
+ 			return -EFAULT;
+ 	}
+ 
++	/*
++	 * Check the file mode to require "dangerous" commands to have write
++	 * permissions.
++	 */
++	switch (cmd) {
++	/* "safe" commands */
++	case MEMGETREGIONCOUNT:
++	case MEMGETREGIONINFO:
++	case MEMGETINFO:
++	case MEMREADOOB:
++	case MEMREADOOB64:
++	case MEMLOCK:
++	case MEMUNLOCK:
++	case MEMISLOCKED:
++	case MEMGETOOBSEL:
++	case MEMGETBADBLOCK:
++	case MEMSETBADBLOCK:
++	case OTPSELECT:
++	case OTPGETREGIONCOUNT:
++	case OTPGETREGIONINFO:
++	case OTPLOCK:
++	case ECCGETLAYOUT:
++	case ECCGETSTATS:
++	case MTDFILEMODE:
++	case BLKPG:
++	case BLKRRPART:
++		break;
++
++	/* "dangerous" commands */
++	case MEMERASE:
++	case MEMERASE64:
++	case MEMWRITEOOB:
++	case MEMWRITEOOB64:
++	case MEMWRITE:
++		if (!(file->f_mode & FMODE_WRITE))
++			return -EPERM;
++		break;
++
++	default:
++		return -ENOTTY;
++	}
++
+ 	switch (cmd) {
+ 	case MEMGETREGIONCOUNT:
+ 		if (copy_to_user(argp, &(mtd->numeraseregions), sizeof(int)))
+@@ -655,9 +694,6 @@ static int mtdchar_ioctl(struct file *fi
+ 	{
+ 		struct erase_info *erase;
+ 
+-		if(!(file->f_mode & FMODE_WRITE))
+-			return -EPERM;
+-
+ 		erase=kzalloc(sizeof(struct erase_info),GFP_KERNEL);
+ 		if (!erase)
+ 			ret = -ENOMEM;
+@@ -982,9 +1018,6 @@ static int mtdchar_ioctl(struct file *fi
+ 		ret = 0;
+ 		break;
+ 	}
+-
+-	default:
+-		ret = -ENOTTY;
+ 	}
+ 
+ 	return ret;
+@@ -1028,6 +1061,11 @@ static long mtdchar_compat_ioctl(struct
+ 		struct mtd_oob_buf32 buf;
+ 		struct mtd_oob_buf32 __user *buf_user = argp;
+ 
++		if (!(file->f_mode & FMODE_WRITE)) {
++			ret = -EPERM;
++			break;
++		}
++
+ 		if (copy_from_user(&buf, argp, sizeof(buf)))
+ 			ret = -EFAULT;
+ 		else
 
 
