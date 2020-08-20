@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45266C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1D9207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6CF207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="ds8FchHZ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="iwarKzYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgHTSvl (ORCPT
+        id S1727957AbgHTSvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:51:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
+        Thu, 20 Aug 2020 14:51:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727897AbgHTSv2 (ORCPT
+        with ESMTP id S1727892AbgHTSvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:51:28 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BEC3C061342
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c19so4320856wmd.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:28 -0700 (PDT)
+        Thu, 20 Aug 2020 14:51:25 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B816C061388
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:25 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id p14so2697153wmg.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=QPQnmI/58kOYJX5JO2+CM6DvjdssZDc2jVBjt8SVn9Y=;
-        b=ds8FchHZgRuxGCcCkfqi5SN58L2+FMba1tz0losixTRhpXlqakfrOTqrbbVnokDN7f
-         WheHwZbtxeZPlOV4zb65MCYoGXAMGE5xVq/Idi3wyXUyRrsLVO4rc/xo9Ni2Ap70Zrln
-         ynhRFKQdeKG3/n3MpIXmtpXc8PiWpVShani05RJZfwaHRiM/mJlDf1/T1urQOTb7OF+n
-         E3S2YOSoJBYv2fiaSbYSjMYeZFKmJYkr4SLL/TqZWgAUyusGabPyP7GqG5K2ZNsu2uZD
-         qXOABGS19VmFHX3oLEuCVW74JDowihEpLnyDpBNKyfNtaK5PrnF6XWwOyQLeYHSci/CY
-         eEUA==
+        bh=8Y9xTv9MTk+DYQZI9tVbj30/uWX0D0ZC3rsteP6Q+Zs=;
+        b=iwarKzYyK4MKjJW/4BzhLQmtU+H8hW6h05HtZHyxDAz+nC5pJoxUpbY2HF5XhTIeQu
+         c77ui33ScwYXE81kdCnr3IghIageEAAQRR8YC8AXSqkOgme0P7wQMwl/Yty3iEq/Jd89
+         rXfJXnQUWdPYdQVZVHDCorDJf9RRjvJ/PtrBvUmO38x8preXWRmgaohWeMvTw6IQcvpQ
+         s1qN9tsrpxY7JGHxeZmz4WmHPh1gZz0JcTJ1PmoRE/O1kYn6abSDLbnhqpgI+lTXE/t+
+         aY86hNiy8Vh/C/F3cN7gCw49cwwvmOj8Ak8He1yjXlAfchwBtXjw8PDKOgs6B96RtO8i
+         e+jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=QPQnmI/58kOYJX5JO2+CM6DvjdssZDc2jVBjt8SVn9Y=;
-        b=OISlbfraECo58IgXiTAK2nhzfcP7kEkLbbUCQ2hnnzAUbgXMExS9gAn1tTVox+hCPs
-         q42rVSwf6obuE5EutG77fW5jQi3itFpvGhqSPBLgexHB5msf1vFHl0PHvRUMBQV/7zYd
-         A5Ol8MtuYqm0Tkaqh40EuJ7W6wjItk7E4RW1eiD3YXgjA9F/hNWtGh8pnrLzIUoeQxrr
-         u9yDoMD+cjGbE3BI9VuZAoUD7Uu8lenb82CuZDWE5Vb/wTJNkNcdhtao34gzAsQIqKfd
-         mMiycBOvrLqMfSx8N5JKSTw4F5uBHWbPKHmQYwgnaXwbjTJ44zJOIQSJ6LmcYn3a/V8O
-         Bwww==
-X-Gm-Message-State: AOAM533R2yOO18DdUsVlzrOPUn/hFNg88rgPZAJbQ7+wddz9HXCRhbYy
-        9xcl4KNJ6LyP/tcWrDCVYYG5UQ==
-X-Google-Smtp-Source: ABdhPJyp/NWmznNP/KusvFX00GaOA7bor3jeE+T3/KSaaSpCfA6GXoWHo3uB2PcjIe/9X/tKfJQ0Pw==
-X-Received: by 2002:a7b:cbcc:: with SMTP id n12mr38361wmi.105.1597949487036;
-        Thu, 20 Aug 2020 11:51:27 -0700 (PDT)
+        bh=8Y9xTv9MTk+DYQZI9tVbj30/uWX0D0ZC3rsteP6Q+Zs=;
+        b=VDWw8b86uBYi7mb13Azk821te8JvneATQ3N+SCwzYzRnGxwXyRYNzmCZd2B9KJTYYy
+         dSrI9fq3Gs4f6OKtswq2HAotShJK3cFxKFMeaBxyUfi4KRcG7LZQiyhe+G6Oqk7tfcvY
+         4zagBqz73Zw9VKA/aLkItYi+muGqhB/1utKLolFNlgJiazsCYPhocPOCNB7Dm+EJhsb5
+         azB30tOlKsqDnWzyoDdp/mE1yYlZd2du4TjQ8GRtjWeMg9ijIUpAzLh2H9yPgIjDPKJ5
+         cxxjBM7/QUXjbDWcw+tbQFH14URp46hgNl01kSYDXTkuHo+jGMSR5o2KWHpY92yOXb8j
+         F58w==
+X-Gm-Message-State: AOAM5331JTx4LBsXfZinavdrVOlS0YewwFfCk+9dLLFSRTI0vilP1/fR
+        msHNoEneF58yuz37NexlyE0x1g==
+X-Google-Smtp-Source: ABdhPJyi93EpGUHDhn1RcT/hobwWURvQP6QtBccpZMz7jNGPAcMuH1elqP6hkoFeMAOkZrFBFXKrew==
+X-Received: by 2002:a1c:2d8d:: with SMTP id t135mr73516wmt.76.1597949483778;
+        Thu, 20 Aug 2020 11:51:23 -0700 (PDT)
 Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
-        by smtp.gmail.com with ESMTPSA id q2sm5694019wro.8.2020.08.20.11.51.25
+        by smtp.gmail.com with ESMTPSA id q2sm5694019wro.8.2020.08.20.11.51.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 11:51:26 -0700 (PDT)
+        Thu, 20 Aug 2020 11:51:23 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Jonathan Cameron <jic23@kernel.org>,
         Hartmut Knaack <knaack.h@gmx.de>,
@@ -70,11 +70,10 @@ To:     Jonathan Cameron <jic23@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v8 3/3] iio: adc: xilinx-xadc: use devm_krealloc()
-Date:   Thu, 20 Aug 2020 20:51:10 +0200
-Message-Id: <20200820185110.17828-4-brgl@bgdev.pl>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v8 2/3] hwmon: pmbus: use more devres helpers
+Date:   Thu, 20 Aug 2020 20:51:09 +0200
+Message-Id: <20200820185110.17828-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200820185110.17828-1-brgl@bgdev.pl>
 References: <20200820185110.17828-1-brgl@bgdev.pl>
@@ -87,82 +86,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Use the managed variant of krealloc() and shrink the code a bit.
+Shrink pmbus code by using devm_hwmon_device_register_with_groups()
+and devm_krealloc() instead of their non-managed variants.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 ---
- drivers/iio/adc/xilinx-xadc-core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/hwmon/pmbus/pmbus_core.c | 28 +++++++++-------------------
+ 1 file changed, 9 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
-index d0b7ef296afb..f93c34fe5873 100644
---- a/drivers/iio/adc/xilinx-xadc-core.c
-+++ b/drivers/iio/adc/xilinx-xadc-core.c
-@@ -1092,6 +1092,7 @@ MODULE_DEVICE_TABLE(of, xadc_of_match_table);
- static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	unsigned int *conf)
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 44535add3a4a..91839979cf6c 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -1018,9 +1018,9 @@ static int pmbus_add_attribute(struct pmbus_data *data, struct attribute *attr)
  {
-+	struct device *dev = indio_dev->dev.parent;
- 	struct xadc *xadc = iio_priv(indio_dev);
- 	struct iio_chan_spec *channels, *chan;
- 	struct device_node *chan_node, *child;
-@@ -1136,7 +1137,8 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 		*conf |= XADC_CONF0_MUX | XADC_CONF0_CHAN(ext_mux_chan);
- 	}
+ 	if (data->num_attributes >= data->max_attributes - 1) {
+ 		int new_max_attrs = data->max_attributes + PMBUS_ATTR_ALLOC_SIZE;
+-		void *new_attrs = krealloc(data->group.attrs,
+-					   new_max_attrs * sizeof(void *),
+-					   GFP_KERNEL);
++		void *new_attrs = devm_krealloc(data->dev, data->group.attrs,
++						new_max_attrs * sizeof(void *),
++						GFP_KERNEL);
+ 		if (!new_attrs)
+ 			return -ENOMEM;
+ 		data->group.attrs = new_attrs;
+@@ -2534,7 +2534,7 @@ int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
  
--	channels = kmemdup(xadc_channels, sizeof(xadc_channels), GFP_KERNEL);
-+	channels = devm_kmemdup(dev, xadc_channels,
-+				sizeof(xadc_channels), GFP_KERNEL);
- 	if (!channels)
- 		return -ENOMEM;
- 
-@@ -1172,8 +1174,9 @@ static int xadc_parse_dt(struct iio_dev *indio_dev, struct device_node *np,
- 	of_node_put(chan_node);
- 
- 	indio_dev->num_channels = num_channels;
--	indio_dev->channels = krealloc(channels, sizeof(*channels) *
--					num_channels, GFP_KERNEL);
-+	indio_dev->channels = devm_krealloc(dev, channels,
-+					    sizeof(*channels) * num_channels,
-+					    GFP_KERNEL);
- 	/* If we can't resize the channels array, just use the original */
- 	if (!indio_dev->channels)
- 		indio_dev->channels = channels;
-@@ -1225,14 +1228,14 @@ static int xadc_probe(struct platform_device *pdev)
- 
- 	ret = xadc_parse_dt(indio_dev, pdev->dev.of_node, &conf0);
+ 	ret = pmbus_find_attributes(client, data);
  	if (ret)
--		goto err_device_free;
+-		goto out_kfree;
 +		return ret;
  
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED) {
- 		ret = iio_triggered_buffer_setup(indio_dev,
- 			&iio_pollfunc_store_time, &xadc_trigger_handler,
- 			&xadc_buffer_ops);
- 		if (ret)
--			goto err_device_free;
-+			return ret;
+ 	/*
+ 	 * If there are no attributes, something is wrong.
+@@ -2542,35 +2542,27 @@ int pmbus_do_probe(struct i2c_client *client, const struct i2c_device_id *id,
+ 	 */
+ 	if (!data->num_attributes) {
+ 		dev_err(dev, "No attributes found\n");
+-		ret = -ENODEV;
+-		goto out_kfree;
++		return -ENODEV;
+ 	}
  
- 		xadc->convst_trigger = xadc_alloc_trigger(indio_dev, "convst");
- 		if (IS_ERR(xadc->convst_trigger)) {
-@@ -1350,8 +1353,6 @@ static int xadc_probe(struct platform_device *pdev)
- err_triggered_buffer_cleanup:
- 	if (xadc->ops->flags & XADC_FLAGS_BUFFERED)
- 		iio_triggered_buffer_cleanup(indio_dev);
--err_device_free:
--	kfree(indio_dev->channels);
+ 	data->groups[0] = &data->group;
+ 	memcpy(data->groups + 1, info->groups, sizeof(void *) * groups_num);
+-	data->hwmon_dev = hwmon_device_register_with_groups(dev, client->name,
+-							    data, data->groups);
++	data->hwmon_dev = devm_hwmon_device_register_with_groups(dev,
++					client->name, data, data->groups);
+ 	if (IS_ERR(data->hwmon_dev)) {
+-		ret = PTR_ERR(data->hwmon_dev);
+ 		dev_err(dev, "Failed to register hwmon device\n");
+-		goto out_kfree;
++		return PTR_ERR(data->hwmon_dev);
+ 	}
  
- 	return ret;
- }
-@@ -1371,7 +1372,6 @@ static int xadc_remove(struct platform_device *pdev)
- 	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
- 	clk_disable_unprepare(xadc->clk);
- 	kfree(xadc->data);
--	kfree(indio_dev->channels);
+ 	ret = pmbus_regulator_register(data);
+ 	if (ret)
+-		goto out_unregister;
++		return ret;
+ 
+ 	ret = pmbus_init_debugfs(client, data);
+ 	if (ret)
+ 		dev_warn(dev, "Failed to register debugfs\n");
  
  	return 0;
+-
+-out_unregister:
+-	hwmon_device_unregister(data->hwmon_dev);
+-out_kfree:
+-	kfree(data->group.attrs);
+-	return ret;
  }
+ EXPORT_SYMBOL_GPL(pmbus_do_probe);
+ 
+@@ -2580,8 +2572,6 @@ int pmbus_do_remove(struct i2c_client *client)
+ 
+ 	debugfs_remove_recursive(data->debugfs);
+ 
+-	hwmon_device_unregister(data->hwmon_dev);
+-	kfree(data->group.attrs);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(pmbus_do_remove);
 -- 
 2.26.1
 
