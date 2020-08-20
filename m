@@ -2,185 +2,181 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D40C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3942DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D20E208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:05:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A0h03ayf"
+	by mail.kernel.org (Postfix) with ESMTP id 1C9FB208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbgHTREC (ORCPT
+        id S1730205AbgHTRFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:04:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36902 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729900AbgHTRCq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:02:46 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH1rVp132117;
-        Thu, 20 Aug 2020 13:02:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=cavpwU+lDo/Lusli5lDuTBdkFJ7dYxcQtjslIDI5oyk=;
- b=A0h03ayfGop/9jm0rqxyJIIYRbWSDDVgf24aumCe0Ah7ZIsvRo7f+jTLPTenwjyAMFuP
- eMKbnZ+B5S0puZhN4vv76atwZGQcFbiCg/wzcsSmARP4CKrY/HOFeQ5TlyOOn26cAGzN
- KY+xAtTAxc1f24bHuEYPF2txlZ7wZeZw7MDxhT+aJz9LCsuGXlbSIQM2XiZ/2aE5ws1M
- uqmtQPn1UP91aeGRDDckHw2zLCclweIVKnT5Meot9ySMAYqMs2jODnZIp9cX3bCXhzjA
- ssaIl6x8CvavrH79MTSmu1JnIEv2d7Awr3J6KaIMW+whTKbbHbiyLlmJ1YgCH/w48hCQ XQ== 
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 331rvv9fqe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 13:02:38 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0IIM001542;
-        Thu, 20 Aug 2020 17:02:34 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03wdc.us.ibm.com with ESMTP id 3304cedu97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 17:02:34 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2XC754722822
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 17:02:33 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2F93AE05F;
-        Thu, 20 Aug 2020 17:02:33 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C61DFAE064;
-        Thu, 20 Aug 2020 17:02:32 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 17:02:32 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-spi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        eajames@linux.ibm.com, joel@jms.id.au, bradleyb@fuzziesquirrel.com,
-        broonie@kernel.org, robh+dt@kernel.org, arnd@arndb.de
-Subject: [PATCH 3/7] spi: fsi: Fix use of the bneq+ sequencer instruction
-Date:   Thu, 20 Aug 2020 12:02:24 -0500
-Message-Id: <20200820170228.42053-4-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200820170228.42053-1-eajames@linux.ibm.com>
-References: <20200820170228.42053-1-eajames@linux.ibm.com>
+        Thu, 20 Aug 2020 13:05:54 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:10333 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730273AbgHTRDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:03:25 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BXWDz2jj7z9vCy8;
+        Thu, 20 Aug 2020 19:03:15 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id GD-bwbqjcmIS; Thu, 20 Aug 2020 19:03:15 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BXWDz0hF0z9vCxy;
+        Thu, 20 Aug 2020 19:03:15 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 91B728B860;
+        Thu, 20 Aug 2020 19:03:16 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id S7nJLVSUMHis; Thu, 20 Aug 2020 19:03:16 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 659498B764;
+        Thu, 20 Aug 2020 19:03:15 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: Fix a bug in __div64_32 if divisor is zero
+To:     Guohua Zhong <zhongguohua1@huawei.com>, paulus@samba.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        gregkh@linuxfoundation.org
+Cc:     nixiaoming@huawei.com, wangle6@huawei.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200820131049.42940-1-zhongguohua1@huawei.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <50d351e0-bbad-f25f-6b4c-265b7a73c878@csgroup.eu>
+Date:   Thu, 20 Aug 2020 19:02:59 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200820131049.42940-1-zhongguohua1@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=593
- suspectscore=1 phishscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brad Bishop <bradleyb@fuzziesquirrel.com>
 
-All of the switches in N2_count_control in the counter configuration are
-required to make the branch if not equal and increment command work.
-Set them when using bneq+.
 
-A side effect of this mode requires a dummy write to TDR when both
-transmitting and receiving otherwise the controller won't start shifting
-receive data.
+Le 20/08/2020 à 15:10, Guohua Zhong a écrit :
+> When cat /proc/pid/stat, do_task_stat will call into cputime_adjust,
+> which call stack is like this:
+> 
+> [17179954.674326]BookE Watchdog detected hard LOCKUP on cpu 0
+> [17179954.674331]dCPU: 0 PID: 1262 Comm: TICK Tainted: P        W  O    4.4.176 #1
+> [17179954.674339]dtask: dc9d7040 task.stack: d3cb4000
+> [17179954.674344]NIP: c001b1a8 LR: c006a7ac CTR: 00000000
+> [17179954.674349]REGS: e6fe1f10 TRAP: 3202   Tainted: P        W  O     (4.4.176)
+> [17179954.674355]MSR: 00021002 <CE,ME>  CR: 28002224  XER: 00000000
+> [17179954.674364]
+> GPR00: 00000016 d3cb5cb0 dc9d7040 d3cb5cc0 00000000 0000025d ffe15b24 ffffffff
+> GPR08: de86aead 00000000 000003ff ffffffff 28002222 0084d1c0 00000000 ffffffff
+> GPR16: b5929ca0 b4bb7a48 c0863c08 0000048d 00000062 00000062 00000000 0000000f
+> GPR24: 00000000 d3cb5d08 d3cb5d60 d3cb5d64 00029002 d3e9c214 fffff30e d3e9c20c
+> [17179954.674410]NIP [c001b1a8] __div64_32+0x60/0xa0
+> [17179954.674422]LR [c006a7ac] cputime_adjust+0x124/0x138
+> [17179954.674434]Call Trace:
+> [17179961.832693]Call Trace:
+> [17179961.832695][d3cb5cb0] [c006a6dc] cputime_adjust+0x54/0x138 (unreliable)
+> [17179961.832705][d3cb5cf0] [c006a818] task_cputime_adjusted+0x58/0x80
+> [17179961.832713][d3cb5d20] [c01dab44] do_task_stat+0x298/0x870
+> [17179961.832720][d3cb5de0] [c01d4948] proc_single_show+0x60/0xa4
+> [17179961.832728][d3cb5e10] [c01963d8] seq_read+0x2d8/0x52c
+> [17179961.832736][d3cb5e80] [c01702fc] __vfs_read+0x40/0x114
+> [17179961.832744][d3cb5ef0] [c0170b1c] vfs_read+0x9c/0x10c
+> [17179961.832751][d3cb5f10] [c0171440] SyS_read+0x68/0xc4
+> [17179961.832759][d3cb5f40] [c0010a40] ret_from_syscall+0x0/0x3c
+> 
+> do_task_stat->task_cputime_adjusted->cputime_adjust->scale_stime->div_u64
+> ->div_u64_rem->do_div->__div64_32
+> 
+> In some corner case, stime + utime = 0 if overflow. Even in v5.8.2  kernel
+> the cputime has changed from unsigned long to u64 data type. About 200
+> days, the lowwer 32 bit will be 0x00000000. Because divisor for __div64_32
+> is unsigned long data type,which is 32 bit for powepc 32, the bug still
+> exists.
+> 
+> So it is also a bug in the cputime_adjust which does not check if
+> stime + utime = 0
+> 
+> time = scale_stime((__force u64)stime, (__force u64)rtime,
+>                  (__force u64)(stime + utime));
+> 
+> The commit 3dc167ba5729 ("sched/cputime: Improve cputime_adjust()") in
+> mainline kernel may has fixed this case. But it is also better to check
+> if divisor is 0 in __div64_32 for other situation.
+> 
+> Signed-off-by: Guohua Zhong <zhongguohua1@huawei.com>
+> Fixes:14cf11af6cf6 "( powerpc: Merge enough to start building in arch/powerpc.)"
+> Fixes:94b212c29f68 "( powerpc: Move ppc64 boot wrapper code over to arch/powerpc)"
+> Cc: stable@vger.kernel.org # v2.6.15+
+> ---
+>   arch/powerpc/boot/div64.S | 4 ++++
+>   arch/powerpc/lib/div64.S  | 4 ++++
+>   2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
+> index 4354928ed62e..39a25b9712d1 100644
+> --- a/arch/powerpc/boot/div64.S
+> +++ b/arch/powerpc/boot/div64.S
+> @@ -13,6 +13,9 @@
+>   
+>   	.globl __div64_32
+>   __div64_32:
+> +	li	r9,0
+> +	cmplw	r4,r9	# check if divisor r4 is zero
+> +	beq	5f			# jump to label 5 if r4(divisor) is zero
+>   	lwz	r5,0(r3)	# get the dividend into r5/r6
+>   	lwz	r6,4(r3)
+>   	cmplw	r5,r4
+> @@ -52,6 +55,7 @@ __div64_32:
+>   4:	stw	r7,0(r3)	# return the quotient in *r3
+>   	stw	r8,4(r3)
+>   	mr	r3,r6		# return the remainder in r3
+> +5:					# return if divisor r4 is zero
+>   	blr
+>   
+>   /*
+> diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+> index 3d5426e7dcc4..1cc9bcabf678 100644
+> --- a/arch/powerpc/lib/div64.S
+> +++ b/arch/powerpc/lib/div64.S
+> @@ -13,6 +13,9 @@
+>   #include <asm/processor.h>
+>   
+>   _GLOBAL(__div64_32)
+> +	li	r9,0
 
-It is likely not possible to avoid TDR underrun errors in this mode and
-they are harmless, so do not check for them.
+You don't need to load r9 with 0, use cmplwi instead.
 
-Fixes: bbb6b2f9865b ("spi: Add FSI-attached SPI controller driver")
-Signed-off-by: Brad Bishop <bradleyb@fuzziesquirrel.com>
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/spi/spi-fsi.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+> +	cmplw	r4,r9	# check if divisor r4 is zero
+> +	beq	5f			# jump to label 5 if r4(divisor) is zero
 
-diff --git a/drivers/spi/spi-fsi.c b/drivers/spi/spi-fsi.c
-index 559d0ff981f3..c31a852b6a3e 100644
---- a/drivers/spi/spi-fsi.c
-+++ b/drivers/spi/spi-fsi.c
-@@ -29,6 +29,10 @@
- #define SPI_FSI_ERROR			0x0
- #define SPI_FSI_COUNTER_CFG		0x1
- #define  SPI_FSI_COUNTER_CFG_LOOPS(x)	 (((u64)(x) & 0xffULL) << 32)
-+#define  SPI_FSI_COUNTER_CFG_N2_RX	 BIT_ULL(8)
-+#define  SPI_FSI_COUNTER_CFG_N2_TX	 BIT_ULL(9)
-+#define  SPI_FSI_COUNTER_CFG_N2_IMPLICIT BIT_ULL(10)
-+#define  SPI_FSI_COUNTER_CFG_N2_RELOAD	 BIT_ULL(11)
- #define SPI_FSI_CFG1			0x2
- #define SPI_FSI_CLOCK_CFG		0x3
- #define  SPI_FSI_CLOCK_CFG_MM_ENABLE	 BIT_ULL(32)
-@@ -61,7 +65,7 @@
- #define  SPI_FSI_STATUS_RDR_OVERRUN	 BIT_ULL(62)
- #define  SPI_FSI_STATUS_RDR_FULL	 BIT_ULL(63)
- #define  SPI_FSI_STATUS_ANY_ERROR	 \
--	(SPI_FSI_STATUS_ERROR | SPI_FSI_STATUS_TDR_UNDERRUN | \
-+	(SPI_FSI_STATUS_ERROR | \
- 	 SPI_FSI_STATUS_TDR_OVERRUN | SPI_FSI_STATUS_RDR_UNDERRUN | \
- 	 SPI_FSI_STATUS_RDR_OVERRUN)
- #define SPI_FSI_PORT_CTRL		0x9
-@@ -238,6 +242,7 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
- 	int rc;
- 	u8 len = min(transfer->len, 8U);
- 	u8 rem = transfer->len % len;
-+	u64 cfg = 0ULL;
- 
- 	loops = transfer->len / len;
- 
-@@ -258,8 +263,14 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
- 	if (loops > 1) {
- 		fsi_spi_sequence_add(seq, SPI_FSI_SEQUENCE_BRANCH(idx));
- 
--		rc = fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG,
--				       SPI_FSI_COUNTER_CFG_LOOPS(loops - 1));
-+		cfg = SPI_FSI_COUNTER_CFG_LOOPS(loops - 1);
-+		if (transfer->rx_buf)
-+			cfg |= SPI_FSI_COUNTER_CFG_N2_RX |
-+				SPI_FSI_COUNTER_CFG_N2_TX |
-+				SPI_FSI_COUNTER_CFG_N2_IMPLICIT |
-+				SPI_FSI_COUNTER_CFG_N2_RELOAD;
-+
-+		rc = fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG, cfg);
- 		if (rc)
- 			return rc;
- 	}
-@@ -275,6 +286,7 @@ static int fsi_spi_transfer_data(struct fsi_spi *ctx,
- {
- 	int rc = 0;
- 	u64 status = 0ULL;
-+	u64 cfg = 0ULL;
- 
- 	if (transfer->tx_buf) {
- 		int nb;
-@@ -312,6 +324,16 @@ static int fsi_spi_transfer_data(struct fsi_spi *ctx,
- 		u64 in = 0ULL;
- 		u8 *rx = transfer->rx_buf;
- 
-+		rc = fsi_spi_read_reg(ctx, SPI_FSI_COUNTER_CFG, &cfg);
-+		if (rc)
-+			return rc;
-+
-+		if (cfg & SPI_FSI_COUNTER_CFG_N2_IMPLICIT) {
-+			rc = fsi_spi_write_reg(ctx, SPI_FSI_DATA_TX, 0);
-+			if (rc)
-+				return rc;
-+		}
-+
- 		while (transfer->len > recv) {
- 			do {
- 				rc = fsi_spi_read_reg(ctx, SPI_FSI_STATUS,
--- 
-2.26.2
+You should leave space between the compare and the branch (i.e. have 
+other instructions inbetween when possible), so that the processor can 
+prepare the branching and do a good prediction. Same as the compare 
+below, you see that there are two other instructions between the cmplw 
+are the blt. You can eventually use another cr field than cr0 in order 
+to nest several test/branches.
+Also because on recent powerpc32, instructions are fetched and executed 
+two by two.
 
+>   	lwz	r5,0(r3)	# get the dividend into r5/r6
+>   	lwz	r6,4(r3)
+>   	cmplw	r5,r4
+> @@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
+>   4:	stw	r7,0(r3)	# return the quotient in *r3
+>   	stw	r8,4(r3)
+>   	mr	r3,r6		# return the remainder in r3
+> +5:					# return if divisor r4 is zero
+>   	blr
+> 
+
+Christophe
