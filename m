@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69573C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AF8207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3978208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917270;
-	bh=+scfe+NEZbJY7EkOG84JZhcz2N/+8keGUW4mOZ8jPCc=;
+	s=default; t=1597917276;
+	bh=JnNbhAP2AQk4xvVJqWvvnnyW0+wwq4Gfhgkon2rtHL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDS5junbdSZ+Ggj1u3F1Qa2PB7oxrtrOVAK5j7R0aJhdJVIi2oKx8DLetgEkA+qFH
-	 MwbW1CPqCOzmEL0KD0tEwHxoPjAFdZ6YtSpJijQ4Ue2bpxqfRTD16oBqDfvuAB+tIe
-	 JPT0YEoR0P4olPR4BPCcDKswMzevC9I/X71NOOgE=
+	b=QZ0woNu4eYrffyAKTQbGtkGTLKaOBG9SG32v1yJhDwg1VNQAtX8gOBIJ1qh1vMiSA
+	 2n/sV1Gp7SZuiPtyAHZDk4Dy9WkHBboMUyyUmZMumzYQRbnL/ZGr2KyMAq1bmXsZZo
+	 oWhuvbcXDbQvmWdMHaUpQWoA0RttIwNxeAelzI44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbgHTJy2 (ORCPT
+        id S1730139AbgHTJye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:54:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgHTJyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:11 -0400
+        id S1730105AbgHTJyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B087F2067C;
-        Thu, 20 Aug 2020 09:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A73732067C;
+        Thu, 20 Aug 2020 09:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917251;
-        bh=+scfe+NEZbJY7EkOG84JZhcz2N/+8keGUW4mOZ8jPCc=;
+        s=default; t=1597917257;
+        bh=JnNbhAP2AQk4xvVJqWvvnnyW0+wwq4Gfhgkon2rtHL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rmWoh+ILhsrxB78nDFZuM8FBE2mgdpSyI7McVWDAq6E5R5iFc+FfIlIRLy2e+j0DE
-         jY3hfHdHzLcuhG1cHJfgIfQ3baSGGjDcGjc/tLig/UXtZYmokrq0lqk5IgFjSmTwC7
-         PhP4W56jIbJwJuQGERMk6r2a0unYzNxxt7siMiQU=
+        b=sTG593gs+2GxJ0QYbH/SciMJpvm4ssAJJAxpCrzLFTyH1zbyA+qmSBxV1TaIOx6ki
+         HXj7GMhj7rOUrx+lgqKSfRySdurcQoHhcZvuIEeANeSX6qbDmD0+2QafW1uFnO9nBV
+         WhqEjHMHiwUjU7z9dbl4XgJ4wXWZHcXa0pzjhJQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 57/92] mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
-Date:   Thu, 20 Aug 2020 11:21:42 +0200
-Message-Id: <20200820091540.583963283@linuxfoundation.org>
+Subject: [PATCH 4.19 59/92] dm rq: dont call blk_mq_queue_stopped() in dm_stop_queue()
+Date:   Thu, 20 Aug 2020 11:21:44 +0200
+Message-Id: <20200820091540.691298635@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -62,62 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 2b26e34e9af3fa24fa1266e9ea2d66a1f7d62dc0 ]
+[ Upstream commit e766668c6cd49d741cfb49eaeb38998ba34d27bc ]
 
-To add end() operation in the future, clean the code of
-renesas_sdhi_internal_dmac_complete_tasklet_fn(). No behavior change.
+dm_stop_queue() only uses blk_mq_quiesce_queue() so it doesn't
+formally stop the blk-mq queue; therefore there is no point making the
+blk_mq_queue_stopped() check -- it will never be stopped.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1590044466-28372-3-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+In addition, even though dm_stop_queue() actually tries to quiesce hw
+queues via blk_mq_quiesce_queue(), checking with blk_queue_quiesced()
+to avoid unnecessary queue quiesce isn't reliable because: the
+QUEUE_FLAG_QUIESCED flag is set before synchronize_rcu() and
+dm_stop_queue() may be called when synchronize_rcu() from another
+blk_mq_quiesce_queue() is in-progress.
+
+Fixes: 7b17c2f7292ba ("dm: Fix a race condition related to stopping and starting queues")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/md/dm-rq.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index 382172fb3da8f..74eea8247490d 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -222,15 +222,12 @@ static void renesas_sdhi_internal_dmac_issue_tasklet_fn(unsigned long arg)
- 					    DTRAN_CTRL_DM_START);
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 4d36373e1c0f0..9fde174ce3961 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -95,9 +95,6 @@ static void dm_old_stop_queue(struct request_queue *q)
+ 
+ static void dm_mq_stop_queue(struct request_queue *q)
+ {
+-	if (blk_mq_queue_stopped(q))
+-		return;
+-
+ 	blk_mq_quiesce_queue(q);
  }
  
--static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+static bool renesas_sdhi_internal_dmac_complete(struct tmio_mmc_host *host)
- {
--	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
- 	enum dma_data_direction dir;
- 
--	spin_lock_irq(&host->lock);
--
- 	if (!host->data)
--		goto out;
-+		return false;
- 
- 	if (host->data->flags & MMC_DATA_READ)
- 		dir = DMA_FROM_DEVICE;
-@@ -243,6 +240,17 @@ static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
- 	if (dir == DMA_FROM_DEVICE)
- 		clear_bit(SDHI_INTERNAL_DMAC_RX_IN_USE, &global_flags);
- 
-+	return true;
-+}
-+
-+static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+{
-+	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
-+
-+	spin_lock_irq(&host->lock);
-+	if (!renesas_sdhi_internal_dmac_complete(host))
-+		goto out;
-+
- 	tmio_mmc_do_data_irq(host);
- out:
- 	spin_unlock_irq(&host->lock);
 -- 
 2.25.1
 
