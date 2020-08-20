@@ -2,109 +2,66 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14650C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754BC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E37CB20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920229;
-	bh=z1bWgTa9JnH8RMIZqIT+XLK2kqP+JWiABGvNdNQcH5E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KfKj4axy7Fsv1Wu7btg5UwColrmyBVfCUWOqLDmLibT7+m3DGj/yqcQ85JwLI8O4u
-	 Q2DB6YFQ9LDC8LEuDMLDzQMcxJYt18SWLGaTwq8Nxp4UBzdjF6H8/TYGw+YrlYZKK9
-	 ylkF73rxDJiG/WQCIqDf8usyFliw7EkvZj2wwxTQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1C70E20639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbgHTKnr (ORCPT
+        id S1731672AbgHTKny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:43:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:43:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55502 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728369AbgHTKQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D3FF206DA;
-        Thu, 20 Aug 2020 10:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918578;
-        bh=z1bWgTa9JnH8RMIZqIT+XLK2kqP+JWiABGvNdNQcH5E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEwgI+t/lS5vt2k8qmKhI3o2f1B81n4DlVL0KRUYWD2qkEl/4vUqMVID9fdECi6WO
-         +Q8U2SARoeZD3fTr/Xiysy1nrQ2PAsCs/aTKvBy1X4ZBzlusvxdUzxlyHQIVw/WIsz
-         vGVb9VKbFlXjzZvQ+QGH+rkjIKjFLzJqwZ0qH5Rk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 4.14 191/228] watchdog: f71808e_wdt: clear watchdog timeout occurred flag
-Date:   Thu, 20 Aug 2020 11:22:46 +0200
-Message-Id: <20200820091617.115856099@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728369AbgHTKnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:43:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 65C6EAD71;
+        Thu, 20 Aug 2020 10:44:16 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 12:43:48 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org
+Subject: Re: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
+Message-ID: <20200820104348.GF4353@alley>
+References: <20200814101933.574326079@linutronix.de>
+ <20200820084738.GD4353@alley>
+ <878se9ip7k.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <878se9ip7k.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+On Thu 2020-08-20 12:30:55, Thomas Gleixner wrote:
+> Petr,
+> 
+> On Thu, Aug 20 2020 at 10:47, Petr Mladek wrote:
+> > The interface is perfectly fine for printk() needs.
+> 
+> Good. So I suggest that I apply that on top of rc1 somewhere in tip and
+> tag the top commit. So you can pull that tag into your printk branch and
+> go wild.
 
-commit 4f39d575844148fbf3081571a1f3b4ae04150958 upstream.
+Sounds good to me.
 
-The flag indicating a watchdog timeout having occurred normally persists
-till Power-On Reset of the Fintek Super I/O chip. The user can clear it
-by writing a `1' to the bit.
-
-The driver doesn't offer a restart method, so regular system reboot
-might not reset the Super I/O and if the watchdog isn't enabled, we
-won't touch the register containing the bit on the next boot.
-In this case all subsequent regular reboots will be wrongly flagged
-by the driver as being caused by the watchdog.
-
-Fix this by having the flag cleared after read. This is also done by
-other drivers like those for the i6300esb and mpc8xxx_wdt.
-
-Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-5-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/watchdog/f71808e_wdt.c |    7 +++++++
- 1 file changed, 7 insertions(+)
-
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -704,6 +704,13 @@ static int __init watchdog_init(int sioa
- 	wdt_conf = superio_inb(sioaddr, F71808FG_REG_WDT_CONF);
- 	watchdog.caused_reboot = wdt_conf & BIT(F71808FG_FLAG_WDTMOUT_STS);
- 
-+	/*
-+	 * We don't want WDTMOUT_STS to stick around till regular reboot.
-+	 * Write 1 to the bit to clear it to zero.
-+	 */
-+	superio_outb(sioaddr, F71808FG_REG_WDT_CONF,
-+		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
-+
- 	superio_exit(sioaddr);
- 
- 	err = watchdog_set_timeout(timeout);
-
-
+Best Regards,
+Petr
