@@ -2,264 +2,141 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AD23C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F7C208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88A2D208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="isPq4NSu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="voVLMNwy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729554AbgHTRHe (ORCPT
+        id S1730397AbgHTRH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:07:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729881AbgHTREc (ORCPT
+        Thu, 20 Aug 2020 13:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42740 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730381AbgHTRFQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:04:32 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH3auR158774;
-        Thu, 20 Aug 2020 13:04:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Kuv6Z602OrDP7XL8CfwTaxRwKEzEbQZE7a88DsQJgMA=;
- b=isPq4NSuR9H/O1UzNxhuG6O9rXZWw7NGJKgPmEQNXZW4FxAjvd2tt5t6aR/X1+BGAa2L
- QOW7sBx+xLpitMMy6bQYERjxoPoMb4GYZPt+Vs6llgfMz1dGzcxH7zYyniiVzaFskzS8
- jR1Gs0/iGSc+mmh67xbhVSIAHE6FOd3/3UfiHo54BjWQhcQY4gCYPRY3vr2tU9QPGt+I
- xNIKliUywcc5F/Kb07IgtvxEd1yamwtXa9CLswQrwe4r3b3EnRv+2X8APv3b6Mo/wc5N
- aLs2adrJhEFGnXOKBFTYgAdFFnMchqXouAdm0D8tF4YkzaqBVQ2vUnu9tQg2EZ1ruL7q 4A== 
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3304rvg5xe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 13:04:14 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KGjb9B029957;
-        Thu, 20 Aug 2020 17:02:36 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 3304cd38xq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 17:02:36 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2Z2M53805558
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 17:02:36 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E27A4AE062;
-        Thu, 20 Aug 2020 17:02:35 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 059B9AE066;
-        Thu, 20 Aug 2020 17:02:35 +0000 (GMT)
-Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 17:02:34 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-spi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        eajames@linux.ibm.com, joel@jms.id.au, bradleyb@fuzziesquirrel.com,
-        broonie@kernel.org, robh+dt@kernel.org, arnd@arndb.de
-Subject: [PATCH 5/7] spi: fsi: Implement restricted size for certain controllers
-Date:   Thu, 20 Aug 2020 12:02:26 -0500
-Message-Id: <20200820170228.42053-6-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200820170228.42053-1-eajames@linux.ibm.com>
-References: <20200820170228.42053-1-eajames@linux.ibm.com>
+        Thu, 20 Aug 2020 13:05:16 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F40BC061342
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:08 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id m12so574387vko.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:05:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QMaiGT30LKtLlawZDaTsiOOUCyQJdWMlHkzyfdww7TU=;
+        b=voVLMNwyYF5yt8ORXHFmegDJzN5i/p3XveW33+kSdXDEUpjgd3givYskKk18LZY8Tj
+         qQGmwS6j0hJFw3+1G4/PnVK987gG4zKKFrg5An2mCffuBiFtjPIznPJfaGmMzvO+Xc91
+         nfd7nJ57RyhHu4hIUdIP1snE38pYxGDi/Y+CHYrhEFEJ/C0B8kf3L+3Y2ZBAGCwSBv+J
+         o0VyszodTpvhY5HFlY5/A/KU8JGyGEppW09peiWZVYDJ+r9hynM+ydaTijpmTQ083Zjs
+         O8hVFJFVls1ohPR0CgMLzH+r7H8W7xji7vUYhRQxZZ+VRk01BAcAT9PwGPV5YLyKKJ5L
+         hcfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QMaiGT30LKtLlawZDaTsiOOUCyQJdWMlHkzyfdww7TU=;
+        b=tNygouD+EToLDBUrfHP1wmVho9ND61DUyLoki4D09EnpDKmEFTxIglAn3vIZHDzvBp
+         sn5bMMNyQINrtvILTLeAQrpUuvSjnSDp+cp9tEP6oDZkkMI7Dk0gJe2oaGpeSGMTyROC
+         IEW76J67hLOdvasWCapJrmTKCc1BChuWajj/9RZ424nbQhcmHFWJtfKIFh5QqwsPowEm
+         5bSr6HpeHrPcK+3SHiIN2AZRVcpJyVcN8kGCtLF090FdocMWSIapsajOzbEFVFzqMax2
+         My7YNweB6lpGJT3jCatNMR6Nf8qsZ4QivMhRvaK1ld3C6WtUTG5Ibbn3S+2X1v0NqxHj
+         u5oA==
+X-Gm-Message-State: AOAM533Dw1bmMCaQK97uzc5Cy2voAMnaiHc9lFQfUC1epjl6KS7pS0tl
+        SZ+p7d108ZzNnGkNazl9qbzc+N1ZTXgz7KhzMRR7lw==
+X-Google-Smtp-Source: ABdhPJw0AHuWD8nNz3mjjHi8gb99GyFZmSI4fWRyfdqag2g9dEVL/BfYYPFVIqjS+RfYFDwHH/CT26r95B95gLAwdSM=
+X-Received: by 2002:a1f:a256:: with SMTP id l83mr2291083vke.78.1597943105094;
+ Thu, 20 Aug 2020 10:05:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=1 phishscore=0 spamscore=0
- impostorscore=0 adultscore=0 mlxscore=0 clxscore=1015 bulkscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200135
+References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 20 Aug 2020 22:34:53 +0530
+Message-ID: <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/204] 5.7.17-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the FSI-attached SPI controllers cannot use the loop command in
-programming the sequencer due to security requirements. Add a boolean
-devicetree property that describes this condition and restrict the
-size for these controllers. Also, add more transfers directly in the
-sequence up to the length of the sequence register.
+On Thu, 20 Aug 2020 at 15:06, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.7.17 release.
+> There are 204 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.7.17-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.7.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Fixes: bbb6b2f9865b ("spi: Add FSI-attached SPI controller driver")
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- drivers/spi/spi-fsi.c | 65 +++++++++++++++++++++++++++++++++++--------
- 1 file changed, 53 insertions(+), 12 deletions(-)
+> Herbert Xu <herbert@gondor.apana.org.au>
+>     crypto: af_alg - Fix regression on empty requests
 
-diff --git a/drivers/spi/spi-fsi.c b/drivers/spi/spi-fsi.c
-index c31a852b6a3e..53cfa201e187 100644
---- a/drivers/spi/spi-fsi.c
-+++ b/drivers/spi/spi-fsi.c
-@@ -24,7 +24,8 @@
- 
- #define SPI_FSI_BASE			0x70000
- #define SPI_FSI_INIT_TIMEOUT_MS		1000
--#define SPI_FSI_MAX_TRANSFER_SIZE	2048
-+#define SPI_FSI_MAX_XFR_SIZE		2048
-+#define SPI_FSI_MAX_XFR_SIZE_RESTRICTED	32
- 
- #define SPI_FSI_ERROR			0x0
- #define SPI_FSI_COUNTER_CFG		0x1
-@@ -74,6 +75,8 @@ struct fsi_spi {
- 	struct device *dev;	/* SPI controller device */
- 	struct fsi_device *fsi;	/* FSI2SPI CFAM engine device */
- 	u32 base;
-+	size_t max_xfr_size;
-+	bool restricted;
- };
- 
- struct fsi_spi_sequence {
-@@ -209,8 +212,12 @@ static int fsi_spi_reset(struct fsi_spi *ctx)
- 	if (rc)
- 		return rc;
- 
--	return fsi_spi_write_reg(ctx, SPI_FSI_CLOCK_CFG,
--				 SPI_FSI_CLOCK_CFG_RESET2);
-+	rc = fsi_spi_write_reg(ctx, SPI_FSI_CLOCK_CFG,
-+			       SPI_FSI_CLOCK_CFG_RESET2);
-+	if (rc)
-+		return rc;
-+
-+	return fsi_spi_write_reg(ctx, SPI_FSI_STATUS, 0ULL);
- }
- 
- static int fsi_spi_sequence_add(struct fsi_spi_sequence *seq, u8 val)
-@@ -218,8 +225,8 @@ static int fsi_spi_sequence_add(struct fsi_spi_sequence *seq, u8 val)
- 	/*
- 	 * Add the next byte of instruction to the 8-byte sequence register.
- 	 * Then decrement the counter so that the next instruction will go in
--	 * the right place. Return the number of "slots" left in the sequence
--	 * register.
-+	 * the right place. Return the index of the slot we just filled in the
-+	 * sequence register.
- 	 */
- 	seq->data |= (u64)val << seq->bit;
- 	seq->bit -= 8;
-@@ -237,9 +244,11 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
- 				     struct fsi_spi_sequence *seq,
- 				     struct spi_transfer *transfer)
- {
-+	bool docfg = false;
- 	int loops;
- 	int idx;
- 	int rc;
-+	u8 val = 0;
- 	u8 len = min(transfer->len, 8U);
- 	u8 rem = transfer->len % len;
- 	u64 cfg = 0ULL;
-@@ -247,22 +256,42 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
- 	loops = transfer->len / len;
- 
- 	if (transfer->tx_buf) {
--		idx = fsi_spi_sequence_add(seq,
--					   SPI_FSI_SEQUENCE_SHIFT_OUT(len));
-+		val = SPI_FSI_SEQUENCE_SHIFT_OUT(len);
-+		idx = fsi_spi_sequence_add(seq, val);
-+
- 		if (rem)
- 			rem = SPI_FSI_SEQUENCE_SHIFT_OUT(rem);
- 	} else if (transfer->rx_buf) {
--		idx = fsi_spi_sequence_add(seq,
--					   SPI_FSI_SEQUENCE_SHIFT_IN(len));
-+		val = SPI_FSI_SEQUENCE_SHIFT_IN(len);
-+		idx = fsi_spi_sequence_add(seq, val);
-+
- 		if (rem)
- 			rem = SPI_FSI_SEQUENCE_SHIFT_IN(rem);
- 	} else {
- 		return -EINVAL;
- 	}
- 
-+	if (ctx->restricted) {
-+		const int eidx = rem ? 5 : 6;
-+
-+		while (loops > 1 && idx <= eidx) {
-+			idx = fsi_spi_sequence_add(seq, val);
-+			loops--;
-+			docfg = true;
-+		}
-+
-+		if (loops > 1) {
-+			dev_warn(ctx->dev, "No sequencer slots; aborting.\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	if (loops > 1) {
- 		fsi_spi_sequence_add(seq, SPI_FSI_SEQUENCE_BRANCH(idx));
-+		docfg = true;
-+	}
- 
-+	if (docfg) {
- 		cfg = SPI_FSI_COUNTER_CFG_LOOPS(loops - 1);
- 		if (transfer->rx_buf)
- 			cfg |= SPI_FSI_COUNTER_CFG_N2_RX |
-@@ -273,6 +302,8 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
- 		rc = fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG, cfg);
- 		if (rc)
- 			return rc;
-+	} else {
-+		fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG, 0ULL);
- 	}
- 
- 	if (rem)
-@@ -429,7 +460,7 @@ static int fsi_spi_transfer_one_message(struct spi_controller *ctlr,
- 
- 		/* Sequencer must do shift out (tx) first. */
- 		if (!transfer->tx_buf ||
--		    transfer->len > SPI_FSI_MAX_TRANSFER_SIZE) {
-+		    transfer->len > (ctx->max_xfr_size + 8)) {
- 			rc = -EINVAL;
- 			goto error;
- 		}
-@@ -453,7 +484,7 @@ static int fsi_spi_transfer_one_message(struct spi_controller *ctlr,
- 
- 			/* Sequencer can only do shift in (rx) after tx. */
- 			if (next->rx_buf) {
--				if (next->len > SPI_FSI_MAX_TRANSFER_SIZE) {
-+				if (next->len > ctx->max_xfr_size) {
- 					rc = -EINVAL;
- 					goto error;
- 				}
-@@ -498,7 +529,9 @@ static int fsi_spi_transfer_one_message(struct spi_controller *ctlr,
- 
- static size_t fsi_spi_max_transfer_size(struct spi_device *spi)
- {
--	return SPI_FSI_MAX_TRANSFER_SIZE;
-+	struct fsi_spi *ctx = spi_controller_get_devdata(spi->controller);
-+
-+	return ctx->max_xfr_size;
- }
- 
- static int fsi_spi_probe(struct device *dev)
-@@ -546,6 +579,14 @@ static int fsi_spi_probe(struct device *dev)
- 		ctx->fsi = fsi;
- 		ctx->base = base + SPI_FSI_BASE;
- 
-+		if (of_property_read_bool(np, "fsi2spi,restricted")) {
-+			ctx->restricted = true;
-+			ctx->max_xfr_size = SPI_FSI_MAX_XFR_SIZE_RESTRICTED;
-+		} else {
-+			ctx->restricted = false;
-+			ctx->max_xfr_size = SPI_FSI_MAX_XFR_SIZE;
-+		}
-+
- 		rc = devm_spi_register_controller(dev, ctlr);
- 		if (rc)
- 			spi_controller_put(ctlr);
--- 
-2.26.2
+Results from Linaro=E2=80=99s test farm.
+Regressions detected.
 
+LTP crypto af_alg02 and cve-2017-17805 failed on stable-rc 5.7 and 5.8
+branches on arm, arm64, i386 and x86_64.
+
+  ltp-crypto-tests:
+    * af_alg02
+
+  ltp-cve-tests:
+    * cve-2017-17805
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.7.17-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.7.y
+git commit: 7366707e7e9962245a618a0aee04c22ab31115c2
+git describe: v5.7.16-205-g7366707e7e99
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
+ld/v5.7.16-205-g7366707e7e99
+
+Regressions (compared to build v5.7.16)
+------------------------------------------------------------------------
+  ltp-crypto-tests:
+    * af_alg02
+
+  ltp-cve-tests:
+    * cve-2017-17805
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
