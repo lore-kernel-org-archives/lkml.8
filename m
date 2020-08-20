@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6013C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCBEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9136A22B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67AC822B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927469;
-	bh=PVYJA52WYw9Hl0D2KaJmkgzZjHf0Bu545Twx30LwtL8=;
+	s=default; t=1597927483;
+	bh=huCiChlyQVRz46fCpLZMtoHb1q8AdA7xw0fOzvyU1vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WLKPUng8RDtkmGyKebNKD2DYwVgRl+8tppXgD7g3RMxFBk4dR4iJRrvEvS05rFqz5
-	 1zJ7uX2UdEU9kN8425fzCVdfjB5ebn4b+wb4zo6txem99B+/+LqX1/bKvYHdmj9HbQ
-	 S8w//4kFUJx5Sy4XtIljW5c3qNHA6MPwMkU752/A=
+	b=giIzN1Ex/WxZD28whlfqXfCXyCvMflpusmj6sUjyfXbhyAMpRcweRXPCIuag7oKHr
+	 VL4kYUlt+Maa7SRvN9zqUnNfJbdNRvvBT5Gh6T3bmWrvZZxsf8bT2HJbITXRtIoyWq
+	 oYf6Gu6SJ6F73W1f5GlfpXHNCHW+8OEKjpzkesv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgHTMo2 (ORCPT
+        id S1729756AbgHTMoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42796 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:44:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729217AbgHTJpp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51AFF22CB1;
-        Thu, 20 Aug 2020 09:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA2A922CF7;
+        Thu, 20 Aug 2020 09:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916743;
-        bh=PVYJA52WYw9Hl0D2KaJmkgzZjHf0Bu545Twx30LwtL8=;
+        s=default; t=1597916735;
+        bh=huCiChlyQVRz46fCpLZMtoHb1q8AdA7xw0fOzvyU1vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOkCo0agOqeGSDOARL89V/qAb/s89Snd7C4I0QNIVa65p0er86GO85Iam8t0ZyrQ0
-         sxEUSdODD82LTUDviek5KDlW4d4+OgOGO3gLPk2EKLb44wc3znR62syzWw1m0udGtP
-         yZ4U81GBLmnTN0JAUEAlZh9tnQDa9Q8vJbQqxsa0=
+        b=1eHOYKEdIBlnsl/RxsJJWTFxHLBgFulWwT6kZWtZR7MKUbUyi7CwtZVFcaYjyWS/B
+         uAstWPoP4WaGesCBuIBXOzp+lI+3l2+z+ItF2D5o0347VXUcYCPqhR6WZDyJlY6zNZ
+         1dHBVHb/bQ/Xd0AN0/J0AbfB7gZHXDUIAmJcHZV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH 5.4 030/152] arm64: perf: Correct the event index in sysfs
-Date:   Thu, 20 Aug 2020 11:19:57 +0200
-Message-Id: <20200820091555.202025556@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Sandeen <sandeen@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 028/152] btrfs: make sure SB_I_VERSION doesnt get unset by remount
+Date:   Thu, 20 Aug 2020 11:19:55 +0200
+Message-Id: <20200820091555.103552738@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,62 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shaokun Zhang <zhangshaokun@hisilicon.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 539707caa1a89ee4efc57b4e4231c20c46575ccc upstream.
+commit faa008899a4db21a2df99833cb4ff6fa67009a20 upstream.
 
-When PMU event ID is equal or greater than 0x4000, it will be reduced
-by 0x4000 and it is not the raw number in the sysfs. Let's correct it
-and obtain the raw event ID.
+There's some inconsistency around SB_I_VERSION handling with mount and
+remount.  Since we don't really want it to be off ever just work around
+this by making sure we don't get the flag cleared on remount.
 
-Before this patch:
-cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
-event=0x001
-After this patch:
-cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
-event=0x4001
+There's a tiny cpu cost of setting the bit, otherwise all changes to
+i_version also change some of the times (ctime/mtime) so the inode needs
+to be synced. We wouldn't save anything by disabling it.
 
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1592487344-30555-3-git-send-email-zhangshaokun@hisilicon.com
-[will: fixed formatting of 'if' condition]
-Signed-off-by: Will Deacon <will@kernel.org>
+Reported-by: Eric Sandeen <sandeen@redhat.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add perf impact analysis ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/perf_event.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ fs/btrfs/super.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -155,7 +155,7 @@ armv8pmu_events_sysfs_show(struct device
- 
- 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
- 
--	return sprintf(page, "event=0x%03llx\n", pmu_attr->id);
-+	return sprintf(page, "event=0x%04llx\n", pmu_attr->id);
- }
- 
- #define ARMV8_EVENT_ATTR(name, config) \
-@@ -303,10 +303,13 @@ armv8pmu_event_attr_is_visible(struct ko
- 	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
- 		return attr->mode;
- 
--	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
--	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
--	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
--		return attr->mode;
-+	if (pmu_attr->id >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE) {
-+		u64 id = pmu_attr->id - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1852,6 +1852,12 @@ static int btrfs_remount(struct super_bl
+ 		set_bit(BTRFS_FS_OPEN, &fs_info->flags);
+ 	}
+ out:
++	/*
++	 * We need to set SB_I_VERSION here otherwise it'll get cleared by VFS,
++	 * since the absence of the flag means it can be toggled off by remount.
++	 */
++	*flags |= SB_I_VERSION;
 +
-+		if (id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
-+		    test_bit(id, cpu_pmu->pmceid_ext_bitmap))
-+			return attr->mode;
-+	}
- 
+ 	wake_up_process(fs_info->transaction_kthread);
+ 	btrfs_remount_cleanup(fs_info, old_opts);
  	return 0;
- }
 
 
