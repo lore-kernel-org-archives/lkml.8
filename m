@@ -2,55 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E609C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B552C22BF5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73ACF21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927365;
-	bh=sL0968/HFFbREq/hgGicNt4OaxmzlMEkH2rS4F4Lc48=;
+	s=default; t=1597927368;
+	bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVvILe1nxB+aK5eALhf5L/2+sm5PpHd1kzWKUnqWRCm/hc2YnfGjxIqXFzS++JQno
-	 DEAdLD+a8EY+hXY5c6GQGtsLMp1nwp0+TRbjjSoUtR7lCIm/N7GfGzQ9TfPWiDytT5
-	 MNWpAHEZ1i9QeEjATjm7I/rCyRHupyKZ733iB1BQ=
+	b=CjWAEktuTjO6Kg5vtIXk12kLBBb65KMkC1RTU/CTLix2EOSLZKS+xMliGNCdectbj
+	 B0sjOAXkkuQbju9RtIGceRgccuYpit2mkLGW+u1qt2IQtYB9eNeugE+fzaF57x7pPB
+	 3+HHykOAQqBn9wOiGLHwoO0xzDeOGGLCzqLgiUOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbgHTJqA (ORCPT
+        id S1729524AbgHTMmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36380 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728920AbgHTJmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:04 -0400
+        id S1728910AbgHTJp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC8822075E;
-        Thu, 20 Aug 2020 09:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B369A20724;
+        Thu, 20 Aug 2020 09:45:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916523;
-        bh=sL0968/HFFbREq/hgGicNt4OaxmzlMEkH2rS4F4Lc48=;
+        s=default; t=1597916758;
+        bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vnUOumdXC3Qp8Sf38JctpyOZTw6RGUaTJq1EHGGTuIkX3ogBMirWcBVmAOtM4PTIt
-         PAZW0x6YS+oCaAQqKReMXTvZoYukz1VtsqHAyu+xxxSkhyGPdJCAPl/sEeiOEMIuYL
-         Tg/I1blYvFmp5kYjLSppq2Exrzpl53UK3hLfn8/Q=
+        b=eywTQZ5lrG+nzYI5S/A2o0Pox6SKneSCwYuamD+CEW4AeF2fn8xESHOnujuIrBFUI
+         oVb+IUZ3SDtHscI825w+sW7jSle7TmujqBCx08avwx4WwuBRALI6DfmJJ4p2I5LSRu
+         Z5vpWbSwbR+oCq9gcUmmR5I89EwPMYLF0TInKkBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 128/204] gpu: ipu-v3: image-convert: Combine rotate/no-rotate irq handlers
-Date:   Thu, 20 Aug 2020 11:20:25 +0200
-Message-Id: <20200820091612.675453246@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.4 035/152] cifs: Fix leak when handling lease break for cached root fid
+Date:   Thu, 20 Aug 2020 11:20:02 +0200
+Message-Id: <20200820091555.458338289@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,118 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Paul Aurich <paul@darkrain42.org>
 
-[ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
+commit baf57b56d3604880ccb3956ec6c62ea894f5de99 upstream.
 
-Combine the rotate_irq() and norotate_irq() handlers into a single
-eof_irq() handler.
+Handling a lease break for the cached root didn't free the
+smb2_lease_break_work allocation, resulting in a leak:
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    unreferenced object 0xffff98383a5af480 (size 128):
+      comm "cifsd", pid 684, jiffies 4294936606 (age 534.868s)
+      hex dump (first 32 bytes):
+        c0 ff ff ff 1f 00 00 00 88 f4 5a 3a 38 98 ff ff  ..........Z:8...
+        88 f4 5a 3a 38 98 ff ff 80 88 d6 8a ff ff ff ff  ..Z:8...........
+      backtrace:
+        [<0000000068957336>] smb2_is_valid_oplock_break+0x1fa/0x8c0
+        [<0000000073b70b9e>] cifs_demultiplex_thread+0x73d/0xcc0
+        [<00000000905fa372>] kthread+0x11c/0x150
+        [<0000000079378e4e>] ret_from_fork+0x22/0x30
+
+Avoid this leak by only allocating when necessary.
+
+Fixes: a93864d93977 ("cifs: add lease tracking to the cached root fid")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+CC: Stable <stable@vger.kernel.org> # v4.18+
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 58 +++++++++-----------------
- 1 file changed, 20 insertions(+), 38 deletions(-)
+ fs/cifs/smb2misc.c |   73 +++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index eeca50d9a1ee4..f8b031ded3cf2 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -1709,9 +1709,10 @@ static irqreturn_t do_irq(struct ipu_image_convert_run *run)
- 	return IRQ_WAKE_THREAD;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -509,15 +509,31 @@ cifs_ses_oplock_break(struct work_struct
+ 	kfree(lw);
  }
  
--static irqreturn_t norotate_irq(int irq, void *data)
-+static irqreturn_t eof_irq(int irq, void *data)
++static void
++smb2_queue_pending_open_break(struct tcon_link *tlink, __u8 *lease_key,
++			      __le32 new_lease_state)
++{
++	struct smb2_lease_break_work *lw;
++
++	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
++	if (!lw) {
++		cifs_put_tlink(tlink);
++		return;
++	}
++
++	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
++	lw->tlink = tlink;
++	lw->lease_state = new_lease_state;
++	memcpy(lw->lease_key, lease_key, SMB2_LEASE_KEY_SIZE);
++	queue_work(cifsiod_wq, &lw->lease_break);
++}
++
+ static bool
+-smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp,
+-		    struct smb2_lease_break_work *lw)
++smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp)
  {
- 	struct ipu_image_convert_chan *chan = data;
-+	struct ipu_image_convert_priv *priv = chan->priv;
- 	struct ipu_image_convert_ctx *ctx;
- 	struct ipu_image_convert_run *run;
- 	unsigned long flags;
-@@ -1728,45 +1729,26 @@ static irqreturn_t norotate_irq(int irq, void *data)
+-	bool found;
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+ 				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
+@@ -556,22 +572,29 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 				  &cinode->flags);
  
- 	ctx = run->ctx;
- 
--	if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this is a rotation operation, just ignore */
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
--	ret = do_irq(run);
--out:
--	spin_unlock_irqrestore(&chan->irqlock, flags);
--	return ret;
--}
--
--static irqreturn_t rotate_irq(int irq, void *data)
--{
--	struct ipu_image_convert_chan *chan = data;
--	struct ipu_image_convert_priv *priv = chan->priv;
--	struct ipu_image_convert_ctx *ctx;
--	struct ipu_image_convert_run *run;
--	unsigned long flags;
--	irqreturn_t ret;
--
--	spin_lock_irqsave(&chan->irqlock, flags);
--
--	/* get current run and its context */
--	run = chan->current_run;
--	if (!run) {
-+	if (irq == chan->out_eof_irq) {
-+		if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this is a rotation op, just ignore */
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else if (irq == chan->rot_out_eof_irq) {
-+		if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this was NOT a rotation op, shouldn't happen */
-+			dev_err(priv->ipu->dev,
-+				"Unexpected rotation interrupt\n");
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else {
-+		dev_err(priv->ipu->dev, "Received unknown irq %d\n", irq);
- 		ret = IRQ_NONE;
- 		goto out;
+ 		cifs_queue_oplock_break(cfile);
+-		kfree(lw);
+ 		return true;
  	}
  
--	ctx = run->ctx;
--
--	if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this was NOT a rotation operation, shouldn't happen */
--		dev_err(priv->ipu->dev, "Unexpected rotation interrupt\n");
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
- 	ret = do_irq(run);
- out:
- 	spin_unlock_irqrestore(&chan->irqlock, flags);
-@@ -1859,7 +1841,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						  chan->out_chan,
- 						  IPU_IRQ_EOF);
+-	found = false;
++	return false;
++}
++
++static struct cifs_pending_open *
++smb2_tcon_find_pending_open_lease(struct cifs_tcon *tcon,
++				  struct smb2_lease_break *rsp)
++{
++	__u8 lease_state = le32_to_cpu(rsp->NewLeaseState);
++	int ack_req = le32_to_cpu(rsp->Flags &
++				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
++	struct cifs_pending_open *open;
++	struct cifs_pending_open *found = NULL;
++
+ 	list_for_each_entry(open, &tcon->pending_opens, olist) {
+ 		if (memcmp(open->lease_key, rsp->LeaseKey,
+ 			   SMB2_LEASE_KEY_SIZE))
+ 			continue;
  
--	ret = request_threaded_irq(chan->out_eof_irq, norotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
-@@ -1872,7 +1854,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						     chan->rotation_out_chan,
- 						     IPU_IRQ_EOF);
+ 		if (!found && ack_req) {
+-			found = true;
+-			memcpy(lw->lease_key, open->lease_key,
+-			       SMB2_LEASE_KEY_SIZE);
+-			lw->tlink = cifs_get_tlink(open->tlink);
+-			queue_work(cifsiod_wq, &lw->lease_break);
++			found = open;
+ 		}
  
--	ret = request_threaded_irq(chan->rot_out_eof_irq, rotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->rot_out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
--- 
-2.25.1
-
+ 		cifs_dbg(FYI, "found in the pending open list\n");
+@@ -592,14 +615,7 @@ smb2_is_valid_lease_break(char *buffer)
+ 	struct TCP_Server_Info *server;
+ 	struct cifs_ses *ses;
+ 	struct cifs_tcon *tcon;
+-	struct smb2_lease_break_work *lw;
+-
+-	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
+-	if (!lw)
+-		return false;
+-
+-	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
+-	lw->lease_state = rsp->NewLeaseState;
++	struct cifs_pending_open *open;
+ 
+ 	cifs_dbg(FYI, "Checking for lease break\n");
+ 
+@@ -617,11 +633,27 @@ smb2_is_valid_lease_break(char *buffer)
+ 				spin_lock(&tcon->open_file_lock);
+ 				cifs_stats_inc(
+ 				    &tcon->stats.cifs_stats.num_oplock_brks);
+-				if (smb2_tcon_has_lease(tcon, rsp, lw)) {
++				if (smb2_tcon_has_lease(tcon, rsp)) {
+ 					spin_unlock(&tcon->open_file_lock);
+ 					spin_unlock(&cifs_tcp_ses_lock);
+ 					return true;
+ 				}
++				open = smb2_tcon_find_pending_open_lease(tcon,
++									 rsp);
++				if (open) {
++					__u8 lease_key[SMB2_LEASE_KEY_SIZE];
++					struct tcon_link *tlink;
++
++					tlink = cifs_get_tlink(open->tlink);
++					memcpy(lease_key, open->lease_key,
++					       SMB2_LEASE_KEY_SIZE);
++					spin_unlock(&tcon->open_file_lock);
++					spin_unlock(&cifs_tcp_ses_lock);
++					smb2_queue_pending_open_break(tlink,
++								      lease_key,
++								      rsp->NewLeaseState);
++					return true;
++				}
+ 				spin_unlock(&tcon->open_file_lock);
+ 
+ 				if (tcon->crfid.is_valid &&
+@@ -639,7 +671,6 @@ smb2_is_valid_lease_break(char *buffer)
+ 		}
+ 	}
+ 	spin_unlock(&cifs_tcp_ses_lock);
+-	kfree(lw);
+ 	cifs_dbg(FYI, "Can not process lease break - no lease matched\n");
+ 	return false;
+ }
 
 
