@@ -7,54 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9565C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D17C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A83F12072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:43:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B2C720674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:53:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597967035;
-	bh=12Z/1F9ynfQG7TePTBeyr3mih++Uy7SZRp4TeFeFs00=;
+	s=default; t=1597967639;
+	bh=OrvMhzElo/BOA9sucY6YNBL0y8bC8eI2i5C7W2muAhY=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OonRDWSuRWmanSGcMd3aPzENNqQ8OaD94hT8DG1I4OjREHSCDrNT7NloRJGW6hDYr
-	 v9Pptu66DPfxPnD8XgEPVrXPFKQqVG1fBnIkDoSlm/pCIdmmJCtkt9OKqXNnh0iH6P
-	 AAFTA+AnySlR9F9YK9+e6Pm/3G7cU8ZZTdJ82Uq0=
+	b=yhlGS9d6EFTv5VFjj88hQDthIceO9uEm0jyn//1+w4mDw0/oxDNsPXooDkIYloK25
+	 6wHKcflj29ZJyc5h7VfkOtOpLxmTuz46tIoOJZVQXj7Wv0oEZFNQo8UpvIDS3SEN+e
+	 gOGIJOQZpqvv3eQ9Yzm3IM5NMAAWOn0u18yJLjsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgHTXny (ORCPT
+        id S1726957AbgHTXx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:43:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56040 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 19:53:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728498AbgHTXnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:43:51 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        id S1725885AbgHTXxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 19:53:45 -0400
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6683321775;
-        Thu, 20 Aug 2020 23:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00326208E4;
+        Thu, 20 Aug 2020 23:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597967030;
-        bh=12Z/1F9ynfQG7TePTBeyr3mih++Uy7SZRp4TeFeFs00=;
+        s=default; t=1597967094;
+        bh=OrvMhzElo/BOA9sucY6YNBL0y8bC8eI2i5C7W2muAhY=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Zh7RPShu8RDbXHSq/oO4RIrP7wWBy3WN/odPT+2RPzaYmOP++iCWgSxuDuz7TTrd3
-         u/rZq9S0bOYAjczwn4IXAUllxtXntn5divU1ss+SS2VPiDDLGc4BJDg+kWq9wRyLDd
-         upGN6rew7AYY0LKvqeSxDvRU14iudWvSn7Kglwvw=
-Received: by mail-ej1-f41.google.com with SMTP id jp10so268087ejb.0;
-        Thu, 20 Aug 2020 16:43:50 -0700 (PDT)
-X-Gm-Message-State: AOAM533FUdPUqyXbftGwAgsZAE9Qo45VS7wLhBtjoBhmgnSJih3YBYZA
-        2clSOWRaoJznpiBflTkmFB/NNNoQqzsYWnE40Q==
-X-Google-Smtp-Source: ABdhPJwvENKIDffOUlwzID4Z1RX/ZzTkvvhpMC6nA358MClEWoZg7KM+bFIxElWhuhPq+Q71kLgNBHiZNim6++NVVE4=
-X-Received: by 2002:a17:906:7492:: with SMTP id e18mr178889ejl.375.1597967028984;
- Thu, 20 Aug 2020 16:43:48 -0700 (PDT)
+        b=jZnXbZvd6r/RDmhRl8Pd5bDqWjtnOLOVXZheUhdWXNR8JZL8+j8DXWO/rfJUaVM7s
+         /aoaV762OQv+WFcuD4lrNZquWhQrGZiaGbYEq0edwA/JnZ6oCShF0kGqpoBWarODnk
+         T0eURcudahnEMu2tSEyme9KyN5dYpoIqloRcKgaU=
+Received: by mail-ej1-f45.google.com with SMTP id jp10so270208ejb.0;
+        Thu, 20 Aug 2020 16:44:53 -0700 (PDT)
+X-Gm-Message-State: AOAM530u3nGoPADJTPnHkvEnE2WB2jrhLNkpH/EqlIoOE0tMzFxSe0G9
+        fum59jzwZuTMso6dqZ7etHBv1rTFtJt1nA5wpQ==
+X-Google-Smtp-Source: ABdhPJyfF0seo8n875amt4dn9oSi2w9SsfnbMsQlnhtKaOBwUNOQeGo3OezMKFROAQyoW2OBGtjzdsNfwx1Y6KwE1IM=
+X-Received: by 2002:a17:906:3a41:: with SMTP id a1mr337598ejf.260.1597967092612;
+ Thu, 20 Aug 2020 16:44:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-8-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1597903458-8055-8-git-send-email-yongqiang.niu@mediatek.com>
+References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-9-git-send-email-yongqiang.niu@mediatek.com>
+In-Reply-To: <1597903458-8055-9-git-send-email-yongqiang.niu@mediatek.com>
 From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 21 Aug 2020 07:43:36 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8LnY3Tbzhmeia5DS7o1WAxd0kz9oVCeKLvwNCn48j_Dg@mail.gmail.com>
-Message-ID: <CAAOTY_8LnY3Tbzhmeia5DS7o1WAxd0kz9oVCeKLvwNCn48j_Dg@mail.gmail.com>
-Subject: Re: [PATCH v1 07/21] drm/mediatek: enable OVL_LAYER_SMI_ID_EN for
- multi-layer usecase
+Date:   Fri, 21 Aug 2020 07:44:40 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9Xt8=tQByDAZwuu_TT9bta1UtLak58uNKb2YM9XtG8DA@mail.gmail.com>
+Message-ID: <CAAOTY_9Xt8=tQByDAZwuu_TT9bta1UtLak58uNKb2YM9XtG8DA@mail.gmail.com>
+Subject: Re: [PATCH v1 08/21] drm/mediatek: check if fb is null
 To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
 Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
@@ -74,52 +73,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI, Yongqiang:
+Hi, Yongqiang:
 
 Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
 =8820=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:06=E5=AF=AB=E9=81=93=
 =EF=BC=9A
 >
-> enable OVL_LAYER_SMI_ID_EN for multi-layer usecase
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/me=
-diatek/mtk_disp_ovl.c
-> index 8cf9f3b..427fe7f 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -23,6 +23,7 @@
->  #define DISP_REG_OVL_RST                       0x0014
->  #define DISP_REG_OVL_ROI_SIZE                  0x0020
->  #define DISP_REG_OVL_DATAPATH_CON              0x0024
-> +#define OVL_LAYER_SMI_ID_EN                            BIT(0)
->  #define OVL_BGCLR_SEL_IN                               BIT(2)
->  #define DISP_REG_OVL_ROI_BGCLR                 0x0028
->  #define DISP_REG_OVL_SRC_CON                   0x002c
-> @@ -116,6 +117,8 @@ static void mtk_ovl_disable_vblank(struct mtk_ddp_com=
-p *comp)
->  static void mtk_ovl_start(struct mtk_ddp_comp *comp)
->  {
->         writel_relaxed(0x1, comp->regs + DISP_REG_OVL_EN);
-> +       mtk_ddp_write_mask(NULL, OVL_LAYER_SMI_ID_EN, comp,
+> It's possible that state->base.fb is null. Add a check before access its
+> format.
 
-writel_relaxed instead of mtk_ddp_write_mask.
-
-> +                          DISP_REG_OVL_DATAPATH_CON, OVL_LAYER_SMI_ID_EN=
-);
-
-If this only should set in mt8192, add a private data to distinguish this.
+Add a Fixes tag.
 
 Regards,
 Chun-Kuang.
 
->  }
 >
->  static void mtk_ovl_stop(struct mtk_ddp_comp *comp)
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/me=
+diatek/mtk_disp_ovl.c
+> index 427fe7f..2506803 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+> @@ -269,7 +269,7 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp =
+*comp, unsigned int idx,
+>         }
+>
+>         con =3D ovl_fmt_convert(ovl, fmt);
+> -       if (state->base.fb->format->has_alpha)
+> +       if (state->base.fb && state->base.fb->format->has_alpha)
+>                 con |=3D OVL_CON_AEN | OVL_CON_ALPHA;
+>
+>         if (pending->rotation & DRM_MODE_REFLECT_Y) {
 > --
 > 1.8.1.1.dirty
 > _______________________________________________
