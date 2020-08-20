@@ -2,100 +2,624 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF1CD2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB1592078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927694;
-	bh=pFq7iB7XnrP7Joiut7KtoVnKCKN42jGESFbYRJbWaKI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kVh1XpdwaBOdm5iMKvSSbHa0zaWmX9rRXEuNL9ok+nzQeRCPuX0pym259D0i9p10+
-	 8dKPKBie8Z/GGdnA6W5Wgh0svILgclzO+tSWye+eR5ZO2h6Szz8hHgWdvgQYrKBJsK
-	 ELAoxKyVX7R3qZiCW8zuJUisFoayLtJjVk4SsR2A=
+	s=default; t=1597927733;
+	bh=VxJz+B3N9tywaAd9nJ/H+Vb38kntR4F4BgLUfhky2Fk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OPbG7nHyak+jAqGv8fdav0KEp60pFiwtgg2V9Lpz8OG1noZZkIovBiwU4kHsAYj34
+	 aD4LKLUjQGL/8ONjzi7AzFgu9j2tLPffCd13qqTnn1FJXy99ispU4mkd2vi6/9pDib
+	 oLi4UdrkYHY6ZlE93E7qgvMY5wiYLwjs0XlgSeV0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbgHTMsF (ORCPT
+        id S1730139AbgHTMsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40216 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730274AbgHTMrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:47:49 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S1729048AbgHTJpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A17AE2078B;
-        Thu, 20 Aug 2020 12:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB9222D00;
+        Thu, 20 Aug 2020 09:44:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597927668;
-        bh=pFq7iB7XnrP7Joiut7KtoVnKCKN42jGESFbYRJbWaKI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0AEFL5Uga/yx7bmcfdjXBBqx6fyLXuznCa39VkuFXi1j1NQBDJLq3mvbmldMpd+Rw
-         spaaiQ1Al2myjvxc41nBH1pzTuSK3jVfdOrfpqDVDOZArlgX5e3q96KqElaoO9sbvO
-         +p0d3GTbl1r1YfKx4bmiF5XQ0tHqMYYk537DJVUU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1k8jyt-004ZAx-4r; Thu, 20 Aug 2020 13:47:47 +0100
+        s=default; t=1597916656;
+        bh=VxJz+B3N9tywaAd9nJ/H+Vb38kntR4F4BgLUfhky2Fk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RYSaO7k2zsseSal4L3DgaRAzZdXsZCCyCSZOBWqsfWrPFgtcSfNRSE6tQbQ3na5wo
+         1ycbPGFWWXEajB2VYtAUQipMqmfnufULE5/uDb606YE5KLxDhGl49quJP45YXfAbDW
+         ZPEMTcG7rw7v/Mv4zEYxTYANDMBZS9xbyDvd/XkE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        Sameer Pujar <spujar@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.7 190/204] ASoC: tegra: Use device managed resource APIs to get the clock
+Date:   Thu, 20 Aug 2020 11:21:27 +0200
+Message-Id: <20200820091615.683726975@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Aug 2020 13:47:47 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Daniel Palmer <daniel@0x0f.com>
-Cc:     Mark-PK Tsai <mark-pk.tsai@mediatek.com>, alix.wu@mediatek.com,
-        DTML <devicetree@vger.kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, yj.chiang@mediatek.com
-Subject: Re: [PATCH v2 1/2] irqchip: irq-mst: Add MStar interrupt controller
- support
-In-Reply-To: <CAFr9PXnzdHs2F3pyF-493xuhn9wFU1G9eLXRtiW-rYNB5bLX7w@mail.gmail.com>
-References: <20200819034231.20726-1-mark-pk.tsai@mediatek.com>
- <20200819153757.28993-1-mark-pk.tsai@mediatek.com>
- <CAFr9PXnzdHs2F3pyF-493xuhn9wFU1G9eLXRtiW-rYNB5bLX7w@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.7
-Message-ID: <ec3dd6b7664d647b2dc27926539eadda@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: daniel@0x0f.com, mark-pk.tsai@mediatek.com, alix.wu@mediatek.com, devicetree@vger.kernel.org, jason@lakedaemon.net, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, yj.chiang@mediatek.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-20 13:36, Daniel Palmer wrote:
-> Hi Mark-PK, Marc
-> 
-> I'm not sure this will be the final version but I'm going to try to
-> integrate this with my current MStar/SigmaStar tree over the weekend
-> and then I guess I can give this a tested-by?
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-That'd be good.
+commit 0de6db30ef79b391cedd749801a49c485d2daf4b upstream.
 
-> Assuming this version or the next is acceptable can I just follow up
-> with a small patch to add the instances I need in my dtsi or should I
-> wait until it's merged before doing that?
+tegra_asoc_utils uses clk_get() to get the clock and clk_put() to free
+them explicitly.
 
-No need to wait, although the platform-specific details should go
-via the arm-soc tree.
+This patch updates it to use device managed resource API devm_clk_get()
+so the clock will be automatically released and freed when the device is
+unbound and removes tegra_asoc_utils_fini() as its no longer needed.
 
-I'm not going to review the new version before next week anyway
-(I'm making a point in reviewing any given series at most once
-a week).
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Sameer Pujar <spujar@nvidia.com>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+---
+ sound/soc/tegra/tegra_alc5632.c    |    7 +------
+ sound/soc/tegra/tegra_asoc_utils.c |   34 +++++++---------------------------
+ sound/soc/tegra/tegra_asoc_utils.h |    1 -
+ sound/soc/tegra/tegra_max98090.c   |   22 ++++++----------------
+ sound/soc/tegra/tegra_rt5640.c     |   22 ++++++----------------
+ sound/soc/tegra/tegra_rt5677.c     |    7 +------
+ sound/soc/tegra/tegra_sgtl5000.c   |    7 +------
+ sound/soc/tegra/tegra_wm8753.c     |   22 ++++++----------------
+ sound/soc/tegra/tegra_wm8903.c     |   22 ++++++----------------
+ sound/soc/tegra/tegra_wm9712.c     |    8 ++------
+ sound/soc/tegra/trimslice.c        |   18 ++++--------------
+ 11 files changed, 40 insertions(+), 130 deletions(-)
+
+--- a/sound/soc/tegra/tegra_alc5632.c
++++ b/sound/soc/tegra/tegra_alc5632.c
+@@ -205,13 +205,11 @@ static int tegra_alc5632_probe(struct pl
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		goto err_put_cpu_of_node;
+ 	}
+ 
+ 	return 0;
+ 
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&alc5632->util_data);
+ err_put_cpu_of_node:
+ 	of_node_put(tegra_alc5632_dai.cpus->of_node);
+ 	tegra_alc5632_dai.cpus->of_node = NULL;
+@@ -226,12 +224,9 @@ err:
+ static int tegra_alc5632_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_alc5632 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	of_node_put(tegra_alc5632_dai.cpus->of_node);
+ 	tegra_alc5632_dai.cpus->of_node = NULL;
+ 	tegra_alc5632_dai.platforms->of_node = NULL;
+--- a/sound/soc/tegra/tegra_asoc_utils.c
++++ b/sound/soc/tegra/tegra_asoc_utils.c
+@@ -175,52 +175,32 @@ int tegra_asoc_utils_init(struct tegra_a
+ 		return -EINVAL;
+ 	}
+ 
+-	data->clk_pll_a = clk_get(dev, "pll_a");
++	data->clk_pll_a = devm_clk_get(dev, "pll_a");
+ 	if (IS_ERR(data->clk_pll_a)) {
+ 		dev_err(data->dev, "Can't retrieve clk pll_a\n");
+-		ret = PTR_ERR(data->clk_pll_a);
+-		goto err;
++		return PTR_ERR(data->clk_pll_a);
+ 	}
+ 
+-	data->clk_pll_a_out0 = clk_get(dev, "pll_a_out0");
++	data->clk_pll_a_out0 = devm_clk_get(dev, "pll_a_out0");
+ 	if (IS_ERR(data->clk_pll_a_out0)) {
+ 		dev_err(data->dev, "Can't retrieve clk pll_a_out0\n");
+-		ret = PTR_ERR(data->clk_pll_a_out0);
+-		goto err_put_pll_a;
++		return PTR_ERR(data->clk_pll_a_out0);
+ 	}
+ 
+-	data->clk_cdev1 = clk_get(dev, "mclk");
++	data->clk_cdev1 = devm_clk_get(dev, "mclk");
+ 	if (IS_ERR(data->clk_cdev1)) {
+ 		dev_err(data->dev, "Can't retrieve clk cdev1\n");
+-		ret = PTR_ERR(data->clk_cdev1);
+-		goto err_put_pll_a_out0;
++		return PTR_ERR(data->clk_cdev1);
+ 	}
+ 
+ 	ret = tegra_asoc_utils_set_rate(data, 44100, 256 * 44100);
+ 	if (ret)
+-		goto err_put_cdev1;
++		return ret;
+ 
+ 	return 0;
+-
+-err_put_cdev1:
+-	clk_put(data->clk_cdev1);
+-err_put_pll_a_out0:
+-	clk_put(data->clk_pll_a_out0);
+-err_put_pll_a:
+-	clk_put(data->clk_pll_a);
+-err:
+-	return ret;
+ }
+ EXPORT_SYMBOL_GPL(tegra_asoc_utils_init);
+ 
+-void tegra_asoc_utils_fini(struct tegra_asoc_utils_data *data)
+-{
+-	clk_put(data->clk_cdev1);
+-	clk_put(data->clk_pll_a_out0);
+-	clk_put(data->clk_pll_a);
+-}
+-EXPORT_SYMBOL_GPL(tegra_asoc_utils_fini);
+-
+ MODULE_AUTHOR("Stephen Warren <swarren@nvidia.com>");
+ MODULE_DESCRIPTION("Tegra ASoC utility code");
+ MODULE_LICENSE("GPL");
+--- a/sound/soc/tegra/tegra_asoc_utils.h
++++ b/sound/soc/tegra/tegra_asoc_utils.h
+@@ -34,6 +34,5 @@ int tegra_asoc_utils_set_rate(struct teg
+ int tegra_asoc_utils_set_ac97_rate(struct tegra_asoc_utils_data *data);
+ int tegra_asoc_utils_init(struct tegra_asoc_utils_data *data,
+ 			  struct device *dev);
+-void tegra_asoc_utils_fini(struct tegra_asoc_utils_data *data);
+ 
+ #endif
+--- a/sound/soc/tegra/tegra_max98090.c
++++ b/sound/soc/tegra/tegra_max98090.c
+@@ -218,19 +218,18 @@ static int tegra_max98090_probe(struct p
+ 
+ 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	tegra_max98090_dai.codecs->of_node = of_parse_phandle(np,
+ 			"nvidia,audio-codec", 0);
+ 	if (!tegra_max98090_dai.codecs->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,audio-codec' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_max98090_dai.cpus->of_node = of_parse_phandle(np,
+@@ -238,40 +237,31 @@ static int tegra_max98090_probe(struct p
+ 	if (!tegra_max98090_dai.cpus->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_max98090_dai.platforms->of_node = tegra_max98090_dai.cpus->of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+-err:
+-	return ret;
+ }
+ 
+ static int tegra_max98090_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_max98090 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	return 0;
+ }
+ 
+--- a/sound/soc/tegra/tegra_rt5640.c
++++ b/sound/soc/tegra/tegra_rt5640.c
+@@ -164,19 +164,18 @@ static int tegra_rt5640_probe(struct pla
+ 
+ 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	tegra_rt5640_dai.codecs->of_node = of_parse_phandle(np,
+ 			"nvidia,audio-codec", 0);
+ 	if (!tegra_rt5640_dai.codecs->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,audio-codec' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_rt5640_dai.cpus->of_node = of_parse_phandle(np,
+@@ -184,40 +183,31 @@ static int tegra_rt5640_probe(struct pla
+ 	if (!tegra_rt5640_dai.cpus->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_rt5640_dai.platforms->of_node = tegra_rt5640_dai.cpus->of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+-err:
+-	return ret;
+ }
+ 
+ static int tegra_rt5640_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_rt5640 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	return 0;
+ }
+ 
+--- a/sound/soc/tegra/tegra_rt5677.c
++++ b/sound/soc/tegra/tegra_rt5677.c
+@@ -270,13 +270,11 @@ static int tegra_rt5677_probe(struct pla
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		goto err_put_cpu_of_node;
+ 	}
+ 
+ 	return 0;
+ 
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+ err_put_cpu_of_node:
+ 	of_node_put(tegra_rt5677_dai.cpus->of_node);
+ 	tegra_rt5677_dai.cpus->of_node = NULL;
+@@ -291,12 +289,9 @@ err:
+ static int tegra_rt5677_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_rt5677 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	tegra_rt5677_dai.platforms->of_node = NULL;
+ 	of_node_put(tegra_rt5677_dai.codecs->of_node);
+ 	tegra_rt5677_dai.codecs->of_node = NULL;
+--- a/sound/soc/tegra/tegra_sgtl5000.c
++++ b/sound/soc/tegra/tegra_sgtl5000.c
+@@ -156,13 +156,11 @@ static int tegra_sgtl5000_driver_probe(s
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		goto err_put_cpu_of_node;
+ 	}
+ 
+ 	return 0;
+ 
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+ err_put_cpu_of_node:
+ 	of_node_put(tegra_sgtl5000_dai.cpus->of_node);
+ 	tegra_sgtl5000_dai.cpus->of_node = NULL;
+@@ -177,13 +175,10 @@ err:
+ static int tegra_sgtl5000_driver_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_sgtl5000 *machine = snd_soc_card_get_drvdata(card);
+ 	int ret;
+ 
+ 	ret = snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	of_node_put(tegra_sgtl5000_dai.cpus->of_node);
+ 	tegra_sgtl5000_dai.cpus->of_node = NULL;
+ 	tegra_sgtl5000_dai.platforms->of_node = NULL;
+--- a/sound/soc/tegra/tegra_wm8753.c
++++ b/sound/soc/tegra/tegra_wm8753.c
+@@ -127,19 +127,18 @@ static int tegra_wm8753_driver_probe(str
+ 
+ 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	tegra_wm8753_dai.codecs->of_node = of_parse_phandle(np,
+ 			"nvidia,audio-codec", 0);
+ 	if (!tegra_wm8753_dai.codecs->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,audio-codec' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_wm8753_dai.cpus->of_node = of_parse_phandle(np,
+@@ -147,40 +146,31 @@ static int tegra_wm8753_driver_probe(str
+ 	if (!tegra_wm8753_dai.cpus->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_wm8753_dai.platforms->of_node = tegra_wm8753_dai.cpus->of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+-err:
+-	return ret;
+ }
+ 
+ static int tegra_wm8753_driver_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_wm8753 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	return 0;
+ }
+ 
+--- a/sound/soc/tegra/tegra_wm8903.c
++++ b/sound/soc/tegra/tegra_wm8903.c
+@@ -323,19 +323,18 @@ static int tegra_wm8903_driver_probe(str
+ 
+ 	ret = snd_soc_of_parse_card_name(card, "nvidia,model");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_of_parse_audio_routing(card, "nvidia,audio-routing");
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	tegra_wm8903_dai.codecs->of_node = of_parse_phandle(np,
+ 						"nvidia,audio-codec", 0);
+ 	if (!tegra_wm8903_dai.codecs->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,audio-codec' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_wm8903_dai.cpus->of_node = of_parse_phandle(np,
+@@ -343,40 +342,31 @@ static int tegra_wm8903_driver_probe(str
+ 	if (!tegra_wm8903_dai.cpus->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	tegra_wm8903_dai.platforms->of_node = tegra_wm8903_dai.cpus->of_node;
+ 
+ 	ret = tegra_asoc_utils_init(&machine->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&machine->util_data);
+-err:
+-	return ret;
+ }
+ 
+ static int tegra_wm8903_driver_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_wm8903 *machine = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	return 0;
+ }
+ 
+--- a/sound/soc/tegra/tegra_wm9712.c
++++ b/sound/soc/tegra/tegra_wm9712.c
+@@ -113,19 +113,17 @@ static int tegra_wm9712_driver_probe(str
+ 
+ 	ret = tegra_asoc_utils_set_ac97_rate(&machine->util_data);
+ 	if (ret)
+-		goto asoc_utils_fini;
++		goto codec_unregister;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto asoc_utils_fini;
++		goto codec_unregister;
+ 	}
+ 
+ 	return 0;
+ 
+-asoc_utils_fini:
+-	tegra_asoc_utils_fini(&machine->util_data);
+ codec_unregister:
+ 	platform_device_del(machine->codec);
+ codec_put:
+@@ -140,8 +138,6 @@ static int tegra_wm9712_driver_remove(st
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&machine->util_data);
+-
+ 	platform_device_unregister(machine->codec);
+ 
+ 	return 0;
+--- a/sound/soc/tegra/trimslice.c
++++ b/sound/soc/tegra/trimslice.c
+@@ -125,8 +125,7 @@ static int tegra_snd_trimslice_probe(str
+ 	if (!trimslice_tlv320aic23_dai.codecs->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,audio-codec' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	trimslice_tlv320aic23_dai.cpus->of_node = of_parse_phandle(np,
+@@ -134,8 +133,7 @@ static int tegra_snd_trimslice_probe(str
+ 	if (!trimslice_tlv320aic23_dai.cpus->of_node) {
+ 		dev_err(&pdev->dev,
+ 			"Property 'nvidia,i2s-controller' missing or invalid\n");
+-		ret = -EINVAL;
+-		goto err;
++		return -EINVAL;
+ 	}
+ 
+ 	trimslice_tlv320aic23_dai.platforms->of_node =
+@@ -143,32 +141,24 @@ static int tegra_snd_trimslice_probe(str
+ 
+ 	ret = tegra_asoc_utils_init(&trimslice->util_data, &pdev->dev);
+ 	if (ret)
+-		goto err;
++		return ret;
+ 
+ 	ret = snd_soc_register_card(card);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n",
+ 			ret);
+-		goto err_fini_utils;
++		return ret;
+ 	}
+ 
+ 	return 0;
+-
+-err_fini_utils:
+-	tegra_asoc_utils_fini(&trimslice->util_data);
+-err:
+-	return ret;
+ }
+ 
+ static int tegra_snd_trimslice_remove(struct platform_device *pdev)
+ {
+ 	struct snd_soc_card *card = platform_get_drvdata(pdev);
+-	struct tegra_trimslice *trimslice = snd_soc_card_get_drvdata(card);
+ 
+ 	snd_soc_unregister_card(card);
+ 
+-	tegra_asoc_utils_fini(&trimslice->util_data);
+-
+ 	return 0;
+ }
+ 
+
+
