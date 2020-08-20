@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 194F3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA1C2072D
+	by mail.kernel.org (Postfix) with ESMTP id E991620738
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918962;
-	bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
+	s=default; t=1597918963;
+	bh=waKOxP2EoxmQLPxYJ+CiiK3DCgizWITSQZ996hG1mjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhMNMN8IiuOI93hxihpwSRMNm3X7+8MhzTseLyGMNq3q7JTbO42v83FJEOGOYSgCX
-	 SPvqW1e0wSz7OwkeOudxC4XUv4zfgWfxsclihOen8yDeWCjiLJv0DXX1H9AmXQGHQU
-	 2EG0+LEBLk1ClyAbCGk1DbSjuTrM2zZW1fgA/Ayc=
+	b=dSkaXKBCpmzIF9rH2bmf48Es4ogGS2JujqeHMHXydRcecL8d6CtVOVbUQy0XMeazw
+	 pvioegddMB2um7GlqyvkGNvux2tBeSogcmKpAiWgs3pvwbtUo/FErjjbr3wyBEnvwo
+	 lzer3Q3X4g7OXkpmfMM1A/9hcKWrudqTtJmHxhY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbgHTKWb (ORCPT
+        id S1731647AbgHTKWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49698 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731608AbgHTKWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:13 -0400
+        id S1729373AbgHTKWP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B0F620658;
-        Thu, 20 Aug 2020 10:22:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71BAD2072D;
+        Thu, 20 Aug 2020 10:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918932;
-        bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
+        s=default; t=1597918934;
+        bh=waKOxP2EoxmQLPxYJ+CiiK3DCgizWITSQZ996hG1mjs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S5EPJ0Cp6TfPcm4PrCYZbRs33XyRhg1rOryN/M1vmyM+QhWPPLI05KyEwWvb7zpf0
-         ET5vSs2BW4WaHZcBQ/M26WJO6N5uDFjNeKnnzylY05rDfhV9kJH1Ep604gPiv49Art
-         nbtHikPxIA/p/f1BI9yiL1P1SU4K/1Go3WgUN31w=
+        b=w+3A36GVaFvdbnphROjEJxUHHr0yTBTGwM/AUw6szS3VcyOUAWoz8+o5PsyQXtRXK
+         oqQn+ytd0uEIKhuABIY4t0ZipmIGnMrHm9ixHgYxEMmMNEJh9lm5NwWlzh08LWwBGi
+         l/9ckpyH5+0VAPYNkIZFS6QVfGIl4YeB9FQMb+cQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.4 120/149] PCI: hotplug: ACPI: Fix context refcounting in acpiphp_grab_context()
-Date:   Thu, 20 Aug 2020 11:23:17 +0200
-Message-Id: <20200820092131.511561023@linuxfoundation.org>
+        stable@vger.kernel.org, Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 103/149] pinctrl-single: fix pcs_parse_pinconf() return value
+Date:   Thu, 20 Aug 2020 11:23:00 +0200
+Message-Id: <20200820092130.693973088@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,51 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Drew Fustini <drew@beagleboard.org>
 
-commit dae68d7fd4930315389117e9da35b763f12238f9 upstream.
+[ Upstream commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f ]
 
-If context is not NULL in acpiphp_grab_context(), but the
-is_going_away flag is set for the device's parent, the reference
-counter of the context needs to be decremented before returning
-NULL or the context will never be freed, so make that happen.
+This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+pinctrl_map is added.  The current behavior is to return 0 when
+!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+incorrectly assumes that a map was added and sets num_maps = 2.
 
-Fixes: edf5bf34d408 ("ACPI / dock: Use callback pointers from devices' ACPI hotplug contexts")
-Reported-by: Vasily Averin <vvs@virtuozzo.com>
-Cc: 3.15+ <stable@vger.kernel.org> # 3.15+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Analysis:
+=========
+The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+returns 0 to indicate there was no error and num_maps is then set to 2:
 
+ 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 981                                                 struct device_node *np,
+ 982                                                 struct pinctrl_map **map,
+ 983                                                 unsigned *num_maps,
+ 984                                                 const char **pgnames)
+ 985 {
+<snip>
+1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+1054         (*map)->data.mux.group = np->name;
+1055         (*map)->data.mux.function = np->name;
+1056
+1057         if (PCS_HAS_PINCONF && function) {
+1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+1059                 if (res)
+1060                         goto free_pingroups;
+1061                 *num_maps = 2;
+1062         } else {
+1063                 *num_maps = 1;
+1064         }
+
+However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+!nconfs.  I believe these conditions should indicate that no map was
+added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+will set num_maps = 2 even though no maps were successfully added, as
+it does not reach "m++" on line 940:
+
+ 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 896                              struct pcs_function *func,
+ 897                              struct pinctrl_map **map)
+ 898
+ 899 {
+ 900         struct pinctrl_map *m = *map;
+<snip>
+ 917         /* If pinconf isn't supported, don't parse properties in below. */
+ 918         if (!PCS_HAS_PINCONF)
+ 919                 return 0;
+ 920
+ 921         /* cacluate how much properties are supported in current node */
+ 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+ 923                 if (of_find_property(np, prop2[i].name, NULL))
+ 924                         nconfs++;
+ 925         }
+ 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+ 927                 if (of_find_property(np, prop4[i].name, NULL))
+ 928                         nconfs++;
+ 929         }
+ 930         if (!nconfs)
+ 919                 return 0;
+ 932
+ 933         func->conf = devm_kcalloc(pcs->dev,
+ 934                                   nconfs, sizeof(struct pcs_conf_vals),
+ 935                                   GFP_KERNEL);
+ 936         if (!func->conf)
+ 937                 return -ENOMEM;
+ 938         func->nconfs = nconfs;
+ 939         conf = &(func->conf[0]);
+ 940         m++;
+
+This situtation will cause a boot failure [0] on the BeagleBone Black
+(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+has compatible = "pinconf-single" instead of "pinctrl-single".
+
+The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+map was added.
+
+Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+is set to 1 as it is valid for pinconf to be enabled and a given pin
+group to not any pinconf properties.
+
+[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+
+Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Link: https://lore.kernel.org/r/20200608125143.GA2789203@x1
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/hotplug/acpiphp_glue.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ drivers/pinctrl/pinctrl-single.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/pci/hotplug/acpiphp_glue.c
-+++ b/drivers/pci/hotplug/acpiphp_glue.c
-@@ -136,13 +136,21 @@ static struct acpiphp_context *acpiphp_g
- 	struct acpiphp_context *context;
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -1071,7 +1071,7 @@ static int pcs_parse_pinconf(struct pcs_
  
- 	acpi_lock_hp_context();
-+
- 	context = acpiphp_get_context(adev);
--	if (!context || context->func.parent->is_going_away) {
--		acpi_unlock_hp_context();
--		return NULL;
-+	if (!context)
-+		goto unlock;
-+
-+	if (context->func.parent->is_going_away) {
-+		acpiphp_put_context(context);
-+		context = NULL;
-+		goto unlock;
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+ 	if (!PCS_HAS_PINCONF)
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+@@ -1083,7 +1083,7 @@ static int pcs_parse_pinconf(struct pcs_
+ 			nconfs++;
  	}
-+
- 	get_bridge(context->func.parent);
- 	acpiphp_put_context(context);
-+
-+unlock:
- 	acpi_unlock_hp_context();
- 	return context;
- }
+ 	if (!nconfs)
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	func->conf = devm_kzalloc(pcs->dev,
+ 				  sizeof(struct pcs_conf_vals) * nconfs,
+@@ -1196,9 +1196,12 @@ static int pcs_parse_one_pinctrl_entry(s
+ 
+ 	if (PCS_HAS_PINCONF) {
+ 		res = pcs_parse_pinconf(pcs, np, function, map);
+-		if (res)
++		if (res == 0)
++			*num_maps = 2;
++		else if (res == -ENOTSUPP)
++			*num_maps = 1;
++		else
+ 			goto free_pingroups;
+-		*num_maps = 2;
+ 	} else {
+ 		*num_maps = 1;
+ 	}
 
 
