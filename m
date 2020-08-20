@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47DC0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4B1C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 175332078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9992078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924582;
-	bh=oV2LcdZCk6ZdbIA9M+KfefM0sGnlL0ZZljwQtqnpk10=;
+	s=default; t=1597924590;
+	bh=8iTHG97oN/GiY/zqMjgP70WevF5Sb28U4lP0F2VYTEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1MxHz457K+xJiIFWXo2EVSgmR+WpYh7k8U6QWFTJ1aVKJorz9n6l5moT2Uv9psZM7
-	 tzH23y9KcUBhgImgoM7CF7NsZOxjeS1pBPCOL+/syAxez33zAN8p91TUcQxKu6L1BR
-	 1AWQ+TuVMiys/A4ee+DKkFVsoh/JaVP3HkHnAWXE=
+	b=BFdxEhysP9E6JoPw6HBDui7FgOHxKZ1GDVfX50h5eHrby/rYi8P0O3uDldjCY76QT
+	 q3BnPFicJIZwtE0Tyie9qf88A59R4SAe/O2Ys/6xWv59x2II6xck2CW/iUT1S9KAoK
+	 6NhD/IIjSpBYP8zpUtQ9JPM0dVL58rD09ax5ky0U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729755AbgHTLzj (ORCPT
+        id S1729557AbgHTLzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51542 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:55:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730507AbgHTKC2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:02:28 -0400
+        id S1730510AbgHTKCa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 849CC22B40;
-        Thu, 20 Aug 2020 10:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB99122B49;
+        Thu, 20 Aug 2020 10:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917748;
-        bh=oV2LcdZCk6ZdbIA9M+KfefM0sGnlL0ZZljwQtqnpk10=;
+        s=default; t=1597917750;
+        bh=8iTHG97oN/GiY/zqMjgP70WevF5Sb28U4lP0F2VYTEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uri7krArmMsScw+W5Y+0roUmB8O0ExduRVx0hgM1P4IMZi0vjpN4QQaUdvWPIDEU6
-         Zf/+I5ngUOQnzaAW3N4SVhQBlK5K7QW4dhgHd1FnECoQtfyUHvbeQyIt+rH+PdhEVE
-         UG9BUu9t2gPlg1BJEM/AyiabZfEFpbWbYi4UpIbs=
+        b=TAudMyy8GYIX+zJotKP56CyPVZWv3N2CUXpy0VNtB/G8HDjGsDOxA/jYwUQxFsegq
+         v52VSUTIS5mvb9BZ8MwYN7Cj5dv+whIIgCNoJ4nMq5HXiLrLZiyjNgi53dcrUJrcBb
+         KpcUWS4Vz8RzvcGT3wf/0xrNmIlWA5pldx569ZaY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Florinel Iordache <florinel.iordache@nxp.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 144/212] fsl/fman: fix dereference null return value
-Date:   Thu, 20 Aug 2020 11:21:57 +0200
-Message-Id: <20200820091609.618808033@linuxfoundation.org>
+Subject: [PATCH 4.9 145/212] fsl/fman: fix unreachable code
+Date:   Thu, 20 Aug 2020 11:21:58 +0200
+Message-Id: <20200820091609.668855430@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -63,46 +63,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Florinel Iordache <florinel.iordache@nxp.com>
 
-[ Upstream commit 0572054617f32670abab4b4e89a876954d54b704 ]
+[ Upstream commit cc79fd8f557767de90ff199d3b6fb911df43160a ]
 
-Check before using returned value to avoid dereferencing null pointer.
+The parameter 'priority' is incorrectly forced to zero which ultimately
+induces logically dead code in the subsequent lines.
 
-Fixes: 18a6c85fcc78 ("fsl/fman: Add FMan Port Support")
+Fixes: 57ba4c9b56d8 ("fsl/fman: Add FMan MAC support")
 Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/fman/fman_port.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/fman/fman_memac.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
-index 9f3bb50a23651..4986f6ba278a3 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.c
-@@ -1623,6 +1623,7 @@ static int fman_port_probe(struct platform_device *of_dev)
- 	struct fman_port *port;
- 	struct fman *fman;
- 	struct device_node *fm_node, *port_node;
-+	struct platform_device *fm_pdev;
- 	struct resource res;
- 	struct resource *dev_res;
- 	u32 val;
-@@ -1647,8 +1648,14 @@ static int fman_port_probe(struct platform_device *of_dev)
- 		goto return_err;
- 	}
+diff --git a/drivers/net/ethernet/freescale/fman/fman_memac.c b/drivers/net/ethernet/freescale/fman/fman_memac.c
+index c30994a09a7c2..3e5b40c831558 100644
+--- a/drivers/net/ethernet/freescale/fman/fman_memac.c
++++ b/drivers/net/ethernet/freescale/fman/fman_memac.c
+@@ -851,7 +851,6 @@ int memac_set_tx_pause_frames(struct fman_mac *memac, u8 priority,
  
--	fman = dev_get_drvdata(&of_find_device_by_node(fm_node)->dev);
-+	fm_pdev = of_find_device_by_node(fm_node);
- 	of_node_put(fm_node);
-+	if (!fm_pdev) {
-+		err = -EINVAL;
-+		goto return_err;
-+	}
-+
-+	fman = dev_get_drvdata(&fm_pdev->dev);
- 	if (!fman) {
- 		err = -EINVAL;
- 		goto return_err;
+ 	tmp = ioread32be(&regs->command_config);
+ 	tmp &= ~CMD_CFG_PFC_MODE;
+-	priority = 0;
+ 
+ 	iowrite32be(tmp, &regs->command_config);
+ 
 -- 
 2.25.1
 
