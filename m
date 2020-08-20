@@ -2,52 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7823DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52B872072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DF2C20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921410;
-	bh=7nvE3dkhdEe7sJvLakuPkpz8dtwTtFlRFnVNQXuA5ho=;
+	s=default; t=1597921415;
+	bh=nxbijIe3mjlBYbtASARKH08UZo8+8GTitovu0fEMvmo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=to48Dl3ISPohtrpNY5FcnTjSUaIM7L7jKkOYEAADUnmJkzIPoIJHiMIMq1NYXNzgv
-	 4J/Tc0cbMGd4/I3QVApyLgE1jusMGe2/TOpn9QkX4Yp8qGIgWIGxYGxBmT5DNWsGK7
-	 DDO74574xb7dT9Z8I7ZtzRbdR+fu7PLgedLUAE64=
+	b=vPrnuqH+j5WTEir0FpwSrTK+b0J0TvuGHHhwoAOD/2GdnK6RKl6znyVXNTzOfgDjC
+	 omyPwDARyTya/KyMfn1RqhnqtwOWCIcL1bgtSHuoivE6POU6glt8ugSvazh1xGlC3H
+	 ddUi9gqEh1JLuth7DkidBYxyB/3zMSuervH4IhlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgHTLCk (ORCPT
+        id S1730790AbgHTLCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:02:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57798 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731135AbgHTKN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:27 -0400
+        id S1731140AbgHTKNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82E7020724;
-        Thu, 20 Aug 2020 10:13:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D45A20738;
+        Thu, 20 Aug 2020 10:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918407;
-        bh=7nvE3dkhdEe7sJvLakuPkpz8dtwTtFlRFnVNQXuA5ho=;
+        s=default; t=1597918412;
+        bh=nxbijIe3mjlBYbtASARKH08UZo8+8GTitovu0fEMvmo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjUrAWNwCIqaJuNjSZBL8gwvixKobakwqdbAapm5THAk2r0Kz89ppcxmZa6SFJvnN
-         rkyq33rq7H+vTWaHTY44JJD4XOCQHmzLOBFQJ3pOvrEO6u5knOkg9GkWganUIyt0zO
-         t7a0GJYaQ2luHbSISUWsl8J+syHYixz1qZec3sFg=
+        b=TWEmPXLpqW5u8v2mDYOMH5OdmmNGgtQzT74h4/w3VeRElkrnKCGnp1z3Q7+IsdQXj
+         F8JWgG/kiTjNoycm/hEn1L5r2sN7S5FP/txgw/6BhCa6aXqe4eOTomzmDmJygR4kqQ
+         m+P1Igi3oAN8jyo90SLM/KgKmXxCKnjwLhYJbbR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 118/228] Smack: prevent underflow in smk_set_cipso()
-Date:   Thu, 20 Aug 2020 11:21:33 +0200
-Message-Id: <20200820091613.493972556@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.14 161/228] parisc: mask out enable and reserved bits from sba imask
+Date:   Thu, 20 Aug 2020 11:22:16 +0200
+Message-Id: <20200820091615.623702917@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,36 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Sven Schnelle <svens@stackframe.org>
 
-[ Upstream commit 42a2df3e829f3c5562090391b33714b2e2e5ad4a ]
+commit 5b24993c21cbf2de11aff077a48c5cb0505a0450 upstream.
 
-We have an upper bound on "maplevel" but forgot to check for negative
-values.
+When using kexec the SBA IOMMU IBASE might still have the RE
+bit set. This triggers a WARN_ON when trying to write back the
+IBASE register later, and it also makes some mask calculations fail.
 
-Fixes: e114e473771c ("Smack: Simplified Mandatory Access Control Kernel")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/smack/smackfs.c | 2 +-
+ drivers/parisc/sba_iommu.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 981f582539acf..accd3846f1e3e 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -912,7 +912,7 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 	}
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -1291,7 +1291,7 @@ sba_ioc_init_pluto(struct parisc_device
+ 	** (one that doesn't overlap memory or LMMIO space) in the
+ 	** IBASE and IMASK registers.
+ 	*/
+-	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE);
++	ioc->ibase = READ_REG(ioc->ioc_hpa + IOC_IBASE) & ~0x1fffffULL;
+ 	iova_space_size = ~(READ_REG(ioc->ioc_hpa + IOC_IMASK) & 0xFFFFFFFFUL) + 1;
  
- 	ret = sscanf(rule, "%d", &maplevel);
--	if (ret != 1 || maplevel > SMACK_CIPSO_MAXLEVEL)
-+	if (ret != 1 || maplevel < 0 || maplevel > SMACK_CIPSO_MAXLEVEL)
- 		goto out;
- 
- 	rule += SMK_DIGITLEN;
--- 
-2.25.1
-
+ 	if ((ioc->ibase < 0xfed00000UL) && ((ioc->ibase + iova_space_size) > 0xfee00000UL)) {
 
 
