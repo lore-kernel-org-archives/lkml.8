@@ -2,98 +2,113 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5168EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEE2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29B782067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F8E204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:31:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597923096;
+	bh=/tn2C9sMZ3N8al5pyHXYeWvuudYtqcDjzQ1Yqw5bKyw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gJYVsMPfRkpo2o+8gQMkSBR6/lVvj66Z+3T1zfw1TVXC/i24FIlTdOtLUuroACr3K
+	 naak8+oniqhcN5L1WPJsyKzDKWd32K8IAzWD4UJW3yYHlV5vL+IjCvHScpHq36y48B
+	 4zCSsfMSUsv9aakd2+sDE5MZzQsxQmzhUcgZMPhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730550AbgHTLan (ORCPT
+        id S1730505AbgHTLbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:30:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52438 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 07:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgHTL3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:29:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 341A4AC98;
-        Thu, 20 Aug 2020 11:30:00 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 13:29:32 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820112932.GG5033@dhcp22.suse.cz>
-References: <20200820002053.1424000-1-surenb@google.com>
- <20200820105555.GA4546@redhat.com>
- <20200820111349.GE5033@dhcp22.suse.cz>
+        id S1730641AbgHTKFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B4F520738;
+        Thu, 20 Aug 2020 10:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917948;
+        bh=/tn2C9sMZ3N8al5pyHXYeWvuudYtqcDjzQ1Yqw5bKyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XPZ5RPdPz4ANqauT3XwjLln/eDjgjUYQ3AUfxOFZ/PRQQpER4txQ/eFHyxViIX6i3
+         U4253cD9amA2hyEY9Fj1xMk2wdYcNtcV3uV1IGM+Wm9vRiplVvm7+bViNknMcAUl6r
+         qTcJHJ/jejBszMYtxUo9rwVVN6WC5mG3ERPIOXI0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 199/212] i2c: rcar: slave: only send STOP event when we have been addressed
+Date:   Thu, 20 Aug 2020 11:22:52 +0200
+Message-Id: <20200820091612.407762309@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820111349.GE5033@dhcp22.suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 13:13:55, Michal Hocko wrote:
-> On Thu 20-08-20 12:55:56, Oleg Nesterov wrote:
-> > On 08/19, Suren Baghdasaryan wrote:
-> > >
-> > > Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
-> > > used the additional mutex lock in that path of the clone() syscall should
-> > > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
-> > > (when the last process sharing the mm exits) is left out of this patch to
-> > > keep it simple and because it is believed that this threading model is
-> > > rare.
-> > 
-> > vfork() ?
-> 
-> Could you be more specific?
-> 
-> > > --- a/kernel/fork.c
-> > > +++ b/kernel/fork.c
-> > > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
-> > >  	if (clone_flags & CLONE_VM) {
-> > >  		mmget(oldmm);
-> > >  		mm = oldmm;
-> > > +		if (!(clone_flags & CLONE_SIGHAND)) {
-> > 
-> > I agree with Christian, you need CLONE_THREAD
-> 
-> This was my suggestion to Suren, likely because I've misrememberd which
-> clone flag is responsible for the signal delivery. But now, after double
-> checking we do explicitly disallow CLONE_SIGHAND && !CLONE_VM. So
-> CLONE_THREAD is the right thing to check.
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I have tried to remember but I have to say that after reading man page I
-am still confused. So what is the actual difference between CLONE_THREAD
-and CLONE_SIGHAND? Essentially all we care about from the OOM (and
-oom_score_adj) POV is that signals are delivered to all entities and
-that thay share signal struct. copy_signal is checking for CLONE_THREAD
-but CLONE_THREAD requires CLONE_SIGHAND AFAIU. So is there any cae where
-checking for CLONE_SIGHAND would wrong for our purpose?
+[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
 
-This is mostly an academic question because I do agree that checking for
-CLONE_THREAD is likely more readable. And in fact the MMF_PROC_SHARED is
-likely more suitable to be set in copy_signal. 
+When the SSR interrupt is activated, it will detect every STOP condition
+on the bus, not only the ones after we have been addressed. So, enable
+this interrupt only after we have been addressed, and disable it
+otherwise.
 
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-rcar.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 93b8069041bb1..4231673435e7b 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -527,13 +527,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
+ 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
+ 		}
+ 
+-		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
++		/* Clear SSR, too, because of old STOPs to other clients than us */
++		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
+ 	}
+ 
+ 	/* master sent stop */
+ 	if (ssr_filtered & SSR) {
+ 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
+-		rcar_i2c_write(priv, ICSIER, SAR | SSR);
++		rcar_i2c_write(priv, ICSIER, SAR);
+ 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
+ 	}
+ 
+@@ -762,7 +763,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
+ 	priv->slave = slave;
+ 	rcar_i2c_write(priv, ICSAR, slave->addr);
+ 	rcar_i2c_write(priv, ICSSR, 0);
+-	rcar_i2c_write(priv, ICSIER, SAR | SSR);
++	rcar_i2c_write(priv, ICSIER, SAR);
+ 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
+ 
+ 	return 0;
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
+
+
