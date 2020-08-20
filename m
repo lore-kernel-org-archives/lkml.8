@@ -2,184 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14962C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3CC208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+0iidhg"
+	by mail.kernel.org (Postfix) with ESMTP id E0A5922D07
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597929779;
+	bh=7cAz3Ec2k+7Y8nlZLkYt3m3jyL4YEhx1BCEiANHBXnE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0Y1401/eK3ZEIEctMpLS2TtrOQje0zPMO/1O2JP+fiDa6nX9TvR09fdOEXBZGm4Bi
+	 Ia9naqHYMqOCcSx0d+ixRLYu4zSt5buEoTZiPVJ76J8RBcU61A4z5E1r0MU5pD5x3X
+	 2QQl+V37o6xlrUtCCA85JB9Pwlg0Yo4QhJxYwG04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgHTNWE (ORCPT
+        id S1730385AbgHTNRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:22:04 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29228 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729578AbgHTNTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:19:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597929582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=EYEbh/d854a4Cvi1ZmxUctES1NziyUONjpMTuL++zu0=;
-        b=U+0iidhgi9u9snAkDQ9TDVUc2PkBoI57W3PkqraAcoc+fZNmQhbhK0O5ntUAdHl37lATFu
-        bwdjzjkLTe+AorJeuiG33PdjU/rD4QLjsl79YfnvNm/XWsimwEXNzSWP6nVdfKgJvNnc2N
-        5t/VIQcK1W5kZ8HpS1AsM1qgvGESGeg=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-69-aY8ZLKuyOc6uRq5QO-umDA-1; Thu, 20 Aug 2020 09:19:38 -0400
-X-MC-Unique: aY8ZLKuyOc6uRq5QO-umDA-1
-Received: by mail-qt1-f197.google.com with SMTP id m88so1500181qtd.15
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EYEbh/d854a4Cvi1ZmxUctES1NziyUONjpMTuL++zu0=;
-        b=X+BPSf5j4oQb6YjA1RVhKJH6qFnkBJt/kSiij3v50Dzw4okldPrZ/OTC43KNw69GZ0
-         D2TWqdAcbbkOpcQJG4CQD04e0D1saNe7RSLcYcG4UGjsKaU4kNEPWva8TleQHVZ6libO
-         0anXX1JcA7pTPU0ydRUat1QIC1EISIXc/Wo7CngcOni4VPt4nIaJFhRm6CdVay2bKcz1
-         Ge1bccc4z2PhwQ9C2hjNarod7uvt7tZPm5w0tG8ubWrCYb0gmTF99k68Rg8Nz64TH8yT
-         YuBhSr5L48x31n/tR8T6jbO7+KgcR1hdC0DvHjn1qsfjnNIwiMmSoDdxep+hQ8niapMO
-         ceOA==
-X-Gm-Message-State: AOAM531P3frXugvOsV6yipF6TQmsq9+TBPFKh6eLf1H9fex4BtOPY1p/
-        Hea66fV/IRV24YVBAm4aqHecO/3J27KqdmefFXcbCVthua4Y299MiU5MZOgNuRPiRjdfyafa5xU
-        +7Jqplp/yalkxKVHseGS/VZ3X
-X-Received: by 2002:ac8:71d6:: with SMTP id i22mr2532262qtp.371.1597929578429;
-        Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJylmGEqva8k65GQbvrfrvomBJaM4CqPY7z4t1eMT+zT+dmuDhYUfv1MeCKO+nFkDiWH+W8K5w==
-X-Received: by 2002:ac8:71d6:: with SMTP id i22mr2532245qtp.371.1597929578139;
-        Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id b37sm3022312qtk.85.2020.08.20.06.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 06:19:37 -0700 (PDT)
-From:   trix@redhat.com
-To:     rydberg@bitmath.org, jdelvare@suse.com, linux@roeck-us.net
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tom Rix <trix@redhat.com>
-Subject: [PATCH] hwmon: applesmc: check status earlier.
-Date:   Thu, 20 Aug 2020 06:19:32 -0700
-Message-Id: <20200820131932.10590-1-trix@redhat.com>
-X-Mailer: git-send-email 2.18.1
+        Thu, 20 Aug 2020 09:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgHTJez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBC7B20724;
+        Thu, 20 Aug 2020 09:34:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916095;
+        bh=7cAz3Ec2k+7Y8nlZLkYt3m3jyL4YEhx1BCEiANHBXnE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eVYNB8h6WrwwGG52s+B8KvIB/FgJ9Egxag0xMvTrz32Tnme5EZnbxgYfDjkwYR60R
+         W3dApJnv/kfFdiCGX39329y/OAE/o4pWtEYTlpvzCW4Ra9JQCqzs5KGcNcSTL64yWc
+         uDlOfoSniVhuIhMPs6ma/x7FPUlrVJKgLtRKO4Gw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 010/204] btrfs: allow use of global block reserve for balance item deletion
+Date:   Thu, 20 Aug 2020 11:18:27 +0200
+Message-Id: <20200820091606.724524770@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: David Sterba <dsterba@suse.com>
 
-clang static analysis reports this representative problem
+commit 3502a8c0dc1bd4b4970b59b06e348f22a1c05581 upstream.
 
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On a filesystem with exhausted metadata, but still enough to start
+balance, it's possible to hit this error:
 
-buffer is filled by the earlier call
+[324402.053842] BTRFS info (device loop0): 1 enospc errors during balance
+[324402.060769] BTRFS info (device loop0): balance: ended with status: -28
+[324402.172295] BTRFS: error (device loop0) in reset_balance_state:3321: errno=-28 No space left
 
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
+It fails inside reset_balance_state and turns the filesystem to
+read-only, which is unnecessary and should be fixed too, but the problem
+is caused by lack for space when the balance item is deleted. This is a
+one-time operation and from the same rank as unlink that is allowed to
+use the global block reserve. So do the same for the balance item.
 
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
+Status of the filesystem (100GiB) just after the balance fails:
 
-Signed-off-by: Tom Rix <trix@redhat.com>
+$ btrfs fi df mnt
+Data, single: total=80.01GiB, used=38.58GiB
+System, single: total=4.00MiB, used=16.00KiB
+Metadata, single: total=19.99GiB, used=19.48GiB
+GlobalReserve, single: total=512.00MiB, used=50.11MiB
+
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ fs/btrfs/volumes.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 316618409315..a18887990f4a 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -753,15 +753,18 @@ static ssize_t applesmc_light_show(struct device *dev,
- 	}
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -3235,7 +3235,7 @@ static int del_balance_item(struct btrfs
+ 	if (!path)
+ 		return -ENOMEM;
  
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
-+
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
- 
- out:
-@@ -810,12 +813,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 		  to_index(attr));
- 
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
-+
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
- }
- 
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -851,12 +853,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
-+
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -872,10 +873,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
-+
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -951,13 +953,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
--- 
-2.18.1
+-	trans = btrfs_start_transaction(root, 0);
++	trans = btrfs_start_transaction_fallback_global_rsv(root, 0);
+ 	if (IS_ERR(trans)) {
+ 		btrfs_free_path(path);
+ 		return PTR_ERR(trans);
+
 
