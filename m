@@ -2,129 +2,330 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B92F3C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B15C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9D0207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD13207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbgHTQtC (ORCPT
+        id S1728369AbgHTQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:49:02 -0400
-Received: from mga03.intel.com ([134.134.136.65]:14315 "EHLO mga03.intel.com"
+        Thu, 20 Aug 2020 12:49:06 -0400
+Received: from mga03.intel.com ([134.134.136.65]:14317 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730326AbgHTQsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:48:24 -0400
-IronPort-SDR: Vqux16cVLojjtJWsQE8AZvvaa6GeGn9HvK2DrhKHncp41Pb1bgQGwDw+3qHk+paYTrtAv9JMPR
- yKgiHOhWrTYQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="155325356"
+        id S1730344AbgHTQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:48:39 -0400
+IronPort-SDR: RrxaW5Gx+ytJfG7PL+Ps8LwKufQN3Sd8Yh4EGdZN8dA2x9H1gt78m5Vqvwe18P2V8GxUGKs/E/
+ E01jR7MkjuMQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="155325492"
 X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="155325356"
+   d="scan'208";a="155325492"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 09:48:22 -0700
-IronPort-SDR: uVyirGKdbAoNQhN+hG6zONG5kRddXPnkhe9Ll4CaogB9eP4fksK9nRfro2P9P5vweoeDBX6gdz
- yomBNfKMqAsQ==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 09:48:27 -0700
+IronPort-SDR: gkFx53hQ93XuxWlOsZNIT/agUptHziJtuforN2J3KeZ6ZxV7wgAbRLpvPozu7xupjUf2h6zqQh
+ zCs8peSljwgA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="442049131"
+   d="scan'208";a="442049145"
 Received: from ssp-icl-u-210.jf.intel.com ([10.54.55.52])
-  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2020 09:48:22 -0700
+  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2020 09:48:27 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
         jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
 Cc:     eranian@google.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 0/4] TopDown metrics support for Ice Lake (perf tool)
-Date:   Thu, 20 Aug 2020 09:45:28 -0700
-Message-Id: <20200820164532.8011-1-kan.liang@linux.intel.com>
+Subject: [PATCH 4/4] perf, tools: Add documentation for topdown metrics
+Date:   Thu, 20 Aug 2020 09:45:32 -0700
+Message-Id: <20200820164532.8011-5-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200820164532.8011-1-kan.liang@linux.intel.com>
+References: <20200820164532.8011-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Andi Kleen <ak@linux.intel.com>
 
-The kernel patches have been merged into the tip's perf/core branch.
-The patch set is on top of commit 2cb5383b30d4 ("perf/x86/intel: Support
-per-thread RDPMC TopDown metrics") of the tip's perf/core branch.
+Add some documentation how to use the topdown metrics in ring 3.
 
-The changes for the perf tool include:
-- Extend --topdown option to support per thread TopDown metrics
-- Support sample-read topdown metric group
-- Add a complete document for the TopDown usage.
-
-Ice Lake has support for measuring the level 1 TopDown metrics
-directly in hardware. This is implemented by an additional METRICS
-register, and a new Fixed Counter 3 that measures pipeline SLOTS.
-
-New in Icelake
-- Do not require generic counters. This allows to collect TopDown always
-  in addition to other events.
-- Measuring TopDown per thread/process instead of only per core
-
-For the Ice Lake implementation of performance metrics, the values in
-PERF_METRICS MSR are derived from fixed counter 3. Software should start
-both registers, PERF_METRICS and fixed counter 3, from zero.
-Additionally, software is recommended to periodically clear both
-registers in order to maintain accurate measurements. The latter is
-required for certain scenarios that involve sampling metrics at high
-rates. Software should always write fixed counter 3 before write to
-PERF_METRICS.
-
-IA32_PERF_GLOBAL_STATUS. OVF_PERF_METRICS[48]: If this bit is set,
-it indicates that some PERF_METRICS-related counter has overflowed and
-a PMI is triggered. Software has to synchronize, e.g. re-start,
-PERF_METRICS as well as fixed counter 3. Otherwise, PERF_METRICS may
-return invalid values.
-
-Limitation
-- To get accurate result and avoid reading the METRICS register multiple
-  times, the TopDown metrics events and SLOTS event have to be in the
-  same group.
-- METRICS and SLOTS registers have to be cleared after each read by SW.
-  That is to prevent the lose of precision.
-- Cannot do sampling read SLOTS and TopDown metric events
-
-Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-TopDown metrics.
-
-Andi Kleen (2):
-  perf stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
-
-Kan Liang (2):
-  perf tools: Rename group to topdown
-  perf record: Support sample-read topdown metric group
-
- tools/perf/Documentation/perf-stat.txt |   7 +-
- tools/perf/Documentation/topdown.txt   | 256 +++++++++++++++++++++++++
- tools/perf/arch/x86/util/Build         |   2 +-
- tools/perf/arch/x86/util/group.c       |  28 ---
- tools/perf/arch/x86/util/topdown.c     |  63 ++++++
- tools/perf/builtin-stat.c              |  81 +++-----
- tools/perf/util/Build                  |   1 +
- tools/perf/util/group.h                |   8 -
- tools/perf/util/record.c               |   3 +-
- tools/perf/util/stat-shadow.c          |  89 +++++++++
- tools/perf/util/stat.c                 |   4 +
- tools/perf/util/stat.h                 |   8 +
- tools/perf/util/topdown.c              |  58 ++++++
- tools/perf/util/topdown.h              |  12 ++
- 14 files changed, 528 insertions(+), 92 deletions(-)
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/Documentation/topdown.txt | 256 +++++++++++++++++++++++++++
+ 1 file changed, 256 insertions(+)
  create mode 100644 tools/perf/Documentation/topdown.txt
- delete mode 100644 tools/perf/arch/x86/util/group.c
- create mode 100644 tools/perf/arch/x86/util/topdown.c
- delete mode 100644 tools/perf/util/group.h
- create mode 100644 tools/perf/util/topdown.c
- create mode 100644 tools/perf/util/topdown.h
 
+diff --git a/tools/perf/Documentation/topdown.txt b/tools/perf/Documentation/topdown.txt
+new file mode 100644
+index 000000000000..f08a2cfdf6e3
+--- /dev/null
++++ b/tools/perf/Documentation/topdown.txt
+@@ -0,0 +1,256 @@
++Using TopDown metrics in user space
++-----------------------------------
++
++Intel CPUs (since Sandy Bridge and Silvermont) support a TopDown
++methology to break down CPU pipeline execution into 4 bottlenecks:
++frontend bound, backend bound, bad speculation, retiring.
++
++For more details on Topdown see [1][5]
++
++Traditionally this was implemented by events in generic counters
++and specific formulas to compute the bottlenecks.
++
++perf stat --topdown implements this.
++
++Full Top Down includes more levels that can break down the
++bottlenecks further. This is not directly implemented in perf,
++but available in other tools that can run on top of perf,
++such as toplev[2] or vtune[3]
++
++New Topdown features in Ice Lake
++===============================
++
++With Ice Lake CPUs the TopDown metrics are directly available as
++fixed counters and do not require generic counters. This allows
++to collect TopDown always in addition to other events.
++
++% perf stat -a --topdown -I1000
++#           time             retiring      bad speculation       frontend bound        backend bound
++     1.001281330                23.0%                15.3%                29.6%                32.1%
++     2.003009005                 5.0%                 6.8%                46.6%                41.6%
++     3.004646182                 6.7%                 6.7%                46.0%                40.6%
++     4.006326375                 5.0%                 6.4%                47.6%                41.0%
++     5.007991804                 5.1%                 6.3%                46.3%                42.3%
++     6.009626773                 6.2%                 7.1%                47.3%                39.3%
++     7.011296356                 4.7%                 6.7%                46.2%                42.4%
++     8.012951831                 4.7%                 6.7%                47.5%                41.1%
++...
++
++This also enables measuring TopDown per thread/process instead
++of only per core.
++
++Using TopDown through RDPMC in applications on Ice Lake
++======================================================
++
++For more fine grained measurements it can be useful to
++access the new  directly from user space. This is more complicated,
++but drastically lowers overhead.
++
++On Ice Lake, there is a new fixed counter 3: SLOTS, which reports
++"pipeline SLOTS" (cycles multiplied by core issue width) and a
++metric register that reports slots ratios for the different bottleneck
++categories.
++
++The metrics counter is CPU model specific and is not available on older
++CPUs.
++
++Example code
++============
++
++Library functions to do the functionality described below
++is also available in libjevents [4]
++
++The application opens a group with fixed counter 3 (SLOTS) and any
++metric event, and allow user programs to read the performance counters.
++
++Fixed counter 3 is mapped to a pseudo event event=0x00, umask=04,
++so the perf_event_attr structure should be initialized with
++{ .config = 0x0400, .type = PERF_TYPE_RAW }
++The metric events are mapped to the pseudo event event=0x00, umask=0x8X.
++For example, the perf_event_attr structure can be initialized with
++{ .config = 0x8000, .type = PERF_TYPE_RAW } for Retiring metric event
++The Fixed counter 3 must be the leader of the group.
++
++#include <linux/perf_event.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++
++/* Provide own perf_event_open stub because glibc doesn't */
++__attribute__((weak))
++int perf_event_open(struct perf_event_attr *attr, pid_t pid,
++		    int cpu, int group_fd, unsigned long flags)
++{
++	return syscall(__NR_perf_event_open, attr, pid, cpu, group_fd, flags);
++}
++
++/* Open slots counter file descriptor for current task. */
++struct perf_event_attr slots = {
++	.type = PERF_TYPE_RAW,
++	.size = sizeof(struct perf_event_attr),
++	.config = 0x400,
++	.exclude_kernel = 1,
++};
++
++int slots_fd = perf_event_open(&slots, 0, -1, -1, 0);
++if (slots_fd < 0)
++	... error ...
++
++/*
++ * Open metrics event file descriptor for current task.
++ * Set slots event as the leader of the group.
++ */
++struct perf_event_attr metrics = {
++	.type = PERF_TYPE_RAW,
++	.size = sizeof(struct perf_event_attr),
++	.config = 0x8000,
++	.exclude_kernel = 1,
++};
++
++int metrics_fd = perf_event_open(&metrics, 0, -1, slots_fd, 0);
++if (metrics_fd < 0)
++	... error ...
++
++
++The RDPMC instruction (or _rdpmc compiler intrinsic) can now be used
++to read slots and the topdown metrics at different points of the program:
++
++#include <stdint.h>
++#include <x86intrin.h>
++
++#define RDPMC_FIXED	(1 << 30)	/* return fixed counters */
++#define RDPMC_METRIC	(1 << 29)	/* return metric counters */
++
++#define FIXED_COUNTER_SLOTS		3
++#define METRIC_COUNTER_TOPDOWN_L1	0
++
++static inline uint64_t read_slots(void)
++{
++	return _rdpmc(RDPMC_FIXED | FIXED_COUNTER_SLOTS);
++}
++
++static inline uint64_t read_metrics(void)
++{
++	return _rdpmc(RDPMC_METRIC | METRIC_COUNTER_TOPDOWN_L1);
++}
++
++Then the program can be instrumented to read these metrics at different
++points.
++
++It's not a good idea to do this with too short code regions,
++as the parallelism and overlap in the CPU program execution will
++cause too much measurement inaccuracy. For example instrumenting
++individual basic blocks is definitely too fine grained.
++
++Decoding metrics values
++=======================
++
++The value reported by read_metrics() contains four 8 bit fields
++that represent a scaled ratio that represent the Level 1 bottleneck.
++All four fields add up to 0xff (= 100%)
++
++The binary ratios in the metric value can be converted to float ratios:
++
++#define GET_METRIC(m, i) (((m) >> (i*8)) & 0xff)
++
++#define TOPDOWN_RETIRING(val)	((float)GET_METRIC(val, 0) / 0xff)
++#define TOPDOWN_BAD_SPEC(val)	((float)GET_METRIC(val, 1) / 0xff)
++#define TOPDOWN_FE_BOUND(val)	((float)GET_METRIC(val, 2) / 0xff)
++#define TOPDOWN_BE_BOUND(val)	((float)GET_METRIC(val, 3) / 0xff)
++
++and then converted to percent for printing.
++
++The ratios in the metric accumulate for the time when the counter
++is enabled. For measuring programs it is often useful to measure
++specific sections. For this it is needed to deltas on metrics.
++
++This can be done by scaling the metrics with the slots counter
++read at the same time.
++
++Then it's possible to take deltas of these slots counts
++measured at different points, and determine the metrics
++for that time period.
++
++	slots_a = read_slots();
++	metric_a = read_metrics();
++
++	... larger code region ...
++
++	slots_b = read_slots()
++	metric_b = read_metrics()
++
++	# compute scaled metrics for measurement a
++	retiring_slots_a = GET_METRIC(metric_a, 0) * slots_a
++	bad_spec_slots_a = GET_METRIC(metric_a, 1) * slots_a
++	fe_bound_slots_a = GET_METRIC(metric_a, 2) * slots_a
++	be_bound_slots_a = GET_METRIC(metric_a, 3) * slots_a
++
++	# compute delta scaled metrics between b and a
++	retiring_slots = GET_METRIC(metric_b, 0) * slots_b - retiring_slots_a
++	bad_spec_slots = GET_METRIC(metric_b, 1) * slots_b - bad_spec_slots_a
++	fe_bound_slots = GET_METRIC(metric_b, 2) * slots_b - fe_bound_slots_a
++	be_bound_slots = GET_METRIC(metric_b, 3) * slots_b - be_bound_slots_a
++
++Later the individual ratios for the measurement period can be recreated
++from these counts.
++
++	slots_delta = slots_b - slots_a
++	retiring_ratio = (float)retiring_slots / slots_delta
++	bad_spec_ratio = (float)bad_spec_slots / slots_delta
++	fe_bound_ratio = (float)fe_bound_slots / slots_delta
++	be_bound_ratio = (float)be_bound_slots / slota_delta
++
++	printf("Retiring %.2f%% Bad Speculation %.2f%% FE Bound %.2f%% BE Bound %.2f%%\n",
++		retiring_ratio * 100.,
++		bad_spec_ratio * 100.,
++		fe_bound_ratio * 100.,
++		be_bound_ratio * 100.);
++
++Resetting metrics counters
++==========================
++
++Since the individual metrics are only 8bit they lose precision for
++short regions over time because the number of cycles covered by each
++fraction bit shrinks. So the counters need to be reset regularly.
++
++When using the kernel perf API the kernel resets on every read.
++So as long as the reading is at reasonable intervals (every few
++seconds) the precision is good.
++
++When using perf stat it is recommended to always use the -I option,
++with no longer interval than a few seconds
++
++	perf stat -I 1000 --topdown ...
++
++For user programs using RDPMC directly the counter can
++be reset explicitly using ioctl:
++
++	ioctl(perf_fd, PERF_EVENT_IOC_RESET, 0);
++
++This "opens" a new measurement period.
++
++A program using RDPMC for TopDown should schedule such a reset
++regularly, as in every few seconds.
++
++Limits on Ice Lake
++==================
++
++Four pseudo TopDown metric events are exposed for the end-users,
++topdown-retiring, topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
++They can be used to collect the TopDown value under the following
++rules:
++- All the TopDown metric events must be in a group with the SLOTS event.
++- The SLOTS event must be the leader of the group.
++- The PERF_FORMAT_GROUP flag must be applied for each TopDown metric
++  events
++
++The SLOTS event and the TopDown metric events can be counting members of
++a sampling read group. Since the SLOTS event must be the leader of a TopDown
++group, the second event of the group is the sampling event.
++For example, perf record -e '{slots, $sampling_event, topdown-retiring}:S'
++
++
++[1] https://software.intel.com/en-us/top-down-microarchitecture-analysis-method-win
++[2] https://github.com/andikleen/pmu-tools/wiki/toplev-manual
++[3] https://software.intel.com/en-us/intel-vtune-amplifier-xe
++[4] https://github.com/andikleen/pmu-tools/tree/master/jevents
++[5] https://sites.google.com/site/analysismethods/yasin-pubs
 -- 
 2.17.1
 
