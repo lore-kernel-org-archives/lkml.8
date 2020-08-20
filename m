@@ -2,52 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A94BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B447C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E02752078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF3E2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917109;
-	bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
+	s=default; t=1597917114;
+	bh=k640J9cqOEVPJ1orsTEWIBrNMF4F3K4Xs6YwxMvaSG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lpSxJTCrMGAsx5nbnxOiSjTepy+e//p0pjuaZvbO3uEAYV9lRFpCP2mjwxioSGeGl
-	 HDWeAnAAgzBUNPj/rrflU2Vse8TBkDP23Ibw789sG//ht3r/CEuw/SgZ2rv93ycTaY
-	 wWfvHN/XjIOx2McIZ+3AEj/dARktaFk/lTDZrFlA=
+	b=dBfCVa4sSkZnvqs+zneiWkXwRUSYqmzysYdLgkQyA039OxH1cOZV1lgQQ87I60ITh
+	 eDYl9OYvK0YS1ufCbUqkrkYKvIb6kbk/Kryfz6Vm1GOWcNnF659MTRNwJYYi9n49hM
+	 zFw+jMuL+jQOqIotKWASAKM2w0xO7+S42H3oX6yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbgHTJvr (ORCPT
+        id S1729858AbgHTJvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:51:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:51:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729642AbgHTJvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:38 -0400
+        id S1729011AbgHTJvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 684452067C;
-        Thu, 20 Aug 2020 09:51:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EE17207FB;
+        Thu, 20 Aug 2020 09:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917097;
-        bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
+        s=default; t=1597917106;
+        bh=k640J9cqOEVPJ1orsTEWIBrNMF4F3K4Xs6YwxMvaSG8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mDQCTZffd1HiozWX6dIVFFWnYwfi1QT3KZCALROzuCHsPMWJZajvoeoSy8slpIgXl
-         eJkLN6iaCYNIao1wr4eRR9yQpWr07XbmHSwlekD+QrSh9UhZdIBNbp0Xrr0B9dJcxq
-         4pwaN59bcTcj6JcS917OzhoRS+ak17Zh8WnXJjx0=
+        b=rsTv+3BN/PugH1ee2IJ/X8Qv+wViH7gS+RSpuGIqI9Sp1DVJUotEUrhTB9b+/UBCP
+         BTw6raWCysfcJEgpIOzn6rdrJnW453aDYcPWZug8UO7CCZez0O0bJgv9v1ukoyBP/p
+         SdFdpyDUMkup3fZbp6r8iRY5LQ1UT2gLMrSFd+bo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 144/152] sh: landisk: Add missing initialization of sh_io_port_base
-Date:   Thu, 20 Aug 2020 11:21:51 +0200
-Message-Id: <20200820091601.192944248@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 147/152] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Thu, 20 Aug 2020 11:21:54 +0200
+Message-Id: <20200820091601.353769890@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,45 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit 0c64a0dce51faa9c706fdf1f957d6f19878f4b81 ]
+commit f29aa08852e1953e461f2d47ab13c34e14bc08b3 upstream.
 
-The Landisk setup code maps the CF IDE area using ioremap_prot(), and
-passes the resulting virtual addresses to the pata_platform driver,
-disguising them as I/O port addresses.  Hence the pata_platform driver
-translates them again using ioport_map().
-As CONFIG_GENERIC_IOMAP=n, and CONFIG_HAS_IOPORT_MAP=y, the
-SuperH-specific mapping code in arch/sh/kernel/ioport.c translates
-I/O port addresses to virtual addresses by adding sh_io_port_base, which
-defaults to -1, thus breaking the assumption of an identity mapping.
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-Fix this by setting sh_io_port_base to zero.
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 37b7a97884ba64bf ("sh: machvec IO death.")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Rich Felker <dalias@libc.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sh/boards/mach-landisk/setup.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/radeon/ni_dpm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sh/boards/mach-landisk/setup.c b/arch/sh/boards/mach-landisk/setup.c
-index 16b4d8b0bb850..2c44b94f82fb2 100644
---- a/arch/sh/boards/mach-landisk/setup.c
-+++ b/arch/sh/boards/mach-landisk/setup.c
-@@ -82,6 +82,9 @@ device_initcall(landisk_devices_setup);
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2125,7 +2125,7 @@ static int ni_init_smc_spll_table(struct
+ 		if (p_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_SHIFT))
+ 			ret = -EINVAL;
  
- static void __init landisk_setup(char **cmdline_p)
- {
-+	/* I/O port identity mapping */
-+	__set_io_port_base(0);
-+
- 	/* LED ON */
- 	__raw_writeb(__raw_readb(PA_LED) | 0x03, PA_LED);
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
  
--- 
-2.25.1
-
+ 		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
 
 
