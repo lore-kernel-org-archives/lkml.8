@@ -2,100 +2,106 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 054C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 643AA207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597895145;
-	bh=T1vQebJsoBRqHO3+NwQVF50ZvFopAiB6Kd6Ov1R16GE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=N20Zn/Q3bLq22GrU/4AtndHm4JLC3S0LzIcU5Ys20rF5sTDtdVznEasaFOnHfvDNE
-	 t89N5mYCYDHa0zHzIJb9/VUTyEljPp2YhbU6EsKOhrHr/BdqvPrB0WV05XTrEY3ZfO
-	 rGQKjiKosG3U+okoTjLUJ6d8rls+gKqD/VApjH+g=
+	by mail.kernel.org (Postfix) with ESMTP id D57D62078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:46:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EBNSDL9z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbgHTDpn (ORCPT
+        id S1726862AbgHTDqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:45:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726578AbgHTDpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 23:45:43 -0400
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [129.253.182.57])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Aug 2020 23:46:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:26422 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726578AbgHTDqs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 23:46:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597895207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yJp8ETPySMsCpzxcqSo+vhA8i7HDv8eDmkf15FdeaxY=;
+        b=EBNSDL9zOOn3bpAmGNw4ZMLXUYXh3TePPLhs2EQk6SeWeU+Mr7omjxk4jxubXlgdexQcUV
+        hSdZ6rEq359wPKQiNuECwERRCrP2Nwk5t7DmrAEQJat8X0jK6IntHciDliONL7jWHCdwLu
+        nH2mJGSrS5CRzNV0fKr6sj9XRDmZ2LI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-CPdbQVJvNBSygXj1nyor9g-1; Wed, 19 Aug 2020 23:46:45 -0400
+X-MC-Unique: CPdbQVJvNBSygXj1nyor9g-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF00B2078B;
-        Thu, 20 Aug 2020 03:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597895143;
-        bh=T1vQebJsoBRqHO3+NwQVF50ZvFopAiB6Kd6Ov1R16GE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQ3VRVB326vzAgsOF5FG+wpRyVnXx466Dz8HAqWvGnsHXlitWdkRwUClhZBNYJbwY
-         G4xCwKnek5kRRMizDBwosfwHYCzJIyECD6GiJrI905muO3LMrbt915WKazYRz1muXq
-         WVS5iNPDwXSTFUGkvO6yyQJ8tCwSFzIXYZeQwS/4=
-Date:   Thu, 20 Aug 2020 12:45:39 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     David Fugate <david.fugate@linux.intel.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        david.fugate@intel.com
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200820034539.GA12222@redsun51.ssa.fujisawa.hgst.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com>
- <20200818071249.GB2544@lst.de>
- <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
- <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
- <d19605da52eb7aa3eb4132ad1781b5fbf636a8a0.camel@linux.intel.com>
- <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
- <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 63875100CEC4;
+        Thu, 20 Aug 2020 03:46:42 +0000 (UTC)
+Received: from treble (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 339621B47B;
+        Thu, 20 Aug 2020 03:46:39 +0000 (UTC)
+Date:   Wed, 19 Aug 2020 22:46:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Kyle Huey <me@kylehuey.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [REGRESSION 5.8] x86/entry: DR0 break-on-write not working
+Message-ID: <20200820034636.tl4nq5aiitpfvx62@treble>
+References: <CAP045Ao5-+vvTzCOaCkfwztsd2Q0_8kh85UxuXW0bbcfVbF40w@mail.gmail.com>
+ <20200819184149.GH2674@hirez.programming.kicks-ass.net>
+ <CAP045ApfQnsHsimmhLsSeL2OSB98-Q3f=nM4em5rqr_paz4=5Q@mail.gmail.com>
+ <20200819213534.GQ3982@worktop.programming.kicks-ass.net>
+ <20200819224731.3edo5lqw6lbuprdx@treble>
+ <CALCETrV8sVjhVYig4ZvYDN3pEbF0tvekXCcJCBakeZbMn0gZ=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CALCETrV8sVjhVYig4ZvYDN3pEbF0tvekXCcJCBakeZbMn0gZ=A@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:43:29PM -0600, David Fugate wrote:
-> There were queries? My key takeaways were a maintainer NAK followed by
-> instructions to make the Intel drive align with the driver by
-> implementing NOIOB. While I disagree with the rejection as it appeared
-> to be based entirely on politics, I can accept it as the quirk wasn't
-> in the spec.
+On Wed, Aug 19, 2020 at 05:14:18PM -0700, Andy Lutomirski wrote:
+> On Wed, Aug 19, 2020 at 3:47 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > What amazes me is that it successfully schedules back to the end of the
+> > #DB handler finish and everything keeps working.
+> >
+> > Do we not have assertions in the scheduler to catch this?
+> 
+> You almost nailed it.
+> 
+> I'm pretty sure you have the buggy sequence of events right, but for
+> the wrong reason.  There's nothing wrong with scheduling when
+> delivering SIGTRAP, but it's definitely wrong to blindly save and
+> restore DR7 around scheduling and around ptrace invocations.  Remember
+> this is an entry from user mode, so it runs on the user stack.
 
-For the record, the suggestion provided, which you agreed to look into,
-most broadly enables your hardware on Linux and was entirely to your
-benefit. Not quite as dramatic as a political conspiracy.
+Wow, I had no idea user #DB's run on the task stack.  The scheduling
+from #DB blew my mind :-)  What's the purpose of that?
 
-You later responded with a technical argument against that suggestion;
-however, your reason didn't add up, and that's where you left the
-thread.
- 
-> It's not fair to make this same "your drive should align with the
-> driver" demand of Samsung because we *are* talking about a spec'ed
-> feature here. Technical critques of their patches and real performance
-> degrades observed are fair game and objective; "your company did
-> the nastiest possible move violating the normal NVMe procedures to make
-> it optional" is not.
+-- 
+Josh
 
-Sure, but you're cherry picking comments from the discussion. The
-performance impact exists, and it's generally not acceptable from a
-maintenance point to duplicate significant code without at least trying
-to provide a common solution. 
