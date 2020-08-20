@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900BCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E45F206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A62C20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920662;
-	bh=YEXaHg2iBlaYXdD+t5XXIh39qL4/7luoV72oGLb54/U=;
+	s=default; t=1597920667;
+	bh=sYOkpyDBSUPLH/d+kI2y7DYG7MdGLaO75GbP0Y15A78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=esfXIQuVG1pdaePt3R+Ku7ENN2eEm10s58m2oq1CXAfM4PcKxbX18eSX/v3cxlGcO
-	 XcvcfxxiiuBBcziAhJGPhfcW8YwgN2VEpXGCWvmXgxlRrYEyeXlXhCs3TKWYymhy1l
-	 6Xyk8Nz5fofFbC+fLu8esyyMZ9hLNcZPTIpy8wds=
+	b=EHLTGdYxXp4Kb/VG/uLm2WIgkpYPbIdg/DkvCCuOJj7ybb8gMLSRAZVwGv2Lr0ubw
+	 oA7uJiU7lO6pC0wKgmV9CH0pwG31TupYnOFicNBoBjU8w1L3J+au8aZLXRL9ECuZRU
+	 R82RsbGJZT+NAMPoAvCPJMqKFfXs5Yz+RE/qDJ0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgHTKvA (ORCPT
+        id S1731211AbgHTKOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33942 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbgHTKPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:15:01 -0400
+        id S1731181AbgHTKOc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9871F206DA;
-        Thu, 20 Aug 2020 10:15:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DD7B2067C;
+        Thu, 20 Aug 2020 10:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918501;
-        bh=YEXaHg2iBlaYXdD+t5XXIh39qL4/7luoV72oGLb54/U=;
+        s=default; t=1597918472;
+        bh=sYOkpyDBSUPLH/d+kI2y7DYG7MdGLaO75GbP0Y15A78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wRlY/9VPZmrcti/pVZ2My8rVcws80BVwMpAdr2XGg12370LwsB4aJ3uuOh4K+WVxg
-         IwFttnS2nlh8UOHpVpidDwPdVhpp/PWYDdE4L660ScOxQoe5bPiLSLjclw0wH7BP78
-         GGW/Xdrtd5gOfXGNDbUHNKVMnr/j4PrBnL4Wtwqo=
+        b=Bqv74Q7Cc7F/iRVlRYrsrR0iKrj/gpnZxlaUdxqN6R7OIg955t2la7RTcMxt5bqz0
+         yo30Dv5IfZRMZnlVVid4BtygqZgujVnfMj4wEhqxXR1hTyQAhQx6mZb/JvdMom/jb1
+         wWeU2j1C2p53pUA0qHQIYD6fJ6oxdL1osRvIwHTE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Liu Ying <victor.liu@nxp.com>
-Subject: [PATCH 4.14 194/228] drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
-Date:   Thu, 20 Aug 2020 11:22:49 +0200
-Message-Id: <20200820091617.259294266@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.14 181/228] mac80211: fix misplaced while instead of if
+Date:   Thu, 20 Aug 2020 11:22:36 +0200
+Message-Id: <20200820091616.623183778@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,52 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Ying <victor.liu@nxp.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 3b2a999582c467d1883716b37ffcc00178a13713 upstream.
+commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
 
-Both of the two LVDS channels should be disabled for split mode
-in the encoder's ->disable() callback, because they are enabled
-in the encoder's ->enable() callback.
+This never was intended to be a 'while' loop, it should've
+just been an 'if' instead of 'while'. Fix this.
 
-Fixes: 6556f7f82b9c ("drm: imx: Move imx-drm driver out of staging")
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+I noticed this while applying another patch from Ben that
+intended to fix a busy loop at this spot.
+
+Cc: stable@vger.kernel.org
+Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
+Reported-by: Ben Greear <greearb@candelatech.com>
+Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/imx/imx-ldb.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/mac80211/sta_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/imx/imx-ldb.c
-+++ b/drivers/gpu/drm/imx/imx-ldb.c
-@@ -311,18 +311,19 @@ static void imx_ldb_encoder_disable(stru
- {
- 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
- 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
-+	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
- 	int mux, ret;
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -952,7 +952,7 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
  
- 	drm_panel_disable(imx_ldb_ch->panel);
- 
--	if (imx_ldb_ch == &ldb->channel[0])
-+	if (imx_ldb_ch == &ldb->channel[0] || dual)
- 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
--	else if (imx_ldb_ch == &ldb->channel[1])
-+	if (imx_ldb_ch == &ldb->channel[1] || dual)
- 		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
- 
- 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
- 
--	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
-+	if (dual) {
- 		clk_disable_unprepare(ldb->clk[0]);
- 		clk_disable_unprepare(ldb->clk[1]);
+-	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
+ 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+ 		WARN_ON_ONCE(ret);
  	}
 
 
