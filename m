@@ -2,104 +2,181 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA46C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D114208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CD5208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="i6SWEOhw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="XY6Z9P2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbgHTRDZ (ORCPT
+        id S1730378AbgHTRDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:03:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729767AbgHTRCj (ORCPT
+        Thu, 20 Aug 2020 13:03:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26644 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729894AbgHTRCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:02:39 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KGrmx5016745;
-        Thu, 20 Aug 2020 13:02:33 -0400
+        Thu, 20 Aug 2020 13:02:46 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH1VFe134320;
+        Thu, 20 Aug 2020 13:02:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=49g9O54YdjuDR0h4JE4h4tBrQTnCIZqBJ7/F6tsyfP0=;
- b=i6SWEOhwX0WQv1puW29SBFlNgevG122h7ZrtcEpklXtUzBBGp1Io3Bvv3MS1QSUUTuBv
- To/v0K3B2MHZ1IwYfumnIFdVQgpWepja56HynY1imlRr3zDZC+mOhR96FRo1F6mCsd93
- y9we+/XHAxKTk2Ecw/xtftN2x9z5xo7SWVgm9U/diFkePjsJnXaOJR9z41BFw0orAEvG
- cy+nKT3KXe/hQmHnyxOwtx6QKgC7gNp5oubi5ZQAr7RFlXlp6UMIv+yoS0xfhJw05G02
- 8NtfhRjDecktyqDtrFje74E8JtSRAkH7T7m2CYBs5BEB3VnC5nYhft3Lq0xKnpmTzIJg jQ== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=rT0q5paLxDTNmpB6TiOegAFsyiJLuUvb7I72smzJHh4=;
+ b=XY6Z9P2ztvLlB+UEeCNojprOdrqYdpNotpNykATgavtXWRSa3jLUm8HBJf8z3+WP6AIt
+ +ntqn/Ro3RYcQ7UwwrFOI5i9dUF1vWbjz/bVNSOcNJIidgDjy7o52+Nu/rIK3DTB+DN+
+ GeRMrFeUfe0YNyxCjSP9fhd8ZQtHJFISd70BG1MTN+qKT7WDGwEa4QRt5IvJtd6lldle
+ ZSlaS93weAr9yWj9tmbQRMtLzstSfpr2a3GulH/F4SED1nm6mA+ySHLvD5kLXLOtVo0L
+ J/V6UHdCAsP1l+R7k5rkrjSQXXS0XSlaQBxahyCnzB8ekiTdS/IGvMUKhr4z/bHm0nQ9 oQ== 
 Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3311yeqgre-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 331ugy3fcf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 13:02:33 -0400
+        Thu, 20 Aug 2020 13:02:39 -0400
 Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0K1t001566;
-        Thu, 20 Aug 2020 17:02:30 GMT
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0ITd001550;
+        Thu, 20 Aug 2020 17:02:37 GMT
 Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03wdc.us.ibm.com with ESMTP id 3304cedu8h-1
+        by ppma03wdc.us.ibm.com with ESMTP id 3304cedu9j-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 17:02:30 +0000
+        Thu, 20 Aug 2020 17:02:37 +0000
 Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2UeH28967174
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2bk145023498
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 17:02:30 GMT
+        Thu, 20 Aug 2020 17:02:37 GMT
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 56034AE067;
-        Thu, 20 Aug 2020 17:02:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 03297AE05C;
+        Thu, 20 Aug 2020 17:02:37 +0000 (GMT)
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66032AE062;
-        Thu, 20 Aug 2020 17:02:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1555FAE060;
+        Thu, 20 Aug 2020 17:02:36 +0000 (GMT)
 Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
         by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 17:02:29 +0000 (GMT)
+        Thu, 20 Aug 2020 17:02:35 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-spi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         eajames@linux.ibm.com, joel@jms.id.au, bradleyb@fuzziesquirrel.com,
         broonie@kernel.org, robh+dt@kernel.org, arnd@arndb.de
-Subject: [PATCH 0/7] spi: Fix FSI-attached controller and AT25 drivers
-Date:   Thu, 20 Aug 2020 12:02:21 -0500
-Message-Id: <20200820170228.42053-1-eajames@linux.ibm.com>
+Subject: [PATCH 6/7] spi: fsi: Check mux status before transfers
+Date:   Thu, 20 Aug 2020 12:02:27 -0500
+Message-Id: <20200820170228.42053-7-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200820170228.42053-1-eajames@linux.ibm.com>
+References: <20200820170228.42053-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- lowpriorityscore=0 mlxlogscore=373 clxscore=1011 suspectscore=1
- adultscore=0 spamscore=0 priorityscore=1501 impostorscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=804 malwarescore=0 bulkscore=0
+ impostorscore=0 suspectscore=1 phishscore=0 priorityscore=1501
+ adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2006250000 definitions=main-2008200135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series implements a number of fixes for the FSI-attached SPI controller
-driver and the AT25 eeprom driver.
+The SPI controllers are not accessible if the mux isn't set. Therefore,
+check the mux status before starting a transfer and fail out if it isn't
+set.
 
-Brad Bishop (4):
-  spi: fsi: Handle 9 to 15 byte transfers lengths
-  spi: fsi: Fix clock running too fast
-  spi: fsi: Fix use of the bneq+ sequencer instruction
-  eeprom: at25: Split reads into chunks and cap write size
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ drivers/spi/spi-fsi.c | 40 +++++++++++++++++++++++++++-------------
+ 1 file changed, 27 insertions(+), 13 deletions(-)
 
-Eddie James (3):
-  dt-bindings: fsi: fsi2spi: Document new restricted property
-  spi: fsi: Implement restricted size for certain controllers
-  spi: fsi: Check mux status before transfers
-
- .../devicetree/bindings/fsi/ibm,fsi2spi.yaml  |  10 ++
- drivers/misc/eeprom/at25.c                    |  94 +++++++-----
- drivers/spi/spi-fsi.c                         | 139 ++++++++++++++----
- 3 files changed, 172 insertions(+), 71 deletions(-)
-
+diff --git a/drivers/spi/spi-fsi.c b/drivers/spi/spi-fsi.c
+index 53cfa201e187..9c0a4413ec3d 100644
+--- a/drivers/spi/spi-fsi.c
++++ b/drivers/spi/spi-fsi.c
+@@ -12,6 +12,7 @@
+ 
+ #define FSI_ENGID_SPI			0x23
+ #define FSI_MBOX_ROOT_CTRL_8		0x2860
++#define  FSI_MBOX_ROOT_CTRL_8_SPI_MUX	 0xf0000000
+ 
+ #define FSI2SPI_DATA0			0x00
+ #define FSI2SPI_DATA1			0x04
+@@ -84,6 +85,26 @@ struct fsi_spi_sequence {
+ 	u64 data;
+ };
+ 
++static int fsi_spi_check_mux(struct fsi_device *fsi, struct device *dev)
++{
++	int rc;
++	u32 root_ctrl_8;
++	__be32 root_ctrl_8_be;
++
++	rc = fsi_slave_read(fsi->slave, FSI_MBOX_ROOT_CTRL_8, &root_ctrl_8_be,
++			    sizeof(root_ctrl_8_be));
++	if (rc)
++		return rc;
++
++	root_ctrl_8 = be32_to_cpu(root_ctrl_8_be);
++	dev_dbg(dev, "Root control register 8: %08x\n", root_ctrl_8);
++	if ((root_ctrl_8 & FSI_MBOX_ROOT_CTRL_8_SPI_MUX) ==
++	     FSI_MBOX_ROOT_CTRL_8_SPI_MUX)
++		return 0;
++
++	return -ENOLINK;
++}
++
+ static int fsi_spi_check_status(struct fsi_spi *ctx)
+ {
+ 	int rc;
+@@ -449,11 +470,15 @@ static int fsi_spi_transfer_init(struct fsi_spi *ctx)
+ static int fsi_spi_transfer_one_message(struct spi_controller *ctlr,
+ 					struct spi_message *mesg)
+ {
+-	int rc = 0;
++	int rc;
+ 	u8 seq_slave = SPI_FSI_SEQUENCE_SEL_SLAVE(mesg->spi->chip_select + 1);
+ 	struct spi_transfer *transfer;
+ 	struct fsi_spi *ctx = spi_controller_get_devdata(ctlr);
+ 
++	rc = fsi_spi_check_mux(ctx->fsi, ctx->dev);
++	if (rc)
++		return rc;
++
+ 	list_for_each_entry(transfer, &mesg->transfers, transfer_list) {
+ 		struct fsi_spi_sequence seq;
+ 		struct spi_transfer *next = NULL;
+@@ -537,24 +562,13 @@ static size_t fsi_spi_max_transfer_size(struct spi_device *spi)
+ static int fsi_spi_probe(struct device *dev)
+ {
+ 	int rc;
+-	u32 root_ctrl_8;
+ 	struct device_node *np;
+ 	int num_controllers_registered = 0;
+ 	struct fsi_device *fsi = to_fsi_dev(dev);
+ 
+-	/*
+-	 * Check the SPI mux before attempting to probe. If the mux isn't set
+-	 * then the SPI controllers can't access their slave devices.
+-	 */
+-	rc = fsi_slave_read(fsi->slave, FSI_MBOX_ROOT_CTRL_8, &root_ctrl_8,
+-			    sizeof(root_ctrl_8));
++	rc = fsi_spi_check_mux(fsi, dev);
+ 	if (rc)
+-		return rc;
+-
+-	if (!root_ctrl_8) {
+-		dev_dbg(dev, "SPI mux not set, aborting probe.\n");
+ 		return -ENODEV;
+-	}
+ 
+ 	for_each_available_child_of_node(dev->of_node, np) {
+ 		u32 base;
 -- 
 2.26.2
 
