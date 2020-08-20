@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EECC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E09C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6022F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E3720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919322;
-	bh=k3wht7a5DX1U9Aa/TvBmtEezKgpqipZxjo4IhICNmKg=;
+	s=default; t=1597919327;
+	bh=9KqV8jmINr61uIw3K2FOWhNzj6unPR/oVo85TfpqgeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwncEseXJH9QMRBWC9ZWXXMTgjlkiPaS9nBZBCrM+iw/DJlq5+3hLLHzXHkBdykf2
-	 hageBqisoSdgC96qA9bOCArCg4JVp1HyeDRz6ZqgqOkYW185RJje2ly8wIcRaB5JlB
-	 30iGfl7MFMzSjD6FWgQDOexnsPukKRNn9klm1yvA=
+	b=d5129zPYZspMVlD3BlwEABN7qk7XZ7K8f5wmAOAIWZJKhl//qQ2bPFmhqQAqNzuKX
+	 xqK+HqA0ACftgpaxuPHHReYS9NLnVdaYyAXNF5yhUHgqWM8hzPTtXapqqy03sGVThH
+	 LcWqKZ7UJdhxI13j27KPbGv3YpaNabpp7IETJ424=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbgHTK2k (ORCPT
+        id S1731549AbgHTKVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:21:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731566AbgHTKVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:42 -0400
+        id S1731537AbgHTKVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28C782072D;
-        Thu, 20 Aug 2020 10:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1A912072D;
+        Thu, 20 Aug 2020 10:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918901;
-        bh=k3wht7a5DX1U9Aa/TvBmtEezKgpqipZxjo4IhICNmKg=;
+        s=default; t=1597918884;
+        bh=9KqV8jmINr61uIw3K2FOWhNzj6unPR/oVo85TfpqgeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oJqb6LjjFuqRBsDKqooPOtwu/BrCJdp4Tky2hsCa6ApY0mAY7kEo3lM46N6EZ/MFl
-         J5Q0jxreLgzipiAV+RRmHFz1vxm/iNafMhnDaeuwzYEmGGOZPY0LMRDgAthKAf7gmo
-         yElOFi0KbqjI7ZcBrLyeeqOHxRWNTzYAk7sLkq3c=
+        b=sztVfzM/7oErr1Bx7W2NnwV/cQv6Vc+Yu7qEf+31gcZcRFOXz9E5qmEUMmTEs3lbQ
+         40Q+H75MdPykFT5I/95JQBqY1NwmZ8uGMG/fWlaG2LAH7U7WnCe/+yyXrIfItTg3GK
+         FGg0xgaUcpSQbmWj73+OledZ+5LmoyP7b0FMOu1w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 077/149] agp/intel: Fix a memory leak on module initialisation failure
-Date:   Thu, 20 Aug 2020 11:22:34 +0200
-Message-Id: <20200820092129.457360989@linuxfoundation.org>
+Subject: [PATCH 4.4 100/149] wl1251: fix always return 0 error
+Date:   Thu, 20 Aug 2020 11:22:57 +0200
+Message-Id: <20200820092130.556503886@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,41 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit b975abbd382fe442713a4c233549abb90e57c22b ]
+[ Upstream commit 20e6421344b5bc2f97b8e2db47b6994368417904 ]
 
-In intel_gtt_setup_scratch_page(), pointer "page" is not released if
-pci_dma_mapping_error() return an error, leading to a memory leak on
-module initialisation failure.  Simply fix this issue by freeing "page"
-before return.
+wl1251_event_ps_report() should not always return 0 because
+wl1251_ps_set_mode() may fail. Change it to return 'ret'.
 
-Fixes: 0e87d2b06cb46 ("intel-gtt: initialize our own scratch page")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200522083451.7448-1-chris@chris-wilson.co.uk
+Fixes: f7ad1eed4d4b ("wl1251: retry power save entry")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200730073939.33704-1-wanghai38@huawei.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/agp/intel-gtt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ti/wl1251/event.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/agp/intel-gtt.c b/drivers/char/agp/intel-gtt.c
-index 76afc841232cf..3d11f5adb355e 100644
---- a/drivers/char/agp/intel-gtt.c
-+++ b/drivers/char/agp/intel-gtt.c
-@@ -303,8 +303,10 @@ static int intel_gtt_setup_scratch_page(void)
- 	if (intel_private.needs_dmar) {
- 		dma_addr = pci_map_page(intel_private.pcidev, page, 0,
- 				    PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
--		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr))
-+		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr)) {
-+			__free_page(page);
- 			return -EINVAL;
-+		}
+diff --git a/drivers/net/wireless/ti/wl1251/event.c b/drivers/net/wireless/ti/wl1251/event.c
+index c98630394a1a2..26bf3e2b750d6 100644
+--- a/drivers/net/wireless/ti/wl1251/event.c
++++ b/drivers/net/wireless/ti/wl1251/event.c
+@@ -80,7 +80,7 @@ static int wl1251_event_ps_report(struct wl1251 *wl,
+ 		break;
+ 	}
  
- 		intel_private.scratch_page_dma = dma_addr;
- 	} else
+-	return 0;
++	return ret;
+ }
+ 
+ static void wl1251_event_mbox_dump(struct event_mailbox *mbox)
 -- 
 2.25.1
 
