@@ -2,163 +2,92 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C52BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F67C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9C120658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930110;
-	bh=TT6DbZYcI6OjD+XU96hy4Tpdh1TkN3Jidi8nyMpo5Gs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHWdKhptRR+S82Mb8wFgUCPHpA/CT/XUj1C0C+/+nH3fr5+cuQdsmnPZqSIFCQr6L
-	 XzW/q1Hpbh/u68bUFI3vIE2hSLJIWuAQD5O1sck6zWOeaVMs/GXDAMiS+xAQKwU70n
-	 u4Ov0c+YgsAKZO87UMiSZkFNqeMZlCPNepbIgBss=
+	by mail.kernel.org (Postfix) with ESMTP id 99CEC20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:28:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="VmD28wkx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbgHTNXK (ORCPT
+        id S1728634AbgHTN2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:23:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbgHTJeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51F7422B4B;
-        Thu, 20 Aug 2020 09:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916007;
-        bh=TT6DbZYcI6OjD+XU96hy4Tpdh1TkN3Jidi8nyMpo5Gs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r49PWMxUjThf82ljm29trZ85bSJH5p+HLNlm9mNo0YmS9GoGMvpGcmbtsAzkrbdEe
-         Sd32X3JvvjulzsFd4ViQaLWyUkC/jf1nU9O83+9Ou1OZHlFzDZ3lVmaYcHVAN0AX2k
-         zXQMQIYGjwFsxLWM/Kdt0i7VuLjmFvbS3V53/af8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dhananjay Phadke <dphadke@linux.microsoft.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 211/232] i2c: iproc: fix race between client unreg and isr
-Date:   Thu, 20 Aug 2020 11:21:02 +0200
-Message-Id: <20200820091623.025837505@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37506 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728017AbgHTN2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:28:38 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A48DC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:28:37 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b2so285491edw.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZODn1jt1970mGvr5GEh4sQD7IJ3k+7keNckpIk/8sqg=;
+        b=VmD28wkxeL/mh5qEeFgQyTUMfQlClarclSFuVsi13Av2ziWfY4IMgRC6FGsZBJWTPW
+         1rSJOq/XC8/v9YEd26xxkNKWlfRtXX2XoJ2EBi5bO/vmb36chULSxUmfQFBU06YQxqer
+         AecRmITso0SD+wBOWNxJ+svZhFc5YYHitbMyB5kwjK/NfvI7MlUS1WLcZDX1W7Ya6lqL
+         J/4tdW4pwP8IE0xdoFapEXITFgxuxbuAiqDOfUtOPBJyPbXoeR9QkA2+tXNBANtGHZtZ
+         D/VBzyPW1X85tJsv3sggZ/QJCxp/zbLH6yW5II9PfBF6DRokZVSYZjlEqP8aqbOpurwX
+         cnaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZODn1jt1970mGvr5GEh4sQD7IJ3k+7keNckpIk/8sqg=;
+        b=OFWW0Ef/vODEuFwXSPUBrLa85umVz/gyyyJYHATdosp5iYYDB8OJxYG8nnPaCS3wk2
+         uqQJ1yKWySbaco+unf+RALmGMss4bHvWeMRbPxd8gPPnIFPd+zteNy5YQ3KqoLyC+Dj0
+         /wl4v8ewaMamRvf2FUxVd1gb85VnclqBt7zo+ryfEwpL+aEQJQsRvYmAPhqQLLpIZYJH
+         Bs/skntSMAV1buSKTdLHwbLPKaEXopmlCmzdKNLKMHcR0HrJRS/xqYzm9l4sho0F5qDL
+         E9GXRKYt5mhGR8AyKB8D9U9TIP6uUQOOLCP8cKZNbn2h63wgK7YHDzbMNRFFltJDmFkV
+         /YGg==
+X-Gm-Message-State: AOAM533dm2dJlueWcPpyrXoYZCgnotaA7CYcdyETQY3Ua70MV2BBlsYf
+        OWmBpAl/XtDuk0qcTMJHdXQ3Y/Wmq5Qm6Thqfkda
+X-Google-Smtp-Source: ABdhPJwlHMJddusXXnIwAHaVZlzOyIKl2c/krfHw1m9+5Tsz8rZpcpExiUwUW7zf0IHK0+QUsvWwYFBX6/JROrFRzYk=
+X-Received: by 2002:aa7:c383:: with SMTP id k3mr2795671edq.164.1597930115893;
+ Thu, 20 Aug 2020 06:28:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <alpine.DEB.2.22.394.2008201218350.2524@hadrien>
+In-Reply-To: <alpine.DEB.2.22.394.2008201218350.2524@hadrien>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 20 Aug 2020 09:28:24 -0400
+Message-ID: <CAHC9VhSX83awKZPO7KZdguTOrpcXokmidqNGDLQWjXgiiuQ5fQ@mail.gmail.com>
+Subject: Re: [PATCH] selinux: fix memdup.cocci warnings
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        kbuild-all@lists.01.org, selinux@vger.kernel.org,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Tom Rix <trix@redhat.com>,
+        Ethan Edwards <ethancarteredwards@gmail.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dhananjay Phadke <dphadke@linux.microsoft.com>
+On Thu, Aug 20, 2020 at 6:20 AM Julia Lawall <julia.lawall@inria.fr> wrote:
+>
+> From: kernel test robot <lkp@intel.com>
+>
+> Use kmemdup rather than duplicating its implementation
+>
+> Generated by: scripts/coccinelle/api/memdup.cocci
+>
+> Fixes: c7c556f1e81b ("selinux: refactor changing booleans")
+> CC: Stephen Smalley <stephen.smalley.work@gmail.com>
+> Signed-off-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
 
-[ Upstream commit b1eef236f50ba6afea680da039ef3a2ca9c43d11 ]
-
-When i2c client unregisters, synchronize irq before setting
-iproc_i2c->slave to NULL.
-
-(1) disable_irq()
-(2) Mask event enable bits in control reg
-(3) Erase slave address (avoid further writes to rx fifo)
-(4) Flush tx and rx FIFOs
-(5) Clear pending event (interrupt) bits in status reg
-(6) enable_irq()
-(7) Set client pointer to NULL
-
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
-
-[  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
-[  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
-[  371.030309] sp : ffff800010003e40
-[  371.033727] x29: ffff800010003e40 x28: 0000000000000060
-[  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
-[  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
-[  371.050165] x23: 0000000000000003 x22: 0000000001600000
-[  371.055645] x21: ffff800010f18888 x20: 0000000001600000
-[  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
-[  371.066603] x17: 0000000000000000 x16: 0000000000000000
-[  371.072082] x15: 0000000000000000 x14: 0000000000000000
-[  371.077561] x13: 0000000000000000 x12: 0000000000000001
-[  371.083040] x11: 0000000000000000 x10: 0000000000000040
-[  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
-[  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
-[  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
-[  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
-[  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
-
-[  371.115916] Call trace:
-[  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
-[  371.122754]  __handle_irq_event_percpu+0x6c/0x170
-[  371.127606]  handle_irq_event_percpu+0x34/0x88
-[  371.132189]  handle_irq_event+0x40/0x120
-[  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
-[  371.140459]  generic_handle_irq+0x24/0x38
-[  371.144594]  __handle_domain_irq+0x60/0xb8
-[  371.148820]  gic_handle_irq+0xc0/0x158
-[  371.152687]  el1_irq+0xb8/0x140
-[  371.155927]  arch_cpu_idle+0x10/0x18
-[  371.159615]  do_idle+0x204/0x290
-[  371.162943]  cpu_startup_entry+0x24/0x60
-[  371.166990]  rest_init+0xb0/0xbc
-[  371.170322]  arch_call_rest_init+0xc/0x14
-[  371.174458]  start_kernel+0x404/0x430
-
-Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
-
-Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Ray Jui <ray.jui@broadcom.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
-index 8a3c98866fb7e..688e928188214 100644
---- a/drivers/i2c/busses/i2c-bcm-iproc.c
-+++ b/drivers/i2c/busses/i2c-bcm-iproc.c
-@@ -1078,7 +1078,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
- 	if (!iproc_i2c->slave)
- 		return -EINVAL;
- 
--	iproc_i2c->slave = NULL;
-+	disable_irq(iproc_i2c->irq);
- 
- 	/* disable all slave interrupts */
- 	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
-@@ -1091,6 +1091,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
- 	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
- 	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
- 
-+	/* flush TX/RX FIFOs */
-+	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
-+	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
-+
-+	/* clear all pending slave interrupts */
-+	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
-+
-+	iproc_i2c->slave = NULL;
-+
-+	enable_irq(iproc_i2c->irq);
-+
- 	return 0;
- }
- 
--- 
-2.25.1
-
-
-
+Merged into selinux/next, thanks!
