@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E18C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7D522BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09A7D22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929194;
-	bh=ZF7fIbxPHaUXniRTO6yvOsfLh+iz09ZMAnI6TM/7UzQ=;
+	s=default; t=1597929216;
+	bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NXDBSEnbdw0u3+ZeS2ywK4dcRaJIxLuWL/c5fvCOx+MNIBD6+E+f+mnzvuSkydxMN
-	 ihadNrCwq2GkoJBQ08e5eH3rcVcD0vbH2Q8UEGvD9IiHTOCemBIIt/yThAQuBsuSpw
-	 NAvG9BIvzPolLZuiMwIHvZmK3kgNwoyd7Uo3wWdc=
+	b=T5v8LUPMjcPJ883S7GKPAZ0ISNTYIHGk5rlMdUTvqjjzRefdc/3+Fuxm0k+VdIB01
+	 dW7s8oZQosY8InUUc5bXn9nEbYu+nY6HGA087nRVphdTKLyEXDJF+VsqWuDFA576fX
+	 tKjp1tjWAB7rOf0c79KyAjUWVwGDUl0wI1X9OU8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbgHTJgq (ORCPT
+        id S1728935AbgHTNNd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:13:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726132AbgHTJgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:36:43 -0400
+        id S1728629AbgHTJgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C1922075E;
-        Thu, 20 Aug 2020 09:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6097220724;
+        Thu, 20 Aug 2020 09:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916201;
-        bh=ZF7fIbxPHaUXniRTO6yvOsfLh+iz09ZMAnI6TM/7UzQ=;
+        s=default; t=1597916204;
+        bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=df3XqUVL+SLcSkkef4qPGqU8IB0VEc1dba2ZFRA0K/KqbTPvjUCoLvO2z6rUGk8Bz
-         j61poUJ8bVIGnTS56usNCosYhj3xQYKddxlco/N2FoTBtcIIe5ba0VVbkH8WBXDwuq
-         TW6m+8LScv/XJpyGsHgy41WIz0plwDu7kCaz7T0E=
+        b=L/TOUPJZE79k23R9MZrlfHFTXHnnb46BnbRFY2vHhTTGTFRFIr5MdStQQ11/46tzD
+         eO/XX1O+CNBe++ttcARDbJhFrxvhfGGPK4c0Z6+rqUc/jnXHfcxxYXFKDhMF0DykFG
+         uQKLQdPUcntn/pHxFMT3gURXxadGs0EGWqNRRJW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lane <tgl@sss.pgh.pa.us>,
-        Daniel Axtens <dja@axtens.net>,
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 045/204] powerpc: Allow 4224 bytes of stack expansion for the signal frame
-Date:   Thu, 20 Aug 2020 11:19:02 +0200
-Message-Id: <20200820091608.524504213@linuxfoundation.org>
+Subject: [PATCH 5.7 046/204] powerpc: Fix circular dependency between percpu.h and mmu.h
+Date:   Thu, 20 Aug 2020 11:19:03 +0200
+Message-Id: <20200820091608.574964047@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,182 +61,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 63dee5df43a31f3844efabc58972f0a206ca4534 upstream.
+commit 0c83b277ada72b585e6a3e52b067669df15bcedb upstream.
 
-We have powerpc specific logic in our page fault handling to decide if
-an access to an unmapped address below the stack pointer should expand
-the stack VMA.
+Recently random.h started including percpu.h (see commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity")), which broke corenet64_smp_defconfig:
 
-The code was originally added in 2004 "ported from 2.4". The rough
-logic is that the stack is allowed to grow to 1MB with no extra
-checking. Over 1MB the access must be within 2048 bytes of the stack
-pointer, or be from a user instruction that updates the stack pointer.
+  In file included from /linux/arch/powerpc/include/asm/paca.h:18,
+                   from /linux/arch/powerpc/include/asm/percpu.h:13,
+                   from /linux/include/linux/random.h:14,
+                   from /linux/lib/uuid.c:14:
+  /linux/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
+    139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
 
-The 2048 byte allowance below the stack pointer is there to cover the
-288 byte "red zone" as well as the "about 1.5kB" needed by the signal
-delivery code.
+This is due to a circular header dependency:
+  asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
+  includes asm/mmu.h
 
-Unfortunately since then the signal frame has expanded, and is now
-4224 bytes on 64-bit kernels with transactional memory enabled. This
-means if a process has consumed more than 1MB of stack, and its stack
-pointer lies less than 4224 bytes from the next page boundary, signal
-delivery will fault when trying to expand the stack and the process
-will see a SEGV.
+Which means DECLARE_PER_CPU() isn't defined when mmu.h needs it.
 
-The total size of the signal frame is the size of struct rt_sigframe
-(which includes the red zone) plus __SIGNAL_FRAMESIZE (128 bytes on
-64-bit).
+We can fix it by moving the include of paca.h below the include of
+asm-generic/percpu.h.
 
-The 2048 byte allowance was correct until 2008 as the signal frame
-was:
+This moves the include of paca.h out of the #ifdef __powerpc64__, but
+that is OK because paca.h is almost entirely inside #ifdef
+CONFIG_PPC64 anyway.
 
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1440 */
-        /* --- cacheline 11 boundary (1408 bytes) was 32 bytes ago --- */
-        long unsigned int          _unused[2];           /*  1440    16 */
-        unsigned int               tramp[6];             /*  1456    24 */
-        struct siginfo *           pinfo;                /*  1480     8 */
-        void *                     puc;                  /*  1488     8 */
-        struct siginfo     info;                         /*  1496   128 */
-        /* --- cacheline 12 boundary (1536 bytes) was 88 bytes ago --- */
-        char                       abigap[288];          /*  1624   288 */
+It also moves the include of paca.h out of the #ifdef CONFIG_SMP,
+which could possibly break something, but seems to have no ill
+effects.
 
-        /* size: 1920, cachelines: 15, members: 7 */
-        /* padding: 8 */
-};
-
-1920 + 128 = 2048
-
-Then in commit ce48b2100785 ("powerpc: Add VSX context save/restore,
-ptrace and signal support") (Jul 2008) the signal frame expanded to
-2304 bytes:
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */	<--
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        long unsigned int          _unused[2];           /*  1696    16 */
-        unsigned int               tramp[6];             /*  1712    24 */
-        struct siginfo *           pinfo;                /*  1736     8 */
-        void *                     puc;                  /*  1744     8 */
-        struct siginfo     info;                         /*  1752   128 */
-        /* --- cacheline 14 boundary (1792 bytes) was 88 bytes ago --- */
-        char                       abigap[288];          /*  1880   288 */
-
-        /* size: 2176, cachelines: 17, members: 7 */
-        /* padding: 8 */
-};
-
-2176 + 128 = 2304
-
-At this point we should have been exposed to the bug, though as far as
-I know it was never reported. I no longer have a system old enough to
-easily test on.
-
-Then in 2010 commit 320b2b8de126 ("mm: keep a guard page below a
-grow-down stack segment") caused our stack expansion code to never
-trigger, as there was always a VMA found for a write up to PAGE_SIZE
-below r1.
-
-That meant the bug was hidden as we continued to expand the signal
-frame in commit 2b0a576d15e0 ("powerpc: Add new transactional memory
-state to the signal context") (Feb 2013):
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        struct ucontext    uc_transact;                  /*  1696  1696 */	<--
-        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
-        long unsigned int          _unused[2];           /*  3392    16 */
-        unsigned int               tramp[6];             /*  3408    24 */
-        struct siginfo *           pinfo;                /*  3432     8 */
-        void *                     puc;                  /*  3440     8 */
-        struct siginfo     info;                         /*  3448   128 */
-        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
-        char                       abigap[288];          /*  3576   288 */
-
-        /* size: 3872, cachelines: 31, members: 8 */
-        /* padding: 8 */
-        /* last cacheline: 32 bytes */
-};
-
-3872 + 128 = 4000
-
-And commit 573ebfa6601f ("powerpc: Increase stack redzone for 64-bit
-userspace to 512 bytes") (Feb 2014):
-
-struct rt_sigframe {
-        struct ucontext    uc;                           /*     0  1696 */
-        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
-        struct ucontext    uc_transact;                  /*  1696  1696 */
-        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
-        long unsigned int          _unused[2];           /*  3392    16 */
-        unsigned int               tramp[6];             /*  3408    24 */
-        struct siginfo *           pinfo;                /*  3432     8 */
-        void *                     puc;                  /*  3440     8 */
-        struct siginfo     info;                         /*  3448   128 */
-        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
-        char                       abigap[512];          /*  3576   512 */	<--
-
-        /* size: 4096, cachelines: 32, members: 8 */
-        /* padding: 8 */
-};
-
-4096 + 128 = 4224
-
-Then finally in 2017, commit 1be7107fbe18 ("mm: larger stack guard
-gap, between vmas") exposed us to the existing bug, because it changed
-the stack VMA to be the correct/real size, meaning our stack expansion
-code is now triggered.
-
-Fix it by increasing the allowance to 4224 bytes.
-
-Hard-coding 4224 is obviously unsafe against future expansions of the
-signal frame in the same way as the existing code. We can't easily use
-sizeof() because the signal frame structure is not in a header. We
-will either fix that, or rip out all the custom stack expansion
-checking logic entirely.
-
-Fixes: ce48b2100785 ("powerpc: Add VSX context save/restore, ptrace and signal support")
-Cc: stable@vger.kernel.org # v2.6.27+
-Reported-by: Tom Lane <tgl@sss.pgh.pa.us>
-Tested-by: Daniel Axtens <dja@axtens.net>
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Cc: stable@vger.kernel.org # v5.8
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200724092528.1578671-2-mpe@ellerman.id.au
+Link: https://lore.kernel.org/r/20200804130558.292328-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/fault.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/percpu.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -241,6 +241,9 @@ static bool bad_kernel_fault(struct pt_r
- 	return false;
- }
+--- a/arch/powerpc/include/asm/percpu.h
++++ b/arch/powerpc/include/asm/percpu.h
+@@ -10,8 +10,6 @@
  
-+// This comes from 64-bit struct rt_sigframe + __SIGNAL_FRAMESIZE
-+#define SIGFRAME_MAX_SIZE	(4096 + 128)
+ #ifdef CONFIG_SMP
+ 
+-#include <asm/paca.h>
+-
+ #define __my_cpu_offset local_paca->data_offset
+ 
+ #endif /* CONFIG_SMP */
+@@ -19,4 +17,6 @@
+ 
+ #include <asm-generic/percpu.h>
+ 
++#include <asm/paca.h>
 +
- static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
- 				struct vm_area_struct *vma, unsigned int flags,
- 				bool *must_retry)
-@@ -248,7 +251,7 @@ static bool bad_stack_expansion(struct p
- 	/*
- 	 * N.B. The POWER/Open ABI allows programs to access up to
- 	 * 288 bytes below the stack pointer.
--	 * The kernel signal delivery code writes up to about 1.5kB
-+	 * The kernel signal delivery code writes a bit over 4KB
- 	 * below the stack pointer (r1) before decrementing it.
- 	 * The exec code can write slightly over 640kB to the stack
- 	 * before setting the user r1.  Thus we allow the stack to
-@@ -273,7 +276,7 @@ static bool bad_stack_expansion(struct p
- 		 * between the last mapped region and the stack will
- 		 * expand the stack rather than segfaulting.
- 		 */
--		if (address + 2048 >= uregs->gpr[1])
-+		if (address + SIGFRAME_MAX_SIZE >= uregs->gpr[1])
- 			return false;
- 
- 		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
+ #endif /* _ASM_POWERPC_PERCPU_H_ */
 
 
