@@ -2,54 +2,57 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64B37207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEBC207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924205;
-	bh=Ifi+U0M3vtDLC2ec3MipYlePFRuzZz26LhGzHccg604=;
+	s=default; t=1597924218;
+	bh=0rtzdLSxiMmDnqYJoiUoOiCfmLifAV7D4NzdX9nGwlY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p4CuDryBjdQVqVzDR2GZzT32GvmffgPcbBATFkRDMo4IPxbRbJS/ZRujlCmjhz4eh
-	 Q7/ZbjjBFBNU93D1MRHHIYqZOyn5/1WRj1FQynpm95DPlcBo3urxJt7p1UEdHdNK+A
-	 /k18tuMZDZ3R/8w9+oCXA+H6J466WESq3zFyTVyw=
+	b=yhEqffFwapDBykb9STjHcjcp08C8TrrW3Ub9fbNJKHp9E7nfuWCY70td3VrpMOL62
+	 /EjLPDPZ97jXywN4vvjK/u9x2XIWQmaQuNaq4wF7MVTxNvQDCbTyU7y2seBRcEAIzA
+	 QHlH96/SoJLIPlGTfjR/YjdduWa+bD0WpMIVszCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgHTLuB (ORCPT
+        id S1731007AbgHTLuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:50:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:50:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730347AbgHTKD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730444AbgHTKD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 06:03:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF2722B40;
-        Thu, 20 Aug 2020 10:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD2B82173E;
+        Thu, 20 Aug 2020 10:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917808;
-        bh=Ifi+U0M3vtDLC2ec3MipYlePFRuzZz26LhGzHccg604=;
+        s=default; t=1597917799;
+        bh=0rtzdLSxiMmDnqYJoiUoOiCfmLifAV7D4NzdX9nGwlY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02Ec2fjT6QMva6RPwm0fqXGdZ9KjT1F3PH+72JHEmlY8aVmJn+ELkpywIjGDAKcDu
-         Eo/xjgOwFN6FgTa6wbTaf5SZFBqcwOgskiz8ZTZE7zaRCMx1OV99nI8qitJLMmfZsY
-         LHRb7sPHCBgnnRNKSkhM4+ChZGO+sR7zaJJTgTGs=
+        b=y/YzQ7N0by/aDhoe3zYaSXWwfLbJSODTvFJ3xzi/+fDFwa4zBdy8jTTU9uhI+8QWw
+         2+6R8WwhTCtf8MDG9RH8VmvYvNjc3c41FHRbBIf6dxY2adRQuxu6KSGA2C2pOmKqxi
+         K8/SXf/Taxq24ZDAUkWFCRE8kqLzmNzRBL8/CU4E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 135/212] Smack: fix another vsscanf out of bounds
-Date:   Thu, 20 Aug 2020 11:21:48 +0200
-Message-Id: <20200820091609.171859608@linuxfoundation.org>
+        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
+        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 161/212] fs/minix: dont allow getting deleted inodes
+Date:   Thu, 20 Aug 2020 11:22:14 +0200
+Message-Id: <20200820091610.532819675@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,39 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
+commit facb03dddec04e4aac1bb2139accdceb04deb1f3 upstream.
 
-This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
-vsscanf") where we added a bounds check on "rule".
+If an inode has no links, we need to mark it bad rather than allowing it
+to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink() when
+doing directory operations on a fuzzed filesystem.
 
-Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
-Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-3-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- security/smack/smackfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/minix/inode.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
-index 2bfec47b8d5c5..2eba7c1e66630 100644
---- a/security/smack/smackfs.c
-+++ b/security/smack/smackfs.c
-@@ -928,6 +928,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
- 
- 	for (i = 0; i < catlen; i++) {
- 		rule += SMK_DIGITLEN;
-+		if (rule > data + count) {
-+			rc = -EOVERFLOW;
-+			goto out;
-+		}
- 		ret = sscanf(rule, "%u", &cat);
- 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
- 			goto out;
--- 
-2.25.1
-
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -472,6 +472,13 @@ static struct inode *V1_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -505,6 +512,13 @@ static struct inode *V2_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
 
 
