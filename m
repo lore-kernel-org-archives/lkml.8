@@ -2,226 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 985EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A434EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75F642076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882548;
-	bh=sk+S3Fr21tKJgcwY1YXzpsiM/9GAWEGKg/lYjMSui+4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YYsxjC4+v1mHxiDlIUvds50r42kPNIWhy6ziNOdBOKtcEGFZdXhR7RwXgxdJHxfKz
-	 7H2TI1/eoCvNxix1euS7cs9KeitegtlkImZ+cuHQUJ+yYu3o0oZTub6CXkkRAeqlxK
-	 723uq1iWN53U2w0ODNMEYBwPUWnygII6YOGUs7+w=
+	by mail.kernel.org (Postfix) with ESMTP id 7FA2F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:17:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3LLQUZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgHTAPr (ORCPT
+        id S1726466AbgHTARD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgHTAPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:15:46 -0400
-Received: from localhost (c-67-180-165-146.hsd1.ca.comcast.net [67.180.165.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76FA8207DA;
-        Thu, 20 Aug 2020 00:15:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597882545;
-        bh=sk+S3Fr21tKJgcwY1YXzpsiM/9GAWEGKg/lYjMSui+4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1l7z5wvibXgXvTSEJvgDjsKkdtIW7G0UBv7pTYBqzxxj0CAReCzMLu3M/pIJ1cFlQ
-         c8iZM5tGhGTSPgSKrQUN4czMkXQkCCGhh0tJZxhic+A3M8iSLQN1U/sqCnsE1u19Mp
-         Ha4qbTBTnGr7DI4byNKS8SSMTZEOk4rxczFlCBgo=
-From:   Andy Lutomirski <luto@kernel.org>
-To:     x86@kernel.org
-Cc:     Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Will Deacon <will@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, stable@vger.kernel.org
-Subject: [PATCH] x86/debug: Allow a single level of #DB recursion
-Date:   Wed, 19 Aug 2020 17:15:43 -0700
-Message-Id: <8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org>
-X-Mailer: git-send-email 2.25.4
+        Wed, 19 Aug 2020 20:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56756 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbgHTARC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:17:02 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278C0C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:17:02 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id m22so512421eje.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:17:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dD6I2sfjrM7WmVDgF13oHi2u8mSy5yR9cY0JUVIH+rg=;
+        b=i3LLQUZx4nyJ5d3l3nMcnG3nuuf4pMY9IuD04004diC+RW1FBhhynk1uN1fkT+YHlj
+         O6P89P2/0ljvDOBC4J31KdqlQsnHRXQnE3uid+q4MwfgQcj/wP/GqimWxkiJTwp1Yqzf
+         DZ0pReM1kOawPpkXd0EvzBYaXrm29/9NESxqmy8LfWWl0pHJlQaskSNKhEIyBEkQTb9s
+         QCaYqGwnG0A1sASXMGdjgMBMvK2BtabJJA0fd1TcWDz1jC/3BiNg49IBam5xM70JJyBu
+         fEGNrRQ13xxWO/DhqsbW+mXazfEuJs+GEP+UC3kUyhQdRV8mzqHCYuHGFPNSmdrIGvFz
+         ++Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dD6I2sfjrM7WmVDgF13oHi2u8mSy5yR9cY0JUVIH+rg=;
+        b=CQaTlPvV7vMJewvYVPxRDISrB4pHn/ZIedQnazl3ZRgUxw3OjPHrSx5rUgKDdrtqcQ
+         1nyfKXE86pTRsMS8gt8hF+NnL5uBTxlr2YtJj6PAYp322JNJ1P+i2myL6Cqbu0LIVxPF
+         6gM3MZDne3B3NJDohN5JF62kRycBrqFlUDW15xjLStQyzaJIQ1Lhx7tG1FXzXnbYUmxC
+         0q6URRcyYEwvpzi1KEfNBAsRAVCDrdg7bMqnDkzgAM5LFrdTY/34+ROsv97eOrrhttlQ
+         qBJo8S91laQ9yesTqJy+vNEnd+Dcck+HnkkMXtIpFctfySbAAcejDCONL4hCFEuogSi8
+         9bmQ==
+X-Gm-Message-State: AOAM530kHPF2u8CM8xj33bI3Xy1PXXyCLIzY0+m8okm+/M1zbKeDR+Vz
+        uqAnON8HC+fpd1Uu3wLuF1k9bjhIsTrgD13c/4g=
+X-Google-Smtp-Source: ABdhPJyjCrNJBANQhRcSAYN+Gm3Pz8l0tivSgen+dDxeCEI/OYPauzv88z3LE98Jev+9tp0teLzTi4suRmxRX+BZJU8=
+X-Received: by 2002:a17:906:3993:: with SMTP id h19mr820232eje.111.1597882620894;
+ Wed, 19 Aug 2020 17:17:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200818184704.3625199-1-yuzhao@google.com> <20200818184704.3625199-3-yuzhao@google.com>
+ <CAHbLzkr7oPFtUog1zJWs54dsS8dhwkWp6ET_Zk71nXmRMtGvDQ@mail.gmail.com> <20200819233916.GA2021304@google.com>
+In-Reply-To: <20200819233916.GA2021304@google.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Wed, 19 Aug 2020 17:16:49 -0700
+Message-ID: <CAHbLzkp4eOf=jywp+wuqqJoJwqMt7338cfxUsfz1KSt=zEZUiw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] mm: remove superfluous __ClearPageWaiters()
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Huang Ying <ying.huang@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, Qian Cai <cai@lca.pw>,
+        Mel Gorman <mgorman@suse.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Hugh Dickins <hughd@google.com>, Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trying to clear DR7 around a #DB from usermode malfunctions if we
-schedule when delivering SIGTRAP.  Rather than trying to define a
-special no-recursion region, just allow a single level of recursion.
-We do the same thing for NMI, and it hasn't caused any problems yet.
+On Wed, Aug 19, 2020 at 4:39 PM Yu Zhao <yuzhao@google.com> wrote:
+>
+> On Wed, Aug 19, 2020 at 04:06:32PM -0700, Yang Shi wrote:
+> > On Tue, Aug 18, 2020 at 11:47 AM Yu Zhao <yuzhao@google.com> wrote:
+> > >
+> > > Presumably __ClearPageWaiters() was added to follow the previously
+> > > removed __ClearPageActive() pattern.
+> > >
+> > > Only flags that are in PAGE_FLAGS_CHECK_AT_FREE needs to be properly
+> > > cleared because otherwise we think there may be some kind of leak.
+> > > PG_waiters is not one of those flags and leaving the clearing to
+> > > PAGE_FLAGS_CHECK_AT_PREP is more appropriate.
+> >
+> > Actually TBH I'm not very keen to this change, it seems the clearing
+> > is just moved around and the allocation side pays for that instead of
+> > free side.
+>
+> I'll assume you are referring to the overhead from clearing
+> PG_waiters. First of all, there is no overhead -- we should have a
+> serious talk with the hardware team who makes word-size bitwise AND
+> more than one instruction. And the clearing is done in
+> free_pages_prepare(), which has nothing to do with allocations.
 
-Reported-by: Kyle Huey <me@kylehuey.com>
-Debugged-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Fixes: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
----
- arch/x86/kernel/traps.c | 69 +++++++++++++++++++++++------------------
- 1 file changed, 38 insertions(+), 31 deletions(-)
-
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 1f66d2d1e998..bf852b72f15c 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -729,20 +729,9 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
- #endif
- }
- 
--static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
-+static __always_inline unsigned long debug_read_clear_dr6(void)
- {
--	/*
--	 * Disable breakpoints during exception handling; recursive exceptions
--	 * are exceedingly 'fun'.
--	 *
--	 * Since this function is NOKPROBE, and that also applies to
--	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
--	 * HW_BREAKPOINT_W on our stack)
--	 *
--	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
--	 * includes the entry stack is excluded for everything.
--	 */
--	*dr7 = local_db_save();
-+	unsigned long dr6;
- 
- 	/*
- 	 * The Intel SDM says:
-@@ -755,15 +744,21 @@ static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
- 	 *
- 	 * Keep it simple: clear DR6 immediately.
- 	 */
--	get_debugreg(*dr6, 6);
-+	get_debugreg(dr6, 6);
- 	set_debugreg(0, 6);
- 	/* Filter out all the reserved bits which are preset to 1 */
--	*dr6 &= ~DR6_RESERVED;
-+	dr6 &= ~DR6_RESERVED;
-+
-+	return dr6;
-+}
-+
-+static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
-+{
-+	*dr6 = debug_read_clear_dr6();
- }
- 
- static __always_inline void debug_exit(unsigned long dr7)
- {
--	local_db_restore(dr7);
- }
- 
- /*
-@@ -863,6 +858,19 @@ static void handle_debug(struct pt_regs *regs, unsigned long dr6, bool user)
- static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 					     unsigned long dr6)
- {
-+	/*
-+	 * Disable breakpoints during exception handling; recursive exceptions
-+	 * are exceedingly 'fun'.
-+	 *
-+	 * Since this function is NOKPROBE, and that also applies to
-+	 * HW_BREAKPOINT_X, we can't hit a breakpoint before this (XXX except a
-+	 * HW_BREAKPOINT_W on our stack)
-+	 *
-+	 * Entry text is excluded for HW_BP_X and cpu_entry_area, which
-+	 * includes the entry stack is excluded for everything.
-+	 */
-+	unsigned long dr7 = local_db_save();
-+
- 	bool irq_state = idtentry_enter_nmi(regs);
- 	instrumentation_begin();
- 
-@@ -883,6 +891,8 @@ static __always_inline void exc_debug_kernel(struct pt_regs *regs,
- 
- 	instrumentation_end();
- 	idtentry_exit_nmi(regs, irq_state);
-+
-+	local_db_restore(dr7);
- }
- 
- static __always_inline void exc_debug_user(struct pt_regs *regs,
-@@ -894,6 +904,15 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
- 	 */
- 	WARN_ON_ONCE(!user_mode(regs));
- 
-+	/*
-+	 * NB: We can't easily clear DR7 here because
-+	 * idtentry_exit_to_usermode() can invoke ptrace, schedule, access
-+	 * user memory, etc.  This means that a recursive #DB is possible.  If
-+	 * this happens, that #DB will hit exc_debug_kernel() and clear DR7.
-+	 * Since we're not on the IST stack right now, everything will be
-+	 * fine.
-+	 */
-+
- 	irqentry_enter_from_user_mode(regs);
- 	instrumentation_begin();
- 
-@@ -907,36 +926,24 @@ static __always_inline void exc_debug_user(struct pt_regs *regs,
- /* IST stack entry */
- DEFINE_IDTENTRY_DEBUG(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
--	exc_debug_kernel(regs, dr6);
--	debug_exit(dr7);
-+	exc_debug_kernel(regs, debug_read_clear_dr6());
- }
- 
- /* User entry, runs on regular task stack */
- DEFINE_IDTENTRY_DEBUG_USER(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
--	exc_debug_user(regs, dr6);
--	debug_exit(dr7);
-+	exc_debug_user(regs, debug_read_clear_dr6());
- }
- #else
- /* 32 bit does not have separate entry points. */
- DEFINE_IDTENTRY_RAW(exc_debug)
- {
--	unsigned long dr6, dr7;
--
--	debug_enter(&dr6, &dr7);
-+	unsigned long dr6 = debug_read_clear_dr6();
- 
- 	if (user_mode(regs))
- 		exc_debug_user(regs, dr6);
- 	else
- 		exc_debug_kernel(regs, dr6);
--
--	debug_exit(dr7);
- }
- #endif
- 
--- 
-2.25.4
-
+Oh, yes, you are right. Now I'm wondering why we have the waiter bit
+cleared at the first place.
