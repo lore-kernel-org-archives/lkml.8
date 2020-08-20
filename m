@@ -2,91 +2,132 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A758EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E088DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B249207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nk9w2AeA"
+	by mail.kernel.org (Postfix) with ESMTP id BE2A72054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597923668;
+	bh=/lDKPZagpOUc0tbDsE8Uyn8FowZEMAao8fwPWcXJ21I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OR2vqJnMNY4ihd14RFqBJd3Shq0Ar9Yy5fszeieV4dkKFxgesqopklu34hZSJsagy
+	 DOWq0H0s0GG4s0zpwQ9QmeuW4ySoJ7v4MWRIWx1kh9qsXLySiKyEy9qi3Q86WCMb8B
+	 uewNLunPSYi6ulQqjJWVpxi2IZxVaF70iE7wIrN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbgHTLlB (ORCPT
+        id S1730653AbgHTLlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:41:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48936 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730588AbgHTLk4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:40:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879BEC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 04:40:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SMfh1yOZqJYcuIo5QqgcDZ8p/aIMYyftWY3o8WxJnu8=; b=nk9w2AeAg9hLKCsi++5FQvlS2S
-        dmRHbDnodhrea9B39OGzzvGElK9iCaSczuybI+aubEWuhO3UC8Y51Z0cTasWqjfnSE85As9QmXLql
-        HV2t6oyUnufzWBbxwFKPz+XRCeud7faNkJK7n8Pvo6BDSBdOvGSVr1DnXaNXqpMGlRvhzQibCLeOE
-        1T1KN5JdRbM3O5laNebu5wfIj4Ivtj0TWv48xre7Ukivtp8rOFgcetC7TeCHHVoFHCynkPt4NisDv
-        MfP4LrPmHhAGVL8y5aQwbtD0wXlH8nf6Mgf0JU7EsE0m6EAA73f2btWdVVif/hGXaSfCtY7RPQhC1
-        X/sdCk9w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8ivu-0002mo-Ii; Thu, 20 Aug 2020 11:40:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 20 Aug 2020 07:41:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726934AbgHTKE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DB105306099;
-        Thu, 20 Aug 2020 13:40:36 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C914E200F9DF2; Thu, 20 Aug 2020 13:40:36 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 13:40:36 +0200
-From:   peterz@infradead.org
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>, tglx@linutronix.de,
-        kent.overstreet@gmail.com
-Subject: Re: [PATCH] lockdep: Do no validate wait context for novalidate class
-Message-ID: <20200820114036.GQ2674@hirez.programming.kicks-ass.net>
-References: <20200629201529.1017485-1-bigeasy@linutronix.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A91DD20724;
+        Thu, 20 Aug 2020 10:04:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917896;
+        bh=/lDKPZagpOUc0tbDsE8Uyn8FowZEMAao8fwPWcXJ21I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jsGW6XxRMBs2AUlXEGZ9pbK0b6iNBAMIvhjrICuPvD19WJz0LrxFwdrwE6ec2RqqF
+         LUYyCgae5GcdRe+yGcwS5k6TnEOGUE7xL7ZvPI/eU7D6L3lJJYRLk3D24+TMznTz1c
+         psXFEPQRxRTEYs46StEaiKWFhHxN1YB6CVL0SH3o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 194/212] USB: serial: ftdi_sio: clean up receive processing
+Date:   Thu, 20 Aug 2020 11:22:47 +0200
+Message-Id: <20200820091612.159360146@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629201529.1017485-1-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:15:29PM +0200, Sebastian Andrzej Siewior wrote:
-> The novalidate class is ignored in the lockchain validation but is
-> considered in the wait context validation.
-> If a mutex and a spinlock_t is ignored by using
-> lockdep_set_novalidate_class() then both locks will share the same lock
-> class. From the wait validation point of view the mutex will then appear
-> like a spinlock_t and the validator will complain if another mutex will
-> be acquired.
-> 
-> Ignore the nonvalidate locks from wait context checking.
+From: Johan Hovold <johan@kernel.org>
 
-Hurmph.. but how? There was only a single user... /me greps.
+[ Upstream commit ce054039ba5e47b75a3be02a00274e52b06a6456 ]
 
-drivers/base/core.c:    lockdep_set_novalidate_class(&dev->mutex);
-drivers/md/bcache/btree.c:      lockdep_set_novalidate_class(&b->lock);
-drivers/md/bcache/btree.c:      lockdep_set_novalidate_class(&b->write_lock);
+Clean up receive processing by dropping the character pointer and
+keeping the length argument unchanged throughout the function.
 
-Urgh.. there's more now :-(
+Also make it more apparent that sysrq processing can consume a
+characters by adding an explicit continue.
 
-So write_lock, like dev->mutex is a mutex.
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/serial/ftdi_sio.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-Kent, what's the story with b->lock? It appears to have lockdep
-annotations, but then is also the novalidate class. Also neither of
-these lockdep_set_novalidate_class() thingies have a comment.
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 2583d21382b06..0c8b24ff44a05 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2054,7 +2054,6 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		struct ftdi_private *priv, unsigned char *buf, int len)
+ {
+ 	unsigned char status;
+-	unsigned char *ch;
+ 	int i;
+ 	char flag;
+ 
+@@ -2097,8 +2096,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	else
+ 		priv->transmit_empty = 0;
+ 
+-	len -= 2;
+-	if (!len)
++	if (len == 2)
+ 		return 0;	/* status only */
+ 
+ 	/*
+@@ -2127,19 +2125,20 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		}
+ 	}
+ 
+-	port->icount.rx += len;
+-	ch = buf + 2;
++	port->icount.rx += len - 2;
+ 
+ 	if (port->port.console && port->sysrq) {
+-		for (i = 0; i < len; i++, ch++) {
+-			if (!usb_serial_handle_sysrq_char(port, *ch))
+-				tty_insert_flip_char(&port->port, *ch, flag);
++		for (i = 2; i < len; i++) {
++			if (usb_serial_handle_sysrq_char(port, buf[i]))
++				continue;
++			tty_insert_flip_char(&port->port, buf[i], flag);
+ 		}
+ 	} else {
+-		tty_insert_flip_string_fixed_flag(&port->port, ch, flag, len);
++		tty_insert_flip_string_fixed_flag(&port->port, buf + 2, flag,
++				len - 2);
+ 	}
+ 
+-	return len;
++	return len - 2;
+ }
+ 
+ static void ftdi_process_read_urb(struct urb *urb)
+-- 
+2.25.1
 
-Anyway, all 3 users should have the same wait context, so where is the
-actual problem?
+
+
