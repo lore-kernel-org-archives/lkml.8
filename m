@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2028C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8442CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B9922B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DF2822B3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930417;
-	bh=fjrrMDfBO1Mz4mhFZZuxpgLz4SiHw1f/z7NFYaXekAA=;
+	s=default; t=1597930434;
+	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAitIfmbXuC8mWGRdFtWKHxivuMlGkWq7sF8ZQvlls/LVeeN4svHrodcftNhgu2Kp
-	 FSGWpbL1+2HeUsNANJ0evLnnfDA4IhXpC0/3FSKxxhU+oQf50qKrRz7++kVs5EgxHG
-	 k94loLzblykfl+3AFdXJY+iLUmzKnjHty/FCZAKI=
+	b=iPlYqJdT8/QLPp6ahN8d75VoSL5kmqknKv2jYJeA34HuUuI/hk2xjK/A+YSA2F4oL
+	 QJwCVqqv+5daN5rFquqaMSgvn33PNQbknN5k7oBQyfugCB5ySJDKogA3SNqgMQ1skJ
+	 o5df7cLU/1Bpi68Q7VF2afrpybdf1BcTH4MakFGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729520AbgHTNde (ORCPT
+        id S1729142AbgHTNdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:33:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:33:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbgHTJax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:53 -0400
+        id S1728183AbgHTJas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17F18207FB;
-        Thu, 20 Aug 2020 09:30:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F7F206FA;
+        Thu, 20 Aug 2020 09:30:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915852;
-        bh=fjrrMDfBO1Mz4mhFZZuxpgLz4SiHw1f/z7NFYaXekAA=;
+        s=default; t=1597915847;
+        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0qlxbSdj16q3OdeeXphEsG9KgP1l9p85D/rLi3fWjcN2n5h4Cyt4F9u+dQNS4gIBA
-         rQpX9vzX1YcO7F6zQ6t7jOBl5/VRsddmM+ey+vg47JUyD9zA+h4vFB7JSJQx+OQexZ
-         N9L5TyL5UOVJ1M/VDyCfAihgr8QKWxmT6dBnztro=
+        b=lUssC45K8j8/29+8aCJvaIA+xN9cxYi/GAEb696wCizTI3jpzim00K2TvdoI9WstZ
+         kY+dghzzwYBTVtsAY8P8/gcKUplc4SulKt2gRM7WlCghrs0wQQ6LUzNs8qwSmI7ggI
+         U+/qH/b9bRiwXFK3xQ6i3pXPRQ8M4+40940XarVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 127/232] media: rockchip: rga: Introduce color fmt macros and refactor CSC mode logic
-Date:   Thu, 20 Aug 2020 11:19:38 +0200
-Message-Id: <20200820091618.966502131@linuxfoundation.org>
+Subject: [PATCH 5.8 153/232] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
+Date:   Thu, 20 Aug 2020 11:20:04 +0200
+Message-Id: <20200820091620.221360472@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -63,80 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit ded874ece29d3fe2abd3775810a06056067eb68c ]
+[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
 
-This introduces two macros: RGA_COLOR_FMT_IS_YUV and RGA_COLOR_FMT_IS_RGB
-which allow quick checking of the colorspace familily of a RGA color format.
-
-These macros are then used to refactor the logic for CSC mode selection.
-The two nested tests for input colorspace are simplified into a single one,
-with a logical and, making the whole more readable.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rockchip/rga/rga-hw.c | 23 +++++++++-----------
- drivers/media/platform/rockchip/rga/rga-hw.h |  5 +++++
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-index 4be6dcf292fff..5607ee8d19176 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.c
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-@@ -200,22 +200,19 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
- 	dst_info.data.format = ctx->out.fmt->hw_format;
- 	dst_info.data.swap = ctx->out.fmt->color_swap;
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index f9216c7a1829e..bc33d748d95b4 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+ 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
+ }
  
--	if (ctx->in.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
--		if (ctx->out.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
--			switch (ctx->in.colorspace) {
--			case V4L2_COLORSPACE_REC709:
--				src_info.data.csc_mode =
--					RGA_SRC_CSC_MODE_BT709_R0;
--				break;
--			default:
--				src_info.data.csc_mode =
--					RGA_SRC_CSC_MODE_BT601_R0;
--				break;
--			}
-+	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
-+	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
-+		switch (ctx->in.colorspace) {
-+		case V4L2_COLORSPACE_REC709:
-+			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-+			break;
-+		default:
-+			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT601_R0;
-+			break;
- 		}
- 	}
+-static int sys_pkey_free(int pkey)
+-{
+-	return syscall(__NR_pkey_free, pkey);
+-}
+-
+ static int child(struct shared_info *info)
+ {
+ 	unsigned long reg;
+@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
  
--	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
-+	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
- 		switch (ctx->out.colorspace) {
- 		case V4L2_COLORSPACE_REC709:
- 			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.h b/drivers/media/platform/rockchip/rga/rga-hw.h
-index 96cb0314dfa70..e8917e5630a48 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.h
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.h
-@@ -95,6 +95,11 @@
- #define RGA_COLOR_FMT_CP_8BPP 15
- #define RGA_COLOR_FMT_MASK 15
+ 	info->amr1 |= 3ul << pkeyshift(pkey1);
+ 	info->amr2 |= 3ul << pkeyshift(pkey2);
+-	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
++	/*
++	 * invalid amr value where we try to force write
++	 * things which are deined by a uamor setting.
++	 */
++	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
  
-+#define RGA_COLOR_FMT_IS_YUV(fmt) \
-+	(((fmt) >= RGA_COLOR_FMT_YUV422SP) && ((fmt) < RGA_COLOR_FMT_CP_1BPP))
-+#define RGA_COLOR_FMT_IS_RGB(fmt) \
-+	((fmt) < RGA_COLOR_FMT_YUV422SP)
-+
- #define RGA_COLOR_NONE_SWAP 0
- #define RGA_COLOR_RB_SWAP 1
- #define RGA_COLOR_ALPHA_SWAP 2
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
+ 
+ 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+ 				3ul << pkeyshift(pkey2);
+-	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
+-
+ 	/*
+-	 * We won't use pkey3. We just want a plausible but invalid key to test
+-	 * whether ptrace will let us write to AMR bits we are not supposed to.
+-	 *
+-	 * This also tests whether the kernel restores the UAMOR permissions
+-	 * after a key is freed.
++	 * Create an IAMR value different from expected value.
++	 * Kernel will reject an IAMR and UAMOR change.
+ 	 */
+-	sys_pkey_free(pkey3);
++	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
++	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
+ 
+ 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
+ 	       user_write, info->amr1, pkey1, pkey2, pkey3);
+@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
+-	info->expected_iamr = info->invalid_iamr = regs[1];
+-	info->expected_uamor = info->invalid_uamor = regs[2];
++	info->amr1 = info->amr2 = regs[0];
++	info->expected_iamr = regs[1];
++	info->expected_uamor = regs[2];
+ 
+ 	/* Wake up child so that it can set itself up. */
+ 	ret = prod_child(&info->child_sync);
 -- 
 2.25.1
 
