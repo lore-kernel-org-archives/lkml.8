@@ -2,141 +2,142 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F579C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A074C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BD62078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6942B2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QecQW2KN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJ9kmuxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbgHTBWA (ORCPT
+        id S1726741AbgHTBY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:22:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgHTBV7 (ORCPT
+        Wed, 19 Aug 2020 21:24:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:51335 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726603AbgHTBY0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:21:59 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA79C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:58 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 185so373994ljj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=f2YYW8edHeX1XU5Hyd3BTnCfsz4e6RGc2J6WqCLqZNs=;
-        b=QecQW2KN7UqoOPEbPzIa1X6BNdwEoPIK3Zx/Cz1cbaaaWzq0I96Bg2sxEjLXoWhVuK
-         PbvXHn2Uii0TYpGDnCXfHmmE5XrHtrf1FGFTrn8xLggR1p7SiGD9AVvWs4E17GLlQa7i
-         +9RrO2pb+ivo2qh5kdDdamSMyool04JXjvdTpV/WTFdoqvC3TWaq+DcnVBQyRrWAkEpv
-         zXGfccmBw8kfZ3Bt8Ot5yOjSVYSdr5sTrBrHT/1eU3R2BLyb/87hGhY7iwc/z+zSRxBS
-         oAePzBtUQ7cH/w548Cl4Y81xeBa3/xsK+VsEs77pv6y3y7buQY14LPj6t2wYozvtscQN
-         x5vg==
+        Wed, 19 Aug 2020 21:24:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597886666;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WjUMl2kvI2SWf67XAmHmBJUIFFn0OB41n2Xt50LZy2w=;
+        b=XJ9kmuxvrAiYRspLUKsdqdjJAKmYavTFG/EKoQjNXvohuJRyOTmKk0ktZ+gefTKC5BQcFn
+        YfDCJ4+nmYWrmjb9WLUETxJHGt1uOxr2O4WQIHOIpVwt9s8KbSlIldKQ3QrKPevh/jAkP3
+        HPKG3Jwd44M9Bu8jXqviWXjW+wKn08E=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-535-fl3nxi5LPfOoyTuJ_KcpVw-1; Wed, 19 Aug 2020 21:24:22 -0400
+X-MC-Unique: fl3nxi5LPfOoyTuJ_KcpVw-1
+Received: by mail-pj1-f72.google.com with SMTP id oc8so266758pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:24:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=f2YYW8edHeX1XU5Hyd3BTnCfsz4e6RGc2J6WqCLqZNs=;
-        b=baNQNqPiIwmml+8lmy/3caRg4IA4ZupdBElmk/o1e5k4K5NNGiALolw4qH9hV7kTpq
-         6imIN0NUDJ2/7heWzfpsqWmTnS81qFz/oqgGUVqswKbPHL+V5vYlVlGgBMPeexqNLyE6
-         Vv2r3SAmFoKwr6U9DGR6y0XORwRPlXsRiKpqtPgVPsKHGb/jYIu1ikzViQjuDW4Hzf/e
-         sKR9h6h+57zjC5blJBSR89nT8fyKTJA/vX7l/hQPaBYgGyTtiU4BkAEx4OlP225U7pUk
-         7pLmoohMci2p931YyJkFHqNQQcmzZtDcnp/wT48iQCIypE7HSur5n4lI9XjyoE1ZVB9a
-         cVJA==
-X-Gm-Message-State: AOAM530jr6Xz682622LCQ2CCOa0KLNOO5fIwpa2fbPw3r7rrihuFKhoQ
-        ar9Ci4s0vIQe1n8D3ut2EUSALcDeFYB52mhnk6cnug==
-X-Google-Smtp-Source: ABdhPJw37D5+GBoWe31O7oE4FkKmrNPnt4yXn6gWy6RLRKh0JBcxDx/XhFlwEmWfYkIVaYDsUe1DzfQA3e5OU0nIeHk=
-X-Received: by 2002:a2e:9396:: with SMTP id g22mr442161ljh.446.1597886516487;
- Wed, 19 Aug 2020 18:21:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200818072501.30396-1-sjpark@amazon.com>
-In-Reply-To: <20200818072501.30396-1-sjpark@amazon.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Wed, 19 Aug 2020 18:21:44 -0700
-Message-ID: <CALvZod6RS66aSFjWHvpbjuinz2mwbGDnz+gh5L7dp+c3D_Zy1w@mail.gmail.com>
-Subject: Re: [RFC v7 00/10] DAMON: Support Physical Memory Address Space Monitoring
-To:     SeongJae Park <sjpark@amazon.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WjUMl2kvI2SWf67XAmHmBJUIFFn0OB41n2Xt50LZy2w=;
+        b=B2Lu77OXSJeqeokyYQRyTLGbdgGa+LeTQ8JkrmJmRZg6pjJ9SoKeQVDRRAk7LtX0xA
+         F1oYF7Yts1FKdm0lRbDGI/YXis1ZMdZS/uyyQaAiSS0aADMvgdfWE0gH0tt71u+9/u9P
+         58I2WDtsVoAlxFrAUE7VskicYtjqa8gaeAwgWrIypTbS2JKuEuYQWRlUPfCiK9pkzRwL
+         vpsvdxWKipNN5ul4j6ZUXz4BzDfLm8aljFhG1yGUOnL3MPqwOoqpI96D6qDV91C3BBk/
+         rSM1ut2fv1BCGR+3ixeQ4sjl+2YTnpjBg9TE+Kf5Lzko1W2K52LgfMImOC3QrDtMPMMa
+         tlYg==
+X-Gm-Message-State: AOAM533uKzbCdJom9o9sAo90iTrTh1IGcFCmyVNjmG/Lgji3JKbruhAO
+        CydONtmvqmTWRIgoXiU8nUyRmmBJw+TnQi7y8PZYKdfc6UD0SY5mBR3JHPRfHVz5IRMZ+dqx9Wq
+        z9+92mjCWHZU8drsksf/odlDD
+X-Received: by 2002:a17:90a:6d96:: with SMTP id a22mr464526pjk.165.1597886661324;
+        Wed, 19 Aug 2020 18:24:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJznZQrOjFKArbT3Fe5xmkGGfKX9NSSvbVErYE0AQ15q2c+Bsrk3JIzM5qQom2dXOfnnMQ6c1g==
+X-Received: by 2002:a17:90a:6d96:: with SMTP id a22mr464511pjk.165.1597886661025;
+        Wed, 19 Aug 2020 18:24:21 -0700 (PDT)
+Received: from xiangao.remote.csb ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id b185sm491513pfg.71.2020.08.19.18.24.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 18:24:20 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 09:24:09 +0800
+From:   Gao Xiang <hsiangkao@redhat.com>
+To:     Yang Shi <shy828301@gmail.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@huawei.com,
-        Andrea Arcangeli <aarcange@redhat.com>, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, amit@kernel.org,
-        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Qian Cai <cai@lca.pw>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        David Hildenbrand <david@redhat.com>, dwmw@amazon.com,
-        "Du, Fan" <fan.du@intel.com>, foersleo@amazon.de,
-        Greg Thelen <gthelen@google.com>,
-        Ian Rogers <irogers@google.com>, jolsa@redhat.com,
-        "Kirill A. Shutemov" <kirill@shutemov.name>, mark.rutland@arm.com,
-        Mel Gorman <mgorman@suse.de>, Minchan Kim <minchan@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, namhyung@kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, rppt@kernel.org,
-        sblbir@amazon.com, shuah@kernel.org, sj38.park@gmail.com,
-        snu@amazon.de, Vlastimil Babka <vbabka@suse.cz>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Huang Ying <ying.huang@intel.com>, zgf574564920@gmail.com,
-        linux-damon@amazon.com, Linux MM <linux-mm@kvack.org>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200820012409.GB5846@xiangao.remote.csb>
+References: <20200819195613.24269-1-hsiangkao@redhat.com>
+ <20200819130506.eea076dd618644cd7ff875b6@linux-foundation.org>
+ <20200819201509.GA26216@xiangao.remote.csb>
+ <CAHbLzkqr3Z0OuzjqrGjNX6kajr9J533FpqQd8zJYD4pjd+CGMg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHbLzkqr3Z0OuzjqrGjNX6kajr9J533FpqQd8zJYD4pjd+CGMg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 12:25 AM SeongJae Park <sjpark@amazon.com> wrote:
->
-> From: SeongJae Park <sjpark@amazon.de>
->
-> Changes from Previous Version
-> =============================
->
-> - Use 42 as the fake target id for paddr instead of -1
-> - Fix a typo
->
-> Introduction
-> ============
->
-> DAMON[1] programming interface users can extend DAMON for any address space by
-> configuring the address-space specific low level primitives with appropriate
-> ones including their own implementations.  However, because the implementation
-> for the virtual address space is only available now, the users should implement
-> their own for other address spaces.  Worse yet, the user space users who rely
-> on the debugfs interface and user space tool, cannot implement their own.
->
-> This patchset implements another reference implementation of the low level
-> primitives for the physical memory address space.  With this change, hence, the
-> kernel space users can monitor both the virtual and the physical address spaces
-> by simply changing the configuration in the runtime.  Further, this patchset
-> links the implementation to the debugfs interface and the user space tool for
-> the user space users.
->
-> Note that the implementation supports only the user memory, as same to the idle
-> page access tracking feature.
->
-> [1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
->
+Hi Yang,
 
-I am still struggling to find the benefit of this feature the way it
-is implemented i.e. region based physical address space monitoring.
-What exactly am I supposed to do for a given hot (or cold) physical
-region? In a containerized world, that region can contain pages from
-any cgroup. I can not really do anything about the accesses PHY-DAMON
-provides me for a region.
+On Wed, Aug 19, 2020 at 02:41:08PM -0700, Yang Shi wrote:
+> On Wed, Aug 19, 2020 at 1:15 PM Gao Xiang <hsiangkao@redhat.com> wrote:
+> >
+> > Hi Andrew,
+> >
+> > On Wed, Aug 19, 2020 at 01:05:06PM -0700, Andrew Morton wrote:
+> > > On Thu, 20 Aug 2020 03:56:13 +0800 Gao Xiang <hsiangkao@redhat.com> wrote:
+> > >
+> > > > SWP_FS doesn't mean the device is file-backed swap device,
+> > > > which just means each writeback request should go through fs
+> > > > by DIO. Or it'll just use extents added by .swap_activate(),
+> > > > but it also works as file-backed swap device.
+> > >
+> > > This is very hard to understand :(
+> >
+> > Thanks for your reply...
+> >
+> > The related logic is in __swap_writepage() and setup_swap_extents(),
+> > and also see e.g generic_swapfile_activate() or iomap_swapfile_activate()...
+> 
+> I think just NFS falls into this case, so you may rephrase it to:
+> 
+> SWP_FS is only used for swap files over NFS. So, !SWP_FS means non NFS
+> swap, it could be either file backed or device backed.
 
-Now if you give me per-page information that would be useful as I can
-at least get per-cgroup accesses (idle or re-use data) but that would
-be as costly as Page Idle Tracking.
+Thanks for your suggestion...
+
+That looks reasonable, and after I looked
+bc4ae27d817a ("mm: split SWP_FILE into SWP_ACTIVATED and SWP_FS")
+
+I think it could be rephrased into
+
+"
+The SWP_FS flag is used to make swap_{read,write}page() go
+through the filesystem, and it's only used for swap files
+over NFS. So, !SWP_FS means non NFS for now, it could be
+either file backed or device backed. Something similar goes
+with legacy SWP_FILE.
+"
+
+Does it look sane? And I will wait for further suggestion
+about this for a while.
+
+And IMO, SWP_FS flag might be useful for other uses later
+(e.g. laterly for some CoW swapfile use, but I don't think
+ carefully if it's practical or not...)
+
+Thanks,
+Gao Xiang
+
