@@ -2,56 +2,57 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C39EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929C1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26EE92075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612952075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882336;
-	bh=o77i1BTdhg3uW3SiGZF7MwLyI/AyQJIQE+HUN78af4E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yEewf4XTYlsepFZZnhWZZvedMmM6VScPpVl0wCtzezzlTlUxE52P1VvE6UdF/HkFu
-	 i548cwisgmNvjnl9U5CZt7RThAEhhND7rFr+GPG2mSixJgz9zOdQl6YZ7YVtMZq3e7
-	 ZbJ4/3CV0fZ9Db6/gLU/n6x+55WYeny2QFBgS3wg=
+	s=default; t=1597882342;
+	bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nA2Ippwjwcl8C642YvRkGaIT2JRZ/aHWWI9mMEG5KoKrPrU+mKj5sb+4//yN3nwal
+	 GA8s5cODwCyPUtkP77cgoU1N3KzlXD180mz3jm7zMIDn2VmnL5Gi/9HqpgfQeGFG9d
+	 kIPiEITcKczVnEPRfU4ush2hadJqADu+3eUPep9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgHTAMO (ORCPT
+        id S1728138AbgHTAMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:12:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58298 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:12:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbgHTAB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:01:58 -0400
+        id S1727062AbgHTABz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6DC4208C7;
-        Thu, 20 Aug 2020 00:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8456F21741;
+        Thu, 20 Aug 2020 00:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881717;
-        bh=o77i1BTdhg3uW3SiGZF7MwLyI/AyQJIQE+HUN78af4E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oHo4nC+PYVnMLiRbY3TUqijfrnF2qwqHxxe3Q0/vNDMWG8phDVREZ8KNgiAUMS7CD
-         YgslQ+62WpNp4leVPzwEGNxbVk6LjVzjTXFPnptlr5M6dMdzNEyLMWKiURkyfckGFG
-         Wccjit/acgDmkyDa9T/98/+YRZuyfQinO+v90lpQ=
+        s=default; t=1597881714;
+        bh=TEnAfCRFKqzWR8b/LmW6mBYUZ01Boo0wZb54NQoT21g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1Bp+Hz9tQvWqmexQqBbJU057VbGeeIbAGhl57i9lm7wcdcfuSpIYjvd8GhApa/7Ll
+         J13Yni1hTY1EMxoSk70HQGsrhZrJ1zaNdJkDS0Lqv4p1Xq7Svy6qb9fONYNoa2TQuz
+         EgfzrEkxh1w+ixauyYp7lpjbwJ/Bh5YVn3BnOTJ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.7 01/24] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Wed, 19 Aug 2020 20:01:32 -0400
-Message-Id: <20200820000155.215089-1-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Laurent Vivier <laurent@vivier.eu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 27/27] fs/signalfd.c: fix inconsistent return codes for signalfd4
+Date:   Wed, 19 Aug 2020 20:01:16 -0400
+Message-Id: <20200820000116.214821-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
+References: <20200820000116.214821-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,50 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+[ Upstream commit a089e3fd5a82aea20f3d9ec4caa5f4c65cc2cfcc ]
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
+The kernel signalfd4() syscall returns different error codes when called
+either in compat or native mode.  This behaviour makes correct emulation
+in qemu and testing programs like LTP more complicated.
 
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix the code to always return -in both modes- EFAULT for unaccessible user
+memory, and EINVAL when called with an invalid signal mask.
+
+Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Laurent Vivier <laurent@vivier.eu>
+Link: http://lkml.kernel.org/r/20200530100707.GA10159@ls3530.fritz.box
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ fs/signalfd.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index df7a1e6805a3b..c3af72c58805d 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -12,6 +12,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
+diff --git a/fs/signalfd.c b/fs/signalfd.c
+index 44b6845b071c3..5b78719be4455 100644
+--- a/fs/signalfd.c
++++ b/fs/signalfd.c
+@@ -314,9 +314,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user *, user_mask,
+ {
+ 	sigset_t mask;
  
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 7ca32ede5e172..610e3a0e98ff4 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -211,6 +211,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
+-	if (sizemask != sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask != sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, flags);
+ }
  
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+@@ -325,9 +326,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *, user_mask,
+ {
+ 	sigset_t mask;
+ 
+-	if (sizemask != sizeof(sigset_t) ||
+-	    copy_from_user(&mask, user_mask, sizeof(mask)))
++	if (sizemask != sizeof(sigset_t))
+ 		return -EINVAL;
++	if (copy_from_user(&mask, user_mask, sizeof(mask)))
++		return -EFAULT;
+ 	return do_signalfd4(ufd, &mask, 0);
+ }
+ 
 -- 
 2.25.1
 
