@@ -2,245 +2,92 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD4FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28EFFC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0796F207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926937;
-	bh=e/9H8fbVPvZQZK6O/dKJii+CSircMQEFTYMDaaOMrak=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWW2fpllVsStQs6gjcf3WlzHdZmy7CziFGBfy5sfI0RkcosCmlEVcYkK5gDMnfwVJ
-	 sSnc460TYlfQKJ9p0QYcTmICVYADhghp9bHZJHmUT/8qMMl8OabhVn4xwcmQ2S6JtM
-	 mYD505aPFz8WuLjFtylQhltNKw386rJUohQlOCMs=
+	by mail.kernel.org (Postfix) with ESMTP id DE43A207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="aH3z0jih"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbgHTMfg (ORCPT
+        id S1729682AbgHTMf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:35:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:35:58 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:39071 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729545AbgHTJsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C37812078D;
-        Thu, 20 Aug 2020 09:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916890;
-        bh=e/9H8fbVPvZQZK6O/dKJii+CSircMQEFTYMDaaOMrak=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdiTNVwSZcg9GXn0d/mMLeilx4lipJFpzP/X8AO5h4p4QkDr97MRHl4hLQrrKBgQr
-         m1RWgL7G06NrKVCq/4qwHWLXDDljUbozax55bwvG7W+1OzL5kG74E5d+WrKiHYzq8d
-         6CqnTWg7BJCtYHtOrTZo4fDn2DVaoK9AUFcdyvFI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Marshall <hubcap@omnibond.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH 5.4 075/152] orangefs: get rid of knob code...
-Date:   Thu, 20 Aug 2020 11:20:42 +0200
-Message-Id: <20200820091557.578194646@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729515AbgHTJsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:07 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 2a71feb8;
+        Thu, 20 Aug 2020 09:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=cC4XKmjMItkWu82Ddd4N3/mfNJY=; b=aH3z0j
+        ih2A6UbHCt3IxPb9cGURoW1AdUF79cwHzp+slOvV8CXFkpZjl6EwYEA+JlKT5gjg
+        zXUFARHfV2sFXTmSREd8NhJunCIHY4nLafXpXu1CpMGAdsfYq1ZI7Ulbh+f6nFuU
+        GLpyQGqn20N+3jb0blAVWJ4mBsKgajaVO0bu5fJURP7VRaYN89n0QypNDmBbRufv
+        ee0CyvIMq5UV+mGRrzaGLR7yKNhLsfMBrsRgpAAPY0ix1nrsuR83acVzKS7914El
+        0vW2TT1WjeT+Ulx5s/6fFxHTTSITqe0SO9LaYWBs5aRN38VHZxd5DoUNpQtc1oJx
+        mQHl+eYy/l9WTo+Q==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 18dd5401 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Thu, 20 Aug 2020 09:21:41 +0000 (UTC)
+Received: by mail-io1-f50.google.com with SMTP id z17so385964ioi.6;
+        Thu, 20 Aug 2020 02:48:06 -0700 (PDT)
+X-Gm-Message-State: AOAM533pN3W79s134djddKcgXm3DtAhueZEDHWNsMOx+g89DE9LGy6Z0
+        nvgqpWN0nwu7SaecnD3KF0JrCiBgFDzwFZD/hPw=
+X-Google-Smtp-Source: ABdhPJwxqXuh3zpZ+vXV6pG3wfV26J+WMkYRDPSnD0jh7SwXM3vLbJ0QIOl7CaiQOrNMVRuAQnK6mTMYW9n8YZipXUs=
+X-Received: by 2002:a05:6638:138a:: with SMTP id w10mr2407389jad.36.1597916885689;
+ Thu, 20 Aug 2020 02:48:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <000000000000a7e38a05a997edb2@google.com> <0000000000005c13f505ad3f5c42@google.com>
+In-Reply-To: <0000000000005c13f505ad3f5c42@google.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 20 Aug 2020 11:47:54 +0200
+X-Gmail-Original-Message-ID: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
+Message-ID: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
+Subject: Re: WARNING in __cfg80211_connect_result
+To:     syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
+        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marshall <hubcap@omnibond.com>
+On Wed, Aug 19, 2020 at 8:42 PM syzbot
+<syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com> wrote:
+>
+> syzbot has bisected this issue to:
+>
+> commit e7096c131e5161fa3b8e52a650d7719d2857adfd
+> Author: Jason A. Donenfeld <Jason@zx2c4.com>
+> Date:   Sun Dec 8 23:27:34 2019 +0000
+>
+>     net: WireGuard secure network tunnel
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
+> start commit:   e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
+> git tree:       net-next
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=14dad8b1900000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10dad8b1900000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
+> dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
+>
+> Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
+> Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
 
-commit ec95f1dedc9c64ac5a8b0bdb7c276936c70fdedd upstream.
-
-Christoph Hellwig sent in a reversion of "orangefs: remember count
-when reading." because:
-
-  ->read_iter calls can race with each other and one or
-  more ->flush calls. Remove the the scheme to store the read
-  count in the file private data as is is completely racy and
-  can cause use after free or double free conditions
-
-Christoph's reversion caused Orangefs not to work or to compile. I
-added a patch that fixed that, but intel's kbuild test robot pointed
-out that sending Christoph's patch followed by my patch upstream, it
-would break bisection because of the failure to compile. So I have
-combined the reversion plus my patch... here's the commit message
-that was in my patch:
-
-  Logically, optimal Orangefs "pages" are 4 megabytes. Reading
-  large Orangefs files 4096 bytes at a time is like trying to
-  kick a dead whale down the beach. Before Christoph's "Revert
-  orangefs: remember count when reading." I tried to give users
-  a knob whereby they could, for example, use "count" in
-  read(2) or bs with dd(1) to get whatever they considered an
-  appropriate amount of bytes at a time from Orangefs and fill
-  as many page cache pages as they could at once.
-
-  Without the racy code that Christoph reverted Orangefs won't
-  even compile, much less work. So this replaces the logic that
-  used the private file data that Christoph reverted with
-  a static number of bytes to read from Orangefs.
-
-  I ran tests like the following to determine what a
-  reasonable static number of bytes might be:
-
-  dd if=/pvfsmnt/asdf of=/dev/null count=128 bs=4194304
-  dd if=/pvfsmnt/asdf of=/dev/null count=256 bs=2097152
-  dd if=/pvfsmnt/asdf of=/dev/null count=512 bs=1048576
-                            .
-                            .
-                            .
-  dd if=/pvfsmnt/asdf of=/dev/null count=4194304 bs=128
-
-  Reads seem faster using the static number, so my "knob code"
-  wasn't just racy, it wasn't even a good idea...
-
-Signed-off-by: Mike Marshall <hubcap@omnibond.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/orangefs/file.c            |   26 +-------------------------
- fs/orangefs/inode.c           |   39 ++++++---------------------------------
- fs/orangefs/orangefs-kernel.h |    4 ----
- 3 files changed, 7 insertions(+), 62 deletions(-)
-
---- a/fs/orangefs/file.c
-+++ b/fs/orangefs/file.c
-@@ -311,23 +311,8 @@ static ssize_t orangefs_file_read_iter(s
-     struct iov_iter *iter)
- {
- 	int ret;
--	struct orangefs_read_options *ro;
--
- 	orangefs_stats.reads++;
- 
--	/*
--	 * Remember how they set "count" in read(2) or pread(2) or whatever -
--	 * users can use count as a knob to control orangefs io size and later
--	 * we can try to help them fill as many pages as possible in readpage.
--	 */
--	if (!iocb->ki_filp->private_data) {
--		iocb->ki_filp->private_data = kmalloc(sizeof *ro, GFP_KERNEL);
--		if (!iocb->ki_filp->private_data)
--			return(ENOMEM);
--		ro = iocb->ki_filp->private_data;
--		ro->blksiz = iter->count;
--	}
--
- 	down_read(&file_inode(iocb->ki_filp)->i_rwsem);
- 	ret = orangefs_revalidate_mapping(file_inode(iocb->ki_filp));
- 	if (ret)
-@@ -615,12 +600,6 @@ static int orangefs_lock(struct file *fi
- 	return rc;
- }
- 
--static int orangefs_file_open(struct inode * inode, struct file *file)
--{
--	file->private_data = NULL;
--	return generic_file_open(inode, file);
--}
--
- static int orangefs_flush(struct file *file, fl_owner_t id)
- {
- 	/*
-@@ -634,9 +613,6 @@ static int orangefs_flush(struct file *f
- 	struct inode *inode = file->f_mapping->host;
- 	int r;
- 
--	kfree(file->private_data);
--	file->private_data = NULL;
--
- 	if (inode->i_state & I_DIRTY_TIME) {
- 		spin_lock(&inode->i_lock);
- 		inode->i_state &= ~I_DIRTY_TIME;
-@@ -659,7 +635,7 @@ const struct file_operations orangefs_fi
- 	.lock		= orangefs_lock,
- 	.unlocked_ioctl	= orangefs_ioctl,
- 	.mmap		= orangefs_file_mmap,
--	.open		= orangefs_file_open,
-+	.open		= generic_file_open,
- 	.flush		= orangefs_flush,
- 	.release	= orangefs_file_release,
- 	.fsync		= orangefs_fsync,
---- a/fs/orangefs/inode.c
-+++ b/fs/orangefs/inode.c
-@@ -259,46 +259,19 @@ static int orangefs_readpage(struct file
- 	pgoff_t index; /* which page */
- 	struct page *next_page;
- 	char *kaddr;
--	struct orangefs_read_options *ro = file->private_data;
- 	loff_t read_size;
--	loff_t roundedup;
- 	int buffer_index = -1; /* orangefs shared memory slot */
- 	int slot_index;   /* index into slot */
- 	int remaining;
- 
- 	/*
--	 * If they set some miniscule size for "count" in read(2)
--	 * (for example) then let's try to read a page, or the whole file
--	 * if it is smaller than a page. Once "count" goes over a page
--	 * then lets round up to the highest page size multiple that is
--	 * less than or equal to "count" and do that much orangefs IO and
--	 * try to fill as many pages as we can from it.
--	 *
--	 * "count" should be represented in ro->blksiz.
--	 *
--	 * inode->i_size = file size.
-+	 * Get up to this many bytes from Orangefs at a time and try
-+	 * to fill them into the page cache at once. Tests with dd made
-+	 * this seem like a reasonable static number, if there was
-+	 * interest perhaps this number could be made setable through
-+	 * sysfs...
- 	 */
--	if (ro) {
--		if (ro->blksiz < PAGE_SIZE) {
--			if (inode->i_size < PAGE_SIZE)
--				read_size = inode->i_size;
--			else
--				read_size = PAGE_SIZE;
--		} else {
--			roundedup = ((PAGE_SIZE - 1) & ro->blksiz) ?
--				((ro->blksiz + PAGE_SIZE) & ~(PAGE_SIZE -1)) :
--				ro->blksiz;
--			if (roundedup > inode->i_size)
--				read_size = inode->i_size;
--			else
--				read_size = roundedup;
--
--		}
--	} else {
--		read_size = PAGE_SIZE;
--	}
--	if (!read_size)
--		read_size = PAGE_SIZE;
-+	read_size = 524288;
- 
- 	if (PageDirty(page))
- 		orangefs_launder_page(page);
---- a/fs/orangefs/orangefs-kernel.h
-+++ b/fs/orangefs/orangefs-kernel.h
-@@ -239,10 +239,6 @@ struct orangefs_write_range {
- 	kgid_t gid;
- };
- 
--struct orangefs_read_options {
--	ssize_t blksiz;
--};
--
- extern struct orangefs_stats orangefs_stats;
- 
- /*
-
-
+Having trouble linking this back to wireguard... Those oopses don't
+have anything to do with it either. Bisection error?
