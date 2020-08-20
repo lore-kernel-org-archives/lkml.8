@@ -2,69 +2,91 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4BDBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83EA120758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:42:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597912942;
-	bh=BnwApX3GfLjLBXFWCKh5pqgRomGQKD+9D+XuvrkyMhE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tbFuv5GbA2TWc9tbu5cq7gg6vJfWNBGsnw8kr/38YPZ4FtoZk+826sRNKO3Vile7f
-	 VJ11emnvxquqVquGXs3HEAUR/7cST3ifJyHYCVpz5FTWg7IwjN5Ik8TTbMf6K4dktq
-	 kIrGD+RqVSIakwsqxOkruoWYpUJUBzS5NXz4WXBI=
+	by mail.kernel.org (Postfix) with ESMTP id 85C5420855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:44:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CgDhH2a7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgHTImU (ORCPT
+        id S1726750AbgHTIow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:42:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725885AbgHTImT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:42:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 20 Aug 2020 04:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgHTIou (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:44:50 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2FC3C061757;
+        Thu, 20 Aug 2020 01:44:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=+br4Xi9BUvjm1jO27R9i4VKynvG3ohMl1AfROGyvnRY=; b=CgDhH2a7Rc7W/e8dYGrNIh8YPu
+        YXC5qQ1mUhO4kiL3+di3H+QmlF67a9TzrLTDP/nG0Rj317H0Gd8gG4GGqpxu3qeL5S5lEnZe1joiL
+        FT8OUGDzT/OD8gVlVHVPMdnCniVLkLqZUloEr4nYott6iTZFGLdbQkpisJQN6TWUGnoCJ2hio0oz2
+        muklmR4M7OLBVh5CpuNx7nir7ZXpEjHfTAn/+whk1r7nY9FBV0VBx3+6tyQwsxhx2V73w6zgFWXV6
+        LjuNvVsGpiTRoyMDKzkWDWOmAhbI0oSF9uHP3roUuIvVIbnJKVcb20xqA0ru35Cx/g2rJ/EhiEPt8
+        63qB1vvg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8gBR-0001TJ-Hr; Thu, 20 Aug 2020 08:44:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3909220758;
-        Thu, 20 Aug 2020 08:42:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597912938;
-        bh=BnwApX3GfLjLBXFWCKh5pqgRomGQKD+9D+XuvrkyMhE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WGq8+izzRcwaFxVhVtneDvQKfpoHcfm820ArTm6bu4AhfivGgCYfPh7bEZhV+huAD
-         hrIzAZrCCdM+m7aw6xqMAQE18RprUwD5dipgtbhK+k3uEq9mLmHvxp7xWZlhC7WM+C
-         GwvntaHRzXJwWEYEmHXl7Au0fXhs3IqUfE2EOZAI=
-Date:   Thu, 20 Aug 2020 10:42:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        kernel@pengutronix.de,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sven Schneider <s.schneider@arkona-technologies.de>
-Subject: Re: [PATCH v2] lib/fonts: add font 6x8 for OLED display
-Message-ID: <20200820084239.GB1001857@kroah.com>
-References: <20200820082137.5907-1-s.hauer@pengutronix.de>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 031D5301324;
+        Thu, 20 Aug 2020 10:44:28 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DCD7428B7E836; Thu, 20 Aug 2020 10:44:27 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 10:44:27 +0200
+From:   peterz@infradead.org
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     x86@kernel.org, Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] x86/debug: Allow a single level of #DB recursion
+Message-ID: <20200820084427.GO2674@hirez.programming.kicks-ass.net>
+References: <8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820082137.5907-1-s.hauer@pengutronix.de>
+In-Reply-To: <8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:21:37AM +0200, Sascha Hauer wrote:
-> From: Sven Schneider <s.schneider@arkona-technologies.de>
-> 
-> This font is derived from lib/fonts/font_6x10.c and is useful for small
-> OLED displays
-> 
-> Signed-off-by: Sven Schneider <s.schneider@arkona-technologies.de>
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+On Wed, Aug 19, 2020 at 05:15:43PM -0700, Andy Lutomirski wrote:
+> +static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
+> +{
+> +	*dr6 = debug_read_clear_dr6();
+>  }
+>  
+>  static __always_inline void debug_exit(unsigned long dr7)
+>  {
+> -	local_db_restore(dr7);
+>  }
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+That's all unused after this patch, might as well remove it.
