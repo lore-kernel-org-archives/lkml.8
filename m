@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7396C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C14D1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 964DA20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A11C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928148;
-	bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
+	s=default; t=1597928157;
+	bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ggGxTgYAO0M7qg+1xWiUdv4GaDk6xoH0Nzi2Fch5JJhKmvRC0dKMpfBtcji0mcg/d
-	 Bm0HzmWLJDoscazA8/081dWGhwjeHIrUrO0Ygj2a9+4asoFGzymgHbiIieBsmuAbJh
-	 NJpSqwMN6QPZbk2dxSyij+d7BVdAc/iVL5nfC/4Q=
+	b=ZmpAt6jNxD8gWRoetke3FLfLvhycQS/RypmMABaz6U9s7E0vYgtYfzvFhJakyS8tQ
+	 FFjcCdV+zuO3uUYTbALwtqCEv31MYM+TW+ET4XTOrLwWTO+cmusG8Fvo8CpRILLRSQ
+	 x7l+L0wleAHTJPx13V81IItlNcWbGCdxx2e8vbNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730049AbgHTMzj (ORCPT
+        id S1729250AbgHTMzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:55:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40214 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbgHTJnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:05 -0400
+        id S1728829AbgHTJm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B5B022D02;
-        Thu, 20 Aug 2020 09:43:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F98E22CAF;
+        Thu, 20 Aug 2020 09:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916582;
-        bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
+        s=default; t=1597916576;
+        bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QEVwx9pc2tF7KTdlJPvTN1iZmW/mm48VTM4mRqfaugSQ5Vd+YrtpsXMrbwLB9Y7XT
-         1BOBiosUFhtTdw4kpSghyxf//3i08Xs7o+eU5F3Aln7bUc3SAzNLMuIdXWaDj9SOXD
-         Vhadqd9BGJkUO0QXosS54zIAlXEu4Lkbaq0/mA4E=
+        b=tEFBcOzUVmycW9Xz7YCCHlApfXzHq5Q2aphTOgLlWd2snx6LmD28w7SmPc9bbPOLW
+         R4lfHPPwOfK5cmm7LqAvnEvEcWxhJcKZ5//XBAtDpJ0MrPZo2HcJY+SDGpUq1p8Xx2
+         TeETvp3GbQw6ZtzxwPoknnezV97BaWpZbbvLmMZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 179/204] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:21:16 +0200
-Message-Id: <20200820091615.143229504@linuxfoundation.org>
+Subject: [PATCH 5.7 177/204] fs/minix: fix block limit check for V1 filesystems
+Date:   Thu, 20 Aug 2020 11:21:14 +0200
+Message-Id: <20200820091615.045879304@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -63,42 +63,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+[ Upstream commit 0a12c4a8069607247cb8edc3b035a664e636fd9a ]
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+The minix filesystem reads its maximum file size from its on-disk
+superblock.  This value isn't necessarily a multiple of the block size.
+When it's not, the V1 block mapping code doesn't allow mapping the last
+possible block.  Commit 6ed6a722f9ab ("minixfs: fix block limit check")
+fixed this in the V2 mapping code.  Fix it in the V1 mapping code too.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Link: http://lkml.kernel.org/r/20200628060846.682158-6-ebiggers@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ufs/super.c | 2 +-
+ fs/minix/itree_v1.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index 1da0be667409b..e3b69fb280e8c 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -101,7 +101,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
- 
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
- 
- 	inode = ufs_iget(sb, ino);
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index c0d418209ead1..405573a79aab4 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,7 +29,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if (block >= inode->i_sb->s_maxbytes/BLOCK_SIZE) {
++	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+ 		if (printk_ratelimit())
+ 			printk("MINIX-fs: block_to_path: "
+ 			       "block %ld too big on dev %pg\n",
 -- 
 2.25.1
 
