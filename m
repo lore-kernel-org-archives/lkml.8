@@ -2,127 +2,167 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DF5C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4E04207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:16:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="jc6mPT2/"
+	by mail.kernel.org (Postfix) with ESMTP id 5E4B821744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597911483;
+	bh=tnxzVI3REHYfxhlG+Le20oXiyBnTOIRi9Ha7ujsgOms=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2vGYHL1O2sLWKu4zr6xvfvzdZB04B+BOaKj95V1qzy6nmg3kWMUM43wB+QOxzgU4J
+	 a/3GIEr6OiTwkOY1wM49DD09TXLfEs3jAhGQM6ekkSzp83jv1I9FO1RvS7vA+rsF0O
+	 z2kmt7LyYvdAnxhTQgUpE1OhmzzyLuATqPI597ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbgHTIQv (ORCPT
+        id S1726749AbgHTISC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:16:51 -0400
-Received: from mx07-00178001.pphosted.com ([185.132.182.106]:33661 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726435AbgHTINe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:13:34 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07K86vFO007077;
-        Thu, 20 Aug 2020 10:13:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=bypIudVjLD+BMgyLulgj0MddZ/EB2P+mWgfGr0rQwJo=;
- b=jc6mPT2/HmRJzmahbN2wVAYpofs2aGC3NhG3DJOgHC4DwUiBnL2fjYxjHgbqSLufFwcP
- OrPggsxjgfvK8Y285ICq5seBT/Eav0tWbnXhuHxZOcumnzFZkjhhz9JHtB3+wfPl+Z4+
- NQdji+vwQ/7/GPkrx6Yi0Q3j0pu5JpQ+LxjcVFRXsIQ1kUORBMyP8u7YsIn2wVRdOKmD
- wh3uznktpBVaxOKHseChr7unax3u+ypPEnICHS38gbD1KqvVydEwlLZDBCsKcE1BMqaW
- 9ZdWmS4U0opvOoZgNPNVJs1byZZNTkZ0MvzpQxIj+CidlnIAHNzLNhQTR6gY/j1KTGbb ow== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 330jek8k2u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 10:13:15 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9FF2010002A;
-        Thu, 20 Aug 2020 10:13:14 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 331E921299C;
-        Thu, 20 Aug 2020 10:13:14 +0200 (CEST)
-Received: from [10.48.1.149] (10.75.127.47) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Aug
- 2020 10:13:13 +0200
-Subject: Re: [PATCH 11/12] regulator: stm32-vrefbuf: Fix W=1 build warning
- when CONFIG_OF=n
-To:     Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Icenowy Zheng <icenowy@aosc.io>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20200820152926.42c48840@xhacker.debian>
- <20200820154626.79d83157@xhacker.debian>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <20fc45ab-4daf-3855-5817-1898d50c9efc@st.com>
-Date:   Thu, 20 Aug 2020 10:13:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 04:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725910AbgHTIRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:17:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78703207DE;
+        Thu, 20 Aug 2020 08:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597911461;
+        bh=tnxzVI3REHYfxhlG+Le20oXiyBnTOIRi9Ha7ujsgOms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BiXjKHU+t3kt0dGqtIgfFJBr5zxmUNLlkx0oMPDZlYR433dwzz8qZjqWFWE3jnijg
+         hUcICMiUQJZpweqeqgyYMB6nK/DJ3WparXIXodkZhJYJlkyR5wx2V1jBlmsyLgxTua
+         zY6PV1YY+GAKsyE5tnpbxCA9YF0deNyUCa648srA=
+Date:   Thu, 20 Aug 2020 10:18:01 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     John Donnelly <john.p.donnelly@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, dm-devel@redhat.com
+Subject: Re: fixing 4.14-stable's broken DM cache writethrough support [was:
+ Re: [(resend) PATCH v3: {linux-4.14.y} ] dm cache: submit writethrough
+ writes in parallel to origin and cache]
+Message-ID: <20200820081801.GH4049659@kroah.com>
+References: <8CFF8DA9-C105-461C-8F5A-DA2BF448A135@oracle.com>
+ <20200804124735.GA219143@kroah.com>
+ <20200804182037.GA15453@redhat.com>
+ <20200805143242.GC2154236@kroah.com>
+ <20200805193409.GA21824@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200820154626.79d83157@xhacker.debian>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_01:2020-08-19,2020-08-20 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200805193409.GA21824@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 9:46 AM, Jisheng Zhang wrote:
-> Fix below warning when CONFIG_OF=n:
+On Wed, Aug 05, 2020 at 03:34:09PM -0400, Mike Snitzer wrote:
+> On Wed, Aug 05 2020 at 10:32am -0400,
+> Greg KH <gregkh@linuxfoundation.org> wrote:
 > 
-> drivers/regulator/stm32-vrefbuf.c:287:34: warning: ‘stm32_vrefbuf_of_match’ defined but not used [-Wunused-const-variable=]
->   287 | static const struct of_device_id stm32_vrefbuf_of_match[] = {
->       |                                  ^~~~~~~~~~~~~~~~~~~~~~
+> > On Tue, Aug 04, 2020 at 02:20:38PM -0400, Mike Snitzer wrote:
+> > > On Tue, Aug 04 2020 at  8:47am -0400,
+> > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > 
+> > > > On Tue, Aug 04, 2020 at 07:33:05AM -0500, John Donnelly wrote:
+> > > > > From: Mike Snitzer <snitzer@redhat.com>
+> > > > > 
+> > > > > Discontinue issuing writethrough write IO in series to the origin and
+> > > > > then cache.
+> > > > > 
+> > > > > Use bio_clone_fast() to create a new origin clone bio that will be
+> > > > > mapped to the origin device and then bio_chain() it to the bio that gets
+> > > > > remapped to the cache device.  The origin clone bio does _not_ have a
+> > > > > copy of the per_bio_data -- as such check_if_tick_bio_needed() will not
+> > > > > be called.
+> > > > > 
+> > > > > The cache bio (parent bio) will not complete until the origin bio has
+> > > > > completed -- this fulfills bio_clone_fast()'s requirements as well as
+> > > > > the requirement to not complete the original IO until the write IO has
+> > > > > completed to both the origin and cache device.
+> > > > > 
+> > > > > Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+> > > > > 
+> > > > > (cherry picked from commit 2df3bae9a6543e90042291707b8db0cbfbae9ee9)
+> > > > > 
+> > > > > Fixes: 4ec34f2196d125ff781170ddc6c3058c08ec5e73 (dm bio record:
+> > > > > save/restore bi_end_io and bi_integrity )
+> > > > > 
+> > > > > 4ec34f21 introduced a mkfs.ext4 hang on a LVM device that has been
+> > > > > modified with lvconvert --cachemode=writethrough.
+> > > > > 
+> > > > > CC:stable@vger.kernel.org for 4.14.y
+> > > > > 
+> > > > > Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> > > > > Reviewed-by: Somasundaram Krishnasamy <somasundaram.krishnasamy@oracle.com>
+> > > > > 
+> > > > > conflicts:
+> > > > > 	drivers/md/dm-cache-target.c. -  Corrected usage of
+> > > > > 	writethrough_mode(&cache->feature) that was caught by
+> > > > > 	compiler, and removed unused static functions : writethrough_endio(),
+> > > > > 	defer_writethrough_bio(), wake_deferred_writethrough_worker()
+> > > > > 	that generated warnings.
+> > > > 
+> > > > What is this "conflicts nonsense"?  You don't see that in any other
+> > > > kernel patch changelog, do you?
+> > > > 
+> > > > > ---
+> > > > > drivers/md/dm-cache-target.c | 92 ++++++++++++++++++--------------------------
+> > > > > 1 file changed, 37 insertions(+), 55 deletions(-)
+> > > > 
+> > > > Please fix your email client up, it's totally broken and this does not
+> > > > work at all and is getting frustrating from my side here.
+> > > > 
+> > > > Try sending emails to yourself and see if you can apply the patches, as
+> > > > the one you sent here does not work, again:
+> > > 
+> > > John's inability to submit a patch that can apply aside: I do not like
+> > > how this patch header is constructed (yet attributed "From" me).  It is
+> > > devoid of detail as it relates to stable@.
+> > > 
+> > > Greg, please don't apply the v4 of this patch either.  I'll craft a
+> > > proper stable@ patch that explains the reason for change and why we're
+> > > left having to resolve conflicts in stable@.
+> > > 
+> > > But first I need to focus on sending DM changes to Linus for v5.9 merge.
+> > 
+> > Ok, no worries, I'll drop all of these from my review queue and wait for
+> > something from you sometime in the future.
 > 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  drivers/regulator/stm32-vrefbuf.c | 2 ++
->  1 file changed, 2 insertions(+)
+> Hey Greg,
 > 
-> diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vrefbuf.c
-> index 992bc18101ef..5a5c12d9ea22 100644
-> --- a/drivers/regulator/stm32-vrefbuf.c
-> +++ b/drivers/regulator/stm32-vrefbuf.c
-> @@ -284,11 +284,13 @@ static const struct dev_pm_ops stm32_vrefbuf_pm_ops = {
->  			   NULL)
->  };
->  
-> +#ifdef CONFIG_OF
-
-Hi Jisheng,
-
-You could probably adopt "__maybe_unused" here ? E.g. like:
-
-static const struct of_device_id __maybe_unused stm32_vrefbuf_of_match[] = {
-
-I can see other drivers use this already for the same.
-
-Thanks,
-Best regards,
-Fabrice
-
->  static const struct of_device_id stm32_vrefbuf_of_match[] = {
->  	{ .compatible = "st,stm32-vrefbuf", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, stm32_vrefbuf_of_match);
-> +#endif
->  
->  static struct platform_driver stm32_vrefbuf_driver = {
->  	.probe = stm32_vrefbuf_probe,
+> SO I've looked this required 4.14 stable@ backport over. Because 4.14
+> already has these commits (to fix a dm integrity issue):
+> 1b17159e52b dm bio record: save/restore bi_end_io and bi_integrity
+> 248aa2645aa dm integrity: use dm_bio_record and dm_bio_restore
 > 
+> DM-cache's 4.14 writethrough mode got broken because its implementation
+> (ab)used dm_hook_bio+dm_bio_record and predates 4.15's switch to using
+> bio_chain() via commit 2df3bae9a654.  Without commit 2df3bae9a654 the
+> dm_hook_bio+dm_bio_record changes from commit 1b17159e52b break
+> dm-cache's writethrough support.
+> 
+> So 4.14-stable now needs these 3 upstream 4.15 commits:
+> 8e3c3827776f dm cache: pass cache structure to mode functions
+> 2df3bae9a654 dm cache: submit writethrough writes in parallel to origin and cache
+> 9958f1d9a04e dm cache: remove all obsolete writethrough-specific code
+> 
+> Applying those commits to v4.14.190 with:
+> git cherry-pick -x 8e3c3827776f^..9958f1d9a04e
+> 
+> results in a kernel that successfully builds and should fix
+> 4.14-stable's broken dm-cache writethrough support.
+> 
+> Are you ok with queueing up applying these 3 upstream commits to
+> 4.14-stable or do you need me to send a patchset?
+
+This is good enough, now all queued up, thanks!
+
+greg k-h
