@@ -2,153 +2,115 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B70C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A00F0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2136D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:54:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924462;
-	bh=1C2IzsKUVP9F/s73Z7R8kmnqyy94WwUAZhdcRr/hM9g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zH3clTn23DdBAxWbhtDIMpxjyfCWtV4nIRjF7zTvPN391CIt2Ai9LNxLiaGkw/LnU
-	 ofTb7SAUL190wPwMwEgmatHeVtrmhHEkiKH5JCJL0kW3F9MuDK4TdhEFhn4tf6wrj1
-	 iKWdDffuWDY4s/7ws+tzXamW/q47SC48Wu50o+Jw=
+	by mail.kernel.org (Postfix) with ESMTP id 8996B2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:54:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730973AbgHTLtX (ORCPT
+        id S1729342AbgHTLs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56508 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730600AbgHTKDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9B9122B4B;
-        Thu, 20 Aug 2020 10:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917819;
-        bh=1C2IzsKUVP9F/s73Z7R8kmnqyy94WwUAZhdcRr/hM9g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YnT2xFrSErnhMe8vr4qRuMlcetQ2vnhxgPffsPU2ZlsEfY0S0GPy7chjxuxl7z0tt
-         P+c8o3rceOFzvuPzL7sakclJjjy2ryCp60cKCkptgYgyoBDRTsCqIx7pYMngQfNP+u
-         +iLtaRi4EZO/jqOW3hZlCgpwkdLC1JiuPtC0qtq0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
-        Sandipan Das <sandipan@linux.ibm.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 139/212] selftests/powerpc: Fix online CPU selection
-Date:   Thu, 20 Aug 2020 11:21:52 +0200
-Message-Id: <20200820091609.374445558@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 07:48:27 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40951 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730554AbgHTLr3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:47:29 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1k8j26-0001SH-AW; Thu, 20 Aug 2020 11:47:02 +0000
+Date:   Thu, 20 Aug 2020 13:47:00 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
+        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820114700.bmla72v3t4ux7gsm@wittgenstein>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <20200820105555.GA4546@redhat.com>
+ <20200820111349.GE5033@dhcp22.suse.cz>
+ <20200820112932.GG5033@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200820112932.GG5033@dhcp22.suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandipan Das <sandipan@linux.ibm.com>
+On Thu, Aug 20, 2020 at 01:29:32PM +0200, Michal Hocko wrote:
+> On Thu 20-08-20 13:13:55, Michal Hocko wrote:
+> > On Thu 20-08-20 12:55:56, Oleg Nesterov wrote:
+> > > On 08/19, Suren Baghdasaryan wrote:
+> > > >
+> > > > Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> > > > used the additional mutex lock in that path of the clone() syscall should
+> > > > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> > > > (when the last process sharing the mm exits) is left out of this patch to
+> > > > keep it simple and because it is believed that this threading model is
+> > > > rare.
+> > > 
+> > > vfork() ?
+> > 
+> > Could you be more specific?
+> > 
+> > > > --- a/kernel/fork.c
+> > > > +++ b/kernel/fork.c
+> > > > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+> > > >  	if (clone_flags & CLONE_VM) {
+> > > >  		mmget(oldmm);
+> > > >  		mm = oldmm;
+> > > > +		if (!(clone_flags & CLONE_SIGHAND)) {
+> > > 
+> > > I agree with Christian, you need CLONE_THREAD
+> > 
+> > This was my suggestion to Suren, likely because I've misrememberd which
+> > clone flag is responsible for the signal delivery. But now, after double
+> > checking we do explicitly disallow CLONE_SIGHAND && !CLONE_VM. So
+> > CLONE_THREAD is the right thing to check.
+> 
+> I have tried to remember but I have to say that after reading man page I
+> am still confused. So what is the actual difference between CLONE_THREAD
+> and CLONE_SIGHAND? Essentially all we care about from the OOM (and
 
-[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
+CLONE_THREAD implies CLONE_SIGHAND
+CLONE_SIGHAND implies CLONE_VM but CLONE_SIGHAND doesn't imply CLONE_THREAD.
 
-The size of the CPU affinity mask must be large enough for
-systems with a very large number of CPUs. Otherwise, tests
-which try to determine the first online CPU by calling
-sched_getaffinity() will fail. This makes sure that the size
-of the allocated affinity mask is dependent on the number of
-CPUs as reported by get_nprocs_conf().
+> oom_score_adj) POV is that signals are delivered to all entities and
+> that thay share signal struct. copy_signal is checking for CLONE_THREAD
 
-Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
-Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
-Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
-Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
- 1 file changed, 25 insertions(+), 12 deletions(-)
+If a thread has a separate sighand struct it can have separate handlers
+(Oleg will correct me if wrong.). But fatal signals will take the whole
+thread-group down and can't be ignored which is the only thing you care
+about with OOM afair.
+What you care about is that the oom_score_adj{_min} settings are shared
+and they live in struct signal_struct and whether that's shared or not
+is basically guided by CLONE_THREAD.
 
-diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
-index dcf74184bfd0a..bafb70d0ee264 100644
---- a/tools/testing/selftests/powerpc/utils.c
-+++ b/tools/testing/selftests/powerpc/utils.c
-@@ -12,6 +12,7 @@
- #include <sched.h>
- #include <stdio.h>
- #include <sys/stat.h>
-+#include <sys/sysinfo.h>
- #include <sys/types.h>
- #include <unistd.h>
- 
-@@ -62,26 +63,38 @@ void *get_auxv_entry(int type)
- 
- int pick_online_cpu(void)
- {
--	cpu_set_t mask;
--	int cpu;
-+	int ncpus, cpu = -1;
-+	cpu_set_t *mask;
-+	size_t size;
-+
-+	ncpus = get_nprocs_conf();
-+	size = CPU_ALLOC_SIZE(ncpus);
-+	mask = CPU_ALLOC(ncpus);
-+	if (!mask) {
-+		perror("malloc");
-+		return -1;
-+	}
- 
--	CPU_ZERO(&mask);
-+	CPU_ZERO_S(size, mask);
- 
--	if (sched_getaffinity(0, sizeof(mask), &mask)) {
-+	if (sched_getaffinity(0, size, mask)) {
- 		perror("sched_getaffinity");
--		return -1;
-+		goto done;
- 	}
- 
- 	/* We prefer a primary thread, but skip 0 */
--	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = 8; cpu < ncpus; cpu += 8)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	/* Search for anything, but in reverse */
--	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
--		if (CPU_ISSET(cpu, &mask))
--			return cpu;
-+	for (cpu = ncpus - 1; cpu >= 0; cpu--)
-+		if (CPU_ISSET_S(cpu, size, mask))
-+			goto done;
- 
- 	printf("No cpus in affinity mask?!\n");
--	return -1;
-+
-+done:
-+	CPU_FREE(mask);
-+	return cpu;
- }
--- 
-2.25.1
+> but CLONE_THREAD requires CLONE_SIGHAND AFAIU. So is there any cae where
+> checking for CLONE_SIGHAND would wrong for our purpose?
 
+Without having spent a long time thinking deeply about this it likely
+wouldn't. But using CLONE_SIGHAND is very irritating since it doesn't
+clearly express what you want this for. Especially since there's now a
+difference between the check in copy_signal() and copy_mm() and a
+disconnect to what is expressed in the commit message too, imho.
 
-
+Christian
