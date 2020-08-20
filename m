@@ -2,110 +2,91 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF063C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E647C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 92DD42078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wXZYynso"
+	by mail.kernel.org (Postfix) with ESMTP id 2C9C5207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:47:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597924034;
+	bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OCZ0e+9SNnGJZruzKuc+m2VfRKsN776vAI8VuIp5Eq00+Cs3+/QwYj8fWmNvsgn9H
+	 FcH0wD579BKV/MmPaQDiKprTHct0CgBExgHRJKDyR4+x6n4Ay3fS9NW6P7GcwXhT79
+	 fXjy15Izic3JjrNXgajZ9Tpy/I4d2BVfJLgdpqyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729184AbgHTLq4 (ORCPT
+        id S1730660AbgHTLrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:46:56 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:60631 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730591AbgHTLpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:45:06 -0400
-Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id 8izskGuNMywL58iztkZUl0; Thu, 20 Aug 2020 13:44:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1597923886; bh=IocCpV9atTxbqpgpHngbBHta2la2malhBL6QLL+KbMw=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wXZYynsoXGQzHJRmmozOkGf/EqZdtHoUtsr/ExG3gSyNAJPQVlg01223NpYMx/2p0
-         cym8co0f5yoFT/4yOUylgHG2WF9mlmjV4f1w5EQtJ56IhRL12hAaLZS3hG/FQZ3nLa
-         Ee+qFiJHupmdw5mOphHbm9kP7JVFsZAZdcIExqXQfEdHRSfE4Vz1Cl9sKQq6NJh4Gb
-         qdDsQ3Vw92+qjPV3rcN4kiY+1s7L+uysFgsLNUYTteqssRmo8jJLOZTiMplpaCNvlG
-         0x4iPQD65oKwFPRjouCSjJxFl1vDSyHcWq5szCK8Xk7JhLB2OVqIP4aJLcUd4fl/py
-         ORheinfat+Vvw==
-Subject: Re: [PATCH v2] media: pvrusb2: fix parsing error
-To:     Tong Zhang <ztong0001@gmail.com>, isely@pobox.com,
-        mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <75b8354b-362a-0215-8038-45bd68be7de5@xs4all.nl>
- <20200819212523.113973-1-ztong0001@gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <aed971ed-bd8e-eaed-b2ee-80e9654f24cd@xs4all.nl>
-Date:   Thu, 20 Aug 2020 13:44:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 07:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730610AbgHTKD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:03:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F09C2067C;
+        Thu, 20 Aug 2020 10:03:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917833;
+        bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xB8NvLtsS5kSjJ1sTgjUKqQ06utB4FW8FToHUlp8my6MW+YWtfbnzdR/LQK13zkJ8
+         tYQXKcm/qixDKRWmc0qfBaTClfdaNbASmtwlF3z4mkimrOz7oZFOmUXtNwkwFROnt8
+         9QYgVEI/9wC0mGplBPe7/ERnxKrI7Sf7J1zaDj5w=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.9 175/212] xtensa: fix xtensa_pmu_setup prototype
+Date:   Thu, 20 Aug 2020 11:22:28 +0200
+Message-Id: <20200820091611.229908245@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200819212523.113973-1-ztong0001@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfEhHaZWDaOurX1cn4LmZC0i1t/di2YlunFK+pliQZuPYrCIYyh5ho6JV7mVCMF7Hwd7EZK32MbBPIliMkHjTo1MIgVGORYFeOeMHXAIMg9Vc7BDXuCDj
- wAKOXUKbVDy9n7GO563eeDiQPU+EMFrd0BmsKGelRh0CZkeseQp/puARcYrNSsAxiGTwNzbyy3izpTpWPpp1SQYfZqH/tO5J5J9ngvKGX4SEOIResnWVu435
- SSUnVdy7alHFz2IqYHaDrgaXLO05Bno4a4Sy8Tibzme7zqSOOMhyb//jLURi5iPy5lXpeCDhH3nR8m7cPX3JkMjQngqcvuAwmZzJwHYGulDC5P9Vohksa84d
- M714J3ygzEM6tgdCHA9MU0cdZLtZWaUL5Lg6FjIE5pp1IcrZF34=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/08/2020 23:25, Tong Zhang wrote:
-> pvr2_std_str_to_id() returns 0 on failure and 1 on success,
-> however the caller is checking failure case using <0
-> 
-> Co-developed-by: Hans Verkuil<hverkuil@xs4all.nl>
-> Signed-off-by: Tong Zhang <ztong0001@gmail.com>
-> ---
-> 
-> v2: return -EINVAL as suggested by Hans Verkuil<hverkuil@xs4all.nl>.
-> I also rebased the code on v5.9-rc1.
-> 
->  drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> index 1cfb7cf64131..6a444cb27e31 100644
-> --- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> +++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> @@ -866,8 +866,8 @@ static int ctrl_std_sym_to_val(struct pvr2_ctrl *cptr,
->  {
->  	int ret;
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-This is no longer used, so can be removed.
+commit 6d65d3769d1910379e1cfa61ebf387efc6bfb22c upstream.
 
-And if I compile this patch I get this warning:
+Fix the following build error in configurations with
+CONFIG_XTENSA_VARIANT_HAVE_PERF_EVENTS=y:
 
-drivers/media/usb/pvrusb2/pvrusb2-hdw.c: In function ‘ctrl_std_sym_to_val’:
-drivers/media/usb/pvrusb2/pvrusb2-hdw.c:867:6: warning: unused variable ‘ret’ [-Wunused-variable]
-  867 |  int ret;
-      |      ^~~
+  arch/xtensa/kernel/perf_event.c:420:29: error: passing argument 3 of
+  ‘cpuhp_setup_state’ from incompatible pointer type
 
-Always compile-test before posting a patch :-)
+Cc: stable@vger.kernel.org
+Fixes: 25a77b55e74c ("xtensa/perf: Convert the hotplug notifier to state machine callbacks")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Regards,
+---
+ arch/xtensa/kernel/perf_event.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Hans
+--- a/arch/xtensa/kernel/perf_event.c
++++ b/arch/xtensa/kernel/perf_event.c
+@@ -404,7 +404,7 @@ static struct pmu xtensa_pmu = {
+ 	.read = xtensa_pmu_read,
+ };
+ 
+-static int xtensa_pmu_setup(int cpu)
++static int xtensa_pmu_setup(unsigned int cpu)
+ {
+ 	unsigned i;
+ 
 
->  	v4l2_std_id id;
-> -	ret = pvr2_std_str_to_id(&id,bufPtr,bufSize);
-> -	if (ret < 0) return ret;
-> +	if (!pvr2_std_str_to_id(&id, bufPtr, bufSize))
-> +		return -EINVAL;
->  	if (mskp) *mskp = id;
->  	if (valp) *valp = id;
->  	return 0;
-> 
 
