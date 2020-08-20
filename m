@@ -2,108 +2,117 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB565C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2A65207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:43:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iE8RIxO/"
+	by mail.kernel.org (Postfix) with ESMTP id BA976207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHTHnc (ORCPT
+        id S1726735AbgHTHo3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgHTHnb (ORCPT
+        Thu, 20 Aug 2020 03:44:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52664 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725797AbgHTHo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:43:31 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CF7C061757;
-        Thu, 20 Aug 2020 00:43:30 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id i6so822265edy.5;
-        Thu, 20 Aug 2020 00:43:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dqghZRBtsmgBcL9zovjVe2f2vLQATQWo8uSmvuxBzHQ=;
-        b=iE8RIxO/pFTAv5ttCWHqtyybVWLleG5KbeeliQ4MWAcj3Et6B9Mt+XJaaOYzns3aBF
-         WbQx68Vkf31i98LizPvX+hHeT6uZs4Q4Qtu8egP9MT8smRjreJG33EFLD210FvYqRIv6
-         VyG/P+c2nTYjIWmCJBuyydQa2XFJObOKoP2r6KiT7Oem/H0j5w0VrvTLItdQdK7o/izy
-         Z6rseArdFHX/+devGGumGlVE1hxFC5w3C5CdfUAec54mwpU8Ec5tG0bmEW5Pmpx2QrZO
-         djC25HjaY4wNtDeVF6KQ9D9bXKivhfrUQKcCqFWMPDm5uY5s8okiQzuepgC/6IUb49yU
-         /FmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dqghZRBtsmgBcL9zovjVe2f2vLQATQWo8uSmvuxBzHQ=;
-        b=KH87rDbICNp76BtUEpgaNJaxvxQqUNUPpe4q3AxgOXg46Tk1x2AzhIZMRDhk8Iolxd
-         WCcHFlwq8uIF6paVJ5j5diz+J9OwSzHzSVKn2JG+DLbCMqYx0pmukatwjDo+ygAL9jXG
-         pbaLJhDSLLbXZOOFa9sVeUE6e4n+vGrPzt2yFyGxMmjLCgy2BsnL32ud5sF5AUEsXd9i
-         BbDj0jHkxFNEUy/6Ws5LIKk9/NtXDvIDZe/tb4IN5YKJMo9zlOP4e0aPZ9YDzhUahIck
-         HtU9O8n4GaE5/sL1fFdDxbE5QeQoCcajCKJX494PbZMjKiJDgXjXJrpw3YqQs60QyHSJ
-         MzEQ==
-X-Gm-Message-State: AOAM531t/c6Ld8Nc352w02FyOfs0zyRaUJnC601mXnG5lPU0f1pO0p2c
-        3C2YPJ+vhAk9256/r/XsKMtP9GFlEZqvWGXW8No=
-X-Google-Smtp-Source: ABdhPJwMbmcJ4NWOGrV3q85l7RlB6WidpEdoOwK1UBexXU20R7Z2Ht1elpiWU7rI7joz4LZw490sfSv6MHCKZI7tMFA=
-X-Received: by 2002:aa7:c513:: with SMTP id o19mr1640779edq.327.1597909409462;
- Thu, 20 Aug 2020 00:43:29 -0700 (PDT)
+        Thu, 20 Aug 2020 03:44:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-79-EZQzNz_MMTW5m19NmXdomw-1; Thu, 20 Aug 2020 08:44:24 +0100
+X-MC-Unique: EZQzNz_MMTW5m19NmXdomw-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 20 Aug 2020 08:44:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 20 Aug 2020 08:44:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] printk: implement pr_cont_t
+Thread-Topic: [RFC PATCH 1/5] printk: implement pr_cont_t
+Thread-Index: AQHWdomYXzVvufyPxEOt+PNltcCbQKlAmzJg
+Date:   Thu, 20 Aug 2020 07:44:23 +0000
+Message-ID: <b17fc8afc8984fedb852921366190104@AcuMS.aculab.com>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+         <20200819232632.13418-2-john.ogness@linutronix.de>
+ <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
+In-Reply-To: <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <465a540e-5296-32e7-f6a6-79942dfe2618@netrounds.com>
- <20200623134259.8197-1-mzhivich@akamai.com> <1849b74f-163c-8cfa-baa5-f653159fefd4@akamai.com>
- <CAM_iQpX1+dHB0kJF8gRfuDeAb9TsA9mB9H_Og8n8Hr19+EMLJA@mail.gmail.com>
- <CAM_iQpWjQiG-zVs+e-V=8LvTFbRwgC4y4eoGERjezfAT0Fmm8g@mail.gmail.com>
- <7fd86d97-6785-0b5f-1e95-92bc1da9df35@netrounds.com> <500b4843cb7c425ea5449fe199095edd5f7feb0c.camel@redhat.com>
- <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
-In-Reply-To: <25ca46e4-a8c1-1c88-d6a9-603289ff44c3@akamai.com>
-From:   Jike Song <albcamus@gmail.com>
-Date:   Thu, 20 Aug 2020 15:43:17 +0800
-Message-ID: <CANE52Ki8rZGDPLZkxY--RPeEG+0=wFeyCD6KKkeG1WREUwramw@mail.gmail.com>
-Subject: Re: Packet gets stuck in NOLOCK pfifo_fast qdisc
-To:     Josh Hunt <johunt@akamai.com>
-Cc:     Paolo Abeni <pabeni@redhat.com>,
-        Jonas Bonn <jonas.bonn@netrounds.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Michael Zhivich <mzhivich@akamai.com>,
-        David Miller <davem@davemloft.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        kehuan.feng@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Josh,
+From: Joe Perches
+> Sent: 20 August 2020 01:34
+> 
+> On Thu, 2020-08-20 at 01:32 +0206, John Ogness wrote:
+> > Implement a new buffering mechanism for pr_cont messages.
+> >
+> > Old mechanism syntax:
+> >
+> >     printk(KERN_INFO "text");
+> >     printk(KERN_CONT " continued");
+> >     printk(KERN_CONT "\n");
+> >
+> > New mechanism syntax:
+> >
+> >     pr_cont_t c;
+> >
+> >     pr_cont_begin(&c, KERN_INFO "text");
+> 
+> bikeshed:
+> 
+> I suggest:
+> 
+> 	printk_begin(&printk_context, fmt, ...)
+> 	printk_continue(&printk_context, fmt, ...) (maybe printk_next())
+> 	printk_end(&printk_context, fmt, ...)
 
-On Fri, Jul 3, 2020 at 2:14 AM Josh Hunt <johunt@akamai.com> wrote:
-{snip}
-> Initial results with Cong's patch look promising, so far no stalls. We
-> will let it run over the long weekend and report back on Tuesday.
->
-> Paolo - I have concerns about possible performance regression with the
-> change as well. If you can gather some data that would be great. If
-> things look good with our low throughput test over the weekend we can
-> also try assessing performance next week.
->
+I see some very long source lines looming ...
 
-We met possibly the same problem when testing nvidia/mellanox's
-GPUDirect RDMA product, we found that changing NET_SCH_DEFAULT to
-DEFAULT_FQ_CODEL mitigated the problem, having no idea why. Maybe you
-can also have a try?
+Blue bikeshed:
 
-Besides, our testing is pretty complex, do you have a quick test to
-reproduce it?
+You'd probably want printk_end(&ctx, NULL) to work.
+Although the example doesn't show where the '\n' comes from.
+Although I guess it is now inferred and actually deleted
+from 'normal' printk() call.
 
--- 
-Thanks,
-Jike
+I've no idea how you'd 'size' the number of buffers.
+You could use kmalloc(), perhaps falling back on a local buffer.
+While might lead to:
+	pr_init(&ctx, level, GFP_KERNEL);
+	pr_cont(&ctx, fmt, ...);
+	pr_flush(&ctx);
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
