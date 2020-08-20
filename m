@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1050AC433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978C1C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8F6A22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AD922BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929243;
-	bh=ML6MeKfHJFdmd/j6R4VH8tkXe+Fr/873m/BBU9B4WKY=;
+	s=default; t=1597929244;
+	bh=XusOjFSGRwsth8qR6OCSimLud2UaSI0UbhOkQ47bGsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0PEJ1ZvOG/Vro3E/pJmQbzAWgyVnH8SpzgnSdfoZtZ/gnncsP/fZ+Fi72Fit2+R+
-	 8HdOGKBdsZdfccCfcXz41m1DdiHwafY3ZBWK96UADKZHvhaftkC8SMyFEQ+PkMSnuU
-	 EIBQNaiCVb7C92qSX4k5zuVQoy1YQw3h8yVSzkU0=
+	b=LkFd7DOZP0Q+NPcwbMbM7QT8pBoUsNGylzV4lv6pYVUHazEQIIDP/oSAPY6Y8DsK/
+	 PwgCTqYBE0zxbS5tu8lHA7WdhY8xX+2QB+zTSWkw+Ve5sz3JVtUQys3/i1cQmcWVwT
+	 3SE0e+UR3q/UGnLAUirHnnO39x0uLIiC6Cv7F44o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729567AbgHTNOB (ORCPT
+        id S1728661AbgHTNOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51472 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:14:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728327AbgHTJgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:36:36 -0400
+        id S1728409AbgHTJge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8FFD2075E;
-        Thu, 20 Aug 2020 09:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1FCF20724;
+        Thu, 20 Aug 2020 09:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916196;
-        bh=ML6MeKfHJFdmd/j6R4VH8tkXe+Fr/873m/BBU9B4WKY=;
+        s=default; t=1597916193;
+        bh=XusOjFSGRwsth8qR6OCSimLud2UaSI0UbhOkQ47bGsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rRArUzZOyQJA/awx/acRdB7fdhJEztc7KMFyERCuZAVlGPBgUGuJ6gWhDyUwPcnuT
-         BzQZSBNlqN3Gxq82/zPxgjtnNk5LkVrRCFniBuBOE5efQCld5hVMOAeIsaanna/+uV
-         2dLF7pmmTYsZDD7y/h0UAHcfDSqgIYtQzUacuwqQ=
+        b=JbflROmZFH/FJ5v1Nr0Cc4yJjnVbznPY6VnWYOm249Uvfk65IjkbRNE3YwlX7OC63
+         3dAsarhoUDUHZffnQK0RV8S7PPlH4Vg8M5IsZ01MMUN/Q793VPk5FhtzlPeptccyK4
+         J5z2PoInzd+jx/B5duyaUCxPNK9LkSYnlQAqXcXA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 044/204] powerpc/ptdump: Fix build failure in hashpagetable.c
-Date:   Thu, 20 Aug 2020 11:19:01 +0200
-Message-Id: <20200820091608.474078716@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.7 043/204] cifs: Fix leak when handling lease break for cached root fid
+Date:   Thu, 20 Aug 2020 11:19:00 +0200
+Message-Id: <20200820091608.422690477@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,36 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Paul Aurich <paul@darkrain42.org>
 
-commit 7c466b0807960edc13e4b855be85ea765df9a6cd upstream.
+commit baf57b56d3604880ccb3956ec6c62ea894f5de99 upstream.
 
-H_SUCCESS is only defined when CONFIG_PPC_PSERIES is defined.
+Handling a lease break for the cached root didn't free the
+smb2_lease_break_work allocation, resulting in a leak:
 
-!= H_SUCCESS means != 0. Modify the test accordingly.
+    unreferenced object 0xffff98383a5af480 (size 128):
+      comm "cifsd", pid 684, jiffies 4294936606 (age 534.868s)
+      hex dump (first 32 bytes):
+        c0 ff ff ff 1f 00 00 00 88 f4 5a 3a 38 98 ff ff  ..........Z:8...
+        88 f4 5a 3a 38 98 ff ff 80 88 d6 8a ff ff ff ff  ..Z:8...........
+      backtrace:
+        [<0000000068957336>] smb2_is_valid_oplock_break+0x1fa/0x8c0
+        [<0000000073b70b9e>] cifs_demultiplex_thread+0x73d/0xcc0
+        [<00000000905fa372>] kthread+0x11c/0x150
+        [<0000000079378e4e>] ret_from_fork+0x22/0x30
 
-Fixes: 65e701b2d2a8 ("powerpc/ptdump: drop non vital #ifdefs")
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/795158fc1d2b3dff3bf7347881947a887ea9391a.1592227105.git.christophe.leroy@csgroup.eu
+Avoid this leak by only allocating when necessary.
+
+Fixes: a93864d93977 ("cifs: add lease tracking to the cached root fid")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+CC: Stable <stable@vger.kernel.org> # v4.18+
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/ptdump/hashpagetable.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/smb2misc.c |   73 +++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 21 deletions(-)
 
---- a/arch/powerpc/mm/ptdump/hashpagetable.c
-+++ b/arch/powerpc/mm/ptdump/hashpagetable.c
-@@ -259,7 +259,7 @@ static int pseries_find(unsigned long ea
- 	for (i = 0; i < HPTES_PER_GROUP; i += 4, hpte_group += 4) {
- 		lpar_rc = plpar_pte_read_4(0, hpte_group, (void *)ptes);
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -508,15 +508,31 @@ cifs_ses_oplock_break(struct work_struct
+ 	kfree(lw);
+ }
  
--		if (lpar_rc != H_SUCCESS)
-+		if (lpar_rc)
++static void
++smb2_queue_pending_open_break(struct tcon_link *tlink, __u8 *lease_key,
++			      __le32 new_lease_state)
++{
++	struct smb2_lease_break_work *lw;
++
++	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
++	if (!lw) {
++		cifs_put_tlink(tlink);
++		return;
++	}
++
++	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
++	lw->tlink = tlink;
++	lw->lease_state = new_lease_state;
++	memcpy(lw->lease_key, lease_key, SMB2_LEASE_KEY_SIZE);
++	queue_work(cifsiod_wq, &lw->lease_break);
++}
++
+ static bool
+-smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp,
+-		    struct smb2_lease_break_work *lw)
++smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp)
+ {
+-	bool found;
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+ 				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
+@@ -546,22 +562,29 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 		cfile->oplock_level = lease_state;
+ 
+ 		cifs_queue_oplock_break(cfile);
+-		kfree(lw);
+ 		return true;
+ 	}
+ 
+-	found = false;
++	return false;
++}
++
++static struct cifs_pending_open *
++smb2_tcon_find_pending_open_lease(struct cifs_tcon *tcon,
++				  struct smb2_lease_break *rsp)
++{
++	__u8 lease_state = le32_to_cpu(rsp->NewLeaseState);
++	int ack_req = le32_to_cpu(rsp->Flags &
++				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
++	struct cifs_pending_open *open;
++	struct cifs_pending_open *found = NULL;
++
+ 	list_for_each_entry(open, &tcon->pending_opens, olist) {
+ 		if (memcmp(open->lease_key, rsp->LeaseKey,
+ 			   SMB2_LEASE_KEY_SIZE))
  			continue;
- 		for (j = 0; j < 4; j++) {
- 			if (HPTE_V_COMPARE(ptes[j].v, want_v) &&
+ 
+ 		if (!found && ack_req) {
+-			found = true;
+-			memcpy(lw->lease_key, open->lease_key,
+-			       SMB2_LEASE_KEY_SIZE);
+-			lw->tlink = cifs_get_tlink(open->tlink);
+-			queue_work(cifsiod_wq, &lw->lease_break);
++			found = open;
+ 		}
+ 
+ 		cifs_dbg(FYI, "found in the pending open list\n");
+@@ -582,14 +605,7 @@ smb2_is_valid_lease_break(char *buffer)
+ 	struct TCP_Server_Info *server;
+ 	struct cifs_ses *ses;
+ 	struct cifs_tcon *tcon;
+-	struct smb2_lease_break_work *lw;
+-
+-	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
+-	if (!lw)
+-		return false;
+-
+-	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
+-	lw->lease_state = rsp->NewLeaseState;
++	struct cifs_pending_open *open;
+ 
+ 	cifs_dbg(FYI, "Checking for lease break\n");
+ 
+@@ -607,11 +623,27 @@ smb2_is_valid_lease_break(char *buffer)
+ 				spin_lock(&tcon->open_file_lock);
+ 				cifs_stats_inc(
+ 				    &tcon->stats.cifs_stats.num_oplock_brks);
+-				if (smb2_tcon_has_lease(tcon, rsp, lw)) {
++				if (smb2_tcon_has_lease(tcon, rsp)) {
+ 					spin_unlock(&tcon->open_file_lock);
+ 					spin_unlock(&cifs_tcp_ses_lock);
+ 					return true;
+ 				}
++				open = smb2_tcon_find_pending_open_lease(tcon,
++									 rsp);
++				if (open) {
++					__u8 lease_key[SMB2_LEASE_KEY_SIZE];
++					struct tcon_link *tlink;
++
++					tlink = cifs_get_tlink(open->tlink);
++					memcpy(lease_key, open->lease_key,
++					       SMB2_LEASE_KEY_SIZE);
++					spin_unlock(&tcon->open_file_lock);
++					spin_unlock(&cifs_tcp_ses_lock);
++					smb2_queue_pending_open_break(tlink,
++								      lease_key,
++								      rsp->NewLeaseState);
++					return true;
++				}
+ 				spin_unlock(&tcon->open_file_lock);
+ 
+ 				if (tcon->crfid.is_valid &&
+@@ -629,7 +661,6 @@ smb2_is_valid_lease_break(char *buffer)
+ 		}
+ 	}
+ 	spin_unlock(&cifs_tcp_ses_lock);
+-	kfree(lw);
+ 	cifs_dbg(FYI, "Can not process lease break - no lease matched\n");
+ 	return false;
+ }
 
 
