@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 309D4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB715204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C6D204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923614;
-	bh=RUq5teYFlzLyRTBN1RWFIjEF9wECVq83jJ1/0f2wCX8=;
+	s=default; t=1597923619;
+	bh=tcGqj/7/ZofFfawDGf6YWAYDXchoGbIZXO0mDruMJEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GQhL9z9qMWO8yIr5OzCfgkLjv7tX9usA8IaR5SuQsQhSv6xkTPUnJ8P4bTTvTY43e
-	 O6BHZF+qGbgJOFxTCSSmCu2BDLCua+FUGN5pbCdPCOC46rzir/TdbWIYDr6j12W5xp
-	 MS+8x/tp1zOg6SUSUKcQ/b43tvKNIoBTuHrVAI/0=
+	b=BNg+RigMIYr6pyHPXzwC2dsz947Rzdu17K6PtQCXQJTmtUFg8oIn1ZPrwMw9E2FNg
+	 +FpD67IbU9BgApmDvh2AfagvvVAGT5GBvkMPvm3qa/61UcZiKWYEJcncz1xQMdSsJE
+	 SLGsw7OCA0t9FEz/8klO2r+5LtcTpLduslAXF1Bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgHTLj7 (ORCPT
+        id S1729742AbgHTLkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:39:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60786 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728219AbgHTKFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:17 -0400
+        id S1729429AbgHTKFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10DB022CA1;
-        Thu, 20 Aug 2020 10:05:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DD5D22B40;
+        Thu, 20 Aug 2020 10:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917916;
-        bh=RUq5teYFlzLyRTBN1RWFIjEF9wECVq83jJ1/0f2wCX8=;
+        s=default; t=1597917919;
+        bh=tcGqj/7/ZofFfawDGf6YWAYDXchoGbIZXO0mDruMJEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=19M7zTKqMD6fqqsl0Cbq0nvlCzBRMNTYdLB8gsoNsN4jD65LelD/6Z9v5g5ArNTT9
-         Lq7/9cm+11znjtY6neaSoW97SLwshcMCBjBcxwipun9g4MOgTkLYIIqksg+/HfogOh
-         fITDleYBy8YSfK18hLEO37yMInOwiI9IZsAMz9dU=
+        b=j/zpOTUcLBPc/ZAzKh8iZt+mcexzVdZUDb+74AAB0BxwR36l2Oab5lRXp059yKMyq
+         YuRzgo5nHNSPyKotSNB+TbHgpwYVw89JPZH/TpkcMEOFNjF1mM1tZR2HzWjakHXYiR
+         oikZrsTNevfqu3ICDI1P8AvzgMtYhOdMS5lSlzo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.9 172/212] btrfs: only search for left_info if there is no right_info in try_merge_free_space
-Date:   Thu, 20 Aug 2020 11:22:25 +0200
-Message-Id: <20200820091611.078402363@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 163/212] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
+Date:   Thu, 20 Aug 2020 11:22:16 +0200
+Message-Id: <20200820091610.636812289@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,64 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
+commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
 
-In try_to_merge_free_space we attempt to find entries to the left and
-right of the entry we are adding to see if they can be merged.  We
-search for an entry past our current info (saved into right_info), and
-then if right_info exists and it has a rb_prev() we save the rb_prev()
-into left_info.
+Further investigation of the L-R swap problem on the MS2109 reveals that
+the problem isn't that the channels are swapped, but rather that they
+are swapped and also out of phase by one sample. In other words, the
+issue is actually that the very first frame that comes from the hardware
+is a half-frame containing only the right channel, and after that
+everything becomes offset.
 
-However there's a slight problem in the case that we have a right_info,
-but no entry previous to that entry.  At that point we will search for
-an entry just before the info we're attempting to insert.  This will
-simply find right_info again, and assign it to left_info, making them
-both the same pointer.
+So introduce a new quirk field to drop the very first 2 bytes that come
+in after the format is configured and a capture stream starts. This puts
+the channels in phase and in the correct order.
 
-Now if right_info _can_ be merged with the range we're inserting, we'll
-add it to the info and free right_info.  However further down we'll
-access left_info, which was right_info, and thus get a use-after-free.
-
-Fix this by only searching for the left entry if we don't find a right
-entry at all.
-
-The CVE referenced had a specially crafted file system that could
-trigger this use-after-free. However with the tree checker improvements
-we no longer trigger the conditions for the UAF.  But the original
-conditions still apply, hence this fix.
-
-Reference: CVE-2019-19448
-Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/free-space-cache.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/usb/card.h   |    1 +
+ sound/usb/pcm.c    |    6 ++++++
+ sound/usb/quirks.c |    3 +++
+ sound/usb/stream.c |    1 +
+ 4 files changed, 11 insertions(+)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2152,7 +2152,7 @@ out:
- static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
- 			  struct btrfs_free_space *info, bool update_stat)
- {
--	struct btrfs_free_space *left_info;
-+	struct btrfs_free_space *left_info = NULL;
- 	struct btrfs_free_space *right_info;
- 	bool merged = false;
- 	u64 offset = info->offset;
-@@ -2167,7 +2167,7 @@ static bool try_merge_free_space(struct
- 	if (right_info && rb_prev(&right_info->offset_index))
- 		left_info = rb_entry(rb_prev(&right_info->offset_index),
- 				     struct btrfs_free_space, offset_index);
--	else
-+	else if (!right_info)
- 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -125,6 +125,7 @@ struct snd_usb_substream {
+ 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
+ 	unsigned int fmt_type;		/* USB audio format type (1-3) */
+ 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
++	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
  
- 	if (right_info && !right_info->bitmap) {
+ 	unsigned int running: 1;	/* running status */
+ 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1312,6 +1312,12 @@ static void retire_capture_urb(struct sn
+ 			// continue;
+ 		}
+ 		bytes = urb->iso_frame_desc[i].actual_length;
++		if (subs->stream_offset_adj > 0) {
++			unsigned int adj = min(subs->stream_offset_adj, bytes);
++			cp += adj;
++			bytes -= adj;
++			subs->stream_offset_adj -= adj;
++		}
+ 		frames = bytes / stride;
+ 		if (!subs->txfr_quirk)
+ 			bytes = frames * stride;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1121,6 +1121,9 @@ void snd_usb_set_format_quirk(struct snd
+ 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
+ 		set_format_emu_quirk(subs, fmt);
+ 		break;
++	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
++		subs->stream_offset_adj = 2;
++		break;
+ 	}
+ }
+ 
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -95,6 +95,7 @@ static void snd_usb_init_substream(struc
+ 	subs->tx_length_quirk = as->chip->tx_length_quirk;
+ 	subs->speed = snd_usb_get_speed(subs->dev);
+ 	subs->pkt_offset_adj = 0;
++	subs->stream_offset_adj = 0;
+ 
+ 	snd_usb_set_pcm_ops(as->pcm, stream);
+ 
 
 
