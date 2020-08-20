@@ -2,128 +2,79 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14028C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D79C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD534206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90EB622B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmjpW6tp"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k3nY8FAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbgHTRPw (ORCPT
+        id S1730532AbgHTRP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:15:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        Thu, 20 Aug 2020 13:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730203AbgHTRPh (ORCPT
+        with ESMTP id S1730490AbgHTRPh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 13:15:37 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DFEC061388
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:15:34 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id d27so1730143qtg.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=424up9fRXsuplUqex8JuKJ4P67ivI7g/11qg3X2brrU=;
-        b=JmjpW6tpJxpmlmER/V+lEb7+vVPrpClcfvWoeMKntJNV5zlykvfG8b7O71gh1eN+fv
-         G5Y9NdDehL3kLIhehElg/dP5K4FuQL9G8vxrUSz9pM2CG2VF1/IcKqMtA/FC+ET5ktWc
-         lijIlMoeqfAsxiXjbaqDyQRyk50axCMAd8cRBCkF9zTM7BbrTrJJUkiSDV7u+/wWfWD6
-         4qzeGQWv7VjDx7F25x4KvbF8zeNIa/JrsBJgVy8V0dMgeBic7a/z+Lj78KfPcBT3byCr
-         OzhJE3D4NNwxzRrXapKNmrKzc4AtbCadPQuwMzYo/iDOZZQjVcHhT4bpMmXf/cQYCVyT
-         1i0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=424up9fRXsuplUqex8JuKJ4P67ivI7g/11qg3X2brrU=;
-        b=FA9aEL8UWRNF2gwfD6ZVxVz3GUkZV0Yczp90WYxTVMzdm1ayJ+10baKDPBRr8oQt+d
-         ZqEu1VHF607cb8hRmwKBcGDj7lsb/VBH7npIA23+/MIVpfmBQLmZqv4b2zsbo2RREBVO
-         H9nRUAILRKVJfUsSYFBiS7fJww/pl58fMdsX6OLRDHsfAyYM142CVoQX4VabxhS8Jnz+
-         sp1cPJnlaeTmmpHi6Dow1JNRIM3Md3dsWKsApU5k/iXtjBh6fqkCRmETupU9lEWV5krX
-         6an1UsYTem4/JVUm/zm3fD2sVs/8ejFcVIprlkLKVGY2lZi8mlMFuesDibhhp9jFCwBO
-         57Hw==
-X-Gm-Message-State: AOAM53285G6I6zuOSOedCV+UQNsXxulKLZyJo3RZYwhiTZll7CVdiE5S
-        nTudRGHr51glJsULD7Zwz6mubbUouc12jC6M9ZrKRw==
-X-Google-Smtp-Source: ABdhPJzYoJN1dKfspxwMxJB4tZMPYOymu0BBSs/+T5H0coi/llS74fnfsvlE1ZRo/WWhYpivmjqX0Il2hYKtx6/uPBY=
-X-Received: by 2002:ac8:7609:: with SMTP id t9mr3599622qtq.158.1597943727622;
- Thu, 20 Aug 2020 10:15:27 -0700 (PDT)
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23191C061385;
+        Thu, 20 Aug 2020 10:15:27 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f0c060044fc628f6f806d19.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:600:44fc:628f:6f80:6d19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5E64C1EC03CF;
+        Thu, 20 Aug 2020 19:15:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1597943724;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=vKmqzspNFgqlKgscTSJ8NWWh/MNhmcmcJfDXPcKbT1g=;
+        b=k3nY8FAT9c8XXhtkWm5XTXfDBTll5csquTTop2JB53IaQkGD1YmzGhvbiRSeRewbwpXswZ
+        SQP8mNMUwxJUtugASmSXOFB001R3jS74TohlirB5PO10RTrDPyLvcpKMMeJdLAcdDTYnSI
+        s426S8HnRszxmDRUbbxpev8qg7TP++g=
+Date:   Thu, 20 Aug 2020 19:15:18 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yazen Ghannam <Yazen.Ghannam@amd.com>
+Cc:     linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tony.luck@intel.com, x86@kernel.org,
+        Smita.KoralahalliChannabasappa@amd.com
+Subject: Re: [PATCH] x86/mce: Increase maximum number of banks to 64
+Message-ID: <20200820171518.GB17271@zn.tnic>
+References: <20200820170624.1855825-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-References: <000000000000568fc005ad3b57c3@google.com> <CACT4Y+bxvHp9gq_OEBAYdMTsm9vxw3CuviuDpxHCXcZHv_A0nw@mail.gmail.com>
- <CAEf4BzYHJgAtO2+6R70MYKQmXjiGy8OVgojNpvEPJ+FQb_DnKg@mail.gmail.com>
-In-Reply-To: <CAEf4BzYHJgAtO2+6R70MYKQmXjiGy8OVgojNpvEPJ+FQb_DnKg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 20 Aug 2020 19:15:16 +0200
-Message-ID: <CACT4Y+aYWgq853nPn3EoW4A0TU9pTJb+vwWHwTiguYy_T3K5rw@mail.gmail.com>
-Subject: Re: unregister_netdevice: waiting for DEV to become free (4)
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     syzbot <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200820170624.1855825-1-Yazen.Ghannam@amd.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 7:07 PM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
-> > On Wed, Aug 19, 2020 at 3:54 PM syzbot
-> > <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com> wrote:
-> > >
-> > > Hello,
-> > >
-> > > syzbot found the following issue on:
-> > >
-> > > HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
-> > > git tree:       upstream
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1710d97a900000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=df400f2f24a1677cd7e0
-> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15859986900000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1228fea1900000
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > Reported-by: syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com
-> > >
-> > > unregister_netdevice: waiting for lo to become free. Usage count = 1
-> >
-> > Based on the repro, it looks bpf/bpf link related:
-> >
-> > syz_emit_ethernet(0x86, &(0x7f0000000000)={@local, @empty=[0x2],
-> > @void, {@ipv4={0x800, @udp={{0x5, 0x4, 0x0, 0x0, 0x78, 0x0, 0x0, 0x0,
-> > 0x11, 0x0, @empty, @empty}, {0x0, 0x1b59, 0x64, 0x0,
-> > @wg=@response={0x5, 0x0, 0x0, "020000010865390406030500000000010900",
-> > "9384bbeb3018ad591b661fe808b21b77",
-> > {"694c875dfb1be5d2a0057a62022a1564",
-> > "a329d3a73b8268129e5fa4316a5d8c69"}}}}}}}, 0x0)
-> > mkdirat(0xffffffffffffff9c, &(0x7f0000000000)='./file0\x00', 0x0)
-> > mount(0x0, &(0x7f0000000080)='./file0\x00',
-> > &(0x7f0000000040)='cgroup2\x00', 0x0, 0x0)
-> > r0 = openat$cgroup_root(0xffffffffffffff9c, &(0x7f0000000000), 0x200002, 0x0)
-> > r1 = bpf$PROG_LOAD(0x5, &(0x7f0000000080)={0x9, 0x4,
-> > &(0x7f0000000000)=@framed={{}, [@alu={0x8000000201a7f19, 0x0, 0x6,
-> > 0x2, 0x1}]}, &(0x7f0000000100)='GPL\x00', 0x0, 0x0, 0x0, 0x0, 0x0, [],
-> > 0x0, 0x0, 0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0}, 0x70)
-> > bpf$BPF_LINK_CREATE(0x1c, &(0x7f0000000100)={r1, r0, 0x2}, 0x10)
-> >
->
-> The only place where BPF link-related code is bumping refcount for
-> net_device is in bpf_xdp_link_attach(), but both success and failure
-> code paths always do dev_put() in the end. bpf_link itself has a
-> pointer on net_device, but it's protected by rtnl_lock() only, no
-> refcnt associated with it. So I don't see how bpf_link can cause this.
-> I also couldn't reproduce this locally, using the provided C
-> reproducer.
+On Thu, Aug 20, 2020 at 05:06:24PM +0000, Yazen Ghannam wrote:
+> From: Akshay Gupta <Akshay.Gupta@amd.com>
+> 
+> ...because future AMD systems will support up to 64 MCA banks per CPU.
+> 
+> MAX_NR_BANKS is used to allocate a number of data structures, and it is
+> used as a ceiling for values read from MCG_CAP[Count]. Therefore, this
+> change will have no functional effect on existing systems with 32 or
+> fewer MCA banks per CPU.
 
-I was able to reproduce this in qemu the first time.
+Of course it will, grep for MAX_NR_BANKS and look at all those bitmaps
+and arrays which get defined with MAX_NR_BANKS size. With your change,
+they will double in size.
+
+How much does vmlinux size grow with your change?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
