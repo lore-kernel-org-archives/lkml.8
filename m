@@ -2,90 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3070FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E914C433E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 148AA207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C09A208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ItWo/q5r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbgHTRAZ (ORCPT
+        id S1730264AbgHTRDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:00:25 -0400
-Received: from cnc.isely.net ([75.149.91.89]:51183 "EHLO cnc.isely.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbgHTRAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:00:20 -0400
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 13:00:20 EDT
-Received: from cnc-c.isely.net ([::ffff:75.149.91.89])
-  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-SHA)
-  by cnc.isely.net with ESMTPSA; Thu, 20 Aug 2020 11:55:13 -0500
-  id 0000000000126070.000000005F3EAAF1.00001768
-Date:   Thu, 20 Aug 2020 11:55:13 -0500 (CDT)
-From:   Mike Isely <isely@isely.net>
-Reply-To: Mike Isely at pobox <isely@pobox.com>
-To:     Tong Zhang <ztong0001@gmail.com>
-cc:     mchehab@kernel.org, linux-media@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mike Isely at pobox <isely@pobox.com>
-Subject: Re: [PATCH v3] media: pvrusb2: fix parsing error
-In-Reply-To: <20200820165239.8510-1-ztong0001@gmail.com>
-Message-ID: <alpine.DEB.2.11.2008201154460.4428@cnc.isely.net>
-References: <aed971ed-bd8e-eaed-b2ee-80e9654f24cd@xs4all.nl> <20200820165239.8510-1-ztong0001@gmail.com>
-User-Agent: Alpine 2.11 (DEB 23 2013-08-11)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Aug 2020 13:03:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47302 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729879AbgHTRCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:02:42 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH29jH036414;
+        Thu, 20 Aug 2020 13:02:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=oCVsg2++cVppf7xzarM62n39OmMOblh0KEy36OO4NPs=;
+ b=ItWo/q5rfy6itcxUVUvZ97Z6CWpvcgq9bq1N271R4vT5ORDyIyicPigtYOLGKa/puGBJ
+ 6YeN1yaKG9jLa2oLM3HAYV81KCMR2VT9Z7PZRx0gIOluNPP2kzxH6sI4sOZ/eSysLfYv
+ 39JdFrHJP/105wSseYCHFPBoMnSho9457HU+LGVPx1xxlGtD+3MkVYMQZUad5wUUjJn7
+ wSrwSV4BpflaAIDtUGyrBwa1TQcI1mi+BMj0pP0LiDiHRvx3D0Td5ZEPRsJDYZgBwm9A
+ hcsWoJdqC6Gg2PMhSrVaobaYrSI089Hpub1YiNN7VGyHMN/86QmldGfUyZapxF1QJzOv QQ== 
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331uj3kd00-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 13:02:37 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0aFt008659;
+        Thu, 20 Aug 2020 17:02:35 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma05wdc.us.ibm.com with ESMTP id 3304th5pyb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 17:02:35 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2YRb51642670
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 17:02:34 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D12A1AE060;
+        Thu, 20 Aug 2020 17:02:34 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD37CAE05C;
+        Thu, 20 Aug 2020 17:02:33 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 17:02:33 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-spi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        eajames@linux.ibm.com, joel@jms.id.au, bradleyb@fuzziesquirrel.com,
+        broonie@kernel.org, robh+dt@kernel.org, arnd@arndb.de
+Subject: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted property
+Date:   Thu, 20 Aug 2020 12:02:25 -0500
+Message-Id: <20200820170228.42053-5-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200820170228.42053-1-eajames@linux.ibm.com>
+References: <20200820170228.42053-1-eajames@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ lowpriorityscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
+ mlxlogscore=999 mlxscore=0 adultscore=0 spamscore=0 suspectscore=1
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add documentation for the "fsi2spi,restricted" property which indicates
+a controller shouldn't sequence loops and therefore has a smaller
+transfer size.
 
-Acked-by: Mike Isely <isely@pobox.com>
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Acked-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+---
+ Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-On Thu, 20 Aug 2020, Tong Zhang wrote:
-
-> pvr2_std_str_to_id() returns 0 on failure and 1 on success,
-> however the caller is checking failure case using <0
-> 
-> Co-developed-by: Hans Verkuil<hverkuil@xs4all.nl>
-> Signed-off-by: Tong Zhang <ztong0001@gmail.com>
-> ---
-> 
-> v2: return -EINVAL as suggested by Hans Verkuil<hverkuil@xs4all.nl>.
-> I also rebased the code on v5.9-rc1.
-> v3: remove unused variable
-> 
->  drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> index 1cfb7cf64131..f4a727918e35 100644
-> --- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> +++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-> @@ -864,10 +864,9 @@ static int ctrl_std_sym_to_val(struct pvr2_ctrl *cptr,
->  			       const char *bufPtr,unsigned int bufSize,
->  			       int *mskp,int *valp)
->  {
-> -	int ret;
->  	v4l2_std_id id;
-> -	ret = pvr2_std_str_to_id(&id,bufPtr,bufSize);
-> -	if (ret < 0) return ret;
-> +	if (!pvr2_std_str_to_id(&id, bufPtr, bufSize))
-> +		return -EINVAL;
->  	if (mskp) *mskp = id;
->  	if (valp) *valp = id;
->  	return 0;
-> 
-
+diff --git a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+index b26d4b4be743..0d2fb071fd00 100644
+--- a/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
++++ b/Documentation/devicetree/bindings/fsi/ibm,fsi2spi.yaml
+@@ -24,6 +24,16 @@ properties:
+     items:
+       - description: FSI slave address
+ 
++patternProperties:
++  "^spi(@.*|-[0-9a-f])*$":
++    type: object
++
++    properties:
++      fsi2spi,restricted:
++        description: indicates the controller should not use looping in the
++          sequencer and therefore has a smaller maximum transfer size
++        type: boolean
++
+ required:
+   - compatible
+   - reg
 -- 
+2.26.2
 
-Mike Isely
-isely @ isely (dot) net
-PGP: 03 54 43 4D 75 E5 CC 92 71 16 01 E2 B5 F5 C1 E8
