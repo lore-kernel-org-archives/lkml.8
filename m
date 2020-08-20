@@ -2,118 +2,361 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78624C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B60C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55CDB2245C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882798;
-	bh=UoSSzOiBrRe7iK+l82T6x0wDhJm6VA4v7CJw4aj4dxQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F9N0UA8b3UxLIfVqEZywGvWqrppSE1VdRsK4oNxp7ArOXJo77RiAkLG4JyD/rfSgr
-	 o0dUf6LXTNps5Fxvl9gYVM6O0RU0y5GEHc7uuCc2ihDGeTPNQUMGtw99YYAqd6xf+D
-	 w5nCPbV8Sc49TTq56osTuGDENMKFiBb0wkpg9kfE=
+	by mail.kernel.org (Postfix) with ESMTP id DA28F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EcZCHM8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgHTAT4 (ORCPT
+        id S1727012AbgHTAUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:19:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgHTAT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:19:56 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A7F521775
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597882795;
-        bh=UoSSzOiBrRe7iK+l82T6x0wDhJm6VA4v7CJw4aj4dxQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gWrlU/kpNE4mcIOu6IQxKmPZHQlr/iVoka4LgMeu/UTnBe7ElH+6QTk8bVOukXqs5
-         a+1fMbb2C5APS9xljnSx+HU1iUr9hIoCi11wtAcpsc5Iz1zM04gZkMeRoX7Ch7he5l
-         /cVWSwq19hhhElKyCs/vR3/9/fHovzCHoy3pBcaw=
-Received: by mail-wr1-f43.google.com with SMTP id r4so417671wrx.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:19:55 -0700 (PDT)
-X-Gm-Message-State: AOAM533zWVP8y0pIFTbtg2tM74TnCBK0wmj9iTnCbT9LOHVItLWje0nh
-        yCVGuWtEIMAGCKn7Ua2r9lKjcyQ8VofMLqFiWBA+yw==
-X-Google-Smtp-Source: ABdhPJxInbWFJqe1ieCcvWc2d/gwkZXQYpryrROje/AuDGXpq1KmCR/aZOFVgMv/+HHmYN60m8lQIaqRMCz8YnK30Sg=
-X-Received: by 2002:a5d:5712:: with SMTP id a18mr497294wrv.184.1597882793738;
- Wed, 19 Aug 2020 17:19:53 -0700 (PDT)
+        Wed, 19 Aug 2020 20:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57252 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726749AbgHTAUM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:20:12 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1519C061384
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:20:11 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id t10so530225ejs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ALU6b4Z2nrBS10m+LDFgzQCHLua9Z/qjoJeUgWzlspg=;
+        b=EcZCHM8cYv8XneQNJzeruMGgCpTlZE7JfEd5FbiWEI7VW5EidJYFVYsB+zisV3uvgp
+         c+wQnOuBmjsG/hw9CLrZPN66inJSvtMarLg0ITU0/bPAEQ/1ea6MD0lfxRcY/dv0l8B+
+         Di4ShGlbVoUtI525v5K0xXaXJZPaELvy0Y4zYL2fcboiOY2OcxMyXG7dcZAJrhATugoh
+         jE20fihWi9KsNJBzxa24CtcbOUgs1ZiDSj3cj6NRyP8JNDttbQtJFMfsXjwf1in/OklR
+         hikv9HrfG1IiBM9QkLbWi94b5oKVQDxRWHyAKdtwRSl4Kyu/uj8jxzZuP00GRzEq6hY4
+         Xpkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ALU6b4Z2nrBS10m+LDFgzQCHLua9Z/qjoJeUgWzlspg=;
+        b=DTdb/2TTpWYQ4If6Ewv1VOjws4QcBvLLlFemN/25/3YeAzVtSlC1MiPaRyiLrqBMAV
+         VM9orTqDcNxAQbTeK5L1JARYinGVWi6GSvRKNdmzy1HggIaA0ItDiM3pTgS35LPLIaRa
+         HoktJXOJ6xo8rHdy2Ncro810XDRtFBjl5ePcmwsOdt393LODOZjzAHIWVjLkzbnFu9aG
+         FVGJWmzNnC1ehwwsYb84Iq+nR4XX3st/C/Q9gJJjZLr4Xu9TLd4iR39s4E7KfhFIlFqL
+         ltuNSeJezyO3Z2tUEdlF3rKNcZy+MNOC77jHSiK4lnhqWhjYH3cc2JhpEqG5dvU5NAxG
+         g/sA==
+X-Gm-Message-State: AOAM532L1meKq3LP4NcayoyFXY2l99fRDfVjpu1cklZJBQlRgvSrSAk/
+        o4/kwNANT0arSBc3AawU2vs4oK/aMP3S1wJCtYS8gQ==
+X-Google-Smtp-Source: ABdhPJxSKeFM1QwFzWhtVNkbCoAd8X9Th3Da1XgI/FkhD3YGCjktBNVLUNdZ6QCtvRTe+gr5sw2+4ApIXKWreSB6ymY=
+X-Received: by 2002:a17:906:7698:: with SMTP id o24mr869118ejm.182.1597882810007;
+ Wed, 19 Aug 2020 17:20:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
- <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
- <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
- <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com> <20200818151524.GE132200@linux.intel.com>
-In-Reply-To: <20200818151524.GE132200@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 19 Aug 2020 17:19:42 -0700
-X-Gmail-Original-Message-ID: <CALCETrWHfL6_BOuVAi=ucB8N=pQiWV_dF3YpWndEq5LWaUD9tw@mail.gmail.com>
-Message-ID: <CALCETrWHfL6_BOuVAi=ucB8N=pQiWV_dF3YpWndEq5LWaUD9tw@mail.gmail.com>
-Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
- enclave call
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
+References: <20200807155648.8602-1-graf@amazon.com> <20200807155648.8602-4-graf@amazon.com>
+In-Reply-To: <20200807155648.8602-4-graf@amazon.com>
+From:   Aaron Lewis <aaronlewis@google.com>
+Date:   Wed, 19 Aug 2020 17:19:58 -0700
+Message-ID: <CAAAPnDFhMNDU3zfy2Yvd=Mq=xGpKGm9z3i+O64GOn2qbyZjqGQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] KVM: selftests: Add test for user space MSR handling
+To:     Alexander Graf <graf@amazon.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Cedric Xing <cedric.xing@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asapek@google.com, Borislav Petkov <bp@alien8.de>,
-        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
-        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
-        Christian Ludloff <ludloff@google.com>,
-        Neil Horman <nhorman@redhat.com>,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        kvm list <kvm@vger.kernel.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 8:15 AM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
+On Fri, Aug 7, 2020 at 8:57 AM Alexander Graf <graf@amazon.com> wrote:
 >
-> On Mon, Aug 10, 2020 at 04:08:46PM -0700, Andy Lutomirski wrote:
-> > On Thu, Aug 6, 2020 at 7:55 AM Nathaniel McCallum <npmccallum@redhat.com> wrote:
-> > >
-> > > In a past revision of this patch, I had requested a void *misc
-> > > parameter that could be passed through vdso_sgx_enter_enclave_t into
-> > > sgx_enclave_exit_handler_t. This request encountered some push back
-> > > and I dropped the issue. However, I'd like to revisit it or something
-> > > similar.
-> >
-> > Why do you need an exit handler at all?  IIRC way back when I
-> > suggested that we simply not support it at all.  If you want to
-> > call__vdso_sgx_enter_enclave() in a loop, call it in a loop.  If you
-> > want to wrap it intelligently in Rust, you don't want a callback
-> > anyway -- that forces you have an FFI (or non-Rust, anyway) frame on
-> > the stack, which interacts poorly with panic handling and prevents you
-> > from using await in your Rust callback handler.  If, on the other
-> > hand, you just call __vdso_sg_enter_enclave() in a loop, all these
-> > problems go away and, if you really want, you can pass in a callback
-> > in Rust and call the callback from Rust.
+> Now that we have the ability to handle MSRs from user space and also to
+> select which ones we do want to prevent in-kernel KVM code from handling,
+> let's add a selftest to show case and verify the API.
 >
-> How would Intel SDK be able to do its stack manipulation?
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+>
+> ---
+>
+> v2 -> v3:
+>
+>   - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
+>   - Add test to clear whitelist
+>   - Adjust to reply-less API
+>   - Fix asserts
+>   - Actually trap on MSR_IA32_POWER_CTL writes
+> ---
+>  tools/testing/selftests/kvm/Makefile          |   1 +
+>  .../selftests/kvm/x86_64/user_msr_test.c      | 221 ++++++++++++++++++
+>  2 files changed, 222 insertions(+)
+>  create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
+>
 
-The same as now.  The enclave would see a pointer to a stack-like
-writable area in USER_RSP, but it just wouldn't be the actual stack.
+Please add user_msr_test to .gitignore.
 
-I suppose that the caller of the vdso can play these games just as
-well as the vdso itself, though, so maybe this is not helpful.
-
---Andy
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 4a166588d99f..80d5c348354c 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -55,6 +55,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
+>  TEST_GEN_PROGS_x86_64 += x86_64/debug_regs
+> +TEST_GEN_PROGS_x86_64 += x86_64/user_msr_test
+>  TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
+>  TEST_GEN_PROGS_x86_64 += demand_paging_test
+>  TEST_GEN_PROGS_x86_64 += dirty_log_test
+> diff --git a/tools/testing/selftests/kvm/x86_64/user_msr_test.c b/tools/testing/selftests/kvm/x86_64/user_msr_test.c
+> new file mode 100644
+> index 000000000000..7b149424690d
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/x86_64/user_msr_test.c
+> @@ -0,0 +1,221 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * tests for KVM_CAP_X86_USER_SPACE_MSR and KVM_X86_ADD_MSR_ALLOWLIST
+> + *
+> + * Copyright (C) 2020, Amazon Inc.
+> + *
+> + * This is a functional test to verify that we can deflect MSR events
+> + * into user space.
+> + */
+> +#define _GNU_SOURCE /* for program_invocation_short_name */
+> +#include <fcntl.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/ioctl.h>
+> +
+> +#include "test_util.h"
+> +
+> +#include "kvm_util.h"
+> +#include "processor.h"
+> +
+> +#define VCPU_ID                  5
+> +
+> +u32 msr_reads, msr_writes;
+> +
+> +struct range_desc {
+> +       struct kvm_msr_allowlist allow;
+> +       void (*populate)(struct kvm_msr_allowlist *range);
+> +};
+> +
+> +static void populate_c0000000_read(struct kvm_msr_allowlist *range)
+> +{
+> +       u8 *bitmap = range->bitmap;
+> +       u32 idx = MSR_SYSCALL_MASK & (KVM_MSR_ALLOWLIST_MAX_LEN - 1);
+> +
+> +       bitmap[idx / 8] &= ~(1 << (idx % 8));
+> +}
+> +
+> +static void populate_00000000_write(struct kvm_msr_allowlist *range)
+> +{
+> +       u8 *bitmap = range->bitmap;
+> +       u32 idx = MSR_IA32_POWER_CTL & (KVM_MSR_ALLOWLIST_MAX_LEN - 1);
+> +
+> +       bitmap[idx / 8] &= ~(1 << (idx % 8));
+> +}
+> +
+> +struct range_desc ranges[] = {
+> +       {
+> +               .allow = {
+> +                       .flags = KVM_MSR_ALLOW_READ,
+> +                       .base = 0x00000000,
+> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
+> +               },
+> +       }, {
+> +               .allow = {
+> +                       .flags = KVM_MSR_ALLOW_WRITE,
+> +                       .base = 0x00000000,
+> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
+> +               },
+> +               .populate = populate_00000000_write,
+> +       }, {
+> +               .allow = {
+> +                       .flags = KVM_MSR_ALLOW_READ | KVM_MSR_ALLOW_WRITE,
+> +                       .base = 0x40000000,
+> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
+> +               },
+> +       }, {
+> +               .allow = {
+> +                       .flags = KVM_MSR_ALLOW_READ,
+> +                       .base = 0xc0000000,
+> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
+> +               },
+> +               .populate = populate_c0000000_read,
+> +       }, {
+> +               .allow = {
+> +                       .flags = KVM_MSR_ALLOW_WRITE,
+> +                       .base = 0xc0000000,
+> +                       .nmsrs = KVM_MSR_ALLOWLIST_MAX_LEN * BITS_PER_BYTE,
+> +               },
+> +       },
+> +};
+> +
+> +static void guest_msr_calls(bool trapped)
+> +{
+> +       /* This goes into the in-kernel emulation */
+> +       wrmsr(MSR_SYSCALL_MASK, 0);
+> +
+> +       if (trapped) {
+> +               /* This goes into user space emulation */
+> +               GUEST_ASSERT(rdmsr(MSR_SYSCALL_MASK) == MSR_SYSCALL_MASK);
+> +       } else {
+> +               GUEST_ASSERT(rdmsr(MSR_SYSCALL_MASK) != MSR_SYSCALL_MASK);
+> +       }
+> +
+> +       /* If trapped == true, this goes into user space emulation */
+> +       wrmsr(MSR_IA32_POWER_CTL, 0x1234);
+> +
+> +       /* This goes into the in-kernel emulation */
+> +       rdmsr(MSR_IA32_POWER_CTL);
+> +}
+> +
+> +static void guest_code(void)
+> +{
+> +       guest_msr_calls(true);
+> +
+> +       /*
+> +        * Disable allow listing, so that the kernel
+> +        * handles everything in the next round
+> +        */
+> +       GUEST_SYNC(0);
+> +
+> +       guest_msr_calls(false);
+> +
+> +       GUEST_DONE();
+> +}
+> +
+> +static int handle_ucall(struct kvm_vm *vm)
+> +{
+> +       struct ucall uc;
+> +
+> +       switch (get_ucall(vm, VCPU_ID, &uc)) {
+> +       case UCALL_ABORT:
+> +               TEST_FAIL("Guest assertion not met");
+> +               break;
+> +       case UCALL_SYNC:
+> +               vm_ioctl(vm, KVM_X86_CLEAR_MSR_ALLOWLIST, NULL);
+> +               break;
+> +       case UCALL_DONE:
+> +               return 1;
+> +       default:
+> +               TEST_FAIL("Unknown ucall %lu", uc.cmd);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static void handle_rdmsr(struct kvm_run *run)
+> +{
+> +       run->msr.data = run->msr.index;
+> +       msr_reads++;
+> +}
+> +
+> +static void handle_wrmsr(struct kvm_run *run)
+> +{
+> +       /* ignore */
+> +       msr_writes++;
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +       struct kvm_enable_cap cap = {
+> +               .cap = KVM_CAP_X86_USER_SPACE_MSR,
+> +               .args[0] = 1,
+> +       };
+> +       struct kvm_vm *vm;
+> +       struct kvm_run *run;
+> +       int rc;
+> +       int i;
+> +
+> +       /* Tell stdout not to buffer its content */
+> +       setbuf(stdout, NULL);
+> +
+> +       /* Create VM */
+> +       vm = vm_create_default(VCPU_ID, 0, guest_code);
+> +       vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+> +       run = vcpu_state(vm, VCPU_ID);
+> +
+> +       rc = kvm_check_cap(KVM_CAP_X86_USER_SPACE_MSR);
+> +       TEST_ASSERT(rc, "KVM_CAP_X86_USER_SPACE_MSR is available");
+> +       vm_enable_cap(vm, &cap);
+> +
+> +       rc = kvm_check_cap(KVM_CAP_X86_MSR_ALLOWLIST);
+> +       TEST_ASSERT(rc, "KVM_CAP_X86_MSR_ALLOWLIST is available");
+> +
+> +       /* Set up MSR allowlist */
+> +       for (i = 0; i < ARRAY_SIZE(ranges); i++) {
+> +               struct kvm_msr_allowlist *a = &ranges[i].allow;
+> +               u32 bitmap_size = a->nmsrs / BITS_PER_BYTE;
+> +               struct kvm_msr_allowlist *range = malloc(sizeof(*a) + bitmap_size);
+> +
+> +               TEST_ASSERT(range, "range alloc failed (%ld bytes)\n", sizeof(*a) + bitmap_size);
+> +
+> +               *range = *a;
+> +
+> +               /* Allow everything by default */
+> +               memset(range->bitmap, 0xff, bitmap_size);
+> +
+> +               if (ranges[i].populate)
+> +                       ranges[i].populate(range);
+> +
+> +               vm_ioctl(vm, KVM_X86_ADD_MSR_ALLOWLIST, range);
+> +       }
+> +
+> +       while (1) {
+> +               rc = _vcpu_run(vm, VCPU_ID);
+> +
+> +               TEST_ASSERT(rc == 0, "vcpu_run failed: %d\n", rc);
+> +
+> +               switch (run->exit_reason) {
+> +               case KVM_EXIT_X86_RDMSR:
+> +                       handle_rdmsr(run);
+> +                       break;
+> +               case KVM_EXIT_X86_WRMSR:
+> +                       handle_wrmsr(run);
+> +                       break;
+> +               case KVM_EXIT_IO:
+> +                       if (handle_ucall(vm))
+> +                               goto done;
+> +                       break;
+> +               }
+> +
+> +       }
+> +
+> +done:
+> +       TEST_ASSERT(msr_reads == 1, "Handled 1 rdmsr in user space");
+> +       TEST_ASSERT(msr_writes == 1, "Handled 1 wrmsr in user space");
+> +
+> +       kvm_vm_free(vm);
+> +
+> +       return 0;
+> +}
+> --
+> 2.17.1
+>
+>
+>
+>
+> Amazon Development Center Germany GmbH
+> Krausenstr. 38
+> 10117 Berlin
+> Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+> Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+> Sitz: Berlin
+> Ust-ID: DE 289 237 879
+>
+>
+>
