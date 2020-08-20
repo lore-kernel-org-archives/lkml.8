@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B53C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91EC7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A39320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0FA2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926554;
-	bh=W7+t/6zBcdWVsX88rL4rBSRKb6pqQy+RRp5z1wyDlyo=;
+	s=default; t=1597926562;
+	bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZ9XEHorm3mVmCAFp1N1xJBnuoEtJiRdBG5N5RazUfBDBZOSu5jr2HQPfiyaugMg2
-	 WXcNDOeaJLVjDmL86rl7RknQKgY4/D/QJ+ohN8RHNU2qpZ74W3HMzCpYH/GYMK6TXj
-	 wILpQqTnfOrsyQiSvFKoJm/3iJHLDeB0bNHHtzlI=
+	b=xNBhHVs9ik7yV2y9gFg11kVE48vAyHzSX7q+HlYdrQmTBr/uAdUi2oh1f7Ln6kqZ5
+	 gPp1C2MAcU2hcFFuXiC3RSHFLUgeeimVFfOW0SJi4O8qW1WUkL2yYSI+6R8/m68cMF
+	 0FHx6o7fDiH+YU1wsnOd9Ku2j59CoPNwGM/CCOaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbgHTM3M (ORCPT
+        id S1729833AbgHTJvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60846 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:51:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729617AbgHTJvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:41 -0400
+        id S1729795AbgHTJvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C115E207FB;
-        Thu, 20 Aug 2020 09:51:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D2852067C;
+        Thu, 20 Aug 2020 09:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917100;
-        bh=W7+t/6zBcdWVsX88rL4rBSRKb6pqQy+RRp5z1wyDlyo=;
+        s=default; t=1597917076;
+        bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUjExCDiPplw1j4sZ0GIMHgkMvGNnFJpLIgFQaXnsXo7G6u4fXGd0ob2JiVLcW+ke
-         8Ph0ZHmNLLwjj1a2/49vjFg1h4b1DemwMYn1nGXD4AI1Yz14mSSvRtxw+Tilxxr2IQ
-         arDny4Zgyfde0I348yN92FLR8HMiHFGOO4DiiEEY=
+        b=DAXifZWN/ui39O7rLZtehbBg7cTCZB4suqdpzSw+K6CkzedIInkei1xmlRCm3wjKa
+         DPIWL5MQInnSwbAMToH63WExv5tg35nK+N3ixqMehf4hARIxs7vcJ1d5RDiqMa7Zzr
+         73XLR3StS26fY5nfzZUR+69RCbpqSuMu/zs8z7rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 145/152] khugepaged: retract_page_tables() remember to test exit
-Date:   Thu, 20 Aug 2020 11:21:52 +0200
-Message-Id: <20200820091601.241691401@linuxfoundation.org>
+        stable@vger.kernel.org, Marius Iacob <themariusus@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.4 149/152] drm: Added orientation quirk for ASUS tablet model T103HAF
+Date:   Thu, 20 Aug 2020 11:21:56 +0200
+Message-Id: <20200820091601.454836276@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -64,99 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Marius Iacob <themariusus@gmail.com>
 
-commit 18e77600f7a1ed69f8ce46c9e11cad0985712dfa upstream.
+commit b5ac98cbb8e5e30c34ebc837d1e5a3982d2b5f5c upstream.
 
-Only once have I seen this scenario (and forgot even to notice what forced
-the eventual crash): a sequence of "BUG: Bad page map" alerts from
-vm_normal_page(), from zap_pte_range() servicing exit_mmap();
-pmd:00000000, pte values corresponding to data in physical page 0.
-
-The pte mappings being zapped in this case were supposed to be from a huge
-page of ext4 text (but could as well have been shmem): my belief is that
-it was racing with collapse_file()'s retract_page_tables(), found *pmd
-pointing to a page table, locked it, but *pmd had become 0 by the time
-start_pte was decided.
-
-In most cases, that possibility is excluded by holding mmap lock; but
-exit_mmap() proceeds without mmap lock.  Most of what's run by khugepaged
-checks khugepaged_test_exit() after acquiring mmap lock:
-khugepaged_collapse_pte_mapped_thps() and hugepage_vma_revalidate() do so,
-for example.  But retract_page_tables() did not: fix that.
-
-The fix is for retract_page_tables() to check khugepaged_test_exit(),
-after acquiring mmap lock, before doing anything to the page table.
-Getting the mmap lock serializes with __mmput(), which briefly takes and
-drops it in __khugepaged_exit(); then the khugepaged_test_exit() check on
-mm_users makes sure we don't touch the page table once exit_mmap() might
-reach it, since exit_mmap() will be proceeding without mmap lock, not
-expecting anyone to be racing with it.
-
-Fixes: f3f0e1d2150b ("khugepaged: add support of collapse for tmpfs/shmem pages")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: <stable@vger.kernel.org>	[4.8+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021215400.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Marius Iacob <themariusus@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200801123445.1514567-1-themariusus@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/khugepaged.c |   24 ++++++++++++++----------
- 1 file changed, 14 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1414,6 +1414,7 @@ out:
- static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
- {
- 	struct vm_area_struct *vma;
-+	struct mm_struct *mm;
- 	unsigned long addr;
- 	pmd_t *pmd, _pmd;
- 
-@@ -1442,7 +1443,8 @@ static void retract_page_tables(struct a
- 			continue;
- 		if (vma->vm_end < addr + HPAGE_PMD_SIZE)
- 			continue;
--		pmd = mm_find_pmd(vma->vm_mm, addr);
-+		mm = vma->vm_mm;
-+		pmd = mm_find_pmd(mm, addr);
- 		if (!pmd)
- 			continue;
- 		/*
-@@ -1452,17 +1454,19 @@ static void retract_page_tables(struct a
- 		 * mmap_sem while holding page lock. Fault path does it in
- 		 * reverse order. Trylock is a way to avoid deadlock.
- 		 */
--		if (down_write_trylock(&vma->vm_mm->mmap_sem)) {
--			spinlock_t *ptl = pmd_lock(vma->vm_mm, pmd);
--			/* assume page table is clear */
--			_pmd = pmdp_collapse_flush(vma, addr, pmd);
--			spin_unlock(ptl);
--			up_write(&vma->vm_mm->mmap_sem);
--			mm_dec_nr_ptes(vma->vm_mm);
--			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
-+		if (down_write_trylock(&mm->mmap_sem)) {
-+			if (!khugepaged_test_exit(mm)) {
-+				spinlock_t *ptl = pmd_lock(mm, pmd);
-+				/* assume page table is clear */
-+				_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+				spin_unlock(ptl);
-+				mm_dec_nr_ptes(mm);
-+				pte_free(mm, pmd_pgtable(_pmd));
-+			}
-+			up_write(&mm->mmap_sem);
- 		} else {
- 			/* Try again later */
--			khugepaged_add_pte_mapped_thp(vma->vm_mm, addr);
-+			khugepaged_add_pte_mapped_thp(mm, addr);
- 		}
- 	}
- 	i_mmap_unlock_write(mapping);
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -121,6 +121,12 @@ static const struct dmi_system_id orient
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T101HA"),
+ 		},
+ 		.driver_data = (void *)&lcd800x1280_rightside_up,
++	}, {	/* Asus T103HAF */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T103HAF"),
++		},
++		.driver_data = (void *)&lcd800x1280_rightside_up,
+ 	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
 
 
