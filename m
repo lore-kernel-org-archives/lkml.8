@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F843C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DCDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE1FB20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 798A820658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:56:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928165;
-	bh=rXEl6PNenzDrQa9aLUnY5d8pkpgS5zeFRz20Js/VACQ=;
+	s=default; t=1597928183;
+	bh=KGzPf/rdCRUwBSQBvzEttjBkAfBjvfkrfl5505s+/ic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V9oFXo6Y07JwYzfo/XBVqqSBd2ORgeY6rQNzH/cM6BMaepdOUvPaOMWyv/2BAYOUU
-	 Gfq5JTwzOlt1SQ/DqtHNR2BskiPoUj2V3nFIw6FTRTAOkyw+VqyoqkVSjI50AqP3tu
-	 +JpfmYM8RBgPokc2TZVE7rsKtsG5wVplHYAuy1/8=
+	b=wiMH4Pd2/UgdzvklwhWAaFo829tbwvInvubAhcFmS89IOkm6iD41TX36ad82/p7Uo
+	 M9zgdismQPhQMsAvZroz5US+E8wTLJXLCJPcCqnKr7xxzVS3BiiP3NHWQBQyvUqP6G
+	 BebHGoAT2DwGrxEyEJuskwkkFpW/GqODk9MMEmW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgHTMz7 (ORCPT
+        id S1727066AbgHTM4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:55:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39618 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:56:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729226AbgHTJmz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:55 -0400
+        id S1729114AbgHTJlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E60A6208DB;
-        Thu, 20 Aug 2020 09:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7D1020724;
+        Thu, 20 Aug 2020 09:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916574;
-        bh=rXEl6PNenzDrQa9aLUnY5d8pkpgS5zeFRz20Js/VACQ=;
+        s=default; t=1597916514;
+        bh=KGzPf/rdCRUwBSQBvzEttjBkAfBjvfkrfl5505s+/ic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=frJqY92stev9YdbBPlESIDQIy/VaBp1+/p7X/UR/KkLx6HHleg5cxXYLMOUOnuo+S
-         yHGdLVSb0f2zJHy4dgQLuODhmsQPW+uUOSJvA+nnD5d4z6hR0a66CQ6WDFNofpiluW
-         KY5zLhWDZ2zWmO8J3VrgX6IY9R1DXdYpP8QEViq0=
+        b=urh7Wwn9yX4CHYoe9w0EdM03pjaPGSagVeqTO2uwG8/gtcp3ILR6Vm0VVholJm0lo
+         cjJnHHWKQuTeD5X1fXCN0QTdGltu3kOwspzjEayCTR53oiK0HHQ0dWTOflsjxaK3ma
+         Gvt+iT9xLJuXjOReuF43CH/4AvcYo3ALMWzKyv0s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 176/204] fs/minix: set s_maxbytes correctly
-Date:   Thu, 20 Aug 2020 11:21:13 +0200
-Message-Id: <20200820091614.996630376@linuxfoundation.org>
+Subject: [PATCH 5.7 153/204] libnvdimm/security: fix a typo
+Date:   Thu, 20 Aug 2020 11:20:50 +0200
+Message-Id: <20200820091613.883056922@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -63,123 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jane Chu <jane.chu@oracle.com>
 
-[ Upstream commit 32ac86efff91a3e4ef8c3d1cadd4559e23c8e73a ]
+[ Upstream commit dad42d17558f316e9e807698cd4207359b636084 ]
 
-The minix filesystem leaves super_block::s_maxbytes at MAX_NON_LFS rather
-than setting it to the actual filesystem-specific limit.  This is broken
-because it means userspace doesn't see the standard behavior like getting
-EFBIG and SIGXFSZ when exceeding the maximum file size.
+commit d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+introduced a typo, causing a 'nvdimm->sec.flags' update being overwritten
+by the subsequent update meant for 'nvdimm->sec.ext_flags'.
 
-Fix this by setting s_maxbytes correctly.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Link: http://lkml.kernel.org/r/20200628060846.682158-5-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/1596494499-9852-1-git-send-email-jane.chu@oracle.com
+Fixes: d78c620a2e82 ("libnvdimm/security: Introduce a 'frozen' attribute")
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/minix/inode.c    | 12 +++++++-----
- fs/minix/itree_v1.c |  2 +-
- fs/minix/itree_v2.c |  3 +--
- fs/minix/minix.h    |  1 -
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/nvdimm/security.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/minix/inode.c b/fs/minix/inode.c
-index 0dd929346f3f3..7b09a9158e401 100644
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -150,8 +150,10 @@ static int minix_remount (struct super_block * sb, int * flags, char * data)
- 	return 0;
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index 89b85970912db..acfd211c01b9c 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -457,7 +457,7 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+ 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+ 	put_device(&nvdimm->dev);
+ 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+-	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
++	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
  }
  
--static bool minix_check_superblock(struct minix_sb_info *sbi)
-+static bool minix_check_superblock(struct super_block *sb)
- {
-+	struct minix_sb_info *sbi = minix_sb(sb);
-+
- 	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
- 		return false;
- 
-@@ -161,7 +163,7 @@ static bool minix_check_superblock(struct minix_sb_info *sbi)
- 	 * of indirect blocks which places the limit well above U32_MAX.
- 	 */
- 	if (sbi->s_version == MINIX_V1 &&
--	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
-+	    sb->s_maxbytes > (7 + 512 + 512*512) * BLOCK_SIZE)
- 		return false;
- 
- 	return true;
-@@ -202,7 +204,7 @@ static int minix_fill_super(struct super_block *s, void *data, int silent)
- 	sbi->s_zmap_blocks = ms->s_zmap_blocks;
- 	sbi->s_firstdatazone = ms->s_firstdatazone;
- 	sbi->s_log_zone_size = ms->s_log_zone_size;
--	sbi->s_max_size = ms->s_max_size;
-+	s->s_maxbytes = ms->s_max_size;
- 	s->s_magic = ms->s_magic;
- 	if (s->s_magic == MINIX_SUPER_MAGIC) {
- 		sbi->s_version = MINIX_V1;
-@@ -233,7 +235,7 @@ static int minix_fill_super(struct super_block *s, void *data, int silent)
- 		sbi->s_zmap_blocks = m3s->s_zmap_blocks;
- 		sbi->s_firstdatazone = m3s->s_firstdatazone;
- 		sbi->s_log_zone_size = m3s->s_log_zone_size;
--		sbi->s_max_size = m3s->s_max_size;
-+		s->s_maxbytes = m3s->s_max_size;
- 		sbi->s_ninodes = m3s->s_ninodes;
- 		sbi->s_nzones = m3s->s_zones;
- 		sbi->s_dirsize = 64;
-@@ -245,7 +247,7 @@ static int minix_fill_super(struct super_block *s, void *data, int silent)
- 	} else
- 		goto out_no_fs;
- 
--	if (!minix_check_superblock(sbi))
-+	if (!minix_check_superblock(s))
- 		goto out_illegal_sb;
- 
- 	/*
-diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
-index 046cc96ee7adb..c0d418209ead1 100644
---- a/fs/minix/itree_v1.c
-+++ b/fs/minix/itree_v1.c
-@@ -29,7 +29,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
- 	if (block < 0) {
- 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
- 			block, inode->i_sb->s_bdev);
--	} else if (block >= (minix_sb(inode->i_sb)->s_max_size/BLOCK_SIZE)) {
-+	} else if (block >= inode->i_sb->s_maxbytes/BLOCK_SIZE) {
- 		if (printk_ratelimit())
- 			printk("MINIX-fs: block_to_path: "
- 			       "block %ld too big on dev %pg\n",
-diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
-index f7fc7eccccccd..ee8af2f9e2828 100644
---- a/fs/minix/itree_v2.c
-+++ b/fs/minix/itree_v2.c
-@@ -32,8 +32,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
- 	if (block < 0) {
- 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
- 			block, sb->s_bdev);
--	} else if ((u64)block * (u64)sb->s_blocksize >=
--			minix_sb(sb)->s_max_size) {
-+	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
- 		if (printk_ratelimit())
- 			printk("MINIX-fs: block_to_path: "
- 			       "block %ld too big on dev %pg\n",
-diff --git a/fs/minix/minix.h b/fs/minix/minix.h
-index df081e8afcc3c..168d45d3de73e 100644
---- a/fs/minix/minix.h
-+++ b/fs/minix/minix.h
-@@ -32,7 +32,6 @@ struct minix_sb_info {
- 	unsigned long s_zmap_blocks;
- 	unsigned long s_firstdatazone;
- 	unsigned long s_log_zone_size;
--	unsigned long s_max_size;
- 	int s_dirsize;
- 	int s_namelen;
- 	struct buffer_head ** s_imap;
+ void nvdimm_security_overwrite_query(struct work_struct *work)
 -- 
 2.25.1
 
