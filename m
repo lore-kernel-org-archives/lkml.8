@@ -2,117 +2,132 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB565C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D06DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA976207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B6A208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:48:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="agbNvw/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbgHTHo3 convert rfc822-to-8bit (ORCPT
+        id S1726215AbgHTHsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:44:29 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:52664 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbgHTHo3 (ORCPT
+        Thu, 20 Aug 2020 03:48:08 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48846 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725819AbgHTHsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:44:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-79-EZQzNz_MMTW5m19NmXdomw-1; Thu, 20 Aug 2020 08:44:24 +0100
-X-MC-Unique: EZQzNz_MMTW5m19NmXdomw-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Thu, 20 Aug 2020 08:44:23 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Thu, 20 Aug 2020 08:44:23 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC PATCH 1/5] printk: implement pr_cont_t
-Thread-Topic: [RFC PATCH 1/5] printk: implement pr_cont_t
-Thread-Index: AQHWdomYXzVvufyPxEOt+PNltcCbQKlAmzJg
-Date:   Thu, 20 Aug 2020 07:44:23 +0000
-Message-ID: <b17fc8afc8984fedb852921366190104@AcuMS.aculab.com>
-References: <20200819232632.13418-1-john.ogness@linutronix.de>
-         <20200819232632.13418-2-john.ogness@linutronix.de>
- <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
-In-Reply-To: <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Thu, 20 Aug 2020 03:48:07 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597909686; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=IAMYwecVtds+SCfxk62/PeLO3YkCQbehVZCXOTu5o88=; b=agbNvw/B5JdDHUi11w/OaqrNkrgeJbajzYMzcvqu28RYMzgxfemzmqASiwMo2uZC0TXbNFZY
+ 0o4X4fxRoqDPyWRfJ+qIBe0peEi55rypj8GynICkncHRxnd4+V4wthqULdV0lRJRfGybohqC
+ gHCJT8I1joyJUlGFhJGouLuf0fU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f3e2aaf7eb4541d93b4e099 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 07:47:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 149EDC4339C; Thu, 20 Aug 2020 07:47:58 +0000 (UTC)
+Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B25EBC433CA;
+        Thu, 20 Aug 2020 07:47:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B25EBC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
+ PMIC VBUS booster
+To:     Sergei Shtylyov <sergei.shtylyov@gmail.com>, sboyd@kernel.org,
+        heikki.krogerus@linux.intel.com, agross@kernel.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20200812071925.315-1-wcheng@codeaurora.org>
+ <20200812071925.315-5-wcheng@codeaurora.org>
+ <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+Date:   Thu, 20 Aug 2020 00:47:55 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches
-> Sent: 20 August 2020 01:34
+
+
+On 8/12/2020 2:34 AM, Sergei Shtylyov wrote:
+> Hello!
 > 
-> On Thu, 2020-08-20 at 01:32 +0206, John Ogness wrote:
-> > Implement a new buffering mechanism for pr_cont messages.
-> >
-> > Old mechanism syntax:
-> >
-> >     printk(KERN_INFO "text");
-> >     printk(KERN_CONT " continued");
-> >     printk(KERN_CONT "\n");
-> >
-> > New mechanism syntax:
-> >
-> >     pr_cont_t c;
-> >
-> >     pr_cont_begin(&c, KERN_INFO "text");
+> On 12.08.2020 10:19, Wesley Cheng wrote:
 > 
-> bikeshed:
+>> Add the required DTS node for the USB VBUS output regulator, which is
+>> available on PM8150B.  This will provide the VBUS source to connected
+>> peripherals.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
+>>   arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
+>>   2 files changed, 10 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>> index 053c659734a7..9e560c1ca30d 100644
+>> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>> @@ -53,6 +53,12 @@ power-on@800 {
+>>               status = "disabled";
+>>           };
+>>   +        pm8150b_vbus: dcdc@1100 {
 > 
-> I suggest:
+>    s/dcdc/regulator/? What is "dcdc", anyway?
+>    The device nodes must have the generic names, according to the DT spec.
 > 
-> 	printk_begin(&printk_context, fmt, ...)
-> 	printk_continue(&printk_context, fmt, ...) (maybe printk_next())
-> 	printk_end(&printk_context, fmt, ...)
 
-I see some very long source lines looming ...
+Hi Sergei,
 
-Blue bikeshed:
+Thanks for the comment!
 
-You'd probably want printk_end(&ctx, NULL) to work.
-Although the example doesn't show where the '\n' comes from.
-Although I guess it is now inferred and actually deleted
-from 'normal' printk() call.
+DCDC is the label that we use for the DC to DC converter block, since
+the VBUS booster will output 5V to the connected devices.  Would it make
+more sense to have "dc-dc?"
 
-I've no idea how you'd 'size' the number of buffers.
-You could use kmalloc(), perhaps falling back on a local buffer.
-While might lead to:
-	pr_init(&ctx, level, GFP_KERNEL);
-	pr_cont(&ctx, fmt, ...);
-	pr_flush(&ctx);
+Thanks
+Wesley
 
-	David
+>> +            compatible = "qcom,pm8150b-vbus-reg";
+>> +            status = "disabled";
+>> +            reg = <0x1100>;
+>> +        };
+>> +
+>>           pm8150b_typec: typec@1500 {
+>>               compatible = "qcom,pm8150b-usb-typec";
+>>               status = "disabled";
+> [...]
+> 
+> MBR, Sergei
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
