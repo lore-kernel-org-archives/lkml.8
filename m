@@ -2,53 +2,58 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F215C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D8C220855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D17A20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925867;
-	bh=uP7qBUfQho+By8w77QxSTaXPo2Q+DtMc5/PUP08XXWg=;
+	s=default; t=1597925883;
+	bh=G+G+Ym26cq/41gK660ylSESL4nMsWXnY8y2UDQq+AgI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBfV+By00/PYjhrZLFL5Kd4TBKwPG9KbNwq1dZUT1A8/9apQqmoOo+UChyS4DrGUt
-	 loytRwJG99TDzazlWueEsM7rvhEko8aKZbeQwkcX6P10lQ1rWn84UE25RIZktFr+7N
-	 rqprTTvV5lQO9h4u4HsoBStMTE5LjieC1WKWDilM=
+	b=xxNSg/TPnlLSQfXynSJVlYkJPSuY1YxcERY2dDwSwYoqp9bQXD0SHgk2E9dM6ALF9
+	 UIsCMYH5UbKZ+2jFkAvRzOUUCUdU6Sn1iiVGk4d0E4ibSJZfEI4TL1tvjssKfYPMpp
+	 Wze4eGJWFLD+CNufiz3pAt2iY6BSGmn2GjgrcW6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgHTMQc (ORCPT
+        id S1730610AbgHTMR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:16:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40328 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:17:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730263AbgHTJ4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:48 -0400
+        id S1730230AbgHTJ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1676F208DB;
-        Thu, 20 Aug 2020 09:56:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC820885;
+        Thu, 20 Aug 2020 09:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917407;
-        bh=uP7qBUfQho+By8w77QxSTaXPo2Q+DtMc5/PUP08XXWg=;
+        s=default; t=1597917395;
+        bh=G+G+Ym26cq/41gK660ylSESL4nMsWXnY8y2UDQq+AgI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yJKipr4NcuqZEwpWsfaDA4fs3UczlRwSOLlhQcsd0p/eKkhVsveWcG0In+j5usUJT
-         GKxeNM5YU7Vc0hVNvD45MXiBwA/5EwIMhSjGmj8l/cq4egfi62G70rc+ibbJlsa9o/
-         eWCLk4D2dv+4zVb4NnFB9C+ETYMTYLDQgja90OJg=
+        b=l1kJ5z9vR51mVmXkSPPyhI8cAk0QMZTjov4SF4dp/eYl6rVVr9hqT4P36PYP3TYfu
+         eRiFJvmneoU5sGpOoNU28nQmtbNOlMSwFvhcjZRGHphTQ9UqL3US5Ifm8OfZc1ru5n
+         Ibm+LgdQro8Xiu49B0nJg7vRXOP1vLbvFIIM82DA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Peilin Ye <yepeilin.cs@gmail.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 020/212] rds: Prevent kernel-infoleak in rds_notify_queue_get()
-Date:   Thu, 20 Aug 2020 11:19:53 +0200
-Message-Id: <20200820091603.352748362@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 017/212] x86/build/lto: Fix truncated .bss with -fdata-sections
+Date:   Thu, 20 Aug 2020 11:19:50 +0200
+Message-Id: <20200820091603.210193271@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,47 +66,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Sami Tolvanen <samitolvanen@google.com>
 
-commit bbc8a99e952226c585ac17477a85ef1194501762 upstream.
+[ Upstream commit 6a03469a1edc94da52b65478f1e00837add869a3 ]
 
-rds_notify_queue_get() is potentially copying uninitialized kernel stack
-memory to userspace since the compiler may leave a 4-byte hole at the end
-of `cmsg`.
+With CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y, we compile the kernel with
+-fdata-sections, which also splits the .bss section.
 
-In 2016 we tried to fix this issue by doing `= { 0 };` on `cmsg`, which
-unfortunately does not always initialize that 4-byte hole. Fix it by using
-memset() instead.
+The new section, with a new .bss.* name, which pattern gets missed by the
+main x86 linker script which only expects the '.bss' name. This results
+in the discarding of the second part and a too small, truncated .bss
+section and an unhappy, non-working kernel.
 
-Cc: stable@vger.kernel.org
-Fixes: f037590fff30 ("rds: fix a leak of kernel memory")
-Fixes: bdbe6fbc6a2f ("RDS: recv.c")
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Use the common BSS_MAIN macro in the linker script to properly capture
+and merge all the generated BSS sections.
 
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20190415164956.124067-1-samitolvanen@google.com
+[ Extended the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/recv.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/rds/recv.c
-+++ b/net/rds/recv.c
-@@ -405,12 +405,13 @@ static int rds_still_queued(struct rds_s
- int rds_notify_queue_get(struct rds_sock *rs, struct msghdr *msghdr)
- {
- 	struct rds_notifier *notifier;
--	struct rds_rdma_notify cmsg = { 0 }; /* fill holes with zero */
-+	struct rds_rdma_notify cmsg;
- 	unsigned int count = 0, max_messages = ~0U;
- 	unsigned long flags;
- 	LIST_HEAD(copy);
- 	int err = 0;
- 
-+	memset(&cmsg, 0, sizeof(cmsg));	/* fill holes with zero */
- 
- 	/* put_cmsg copies to user space and thus may sleep. We can't do this
- 	 * with rs_lock held, so first grab as many notifications as we can stuff
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 097268f85e4ee..0df44e4fe7cb1 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -329,7 +329,7 @@ SECTIONS
+ 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
+ 		__bss_start = .;
+ 		*(.bss..page_aligned)
+-		*(.bss)
++		*(BSS_MAIN)
+ 		. = ALIGN(PAGE_SIZE);
+ 		__bss_stop = .;
+ 	}
+-- 
+2.25.1
+
 
 
