@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A184EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9009C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0BE20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EBC20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919184;
-	bh=hixA20xvTdZKt1cgfekH/mKHjoOFti/JKv/G0nEaHcE=;
+	s=default; t=1597919188;
+	bh=pn9CX2fSQaNdNVwtjc2KnFu4I6vNhAUujQBd4xjXgpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sebP59a9w1btgD9bGJV51zHiixcTd9OQS6cbnBIeaQ61js/YjnXUCgptq+RF8XH7a
-	 QF3z0BIEVgIL3dA2jhbQWggFJVop76R+Yxxkw8tToH97eVFBv3DIaD5GuX23/ytQ9M
-	 7f2k2gSYbll/ZlKRGtO2w+bOy4XnkGBhwdViBvd0=
+	b=s0plg101MeeN34D2xHYIXZKnItvz1bMhZ8GPlBvYCoEer6NfuzNR0DJxNNwnoLYBJ
+	 V/MXLGBohUmCT0SL7KgvBIPNvVv+aSE/N7MNd8wWjTsl8pPszRsnA8fNnSCKvBUYQD
+	 DDgk5FTJaD2QcTvMGVQg6EoQQTAHk5hmK40JrriQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgHTK0W (ORCPT
+        id S1731762AbgHTK01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51842 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731686AbgHTKXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:08 -0400
+        id S1730480AbgHTKW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01CA220738;
-        Thu, 20 Aug 2020 10:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C3402078D;
+        Thu, 20 Aug 2020 10:22:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918986;
-        bh=hixA20xvTdZKt1cgfekH/mKHjoOFti/JKv/G0nEaHcE=;
+        s=default; t=1597918978;
+        bh=pn9CX2fSQaNdNVwtjc2KnFu4I6vNhAUujQBd4xjXgpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hed65pBbiLOhdN7eT86y5ymYsTURnyM34EL7vpKJIoum58WU45/h/3IAfMCUaa04p
-         0hhyFajHPSuPkiQ/mrN/tK7TfHslW8n+xi+yats6TfJ59j/xqwWKySVdaMZV2pvEGz
-         COZD47L50CqziALtjIJmHMxM72Gvip3QsjC5gtSg=
+        b=Im7IIe53HcFOOxrdc+/NC00/49wnYpkEOM1m82RYd4J5Xqqp+jpp5SOczF6ZAf+Fn
+         yQb5BYrAYwpXQcS/7i6FKLCubP7DEnPkjzlOTAwlOsdDSjpcZVUxxnaEhT6OjIJKQo
+         trQFasrccVGV2T2N2lrB1Rz+ypRXqVn3qze7UX88=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 134/149] USB: serial: ftdi_sio: make process-packet buffer unsigned
-Date:   Thu, 20 Aug 2020 11:23:31 +0200
-Message-Id: <20200820092132.186524629@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.4 109/149] ALSA: usb-audio: add quirk for Pioneer DDJ-RB
+Date:   Thu, 20 Aug 2020 11:23:06 +0200
+Message-Id: <20200820092130.981920190@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,96 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Hector Martin <marcan@marcan.st>
 
-[ Upstream commit ab4cc4ef6724ea588e835fc1e764c4b4407a70b7 ]
+commit 6e8596172ee1cd46ec0bfd5adcf4ff86371478b6 upstream.
 
-Use an unsigned type for the process-packet buffer argument and give it
-a more apt name.
+This is just another Pioneer device with fixed endpoints. Input is dummy
+but used as feedback (it always returns silence).
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082502.225979-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/ftdi_sio.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ sound/usb/quirks-table.h |   56 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 8388f88ce6356..4b9404f99c010 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2051,12 +2051,12 @@ static int ftdi_prepare_write_buffer(struct usb_serial_port *port,
- #define FTDI_RS_ERR_MASK (FTDI_RS_BI | FTDI_RS_PE | FTDI_RS_FE | FTDI_RS_OE)
- 
- static int ftdi_process_packet(struct usb_serial_port *port,
--		struct ftdi_private *priv, char *packet, int len)
-+		struct ftdi_private *priv, unsigned char *buf, int len)
- {
-+	unsigned char status;
-+	unsigned char *ch;
- 	int i;
--	char status;
- 	char flag;
--	char *ch;
- 
- 	if (len < 2) {
- 		dev_dbg(&port->dev, "malformed packet\n");
-@@ -2066,7 +2066,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	/* Compare new line status to the old one, signal if different/
- 	   N.B. packet may be processed more than once, but differences
- 	   are only processed once.  */
--	status = packet[0] & FTDI_STATUS_B0_MASK;
-+	status = buf[0] & FTDI_STATUS_B0_MASK;
- 	if (status != priv->prev_status) {
- 		char diff_status = status ^ priv->prev_status;
- 
-@@ -2092,7 +2092,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	}
- 
- 	/* save if the transmitter is empty or not */
--	if (packet[1] & FTDI_RS_TEMT)
-+	if (buf[1] & FTDI_RS_TEMT)
- 		priv->transmit_empty = 1;
- 	else
- 		priv->transmit_empty = 0;
-@@ -2106,29 +2106,29 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 * data payload to avoid over-reporting.
- 	 */
- 	flag = TTY_NORMAL;
--	if (packet[1] & FTDI_RS_ERR_MASK) {
-+	if (buf[1] & FTDI_RS_ERR_MASK) {
- 		/* Break takes precedence over parity, which takes precedence
- 		 * over framing errors */
--		if (packet[1] & FTDI_RS_BI) {
-+		if (buf[1] & FTDI_RS_BI) {
- 			flag = TTY_BREAK;
- 			port->icount.brk++;
- 			usb_serial_handle_break(port);
--		} else if (packet[1] & FTDI_RS_PE) {
-+		} else if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
--		} else if (packet[1] & FTDI_RS_FE) {
-+		} else if (buf[1] & FTDI_RS_FE) {
- 			flag = TTY_FRAME;
- 			port->icount.frame++;
- 		}
- 		/* Overrun is special, not associated with a char */
--		if (packet[1] & FTDI_RS_OE) {
-+		if (buf[1] & FTDI_RS_OE) {
- 			port->icount.overrun++;
- 			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3380,5 +3380,61 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
  		}
  	}
+ },
++{
++	/*
++	 * PIONEER DJ DDJ-RB
++	 * PCM is 4 channels out, 2 dummy channels in @ 44.1 fixed
++	 * The feedback for the output is the dummy input.
++	 */
++	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x000e),
++	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
++		.ifnum = QUIRK_ANY_INTERFACE,
++		.type = QUIRK_COMPOSITE,
++		.data = (const struct snd_usb_audio_quirk[]) {
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 4,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x01,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						   USB_ENDPOINT_SYNC_ASYNC,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = 0,
++				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
++				.data = &(const struct audioformat) {
++					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
++					.channels = 2,
++					.iface = 0,
++					.altsetting = 1,
++					.altset_idx = 1,
++					.endpoint = 0x82,
++					.ep_attr = USB_ENDPOINT_XFER_ISOC|
++						 USB_ENDPOINT_SYNC_ASYNC|
++						 USB_ENDPOINT_USAGE_IMPLICIT_FB,
++					.rates = SNDRV_PCM_RATE_44100,
++					.rate_min = 44100,
++					.rate_max = 44100,
++					.nr_rates = 1,
++					.rate_table = (unsigned int[]) { 44100 }
++				}
++			},
++			{
++				.ifnum = -1
++			}
++		}
++	}
++},
  
- 	port->icount.rx += len;
--	ch = packet + 2;
-+	ch = buf + 2;
- 
- 	if (port->port.console && port->sysrq) {
- 		for (i = 0; i < len; i++, ch++) {
--- 
-2.25.1
-
+ #undef USB_DEVICE_VENDOR_SPEC
 
 
