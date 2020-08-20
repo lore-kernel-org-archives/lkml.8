@@ -2,194 +2,112 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7891EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:51:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D33BB206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50CFF2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:51:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931453;
-	bh=ka0fvdpQBGDZw+aAdie2jqZIVYKV+E9f2cyE2BpXYZM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cLeX4QyGjy2KS/Uhe1bWRRULG+I4InvSDNkMJ59wZ1sQdO+9+AkHm102khppGuFB8
-	 RBcfnV9iIn2wv2ONkW5UfqGjTraIsNROQbqKQJBwo3ZrRn1QPumXvIGVAlad85IT9U
-	 1JQ7zI2WlXMXZrpWgD7dreAK8PMxYj2aDMdPlrUk=
+	s=default; t=1597931476;
+	bh=dS8dzhEVE5Nj4hXt/7nG5Xj6Ci9DebYbCbAd8yx4FHA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QvTlt5BmUfESvMgAtt5JxxyURIRxpXpntC4/Dqu0Yx08suAomOT04D3rXQJFiDJgw
+	 Y47cXPxHNyGAzYJAmCZ+dEKUUNoagR39LLvAMMKIXSnnHQXsE3BlUxBvfDuNJGnReW
+	 C19u017EzSa6yPpuxYL/1ZXKsMOhRjy3nA5G2re0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgHTNuw (ORCPT
+        id S1730427AbgHTNu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:50:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:50:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726852AbgHTJ1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:08 -0400
+        id S1728807AbgHTNut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:50:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B86D422CA1;
-        Thu, 20 Aug 2020 09:27:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CAC206DA;
+        Thu, 20 Aug 2020 13:50:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915627;
-        bh=ka0fvdpQBGDZw+aAdie2jqZIVYKV+E9f2cyE2BpXYZM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V2FSzO5ABZsH79zjBZbFT5/+nkrhCouGb3t3DUAxVlt/ioZMyArJTzwNM69fC6vhq
-         gWam+pCvwOXRpas9Lqv7B+5puqzhgoLqjIh7qUTp9dHZBdyq5BbJxIc74mON4/DXjt
-         61nIY83EZiADT5ROVusUp4c5CIO8d4bWtlsFrw9w=
+        s=default; t=1597931449;
+        bh=dS8dzhEVE5Nj4hXt/7nG5Xj6Ci9DebYbCbAd8yx4FHA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gMloImExGVBFf8YTArNooTXh+sdXLqklIX4766SFRMbXpKrzvsS/vgRPyIzFFAZ6G
+         7L6c11hsVfNMi9dnbRPY2pULwc9LLR+wweGgedbzvmWcU5EIylOcekyrMVaEy9OJXu
+         CTbNwkD14pbK3B7jjCss4EJhd+ZmMjWzReskyuV4=
+Date:   Thu, 20 Aug 2020 15:51:09 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 079/232] khugepaged: collapse_pte_mapped_thp() protect the pmd lock
-Date:   Thu, 20 Aug 2020 11:18:50 +0200
-Message-Id: <20200820091616.640725029@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Jon Hunter <jonathanh@nvidia.com>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH 4.14 000/228] 4.14.194-rc1 review
+Message-ID: <20200820135109.GA1533948@kroah.com>
+References: <20200820091607.532711107@linuxfoundation.org>
+ <a6b632f8-b327-3f8d-5306-12989cfaf4e3@nvidia.com>
+ <20200820123828.GA1465682@kroah.com>
+ <20200820124445.GB1482630@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820124445.GB1482630@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+On Thu, Aug 20, 2020 at 02:44:45PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 20, 2020 at 02:38:28PM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, Aug 20, 2020 at 12:57:36PM +0100, Jon Hunter wrote:
+> > > 
+> > > On 20/08/2020 10:19, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.14.194 release.
+> > > > There are 228 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > > The whole patch series can be found in one patch at:
+> > > > 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.194-rc1.gz
+> > > > or in the git tree and branch at:
+> > > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> > > > and the diffstat can be found below.
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > > 
+> > > > -------------
+> > > > Pseudo-Shortlog of commits:
+> > > 
+> > > ...
+> > > 
+> > > > Tomasz Maciej Nowak <tmn505@gmail.com>
+> > > >     arm64: dts: marvell: espressobin: add ethernet alias
+> > > 
+> > > 
+> > > The above change is causing the following build failure for ARM64 ...
+> > > 
+> > > arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb: ERROR (path_references): Reference to non-existent node or label "uart1"
+> > > ERROR: Input tree has errors, aborting (use -f to force output)
+> > > scripts/Makefile.lib:317: recipe for target 'arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb' failed
+> > > make[3]: *** [arch/arm64/boot/dts/marvell/armada-3720-espressobin.dtb] Error 2
+> > > 
+> > > Reverting this fixes the problem.
+> > 
+> > Thanks, now dropping it.  Sad as it said it was to be backported here...
+> > 
+> > Will go push out a -rc2 with that fixed.
+> 
+> Well, will push out -rc2 once kernel.org's maintenance is finished,
+> might be an hour or so...
 
-commit 119a5fc16105b2b9383a6e2a7800b2ef861b2975 upstream.
-
-When retract_page_tables() removes a page table to make way for a huge
-pmd, it holds huge page lock, i_mmap_lock_write, mmap_write_trylock and
-pmd lock; but when collapse_pte_mapped_thp() does the same (to handle the
-case when the original mmap_write_trylock had failed), only
-mmap_write_trylock and pmd lock are held.
-
-That's not enough.  One machine has twice crashed under load, with "BUG:
-spinlock bad magic" and GPF on 6b6b6b6b6b6b6b6b.  Examining the second
-crash, page_vma_mapped_walk_done()'s spin_unlock of pvmw->ptl (serving
-page_referenced() on a file THP, that had found a page table at *pmd)
-discovers that the page table page and its lock have already been freed by
-the time it comes to unlock.
-
-Follow the example of retract_page_tables(), but we only need one of huge
-page lock or i_mmap_lock_write to secure against this: because it's the
-narrower lock, and because it simplifies collapse_pte_mapped_thp() to know
-the hpage earlier, choose to rely on huge page lock here.
-
-Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021213070.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/khugepaged.c |   44 +++++++++++++++++++-------------------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
-
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1412,7 +1412,7 @@ void collapse_pte_mapped_thp(struct mm_s
- {
- 	unsigned long haddr = addr & HPAGE_PMD_MASK;
- 	struct vm_area_struct *vma = find_vma(mm, haddr);
--	struct page *hpage = NULL;
-+	struct page *hpage;
- 	pte_t *start_pte, *pte;
- 	pmd_t *pmd, _pmd;
- 	spinlock_t *ptl;
-@@ -1432,9 +1432,17 @@ void collapse_pte_mapped_thp(struct mm_s
- 	if (!hugepage_vma_check(vma, vma->vm_flags | VM_HUGEPAGE))
- 		return;
- 
-+	hpage = find_lock_page(vma->vm_file->f_mapping,
-+			       linear_page_index(vma, haddr));
-+	if (!hpage)
-+		return;
-+
-+	if (!PageHead(hpage))
-+		goto drop_hpage;
-+
- 	pmd = mm_find_pmd(mm, haddr);
- 	if (!pmd)
--		return;
-+		goto drop_hpage;
- 
- 	start_pte = pte_offset_map_lock(mm, pmd, haddr, &ptl);
- 
-@@ -1453,30 +1461,11 @@ void collapse_pte_mapped_thp(struct mm_s
- 
- 		page = vm_normal_page(vma, addr, *pte);
- 
--		if (!page || !PageCompound(page))
--			goto abort;
--
--		if (!hpage) {
--			hpage = compound_head(page);
--			/*
--			 * The mapping of the THP should not change.
--			 *
--			 * Note that uprobe, debugger, or MAP_PRIVATE may
--			 * change the page table, but the new page will
--			 * not pass PageCompound() check.
--			 */
--			if (WARN_ON(hpage->mapping != vma->vm_file->f_mapping))
--				goto abort;
--		}
--
- 		/*
--		 * Confirm the page maps to the correct subpage.
--		 *
--		 * Note that uprobe, debugger, or MAP_PRIVATE may change
--		 * the page table, but the new page will not pass
--		 * PageCompound() check.
-+		 * Note that uprobe, debugger, or MAP_PRIVATE may change the
-+		 * page table, but the new page will not be a subpage of hpage.
- 		 */
--		if (WARN_ON(hpage + i != page))
-+		if (hpage + i != page)
- 			goto abort;
- 		count++;
- 	}
-@@ -1495,7 +1484,7 @@ void collapse_pte_mapped_thp(struct mm_s
- 	pte_unmap_unlock(start_pte, ptl);
- 
- 	/* step 3: set proper refcount and mm_counters. */
--	if (hpage) {
-+	if (count) {
- 		page_ref_sub(hpage, count);
- 		add_mm_counter(vma->vm_mm, mm_counter_file(hpage), -count);
- 	}
-@@ -1506,10 +1495,15 @@ void collapse_pte_mapped_thp(struct mm_s
- 	spin_unlock(ptl);
- 	mm_dec_nr_ptes(mm);
- 	pte_free(mm, pmd_pgtable(_pmd));
-+
-+drop_hpage:
-+	unlock_page(hpage);
-+	put_page(hpage);
- 	return;
- 
- abort:
- 	pte_unmap_unlock(start_pte, ptl);
-+	goto drop_hpage;
- }
- 
- static int khugepaged_collapse_pte_mapped_thps(struct mm_slot *mm_slot)
-
-
+Now pushed out!
