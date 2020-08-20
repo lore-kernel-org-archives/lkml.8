@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AD6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1C1A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:01:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C60421744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881703;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1597881709;
+	bh=9R6DF0z8Riev++arCUBM7qjB7dhQ/99mOWwnn9pjiuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bxh4VddCzIgF7xCINhqSTHZ9JeE/JejNw30gdGRCqNar70ev4DkiDrOI07h8mP/VD
-	 bm8bhkpiXPgt31NkLGDCBXaonJ6aAETtzsDLcySFoJjloiLDmuTqWel8tr6B/McGsu
-	 CaOpt8okBXOP9QYAiAa7c/EcZZnU/gq9dKD6UfBs=
+	b=ExOaBIprV15Ap+etXNkzem4fb9W9V+rbuZIZIxLlYWsuhqvG7wdM2N2ozyRfahZI4
+	 LZXpVBRo9BKuXjx4VN9mAAmFcbpW5crRW1G15D/PNgwOExga0MYIlQU2+0EwKdw5YX
+	 WRfltThMbAkOaOs+svLwPYmBAuo0fvQDUeDzKr6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgHTABm (ORCPT
+        id S1727021AbgHTABs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57614 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726844AbgHTABc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:01:32 -0400
+        id S1726965AbgHTABn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0747D2075E;
-        Thu, 20 Aug 2020 00:01:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B81B2207DA;
+        Thu, 20 Aug 2020 00:01:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881691;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1597881702;
+        bh=9R6DF0z8Riev++arCUBM7qjB7dhQ/99mOWwnn9pjiuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=INdknvwMVv0ea3ggaTg3EnGcx97GUMmPvYfuBM948qIz5BGjsDXJBe4j5LhTAfaTM
-         m2cdBOk5UtAchcUJWnrSjsOr1CPuz5tAAILK8x7qa8NAGs2/myzRk/hX+63UHMuXxF
-         uSuTva42A4ULFHd08/UgpqIqKmx/5uKgShM1bI0Q=
+        b=VDrRRxTik1vucKs5L3NHTuL/0Oj6ulz6IF7FEFMz1Ubc8RvV7WEl0KOPWUOPWne9n
+         PG1qv8bymmjcUB/BFGWPCUcbYr4WjWGe3JpI3NIuzKYijSvRQ+leugy0oitZjCrXqa
+         Cduwgo3H8YRwnS79nEXAWna/DDZtfCm8IoTTO0HY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.8 11/27] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Wed, 19 Aug 2020 20:01:00 -0400
-Message-Id: <20200820000116.214821-11-sashal@kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 19/27] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+Date:   Wed, 19 Aug 2020 20:01:08 -0400
+Message-Id: <20200820000116.214821-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
 References: <20200820000116.214821-1-sashal@kernel.org>
@@ -59,50 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
+this MSR via BIOS settings on some systems or can use msr tools to update.
+Also some systems boot with value = 0.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+This results in display of cpufreq/cpuinfo_max_freq wrong. This value
+will be equal to cpufreq/base_frequency, even though turbo is enabled.
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
+But platform will still function normally in HWP mode as we get max
+1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
+to calculate cpu->pstate.turbo_freq, which is used for to set
+policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
+is used. For example to set policy->max.
 
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+To fix this, also update cpu->pstate.turbo_pstate when updating
+cpu->pstate.turbo_freq.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/cpufreq/intel_pstate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 7e0f7880b21a6..c7540ad28995b 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1572,6 +1572,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+ 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
+ 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
++		cpu->pstate.turbo_pstate = phy_max;
+ 	} else {
+ 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+ 	}
 -- 
 2.25.1
 
