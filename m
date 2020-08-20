@@ -2,124 +2,126 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C698C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 737D0208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE0A5208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:08:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597936111;
+	bh=PD+kIuAml8tMq9Xgm9Esyl8lxWkN6y9z0t/To/ttxnk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ITFo7wP+61xqKnXJhWDDQBp1xwK8Q9yPe3y727ouBOB5KE49LIxQU6iu66fW1hM6z
+	 muIHHNcC6r1PmpxI8sg1u3bKmH/iGxGkYwWR87HwvyD4//bfXVWH0iJCggxeEmJ4TT
+	 Z9kRX7YTBhvUSSuOD3XpbTfLLXEXPmxPS1XCb0+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728479AbgHTPHq (ORCPT
+        id S1728533AbgHTPIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:07:46 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50849 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgHTPHl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:07:41 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8m9Y-0005rd-Um; Thu, 20 Aug 2020 15:06:57 +0000
-Date:   Thu, 20 Aug 2020 17:06:55 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Michal Hocko <mhocko@suse.com>,
-        Suren Baghdasaryan <surenb@google.com>, timmurray@google.com,
-        mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-        esyr@redhat.com, christian@kellner.me, areber@redhat.com,
-        shakeelb@google.com, cyphar@cyphar.com, oleg@redhat.com,
-        adobriyan@gmail.com, akpm@linux-foundation.org,
-        gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820150655.ewjqommxs3axrsf6@wittgenstein>
-References: <87zh6pxzq6.fsf@x220.int.ebiederm.org>
- <20200820124241.GJ5033@dhcp22.suse.cz>
- <87lfi9xz7y.fsf@x220.int.ebiederm.org>
- <87d03lxysr.fsf@x220.int.ebiederm.org>
- <20200820132631.GK5033@dhcp22.suse.cz>
- <20200820133454.ch24kewh42ax4ebl@wittgenstein>
- <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
- <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
- <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+        Thu, 20 Aug 2020 11:08:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52498 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727920AbgHTPI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:08:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE2AB208C7;
+        Thu, 20 Aug 2020 15:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597936107;
+        bh=PD+kIuAml8tMq9Xgm9Esyl8lxWkN6y9z0t/To/ttxnk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2ogBOzYPiOBulfWMN7+t/PcwRan6eCGrpEwj4EA1anWfTdxPB4SIzbFF8hruHDKUg
+         zQJL83RUzVE3m04VGnNsjUKMJGwANZkn+LbIfuEUk0TXTyjUz62sAx5uvzD7R9kSH1
+         4bPMIW9gZkoPikuokh44iDUOplB+kE62f5aNpf3E=
+Date:   Thu, 20 Aug 2020 17:08:48 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Willy Tarreau <w@1wt.eu>, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 4.4 000/149] 4.4.233-rc1 review
+Message-ID: <20200820150848.GA1565072@kroah.com>
+References: <20200820092125.688850368@linuxfoundation.org>
+ <CA+G9fYsxQEnACmjP+CUtBq9P+0nWU_19oG62tpCbKtdcGAStfA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+In-Reply-To: <CA+G9fYsxQEnACmjP+CUtBq9P+0nWU_19oG62tpCbKtdcGAStfA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 09:49:11AM -0500, Eric W. Biederman wrote:
-> Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp> writes:
-> 
-> > On 2020/08/20 23:00, Christian Brauner wrote:
-> >> On Thu, Aug 20, 2020 at 10:48:43PM +0900, Tetsuo Handa wrote:
-> >>> On 2020/08/20 22:34, Christian Brauner wrote:
-> >>>> On Thu, Aug 20, 2020 at 03:26:31PM +0200, Michal Hocko wrote:
-> >>>>> If you can handle vfork by other means then I am all for it. There were
-> >>>>> no patches in that regard proposed yet. Maybe it will turn out simpler
-> >>>>> then the heavy lifting we have to do in the oom specific code.
-> >>>>
-> >>>> Eric's not wrong. I fiddled with this too this morning but since
-> >>>> oom_score_adj is fiddled with in a bunch of places this seemed way more
-> >>>> code churn then what's proposed here.
-> >>>
-> >>> I prefer simply reverting commit 44a70adec910d692 ("mm, oom_adj: make sure
-> >>> processes sharing mm have same view of oom_score_adj").
-> >>>
-> >>>   https://lore.kernel.org/patchwork/patch/1037208/
-> >> 
-> >> I guess this is a can of worms but just or the sake of getting more
-> >> background: the question seems to be whether the oom adj score is a
-> >> property of the task/thread-group or a property of the mm. I always
-> >> thought the oom score is a property of the task/thread-group and not the
-> >> mm which is also why it lives in struct signal_struct and not in struct
-> >> mm_struct. But
-> >> 
-> >> 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
-> >> 
-> >> reads like it is supposed to be a property of the mm or at least the
-> >> change makes it so.
+On Thu, Aug 20, 2020 at 07:49:06PM +0530, Naresh Kamboju wrote:
+> On Thu, 20 Aug 2020 at 15:47, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Yes, 44a70adec910 is trying to go towards changing from a property of the task/thread-group
-> > to a property of mm. But I don't think we need to do it at the cost of "__set_oom_adj() latency
-> > Yong-Taek Lee and Tim Murray have reported" and "complicity for supporting
-> > vfork() => __set_oom_adj() => execve() sequence".
+> > This is the start of the stable review cycle for the 4.4.233 release.
+> > There are 149 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 22 Aug 2020 09:21:01 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.233-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> The thing is commit 44a70adec910d692 ("mm, oom_adj: make sure processes
-> sharing mm have same view of oom_score_adj") has been in the tree for 4
-> years.
+> i386 build failed on stable-rc 4.4 branch
 > 
-> That someone is just now noticing a regression is their problem.  The
-> change is semantics is done and decided.  We can not reasonably revert
-> at this point without risking other regressions.
-> 
-> Given that the decision has already been made to make oom_adj
-> effectively per mm.  There is no point on have a debate if we should do
-> it.
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=i386 HOSTCC=gcc
+> CC="sccache gcc" O=build
+> #
+> In file included from ../samples/seccomp/bpf-direct.c:19:
+> /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+> file or directory
+>     5 | #include <asm/types.h>
+>       |          ^~~~~~~~~~~~~
+> compilation terminated.
+> In file included from /usr/include/linux/filter.h:10,
+>                  from ../samples/seccomp/bpf-fancy.c:12:
+> /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+> file or directory
+>     5 | #include <asm/types.h>
+>       |          ^~~~~~~~~~~~~
+> compilation terminated.
+> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-direct.o] Error 1
+> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-fancy.o] Error 1
+> In file included from /usr/include/bits/errno.h:26,
+>                  from /usr/include/errno.h:28,
+>                  from ../samples/seccomp/dropper.c:17:
+> /usr/include/linux/errno.h:1:10: fatal error: asm/errno.h: No such
+> file or directory
+>     1 | #include <asm/errno.h>
+>       |          ^~~~~~~~~~~~~
+> compilation terminated.
+> make[3]: *** [scripts/Makefile.host:108: samples/seccomp/dropper.o] Error 1
+> In file included from ../samples/seccomp/bpf-helper.c:16:
+> ../samples/seccomp/bpf-helper.h:17:10: fatal error: asm/bitsperlong.h:
+> No such file or directory
+>    17 | #include <asm/bitsperlong.h> /* for __BITS_PER_LONG */
+>       |          ^~~~~~~~~~~~~~~~~~~
 
-I mean yeah, I think no-one really was going to jump on the revert-train.
+Any pointers to the commit that caused this?  I'll place odds on one of
+the random.h changes :(
 
-At least for me the historical background was quite important to know
-actually. The fact that by sharing the mm one can effectively be bound
-to the oom score of another thread-group is kinda suprising and the
-oom_score_adj section in man proc doesn't mention this.
-
-And I really think we need to document this. Either on the clone() or on
-the oom_score_adj page...
-
-Christian
+greg k-h
