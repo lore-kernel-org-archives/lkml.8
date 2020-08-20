@@ -5,55 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED05C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ECCC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3F322075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0CEF2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882327;
-	bh=KGpGAZlvQgPYAhs7AD6Jfe942r91IQpvXBxuiCSx2d8=;
+	s=default; t=1597882331;
+	bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSZt5Hq7KFUdHHSLAE6Si8wUJwg5W5Rb81rs6sszItb9aMTG6cQSl125++9XL+hgp
-	 mZxib4tF4WMHv0CzfU516cr+MzK3wBpSi+6p/wVv2h9Xro3iU/EL9ESiLswLqwSaHn
-	 T7pspdBg32YdQTreP57XeHV3DEfN/dQavDlUOWnM=
+	b=FfyYvNN0Qr6xkXGpRAu7TcZhjkrIwp9I7saslbKp9mEDVnyU4bwHODnebqposuSxr
+	 m7gOXM4vDrwRVHP8AHbNme2aOX0Do48bgoR8jsxbr9K/g3mY8/Rpse+JxRG2JutpPa
+	 TExNY7B2E1/tOFLqcBeUmNkRqOEhj9kvrBGw2Uno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbgHTAMC (ORCPT
+        id S1727103AbgHTAB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58336 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:01:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgHTACA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:00 -0400
+        id S1727061AbgHTABu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6296D207FB;
-        Thu, 20 Aug 2020 00:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EFE6207FB;
+        Thu, 20 Aug 2020 00:01:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881719;
-        bh=KGpGAZlvQgPYAhs7AD6Jfe942r91IQpvXBxuiCSx2d8=;
+        s=default; t=1597881709;
+        bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pYBFOhKxgH65v/hbN4WDiQ8+Qswod1V8tK5GxVOxXT+cBjNnAExCJSdey4QPz3ivx
-         uaEl+OVXIgblpVD+clrFR4XJAPdypeep0XW4UC1N8t/IP+tdqMv+wDtSXVAE7pbGBp
-         xk0JFVX0xWVlTsA92QKJNXGyhx4wGTCPiaoNci4Q=
+        b=RorQC4tK5pnF3Tpa7sEMfVl9+CvEwat5fTB8pD3sKg6I3kFLiTAzMdBg/3owAePXA
+         zpjtlqj8ClLwE/nKCD9GmNAJWcNotY9fVsr1KQx17VedFQhrV1Sc2HVWnb9Pxz4n88
+         6tWBwT01EY/Br0Su+79IdaqX4fSIgs7WVDTOSFYA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        JiangYu <lnsyyj@hotmail.com>,
-        Daniel Meyerholt <dxm523@gmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 02/24] scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
-Date:   Wed, 19 Aug 2020 20:01:33 -0400
-Message-Id: <20200820000155.215089-2-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 24/27] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Wed, 19 Aug 2020 20:01:13 -0400
+Message-Id: <20200820000116.214821-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000155.215089-1-sashal@kernel.org>
-References: <20200820000155.215089-1-sashal@kernel.org>
+In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
+References: <20200820000116.214821-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,92 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit 3145550a7f8b08356c8ff29feaa6c56aca12901d ]
+[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
 
-This patch fixes the following crash (see
-https://bugzilla.kernel.org/show_bug.cgi?id=208045)
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
- Process iscsi_trx (pid: 7496, stack limit = 0x0000000010dd111a)
- CPU: 0 PID: 7496 Comm: iscsi_trx Not tainted 4.19.118-0419118-generic
-        #202004230533
- Hardware name: Greatwall QingTian DF720/F601, BIOS 601FBE20 Sep 26 2019
- pstate: 80400005 (Nzcv daif +PAN -UAO)
- pc : flush_dcache_page+0x18/0x40
- lr : is_ring_space_avail+0x68/0x2f8 [target_core_user]
- sp : ffff000015123a80
- x29: ffff000015123a80 x28: 0000000000000000
- x27: 0000000000001000 x26: ffff000023ea5000
- x25: ffffcfa25bbe08b8 x24: 0000000000000078
- x23: ffff7e0000000000 x22: ffff000023ea5001
- x21: ffffcfa24b79c000 x20: 0000000000000fff
- x19: ffff7e00008fa940 x18: 0000000000000000
- x17: 0000000000000000 x16: ffff2d047e709138
- x15: 0000000000000000 x14: 0000000000000000
- x13: 0000000000000000 x12: ffff2d047fbd0a40
- x11: 0000000000000000 x10: 0000000000000030
- x9 : 0000000000000000 x8 : ffffc9a254820a00
- x7 : 00000000000013b0 x6 : 000000000000003f
- x5 : 0000000000000040 x4 : ffffcfa25bbe08e8
- x3 : 0000000000001000 x2 : 0000000000000078
- x1 : ffffcfa25bbe08b8 x0 : ffff2d040bc88a18
- Call trace:
-  flush_dcache_page+0x18/0x40
-  is_ring_space_avail+0x68/0x2f8 [target_core_user]
-  queue_cmd_ring+0x1f8/0x680 [target_core_user]
-  tcmu_queue_cmd+0xe4/0x158 [target_core_user]
-  __target_execute_cmd+0x30/0xf0 [target_core_mod]
-  target_execute_cmd+0x294/0x390 [target_core_mod]
-  transport_generic_new_cmd+0x1e8/0x358 [target_core_mod]
-  transport_handle_cdb_direct+0x50/0xb0 [target_core_mod]
-  iscsit_execute_cmd+0x2b4/0x350 [iscsi_target_mod]
-  iscsit_sequence_cmd+0xd8/0x1d8 [iscsi_target_mod]
-  iscsit_process_scsi_cmd+0xac/0xf8 [iscsi_target_mod]
-  iscsit_get_rx_pdu+0x404/0xd00 [iscsi_target_mod]
-  iscsi_target_rx_thread+0xb8/0x130 [iscsi_target_mod]
-  kthread+0x130/0x138
-  ret_from_fork+0x10/0x18
- Code: f9000bf3 aa0003f3 aa1e03e0 d503201f (f9400260)
- ---[ end trace 1e451c73f4266776 ]---
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
 
-The solution is based on patch:
+Fix it by checking parent_kobj before the code accesses its member.
 
-  "scsi: target: tcmu: Optimize use of flush_dcache_page"
-
-which restricts the use of tcmu_flush_dcache_range() to addresses from
-vmalloc'ed areas only.
-
-This patch now replaces the virt_to_page() call in
-tcmu_flush_dcache_range() - which is wrong for vmalloced addrs - by
-vmalloc_to_page().
-
-The patch was tested on ARM with kernel 4.19.118 and 5.7.2
-
-Link: https://lore.kernel.org/r/20200618131632.32748-3-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Tested-by: Daniel Meyerholt <dxm523@gmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: minor whitespace edits]
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_sysfs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index b63a1e0c4aa6d..a55114975b00d 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -601,7 +601,7 @@ static inline void tcmu_flush_dcache_range(void *vaddr, size_t size)
- 	size = round_up(size+offset, PAGE_SIZE);
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index e9f810fc67317..43585850f1546 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -32,9 +32,11 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject		*parent;
++
++	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
+ }
  
- 	while (size) {
--		flush_dcache_page(virt_to_page(start));
-+		flush_dcache_page(vmalloc_to_page(start));
- 		start += PAGE_SIZE;
- 		size -= PAGE_SIZE;
- 	}
+ static inline void
 -- 
 2.25.1
 
