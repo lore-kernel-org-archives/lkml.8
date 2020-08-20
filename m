@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B141C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9616EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051C42075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C3B720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918259;
-	bh=uWixnaLddrmx8tfCmet0WZ9uBZadHkMnrCsBBivaZgg=;
+	s=default; t=1597918270;
+	bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kK10e7WAd2WB2fkXQmSKNEQ3IepMn2pmSzOgTf6UXJZjap71y4t/+dy5Gem8KYRv
-	 lRoFZGQBkg7WUfmcRalbRZrFFpQDqQiW1HG76M6EWgs+z8wgMy4BeLCf5aXCdF5G9t
-	 oOOzi9ZIIURLa3La4tDuLROrXCLoAcKSXdKJ++Rg=
+	b=s4ooUWwijeCtZ70c4IscIEYPZJ7fkIAKVCbtHOEml/9ZGpt5eJQo6rDTucO10oFO1
+	 9YQOBKpyCAAXmey2oQRaDAr++QwnoxTlG0F/Fw6UM0sH/LcqKbzTqGNvJyOu04w6H8
+	 glRTDxi3luNPOIuVjNxbNlEfJTRq2MCTfET2VcA8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729961AbgHTKK5 (ORCPT
+        id S1730938AbgHTKLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48106 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:11:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730925AbgHTKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:48 -0400
+        id S1728509AbgHTKKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1DA20724;
-        Thu, 20 Aug 2020 10:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489C0206DA;
+        Thu, 20 Aug 2020 10:10:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918247;
-        bh=uWixnaLddrmx8tfCmet0WZ9uBZadHkMnrCsBBivaZgg=;
+        s=default; t=1597918250;
+        bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M4VF+ESBkpu+zgaiRzhevUucvZcaa0zgn3JGDNb4U816ctl6jBQzYXIoeLvzCrjWW
-         R2HQCfmUnZxcxuYjC5FRTS2FqIj8G+hknOk5wRIfwZHh+v5PPZKIfpu4qV3/0bKcof
-         YLxBh3GUVmMAJmV/qGks6yOyMUU4Nxwme05pcy6Y=
+        b=ZLoFDvTqbGYSxDLg5aS+I0TsywmKFFiV5Nq8SzCLn2af+ziAVy7FWHEBFAdNeXNBh
+         kqoYIJq4pIonYZTnzcFkV1wsXr1lAzDmMxtlQ4MuiQmKnfzHoZ3RinRHcUvnTO27zL
+         AG0oVGA2HWgx3hssHgehh4IFV720C8QP5sNqaTyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Douglas Gilbert <dgilbert@interlog.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 104/228] scsi: scsi_debug: Add check for sdebug_max_queue during module init
-Date:   Thu, 20 Aug 2020 11:21:19 +0200
-Message-Id: <20200820091612.804671558@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 087/228] leds: lm355x: avoid enum conversion warning
+Date:   Thu, 20 Aug 2020 11:21:02 +0200
+Message-Id: <20200820091611.964472782@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,90 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit c87bf24cfb60bce27b4d2c7e56ebfd86fb9d16bb ]
+[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
 
-sdebug_max_queue should not exceed SDEBUG_CANQUEUE, otherwise crashes like
-this can be triggered by passing an out-of-range value:
+clang points out that doing arithmetic between diffent enums is usually
+a mistake:
 
-Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.16.01 03/15/2019
- pstate: 20400009 (nzCv daif +PAN -UAO BTYPE=--)
- pc : schedule_resp+0x2a4/0xa70 [scsi_debug]
- lr : schedule_resp+0x52c/0xa70 [scsi_debug]
- sp : ffff800022ab36f0
- x29: ffff800022ab36f0 x28: ffff0023a935a610
- x27: ffff800008e0a648 x26: 0000000000000003
- x25: ffff0023e84f3200 x24: 00000000003d0900
- x23: 0000000000000000 x22: 0000000000000000
- x21: ffff0023be60a320 x20: ffff0023be60b538
- x19: ffff800008e13000 x18: 0000000000000000
- x17: 0000000000000000 x16: 0000000000000000
- x15: 0000000000000000 x14: 0000000000000000
- x13: 0000000000000000 x12: 0000000000000000
- x11: 0000000000000000 x10: 0000000000000000
- x9 : 0000000000000001 x8 : 0000000000000000
- x7 : 0000000000000000 x6 : 00000000000000c1
- x5 : 0000020000200000 x4 : dead0000000000ff
- x3 : 0000000000000200 x2 : 0000000000000200
- x1 : ffff800008e13d88 x0 : 0000000000000000
- Call trace:
-schedule_resp+0x2a4/0xa70 [scsi_debug]
-scsi_debug_queuecommand+0x2c4/0x9e0 [scsi_debug]
-scsi_queue_rq+0x698/0x840
-__blk_mq_try_issue_directly+0x108/0x228
-blk_mq_request_issue_directly+0x58/0x98
-blk_mq_try_issue_list_directly+0x5c/0xf0
-blk_mq_sched_insert_requests+0x18c/0x200
-blk_mq_flush_plug_list+0x11c/0x190
-blk_flush_plug_list+0xdc/0x110
-blk_finish_plug+0x38/0x210
-blkdev_direct_IO+0x450/0x4d8
-generic_file_read_iter+0x84/0x180
-blkdev_read_iter+0x3c/0x50
-aio_read+0xc0/0x170
-io_submit_one+0x5c8/0xc98
-__arm64_sys_io_submit+0x1b0/0x258
-el0_svc_common.constprop.3+0x68/0x170
-do_el0_svc+0x24/0x90
-el0_sync_handler+0x13c/0x1a8
-el0_sync+0x158/0x180
- Code: 528847e0 72a001e0 6b00003f 540018cd (3941c340)
+drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
+                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
+                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
 
-In addition, it should not be less than 1.
+In this driver, it is intentional, so add a cast to hide the false-positive
+warning. It appears to be the only instance of this warning at the moment.
 
-So add checks for these, and fail the module init for those cases.
-
-[mkp: changed if condition to match error message]
-
-Link: https://lore.kernel.org/r/1594297400-24756-2-git-send-email-john.garry@huawei.com
-Fixes: c483739430f1 ("scsi_debug: add multiple queue support")
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Acked-by: Douglas Gilbert <dgilbert@interlog.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_debug.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/leds/leds-lm355x.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index ac936b5ca74e5..aba1a3396890b 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -4993,6 +4993,12 @@ static int __init scsi_debug_init(void)
- 		pr_err("submit_queues must be 1 or more\n");
- 		return -EINVAL;
- 	}
-+
-+	if ((sdebug_max_queue > SDEBUG_CANQUEUE) || (sdebug_max_queue < 1)) {
-+		pr_err("max_queue must be in range [1, %d]\n", SDEBUG_CANQUEUE);
-+		return -EINVAL;
-+	}
-+
- 	sdebug_q_arr = kcalloc(submit_queues, sizeof(struct sdebug_queue),
- 			       GFP_KERNEL);
- 	if (sdebug_q_arr == NULL)
+diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
+index 6cb94f9a2f3f3..b9c60dd2b1327 100644
+--- a/drivers/leds/leds-lm355x.c
++++ b/drivers/leds/leds-lm355x.c
+@@ -168,18 +168,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
+ 	/* input and output pins configuration */
+ 	switch (chip->type) {
+ 	case CHIP_LM3554:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
+ 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+-		reg_val = pdata->pass_mode;
++		reg_val = (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
+ 		if (ret < 0)
+ 			goto out;
+ 		break;
+ 
+ 	case CHIP_LM3556:
+-		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
++		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
++		          (u32)pdata->pass_mode;
+ 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
+ 		if (ret < 0)
+ 			goto out;
 -- 
 2.25.1
 
