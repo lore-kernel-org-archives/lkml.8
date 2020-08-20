@@ -2,112 +2,127 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ED9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B420C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DACF62072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="juPlfhg3"
+	by mail.kernel.org (Postfix) with ESMTP id 4E26A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbgHTQxP (ORCPT
+        id S1730360AbgHTQxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:53:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40860 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729881AbgHTQxI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:53:08 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 563EBC061385;
-        Thu, 20 Aug 2020 09:53:05 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id w9so1667632qts.6;
-        Thu, 20 Aug 2020 09:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Fhzx8KwwpeQJ5G+vL21g25GrjAt+ixzDYHjelVEfNvE=;
-        b=juPlfhg3k0rzoOmVhQGgWNhjP93HI6I6CQQI/nBnJBm8DLwBlxZ8b3M4vdsNv1CxSu
-         86TSooDC11o8h2jjA64w5RkPugRKCxQd7BUMc/TmbXHh5P3sxOjNaOpjmvzSwCClyVI9
-         0xZymLvBQOgyL2ppfj6hvhZEgewM8UWc/bThXY86pAyb45CpDWr7p1bQic5XKq1O4GRS
-         UhxQcOvI8SWoVoGIOh4iZjag1NZmh/5zmCViQv6t5kLa+bMsxBjH6FggazqDm0ldRV+Q
-         uHy3RsBXcow2lApQE5g0LM0+MxUwp90jJvo+q8yjinqJwDViVQFexoq9mRyzV8+2oDBy
-         ChYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Fhzx8KwwpeQJ5G+vL21g25GrjAt+ixzDYHjelVEfNvE=;
-        b=VonLjdHLDpFGhPsgajGETtKTwf2xmYwwtEtQ+GI5OrWDvF/F01ozLFcrySf1nFBI6U
-         xE0zF+o9lItzWD5uVD9u8QuQYByyNOAwi0J0zH8FdAc8SlJnrgXcb9KM9pMb6KV19lhW
-         u9ObucQYpkuVKiUKz3otewL7CZgTuY+wRdIVWzRj5TNFj6Bj66qCtOxrqlvEN7MHtw2/
-         G15yAgEQBrtIunQgtIOfvkLGTBkq0idJ5nqyT+pYUih1/aAkVoioBTwP/GQCFIGJSAze
-         3qOONESf8pJ1+0W/cg/V3P5wbl+Yn6LgJ8br0FJkZ6OzVmWZrt2/SGbLrzNQ/DjRNJRC
-         uuFQ==
-X-Gm-Message-State: AOAM5335gaGIgNGTjzTaREuIsYG9tsf9UBiJfB+vAjDSoQjb2YnEZAoM
-        InWoYtPwTHtSs4DIeadGNJJVAFNMSK+ypg==
-X-Google-Smtp-Source: ABdhPJyvtsnkq3ihC1UTFHnyZkG+qbwgy0v5X/i2yoY+dnV59Q+6G/oMe77e4SapitYg942XJGpWKg==
-X-Received: by 2002:ac8:3a26:: with SMTP id w35mr3617092qte.124.1597942384460;
-        Thu, 20 Aug 2020 09:53:04 -0700 (PDT)
-Received: from tong-desktop.local ([2601:5c0:c100:b9d:a169:4fca:c1d6:b7b4])
-        by smtp.googlemail.com with ESMTPSA id 128sm2706753qkk.101.2020.08.20.09.53.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 09:53:04 -0700 (PDT)
-From:   Tong Zhang <ztong0001@gmail.com>
-To:     isely@pobox.com, mchehab@kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hverkuil@xs4all.nl
-Cc:     ztong0001@gmail.com
-Subject: [PATCH v3] media: pvrusb2: fix parsing error
-Date:   Thu, 20 Aug 2020 12:52:40 -0400
-Message-Id: <20200820165239.8510-1-ztong0001@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <aed971ed-bd8e-eaed-b2ee-80e9654f24cd@xs4all.nl>
-References: <aed971ed-bd8e-eaed-b2ee-80e9654f24cd@xs4all.nl>
+        Thu, 20 Aug 2020 12:53:14 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:40547 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729766AbgHTQxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:53:09 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 07KGq4Qu021721;
+        Thu, 20 Aug 2020 18:52:04 +0200
+Date:   Thu, 20 Aug 2020 18:52:04 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 4.4 000/149] 4.4.233-rc1 review
+Message-ID: <20200820165204.GA21717@1wt.eu>
+References: <20200820092125.688850368@linuxfoundation.org>
+ <CA+G9fYsxQEnACmjP+CUtBq9P+0nWU_19oG62tpCbKtdcGAStfA@mail.gmail.com>
+ <20200820150848.GA1565072@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820150848.GA1565072@kroah.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pvr2_std_str_to_id() returns 0 on failure and 1 on success,
-however the caller is checking failure case using <0
+On Thu, Aug 20, 2020 at 05:08:48PM +0200, Greg Kroah-Hartman wrote:
+> On Thu, Aug 20, 2020 at 07:49:06PM +0530, Naresh Kamboju wrote:
+> > On Thu, 20 Aug 2020 at 15:47, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 4.4.233 release.
+> > > There are 149 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, please
+> > > let me know.
+> > >
+> > > Responses should be made by Sat, 22 Aug 2020 09:21:01 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.233-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> > 
+> > i386 build failed on stable-rc 4.4 branch
+> > 
+> > make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=i386 HOSTCC=gcc
+> > CC="sccache gcc" O=build
+> > #
+> > In file included from ../samples/seccomp/bpf-direct.c:19:
+> > /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+> > file or directory
+> >     5 | #include <asm/types.h>
+> >       |          ^~~~~~~~~~~~~
+> > compilation terminated.
+> > In file included from /usr/include/linux/filter.h:10,
+> >                  from ../samples/seccomp/bpf-fancy.c:12:
+> > /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+> > file or directory
+> >     5 | #include <asm/types.h>
+> >       |          ^~~~~~~~~~~~~
+> > compilation terminated.
+> > make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-direct.o] Error 1
+> > make[3]: *** [scripts/Makefile.host:108: samples/seccomp/bpf-fancy.o] Error 1
+> > In file included from /usr/include/bits/errno.h:26,
+> >                  from /usr/include/errno.h:28,
+> >                  from ../samples/seccomp/dropper.c:17:
+> > /usr/include/linux/errno.h:1:10: fatal error: asm/errno.h: No such
+> > file or directory
+> >     1 | #include <asm/errno.h>
+> >       |          ^~~~~~~~~~~~~
+> > compilation terminated.
+> > make[3]: *** [scripts/Makefile.host:108: samples/seccomp/dropper.o] Error 1
+> > In file included from ../samples/seccomp/bpf-helper.c:16:
+> > ../samples/seccomp/bpf-helper.h:17:10: fatal error: asm/bitsperlong.h:
+> > No such file or directory
+> >    17 | #include <asm/bitsperlong.h> /* for __BITS_PER_LONG */
+> >       |          ^~~~~~~~~~~~~~~~~~~
+> 
+> Any pointers to the commit that caused this?  I'll place odds on one of
+> the random.h changes :(
 
-Co-developed-by: Hans Verkuil<hverkuil@xs4all.nl>
-Signed-off-by: Tong Zhang <ztong0001@gmail.com>
----
+It's very possible, but we never touched these files, so it looks like
+there is something else if these ones cannot even be found :
 
-v2: return -EINVAL as suggested by Hans Verkuil<hverkuil@xs4all.nl>.
-I also rebased the code on v5.9-rc1.
-v3: remove unused variable
+> > /usr/include/linux/types.h:5:10: fatal error: asm/types.h: No such
+> > file or directory
+> >     5 | #include <asm/types.h>
+> >       |          ^~~~~~~~~~~~~
 
- drivers/media/usb/pvrusb2/pvrusb2-hdw.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Also I don't know what this "sccache" wrapper is, maybe it needs to be
+cleaned before trying again ?
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-index 1cfb7cf64131..f4a727918e35 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-hdw.c
-@@ -864,10 +864,9 @@ static int ctrl_std_sym_to_val(struct pvr2_ctrl *cptr,
- 			       const char *bufPtr,unsigned int bufSize,
- 			       int *mskp,int *valp)
- {
--	int ret;
- 	v4l2_std_id id;
--	ret = pvr2_std_str_to_id(&id,bufPtr,bufSize);
--	if (ret < 0) return ret;
-+	if (!pvr2_std_str_to_id(&id, bufPtr, bufSize))
-+		return -EINVAL;
- 	if (mskp) *mskp = id;
- 	if (valp) *valp = id;
- 	return 0;
--- 
-2.25.1
+That's a bit confusing :-/
 
+Willy
