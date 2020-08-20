@@ -2,181 +2,75 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E192C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD772C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 206152076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:57:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XeiN7jhz"
+	by mail.kernel.org (Postfix) with ESMTP id A04092076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgHTH5n (ORCPT
+        id S1726215AbgHTH7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:57:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726823AbgHTH4o (ORCPT
+        Thu, 20 Aug 2020 03:59:35 -0400
+Received: from smtprelay0080.hostedemail.com ([216.40.44.80]:46182 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725798AbgHTH7e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:56:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29B4CC061387
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:56:44 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id t6so635914pjr.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Xmu7H0E+tFg4FErq7QIubnUbkqLX4YsFmMjBv8snFjM=;
-        b=XeiN7jhzKtl+qc8zYJeYP04FEkec+TZuADSi0PKem0kyofYbjO4yrpZIEMlrJHIQR7
-         mj5Esq/GTfN/ZYF9OXmHMeIDIEjaLrFoXuYn7idXzBm3Nquh1dSU9enaxPZAjA/JYcdn
-         C5LMaanseLjriumFoBuVFmsBjF0KyB2MR11rKB9+NZ/dKVQTvxy7KcT3Tw4lOJ4VDQdo
-         oLj39R9AGF900jmwJp49Dodn8o+o5FwO9f7uu6QGtQESBGxtN0RxB5tZC2ZP05Oxhckq
-         Hd5TEsf4yTk7fZ/Y9de8Ka6RiGaXIy0lCItr2P8hHkPOqPCvhV3LH5fZZ8BnLnS/ky2b
-         Ig8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Xmu7H0E+tFg4FErq7QIubnUbkqLX4YsFmMjBv8snFjM=;
-        b=Hxj9Vl9+EhEDnGlOE0HbXxNH+QAlOdP5MYV1aF5qaNHcpwIQL8NdLSgmQVnWtVrnZ0
-         ZD0+CpDLJIxAzOCWvU+mJgxYktkzTGquss2zA5qfXuBlHts5NVuu297cEzPt0R3YimvK
-         snaMUCI1ba2rByljPhUeUKzygcB1w1cwmELdY7UMXwrchDnTPjXVOLBk4fTstHLI+lxP
-         1zYa7TB49+TtYxRdIFHep+PMGprsbf/GItOjAfCvJImRRi+n5wG/IwVy+5/DAvvPQPcI
-         TCgjBL7V0YiQIAcibkWeS6xdygYr+LuzwEyfnadD9X8tBStweCvj+e6C5dTNM3IUSMPA
-         lZ/A==
-X-Gm-Message-State: AOAM533uzL+Q1/VClniB74PQ5szhn7YtQSbkyeSXcPHdXq/zCv0buXmK
-        CixQfFUIHIIiK499cOzoMIPFsw==
-X-Google-Smtp-Source: ABdhPJyAvAYnc5QIqJi41Th1jUA4+WoiklJUB5kqWpWjYvrHM4DPKLUuw4aNfDM/Y/rRLlRwJJlP2A==
-X-Received: by 2002:a17:902:a585:: with SMTP id az5mr1692694plb.172.1597910203441;
-        Thu, 20 Aug 2020 00:56:43 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id f6sm1777666pfa.23.2020.08.20.00.56.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 00:56:42 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     rnayak@codeaurora.org, Viresh Kumar <vireshk@kernel.org>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>, sibis@codeaurora.org,
-        sbhanu@codeaurora.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V3 1/4] opp: Rename regulator_enabled and use it as status of all resources
-Date:   Thu, 20 Aug 2020 13:26:31 +0530
-Message-Id: <38740bd2a53a0f4778e9a8719ac2c590423f745a.1597909885.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1597909885.git.viresh.kumar@linaro.org>
-References: <cover.1597909885.git.viresh.kumar@linaro.org>
+        Thu, 20 Aug 2020 03:59:34 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id F25CF181D330D;
+        Thu, 20 Aug 2020 07:59:32 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: paste48_5b144792702f
+X-Filterd-Recvd-Size: 1775
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf02.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 20 Aug 2020 07:59:31 +0000 (UTC)
+Message-ID: <29b6120680fbfb51936bb9100b2c9bb78385aef0.camel@perches.com>
+Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
+From:   Joe Perches <joe@perches.com>
+To:     David Laight <David.Laight@ACULAB.COM>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Aug 2020 00:59:30 -0700
+In-Reply-To: <b17fc8afc8984fedb852921366190104@AcuMS.aculab.com>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+         <20200819232632.13418-2-john.ogness@linutronix.de>
+         <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
+         <b17fc8afc8984fedb852921366190104@AcuMS.aculab.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expand the scope of the regulator_enabled flag and use it to track
-status of all the resources. This will be used for other stuff in the
-next patch.
+On Thu, 2020-08-20 at 07:44 +0000, David Laight wrote:
+> I've no idea how you'd 'size' the number of buffers.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 19 +++++++++----------
- drivers/opp/opp.h  |  4 ++--
- 2 files changed, 11 insertions(+), 12 deletions(-)
+I believe they are static and assume no more than 10
+simultaneous uses of
+printk_begin
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 9668ea04cc80..6f43ef4945b7 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -703,12 +703,10 @@ static int _generic_set_opp_regulator(struct opp_table *opp_table,
- 	 * Enable the regulator after setting its voltages, otherwise it breaks
- 	 * some boot-enabled regulators.
- 	 */
--	if (unlikely(!opp_table->regulator_enabled)) {
-+	if (unlikely(!opp_table->enabled)) {
- 		ret = regulator_enable(reg);
- 		if (ret < 0)
- 			dev_warn(dev, "Failed to enable regulator: %d", ret);
--		else
--			opp_table->regulator_enabled = true;
- 	}
- 
- 	return 0;
-@@ -909,12 +907,12 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 		if (ret)
- 			goto put_opp_table;
- 
--		if (opp_table->regulator_enabled) {
-+		if (opp_table->regulators)
- 			regulator_disable(opp_table->regulators[0]);
--			opp_table->regulator_enabled = false;
--		}
- 
- 		ret = _set_required_opps(dev, opp_table, NULL);
-+
-+		opp_table->enabled = false;
- 		goto put_opp_table;
- 	}
- 
-@@ -1001,8 +999,11 @@ int dev_pm_opp_set_rate(struct device *dev, unsigned long target_freq)
- 			dev_err(dev, "Failed to set required opps: %d\n", ret);
- 	}
- 
--	if (!ret)
-+	if (!ret) {
- 		ret = _set_opp_bw(opp_table, opp, dev, false);
-+		if (!ret)
-+			opp_table->enabled = true;
-+	}
- 
- put_opp:
- 	dev_pm_opp_put(opp);
-@@ -1796,11 +1797,9 @@ void dev_pm_opp_put_regulators(struct opp_table *opp_table)
- 	/* Make sure there are no concurrent readers while updating opp_table */
- 	WARN_ON(!list_empty(&opp_table->opp_list));
- 
--	if (opp_table->regulator_enabled) {
-+	if (opp_table->enabled) {
- 		for (i = opp_table->regulator_count - 1; i >= 0; i--)
- 			regulator_disable(opp_table->regulators[i]);
--
--		opp_table->regulator_enabled = false;
- 	}
- 
- 	for (i = opp_table->regulator_count - 1; i >= 0; i--)
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index e51646ff279e..0c3de3f6db5c 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -147,11 +147,11 @@ enum opp_table_access {
-  * @clk: Device's clock handle
-  * @regulators: Supply regulators
-  * @regulator_count: Number of power supply regulators. Its value can be -1
-- * @regulator_enabled: Set to true if regulators were previously enabled.
-  * (uninitialized), 0 (no opp-microvolt property) or > 0 (has opp-microvolt
-  * property).
-  * @paths: Interconnect path handles
-  * @path_count: Number of interconnect paths
-+ * @enabled: Set to true if the device's resources are enabled/configured.
-  * @genpd_performance_state: Device's power domain support performance state.
-  * @is_genpd: Marks if the OPP table belongs to a genpd.
-  * @set_opp: Platform specific set_opp callback
-@@ -195,9 +195,9 @@ struct opp_table {
- 	struct clk *clk;
- 	struct regulator **regulators;
- 	int regulator_count;
--	bool regulator_enabled;
- 	struct icc_path **paths;
- 	unsigned int path_count;
-+	bool enabled;
- 	bool genpd_performance_state;
- 	bool is_genpd;
- 
--- 
-2.25.0.rc1.19.g042ed3e048af
++#define CONT_LINE_MAX LOG_LINE_MAX
++#define CONT_BUF_COUNT 10
++static char cont_buf[CONT_BUF_COUNT][CONT_LINE_MAX];
++static DECLARE_BITMAP(cont_buf_map, CONT_BUF_COUNT);
+
+Though I don't see much value in a separate define
+for CONT_LINE_MAx
+
 
