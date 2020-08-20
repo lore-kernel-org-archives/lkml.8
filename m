@@ -2,54 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1971CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D257EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E862820855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14E020855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924693;
-	bh=McGCwYC+BC0s+KKmOlE6YpRkcTGvJ3EU52u2hcJ7Ew4=;
+	s=default; t=1597924706;
+	bh=PyqoSGe/Ol3BIZziK/oJea7Mem0MDowvc+9/oJyQP/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VnQMBxdo2vmK2madg/h6etK1XmK+hMN2Ra/cqBXY/ht6LCR6CeSFHNtwNeu6TkU6Q
-	 xSFf934KwXn2jL5JMeUQlC7W6dLkFybYmn8ttJpAShar3KxjsYo54a/TbjJS7R1pqV
-	 lWoTlvVnKDtN6qD/3P93htQP0F6gj7PV9TgN1N5g=
+	b=szvNP/yLgM11g4TVHrJHBu8zmWDXTCQk1TrCZkRe+1AZPXzmEhUVncCVz5dt25Lmy
+	 6bqRUoK9GSqqMy6nOMR2v4d7o2neBDeC0mRTKVEMnQwY/NZprfxrFA0PoOzKNM0Y16
+	 6BZlaZZwgkvSULSYrNpk3VxjygADjPthQS3cERIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbgHTL6M (ORCPT
+        id S1730510AbgHTL6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:58:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgHTKAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:42 -0400
+        id S1730478AbgHTKAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C14D5208E4;
-        Thu, 20 Aug 2020 10:00:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A9020855;
+        Thu, 20 Aug 2020 10:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917642;
-        bh=McGCwYC+BC0s+KKmOlE6YpRkcTGvJ3EU52u2hcJ7Ew4=;
+        s=default; t=1597917639;
+        bh=PyqoSGe/Ol3BIZziK/oJea7Mem0MDowvc+9/oJyQP/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JWoPvkLU7eSoZSGOAPBgETWVR+dflYSjbxcBYWhG9W3Zl8u6USSFA6jXH6HiveJ1H
-         7KgtZeO+zzt9fYEvdcgr1Dcq7rjjGX+4EaTwBrV36UGVA5Ub6vGuiunulNNlJxjNpv
-         4r6dGKe971BiV1B6d4OLa9ZeNo06Jl09PMUaFTC4=
+        b=wueYPBZWbOpdJOO8aMEa+udLmG71s0Qo6cKNvcu8ciWhZCVS3gpjphGzenmYdkCk7
+         6C4INa6dGABT+THnfUMFHOk+CVkKasSmKeqXgF0HKoZBCMrazm328FUycwMUvkcFTc
+         JLFOsbmizv1WN/CMqh14Pth8ypMowxtBVseYKVSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 064/212] net/9p: validate fds in p9_fd_open
-Date:   Thu, 20 Aug 2020 11:20:37 +0200
-Message-Id: <20200820091605.601050071@linuxfoundation.org>
+        stable@vger.kernel.org, ch3332xr@gmail.com,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 073/212] ipv6: fix memory leaks on IPV6_ADDRFORM path
+Date:   Thu, 20 Aug 2020 11:20:46 +0200
+Message-Id: <20200820091606.049138046@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,70 +60,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
+[ Upstream commit 8c0de6e96c9794cb523a516c465991a70245da1c ]
 
-p9_fd_open just fgets file descriptors passed in from userspace, but
-doesn't verify that they are valid for read or writing.  This gets
-cought down in the VFS when actually attempting a read or write, but
-a new warning added in linux-next upsets syzcaller.
+IPV6_ADDRFORM causes resource leaks when converting an IPv6 socket
+to IPv4, particularly struct ipv6_ac_socklist. Similar to
+struct ipv6_mc_socklist, we should just close it on this path.
 
-Fix this by just verifying the fds early on.
+This bug can be easily reproduced with the following C program:
 
-Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
-Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Dominique: amend goto as per Doug Nazar's review]
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  #include <stdio.h>
+  #include <string.h>
+  #include <sys/types.h>
+  #include <sys/socket.h>
+  #include <arpa/inet.h>
+
+  int main()
+  {
+    int s, value;
+    struct sockaddr_in6 addr;
+    struct ipv6_mreq m6;
+
+    s = socket(AF_INET6, SOCK_DGRAM, 0);
+    addr.sin6_family = AF_INET6;
+    addr.sin6_port = htons(5000);
+    inet_pton(AF_INET6, "::ffff:192.168.122.194", &addr.sin6_addr);
+    connect(s, (struct sockaddr *)&addr, sizeof(addr));
+
+    inet_pton(AF_INET6, "fe80::AAAA", &m6.ipv6mr_multiaddr);
+    m6.ipv6mr_interface = 5;
+    setsockopt(s, SOL_IPV6, IPV6_JOIN_ANYCAST, &m6, sizeof(m6));
+
+    value = AF_INET;
+    setsockopt(s, SOL_IPV6, IPV6_ADDRFORM, &value, sizeof(value));
+
+    close(s);
+    return 0;
+  }
+
+Reported-by: ch3332xr@gmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/9p/trans_fd.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ include/net/addrconf.h   |    1 +
+ net/ipv6/anycast.c       |   17 ++++++++++++-----
+ net/ipv6/ipv6_sockglue.c |    1 +
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index b0f47563f0bf3..bad27b0ec65d6 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -815,20 +815,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
- 		return -ENOMEM;
+--- a/include/net/addrconf.h
++++ b/include/net/addrconf.h
+@@ -253,6 +253,7 @@ int ipv6_sock_ac_join(struct sock *sk, i
+ 		      const struct in6_addr *addr);
+ int ipv6_sock_ac_drop(struct sock *sk, int ifindex,
+ 		      const struct in6_addr *addr);
++void __ipv6_sock_ac_close(struct sock *sk);
+ void ipv6_sock_ac_close(struct sock *sk);
  
- 	ts->rd = fget(rfd);
-+	if (!ts->rd)
-+		goto out_free_ts;
-+	if (!(ts->rd->f_mode & FMODE_READ))
-+		goto out_put_rd;
- 	ts->wr = fget(wfd);
--	if (!ts->rd || !ts->wr) {
--		if (ts->rd)
--			fput(ts->rd);
--		if (ts->wr)
--			fput(ts->wr);
--		kfree(ts);
--		return -EIO;
--	}
-+	if (!ts->wr)
-+		goto out_put_rd;
-+	if (!(ts->wr->f_mode & FMODE_WRITE))
-+		goto out_put_wr;
- 
- 	client->trans = ts;
- 	client->status = Connected;
- 
+ int __ipv6_dev_ac_inc(struct inet6_dev *idev, const struct in6_addr *addr);
+--- a/net/ipv6/anycast.c
++++ b/net/ipv6/anycast.c
+@@ -170,7 +170,7 @@ int ipv6_sock_ac_drop(struct sock *sk, i
  	return 0;
-+
-+out_put_wr:
-+	fput(ts->wr);
-+out_put_rd:
-+	fput(ts->rd);
-+out_free_ts:
-+	kfree(ts);
-+	return -EIO;
  }
  
- static int p9_socket_open(struct p9_client *client, struct socket *csocket)
--- 
-2.25.1
-
+-void ipv6_sock_ac_close(struct sock *sk)
++void __ipv6_sock_ac_close(struct sock *sk)
+ {
+ 	struct ipv6_pinfo *np = inet6_sk(sk);
+ 	struct net_device *dev = NULL;
+@@ -178,10 +178,7 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 	struct net *net = sock_net(sk);
+ 	int	prev_index;
+ 
+-	if (!np->ipv6_ac_list)
+-		return;
+-
+-	rtnl_lock();
++	ASSERT_RTNL();
+ 	pac = np->ipv6_ac_list;
+ 	np->ipv6_ac_list = NULL;
+ 
+@@ -198,6 +195,16 @@ void ipv6_sock_ac_close(struct sock *sk)
+ 		sock_kfree_s(sk, pac, sizeof(*pac));
+ 		pac = next;
+ 	}
++}
++
++void ipv6_sock_ac_close(struct sock *sk)
++{
++	struct ipv6_pinfo *np = inet6_sk(sk);
++
++	if (!np->ipv6_ac_list)
++		return;
++	rtnl_lock();
++	__ipv6_sock_ac_close(sk);
+ 	rtnl_unlock();
+ }
+ 
+--- a/net/ipv6/ipv6_sockglue.c
++++ b/net/ipv6/ipv6_sockglue.c
+@@ -206,6 +206,7 @@ static int do_ipv6_setsockopt(struct soc
+ 
+ 			fl6_free_socklist(sk);
+ 			__ipv6_sock_mc_close(sk);
++			__ipv6_sock_ac_close(sk);
+ 
+ 			/*
+ 			 * Sock is moving from IPv6 to IPv4 (sk_prot), so
 
 
