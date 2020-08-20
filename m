@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D13C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B340DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1193121744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9075C21744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915818;
-	bh=WbXt8Ib5yN5cpTvhe/9oHmMjDtvq/mhODJSbnCMBbf4=;
+	s=default; t=1597915821;
+	bh=mfUn4xnhBLZ9RvlH0Kfu2AhP1HgYT78e9KdsuDfoqo8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vVlq8IDdeYfWLbXvabtSCCKj0MI344osBJiheUbh6lUzczorlt9T24JiBj81FK4yR
-	 8onzm0F/a6szixg6JiUQFzpmwf9vM2kPd4CJ3bK38fRnlN7fk6LIXyVn6fLGVp7OLK
-	 z1dVy++HDiilSqMQ4IWPZBC0BdLKDNcx4a6Y/HdM=
+	b=bz9XAboeXGuf9ekFMkmraXap15xuWY9h/y697Ew70uHfhWohRCHDdRgklj4B/Uzok
+	 B3vF/v1G2FpWY3xzDorkG8lLe9zB1yF4dot/ISojL2RCrRrE/2lbqr0d357dFieTQ5
+	 2njE4Jk6K80OJawqcYCj7Q7zI8vN+SwBZkQJ3cb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgHTJaQ (ORCPT
+        id S1728134AbgHTJaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:30:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:30:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728127AbgHTJ36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:58 -0400
+        id S1727106AbgHTJ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A547422CA1;
-        Thu, 20 Aug 2020 09:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEC3E2173E;
+        Thu, 20 Aug 2020 09:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915798;
-        bh=WbXt8Ib5yN5cpTvhe/9oHmMjDtvq/mhODJSbnCMBbf4=;
+        s=default; t=1597915786;
+        bh=mfUn4xnhBLZ9RvlH0Kfu2AhP1HgYT78e9KdsuDfoqo8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSSLjHSdgznU75octr1s+1JRBd78A6F1dgBBtgIwcvfbVg77MsOnhEzkneXkbEb5j
-         +9Nv+cRwTc5hxYw34i/AbukMvkFYSYH+KHeV8sPGMQz6FxNLTjmyErPWfyO3xaJ6R7
-         8dl0PdjxjUMKP1z92yWYn4mEHm84IuGriyDPcuYg=
+        b=Ba/vKsWcIslne23Fpmv3HoSwL1yptu0I5YnUuniJzgo/Bzy8r+QjJx3PZLo3Vub93
+         hyUA+2EBHYNaQIBJ19n9AVIu4xWMFzOdHIE6FFsNpiAOmyahfkympObjXWSzbS8iyC
+         SvJDoYj44bwsmPhl66YfZZnFNMAvWg6dxJTitIEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 138/232] crypto: af_alg - Fix regression on empty requests
-Date:   Thu, 20 Aug 2020 11:19:49 +0200
-Message-Id: <20200820091619.509042985@linuxfoundation.org>
+Subject: [PATCH 5.8 134/232] selftests/bpf: test_progs avoid minus shell exit codes
+Date:   Thu, 20 Aug 2020 11:19:45 +0200
+Message-Id: <20200820091619.311576283@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,46 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-[ Upstream commit 662bb52f50bca16a74fe92b487a14d7dccb85e1a ]
+[ Upstream commit b8c50df0cb3eb9008f8372e4ff0317eee993b8d1 ]
 
-Some user-space programs rely on crypto requests that have no
-control metadata.  This broke when a check was added to require
-the presence of control metadata with the ctx->init flag.
+There are a number of places in test_progs that use minus-1 as the argument
+to exit(). This is confusing as a process exit status is masked to be a
+number between 0 and 255 as defined in man exit(3). Thus, users will see
+status 255 instead of minus-1.
 
-This patch fixes the regression by setting ctx->init as long as
-one sendmsg(2) has been made, with or without a control message.
+This patch use positive exit code 3 instead of minus-1. These cases are put
+in the same group of infrastructure setup errors.
 
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: fd27b1835e70 ("selftests/bpf: Reset process and thread affinity after each test/sub-test")
+Fixes: 811d7e375d08 ("bpf: selftests: Restore netns after each test")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/159410594499.1093222.11080787853132708654.stgit@firesoul
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/af_alg.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 9fcb91ea10c41..5882ed46f1adb 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -851,6 +851,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 		err = -EINVAL;
- 		goto unlock;
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index 0849735ebda8a..d498b6aa63a42 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -13,6 +13,7 @@
+ #include <execinfo.h> /* backtrace */
+ 
+ #define EXIT_NO_TEST		2
++#define EXIT_ERR_SETUP_INFRA	3
+ 
+ /* defined in test_progs.h */
+ struct test_env env = {};
+@@ -113,13 +114,13 @@ static void reset_affinity() {
+ 	if (err < 0) {
+ 		stdio_restore();
+ 		fprintf(stderr, "Failed to reset process affinity: %d!\n", err);
+-		exit(-1);
++		exit(EXIT_ERR_SETUP_INFRA);
  	}
-+	ctx->init = true;
- 
- 	if (init) {
- 		ctx->enc = enc;
-@@ -858,7 +859,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 			memcpy(ctx->iv, con.iv->iv, ivsize);
- 
- 		ctx->aead_assoclen = con.aead_assoclen;
--		ctx->init = true;
+ 	err = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
+ 	if (err < 0) {
+ 		stdio_restore();
+ 		fprintf(stderr, "Failed to reset thread affinity: %d!\n", err);
+-		exit(-1);
++		exit(EXIT_ERR_SETUP_INFRA);
  	}
+ }
  
- 	while (size) {
+@@ -128,7 +129,7 @@ static void save_netns(void)
+ 	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
+ 	if (env.saved_netns_fd == -1) {
+ 		perror("open(/proc/self/ns/net)");
+-		exit(-1);
++		exit(EXIT_ERR_SETUP_INFRA);
+ 	}
+ }
+ 
+@@ -137,7 +138,7 @@ static void restore_netns(void)
+ 	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
+ 		stdio_restore();
+ 		perror("setns(CLONE_NEWNS)");
+-		exit(-1);
++		exit(EXIT_ERR_SETUP_INFRA);
+ 	}
+ }
+ 
 -- 
 2.25.1
 
