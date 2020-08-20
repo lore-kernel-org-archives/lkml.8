@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427B4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50FD022B47
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B56208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929867;
-	bh=ayR58E/HkqMTNKquLhSI45UEGPZWQDPCo6KAuDomwQI=;
+	s=default; t=1597929895;
+	bh=0pkLbZ3ecE1PW8MfK1EZfq9ZmaccVL2nFYhP+U3ugMU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OewbwzaV6ie18NdZ6tm0SwIOQ5IxaI05DjO9OvcQk0mbeE/JpZp2fBRlhyt4D1IYl
-	 VSkds54IlUh/zKrqSIe7PgK1JblMx/CcbwDndmskDV6T0bVpu8wzaVP7D0BF6Ul87b
-	 fbyGnWkHiZjsojVPkTuhwPZ72s80eatRekHnnPAE=
+	b=1xOjerAkdPi1DwRY+1nZthXDgBPkLBPTMKIriDThYP/BKbQh2t+8DNwrjCXsd64JW
+	 GNFFicrJCEdIb2tCN7FSUtzcMj45L9pGT3/FTeusupe28gwZmUIZc3UgEHplurN00k
+	 h8fPwAcD+Hsf1lvtXpZKb7nyv0TH2dwxfztT5Ahg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730563AbgHTNYX (ORCPT
+        id S1730600AbgHTNYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:24:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728398AbgHTJdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:33:24 -0400
+        id S1728405AbgHTJd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:33:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A898922B43;
-        Thu, 20 Aug 2020 09:33:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB9A822BEF;
+        Thu, 20 Aug 2020 09:33:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915987;
-        bh=ayR58E/HkqMTNKquLhSI45UEGPZWQDPCo6KAuDomwQI=;
+        s=default; t=1597915993;
+        bh=0pkLbZ3ecE1PW8MfK1EZfq9ZmaccVL2nFYhP+U3ugMU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+1kDLtXpYJYGDKK+WLCmROCP1GCxfta20+l+Y8QzESEiLfaPisXoRy2rTq94DGll
-         Ryg3ryZF33+PNx6QHzIaQPA7SiPygw7ezdJxpJgeugzz8ytdQJhY7OZNSqJY51G2Ct
-         Zv+4GRJTewChjKmGAy3mUj48Df3u2lccnty+WpH4=
+        b=Bo5aqiUCvvmFnpok/m7u/8NaniYKQlT3inDMT939nVGBQAHdXcYAiKbuvPQR7TARf
+         oA7Giwk7NMruK3mNqB+lKwxNnhm+HFX4EBZMktl6UfC5FJwuSqyer8GLn5y5Yb5U/6
+         0hPDIzmh2WYJlddqwR9q12UaX3gpBf2MaCmiE2cY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 205/232] lib/test_lockup.c: fix return value of test_lockup_init()
-Date:   Thu, 20 Aug 2020 11:20:56 +0200
-Message-Id: <20200820091622.740690835@linuxfoundation.org>
+Subject: [PATCH 5.8 189/232] x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
+Date:   Thu, 20 Aug 2020 11:20:40 +0200
+Message-Id: <20200820091621.948589440@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -64,60 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-[ Upstream commit 3adf3bae0d612357da516d39e1584f1547eb6e86 ]
+[ Upstream commit 7d98585860d845e36ee612832a5ff021f201dbaf ]
 
-Since filp_open() returns an error pointer, we should use IS_ERR() to
-check the return value and then return PTR_ERR() if failed to get the
-actual return value instead of always -EINVAL.
+Frequency descriptor of Lightning Mountain SoC doesn't have all the
+frequency entries so resulting in the below failure causing a kernel hang:
 
-E.g. without this patch:
+    Error MSR_FSB_FREQ index 15 is unknown
+    tsc: Fast TSC calibration failed
 
-[root@localhost loongson]# ls no_such_file
-ls: cannot access no_such_file: No such file or directory
-[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
-modprobe: ERROR: could not insert 'test_lockup': Invalid argument
-[root@localhost loongson]# dmesg | tail -1
-[  126.100596] test_lockup: cannot find file_path
+So, add all the frequency entries in the Lightning Mountain SoC frequency
+descriptor.
 
-With this patch:
-
-[root@localhost loongson]# ls no_such_file
-ls: cannot access no_such_file: No such file or directory
-[root@localhost loongson]# modprobe test_lockup file_path=no_such_file lock_sb_umount time_secs=60 state=S
-modprobe: ERROR: could not insert 'test_lockup': Unknown symbol in module, or unknown parameter (see dmesg)
-[root@localhost loongson]# dmesg | tail -1
-[   95.134362] test_lockup: failed to open no_such_file: -2
-
-Fixes: aecd42df6d39 ("lib/test_lockup.c: add parameters for locking generic vfs locks")
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc: Kees Cook <keescook@chromium.org>
-Link: http://lkml.kernel.org/r/1595555407-29875-2-git-send-email-yangtiezhu@loongson.cn
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
+Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/211c643ae217604b46cbec43a2c0423946dc7d2d.1596440057.git.eswara.kota@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- lib/test_lockup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/tsc_msr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_lockup.c b/lib/test_lockup.c
-index bd7c7ff39f6be..e7202763a1688 100644
---- a/lib/test_lockup.c
-+++ b/lib/test_lockup.c
-@@ -512,8 +512,8 @@ static int __init test_lockup_init(void)
- 	if (test_file_path[0]) {
- 		test_file = filp_open(test_file_path, O_RDONLY, 0);
- 		if (IS_ERR(test_file)) {
--			pr_err("cannot find file_path\n");
--			return -EINVAL;
-+			pr_err("failed to open %s: %ld\n", test_file_path, PTR_ERR(test_file));
-+			return PTR_ERR(test_file);
- 		}
- 		test_inode = file_inode(test_file);
- 	} else if (test_lock_inode ||
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index 4fec6f3a1858b..a654a9b4b77c0 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -133,10 +133,15 @@ static const struct freq_desc freq_desc_ann = {
+ 	.mask = 0x0f,
+ };
+ 
+-/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
++/*
++ * 24 MHz crystal? : 24 * 13 / 4 = 78 MHz
++ * Frequency step for Lightning Mountain SoC is fixed to 78 MHz,
++ * so all the frequency entries are 78000.
++ */
+ static const struct freq_desc freq_desc_lgm = {
+ 	.use_msr_plat = true,
+-	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
++	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
++		   78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ 	.mask = 0x0f,
+ };
+ 
 -- 
 2.25.1
 
