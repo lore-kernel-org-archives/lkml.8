@@ -4,56 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9464C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB1FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C2220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC66220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926353;
-	bh=Rmv470bmgUS7+vIi8DvLOsrP7vf16lYWdL3eGMa12cg=;
+	s=default; t=1597926361;
+	bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/f1rTjmRXlti1BB7HMCwTfzoAfcwZPjv4X3nk8qpiZUbI5d9HQWNHcLj/Z8htRoB
-	 4UuS+5R9aI/37W4iK+14MiVXkj9TSxOynb9iiSbohV3HGgxp4fbdcJj4iIfvIGydJA
-	 /CAV89c+Nqg2PJ7t2Zj5vBKlnxB8esZwTwhl/kgI=
+	b=KTmY64y47oO781GInFuXDYH/K7Co2AhvLLwA2HKJWJbbmD8dcWwVko62xpAB2havr
+	 Y0+zokqMpPkAPvqXlxs4kZWtNJvF/AHprwV9dzETLqQ2AT2zRJu4XBuBSXigIsqX0C
+	 DO3h6uvIt3SaYVW1YvDE0hJ/UqQLpL4TBBJqChCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgHTMZw (ORCPT
+        id S1730245AbgHTMZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34938 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:25:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729956AbgHTJxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:13 -0400
+        id S1729143AbgHTJxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AF012075E;
-        Thu, 20 Aug 2020 09:53:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B582067C;
+        Thu, 20 Aug 2020 09:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917192;
-        bh=Rmv470bmgUS7+vIi8DvLOsrP7vf16lYWdL3eGMa12cg=;
+        s=default; t=1597917188;
+        bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P/Sz8vnVWV2H21V61Al9weCRbiH6ZhryBh40U0icNrv0e+Q/bPFcYB6e7Ocv1oCmR
-         HjJjot+TKaAsBRmv/9UBU/AsQJJuS3rl94RQJ8PexhjeV0x8l1eotcwX1pTTtny0v9
-         zpHAIKKmXEx7UZtqikpMHnY78gqImsIQwgjXePdg=
+        b=QppLR81f0zaMwlWN6+5AggINSla+ChiD/8ha61H7YB4UT3hdXJN99OmiAVgEgiJq7
+         f18hiVe2rGp/dL1IfqiCj+DxqbsawK459+aytrXZwK6s+MGHSgbpIhWM6hGJcVUkRS
+         EISj74JD+g5NXDa07H3KHHcbgDZ2iaWIIY2XZ1SU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 35/92] ocfs2: change slot number type s16 to u16
-Date:   Thu, 20 Aug 2020 11:21:20 +0200
-Message-Id: <20200820091539.424033180@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.19 34/92] ext2: fix missing percpu_counter_inc
+Date:   Thu, 20 Aug 2020 11:21:19 +0200
+Message-Id: <20200820091539.376655618@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -66,87 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
+commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
 
-Dan Carpenter reported the following static checker warning.
+sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
+increased. This patch fixes it.
 
-	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
-	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
-	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
+Note that sbi->s_freeinodes_counter is only used in the algorithm that
+tries to find the group for new allocations, so this bug is not easily
+visible (the only visibility is that the group finding algorithm selects
+inoptinal result).
 
-That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
-never negative, so change s16 to u16.
-
-Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reviewed-by: Gang He <ghe@suse.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ocfs2/ocfs2.h    |    4 ++--
- fs/ocfs2/suballoc.c |    4 ++--
- fs/ocfs2/super.c    |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ fs/ext2/ialloc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -338,8 +338,8 @@ struct ocfs2_super
- 	spinlock_t osb_lock;
- 	u32 s_next_generation;
- 	unsigned long osb_flags;
--	s16 s_inode_steal_slot;
--	s16 s_meta_steal_slot;
-+	u16 s_inode_steal_slot;
-+	u16 s_meta_steal_slot;
- 	atomic_t s_num_inodes_stolen;
- 	atomic_t s_num_meta_stolen;
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -80,6 +80,7 @@ static void ext2_release_inode(struct su
+ 	if (dir)
+ 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
+ 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
++	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
+ 	if (dir)
+ 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
+ 	mark_buffer_dirty(bh);
+@@ -531,7 +532,7 @@ got:
+ 		goto fail;
+ 	}
  
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -893,9 +893,9 @@ static void __ocfs2_set_steal_slot(struc
- {
- 	spin_lock(&osb->osb_lock);
- 	if (type == INODE_ALLOC_SYSTEM_INODE)
--		osb->s_inode_steal_slot = slot;
-+		osb->s_inode_steal_slot = (u16)slot;
- 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
--		osb->s_meta_steal_slot = slot;
-+		osb->s_meta_steal_slot = (u16)slot;
- 	spin_unlock(&osb->osb_lock);
- }
+-	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
++	percpu_counter_dec(&sbi->s_freeinodes_counter);
+ 	if (S_ISDIR(mode))
+ 		percpu_counter_inc(&sbi->s_dirs_counter);
  
---- a/fs/ocfs2/super.c
-+++ b/fs/ocfs2/super.c
-@@ -92,7 +92,7 @@ struct mount_options
- 	unsigned long	commit_interval;
- 	unsigned long	mount_opt;
- 	unsigned int	atime_quantum;
--	signed short	slot;
-+	unsigned short	slot;
- 	int		localalloc_opt;
- 	unsigned int	resv_level;
- 	int		dir_resv_level;
-@@ -1384,7 +1384,7 @@ static int ocfs2_parse_options(struct su
- 				goto bail;
- 			}
- 			if (option)
--				mopt->slot = (s16)option;
-+				mopt->slot = (u16)option;
- 			break;
- 		case Opt_commit:
- 			if (match_int(&args[0], &option)) {
 
 
