@@ -4,123 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F634C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78624C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 778C0207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55CDB2245C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882717;
-	bh=YZpMpqzQbr2IvWkTmf8PhaAX8U2jACxI9onk8Go7xCo=;
+	s=default; t=1597882798;
+	bh=UoSSzOiBrRe7iK+l82T6x0wDhJm6VA4v7CJw4aj4dxQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=XApmHcG0QnjdR8Lc4YsV1NDmqLZhwkvsxRZ+IWWqWhQf6SklLmjwXoqnW3wkOlgE2
-	 3MiyLPQwU654sT3Pi8Gg/PpWZohkqnSgRQa9gXnadYdVmlYORKtUOfIabk1k/hb0uQ
-	 u6izmSnhAB1Svtmmy8sF0DT/7oWIGE1+zQBV99Oc=
+	b=F9N0UA8b3UxLIfVqEZywGvWqrppSE1VdRsK4oNxp7ArOXJo77RiAkLG4JyD/rfSgr
+	 o0dUf6LXTNps5Fxvl9gYVM6O0RU0y5GEHc7uuCc2ihDGeTPNQUMGtw99YYAqd6xf+D
+	 w5nCPbV8Sc49TTq56osTuGDENMKFiBb0wkpg9kfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHTASd (ORCPT
+        id S1726735AbgHTAT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgHTASc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:18:32 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+        id S1726362AbgHTAT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:19:56 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D5ED21775
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:18:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A7F521775
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597882712;
-        bh=YZpMpqzQbr2IvWkTmf8PhaAX8U2jACxI9onk8Go7xCo=;
+        s=default; t=1597882795;
+        bh=UoSSzOiBrRe7iK+l82T6x0wDhJm6VA4v7CJw4aj4dxQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=bvzN53Gd9Fxe4ubeT5Bkxnhwg6EF/5NK7r8kVzUoDR4j9NBW5ykvCUfiNhZmfnLdV
-         TapqYM0Tmq9++ozG65Ns4NcsaLO4u7zAF3osoTSCaGbZKP5YTH00y9t4KgNMAyei0A
-         fn8ePt/T5CEz6yLM9GtlL/1H249IYgpYYkX1mXZ0=
-Received: by mail-wr1-f49.google.com with SMTP id a15so411769wrh.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:18:32 -0700 (PDT)
-X-Gm-Message-State: AOAM532uMkuIxzRvtKhzOAMYbQr6ezJ8RuWLWM7OjC40nBL0n2RLt3Xx
-        8yrdkrmxZTUjBSAQbYG0Eb6bpjUzWcqDaxQC5kTGog==
-X-Google-Smtp-Source: ABdhPJw2/o9xv2vNO2UPdZwGB+vSRdTg3W3G0f7KfGoSmhU5HbFkBRCRa6ncvDBjDuR8eyDApjf9t6N29HPBeHnZ6S4=
-X-Received: by 2002:adf:e90f:: with SMTP id f15mr520654wrm.18.1597882710887;
- Wed, 19 Aug 2020 17:18:30 -0700 (PDT)
+        b=gWrlU/kpNE4mcIOu6IQxKmPZHQlr/iVoka4LgMeu/UTnBe7ElH+6QTk8bVOukXqs5
+         a+1fMbb2C5APS9xljnSx+HU1iUr9hIoCi11wtAcpsc5Iz1zM04gZkMeRoX7Ch7he5l
+         /cVWSwq19hhhElKyCs/vR3/9/fHovzCHoy3pBcaw=
+Received: by mail-wr1-f43.google.com with SMTP id r4so417671wrx.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 17:19:55 -0700 (PDT)
+X-Gm-Message-State: AOAM533zWVP8y0pIFTbtg2tM74TnCBK0wmj9iTnCbT9LOHVItLWje0nh
+        yCVGuWtEIMAGCKn7Ua2r9lKjcyQ8VofMLqFiWBA+yw==
+X-Google-Smtp-Source: ABdhPJxInbWFJqe1ieCcvWc2d/gwkZXQYpryrROje/AuDGXpq1KmCR/aZOFVgMv/+HHmYN60m8lQIaqRMCz8YnK30Sg=
+X-Received: by 2002:a5d:5712:: with SMTP id a18mr497294wrv.184.1597882793738;
+ Wed, 19 Aug 2020 17:19:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com>
- <CALCETrVUgHHW=q3R9jQxU4JTf2m493FhOa3L-iQnHMcH7dgQFg@mail.gmail.com> <20200819170223.nmv7dekvpc5yk4rm@treble>
-In-Reply-To: <20200819170223.nmv7dekvpc5yk4rm@treble>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-22-jarkko.sakkinen@linux.intel.com>
+ <CAOASepOqRfUafSv_qjUv-jW_6n8G7kZ9yh-2z_Z9sjL_2zqNCg@mail.gmail.com>
+ <CALCETrVch_XW-oc_-LR8Dbgat9DpSKtCYTV9YZaU7tfu61FHEw@mail.gmail.com> <20200818151524.GE132200@linux.intel.com>
+In-Reply-To: <20200818151524.GE132200@linux.intel.com>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 19 Aug 2020 17:18:19 -0700
-X-Gmail-Original-Message-ID: <CALCETrXeTqkGry=Rbccn9EP1=YAqkYBt7wywrFohUyG-6A_udA@mail.gmail.com>
-Message-ID: <CALCETrXeTqkGry=Rbccn9EP1=YAqkYBt7wywrFohUyG-6A_udA@mail.gmail.com>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess speculation
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+Date:   Wed, 19 Aug 2020 17:19:42 -0700
+X-Gmail-Original-Message-ID: <CALCETrWHfL6_BOuVAi=ucB8N=pQiWV_dF3YpWndEq5LWaUD9tw@mail.gmail.com>
+Message-ID: <CALCETrWHfL6_BOuVAi=ucB8N=pQiWV_dF3YpWndEq5LWaUD9tw@mail.gmail.com>
+Subject: Re: [PATCH v36 21/24] x86/vdso: Implement a vDSO for Intel SGX
+ enclave call
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Nathaniel McCallum <npmccallum@redhat.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Christoph Hellwig <hch@lst.de>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, Borislav Petkov <bp@alien8.de>,
+        chenalexchen@google.com, Conrad Parker <conradparker@google.com>,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Keith Moyer <kmoy@google.com>,
+        Christian Ludloff <ludloff@google.com>,
+        Neil Horman <nhorman@redhat.com>,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:02 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, Aug 18, 2020 at 8:15 AM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
 >
-> On Wed, Aug 19, 2020 at 09:39:10AM -0700, Andy Lutomirski wrote:
-> > On Wed, Aug 19, 2020 at 7:50 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > +/*
-> > > + * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
-> > > + * user pointer.  This blocks speculative dereferences of user-controlled
-> > > + * pointers.
-> > > + */
-> > > +#define uaccess_mask_ptr(ptr) \
-> > > +       (__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
-> > > +
+> On Mon, Aug 10, 2020 at 04:08:46PM -0700, Andy Lutomirski wrote:
+> > On Thu, Aug 6, 2020 at 7:55 AM Nathaniel McCallum <npmccallum@redhat.com> wrote:
+> > >
+> > > In a past revision of this patch, I had requested a void *misc
+> > > parameter that could be passed through vdso_sgx_enter_enclave_t into
+> > > sgx_enclave_exit_handler_t. This request encountered some push back
+> > > and I dropped the issue. However, I'd like to revisit it or something
+> > > similar.
 > >
-> > If I dug through all the macros correctly, this is generating a fairly
-> > complex pile of math to account for the fact that user_addr_max() is
-> > variable and that it's a nasty number.
+> > Why do you need an exit handler at all?  IIRC way back when I
+> > suggested that we simply not support it at all.  If you want to
+> > call__vdso_sgx_enter_enclave() in a loop, call it in a loop.  If you
+> > want to wrap it intelligently in Rust, you don't want a callback
+> > anyway -- that forces you have an FFI (or non-Rust, anyway) frame on
+> > the stack, which interacts poorly with panic handling and prevents you
+> > from using await in your Rust callback handler.  If, on the other
+> > hand, you just call __vdso_sg_enter_enclave() in a loop, all these
+> > problems go away and, if you really want, you can pass in a callback
+> > in Rust and call the callback from Rust.
 >
-> The math is actually pretty simple.  It's identical to what getuser.S is
-> doing:
->
->         cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
->         sbb %_ASM_DX, %_ASM_DX
->         and %_ASM_DX, %_ASM_AX
->
-> > But I don't think there's any particular need to use the real maximum
-> > user address here.  Allowing a mis-speculated user access to a
-> > non-canonical address or to the top guard page of the lower canonical
-> > region is harmless.  With current kernels, a sequence like:
-> >
-> > if (likely((long)addr > 0) {
-> >   masked_addr = addr & 0x7FFFFFFFFFFFFFFFUL;
-> > } else {
-> >   if (kernel fs) {
-> >     masked_addr = addr;
-> >   } else {
-> >     EFAULT;
-> >   }
-> > }
->
-> The masking has to be done without conditional branches, otherwise it
-> defeats the point.
+> How would Intel SDK be able to do its stack manipulation?
 
-Ugh.  Fair enough.
+The same as now.  The enclave would see a pointer to a stack-like
+writable area in USER_RSP, but it just wouldn't be the actual stack.
 
-> Yeah, we could do that.  Though in the meantime, the simple merge
-> conflict resolution with Christoph's patches would be
-> s/user_addr_max/TASK_SIZE_MAX/ in my uaccess_mask_ptr() macro.
-
-Okay.  I will try to help remember :)
+I suppose that the caller of the vdso can play these games just as
+well as the vdso itself, though, so maybe this is not helpful.
 
 --Andy
