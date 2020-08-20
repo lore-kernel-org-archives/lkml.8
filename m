@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6CFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF495C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3978208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEC72078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917276;
-	bh=JnNbhAP2AQk4xvVJqWvvnnyW0+wwq4Gfhgkon2rtHL0=;
+	s=default; t=1597917279;
+	bh=+wJePM7tFVWHEgDK9v3I9eBY8WSJUwrrp6TR6uB9qXg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QZ0woNu4eYrffyAKTQbGtkGTLKaOBG9SG32v1yJhDwg1VNQAtX8gOBIJ1qh1vMiSA
-	 2n/sV1Gp7SZuiPtyAHZDk4Dy9WkHBboMUyyUmZMumzYQRbnL/ZGr2KyMAq1bmXsZZo
-	 oWhuvbcXDbQvmWdMHaUpQWoA0RttIwNxeAelzI44=
+	b=kxX5Njs7EhOpgHPPfh3x8hOd/QGAot3tJmwEZO0EwMGd44xTgwyqQqKJpo/2/AAt2
+	 1nVUqWm/5nAwUqrQAzaBvxf1hae0/lEaGD0tdUvSZsXj7NmUcTjHzllBTtjeuutBsH
+	 7U3W5GBBlFTTwPH8omGDoWBtnrRSlDXj0WfNYinY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgHTJye (ORCPT
+        id S1730140AbgHTJyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:54:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36676 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730105AbgHTJyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:17 -0400
+        id S1729410AbgHTJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A73732067C;
-        Thu, 20 Aug 2020 09:54:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC7D820855;
+        Thu, 20 Aug 2020 09:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917257;
-        bh=JnNbhAP2AQk4xvVJqWvvnnyW0+wwq4Gfhgkon2rtHL0=;
+        s=default; t=1597917273;
+        bh=+wJePM7tFVWHEgDK9v3I9eBY8WSJUwrrp6TR6uB9qXg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sTG593gs+2GxJ0QYbH/SciMJpvm4ssAJJAxpCrzLFTyH1zbyA+qmSBxV1TaIOx6ki
-         HXj7GMhj7rOUrx+lgqKSfRySdurcQoHhcZvuIEeANeSX6qbDmD0+2QafW1uFnO9nBV
-         WhqEjHMHiwUjU7z9dbl4XgJ4wXWZHcXa0pzjhJQU=
+        b=y7aS5i2dAKLf0oIX6HhOS2U9V/zcFh2amh2UcIGWCQ0gLZNyj0aXQZ0L7/FKjkIDR
+         oDlzDSka4nu1vp4uPh9RJ4k7i4n7IDEjz4s6GvBP9zTJ4KTv9Bn44eN8Y+BncSx2CW
+         avOC8ugaU/gKVz1NmpO/RF6/diJcw5eCLLelYeZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 59/92] dm rq: dont call blk_mq_queue_stopped() in dm_stop_queue()
-Date:   Thu, 20 Aug 2020 11:21:44 +0200
-Message-Id: <20200820091540.691298635@linuxfoundation.org>
+        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 64/92] iommu/vt-d: Enforce PASID devTLB field mask
+Date:   Thu, 20 Aug 2020 11:21:49 +0200
+Message-Id: <20200820091540.934456104@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,43 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Liu Yi L <yi.l.liu@intel.com>
 
-[ Upstream commit e766668c6cd49d741cfb49eaeb38998ba34d27bc ]
+[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
 
-dm_stop_queue() only uses blk_mq_quiesce_queue() so it doesn't
-formally stop the blk-mq queue; therefore there is no point making the
-blk_mq_queue_stopped() check -- it will never be stopped.
+Set proper masks to avoid invalid input spillover to reserved bits.
 
-In addition, even though dm_stop_queue() actually tries to quiesce hw
-queues via blk_mq_quiesce_queue(), checking with blk_queue_quiesced()
-to avoid unnecessary queue quiesce isn't reliable because: the
-QUEUE_FLAG_QUIESCED flag is set before synchronize_rcu() and
-dm_stop_queue() may be called when synchronize_rcu() from another
-blk_mq_quiesce_queue() is in-progress.
-
-Fixes: 7b17c2f7292ba ("dm: Fix a race condition related to stopping and starting queues")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-rq.c | 3 ---
- 1 file changed, 3 deletions(-)
+ include/linux/intel-iommu.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 4d36373e1c0f0..9fde174ce3961 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -95,9 +95,6 @@ static void dm_old_stop_queue(struct request_queue *q)
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index b1b4411b4c6b8..539f4a84412f4 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -308,8 +308,8 @@ enum {
  
- static void dm_mq_stop_queue(struct request_queue *q)
- {
--	if (blk_mq_queue_stopped(q))
--		return;
--
- 	blk_mq_quiesce_queue(q);
- }
- 
+ #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
+ #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
+-#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
+-#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
++#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
++#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
+ #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
+ #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
+ #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
 -- 
 2.25.1
 
