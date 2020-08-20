@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63213C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60122C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 375B5221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D5E2184D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881803;
-	bh=HQT20XGqQI8d/gf9N4iBNXI/s5dsOAil5OIsTKXIwtw=;
+	s=default; t=1597881813;
+	bh=KU1Yu0QAZX0uxEKw7gvY6AXsp9BPLpZRafmjwAOBZHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zcQSHwR0UjqzOMDqv8V3T6WFULRqifuwxkAbp+jn2ms3a1xSsEU8Iu+4yLC6yvxmz
-	 Rq8Mi6A2wyyKRp6f7yibdIwhbVInVfR9ICKoidRVTXFHX3ozkIS+9X5QOXckeroX8k
-	 f5fgCeBioTUGP7Hx9z1ke/nuEcjcvr8lOShliKzs=
+	b=IBYItC9e+BoGXifog0bazrVfw/FeJFZlHq46dDQkwXbLRUoFiE1sFZls6ITwhvgO2
+	 bKHuNua0TNbesQGH0ep5czDTo+bQdwghAWEzaI8b1EQ2vbijbycx5/55a0fHX0pHtF
+	 BfT7SljQMgCqxfbokoEw4EJj4lB8MjV63ewtrllo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgHTADT (ORCPT
+        id S1728289AbgHTAD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:03:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgHTADS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:18 -0400
+        id S1728260AbgHTADU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 994AC208C7;
-        Thu, 20 Aug 2020 00:03:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE272207FB;
+        Thu, 20 Aug 2020 00:03:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881794;
-        bh=HQT20XGqQI8d/gf9N4iBNXI/s5dsOAil5OIsTKXIwtw=;
+        s=default; t=1597881800;
+        bh=KU1Yu0QAZX0uxEKw7gvY6AXsp9BPLpZRafmjwAOBZHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uDjwvrInQjlcViKH2K2Ijkf7DoLPwRK19dvO2+cjZ0CniQTXO1VJoFqzjIMtXKo7A
-         q/g1AY3anecFZvj22qezfKQdaHT1kUGud9DKCnrhWStAUNh9awbRSp9WeYOOsfNXtf
-         EcQwUbsl7sIpWThn7mVxraRY6IZz0nUTayypvI6c=
+        b=wX02stB0pVAWkuf4Kng0vcPg5FHhnXo65QDi3E6pjEWGkdMiQN0Er8UErwserRIyK
+         LuaSQa8isA5VaXa3rR/uOyiVGNF8aCIxw+QP5N/m9RlDCSoON3EfL+czXun3+RtKpL
+         /gFUTs9xwP9JNmcP3f/kjj2gH4sOqdLYeXbsrAdg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/18] xfs: fix inode quota reservation checks
-Date:   Wed, 19 Aug 2020 20:02:52 -0400
-Message-Id: <20200820000302.215560-9-sashal@kernel.org>
+Cc:     Javed Hasan <jhasan@marvell.com>,
+        Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/18] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
+Date:   Wed, 19 Aug 2020 20:02:56 -0400
+Message-Id: <20200820000302.215560-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -61,54 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
+[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
 
-xfs_trans_dqresv is the function that we use to make reservations
-against resource quotas.  Each resource contains two counters: the
-q_core counter, which tracks resources allocated on disk; and the dquot
-reservation counter, which tracks how much of that resource has either
-been allocated or reserved by threads that are working on metadata
-updates.
+In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
+for PTR_ERR. However, in some cases it didn't.
 
-For disk blocks, we compare the proposed reservation counter against the
-hard and soft limits to decide if we're going to fail the operation.
-However, for inodes we inexplicably compare against the q_core counter,
-not the incore reservation count.
+This fix is to call fc_frame_free(fp) before function returns.
 
-Since the q_core counter is always lower than the reservation count and
-we unlock the dquot between reservation and transaction commit, this
-means that multiple threads can reserve the last inode count before we
-hit the hard limit, and when they commit, we'll be well over the hard
-limit.
-
-Fix this by checking against the incore inode reservation counter, since
-we would appear to maintain that correctly (and that's what we report in
-GETQUOTA).
-
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_dquot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index c23257a26c2b8..b8f05d5909b59 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -657,7 +657,7 @@ xfs_trans_dqresv(
+diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
+index 8839f509b19ab..78cf5b32bca67 100644
+--- a/drivers/scsi/libfc/fc_disc.c
++++ b/drivers/scsi/libfc/fc_disc.c
+@@ -593,8 +593,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 
+ 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
+ 		goto out;
+-	if (IS_ERR(fp))
+-		goto redisc;
++	if (IS_ERR(fp)) {
++		mutex_lock(&disc->disc_mutex);
++		fc_disc_restart(disc);
++		mutex_unlock(&disc->disc_mutex);
++		goto out;
++	}
+ 
+ 	cp = fc_frame_payload_get(fp, sizeof(*cp));
+ 	if (!cp)
+@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 				new_rdata->disc_id = disc->disc_id;
+ 				fc_rport_login(new_rdata);
  			}
+-			goto out;
++			goto free_fp;
  		}
- 		if (ninos > 0) {
--			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
-+			total_count = dqp->q_res_icount + ninos;
- 			timer = be32_to_cpu(dqp->q_core.d_itimer);
- 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
- 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
+ 		rdata->disc_id = disc->disc_id;
+ 		mutex_unlock(&rdata->rp_mutex);
+@@ -638,6 +642,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
+ 		fc_disc_restart(disc);
+ 		mutex_unlock(&disc->disc_mutex);
+ 	}
++free_fp:
++	fc_frame_free(fp);
+ out:
+ 	kref_put(&rdata->kref, fc_rport_destroy);
+ 	if (!IS_ERR(fp))
 -- 
 2.25.1
 
