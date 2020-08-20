@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E589AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DFE0206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C169920738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931851;
-	bh=eoztplTus6nq3nSYjpveHlTWmwLp66x9zB5eAk6dUkA=;
+	s=default; t=1597931952;
+	bh=XusOjFSGRwsth8qR6OCSimLud2UaSI0UbhOkQ47bGsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iLJWYHBJhozxPFcEaT+TlKkdQl3BOP9mfXmOYf+8rR5LKbDNGqIGA0JCHIPd/7XhB
-	 l4+Z6EJU7W0zCnQkLd6EXp+qZJowq6MjUuGIxZcFMAusbL5zkqnHm/7kOKijl/zL97
-	 0tGtcvq5cU2htN78KM5VhtPsRZNoHulWK4FpN8lk=
+	b=fGb9piNpcOZZqes4OyiRyYYkE2g+yJhcW+/oddCFrL/pDPiYSWkuEy7QTJsrdbPpi
+	 JASW0q+cqCBvSFsCpWHT3MNfrPw5MOJigymx2SSIOYVsxI4B4Uw1NJtPM2IkrSMDHo
+	 +8DjHKMs5TLjMcNeMaXmbSqnjubWqvWINQZ/5eXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgHTN5a (ORCPT
+        id S1728835AbgHTN5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgHTJZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:44 -0400
+        id S1727005AbgHTJZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:25:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 023312075E;
-        Thu, 20 Aug 2020 09:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2D242224D;
+        Thu, 20 Aug 2020 09:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915528;
-        bh=eoztplTus6nq3nSYjpveHlTWmwLp66x9zB5eAk6dUkA=;
+        s=default; t=1597915539;
+        bh=XusOjFSGRwsth8qR6OCSimLud2UaSI0UbhOkQ47bGsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HJGmxLDP8PmdO7AZM9E/rS/TYSBRglWqtEl3tmtBoBUO2QWhwmumgK1ELnV1JMm1Q
-         w/6vn6bR0XHWXnTqkz3z2l7+0X3iIJLei+2BNoZPfx3jbxPIsMppyHnR7r8KBIzbRw
-         MW5/u2gz2GWpJyQXs/Dzvs5vZf68PnYzZ6bZT4vw=
+        b=vmkYDH94vrW8PP4E9+0uldYkgRX9RxhzOaFgNV9BRQ0Tg/yWRrYZ5kcN3UE7sHJi8
+         5kn/ig5L3um9oFaZ3HFrQrp8sVd1n/9SdbL6UGH8e+oaBSFYPNm0G5oNDq2G8K0o29
+         iJK+y8lNXMDw+/erClEZsPUwbi8dmKMjvnH8NZ/4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.8 046/232] iio: imu: st_lsm6dsx: reset hw ts after resume
-Date:   Thu, 20 Aug 2020 11:18:17 +0200
-Message-Id: <20200820091615.011803854@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 5.8 049/232] cifs: Fix leak when handling lease break for cached root fid
+Date:   Thu, 20 Aug 2020 11:18:20 +0200
+Message-Id: <20200820091615.156650621@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,95 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Paul Aurich <paul@darkrain42.org>
 
-commit a1bab9396c2d98c601ce81c27567159dfbc10c19 upstream.
+commit baf57b56d3604880ccb3956ec6c62ea894f5de99 upstream.
 
-Reset hw time samples generator after system resume in order to avoid
-disalignment between system and device time reference since FIFO
-batching and time samples generator are disabled during suspend.
+Handling a lease break for the cached root didn't free the
+smb2_lease_break_work allocation, resulting in a leak:
 
-Fixes: 213451076bd3 ("iio: imu: st_lsm6dsx: add hw timestamp support")
-Tested-by: Sean Nyekjaer <sean@geanix.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+    unreferenced object 0xffff98383a5af480 (size 128):
+      comm "cifsd", pid 684, jiffies 4294936606 (age 534.868s)
+      hex dump (first 32 bytes):
+        c0 ff ff ff 1f 00 00 00 88 f4 5a 3a 38 98 ff ff  ..........Z:8...
+        88 f4 5a 3a 38 98 ff ff 80 88 d6 8a ff ff ff ff  ..Z:8...........
+      backtrace:
+        [<0000000068957336>] smb2_is_valid_oplock_break+0x1fa/0x8c0
+        [<0000000073b70b9e>] cifs_demultiplex_thread+0x73d/0xcc0
+        [<00000000905fa372>] kthread+0x11c/0x150
+        [<0000000079378e4e>] ret_from_fork+0x22/0x30
+
+Avoid this leak by only allocating when necessary.
+
+Fixes: a93864d93977 ("cifs: add lease tracking to the cached root fid")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+CC: Stable <stable@vger.kernel.org> # v4.18+
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        |    3 +--
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c |   23 +++++++++++++++--------
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   |    2 +-
- 3 files changed, 17 insertions(+), 11 deletions(-)
+ fs/cifs/smb2misc.c |   73 +++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 21 deletions(-)
 
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -436,8 +436,7 @@ int st_lsm6dsx_update_watermark(struct s
- 				u16 watermark);
- int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable);
- int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
--int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
--			     enum st_lsm6dsx_fifo_mode fifo_mode);
-+int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw);
- int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw);
- int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw);
- int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u32 odr, u8 *val);
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -184,8 +184,8 @@ static int st_lsm6dsx_update_decimators(
- 	return err;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -508,15 +508,31 @@ cifs_ses_oplock_break(struct work_struct
+ 	kfree(lw);
  }
  
--int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
--			     enum st_lsm6dsx_fifo_mode fifo_mode)
-+static int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
-+				    enum st_lsm6dsx_fifo_mode fifo_mode)
- {
- 	unsigned int data;
- 
-@@ -302,6 +302,18 @@ static int st_lsm6dsx_reset_hw_ts(struct
- 	return 0;
- }
- 
-+int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw)
++static void
++smb2_queue_pending_open_break(struct tcon_link *tlink, __u8 *lease_key,
++			      __le32 new_lease_state)
 +{
-+	int err;
++	struct smb2_lease_break_work *lw;
 +
-+	/* reset hw ts counter */
-+	err = st_lsm6dsx_reset_hw_ts(hw);
-+	if (err < 0)
-+		return err;
++	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
++	if (!lw) {
++		cifs_put_tlink(tlink);
++		return;
++	}
 +
-+	return st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
++	lw->tlink = tlink;
++	lw->lease_state = new_lease_state;
++	memcpy(lw->lease_key, lease_key, SMB2_LEASE_KEY_SIZE);
++	queue_work(cifsiod_wq, &lw->lease_break);
 +}
 +
- /*
-  * Set max bulk read to ST_LSM6DSX_MAX_WORD_LEN/ST_LSM6DSX_MAX_TAGGED_WORD_LEN
-  * in order to avoid a kmalloc for each bus access
-@@ -675,12 +687,7 @@ int st_lsm6dsx_update_fifo(struct st_lsm
- 		goto out;
+ static bool
+-smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp,
+-		    struct smb2_lease_break_work *lw)
++smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp)
+ {
+-	bool found;
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+ 				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
+@@ -546,22 +562,29 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 		cfile->oplock_level = lease_state;
  
- 	if (fifo_mask) {
--		/* reset hw ts counter */
--		err = st_lsm6dsx_reset_hw_ts(hw);
--		if (err < 0)
--			goto out;
+ 		cifs_queue_oplock_break(cfile);
+-		kfree(lw);
+ 		return true;
+ 	}
+ 
+-	found = false;
++	return false;
++}
++
++static struct cifs_pending_open *
++smb2_tcon_find_pending_open_lease(struct cifs_tcon *tcon,
++				  struct smb2_lease_break *rsp)
++{
++	__u8 lease_state = le32_to_cpu(rsp->NewLeaseState);
++	int ack_req = le32_to_cpu(rsp->Flags &
++				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
++	struct cifs_pending_open *open;
++	struct cifs_pending_open *found = NULL;
++
+ 	list_for_each_entry(open, &tcon->pending_opens, olist) {
+ 		if (memcmp(open->lease_key, rsp->LeaseKey,
+ 			   SMB2_LEASE_KEY_SIZE))
+ 			continue;
+ 
+ 		if (!found && ack_req) {
+-			found = true;
+-			memcpy(lw->lease_key, open->lease_key,
+-			       SMB2_LEASE_KEY_SIZE);
+-			lw->tlink = cifs_get_tlink(open->tlink);
+-			queue_work(cifsiod_wq, &lw->lease_break);
++			found = open;
+ 		}
+ 
+ 		cifs_dbg(FYI, "found in the pending open list\n");
+@@ -582,14 +605,7 @@ smb2_is_valid_lease_break(char *buffer)
+ 	struct TCP_Server_Info *server;
+ 	struct cifs_ses *ses;
+ 	struct cifs_tcon *tcon;
+-	struct smb2_lease_break_work *lw;
 -
--		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
-+		err = st_lsm6dsx_resume_fifo(hw);
- 		if (err < 0)
- 			goto out;
- 	}
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -2458,7 +2458,7 @@ static int __maybe_unused st_lsm6dsx_res
- 	}
+-	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
+-	if (!lw)
+-		return false;
+-
+-	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
+-	lw->lease_state = rsp->NewLeaseState;
++	struct cifs_pending_open *open;
  
- 	if (hw->fifo_mask)
--		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
-+		err = st_lsm6dsx_resume_fifo(hw);
+ 	cifs_dbg(FYI, "Checking for lease break\n");
  
- 	return err;
+@@ -607,11 +623,27 @@ smb2_is_valid_lease_break(char *buffer)
+ 				spin_lock(&tcon->open_file_lock);
+ 				cifs_stats_inc(
+ 				    &tcon->stats.cifs_stats.num_oplock_brks);
+-				if (smb2_tcon_has_lease(tcon, rsp, lw)) {
++				if (smb2_tcon_has_lease(tcon, rsp)) {
+ 					spin_unlock(&tcon->open_file_lock);
+ 					spin_unlock(&cifs_tcp_ses_lock);
+ 					return true;
+ 				}
++				open = smb2_tcon_find_pending_open_lease(tcon,
++									 rsp);
++				if (open) {
++					__u8 lease_key[SMB2_LEASE_KEY_SIZE];
++					struct tcon_link *tlink;
++
++					tlink = cifs_get_tlink(open->tlink);
++					memcpy(lease_key, open->lease_key,
++					       SMB2_LEASE_KEY_SIZE);
++					spin_unlock(&tcon->open_file_lock);
++					spin_unlock(&cifs_tcp_ses_lock);
++					smb2_queue_pending_open_break(tlink,
++								      lease_key,
++								      rsp->NewLeaseState);
++					return true;
++				}
+ 				spin_unlock(&tcon->open_file_lock);
+ 
+ 				if (tcon->crfid.is_valid &&
+@@ -629,7 +661,6 @@ smb2_is_valid_lease_break(char *buffer)
+ 		}
+ 	}
+ 	spin_unlock(&cifs_tcp_ses_lock);
+-	kfree(lw);
+ 	cifs_dbg(FYI, "Can not process lease break - no lease matched\n");
+ 	return false;
  }
 
 
