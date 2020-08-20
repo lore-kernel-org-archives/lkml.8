@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7854EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FE0C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 434C92054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C9F2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923773;
-	bh=JIqPtEoHEL0aT6fy2cbNpczcGMB4G3Go8LW1M2P+B94=;
+	s=default; t=1597923788;
+	bh=qI+5inS8hSQKEEOaN3VhCxjF7+/Lft77KWpa14EDLNA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOVY9Y0AYQ+45+TmPd/UWjfgVn7GDEtAr3Nv5um0qOM+1RJ4xDqFUPzTK7xNY6P4T
-	 HHLA31qdpSZxzxFL6XAevLfgHPimmyauuX0leC1B5GB0hhcBhsLnTQVwjzCspU1s1C
-	 EL7yuV7R1qOniq17HBFYAz1ehd1ofQw2m2M1YuhY=
+	b=AKS6wjjg9HD24+PXgbtatf61t4BEltxK1GCZ8OEDTKamSVivmFn2EwMEGVdq9/sS6
+	 wSdmj5Aj3qxNZxWapvYZQJ4MD7CSEw+DZA59ZACy8juD4i97M5J3AKPpQlWqL8dOe5
+	 Tsc+F34UKWcPYO2i6O1368u/86qnttwN0vwtZE+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbgHTLml (ORCPT
+        id S1730365AbgHTLnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58026 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:43:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726786AbgHTKEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:15 -0400
+        id S1730615AbgHTKEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5041522BEA;
-        Thu, 20 Aug 2020 10:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A47520855;
+        Thu, 20 Aug 2020 10:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917855;
-        bh=JIqPtEoHEL0aT6fy2cbNpczcGMB4G3Go8LW1M2P+B94=;
+        s=default; t=1597917845;
+        bh=qI+5inS8hSQKEEOaN3VhCxjF7+/Lft77KWpa14EDLNA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwuHWV+N1J1SVcnCLfM4o7BYbM5MmCXvlIabeyg4QqBsjSihnkSRFu5+Kj+FxofSh
-         EHOpvxR4xu2qVgrtaGIp9rKOS0qNYCxsO7qWje/Og2UhnqU6kHyOPSwlkWfrpNCLyZ
-         REiySJ2+uP0TvZ4HEM7W/RTczljejITl5aTZfFzQ=
+        b=ss2LkruthLZDF5K8KNEq/liMHQPqNYleW8+PQ9+kyGB6w109bSuZ2QWtty1RoV2Kj
+         la13NyXkYRc2Ccq8kfnhhPnIVN4fs+dX1UeVY9rGVRR9hh1EUV9vNsihSrYI4NuM2S
+         fW4obgkc7SQguSG+MGAsrTaolxiRi2Oyjx92vEYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.9 182/212] mac80211: fix misplaced while instead of if
-Date:   Thu, 20 Aug 2020 11:22:35 +0200
-Message-Id: <20200820091611.583981006@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 4.9 179/212] net/compat: Add missing sock updates for SCM_RIGHTS
+Date:   Thu, 20 Aug 2020 11:22:32 +0200
+Message-Id: <20200820091611.430963346@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,37 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
+commit d9539752d23283db4692384a634034f451261e29 upstream.
 
-This never was intended to be a 'while' loop, it should've
-just been an 'if' instead of 'while'. Fix this.
+Add missed sock updates to compat path via a new helper, which will be
+used more in coming patches. (The net/core/scm.c code is left as-is here
+to assist with -stable backports for the compat path.)
 
-I noticed this while applying another patch from Ben that
-intended to fix a busy loop at this spot.
-
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: stable@vger.kernel.org
-Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
-Reported-by: Ben Greear <greearb@candelatech.com>
-Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
+Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/mac80211/sta_info.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/net/sock.h |    4 ++++
+ net/compat.c       |    1 +
+ net/core/sock.c    |   21 +++++++++++++++++++++
+ 3 files changed, 26 insertions(+)
 
---- a/net/mac80211/sta_info.c
-+++ b/net/mac80211/sta_info.c
-@@ -946,7 +946,7 @@ static void __sta_info_destroy_part2(str
- 	might_sleep();
- 	lockdep_assert_held(&local->sta_mtx);
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -784,6 +784,8 @@ static inline int sk_memalloc_socks(void
+ {
+ 	return static_key_false(&memalloc_socks);
+ }
++
++void __receive_sock(struct file *file);
+ #else
  
--	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
-+	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
- 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
- 		WARN_ON_ONCE(ret);
+ static inline int sk_memalloc_socks(void)
+@@ -791,6 +793,8 @@ static inline int sk_memalloc_socks(void
+ 	return 0;
+ }
+ 
++static inline void __receive_sock(struct file *file)
++{ }
+ #endif
+ 
+ static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
+--- a/net/compat.c
++++ b/net/compat.c
+@@ -284,6 +284,7 @@ void scm_detach_fds_compat(struct msghdr
+ 			break;
+ 		}
+ 		/* Bump the usage count and install the file. */
++		__receive_sock(fp[i]);
+ 		fd_install(new_fd, get_file(fp[i]));
  	}
+ 
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2323,6 +2323,27 @@ int sock_no_mmap(struct file *file, stru
+ }
+ EXPORT_SYMBOL(sock_no_mmap);
+ 
++/*
++ * When a file is received (via SCM_RIGHTS, etc), we must bump the
++ * various sock-based usage counts.
++ */
++void __receive_sock(struct file *file)
++{
++	struct socket *sock;
++	int error;
++
++	/*
++	 * The resulting value of "error" is ignored here since we only
++	 * need to take action when the file is a socket and testing
++	 * "sock" for NULL is sufficient.
++	 */
++	sock = sock_from_file(file, &error);
++	if (sock) {
++		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
++		sock_update_classid(&sock->sk->sk_cgrp_data);
++	}
++}
++
+ ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
+ {
+ 	ssize_t res;
 
 
