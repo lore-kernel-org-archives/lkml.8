@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FCBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C82FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4426C20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27BD20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930915;
-	bh=8Nx+WniPGYDtKfMVx4hJjYH84RdLwha1VvyMXy5JftU=;
+	s=default; t=1597930922;
+	bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AUUYKEjqfPbhWat2vN1vLPCGsXmylmq1XDEj3vTvByOL84TyxIf2n+zINSn4nq14I
-	 tnOjmRka1a+brk1LO1bJYs2ELgXQKUyVIchSIiNr+kFoFCwdoEcMHFTXMwcfQOmm9o
-	 HmglpPKkAog9bIaIMcEwMJ51rYwdP434nWVjxUp4=
+	b=T/ESsYU5U13S6qHr1UAYpu2m654V+F265bQaqUf2k65DNTzvKtr7jJrobPRJu55jO
+	 vHKBYhO+TgV4dD5bEBbwVnl9qzrepCTeR5xrjUQtpXp1NN1l4PpxO3faSXJuTGz8wM
+	 z8WE6sLvviK/9ZcQet1OGk6UE3uxWKb/sl5s8ndc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHTNlx (ORCPT
+        id S1729844AbgHTNl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:41:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:41:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbgHTJaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:10 -0400
+        id S1728123AbgHTJ3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7022821744;
-        Thu, 20 Aug 2020 09:30:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FD3022B4B;
+        Thu, 20 Aug 2020 09:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915810;
-        bh=8Nx+WniPGYDtKfMVx4hJjYH84RdLwha1VvyMXy5JftU=;
+        s=default; t=1597915792;
+        bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3lAdZcZZ2Y0lxDQFZQWSnJc/KNTwFPfVPIwql1je7WsopKlHYi2SazQJxlbQjMrz
-         erV6/S1t/tla+jM5gOQP6lSAX/XB5vGXuDtMQfQoVKnSEN5skOusSfrA7lt36gh6bW
-         8/1pFQjrOzk5HWAl8ukx4uJm8F2U6MjBsKpHnfcc=
+        b=Zo4u9rx9hUT/+xzctkRzv3wCb9AuXY5maTh6791hz4bUhCUgZJWbj8gGMhcXX1uqg
+         esKLEa2Kw+yTKlQWaMNsOq9FMBpteU0m6q61XyKnGhtBAImqnFm/JnjWv30K6Wad1r
+         7umMh6SROeocxkPKO+VUU+xzEZjFQoVK0d2xZReU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 142/232] mmc: renesas_sdhi_internal_dmac: clean up the code for dma complete
-Date:   Thu, 20 Aug 2020 11:19:53 +0200
-Message-Id: <20200820091619.698560829@linuxfoundation.org>
+Subject: [PATCH 5.8 136/232] USB: serial: ftdi_sio: clean up receive processing
+Date:   Thu, 20 Aug 2020 11:19:47 +0200
+Message-Id: <20200820091619.410965526@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,62 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 2b26e34e9af3fa24fa1266e9ea2d66a1f7d62dc0 ]
+[ Upstream commit ce054039ba5e47b75a3be02a00274e52b06a6456 ]
 
-To add end() operation in the future, clean the code of
-renesas_sdhi_internal_dmac_complete_tasklet_fn(). No behavior change.
+Clean up receive processing by dropping the character pointer and
+keeping the length argument unchanged throughout the function.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1590044466-28372-3-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Also make it more apparent that sysrq processing can consume a
+characters by adding an explicit continue.
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/renesas_sdhi_internal_dmac.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/usb/serial/ftdi_sio.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/mmc/host/renesas_sdhi_internal_dmac.c b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-index 47ac53e912411..201b8ed37f2e0 100644
---- a/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-+++ b/drivers/mmc/host/renesas_sdhi_internal_dmac.c
-@@ -229,15 +229,12 @@ static void renesas_sdhi_internal_dmac_issue_tasklet_fn(unsigned long arg)
- 					    DTRAN_CTRL_DM_START);
+diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
+index 96b9e2768ac5c..33f1cca7eaa61 100644
+--- a/drivers/usb/serial/ftdi_sio.c
++++ b/drivers/usb/serial/ftdi_sio.c
+@@ -2483,7 +2483,6 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		struct ftdi_private *priv, unsigned char *buf, int len)
+ {
+ 	unsigned char status;
+-	unsigned char *ch;
+ 	int i;
+ 	char flag;
+ 
+@@ -2526,8 +2525,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	else
+ 		priv->transmit_empty = 0;
+ 
+-	len -= 2;
+-	if (!len)
++	if (len == 2)
+ 		return 0;	/* status only */
+ 
+ 	/*
+@@ -2556,19 +2554,20 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		}
+ 	}
+ 
+-	port->icount.rx += len;
+-	ch = buf + 2;
++	port->icount.rx += len - 2;
+ 
+ 	if (port->port.console && port->sysrq) {
+-		for (i = 0; i < len; i++, ch++) {
+-			if (!usb_serial_handle_sysrq_char(port, *ch))
+-				tty_insert_flip_char(&port->port, *ch, flag);
++		for (i = 2; i < len; i++) {
++			if (usb_serial_handle_sysrq_char(port, buf[i]))
++				continue;
++			tty_insert_flip_char(&port->port, buf[i], flag);
+ 		}
+ 	} else {
+-		tty_insert_flip_string_fixed_flag(&port->port, ch, flag, len);
++		tty_insert_flip_string_fixed_flag(&port->port, buf + 2, flag,
++				len - 2);
+ 	}
+ 
+-	return len;
++	return len - 2;
  }
  
--static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+static bool renesas_sdhi_internal_dmac_complete(struct tmio_mmc_host *host)
- {
--	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
- 	enum dma_data_direction dir;
- 
--	spin_lock_irq(&host->lock);
--
- 	if (!host->data)
--		goto out;
-+		return false;
- 
- 	if (host->data->flags & MMC_DATA_READ)
- 		dir = DMA_FROM_DEVICE;
-@@ -250,6 +247,17 @@ static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
- 	if (dir == DMA_FROM_DEVICE)
- 		clear_bit(SDHI_INTERNAL_DMAC_RX_IN_USE, &global_flags);
- 
-+	return true;
-+}
-+
-+static void renesas_sdhi_internal_dmac_complete_tasklet_fn(unsigned long arg)
-+{
-+	struct tmio_mmc_host *host = (struct tmio_mmc_host *)arg;
-+
-+	spin_lock_irq(&host->lock);
-+	if (!renesas_sdhi_internal_dmac_complete(host))
-+		goto out;
-+
- 	tmio_mmc_do_data_irq(host);
- out:
- 	spin_unlock_irq(&host->lock);
+ static void ftdi_process_read_urb(struct urb *urb)
 -- 
 2.25.1
 
