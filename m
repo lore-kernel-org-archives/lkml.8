@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB97C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B252207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95A4207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928631;
-	bh=fjrrMDfBO1Mz4mhFZZuxpgLz4SiHw1f/z7NFYaXekAA=;
+	s=default; t=1597928640;
+	bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lytHq0ae4Kj9X6WrRPcYB3IG8NqDFn4aP9Yl+Db9TyB5wGEdGI4n7kHMm/Y22J/G4
-	 5HbIXTh6tM51d/mndMeA0Jpm9Ur5J9hxuAI8xMX62Ob04kmT3Ew3G/5ELffZ3g9Xkm
-	 76NjjPdeU6jquCqzrDMd6ayzXfmblMge/ejgmhv8=
+	b=C0GP9ApqkARkQo5tDqp0BqK+VYLz+B6sqIy/w06RrGYPQyzbpDCnwFTCbGUbX+sLo
+	 ZxreG0CyhHXPmw+Gceeh2afN3jwIoUcMHKx+dqcp2euOH3bG+1y4NO6FZ/A/V4pWRd
+	 dQz0PBL5Xy4/iCb1PaQEEqJd6YzxGD3ZVr3w4ZvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730034AbgHTNDu (ORCPT
+        id S1729178AbgHTND7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:03:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59312 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgHTJjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:39:45 -0400
+        id S1728848AbgHTJjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:39:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76F0208E4;
-        Thu, 20 Aug 2020 09:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE4B20724;
+        Thu, 20 Aug 2020 09:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916384;
-        bh=fjrrMDfBO1Mz4mhFZZuxpgLz4SiHw1f/z7NFYaXekAA=;
+        s=default; t=1597916375;
+        bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kf77VFaqMtoz2QS52rWXjAP2W7OnqD2qsVeJPkf+SLV5cveAJDjsU/SUM0Q+b9lri
-         MJ4odyJCmCuDQdpA1h/nGKUGYh+HuPosI+mtpQ3t6EIGjXmAW6DtbsC7uEocFp/dri
-         dlcAEOKItT3Cgf+waTJepRJsmNvZXIWPPdSv0Sl4=
+        b=s+CDYsuQorpVRwDsfsu3STreOzI7xfnp7jD2DBYMR5a0rZEMYylL5Ke7ACMpvJjJg
+         23a2vjwDa0GhpK6KF1e9HKgLp6e9aPOwB05kl9nz04O+WZdVCEUwhVlERvnA0+7VNW
+         rVUZjMpcEphhBczotFd38WbyoNawedBDapdjERm0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, "Sicelo A. Mhlongo" <absicsz@gmail.com>,
+        Dev Null <devnull@uvos.xyz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 109/204] media: rockchip: rga: Introduce color fmt macros and refactor CSC mode logic
-Date:   Thu, 20 Aug 2020 11:20:06 +0200
-Message-Id: <20200820091611.761551562@linuxfoundation.org>
+Subject: [PATCH 5.7 107/204] rtc: cpcap: fix range
+Date:   Thu, 20 Aug 2020 11:20:04 +0200
+Message-Id: <20200820091611.669353859@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -63,80 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit ded874ece29d3fe2abd3775810a06056067eb68c ]
+[ Upstream commit 3180cfabf6fbf982ca6d1a6eb56334647cc1416b ]
 
-This introduces two macros: RGA_COLOR_FMT_IS_YUV and RGA_COLOR_FMT_IS_RGB
-which allow quick checking of the colorspace familily of a RGA color format.
+Unbreak CPCAP driver, which has one more bit in the day counter
+increasing the max. range from 2014 to 2058. The original commit
+introducing the range limit was obviously wrong, since the driver
+has only been written in 2017 (3 years after 14 bits would have
+run out).
 
-These macros are then used to refactor the logic for CSC mode selection.
-The two nested tests for input colorspace are simplified into a single one,
-with a logical and, making the whole more readable.
-
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: d2377f8cc5a7 ("rtc: cpcap: set range")
+Reported-by: Sicelo A. Mhlongo <absicsz@gmail.com>
+Reported-by: Dev Null <devnull@uvos.xyz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200629114123.27956-1-sebastian.reichel@collabora.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/rockchip/rga/rga-hw.c | 23 +++++++++-----------
- drivers/media/platform/rockchip/rga/rga-hw.h |  5 +++++
- 2 files changed, 15 insertions(+), 13 deletions(-)
+ drivers/rtc/rtc-cpcap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
-index 4be6dcf292fff..5607ee8d19176 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.c
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.c
-@@ -200,22 +200,19 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
- 	dst_info.data.format = ctx->out.fmt->hw_format;
- 	dst_info.data.swap = ctx->out.fmt->color_swap;
+diff --git a/drivers/rtc/rtc-cpcap.c b/drivers/rtc/rtc-cpcap.c
+index a603f1f211250..800667d73a6fb 100644
+--- a/drivers/rtc/rtc-cpcap.c
++++ b/drivers/rtc/rtc-cpcap.c
+@@ -261,7 +261,7 @@ static int cpcap_rtc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(rtc->rtc_dev);
  
--	if (ctx->in.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
--		if (ctx->out.fmt->hw_format < RGA_COLOR_FMT_YUV422SP) {
--			switch (ctx->in.colorspace) {
--			case V4L2_COLORSPACE_REC709:
--				src_info.data.csc_mode =
--					RGA_SRC_CSC_MODE_BT709_R0;
--				break;
--			default:
--				src_info.data.csc_mode =
--					RGA_SRC_CSC_MODE_BT601_R0;
--				break;
--			}
-+	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
-+	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
-+		switch (ctx->in.colorspace) {
-+		case V4L2_COLORSPACE_REC709:
-+			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-+			break;
-+		default:
-+			src_info.data.csc_mode = RGA_SRC_CSC_MODE_BT601_R0;
-+			break;
- 		}
- 	}
+ 	rtc->rtc_dev->ops = &cpcap_rtc_ops;
+-	rtc->rtc_dev->range_max = (1 << 14) * SECS_PER_DAY - 1;
++	rtc->rtc_dev->range_max = (timeu64_t) (DAY_MASK + 1) * SECS_PER_DAY - 1;
  
--	if (ctx->out.fmt->hw_format >= RGA_COLOR_FMT_YUV422SP) {
-+	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
- 		switch (ctx->out.colorspace) {
- 		case V4L2_COLORSPACE_REC709:
- 			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
-diff --git a/drivers/media/platform/rockchip/rga/rga-hw.h b/drivers/media/platform/rockchip/rga/rga-hw.h
-index 96cb0314dfa70..e8917e5630a48 100644
---- a/drivers/media/platform/rockchip/rga/rga-hw.h
-+++ b/drivers/media/platform/rockchip/rga/rga-hw.h
-@@ -95,6 +95,11 @@
- #define RGA_COLOR_FMT_CP_8BPP 15
- #define RGA_COLOR_FMT_MASK 15
- 
-+#define RGA_COLOR_FMT_IS_YUV(fmt) \
-+	(((fmt) >= RGA_COLOR_FMT_YUV422SP) && ((fmt) < RGA_COLOR_FMT_CP_1BPP))
-+#define RGA_COLOR_FMT_IS_RGB(fmt) \
-+	((fmt) < RGA_COLOR_FMT_YUV422SP)
-+
- #define RGA_COLOR_NONE_SWAP 0
- #define RGA_COLOR_RB_SWAP 1
- #define RGA_COLOR_ALPHA_SWAP 2
+ 	err = cpcap_get_vendor(dev, rtc->regmap, &rtc->vendor);
+ 	if (err)
 -- 
 2.25.1
 
