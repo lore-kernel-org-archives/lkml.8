@@ -2,53 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF854C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4103FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB8320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5C82067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918378;
-	bh=sysaVeh2EdH/GQLRY7NDAYHNoH+duUNyIpglnn51t0Y=;
+	s=default; t=1597918386;
+	bh=zknEk2SYahKBzJKWH2mpBxTm0EtLWvmX6voU525LImQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XqIS8Y3/eEWW/ByNNB7xySCqyKPBrxjTidM+gcoDLeGkIENQNytpk+5F+Cl9dbQpL
-	 OGeGaW6kQyaTqZWJ01JLx/Ugg81OEq+v0q0Ri1kQU7D5qtLVfBpv5J7PcUiT7n2Ml4
-	 F2zDAnjufWCV3zQdXRYIXN7U0KJaImqseUF/Jgzc=
+	b=v8nmEdApExufd5zXpzxx/cafi8w4XFYCqkyCgX7884dSDPMVQiFRcFkxuey6wfTav
+	 mRlp+XxwlojHFWLki6I0nk1eVM61VT1FiKxZHjjlph1/gWuVPYxPZUoFtdbMVnRu48
+	 AI4DiC9w/pbakjapPe1KsixSpK4CJlgNSdJIEOrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgHTKMp (ORCPT
+        id S1730734AbgHTKND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:12:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53462 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731048AbgHTKMT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:19 -0400
+        id S1731067AbgHTKMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B886920738;
-        Thu, 20 Aug 2020 10:12:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2F60206DA;
+        Thu, 20 Aug 2020 10:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918339;
-        bh=sysaVeh2EdH/GQLRY7NDAYHNoH+duUNyIpglnn51t0Y=;
+        s=default; t=1597918365;
+        bh=zknEk2SYahKBzJKWH2mpBxTm0EtLWvmX6voU525LImQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnnFvLHccyfUVa3I1oAGb25aZDU0MmbYH3cG50W+vRbXvQWSxg+LmFaQqMYjQeNIv
-         OX3gJJjxwraZFtvbADPfm0KWsscYS46bdF6wV3i9a9b3dZC+Gusc8Jcpkd4ZoBR+iC
-         qPoPAHj84m0zeBlg5b9Gs1yhTN4f9pcD2kE5Dqdk=
+        b=xmpKRyHAfg9oFv5flIdEonIfVT24103Tbtxpv8EdXOZdBuUpaCILh9uCH2VS1qYRL
+         EgO/thAMmIPTK4G8x9Q7O7nWc4Wc94ywrX6VRSdqElJN8yyjBxf42X0Pxqok+yaMRh
+         m33MYEWrei80R295N1Hxzx5yWqJlWWvJE42pn4as=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        David Teigland <teigland@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 135/228] dlm: Fix kobject memleak
-Date:   Thu, 20 Aug 2020 11:21:50 +0200
-Message-Id: <20200820091614.334426704@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 143/228] net: Set fput_needed iff FDPUT_FPUT is set
+Date:   Thu, 20 Aug 2020 11:21:58 +0200
+Message-Id: <20200820091614.727400733@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,52 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit 0ffddafc3a3970ef7013696e7f36b3d378bc4c16 ]
+[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+accordingly.
 
-Set do_unreg = 1 before kobject_init_and_add() to ensure that
-kobject_put() can be called in its error patch.
-
-Fixes: 901195ed7f4b ("Kobject: change GFS2 to use kobject_init_and_add")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David Teigland <teigland@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/dlm/lockspace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
-index 9c8c9a09b4a6d..7a6b0327ceb0b 100644
---- a/fs/dlm/lockspace.c
-+++ b/fs/dlm/lockspace.c
-@@ -633,6 +633,9 @@ static int new_lockspace(const char *name, const char *cluster,
- 	wait_event(ls->ls_recover_lock_wait,
- 		   test_bit(LSFL_RECOVER_LOCK, &ls->ls_flags));
- 
-+	/* let kobject handle freeing of ls if there's an error */
-+	do_unreg = 1;
-+
- 	ls->ls_kobj.kset = dlm_kset;
- 	error = kobject_init_and_add(&ls->ls_kobj, &dlm_ktype, NULL,
- 				     "%s", ls->ls_name);
-@@ -640,9 +643,6 @@ static int new_lockspace(const char *name, const char *cluster,
- 		goto out_recoverd;
- 	kobject_uevent(&ls->ls_kobj, KOBJ_ADD);
- 
--	/* let kobject handle freeing of ls if there's an error */
--	do_unreg = 1;
--
- 	/* This uevent triggers dlm_controld in userspace to add us to the
- 	   group of nodes that are members of this lockspace (managed by the
- 	   cluster infrastructure.)  Once it's done that, it tells us who the
--- 
-2.25.1
-
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -496,7 +496,7 @@ static struct socket *sockfd_lookup_ligh
+ 	if (f.file) {
+ 		sock = sock_from_file(f.file, err);
+ 		if (likely(sock)) {
+-			*fput_needed = f.flags;
++			*fput_needed = f.flags & FDPUT_FPUT;
+ 			return sock;
+ 		}
+ 		fdput(f);
 
 
