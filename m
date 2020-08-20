@@ -2,124 +2,133 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48EFC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8240C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 918E12076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A1C2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931335;
-	bh=aMJupPBQ4LxbwYlKEK/6QB+6fhqLMcVfiMNCpsaL+xs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1pDp41wToNnyOcTpHJ4KtLH3JJkjx1A0GdpyG7UfJgOeiRsXC6wBKqDjdond+gg04
-	 lXa+uILiIs3njC2CH2C37pBB9zTRHykGh2ysGlNG5Ij0g4f2pPrvurTRQW2UOqbx5C
-	 sRICVnfEUMpwOWBh9FjDNoW7rbNCmdkGNlXGn4h8=
+	s=default; t=1597931353;
+	bh=Mbyu94M5Ib3Jy3y7GVySoutrnyeR4/0pRXPAij6sL4o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=znMV3+0lLFQ00CMWIU7NBYZmO55YBNIOWZsEcTLDhtAyQemNvmFhnZqcEEwKTm2OI
+	 Z24vy++/2W3wCJ+/qqNAqk3vAtUGjMbXjt0hJJVWiAbARQQ86raQvn6pMMI49NqX2e
+	 k9roPUSycc80TmKOhnFqX934DyeMy3o+nY1NIQtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730486AbgHTNjf (ORCPT
+        id S1729392AbgHTNjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:39:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725916AbgHTJal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:41 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728180AbgHTJap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD926207FB;
-        Thu, 20 Aug 2020 09:30:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD11920724;
+        Thu, 20 Aug 2020 09:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915839;
-        bh=aMJupPBQ4LxbwYlKEK/6QB+6fhqLMcVfiMNCpsaL+xs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=f4sMLbF3Ul/oSOcXWDtf7iwQrI3+vQvCq5y7Yl3ym07AuGuA3UOAR7s39x12gHGk1
-         bdOJyPHLfbdDmAyl1/S0WykPWX7i9HcBevqZzcszcsR/S/s/QWZrnc/71hV3B+fF8y
-         IcfGhTLfd4jaho8ZwXiXIA1vEWA3QC+wAsjyhP+c=
-Received: by mail-oi1-f171.google.com with SMTP id z22so1331795oid.1;
-        Thu, 20 Aug 2020 02:30:38 -0700 (PDT)
-X-Gm-Message-State: AOAM530RY4IMwYFWRqpHw7op23RTsLivnLutRFYlTm1Uz4U7Ip3WnfBC
-        p1RcQx7Ozr82/YTz8SB2y97mUtf5D4JW6HxcJPk=
-X-Google-Smtp-Source: ABdhPJxemHzFYiAaONEKxIjjxb830jZ1kTPr+TQsBCiFxqktaVfNOEcVPetmqS9UkEP59AbuX1DST0GcTwJkFK5yo5k=
-X-Received: by 2002:a05:6808:b:: with SMTP id u11mr1168892oic.33.1597915838236;
- Thu, 20 Aug 2020 02:30:38 -0700 (PDT)
+        s=default; t=1597915845;
+        bh=Mbyu94M5Ib3Jy3y7GVySoutrnyeR4/0pRXPAij6sL4o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LKazDKGCafaNUVDgBNfyEV8cVeKSznq4Y0awl/uYofqKIrdSM6nB3rvyoGPiARFta
+         T7P3EqwoQkgJqZFMSSAAHTCSsu2xNWHi09ayOah3DnwE44vjZeFrFOWcLUFDbJ+fo9
+         5J2Qrxj5cw3166OBhCbb23sXyXVM1Ii7L7Onc6A4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 126/232] media: staging: rkisp1: rsz: set default format if the given format is not RKISP1_ISP_SD_SRC
+Date:   Thu, 20 Aug 2020 11:19:37 +0200
+Message-Id: <20200820091618.918297764@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200819092838.11290-1-jlee@suse.com>
-In-Reply-To: <20200819092838.11290-1-jlee@suse.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Thu, 20 Aug 2020 11:30:27 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
-Message-ID: <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
-Subject: Re: [PATCH] efi/efivars: create efivars mount point when get variable
- services are available
-To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Lee, Chun-Yi" <jlee@suse.com>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 at 11:28, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
->
-> The efivars filesystem depends on GetVariable or GetNextVariable EFI
-> runtime services. So the /sys/firmware/efi/efivars does not need to be
-> created when GetVariable and GetNextVariable are not available.
->
-> It is useful for userland to determine the availability of efivars
-> filesystem.
->
-> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-Hello Joey,
+[ Upstream commit 206003b18bb264521607440752814ccff59f91f3 ]
 
-This is not the right check to perform here: the efivarfs code could
-be instantiated using a different efivars abstraction, so whether the
-RT services are implemented is not entirely relevant.
+When setting the sink format of the 'rkisp1_resizer'
+the format should be supported by 'rkisp1_isp' on
+the video source pad. This patch checks this condition
+and sets the format to default if the condition is false.
 
-Please look at commit f88814cc2578c121e6edef686365036db72af0ed
-("efi/efivars: Expose RT service availability via efivars
-abstraction") for an explanation of the underlying issue, and update
-your patch accordingly.
+Fixes: 56e3b29f9f6b "media: staging: rkisp1: add streaming paths"
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Acked-by: Helen Koike <helen.koike@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/media/rkisp1/rkisp1-common.h  | 3 +++
+ drivers/staging/media/rkisp1/rkisp1-isp.c     | 3 ---
+ drivers/staging/media/rkisp1/rkisp1-resizer.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/media/rkisp1/rkisp1-common.h b/drivers/staging/media/rkisp1/rkisp1-common.h
+index 0c4fe503adc90..12bd9d05050db 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-common.h
++++ b/drivers/staging/media/rkisp1/rkisp1-common.h
+@@ -22,6 +22,9 @@
+ #include "rkisp1-regs.h"
+ #include "uapi/rkisp1-config.h"
+ 
++#define RKISP1_ISP_SD_SRC BIT(0)
++#define RKISP1_ISP_SD_SINK BIT(1)
++
+ #define RKISP1_ISP_MAX_WIDTH		4032
+ #define RKISP1_ISP_MAX_HEIGHT		3024
+ #define RKISP1_ISP_MIN_WIDTH		32
+diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
+index abfedb604303f..b21a67aea433c 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-isp.c
++++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
+@@ -23,9 +23,6 @@
+ 
+ #define RKISP1_ISP_DEV_NAME	RKISP1_DRIVER_NAME "_isp"
+ 
+-#define RKISP1_ISP_SD_SRC BIT(0)
+-#define RKISP1_ISP_SD_SINK BIT(1)
+-
+ /*
+  * NOTE: MIPI controller and input MUX are also configured in this file.
+  * This is because ISP Subdev describes not only ISP submodule (input size,
+diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+index e188944941b58..a2b35961bc8b7 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
++++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
+@@ -542,7 +542,7 @@ static void rkisp1_rsz_set_sink_fmt(struct rkisp1_resizer *rsz,
+ 					    which);
+ 	sink_fmt->code = format->code;
+ 	mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
+-	if (!mbus_info) {
++	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SRC)) {
+ 		sink_fmt->code = RKISP1_DEF_FMT;
+ 		mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
+ 	}
+-- 
+2.25.1
 
 
-> ---
->  drivers/firmware/efi/efi.c | 13 ++++++++-----
->  1 file changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index fdd1db025dbf..929fbf4dfd5d 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -404,11 +404,14 @@ static int __init efisubsys_init(void)
->         if (error)
->                 goto err_remove_group;
->
-> -       /* and the standard mountpoint for efivarfs */
-> -       error = sysfs_create_mount_point(efi_kobj, "efivars");
-> -       if (error) {
-> -               pr_err("efivars: Subsystem registration failed.\n");
-> -               goto err_remove_group;
-> +       if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
-> +                                     EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
-> +               /* and the standard mountpoint for efivarfs */
-> +               error = sysfs_create_mount_point(efi_kobj, "efivars");
-> +               if (error) {
-> +                       pr_err("efivars: Subsystem registration failed.\n");
-> +                       goto err_remove_group;
-> +               }
->         }
->
->         if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
-> --
-> 2.16.4
->
+
