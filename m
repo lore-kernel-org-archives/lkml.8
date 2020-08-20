@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B98A8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F08C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89BE720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EB272078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925945;
-	bh=8oiJfUWAGWX/bCFj33VEYHm5fd1QvU3Tdt/J/MpTiwI=;
+	s=default; t=1597925966;
+	bh=diE3N2CBro8OHsuIjnaYGxC4OcsqUFKElYd2GeKgqc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v+zZ2/MHGRyknqAkJGzNTyYjjhuvKdYumFUjTriW7X7nFWqShM8/TK6HA9IPEoRsm
-	 qIu/d4VbBhkMW0fXnWBt5nhO4k6nOyu06hLif7+hjH16pdVX48kYH367I4JvSYwGoR
-	 0Ij/wdGWKBtTraFEQ5gSTVNAI1QXoTGQZeuhCqC0=
+	b=i17f9zbWKe+ox8n+7IzQjEti/GLlunDrmCKBRn0XD3XLrlZbdwuimo0hkljwzj7zI
+	 INdtmUp4/QRZMzXO2+COBiQS9CfdU4uNRGV45pzDLgsg8oaL6Ha1COHVafhEcYG6Oy
+	 tmRzTUEQ9t6amrptPIw0XNVrZub5atOY5int/FGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgHTMTC (ORCPT
+        id S1725834AbgHTMTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:19:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729847AbgHTJ4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:07 -0400
+        id S1730246AbgHTJ4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1822078D;
-        Thu, 20 Aug 2020 09:56:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 652BE20855;
+        Thu, 20 Aug 2020 09:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917366;
-        bh=8oiJfUWAGWX/bCFj33VEYHm5fd1QvU3Tdt/J/MpTiwI=;
+        s=default; t=1597917363;
+        bh=diE3N2CBro8OHsuIjnaYGxC4OcsqUFKElYd2GeKgqc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ue4niTTQ70zQLGJ4vVP7FWeb/0tlhJy6kpGsTfHd47K6AhAPywwkPqo6SGFHPDlPf
-         K4Dtxy17U6yhXu1qczsBEXsXzHnpclzysEXf+DfQue8W/24WrW/UphaNkfwouXSQWI
-         8topj44zL+kLi5tgiG8xF5/UIGZy5Isz2T0mwR1A=
+        b=uOsuaHlGYLcZCzcDlKl9vz8J3Ig7UCJ8Pr42wbct6jZqkJU7T+GyuNOG2QfkKdq4Z
+         xu+pKqRmJkd1TR19gxRRssThthU1LMgKGE9pnhQcojBDpu8kobwq1Ps0oWoGAEp4j3
+         WNaReu1MfULWcOmk72kV3lEt4lV/dA4FNbesIOY4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 85/92] perf bench mem: Always memset source before memcpy
-Date:   Thu, 20 Aug 2020 11:22:10 +0200
-Message-Id: <20200820091542.061159843@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 84/92] ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
+Date:   Thu, 20 Aug 2020 11:22:09 +0200
+Message-Id: <20200820091542.011298432@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -66,103 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
+[ Upstream commit 5a25de6df789cc805a9b8ba7ab5deef5067af47e ]
 
-For memcpy, the source pages are memset to zero only when --cycles is
-used.  This leads to wildly different results with or without --cycles,
-since all sources pages are likely to be mapped to the same zero page
-without explicit writes.
+Freeing chip on error may lead to an Oops at the next time
+the system goes to resume. Fix this by removing all
+snd_echo_free() calls on error.
 
-Before this fix:
-
-$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
-  mem memcpy -s 1024MB -l 100 -f default"
-$ $cmd
-
-         2,935,826      LLC-loads
-       3.821677452 seconds time elapsed
-
-$ $cmd --cycles
-
-       217,533,436      LLC-loads
-       8.616725985 seconds time elapsed
-
-After this fix:
-
-$ $cmd
-
-       214,459,686      LLC-loads
-       8.674301124 seconds time elapsed
-
-$ $cmd --cycles
-
-       214,758,651      LLC-loads
-       8.644480006 seconds time elapsed
-
-Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel@axis.com
-Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Link: https://lore.kernel.org/r/20200813074632.17022-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/mem-functions.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ sound/pci/echoaudio/echoaudio.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index 0251dd348124a..4864fc67d01b5 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -222,12 +222,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
- 	return 0;
- }
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index 3ef2b27ebbe8c..f32c55ffffc79 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -2216,7 +2216,6 @@ static int snd_echo_resume(struct device *dev)
+ 	if (err < 0) {
+ 		kfree(commpage_bak);
+ 		dev_err(dev, "resume init_hw err=%d\n", err);
+-		snd_echo_free(chip);
+ 		return err;
+ 	}
  
--static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
- {
--	u64 cycle_start = 0ULL, cycle_end = 0ULL;
--	memcpy_t fn = r->fn.memcpy;
--	int i;
--
- 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
- 	memset(src, 0, size);
- 
-@@ -236,6 +232,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
- 	 * to not measure page fault overhead:
- 	 */
- 	fn(dst, src, size);
-+}
-+
-+static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+{
-+	u64 cycle_start = 0ULL, cycle_end = 0ULL;
-+	memcpy_t fn = r->fn.memcpy;
-+	int i;
-+
-+	memcpy_prefault(fn, size, src, dst);
- 
- 	cycle_start = get_cycles();
- 	for (i = 0; i < nr_loops; ++i)
-@@ -251,11 +256,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
- 	memcpy_t fn = r->fn.memcpy;
- 	int i;
- 
--	/*
--	 * We prefault the freshly allocated memory range here,
--	 * to not measure page fault overhead:
--	 */
--	fn(dst, src, size);
-+	memcpy_prefault(fn, size, src, dst);
- 
- 	BUG_ON(gettimeofday(&tv_start, NULL));
- 	for (i = 0; i < nr_loops; ++i)
+@@ -2243,7 +2242,6 @@ static int snd_echo_resume(struct device *dev)
+ 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
+ 			KBUILD_MODNAME, chip)) {
+ 		dev_err(chip->card->dev, "cannot grab irq\n");
+-		snd_echo_free(chip);
+ 		return -EBUSY;
+ 	}
+ 	chip->irq = pci->irq;
 -- 
 2.25.1
 
