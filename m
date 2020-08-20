@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F06C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EDDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B6E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9E8206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918790;
-	bh=RbLioRtwqIYvPCQRBQHY8oawWlkPDVdj5GuzGLh/pYI=;
+	s=default; t=1597918811;
+	bh=BfPjhQ44U9DE3oZzImTFIZQyBr/WqCe9IVpkANI4hnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6E0Wbpz0yo9K0H34lqbCztowGs7QgFiLWny8G+Ew6VnYSEhxzEmpyys9Etpj9guk
-	 /nMiCvhX6NwcfGV8eESRO7h8N88UhgPCM/+iorDAa11O+0+N9DRtkRqx+pboXRSJ5r
-	 76H+nKlfrTVqZBbwFMS0/i6OKYo9IKjUCwWM7k/0=
+	b=ntoTDgbsRRBSjix+OdVd+ekI+Ugb2VVVltuxhoP1h+5pZwO5+TnUhRhwq+zrPMNzk
+	 fJORg090JJZBgVO+Ys2SKYUVVawH3XJU5UjM72C+OrDYW+XyXTQlaswEtJxI7sxpKI
+	 UaPzCT2bkzXsxS6lVwycYU3zgE3cf9KLhTsJJQxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731456AbgHTKTt (ORCPT
+        id S1730949AbgHTKUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42568 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731369AbgHTKTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:16 -0400
+        id S1731066AbgHTKTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D681820658;
-        Thu, 20 Aug 2020 10:19:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4436C208E4;
+        Thu, 20 Aug 2020 10:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918755;
-        bh=RbLioRtwqIYvPCQRBQHY8oawWlkPDVdj5GuzGLh/pYI=;
+        s=default; t=1597918783;
+        bh=BfPjhQ44U9DE3oZzImTFIZQyBr/WqCe9IVpkANI4hnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wvr0vQpKed6GbDOCCLDQeOsfZSLoPJr8ZFXbVCBhQ2nEuWONiOwvO2ufo5qkI9dZn
-         h++3nA1xOXTYEKYA95m037Y9Wd4WCDqESbkLBQKK7Hu1Ea2q6Ir0h4L6G110JabfsV
-         Je/orPVtzWEQnJg/Z2kq5MLt0Ob5U/hMOEE3+DGc=
+        b=zWd4Zq9hoZ2ofjl7/VrTzsqvQxrqQs6fKWzbBF3G3XN52x0B96nx4b2LWyYvadSBI
+         /2gRJZmPJg6DMd9e8ztM4wB5y1HvrWrrQyrMk0gKzliJGX6S/alszgTN4/qboV/GBI
+         H5ryoyiDqFWsIXopItvsQqm1K3K0SfYZOiEkLEHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Dexuan Cui <decui@microsoft.com>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 055/149] udp: drop corrupt packets earlier to avoid data corruption
-Date:   Thu, 20 Aug 2020 11:22:12 +0200
-Message-Id: <20200820092128.392955595@linuxfoundation.org>
+Subject: [PATCH 4.4 065/149] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
+Date:   Thu, 20 Aug 2020 11:22:22 +0200
+Message-Id: <20200820092128.887747279@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,87 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-The v4.4 stable kernel lacks this bugfix:
-commit 327868212381 ("make skb_copy_datagram_msg() et.al. preserve ->msg_iter on error").
-As a result, the v4.4 kernel can deliver corrupt data to the application
-when a corrupt UDP packet is closely followed by a valid UDP packet: the
-same invocation of the recvmsg() syscall can deliver the corrupt packet's
-UDP payload to the application with the UDP payload length and the
-"from IP/Port" of the valid packet.
+[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
 
-Details:
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-For a UDP packet longer than 76 bytes (see the v5.8-rc6 kernel's
-include/linux/skbuff.h:3951), Linux delays the UDP checksum verification
-until the application invokes the syscall recvmsg().
-
-In the recvmsg() syscall handler, while Linux is copying the UDP payload
-to the application's memory, it calculates the UDP checksum. If the
-calculated checksum doesn't match the received checksum, Linux drops the
-corrupt UDP packet, and then starts to process the next packet (if any),
-and if the next packet is valid (i.e. the checksum is correct), Linux
-will copy the valid UDP packet's payload to the application's receiver
-buffer.
-
-The bug is: before Linux starts to copy the valid UDP packet, the data
-structure used to track how many more bytes should be copied to the
-application memory is not reset to what it was when the application just
-entered the kernel by the syscall! Consequently, only a small portion or
-none of the valid packet's payload is copied to the application's
-receive buffer, and later when the application exits from the kernel,
-actually most of the application's receive buffer contains the payload
-of the corrupt packet while recvmsg() returns the length of the UDP
-payload of the valid packet.
-
-For the mainline kernel, the bug was fixed in commit 327868212381,
-but unluckily the bugfix is only backported to v4.9+. It turns out
-backporting 327868212381 to v4.4 means that some supporting patches
-must be backported first, so the overall changes seem too big, so the
-alternative is performs the csum validation earlier and drops the
-corrupt packets earlier.
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-Acked-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/udp.c | 3 +--
- net/ipv6/udp.c | 6 ++----
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
+ drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
+ drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index 5464fd2102302..0d9f9d6251245 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -1589,8 +1589,7 @@ int udp_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 		}
- 	}
+diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
+index 4572bfba017c5..17c73b8c90e71 100644
+--- a/drivers/gpu/drm/radeon/radeon_display.c
++++ b/drivers/gpu/drm/radeon/radeon_display.c
+@@ -660,8 +660,10 @@ radeon_crtc_set_config(struct drm_mode_set *set)
+ 	dev = set->crtc->dev;
  
--	if (rcu_access_pointer(sk->sk_filter) &&
--	    udp_lib_checksum_complete(skb))
-+	if (udp_lib_checksum_complete(skb))
- 		goto csum_error;
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- 	if (sk_rcvqueues_full(sk, sk->sk_rcvbuf)) {
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 79c583004575a..be570cd7c9aed 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -686,10 +686,8 @@ int udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
- 		}
- 	}
+ 	ret = drm_crtc_helper_set_config(set);
  
--	if (rcu_access_pointer(sk->sk_filter)) {
--		if (udp_lib_checksum_complete(skb))
--			goto csum_error;
--	}
-+	if (udp_lib_checksum_complete(skb))
-+		goto csum_error;
+diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
+index 5b6a6f5b3619e..401403a3ea50c 100644
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -527,8 +527,10 @@ long radeon_drm_ioctl(struct file *filp,
+ 	long ret;
+ 	dev = file_priv->minor->dev;
+ 	ret = pm_runtime_get_sync(dev->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return ret;
++	}
  
- 	if (sk_rcvqueues_full(sk, sk->sk_rcvbuf)) {
- 		UDP6_INC_STATS_BH(sock_net(sk),
+ 	ret = drm_ioctl(filp, cmd, arg);
+ 	
+diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
+index d290a8a09036e..41caf7da90548 100644
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -631,8 +631,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
+ 	file_priv->driver_priv = NULL;
+ 
+ 	r = pm_runtime_get_sync(dev->dev);
+-	if (r < 0)
++	if (r < 0) {
++		pm_runtime_put_autosuspend(dev->dev);
+ 		return r;
++	}
+ 
+ 	/* new gpu have virtual address space support */
+ 	if (rdev->family >= CHIP_CAYMAN) {
 -- 
 2.25.1
 
