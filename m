@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA58C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89F10207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7F8208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926906;
-	bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
+	s=default; t=1597926909;
+	bh=qJmEpL7tQCrTn65OLAj/uvcxZFClayXp+iHkQUQEPGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nUULuPizaBwVIa+mYj9ZKt7sIErCCxYdaXkWclkeApmU2kxKDsUFcig+uquah64EF
-	 0NVlSeMgX5AyjM6alQ8WmHW/eS+BWnhqZdIV0XGMGQdKoGtuF8nujfZIKSVYeXOvAr
-	 pWyMjCyzi2dh3WAvnBmYxkTGLUSLWVyX9LANPzuE=
+	b=TWlE9/fvTu0F8SpMA10CSLPEpibN8faN93ZFsoWKmyoEHRgODHFyzqnrWkUAh6Ww8
+	 F9Y5cQt2qTB1gvsBzIBhpNAoRGQv2IhiODdpSMCaJVugEL/eHuPe6Xx9eQihFZ6mq9
+	 exiXznKKQpV4yK2gi3ioWvDqmIQauNrR9trDQOKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbgHTMfF (ORCPT
+        id S1729518AbgHTJsa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53460 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:48:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726897AbgHTJsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:31 -0400
+        id S1729513AbgHTJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C49C62078D;
-        Thu, 20 Aug 2020 09:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E19012078D;
+        Thu, 20 Aug 2020 09:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916911;
-        bh=RHqDz9lR5Du0csNXTtFqx68ndUQQKIhitffvzRzCYBU=;
+        s=default; t=1597916884;
+        bh=qJmEpL7tQCrTn65OLAj/uvcxZFClayXp+iHkQUQEPGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1zoukCWwT5eT48KT/vcOle1Rohk6Q7AZI/QNuAHR69DtiV7BPE49ieLeETlFE9tGA
-         xhvZ9/x0EbPP+pvcpUTdG5CXQ2MWwZrWBuczeEV2N6VWdYDnHsppfbouDp89ddAao9
-         ktyMd03TvaCjinOuFGMVmKdRIuk6UJdxl0k1pc2Y=
+        b=dMmfbVHy0aqOHWroCYr6hDJUcjLmk0XVNTu7JUy6TqaFIWETygrCsZ6HFHqzqDdMW
+         3lFcl6qUrffhqwWVFaL7/vnUmbEXSo2CohimgsZ/7mO+GQUOZGuKo4uHWuMi144eT5
+         6ioeIQIT6wFVDxoEjQqVYZaw+dJ1z2QYBHX8p0pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/152] USB: serial: ftdi_sio: clean up receive processing
-Date:   Thu, 20 Aug 2020 11:20:57 +0200
-Message-Id: <20200820091558.345640597@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.4 051/152] ext2: fix missing percpu_counter_inc
+Date:   Thu, 20 Aug 2020 11:20:18 +0200
+Message-Id: <20200820091556.333647768@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,75 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit ce054039ba5e47b75a3be02a00274e52b06a6456 ]
+commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
 
-Clean up receive processing by dropping the character pointer and
-keeping the length argument unchanged throughout the function.
+sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
+increased. This patch fixes it.
 
-Also make it more apparent that sysrq processing can consume a
-characters by adding an explicit continue.
+Note that sbi->s_freeinodes_counter is only used in the algorithm that
+tries to find the group for new allocations, so this bug is not easily
+visible (the only visibility is that the group finding algorithm selects
+inoptinal result).
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/ftdi_sio.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/ext2/ialloc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 96b9e2768ac5c..33f1cca7eaa61 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2483,7 +2483,6 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
- {
- 	unsigned char status;
--	unsigned char *ch;
- 	int i;
- 	char flag;
- 
-@@ -2526,8 +2525,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	else
- 		priv->transmit_empty = 0;
- 
--	len -= 2;
--	if (!len)
-+	if (len == 2)
- 		return 0;	/* status only */
- 
- 	/*
-@@ -2556,19 +2554,20 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		}
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -80,6 +80,7 @@ static void ext2_release_inode(struct su
+ 	if (dir)
+ 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
+ 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
++	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
+ 	if (dir)
+ 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
+ 	mark_buffer_dirty(bh);
+@@ -528,7 +529,7 @@ got:
+ 		goto fail;
  	}
  
--	port->icount.rx += len;
--	ch = buf + 2;
-+	port->icount.rx += len - 2;
+-	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
++	percpu_counter_dec(&sbi->s_freeinodes_counter);
+ 	if (S_ISDIR(mode))
+ 		percpu_counter_inc(&sbi->s_dirs_counter);
  
- 	if (port->port.console && port->sysrq) {
--		for (i = 0; i < len; i++, ch++) {
--			if (!usb_serial_handle_sysrq_char(port, *ch))
--				tty_insert_flip_char(&port->port, *ch, flag);
-+		for (i = 2; i < len; i++) {
-+			if (usb_serial_handle_sysrq_char(port, buf[i]))
-+				continue;
-+			tty_insert_flip_char(&port->port, buf[i], flag);
- 		}
- 	} else {
--		tty_insert_flip_string_fixed_flag(&port->port, ch, flag, len);
-+		tty_insert_flip_string_fixed_flag(&port->port, buf + 2, flag,
-+				len - 2);
- 	}
- 
--	return len;
-+	return len - 2;
- }
- 
- static void ftdi_process_read_urb(struct urb *urb)
--- 
-2.25.1
-
 
 
