@@ -7,52 +7,60 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E09EC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C0FC2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A20A2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927974;
-	bh=DW+/asn9SL3tnwFrOH3enyhqWRJzJS/BBM0HEdCf5Cc=;
+	s=default; t=1597927983;
+	bh=ZSVSCLk6sgVSzJxYcmu3SBHBa8jjlddTn9NVrtyCIvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqIHXDeK+xNTYq6Aa47VJxLYGX2fEBIeaUNeZ233hn2h8qikyZgFPtnyuUK6vFoT+
-	 RjogJM2cuPzKCRNzhWicaqeCnlPI/2QwJPa8M+V6+9iKHyEipnbC0VMKapunJleAOT
-	 bPQCbA7De0OqH+Pc754ADczCw4sSbQM7diejHeBI=
+	b=bhvaFTtz6Viao3mJBH/I+q7d6bug7Rw2ri6RQ5g7807Po+QSHqOROSR1X1PuS6cZI
+	 Moh1RlqAM9tqjDiUmQFK3ANe0hDrkmjVQXzOTuSMBpvSxcZp481PTZGLmMzMV8+mj7
+	 grI7sYWviQXFoBKxnLfXEpfg9qi7hwMP++omcEno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729683AbgHTMwv (ORCPT
+        id S1730150AbgHTMw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:52:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:52:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729094AbgHTJnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:40 -0400
+        id S1728831AbgHTJn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 492E822CAF;
-        Thu, 20 Aug 2020 09:43:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A71D5207DE;
+        Thu, 20 Aug 2020 09:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916619;
-        bh=DW+/asn9SL3tnwFrOH3enyhqWRJzJS/BBM0HEdCf5Cc=;
+        s=default; t=1597916605;
+        bh=ZSVSCLk6sgVSzJxYcmu3SBHBa8jjlddTn9NVrtyCIvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N6/xk/uEYKIkGlTLaSRryOcud4IHQZz2d1LJh3BOI8fslObWmH3JohhRmbEJM+AVL
-         3wVxV8gH2sTe76kuUW4bwx79Bqou5IBX4FGqpqp3hZrGfE7NXL4tL0hDY5XgL46mPH
-         jzeHQzkuEe4f9XrCn3Gg5Ar4gUF08ACYBYEtBrtI=
+        b=OdRNgbUV5vTB/Ie41QHPu3E4sy8ISPELdP3wxuoiPUUQTQKQ2k/mKBEOALowkWEQ/
+         vKZGMtpeGwAZbcOh5E0bSYAq6iI/HLGr5elGdcpac6WIyg9B3Trnx8smJlfQOkRVNY
+         uyK9b8tks8FX4OJTb+NGraetdd+H0jJnILty0Nn4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nelson Dsouza <nelson.dsouza@linux.intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 162/204] x86/bugs/multihit: Fix mitigation reporting when VMX is not in use
-Date:   Thu, 20 Aug 2020 11:20:59 +0200
-Message-Id: <20200820091614.312388768@linuxfoundation.org>
+Subject: [PATCH 5.7 186/204] tools build feature: Quote CC and CXX for their arguments
+Date:   Thu, 20 Aug 2020 11:21:23 +0200
+Message-Id: <20200820091615.477649993@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -65,76 +73,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Daniel Díaz <daniel.diaz@linaro.org>
 
-[ Upstream commit f29dfa53cc8ae6ad93bae619bcc0bf45cab344f7 ]
+[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
 
-On systems that have virtualization disabled or unsupported, sysfs
-mitigation for X86_BUG_ITLB_MULTIHIT is reported incorrectly as:
+When using a cross-compilation environment, such as OpenEmbedded,
+the CC an CXX variables are set to something more than just a
+command: there are arguments (such as --sysroot) that need to be
+passed on to the compiler so that the right set of headers and
+libraries are used.
 
-  $ cat /sys/devices/system/cpu/vulnerabilities/itlb_multihit
-  KVM: Vulnerable
+For the particular case that our systems detected, CC is set to
+the following:
 
-System is not vulnerable to DoS attack from a rogue guest when
-virtualization is disabled or unsupported in the hardware. Change the
-mitigation reporting for these cases.
+  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
 
-Fixes: b8e8c8303ff2 ("kvm: mmu: ITLB_MULTIHIT mitigation")
-Reported-by: Nelson Dsouza <nelson.dsouza@linux.intel.com>
-Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/0ba029932a816179b9d14a30db38f0f11ef1f166.1594925782.git.pawan.kumar.gupta@linux.intel.com
+Without quotes, detection is as follows:
+
+  Auto-detecting system features:
+  ...                         dwarf: [ OFF ]
+  ...            dwarf_getlocations: [ OFF ]
+  ...                         glibc: [ OFF ]
+  ...                          gtk2: [ OFF ]
+  ...                        libbfd: [ OFF ]
+  ...                        libcap: [ OFF ]
+  ...                        libelf: [ OFF ]
+  ...                       libnuma: [ OFF ]
+  ...        numa_num_possible_cpus: [ OFF ]
+  ...                       libperl: [ OFF ]
+  ...                     libpython: [ OFF ]
+  ...                     libcrypto: [ OFF ]
+  ...                     libunwind: [ OFF ]
+  ...            libdw-dwarf-unwind: [ OFF ]
+  ...                          zlib: [ OFF ]
+  ...                          lzma: [ OFF ]
+  ...                     get_cpuid: [ OFF ]
+  ...                           bpf: [ OFF ]
+  ...                        libaio: [ OFF ]
+  ...                       libzstd: [ OFF ]
+  ...        disassembler-four-args: [ OFF ]
+
+  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+  Makefile.perf:230: recipe for target 'sub-make' failed
+  make[1]: *** [sub-make] Error 2
+  Makefile:69: recipe for target 'all' failed
+  make: *** [all] Error 2
+
+With CC and CXX quoted, some of those features are now detected.
+
+Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@chromium.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/admin-guide/hw-vuln/multihit.rst | 4 ++++
- arch/x86/kernel/cpu/bugs.c                     | 8 +++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ tools/build/Makefile.feature | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/hw-vuln/multihit.rst b/Documentation/admin-guide/hw-vuln/multihit.rst
-index ba9988d8bce50..140e4cec38c33 100644
---- a/Documentation/admin-guide/hw-vuln/multihit.rst
-+++ b/Documentation/admin-guide/hw-vuln/multihit.rst
-@@ -80,6 +80,10 @@ The possible values in this file are:
-        - The processor is not vulnerable.
-      * - KVM: Mitigation: Split huge pages
-        - Software changes mitigate this issue.
-+     * - KVM: Mitigation: VMX unsupported
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is not supported.
-+     * - KVM: Mitigation: VMX disabled
-+       - KVM is not vulnerable because Virtual Machine Extensions (VMX) is disabled.
-      * - KVM: Vulnerable
-        - The processor is vulnerable, but no mitigation enabled
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 941cddd5c00cd..82d6c43333fbd 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -8,7 +8,7 @@ endif
  
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index b53dcff21438c..8c963ea39f9df 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -31,6 +31,7 @@
- #include <asm/intel-family.h>
- #include <asm/e820/api.h>
- #include <asm/hypervisor.h>
-+#include <asm/tlbflush.h>
+ feature_check = $(eval $(feature_check_code))
+ define feature_check_code
+-  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
++  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+ endef
  
- #include "cpu.h"
- 
-@@ -1556,7 +1557,12 @@ static ssize_t l1tf_show_state(char *buf)
- 
- static ssize_t itlb_multihit_show_state(char *buf)
- {
--	if (itlb_multihit_kvm_mitigation)
-+	if (!boot_cpu_has(X86_FEATURE_MSR_IA32_FEAT_CTL) ||
-+	    !boot_cpu_has(X86_FEATURE_VMX))
-+		return sprintf(buf, "KVM: Mitigation: VMX unsupported\n");
-+	else if (!(cr4_read_shadow() & X86_CR4_VMXE))
-+		return sprintf(buf, "KVM: Mitigation: VMX disabled\n");
-+	else if (itlb_multihit_kvm_mitigation)
- 		return sprintf(buf, "KVM: Mitigation: Split huge pages\n");
- 	else
- 		return sprintf(buf, "KVM: Vulnerable\n");
+ feature_set = $(eval $(feature_set_code))
 -- 
 2.25.1
 
