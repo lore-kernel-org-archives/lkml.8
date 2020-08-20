@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFBBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13952C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B68922CA1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E82B722D03
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915624;
-	bh=qSvUBKDi00WIyAyry/sv6rrACXvKCMoL036mv2tgZ7o=;
+	s=default; t=1597915626;
+	bh=IwOu8fCXa9DdmcQyNO/NbHb+QA/2t8mkqbpPv7+Zhfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zw3XeAzmHkBEBb3C3H2vVtQ348rgdCdcJj6hCeVhIlupxRLucq20iJ2SIm/YNNkFd
-	 HQHFkdToVEdJAXStoAmX2NrLtzlSPMaObe654fL4GT6s48Ce7MBnjg7WLDzyMQyT/v
-	 nq7vsMUpr3/MAA3FE8zItUaHpk44zOS6GmxOUNcM=
+	b=OfBjBwEuV7V8acUAO9uqKC6q4nBzODZrAeL9fHi+C6vCs5zBQdd33DWjW/KdGBbto
+	 7D5YKPExZZ6iHm6SMvNkLkIqlnL7jixH4Y3jZaOwPLRIaW01lbq2SW5AnT+dkhr68W
+	 p3cHNJWrY3woNQIm06d/UTHXHUTlhA5xLuh6IQF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgHTJ1B (ORCPT
+        id S1726766AbgHTJ06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34832 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgHTJ0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:02 -0400
+        id S1727838AbgHTJ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 998C322D02;
-        Thu, 20 Aug 2020 09:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1193D22D04;
+        Thu, 20 Aug 2020 09:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915556;
-        bh=qSvUBKDi00WIyAyry/sv6rrACXvKCMoL036mv2tgZ7o=;
+        s=default; t=1597915550;
+        bh=IwOu8fCXa9DdmcQyNO/NbHb+QA/2t8mkqbpPv7+Zhfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OymSgv5jVwcJIxrgtNQPeBJPz4dUU5SViPZONIJ9ltnVMPJk9OkATsP5h1dZpHXf0
-         OB8I1TjPIU/BypOCx/Phb912i5m9pcsqnTvFBSE1M1/FzG6fGTbR9yyTbKFSiXJAjc
-         qMKO+OQY/mQHIxAIqmYwbbwPkVBPo0NNwSTy3tcU=
+        b=MjP5llvGhntxomiAmrvDuyX1n2EjA59e5hGsLATKysDXcWegRBWO9RMqGB3CT4iu9
+         i3i80M5VNAZqrunhVlWX1BFGw+f+0kNCwiFP1O11lrejtARSGC49iJnJSwLR1taYYT
+         Km2klZY5D1diX+2/IzZhqSacH093yyPpTUmGkmiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Mansur Alisha Shaik <mansur@codeaurora.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.8 055/232] media: venus: fix multiple encoder crash
-Date:   Thu, 20 Aug 2020 11:18:26 +0200
-Message-Id: <20200820091615.450774241@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.8 053/232] pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
+Date:   Thu, 20 Aug 2020 11:18:24 +0200
+Message-Id: <20200820091615.351306981@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,42 +61,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mansur Alisha Shaik <mansur@codeaurora.org>
+From: Paul Cercueil <paul@crapouillou.net>
 
-commit e0eb34810113dbbf1ace57440cf48d514312a373 upstream.
+commit 1c95348ba327fe8621d3680890c2341523d3524a upstream.
 
-Currently we are considering the instances which are available
-in core->inst list for load calculation in min_loaded_core()
-function, but this is incorrect because by the time we call
-decide_core() for second instance, the third instance not
-filled yet codec_freq_data pointer.
+Ingenic SoCs don't natively support registering an interrupt for both
+rising and falling edges. This has to be emulated in software.
 
-Solve this by considering the instances whose session has started.
+Until now, this was emulated by switching back and forth between
+IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING according to the level of
+the GPIO. While this worked most of the time, when used with GPIOs that
+need debouncing, some events would be lost. For instance, between the
+time a falling-edge interrupt happens and the interrupt handler
+configures the hardware for rising-edge, the level of the pin may have
+already risen, and the rising-edge event is lost.
 
-Cc: stable@vger.kernel.org # v5.7+
-Fixes: 4ebf969375bc ("media: venus: introduce core selection")
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Mansur Alisha Shaik <mansur@codeaurora.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To address that issue, instead of switching back and forth between
+IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING, we now switch back and
+forth between IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH. Since we
+always switch in the interrupt handler, they actually permit to detect
+level changes. In the example above, if the pin level rises before
+switching the IRQ type from IRQ_TYPE_LEVEL_LOW to IRQ_TYPE_LEVEL_HIGH,
+a new interrupt will raise as soon as the handler exits, and the
+rising-edge event will be properly detected.
+
+Fixes: e72394e2ea19 ("pinctrl: ingenic: Merge GPIO functionality")
+Reported-by: João Henrique <johnnyonflame@hotmail.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: João Henrique <johnnyonflame@hotmail.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200622214548.265417-1-paul@crapouillou.net
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/qcom/venus/pm_helpers.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pinctrl/pinctrl-ingenic.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/platform/qcom/venus/pm_helpers.c
-+++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-@@ -496,6 +496,10 @@ min_loaded_core(struct venus_inst *inst,
- 	list_for_each_entry(inst_pos, &core->instances, list) {
- 		if (inst_pos == inst)
- 			continue;
-+
-+		if (inst_pos->state != INST_START)
-+			continue;
-+
- 		vpp_freq = inst_pos->clk_data.codec_freq_data->vpp_freq;
- 		coreid = inst_pos->clk_data.core_id;
+--- a/drivers/pinctrl/pinctrl-ingenic.c
++++ b/drivers/pinctrl/pinctrl-ingenic.c
+@@ -1810,9 +1810,9 @@ static void ingenic_gpio_irq_ack(struct
+ 		 */
+ 		high = ingenic_gpio_get_value(jzgc, irq);
+ 		if (high)
+-			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_FALLING);
++			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_LOW);
+ 		else
+-			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_RISING);
++			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
+ 	}
  
+ 	if (jzgc->jzpc->info->version >= ID_JZ4760)
+@@ -1848,7 +1848,7 @@ static int ingenic_gpio_irq_set_type(str
+ 		 */
+ 		bool high = ingenic_gpio_get_value(jzgc, irqd->hwirq);
+ 
+-		type = high ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
++		type = high ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_LEVEL_HIGH;
+ 	}
+ 
+ 	irq_set_type(jzgc, irqd->hwirq, type);
 
 
