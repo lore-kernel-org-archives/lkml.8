@@ -2,635 +2,893 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3818C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EF4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F26C2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:40:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBB1207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597956141;
+	bh=QfRyOWNm0RtO0rWx3dIyzWZvgY2IqUHJrI9e+OmVGC0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=p1wH9vTTYHeJEK29GHwMPdxWZCzJZhjboBvQHAjihc2l8PGKl7L7GldtbRXIQjKhx
+	 2nYxOgt3/X7wowm5++gwkFHJtRgZIEWpw5kwuyhjGl12+hbsVRDqxmQVduCUz+zrJB
+	 a/hx5fDYUcoc9GVFnsQeSTXa6sDsfs37tWChdIv8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728439AbgHTUkA (ORCPT
+        id S1728450AbgHTUmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 16:40:00 -0400
-Received: from mga18.intel.com ([134.134.136.126]:10442 "EHLO mga18.intel.com"
+        Thu, 20 Aug 2020 16:42:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbgHTUj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:39:56 -0400
-IronPort-SDR: M2DHau3TtCaaiRgKwJIWTXtSMveGYJYIXviPkmb2QSabnuD2N6gIBv2PLBtNudpKw0vPPxvOsE
- wVoZ/icA+ouQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="143036138"
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="gz'50?scan'50,208,50";a="143036138"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 13:38:46 -0700
-IronPort-SDR: l/BM8dRAs1iszLwH7gOyCVh1FHlFTSzp2u2fwGcU/mKTnt1eO+citVCDTYUVpZicvOFQdbWuYX
- W8U2BF/ci/Yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="gz'50?scan'50,208,50";a="442116797"
-Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 20 Aug 2020 13:38:43 -0700
-Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1k8rKc-0000Em-Ti; Thu, 20 Aug 2020 20:38:42 +0000
-Date:   Fri, 21 Aug 2020 04:37:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: drivers/mmc/host/mtk-sd.c:undefined reference to `clk_get_parent'
-Message-ID: <202008210455.0RGn9pKw%lkp@intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="OXfL5xGRrasGEqWY"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1726911AbgHTUmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 16:42:17 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 900FE2076E;
+        Thu, 20 Aug 2020 20:42:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597956135;
+        bh=QfRyOWNm0RtO0rWx3dIyzWZvgY2IqUHJrI9e+OmVGC0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Y71pQRTZsBAEiJTf0QQ3qBJyTPj6R78H8BBXbkB5veoGgqwq7Zc+wgFDEMrw0YA0U
+         ClwR9yNoV06/Tkvo8F6WSS3v4FpbJl7HbgJ4hdvNnL2VqsU+bAX+VbeifU59nfFkL7
+         iOuL5sANGqdUJLv4GiK/lICmYAkADoQeaeDJ48YY=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH] ARM: s3c: Avoid naming clash of S3C24xx and S3C64xx timer setup
+Date:   Thu, 20 Aug 2020 22:42:03 +0200
+Message-Id: <20200820204203.22328-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+PWM timer initialization has two independent implementations - one for
+S3C24xx and one for S3C64xx.  The naming however was always the same
+and before also the declaration was shared.  This is confusing, error
+prone and might cause issues when trying to build multiplatform kernel.
 
---OXfL5xGRrasGEqWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-Hi Jiaxun,
-
-FYI, the error/warning still remains.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   7eac66d0456fe12a462e5c14c68e97c7460989da
-commit: ff487d41036035376e47972c7c522490b839ab37 MIPS: Truncate link address into 32bit for 32bit kernel
-date:   4 months ago
-config: mips-randconfig-p001-20200820 (attached as .config)
-compiler: mips-linux-gcc (GCC) 9.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout ff487d41036035376e47972c7c522490b839ab37
-        # save the attached .config to linux build tree
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=mips 
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   mips-linux-ld: drivers/gpu/drm/ingenic/ingenic-drm.o: in function `ingenic_drm_probe':
-   drivers/gpu/drm/ingenic/ingenic-drm.c:(.text+0xc8c): undefined reference to `clk_get_parent'
-   mips-linux-ld: drivers/mmc/host/mtk-sd.o: in function `msdc_set_mclk':
->> drivers/mmc/host/mtk-sd.c:(.text+0x1ce4): undefined reference to `clk_get_parent'
->> mips-linux-ld: drivers/mmc/host/mtk-sd.c:(.text+0x1d38): undefined reference to `clk_get_parent'
-   mips-linux-ld: drivers/iio/adc/ingenic-adc.o: in function `jz4770_adc_init_clk_div':
-   drivers/iio/adc/ingenic-adc.c:(.text+0x18): undefined reference to `clk_get_parent'
-   mips-linux-ld: drivers/iio/adc/ingenic-adc.o: in function `jz4725b_adc_init_clk_div':
-   drivers/iio/adc/ingenic-adc.c:(.text+0x138): undefined reference to `clk_get_parent'
-
+Suggested-by: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ arch/arm/mach-s3c/mach-amlm5900.c   |  4 ++--
+ arch/arm/mach-s3c/mach-anubis.c     |  4 ++--
+ arch/arm/mach-s3c/mach-anw6410.c    |  4 ++--
+ arch/arm/mach-s3c/mach-at2440evb.c  |  4 ++--
+ arch/arm/mach-s3c/mach-bast.c       |  4 ++--
+ arch/arm/mach-s3c/mach-crag6410.c   |  4 ++--
+ arch/arm/mach-s3c/mach-gta02.c      |  4 ++--
+ arch/arm/mach-s3c/mach-h1940.c      |  4 ++--
+ arch/arm/mach-s3c/mach-hmt.c        |  4 ++--
+ arch/arm/mach-s3c/mach-jive.c       |  4 ++--
+ arch/arm/mach-s3c/mach-mini2440.c   |  4 ++--
+ arch/arm/mach-s3c/mach-mini6410.c   |  4 ++--
+ arch/arm/mach-s3c/mach-n30.c        |  4 ++--
+ arch/arm/mach-s3c/mach-ncp.c        |  4 ++--
+ arch/arm/mach-s3c/mach-nexcoder.c   |  4 ++--
+ arch/arm/mach-s3c/mach-osiris.c     |  4 ++--
+ arch/arm/mach-s3c/mach-otom.c       |  4 ++--
+ arch/arm/mach-s3c/mach-qt2410.c     |  4 ++--
+ arch/arm/mach-s3c/mach-real6410.c   |  4 ++--
+ arch/arm/mach-s3c/mach-rx1950.c     |  4 ++--
+ arch/arm/mach-s3c/mach-rx3715.c     |  4 ++--
+ arch/arm/mach-s3c/mach-smartq.c     |  2 +-
+ arch/arm/mach-s3c/mach-smartq5.c    |  2 +-
+ arch/arm/mach-s3c/mach-smartq7.c    |  2 +-
+ arch/arm/mach-s3c/mach-smdk2410.c   |  4 ++--
+ arch/arm/mach-s3c/mach-smdk2413.c   |  8 ++++----
+ arch/arm/mach-s3c/mach-smdk2416.c   |  4 ++--
+ arch/arm/mach-s3c/mach-smdk2440.c   |  4 ++--
+ arch/arm/mach-s3c/mach-smdk2443.c   |  4 ++--
+ arch/arm/mach-s3c/mach-smdk6400.c   |  4 ++--
+ arch/arm/mach-s3c/mach-smdk6410.c   |  4 ++--
+ arch/arm/mach-s3c/mach-tct_hammer.c |  4 ++--
+ arch/arm/mach-s3c/mach-vr1000.c     |  4 ++--
+ arch/arm/mach-s3c/mach-vstms.c      |  4 ++--
+ arch/arm/mach-s3c/s3c24xx.c         |  4 ++--
+ arch/arm/mach-s3c/s3c24xx.h         | 18 +++++++++---------
+ arch/arm/mach-s3c/s3c64xx.c         |  4 ++--
+ arch/arm/mach-s3c/s3c64xx.h         | 18 +++++++++---------
+ 38 files changed, 89 insertions(+), 89 deletions(-)
 
---OXfL5xGRrasGEqWY
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
+diff --git a/arch/arm/mach-s3c/mach-amlm5900.c b/arch/arm/mach-s3c/mach-amlm5900.c
+index f73a5223663b..94c4512ace17 100644
+--- a/arch/arm/mach-s3c/mach-amlm5900.c
++++ b/arch/arm/mach-s3c/mach-amlm5900.c
+@@ -153,13 +153,13 @@ static void __init amlm5900_map_io(void)
+ {
+ 	s3c24xx_init_io(amlm5900_iodesc, ARRAY_SIZE(amlm5900_iodesc));
+ 	s3c24xx_init_uarts(amlm5900_uartcfgs, ARRAY_SIZE(amlm5900_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init amlm5900_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ #ifdef CONFIG_FB_S3C2410
+diff --git a/arch/arm/mach-s3c/mach-anubis.c b/arch/arm/mach-s3c/mach-anubis.c
+index 522bb10e8a19..969b74079c8e 100644
+--- a/arch/arm/mach-s3c/mach-anubis.c
++++ b/arch/arm/mach-s3c/mach-anubis.c
+@@ -381,7 +381,7 @@ static void __init anubis_map_io(void)
+ {
+ 	s3c24xx_init_io(anubis_iodesc, ARRAY_SIZE(anubis_iodesc));
+ 	s3c24xx_init_uarts(anubis_uartcfgs, ARRAY_SIZE(anubis_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ 
+ 	/* check for the newer revision boards with large page nand */
+ 
+@@ -400,7 +400,7 @@ static void __init anubis_map_io(void)
+ static void __init anubis_init_time(void)
+ {
+ 	s3c2440_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init anubis_init(void)
+diff --git a/arch/arm/mach-s3c/mach-anw6410.c b/arch/arm/mach-s3c/mach-anw6410.c
+index b4f08e5c9858..825714e9ac66 100644
+--- a/arch/arm/mach-s3c/mach-anw6410.c
++++ b/arch/arm/mach-s3c/mach-anw6410.c
+@@ -202,7 +202,7 @@ static void __init anw6410_map_io(void)
+ 	s3c64xx_init_io(anw6410_iodesc, ARRAY_SIZE(anw6410_iodesc));
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(anw6410_uartcfgs, ARRAY_SIZE(anw6410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	anw6410_lcd_mode_set();
+ }
+@@ -226,5 +226,5 @@ MACHINE_START(ANW6410, "A&W6410")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= anw6410_map_io,
+ 	.init_machine	= anw6410_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-at2440evb.c b/arch/arm/mach-s3c/mach-at2440evb.c
+index 13d014bc8371..18ace34bbb85 100644
+--- a/arch/arm/mach-s3c/mach-at2440evb.c
++++ b/arch/arm/mach-s3c/mach-at2440evb.c
+@@ -202,13 +202,13 @@ static void __init at2440evb_map_io(void)
+ {
+ 	s3c24xx_init_io(at2440evb_iodesc, ARRAY_SIZE(at2440evb_iodesc));
+ 	s3c24xx_init_uarts(at2440evb_uartcfgs, ARRAY_SIZE(at2440evb_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init at2440evb_init_time(void)
+ {
+ 	s3c2440_init_clocks(16934400);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init at2440evb_init(void)
+diff --git a/arch/arm/mach-s3c/mach-bast.c b/arch/arm/mach-s3c/mach-bast.c
+index 1cb2193256e1..ad3c7e209544 100644
+--- a/arch/arm/mach-s3c/mach-bast.c
++++ b/arch/arm/mach-s3c/mach-bast.c
+@@ -547,13 +547,13 @@ static void __init bast_map_io(void)
+ 
+ 	s3c24xx_init_io(bast_iodesc, ARRAY_SIZE(bast_iodesc));
+ 	s3c24xx_init_uarts(bast_uartcfgs, ARRAY_SIZE(bast_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init bast_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init bast_init(void)
+diff --git a/arch/arm/mach-s3c/mach-crag6410.c b/arch/arm/mach-s3c/mach-crag6410.c
+index 0bfcb79cc0a6..4a12c75d407f 100644
+--- a/arch/arm/mach-s3c/mach-crag6410.c
++++ b/arch/arm/mach-s3c/mach-crag6410.c
+@@ -748,7 +748,7 @@ static void __init crag6410_map_io(void)
+ 	s3c64xx_init_io(NULL, 0);
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(crag6410_uartcfgs, ARRAY_SIZE(crag6410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	/* LCD type and Bypass set by bootloader */
+ }
+@@ -875,5 +875,5 @@ MACHINE_START(WLF_CRAGG_6410, "Wolfson Cragganmore 6410")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= crag6410_map_io,
+ 	.init_machine	= crag6410_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-gta02.c b/arch/arm/mach-s3c/mach-gta02.c
+index 9e5cb05f3ef1..97a52fd6ded6 100644
+--- a/arch/arm/mach-s3c/mach-gta02.c
++++ b/arch/arm/mach-s3c/mach-gta02.c
+@@ -505,7 +505,7 @@ static void __init gta02_map_io(void)
+ {
+ 	s3c24xx_init_io(gta02_iodesc, ARRAY_SIZE(gta02_iodesc));
+ 	s3c24xx_init_uarts(gta02_uartcfgs, ARRAY_SIZE(gta02_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ 
+@@ -567,7 +567,7 @@ static void __init gta02_machine_init(void)
+ static void __init gta02_init_time(void)
+ {
+ 	s3c2442_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ MACHINE_START(NEO1973_GTA02, "GTA02")
+diff --git a/arch/arm/mach-s3c/mach-h1940.c b/arch/arm/mach-s3c/mach-h1940.c
+index da9ac61f7948..53d51aa83200 100644
+--- a/arch/arm/mach-s3c/mach-h1940.c
++++ b/arch/arm/mach-s3c/mach-h1940.c
+@@ -686,7 +686,7 @@ static void __init h1940_map_io(void)
+ {
+ 	s3c24xx_init_io(h1940_iodesc, ARRAY_SIZE(h1940_iodesc));
+ 	s3c24xx_init_uarts(h1940_uartcfgs, ARRAY_SIZE(h1940_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ 
+ 	/* setup PM */
+ 
+@@ -703,7 +703,7 @@ static void __init h1940_map_io(void)
+ static void __init h1940_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ /* H1940 and RX3715 need to reserve this for suspend */
+diff --git a/arch/arm/mach-s3c/mach-hmt.c b/arch/arm/mach-s3c/mach-hmt.c
+index 29510e27f90f..c58cd1fa6981 100644
+--- a/arch/arm/mach-s3c/mach-hmt.c
++++ b/arch/arm/mach-s3c/mach-hmt.c
+@@ -249,7 +249,7 @@ static void __init hmt_map_io(void)
+ 	s3c64xx_init_io(hmt_iodesc, ARRAY_SIZE(hmt_iodesc));
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(hmt_uartcfgs, ARRAY_SIZE(hmt_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ }
+ 
+ static void __init hmt_machine_init(void)
+@@ -278,5 +278,5 @@ MACHINE_START(HMT, "Airgoo-HMT")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= hmt_map_io,
+ 	.init_machine	= hmt_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-jive.c b/arch/arm/mach-s3c/mach-jive.c
+index 5c3037bf647d..94b16b2cb1da 100644
+--- a/arch/arm/mach-s3c/mach-jive.c
++++ b/arch/arm/mach-s3c/mach-jive.c
+@@ -529,13 +529,13 @@ static void __init jive_map_io(void)
+ {
+ 	s3c24xx_init_io(jive_iodesc, ARRAY_SIZE(jive_iodesc));
+ 	s3c24xx_init_uarts(jive_uartcfgs, ARRAY_SIZE(jive_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init jive_init_time(void)
+ {
+ 	s3c2412_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void jive_power_off(void)
+diff --git a/arch/arm/mach-s3c/mach-mini2440.c b/arch/arm/mach-s3c/mach-mini2440.c
+index 48e436a2f639..0f4f2a940b5c 100644
+--- a/arch/arm/mach-s3c/mach-mini2440.c
++++ b/arch/arm/mach-s3c/mach-mini2440.c
+@@ -597,13 +597,13 @@ static void __init mini2440_map_io(void)
+ {
+ 	s3c24xx_init_io(mini2440_iodesc, ARRAY_SIZE(mini2440_iodesc));
+ 	s3c24xx_init_uarts(mini2440_uartcfgs, ARRAY_SIZE(mini2440_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init mini2440_init_time(void)
+ {
+ 	s3c2440_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ /*
+diff --git a/arch/arm/mach-s3c/mach-mini6410.c b/arch/arm/mach-s3c/mach-mini6410.c
+index 1580bb8ee2c7..75f2ec4a2993 100644
+--- a/arch/arm/mach-s3c/mach-mini6410.c
++++ b/arch/arm/mach-s3c/mach-mini6410.c
+@@ -237,7 +237,7 @@ static void __init mini6410_map_io(void)
+ 	s3c64xx_init_io(NULL, 0);
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(mini6410_uartcfgs, ARRAY_SIZE(mini6410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	/* set the LCD type */
+ 	tmp = __raw_readl(S3C64XX_SPCON);
+@@ -361,5 +361,5 @@ MACHINE_START(MINI6410, "MINI6410")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= mini6410_map_io,
+ 	.init_machine	= mini6410_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-n30.c b/arch/arm/mach-s3c/mach-n30.c
+index 8a9382326d29..e40c1fcf418c 100644
+--- a/arch/arm/mach-s3c/mach-n30.c
++++ b/arch/arm/mach-s3c/mach-n30.c
+@@ -579,13 +579,13 @@ static void __init n30_map_io(void)
+ 	s3c24xx_init_io(n30_iodesc, ARRAY_SIZE(n30_iodesc));
+ 	n30_hwinit();
+ 	s3c24xx_init_uarts(n30_uartcfgs, ARRAY_SIZE(n30_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init n30_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ /* GPB3 is the line that controls the pull-up for the USB D+ line */
+diff --git a/arch/arm/mach-s3c/mach-ncp.c b/arch/arm/mach-s3c/mach-ncp.c
+index 3480ba8184b1..1a45bed56622 100644
+--- a/arch/arm/mach-s3c/mach-ncp.c
++++ b/arch/arm/mach-s3c/mach-ncp.c
+@@ -79,7 +79,7 @@ static void __init ncp_map_io(void)
+ 	s3c64xx_init_io(ncp_iodesc, ARRAY_SIZE(ncp_iodesc));
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(ncp_uartcfgs, ARRAY_SIZE(ncp_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ }
+ 
+ static void __init ncp_machine_init(void)
+@@ -96,5 +96,5 @@ MACHINE_START(NCP, "NCP")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= ncp_map_io,
+ 	.init_machine	= ncp_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-nexcoder.c b/arch/arm/mach-s3c/mach-nexcoder.c
+index 7e96c546f359..2a454c919658 100644
+--- a/arch/arm/mach-s3c/mach-nexcoder.c
++++ b/arch/arm/mach-s3c/mach-nexcoder.c
+@@ -129,7 +129,7 @@ static void __init nexcoder_map_io(void)
+ {
+ 	s3c24xx_init_io(nexcoder_iodesc, ARRAY_SIZE(nexcoder_iodesc));
+ 	s3c24xx_init_uarts(nexcoder_uartcfgs, ARRAY_SIZE(nexcoder_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ 
+ 	nexcoder_sensorboard_init();
+ }
+@@ -137,7 +137,7 @@ static void __init nexcoder_map_io(void)
+ static void __init nexcoder_init_time(void)
+ {
+ 	s3c2440_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init nexcoder_init(void)
+diff --git a/arch/arm/mach-s3c/mach-osiris.c b/arch/arm/mach-s3c/mach-osiris.c
+index d0675c558d89..4e94683fff3d 100644
+--- a/arch/arm/mach-s3c/mach-osiris.c
++++ b/arch/arm/mach-s3c/mach-osiris.c
+@@ -356,7 +356,7 @@ static void __init osiris_map_io(void)
+ 
+ 	s3c24xx_init_io(osiris_iodesc, ARRAY_SIZE(osiris_iodesc));
+ 	s3c24xx_init_uarts(osiris_uartcfgs, ARRAY_SIZE(osiris_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ 
+ 	/* check for the newer revision boards with large page nand */
+ 
+@@ -381,7 +381,7 @@ static void __init osiris_map_io(void)
+ static void __init osiris_init_time(void)
+ {
+ 	s3c2440_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init osiris_init(void)
+diff --git a/arch/arm/mach-s3c/mach-otom.c b/arch/arm/mach-s3c/mach-otom.c
+index fc8f78396159..460ee97766cd 100644
+--- a/arch/arm/mach-s3c/mach-otom.c
++++ b/arch/arm/mach-s3c/mach-otom.c
+@@ -94,13 +94,13 @@ static void __init otom11_map_io(void)
+ {
+ 	s3c24xx_init_io(otom11_iodesc, ARRAY_SIZE(otom11_iodesc));
+ 	s3c24xx_init_uarts(otom11_uartcfgs, ARRAY_SIZE(otom11_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init otom11_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init otom11_init(void)
+diff --git a/arch/arm/mach-s3c/mach-qt2410.c b/arch/arm/mach-s3c/mach-qt2410.c
+index cba41466b261..9a4212ea07db 100644
+--- a/arch/arm/mach-s3c/mach-qt2410.c
++++ b/arch/arm/mach-s3c/mach-qt2410.c
+@@ -320,13 +320,13 @@ static void __init qt2410_map_io(void)
+ {
+ 	s3c24xx_init_io(qt2410_iodesc, ARRAY_SIZE(qt2410_iodesc));
+ 	s3c24xx_init_uarts(smdk2410_uartcfgs, ARRAY_SIZE(smdk2410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init qt2410_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init qt2410_machine_init(void)
+diff --git a/arch/arm/mach-s3c/mach-real6410.c b/arch/arm/mach-s3c/mach-real6410.c
+index 63819560fc4c..147e660647ba 100644
+--- a/arch/arm/mach-s3c/mach-real6410.c
++++ b/arch/arm/mach-s3c/mach-real6410.c
+@@ -207,7 +207,7 @@ static void __init real6410_map_io(void)
+ 	s3c64xx_init_io(NULL, 0);
+ 	s3c24xx_init_clocks(12000000);
+ 	s3c24xx_init_uarts(real6410_uartcfgs, ARRAY_SIZE(real6410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	/* set the LCD type */
+ 	tmp = __raw_readl(S3C64XX_SPCON);
+@@ -329,5 +329,5 @@ MACHINE_START(REAL6410, "REAL6410")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= real6410_map_io,
+ 	.init_machine	= real6410_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-rx1950.c b/arch/arm/mach-s3c/mach-rx1950.c
+index 99dabe7309ef..4df7a54ad7e4 100644
+--- a/arch/arm/mach-s3c/mach-rx1950.c
++++ b/arch/arm/mach-s3c/mach-rx1950.c
+@@ -778,7 +778,7 @@ static void __init rx1950_map_io(void)
+ {
+ 	s3c24xx_init_io(rx1950_iodesc, ARRAY_SIZE(rx1950_iodesc));
+ 	s3c24xx_init_uarts(rx1950_uartcfgs, ARRAY_SIZE(rx1950_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ 
+ 	/* setup PM */
+ 
+@@ -792,7 +792,7 @@ static void __init rx1950_map_io(void)
+ static void __init rx1950_init_time(void)
+ {
+ 	s3c2442_init_clocks(16934000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init rx1950_init_machine(void)
+diff --git a/arch/arm/mach-s3c/mach-rx3715.c b/arch/arm/mach-s3c/mach-rx3715.c
+index 4d6e9d9c8e07..889e44d86586 100644
+--- a/arch/arm/mach-s3c/mach-rx3715.c
++++ b/arch/arm/mach-s3c/mach-rx3715.c
+@@ -176,13 +176,13 @@ static void __init rx3715_map_io(void)
+ {
+ 	s3c24xx_init_io(rx3715_iodesc, ARRAY_SIZE(rx3715_iodesc));
+ 	s3c24xx_init_uarts(rx3715_uartcfgs, ARRAY_SIZE(rx3715_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init rx3715_init_time(void)
+ {
+ 	s3c2440_init_clocks(16934000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ /* H1940 and RX3715 need to reserve this for suspend */
+diff --git a/arch/arm/mach-s3c/mach-smartq.c b/arch/arm/mach-s3c/mach-smartq.c
+index da44a2610506..5b6e7c2a85ef 100644
+--- a/arch/arm/mach-s3c/mach-smartq.c
++++ b/arch/arm/mach-s3c/mach-smartq.c
+@@ -383,7 +383,7 @@ void __init smartq_map_io(void)
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c64xx_set_xusbxti_freq(12000000);
+ 	s3c24xx_init_uarts(smartq_uartcfgs, ARRAY_SIZE(smartq_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	smartq_lcd_mode_set();
+ }
+diff --git a/arch/arm/mach-s3c/mach-smartq5.c b/arch/arm/mach-s3c/mach-smartq5.c
+index 5d5e3c241629..8c940227e810 100644
+--- a/arch/arm/mach-s3c/mach-smartq5.c
++++ b/arch/arm/mach-s3c/mach-smartq5.c
+@@ -150,5 +150,5 @@ MACHINE_START(SMARTQ5, "SmartQ 5")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= smartq_map_io,
+ 	.init_machine	= smartq5_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-smartq7.c b/arch/arm/mach-s3c/mach-smartq7.c
+index 16b62e337d8d..ab243969d6d0 100644
+--- a/arch/arm/mach-s3c/mach-smartq7.c
++++ b/arch/arm/mach-s3c/mach-smartq7.c
+@@ -166,5 +166,5 @@ MACHINE_START(SMARTQ7, "SmartQ 7")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= smartq_map_io,
+ 	.init_machine	= smartq7_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-smdk2410.c b/arch/arm/mach-s3c/mach-smdk2410.c
+index c6f0d0abf515..ca83d5a7d101 100644
+--- a/arch/arm/mach-s3c/mach-smdk2410.c
++++ b/arch/arm/mach-s3c/mach-smdk2410.c
+@@ -81,13 +81,13 @@ static void __init smdk2410_map_io(void)
+ {
+ 	s3c24xx_init_io(smdk2410_iodesc, ARRAY_SIZE(smdk2410_iodesc));
+ 	s3c24xx_init_uarts(smdk2410_uartcfgs, ARRAY_SIZE(smdk2410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init smdk2410_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init smdk2410_init(void)
+diff --git a/arch/arm/mach-s3c/mach-smdk2413.c b/arch/arm/mach-s3c/mach-smdk2413.c
+index 67ca5c855684..c43095b321d7 100644
+--- a/arch/arm/mach-s3c/mach-smdk2413.c
++++ b/arch/arm/mach-s3c/mach-smdk2413.c
+@@ -98,13 +98,13 @@ static void __init smdk2413_map_io(void)
+ {
+ 	s3c24xx_init_io(smdk2413_iodesc, ARRAY_SIZE(smdk2413_iodesc));
+ 	s3c24xx_init_uarts(smdk2413_uartcfgs, ARRAY_SIZE(smdk2413_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init smdk2413_init_time(void)
+ {
+ 	s3c2412_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init smdk2413_machine_init(void)
+@@ -134,7 +134,7 @@ MACHINE_START(S3C2413, "S3C2413")
+ 	.init_irq	= s3c2412_init_irq,
+ 	.map_io		= smdk2413_map_io,
+ 	.init_machine	= smdk2413_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c24xx_timer_init,
+ MACHINE_END
+ 
+ MACHINE_START(SMDK2412, "SMDK2412")
+@@ -145,7 +145,7 @@ MACHINE_START(SMDK2412, "SMDK2412")
+ 	.init_irq	= s3c2412_init_irq,
+ 	.map_io		= smdk2413_map_io,
+ 	.init_machine	= smdk2413_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c24xx_timer_init,
+ MACHINE_END
+ 
+ MACHINE_START(SMDK2413, "SMDK2413")
+diff --git a/arch/arm/mach-s3c/mach-smdk2416.c b/arch/arm/mach-s3c/mach-smdk2416.c
+index 3e28f65a6f83..4d883a792cc6 100644
+--- a/arch/arm/mach-s3c/mach-smdk2416.c
++++ b/arch/arm/mach-s3c/mach-smdk2416.c
+@@ -213,14 +213,14 @@ static struct platform_device *smdk2416_devices[] __initdata = {
+ static void __init smdk2416_init_time(void)
+ {
+ 	s3c2416_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init smdk2416_map_io(void)
+ {
+ 	s3c24xx_init_io(smdk2416_iodesc, ARRAY_SIZE(smdk2416_iodesc));
+ 	s3c24xx_init_uarts(smdk2416_uartcfgs, ARRAY_SIZE(smdk2416_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init smdk2416_machine_init(void)
+diff --git a/arch/arm/mach-s3c/mach-smdk2440.c b/arch/arm/mach-s3c/mach-smdk2440.c
+index 596a76702edb..7f6fe0db04f3 100644
+--- a/arch/arm/mach-s3c/mach-smdk2440.c
++++ b/arch/arm/mach-s3c/mach-smdk2440.c
+@@ -158,13 +158,13 @@ static void __init smdk2440_map_io(void)
+ {
+ 	s3c24xx_init_io(smdk2440_iodesc, ARRAY_SIZE(smdk2440_iodesc));
+ 	s3c24xx_init_uarts(smdk2440_uartcfgs, ARRAY_SIZE(smdk2440_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init smdk2440_init_time(void)
+ {
+ 	s3c2440_init_clocks(16934400);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init smdk2440_machine_init(void)
+diff --git a/arch/arm/mach-s3c/mach-smdk2443.c b/arch/arm/mach-s3c/mach-smdk2443.c
+index ee6af7ad4429..fc54c91ade56 100644
+--- a/arch/arm/mach-s3c/mach-smdk2443.c
++++ b/arch/arm/mach-s3c/mach-smdk2443.c
+@@ -109,13 +109,13 @@ static void __init smdk2443_map_io(void)
+ {
+ 	s3c24xx_init_io(smdk2443_iodesc, ARRAY_SIZE(smdk2443_iodesc));
+ 	s3c24xx_init_uarts(smdk2443_uartcfgs, ARRAY_SIZE(smdk2443_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init smdk2443_init_time(void)
+ {
+ 	s3c2443_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init smdk2443_machine_init(void)
+diff --git a/arch/arm/mach-s3c/mach-smdk6400.c b/arch/arm/mach-s3c/mach-smdk6400.c
+index 8f7c5071e113..827221398d6c 100644
+--- a/arch/arm/mach-s3c/mach-smdk6400.c
++++ b/arch/arm/mach-s3c/mach-smdk6400.c
+@@ -60,7 +60,7 @@ static void __init smdk6400_map_io(void)
+ 	s3c64xx_init_io(smdk6400_iodesc, ARRAY_SIZE(smdk6400_iodesc));
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(smdk6400_uartcfgs, ARRAY_SIZE(smdk6400_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ }
+ 
+ static struct platform_device *smdk6400_devices[] __initdata = {
+@@ -86,5 +86,5 @@ MACHINE_START(SMDK6400, "SMDK6400")
+ 	.init_irq	= s3c6400_init_irq,
+ 	.map_io		= smdk6400_map_io,
+ 	.init_machine	= smdk6400_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-smdk6410.c b/arch/arm/mach-s3c/mach-smdk6410.c
+index 9614916f1294..ae18c1375c9c 100644
+--- a/arch/arm/mach-s3c/mach-smdk6410.c
++++ b/arch/arm/mach-s3c/mach-smdk6410.c
+@@ -633,7 +633,7 @@ static void __init smdk6410_map_io(void)
+ 	s3c64xx_init_io(smdk6410_iodesc, ARRAY_SIZE(smdk6410_iodesc));
+ 	s3c64xx_set_xtal_freq(12000000);
+ 	s3c24xx_init_uarts(smdk6410_uartcfgs, ARRAY_SIZE(smdk6410_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c64xx_set_timer_source(S3C64XX_PWM3, S3C64XX_PWM4);
+ 
+ 	/* set the LCD type */
+ 
+@@ -702,5 +702,5 @@ MACHINE_START(SMDK6410, "SMDK6410")
+ 	.init_irq	= s3c6410_init_irq,
+ 	.map_io		= smdk6410_map_io,
+ 	.init_machine	= smdk6410_machine_init,
+-	.init_time	= samsung_timer_init,
++	.init_time	= s3c64xx_timer_init,
+ MACHINE_END
+diff --git a/arch/arm/mach-s3c/mach-tct_hammer.c b/arch/arm/mach-s3c/mach-tct_hammer.c
+index 3570cfdd817d..2a61df316e8c 100644
+--- a/arch/arm/mach-s3c/mach-tct_hammer.c
++++ b/arch/arm/mach-s3c/mach-tct_hammer.c
+@@ -131,13 +131,13 @@ static void __init tct_hammer_map_io(void)
+ {
+ 	s3c24xx_init_io(tct_hammer_iodesc, ARRAY_SIZE(tct_hammer_iodesc));
+ 	s3c24xx_init_uarts(tct_hammer_uartcfgs, ARRAY_SIZE(tct_hammer_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init tct_hammer_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init tct_hammer_init(void)
+diff --git a/arch/arm/mach-s3c/mach-vr1000.c b/arch/arm/mach-s3c/mach-vr1000.c
+index 2f7f61d188eb..5c3d07cf2e79 100644
+--- a/arch/arm/mach-s3c/mach-vr1000.c
++++ b/arch/arm/mach-s3c/mach-vr1000.c
+@@ -326,13 +326,13 @@ static void __init vr1000_map_io(void)
+ 
+ 	s3c24xx_init_io(vr1000_iodesc, ARRAY_SIZE(vr1000_iodesc));
+ 	s3c24xx_init_uarts(vr1000_uartcfgs, ARRAY_SIZE(vr1000_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init vr1000_init_time(void)
+ {
+ 	s3c2410_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init vr1000_init(void)
+diff --git a/arch/arm/mach-s3c/mach-vstms.c b/arch/arm/mach-s3c/mach-vstms.c
+index 3cf798cffbfb..0a67641e5218 100644
+--- a/arch/arm/mach-s3c/mach-vstms.c
++++ b/arch/arm/mach-s3c/mach-vstms.c
+@@ -135,13 +135,13 @@ static void __init vstms_map_io(void)
+ {
+ 	s3c24xx_init_io(vstms_iodesc, ARRAY_SIZE(vstms_iodesc));
+ 	s3c24xx_init_uarts(vstms_uartcfgs, ARRAY_SIZE(vstms_uartcfgs));
+-	samsung_set_timer_source(SAMSUNG_PWM3, SAMSUNG_PWM4);
++	s3c24xx_set_timer_source(S3C24XX_PWM3, S3C24XX_PWM4);
+ }
+ 
+ static void __init vstms_init_time(void)
+ {
+ 	s3c2412_init_clocks(12000000);
+-	samsung_timer_init();
++	s3c24xx_timer_init();
+ }
+ 
+ static void __init vstms_init(void)
+diff --git a/arch/arm/mach-s3c/s3c24xx.c b/arch/arm/mach-s3c/s3c24xx.c
+index db049dd94324..26a2190a81ff 100644
+--- a/arch/arm/mach-s3c/s3c24xx.c
++++ b/arch/arm/mach-s3c/s3c24xx.c
+@@ -222,13 +222,13 @@ void __init s3c24xx_init_io(struct map_desc *mach_desc, int size)
+ 	samsung_pwm_set_platdata(&s3c24xx_pwm_variant);
+ }
+ 
+-void __init samsung_set_timer_source(unsigned int event, unsigned int source)
++void __init s3c24xx_set_timer_source(unsigned int event, unsigned int source)
+ {
+ 	s3c24xx_pwm_variant.output_mask = BIT(SAMSUNG_PWM_NUM) - 1;
+ 	s3c24xx_pwm_variant.output_mask &= ~(BIT(event) | BIT(source));
+ }
+ 
+-void __init samsung_timer_init(void)
++void __init s3c24xx_timer_init(void)
+ {
+ 	unsigned int timer_irqs[SAMSUNG_PWM_NUM] = {
+ 		IRQ_TIMER0, IRQ_TIMER1, IRQ_TIMER2, IRQ_TIMER3, IRQ_TIMER4,
+diff --git a/arch/arm/mach-s3c/s3c24xx.h b/arch/arm/mach-s3c/s3c24xx.h
+index 86826cafa15d..5848bef5bb49 100644
+--- a/arch/arm/mach-s3c/s3c24xx.h
++++ b/arch/arm/mach-s3c/s3c24xx.h
+@@ -109,16 +109,16 @@ extern struct platform_device s3c2443_device_dma;
+ 
+ extern struct platform_device s3c2410_device_dclk;
+ 
+-enum samsung_timer_mode {
+-	SAMSUNG_PWM0,
+-	SAMSUNG_PWM1,
+-	SAMSUNG_PWM2,
+-	SAMSUNG_PWM3,
+-	SAMSUNG_PWM4,
++enum s3c24xx_timer_mode {
++	S3C24XX_PWM0,
++	S3C24XX_PWM1,
++	S3C24XX_PWM2,
++	S3C24XX_PWM3,
++	S3C24XX_PWM4,
+ };
+ 
+-extern void __init samsung_set_timer_source(enum samsung_timer_mode event,
+-					    enum samsung_timer_mode source);
+-extern void __init samsung_timer_init(void);
++extern void __init s3c24xx_set_timer_source(enum s3c24xx_timer_mode event,
++					    enum s3c24xx_timer_mode source);
++extern void __init s3c24xx_timer_init(void);
+ 
+ #endif /* __ARCH_ARM_MACH_S3C24XX_COMMON_H */
+diff --git a/arch/arm/mach-s3c/s3c64xx.c b/arch/arm/mach-s3c/s3c64xx.c
+index ef79aaf1aced..b5fc615a482f 100644
+--- a/arch/arm/mach-s3c/s3c64xx.c
++++ b/arch/arm/mach-s3c/s3c64xx.c
+@@ -168,13 +168,13 @@ static struct samsung_pwm_variant s3c64xx_pwm_variant = {
+ 	.tclk_mask	= (1 << 7) | (1 << 6) | (1 << 5),
+ };
+ 
+-void __init samsung_set_timer_source(unsigned int event, unsigned int source)
++void __init s3c64xx_set_timer_source(unsigned int event, unsigned int source)
+ {
+ 	s3c64xx_pwm_variant.output_mask = BIT(SAMSUNG_PWM_NUM) - 1;
+ 	s3c64xx_pwm_variant.output_mask &= ~(BIT(event) | BIT(source));
+ }
+ 
+-void __init samsung_timer_init(void)
++void __init s3c64xx_timer_init(void)
+ {
+ 	unsigned int timer_irqs[SAMSUNG_PWM_NUM] = {
+ 		IRQ_TIMER0_VIC, IRQ_TIMER1_VIC, IRQ_TIMER2_VIC,
+diff --git a/arch/arm/mach-s3c/s3c64xx.h b/arch/arm/mach-s3c/s3c64xx.h
+index 567bf3017171..92258e4f60f6 100644
+--- a/arch/arm/mach-s3c/s3c64xx.h
++++ b/arch/arm/mach-s3c/s3c64xx.h
+@@ -51,16 +51,16 @@ extern struct pl08x_platform_data s3c64xx_dma1_plat_data;
+ #endif
+ 
+ /* Samsung HR-Timer Clock mode */
+-enum samsung_timer_mode {
+-	SAMSUNG_PWM0,
+-	SAMSUNG_PWM1,
+-	SAMSUNG_PWM2,
+-	SAMSUNG_PWM3,
+-	SAMSUNG_PWM4,
++enum s3c64xx_timer_mode {
++	S3C64XX_PWM0,
++	S3C64XX_PWM1,
++	S3C64XX_PWM2,
++	S3C64XX_PWM3,
++	S3C64XX_PWM4,
+ };
+ 
+-extern void __init samsung_set_timer_source(enum samsung_timer_mode event,
+-					    enum samsung_timer_mode source);
+-extern void __init samsung_timer_init(void);
++extern void __init s3c64xx_set_timer_source(enum s3c64xx_timer_mode event,
++					    enum s3c64xx_timer_mode source);
++extern void __init s3c64xx_timer_init(void);
+ 
+ #endif /* __ARCH_ARM_MACH_S3C64XX_COMMON_H */
+-- 
+2.17.1
 
-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
-
---OXfL5xGRrasGEqWY--
