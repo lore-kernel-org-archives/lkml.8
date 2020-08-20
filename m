@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0CAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78022C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5B3E2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCC820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920600;
-	bh=5lCmqE8k4PkyMgQvNv2cH1Qt3BNAAjoVXgQOsdnIyL4=;
+	s=default; t=1597920614;
+	bh=H019FiiKYRRJW01VFvYqj6fPY3MeGGKKBDs9q4GVww8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnwMItioaB0ZxuGVWVn2f6nbSZu826+A0Jqa01jsLAO+u5FPM8MOc2E4p3h+UIq4R
-	 ZdghxGtg3uGmHmSWIghZ887itEJSUjTLamnoaLb07DWjzve+PxHtFqXdkz/T8X53n9
-	 M7ZuoJhubgc8hAUkX+wWxJ5dAJ7Lov/AHzSuuGfs=
+	b=t9Yo2q5Odjn6MNg7DzOtrWfGNy7HYDCBQKeSFSSuzaHREMjTsKwNbAXb2JpWVN5kx
+	 WMp221og598Lb3Tb2NNo+uufO4a94yQsad/lBLlxHmNXgjQfICbNexebSzFPq2kalf
+	 YegI7BHVqk6oD1vLkn50Ck+IcXfdsHg+fKdCNyc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731767AbgHTKtQ (ORCPT
+        id S1726788AbgHTKr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:49:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34970 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:47:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731259AbgHTKPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:15:37 -0400
+        id S1731263AbgHTKQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13FD7206DA;
-        Thu, 20 Aug 2020 10:15:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F05420855;
+        Thu, 20 Aug 2020 10:15:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918533;
-        bh=5lCmqE8k4PkyMgQvNv2cH1Qt3BNAAjoVXgQOsdnIyL4=;
+        s=default; t=1597918559;
+        bh=H019FiiKYRRJW01VFvYqj6fPY3MeGGKKBDs9q4GVww8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DU8J7K/cUCIzUS8d56/nrfIyHa7RBD5a5mXu92DOLslSxUql1UH1AVSBInY0ru38M
-         psLXkFMvaGfNacrgax9+THvQi+ISdXFjstnQruHIvwBbVHYLTBJNmzH4WL4x97oR3Z
-         qAlo+m08rjiix8Siu7OtdL36yQpRGiDinrWi+UQk=
+        b=IoEUdaqTx1FSHhJETp+tY4BV2Cy7wKRHgAXc4YcnIYUiVcCBJlRgIVMTy+a44GVvM
+         XQ8RpnhIDUGApODYGCvoUdsY5uwORaTx2NtApPf2b0KydxNpKk+o7yVvVAygdXThnf
+         TNcJKOKK1WRHBCk/fT97h7P9LHjCA47dqHo1xhP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 204/228] i2c: rcar: slave: only send STOP event when we have been addressed
-Date:   Thu, 20 Aug 2020 11:22:59 +0200
-Message-Id: <20200820091617.741032583@linuxfoundation.org>
+        Jeffrey Mitchell <jeffrey.mitchell@starlab.io>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 213/228] nfs: Fix getxattr kernel panic and memory overflow
+Date:   Thu, 20 Aug 2020 11:23:08 +0200
+Message-Id: <20200820091618.170689390@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,53 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
 
-[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
+[ Upstream commit b4487b93545214a9db8cbf32e86411677b0cca21 ]
 
-When the SSR interrupt is activated, it will detect every STOP condition
-on the bus, not only the ones after we have been addressed. So, enable
-this interrupt only after we have been addressed, and disable it
-otherwise.
+Move the buffer size check to decode_attr_security_label() before memcpy()
+Only call memcpy() if the buffer is large enough
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
+Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+[Trond: clean up duplicate test of label->len != 0]
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4proc.c | 2 --
+ fs/nfs/nfs4xdr.c  | 6 +++++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index db9ca8e926ca7..07305304712e1 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -538,13 +538,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
- 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
- 		}
- 
--		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
-+		/* Clear SSR, too, because of old STOPs to other clients than us */
-+		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
- 	}
- 
- 	/* master sent stop */
- 	if (ssr_filtered & SSR) {
- 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
--		rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+		rcar_i2c_write(priv, ICSIER, SAR);
- 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
- 	}
- 
-@@ -802,7 +803,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
- 	priv->slave = slave;
- 	rcar_i2c_write(priv, ICSAR, slave->addr);
- 	rcar_i2c_write(priv, ICSSR, 0);
--	rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+	rcar_i2c_write(priv, ICSIER, SAR);
- 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
- 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a19bbcfab7c5e..4cfb84119e017 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5323,8 +5323,6 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
+ 		return ret;
+ 	if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
+ 		return -ENOENT;
+-	if (buflen < label.len)
+-		return -ERANGE;
  	return 0;
+ }
+ 
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 0b2d051990e99..3cd04c98da6bc 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4258,7 +4258,11 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 			goto out_overflow;
+ 		if (len < NFS4_MAXLABELLEN) {
+ 			if (label) {
+-				memcpy(label->label, p, len);
++				if (label->len) {
++					if (label->len < len)
++						return -ERANGE;
++					memcpy(label->label, p, len);
++				}
+ 				label->len = len;
+ 				label->pi = pi;
+ 				label->lfs = lfs;
 -- 
 2.25.1
 
