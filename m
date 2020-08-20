@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B081C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A521C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1099E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6907720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919582;
-	bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
+	s=default; t=1597919589;
+	bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BA6bedGGKIrF458ajKorYRQCOfusps3leHRcTPoZ96uj6Y8pUMy+cXwVSoD5eTSH6
-	 SkpwKpAiPdIk8XTQIoK+hl5SMgRvgnuCFmTIYTrlx3gMPmtIbiky9Tof0oaYq8xesg
-	 26jvC5nB+vGbrI+hD0kimPD3AkcMizURVDSfmh9g=
+	b=01s4B4ox9+lp7rpYbQ+gFdw72pLizLpH7VNxdBKE+4Cku+7g9cse1zZDpxk4I2zpx
+	 UVLbvpSXUbFvDkOVrYAQ53RILHf6kVYMWT75mT0LjYNC5SjesYugMM7sAjjgSWMOz4
+	 PlAn/IrHQ05OuaHu7rU/qIuW/LkAipvUy1P47fI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731755AbgHTKc7 (ORCPT
+        id S1731113AbgHTKdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44256 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:33:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731307AbgHTKTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:53 -0400
+        id S1731457AbgHTKTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49CEF20658;
-        Thu, 20 Aug 2020 10:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0169B2067C;
+        Thu, 20 Aug 2020 10:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918792;
-        bh=IdDf2kmFCiCQlkr/H7Pdocwg/VRbq2e14AGXX+tSwAk=;
+        s=default; t=1597918789;
+        bh=6XdUHVcTHv4Q3XUDPQswzH/xyKNtLCKSI1GvwszQ5Fc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqX44m/rV1H+1AXQ5wCBVrLXVrPEqyXZhiz4QhGnTRYwsUxdnAOJHRcl/sNJGA+1d
-         Qe7AVuAlPGz7Urcq5lAQQk8Swll/m6myU9dUq01OJrxswHQcpy07QiExSvTOM0l2xV
-         HE0NnhlpLiSqLLsuREwO8LK8VTT5q2mIjBbw6bvY=
+        b=GOtwcwFPcWC0olisKkra5qwZHkjc6i5NTGyn2S5PtPTKjka6ZMz2OtslooqPC/OSE
+         se49cwXuZgT/dQrWhUWMQ8jYVUdbSsR8ys5ngKB97ASFpqG01fnsjwLc+CVnYgAXN5
+         AOMSKXk3dF4DuLe5nOI6q7tbcCBzrCT/tqGCFb5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 067/149] drm/nouveau: fix multiple instances of reference count leaks
-Date:   Thu, 20 Aug 2020 11:22:24 +0200
-Message-Id: <20200820092128.986200888@linuxfoundation.org>
+Subject: [PATCH 4.4 066/149] video: fbdev: neofb: fix memory leak in neo_scan_monitor()
+Date:   Thu, 20 Aug 2020 11:22:23 +0200
+Message-Id: <20200820092128.936586439@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,66 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 659fb5f154c3434c90a34586f3b7aa1c39cf6062 ]
+[ Upstream commit edcb3895a751c762a18d25c8d9846ce9759ed7e1 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-ref count before returning the error.
+neofb_probe() calls neo_scan_monitor() that can successfully allocate a
+memory for info->monspecs.modedb and proceed to case 0x03. There it does
+not free the memory and returns -1. neofb_probe() goes to label
+err_scan_monitor, thus, it does not free this memory through calling
+fb_destroy_modedb() as well. We can not go to label err_init_hw since
+neo_scan_monitor() can fail during memory allocation. So, the patch frees
+the memory directly for case 0x03.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200630195451.18675-1-novikov@ispras.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_drm.c | 8 ++++++--
- drivers/gpu/drm/nouveau/nouveau_gem.c | 4 +++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/neofb.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-index 91a61d2cca889..a90840e391100 100644
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -805,8 +805,10 @@ nouveau_drm_open(struct drm_device *dev, struct drm_file *fpriv)
- 
- 	/* need to bring up power immediately if opening device */
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	get_task_comm(tmpname, current);
- 	snprintf(name, sizeof(name), "%s[%d]", tmpname, pid_nr(fpriv->pid));
-@@ -894,8 +896,10 @@ nouveau_drm_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	long ret;
- 
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	switch (_IOC_NR(cmd) - DRM_COMMAND_BASE) {
- 	case DRM_NOUVEAU_NVIF:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_gem.c b/drivers/gpu/drm/nouveau/nouveau_gem.c
-index ae560f5977fca..e5db2a385cb65 100644
---- a/drivers/gpu/drm/nouveau/nouveau_gem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_gem.c
-@@ -42,8 +42,10 @@ nouveau_gem_object_del(struct drm_gem_object *gem)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (WARN_ON(ret < 0 && ret != -EACCES))
-+	if (WARN_ON(ret < 0 && ret != -EACCES)) {
-+		pm_runtime_put_autosuspend(dev);
- 		return;
-+	}
- 
- 	if (gem->import_attach)
- 		drm_prime_gem_destroy(gem, nvbo->bo.sg);
+diff --git a/drivers/video/fbdev/neofb.c b/drivers/video/fbdev/neofb.c
+index db023a97d1eae..e243254a57214 100644
+--- a/drivers/video/fbdev/neofb.c
++++ b/drivers/video/fbdev/neofb.c
+@@ -1820,6 +1820,7 @@ static int neo_scan_monitor(struct fb_info *info)
+ #else
+ 		printk(KERN_ERR
+ 		       "neofb: Only 640x480, 800x600/480 and 1024x768 panels are currently supported\n");
++		kfree(info->monspecs.modedb);
+ 		return -1;
+ #endif
+ 	default:
 -- 
 2.25.1
 
