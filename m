@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65291C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC2B9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3369920658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 890C420658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919221;
-	bh=eSuaLEycDt/TmbELdr/7tA34qeKIfGtLC3IoZFjSsNQ=;
+	s=default; t=1597919225;
+	bh=peVkpFOhZGuRw9SB7/KqhBJFgfeMdu5lbq25QTO9714=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TGRpF0n6TbsrqZPcGCiez3Sai/iZXlG2d9ElJjS8Go+D7dgVb8xvwvehTmKChKK7Y
-	 Fow6MOfb2LplBmIezxG+/HbCyCYDFRkk2Y42cXczlB5NqWYW5orbivJzdgt/kkUVT3
-	 wbBtsES5WcmlE2vPG3rUCyQqZlBvvE/yFpNbmvLw=
+	b=SGRfHozZ+G+sv97fdlz2+aPjqepFfVmSs0EgRC0ctznfdBA/YfOdlMRjR1hNofIt+
+	 l0QDv4fnwBMHUTdzs4VgeLjyomA09LXN30wwl0mxuBt8NwZxdZa2nbYe7jUNoPGK6b
+	 u7ibr85TGus9AuNnw12wmQ1LfOAgSXnUaK23joew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731688AbgHTK07 (ORCPT
+        id S1731776AbgHTK1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50930 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731713AbgHTKWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:42 -0400
+        id S1731677AbgHTKWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A028B20658;
-        Thu, 20 Aug 2020 10:22:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BB520658;
+        Thu, 20 Aug 2020 10:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918962;
-        bh=eSuaLEycDt/TmbELdr/7tA34qeKIfGtLC3IoZFjSsNQ=;
+        s=default; t=1597918954;
+        bh=peVkpFOhZGuRw9SB7/KqhBJFgfeMdu5lbq25QTO9714=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gt7KSkx6znudPHP7s4YdvNuY2DgR6PucFREM1aLBM/SWonIelXEYdaEzntcZED54g
-         uVftKl4E11y0QwfF/K6C4PQtNTpL5wsniJmT94abn+HK8wrqM7EUgTPhtWtOxM/0OQ
-         LBO8Ed7tUz144mRrY6oOJH/qmMIKm2tLqqORP7XI=
+        b=K+k6iEPcYyiNWFXbUhGJRRaRV0GtOnPk8OQxKhqh8+iqYohQgkr6GqLIQ4JyU3qE+
+         3vF/wtwydbbiqXUGtWoUCoFPPNcKEMrJ2xJOoUO4J6lligmYkjz+PXIqsE4AOHYOSV
+         4pCgpnsp/VjHArUjitfaegrxLQznebxd+fuHTOQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Brian Norris <briannorris@chromium.org>,
-        Xie He <xie.he.0141@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 104/149] drivers/net/wan/lapbether: Added needed_headroom and a skb->len check
-Date:   Thu, 20 Aug 2020 11:23:01 +0200
-Message-Id: <20200820092130.743148558@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 128/149] mac80211: fix misplaced while instead of if
+Date:   Thu, 20 Aug 2020 11:23:25 +0200
+Message-Id: <20200820092131.904271328@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -64,107 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xie He <xie.he.0141@gmail.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit c7ca03c216acb14466a713fedf1b9f2c24994ef2 ]
+commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
 
-1. Added a skb->len check
+This never was intended to be a 'while' loop, it should've
+just been an 'if' instead of 'while'. Fix this.
 
-This driver expects upper layers to include a pseudo header of 1 byte
-when passing down a skb for transmission. This driver will read this
-1-byte header. This patch added a skb->len check before reading the
-header to make sure the header exists.
+I noticed this while applying another patch from Ben that
+intended to fix a busy loop at this spot.
 
-2. Changed to use needed_headroom instead of hard_header_len to request
-necessary headroom to be allocated
-
-In net/packet/af_packet.c, the function packet_snd first reserves a
-headroom of length (dev->hard_header_len + dev->needed_headroom).
-Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
-which calls dev->header_ops->create, to create the link layer header.
-If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
-length (dev->hard_header_len), and assumes the user to provide the
-appropriate link layer header.
-
-So according to the logic of af_packet.c, dev->hard_header_len should
-be the length of the header that would be created by
-dev->header_ops->create.
-
-However, this driver doesn't provide dev->header_ops, so logically
-dev->hard_header_len should be 0.
-
-So we should use dev->needed_headroom instead of dev->hard_header_len
-to request necessary headroom to be allocated.
-
-This change fixes kernel panic when this driver is used with AF_PACKET
-SOCK_RAW sockets.
-
-Call stack when panic:
-
-[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
-put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
-dev:veth0
-...
-[  168.399255] Call Trace:
-[  168.399259]  skb_push.cold+0x14/0x24
-[  168.399262]  eth_header+0x2b/0xc0
-[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
-[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
-[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
-[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
-[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
-[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
-[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
-[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
-[  168.399291]  __dev_queue_xmit+0x721/0x8e0
-[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
-[  168.399297]  dev_queue_xmit+0x10/0x20
-[  168.399298]  packet_sendmsg+0xbf0/0x19b0
-......
-
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Martin Schiller <ms@dev.tdt.de>
-Cc: Brian Norris <briannorris@chromium.org>
-Signed-off-by: Xie He <xie.he.0141@gmail.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable@vger.kernel.org
+Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
+Reported-by: Ben Greear <greearb@candelatech.com>
+Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/wan/lapbether.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wan/lapbether.c
-+++ b/drivers/net/wan/lapbether.c
-@@ -160,6 +160,12 @@ static netdev_tx_t lapbeth_xmit(struct s
- 	if (!netif_running(dev))
- 		goto drop;
+---
+ net/mac80211/sta_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -906,7 +906,7 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
  
-+	/* There should be a pseudo header of 1 byte added by upper layers.
-+	 * Check to make sure it is there before reading it.
-+	 */
-+	if (skb->len < 1)
-+		goto drop;
-+
- 	switch (skb->data[0]) {
- 	case X25_IFACE_DATA:
- 		break;
-@@ -308,6 +314,7 @@ static void lapbeth_setup(struct net_dev
- 	dev->netdev_ops	     = &lapbeth_netdev_ops;
- 	dev->destructor	     = free_netdev;
- 	dev->type            = ARPHRD_X25;
-+	dev->hard_header_len = 0;
- 	dev->mtu             = 1000;
- 	dev->addr_len        = 0;
- }
-@@ -334,7 +341,8 @@ static int lapbeth_new_device(struct net
- 	 * then this driver prepends a length field of 2 bytes,
- 	 * then the underlying Ethernet device prepends its own header.
- 	 */
--	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
-+	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
-+					   + dev->needed_headroom;
- 
- 	lapbeth = netdev_priv(ndev);
- 	lapbeth->axdev = ndev;
+-	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
+ 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+ 		WARN_ON_ONCE(ret);
+ 	}
 
 
