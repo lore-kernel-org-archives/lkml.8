@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA65C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C31C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26755207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:51:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83A612078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924306;
-	bh=pn9CX2fSQaNdNVwtjc2KnFu4I6vNhAUujQBd4xjXgpI=;
+	s=default; t=1597924311;
+	bh=BsKSyBUo4NViFgNTZPYPRDujfeJBe97TjycPuuzQqnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mqMg+GnUWZFlr+T7AowQGVTyzAv8Qe074uC/OW9Eq23/h7ABcF0bbALFqJvV6wKsT
-	 kUhlOYrOvvmDvR+4IG2jTLSD7VWBzKrhtvgmP/CbjXMyPLPpeGNw3RAXDsm9v5NEQ2
-	 EkJVciIsqR/Bh6VMo60TJQeoqno37OGfz/DYrXkc=
+	b=A1EiDdjJDAGXqX6uKvWlKja4Vgg1CIUkQy2tVAg8LwAUCE54eBdvzna4Sc6GSV55v
+	 A0G3Wk5mKc+ONIXwE7jJglfK4swRUuniZj65lgA5nQBaeKtoQ6ksCyLDuUf8JdC9pJ
+	 N/yN0XtCqRrkoGJlJFUg7katMdK10FV3jbR5iqh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730553AbgHTLvh (ORCPT
+        id S1728949AbgHTLvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:51:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52872 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:51:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730592AbgHTKDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:07 -0400
+        id S1730570AbgHTKCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B0B22B4E;
-        Thu, 20 Aug 2020 10:03:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FCAC22BF3;
+        Thu, 20 Aug 2020 10:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917786;
-        bh=pn9CX2fSQaNdNVwtjc2KnFu4I6vNhAUujQBd4xjXgpI=;
+        s=default; t=1597917771;
+        bh=BsKSyBUo4NViFgNTZPYPRDujfeJBe97TjycPuuzQqnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kaVoaJEjzCPva4Ihw7A5+NuhVMo0cSMqmE+U6hf0hP6srrTgoulg3yG7qx2y/B3a
-         YPUU5uUFgydzAGDQAHJJ18NoMBkjNSEOrc9SDZSNO/QgSqpOrjmmKvEQoKuXZAY2pN
-         +A/5DiYTsaaadx6rGdxudjJypsEzOVFUnQ80kCHA=
+        b=1bp3+7aDc2LkFNayKLIG/XAD9NUx+f5Ps4qXPHYMkmU6bQcdiloakfwVDLpdPiBHo
+         nW32GZ77qZu4p/z0GVDHGJY1bzs0amcEiFlmSLdjVGWoBSxU4isPYK1fezEel8iBJ3
+         IOPja3F8WWeSMdnL3+J2dWccsgAb8k7LkCZ7dPSg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 157/212] ALSA: usb-audio: add quirk for Pioneer DDJ-RB
-Date:   Thu, 20 Aug 2020 11:22:10 +0200
-Message-Id: <20200820091610.330647474@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 152/212] net: Set fput_needed iff FDPUT_FPUT is set
+Date:   Thu, 20 Aug 2020 11:22:05 +0200
+Message-Id: <20200820091610.082971630@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,86 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 6e8596172ee1cd46ec0bfd5adcf4ff86371478b6 upstream.
+[ Upstream commit ce787a5a074a86f76f5d3fd804fa78e01bfb9e89 ]
 
-This is just another Pioneer device with fixed endpoints. Input is dummy
-but used as feedback (it always returns silence).
+We should fput() file iff FDPUT_FPUT is set. So we should set fput_needed
+accordingly.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082502.225979-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 00e188ef6a7e ("sockfd_lookup_light(): switch to fdget^W^Waway from fget_light")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- sound/usb/quirks-table.h |   56 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ net/socket.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/quirks-table.h
-+++ b/sound/usb/quirks-table.h
-@@ -3380,5 +3380,61 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -498,7 +498,7 @@ static struct socket *sockfd_lookup_ligh
+ 	if (f.file) {
+ 		sock = sock_from_file(f.file, err);
+ 		if (likely(sock)) {
+-			*fput_needed = f.flags;
++			*fput_needed = f.flags & FDPUT_FPUT;
+ 			return sock;
  		}
- 	}
- },
-+{
-+	/*
-+	 * PIONEER DJ DDJ-RB
-+	 * PCM is 4 channels out, 2 dummy channels in @ 44.1 fixed
-+	 * The feedback for the output is the dummy input.
-+	 */
-+	USB_DEVICE_VENDOR_SPEC(0x2b73, 0x000e),
-+	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
-+		.ifnum = QUIRK_ANY_INTERFACE,
-+		.type = QUIRK_COMPOSITE,
-+		.data = (const struct snd_usb_audio_quirk[]) {
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 4,
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x01,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						   USB_ENDPOINT_SYNC_ASYNC,
-+					.rates = SNDRV_PCM_RATE_44100,
-+					.rate_min = 44100,
-+					.rate_max = 44100,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 44100 }
-+				}
-+			},
-+			{
-+				.ifnum = 0,
-+				.type = QUIRK_AUDIO_FIXED_ENDPOINT,
-+				.data = &(const struct audioformat) {
-+					.formats = SNDRV_PCM_FMTBIT_S24_3LE,
-+					.channels = 2,
-+					.iface = 0,
-+					.altsetting = 1,
-+					.altset_idx = 1,
-+					.endpoint = 0x82,
-+					.ep_attr = USB_ENDPOINT_XFER_ISOC|
-+						 USB_ENDPOINT_SYNC_ASYNC|
-+						 USB_ENDPOINT_USAGE_IMPLICIT_FB,
-+					.rates = SNDRV_PCM_RATE_44100,
-+					.rate_min = 44100,
-+					.rate_max = 44100,
-+					.nr_rates = 1,
-+					.rate_table = (unsigned int[]) { 44100 }
-+				}
-+			},
-+			{
-+				.ifnum = -1
-+			}
-+		}
-+	}
-+},
- 
- #undef USB_DEVICE_VENDOR_SPEC
+ 		fdput(f);
 
 
