@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFA0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06344C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9540B21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D9022B3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917604;
-	bh=y9ShighU1IxoGurbS7G9NRZYkUnFsrUe92tmo3VmKjc=;
+	s=default; t=1597917642;
+	bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/fH6gqR19UOOpV/jpB9oQiinYK47jcwPo3yKaw/gYNG7IybWL/UOC1t7JNqby38M
-	 +yOxN+V2QSuqinYE17/dv+kQhozJamty2zUEnO0VQwJxwSDGYbPXc9bbRUEyKNafHw
-	 UZrnFs64wbab3c+YO9Ng3Y/u0zqq4UIjq3tEJqCs=
+	b=bM5rESNRSy9aJRp9g+cKra/qqO0bRG6GBWCMI5W32dzjD+QXoNi31HfhNKsHTHmhj
+	 jrIszZjgYx3p8oyYTN5GpXp6YTn2L5dXdcgOQuuJejo/p1YPptwEhMPiu2NI0cg/Ho
+	 bEN91OPu/sTkf4E9Nst6iOLs6sPN51XArr2Fo/fA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgHTJ77 (ORCPT
+        id S1730441AbgHTKAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46160 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727794AbgHTJ7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:49 -0400
+        id S1727794AbgHTKAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539372067C;
-        Thu, 20 Aug 2020 09:59:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8046C2067C;
+        Thu, 20 Aug 2020 10:00:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917588;
-        bh=y9ShighU1IxoGurbS7G9NRZYkUnFsrUe92tmo3VmKjc=;
+        s=default; t=1597917601;
+        bh=NA/ndJV7K60CAH946kmTXs4ibWi53JfPfIOQEF4YGjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KN1JNKYgYezvCCwNvElB8Ae8YVOix5srGiJgI7sTRD9x1faY8Yg65bilZ+6KNQjza
-         60aQrwt2CwtUr5dxI+CjVny128+Gweb3KAaHIatGdwJIyAN4L+9zLE2xYH5sMLZ8EX
-         PTZR2QTuBWdo+FuYbJQgXxolxh/BECcjA/FUll88=
+        b=XeoeQtjinrZSKyJUr4bBSfhQlxNYaa/McifLzgl9cLyDWTfaqtx/phMJlnUtaaLAa
+         x/cyTUSq526P5ctYTOTBEAIcEL3+4Fay2BatJWWd2l2sGNGuxg1Daz9k05HHu6txg3
+         pHe1ZO2n85xHIB3lc5daI5BWuUIRDCvxMpTyHCKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Lu Wei <luwei32@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 084/212] arm64: dts: exynos: Fix silent hang after boot on Espresso
-Date:   Thu, 20 Aug 2020 11:20:57 +0200
-Message-Id: <20200820091606.601139326@linuxfoundation.org>
+Subject: [PATCH 4.9 088/212] platform/x86: intel-vbtn: Fix return value check in check_acpi_dev()
+Date:   Thu, 20 Aug 2020 11:21:01 +0200
+Message-Id: <20200820091606.792489258@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,35 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+From: Lu Wei <luwei32@huawei.com>
 
-[ Upstream commit b072714bfc0e42c984b8fd6e069f3ca17de8137a ]
+[ Upstream commit 64dd4a5a7d214a07e3d9f40227ec30ac8ba8796e ]
 
-Once regulators are disabled after kernel boot, on Espresso board silent
-hang observed because of LDO7 being disabled.  LDO7 actually provide
-power to CPU cores and non-cpu blocks circuitries.  Keep this regulator
-always-on to fix this hang.
+In the function check_acpi_dev(), if it fails to create
+platform device, the return value is ERR_PTR() or NULL.
+Thus it must use IS_ERR_OR_NULL() to check return value.
 
-Fixes: 9589f7721e16 ("arm64: dts: Add S2MPS15 PMIC node on exynos7-espresso")
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 332e081225fc ("intel-vbtn: new driver for Intel Virtual Button")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Lu Wei <luwei32@huawei.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/platform/x86/intel-vbtn.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index c528dd52ba2d3..2f7d144d556da 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -131,6 +131,7 @@ ldo7_reg: LDO7 {
- 				regulator-min-microvolt = <700000>;
- 				regulator-max-microvolt = <1150000>;
- 				regulator-enable-ramp-delay = <125>;
-+				regulator-always-on;
- 			};
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index a74340dff530e..1cf2a38add5f9 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -168,7 +168,7 @@ check_acpi_dev(acpi_handle handle, u32 lvl, void *context, void **rv)
+ 		return AE_OK;
  
- 			ldo8_reg: LDO8 {
+ 	if (acpi_match_device_ids(dev, ids) == 0)
+-		if (acpi_create_platform_device(dev, NULL))
++		if (!IS_ERR_OR_NULL(acpi_create_platform_device(dev, NULL)))
+ 			dev_info(&dev->dev,
+ 				 "intel-vbtn: created platform device\n");
+ 
 -- 
 2.25.1
 
