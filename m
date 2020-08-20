@@ -5,52 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9180C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1BE7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7D89207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6905A20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926702;
-	bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+	s=default; t=1597926706;
+	bh=wgDKKFPKPOLf1Qb3wYtpJbDdGY4QsxLtEopvgmu24PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JCN2SYAb2v5rtBVBhSAfUT1eqoG1s1sGDpEKh0wqzHeeY5+Z4Dzecnv85QzADQbnJ
-	 0O9MSJlI5amgdzFnbYbFU4/O7n+8MTKTjH0vVgBNoU4epSiFea0Y3F2kjy5+N/0Rrs
-	 rvkIloI+J31yVFEA8iAmXzY2A9bgQVnjpBMdT90Y=
+	b=fZBCWP5gWpcM0qs56en7TpU/XFSJzyx5bweU9cdgKIayhHwkJNMY6ybWztvtt5OM2
+	 4JkP8cqDvODdysToAA2JzZVfWekQ5NnqKDS00ymrwK0/9P1LfptBs2x1JhkEePbybx
+	 lbMWMz20KioUYImyidbfofp2K0Tq1YgRSNka2Bs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgHTMbm (ORCPT
+        id S1729606AbgHTMbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:31:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58524 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:31:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729462AbgHTJug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:36 -0400
+        id S1728710AbgHTJu2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B323D2078D;
-        Thu, 20 Aug 2020 09:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED7B82067C;
+        Thu, 20 Aug 2020 09:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917036;
-        bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+        s=default; t=1597917028;
+        bh=wgDKKFPKPOLf1Qb3wYtpJbDdGY4QsxLtEopvgmu24PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=izt+fIWzVI5SynLDRBpal4gJX4JOGBK3wd7pU6dR8k9d/fFXtNmfYQVCoL6VYQNp6
-         dqlmB79c/kDXAggV41KYN0biGLYmoPjhy2BW4iqfbjUzZ+ICi9WXXDcqac7xqAWuAu
-         aY8Bg6LG0cugml2I1vItWHmSpswb4PlsjbhJX+Kg=
+        b=eni6ptf3sR+H+wJ/CGv2PtFm1GLOb1lVWzrPWTvU1LL05gWOlT7pNcUiNd55jl9Jd
+         s4OsL0QlxPumFhUwHdIOzuFBRhB1ENLc8ooH2PZhkog+5UYtWgHy870rZwFLVeYMBB
+         Yq4R6do4T53L1WrSUyaVyeeqbKkkYEaNYxgHwrbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 133/152] fs/minix: fix block limit check for V1 filesystems
-Date:   Thu, 20 Aug 2020 11:21:40 +0200
-Message-Id: <20200820091600.624865025@linuxfoundation.org>
+Subject: [PATCH 5.4 130/152] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
+Date:   Thu, 20 Aug 2020 11:21:37 +0200
+Message-Id: <20200820091600.467284943@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -63,41 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 0a12c4a8069607247cb8edc3b035a664e636fd9a ]
+[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
 
-The minix filesystem reads its maximum file size from its on-disk
-superblock.  This value isn't necessarily a multiple of the block size.
-When it's not, the V1 block mapping code doesn't allow mapping the last
-possible block.  Commit 6ed6a722f9ab ("minixfs: fix block limit check")
-fixed this in the V2 mapping code.  Fix it in the V1 mapping code too.
+Fix the missing clk_disable_unprepare() before return
+from emac_clks_phase1_init() in the error handling case.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Link: http://lkml.kernel.org/r/20200628060846.682158-6-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/minix/itree_v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
-index c0d418209ead1..405573a79aab4 100644
---- a/fs/minix/itree_v1.c
-+++ b/fs/minix/itree_v1.c
-@@ -29,7 +29,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
- 	if (block < 0) {
- 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
- 			block, inode->i_sb->s_bdev);
--	} else if (block >= inode->i_sb->s_maxbytes/BLOCK_SIZE) {
-+	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
- 		if (printk_ratelimit())
- 			printk("MINIX-fs: block_to_path: "
- 			       "block %ld too big on dev %pg\n",
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
+index c84ab052ef265..3eee8df359a12 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -485,13 +485,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
+ 
+ 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_axi;
+ 
+ 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_cfg_ahb;
++
++	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	if (ret)
++		goto disable_clk_cfg_ahb;
+ 
+-	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	return 0;
++
++disable_clk_cfg_ahb:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
++disable_clk_axi:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
++
++	return ret;
+ }
+ 
+ /* Enable clocks; needs emac_clks_phase1_init to be called before */
 -- 
 2.25.1
 
