@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5264C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F263C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA1A207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B92207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925281;
-	bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+	s=default; t=1597925292;
+	bh=g9xcfehC6Hbfes1kI0xpawGcQe/EA/vW5jFuZwZIt4Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Aurg86LYXvNNAYC1OS9LAGxyHt9gyrEGsWiYTSH5Jjgx8COos7UVnl7n1wN1xxjue
-	 UTiWYBfO6OtOK6CdYvGAIUiubBORGbuL4qQm0x20tXSeMODN+Ja+0MdWzubJnSTPIT
-	 QzGP2BeJbjViFZveaD7Nq9MMwawz9VmmDOsKIGGA=
+	b=qBj3bwcLxtp92Vy+eROPtkfa20hHbCajzxOHL+JKpefk6DT0dqfKJtZH79CB9zc6T
+	 ZFwg677runm6UYRi8zWXDalqgPki9a6iZSTOHYMFvX1nZCtv2hRZF3qvOKmC7ZDxQ3
+	 VIDCTNUccJT2E5JyWcpDkKHLMIzkB7+iRRFgwmcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbgHTJ6O (ORCPT
+        id S1730440AbgHTMIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:08:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730027AbgHTJ57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:59 -0400
+        id S1729971AbgHTJ6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE78E22B43;
-        Thu, 20 Aug 2020 09:57:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3D9208DB;
+        Thu, 20 Aug 2020 09:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917479;
-        bh=ysS3LGq+470SGw6FYTetlB33DoPN5s8hyLYUhLe+03M=;
+        s=default; t=1597917488;
+        bh=g9xcfehC6Hbfes1kI0xpawGcQe/EA/vW5jFuZwZIt4Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=axZq+jOmz3V16jRSXJrKIrRkFjJgFdgVQfDKeRDco6ihdztoLqToGObBA5u+pOiaK
-         yY02ysj9LOSPFHSyq+3Lz4tHjzzEiRpd0nuzpHsaKF8svOkh5zS0/6jgcW/LlN+KZl
-         q6801/zqBNtu09NUH9E6szrq7E44ofC8oYLbrxZw=
+        b=UGRpqZs6JGWfp327JrZXaO8Ga45lTAiNfqVjPmVQDA23Ji3cyVUR9N4/vizBedEOn
+         0mbPODwYeOGbvtcW85IwnkMPExnSfCHnrSgmjSmlzxSYZRi48QC9Dbt1D8QrIK/gUR
+         FDzSB7aFnRSr+bt1n60izYC1CU3EPh4CR98QjDL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
+        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+        Willy Tarreau <w@1wt.eu>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 046/212] ARM: percpu.h: fix build error
-Date:   Thu, 20 Aug 2020 11:20:19 +0200
-Message-Id: <20200820091604.699539923@linuxfoundation.org>
+Subject: [PATCH 4.9 049/212] random32: move the pseudo-random 32-bit definitions to prandom.h
+Date:   Thu, 20 Aug 2020 11:20:22 +0200
+Message-Id: <20200820091604.845260256@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,43 +60,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit aa54ea903abb02303bf55855fb51e3fcee135d70 upstream.
+commit c0842fbc1b18c7a044e6ff3e8fa78bfa822c7d1a upstream.
 
-Fix build error for the case:
-  defined(CONFIG_SMP) && !defined(CONFIG_CPU_V6)
+The addition of percpu.h to the list of includes in random.h revealed
+some circular dependencies on arm64 and possibly other platforms.  This
+include was added solely for the pseudo-random definitions, which have
+nothing to do with the rest of the definitions in this file but are
+still there for legacy reasons.
 
-config: keystone_defconfig
+This patch moves the pseudo-random parts to linux/prandom.h and the
+percpu.h include with it, which is now guarded by _LINUX_PRANDOM_H and
+protected against recursive inclusion.
 
-  CC      arch/arm/kernel/signal.o
-  In file included from ../include/linux/random.h:14,
-                    from ../arch/arm/kernel/signal.c:8:
-  ../arch/arm/include/asm/percpu.h: In function ‘__my_cpu_offset’:
-  ../arch/arm/include/asm/percpu.h:29:34: error: ‘current_stack_pointer’ undeclared (first use in this function); did you mean ‘user_stack_pointer’?
-      : "Q" (*(const unsigned long *)current_stack_pointer));
-                                     ^~~~~~~~~~~~~~~~~~~~~
-                                     user_stack_pointer
+A further cleanup step would be to remove this from <linux/random.h>
+entirely, and make people who use the prandom infrastructure include
+just the new header file.  That's a bit of a churn patch, but grepping
+for "prandom_" and "next_pseudo_random32" "struct rnd_state" should
+catch most users.
 
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+But it turns out that that nice cleanup step is fairly painful, because
+a _lot_ of code currently seems to depend on the implicit include of
+<linux/random.h>, which can currently come in a lot of ways, including
+such fairly core headfers as <linux/net.h>.
+
+So the "nice cleanup" part may or may never happen.
+
+Fixes: 1c9df907da83 ("random: fix circular include dependency on arm64 after addition of percpu.h")
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Willy Tarreau <w@1wt.eu>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/percpu.h |    2 ++
- 1 file changed, 2 insertions(+)
+ include/linux/prandom.h |   78 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/random.h  |   66 ++--------------------------------------
+ 2 files changed, 82 insertions(+), 62 deletions(-)
 
---- a/arch/arm/include/asm/percpu.h
-+++ b/arch/arm/include/asm/percpu.h
-@@ -16,6 +16,8 @@
- #ifndef _ASM_ARM_PERCPU_H_
- #define _ASM_ARM_PERCPU_H_
- 
-+#include <asm/thread_info.h>
+--- /dev/null
++++ b/include/linux/prandom.h
+@@ -0,0 +1,78 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * include/linux/prandom.h
++ *
++ * Include file for the fast pseudo-random 32-bit
++ * generation.
++ */
++#ifndef _LINUX_PRANDOM_H
++#define _LINUX_PRANDOM_H
 +
++#include <linux/types.h>
++#include <linux/percpu.h>
++
++u32 prandom_u32(void);
++void prandom_bytes(void *buf, size_t nbytes);
++void prandom_seed(u32 seed);
++void prandom_reseed_late(void);
++
++struct rnd_state {
++	__u32 s1, s2, s3, s4;
++};
++
++DECLARE_PER_CPU(struct rnd_state, net_rand_state);
++
++u32 prandom_u32_state(struct rnd_state *state);
++void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
++void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
++
++#define prandom_init_once(pcpu_state)			\
++	DO_ONCE(prandom_seed_full_state, (pcpu_state))
++
++/**
++ * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
++ * @ep_ro: right open interval endpoint
++ *
++ * Returns a pseudo-random number that is in interval [0, ep_ro). Note
++ * that the result depends on PRNG being well distributed in [0, ~0U]
++ * u32 space. Here we use maximally equidistributed combined Tausworthe
++ * generator, that is, prandom_u32(). This is useful when requesting a
++ * random index of an array containing ep_ro elements, for example.
++ *
++ * Returns: pseudo-random number in interval [0, ep_ro)
++ */
++static inline u32 prandom_u32_max(u32 ep_ro)
++{
++	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
++}
++
++/*
++ * Handle minimum values for seeds
++ */
++static inline u32 __seed(u32 x, u32 m)
++{
++	return (x < m) ? x + m : x;
++}
++
++/**
++ * prandom_seed_state - set seed for prandom_u32_state().
++ * @state: pointer to state structure to receive the seed.
++ * @seed: arbitrary 64-bit value to use as a seed.
++ */
++static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
++{
++	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
++
++	state->s1 = __seed(i,   2U);
++	state->s2 = __seed(i,   8U);
++	state->s3 = __seed(i,  16U);
++	state->s4 = __seed(i, 128U);
++}
++
++/* Pseudo random number generator from numerical recipes. */
++static inline u32 next_pseudo_random32(u32 seed)
++{
++	return seed * 1664525 + 1013904223;
++}
++
++#endif
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -8,7 +8,6 @@
+ 
+ #include <linux/list.h>
+ #include <linux/once.h>
+-#include <asm/percpu.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -47,63 +46,12 @@ unsigned int get_random_int(void);
+ unsigned long get_random_long(void);
+ unsigned long randomize_page(unsigned long start, unsigned long range);
+ 
+-u32 prandom_u32(void);
+-void prandom_bytes(void *buf, size_t nbytes);
+-void prandom_seed(u32 seed);
+-void prandom_reseed_late(void);
+-
+-struct rnd_state {
+-	__u32 s1, s2, s3, s4;
+-};
+-
+-DECLARE_PER_CPU(struct rnd_state, net_rand_state);
+-
+-u32 prandom_u32_state(struct rnd_state *state);
+-void prandom_bytes_state(struct rnd_state *state, void *buf, size_t nbytes);
+-void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+-
+-#define prandom_init_once(pcpu_state)			\
+-	DO_ONCE(prandom_seed_full_state, (pcpu_state))
+-
+-/**
+- * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
+- * @ep_ro: right open interval endpoint
+- *
+- * Returns a pseudo-random number that is in interval [0, ep_ro). Note
+- * that the result depends on PRNG being well distributed in [0, ~0U]
+- * u32 space. Here we use maximally equidistributed combined Tausworthe
+- * generator, that is, prandom_u32(). This is useful when requesting a
+- * random index of an array containing ep_ro elements, for example.
+- *
+- * Returns: pseudo-random number in interval [0, ep_ro)
+- */
+-static inline u32 prandom_u32_max(u32 ep_ro)
+-{
+-	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
+-}
+-
  /*
-  * Same as asm-generic/percpu.h, except that we store the per cpu offset
-  * in the TPIDRPRW. TPIDRPRW only exists on V6K and V7
+- * Handle minimum values for seeds
+- */
+-static inline u32 __seed(u32 x, u32 m)
+-{
+-	return (x < m) ? x + m : x;
+-}
+-
+-/**
+- * prandom_seed_state - set seed for prandom_u32_state().
+- * @state: pointer to state structure to receive the seed.
+- * @seed: arbitrary 64-bit value to use as a seed.
++ * This is designed to be standalone for just prandom
++ * users, but for now we include it from <linux/random.h>
++ * for legacy reasons.
+  */
+-static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
+-{
+-	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
+-
+-	state->s1 = __seed(i,   2U);
+-	state->s2 = __seed(i,   8U);
+-	state->s3 = __seed(i,  16U);
+-	state->s4 = __seed(i, 128U);
+-}
++#include <linux/prandom.h>
+ 
+ #ifdef CONFIG_ARCH_RANDOM
+ # include <asm/archrandom.h>
+@@ -134,10 +82,4 @@ static inline bool arch_has_random_seed(
+ }
+ #endif
+ 
+-/* Pseudo random number generator from numerical recipes. */
+-static inline u32 next_pseudo_random32(u32 seed)
+-{
+-	return seed * 1664525 + 1013904223;
+-}
+-
+ #endif /* _LINUX_RANDOM_H */
 
 
