@@ -2,94 +2,116 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F93C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D14BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB5B52078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927906;
-	bh=wtGVyYjZYxCX1zOoHAaTpFZdg8jlmbqqKlpOeNdE2pI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7kuv8AItsxHVhgByHHXR1HX4034GR9qam7HLZ263xl3zqfWj5dyWvA13vY1IEdnd
-	 s1/EveilHe031dnY4OUQKCJelOKuRENVHumA87UfTKyFMofMTUqu8d0nAppnmLqWea
-	 Ad22E91u2WWSyA9KHGWNW4TOinv0UNRovomTX1pY=
+	by mail.kernel.org (Postfix) with ESMTP id 3A4562078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:51:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NSQ0BROB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbgHTMvd (ORCPT
+        id S1729162AbgHTMvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:51:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729116AbgHTJn5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:57 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35992173E;
-        Thu, 20 Aug 2020 09:43:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916637;
-        bh=wtGVyYjZYxCX1zOoHAaTpFZdg8jlmbqqKlpOeNdE2pI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pRkwn/1/oeW8IvRaZBJpEVZvu1WwH+5qWKEI5TaytkW325STpIV3w8sLmZJyAKVTh
-         UX/EWAok3NFhog1n0mQsLQZHCeymAP3Ne8hjIVQN5Nkobzi9271gCE5dbjXQHrJ9v0
-         Biq3W/XzIJlyMJlL2NFf9Mo0jgD7BcWHvc1IkMV4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH 5.7 199/204] drm/tidss: fix modeset init for DPI panels
-Date:   Thu, 20 Aug 2020 11:21:36 +0200
-Message-Id: <20200820091616.120461314@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 08:51:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728981AbgHTMvT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:51:19 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED19C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 05:51:19 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id j22so877563lfm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 05:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jbR4Pr9PsKUZJNbETq29ZnQQtrCssVvEEQi3ARZG9nQ=;
+        b=NSQ0BROBMUCayc3T1MEpDkx4BHFB0Fa2GAnXsMWQfpc9Mxm8RXXYi5lIXrgPw4T8gp
+         RrcHrHqBxLMy+phmJVsyJet4JVoixJY1EjWaOcUoJvARS+Kogk3jxHOvaOiTFiBv3ON2
+         bYGM6rcx03city4YXeyfQ/Exg15Ql39gfEj/ZVmi7IgGGQahzsKTrbDi5x4T57w0PULJ
+         ImKs6d/eNQvxJatm0TZRsDK7swAfzws9tQp49r7cjdcJqKeVXudGfcWJKNPJE04EuSDR
+         jrUdNU0I6aCSVwBAtlNxgXAcPQN8HKPWpaKgNeHj0JneqqX0ENOv2kTcp+zf8bHyK1UC
+         pdbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jbR4Pr9PsKUZJNbETq29ZnQQtrCssVvEEQi3ARZG9nQ=;
+        b=HiLXEMQNUYFwapVkgijfkDyrywfUFrXHjhdx+xWCvpD2dsm/dN0D/sUa8NPN0TCR9I
+         IPSFl2/WMKC2MLcLwH9g7Cv5ojbNcDJXaMG3RMMe8FD9/+YswvLeiL4n8db9Ml132LiO
+         Wcl+Bhy+6MXtnxXXsgA8xMvMw2rG6V17CAeGSlsdclRU1gfMoeBYABcHThIAGWEkHXUM
+         U6fYEXWD3GEngHxIe+kZD93Sp8eO0U+HGRBdXcJPp2nbMqDjIK1j9n8X/Tr/gtLX1e3k
+         2kQ7DnNJlynNxCoxuKIOwPkho5HJe7ULVO6sDK75nrDJ2efcDsPDanjk6hGfGBv5C5V/
+         kaPA==
+X-Gm-Message-State: AOAM531iLxxKN+NuQ0Jr4CfvtcFxXpP8bSW+VDzTPrTAwFsZ88VJu9b3
+        3gGATHgL/wJ1gIo5XbO4ll//wcM12O/UmJEg2K6a3g==
+X-Google-Smtp-Source: ABdhPJyEfF3Cf/9HBpWEcyPwTPo5dMAoeC6NBCQNEMnYl5vYAY5FrV4DpuBgxEshfquiH7b1BGXzndIiHYrezc8JbBQ=
+X-Received: by 2002:ac2:42cd:: with SMTP id n13mr500476lfl.190.1597927877625;
+ Thu, 20 Aug 2020 05:51:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200820120025.74460-1-benbjiang@tencent.com>
+In-Reply-To: <20200820120025.74460-1-benbjiang@tencent.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 20 Aug 2020 14:51:06 +0200
+Message-ID: <CAKfTPtABCbEuYf3uup5ZODyPXpUqBjgM8A5gBQqM0cQGxWk5zw@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: avoid vruntime compensation for SCHED_IDLE task
+To:     Jiang Biao <benbjiang@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jiang Biao <benbjiang@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Thu, 20 Aug 2020 at 14:00, Jiang Biao <benbjiang@gmail.com> wrote:
+>
+> From: Jiang Biao <benbjiang@tencent.com>
+>
+> Vruntime compensation has been down in place_entity() to
+> boot the waking procedure for fair tasks. There is no need to
 
-commit a72a6a16d51034045cb6355924b62221a8221ca3 upstream.
+s/boot/boost/ ?
 
-The connector type for DISPC's DPI videoport was set the LVDS instead of
-DPI. This causes any DPI panel setup to fail with tidss, making all DPI
-panels unusable.
+> do that for SCHED_IDLE task actually.
+>
+> Not compensating vruntime for SCHED_IDLE task could make
+> SCHED_IDLE task more harmless for normal tasks.
+>
+> Signed-off-by: Jiang Biao <benbjiang@tencent.com>
+> ---
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 1a68a0536add..adff77676a0a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4115,7 +4115,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int initial)
+>                 vruntime += sched_vslice(cfs_rq, se);
+>
+>         /* sleeps up to a single latency don't count. */
+> -       if (!initial) {
+> +       if (!initial && likely(!task_has_idle_policy(task_of(se)))) {
 
-Fix this by using correct connector type.
+What if se is not a task ?
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Fixes: 32a1795f57eecc39749017 ("drm/tidss: New driver for TI Keystone platform Display SubSystem")
-Cc: stable@vger.kernel.org # v5.7+
-Link: https://patchwork.freedesktop.org/patch/msgid/20200604080214.107159-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/gpu/drm/tidss/tidss_kms.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/gpu/drm/tidss/tidss_kms.c
-+++ b/drivers/gpu/drm/tidss/tidss_kms.c
-@@ -154,7 +154,7 @@ static int tidss_dispc_modeset_init(stru
- 				break;
- 			case DISPC_VP_DPI:
- 				enc_type = DRM_MODE_ENCODER_DPI;
--				conn_type = DRM_MODE_CONNECTOR_LVDS;
-+				conn_type = DRM_MODE_CONNECTOR_DPI;
- 				break;
- 			default:
- 				WARN_ON(1);
-
-
+>                 unsigned long thresh = sysctl_sched_latency;
+>
+>                 /*
+> --
+> 2.21.0
+>
