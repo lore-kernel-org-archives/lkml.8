@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05DFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB2920FC3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A04B22B43
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881785;
-	bh=9eM5rUoj0DJZv2BnhxvvhEMbKv87QePAjTshRCH1THE=;
+	s=default; t=1597881792;
+	bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sVmRSF8dkciilljj2wwpib++bSHY03GmxvpHe5rTivSjuofYJWE83qpBHBC8pg2N7
-	 v1FBmlA29IFPGnl5F41Mxeb4XnrJgRXSi4pjLkmZrmZXKvzgFbcbKUcaa7f+hgJwoY
-	 nZO6GJF2m8s7IyjbqbWPqXrvMKetvNqaHCvgcnA4=
+	b=wwMHPNxVXr6FmeZ7aOBl9E6XSjV3H2D0vM8iXkITXIleInMFqMIde1qK7HjNPvHZD
+	 1uSooi/dl9NY5sIIqLsWzl2YhGrMP0E3FDnxzpv1aO6TeNBu3ogWi6nSlQM07zTPUf
+	 +ts0eYcc1+TiICWRyINyqow0ejti/2WVstCsymG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgHTADE (ORCPT
+        id S1728216AbgHTADK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60274 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:03:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgHTACz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:55 -0400
+        id S1728173AbgHTAC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE18207FB;
-        Thu, 20 Aug 2020 00:02:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEE3D21744;
+        Thu, 20 Aug 2020 00:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881774;
-        bh=9eM5rUoj0DJZv2BnhxvvhEMbKv87QePAjTshRCH1THE=;
+        s=default; t=1597881777;
+        bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2o7nu1dSS+m0nRZbGMSCHW8uWG7fDDBan3hte3I2eqE/Zl0qqPP6Q2JCFBYh1C8hx
-         Y4/PVFnQDxPfVcPGHy441Ahmg/cCn06rqdJdIMcQizGWfSKZHzbYpeeZFpjRoQS3IF
-         79ArFxSVPA/kzEKcWm6VPSOh9GqQRDRurT6jop70=
+        b=HsuFwN+yuWh0rkLumLJIijSnX/m8OCPY3sK5HCJgiSsfS5tQcF8HD8ED7uRAxVcAz
+         n8CkX+a7wtyxg6V8bha0A5+lAm042Fkk1xl5gYaESDR9BPPr2bfD38ADDITjzDVgz1
+         JMK6/FIrjRcqpyiq9FKOkQuAfgiR8RhEgUHHtVmc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evgeny Novikov <novikov@ispras.ru>,
-        Anton Vasilyev <vasilyev@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 18/22] media: camss: fix memory leaks on error handling paths in probe
-Date:   Wed, 19 Aug 2020 20:02:25 -0400
-Message-Id: <20200820000229.215333-18-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 20/22] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Wed, 19 Aug 2020 20:02:27 -0400
+Message-Id: <20200820000229.215333-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
@@ -62,97 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit f45882cfb152f5d3a421fd58f177f227e44843b9 ]
+[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
 
-camss_probe() does not free camss on error handling paths. The patch
-introduces an additional error label for this purpose. Besides, it
-removes call of v4l2_async_notifier_cleanup() from
-camss_of_parse_ports() since its caller, camss_probe(), cleans up all
-its resources itself.
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
-Found by Linux Driver Verification project (linuxtesting.org).
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Co-developed-by: Anton Vasilyev <vasilyev@ispras.ru>
-Signed-off-by: Anton Vasilyev <vasilyev@ispras.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fix it by checking parent_kobj before the code accesses its member.
+
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: minor whitespace edits]
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/qcom/camss/camss.c | 30 +++++++++++++++--------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+ fs/xfs/xfs_sysfs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/qcom/camss/camss.c b/drivers/media/platform/qcom/camss/camss.c
-index 3fdc9f964a3c6..2483641799dfb 100644
---- a/drivers/media/platform/qcom/camss/camss.c
-+++ b/drivers/media/platform/qcom/camss/camss.c
-@@ -504,7 +504,6 @@ static int camss_of_parse_ports(struct camss *camss)
- 	return num_subdevs;
- 
- err_cleanup:
--	v4l2_async_notifier_cleanup(&camss->notifier);
- 	of_node_put(node);
- 	return ret;
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index e9f810fc67317..43585850f1546 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -32,9 +32,11 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject		*parent;
++
++	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
  }
-@@ -835,29 +834,38 @@ static int camss_probe(struct platform_device *pdev)
- 		camss->csid_num = 4;
- 		camss->vfe_num = 2;
- 	} else {
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_free;
- 	}
  
- 	camss->csiphy = devm_kcalloc(dev, camss->csiphy_num,
- 				     sizeof(*camss->csiphy), GFP_KERNEL);
--	if (!camss->csiphy)
--		return -ENOMEM;
-+	if (!camss->csiphy) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	camss->csid = devm_kcalloc(dev, camss->csid_num, sizeof(*camss->csid),
- 				   GFP_KERNEL);
--	if (!camss->csid)
--		return -ENOMEM;
-+	if (!camss->csid) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	camss->vfe = devm_kcalloc(dev, camss->vfe_num, sizeof(*camss->vfe),
- 				  GFP_KERNEL);
--	if (!camss->vfe)
--		return -ENOMEM;
-+	if (!camss->vfe) {
-+		ret = -ENOMEM;
-+		goto err_free;
-+	}
- 
- 	v4l2_async_notifier_init(&camss->notifier);
- 
- 	num_subdevs = camss_of_parse_ports(camss);
--	if (num_subdevs < 0)
--		return num_subdevs;
-+	if (num_subdevs < 0) {
-+		ret = num_subdevs;
-+		goto err_cleanup;
-+	}
- 
- 	ret = camss_init_subdevices(camss);
- 	if (ret < 0)
-@@ -936,6 +944,8 @@ static int camss_probe(struct platform_device *pdev)
- 	v4l2_device_unregister(&camss->v4l2_dev);
- err_cleanup:
- 	v4l2_async_notifier_cleanup(&camss->notifier);
-+err_free:
-+	kfree(camss);
- 
- 	return ret;
- }
+ static inline void
 -- 
 2.25.1
 
