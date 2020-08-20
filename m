@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC8FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3534721775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C2DD20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917487;
-	bh=r9w4WXp9/e7/WqILGWIDl0giQdfpbmYMY9CwCYFkm6A=;
+	s=default; t=1597917504;
+	bh=B9I86CKSfEkWeYcKIy1EwsYk+OARDO/f2z7E9feAlY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zdz9gq4SHd/EHEdqaspfVDmbifOizdh3ds+gDgA+i4IQmTn7b3u7M/gwOoJ3YjYMA
-	 g1osUbn51nhoctAZEfcOBIIYm5DfEGz4TqR6VcHPQb7tkSV79ohN/5Z+5RgoOypsPw
-	 WeQpRBUO9CNAIjnFbDbsNIsFU7rioVLx8TR0Gn4Y=
+	b=mGM30rhCmBMYFJFIX1WKydvPr4L5Yj89sqL1idu3JK+v9VHJnIVwGQJ5kQTriXSr7
+	 FHFbeYRPOn1dSw4f3XaX6QNaDblsYNvrq79b80jiKiwP1/5npJoE68GGiY8yarZQUr
+	 3k5lpQHtj9cHX8yhQPvlwxByX7sU7nnds9CympKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbgHTJ6G (ORCPT
+        id S1730394AbgHTJ6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbgHTJ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:40 -0400
+        id S1726796AbgHTJ6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69F90207FB;
-        Thu, 20 Aug 2020 09:57:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBB972067C;
+        Thu, 20 Aug 2020 09:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917458;
-        bh=r9w4WXp9/e7/WqILGWIDl0giQdfpbmYMY9CwCYFkm6A=;
+        s=default; t=1597917491;
+        bh=B9I86CKSfEkWeYcKIy1EwsYk+OARDO/f2z7E9feAlY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aerKHIFzZUi0i0cup1a8pyeKjYz8rM3GX64EPqnAvI2u5BUGyO+YgKLe2c0gNSm5i
-         uU4sdNtARYuVEh2q86mW2yOvA+mTr20uxEpohAlAAjKDjP0QxTE9JHuoJI1Oc3kiq/
-         qZ1OT0l8MmcKXNCz+epcwGc0qqz0WLY6PQJNScjs=
+        b=GlIUtJMwzvGRN04NkHsfNsJ1WbeuRyXWum3ATxaG2TtJzhUfKsAQl31Wu1Gwo9818
+         D582SD722ixq5tWczw9Rp8l4toYWHaC8XsEkE/PEz6lvk40+s7QJC3BQElc/0ym/B9
+         baWfN2yKa+LuMgLGBp0goFEjTGAyjXoEo1xLWTJI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robert Hancock <hancockrwd@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 009/212] PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
-Date:   Thu, 20 Aug 2020 11:19:42 +0200
-Message-Id: <20200820091602.794106606@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Wang Long <wanglong19@meituan.com>,
+        Jiang Ying <jiangying8582@126.com>
+Subject: [PATCH 4.9 050/212] ext4: fix direct I/O read error
+Date:   Thu, 20 Aug 2020 11:20:23 +0200
+Message-Id: <20200820091604.894804916@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,68 +60,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robert Hancock <hancockrwd@gmail.com>
+From: Jiang Ying <jiangying8582@126.com>
 
-commit b361663c5a40c8bc758b7f7f2239f7a192180e7c upstream.
+This patch is used to fix ext4 direct I/O read error when
+the read size is not aligned with block size.
 
-Recently ASPM handling was changed to allow ASPM on PCIe-to-PCI/PCI-X
-bridges.  Unfortunately the ASMedia ASM1083/1085 PCIe to PCI bridge device
-doesn't seem to function properly with ASPM enabled.  On an Asus PRIME
-H270-PRO motherboard, it causes errors like these:
+Then, I will use a test to explain the error.
 
-  pcieport 0000:00:1c.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
-  pcieport 0000:00:1c.0: AER:   device [8086:a292] error status/mask=00003000/00002000
-  pcieport 0000:00:1c.0: AER:    [12] Timeout
-  pcieport 0000:00:1c.0: AER: Corrected error received: 0000:00:1c.0
-  pcieport 0000:00:1c.0: AER: can't find device of ID00e0
+(1) Make a file that is not aligned with block size:
+	$dd if=/dev/zero of=./test.jar bs=1000 count=3
 
-In addition to flooding the kernel log, this also causes the machine to
-wake up immediately after suspend is initiated.
+(2) I wrote a source file named "direct_io_read_file.c" as following:
 
-The device advertises ASPM L0s and L1 support in the Link Capabilities
-register, but the ASMedia web page for ASM1083 [1] claims "No PCIe ASPM
-support".
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/file.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <string.h>
+	#define BUF_SIZE 1024
 
-Windows 10 (build 2004) enables L0s, but it also logs correctable PCIe
-errors.
+	int main()
+	{
+		int fd;
+		int ret;
 
-Add a quirk to disable ASPM for this device.
+		unsigned char *buf;
+		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+		if (ret) {
+			perror("posix_memalign failed");
+			exit(1);
+		}
+		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+		if (fd < 0){
+			perror("open ./test.jar failed");
+			exit(1);
+		}
 
-[1] https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
+		do {
+			ret = read(fd, buf, BUF_SIZE);
+			printf("ret=%d\n",ret);
+			if (ret < 0) {
+				perror("write test.jar failed");
+			}
+		} while (ret > 0);
 
-[bhelgaas: commit log]
-Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208667
-Link: https://lore.kernel.org/r/20200722021803.17958-1-hancockrwd@gmail.com
-Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+		free(buf);
+		close(fd);
+	}
+
+(3) Compile the source file:
+	$gcc direct_io_read_file.c -D_GNU_SOURCE
+
+(4) Run the test program:
+	$./a.out
+
+	The result is as following:
+	ret=1024
+	ret=1024
+	ret=952
+	ret=-1
+	write test.jar failed: Invalid argument.
+
+I have tested this program on XFS filesystem, XFS does not have
+this problem, because XFS use iomap_dio_rw() to do direct I/O
+read. And the comparing between read offset and file size is done
+in iomap_dio_rw(), the code is as following:
+
+	if (pos < size) {
+		retval = filemap_write_and_wait_range(mapping, pos,
+				pos + iov_length(iov, nr_segs) - 1);
+
+		if (!retval) {
+			retval = mapping->a_ops->direct_IO(READ, iocb,
+						iov, pos, nr_segs);
+		}
+		...
+	}
+
+...only when "pos < size", direct I/O can be done, or 0 will be return.
+
+I have tested the fix patch on Ext4, it is up to the mustard of
+EINVAL in man2(read) as following:
+	#include <unistd.h>
+	ssize_t read(int fd, void *buf, size_t count);
+
+	EINVAL
+		fd is attached to an object which is unsuitable for reading;
+		or the file was opened with the O_DIRECT flag, and either the
+		address specified in buf, the value specified in count, or the
+		current file offset is not suitably aligned.
+
+So I think this patch can be applied to fix ext4 direct I/O error.
+
+However Ext4 introduces direct I/O read using iomap infrastructure
+on kernel 5.5, the patch is commit <b1b4705d54ab>
+("ext4: introduce direct I/O read using iomap infrastructure"),
+then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+
+>From above description, we can see this problem exists on all the kernel
+versions between kernel 3.14 and kernel 5.4. It will cause the Applications
+to fail to read. For example, when the search service downloads a new full
+index file, the search engine is loading the previous index file and is
+processing the search request, it can not use buffer io that may squeeze
+the previous index file in use from pagecache, so the serch service must
+use direct I/O read.
+
+Please apply this patch on these kernel versions, or please use the method
+on kernel 5.5 to fix this problem.
+
+Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Jiang Ying <jiangying8582@126.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/quirks.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/ext4/inode.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -2046,6 +2046,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3575,6 +3575,11 @@ static ssize_t ext4_direct_IO_read(struc
+ 	struct address_space *mapping = iocb->ki_filp->f_mapping;
+ 	struct inode *inode = mapping->host;
+ 	ssize_t ret;
++	loff_t offset = iocb->ki_pos;
++	loff_t size = i_size_read(inode);
++
++	if (offset >= size)
++		return 0;
  
-+static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
-+{
-+	pci_info(dev, "Disabling ASPM L0s/L1\n");
-+	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-+}
-+
-+/*
-+ * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
-+ * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected;
-+ * disable both L0s and L1 for now to be safe.
-+ */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
-+
- /*
-  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
-  * Link bit cleared after starting the link retrain process to allow this
+ 	/*
+ 	 * Shared inode_lock is enough for us - it protects against concurrent
 
 
