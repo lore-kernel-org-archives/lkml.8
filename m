@@ -2,97 +2,120 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8023C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F286CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A383420758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D760820758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726750AbgHTFEP (ORCPT
+        id S1725910AbgHTFFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:04:15 -0400
-Received: from mga09.intel.com ([134.134.136.24]:45660 "EHLO mga09.intel.com"
+        Thu, 20 Aug 2020 01:05:46 -0400
+Received: from mga05.intel.com ([192.55.52.43]:17883 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgHTFEO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:04:14 -0400
-IronPort-SDR: LAI45mVG2xLY0ONW7CGjQsLhPLCGtL3dptEEGuQRbXqfRYMIXjsQuWJw9aLMCRtpIqNI+w5zZe
- UAFa2pXdSGIQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="156307267"
+        id S1725768AbgHTFFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:05:45 -0400
+IronPort-SDR: wehtcBhL0Sbn4S/1dLRB32iaRmCMYILlCo9/+1N079sEIwpNKWeQOHp95/9fFIDMElrw+RIJL7
+ hZzNFQmPkoEw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="240065053"
 X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="156307267"
+   d="scan'208";a="240065053"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:04:14 -0700
-IronPort-SDR: 5ew4P0zvnHwOu7lJzv+xOjVYlGdfsv79mm0uX03gaziLHUvawKN3Sx8MLKVZCyYgrqcDwdHdi1
- 5Fv9ZawvzNRg==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:05:45 -0700
+IronPort-SDR: OZXJvMO5PQiH3Cf2UlhbyGFZwCTjlc8v6u8s9AzvCb+Q1uF/+A1WFMIKnvpDPlYKARZ2UU4xK2
+ FFp6QNT31ZVg==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="441846299"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 22:04:11 -0700
-Subject: Re: [clk] a2499eff4b: BUG:kernel_NULL_pointer_dereference,address
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, 0day robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200811084943.GC7488@shao2-debian>
- <159780681339.334488.10402512224012716827@swboyd.mtv.corp.google.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <be4c9098-98a2-e9c0-b787-57fa7d7da24f@intel.com>
-Date:   Thu, 20 Aug 2020 13:03:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+   d="scan'208";a="320731690"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.164])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Aug 2020 22:05:43 -0700
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
+Date:   Thu, 20 Aug 2020 13:05:42 +0800
+In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com> (Gao Xiang's message
+        of "Thu, 20 Aug 2020 12:53:23 +0800")
+Message-ID: <87wo1tx5y1.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <159780681339.334488.10402512224012716827@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Gao Xiang <hsiangkao@redhat.com> writes:
 
+> SWP_FS is used to make swap_{read,write}page() go through
+> the filesystem, and it's only used for swap files over
+> NFS. So, !SWP_FS means non NFS for now, it could be either
+> file backed or device backed. Something similar goes with
+> legacy SWP_FILE.
+>
+> So in order to achieve the goal of the original patch,
+> SWP_BLKDEV should be used instead.
+>
+> FS corruption can be observed with SSD device + XFS +
+> fragmented swapfile due to CONFIG_THP_SWAP=y.
+>
+> I reproduced the issue with the following details:
+>
+> Environment:
+> QEMU + upstream kernel + buildroot + NVMe (2 GB)
+>
+> Kernel config:
+> CONFIG_BLK_DEV_NVME=y
+> CONFIG_THP_SWAP=y
+>
+> Some reproducable steps:
+> mkfs.xfs -f /dev/nvme0n1
+> mkdir /tmp/mnt
+> mount /dev/nvme0n1 /tmp/mnt
+> bs="32k"
+> sz="1024m"    # doesn't matter too much, I also tried 16m
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
+>
+> mkswap /tmp/mnt/sw
+> swapon /tmp/mnt/sw
+>
+> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
+>
+> Symptoms:
+>  - FS corruption (e.g. checksum failure)
+>  - memory corruption at: 0xd2808010
+>  - segfault
+>
+> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Cc: Rafael Aquini <aquini@redhat.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 
-On 8/19/20 11:13 AM, Stephen Boyd wrote:
-> Quoting kernel test robot (2020-08-11 01:49:44)
->> Greeting,
->>
->> FYI, we noticed the following commit (built with gcc-9):
->>
->> commit: a2499eff4b30a85d56e4466e6ca4746c72a347c6 ("[PATCH v2] clk: samsung: Keep top BPLL mux on Exynos542x enabled")
->> url: https://github.com/0day-ci/linux/commits/Marek-Szyprowski/clk-samsung-Keep-top-BPLL-mux-on-Exynos542x-enabled/20200807-213239
->> base: https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git clk-next
->>
->> in testcase: trinity
->> with following parameters:
->>
->>          runtime: 300s
->>
->> test-description: Trinity is a linux system call fuzz tester.
->> test-url: http://codemonkey.org.uk/projects/trinity/
->>
->>
->> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
-> Cool robot. But this doesn't look related to the patch at all?
+Thanks!
 
-Hi Stephen,
-
-Sorry for the inconvenience, you are right, we run more times
-on the parent commit and can reproduce the error too.
+Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
 
 Best Regards,
-Rong Chen
-
-
+Huang, Ying
