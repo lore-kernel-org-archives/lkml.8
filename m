@@ -2,89 +2,107 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB330C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14E5621734
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:39:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9325D20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:44:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="L8Xc757w"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qRTJ34s9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgHTVjO (ORCPT
+        id S1727968AbgHTVoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:39:14 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38128 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTVjN (ORCPT
+        Thu, 20 Aug 2020 17:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57534 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgHTVoJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:39:13 -0400
-Received: from viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net (unknown [13.66.132.26])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 832E320B4908;
-        Thu, 20 Aug 2020 14:39:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 832E320B4908
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1597959552;
-        bh=2H5J51gfYomnZO7gO0OSn0mfMlYSdm+2t/COROltWJk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8Xc757whT9VGBAlNfTbZP2IUNTBjn5l9aAU4aVMa+NrFXAlLtFNUGr18jxDkhbZa
-         x8rJ+O/011M8foZM1gay5fWqaiXh9WEa2uBRQOZld4doNSr3/+fd7KI2ubMhqspE8a
-         dPscSCUZ0+elGrfU+x9MfxmSZvcXVBpC66tXTwYY=
-Date:   Thu, 20 Aug 2020 21:39:12 +0000
-From:   Vineeth Pillai <viremana@linux.microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] hv_utils: return error if host timesysnc update is stale
-Message-ID: <20200820213912.fmttvj6wcirn5sas@viremana-dev.fwjladdvyuiujdukmejncen4mf.xx.internal.cloudapp.net>
-References: <20200819174527.47156-1-viremana@linux.microsoft.com>
- <MW2PR2101MB10527EAC115BF49715BF4722D75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Thu, 20 Aug 2020 17:44:09 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3E4FC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:44:08 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id a65so26104otc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JYwHUMqrgisA2MC9phgyUn1/pNwWsiB0gxz1VRA/k7U=;
+        b=qRTJ34s9UkOAnZaN8ZPr0d9ptggsR0srmk4FHFiwxaPgrwPW65Uv4h8OJZMvJEcN4k
+         atZXkG4wSxcl+XsWGOvXHY7lWD3jNyIpWol1leSAgdXjtxxffsJDaov4iQEjpoq1lf02
+         OePZRyyoMmNKPmwP4/WNNuafraSZD/dPy1S+zycbpE1tr8OkfpA3JtUqhBT8YJ1/MJA0
+         wplcl5+UQ8Y8vjlefu7xs+DRfdyS9fqSXXH9YnlYK3zHAtaROi2l1OzNOgnFjfGj+NI5
+         rtpSrST4mPzyNubWEsIrkhHCQa38sJr6cz/40TvVG/c0xfFAsO3fC8MtFvw24bxxLrXS
+         Zurw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JYwHUMqrgisA2MC9phgyUn1/pNwWsiB0gxz1VRA/k7U=;
+        b=DcGiSwnG0h+VT4NEPBOfAUn+257zrTqx2l/OW289unYLmH+NuIzhtwNatHueaAQLow
+         GzfGxElJgHbKMhvoC6XmV9qnAOOYtHg0KrJpvT5BELn2bVp0S0iKpfge3o6fW6THaqKx
+         wh8h+5eGtyUcAEBjt11htr3oq1St6LBnMJcZ8dfga7ZKQy+pU9s+qdnmmNjO9CU05fIi
+         +BQhoGhTa4GQEagPlt01OHGtmXn7IRauxsDbK2l9K/jQL4nAd2s0NnaGOfzoAbflYp6l
+         IH9hK52tyT1GkyihJlZkbmfB1Bx7+/PwgmONpCyXkaCAAbYObBEwMqwFP9mURvjfwin+
+         JlPA==
+X-Gm-Message-State: AOAM532iaK5FD+UMbfVoj2qMxl+zyL3XC+kmLCdZoHWYKyMXrn1ITO3M
+        Q6oug/JwxLV442SgUW9+MTtm3bPe/O0mcgdF05ldIA==
+X-Google-Smtp-Source: ABdhPJwlOoE+a01uhmSNQmRIKx7rD3ktKBhwaFSOIAol1TcsX1kjG+yaIUwY1dec23S16b3xJbV9RzNwat2fKYyWVsA=
+X-Received: by 2002:a9d:65ca:: with SMTP id z10mr513440oth.295.1597959847966;
+ Thu, 20 Aug 2020 14:44:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB10527EAC115BF49715BF4722D75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20171215
+References: <20200820133339.372823-1-mlevitsk@redhat.com> <20200820133339.372823-5-mlevitsk@redhat.com>
+In-Reply-To: <20200820133339.372823-5-mlevitsk@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 20 Aug 2020 14:43:56 -0700
+Message-ID: <CALMp9eRNLjj5cs1xj44WVRoKK0ZrcGXn7ffdH+bEeDHkLE9nSA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] KVM: x86: allow kvm_x86_ops.set_efer to return a value
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
+>
+> This will be used later to return an error when setting this msr fails.
+>
+> For VMX, it already has an error condition when EFER is
+> not in the shared MSR list, so return an error in this case.
+>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
 
-Hi Michael,
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1471,7 +1471,8 @@ static int set_efer(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>         efer &= ~EFER_LMA;
+>         efer |= vcpu->arch.efer & EFER_LMA;
+>
+> -       kvm_x86_ops.set_efer(vcpu, efer);
+> +       if (kvm_x86_ops.set_efer(vcpu, efer))
+> +               return 1;
 
-> > +const u64 HOST_TIMESYNC_DELAY_THRESH = 600 * NSEC_PER_SEC;
-> 
-> Kernel test robot has already complained that this should be static,
-> and about the potential overflow based on the types of the constants in
-> the right side expression.  I didn't check the details, but I suspect the
-> complaint is when building in 32-bit mode.  This code does get built in
-> 32-bit mode and it's possible for run 32-bit Linux guests on Hyper-V.
-> 
-NSEC_PER_SEC is defined long and it caused the warning with i386 build.
-Casting it to u64 would fix the issue. Will fix the static warning as well
-in the next iteration.
-
-> > +		pr_warn("TIMESYNC IC: Stale time stamp, %llu nsecs old\n",
-> > +			HOST_TIMESYNC_DELAY_THRESH);
-> 
-> Let's provide the timediff_adj in the message instead of the constant
-> threshold value so we know the degree of staleness. :-)
-> 
-> Also, I'm wondering if this should be pr_warn_once().  Presumably
-> chronyd or whoever is reading /dev/ptp0 will give up after getting
-> this error, but if not, it would be nice to avoid filling up the console
-> with these error messages.
-> 
-Makes sense, will fix this also.
-
-Thanks,
-Vineeth
-
+This seems like a userspace ABI change to me. Previously, it looks
+like userspace could always use KVM_SET_MSRS to set MSR_EFER to 0 or
+EFER_SCE, and it would always succeed. Now, it looks like it will fail
+on CPUs that don't support EFER in hardware. (Perhaps it should fail,
+but it didn't before, AFAICT.)
