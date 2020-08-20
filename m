@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 379A5207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1B420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926718;
-	bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
+	s=default; t=1597926732;
+	bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQcYQYEToff4rfFWuZ3gfQumxZ3NxmXKz6h6FbAR6cOpX9Q9qW6nL9X2ZVX7ZMvAh
-	 NYRJiyvWCvEQR4p4A92c+nf0OK2nkqZdhV+l6L7aWSzvD+fIqp5ZafO8P4NBA0YcwI
-	 4a8JoER/OFrIOXk5cRhKBB++6cP0nrdDJaS/OpW0=
+	b=vBPtb0AETORfBVorW8AbJZ+FOlulgQG2WOS5c8wz8qp1CLygGHyKpInAAtVUDuvjK
+	 lu0pptiSwJ8l0yVjfpHFVgORLrz038/e6RtNJTfPty0vQM/eLDhT+BKyWIukw78e/o
+	 v8mW7DTppcC/bCU3Yp6mROuyZbEpHq4Ir7TPw/+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbgHTMb4 (ORCPT
+        id S1729877AbgHTMcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57350 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbgHTJuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:14 -0400
+        id S1729698AbgHTJuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE7A72224D;
-        Thu, 20 Aug 2020 09:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39F422173E;
+        Thu, 20 Aug 2020 09:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917014;
-        bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
+        s=default; t=1597917008;
+        bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GMr30xdqLj5SJO5/1y5rXTqZ4+0bCkGcsSQKPUFSL1zFEORWQuJsPMAREEcihyLKj
-         Z4YVeRSihGoGqHjTrXxLXqVbZG0kj98pX0e6Tz+MhyzHBfzpeHYjBTtxd96nmdLLF3
-         zpTKIVW9FlMGT6uSCmiLzwKus4i+eo2OqVqy5xs4=
+        b=2Ex1hx5UmGr5tJaGKvEBqxg87TxiNuZ5K1Luu4xrul67JvzUKztaV7JY3A6MUvN2+
+         rzz0UNau437FXCw8xT7QVADPw6jwzMIGFu5pCvizcB8myzqIMTbMNHPskic+yOKMEH
+         amBLXpOgmgU4YPNkQHTjzFxxqb+rdgSfYptHtsYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 126/152] Input: sentelic - fix error return when fsp_reg_write fails
-Date:   Thu, 20 Aug 2020 11:21:33 +0200
-Message-Id: <20200820091600.256616070@linuxfoundation.org>
+Subject: [PATCH 5.4 124/152] md-cluster: Fix potential error pointer dereference in resize_bitmaps()
+Date:   Thu, 20 Aug 2020 11:21:31 +0200
+Message-Id: <20200820091600.147128687@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,37 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
+[ Upstream commit e8abe1de43dac658dacbd04a4543e0c988a8d386 ]
 
-Currently when the call to fsp_reg_write fails -EIO is not being returned
-because the count is being returned instead of the return value in retval.
-Fix this by returning the value in retval instead of count.
+The error handling calls md_bitmap_free(bitmap) which checks for NULL
+but will Oops if we pass an error pointer.  Let's set "bitmap" to NULL
+on this error path.
 
-Addresses-Coverity: ("Unused value")
-Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Fixes: afd756286083 ("md-cluster/raid10: resize all the bitmaps before start reshape")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/sentelic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/md-cluster.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
-index e99d9bf1a267d..e78c4c7eda34d 100644
---- a/drivers/input/mouse/sentelic.c
-+++ b/drivers/input/mouse/sentelic.c
-@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
- 
- 	fsp_reg_write_enable(psmouse, false);
- 
--	return count;
-+	return retval;
- }
- 
- PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index 73fd50e779754..d50737ec40394 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1139,6 +1139,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
+ 		bitmap = get_bitmap_from_slot(mddev, i);
+ 		if (IS_ERR(bitmap)) {
+ 			pr_err("can't get bitmap from slot %d\n", i);
++			bitmap = NULL;
+ 			goto out;
+ 		}
+ 		counts = &bitmap->counts;
 -- 
 2.25.1
 
