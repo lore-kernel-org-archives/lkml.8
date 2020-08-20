@@ -7,49 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC16EC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0D5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7AD82224D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D008120724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916274;
-	bh=ublyth4NykMzai27siOdNCTMlMUHjhBoS5hQTtTF/HA=;
+	s=default; t=1597916284;
+	bh=UYIBLA8WibIjjCLyWu8ir8Voaqbk5WTp/nNLFt6poao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ebFlZZ66ywahzYshVtLhGLLznN6i4EeGy1ArxzfK1My2vpdzm2ujInVtDgRvd3AdG
-	 5B5q0s/fQduIgyNCAsps/opiyHcfqxXrympmES2B6D1l8Hsbie7tVpBhVJ0R4GZEzU
-	 yP5yq5AAT7tTB4ntWD1Z1W4f3nsaalVWpB8DEtoI=
+	b=wHZqGdevvHmDhrkR0LDr6NjNGxdW9KyfXu00Yp/ue+vRlc8m89TSApclT2+7Td1Rg
+	 VzIX/bqIW/aOOrbZOc4YeqPUXp3O6WazFNYe0pVZcWVAOSJs89GOarXEnKPUZeiIf+
+	 CAn6ARj27SsMpa46agGfUts8OLHy90Yz/lrO+YZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgHTJhr (ORCPT
+        id S1728400AbgHTJiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:37:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53286 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:38:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728701AbgHTJhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:15 -0400
+        id S1728856AbgHTJhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0391F20724;
-        Thu, 20 Aug 2020 09:37:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 432182075E;
+        Thu, 20 Aug 2020 09:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916234;
-        bh=ublyth4NykMzai27siOdNCTMlMUHjhBoS5hQTtTF/HA=;
+        s=default; t=1597916269;
+        bh=UYIBLA8WibIjjCLyWu8ir8Voaqbk5WTp/nNLFt6poao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDH1Ta0rZ4xMNOxDPx2ldMSJdMmvkCtuMRvNV2+HmLzKLdu4kM3ZpvnfdoB2yjHXt
-         irR3N2ULY8tYKslnFEGAKTgcsRL4BsfYLVmx5XjZbQDPER3g20sUwxFlaoWEKEnl6j
-         6gcy8Lb/cqMjRm/1JeTPb392AU7luzViM/5iWVJs=
+        b=DRSy1gEgQihwttWa0hXmOUWkLZ5FlOelIPYvzwtcLUb6GBgjlmeOmshTo+2NctOtz
+         suQTWwhA/ZaRRmJZjT6QIQoJaIQ4HvS0O4rZMHYKRBbmv0BUGhXfcMw0lsldu9teKF
+         2JunN2Vb3oHJ9HDeCNnTvrEbNU6wzp9VVLS5dDe4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.7 056/204] net/compat: Add missing sock updates for SCM_RIGHTS
-Date:   Thu, 20 Aug 2020 11:19:13 +0200
-Message-Id: <20200820091609.066089993@linuxfoundation.org>
+        stable@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 070/204] hugetlbfs: remove call to huge_pte_alloc without i_mmap_rwsem
+Date:   Thu, 20 Aug 2020 11:19:27 +0200
+Message-Id: <20200820091609.830343544@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,89 +69,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-commit d9539752d23283db4692384a634034f451261e29 upstream.
+commit 34ae204f18519f0920bd50a644abd6fefc8dbfcf upstream.
 
-Add missed sock updates to compat path via a new helper, which will be
-used more in coming patches. (The net/core/scm.c code is left as-is here
-to assist with -stable backports for the compat path.)
+Commit c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing
+synchronization") requires callers of huge_pte_alloc to hold i_mmap_rwsem
+in at least read mode.  This is because the explicit locking in
+huge_pmd_share (called by huge_pte_alloc) was removed.  When restructuring
+the code, the call to huge_pte_alloc in the else block at the beginning of
+hugetlb_fault was missed.
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 48a87cc26c13 ("net: netprio: fd passed in SCM_RIGHTS datagram not set correctly")
-Fixes: d84295067fc7 ("net: net_cls: fd passed in SCM_RIGHTS datagram not set correctly")
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Unfortunately, that else clause is exercised when there is no page table
+entry.  This will likely lead to a call to huge_pmd_share.  If
+huge_pmd_share thinks pmd sharing is possible, it will traverse the
+mapping tree (i_mmap) without holding i_mmap_rwsem.  If someone else is
+modifying the tree, bad things such as addressing exceptions or worse
+could happen.
+
+Simply remove the else clause.  It should have been removed previously.
+The code following the else will call huge_pte_alloc with the appropriate
+locking.
+
+To prevent this type of issue in the future, add routines to assert that
+i_mmap_rwsem is held, and call these routines in huge pmd sharing
+routines.
+
+Fixes: c0d0381ade79 ("hugetlbfs: use i_mmap_rwsem for more pmd sharing synchronization")
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/e670f327-5cf9-1959-96e4-6dc7cc30d3d5@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sock.h |    4 ++++
- net/compat.c       |    1 +
- net/core/sock.c    |   21 +++++++++++++++++++++
- 3 files changed, 26 insertions(+)
+ include/linux/fs.h      |   10 ++++++++++
+ include/linux/hugetlb.h |    8 +++++---
+ mm/hugetlb.c            |   15 +++++++--------
+ mm/rmap.c               |    2 +-
+ 4 files changed, 23 insertions(+), 12 deletions(-)
 
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -890,6 +890,8 @@ static inline int sk_memalloc_socks(void
- {
- 	return static_branch_unlikely(&memalloc_socks_key);
- }
-+
-+void __receive_sock(struct file *file);
- #else
- 
- static inline int sk_memalloc_socks(void)
-@@ -897,6 +899,8 @@ static inline int sk_memalloc_socks(void
- 	return 0;
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -546,6 +546,16 @@ static inline void i_mmap_unlock_read(st
+ 	up_read(&mapping->i_mmap_rwsem);
  }
  
-+static inline void __receive_sock(struct file *file)
-+{ }
- #endif
- 
- static inline gfp_t sk_gfp_mask(const struct sock *sk, gfp_t gfp_mask)
---- a/net/compat.c
-+++ b/net/compat.c
-@@ -307,6 +307,7 @@ void scm_detach_fds_compat(struct msghdr
- 			break;
- 		}
- 		/* Bump the usage count and install the file. */
-+		__receive_sock(fp[i]);
- 		fd_install(new_fd, get_file(fp[i]));
- 	}
- 
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -2753,6 +2753,27 @@ int sock_no_mmap(struct file *file, stru
- }
- EXPORT_SYMBOL(sock_no_mmap);
- 
-+/*
-+ * When a file is received (via SCM_RIGHTS, etc), we must bump the
-+ * various sock-based usage counts.
-+ */
-+void __receive_sock(struct file *file)
++static inline void i_mmap_assert_locked(struct address_space *mapping)
 +{
-+	struct socket *sock;
-+	int error;
-+
-+	/*
-+	 * The resulting value of "error" is ignored here since we only
-+	 * need to take action when the file is a socket and testing
-+	 * "sock" for NULL is sufficient.
-+	 */
-+	sock = sock_from_file(file, &error);
-+	if (sock) {
-+		sock_update_netprioidx(&sock->sk->sk_cgrp_data);
-+		sock_update_classid(&sock->sk->sk_cgrp_data);
-+	}
++	lockdep_assert_held(&mapping->i_mmap_rwsem);
 +}
 +
- ssize_t sock_no_sendpage(struct socket *sock, struct page *page, int offset, size_t size, int flags)
++static inline void i_mmap_assert_write_locked(struct address_space *mapping)
++{
++	lockdep_assert_held_write(&mapping->i_mmap_rwsem);
++}
++
+ /*
+  * Might pages of this file be mapped into userspace?
+  */
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -165,7 +165,8 @@ pte_t *huge_pte_alloc(struct mm_struct *
+ 			unsigned long addr, unsigned long sz);
+ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		       unsigned long addr, unsigned long sz);
+-int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep);
++int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
++				unsigned long *addr, pte_t *ptep);
+ void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+ 				unsigned long *start, unsigned long *end);
+ struct page *follow_huge_addr(struct mm_struct *mm, unsigned long address,
+@@ -204,8 +205,9 @@ static inline struct address_space *huge
+ 	return NULL;
+ }
+ 
+-static inline int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr,
+-					pte_t *ptep)
++static inline int huge_pmd_unshare(struct mm_struct *mm,
++					struct vm_area_struct *vma,
++					unsigned long *addr, pte_t *ptep)
  {
- 	ssize_t res;
+ 	return 0;
+ }
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3840,7 +3840,7 @@ void __unmap_hugepage_range(struct mmu_g
+ 			continue;
+ 
+ 		ptl = huge_pte_lock(h, mm, ptep);
+-		if (huge_pmd_unshare(mm, &address, ptep)) {
++		if (huge_pmd_unshare(mm, vma, &address, ptep)) {
+ 			spin_unlock(ptl);
+ 			/*
+ 			 * We just unmapped a page of PMDs by clearing a PUD.
+@@ -4427,10 +4427,6 @@ vm_fault_t hugetlb_fault(struct mm_struc
+ 		} else if (unlikely(is_hugetlb_entry_hwpoisoned(entry)))
+ 			return VM_FAULT_HWPOISON_LARGE |
+ 				VM_FAULT_SET_HINDEX(hstate_index(h));
+-	} else {
+-		ptep = huge_pte_alloc(mm, haddr, huge_page_size(h));
+-		if (!ptep)
+-			return VM_FAULT_OOM;
+ 	}
+ 
+ 	/*
+@@ -4907,7 +4903,7 @@ unsigned long hugetlb_change_protection(
+ 		if (!ptep)
+ 			continue;
+ 		ptl = huge_pte_lock(h, mm, ptep);
+-		if (huge_pmd_unshare(mm, &address, ptep)) {
++		if (huge_pmd_unshare(mm, vma, &address, ptep)) {
+ 			pages++;
+ 			spin_unlock(ptl);
+ 			shared_pmd = true;
+@@ -5288,12 +5284,14 @@ out:
+  * returns: 1 successfully unmapped a shared pte page
+  *	    0 the underlying pte page is not shared, or it is the last user
+  */
+-int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep)
++int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
++					unsigned long *addr, pte_t *ptep)
+ {
+ 	pgd_t *pgd = pgd_offset(mm, *addr);
+ 	p4d_t *p4d = p4d_offset(pgd, *addr);
+ 	pud_t *pud = pud_offset(p4d, *addr);
+ 
++	i_mmap_assert_write_locked(vma->vm_file->f_mapping);
+ 	BUG_ON(page_count(virt_to_page(ptep)) == 0);
+ 	if (page_count(virt_to_page(ptep)) == 1)
+ 		return 0;
+@@ -5311,7 +5309,8 @@ pte_t *huge_pmd_share(struct mm_struct *
+ 	return NULL;
+ }
+ 
+-int huge_pmd_unshare(struct mm_struct *mm, unsigned long *addr, pte_t *ptep)
++int huge_pmd_unshare(struct mm_struct *mm, struct vm_area_struct *vma,
++				unsigned long *addr, pte_t *ptep)
+ {
+ 	return 0;
+ }
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -1458,7 +1458,7 @@ static bool try_to_unmap_one(struct page
+ 			 * do this outside rmap routines.
+ 			 */
+ 			VM_BUG_ON(!(flags & TTU_RMAP_LOCKED));
+-			if (huge_pmd_unshare(mm, &address, pvmw.pte)) {
++			if (huge_pmd_unshare(mm, vma, &address, pvmw.pte)) {
+ 				/*
+ 				 * huge_pmd_unshare unmapped an entire PMD
+ 				 * page.  There is no way of knowing exactly
 
 
