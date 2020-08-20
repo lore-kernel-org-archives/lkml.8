@@ -2,101 +2,66 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F36F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2D89207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925590;
-	bh=TBVknhZVyjDgRUX1egicX7fhjQ9CedC2sJRWeg3JK24=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QUfDZPCbo6DFaJV+3zKmFa0vWIbXikAlsTB7ZmsWhA8MXrRSJjFUQardJpyPGEJJ8
-	 O4dm4CLQ8V9EXYGPFUPwvyVMQaRZcO7znj80zjHuxEe69J/j1pl2BI17snxz3BFuXC
-	 NAfA9QOnSTVIh4dQTdcm+93ymBPay3AmWnfLy6L4=
+	by mail.kernel.org (Postfix) with ESMTP id 15E4D207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="t5eSugjJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbgHTMNH (ORCPT
+        id S1730357AbgHTMNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:13:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41246 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:13:15 -0400
+Received: from crapouillou.net ([89.234.176.41]:47050 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730185AbgHTJ51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C65D22CAD;
-        Thu, 20 Aug 2020 09:57:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917447;
-        bh=TBVknhZVyjDgRUX1egicX7fhjQ9CedC2sJRWeg3JK24=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmrGpTerFwrnV76lQ6wiBhwSxHspUA1n4uVPJDc2u3WbvC0sgYhZ/OCnF+1CjNspe
-         k4IuKOFOo2hGgZU9jRSeT/qxNubCdjTLN/2bYZdhpKTrqBmot6ONGkE/2KWSIns4hS
-         ljG3GqnOYBYaPgEaaCHS6PZSPC+3Yj1vxdHMY/zU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 005/212] crypto: ccp - Release all allocated memory if sha type is invalid
-Date:   Thu, 20 Aug 2020 11:19:38 +0200
-Message-Id: <20200820091602.527206018@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730067AbgHTMNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:13:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597925582; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=fVj37TIG+mvs7lftpVXU13Q2HOoYZx+9DhCxLihuqvk=;
+        b=t5eSugjJtimK8UxX9PPKhP8StyA8sWuspF56PdTYS/PHVZyzzhQk+gvYt4UW6rMfm76mMy
+        zwm971CP9BE+LS6Y8dgwSS0umu4TwFKt9Fj5h7owDW6/CPBSN78twzl+lVNX1u3szGDBvV
+        OpAo74M0rVPa5CE/0WSMVumKxYQ+aZc=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 0/2] NT39016 cleanup
+Date:   Thu, 20 Aug 2020 14:12:54 +0200
+Message-Id: <20200820121256.32037-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+A few cleanups to the Novatek NT39016 panel driver:
 
-[ Upstream commit 128c66429247add5128c03dc1e144ca56f05a4e2 ]
+- Reorder function calls in probe, so that drm_panel_of_backlight() is
+  called after drm_panel_init(), as requested by the function's
+  documentation;
+- Use the 'dev' field inside the drm_panel structure, instead of using a
+  separate field in the driver's private structure.
 
-Release all allocated memory if sha type is invalid:
-In ccp_run_sha_cmd, if the type of sha is invalid, the allocated
-hmac_buf should be released.
+Cheers,
+-Paul
 
-v2: fix the goto.
+Paul Cercueil (2):
+  drm/panel: novatek,nt39016: Reorder calls in probe
+  drm/panel: novatek,nt39016: Remove 'dev' field in priv struct
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Acked-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/crypto/ccp/ccp-ops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/crypto/ccp/ccp-ops.c b/drivers/crypto/ccp/ccp-ops.c
-index 7d4cd518e6022..723f0a0cb2b5b 100644
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -1216,8 +1216,9 @@ static int ccp_run_sha_cmd(struct ccp_cmd_queue *cmd_q, struct ccp_cmd *cmd)
- 			       digest_size);
- 			break;
- 		default:
-+			kfree(hmac_buf);
- 			ret = -EINVAL;
--			goto e_ctx;
-+			goto e_data;
- 		}
- 
- 		memset(&hmac_cmd, 0, sizeof(hmac_cmd));
 -- 
-2.25.1
-
-
+2.28.0
 
