@@ -5,49 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E86C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C66402067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3612067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918478;
-	bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+	s=default; t=1597918482;
+	bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Slb9Nb9o1VqMasE3W+1+FbPWGNtIabVc7k99oujdsL3R/XjXjY/BqnoWEDt+TYO3L
-	 pFPuxPHE2/kX3sRJ57nIcx3hbP9jAEabpH08ZZ2C6vicuzt6aEZX7yk+WdLVZAEM2S
-	 pWaWTePDFbAYKTwNdy0o3xuHFTcscrcuP4HxT77k=
+	b=ZQ0Zxwd7Hn6DLHkEBmMgVYzxjnccMhLrd0iGgOgHgzo6+0Vki0qAgJXeMM2rFajS/
+	 pVOvYV3393x/uGJDRM/k1poWO3fDn76lGuaB7QGxe++9XmAQL93kTcsnXirtTKbPFH
+	 sqhp99nP6KjZUCZQTBpW3D3rMuuOmzsv5CGPTyHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgHTKOh (ORCPT
+        id S1731200AbgHTKOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60252 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:14:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731069AbgHTKOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:07 -0400
+        id S1731095AbgHTKOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099BC206DA;
-        Thu, 20 Aug 2020 10:14:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D203A20724;
+        Thu, 20 Aug 2020 10:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918446;
-        bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+        s=default; t=1597918451;
+        bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzqX82Ybgy6fKmY3PbUrKKv/GWdgmnisvZFclaSPJxCPqW7VTNJF3vCHm0EJ3/tQm
-         5Azf8nasiHA5AQ01z24vG3gXX2aVbNtDdYU5lqYATKO3L3JKHvSd5SBhp143eewi4M
-         4aywLMxkCir01EvwmD58uX7k+9k5pEXHagc8ws90=
+        b=DbYkbVe3XVycxhQanWGpS56Kvw66GrUROLH+AejuRNALFio2KNwbBftCg3DngpKRz
+         tQd407T77fpZQC7JYJpgMMLsPq7MzCY2fnU3Av+/x/dyCTsTStNP9fsB1DvQ1XWuh+
+         EOKlRh7iTYFHTv+Y1cO9a1tKgjXhJU6rSL5TAphM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Christian Eggers <ceggers@arri.de>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.14 172/228] dt-bindings: iio: io-channel-mux: Fix compatible string in example code
-Date:   Thu, 20 Aug 2020 11:22:27 +0200
-Message-Id: <20200820091616.179163271@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PATCH 4.14 174/228] xtensa: fix xtensa_pmu_setup prototype
+Date:   Thu, 20 Aug 2020 11:22:29 +0200
+Message-Id: <20200820091616.273559522@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,34 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Eggers <ceggers@arri.de>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-commit add48ba425192c6e04ce70549129cacd01e2a09e upstream.
+commit 6d65d3769d1910379e1cfa61ebf387efc6bfb22c upstream.
 
-The correct compatible string is "gpio-mux" (see
-bindings/mux/gpio-mux.txt).
+Fix the following build error in configurations with
+CONFIG_XTENSA_VARIANT_HAVE_PERF_EVENTS=y:
 
-Cc: stable@vger.kernel.org # v4.13+
-Reviewed-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-Link: https://lore.kernel.org/r/20200727101605.24384-1-ceggers@arri.de
-Signed-off-by: Rob Herring <robh@kernel.org>
+  arch/xtensa/kernel/perf_event.c:420:29: error: passing argument 3 of
+  ‘cpuhp_setup_state’ from incompatible pointer type
+
+Cc: stable@vger.kernel.org
+Fixes: 25a77b55e74c ("xtensa/perf: Convert the hotplug notifier to state machine callbacks")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 +-
+ arch/xtensa/kernel/perf_event.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-+++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-@@ -21,7 +21,7 @@ controller state. The mux controller sta
+--- a/arch/xtensa/kernel/perf_event.c
++++ b/arch/xtensa/kernel/perf_event.c
+@@ -404,7 +404,7 @@ static struct pmu xtensa_pmu = {
+ 	.read = xtensa_pmu_read,
+ };
  
- Example:
- 	mux: mux-controller {
--		compatible = "mux-gpio";
-+		compatible = "gpio-mux";
- 		#mux-control-cells = <0>;
+-static int xtensa_pmu_setup(int cpu)
++static int xtensa_pmu_setup(unsigned int cpu)
+ {
+ 	unsigned i;
  
- 		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
 
 
