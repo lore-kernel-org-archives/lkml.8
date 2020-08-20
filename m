@@ -2,111 +2,201 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32159C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C72C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06BAE2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41CA020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Pf9iu/qU"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PSHGnsUv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgHTVxu (ORCPT
+        id S1728209AbgHTVx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:53:50 -0400
-Received: from mail-eopbgr770101.outbound.protection.outlook.com ([40.107.77.101]:15621
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728121AbgHTVxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:53:45 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EcQ+Fnu83BWveC7qucvFr779R/gkgy7NLFoVnIxY7/WqGr3AN9RQGDm0JRGqRY7QJjpeji8lDrMvOL+W9VJM24A2la9ApahC/SOgDZ5UKrwf/8152PAWuO9b7AkC6WainXmCmr+Gl9eQIsRNrFUjiD4479oj6jA3mEAuWAVf3BY9dXPhOHcJV+ypwUPESUlbjzqz4UxxXcJajhdkXVDk8ZQZjcoKZxiuDj09j1aJPpJi7UVP0FBGJewphclOWA4QZDE0IeekdJyyNYaP0PmmqfBCuPEacP/E20U8LXTUorgOq19PVjZDvSZjkOxFd0gwbhr3o2/eJ7XQbZn5PR3jww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4RG4KbGLVdOufIYjQc1al6YSpiV9guQJUhOLQ5+XRbE=;
- b=ILepRKHgs3Z5flcyyWErTXlYuIEtvGpbfWhyZgoyzdD2IIIQdLqDm49+vmU+KC2Q29Mk6O8blaq3nkHOiUCTnm/h8QPEo7l5QfM42/tFPIcX2xuLfCQfVC7P08a7qL8+f0Tn5z/CRiPAoABdt/7SxLgPf4k+xbIP0XwsjDrsiS+YLAdoDdEjxXH8jen6n1WJCw0j6lGh3qgZX1RDeRGmYqoi8ThNYIWZAhSbhu/6qgQDgBmvd/xEjP/zRcraoMIvmQePEvjnxnLVcTEOadOFNbo4ylVY8kWxr1LftxfCgu4Aoxr8ZY6I+7pR9nxuxlEhKBncvdLmr6X9gAkSRqwPeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4RG4KbGLVdOufIYjQc1al6YSpiV9guQJUhOLQ5+XRbE=;
- b=Pf9iu/qUELTXl17MjEsSOrzj6JLqilB5hjYthH0dPmKIgIMjqEkNNJiACtHSp3vejRTmNDTl5C9U/ctiCTwcQX5p5O2EW6JwgzW6X3/CX5BiOczPnsMauxoNjoJoPYvcb8aYPW/zf2wiEQkFae0FoBHtKnd1k/R1pADYj5aCu5A=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=microsoft.com;
-Received: from BYAPR21MB1333.namprd21.prod.outlook.com (2603:10b6:a03:115::15)
- by BY5PR21MB1395.namprd21.prod.outlook.com (2603:10b6:a03:238::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.5; Thu, 20 Aug
- 2020 21:53:43 +0000
-Received: from BYAPR21MB1333.namprd21.prod.outlook.com
- ([fe80::e1f7:9d59:6ae3:e84f]) by BYAPR21MB1333.namprd21.prod.outlook.com
- ([fe80::e1f7:9d59:6ae3:e84f%9]) with mapi id 15.20.3305.021; Thu, 20 Aug 2020
- 21:53:43 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     linux-hyperv@vger.kernel.org, netdev@vger.kernel.org
-Cc:     haiyangz@microsoft.com, kys@microsoft.com, sthemmin@microsoft.com,
-        olaf@aepfle.de, vkuznets@redhat.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net, 0/2] hv_netvsc: Some fixes for the select_queue
-Date:   Thu, 20 Aug 2020 14:53:13 -0700
-Message-Id: <1597960395-1897-1-git-send-email-haiyangz@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MWHPR18CA0025.namprd18.prod.outlook.com
- (2603:10b6:320:31::11) To BYAPR21MB1333.namprd21.prod.outlook.com
- (2603:10b6:a03:115::15)
+        Thu, 20 Aug 2020 17:53:57 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58684 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbgHTVxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 17:53:55 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07KLrpUk066344;
+        Thu, 20 Aug 2020 16:53:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1597960431;
+        bh=0EF0JtL6mcRJ2tR/2jpO3XDBQ1XUe4voliiNQAmlZ7E=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=PSHGnsUvaSP3XcBuScKinyIYKtQSV7UR5XHLvBdjdHtD8Sqoa+v+sPTTsAbGOninv
+         yuNTFPV3OQSlREwvm4GzPcjMykxvvAaRSIdIev9OULJF3V3PLtLH9klh9db+/ujzcW
+         EbIcNMR50Y+ycCuQFrcqOWa6VEff3I8D5THUB4Ms=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07KLrpks009770
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 16:53:51 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
+ Aug 2020 16:53:50 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Thu, 20 Aug 2020 16:53:50 -0500
+Received: from [10.250.32.29] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07KLrooR103491;
+        Thu, 20 Aug 2020 16:53:50 -0500
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+From:   Suman Anna <s-anna@ti.com>
+To:     Stefano Stabellini <stefano.stabellini@xilinx.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>, <stefanos@xilinx.com>,
+        <BLEVINSK@xilinx.com>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <tomase@xilinx.com>
+References: <20200630024922.32491-1-s-anna@ti.com>
+ <20200630024922.32491-2-s-anna@ti.com> <20200714171553.GA2522956@bogus>
+ <20200716171903.GA3286345@xps15>
+ <alpine.DEB.2.21.2007161232400.3886@sstabellini-ThinkPad-T480s>
+ <b7415d48-a354-5610-a657-08cdefc482a6@ti.com>
+ <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
+Message-ID: <d818fe7b-26d6-2b3f-3155-87fc58f5b273@ti.com>
+Date:   Thu, 20 Aug 2020 16:53:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 2
-Received: from 255.255.255.255 (255.255.255.255) by MWHPR18CA0025.namprd18.prod.outlook.com (2603:10b6:320:31::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Thu, 20 Aug 2020 21:53:42 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 23690fbb-b0f4-4c19-2038-08d84553814d
-X-MS-TrafficTypeDiagnostic: BY5PR21MB1395:
-X-MS-Exchange-Transport-Forked: True
-X-LD-Processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-X-Microsoft-Antispam-PRVS: <BY5PR21MB139593B953FE84B5D94DB0F7AC5A0@BY5PR21MB1395.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4lii6AgTstyKx18yPk8a6RREMTybI8ZkloePBarGPztK2nweNaaD3RFFQRDQO7a7Bkdos0iZVAx4Qa05dkurTKIXAcjHUTL3e0PZmrKS4/4qEhYVu14iGr1uP5rxzzFoyWTsCrmcFCavmw25etxUIZxVO+rpgMPqE8XNFxd3QrqcToKk+VZsnIOZAWRgRHChuGT4OW2n14z3AgRUUkm+T2az4o5zPnIhE4UfHe5g7fq7E+bbDZvwsrYlKTedMFhxo/aaYavFhCiltJf0eK/uw7hniPBnngWNnXTrLCosZ+IHBVJ6U+XzG0gE5zDP+ZfVyXjf7jGNvXeFbHEFrWdx08htpSyZQcVFzv8Bg8uAdPIoXDmFccu49Uub7bIeBWpO
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1333.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(39860400002)(366004)(376002)(136003)(346002)(82950400001)(956004)(82960400001)(2616005)(52116002)(66556008)(66946007)(478600001)(5660300002)(66476007)(316002)(16576012)(6666004)(558084003)(110011004)(83380400001)(36756003)(8936002)(186003)(6486002)(4326008)(10290500003)(2906002)(7846003)(8676002)(26005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: dqXvoOtUt3wIZIeDNyvT9n/KIOV55DugHIjFO4aNm2KTjlF1Ei5yr+glzjrMLcM/89eXwsT4ReK420nk6yv0a1doaWpENsw0Q1PB737WPdA5p755lfuHQCK6HgKA1vBj7IxFr5mQd+5eNzKrzLq5bqUPPiOXrzINSzGJ/jMLLA9zdIdKjNYbpKqJfgK+uC7KLf+7oLxRzzmvnw62SQda8A+anFVgGmrdtET7Jxds/hcu7KaMv6LHZiw/pXkxqeWNXOvdtJvd/Pu6n1tNmpUO4UsCYfac17Orz8RCE1gege5HyjXI5Xj0gzbMSYR1eanUUqNuElf8c9cQRdk/YTQzfwSsznzrhbe314gc2nHEgm2Uve/XqxUEwGgKno4bT4U7JkoBfh59O6WF6qAKwUeHCnnonoSsp9PcS9rDV5sYPbw7jpA82SUUrIu13FmFXlSbGpSTJVy/Yg0KXzOvBUNJmcdNFZAogy/Swd0u/Cyl4UQ3GYMMfX9TpU51JAiqsPzFteh6dPUlvWOU7Ad/ljbZEQnZTbUPt9R8IwHOmD0AegUwSXAZZ1Qs6mYaUJJqDHS0LWBLzsdHb/G5Oc5pJA9QIEgph89ItgZgUWjuWzEjoIo2K3Wyg6H3zqHYbvTjVOi9KIsqfVco8eTW6Zf4RKHCrw==
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23690fbb-b0f4-4c19-2038-08d84553814d
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1333.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 21:53:43.1532
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eHaKEgmHoWBcW2rOZ/dks9gMjh3xZuZdpPXn859Cp2p1ZhTgyo1/yfQUQqHr17rCIfcGxHKwph3Pgvol52INeA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR21MB1395
+In-Reply-To: <8ba1f240-df9a-d63e-5c05-1a4a13e03213@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set includes two fixes for the select_queue process.
+Hi Rob,
 
-Haiyang Zhang (2):
-  hv_netvsc: Remove "unlikely" from netvsc_select_queue
-  hv_netvsc: Fix the queue_mapping in netvsc_vf_xmit()
+On 8/10/20 11:52 AM, Suman Anna wrote:
+> Hi Rob,
+> 
+> On 7/27/20 5:39 PM, Suman Anna wrote:
+>> Hi Rob,
+>>
+>> On 7/16/20 2:43 PM, Stefano Stabellini wrote:
+>>> On Thu, 16 Jul 2020, Mathieu Poirier wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On Tue, Jul 14, 2020 at 11:15:53AM -0600, Rob Herring wrote:
+>>>>> On Mon, Jun 29, 2020 at 09:49:19PM -0500, Suman Anna wrote:
+>>>>>> The Texas Instruments K3 family of SoCs have one or more dual-core
+>>>>>> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+>>>>>> can be split between multiple voltage domains as well. Add the device
+>>>>>> tree bindings document for these R5F subsystem devices. These R5F
+>>>>>> processors do not have an MMU, and so require fixed memory carveout
+>>>>>> regions matching the firmware image addresses. The nodes require more
+>>>>>> than one memory region, with the first memory region used for DMA
+>>>>>> allocations at runtime. The remaining memory regions are reserved
+>>>>>> and are used for the loading and running of the R5F remote processors.
+>>>>>> The R5F processors can also optionally use any internal on-chip SRAM
+>>>>>> memories either for executing code or using it as fast-access data.
+>>>>>>
+>>>>>> The added example illustrates the DT nodes for the single R5FSS device
+>>>>>> present on K3 AM65x family of SoCs.
+>>>>>>
+>>>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>>>> ---
+>>>>>> v2:
+>>>>>>   - Renamed "lockstep-mode" property to "ti,cluster-mode"
+>>>>>
+>>>>> I don't think that's a move in the right direction given this is at
+>>>>> least partially a standard feature.
+>>>>>
+>>>>> As I said before, I'm very hesistant to accept anything here given I
+>>>>> know the desires and activity to define 'system Devicetrees' of which
+>>>>> TI is participating. While maybe an rproc node is sufficient for a
+>>>>> DSP, it seems multiple vendors have R cores and want to define them in
+>>>>> system DT.
+>>
+>> Ping on this discussion. TI is participating on the System DT evolution in general, but we don't have any plans to use DTS on our remote cores. We have our own auto-generated Chip-Support-Library (CSL) code that gets used on our firmwares.
+>>
+>> Also, most of the properties I defined are rather standard properties. I have posted a revised v3 [1] after the common ti,sci properties refactoring. This series is only waiting on the bindings. I am happy to change any ti, prefixed properties. I had one open question [2] that I am waiting for a response from you for identifying the R5F Core.
+> 
+> Ping on this.
 
- drivers/net/hyperv/netvsc_drv.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Any comments on this? This discussion is what's holding up this series from
+getting merged.
 
--- 
-2.25.1
+Also, FWIW, I spent a bit of time looking at the R5s (called RPU) in the Xilinx
+ZynqMP, and the integration aspects are very different between the TI and Xilinx
+SoCs, so I do not think even a single binding is possible between the two SoCs.
+A few of them to cite:
+
+1. TI SoCs require the power/resets to be released for both the Cores in
+LockStep-mode, while it was enough to just release the Core0 resets on ZynqMP.
+So, our binding requires that both CPUs be defined for sure as the reset
+controls are defined per core, while you don't see them on the RPU.
+
+2. There are specific core reset sequences on TI SoCs in LockStep and
+Split-modes on TI SoCs, I am not sure if there are any with Xilinx SoCs.
+
+3. The TCMs are embedded within the R5F sub-system on TI SoCs, and are
+controlled by the same power and clock as the R5Fs. There is an additional CPU
+halt line that controls the core execution, and allows us to enable the access
+to these. The ZynqMP looks to have completely independent control to the TCMs.
+This is the reason why they are represented as individual mmio-sram nodes in the
+Xilinx binding.
+
+4. The TCMs and which one appears at the R5 address 0 are programmable on TI
+SoCs, I couldn't tell if this is the case with Xilinx SoCs.
+
+Ben and Stefano,
+Please do clarify, if I am off on any of the above differences.
+
+regards
+Suman
+
+
+> 
+> regards
+> Suman
+> 
+>>
+>> regards
+>> Suman
+>>
+>> [1] https://patchwork.kernel.org/patch/11679331/
+>> [2] https://patchwork.kernel.org/comment/23273441/
+>>
+>>>>>
+>>>>> Though the system DT effort has not yet given any thought to what is the
+>>>>> view of one processor or instance to another instance (which is what
+>>>>> this binding is). We'll still need something defined for that, but I'd
+>>>>> expect that to be dependent on what is defined for system DT.
+>>>>
+>>>> Efforts related to the definition of the system DT are under way, something I
+>>>> expect to keep going on for some time to come.  I agree with the need to use the
+>>>> system DT to define remote processors and I look forward to the time we can do
+>>>> so.
+>>>
+>>> I'll take this opportunity to add that I should be able to publicly
+>>> present a System Device Tree proposal for this during the next call (the
+>>> next one after the call early next week that has already a full agenda.)
+>>>
+>>>
+>>>> That being said we need to find a concensus on how to move forward with patches
+>>>> that are ready to be merged.  What is your opinion on that?
+>>>
+>>> In my opinion we don't have to necessarily wait for System Device Tree
+>>> to make progress with those if they look OK.
+>>>
+>>
+> 
 
