@@ -7,45 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ECDEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3612067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20B720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918482;
-	bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
+	s=default; t=1597918488;
+	bh=10jsHML1yfzSljuKWYJg2C1g0WyzWLBu9ooMOo5TVOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQ0Zxwd7Hn6DLHkEBmMgVYzxjnccMhLrd0iGgOgHgzo6+0Vki0qAgJXeMM2rFajS/
-	 pVOvYV3393x/uGJDRM/k1poWO3fDn76lGuaB7QGxe++9XmAQL93kTcsnXirtTKbPFH
-	 sqhp99nP6KjZUCZQTBpW3D3rMuuOmzsv5CGPTyHU=
+	b=S9OYYNHsm3sb0aqsDQyhFKh1AItMahKr8fHlwKS5zHoH8h6ysKC1e26AQLKQuhN/i
+	 Oj6Y8vK9/kfu4XNu3FbxGhAg0haRBJs7uaAZK3mmFhBq55APh4SKpQq5hPsszV8ws/
+	 Eg/dhwNuKwCBTVJjVSys7momT+bTNNbOj626EzEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbgHTKOj (ORCPT
+        id S1731207AbgHTKOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731095AbgHTKOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:12 -0400
+        id S1730928AbgHTKOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D203A20724;
-        Thu, 20 Aug 2020 10:14:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13F6320738;
+        Thu, 20 Aug 2020 10:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918451;
-        bh=fkOJEgxnlLfFoY4VoR+l/3xqMq5UzsO9nPMTzem0mjU=;
+        s=default; t=1597918469;
+        bh=10jsHML1yfzSljuKWYJg2C1g0WyzWLBu9ooMOo5TVOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DbYkbVe3XVycxhQanWGpS56Kvw66GrUROLH+AejuRNALFio2KNwbBftCg3DngpKRz
-         tQd407T77fpZQC7JYJpgMMLsPq7MzCY2fnU3Av+/x/dyCTsTStNP9fsB1DvQ1XWuh+
-         EOKlRh7iTYFHTv+Y1cO9a1tKgjXhJU6rSL5TAphM=
+        b=eJYhaE4OdXlVRGZ9RfdRT/1j/02zYWfRguyt1w4FEt1m9V8Pa09z0V9mimejMqiMu
+         239MoCbwWORLjLMD2hnndIx80jMds7CJMbnp0jRjw03U4k0XgeMguGY6SKnJj8j5SC
+         DhdHWaEcKiHfIrVJXtljBjiB9LgPfm7DHNTfVLEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.14 174/228] xtensa: fix xtensa_pmu_setup prototype
-Date:   Thu, 20 Aug 2020 11:22:29 +0200
-Message-Id: <20200820091616.273559522@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com,
+        syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 154/228] fs/minix: dont allow getting deleted inodes
+Date:   Thu, 20 Aug 2020 11:22:09 +0200
+Message-Id: <20200820091615.278147448@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -58,35 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 6d65d3769d1910379e1cfa61ebf387efc6bfb22c upstream.
+commit facb03dddec04e4aac1bb2139accdceb04deb1f3 upstream.
 
-Fix the following build error in configurations with
-CONFIG_XTENSA_VARIANT_HAVE_PERF_EVENTS=y:
+If an inode has no links, we need to mark it bad rather than allowing it
+to be accessed.  This avoids WARNINGs in inc_nlink() and drop_nlink() when
+doing directory operations on a fuzzed filesystem.
 
-  arch/xtensa/kernel/perf_event.c:420:29: error: passing argument 3 of
-  ‘cpuhp_setup_state’ from incompatible pointer type
-
-Cc: stable@vger.kernel.org
-Fixes: 25a77b55e74c ("xtensa/perf: Convert the hotplug notifier to state machine callbacks")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+a9ac3de1b5de5fb10efc@syzkaller.appspotmail.com
+Reported-by: syzbot+df958cf5688a96ad3287@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-3-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/kernel/perf_event.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/minix/inode.c |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
---- a/arch/xtensa/kernel/perf_event.c
-+++ b/arch/xtensa/kernel/perf_event.c
-@@ -404,7 +404,7 @@ static struct pmu xtensa_pmu = {
- 	.read = xtensa_pmu_read,
- };
- 
--static int xtensa_pmu_setup(int cpu)
-+static int xtensa_pmu_setup(unsigned int cpu)
- {
- 	unsigned i;
- 
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -471,6 +471,13 @@ static struct inode *V1_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
+@@ -504,6 +511,13 @@ static struct inode *V2_minix_iget(struc
+ 		iget_failed(inode);
+ 		return ERR_PTR(-EIO);
+ 	}
++	if (raw_inode->i_nlinks == 0) {
++		printk("MINIX-fs: deleted inode referenced: %lu\n",
++		       inode->i_ino);
++		brelse(bh);
++		iget_failed(inode);
++		return ERR_PTR(-ESTALE);
++	}
+ 	inode->i_mode = raw_inode->i_mode;
+ 	i_uid_write(inode, raw_inode->i_uid);
+ 	i_gid_write(inode, raw_inode->i_gid);
 
 
