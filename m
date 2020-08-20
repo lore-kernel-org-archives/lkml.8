@@ -2,138 +2,252 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9836C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD254C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5682078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9441E207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:11:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=silabs.onmicrosoft.com header.i=@silabs.onmicrosoft.com header.b="ho72egb5"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="LaaXzekv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726741AbgHTJLZ (ORCPT
+        id S1726793AbgHTJLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:11:25 -0400
-Received: from mail-bn8nam11on2079.outbound.protection.outlook.com ([40.107.236.79]:35904
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbgHTJLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:11:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fvqg8p7IDl28T2MjwqrrhwStZeQEPTfsXWBlsX7b0ey9vBeOGxSNzniNGiHFKOfih7NZGwvqK0wGLnlYWQL0ro51nRKjrqKL9J5av4pNgxv8IEiLzh1gRfstCAEMIw0vcisoB0NCMRyTH4KX56ye0TLuQstDqYmoM0+cc+mGYrUcGmynwvnGm19Mn43lnZDPjYmK1BeeYwEy5ac3Q1drx/AkC5WXmHdKvhcGoJtHWJJILoiCesIxJ2gzQH8kd8n6DaF3pIVt4PxuR2MVSqgrT24LX+bUXJxrhRhgso9m3py06CdldPKpe0NPQOGl8UycqrlT7SLHc/kh4814X6qQ0Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZBvTnQ/oki3O+HDORedm9zXMjPJjx1JFDiBlSqL0tUs=;
- b=AcE1FlDklqlFfET8rFPCEFv8Va0hEDSBp9p2iHP86xTiyA6a/LC0JKX5lRjGQW+/2yc6Iwldon0Iw0lia8oFaIRjM6zcioo86hxumr0bH63apjDYfZnC8FaptIneH/meAwQQeysSHgps9ZvCmRpkcJRHRQddqiRT8AyM5wZRJtpNLWIFWqGfi5uSf+1TwpXSmShPUgjjMm11CMi9f8a6l2FB4FCUHJ2Kehdz3tZxvYdWj2QARYGCRiA7T5uiTLuDeOEYRknJERFroq/RsMbuwVAPwqwVb562kKIy1IMbq+YKDkBAJs1193/bRvp8VwXN+rInT0Qq0lZXkMQnce7Ikg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=silabs.com; dmarc=pass action=none header.from=silabs.com;
- dkim=pass header.d=silabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=silabs.onmicrosoft.com; s=selector2-silabs-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZBvTnQ/oki3O+HDORedm9zXMjPJjx1JFDiBlSqL0tUs=;
- b=ho72egb5pwAosxObu81Jd1iIQKicPhFLhmuPxfEnIHjFz+hRZJnaXWwE4VlAh/huohTM8yrK7WFtvHbIaZUcdHNfH7VjryxyI6PBQz8kXv17kcIhSeLT2LjmNIUPiwvIZZD8jhutqbU6IoOSdaaf+LcwFgYdb0yXzqd6HKesabE=
-Authentication-Results: linuxfoundation.org; dkim=none (message not signed)
- header.d=none;linuxfoundation.org; dmarc=none action=none
- header.from=silabs.com;
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com (2603:10b6:805:63::18)
- by SA0PR11MB4544.namprd11.prod.outlook.com (2603:10b6:806:92::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
- 2020 09:11:21 +0000
-Received: from SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6]) by SN6PR11MB2718.namprd11.prod.outlook.com
- ([fe80::85c9:1aa9:aeab:3fa6%4]) with mapi id 15.20.3305.026; Thu, 20 Aug 2020
- 09:11:20 +0000
-From:   =?ISO-8859-1?Q?J=E9r=F4me?= Pouiller <jerome.pouiller@silabs.com>
-To:     gregkh@linuxfoundation.org, Suraj Upadhyay <usuraj35@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 5/6] staging: wfx/hif_rx.c: Fix spelling mistake "negociation" => "negotiation"
-Date:   Thu, 20 Aug 2020 11:11:16 +0200
-Message-ID: <2117465.u6biEVJElo@pc-42>
-Organization: Silicon Labs
-In-Reply-To: <eab6bcb570dcd1407efc8163ff8ff976f623ae9c.1597913333.git.usuraj35@gmail.com>
-References: <834139101223e627665c939388cd7c542920c531.1597913333.git.usuraj35@gmail.com> <eab6bcb570dcd1407efc8163ff8ff976f623ae9c.1597913333.git.usuraj35@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-ClientProxiedBy: PR0P264CA0093.FRAP264.PROD.OUTLOOK.COM
- (2603:10a6:100:18::33) To SN6PR11MB2718.namprd11.prod.outlook.com
- (2603:10b6:805:63::18)
+        Thu, 20 Aug 2020 05:11:52 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:56033 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726364AbgHTJLp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:11:45 -0400
+Received: from cust-b5b5937f ([IPv6:fc0c:c16d:66b8:757f:c639:739b:9d66:799d])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id 8gblkFRmeywL58gbmkZ5pf; Thu, 20 Aug 2020 11:11:42 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1597914702; bh=U7xBLcM2J0jpHAEK5uZYaH2c1oV3hUq9xBqu8R3Xk5s=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=LaaXzekvbv04aXLJUi0eJAG8g7ODXfUELwhFsahrBUUuM8RZsp582BjyuPOu3E9V4
+         Q9K/quCO7BiIStMa3WS24eFIxfSpStTQSooqgIacXM07Rmn+1KgfQLZgjDyBvSmVqj
+         64T77nOLZ0rnpi6qbwnTAIR0eI9Sb28u2hyCv6yLSVYpG8ba6aLVqT5u44QfsE2irn
+         mSpcZyUFZePb7FEQ3wuyqJ1g9j5fc+VamCqtIKg9uRZ1kljhrVyxoCHCSkKLixPwPF
+         yR/jrCV8Z7jHRJQVDX7g18mlv5cusaAxpIp1m+X0Q/cpkrjvtpA+jCv6deCLxt+wB5
+         AlL+djRYrd/eA==
+Subject: Re: [PATCH v3 01/19] media: uapi: h264: Update reference lists
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+References: <20200814133634.95665-1-ezequiel@collabora.com>
+ <20200814133634.95665-2-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f00e299f-8ed2-6dcf-211f-0545e13438aa@xs4all.nl>
+Date:   Thu, 20 Aug 2020 11:11:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by PR0P264CA0093.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:18::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Thu, 20 Aug 2020 09:11:19 +0000
-X-Originating-IP: [37.71.187.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c61c4be1-6ed0-45ed-2d9d-08d844e900e0
-X-MS-TrafficTypeDiagnostic: SA0PR11MB4544:
-X-Microsoft-Antispam-PRVS: <SA0PR11MB454417E341798B77EF1C3653935A0@SA0PR11MB4544.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QFjfj1fMiNbgus8/dS4wWjaLQ6oAvZK8dNepBo3P1jCUf82Ytj+AkGGIwqaLIJksCt5JDP9aZ2cbCQ5S4iPHWYNIuMppfWaG/edUE4hu8kJqRcCmlY7kGZwLrJWmUZ67tb2Wn9/EHMFsi0O9ZgHXUeOFyiXWRAkzguYqMSFAxfPtwFzk8/SGyq2LB1OXnvKAbESGReCOIB/zrvv5Cg2oMkjxvuZjzPw2zEY//iXbyVogeVtR04MYp2TWbL18We23qlYeK74W796uN+CchHfn5USPoQeozchRgzu0yLLoZxJ9KR6kPnDaffLSGCPj671UZhCY4NN/vvmUq3GNxvQpIKEuSRH3UDnWr4E81nsleotljj3uGw5q5FzQKf7sjtqjP2RVVyQDYxutfdQKZanYJg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB2718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(7916004)(136003)(39850400004)(376002)(366004)(346002)(396003)(186003)(6916009)(8936002)(8676002)(956004)(9686003)(478600001)(86362001)(2906002)(5660300002)(66556008)(4326008)(33716001)(66946007)(66476007)(16576012)(6666004)(6486002)(110011004)(83380400001)(316002)(52116002)(36916002)(66574015)(26005)(39026012);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 1MdqK417BXA37J6p0BIWxddU3usp514uLeQKEXHFPUL9MmkpIEE8bIk0B/VpKmsVMGjP4rObUUPPTyC5Aj89dos+svfqhxmNFgafdFwoAFYZza1xn49cNU0MkfMT0YD3+FGgySEwizMWATFUnHDbt/GqrZCWxKMHuHN/oelslIiIlWNuNTP+l9f34ODeke0YrK0NRID6ccnJN0O+1ZxKG1hw0S2KFCunkJF9UgnO+skiLvAdNGvWSgc5qEyXiZFNrY0RyhyWwZOrKpFhlKzm7KfN7eBnWVW+NRPIFQo9eLJ7y2Ep1+G3SLaW/mYxVLtVxrVgkWupbDQ2AexrWl/MBPSJlfJlNn4fGRuvNiPRf/FMoFWW/1mBc4cWO9XWGlrvw37WR//SJi4I95cwLWn12F61/SqVn6ODh4QS/uEXeiJVjh9nVyU2pn8ol2c0FoJzOm+xZYfg+OpvXLCxqRJ13Qwy3jvHL5yDYLfQqxHQq/WEpm3Umagr4+IQTLq/COUSXYMXtZIe1BTGiUCFckBK9r4E3ZhKD8CtIh//2eYVwNpeC7O0cYkUmDHFD8q5nyfzJf4ZgrUFvS2kqjopG0Bw8tpOnjtDg1Tl0TqNJJmNCwaH1ZGWUpJAOqfwQJxzaxNj92y6Zr6/kafL5kG5s0TVqw==
-X-OriginatorOrg: silabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c61c4be1-6ed0-45ed-2d9d-08d844e900e0
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB2718.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 09:11:20.8504
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 54dbd822-5231-4b20-944d-6f4abcd541fb
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hDSb6/JCBUiCMSakR7V3BLn8U43kdXQBbIRJ6jBGGldstdtkjs9wcYLVzn1UX3Mij5nhT/pBEkjOtnwpUau5nA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR11MB4544
+In-Reply-To: <20200814133634.95665-2-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfAjTqbisxxfuHqWvIRIOhnI8MK49adN3g+IHofEpheCosvb8sv3BNbTYJN7+/spl3+u2qEBz4tvjmIyx1P5HxD3b59gnrjvS2FVBX1bfCxNPMszZDk11
+ IbnXH6nPsnEdkBrjcm5wzfwkoX0Wv5K58gSAbYgode3aK6TDgznTDFK4itsJRmZ8FGlfta9h/oejjldypeAkLvnGoxglyGvzY8YkyUZg8sBbDzn0uYC73Sna
+ dcOfWCKoeT8Uj+h+/RyMTpMok3zlGhDqZ6lyQwp9QAHX0+0WXHkDSQvHxdecTV70yNwzPn0rmAF3RCQbOqTCgRZdtlRe/kAbDH+IhrI8zd3BRhl0xxV7m1zR
+ idjJl3/NowOJf/drEWEy0nwphqv2jgeP4rDJNZd5J0APqfwIlm+A6rGuYce5fykr8olAAQgkP0T/kh7a4sKCqH+TaHRSH2NfRSeQMWveeKqcyzLPpHrcX2eo
+ o7DGoXmx5l1ssB0RJYMBg5u6MroIzPymTaNSkLzREaaOhQGhgNa1R2/NreKZwXKmkVDuwh1brqmYI8mGyZchOPl8qo5+eQ2Rc8llKrSgDT39lYuEVOldUY1A
+ P57e48XWqPvxMNfr9xo9L/1Ghsm+VFNJibxkp+MqJdCaB8BLC9ueO+AV1LKPkuYp8HQibWCAOSL9m/nKk0RmkN+Vk9k5m8kMlXZrt9YHMZPpYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Suraj,
-
-Thank you for your contribution.
-
-On Thursday 20 August 2020 10:51:27 CEST Suraj Upadhyay wrote:
->=20
-> Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
-
-Even for a small change, you have to fill the commit log body.
-
+On 14/08/2020 15:36, Ezequiel Garcia wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> When dealing with with interlaced frames, reference lists must tell if
+> each particular reference is meant for top or bottom field. This info
+> is currently not provided at all in the H264 related controls.
+> 
+> Make reference lists hold a structure which will also hold an
+> enumerator type along index into DPB array. The enumerator must
+> be used to specify if reference is for top or bottom field.
+> 
+> Currently the only user of these lists is Cedrus which is just compile
+> fixed here. Actual usage of will come in a following commit.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
 > ---
->  drivers/staging/wfx/hif_rx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/staging/wfx/hif_rx.c b/drivers/staging/wfx/hif_rx.c
-> index cc7c0cf226ba..1d32973d8ec1 100644
-> --- a/drivers/staging/wfx/hif_rx.c
-> +++ b/drivers/staging/wfx/hif_rx.c
-> @@ -118,7 +118,7 @@ static int hif_keys_indication(struct wfx_dev *wdev,
->=20
->         // SL_PUB_KEY_EXCHANGE_STATUS_SUCCESS is used by legacy secure li=
-nk
->         if (body->status && body->status !=3D HIF_STATUS_SLK_NEGO_SUCCESS=
-)
-> -               dev_warn(wdev->dev, "secure link negociation error\n");
-> +               dev_warn(wdev->dev, "secure link negotiation error\n");
+> v3:
+> * Rename to avoid mentioning the DPB.
+> v2:
+> * As pointed out by Jonas, enum v4l2_h264_dpb_reference here.
+> ---
+>  .../media/v4l/ext-ctrls-codec.rst             | 44 ++++++++++++++++++-
+>  .../staging/media/sunxi/cedrus/cedrus_h264.c  |  6 +--
+>  include/media/h264-ctrls.h                    | 23 +++++++---
+>  3 files changed, 62 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> index d0d506a444b1..b9b2617c3bda 100644
+> --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> @@ -1843,10 +1843,10 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>      * - __u32
+>        - ``slice_group_change_cycle``
+>        -
+> -    * - __u8
+> +    * - struct :c:type:`v4l2_h264_reference`
+>        - ``ref_pic_list0[32]``
+>        - Reference picture list after applying the per-slice modifications
+> -    * - __u8
+> +    * - struct :c:type:`v4l2_h264_reference`
+>        - ``ref_pic_list1[32]``
+>        - Reference picture list after applying the per-slice modifications
+>      * - __u32
+> @@ -1926,6 +1926,46 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+>        - ``chroma_offset[32][2]``
+>        -
+>  
+> +``Picture Reference``
+> +
+> +.. c:type:: v4l2_h264_reference
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table:: struct v4l2_h264_reference
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - enum :c:type:`v4l2_h264_field_reference`
+> +      - ``reference``
+> +      - Specifies how the picture is referenced.
+> +    * - __u8
+> +      - ``index``
+> +      - Index into the :c:type:`v4l2_ctrl_h264_decode_params`.dpb array.
+> +
+> +.. c:type:: v4l2_h264_field_reference
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 1 2
+> +
+> +    * - ``V4L2_H264_TOP_FIELD_REF``
+> +      - 0x1
+> +      - The top field in field pair is used for
+> +        short-term reference.
+> +    * - ``V4L2_H264_BOTTOM_FIELD_REF``
+> +      - 0x2
+> +     - The bottom field in field pair is used for
+> +        short-term reference.
+> +    * - ``V4L2_H264_FRAME_REF``
+> +      - 0x3
+> +      - The frame (or the top/bottom fields, if it's a field pair)
+> +        is used for short-term reference.
+> +
+>  ``V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS (struct)``
+>      Specifies the decode parameters (as extracted from the bitstream)
+>      for the associated H264 slice data. This includes the necessary
+> diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> index 54ee2aa423e2..cce527bbdf86 100644
+> --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> @@ -166,8 +166,8 @@ static void cedrus_write_frame_list(struct cedrus_ctx *ctx,
+>  
+>  static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>  				   struct cedrus_run *run,
+> -				   const u8 *ref_list, u8 num_ref,
+> -				   enum cedrus_h264_sram_off sram)
+> +				   const struct v4l2_h264_reference *ref_list,
+> +				   u8 num_ref, enum cedrus_h264_sram_off sram)
+>  {
+>  	const struct v4l2_ctrl_h264_decode_params *decode = run->h264.decode_params;
+>  	struct vb2_queue *cap_q;
+> @@ -188,7 +188,7 @@ static void _cedrus_write_ref_list(struct cedrus_ctx *ctx,
+>  		int buf_idx;
+>  		u8 dpb_idx;
+>  
+> -		dpb_idx = ref_list[i];
+> +		dpb_idx = ref_list[i].index;
+>  		dpb = &decode->dpb[dpb_idx];
+>  
+>  		if (!(dpb->flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
+> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> index 080fd1293c42..5f635e8d25e2 100644
+> --- a/include/media/h264-ctrls.h
+> +++ b/include/media/h264-ctrls.h
+> @@ -19,6 +19,8 @@
+>   */
+>  #define V4L2_H264_NUM_DPB_ENTRIES 16
+>  
+> +#define V4L2_H264_REF_LIST_LEN (2 * V4L2_H264_NUM_DPB_ENTRIES)
+> +
+>  /* Our pixel format isn't stable at the moment */
+>  #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4') /* H264 parsed slices */
+>  
+> @@ -140,6 +142,19 @@ struct v4l2_h264_pred_weight_table {
+>  #define V4L2_H264_SLICE_FLAG_DIRECT_SPATIAL_MV_PRED	0x04
+>  #define V4L2_H264_SLICE_FLAG_SP_FOR_SWITCH		0x08
+>  
+> +enum v4l2_h264_field_reference {
+> +	V4L2_H264_TOP_FIELD_REF = 0x1,
+> +	V4L2_H264_BOTTOM_FIELD_REF = 0x2,
+> +	V4L2_H264_FRAME_REF = 0x3,
+> +};
+> +
+> +struct v4l2_h264_reference {
+> +	enum v4l2_h264_field_reference fields;
+> +
+> +	/* Index into v4l2_ctrl_h264_decode_params.dpb[] */
+> +	__u8 index;
+> +};
 
-This change is already in the staging tree. See commit c9638363f02d
-("staging: wfx: fix a handful of spelling mistakes").
+This introducing 3 bytes of padding at the end of this struct...
 
-Globally, if you post changes for drivers/staging you should rebase your
-work on the staging tree before to send it. You can use the script
-get_maintainer.pl to get this information:
+> +
+>  struct v4l2_ctrl_h264_slice_params {
+>  	/* Size in bytes, including header */
+>  	__u32 size;
+> @@ -178,12 +193,8 @@ struct v4l2_ctrl_h264_slice_params {
+>  	__u8 num_ref_idx_l1_active_minus1;
+>  	__u32 slice_group_change_cycle;
+>  
+> -	/*
+> -	 * Entries on each list are indices into
+> -	 * v4l2_ctrl_h264_decode_params.dpb[].
+> -	 */
+> -	__u8 ref_pic_list0[32];
+> -	__u8 ref_pic_list1[32];
+> +	struct v4l2_h264_reference ref_pic_list0[V4L2_H264_REF_LIST_LEN];
+> +	struct v4l2_h264_reference ref_pic_list1[V4L2_H264_REF_LIST_LEN];
 
-    $ ./scripts/get_maintainer.pl --scm drivers/staging/wfx
-    [...]
-    git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
+...which leads to a lot of holes of uninitialized data in these arrays.
 
---=20
-J=E9r=F4me Pouiller
+I recommend to replace 'enum v4l2_h264_field_reference fields;' in struct v4l2_h264_reference
+by '__u8 fields; /* enum v4l2_h264_field_reference */'.
 
+This also saves a lot of memory (2*32*6 = 384 bytes!) and avoids the padding issue.
+
+Regards,
+
+	Hans
+
+>  
+>  	__u32 flags;
+>  };
+> 
 
