@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB043C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2CFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8651D206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8575A2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920734;
-	bh=pkvvXZauKQ4Yty9w49X1OqoXSooFZ3+QrwNAsM8G9Yc=;
+	s=default; t=1597920744;
+	bh=7xMbWi8u2MztLyU+DFZFgOrpTUybRCIU3q3jbvbycHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9+DoXWgUkkbRL0nzzHgOjU2TZK+K0Ab5kjRFAzpBkMPlNkjUPSYc2ltFl0D98p7P
-	 tLGsQ+Q9/iQJBaOpxTt9bC59yF9a1kb5uHs4OcbfN8HXM2uxEwk6UkYl/Qg5bsPgei
-	 TiKfZ65I731AIvfVMAp+qHhO5ZO3PV/m32rrbfr4=
+	b=UkcYxRsXJoxaj+sl5ce2BAX+tTk/I339txuFFV8IFLM7Fkn9cGE6ePOzr1yAtjXN2
+	 ThaoXYYTmj+8ReFaX2Z0yom78ZjzHX4AiA+FpKzelLU417c2/VzJHzKD3OXDazLdF+
+	 cJ7Nm05tTO4BN56cA6ZXly/ZUkf0htjd3Ey7QLbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731153AbgHTKwJ (ORCPT
+        id S1730726AbgHTKOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:52:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32892 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730973AbgHTKO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:28 -0400
+        id S1730822AbgHTKNs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84780206DA;
-        Thu, 20 Aug 2020 10:14:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C84C2206DA;
+        Thu, 20 Aug 2020 10:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918467;
-        bh=pkvvXZauKQ4Yty9w49X1OqoXSooFZ3+QrwNAsM8G9Yc=;
+        s=default; t=1597918427;
+        bh=7xMbWi8u2MztLyU+DFZFgOrpTUybRCIU3q3jbvbycHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDQ9+09G6KvOCdPDv22So4CD+I6x9e+RjRX3tNqRAg0I1Ub2jZSArNNAdc7xWXqyx
-         iqAgVJljUwOfUaPLqTDYesis3km/bTiPi25DnnZAFPiHAO4FS7HucYiw6e+iYX0orX
-         DZ1GB/mFlA18t+tyZs/UTTxiKqejW3lrvEEbrNWg=
+        b=1LJkEdoP36iN4SX9aL04G/uShCrwq0DEdQhe6+cPYzUFYLAs1YmfzEl8U79Vfhvzp
+         io1a6gaqsq1hDXndXIyy12nTH8G9jz0CFH14ODRU5QaUhwAc8IesWE2dmbU2WnNfIT
+         4fqk2WUJyCXDepj87CYZSU1/43I2JlhJjzz2qIks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 180/228] bcache: allocate meta data pages as compound pages
-Date:   Thu, 20 Aug 2020 11:22:35 +0200
-Message-Id: <20200820091616.573741584@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Tim Froidcoeur <tim.froidcoeur@tessares.net>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 166/228] net: initialize fastreuse on inet_inherit_port
+Date:   Thu, 20 Aug 2020 11:22:21 +0200
+Message-Id: <20200820091615.869366086@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,80 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Tim Froidcoeur <tim.froidcoeur@tessares.net>
 
-commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
+commit d76f3351cea2d927fdf70dd7c06898235035e84e upstream.
 
-There are some meta data of bcache are allocated by multiple pages,
-and they are used as bio bv_page for I/Os to the cache device. for
-example cache_set->uuids, cache->disk_buckets, journal_write->data,
-bset_tree->data.
+In the case of TPROXY, bind_conflict optimizations for SO_REUSEADDR or
+SO_REUSEPORT are broken, possibly resulting in O(n) instead of O(1) bind
+behaviour or in the incorrect reuse of a bind.
 
-For such meta data memory, all the allocated pages should be treated
-as a single memory block. Then the memory management and underlying I/O
-code can treat them more clearly.
+the kernel keeps track for each bind_bucket if all sockets in the
+bind_bucket support SO_REUSEADDR or SO_REUSEPORT in two fastreuse flags.
+These flags allow skipping the costly bind_conflict check when possible
+(meaning when all sockets have the proper SO_REUSE option).
 
-This patch adds __GFP_COMP flag to all the location allocating >0 order
-pages for the above mentioned meta data. Then their pages are treated
-as compound pages now.
+For every socket added to a bind_bucket, these flags need to be updated.
+As soon as a socket that does not support reuse is added, the flag is
+set to false and will never go back to true, unless the bind_bucket is
+deleted.
 
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Note that there is no mechanism to re-evaluate these flags when a socket
+is removed (this might make sense when removing a socket that would not
+allow reuse; this leaves room for a future patch).
+
+For this optimization to work, it is mandatory that these flags are
+properly initialized and updated.
+
+When a child socket is created from a listen socket in
+__inet_inherit_port, the TPROXY case could create a new bind bucket
+without properly initializing these flags, thus preventing the
+optimization to work. Alternatively, a socket not allowing reuse could
+be added to an existing bind bucket without updating the flags, causing
+bind_conflict to never be called as it should.
+
+Call inet_csk_update_fastreuse when __inet_inherit_port decides to create
+a new bind_bucket or use a different bind_bucket than the one of the
+listen socket.
+
+Fixes: 093d282321da ("tproxy: fix hash locking issue when using port redirection in __inet_inherit_port()")
+Acked-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Tim Froidcoeur <tim.froidcoeur@tessares.net>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bset.c    |    2 +-
- drivers/md/bcache/btree.c   |    2 +-
- drivers/md/bcache/journal.c |    4 ++--
- drivers/md/bcache/super.c   |    2 +-
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ net/ipv4/inet_hashtables.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/md/bcache/bset.c
-+++ b/drivers/md/bcache/bset.c
-@@ -319,7 +319,7 @@ int bch_btree_keys_alloc(struct btree_ke
- 
- 	b->page_order = page_order;
- 
--	t->data = (void *) __get_free_pages(gfp, b->page_order);
-+	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
- 	if (!t->data)
- 		goto err;
- 
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -794,7 +794,7 @@ int bch_btree_cache_alloc(struct cache_s
- 	mutex_init(&c->verify_lock);
- 
- 	c->verify_ondisk = (void *)
--		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
-+		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
- 
- 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
- 
---- a/drivers/md/bcache/journal.c
-+++ b/drivers/md/bcache/journal.c
-@@ -838,8 +838,8 @@ int bch_journal_alloc(struct cache_set *
- 	j->w[1].c = c;
- 
- 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
--	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
--	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
-+	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
-+	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
- 		return -ENOMEM;
- 
- 	return 0;
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1468,7 +1468,7 @@ void bch_cache_set_unregister(struct cac
- }
- 
- #define alloc_bucket_pages(gfp, c)			\
--	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
-+	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
- 
- struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
- {
+--- a/net/ipv4/inet_hashtables.c
++++ b/net/ipv4/inet_hashtables.c
+@@ -160,6 +160,7 @@ int __inet_inherit_port(const struct soc
+ 				return -ENOMEM;
+ 			}
+ 		}
++		inet_csk_update_fastreuse(tb, child);
+ 	}
+ 	inet_bind_hash(child, tb, port);
+ 	spin_unlock(&head->lock);
 
 
