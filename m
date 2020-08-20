@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EFFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D40C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD88208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D20E208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:05:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kKuVEVlm"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A0h03ayf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbgHTRDo (ORCPT
+        id S1730113AbgHTREC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:03:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57766 "EHLO
+        Thu, 20 Aug 2020 13:04:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36902 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730068AbgHTRCs (ORCPT
+        by vger.kernel.org with ESMTP id S1729900AbgHTRCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:02:48 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH1UCK134262;
-        Thu, 20 Aug 2020 13:02:43 -0400
+        Thu, 20 Aug 2020 13:02:46 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KH1rVp132117;
+        Thu, 20 Aug 2020 13:02:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=j/oDWsRv895s55NF1YbL3HUUtH7qtXG3XNnJHAmUmGY=;
- b=kKuVEVlmxtyvZBTknwfXOOXvRe4Eu7uYqolxWWqfOH6aVDrnPQ0UYQNUabtkyIGC5qsa
- fbbm1/N/eX30sFh0xlPjGsIYIgL6ItsPgTWmI5o75kz90YyWlDNkWaKC/I7MJQv9gnqM
- bjYRA3O+NeblkCdc30JIGmw81rA4hb+ZKaIH0uSPTIzK9i/GqqvQ05pLWuRLPE7z+FN4
- I4BufddVO/G2U0luQC7skXkyBuoBXo5V4PMfD5EOAzQ0bWq1MF+3RMWNfvke7CKrVVOl
- twvK0N6OQbvu4k4e70gnymwjceoAA673ijqJT1ia6BPMURzSEQkKF22d5wPwAPKLzjKy fA== 
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 331ugy3fdf-1
+ bh=cavpwU+lDo/Lusli5lDuTBdkFJ7dYxcQtjslIDI5oyk=;
+ b=A0h03ayfGop/9jm0rqxyJIIYRbWSDDVgf24aumCe0Ah7ZIsvRo7f+jTLPTenwjyAMFuP
+ eMKbnZ+B5S0puZhN4vv76atwZGQcFbiCg/wzcsSmARP4CKrY/HOFeQ5TlyOOn26cAGzN
+ KY+xAtTAxc1f24bHuEYPF2txlZ7wZeZw7MDxhT+aJz9LCsuGXlbSIQM2XiZ/2aE5ws1M
+ uqmtQPn1UP91aeGRDDckHw2zLCclweIVKnT5Meot9ySMAYqMs2jODnZIp9cX3bCXhzjA
+ ssaIl6x8CvavrH79MTSmu1JnIEv2d7Awr3J6KaIMW+whTKbbHbiyLlmJ1YgCH/w48hCQ XQ== 
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 331rvv9fqe-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 13:02:42 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0guK015112;
-        Thu, 20 Aug 2020 17:02:38 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 3304uewqq1-1
+        Thu, 20 Aug 2020 13:02:38 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KH0IIM001542;
+        Thu, 20 Aug 2020 17:02:34 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 3304cedu97-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 17:02:38 +0000
+        Thu, 20 Aug 2020 17:02:34 +0000
 Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2coK43188680
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KH2XC754722822
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 17:02:38 GMT
+        Thu, 20 Aug 2020 17:02:33 GMT
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14170AE05C;
-        Thu, 20 Aug 2020 17:02:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B2F93AE05F;
+        Thu, 20 Aug 2020 17:02:33 +0000 (GMT)
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29DADAE060;
-        Thu, 20 Aug 2020 17:02:37 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C61DFAE064;
+        Thu, 20 Aug 2020 17:02:32 +0000 (GMT)
 Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
         by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 17:02:37 +0000 (GMT)
+        Thu, 20 Aug 2020 17:02:32 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-spi@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         eajames@linux.ibm.com, joel@jms.id.au, bradleyb@fuzziesquirrel.com,
         broonie@kernel.org, robh+dt@kernel.org, arnd@arndb.de
-Subject: [PATCH 7/7] eeprom: at25: Split reads into chunks and cap write size
-Date:   Thu, 20 Aug 2020 12:02:28 -0500
-Message-Id: <20200820170228.42053-8-eajames@linux.ibm.com>
+Subject: [PATCH 3/7] spi: fsi: Fix use of the bneq+ sequencer instruction
+Date:   Thu, 20 Aug 2020 12:02:24 -0500
+Message-Id: <20200820170228.42053-4-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200820170228.42053-1-eajames@linux.ibm.com>
 References: <20200820170228.42053-1-eajames@linux.ibm.com>
@@ -75,11 +75,11 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0
- impostorscore=0 suspectscore=1 phishscore=0 priorityscore=1501
- adultscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200135
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ malwarescore=0 bulkscore=0 priorityscore=1501 adultscore=0 mlxlogscore=593
+ suspectscore=1 phishscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -87,152 +87,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Brad Bishop <bradleyb@fuzziesquirrel.com>
 
-Make use of spi_max_transfer_size to avoid requesting transfers that are
-too large for some spi controllers.
+All of the switches in N2_count_control in the counter configuration are
+required to make the branch if not equal and increment command work.
+Set them when using bneq+.
 
+A side effect of this mode requires a dummy write to TDR when both
+transmitting and receiving otherwise the controller won't start shifting
+receive data.
+
+It is likely not possible to avoid TDR underrun errors in this mode and
+they are harmless, so do not check for them.
+
+Fixes: bbb6b2f9865b ("spi: Add FSI-attached SPI controller driver")
 Signed-off-by: Brad Bishop <bradleyb@fuzziesquirrel.com>
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Reviewed-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/misc/eeprom/at25.c | 94 ++++++++++++++++++++++----------------
- 1 file changed, 54 insertions(+), 40 deletions(-)
+ drivers/spi/spi-fsi.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/eeprom/at25.c b/drivers/misc/eeprom/at25.c
-index ed8d38b09925..30f0704ab2d4 100644
---- a/drivers/misc/eeprom/at25.c
-+++ b/drivers/misc/eeprom/at25.c
-@@ -64,12 +64,17 @@ static int at25_ee_read(void *priv, unsigned int offset,
+diff --git a/drivers/spi/spi-fsi.c b/drivers/spi/spi-fsi.c
+index 559d0ff981f3..c31a852b6a3e 100644
+--- a/drivers/spi/spi-fsi.c
++++ b/drivers/spi/spi-fsi.c
+@@ -29,6 +29,10 @@
+ #define SPI_FSI_ERROR			0x0
+ #define SPI_FSI_COUNTER_CFG		0x1
+ #define  SPI_FSI_COUNTER_CFG_LOOPS(x)	 (((u64)(x) & 0xffULL) << 32)
++#define  SPI_FSI_COUNTER_CFG_N2_RX	 BIT_ULL(8)
++#define  SPI_FSI_COUNTER_CFG_N2_TX	 BIT_ULL(9)
++#define  SPI_FSI_COUNTER_CFG_N2_IMPLICIT BIT_ULL(10)
++#define  SPI_FSI_COUNTER_CFG_N2_RELOAD	 BIT_ULL(11)
+ #define SPI_FSI_CFG1			0x2
+ #define SPI_FSI_CLOCK_CFG		0x3
+ #define  SPI_FSI_CLOCK_CFG_MM_ENABLE	 BIT_ULL(32)
+@@ -61,7 +65,7 @@
+ #define  SPI_FSI_STATUS_RDR_OVERRUN	 BIT_ULL(62)
+ #define  SPI_FSI_STATUS_RDR_FULL	 BIT_ULL(63)
+ #define  SPI_FSI_STATUS_ANY_ERROR	 \
+-	(SPI_FSI_STATUS_ERROR | SPI_FSI_STATUS_TDR_UNDERRUN | \
++	(SPI_FSI_STATUS_ERROR | \
+ 	 SPI_FSI_STATUS_TDR_OVERRUN | SPI_FSI_STATUS_RDR_UNDERRUN | \
+ 	 SPI_FSI_STATUS_RDR_OVERRUN)
+ #define SPI_FSI_PORT_CTRL		0x9
+@@ -238,6 +242,7 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
+ 	int rc;
+ 	u8 len = min(transfer->len, 8U);
+ 	u8 rem = transfer->len % len;
++	u64 cfg = 0ULL;
+ 
+ 	loops = transfer->len / len;
+ 
+@@ -258,8 +263,14 @@ static int fsi_spi_sequence_transfer(struct fsi_spi *ctx,
+ 	if (loops > 1) {
+ 		fsi_spi_sequence_add(seq, SPI_FSI_SEQUENCE_BRANCH(idx));
+ 
+-		rc = fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG,
+-				       SPI_FSI_COUNTER_CFG_LOOPS(loops - 1));
++		cfg = SPI_FSI_COUNTER_CFG_LOOPS(loops - 1);
++		if (transfer->rx_buf)
++			cfg |= SPI_FSI_COUNTER_CFG_N2_RX |
++				SPI_FSI_COUNTER_CFG_N2_TX |
++				SPI_FSI_COUNTER_CFG_N2_IMPLICIT |
++				SPI_FSI_COUNTER_CFG_N2_RELOAD;
++
++		rc = fsi_spi_write_reg(ctx, SPI_FSI_COUNTER_CFG, cfg);
+ 		if (rc)
+ 			return rc;
+ 	}
+@@ -275,6 +286,7 @@ static int fsi_spi_transfer_data(struct fsi_spi *ctx,
  {
- 	struct at25_data *at25 = priv;
- 	char *buf = val;
-+	size_t max_chunk = spi_max_transfer_size(at25->spi);
-+	size_t num_msgs = DIV_ROUND_UP(count, max_chunk);
-+	size_t			nr_bytes = 0;
- 	u8			command[EE_MAXADDRLEN + 1];
- 	u8			*cp;
- 	ssize_t			status;
- 	struct spi_transfer	t[2];
- 	struct spi_message	m;
- 	u8			instr;
-+	unsigned int		msg_offset;
-+	size_t			msg_count;
+ 	int rc = 0;
+ 	u64 status = 0ULL;
++	u64 cfg = 0ULL;
  
- 	if (unlikely(offset >= at25->chip.byte_len))
- 		return -EINVAL;
-@@ -78,57 +83,64 @@ static int at25_ee_read(void *priv, unsigned int offset,
- 	if (unlikely(!count))
- 		return -EINVAL;
+ 	if (transfer->tx_buf) {
+ 		int nb;
+@@ -312,6 +324,16 @@ static int fsi_spi_transfer_data(struct fsi_spi *ctx,
+ 		u64 in = 0ULL;
+ 		u8 *rx = transfer->rx_buf;
  
--	cp = command;
--
--	instr = AT25_READ;
--	if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
--		if (offset >= (1U << (at25->addrlen * 8)))
--			instr |= AT25_INSTR_BIT3;
--	*cp++ = instr;
--
--	/* 8/16/24-bit address is written MSB first */
--	switch (at25->addrlen) {
--	default:	/* case 3 */
--		*cp++ = offset >> 16;
--		fallthrough;
--	case 2:
--		*cp++ = offset >> 8;
--		fallthrough;
--	case 1:
--	case 0:	/* can't happen: for better codegen */
--		*cp++ = offset >> 0;
--	}
-+	msg_offset = (unsigned int)offset;
-+	msg_count = min(count, max_chunk);
-+	while (num_msgs) {
-+		cp = command;
++		rc = fsi_spi_read_reg(ctx, SPI_FSI_COUNTER_CFG, &cfg);
++		if (rc)
++			return rc;
 +
-+		instr = AT25_READ;
-+		if (at25->chip.flags & EE_INSTR_BIT3_IS_ADDR)
-+			if (msg_offset >= (1U << (at25->addrlen * 8)))
-+				instr |= AT25_INSTR_BIT3;
-+		*cp++ = instr;
-+
-+		/* 8/16/24-bit address is written MSB first */
-+		switch (at25->addrlen) {
-+		default:	/* case 3 */
-+			*cp++ = msg_offset >> 16;
-+			fallthrough;
-+		case 2:
-+			*cp++ = msg_offset >> 8;
-+			fallthrough;
-+		case 1:
-+		case 0:	/* can't happen: for better codegen */
-+			*cp++ = msg_offset >> 0;
++		if (cfg & SPI_FSI_COUNTER_CFG_N2_IMPLICIT) {
++			rc = fsi_spi_write_reg(ctx, SPI_FSI_DATA_TX, 0);
++			if (rc)
++				return rc;
 +		}
- 
--	spi_message_init(&m);
--	memset(t, 0, sizeof(t));
-+		spi_message_init(&m);
-+		memset(t, 0, sizeof(t));
- 
--	t[0].tx_buf = command;
--	t[0].len = at25->addrlen + 1;
--	spi_message_add_tail(&t[0], &m);
-+		t[0].tx_buf = command;
-+		t[0].len = at25->addrlen + 1;
-+		spi_message_add_tail(&t[0], &m);
- 
--	t[1].rx_buf = buf;
--	t[1].len = count;
--	spi_message_add_tail(&t[1], &m);
-+		t[1].rx_buf = buf + nr_bytes;
-+		t[1].len = msg_count;
-+		spi_message_add_tail(&t[1], &m);
- 
--	mutex_lock(&at25->lock);
-+		mutex_lock(&at25->lock);
- 
--	/* Read it all at once.
--	 *
--	 * REVISIT that's potentially a problem with large chips, if
--	 * other devices on the bus need to be accessed regularly or
--	 * this chip is clocked very slowly
--	 */
--	status = spi_sync(at25->spi, &m);
--	dev_dbg(&at25->spi->dev, "read %zu bytes at %d --> %zd\n",
--		count, offset, status);
-+		status = spi_sync(at25->spi, &m);
- 
--	mutex_unlock(&at25->lock);
--	return status;
-+		mutex_unlock(&at25->lock);
 +
-+		if (status)
-+			return status;
-+
-+		--num_msgs;
-+		msg_offset += msg_count;
-+		nr_bytes += msg_count;
-+	}
-+
-+	dev_dbg(&at25->spi->dev, "read %zu bytes at %d\n",
-+		count, offset);
-+	return 0;
- }
- 
- static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- {
- 	struct at25_data *at25 = priv;
-+	size_t maxsz = spi_max_transfer_size(at25->spi);
- 	const char *buf = val;
- 	int			status = 0;
- 	unsigned		buf_size;
-@@ -191,6 +203,8 @@ static int at25_ee_write(void *priv, unsigned int off, void *val, size_t count)
- 		segment = buf_size - (offset % buf_size);
- 		if (segment > count)
- 			segment = count;
-+		if (segment > maxsz)
-+			segment = maxsz;
- 		memcpy(cp, buf, segment);
- 		status = spi_write(at25->spi, bounce,
- 				segment + at25->addrlen + 1);
+ 		while (transfer->len > recv) {
+ 			do {
+ 				rc = fsi_spi_read_reg(ctx, SPI_FSI_STATUS,
 -- 
 2.26.2
 
