@@ -2,169 +2,203 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BE6C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C53C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B89C62075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203352075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eEQiNAr7"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eHClQ8da"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgHTPcB (ORCPT
+        id S1729234AbgHTPcQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:32:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgHTPcA (ORCPT
+        Thu, 20 Aug 2020 11:32:16 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52472 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728920AbgHTPcN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:32:00 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1732AC061385;
-        Thu, 20 Aug 2020 08:32:00 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so3000309eje.7;
-        Thu, 20 Aug 2020 08:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=msZh1S5NuZX02zho73S2OZYmPkkP6K5y19k9T2pRLlU=;
-        b=eEQiNAr7rWImjK6RLknd81QWM9qtZqSYCjD9pFF78tYd4TULEoiAOd8XfONRjXELup
-         E4CNQ1gh1sZl0QDdS6kR8HrKAHNfSD+4o0BLmZc4Rt5ObBJHIUcBPiiBhfYSHIsJQGEv
-         GOK6LIqNuD/dnKlE0VEvbndrg3mORYdlPSWKgZRcW76Ucd2BJmf1B9QSmhwPCeMoMtM/
-         Yng6JQdTv/He2XKn2KdPtyGWPSehTDalQBD2wuBGTb92X89VDQShPYLtgU22ECsgcCb7
-         mfTETbXBT2BnlsJ7RTJUySNQnCAtIoC54fKjVRxTl/dkN9JeIok7CTmdO3W9KBDEKZkO
-         bIoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=msZh1S5NuZX02zho73S2OZYmPkkP6K5y19k9T2pRLlU=;
-        b=QTlFnil6mVQyWvnfyrACdcFe7xUzVI38P9CdLNCkCquvd5tN4laAwxt5f2YJSGjBM8
-         HQHQmNrAgDcxzPpyEfZkealtUeaSDICzSH7LuORPkUrSTxfM0ro1nLdV9GmkbXTQPfmC
-         sRWnBPFBrXbVGdzjHxFto8mVaRT5/6P5oUMUQpgaemDePipDA2Hzl9qiZKugdJSdN5A8
-         9/h+WBgEa4iUL22Ft3OCoxbDjkSjSWaaZatSSoOLmRRErKgpmSf6bve/2tzX/Cj7bUKR
-         rlV5FIyOgTe1YovLKQdlvyO9CvIyRBXJ8z4xhe7dWs+X2DxvAqgeNGIS7nbOmeEFNh+3
-         bwdA==
-X-Gm-Message-State: AOAM532haOYFblxxWoYvoR6C+idtGIGXRYJCTSAwyLk332w8aZUzxaWv
-        un3WgSe8aooIsm9yq6sZmpfrxQuX+WTow2+VQ+Y=
-X-Google-Smtp-Source: ABdhPJzD+zk0t+nWGD6xbgEYzbLJU9rJ448TkrySkRv6QD+kn8cqo7BHXH1FT90ym+QcSpF3F2Vrku7Pi7nKPbUArzU=
-X-Received: by 2002:a17:906:84e1:: with SMTP id zp1mr3535972ejb.499.1597937518785;
- Thu, 20 Aug 2020 08:31:58 -0700 (PDT)
+        Thu, 20 Aug 2020 11:32:13 -0400
+Received: from [192.168.0.20] (cpc89244-aztw30-2-0-cust3082.18-1.cable.virginm.net [86.31.172.11])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id AFD2E23D;
+        Thu, 20 Aug 2020 17:32:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1597937529;
+        bh=60ulVbwO4NBQ6nKBLOoJnVoZBadXZmtd1z1Re1hDuxA=;
+        h=Reply-To:Subject:To:References:From:Date:In-Reply-To:From;
+        b=eHClQ8daoRVOzPsEGP3UHHwkYeOIUlk8bZKiBxbTPJdPePuoIqVg64C8L25qpZV9M
+         mDJf6tg0Ga9jTY5vxajm+uxyWgvihZAr3CxZMg1M5zV2SmOEVnqk0b9oemYBglMRb9
+         yQKwXlQsR4+vQCcgUtANmk226JExz/evQut/6i3E=
+Reply-To: kieran.bingham@ideasonboard.com
+Subject: Re: [PATCH v3 1/9] media: vimc: Move get_source_entity to vimc-common
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200819180442.11630-1-kgupta@es.iitr.ac.in>
+ <20200819180442.11630-2-kgupta@es.iitr.ac.in>
+From:   Kieran Bingham <kieran.bingham@ideasonboard.com>
+Autocrypt: addr=kieran.bingham@ideasonboard.com; keydata=
+ mQINBFYE/WYBEACs1PwjMD9rgCu1hlIiUA1AXR4rv2v+BCLUq//vrX5S5bjzxKAryRf0uHat
+ V/zwz6hiDrZuHUACDB7X8OaQcwhLaVlq6byfoBr25+hbZG7G3+5EUl9cQ7dQEdvNj6V6y/SC
+ rRanWfelwQThCHckbobWiQJfK9n7rYNcPMq9B8e9F020LFH7Kj6YmO95ewJGgLm+idg1Kb3C
+ potzWkXc1xmPzcQ1fvQMOfMwdS+4SNw4rY9f07Xb2K99rjMwZVDgESKIzhsDB5GY465sCsiQ
+ cSAZRxqE49RTBq2+EQsbrQpIc8XiffAB8qexh5/QPzCmR4kJgCGeHIXBtgRj+nIkCJPZvZtf
+ Kr2EAbc6tgg6DkAEHJb+1okosV09+0+TXywYvtEop/WUOWQ+zo+Y/OBd+8Ptgt1pDRyOBzL8
+ RXa8ZqRf0Mwg75D+dKntZeJHzPRJyrlfQokngAAs4PaFt6UfS+ypMAF37T6CeDArQC41V3ko
+ lPn1yMsVD0p+6i3DPvA/GPIksDC4owjnzVX9kM8Zc5Cx+XoAN0w5Eqo4t6qEVbuettxx55gq
+ 8K8FieAjgjMSxngo/HST8TpFeqI5nVeq0/lqtBRQKumuIqDg+Bkr4L1V/PSB6XgQcOdhtd36
+ Oe9X9dXB8YSNt7VjOcO7BTmFn/Z8r92mSAfHXpb07YJWJosQOQARAQABtDBLaWVyYW4gQmlu
+ Z2hhbSA8a2llcmFuLmJpbmdoYW1AaWRlYXNvbmJvYXJkLmNvbT6JAlcEEwEKAEECGwMFCwkI
+ BwIGFQgJCgsCBBYCAwECHgECF4ACGQEWIQSQLdeYP70o/eNy1HqhHkZyEKRh/QUCXWTtygUJ
+ CyJXZAAKCRChHkZyEKRh/f8dEACTDsbLN2nioNZMwyLuQRUAFcXNolDX48xcUXsWS2QjxaPm
+ VsJx8Uy8aYkS85mdPBh0C83OovQR/OVbr8AxhGvYqBs3nQvbWuTl/+4od7DfK2VZOoKBAu5S
+ QK2FYuUcikDqYcFWJ8DQnubxfE8dvzojHEkXw0sA4igINHDDFX3HJGZtLio+WpEFQtCbfTAG
+ YZslasz1YZRbwEdSsmO3/kqy5eMnczlm8a21A3fKUo3g8oAZEFM+f4DUNzqIltg31OAB/kZS
+ enKZQ/SWC8PmLg/ZXBrReYakxXtkP6w3FwMlzOlhGxqhIRNiAJfXJBaRhuUWzPOpEDE9q5YJ
+ BmqQL2WJm1VSNNVxbXJHpaWMH1sA2R00vmvRrPXGwyIO0IPYeUYQa3gsy6k+En/aMQJd27dp
+ aScf9am9PFICPY5T4ppneeJLif2lyLojo0mcHOV+uyrds9XkLpp14GfTkeKPdPMrLLTsHRfH
+ fA4I4OBpRrEPiGIZB/0im98MkGY/Mu6qxeZmYLCcgD6qz4idOvfgVOrNh+aA8HzIVR+RMW8H
+ QGBN9f0E3kfwxuhl3omo6V7lDw8XOdmuWZNC9zPq1UfryVHANYbLGz9KJ4Aw6M+OgBC2JpkD
+ hXMdHUkC+d20dwXrwHTlrJi1YNp6rBc+xald3wsUPOZ5z8moTHUX/uPA/qhGsbkCDQRWBP1m
+ ARAAzijkb+Sau4hAncr1JjOY+KyFEdUNxRy+hqTJdJfaYihxyaj0Ee0P0zEi35CbE6lgU0Uz
+ tih9fiUbSV3wfsWqg1Ut3/5rTKu7kLFp15kF7eqvV4uezXRD3Qu4yjv/rMmEJbbD4cTvGCYI
+ d6MDC417f7vK3hCbCVIZSp3GXxyC1LU+UQr3fFcOyCwmP9vDUR9JV0BSqHHxRDdpUXE26Dk6
+ mhf0V1YkspE5St814ETXpEus2urZE5yJIUROlWPIL+hm3NEWfAP06vsQUyLvr/GtbOT79vXl
+ En1aulcYyu20dRRxhkQ6iILaURcxIAVJJKPi8dsoMnS8pB0QW12AHWuirPF0g6DiuUfPmrA5
+ PKe56IGlpkjc8cO51lIxHkWTpCMWigRdPDexKX+Sb+W9QWK/0JjIc4t3KBaiG8O4yRX8ml2R
+ +rxfAVKM6V769P/hWoRGdgUMgYHFpHGSgEt80OKK5HeUPy2cngDUXzwrqiM5Sz6Od0qw5pCk
+ NlXqI0W/who0iSVM+8+RmyY0OEkxEcci7rRLsGnM15B5PjLJjh1f2ULYkv8s4SnDwMZ/kE04
+ /UqCMK/KnX8pwXEMCjz0h6qWNpGwJ0/tYIgQJZh6bqkvBrDogAvuhf60Sogw+mH8b+PBlx1L
+ oeTK396wc+4c3BfiC6pNtUS5GpsPMMjYMk7kVvEAEQEAAYkCPAQYAQoAJgIbDBYhBJAt15g/
+ vSj943LUeqEeRnIQpGH9BQJdizzIBQkLSKZiAAoJEKEeRnIQpGH9eYgQAJpjaWNgqNOnMTmD
+ MJggbwjIotypzIXfhHNCeTkG7+qCDlSaBPclcPGYrTwCt0YWPU2TgGgJrVhYT20ierN8LUvj
+ 6qOPTd+Uk7NFzL65qkh80ZKNBFddx1AabQpSVQKbdcLb8OFs85kuSvFdgqZwgxA1vl4TFhNz
+ PZ79NAmXLackAx3sOVFhk4WQaKRshCB7cSl+RIng5S/ThOBlwNlcKG7j7W2MC06BlTbdEkUp
+ ECzuuRBv8wX4OQl+hbWbB/VKIx5HKlLu1eypen/5lNVzSqMMIYkkZcjV2SWQyUGxSwq0O/sx
+ S0A8/atCHUXOboUsn54qdxrVDaK+6jIAuo8JiRWctP16KjzUM7MO0/+4zllM8EY57rXrj48j
+ sbEYX0YQnzaj+jO6kJtoZsIaYR7rMMq9aUAjyiaEZpmP1qF/2sYenDx0Fg2BSlLvLvXM0vU8
+ pQk3kgDu7kb/7PRYrZvBsr21EIQoIjXbZxDz/o7z95frkP71EaICttZ6k9q5oxxA5WC6sTXc
+ MW8zs8avFNuA9VpXt0YupJd2ijtZy2mpZNG02fFVXhIn4G807G7+9mhuC4XG5rKlBBUXTvPU
+ AfYnB4JBDLmLzBFavQfvonSfbitgXwCG3vS+9HEwAjU30Bar1PEOmIbiAoMzuKeRm2LVpmq4
+ WZw01QYHU/GUV/zHJSFk
+Organization: Ideas on Board
+Message-ID: <12e33b5c-d894-a23c-b7a5-9fb3fbd51600@ideasonboard.com>
+Date:   Thu, 20 Aug 2020 16:32:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
-In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 20 Aug 2020 08:31:46 -0700
-Message-ID: <CAHbLzkramrQbkQeBBy-ZzHKy6Uqt6ONVxKeouVyu-6_cvFpNmA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by mistake
-To:     Gao Xiang <hsiangkao@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200819180442.11630-2-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 9:54 PM Gao Xiang <hsiangkao@redhat.com> wrote:
->
-> SWP_FS is used to make swap_{read,write}page() go through
-> the filesystem, and it's only used for swap files over
-> NFS. So, !SWP_FS means non NFS for now, it could be either
-> file backed or device backed. Something similar goes with
-> legacy SWP_FILE.
->
-> So in order to achieve the goal of the original patch,
-> SWP_BLKDEV should be used instead.
->
-> FS corruption can be observed with SSD device + XFS +
-> fragmented swapfile due to CONFIG_THP_SWAP=y.
->
-> I reproduced the issue with the following details:
->
-> Environment:
-> QEMU + upstream kernel + buildroot + NVMe (2 GB)
->
-> Kernel config:
-> CONFIG_BLK_DEV_NVME=y
-> CONFIG_THP_SWAP=y
->
-> Some reproducable steps:
-> mkfs.xfs -f /dev/nvme0n1
-> mkdir /tmp/mnt
-> mount /dev/nvme0n1 /tmp/mnt
-> bs="32k"
-> sz="1024m"    # doesn't matter too much, I also tried 16m
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
-> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
->
-> mkswap /tmp/mnt/sw
-> swapon /tmp/mnt/sw
->
-> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
->
-> Symptoms:
->  - FS corruption (e.g. checksum failure)
->  - memory corruption at: 0xd2808010
->  - segfault
->
-> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
-> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
-> Cc: "Huang, Ying" <ying.huang@intel.com>
-> Cc: Yang Shi <yang.shi@linux.alibaba.com>
-> Cc: Rafael Aquini <aquini@redhat.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+Hi Kaaira,
+
+On 19/08/2020 19:04, Kaaira Gupta wrote:
+> Move the function vimc_get_source_entity() to vimc-common.c to make it
+> reusable.
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+
+Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+
 > ---
-> v1: https://lore.kernel.org/r/20200819195613.24269-1-hsiangkao@redhat.com
->
-> changes since v1:
->  - improve commit message description
+>  drivers/media/test-drivers/vimc/vimc-common.c | 14 +++++++++++
+>  drivers/media/test-drivers/vimc/vimc-common.h | 12 ++++++++++
+>  .../media/test-drivers/vimc/vimc-streamer.c   | 24 -------------------
+>  3 files changed, 26 insertions(+), 24 deletions(-)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.c b/drivers/media/test-drivers/vimc/vimc-common.c
+> index 0d97b25ce21e..91c8992bb391 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.c
+> @@ -417,3 +417,17 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
+>  	media_entity_cleanup(&sd->entity);
+>  	return ret;
+>  }
+> +
+> +struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+> +{
+> +	struct media_pad *pad;
+> +	int i;
+> +
+> +	for (i = 0; i < ent->num_pads; i++) {
+> +		if (ent->pads[i].flags & MEDIA_PAD_FL_SOURCE)
+> +			continue;
+> +		pad = media_entity_remote_pad(&ent->pads[i]);
+> +		return pad ? pad->entity : NULL;
+> +	}
+> +	return NULL;
+> +}
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> index a289434e75ba..4c580d854007 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> @@ -230,4 +230,16 @@ int vimc_ent_sd_register(struct vimc_ent_device *ved,
+>   */
+>  int vimc_vdev_link_validate(struct media_link *link);
+>  
+> +/**
+> + * vimc_get_source_entity - get the entity connected with the first sink pad
+> + *
+> + * @ent:	reference media_entity
+> + *
+> + * Helper function that returns the media entity containing the source pad
+> + * linked with the first sink pad from the given media entity pad list.
+> + *
+> + * Return: The source pad or NULL, if it wasn't found.
+> + */
+> +struct media_entity *vimc_get_source_entity(struct media_entity *ent);
+> +
+>  #endif
+> diff --git a/drivers/media/test-drivers/vimc/vimc-streamer.c b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> index 451a32c0d034..4f8384246042 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-streamer.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-streamer.c
+> @@ -12,30 +12,6 @@
+>  
+>  #include "vimc-streamer.h"
+>  
+> -/**
+> - * vimc_get_source_entity - get the entity connected with the first sink pad
+> - *
+> - * @ent:	reference media_entity
+> - *
+> - * Helper function that returns the media entity containing the source pad
+> - * linked with the first sink pad from the given media entity pad list.
+> - *
+> - * Return: The source pad or NULL, if it wasn't found.
+> - */
+> -static struct media_entity *vimc_get_source_entity(struct media_entity *ent)
+> -{
+> -	struct media_pad *pad;
+> -	int i;
+> -
+> -	for (i = 0; i < ent->num_pads; i++) {
+> -		if (ent->pads[i].flags & MEDIA_PAD_FL_SOURCE)
+> -			continue;
+> -		pad = media_entity_remote_pad(&ent->pads[i]);
+> -		return pad ? pad->entity : NULL;
+> -	}
+> -	return NULL;
+> -}
+> -
+>  /**
+>   * vimc_streamer_pipeline_terminate - Disable stream in all ved in stream
+>   *
+> 
 
-Thanks for incorporating this. Reviewed-by: Yang Shi <shy828301@gmail.com>
-
->
-> Hi Andrew,
-> Kindly consider this one instead if no other concerns...
->
-> Thanks,
-> Gao Xiang
->
->  mm/swapfile.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index 6c26916e95fd..2937daf3ca02 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
->                         goto nextsi;
->                 }
->                 if (size == SWAPFILE_CLUSTER) {
-> -                       if (!(si->flags & SWP_FS))
-> +                       if (si->flags & SWP_BLKDEV)
->                                 n_ret = swap_alloc_cluster(si, swp_entries);
->                 } else
->                         n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
-> --
-> 2.18.1
->
->
+-- 
+Regards
+--
+Kieran
