@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9E5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB79E206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3136D20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917999;
-	bh=1/n5nDmrqZc82M8C2uKR8Htb2KZeOlFAnuXCzhSTwys=;
+	s=default; t=1597918005;
+	bh=ivOMTOdFsLN/sz1ORCYQGPOcLijlJUddQvL8fkZTMnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQQMFEO+7Ja7BSiBBW3NO/rliBtxCuVoas1fi08mr9OaVNwfPzwE+n4N+hF0Q5Vb8
-	 aKmy114FZhBAxvw0k7Twy1uKJKvPWIaY6AZH5mfWPzVCem9S56/Jcwjh5tt+FFkgB3
-	 4jeIhli3YEPLiAM4CfPAEjg6w0W2Mt+j0sO/ULak=
+	b=R0hlKq8vd/kgIAGthUcdVK3COPKXdZ2rDJQgkmOd9nGArOAT8SsrsF+vaZWe8yPYh
+	 bDQpR35CWE29dBh+xxP4vm/YKNxkC8pg9vM8f7qrSDnMklNZ8mWOelLv33ZAAf/apm
+	 2xiaWWXUg7TZDzrrm1tSAEI2YCheChp2hV6Je5BI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgHTKGf (ORCPT
+        id S1729490AbgHTKGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:06:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:06:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbgHTKB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:29 -0400
+        id S1730365AbgHTKBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0A5D20855;
-        Thu, 20 Aug 2020 10:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44DF920738;
+        Thu, 20 Aug 2020 10:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917689;
-        bh=1/n5nDmrqZc82M8C2uKR8Htb2KZeOlFAnuXCzhSTwys=;
+        s=default; t=1597917683;
+        bh=ivOMTOdFsLN/sz1ORCYQGPOcLijlJUddQvL8fkZTMnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rA+HRNN7Bab6da3wihIkB+bE6RG1OubkFSgdYREAwTvDN8x3/YkHgFn97GOR7DGVr
-         HBApN72aa+Ot/AVaoQ5MejjSRqX3wCa6BKq0yd2yS/mrycqWUCU6D54LY+60odahsE
-         mksTtx95FhuMOOxnAFEHGJ2b5stW/iv4gjattpDc=
+        b=bCEYKMVKfB++alfB9kuac0Dl2O2THatvnbVUM9q55+QT1GCPLUHcaMjx+KZ54BqUX
+         PyVkG5ecyPHXbuxpTq/02tSb+kUQ9zydpLVNMo0z3L1G9Cll6PcDs+vSoMe5pvJ7A4
+         D6Sa20FIYkpubq7Ap+n06r9Jraa4JN4A1h4Cn/fQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 121/212] media: exynos4-is: Add missed check for pinctrl_lookup_state()
-Date:   Thu, 20 Aug 2020 11:21:34 +0200
-Message-Id: <20200820091608.466007941@linuxfoundation.org>
+Subject: [PATCH 4.9 119/212] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
+Date:   Thu, 20 Aug 2020 11:21:32 +0200
+Message-Id: <20200820091608.362689748@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,36 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit 18ffec750578f7447c288647d7282c7d12b1d969 ]
+[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
 
-fimc_md_get_pinctrl() misses a check for pinctrl_lookup_state().
-Add the missed check to fix it.
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-Fixes: 4163851f7b99 ("[media] s5p-fimc: Use pinctrl API for camera ports configuration]")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/exynos4-is/media-dev.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/scsi/arm/eesox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/exynos4-is/media-dev.c b/drivers/media/platform/exynos4-is/media-dev.c
-index ef6ccb5b89525..cdaf3a8e2555e 100644
---- a/drivers/media/platform/exynos4-is/media-dev.c
-+++ b/drivers/media/platform/exynos4-is/media-dev.c
-@@ -1257,6 +1257,9 @@ static int fimc_md_get_pinctrl(struct fimc_md *fmd)
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index e93e047f43165..65bb34ce93b94 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -575,7 +575,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
- 	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
- 					PINCTRL_STATE_IDLE);
-+	if (IS_ERR(pctl->state_idle))
-+		return PTR_ERR(pctl->state_idle);
-+
- 	return 0;
- }
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
  
+  out_remove:
+ 	fas216_remove(host);
 -- 
 2.25.1
 
