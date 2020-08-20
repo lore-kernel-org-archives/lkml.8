@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DF9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8634BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D816E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C3F820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919561;
-	bh=8aQaJQ3yhJZ2jljzx1rQZ4agQxGWLhV6PGFPiR1F+N8=;
+	s=default; t=1597919563;
+	bh=srXWZiN4UvRjQoGJzlyOEKNDr9gqff2/ELi12xw0MRM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rycDVyOdaJ3JNvQT7X2yzjcNSVIFtm3uQVlu3FSSDGgsLfzD9IO1dupDtZG/wFP46
-	 arJU7W2uGjXOl+R7LqaaWQOl4ULRGnv68M+LjsPL/EmCMt4qcHIZ+CNxxHuCi3pHno
-	 5eUaYFkL0nrPpmOIJH9bHOskJszK+FuEdNcr/ELI=
+	b=C3tlVVZnrUFIuthhFDAIzn0WOLV8C2d02JBjadORGpG2SnnwIdQcehQFV/1h4O8dz
+	 2GXE9HUm2MQi8zsIxXnRVPe0ALPrn1ZR3o9SCygXpGy3/4VnODAfMGaNq/RQUVuvws
+	 rneh5NP5WO9BnnV+U6pqOw3NcmDAb9eLEWUk/f+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731867AbgHTKcj (ORCPT
+        id S1731016AbgHTKT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgHTKUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:04 -0400
+        id S1731050AbgHTKRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:17:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA54320738;
-        Thu, 20 Aug 2020 10:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFBC020885;
+        Thu, 20 Aug 2020 10:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918801;
-        bh=8aQaJQ3yhJZ2jljzx1rQZ4agQxGWLhV6PGFPiR1F+N8=;
+        s=default; t=1597918654;
+        bh=srXWZiN4UvRjQoGJzlyOEKNDr9gqff2/ELi12xw0MRM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMsg9StSFvX1bhYs1EQ+LV+vmo4p+nKF+GkPhobBrOQG4oj/Z3JbG1HatqiNOGy/v
-         JfTqq2lDcP8W2Jb4IjKIIgC0S+BR2Ou1BgIAgA5I0MkOlgofheKeew6WIQPHlS5Vbc
-         3urcuG+7wew/rEU1g2rza5mkMoyNGB5+7epxptV8=
+        b=xaN4BIIRiD5cCeyyFCW1uxLuIBnuXvkEHoqpqmO+mgPFIfnLoY5BgsStsN+hFiyq6
+         gY7AI2mSSiEMfeSoUpj5wqcppkuNuXqvbPwMPRW1p28drwGIOCOnpIYQcYyU2l0D9f
+         WTCsVcGW23MB1FmP8Y6KZd3OdrSv8vM8+yKDSYZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Squires <julian@cipht.net>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
+        Johan Hovold <johan@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 042/149] cfg80211: check vendor command doit pointer before use
-Date:   Thu, 20 Aug 2020 11:21:59 +0200
-Message-Id: <20200820092127.773758336@linuxfoundation.org>
+Subject: [PATCH 4.4 019/149] net: lan78xx: fix transfer-buffer memory leak
+Date:   Thu, 20 Aug 2020 11:21:36 +0200
+Message-Id: <20200820092126.635106821@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,48 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Squires <julian@cipht.net>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 4052d3d2e8f47a15053320bbcbe365d15610437d ]
+[ Upstream commit 63634aa679ba8b5e306ad0727120309ae6ba8a8e ]
 
-In the case where a vendor command does not implement doit, and has no
-flags set, doit would not be validated and a NULL pointer dereference
-would occur, for example when invoking the vendor command via iw.
+The interrupt URB transfer-buffer was never freed on disconnect or after
+probe errors.
 
-I encountered this while developing new vendor commands.  Perhaps in
-practice it is advisable to always implement doit along with dumpit,
-but it seems reasonable to me to always check doit anyway, not just
-when NEED_WDEV.
-
-Signed-off-by: Julian Squires <julian@cipht.net>
-Link: https://lore.kernel.org/r/20200706211353.2366470-1-julian@cipht.net
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/usb/lan78xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index c6c168f20b0f2..55de35c4434a8 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -10180,13 +10180,13 @@ static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
- 				if (!wdev->netdev && !wdev->p2p_started)
- 					return -ENETDOWN;
- 			}
--
--			if (!vcmd->doit)
--				return -EOPNOTSUPP;
- 		} else {
- 			wdev = NULL;
+diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
+index 3f2f524c338d6..1fb5d5f3475cf 100644
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -3006,6 +3006,7 @@ static int lan78xx_probe(struct usb_interface *intf,
+ 			usb_fill_int_urb(dev->urb_intr, dev->udev,
+ 					 dev->pipe_intr, buf, maxp,
+ 					 intr_complete, dev, period);
++			dev->urb_intr->transfer_flags |= URB_FREE_BUFFER;
  		}
+ 	}
  
-+		if (!vcmd->doit)
-+			return -EOPNOTSUPP;
-+
- 		if (info->attrs[NL80211_ATTR_VENDOR_DATA]) {
- 			data = nla_data(info->attrs[NL80211_ATTR_VENDOR_DATA]);
- 			len = nla_len(info->attrs[NL80211_ATTR_VENDOR_DATA]);
 -- 
 2.25.1
 
