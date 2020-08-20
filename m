@@ -2,104 +2,104 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC736C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFD12208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA44A208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931279;
-	bh=rYL2IwAIcAFoDXZRpBmPjSQUP7VADmZhoj4Za1W7tt4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lh4MH5o0L1tDs7Zs/7UHlhBBuRxMUNQCwha1BfYrYsACiSL2cVpVUrM84UbqWNRm5
-	 /oWg2E1FwuIpSAN1DM1/f+Nmx7fQeH4XRlw/nYvsOHMF9WVUmccMfWFwMUPIdpq975
-	 lUvo79Ll7BJZ4AKnitqHVHz3kpSeG39rL0Yuf914=
+	s=default; t=1597931298;
+	bh=0cUhTu2kcvkdAMXDD1Ej4fAur3dt50eKRxc2djb/ufs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pHsV6uaQr86Hvnz7yZuLN9CbpJmw66pdVgQWp9OCd934gsXr1EKG0sfxkz/MZGy1k
+	 CtltbpDw2VbyAm8I+F8snLOMdcXM8JKy/le6Qt0UVsR7cKaFw9Hzj5pCmVgtgBY4oG
+	 H4uHF65jtr8Zwkzbb2aE/TjGTnBKGmVqjU9L0ERo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730019AbgHTNmf (ORCPT
+        id S1729514AbgHTNsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:48:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgHTJ3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:32 -0400
+        id S1728153AbgHTNsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:48:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E32622CB2;
-        Thu, 20 Aug 2020 09:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D6CC208DB;
+        Thu, 20 Aug 2020 13:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915771;
-        bh=rYL2IwAIcAFoDXZRpBmPjSQUP7VADmZhoj4Za1W7tt4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdJD2B0vtEqDxXJPdSod66qt9gRMofWTdnTVHuQI6Y8rV6ODYQFrQmLI/D9mkr69z
-         cRumilPWCXjqWnwWIW8W4BTTcB9DKUVVbG+pUVCt2CYSrlYknUFbuz6yN61iFWlAJM
-         ydOmgy7HMcnjIQIHwKu0wC0eyxiI9UHQI964vohY=
+        s=default; t=1597931283;
+        bh=0cUhTu2kcvkdAMXDD1Ej4fAur3dt50eKRxc2djb/ufs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YxOvmp69gqUfe9ze3lIxSTrJkUjCChxP5m09Az4de/WNFcztdDT0XC5y2O6c4OSfS
+         E62SrOpobxYpa8gQiYCxcUZgRk/5E6PMYqNLmVbJMzbVm5jz6qju5J1UfXRavcg+58
+         dZynIvxSXYIIDu0cYTa0VZt47sOgHnehFuOINxX0=
+Date:   Thu, 20 Aug 2020 15:48:23 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.8 099/232] dm: dont call report zones for more than the user requested
-Date:   Thu, 20 Aug 2020 11:19:10 +0200
-Message-Id: <20200820091617.626527301@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Wei Hu <weh@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 5.8 164/232] PCI: hv: Fix a timing issue which causes
+ kdump to fail occasionally
+Message-ID: <20200820134823.GA1533625@kroah.com>
 References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+ <20200820091620.754492308@linuxfoundation.org>
+ <MW2PR2101MB10522B1242B1309BF35EFFEED75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+ <20200820132924.GA8670@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820132924.GA8670@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+On Thu, Aug 20, 2020 at 09:29:24AM -0400, Sasha Levin wrote:
+> On Thu, Aug 20, 2020 at 01:00:51PM +0000, Michael Kelley wrote:
+> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> Sent: Thursday, August 20, 2020 2:20 AM
+> > > 
+> > > From: Wei Hu <weh@microsoft.com>
+> > > 
+> > > [ Upstream commit d6af2ed29c7c1c311b96dac989dcb991e90ee195 ]
+> > > 
+> > > Kdump could fail sometime on Hyper-V guest because the retry in
+> > > hv_pci_enter_d0() releases child device structures in hv_pci_bus_exit().
+> > > 
+> > > Although there is a second asynchronous device relations message sending
+> > > from the host, if this message arrives to the guest after
+> > > hv_send_resource_allocated() is called, the retry would fail.
+> > > 
+> > > Fix the problem by moving retry to hv_pci_probe() and start the retry
+> > > from hv_pci_query_relations() call.  This will cause a device relations
+> > > message to arrive to the guest synchronously; the guest would then be
+> > > able to rebuild the child device structures before calling
+> > > hv_send_resource_allocated().
+> > > 
+> > > Link:
+> > > https://lore.kernel.org/linux-hyperv/20200727071731.18516-1-weh@microsoft.com/
+> > > Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
+> > > Signed-off-by: Wei Hu <weh@microsoft.com>
+> > > [lorenzo.pieralisi@arm.com: fixed a comment and commit log]
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
+> > >  1 file changed, 37 insertions(+), 34 deletions(-)
+> > > 
+> > 
+> > This patch came through three days ago, and I indicated then that we don't want
+> > it backported to 5.8 and earlier.
+> 
+> Uh, I re-added it by mistake, sorry.
 
-commit a9cb9f4148ef6bb8fabbdaa85c42b2171fbd5a0d upstream.
-
-Don't call report zones for more zones than the user actually requested,
-otherwise this can lead to out-of-bounds accesses in the callback
-functions.
-
-Such a situation can happen if the target's ->report_zones() callback
-function returns 0 because we've reached the end of the target and then
-restart the report zones on the second target.
-
-We're again calling into ->report_zones() and ultimately into the user
-supplied callback function but when we're not subtracting the number of
-zones already processed this may lead to out-of-bounds accesses in the
-user callbacks.
-
-Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
-Fixes: d41003513e61 ("block: rework zone reporting")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/dm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -504,7 +504,8 @@ static int dm_blk_report_zones(struct ge
- 		}
- 
- 		args.tgt = tgt;
--		ret = tgt->type->report_zones(tgt, &args, nr_zones);
-+		ret = tgt->type->report_zones(tgt, &args,
-+					      nr_zones - args.zone_idx);
- 		if (ret < 0)
- 			goto out;
- 	} while (args.zone_idx < nr_zones &&
-
-
+Ok, let me go drop it...
