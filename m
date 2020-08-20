@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165D3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BEDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD090208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35279207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927273;
-	bh=ML6MeKfHJFdmd/j6R4VH8tkXe+Fr/873m/BBU9B4WKY=;
+	s=default; t=1597927282;
+	bh=1cHTx30rbzMwVWXjTLu473SVH9WLuKIxD9AOHOapkAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sozWa9LxWinOevxHkbKvdhmfG6WNv02ZVoFUs8/fTqKoAZHzMZQAodGbX4dxW1moc
-	 2MNeiV9NCo3xIhbkb1b3rKKnkMnuG+rgVW0Hl++b7ilVSbwf0Zj1zHZWj6fUTTrnSg
-	 ZHLgpFpZ7BiPShzvPLHBpvfYvsu7QFO6biBIjw7c=
+	b=rQEKWqa+4OsksKlq3bkdOOAqAy28RvdvzzgXmWWZmrlHL1gt2+0jgi+s4cLjgRBeB
+	 Fvifp2EuRr0VpTuptrHmGy8ac5tjoqUMqdIVeVO82piGZmDhkBNaxVZkqEmFqzPJKJ
+	 a0NLL81oD00d9VtsN93ge7M1p5ipYYIX3poPslsE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgHTJqb (ORCPT
+        id S1729425AbgHTMlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47756 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgHTJqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:46:01 -0400
+        id S1728890AbgHTJqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5176A2173E;
-        Thu, 20 Aug 2020 09:46:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CAD2078D;
+        Thu, 20 Aug 2020 09:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916760;
-        bh=ML6MeKfHJFdmd/j6R4VH8tkXe+Fr/873m/BBU9B4WKY=;
+        s=default; t=1597916792;
+        bh=1cHTx30rbzMwVWXjTLu473SVH9WLuKIxD9AOHOapkAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZPM40Z/POvPJarO+koj9fWhcrXnjlpwlZH9gdzg6Yrutw495mQAI1qr6Zqzgcs1Y
-         6QuaMw91C3IGFChZ52IdswTQ3yPOeEHhtQ9IvUdEHQAHN4YdMq83/S3tnakjk1mC5T
-         paiL+23kDP+JSXMlm+iRgDaem1v9QPQA35xvEPy8=
+        b=lpsnLh75JVLi1xtqJ7qQpzAAxJ9r5pil06yLdoIlkSPwoFETmbOKl28ba1N3F95Oz
+         tVOCAUcLpKHV+kpHts3V1BoQpwT4tfLMSZ+jOQAU/ZzZ2iMvLSwhYFhmNCALgY0vlD
+         JcM88UIhaN3ULzcaX+NIphOVu+3cdHpKR/9URgMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 036/152] powerpc/ptdump: Fix build failure in hashpagetable.c
-Date:   Thu, 20 Aug 2020 11:20:03 +0200
-Message-Id: <20200820091555.506820739@linuxfoundation.org>
+        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 017/152] btrfs: move the chunk_mutex in btrfs_read_chunk_tree
+Date:   Thu, 20 Aug 2020 11:19:44 +0200
+Message-Id: <20200820091554.527061070@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,36 +60,166 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 7c466b0807960edc13e4b855be85ea765df9a6cd upstream.
+commit 01d01caf19ff7c537527d352d169c4368375c0a1 upstream.
 
-H_SUCCESS is only defined when CONFIG_PPC_PSERIES is defined.
+We are currently getting this lockdep splat in btrfs/161:
 
-!= H_SUCCESS means != 0. Modify the test accordingly.
+  ======================================================
+  WARNING: possible circular locking dependency detected
+  5.8.0-rc5+ #20 Tainted: G            E
+  ------------------------------------------------------
+  mount/678048 is trying to acquire lock:
+  ffff9b769f15b6e0 (&fs_devs->device_list_mutex){+.+.}-{3:3}, at: clone_fs_devices+0x4d/0x170 [btrfs]
 
-Fixes: 65e701b2d2a8 ("powerpc/ptdump: drop non vital #ifdefs")
-Cc: stable@vger.kernel.org
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/795158fc1d2b3dff3bf7347881947a887ea9391a.1592227105.git.christophe.leroy@csgroup.eu
+  but task is already holding lock:
+  ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
+
+  which lock already depends on the new lock.
+
+  the existing dependency chain (in reverse order) is:
+
+  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
+	 __mutex_lock+0x8b/0x8f0
+	 btrfs_init_new_device+0x2d2/0x1240 [btrfs]
+	 btrfs_ioctl+0x1de/0x2d20 [btrfs]
+	 ksys_ioctl+0x87/0xc0
+	 __x64_sys_ioctl+0x16/0x20
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  -> #0 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
+	 __lock_acquire+0x1240/0x2460
+	 lock_acquire+0xab/0x360
+	 __mutex_lock+0x8b/0x8f0
+	 clone_fs_devices+0x4d/0x170 [btrfs]
+	 btrfs_read_chunk_tree+0x330/0x800 [btrfs]
+	 open_ctree+0xb7c/0x18ce [btrfs]
+	 btrfs_mount_root.cold+0x13/0xfa [btrfs]
+	 legacy_get_tree+0x30/0x50
+	 vfs_get_tree+0x28/0xc0
+	 fc_mount+0xe/0x40
+	 vfs_kern_mount.part.0+0x71/0x90
+	 btrfs_mount+0x13b/0x3e0 [btrfs]
+	 legacy_get_tree+0x30/0x50
+	 vfs_get_tree+0x28/0xc0
+	 do_mount+0x7de/0xb30
+	 __x64_sys_mount+0x8e/0xd0
+	 do_syscall_64+0x52/0xb0
+	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+  other info that might help us debug this:
+
+   Possible unsafe locking scenario:
+
+	 CPU0                    CPU1
+	 ----                    ----
+    lock(&fs_info->chunk_mutex);
+				 lock(&fs_devs->device_list_mutex);
+				 lock(&fs_info->chunk_mutex);
+    lock(&fs_devs->device_list_mutex);
+
+   *** DEADLOCK ***
+
+  3 locks held by mount/678048:
+   #0: ffff9b75ff5fb0e0 (&type->s_umount_key#63/1){+.+.}-{3:3}, at: alloc_super+0xb5/0x380
+   #1: ffffffffc0c2fbc8 (uuid_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x54/0x800 [btrfs]
+   #2: ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
+
+  stack backtrace:
+  CPU: 2 PID: 678048 Comm: mount Tainted: G            E     5.8.0-rc5+ #20
+  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
+  Call Trace:
+   dump_stack+0x96/0xd0
+   check_noncircular+0x162/0x180
+   __lock_acquire+0x1240/0x2460
+   ? asm_sysvec_apic_timer_interrupt+0x12/0x20
+   lock_acquire+0xab/0x360
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   __mutex_lock+0x8b/0x8f0
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? cpumask_next+0x16/0x20
+   ? module_assert_mutex_or_preempt+0x14/0x40
+   ? __module_address+0x28/0xf0
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   ? static_obj+0x4f/0x60
+   ? lockdep_init_map_waits+0x43/0x200
+   ? clone_fs_devices+0x4d/0x170 [btrfs]
+   clone_fs_devices+0x4d/0x170 [btrfs]
+   btrfs_read_chunk_tree+0x330/0x800 [btrfs]
+   open_ctree+0xb7c/0x18ce [btrfs]
+   ? super_setup_bdi_name+0x79/0xd0
+   btrfs_mount_root.cold+0x13/0xfa [btrfs]
+   ? vfs_parse_fs_string+0x84/0xb0
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? kfree+0x2b5/0x310
+   legacy_get_tree+0x30/0x50
+   vfs_get_tree+0x28/0xc0
+   fc_mount+0xe/0x40
+   vfs_kern_mount.part.0+0x71/0x90
+   btrfs_mount+0x13b/0x3e0 [btrfs]
+   ? cred_has_capability+0x7c/0x120
+   ? rcu_read_lock_sched_held+0x52/0x60
+   ? legacy_get_tree+0x30/0x50
+   legacy_get_tree+0x30/0x50
+   vfs_get_tree+0x28/0xc0
+   do_mount+0x7de/0xb30
+   ? memdup_user+0x4e/0x90
+   __x64_sys_mount+0x8e/0xd0
+   do_syscall_64+0x52/0xb0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This is because btrfs_read_chunk_tree() can come upon DEV_EXTENT's and
+then read the device, which takes the device_list_mutex.  The
+device_list_mutex needs to be taken before the chunk_mutex, so this is a
+problem.  We only really need the chunk mutex around adding the chunk,
+so move the mutex around read_one_chunk.
+
+An argument could be made that we don't even need the chunk_mutex here
+as it's during mount, and we are protected by various other locks.
+However we already have special rules for ->device_list_mutex, and I'd
+rather not have another special case for ->chunk_mutex.
+
+CC: stable@vger.kernel.org # 4.19+
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/mm/ptdump/hashpagetable.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/volumes.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/mm/ptdump/hashpagetable.c
-+++ b/arch/powerpc/mm/ptdump/hashpagetable.c
-@@ -259,7 +259,7 @@ static int pseries_find(unsigned long ea
- 	for (i = 0; i < HPTES_PER_GROUP; i += 4, hpte_group += 4) {
- 		lpar_rc = plpar_pte_read_4(0, hpte_group, (void *)ptes);
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -7282,7 +7282,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	 * otherwise we don't need it.
+ 	 */
+ 	mutex_lock(&uuid_mutex);
+-	mutex_lock(&fs_info->chunk_mutex);
  
--		if (lpar_rc != H_SUCCESS)
-+		if (lpar_rc)
- 			continue;
- 		for (j = 0; j < 4; j++) {
- 			if (HPTE_V_COMPARE(ptes[j].v, want_v) &&
+ 	/*
+ 	 * It is possible for mount and umount to race in such a way that
+@@ -7327,7 +7326,9 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 		} else if (found_key.type == BTRFS_CHUNK_ITEM_KEY) {
+ 			struct btrfs_chunk *chunk;
+ 			chunk = btrfs_item_ptr(leaf, slot, struct btrfs_chunk);
++			mutex_lock(&fs_info->chunk_mutex);
+ 			ret = read_one_chunk(&found_key, leaf, chunk);
++			mutex_unlock(&fs_info->chunk_mutex);
+ 			if (ret)
+ 				goto error;
+ 		}
+@@ -7357,7 +7358,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	}
+ 	ret = 0;
+ error:
+-	mutex_unlock(&fs_info->chunk_mutex);
+ 	mutex_unlock(&uuid_mutex);
+ 
+ 	btrfs_free_path(path);
 
 
