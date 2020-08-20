@@ -2,127 +2,182 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D819FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B632DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B493620724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OefLEHD7"
+	by mail.kernel.org (Postfix) with ESMTP id 8CFF920738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597932414;
+	bh=+ovO2cUVQ9x1FMkutMCyDN2YYRsnBrHjjN50/X+tt9g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Z+SB+U0af9jxgT5qmk6vuEQizSYw6wo+O0D10dBBWp47UgFnT7CjHuUvkyZnCET7n
+	 vAPivm5UIx1BcnREuLIHmp5mmxm1816YFnc5Ze8zDXLISZrvJmC0bKw48XiRlbzVnr
+	 yyReR39mxf5irS5LHHUHxY9f7i8FdSXpDV0+k5tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgHTOG2 (ORCPT
+        id S1731317AbgHTN7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42758 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgHTOC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:02:28 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77BF9C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:02:28 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k12so1545050otr.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:02:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7V8Nr2ZLqIB6Fm+9YdweCl6lFef8zjHx+W/eb65CZWQ=;
-        b=OefLEHD7/gsOkGowHqibgIn2BvXcvuSIL22NvNVC0MKMv5EA1gcTDshdsOrsDs6R9v
-         tTBVEFdNJQzdjBtZFcFFOolTJQv6VHaN/ASR/ZWU/Vnct1lKzJOXm/QY4/cW47+Rf24o
-         vG7ZfKsIiBMwzpeADcDKuYghAGbkKoLTOIuziuJDtDZHeX9Az+QoghHLruquO3FLGu9J
-         dhE4yJGGdbNtSP2y9SGBr/zu5pwOLpX4PVQqgdir1/JPbfDUNl2FtZdCw0yUtJCv6pis
-         5NnlORyNniDGHK6wXeynz+OE7rcy/1+jngd7A5uPpyV0Cuy44m/qZMlsEh/FBRJeoukR
-         OGGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7V8Nr2ZLqIB6Fm+9YdweCl6lFef8zjHx+W/eb65CZWQ=;
-        b=WOP1Wc1R+AtqutZhnK1rwbFR5Un4Z+zd+fa+PqWZ3xktHPew76QsZ0oqE0nQ21XlsR
-         goyx9/DHhRTkvv8+EMdS1XtiQrtbn8NdcGvKANkdiY8kjTrX1oFl1SQ5a38sUZa2fVtL
-         KBudG8n9jlCPqU4UarO2LoFk3vcRYQ+nKsP7b9a323RzoLkf/5fZZ+U9N5ifpmqDAYAW
-         xHycggJ0fmnfNjyoNUihQkYuWRmTs0T61Sx6wmbA0Lcl2/UVYX5G+iqQgMcneR2j7zTE
-         vKkPHZYZr+xrL/rfl+TZ/tLv//KK2GtCG0Onkv693StDZ+eATR0/RPMMXHhg7ajz5EFm
-         j++Q==
-X-Gm-Message-State: AOAM531YMdU/HrVkgA/HuhojyAqJtSEwn+uIeuABFkuLtpVJ0G18Wtdw
-        wQd6S1G5l365Pger5ge/1Si8tUNEmeb6fw7UaQpY7x2fX5F6Pg==
-X-Google-Smtp-Source: ABdhPJxNrSm5Cym3X45sROT/6O/6U1GXm4ggcTQuxN/It21oRPEZksIOUhBRINM1ziaOxCi0/LAwp6fjhlakocSZPfI=
-X-Received: by 2002:a9d:20c4:: with SMTP id x62mr2038263ota.99.1597932147885;
- Thu, 20 Aug 2020 07:02:27 -0700 (PDT)
+        Thu, 20 Aug 2020 09:59:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgHTJYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A29122CB1;
+        Thu, 20 Aug 2020 09:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915464;
+        bh=+ovO2cUVQ9x1FMkutMCyDN2YYRsnBrHjjN50/X+tt9g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rmBJXqt0voH9cEA475+ufLb+R/9T9ltWzAPrEXVIIWgLG1pa+M6EJPC9JFSo7CElu
+         9f2SLRfwU871QC78TD82MIGZCIVhKR9WZZRWLspP4K8nx8g5RgeXPpKRbGoS8OzfC5
+         9Gysnxg4xTTygAkfE9I2MLSDlVlnTShacFAqV9UI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 022/232] btrfs: dont traverse into the seed devices in show_devname
+Date:   Thu, 20 Aug 2020 11:17:53 +0200
+Message-Id: <20200820091613.821160235@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1597061872-58724-1-git-send-email-xlpang@linux.alibaba.com>
-In-Reply-To: <1597061872-58724-1-git-send-email-xlpang@linux.alibaba.com>
-From:   Pekka Enberg <penberg@gmail.com>
-Date:   Thu, 20 Aug 2020 17:02:10 +0300
-Message-ID: <CAOJsxLE9SkLY5V=D=Ot1oyLkbAORagfozYqxk1iNDW6b7QZrwg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] mm/slub: Fix count_partial() problem
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Christoph Lameter <cl@linux.com>,
-        Wen Yang <wenyang@linux.alibaba.com>,
-        Roman Gushchin <guro@fb.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        David Rientjes <rientjes@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 3:18 PM Xunlei Pang <xlpang@linux.alibaba.com> wrote:
->
-> v1->v2:
-> - Improved changelog and variable naming for PATCH 1~2.
-> - PATCH3 adds per-cpu counter to avoid performance regression
->   in concurrent __slab_free().
->
-> [Testing]
-> On my 32-cpu 2-socket physical machine:
-> Intel(R) Xeon(R) CPU E5-2650 v2 @ 2.60GHz
-> perf stat --null --repeat 10 -- hackbench 20 thread 20000
->
-> == original, no patched
->       19.211637055 seconds time elapsed                                          ( +-  0.57% )
->
-> == patched with patch1~2
->  Performance counter stats for 'hackbench 20 thread 20000' (10 runs):
->
->       21.731833146 seconds time elapsed                                          ( +-  0.17% )
->
-> == patched with patch1~3
->  Performance counter stats for 'hackbench 20 thread 20000' (10 runs):
->
->       19.112106847 seconds time elapsed                                          ( +-  0.64% )
->
->
-> Xunlei Pang (3):
->   mm/slub: Introduce two counters for partial objects
->   mm/slub: Get rid of count_partial()
->   mm/slub: Use percpu partial free counter
->
->  mm/slab.h |   2 +
->  mm/slub.c | 124 +++++++++++++++++++++++++++++++++++++++++++-------------------
->  2 files changed, 89 insertions(+), 37 deletions(-)
+From: Anand Jain <anand.jain@oracle.com>
 
-We probably need to wrap the counters under CONFIG_SLUB_DEBUG because
-AFAICT all the code that uses them is also wrapped under it.
+commit 4faf55b03823e96c44dc4e364520000ed3b12fdb upstream.
 
-An alternative approach for this patch would be to somehow make the
-lock in count_partial() more granular, but I don't know how feasible
-that actually is.
+->show_devname currently shows the lowest devid in the list. As the seed
+devices have the lowest devid in the sprouted filesystem, the userland
+tool such as findmnt end up seeing seed device instead of the device from
+the read-writable sprouted filesystem. As shown below.
 
-Anyway, I am OK with this approach:
+ mount /dev/sda /btrfs
+ mount: /btrfs: WARNING: device write-protected, mounted read-only.
 
-Reviewed-by: Pekka Enberg <penberg@kernel.org>
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
 
-You still need to convince Christoph, though, because he had
-objections over this approach.
+ btrfs dev add -f /dev/sdb /btrfs
 
-- Pekka
+ umount /btrfs
+ mount /dev/sdb /btrfs
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+
+All sprouts from a single seed will show the same seed device and the
+same fsid. That's confusing.
+This is causing problems in our prototype as there isn't any reference
+to the sprout file-system(s) which is being used for actual read and
+write.
+
+This was added in the patch which implemented the show_devname in btrfs
+commit 9c5085c14798 ("Btrfs: implement ->show_devname").
+I tried to look for any particular reason that we need to show the seed
+device, there isn't any.
+
+So instead, do not traverse through the seed devices, just show the
+lowest devid in the sprouted fsid.
+
+After the patch:
+
+ mount /dev/sda /btrfs
+ mount: /btrfs: WARNING: device write-protected, mounted read-only.
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+
+ btrfs dev add -f /dev/sdb /btrfs
+ mount -o rw,remount /dev/sdb /btrfs
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs
+ SOURCE   TARGET UUID
+ /dev/sdb /btrfs 595ca0e6-b82e-46b5-b9e2-c72a6928be48
+
+ mount /dev/sda /btrfs1
+ mount: /btrfs1: WARNING: device write-protected, mounted read-only.
+
+ btrfs dev add -f /dev/sdc /btrfs1
+
+ findmnt --output SOURCE,TARGET,UUID /btrfs1
+ SOURCE   TARGET  UUID
+ /dev/sdc /btrfs1 ca1dbb7a-8446-4f95-853c-a20f3f82bdbb
+
+ cat /proc/self/mounts | grep btrfs
+ /dev/sdb /btrfs btrfs rw,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
+ /dev/sdc /btrfs1 btrfs ro,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
+
+Reported-by: Martin K. Petersen <martin.petersen@oracle.com>
+CC: stable@vger.kernel.org # 4.19+
+Tested-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/super.c |   21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
+
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2296,9 +2296,7 @@ static int btrfs_unfreeze(struct super_b
+ static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(root->d_sb);
+-	struct btrfs_fs_devices *cur_devices;
+ 	struct btrfs_device *dev, *first_dev = NULL;
+-	struct list_head *head;
+ 
+ 	/*
+ 	 * Lightweight locking of the devices. We should not need
+@@ -2308,18 +2306,13 @@ static int btrfs_show_devname(struct seq
+ 	 * least until the rcu_read_unlock.
+ 	 */
+ 	rcu_read_lock();
+-	cur_devices = fs_info->fs_devices;
+-	while (cur_devices) {
+-		head = &cur_devices->devices;
+-		list_for_each_entry_rcu(dev, head, dev_list) {
+-			if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
+-				continue;
+-			if (!dev->name)
+-				continue;
+-			if (!first_dev || dev->devid < first_dev->devid)
+-				first_dev = dev;
+-		}
+-		cur_devices = cur_devices->seed;
++	list_for_each_entry_rcu(dev, &fs_info->fs_devices->devices, dev_list) {
++		if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
++			continue;
++		if (!dev->name)
++			continue;
++		if (!first_dev || dev->devid < first_dev->devid)
++			first_dev = dev;
+ 	}
+ 
+ 	if (first_dev)
+
+
