@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8379EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD50C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CDE1207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CE72078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926918;
-	bh=AMJbALkJjz8scBdcbtE9UUJgKG/4dLleB2UZksKqIAc=;
+	s=default; t=1597926931;
+	bh=9iIh+itXFCiJpzJCgY8kQPXUYNArH99tHwymyYCggEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCK1dkbO6gZwWWk2T1kmamKa7i9AAOVhl8+5pTuog3KUQVF/2pEfwV273fWkxz52A
-	 Dsgg667i2Y+wRSRkGw7b1kBN0hQAKP02y8mGOkuPEvPG6ZtboCCU+BDUkrc1DQROdt
-	 rVx9svuOdvnshwNTG4qGk9RWbKOp50O8YXpYvQOk=
+	b=DspeALsOJORODF2K8b7k/vlBy4HNcnZksrBxC9k1w0GIEEEms+3jZUG3UwaKVuQ6v
+	 BsdrWNh6BRz3EdnK6CEMhLRvn18qq7AnulgbjOrIdiv4jLKneTzGAlofzZSB4ojGzQ
+	 iEALyN2Vd3aJ+SSseKZp7LdUZwfEkFnTTluMgOy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgHTMfQ (ORCPT
+        id S1729357AbgHTMf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:35:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729554AbgHTJs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:26 -0400
+        id S1729102AbgHTJsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7A520724;
-        Thu, 20 Aug 2020 09:48:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 540612173E;
+        Thu, 20 Aug 2020 09:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916905;
-        bh=AMJbALkJjz8scBdcbtE9UUJgKG/4dLleB2UZksKqIAc=;
+        s=default; t=1597916897;
+        bh=9iIh+itXFCiJpzJCgY8kQPXUYNArH99tHwymyYCggEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mBMYdr9uH39AF2DG+CgR4OGM8pxmMrHQhYAsueXsVQlTCGREe3n9EwzVaDsKMmREe
-         HC0Sq3DK8v63G1J+lot6b8EcbruRKnfSEQX+Iq1FWsc0iWHjS89Lmgq9f+zg879hjV
-         ZHgDD3QMVtKEFCGOPHfG92IX9VNJ7lQ7pP95Mzxc=
+        b=F2lCzwqRL322IpMRmXk+VC5YTPCPzzvw58lfZWIrCri35e+hjEcwTJL9btAXUlEOr
+         VZUNpRcwJg1tHkVekLFIseqcfMLxSjPwhxvSv9+0ADZL0y88R3NPrhBHsBh3QkzzQi
+         GKalfRvkYY9bNfEbMVhm5avNMw29YOn7OInwR6Ow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/152] selftests/bpf: test_progs use another shell exit on non-actions
-Date:   Thu, 20 Aug 2020 11:20:55 +0200
-Message-Id: <20200820091558.240620751@linuxfoundation.org>
+Subject: [PATCH 5.4 085/152] media: rockchip: rga: Only set output CSC mode for RGB input
+Date:   Thu, 20 Aug 2020 11:20:52 +0200
+Message-Id: <20200820091558.099124991@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,52 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
 
-[ Upstream commit 3220fb667842a9725cbb71656f406eadb03c094b ]
+[ Upstream commit 0f879bab72f47e8ba2421a984e7acfa763d3e84e ]
 
-This is a follow up adjustment to commit 6c92bd5cd465 ("selftests/bpf:
-Test_progs indicate to shell on non-actions"), that returns shell exit
-indication EXIT_FAILURE (value 1) when user selects a non-existing test.
+Setting the output CSC mode is required for a YUV output, but must not
+be set when the input is also YUV. Doing this (as tested with a YUV420P
+to YUV420P conversion) results in wrong colors.
 
-The problem with using EXIT_FAILURE is that a shell script cannot tell
-the difference between a non-existing test and the test failing.
+Adapt the logic to only set the output CSC mode when the output is YUV and
+the input is RGB. Also add a comment to clarify the rationale.
 
-This patch uses value 2 as shell exit indication.
-(Aside note unrecognized option parameters use value 64).
-
-Fixes: 6c92bd5cd465 ("selftests/bpf: Test_progs indicate to shell on non-actions")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159410593992.1093222.90072558386094370.stgit@firesoul
+Fixes: f7e7b48e6d79 ("[media] rockchip/rga: v4l2 m2m support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/platform/rockchip/rga/rga-hw.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index a7d06724c18c2..48bbe8e0ce48d 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -7,6 +7,8 @@
- #include <argp.h>
- #include <string.h>
+diff --git a/drivers/media/platform/rockchip/rga/rga-hw.c b/drivers/media/platform/rockchip/rga/rga-hw.c
+index 5607ee8d19176..aaa96f256356b 100644
+--- a/drivers/media/platform/rockchip/rga/rga-hw.c
++++ b/drivers/media/platform/rockchip/rga/rga-hw.c
+@@ -200,6 +200,11 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+ 	dst_info.data.format = ctx->out.fmt->hw_format;
+ 	dst_info.data.swap = ctx->out.fmt->color_swap;
  
-+#define EXIT_NO_TEST		2
++	/*
++	 * CSC mode must only be set when the colorspace families differ between
++	 * input and output. It must remain unset (zeroed) if both are the same.
++	 */
 +
- /* defined in test_progs.h */
- struct test_env env;
+ 	if (RGA_COLOR_FMT_IS_YUV(ctx->in.fmt->hw_format) &&
+ 	    RGA_COLOR_FMT_IS_RGB(ctx->out.fmt->hw_format)) {
+ 		switch (ctx->in.colorspace) {
+@@ -212,7 +217,8 @@ static void rga_cmd_set_trans_info(struct rga_ctx *ctx)
+ 		}
+ 	}
  
-@@ -585,7 +587,7 @@ int main(int argc, char **argv)
- 	free(env.subtest_selector.num_set);
- 
- 	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
--		return EXIT_FAILURE;
-+		return EXIT_NO_TEST;
- 
- 	return env.fail_cnt ? EXIT_FAILURE : EXIT_SUCCESS;
- }
+-	if (RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
++	if (RGA_COLOR_FMT_IS_RGB(ctx->in.fmt->hw_format) &&
++	    RGA_COLOR_FMT_IS_YUV(ctx->out.fmt->hw_format)) {
+ 		switch (ctx->out.colorspace) {
+ 		case V4L2_COLORSPACE_REC709:
+ 			dst_info.data.csc_mode = RGA_SRC_CSC_MODE_BT709_R0;
 -- 
 2.25.1
 
