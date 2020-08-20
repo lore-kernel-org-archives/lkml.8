@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D915C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF88BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34BD1206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC36420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918021;
-	bh=8ZGoBqju/lye+2LTT4VSSUJ0uHKgnw6J0Qizfb+cNtQ=;
+	s=default; t=1597918026;
+	bh=0BuGBNYRRfCZkWroIdzu90x55iYIIgyR6zQdAe8liMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xuzi79qOOA9u+nkGXYi4SM4A2O5f8pXhqYx/bnxtKBBOWVkzhuY1bdiS9aUYZxBxw
-	 AuoShphB6FQWS3h/X3Upa19JGK5Ti4pKob07D8A0IjIRs5JfVpDqNWjX5v1YdbmP+M
-	 S0EqEECxBvEzI3zGzIYDRKuGtgyeEu3eM2ojqp3E=
+	b=Tv00y6G+tYDFC8stT1YdiOQaJEvAaoGdEjfRF+iYYYFB6J9ANADtVp/QIFOPxZcdy
+	 wt/4T06bktnsTOrZypqm6mOkJW+q/fF+BoV1yPim3AwAOKrc6lnSr9ILSlry1Mwen8
+	 7RWhtNpHLZo8PcIQqWrOs1CTgWWVLE5G+XjowLJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgHTKG5 (ORCPT
+        id S1730535AbgHTKHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:06:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50864 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:07:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbgHTKBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:21 -0400
+        id S1730293AbgHTKCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91AB820724;
-        Thu, 20 Aug 2020 10:01:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7D7420855;
+        Thu, 20 Aug 2020 10:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917681;
-        bh=8ZGoBqju/lye+2LTT4VSSUJ0uHKgnw6J0Qizfb+cNtQ=;
+        s=default; t=1597917737;
+        bh=0BuGBNYRRfCZkWroIdzu90x55iYIIgyR6zQdAe8liMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NvSvVlC0xO2ycVVL/ZmApy/M3B9ipjQSFW3EvDhigPZq17ZogIu6HS7tJnQugwHBe
-         HDAclBHtvhFRcs/2NDkBCJ+eYmxW5K/8RtOrhzkPVNFFqHkGpwwQYKHzN6FbCYJrF7
-         l5WGrhvgHJfcFeotvgV1Oz6DaaUmqJtT4Es5phhU=
+        b=DbIuRohNVW5fj22kNc2Bg5APHCu2CN4lliUR/bSjmf7FPjRj3F2BTpzuFP4/XKoPd
+         4noYOnJ2GoRNew16gaQYZNFQEK7T4Trp0IBYGNK90q60UcqyKfxexXynKUnu8ureFn
+         Hch+K8JmKAYUJ20IKy5HwjAloD6uOUR+EHWeqL4M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 118/212] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
-Date:   Thu, 20 Aug 2020 11:21:31 +0200
-Message-Id: <20200820091608.311277070@linuxfoundation.org>
+Subject: [PATCH 4.9 140/212] s390/qeth: dont process empty bridge port events
+Date:   Thu, 20 Aug 2020 11:21:53 +0200
+Message-Id: <20200820091609.417418761@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,35 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit d179f7c763241c1dc5077fca88ddc3c47d21b763 ]
+[ Upstream commit 02472e28b9a45471c6d8729ff2c7422baa9be46a ]
 
-The dev_id used in request_irq() and free_irq() should match. Use 'info' in
-both cases.
+Discard events that don't contain any entries. This shouldn't happen,
+but subsequent code relies on being able to use entry 0. So better
+be safe than accessing garbage.
 
-Link: https://lore.kernel.org/r/20200626035948.944148-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: b4d72c08b358 ("qeth: bridgeport support - basic control")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/powertec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/qeth_l2_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
-index 79aa88911b7f3..b5e4a25ea1ef3 100644
---- a/drivers/scsi/arm/powertec.c
-+++ b/drivers/scsi/arm/powertec.c
-@@ -382,7 +382,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 51152681aba6e..c878c87966163 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -1675,6 +1675,10 @@ static void qeth_bridge_state_change(struct qeth_card *card,
+ 	int extrasize;
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
- 
-  out_release:
- 	fas216_release(host);
+ 	QETH_CARD_TEXT(card, 2, "brstchng");
++	if (qports->num_entries == 0) {
++		QETH_CARD_TEXT(card, 2, "BPempty");
++		return;
++	}
+ 	if (qports->entry_length != sizeof(struct qeth_sbp_port_entry)) {
+ 		QETH_CARD_TEXT_(card, 2, "BPsz%04x", qports->entry_length);
+ 		return;
 -- 
 2.25.1
 
