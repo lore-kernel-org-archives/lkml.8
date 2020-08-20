@@ -2,94 +2,118 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42B4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D98BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B759D207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F2D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928860;
-	bh=UpYTKo9YBI4Wb/ngMmtCZOnOgqcl6SDDieR0IfyJbOU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=110iOo9R94ORD8JhKf4Gh8Kh8Bdr5DWNYsIkRsoTEDQXe9ZeCmBURirAfxrXslO5w
-	 hgovQTQGwo9xDuH+mmtvmTLf3G0YqPy3zYpYfTnf2544TWh/lXPvUp6MLuOsaTnGlq
-	 3f91smNUwDHeu8oc0TAJlOrlfgD30jPoH+3maWYs=
+	s=default; t=1597928865;
+	bh=9T4WeDp0RYzmw5XlXp9uYtO1HytLjTO0M9v9kwsrWf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vJtLSE5BpO5Hxd23CbiZmM1M2Q18W9TtaX6CQ/AtRNYoVhWXWGJ9mUnq39mtK14f9
+	 PLfGvB+dDEj9GkZPHYGWa5Q60YPU8gj1ioOFS2GQe5tQNW9NzCg3jRXsK8Sq8f2qwB
+	 ZJNkAbto3B847GyIdGq2AZ7hhG2VR7JhqXcvQ9h4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbgHTNHP (ORCPT
+        id S1728216AbgHTNHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:07:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56402 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728842AbgHTJie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1728219AbgHTNHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:07:21 -0400
+Received: from localhost (p54b3333c.dip0.t-ipconnect.de [84.179.51.60])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C06522B49;
-        Thu, 20 Aug 2020 09:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F322B207BB;
+        Thu, 20 Aug 2020 13:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916313;
-        bh=UpYTKo9YBI4Wb/ngMmtCZOnOgqcl6SDDieR0IfyJbOU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TR+BfDMVKf8NO9DQ3//Pfyd8WLi8ISJN1fB4yhvmERILr4YOvUo0QG1p/tb3ASxEW
-         cEcVbKy1tKhUglXhwdzXKN0Bvmb1CqnAJCgdknZ8yOHONSsU4h5G7BNLzF6/Qxx7lc
-         LISg5X7P2s+2ezLaBUOemtN4zgFSdkcADMLqWF/0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        s=default; t=1597928840;
+        bh=9T4WeDp0RYzmw5XlXp9uYtO1HytLjTO0M9v9kwsrWf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UVlhYFh3XV1+TA5Oe6DIE5oEjDi94Rt10we1LK8ZozUWHc/cfLYVjjEniqZMmpRGL
+         cQQOx0q8nmki/LH94WEslevVWm1QLAzs5udMYpgNoi9QdzXtTConvoGjce6mzAC+S/
+         gWpulzQ8AH2xNYzOjoSTRBPMzFK7AT4GMfUBspl8=
+Date:   Thu, 20 Aug 2020 15:07:08 +0200
+From:   Wolfram Sang <wsa@kernel.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Blanchard <anton@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.7 085/204] pseries: Fix 64 bit logical memory block panic
-Date:   Thu, 20 Aug 2020 11:19:42 +0200
-Message-Id: <20200820091610.587579219@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+Cc:     kernel@pengutronix.de, Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] can: mscan: mpc5xxx_can: update contact email
+Message-ID: <20200820130707.GA11403@ninjato>
+References: <20200502142657.19199-1-wsa@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Content-Disposition: inline
+In-Reply-To: <20200502142657.19199-1-wsa@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Blanchard <anton@ozlabs.org>
 
-commit 89c140bbaeee7a55ed0360a88f294ead2b95201b upstream.
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Booting with a 4GB LMB size causes us to panic:
+On Sat, May 02, 2020 at 04:26:56PM +0200, Wolfram Sang wrote:
+> The 'pengutronix' address is defunct for years. Use the proper contact
+> address.
+>=20
+> Signed-off-by: Wolfram Sang <wsa@kernel.org>
 
-  qemu-system-ppc64: OS terminated: OS panic:
-      Memory block size not suitable: 0x0
+Ping?
 
-Fix pseries_memory_block_size() to handle 64 bit LMBs.
+> ---
+>  drivers/net/can/mscan/mpc5xxx_can.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/=
+mpc5xxx_can.c
+> index e4f4b5c9ebd6..e254e04ae257 100644
+> --- a/drivers/net/can/mscan/mpc5xxx_can.c
+> +++ b/drivers/net/can/mscan/mpc5xxx_can.c
+> @@ -5,7 +5,7 @@
+>   * Copyright (C) 2004-2005 Andrey Volkov <avolkov@varma-el.com>,
+>   *                         Varma Electronics Oy
+>   * Copyright (C) 2008-2009 Wolfgang Grandegger <wg@grandegger.com>
+> - * Copyright (C) 2009 Wolfram Sang, Pengutronix <w.sang@pengutronix.de>
+> + * Copyright (C) 2009 Wolfram Sang, Pengutronix <kernel@pengutronix.de>
+>   */
+> =20
+>  #include <linux/kernel.h>
+> --=20
+> 2.20.1
+>=20
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Anton Blanchard <anton@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200715000820.1255764-1-anton@ozlabs.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
 
----
- arch/powerpc/platforms/pseries/hotplug-memory.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -27,7 +27,7 @@ static bool rtas_hp_event;
- unsigned long pseries_memory_block_size(void)
- {
- 	struct device_node *np;
--	unsigned int memblock_size = MIN_MEMORY_BLOCK_SIZE;
-+	u64 memblock_size = MIN_MEMORY_BLOCK_SIZE;
- 	struct resource r;
- 
- 	np = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl8+dXcACgkQFA3kzBSg
+Kbbitw/9F16nwRBCNgwSGqNwxfnuj1puuUpdtbdyXSh3CwYylq50zKpHrYTd232F
+qEyVjLzVCF+qfq5o9P3GkWb6jL/kAnB9GVz+jkoLxYpXpk+Z4x3hxTXo/6I3AeMm
+s9wY9Svr06xrsn8hqk7K0m4LWcSTwBOH4qMAhTykf8bWsom/+mX5eLStF8FzFF9/
+lmjNdZm38vZ4GAfD8INpS358dUMmKLrQ/sL5heWs8bLpwTLli+qDCFf3dHXOVr1b
+bt2vNqUdk9jAIp4oc4gRxFEpWxJmLzPl7bUqb41bnUfx+ARra/iQtMiODZgmmevL
+vy7tKrgH5y1Q9AFWZnyMqeCoi8NxwFS+kN7dERz/haBnocHHlzwPEcM3SfdU2A8o
+4Rvo7FdEdXLROQsZWUzJaYtEN/aEyNyNGPU3HYYxZ0zjU1O7sTRlsMTbeyJXPCit
+IxK77SEAZXSCP6oCwUqoZ303wAvL+YUxYU+CgKvn6nmJqj58+iN8t6z3VHA94Yyq
+tybtEz6dp3qN6dhLK7LB3vT4o6H0OhVgnuBEmqFf+o6t2m5xIBNjxyCnkDBvkxBH
+jHsBeUw0zynKxRt6x3zCvRZA2qL4nJ6WizyIm6uKd01fekTKTeM6NHTL91QNY+Rl
+cxAIXV+esUM4psPYJ37M3je60bVX0ymkFSoXQ3XxQORTCntFmkg=
+=Ucks
+-----END PGP SIGNATURE-----
 
-
+--huq684BweRXVnRxX--
