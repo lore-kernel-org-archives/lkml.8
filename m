@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6A6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F41FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 884632067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA3F206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918158;
-	bh=ol2mVve6eFfgKC4fO+t6H8muDmioQ64l/6eQK9evxu8=;
+	s=default; t=1597918162;
+	bh=ox3YvlEDmwP7VTNyhPPlqumKr30V+TKNRbSXV9BJ594=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1IosPccX0gDnaEHgRZe2enTEojap6JUD2SDgkDEc3cd2zfD/Cn2Wzphk7QcvWVOam
-	 dvtxivubcjDplTtyEa+bp3fWGPXN5dhp9/f6JgQlSbLc/iQYkkmmDebQ/r7QFKAJrk
-	 4n8kWkZ8R+a9cKWtN3cSUCX9c4mVZ115Lo3tgJKQ=
+	b=1tBWpXKDooVrBRVLIvNs3v9oxsVEWxgfZaZaVsRSXHi0OnGsBPxSz/T0hDLV8Igf9
+	 l1eRt9H8EGcooEeXPUvKKJR3gUukPno+YG6NpV8thayIVSOcjfm1Ap4sITfe0E35u1
+	 mQceZozyFKbBlHIJ5AgWIkGNR8R0jJy64v35jAq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730789AbgHTKJR (ORCPT
+        id S1730796AbgHTKJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42756 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:09:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbgHTKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:09:11 -0400
+        id S1729654AbgHTKJN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:09:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FC920724;
-        Thu, 20 Aug 2020 10:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAF982067C;
+        Thu, 20 Aug 2020 10:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918150;
-        bh=ol2mVve6eFfgKC4fO+t6H8muDmioQ64l/6eQK9evxu8=;
+        s=default; t=1597918153;
+        bh=ox3YvlEDmwP7VTNyhPPlqumKr30V+TKNRbSXV9BJ594=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gy81fHDTedLZ2A6Gfbej9142mYa0rPQdCh1tD+BR1F/bhfN/6LhVFxTvFazhbv+s5
-         ACaKjrJ3ql/DvFrJxRMw3MX21iouDc/8HBoNLSO2YBs8NKFZYztFD9P2KHjrzk69yG
-         pGrmanqlh01sMVn/e0yUnTwjjbTstREcRjskJyAk=
+        b=K3x93DMw1ajjncL4F7SKnHXvgdET2C3/Uzuc0K1WN4mXlE9+orVLrH11AF3CID3yh
+         jt4X6eo1QrTcekiHOvcv3Bo84JQXO3yp+qSUBzeIyQrlQKr1BLBP6mtcca48qfk0kU
+         0Zvcf4OHmtR+EB9Q12xEBtsC1+l7M8zR9okae1MQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Finn Thain <fthain@telegraphics.com.au>,
+        Stan Johnson <userm57@yahoo.com>,
+        Joshua Thompson <funaho@jurai.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 071/228] brcmfmac: To fix Bss Info flag definition Bug
-Date:   Thu, 20 Aug 2020 11:20:46 +0200
-Message-Id: <20200820091611.151305853@linuxfoundation.org>
+Subject: [PATCH 4.14 054/228] m68k: mac: Fix IOP status/control register writes
+Date:   Thu, 20 Aug 2020 11:20:29 +0200
+Message-Id: <20200820091610.315605613@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -63,37 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+From: Finn Thain <fthain@telegraphics.com.au>
 
-[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
+[ Upstream commit 931fc82a6aaf4e2e4a5490addaa6a090d78c24a7 ]
 
-Bss info flag definition need to be fixed from 0x2 to 0x4
-This flag is for rssi info received on channel.
-All Firmware branches defined as 0x4 and this is bug in brcmfmac.
+When writing values to the IOP status/control register make sure those
+values do not have any extraneous bits that will clear interrupt flags.
 
-Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
+To place the SCC IOP into bypass mode would be desirable but this is not
+achieved by writing IOP_DMAINACTIVE | IOP_RUN | IOP_AUTOINC | IOP_BYPASS
+to the control register. Drop this ineffective register write.
+
+Remove the flawed and unused iop_bypass() function. Make use of the
+unused iop_stop() function.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Joshua Thompson <funaho@jurai.org>
+Link: https://lore.kernel.org/r/09bcb7359a1719a18b551ee515da3c4c3cf709e6.1590880333.git.fthain@telegraphics.com.au
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/m68k/mac/iop.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-index e0d22fedb2b45..05bd636011ec9 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
-@@ -30,7 +30,7 @@
- #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+diff --git a/arch/m68k/mac/iop.c b/arch/m68k/mac/iop.c
+index fb61af5ac4ab8..0b94f6672c5f3 100644
+--- a/arch/m68k/mac/iop.c
++++ b/arch/m68k/mac/iop.c
+@@ -183,7 +183,7 @@ static __inline__ void iop_writeb(volatile struct mac_iop *iop, __u16 addr, __u8
  
- #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
--#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
-+#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
+ static __inline__ void iop_stop(volatile struct mac_iop *iop)
+ {
+-	iop->status_ctrl &= ~IOP_RUN;
++	iop->status_ctrl = IOP_AUTOINC;
+ }
  
- #define BRCMF_STA_WME              0x00000002      /* WMM association */
- #define BRCMF_STA_AUTHE            0x00000008      /* Authenticated */
+ static __inline__ void iop_start(volatile struct mac_iop *iop)
+@@ -191,14 +191,9 @@ static __inline__ void iop_start(volatile struct mac_iop *iop)
+ 	iop->status_ctrl = IOP_RUN | IOP_AUTOINC;
+ }
+ 
+-static __inline__ void iop_bypass(volatile struct mac_iop *iop)
+-{
+-	iop->status_ctrl |= IOP_BYPASS;
+-}
+-
+ static __inline__ void iop_interrupt(volatile struct mac_iop *iop)
+ {
+-	iop->status_ctrl |= IOP_IRQ;
++	iop->status_ctrl = IOP_IRQ | IOP_RUN | IOP_AUTOINC;
+ }
+ 
+ static int iop_alive(volatile struct mac_iop *iop)
+@@ -244,7 +239,6 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_SCC] = (struct mac_iop *) SCC_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_SCC]->status_ctrl = 0x87;
+ 		iop_scc_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_SCC] = NULL;
+@@ -256,7 +250,7 @@ void __init iop_preinit(void)
+ 		} else {
+ 			iop_base[IOP_NUM_ISM] = (struct mac_iop *) ISM_IOP_BASE_QUADRA;
+ 		}
+-		iop_base[IOP_NUM_ISM]->status_ctrl = 0;
++		iop_stop(iop_base[IOP_NUM_ISM]);
+ 		iop_ism_present = 1;
+ 	} else {
+ 		iop_base[IOP_NUM_ISM] = NULL;
 -- 
 2.25.1
 
