@@ -2,52 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86D29C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E084C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E832207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03642075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916454;
-	bh=8IqWyfEDnx2H1Au+cCDuG8ozinL/2n49sbIicse6ffo=;
+	s=default; t=1597916463;
+	bh=ATlZv6UUf8gC4J7JiJhspjarlU5BxTsDmslsrQf6BAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f0rSvCxv/JQd1eqRmMPro6x6dojoPjhzv9NORf/x7/ReFpCSpZxCNzQ+I7K5LK19X
-	 ovO9img7+z70H+C3O+Efs1jJcdRhflCumCAZKiBiGshHa6avQ9DYMh4t0p5BB9ewxS
-	 vrvAxwHis21eymvSm0/Yr2Q3jsiwN8GlqCFrlL9M=
+	b=AIde2ZJFjL4BG4/wRFCW0X1p2YeQrAFLPxSW+chMdIkMqOlfx3GuifJLpaAt8cWDY
+	 qRXxTr6aIytA/26VxFwaoOXpriIcnnDWdZk28vKQadzfzEbAKWfK+xKThZGUvFH36E
+	 7iHGMCmejeJzdRjGbqoSIDKZTDrhBbvgu/QsCDlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgHTJkw (ORCPT
+        id S1729079AbgHTJlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32784 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729038AbgHTJkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:32 -0400
+        id S1728802AbgHTJkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31C482075E;
-        Thu, 20 Aug 2020 09:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53C662075E;
+        Thu, 20 Aug 2020 09:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916431;
-        bh=8IqWyfEDnx2H1Au+cCDuG8ozinL/2n49sbIicse6ffo=;
+        s=default; t=1597916445;
+        bh=ATlZv6UUf8gC4J7JiJhspjarlU5BxTsDmslsrQf6BAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enHCwiQd6LdHyFKw5mPh6JfDVZbz49oR90IK2rPgddody83WS8dfPazJZ0E/fEnhD
-         naDF4SYkNH6F4QnFcW7xdq824FcTlzK+o89mk/Dopel9LWxMC4DGbPmLz7CD6CfnZk
-         WBON7DBM2NwVKAap2NV0mw1WQ0qweuocraISHdNQ=
+        b=EvdcXM+ryr4MM1zea5XyPM6UCmMPyvNxTX400zC70CgyuSy+YPVERe0il2A3tCK4O
+         7pek2eCAPzL8dSZno3pMm1m88GaOsUwhFNJ2tN7nwPyXM+CcLTmGinPTLpdvxs9sxw
+         WlWqwpP+rM+EOadHKxq/iRXDnTQRR+kJnkyrKGnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5.7 095/204] remoteproc: qcom_q6v5_mss: Validate MBA firmware size before load
-Date:   Thu, 20 Aug 2020 11:19:52 +0200
-Message-Id: <20200820091611.078303806@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 123/204] RDMA/counter: Allow manually bind QPs with different pids to same counter
+Date:   Thu, 20 Aug 2020 11:20:20 +0200
+Message-Id: <20200820091612.439376799@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,60 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Mark Zhang <markz@mellanox.com>
 
-commit e013f455d95add874f310dc47c608e8c70692ae5 upstream.
+[ Upstream commit cbeb7d896c0f296451ffa7b67e7706786b8364c8 ]
 
-The following mem abort is observed when the mba firmware size exceeds
-the allocated mba region. MBA firmware size is restricted to a maximum
-size of 1M and remaining memory region is used by modem debug policy
-firmware when available. Hence verify whether the MBA firmware size lies
-within the allocated memory region and is not greater than 1M before
-loading.
+In manual mode allow bind user QPs with different pids to same counter,
+since this is allowed in auto mode.
+Bind kernel QPs and user QPs to the same counter are not allowed.
 
-Err Logs:
-Unable to handle kernel paging request at virtual address
-Mem abort info:
-...
-Call trace:
-  __memcpy+0x110/0x180
-  rproc_start+0x40/0x218
-  rproc_boot+0x5b4/0x608
-  state_store+0x54/0xf8
-  dev_attr_store+0x44/0x60
-  sysfs_kf_write+0x58/0x80
-  kernfs_fop_write+0x140/0x230
-  vfs_write+0xc4/0x208
-  ksys_write+0x74/0xf8
-  __arm64_sys_write+0x24/0x30
-...
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200722201047.12975-2-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 1bd8e0a9d0fd ("RDMA/counter: Allow manual mode configuration support")
+Link: https://lore.kernel.org/r/20200702082933.424537-4-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/infiniband/core/counters.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -408,6 +408,12 @@ static int q6v5_load(struct rproc *rproc
- {
- 	struct q6v5 *qproc = rproc->priv;
+diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
+index 6deb1901fbd02..417ebf4d8ba9b 100644
+--- a/drivers/infiniband/core/counters.c
++++ b/drivers/infiniband/core/counters.c
+@@ -483,7 +483,7 @@ int rdma_counter_bind_qpn(struct ib_device *dev, u8 port,
+ 		goto err;
+ 	}
  
-+	/* MBA is restricted to a maximum size of 1M */
-+	if (fw->size > qproc->mba_size || fw->size > SZ_1M) {
-+		dev_err(qproc->dev, "MBA firmware load failed\n");
-+		return -EINVAL;
-+	}
-+
- 	memcpy(qproc->mba_region, fw->data, fw->size);
- 
- 	return 0;
+-	if (counter->res.task != qp->res.task) {
++	if (rdma_is_kernel_res(&counter->res) != rdma_is_kernel_res(&qp->res)) {
+ 		ret = -EINVAL;
+ 		goto err_task;
+ 	}
+-- 
+2.25.1
+
 
 
