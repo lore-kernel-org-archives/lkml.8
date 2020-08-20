@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC39CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF22C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9944122CA1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09F4A22CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924628;
-	bh=8gLfGueIubmjq71GiCt1zrB0HTttEmsPLuEs2LZ5dtw=;
+	s=default; t=1597924632;
+	bh=LAo3eUTJ8Bt40oLpcmUz9zx4hJiT9FLsAnd1QJarXcM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fWxrytcrC4eExxI+gBd2pt61MBtlT2a274xZp7kMK5LSg71OueuNttlEwaAxWEtar
-	 MU4UKfmlSZOX6AETpXP5G9aHnM1HQSyaS3qpZlZ2HzdpP9lODc0FovHyYu3P7KWm7d
-	 /V41pIgez9pApKLeJUVF7AeJT0h2PjwfUSnpCkZM=
+	b=o0R6BAJ7AYUydEkRpkOsz/u3n8DxEsLshr8dairUPIBXnFBwedcD+qgEOTnb6JDPH
+	 zcLFJDrDt2on5ELY1nK/vA7EBYsuiBjJS3u/obLq9omW57rlB4aOfV8J0TBxXYVCm+
+	 NLfzvftJ45Cj63JzAlLOQ7zZvaqBftBOyuWYuIoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbgHTL5G (ORCPT
+        id S1729065AbgHTL5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50532 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbgHTKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:14 -0400
+        id S1730296AbgHTKA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1D1822B4D;
-        Thu, 20 Aug 2020 10:01:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 034C122B40;
+        Thu, 20 Aug 2020 10:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917672;
-        bh=8gLfGueIubmjq71GiCt1zrB0HTttEmsPLuEs2LZ5dtw=;
+        s=default; t=1597917658;
+        bh=LAo3eUTJ8Bt40oLpcmUz9zx4hJiT9FLsAnd1QJarXcM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWuORETpU/zyP7tMet9qRAMRpdfLPivYV8/+8eRJEJ4tUDlAR4tusfVaP+8ij4HOm
-         iHnb3YsGlOdu3IYvGbqQj+W7yKbHLyVcKCDpTbxMHH65CW2HYOn+r14mPKeux6ovL5
-         QY3m2bWgE+FEtm/GV7tUmWAUc73n1fJQ9fBCnLRI=
+        b=xuIsCzGU5URhu7OHbLYMmGY9ycj0gpiZthR9gttwMxBdCEElccfowPQ5ONAXf9owe
+         /g1uPfYPoFCTs2T+yrU6sFOEuHeQYVv35RFXm3xA8N1GVVOUcpcFYuBr5/8Eb3EPhi
+         WHggG9EadxBnUsIIoXvadQXetM0YRpyUBh1fR0iY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Tomasz Duszynski <tomasz.duszynski@octakon.com>,
+        Matt Ranostay <matt.ranostay@konsulko.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 116/212] cxl: Fix kobject memleak
-Date:   Thu, 20 Aug 2020 11:21:29 +0200
-Message-Id: <20200820091608.209297448@linuxfoundation.org>
+Subject: [PATCH 4.9 111/212] iio: improve IIO_CONCENTRATION channel type description
+Date:   Thu, 20 Aug 2020 11:21:24 +0200
+Message-Id: <20200820091607.951901676@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,42 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Tomasz Duszynski <tomasz.duszynski@octakon.com>
 
-[ Upstream commit 85c5cbeba8f4fb28e6b9bfb3e467718385f78f76 ]
+[ Upstream commit df16c33a4028159d1ba8a7061c9fa950b58d1a61 ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+IIO_CONCENTRATION together with INFO_RAW specifier is used for reporting
+raw concentrations of pollutants. Raw value should be meaningless
+before being properly scaled. Because of that description shouldn't
+mention raw value unit whatsoever.
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+Fix this by rephrasing existing description so it follows conventions
+used throughout IIO ABI docs.
 
-Fixes: b087e6190ddc ("cxl: Export optional AFU configuration record in sysfs")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200602120733.5943-1-wanghai38@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 8ff6b3bc94930 ("iio: chemical: Add IIO_CONCENTRATION channel type")
+Signed-off-by: Tomasz Duszynski <tomasz.duszynski@octakon.com>
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/cxl/sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/ABI/testing/sysfs-bus-iio | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/cxl/sysfs.c b/drivers/misc/cxl/sysfs.c
-index a8b6d6a635e96..e97b3b26805d1 100644
---- a/drivers/misc/cxl/sysfs.c
-+++ b/drivers/misc/cxl/sysfs.c
-@@ -598,7 +598,7 @@ static struct afu_config_record *cxl_sysfs_afu_new_cr(struct cxl_afu *afu, int c
- 	rc = kobject_init_and_add(&cr->kobj, &afu_config_record_type,
- 				  &afu->dev.kobj, "cr%i", cr->cr);
- 	if (rc)
--		goto err;
-+		goto err1;
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio b/Documentation/ABI/testing/sysfs-bus-iio
+index 0406076e44059..743ffbcc6b5f0 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio
++++ b/Documentation/ABI/testing/sysfs-bus-iio
+@@ -1491,7 +1491,8 @@ What:		/sys/bus/iio/devices/iio:deviceX/in_concentrationX_voc_raw
+ KernelVersion:	4.3
+ Contact:	linux-iio@vger.kernel.org
+ Description:
+-		Raw (unscaled no offset etc.) percentage reading of a substance.
++		Raw (unscaled no offset etc.) reading of a substance. Units
++		after application of scale and offset are percents.
  
- 	rc = sysfs_create_bin_file(&cr->kobj, &cr->config_attr);
- 	if (rc)
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistance_raw
+ What:		/sys/bus/iio/devices/iio:deviceX/in_resistanceX_raw
 -- 
 2.25.1
 
