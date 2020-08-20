@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F9FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9172220855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 567D720855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924779;
-	bh=qiSuuWBMSyShVnhW2u6bdkeMmDZ6T2EMNDEsJ/IiqMA=;
+	s=default; t=1597924785;
+	bh=xf0dFFOmHB1zli1IEMhGjw6GilLLwgssnE8ZBaXHOU0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JyPKAAHFHYYQD7rZ6g18xs0Nv1BIUKIoPEE4TU/tcfescZLpCaE05LGQBzexpcFlu
-	 zhNQtQLaq6OUj1PBhk1IwAVF8atPFDXiDZKDZca5YPIU945C40Oo1TjCB39/a/TYLH
-	 vbfexdcXb2ORJc2475fxErzpShIXdrOduoxIRCZs=
+	b=MwplA25qiIuiIfZuEAxplkzStdHtKk2G0UyX5CMAnvBfvWb19IQte0bmlILmseisi
+	 jHOmYx1aRmX5+7Je8LWCJw3ZXAeHFHWpbZy2WvciBfljttXul9OWOaxGK/Hu0WMHf6
+	 72setkFwJJmUSUhRdM7gQYKiT+eckeTgm67a4gjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725885AbgHTL7g (ORCPT
+        id S1728343AbgHTL7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47868 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbgHTKA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:28 -0400
+        id S1730465AbgHTKAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AB822173E;
-        Thu, 20 Aug 2020 10:00:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 946AF22B4B;
+        Thu, 20 Aug 2020 10:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917626;
-        bh=qiSuuWBMSyShVnhW2u6bdkeMmDZ6T2EMNDEsJ/IiqMA=;
+        s=default; t=1597917624;
+        bh=xf0dFFOmHB1zli1IEMhGjw6GilLLwgssnE8ZBaXHOU0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EI/znfWbpGcTEFT8xwNl3nin2vEWkp59oLLsowIv0eoxG45i17xta+vQZFf1PARfB
-         ceB/Xgc7BykNK7dy4XdSdNNxK3k0bkCQLo/Q5H/fSB2P270lIOEmtFiqpgUfoouLiH
-         4oxrb5Eyp44Ln7olqoJvonRPR4XdfiwtjxcLSJtI=
+        b=HEWi56BA7US12ZQcdz2qhCwFC+WLVFf/O563/QtTdASUdZG54cKZbl/cJvFda29OF
+         XkTfkjtkeBd1m2cnq8qfyKMeXx1Fk1D9xoWMGonEUKUwEPGlMice3ruADb9J6TAVIS
+         bXamTb+Z6pSiSjjFMrnKRTzBkzz+9PJ13yMwByrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Xiong <xiongx18@fudan.edu.cn>,
-        Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Zhao Heming <heming.zhao@suse.com>,
+        Song Liu <songliubraving@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 068/212] atm: fix atm_dev refcnt leaks in atmtcp_remove_persistent
-Date:   Thu, 20 Aug 2020 11:20:41 +0200
-Message-Id: <20200820091605.798643890@linuxfoundation.org>
+Subject: [PATCH 4.9 096/212] md-cluster: fix wild pointer of unlock_all_bitmaps()
+Date:   Thu, 20 Aug 2020 11:21:09 +0200
+Message-Id: <20200820091607.199709710@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,52 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Xiong <xiongx18@fudan.edu.cn>
+From: Zhao Heming <heming.zhao@suse.com>
 
-[ Upstream commit 51875dad43b44241b46a569493f1e4bfa0386d86 ]
+[ Upstream commit 60f80d6f2d07a6d8aee485a1d1252327eeee0c81 ]
 
-atmtcp_remove_persistent() invokes atm_dev_lookup(), which returns a
-reference of atm_dev with increased refcount or NULL if fails.
+reproduction steps:
+```
+node1 # mdadm -C /dev/md0 -b clustered -e 1.2 -n 2 -l mirror /dev/sda
+/dev/sdb
+node2 # mdadm -A /dev/md0 /dev/sda /dev/sdb
+node1 # mdadm -G /dev/md0 -b none
+mdadm: failed to remove clustered bitmap.
+node1 # mdadm -S --scan
+^C  <==== mdadm hung & kernel crash
+```
 
-The refcount leaks issues occur in two error handling paths. If
-dev_data->persist is zero or PRIV(dev)->vcc isn't NULL, the function
-returns 0 without decreasing the refcount kept by a local variable,
-resulting in refcount leaks.
+kernel stack:
+```
+[  335.230657] general protection fault: 0000 [#1] SMP NOPTI
+[...]
+[  335.230848] Call Trace:
+[  335.230873]  ? unlock_all_bitmaps+0x5/0x70 [md_cluster]
+[  335.230886]  unlock_all_bitmaps+0x3d/0x70 [md_cluster]
+[  335.230899]  leave+0x10f/0x190 [md_cluster]
+[  335.230932]  ? md_super_wait+0x93/0xa0 [md_mod]
+[  335.230947]  ? leave+0x5/0x190 [md_cluster]
+[  335.230973]  md_cluster_stop+0x1a/0x30 [md_mod]
+[  335.230999]  md_bitmap_free+0x142/0x150 [md_mod]
+[  335.231013]  ? _cond_resched+0x15/0x40
+[  335.231025]  ? mutex_lock+0xe/0x30
+[  335.231056]  __md_stop+0x1c/0xa0 [md_mod]
+[  335.231083]  do_md_stop+0x160/0x580 [md_mod]
+[  335.231119]  ? 0xffffffffc05fb078
+[  335.231148]  md_ioctl+0xa04/0x1930 [md_mod]
+[  335.231165]  ? filename_lookup+0xf2/0x190
+[  335.231179]  blkdev_ioctl+0x93c/0xa10
+[  335.231205]  ? _cond_resched+0x15/0x40
+[  335.231214]  ? __check_object_size+0xd4/0x1a0
+[  335.231224]  block_ioctl+0x39/0x40
+[  335.231243]  do_vfs_ioctl+0xa0/0x680
+[  335.231253]  ksys_ioctl+0x70/0x80
+[  335.231261]  __x64_sys_ioctl+0x16/0x20
+[  335.231271]  do_syscall_64+0x65/0x1f0
+[  335.231278]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+```
 
-Fix the issue by adding atm_dev_put() before returning 0 both when
-dev_data->persist is zero or PRIV(dev)->vcc isn't NULL.
-
-Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Zhao Heming <heming.zhao@suse.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/atm/atmtcp.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/md/md-cluster.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/atm/atmtcp.c b/drivers/atm/atmtcp.c
-index 480fa6ffbc090..04fca6db273ef 100644
---- a/drivers/atm/atmtcp.c
-+++ b/drivers/atm/atmtcp.c
-@@ -432,9 +432,15 @@ static int atmtcp_remove_persistent(int itf)
- 		return -EMEDIUMTYPE;
+diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
+index e870b09b2c84d..d08c63aaf10bb 100644
+--- a/drivers/md/md-cluster.c
++++ b/drivers/md/md-cluster.c
+@@ -1234,6 +1234,7 @@ static void unlock_all_bitmaps(struct mddev *mddev)
+ 			}
+ 		}
+ 		kfree(cinfo->other_bitmap_lockres);
++		cinfo->other_bitmap_lockres = NULL;
  	}
- 	dev_data = PRIV(dev);
--	if (!dev_data->persist) return 0;
-+	if (!dev_data->persist) {
-+		atm_dev_put(dev);
-+		return 0;
-+	}
- 	dev_data->persist = 0;
--	if (PRIV(dev)->vcc) return 0;
-+	if (PRIV(dev)->vcc) {
-+		atm_dev_put(dev);
-+		return 0;
-+	}
- 	kfree(dev_data);
- 	atm_dev_put(dev);
- 	atm_dev_deregister(dev);
+ }
+ 
 -- 
 2.25.1
 
