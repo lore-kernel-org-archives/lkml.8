@@ -2,143 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8442CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF2822B3F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930434;
-	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iPlYqJdT8/QLPp6ahN8d75VoSL5kmqknKv2jYJeA34HuUuI/hk2xjK/A+YSA2F4oL
-	 QJwCVqqv+5daN5rFquqaMSgvn33PNQbknN5k7oBQyfugCB5ySJDKogA3SNqgMQ1skJ
-	 o5df7cLU/1Bpi68Q7VF2afrpybdf1BcTH4MakFGw=
+	by mail.kernel.org (Postfix) with ESMTP id 312F722B3F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PCeB5h9t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729142AbgHTNdv (ORCPT
+        id S1728871AbgHTNd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:33:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728183AbgHTJas (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:48 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 09:33:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28710 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729475AbgHTNdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:33:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597930428;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=X2fJCEf/hhnmDqCnQtY5hjOcNe8YUPEVscVUU8eAkMY=;
+        b=PCeB5h9t4arJmC7gNny9BR5ixdPvS4aReiuGdKagFlgRp6KFFhxgOOWsYCJAnhtCTzft/7
+        kCPDpLERZoNFA4tI8vaLNDrMSYuGq9dodpF+N4sNM8VzxdLsDthBAdo/Hw6c3W+01i3jJw
+        STrZDp0kklISUTvMmd+ye85yfE3SDgM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-vDgPCg3fNbqGSmAdSCx5vQ-1; Thu, 20 Aug 2020 09:33:46 -0400
+X-MC-Unique: vDgPCg3fNbqGSmAdSCx5vQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F7F206FA;
-        Thu, 20 Aug 2020 09:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915847;
-        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lUssC45K8j8/29+8aCJvaIA+xN9cxYi/GAEb696wCizTI3jpzim00K2TvdoI9WstZ
-         kY+dghzzwYBTVtsAY8P8/gcKUplc4SulKt2gRM7WlCghrs0wQQ6LUzNs8qwSmI7ggI
-         U+/qH/b9bRiwXFK3xQ6i3pXPRQ8M4+40940XarVY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 153/232] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
-Date:   Thu, 20 Aug 2020 11:20:04 +0200
-Message-Id: <20200820091620.221360472@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2A52AE641;
+        Thu, 20 Aug 2020 13:33:43 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.35.206.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 35F7219D6C;
+        Thu, 20 Aug 2020 13:33:40 +0000 (UTC)
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
+        Jim Mattson <jmattson@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
+        64-BIT)), "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Maxim Levitsky <mlevitsk@redhat.com>
+Subject: [PATCH v2 0/7] KVM: nSVM: ondemand nested state allocation + smm fixes
+Date:   Thu, 20 Aug 2020 16:33:32 +0300
+Message-Id: <20200820133339.372823-1-mlevitsk@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-
-[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
-
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
- 1 file changed, 12 insertions(+), 18 deletions(-)
-
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index f9216c7a1829e..bc33d748d95b4 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
- 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
- }
- 
--static int sys_pkey_free(int pkey)
--{
--	return syscall(__NR_pkey_free, pkey);
--}
--
- static int child(struct shared_info *info)
- {
- 	unsigned long reg;
-@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
- 
- 	info->amr1 |= 3ul << pkeyshift(pkey1);
- 	info->amr2 |= 3ul << pkeyshift(pkey2);
--	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
-+	/*
-+	 * invalid amr value where we try to force write
-+	 * things which are deined by a uamor setting.
-+	 */
-+	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
- 
- 	if (disable_execute)
- 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
-@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
- 
- 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
- 				3ul << pkeyshift(pkey2);
--	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
--	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
--
- 	/*
--	 * We won't use pkey3. We just want a plausible but invalid key to test
--	 * whether ptrace will let us write to AMR bits we are not supposed to.
--	 *
--	 * This also tests whether the kernel restores the UAMOR permissions
--	 * after a key is freed.
-+	 * Create an IAMR value different from expected value.
-+	 * Kernel will reject an IAMR and UAMOR change.
- 	 */
--	sys_pkey_free(pkey3);
-+	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
-+	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
- 
- 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
- 	       user_write, info->amr1, pkey1, pkey2, pkey3);
-@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
- 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
--	info->expected_iamr = info->invalid_iamr = regs[1];
--	info->expected_uamor = info->invalid_uamor = regs[2];
-+	info->amr1 = info->amr2 = regs[0];
-+	info->expected_iamr = regs[1];
-+	info->expected_uamor = regs[2];
- 
- 	/* Wake up child so that it can set itself up. */
- 	ret = prod_child(&info->child_sync);
--- 
-2.25.1
-
-
+Hi!=0D
+=0D
+This patch series does some refactoring and implements on demand nested sta=
+te area=0D
+This way at least guests that don't use nesting won't waste memory=0D
+on nested state.=0D
+=0D
+Patches 1,2,3 are refactoring=0D
+=0D
+Patches 4,5 are new from V1 and implement more strict SMM save state area c=
+hecking=0D
+on resume from SMM to avoid guest tampering with this area.=0D
+=0D
+This was done to avoid crashing if the guest enabled 'guest was interrupted=
+'=0D
+flag there and we don't have nested state allocated.=0D
+=0D
+Patches 6,7 are for ondemand nested state.=0D
+=0D
+The series was tested with various nested guests, in one case even with=0D
+L3 running, but note that due to unrelated issue, migration with nested=0D
+guest running didn't work for me with or without this series.=0D
+I am investigating this currently.=0D
+=0D
+Best regards,=0D
+	Maxim Levitsky=0D
+=0D
+Maxim Levitsky (7):=0D
+  KVM: SVM: rename a variable in the svm_create_vcpu=0D
+  KVM: nSVM: rename nested 'vmcb' to vmcb12_gpa in few places=0D
+  KVM: SVM: refactor msr permission bitmap allocation=0D
+  KVM: x86: allow kvm_x86_ops.set_efer to return a value=0D
+  KVM: nSVM: more strict smm checks=0D
+  KVM: emulator: more strict rsm checks.=0D
+  KVM: nSVM: implement ondemand allocation of the nested state=0D
+=0D
+ arch/x86/include/asm/kvm_host.h |   2 +-=0D
+ arch/x86/kvm/emulate.c          |  22 ++++--=0D
+ arch/x86/kvm/svm/nested.c       |  53 +++++++++++--=0D
+ arch/x86/kvm/svm/svm.c          | 130 ++++++++++++++++++--------------=0D
+ arch/x86/kvm/svm/svm.h          |  10 ++-=0D
+ arch/x86/kvm/vmx/vmx.c          |   5 +-=0D
+ arch/x86/kvm/x86.c              |   3 +-=0D
+ 7 files changed, 151 insertions(+), 74 deletions(-)=0D
+=0D
+-- =0D
+2.26.2=0D
+=0D
 
