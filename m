@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D24CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E665FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DE142075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B228A2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:11:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882281;
-	bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+	s=default; t=1597882289;
+	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2LBt5MDinT7/iUgjBoVMNsviVrwciv9XxjmXOIcAx+CVxHWLLlS+TgObMRUar5jCQ
-	 dSeMD8F0UABNufwrj9O7z1i3vDVBSEiCGSdV9yN0W4T1ezUPzIIkzVteXXAsSV6s0g
-	 1ZY/MySj50oy4v57TZDqkTlfCvK1NBbHJ7J3WDGU=
+	b=1XAe7DFw4QkcEdmPbu9o5aPYSnYIdd2uw4oexnIAYypq2bYLmrnCWx6OkDOHQLtEB
+	 +Zo9wGa8hcmrCw2iylXnfyL7cfqocoSjLxwDs6BcTVLe9aJu3upjanVprtt66LIJF5
+	 vQimpWUlaMag+wolj4dy7Pfxt2t8PcRlrQUQxsPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728700AbgHTALP (ORCPT
+        id S1728230AbgHTAL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:11:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58678 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:11:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgHTACM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:12 -0400
+        id S1727822AbgHTACH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0AF420FC3;
-        Thu, 20 Aug 2020 00:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 257AE214F1;
+        Thu, 20 Aug 2020 00:02:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881731;
-        bh=bN7dJrzpgTx4kNBALgXdM5o7wtL1Q+rEH6arvcnTpUo=;
+        s=default; t=1597881727;
+        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fb0iD9+5vQ88441Enesn6jx3hkqldnAurZRC46S4zGiGZCOOVRF934+AGd0H/+Sqs
-         aaUDQLbxtjdGN+BdafxEwsFH/JV4RTZIS/o94H8vQoEY/yv8AhuN8xKS838kChj461
-         E13zaJnLQRI4wD7kKkPgWRQ4wy0b97jCVGJ000FA=
+        b=CizWH0iF+sQxj7FteMdGjiKNEsKJMUELydrXVkQcHj9qQfhJPwb9buZ6NB8iLr3Yn
+         NvpP3i9BLzZk5DErLpZBVFenZ+MjhVo9ty8Gqmdy3925cjXBSWKLOekDwDxIzdSXhh
+         TUwBC4b4G7x42EXWprspkICUcnZtaCf1yeF3sqx4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Felix Kuehling <Felix.Kuehling@amd.com>,
-        Laurent Morichetti <laurent.morichetti@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+Cc:     Greg Ungerer <gerg@linux-m68k.org>,
         Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.7 12/24] drm/ttm: fix offset in VMAs with a pg_offs in ttm_bo_vm_access
-Date:   Wed, 19 Aug 2020 20:01:43 -0400
-Message-Id: <20200820000155.215089-12-sashal@kernel.org>
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH AUTOSEL 5.7 09/24] m68knommu: fix overwriting of bits in ColdFire V3 cache control
+Date:   Wed, 19 Aug 2020 20:01:40 -0400
+Message-Id: <20200820000155.215089-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000155.215089-1-sashal@kernel.org>
 References: <20200820000155.215089-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,39 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Kuehling <Felix.Kuehling@amd.com>
+From: Greg Ungerer <gerg@linux-m68k.org>
 
-[ Upstream commit c0001213d195d1bac83e0744c06ff06dd5a8ba53 ]
+[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
 
-VMAs with a pg_offs that's offset from the start of the vma_node need
-to adjust the offset within the BO accordingly. This matches the
-offset calculation in ttm_bo_vm_fault_reserved.
+The Cache Control Register (CACR) of the ColdFire V3 has bits that
+control high level caching functions, and also enable/disable the use
+of the alternate stack pointer register (the EUSP bit) to provide
+separate supervisor and user stack pointer registers. The code as
+it is today will blindly clear the EUSP bit on cache actions like
+invalidation. So it is broken for this case - and that will result
+in failed booting (interrupt entry and exit processing will be
+completely hosed).
 
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Tested-by: Laurent Morichetti <laurent.morichetti@amd.com>
-Signed-off-by: Christian König <christian.koenig@amd.com>
-Link: https://patchwork.freedesktop.org/patch/381169/
+This only affects ColdFire V3 parts that support the alternate stack
+register (like the 5329 for example) - generally speaking new parts do,
+older parts don't. It has no impact on ColdFire V3 parts with the single
+stack pointer, like the 5307 for example.
+
+Fix the cache bit defines used, so they maintain the EUSP bit when
+carrying out cache actions through the CACR register.
+
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/m68k/include/asm/m53xxacr.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 72100b84c7a90..b08fdfa4291b2 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -505,8 +505,10 @@ static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
- int ttm_bo_vm_access(struct vm_area_struct *vma, unsigned long addr,
- 		     void *buf, int len, int write)
- {
--	unsigned long offset = (addr) - vma->vm_start;
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	unsigned long offset = (addr) - vma->vm_start +
-+		((vma->vm_pgoff - drm_vma_node_start(&bo->base.vma_node))
-+		 << PAGE_SHIFT);
- 	int ret;
+diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
+index 9138a624c5c81..692f90e7fecc1 100644
+--- a/arch/m68k/include/asm/m53xxacr.h
++++ b/arch/m68k/include/asm/m53xxacr.h
+@@ -89,9 +89,9 @@
+  * coherency though in all cases. And for copyback caches we will need
+  * to push cached data as well.
+  */
+-#define CACHE_INIT	  CACR_CINVA
+-#define CACHE_INVALIDATE  CACR_CINVA
+-#define CACHE_INVALIDATED CACR_CINVA
++#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
++#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
++#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
  
- 	if (len < 1 || (offset + len) >> PAGE_SHIFT > bo->num_pages)
+ #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
+ 			 (0x000f0000) + \
 -- 
 2.25.1
 
