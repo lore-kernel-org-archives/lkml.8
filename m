@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F468C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:29:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3DFC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E18BC20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EBF20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919360;
-	bh=+W1ClYTS8nfE7NN7MjHwbLixXM3LcbIFD2L7yU6ukJc=;
+	s=default; t=1597919366;
+	bh=lzkdhGteIHo8AwsJQRu9trsCU87OtNrMqlRTr1Hhc/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kWCEdCwb7swLTQ+Tcp8UAv6B18ECvPetZKkVTaKrlohFgHFH6iA25D1YbbcSJGQpk
-	 FAugai9n7rtA4GKY9zvSMl9l4kST1d3zLH1EW84ezc2qFQ+xQkIq9ba74T7yTs2HjF
-	 G+O1MuqIL3d7UzpHr8DHkugk/b36uGMhAp7hVFi4=
+	b=r9ymGC/YzPw5BQyr+h2gXxNNAALaTZUIusEd1SPe/M6g/ERunPbCf3IGG65pQ/UWA
+	 /QeoiXHcS721oaZMlgowZ5+sSDKfpWp5a+560jX9XXii4RXG2GUOr+Sar3vbiARLIh
+	 BWdsNKo415N24/Xd1B8cgzw1ONCOQ136Z1/g3hlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbgHTK3Q (ORCPT
+        id S1731711AbgHTK3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:29:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47792 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730519AbgHTKVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:22 -0400
+        id S1731273AbgHTKVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4AF420885;
-        Thu, 20 Aug 2020 10:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDCE22078D;
+        Thu, 20 Aug 2020 10:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918881;
-        bh=+W1ClYTS8nfE7NN7MjHwbLixXM3LcbIFD2L7yU6ukJc=;
+        s=default; t=1597918878;
+        bh=lzkdhGteIHo8AwsJQRu9trsCU87OtNrMqlRTr1Hhc/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a9SWIfWvbeTIQWzFegQ+vNg675CY+JsMbKkvA7s8q24Dz8DQ7i0OK8rQ0ffJFStBG
-         TF5j3Ca2lA88l8p89WeciTu4lejFitRmRLe/u/Nle6IvhHxRDox20vpeJ4FNGhhNNE
-         D6XYz9+l7X4sxTwuiU89nfOubBnLRtaESTc5Nrgk=
+        b=jmtgJRIGfu/Dyl9mP/+xLua8Z272D6yS/3pjipPV6/TWGm1WcxDrSQnn0Fl+jnW67
+         wJ2VONhmmydes6ydGg4uHg87MQGBYrcALytB0vPRi+Xmoz8SKyPcItQt7T57TA6IgY
+         uCcmmkn5ylhzLbfugm+gciWOkymUwP7hg4u46bak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 099/149] s390/qeth: dont process empty bridge port events
-Date:   Thu, 20 Aug 2020 11:22:56 +0200
-Message-Id: <20200820092130.507259086@linuxfoundation.org>
+Subject: [PATCH 4.4 098/149] power: supply: check if calc_soc succeeded in pm860x_init_battery
+Date:   Thu, 20 Aug 2020 11:22:55 +0200
+Message-Id: <20200820092130.461949698@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,38 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Tom Rix <trix@redhat.com>
 
-[ Upstream commit 02472e28b9a45471c6d8729ff2c7422baa9be46a ]
+[ Upstream commit ccf193dee1f0fff55b556928591f7818bac1b3b1 ]
 
-Discard events that don't contain any entries. This shouldn't happen,
-but subsequent code relies on being able to use entry 0. So better
-be safe than accessing garbage.
+clang static analysis flags this error
 
-Fixes: b4d72c08b358 ("qeth: bridgeport support - basic control")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+88pm860x_battery.c:522:19: warning: Assigned value is
+  garbage or undefined [core.uninitialized.Assign]
+                info->start_soc = soc;
+                                ^ ~~~
+soc is set by calling calc_soc.
+But calc_soc can return without setting soc.
+
+So check the return status and bail similarly to other
+checks in pm860x_init_battery and initialize soc to
+silence the warning.
+
+Fixes: a830d28b48bf ("power_supply: Enable battery-charger for 88pm860x")
+
+Signed-off-by: Tom Rix <trix@redhat.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/power/88pm860x_battery.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 97211f7f0cf02..ed4b0f6e2d6ad 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1669,6 +1669,10 @@ static void qeth_bridge_state_change(struct qeth_card *card,
- 	int extrasize;
+diff --git a/drivers/power/88pm860x_battery.c b/drivers/power/88pm860x_battery.c
+index 63c57dc82ac1d..4eda5065b5bbc 100644
+--- a/drivers/power/88pm860x_battery.c
++++ b/drivers/power/88pm860x_battery.c
+@@ -436,7 +436,7 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
+ 	int ret;
+ 	int data;
+ 	int bat_remove;
+-	int soc;
++	int soc = 0;
  
- 	QETH_CARD_TEXT(card, 2, "brstchng");
-+	if (qports->num_entries == 0) {
-+		QETH_CARD_TEXT(card, 2, "BPempty");
-+		return;
-+	}
- 	if (qports->entry_length != sizeof(struct qeth_sbp_port_entry)) {
- 		QETH_CARD_TEXT_(card, 2, "BPsz%04x", qports->entry_length);
- 		return;
+ 	/* measure enable on GPADC1 */
+ 	data = MEAS1_GP1;
+@@ -499,7 +499,9 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
+ 	}
+ 	mutex_unlock(&info->lock);
+ 
+-	calc_soc(info, OCV_MODE_ACTIVE, &soc);
++	ret = calc_soc(info, OCV_MODE_ACTIVE, &soc);
++	if (ret < 0)
++		goto out;
+ 
+ 	data = pm860x_reg_read(info->i2c, PM8607_POWER_UP_LOG);
+ 	bat_remove = data & BAT_WU_LOG;
 -- 
 2.25.1
 
