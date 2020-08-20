@@ -2,149 +2,140 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628A4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58ADCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3807F22CB3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CE2322B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597929088;
+	bh=NX4UnJ/QnsQ3gLYq/0AoTf5Ds3zM+Bg7dKu44zP0MGU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QV5+QDEodjpfEY6VRz40iuJ0ghNzwBi2pCGzBV7+liUqGGQa+apYCVkWo57LXrExD
+	 HyL5v9jFq8PN+ULSSGxKW6FlTxPNfYwO6khaYdfhNQO8XXYd1ogawklO0MTnrr3l5i
+	 z2YlVWYns/oiS3qDe/g2z/YDUQDCq3uh7GPoLbMk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728499AbgHTNLP (ORCPT
+        id S1729499AbgHTNLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:11:15 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9795 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727084AbgHTNLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:11:06 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DE87FE644D56D59FBCBC;
-        Thu, 20 Aug 2020 21:10:58 +0800 (CST)
-Received: from DESKTOP-8N3QUD5.china.huawei.com (10.67.102.173) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 20 Aug 2020 21:10:49 +0800
-From:   Guohua Zhong <zhongguohua1@huawei.com>
-To:     <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <benh@kernel.crashing.org>, <gregkh@linuxfoundation.org>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>, <nixiaoming@huawei.com>,
-        <wangle6@huawei.com>
-Subject: [PATCH] powerpc: Fix a bug in __div64_32 if divisor is zero
-Date:   Thu, 20 Aug 2020 21:10:49 +0800
-Message-ID: <20200820131049.42940-1-zhongguohua1@huawei.com>
-X-Mailer: git-send-email 2.21.0.windows.1
+        Thu, 20 Aug 2020 09:11:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726964AbgHTJhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D646420724;
+        Thu, 20 Aug 2020 09:37:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916240;
+        bh=NX4UnJ/QnsQ3gLYq/0AoTf5Ds3zM+Bg7dKu44zP0MGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Fr29INpsFnhXl+BRjV+H7gj3lxRcLsjqHsRLWb/yKYzkh4ITobWcqB7MlQUYROE39
+         O8sTesh+CsKknMmEQDz2EKgXRX0AWwh3gG7dzVYq1HHcMrWNPiFriJ9aT5i04FFqfP
+         WmjOujVNiS+nAEWmH/qByjq4PDXl3Alu4r38LZ8A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 030/204] btrfs: fix messages after changing compression level by remount
+Date:   Thu, 20 Aug 2020 11:18:47 +0200
+Message-Id: <20200820091607.764122274@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.102.173]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When cat /proc/pid/stat, do_task_stat will call into cputime_adjust,
-which call stack is like this:
+From: David Sterba <dsterba@suse.com>
 
-[17179954.674326]BookE Watchdog detected hard LOCKUP on cpu 0
-[17179954.674331]dCPU: 0 PID: 1262 Comm: TICK Tainted: P        W  O    4.4.176 #1
-[17179954.674339]dtask: dc9d7040 task.stack: d3cb4000
-[17179954.674344]NIP: c001b1a8 LR: c006a7ac CTR: 00000000
-[17179954.674349]REGS: e6fe1f10 TRAP: 3202   Tainted: P        W  O     (4.4.176)
-[17179954.674355]MSR: 00021002 <CE,ME>  CR: 28002224  XER: 00000000
-[17179954.674364]
-GPR00: 00000016 d3cb5cb0 dc9d7040 d3cb5cc0 00000000 0000025d ffe15b24 ffffffff
-GPR08: de86aead 00000000 000003ff ffffffff 28002222 0084d1c0 00000000 ffffffff
-GPR16: b5929ca0 b4bb7a48 c0863c08 0000048d 00000062 00000062 00000000 0000000f
-GPR24: 00000000 d3cb5d08 d3cb5d60 d3cb5d64 00029002 d3e9c214 fffff30e d3e9c20c
-[17179954.674410]NIP [c001b1a8] __div64_32+0x60/0xa0
-[17179954.674422]LR [c006a7ac] cputime_adjust+0x124/0x138
-[17179954.674434]Call Trace:
-[17179961.832693]Call Trace:
-[17179961.832695][d3cb5cb0] [c006a6dc] cputime_adjust+0x54/0x138 (unreliable)
-[17179961.832705][d3cb5cf0] [c006a818] task_cputime_adjusted+0x58/0x80
-[17179961.832713][d3cb5d20] [c01dab44] do_task_stat+0x298/0x870
-[17179961.832720][d3cb5de0] [c01d4948] proc_single_show+0x60/0xa4
-[17179961.832728][d3cb5e10] [c01963d8] seq_read+0x2d8/0x52c
-[17179961.832736][d3cb5e80] [c01702fc] __vfs_read+0x40/0x114
-[17179961.832744][d3cb5ef0] [c0170b1c] vfs_read+0x9c/0x10c
-[17179961.832751][d3cb5f10] [c0171440] SyS_read+0x68/0xc4
-[17179961.832759][d3cb5f40] [c0010a40] ret_from_syscall+0x0/0x3c
+commit 27942c9971cc405c60432eca9395e514a2ae9f5e upstream.
 
-do_task_stat->task_cputime_adjusted->cputime_adjust->scale_stime->div_u64
-->div_u64_rem->do_div->__div64_32
+Reported by Forza on IRC that remounting with compression options does
+not reflect the change in level, or at least it does not appear to do so
+according to the messages:
 
-In some corner case, stime + utime = 0 if overflow. Even in v5.8.2  kernel
-the cputime has changed from unsigned long to u64 data type. About 200
-days, the lowwer 32 bit will be 0x00000000. Because divisor for __div64_32
-is unsigned long data type,which is 32 bit for powepc 32, the bug still
-exists.
+  mount -o compress=zstd:1 /dev/sda /mnt
+  mount -o remount,compress=zstd:15 /mnt
 
-So it is also a bug in the cputime_adjust which does not check if
-stime + utime = 0
+does not print the change to the level to syslog:
 
-time = scale_stime((__force u64)stime, (__force u64)rtime,
-                (__force u64)(stime + utime));
+  [   41.366060] BTRFS info (device vda): use zstd compression, level 1
+  [   41.368254] BTRFS info (device vda): disk space caching is enabled
+  [   41.390429] BTRFS info (device vda): disk space caching is enabled
 
-The commit 3dc167ba5729 ("sched/cputime: Improve cputime_adjust()") in
-mainline kernel may has fixed this case. But it is also better to check
-if divisor is 0 in __div64_32 for other situation.
+What really happens is that the message is lost but the level is actualy
+changed.
 
-Signed-off-by: Guohua Zhong <zhongguohua1@huawei.com>
-Fixes:14cf11af6cf6 "( powerpc: Merge enough to start building in arch/powerpc.)"
-Fixes:94b212c29f68 "( powerpc: Move ppc64 boot wrapper code over to arch/powerpc)"
-Cc: stable@vger.kernel.org # v2.6.15+
+There's another weird output, if compression is reset to 'no':
+
+  [   45.413776] BTRFS info (device vda): use no compression, level 4
+
+To fix that, save the previous compression level and print the message
+in that case too and use separate message for 'no' compression.
+
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/boot/div64.S | 4 ++++
- arch/powerpc/lib/div64.S  | 4 ++++
- 2 files changed, 8 insertions(+)
+ fs/btrfs/super.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
-index 4354928ed62e..39a25b9712d1 100644
---- a/arch/powerpc/boot/div64.S
-+++ b/arch/powerpc/boot/div64.S
-@@ -13,6 +13,9 @@
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -440,6 +440,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 	char *compress_type;
+ 	bool compress_force = false;
+ 	enum btrfs_compression_type saved_compress_type;
++	int saved_compress_level;
+ 	bool saved_compress_force;
+ 	int no_compress = 0;
  
- 	.globl __div64_32
- __div64_32:
-+	li	r9,0
-+	cmplw	r4,r9	# check if divisor r4 is zero
-+	beq	5f			# jump to label 5 if r4(divisor) is zero
- 	lwz	r5,0(r3)	# get the dividend into r5/r6
- 	lwz	r6,4(r3)
- 	cmplw	r5,r4
-@@ -52,6 +55,7 @@ __div64_32:
- 4:	stw	r7,0(r3)	# return the quotient in *r3
- 	stw	r8,4(r3)
- 	mr	r3,r6		# return the remainder in r3
-+5:					# return if divisor r4 is zero
- 	blr
- 
- /*
-diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
-index 3d5426e7dcc4..1cc9bcabf678 100644
---- a/arch/powerpc/lib/div64.S
-+++ b/arch/powerpc/lib/div64.S
-@@ -13,6 +13,9 @@
- #include <asm/processor.h>
- 
- _GLOBAL(__div64_32)
-+	li	r9,0
-+	cmplw	r4,r9	# check if divisor r4 is zero
-+	beq	5f			# jump to label 5 if r4(divisor) is zero
- 	lwz	r5,0(r3)	# get the dividend into r5/r6
- 	lwz	r6,4(r3)
- 	cmplw	r5,r4
-@@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
- 4:	stw	r7,0(r3)	# return the quotient in *r3
- 	stw	r8,4(r3)
- 	mr	r3,r6		# return the remainder in r3
-+5:					# return if divisor r4 is zero
- 	blr
--- 
-2.12.3
+@@ -522,6 +523,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				info->compress_type : BTRFS_COMPRESS_NONE;
+ 			saved_compress_force =
+ 				btrfs_test_opt(info, FORCE_COMPRESS);
++			saved_compress_level = info->compress_level;
+ 			if (token == Opt_compress ||
+ 			    token == Opt_compress_force ||
+ 			    strncmp(args[0].from, "zlib", 4) == 0) {
+@@ -566,6 +568,8 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				no_compress = 0;
+ 			} else if (strncmp(args[0].from, "no", 2) == 0) {
+ 				compress_type = "no";
++				info->compress_level = 0;
++				info->compress_type = 0;
+ 				btrfs_clear_opt(info->mount_opt, COMPRESS);
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
+ 				compress_force = false;
+@@ -586,11 +590,11 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				 */
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
+ 			}
+-			if ((btrfs_test_opt(info, COMPRESS) &&
+-			     (info->compress_type != saved_compress_type ||
+-			      compress_force != saved_compress_force)) ||
+-			    (!btrfs_test_opt(info, COMPRESS) &&
+-			     no_compress == 1)) {
++			if (no_compress == 1) {
++				btrfs_info(info, "use no compression");
++			} else if ((info->compress_type != saved_compress_type) ||
++				   (compress_force != saved_compress_force) ||
++				   (info->compress_level != saved_compress_level)) {
+ 				btrfs_info(info, "%s %s compression, level %d",
+ 					   (compress_force) ? "force" : "use",
+ 					   compress_type, info->compress_level);
 
 
