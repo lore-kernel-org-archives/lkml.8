@@ -2,93 +2,70 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E09A2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C689C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE7A20748
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D83C820748
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597966051;
+	bh=ss+qpo3s8H/goxNown6WFKCEXAfAK/KOd3YGrJXIk1c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bhE1Q51i1a4aFKi+vLPCJ2ujJdI7lI/pS/vEkfM1/jwxRyKTDul5uCmo7vLoKhGj+
+	 ZyKqF20613L17agpPJDtxwj9NdevBiZI2yziETAhFeaEU35cxHZ0iudgitE98tUIkF
+	 /pHcS5F8Np1pi9/lXInJFVAD7+bU7tqwvMfGIdn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgHTX0i (ORCPT
+        id S1728751AbgHTX12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:26:38 -0400
-Received: from mga11.intel.com ([192.55.52.93]:38455 "EHLO mga11.intel.com"
+        Thu, 20 Aug 2020 19:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728498AbgHTX0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:26:37 -0400
-IronPort-SDR: NvRIFNIpo3jGD8iw2mXPYOAWx7JBEwY6CI67vcX3ujVI9NrDJCn769lovDmafHNZtISfdfOGmG
- EUacAGIMsIqg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="153030831"
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="153030831"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 16:26:37 -0700
-IronPort-SDR: 9Ky8mvGz0EN6h1i76ZR7v1lvNDl6DrRr3zpNs9V+NYGDw4SEgSPFiy5VWkb1qrPkhvjvx+kJ6N
- Hj1MJ1KtOSww==
-X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
-   d="scan'208";a="472830363"
-Received: from unknown (HELO dwf-u18040) ([10.232.115.15])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 16:26:36 -0700
-Message-ID: <0e911fce1c5c6f7dc01263ecdc280e76a0ea202f.camel@linux.intel.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-From:   David Fugate <david.fugate@linux.intel.com>
-Reply-To: david.fugate@linux.intel.com
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        david.fugate@intel.com
-Date:   Thu, 20 Aug 2020 17:26:35 -0600
-In-Reply-To: <20200820034539.GA12222@redsun51.ssa.fujisawa.hgst.com>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
-         <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
-         <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de>
-         <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
-         <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
-         <d19605da52eb7aa3eb4132ad1781b5fbf636a8a0.camel@linux.intel.com>
-         <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com>
-         <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
-         <20200820034539.GA12222@redsun51.ssa.fujisawa.hgst.com>
-Organization: Intel
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1728498AbgHTX11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 19:27:27 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 183F620748;
+        Thu, 20 Aug 2020 23:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597966046;
+        bh=ss+qpo3s8H/goxNown6WFKCEXAfAK/KOd3YGrJXIk1c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ILPKEenDNolJ3VS1E+Asq+j+onbm+edbHtt07iPn9ViEgua0toDi1/Shbp6cbaved
+         YFBQl7UhZY+nAjJwfy4smXlrc5QTK9BYsgU6E32gE7qS6LA0Y89MeSb0VjS2ijlSrY
+         28zBMoRJh/KI3k7AGy421zKB8F01WivBIW6oJNN4=
+Date:   Thu, 20 Aug 2020 18:33:13 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, clang-built-linux@googlegroups.com,
+        natechancellor@gmail.com, miguel.ojeda.sandonis@gmail.com
+Subject: Re: fallthrough pseudo-keyword macro conversions for 5.9-rc2
+Message-ID: <20200820233313.GA5113@embeddedor>
+References: <20200820220210.GA14894@embeddedor>
+ <20200820221511.3328330-1-ndesaulniers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820221511.3328330-1-ndesaulniers@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-20 at 12:45 +0900, Keith Busch wrote:
-> For the record, the suggestion provided, which you agreed to look
-> into,
-> most broadly enables your hardware on Linux and was entirely to your
-> benefit. Not quite as dramatic as a political conspiracy.
-> 
-> You later responded with a technical argument against that
-> suggestion;
-> however, your reason didn't add up, and that's where you left the
-> thread.
+Hi Nick,
 
-The suggestion to the rejected patch was passed onto the related FW
-team, and the "technical argument" was our FW team's response to the
-suggestion which I relayed to the list. At this point, there's no
-closure on whether the device will get NOIOB.
+On Thu, Aug 20, 2020 at 03:15:11PM -0700, Nick Desaulniers wrote:
+> Just noticed this on lore.  I'm curious if you'd had a chance to test your PR
+> with e2079e93f562c reverted?
 
-My point in bringing up this example was a one-line, highly-
-maintainable patch which improves the performance of Linux should not
-have been immediatedly NAK'ed as it was. If you believe it should have,
-we'll agree to disagree.
+Yep; it builds just fine with Clang 11.0.0 :)
 
+Thanks
+--
+Gustavo
