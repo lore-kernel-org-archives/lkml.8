@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F29EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25987C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F51C22CAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0069B2224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916774;
-	bh=BvelV7rj7pX8LClD7CfT1GkoCmXsCtbsF1V8T+D2ddY=;
+	s=default; t=1597916780;
+	bh=/bkX29MlNOUlzQFGNzz049u3ETyfMbrJy+tTeeKVYTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=myf9HpX+BZNWgZNHBAgWHZ1i1KHWDmGr/+Kbol/9fTA+7ektG9lU/S+NbDYaBsk2i
-	 ppsB/xYKYYobi8NZAmKGTzHDtgXXLVCN3f4U8kro3n8izQ2x9FV0uGU8aziMbpA9Aa
-	 Ycrjsi3RJNo8aF/uAn7H8oyYVj2VvwK/rupOWbVI=
+	b=RbZ3BfSpYTlakmgsuP1ESG+t5BUQ7gnAQKKcYSH0EssEmp+seoQ7OkTY9+RuwLtg4
+	 OOZHrqL7jGNbVdXE1KBM7tZlNnyuRWfaf3RCEaUqAKDA6LW/+VQ539bjNj7LMvspst
+	 cVWwgRTwcRz9J9XBTyBb0oHoZ/NhsUNXPxu1QLLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgHTJqM (ORCPT
+        id S1729192AbgHTJqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38010 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:46:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbgHTJmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:33 -0400
+        id S1729267AbgHTJnq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24140207DE;
-        Thu, 20 Aug 2020 09:42:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407BB2173E;
+        Thu, 20 Aug 2020 09:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916552;
-        bh=BvelV7rj7pX8LClD7CfT1GkoCmXsCtbsF1V8T+D2ddY=;
+        s=default; t=1597916625;
+        bh=/bkX29MlNOUlzQFGNzz049u3ETyfMbrJy+tTeeKVYTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b+2QBgfRmbBCqZi18+YWJIHZ4ZIHMgVnbOxlS0yi5+vKEt9vsn5gX4a4iJNOsYIL4
-         99IfSnBWreFQ8gM9lgzpkrCxpHH8snLDLtKQTaH+nNf/2BUV4ygQzUjr4LiULGrj0T
-         vGa61MDJw598nNv75zyywfIdzOXKar/NcsrDZ0RM=
+        b=jRNkjYKF9O0tmwjtSFCCUuvUPSbj/8LR9Sz2IqgXkrBR3JqQJgxNWQ5J6sYmXHDpB
+         McESX/upSNxZRtQkBUcHbW94iC08th1tJWSv9MuojspzE624Ouj6ofkD5AjBXie2bU
+         eNzkdvZGlk47V9KTmZcrsD4hkU6Csv5XxU3oduQk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Roland Scheidegger <sroland@vmware.com>,
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 169/204] drm/vmwgfx: Fix two list_for_each loop exit tests
-Date:   Thu, 20 Aug 2020 11:21:06 +0200
-Message-Id: <20200820091614.652651134@linuxfoundation.org>
+Subject: [PATCH 5.7 154/204] libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
+Date:   Thu, 20 Aug 2020 11:20:51 +0200
+Message-Id: <20200820091613.931970561@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,60 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jane Chu <jane.chu@oracle.com>
 
-[ Upstream commit 4437c1152ce0e57ab8f401aa696ea6291cc07ab1 ]
+[ Upstream commit 7f674025d9f7321dea11b802cc0ab3f09cbe51c5 ]
 
-These if statements are supposed to be true if we ended the
-list_for_each_entry() loops without hitting a break statement but they
-don't work.
+commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
+adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
+operation has completed. But the notification is issued before the internal
+dimm security state and flags have been updated, so the userspace poll thread
+wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
+But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
+the command returns instantly.
 
-In the first loop, we increment "i" after the "if (i == unit)" condition
-so we don't necessarily know that "i" is not equal to unit at the end of
-the loop.
-
-In the second loop we exit when mode is not pointing to a valid
-drm_display_mode struct so it doesn't make sense to check "mode->type".
-
-Fixes: a278724aa23c ("drm/vmwgfx: Implement fbdev on kms v2")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
-Signed-off-by: Roland Scheidegger <sroland@vmware.com>
+Link: https://lore.kernel.org/r/1596494499-9852-3-git-send-email-jane.chu@oracle.com
+Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_kms.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/nvdimm/security.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-index 04d66592f6050..b7a9cee69ea72 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_kms.c
-@@ -2578,7 +2578,7 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
- 		++i;
- 	}
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index acfd211c01b9c..35d265014e1ec 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
+ 	else
+ 		dev_dbg(&nvdimm->dev, "overwrite completed\n");
  
--	if (i != unit) {
-+	if (&con->head == &dev_priv->dev->mode_config.connector_list) {
- 		DRM_ERROR("Could not find initial display unit.\n");
- 		ret = -EINVAL;
- 		goto out_unlock;
-@@ -2602,13 +2602,13 @@ int vmw_kms_fbdev_init_data(struct vmw_private *dev_priv,
- 			break;
- 	}
+-	if (nvdimm->sec.overwrite_state)
+-		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
++	/*
++	 * Mark the overwrite work done and update dimm security flags,
++	 * then send a sysfs event notification to wake up userspace
++	 * poll threads to picked up the changed state.
++	 */
+ 	nvdimm->sec.overwrite_tmo = 0;
+ 	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
+ 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
+-	put_device(&nvdimm->dev);
+ 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
+ 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
++	if (nvdimm->sec.overwrite_state)
++		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
++	put_device(&nvdimm->dev);
+ }
  
--	if (mode->type & DRM_MODE_TYPE_PREFERRED)
--		*p_mode = mode;
--	else {
-+	if (&mode->head == &con->modes) {
- 		WARN_ONCE(true, "Could not find initial preferred mode.\n");
- 		*p_mode = list_first_entry(&con->modes,
- 					   struct drm_display_mode,
- 					   head);
-+	} else {
-+		*p_mode = mode;
- 	}
- 
-  out_unlock:
+ void nvdimm_security_overwrite_query(struct work_struct *work)
 -- 
 2.25.1
 
