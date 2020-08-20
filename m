@@ -5,55 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537B5C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A94BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 331D320855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E02752078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917105;
-	bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+	s=default; t=1597917109;
+	bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DedA5bTO2v/WSVg6oTUdkd7Ay9uMc7cOVOhHByQYDjGkj6MdfmgoFWu8knX+VZ2Ol
-	 m2bEZSxnmqFUJcYHTXuN07d+r/BkeKj4iik6BZFVyjJK8fewl1DphDZ8+JsgQ2+yT1
-	 wbyDIMKoJTgZTsmne6qU3++2eomPxf7oDaoc5C0o=
+	b=lpSxJTCrMGAsx5nbnxOiSjTepy+e//p0pjuaZvbO3uEAYV9lRFpCP2mjwxioSGeGl
+	 HDWeAnAAgzBUNPj/rrflU2Vse8TBkDP23Ibw789sG//ht3r/CEuw/SgZ2rv93ycTaY
+	 wWfvHN/XjIOx2McIZ+3AEj/dARktaFk/lTDZrFlA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgHTJvo (ORCPT
+        id S1729660AbgHTJvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:51:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60512 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:51:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729809AbgHTJv3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:29 -0400
+        id S1729642AbgHTJvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67E5E2075E;
-        Thu, 20 Aug 2020 09:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 684452067C;
+        Thu, 20 Aug 2020 09:51:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917089;
-        bh=SyegA3bvJrFg8dpHJ5/ardA2mwqjWJ6lgwFOeVX86zA=;
+        s=default; t=1597917097;
+        bh=I8uEIPz1Akn5O5ubpZWgVp4PADz7yYhOyHoDeLbjUI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pb7uG2eEucq9jEXov8gznVvj1/LmeuofH9ebmhu3FEVjLUTM6uU0c9H1rI9cZJXS2
-         Wgunr+6WQfp9fNYeSI3mQ7/HQF89oIgz2e9OpQNnjijj8z90DukQ13kY3OMHEnDID7
-         c5W2ubnQdetije08KgrkAYS7Z0QN2RKqS08+NTDQ=
+        b=mDQCTZffd1HiozWX6dIVFFWnYwfi1QT3KZCALROzuCHsPMWJZajvoeoSy8slpIgXl
+         eJkLN6iaCYNIao1wr4eRR9yQpWr07XbmHSwlekD+QrSh9UhZdIBNbp0Xrr0B9dJcxq
+         4pwaN59bcTcj6JcS917OzhoRS+ak17Zh8WnXJjx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, kernel@axis.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 141/152] perf bench mem: Always memset source before memcpy
-Date:   Thu, 20 Aug 2020 11:21:48 +0200
-Message-Id: <20200820091601.031660279@linuxfoundation.org>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Rich Felker <dalias@libc.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 144/152] sh: landisk: Add missing initialization of sh_io_port_base
+Date:   Thu, 20 Aug 2020 11:21:51 +0200
+Message-Id: <20200820091601.192944248@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -66,103 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 1beaef29c34154ccdcb3f1ae557f6883eda18840 ]
+[ Upstream commit 0c64a0dce51faa9c706fdf1f957d6f19878f4b81 ]
 
-For memcpy, the source pages are memset to zero only when --cycles is
-used.  This leads to wildly different results with or without --cycles,
-since all sources pages are likely to be mapped to the same zero page
-without explicit writes.
+The Landisk setup code maps the CF IDE area using ioremap_prot(), and
+passes the resulting virtual addresses to the pata_platform driver,
+disguising them as I/O port addresses.  Hence the pata_platform driver
+translates them again using ioport_map().
+As CONFIG_GENERIC_IOMAP=n, and CONFIG_HAS_IOPORT_MAP=y, the
+SuperH-specific mapping code in arch/sh/kernel/ioport.c translates
+I/O port addresses to virtual addresses by adding sh_io_port_base, which
+defaults to -1, thus breaking the assumption of an identity mapping.
 
-Before this fix:
+Fix this by setting sh_io_port_base to zero.
 
-$ export cmd="./perf stat -e LLC-loads -- ./perf bench \
-  mem memcpy -s 1024MB -l 100 -f default"
-$ $cmd
-
-         2,935,826      LLC-loads
-       3.821677452 seconds time elapsed
-
-$ $cmd --cycles
-
-       217,533,436      LLC-loads
-       8.616725985 seconds time elapsed
-
-After this fix:
-
-$ $cmd
-
-       214,459,686      LLC-loads
-       8.674301124 seconds time elapsed
-
-$ $cmd --cycles
-
-       214,758,651      LLC-loads
-       8.644480006 seconds time elapsed
-
-Fixes: 47b5757bac03c338 ("perf bench mem: Move boilerplate memory allocation to the infrastructure")
-Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: kernel@axis.com
-Link: http://lore.kernel.org/lkml/20200810133404.30829-1-vincent.whitchurch@axis.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 37b7a97884ba64bf ("sh: machvec IO death.")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Rich Felker <dalias@libc.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/mem-functions.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/sh/boards/mach-landisk/setup.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/bench/mem-functions.c b/tools/perf/bench/mem-functions.c
-index 9235b76501be8..19d45c377ac18 100644
---- a/tools/perf/bench/mem-functions.c
-+++ b/tools/perf/bench/mem-functions.c
-@@ -223,12 +223,8 @@ static int bench_mem_common(int argc, const char **argv, struct bench_mem_info *
- 	return 0;
- }
+diff --git a/arch/sh/boards/mach-landisk/setup.c b/arch/sh/boards/mach-landisk/setup.c
+index 16b4d8b0bb850..2c44b94f82fb2 100644
+--- a/arch/sh/boards/mach-landisk/setup.c
++++ b/arch/sh/boards/mach-landisk/setup.c
+@@ -82,6 +82,9 @@ device_initcall(landisk_devices_setup);
  
--static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+static void memcpy_prefault(memcpy_t fn, size_t size, void *src, void *dst)
+ static void __init landisk_setup(char **cmdline_p)
  {
--	u64 cycle_start = 0ULL, cycle_end = 0ULL;
--	memcpy_t fn = r->fn.memcpy;
--	int i;
--
- 	/* Make sure to always prefault zero pages even if MMAP_THRESH is crossed: */
- 	memset(src, 0, size);
- 
-@@ -237,6 +233,15 @@ static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, vo
- 	 * to not measure page fault overhead:
- 	 */
- 	fn(dst, src, size);
-+}
++	/* I/O port identity mapping */
++	__set_io_port_base(0);
 +
-+static u64 do_memcpy_cycles(const struct function *r, size_t size, void *src, void *dst)
-+{
-+	u64 cycle_start = 0ULL, cycle_end = 0ULL;
-+	memcpy_t fn = r->fn.memcpy;
-+	int i;
-+
-+	memcpy_prefault(fn, size, src, dst);
+ 	/* LED ON */
+ 	__raw_writeb(__raw_readb(PA_LED) | 0x03, PA_LED);
  
- 	cycle_start = get_cycles();
- 	for (i = 0; i < nr_loops; ++i)
-@@ -252,11 +257,7 @@ static double do_memcpy_gettimeofday(const struct function *r, size_t size, void
- 	memcpy_t fn = r->fn.memcpy;
- 	int i;
- 
--	/*
--	 * We prefault the freshly allocated memory range here,
--	 * to not measure page fault overhead:
--	 */
--	fn(dst, src, size);
-+	memcpy_prefault(fn, size, src, dst);
- 
- 	BUG_ON(gettimeofday(&tv_start, NULL));
- 	for (i = 0; i < nr_loops; ++i)
 -- 
 2.25.1
 
