@@ -4,64 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9338C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D7AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86BD1207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD47820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:59:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbgHTGwz (ORCPT
+        id S1726723AbgHTG67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 02:52:55 -0400
-Received: from verein.lst.de ([213.95.11.211]:40942 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbgHTGwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 02:52:53 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 4C3FD68BEB; Thu, 20 Aug 2020 08:52:50 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 08:52:50 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Javier Gonzalez <javier@javigon.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, david.fugate@linux.intel.com,
-        Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200820065250.GA6885@lst.de>
-References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com> <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de> <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com> <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk> <20200820063719.q6wftb23op45wigk@MacBook-Pro.localdomain>
+        Thu, 20 Aug 2020 02:58:59 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:42708 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgHTG67 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 02:58:59 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 81FCC1C0BB4; Thu, 20 Aug 2020 08:58:56 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 08:58:56 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
+        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
+        linux-pm@vger.kernel.org, "Arthur D." <spinal.by@gmail.com>
+Subject: Re: [RFC] Limiting charge current on Droid 4 (and N900)
+Message-ID: <20200820065855.GA9738@amd>
+References: <20200615140557.GA22781@duo.ucw.cz>
+ <20200629155515.GR37466@atomide.com>
+ <20200820041512.GH2994@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
-In-Reply-To: <20200820063719.q6wftb23op45wigk@MacBook-Pro.localdomain>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200820041512.GH2994@atomide.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:37:19AM +0200, Javier Gonzalez wrote:
-> We will stop pushing for this emulation. We have a couple of SSDs where
-> we disabled Append, we implemented support for them, and we wanted to
-> push the changes upstream. That's it. This is no politics not a
-> conspiracy against the current ZNS spec. We spent a lot of time working
-> on this spec and are actually doing a fair amount of work to support
-> Append other places in the stack. In any case, the fuzz stops here.
 
-FYI, from knowing your personally I'm pretty confident you are not
-part of a conspiracy and you are just doing your best given the context,
-and I appreciate all your work!
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm a lot less happy about thinks that happen in other groups not
-involving you directly, and I'm still pretty mad at how the games were
-played there, and especially other actors the seem to be reading the
-list here, and instead of taking part in the discussion are causing fuzz
-in completely unrelated venues.
+Hi!
+
+> > > Droid 4 has same problem as N900: it is often neccessary to manually
+> > > tweak current draw from USB, for example when using thin charging cab=
+le.
+> > >=20
+> > > N900 creates unique attribute by hand, but I believe
+> > > POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT looks suitable. (Should N900 be
+> > > converted?)
+> > >=20
+> > > Comments? Would the patch be acceptable after fixing whitespace?
+> >=20
+> > Looks OK to me. Until we have better charger vs host vs usb3 charging h=
+ub
+> > detection in place this seems like a good thing to do.
+>=20
+> FYI, I'm cleaning up the pending charger and battery patches to send out
+> for review. So that includes my earlier RFC battery status patches, and
+> Spinal's additions, and this patch. It will likely be several days before
+> I have the series ready for posting though.
+
+Thanks for heads-up.
+
+I had issue when I could not charge _empty_ droid4 battery from
+powerbank. Green light was blinking and current was going up and down
+but never stabilized. I thought I had dmesg from that but can't find
+it now :-(.
+
+Plus, I left D4 on charger overnight, and found battery empty in the
+morning. It apparently charged in the evening but then discharged.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl8+Hy8ACgkQMOfwapXb+vINSgCgwqDjvKoMVjGwrmlpzth44pKJ
+HuAAnRj18b8ySC+VOYnVFyO5jFV9QHol
+=/9vO
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
