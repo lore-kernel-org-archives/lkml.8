@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8091B20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BDA320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918300;
-	bh=lxe8g7FX23dHva9JYODgWaxoPdH/vB0tpCeu2DOon2Q=;
+	s=default; t=1597918309;
+	bh=APROJGtWB7/il4fNANFBIGq/O5Pv4X43mA+8sqo90YA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yk5Xg7dXsLUO24XxsdHGr9eb0XWv9wbvfgerov2xjXsSUWPC1akPpAgkGPbYKwooj
-	 fr2mgxC5dxTLVtC9ZoIMzZtHd9hXWli7H0Ccp+hJHU7EVrVf+CUOhOvtMAh90e7BQ4
-	 rmZgsuHyIZqiGRD53J7nIq66iwTr1M7H0si9Q3l4=
+	b=LpdPIOWywCfjBqlgu3QWes9ukSqB4pkHJsv48woA8ZAx7vVKF7VD89xam8P+SZsSt
+	 NvGng/DVkod7+Rc+jHUkI/NRnCqAdpv8aY40ImeMBEzNGPVajOspOT5D6LnYYFELM1
+	 2VMYUanGn4MVM9C5kpL/PCHaTFnKuGieoC5or8c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgHTKLh (ORCPT
+        id S1731011AbgHTKLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:11:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50192 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730966AbgHTKLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:11:23 -0400
+        id S1729797AbgHTKLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:11:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B7AA2067C;
-        Thu, 20 Aug 2020 10:11:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DEAEA206DA;
+        Thu, 20 Aug 2020 10:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918282;
-        bh=lxe8g7FX23dHva9JYODgWaxoPdH/vB0tpCeu2DOon2Q=;
+        s=default; t=1597918300;
+        bh=APROJGtWB7/il4fNANFBIGq/O5Pv4X43mA+8sqo90YA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Iq9J1bkTc0wpLAxdJWeIckCwBhACMyYlA1pCcYljGhX8IZBBYwcNFOv0OdnnKhAuf
-         c6JM2tG5FCWdczgjzFtnG1CZ8c3yDSzmbcbqlRV6X7uezukFe8DBUuYCgiZ9+qn0FD
-         i0K3XtX7vYDO5CneJcjli/P+raeRcQZTV+pZsHOE=
+        b=gtEudtB86Y6wbL26GXXHuN+O8quwQDmER89IvwcxBClbLr3Mwh3wK9ajJy6dUETGe
+         cGa8bwM84Fd8pB6P+YuIGj/RILti7bfYiDJ+5Cj5Dn5RFar1Anheb9x4prLdRcGv62
+         VGKJNke0QNjhU83rQqpgWepDa1lhZ21N3lD9JvQY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Robert Chiras <robert.chiras@nxp.com>,
+        Vinay Simha BN <simhavcs@gmail.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 088/228] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
-Date:   Thu, 20 Aug 2020 11:21:03 +0200
-Message-Id: <20200820091612.011597270@linuxfoundation.org>
+Subject: [PATCH 4.14 091/228] drm/mipi: use dcs write for mipi_dsi_dcs_set_tear_scanline
+Date:   Thu, 20 Aug 2020 11:21:06 +0200
+Message-Id: <20200820091612.167354924@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,45 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Emil Velikov <emil.velikov@collabora.com>
 
-[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
+[ Upstream commit 7a05c3b6d24b8460b3cec436cf1d33fac43c8450 ]
 
-preview_init_entities() does not call v4l2_ctrl_handler_free() when
-it fails.
-Add the missed function to fix it.
+The helper uses the MIPI_DCS_SET_TEAR_SCANLINE, although it's currently
+using the generic write. This does not look right.
 
-Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Perhaps some platforms don't distinguish between the two writers?
+
+Cc: Robert Chiras <robert.chiras@nxp.com>
+Cc: Vinay Simha BN <simhavcs@gmail.com>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Thierry Reding <treding@nvidia.com>
+Fixes: e83950816367 ("drm/dsi: Implement set tear scanline")
+Signed-off-by: Emil Velikov <emil.velikov@collabora.com>
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200505160329.2976059-3-emil.l.velikov@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/omap3isp/isppreview.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/drm_mipi_dsi.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
-index e981eb2330f18..ac005ae4d21b4 100644
---- a/drivers/media/platform/omap3isp/isppreview.c
-+++ b/drivers/media/platform/omap3isp/isppreview.c
-@@ -2290,7 +2290,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	me->ops = &preview_media_ops;
- 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
- 	if (ret < 0)
--		return ret;
-+		goto error_handler_free;
+diff --git a/drivers/gpu/drm/drm_mipi_dsi.c b/drivers/gpu/drm/drm_mipi_dsi.c
+index 4b47226b90d4b..6f0de951b75d5 100644
+--- a/drivers/gpu/drm/drm_mipi_dsi.c
++++ b/drivers/gpu/drm/drm_mipi_dsi.c
+@@ -1029,11 +1029,11 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_pixel_format);
+  */
+ int mipi_dsi_dcs_set_tear_scanline(struct mipi_dsi_device *dsi, u16 scanline)
+ {
+-	u8 payload[3] = { MIPI_DCS_SET_TEAR_SCANLINE, scanline >> 8,
+-			  scanline & 0xff };
++	u8 payload[2] = { scanline >> 8, scanline & 0xff };
+ 	ssize_t err;
  
- 	preview_init_formats(sd, NULL);
- 
-@@ -2323,6 +2323,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
- 	omap3isp_video_cleanup(&prev->video_in);
- error_video_in:
- 	media_entity_cleanup(&prev->subdev.entity);
-+error_handler_free:
-+	v4l2_ctrl_handler_free(&prev->ctrls);
- 	return ret;
- }
+-	err = mipi_dsi_generic_write(dsi, payload, sizeof(payload));
++	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_TEAR_SCANLINE, payload,
++				 sizeof(payload));
+ 	if (err < 0)
+ 		return err;
  
 -- 
 2.25.1
