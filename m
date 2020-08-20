@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB17FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8887FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC08420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D699206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917020;
-	bh=VjGXS5qUqznvGzS2U4eUACOqvpULSo7dVAE7teJvuEU=;
+	s=default; t=1597917028;
+	bh=HaSHAQTht2lvS8IefNfzjdeeLOJhuJ+du29m+05NXtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fJC4NNMHpwfqSFtuYU4fBytlZYQdd3W4/RgSxozAjFAMcv6Dkx4wFWGsNlWeiLwbL
-	 al3ugT/5QFGR3JTEKih23Gl7XzJSh+thRYzS4o6cagSvC28h6MKwL5AwO8sSTRSGjV
-	 I0N80ud+S1kR9SH/ixKVMsu+/xvBLU+l2gYL6dfQ=
+	b=Wp8ChB3hVbrR3xIKup/gd7xJBS12ezwngYTBE3O/lp/88qxClBLfA1DQPlyTlimtC
+	 22q2vGLT/O9uGmKbudfo3qcW6/+k3AHGOV9yHLLeO2jH6CjYoYy8oYU1vqmzm0LkEv
+	 KKyOgVzDKjLp0SOZB7cYWGhDqG+UgHrl15bk1DrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbgHTJuT (ORCPT
+        id S1729500AbgHTJuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57080 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:50:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729704AbgHTJuD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:03 -0400
+        id S1729702AbgHTJuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8692C20724;
-        Thu, 20 Aug 2020 09:50:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6CBB22BEA;
+        Thu, 20 Aug 2020 09:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917003;
-        bh=VjGXS5qUqznvGzS2U4eUACOqvpULSo7dVAE7teJvuEU=;
+        s=default; t=1597917017;
+        bh=HaSHAQTht2lvS8IefNfzjdeeLOJhuJ+du29m+05NXtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d83Pze5JjyX14PAyFSVzqWqH24ujGKsXDTjcLJ+RpQGG9v7BtK1DiVDEngSKmHby3
-         VKGv8QHAaOHO6pfZK10G2LjRmFoUiB0NXFBuMSSQ3eVdjYRZtckxz63vn35ImkK1Ni
-         /n3JR9fTtNEQtvdRRWWKqWIRDoeK0wu8VAyUkMeA=
+        b=h/qiOsnO10TkJCRetX9VrmT4fO0Rp0xo89hzV3OhZCFPRbVoLvb/jDEeSzgf1xzJa
+         vyltFd7evUMvSfryx4S0x8N9/1SYD3yV6KPPzW1or+T+qQgPS/89qtngmzEVxIczUU
+         GXYMJfbtmKnXsJYUCHgVTsOAtTQ8tS1XHJBl/1PE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 122/152] nfs: nfs_file_write() should check for writeback errors
-Date:   Thu, 20 Aug 2020 11:21:29 +0200
-Message-Id: <20200820091600.023309775@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 109/152] i2c: rcar: slave: only send STOP event when we have been addressed
+Date:   Thu, 20 Aug 2020 11:21:16 +0200
+Message-Id: <20200820091559.354748140@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,72 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit ce368536dd614452407dc31e2449eb84681a06af ]
+[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
 
-The NFS_CONTEXT_ERROR_WRITE flag (as well as the check of said flag) was
-removed by commit 6fbda89b257f.  The absence of an error check allows
-writes to be continually queued up for a server that may no longer be
-able to handle them.  Fix it by adding an error check using the generic
-error reporting functions.
+When the SSR interrupt is activated, it will detect every STOP condition
+on the bus, not only the ones after we have been addressed. So, enable
+this interrupt only after we have been addressed, and disable it
+otherwise.
 
-Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with generic one")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/file.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/i2c/busses/i2c-rcar.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 348f67c8f3224..387a2cfa7e172 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -583,12 +583,14 @@ static const struct vm_operations_struct nfs_file_vm_ops = {
- 	.page_mkwrite = nfs_vm_page_mkwrite,
- };
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 36af8fdb66586..3ea6013a3d68a 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -580,13 +580,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
+ 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
+ 		}
  
--static int nfs_need_check_write(struct file *filp, struct inode *inode)
-+static int nfs_need_check_write(struct file *filp, struct inode *inode,
-+				int error)
- {
- 	struct nfs_open_context *ctx;
+-		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
++		/* Clear SSR, too, because of old STOPs to other clients than us */
++		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
+ 	}
  
- 	ctx = nfs_file_open_context(filp);
--	if (nfs_ctx_key_to_expire(ctx, inode))
-+	if (nfs_error_is_fatal_on_server(error) ||
-+	    nfs_ctx_key_to_expire(ctx, inode))
- 		return 1;
+ 	/* master sent stop */
+ 	if (ssr_filtered & SSR) {
+ 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
+-		rcar_i2c_write(priv, ICSIER, SAR | SSR);
++		rcar_i2c_write(priv, ICSIER, SAR);
+ 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
+ 	}
+ 
+@@ -850,7 +851,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
+ 	priv->slave = slave;
+ 	rcar_i2c_write(priv, ICSAR, slave->addr);
+ 	rcar_i2c_write(priv, ICSSR, 0);
+-	rcar_i2c_write(priv, ICSIER, SAR | SSR);
++	rcar_i2c_write(priv, ICSIER, SAR);
+ 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
+ 
  	return 0;
- }
-@@ -599,6 +601,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	struct inode *inode = file_inode(file);
- 	unsigned long written = 0;
- 	ssize_t result;
-+	errseq_t since;
-+	int error;
- 
- 	result = nfs_key_timeout_notify(file, inode);
- 	if (result)
-@@ -623,6 +627,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos > i_size_read(inode))
- 		nfs_revalidate_mapping(inode, file->f_mapping);
- 
-+	since = filemap_sample_wb_err(file->f_mapping);
- 	nfs_start_io_write(inode);
- 	result = generic_write_checks(iocb, from);
- 	if (result > 0) {
-@@ -641,7 +646,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 		goto out;
- 
- 	/* Return error values */
--	if (nfs_need_check_write(file, inode)) {
-+	error = filemap_check_wb_err(file->f_mapping, since);
-+	if (nfs_need_check_write(file, inode, error)) {
- 		int err = nfs_wb_all(inode);
- 		if (err < 0)
- 			result = err;
 -- 
 2.25.1
 
