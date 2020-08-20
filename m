@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88927C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2076C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56994207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2D9207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916514;
-	bh=GLXQfcRWfRzS75qj46k4hC5dnG429jw21sLIeHx3YyM=;
+	s=default; t=1597916524;
+	bh=zYYp3C2CTnV6KL7DGFZEL0ktlMcY9rMHH+wVkETx7r8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tlb3SeYZSJIu2f2HzddGFO1PO1idAUQ5EX2x29Nu7lGWRqsCF2twYWHC7PihRlAZF
-	 YFGAgMRwwKLedI34S2p+afmpDxjO241abiDh+OoFnCWpQORoKfp/kIplbTGzOStMZ7
-	 QklAnLfgYN/u1Ik1y36eb3fMyqBJOhlyV/7o6ov0=
+	b=Mp8E85XNxEhDR0SHAYkZpjWtESMcpaL8Xwil8THdV+2yCliUU9I41L1HSi/SX7mdK
+	 a0Qs2XK+SWvxNL9839gaAMIuIJb6aAbXriC9kxTDtBkf9vVO4XVe9VXnPowvZG5AlZ
+	 c5f9bQ1r/Wgczd+ayG+B/3r9TPag2dJ74ATqagEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729126AbgHTJlv (ORCPT
+        id S1729133AbgHTJl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728710AbgHTJlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:46 -0400
+        id S1728281AbgHTJls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BED962075E;
-        Thu, 20 Aug 2020 09:41:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C38520724;
+        Thu, 20 Aug 2020 09:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916505;
-        bh=GLXQfcRWfRzS75qj46k4hC5dnG429jw21sLIeHx3YyM=;
+        s=default; t=1597916508;
+        bh=zYYp3C2CTnV6KL7DGFZEL0ktlMcY9rMHH+wVkETx7r8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OKOfBId1Mgg5E2dBTJOjSauAHUBD9UnnTD5K7oA9H3TF5U9dHzTsX/MS57E8kGwSX
-         5Iws/Nitgqd/sM6y1XW2IzlhayWUNmuoR8zofvGeKNu3+U3OTBiCYMWSxTV6+ga1LX
-         Wz/Wl6VDPPMdLB7M8DDA2WBQWUPq0ZWV/Fjfn16s=
+        b=Jj7xngC8n1Vxtd8qlGx9s7s3vRBRtqNEwlcsM9CNOsQ3U4B49yTGvVvCpaGQMIe2v
+         WwrBPREItbz/wmsj3VfAa+5juECcGrVk75Ah5YDIT2IZDjFpgnL6RH2qzaX1e42gI3
+         Y3RZkSVYxCkRXB1dXF6YOjlqOTc+5BPMOm05kanA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 151/204] ubifs: Fix wrong orphan node deletion in ubifs_jnl_update|rename
-Date:   Thu, 20 Aug 2020 11:20:48 +0200
-Message-Id: <20200820091613.785037682@linuxfoundation.org>
+Subject: [PATCH 5.7 125/204] rtw88: pci: disable aspm for platform inter-op with module parameter
+Date:   Thu, 20 Aug 2020 11:20:22 +0200
+Message-Id: <20200820091612.534416503@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,84 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-[ Upstream commit 094b6d1295474f338201b846a1f15e72eb0b12cf ]
+[ Upstream commit 68aa716b7dd36f55e080da9e27bc594346334c41 ]
 
-There a wrong orphan node deleting in error handling path in
-ubifs_jnl_update() and ubifs_jnl_rename(), which may cause
-following error msg:
+Some platforms cannot read the DBI register successfully for the
+ASPM settings. After the read failed, the bus could be unstable,
+and the device just became unavailable [1]. For those platforms,
+the ASPM should be disabled. But as the ASPM can help the driver
+to save the power consumption in power save mode, the ASPM is still
+needed. So, add a module parameter for them to disable it, then
+the device can still work, while others can benefit from the less
+power consumption that brings by ASPM enabled.
 
-  UBIFS error (ubi0:0 pid 1522): ubifs_delete_orphan [ubifs]:
-  missing orphan ino 65
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=206411
+[2] Note that my lenovo T430 is the same.
 
-Fix this by checking whether the node has been operated for
-adding to orphan list before being deleted,
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Fixes: 823838a486888cf484e ("ubifs: Add hashes to the tree node cache")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 3dff7c6e3749 ("rtw88: allows to enable/disable HCI link PS mechanism")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200605074703.32726-1-yhchuang@realtek.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/journal.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
-index e5ec1afe1c668..2cf05f87565c2 100644
---- a/fs/ubifs/journal.c
-+++ b/fs/ubifs/journal.c
-@@ -539,7 +539,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
- 		     const struct fscrypt_name *nm, const struct inode *inode,
- 		     int deletion, int xent)
- {
--	int err, dlen, ilen, len, lnum, ino_offs, dent_offs;
-+	int err, dlen, ilen, len, lnum, ino_offs, dent_offs, orphan_added = 0;
- 	int aligned_dlen, aligned_ilen, sync = IS_DIRSYNC(dir);
- 	int last_reference = !!(deletion && inode->i_nlink == 0);
- 	struct ubifs_inode *ui = ubifs_inode(inode);
-@@ -630,6 +630,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
- 			goto out_finish;
- 		}
- 		ui->del_cmtno = c->cmt_no;
-+		orphan_added = 1;
- 	}
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index d735f3127fe8f..6c24ddc2a9751 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -14,8 +14,11 @@
+ #include "debug.h"
  
- 	err = write_head(c, BASEHD, dent, len, &lnum, &dent_offs, sync);
-@@ -702,7 +703,7 @@ int ubifs_jnl_update(struct ubifs_info *c, const struct inode *dir,
- 	kfree(dent);
- out_ro:
- 	ubifs_ro_mode(c, err);
--	if (last_reference)
-+	if (orphan_added)
- 		ubifs_delete_orphan(c, inode->i_ino);
- 	finish_reservation(c);
- 	return err;
-@@ -1218,7 +1219,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
- 	void *p;
- 	union ubifs_key key;
- 	struct ubifs_dent_node *dent, *dent2;
--	int err, dlen1, dlen2, ilen, lnum, offs, len;
-+	int err, dlen1, dlen2, ilen, lnum, offs, len, orphan_added = 0;
- 	int aligned_dlen1, aligned_dlen2, plen = UBIFS_INO_NODE_SZ;
- 	int last_reference = !!(new_inode && new_inode->i_nlink == 0);
- 	int move = (old_dir != new_dir);
-@@ -1334,6 +1335,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
- 			goto out_finish;
- 		}
- 		new_ui->del_cmtno = c->cmt_no;
-+		orphan_added = 1;
- 	}
+ static bool rtw_disable_msi;
++static bool rtw_pci_disable_aspm;
+ module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
++module_param_named(disable_aspm, rtw_pci_disable_aspm, bool, 0644);
+ MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
++MODULE_PARM_DESC(disable_aspm, "Set Y to disable PCI ASPM support");
  
- 	err = write_head(c, BASEHD, dent, len, &lnum, &offs, sync);
-@@ -1415,7 +1417,7 @@ int ubifs_jnl_rename(struct ubifs_info *c, const struct inode *old_dir,
- 	release_head(c, BASEHD);
- out_ro:
- 	ubifs_ro_mode(c, err);
--	if (last_reference)
-+	if (orphan_added)
- 		ubifs_delete_orphan(c, new_inode->i_ino);
- out_finish:
- 	finish_reservation(c);
+ static u32 rtw_pci_tx_queue_idx_addr[] = {
+ 	[RTW_TX_QUEUE_BK]	= RTK_PCI_TXBD_IDX_BKQ,
+@@ -1189,6 +1192,9 @@ static void rtw_pci_clkreq_set(struct rtw_dev *rtwdev, bool enable)
+ 	u8 value;
+ 	int ret;
+ 
++	if (rtw_pci_disable_aspm)
++		return;
++
+ 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to read CLKREQ_L1, ret=%d", ret);
+@@ -1208,6 +1214,9 @@ static void rtw_pci_aspm_set(struct rtw_dev *rtwdev, bool enable)
+ 	u8 value;
+ 	int ret;
+ 
++	if (rtw_pci_disable_aspm)
++		return;
++
+ 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to read ASPM, ret=%d", ret);
 -- 
 2.25.1
 
