@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 217DAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BE3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F239020639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B28320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920242;
-	bh=UUrS1yBUSa9rxTrMyNiRGKbwDpz6ndKaUEJYbS4t3sA=;
+	s=default; t=1597920251;
+	bh=o3bCuR49FtZ4PWG0FZWSBRrbVN09TtVONmUmYHKuOgE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xLTpfbtKSFGH1k7/jrmMFtRrEJcIMn8IQ9riOsx1knvxalltUuzcGAutABCZNCLCs
-	 wq0jYqBN84IJYc0OxkFO3AJutF+gziLIZ5wnbpf1GsG7HBEPIichywnniAkp+Vtdlc
-	 lgUVhFTv1yrRirlKy8YH4EqHAJ0JnRXjeDUWW6wE=
+	b=gyXDnKkv3RuYRZWPdygxja4g/A/eW2v9CKfhoz/0yVVPCwThsd9dZv/Hj7e2a7G26
+	 oSZ9hy2RU9FGdjeWfj8/KRiK5COT6yOr+sEkXfZ0nmJou31G16GY7VxY8FiztlYlIZ
+	 OtsS8tq+yM6psEFTmBKqGlcKtfUXw/1usmwfEhYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgHTKn7 (ORCPT
+        id S1731868AbgHTKoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:43:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730885AbgHTKQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:17 -0400
+        id S1730256AbgHTKQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15E3022B40;
-        Thu, 20 Aug 2020 10:16:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8FEF2173E;
+        Thu, 20 Aug 2020 10:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918576;
-        bh=UUrS1yBUSa9rxTrMyNiRGKbwDpz6ndKaUEJYbS4t3sA=;
+        s=default; t=1597918571;
+        bh=o3bCuR49FtZ4PWG0FZWSBRrbVN09TtVONmUmYHKuOgE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ICTfeFpPvBs4Zpgh3MU5/Dn8LiuLI7T33/HqWiYoL1wOiJ6jZPbtilj1FsLVQoajl
-         EjjHCXX7xrF4YDeOWQ0H9QQ/VRA9FX9aLmf1x+46rhTPtbaUjrdbS7bT8NASxR6i/k
-         1GmRdXGPsQWhpqEM4+1MNNFfz1Z4axXUxGeaemAI=
+        b=cAnQrxcxquhktyVwz/5DQAIzoGJi7+Tb+Km7XFoyM0RquFOf4Nv72h3bb+vtqrW2e
+         8ujvtp0XJHJZZNDTnwnprwxJptnQSVprU0p7SWZr1X2FxdHnK3lnBh4KoV6lLhOtWn
+         e5gStUfdAb/oE2PorfOAfd21cQbdj4/QRLh6AwMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 4.14 190/228] watchdog: f71808e_wdt: remove use of wrong watchdog_info option
-Date:   Thu, 20 Aug 2020 11:22:45 +0200
-Message-Id: <20200820091617.068528998@linuxfoundation.org>
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 188/228] tracing: Use trace_sched_process_free() instead of exit() for pid tracing
+Date:   Thu, 20 Aug 2020 11:22:43 +0200
+Message-Id: <20200820091616.969630681@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,48 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 802141462d844f2e6a4d63a12260d79b7afc4c34 upstream.
+commit afcab636657421f7ebfa0783a91f90256bba0091 upstream.
 
-The flags that should be or-ed into the watchdog_info.options by drivers
-all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
-driver's watchdog_ops has a usable set_timeout.
+On exit, if a process is preempted after the trace_sched_process_exit()
+tracepoint but before the process is done exiting, then when it gets
+scheduled in, the function tracers will not filter it properly against the
+function tracing pid filters.
 
-WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
-equals:
+That is because the function tracing pid filters hooks to the
+sched_process_exit() tracepoint to remove the exiting task's pid from the
+filter list. Because the filtering happens at the sched_switch tracepoint,
+when the exiting task schedules back in to finish up the exit, it will no
+longer be in the function pid filtering tables.
 
-   WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
-   WDIOF_MAGICCLOSE | 0xc0045000
+This was noticeable in the notrace self tests on a preemptable kernel, as
+the tests would fail as it exits and preempted after being taken off the
+notrace filter table and on scheduling back in it would not be in the
+notrace list, and then the ending of the exit function would trace. The test
+detected this and would fail.
 
-These were so far indicated to userspace on WDIOC_GETSUPPORT.
-As the driver has not yet been migrated to the new watchdog kernel API,
-the constant can just be dropped without substitute.
-
-Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for Fintek F71808E and F71882FG")
 Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-4-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 1e10486ffee0a ("ftrace: Add 'function-fork' trace option")
+Fixes: c37775d57830a ("tracing: Add infrastructure to allow set_event_pid to follow children"
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/f71808e_wdt.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ kernel/trace/ftrace.c       |    4 ++--
+ kernel/trace/trace_events.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -688,8 +688,7 @@ static int __init watchdog_init(int sioa
- 	 * into the module have been registered yet.
- 	 */
- 	watchdog.sioaddr = sioaddr;
--	watchdog.ident.options = WDIOC_SETTIMEOUT
--				| WDIOF_MAGICCLOSE
-+	watchdog.ident.options = WDIOF_MAGICCLOSE
- 				| WDIOF_KEEPALIVEPING
- 				| WDIOF_CARDRESET;
- 
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6242,12 +6242,12 @@ void ftrace_pid_follow_fork(struct trace
+ 	if (enable) {
+ 		register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						  tr);
+-		register_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						  tr);
+ 	} else {
+ 		unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						    tr);
+ 	}
+ }
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -533,12 +533,12 @@ void trace_event_follow_fork(struct trac
+ 	if (enable) {
+ 		register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						       tr, INT_MIN);
+-		register_trace_prio_sched_process_exit(event_filter_pid_sched_process_exit,
++		register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
+ 						       tr, INT_MAX);
+ 	} else {
+ 		unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(event_filter_pid_sched_process_exit,
++		unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
+ 						    tr);
+ 	}
+ }
 
 
