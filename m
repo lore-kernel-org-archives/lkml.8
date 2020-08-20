@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FC2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC48C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6872078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A87CB207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927642;
-	bh=VHxzCYNA7Dc8Z3qIA1RJKTVQzqLyg5u7fzeDoru0pRo=;
+	s=default; t=1597927653;
+	bh=4Pu5l+a7R0giKXEjk93F4XnVBL48zhHRz7T5g0HZRQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrcyZ6GrUJ1q+pMmujP6s90SwVH5COkek/BS6RYnogIkZ+2+ET2zfjJ8FGuGIknHq
-	 L7zIuEeBcsTxQTBe/c6IFELJqcsp4cgzTtLluaFUYi9MlTrXbYCrgbAkOMZhqUedFY
-	 79Vc89Ute+BB9yLVMSEThwylV1e10cpW6q3qK4/s=
+	b=LZxPR62YH6nvcBsBW3HHtGOt8fx/OHZuLvclHoJJJ0qfgBlWftnLfN1ixZyHNxgg+
+	 v5qzSXDBFGozclHCXqC4QDWgqsPOAjOcfYyHu6fE5P+IwPop0tGKBRcYL9bK5K/5dL
+	 2mosglQu5DRVZOFIi+XSRvm1+QPomnbBIVor5UH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbgHTMrU (ORCPT
+        id S1729628AbgHTMr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:47:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46378 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:47:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbgHTJp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729213AbgHTJp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:45:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E63822D2C;
-        Thu, 20 Aug 2020 09:44:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F79022D6D;
+        Thu, 20 Aug 2020 09:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916690;
-        bh=VHxzCYNA7Dc8Z3qIA1RJKTVQzqLyg5u7fzeDoru0pRo=;
+        s=default; t=1597916696;
+        bh=4Pu5l+a7R0giKXEjk93F4XnVBL48zhHRz7T5g0HZRQc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BRmaVmk1YlRwdW/4xEzi+ftbL6urzOwqBDRhKpBLj4Xl5A6xMtD2S8vVfCDqok7Pv
-         bE9p3ho80O/OeXbKBN8Wj/DTdC8/R23FtFiHzesnFtCtgzjg7awFx3yWyWPjeCQk16
-         0ofS6qmUSvcgN2vDIl6UhrWnactSIgM0dUOZ9Z8I=
+        b=0R89/UlMfCk1dw0PXngaU+kvwFjI8T7lm3yTcsj++RqxW+18v3lKVZnxyu41wx6gk
+         PP6gh1QcxrX6kyWBlgqJu1z/TcM1Wu9JREIxb3CTYNtSq6iFurBLwXyKvX6f4HjVoL
+         Ufo1sz0QI9YdyNK/ffeaWd4j74M9Q2eOpkyotqdE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 005/152] PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken
-Date:   Thu, 20 Aug 2020 11:19:32 +0200
-Message-Id: <20200820091553.905542775@linuxfoundation.org>
+        stable@vger.kernel.org, Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH 5.4 007/152] PCI: qcom: Define some PARF params needed for ipq8064 SoC
+Date:   Thu, 20 Aug 2020 11:19:34 +0200
+Message-Id: <20200820091554.011441096@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,56 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-commit 45beb31d3afb651bb5c41897e46bd4fa9980c51c upstream.
+commit 5149901e9e6deca487c01cc434a3ac4125c7b00b upstream.
 
-We are seeing AMD Radeon Pro W5700 doesn't work when IOMMU is enabled:
+Set some specific value for Tx De-Emphasis, Tx Swing and Rx equalization
+needed on some ipq8064 based device (Netgear R7800 for example). Without
+this the system locks on kernel load.
 
-  iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01a0]
-  iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01c0]
-
-The error also makes graphics driver fail to probe the device.
-
-It appears to be the same issue as commit 5e89cd303e3a ("PCI: Mark AMD
-Navi14 GPU rev 0xc5 ATS as broken") addresses, and indeed the same ATS
-quirk can workaround the issue.
-
-See-also: 5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
-See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken")
-See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208725
-Link: https://lore.kernel.org/r/20200728104554.28927-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200615210608.21469-8-ansuelsmth@gmail.com
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: stable@vger.kernel.org # v4.5+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-qcom.c |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5208,7 +5208,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SE
-  */
- static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
- {
--	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
-+	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-+	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
- 		return;
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -76,6 +76,18 @@
+ #define DBI_RO_WR_EN				1
  
- 	pci_info(pdev, "disabling ATS\n");
-@@ -5219,6 +5220,8 @@ static void quirk_amd_harvest_no_ats(str
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
- /* AMD Iceland dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
-+/* AMD Navi10 dGPU */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
- /* AMD Navi14 dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
- #endif /* CONFIG_PCI_ATS */
+ #define PERST_DELAY_US				1000
++/* PARF registers */
++#define PCIE20_PARF_PCS_DEEMPH			0x34
++#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
++#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
++
++#define PCIE20_PARF_PCS_SWING			0x38
++#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
++#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
++
++#define PCIE20_PARF_CONFIG_BITS		0x50
++#define PHY_RX0_EQ(x)				((x) << 24)
+ 
+ #define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+@@ -275,6 +287,7 @@ static int qcom_pcie_init_2_1_0(struct q
+ 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
++	struct device_node *node = dev->of_node;
+ 	u32 val;
+ 	int ret;
+ 
+@@ -319,6 +332,17 @@ static int qcom_pcie_init_2_1_0(struct q
+ 	val &= ~BIT(0);
+ 	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+ 
++	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
++		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
++			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
++			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
++		       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
++		writel(PCS_SWING_TX_SWING_FULL(120) |
++			       PCS_SWING_TX_SWING_LOW(120),
++		       pcie->parf + PCIE20_PARF_PCS_SWING);
++		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
++	}
++
+ 	/* enable external reference clock */
+ 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
+ 	val |= BIT(16);
 
 
