@@ -2,58 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E22C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FFBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F52D2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201682173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:56:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917368;
-	bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+	s=default; t=1597917396;
+	bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fIeUlqRaYWbnVY+/YWTPPcJGTuacBpy/LzPrQnWIB/8ygJuIxZMKFG1xBHEWcXsQ1
-	 pXTbkRJZXopvCPkUX55v87qRqD1L0jAyeonACY8NV84qp+BcSRZDADmsX2FuiGupFx
-	 fCnv5jmDnkD665A3sTtYER5pI/yRL44uNKYO3nYk=
+	b=wioet1tXwj/bVDQcmjmjGfS6QtpPFyFtZSvGFtQpv1BCjqRpzQXcCsvlzfoSmsDiv
+	 MOfRnMpDcuDBw8A7y4kV0jjxDYPwOjRIsMjemcn4twYLjKmgvKYf4jUM+Rbek3JrWr
+	 y8lg1g9ruVQG6meoMlktJHeEDoNxiaWbCGsS73o4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730016AbgHTJ4F (ORCPT
+        id S1729498AbgHTJ4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:56:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39024 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:56:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730219AbgHTJzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:51 -0400
+        id S1730252AbgHTJ4R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30CAC2067C;
-        Thu, 20 Aug 2020 09:55:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA69B20855;
+        Thu, 20 Aug 2020 09:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917350;
-        bh=n7wzPQ3M0ERQ59sffFXEWhQWFOF761BQYOzZAulle1Q=;
+        s=default; t=1597917375;
+        bh=O2RC+e43R6W2CMNZ/EhI3/kEAnaUQ/baPfNH/UmDZLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HWNBt75kHj/CQVv8X8Dv/YKdtDC34vHwTzPKk0l3RXdtuZXiR+y0xwZ/p9HhoW0+V
-         ZTkP7LB6zjHRBFLmhIoM+eihkYagqobeFrXG124RvO5HYFOREx2jabXBA1nA4yPVl0
-         nrrVd7OamLH23iqlB/9dSkeQRFpv3qJ1DD28yLVo=
+        b=xz4drtEcMfYwKchdz4gA0zTBpq6RrZK9PKGIHi9LAkNNSqy2PTFiLzin84H/w+98g
+         frwZqdnTIz3Z3pL/RrMebtRnJlw2h+fr6uUy8/CA1zcC7PQuYV313yYfLfEQ/Mgr9s
+         9j3etatKf7JG6ivBBop06HnN/5eoP7aARQCNXyW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 79/92] fs/minix: fix block limit check for V1 filesystems
-Date:   Thu, 20 Aug 2020 11:22:04 +0200
-Message-Id: <20200820091541.764302089@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 4.9 010/212] ARM: 8986/1: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
+Date:   Thu, 20 Aug 2020 11:19:43 +0200
+Message-Id: <20200820091602.847078012@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
-References: <20200820091537.490965042@linuxfoundation.org>
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,43 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 0a12c4a8069607247cb8edc3b035a664e636fd9a ]
+commit eec13b42d41b0f3339dcf0c4da43734427c68620 upstream.
 
-The minix filesystem reads its maximum file size from its on-disk
-superblock.  This value isn't necessarily a multiple of the block size.
-When it's not, the V1 block mapping code doesn't allow mapping the last
-possible block.  Commit 6ed6a722f9ab ("minixfs: fix block limit check")
-fixed this in the V2 mapping code.  Fix it in the V1 mapping code too.
+Unprivileged memory accesses generated by the so-called "translated"
+instructions (e.g. LDRT) in kernel mode can cause user watchpoints to fire
+unexpectedly. In such cases, the hw_breakpoint logic will invoke the user
+overflow handler which will typically raise a SIGTRAP back to the current
+task. This is futile when returning back to the kernel because (a) the
+signal won't have been delivered and (b) userspace can't handle the thing
+anyway.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Link: http://lkml.kernel.org/r/20200628060846.682158-6-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Avoid invoking the user overflow handler for watchpoints triggered by
+kernel uaccess routines, and instead single-step over the faulting
+instruction as we would if no overflow handler had been installed.
+
+Cc: <stable@vger.kernel.org>
+Fixes: f81ef4a920c8 ("ARM: 6356/1: hw-breakpoint: add ARM backend for the hw-breakpoint framework")
+Reported-by: Luis Machado <luis.machado@linaro.org>
+Tested-by: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/minix/itree_v1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/hw_breakpoint.c |   27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
-diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
-index c0d418209ead1..405573a79aab4 100644
---- a/fs/minix/itree_v1.c
-+++ b/fs/minix/itree_v1.c
-@@ -29,7 +29,7 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
- 	if (block < 0) {
- 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
- 			block, inode->i_sb->s_bdev);
--	} else if (block >= inode->i_sb->s_maxbytes/BLOCK_SIZE) {
-+	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
- 		if (printk_ratelimit())
- 			printk("MINIX-fs: block_to_path: "
- 			       "block %ld too big on dev %pg\n",
--- 
-2.25.1
-
+--- a/arch/arm/kernel/hw_breakpoint.c
++++ b/arch/arm/kernel/hw_breakpoint.c
+@@ -688,6 +688,12 @@ static void disable_single_step(struct p
+ 	arch_install_hw_breakpoint(bp);
+ }
+ 
++static int watchpoint_fault_on_uaccess(struct pt_regs *regs,
++				       struct arch_hw_breakpoint *info)
++{
++	return !user_mode(regs) && info->ctrl.privilege == ARM_BREAKPOINT_USER;
++}
++
+ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+ 			       struct pt_regs *regs)
+ {
+@@ -747,16 +753,27 @@ static void watchpoint_handler(unsigned
+ 		}
+ 
+ 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
++
++		/*
++		 * If we triggered a user watchpoint from a uaccess routine,
++		 * then handle the stepping ourselves since userspace really
++		 * can't help us with this.
++		 */
++		if (watchpoint_fault_on_uaccess(regs, info))
++			goto step;
++
+ 		perf_bp_event(wp, regs);
+ 
+ 		/*
+-		 * If no overflow handler is present, insert a temporary
+-		 * mismatch breakpoint so we can single-step over the
+-		 * watchpoint trigger.
++		 * Defer stepping to the overflow handler if one is installed.
++		 * Otherwise, insert a temporary mismatch breakpoint so that
++		 * we can single-step over the watchpoint trigger.
+ 		 */
+-		if (is_default_overflow_handler(wp))
+-			enable_single_step(wp, instruction_pointer(regs));
++		if (!is_default_overflow_handler(wp))
++			goto unlock;
+ 
++step:
++		enable_single_step(wp, instruction_pointer(regs));
+ unlock:
+ 		rcu_read_unlock();
+ 	}
 
 
