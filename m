@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DB3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAC7207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B230207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927039;
-	bh=gxyljUXskyWu0WRXoIl0lAS2I6vIPL5JTgN3D6quj4Y=;
+	s=default; t=1597927053;
+	bh=sOLyRSVh6bLobyYs66EGqvuZqQ71VOVNcZvsXcdcfNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HxKxZmATPdfotV6c4pn+IiriRf/ulvExY3TC6ntvVttjEkvAs88dl6rQEgqn72N12
-	 82k4c717Jc97VjOf8C9p+lxTNI9rfDiZFUrou4oiIiguNR5HmwHZHv9+vv6w6xiHcy
-	 J684DvutYrvQxIImTbSP8WUrf3Zzw0kaBHAsgWUY=
+	b=KZunsgT+MRv00K9FXjdsCk/XjHomxUbPzjR2u0wvHrf88rYtW40/DG4WAyX8wSYmr
+	 OcjxIsIHJ88mcU6ll801vOeq+vQQvBEm0u8Fpi0/rFRVdf9qbXiAoCB7VR6JFjVNC/
+	 uqlq/pRPNVioOwcryt2I7l3g6fjbqJl5zDAxpAL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729811AbgHTMhR (ORCPT
+        id S1729484AbgHTJrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729522AbgHTJrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:45 -0400
+        id S1729421AbgHTJrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5D8020724;
-        Thu, 20 Aug 2020 09:47:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36BDB22BEA;
+        Thu, 20 Aug 2020 09:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916865;
-        bh=gxyljUXskyWu0WRXoIl0lAS2I6vIPL5JTgN3D6quj4Y=;
+        s=default; t=1597916838;
+        bh=sOLyRSVh6bLobyYs66EGqvuZqQ71VOVNcZvsXcdcfNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mkGRngaoUy4XDiiLIbC7bQdI6Vs/lBd8arD15t7AG6hRHK/5alRY+CsJoYeVXA4Gc
-         F2fV6tb73PjAFXNtDt1qYZdf2OsRD+kjBR8y95eZSVODaX6w0pYIcCK7Ea3ggMuLK0
-         Z8RwMfMvnnB9E9m3Ds+jRRxEPBHx3oq1D4kcmzmQ=
+        b=IWLuWNbs7Lg6SzN0siIDTAgdI9z0W6gLxM+9xNwApjozhKSYUHgjnMOrHq/MzrX52
+         p8f3choOu6vfBu+FqDiKf5GSFjADq7Pjs60z3sdsugQ0c1uaixVRXmeJtsM1eM25Tp
+         DpQXLAuKB481eNeaGHc1TUfpyv76DxmV3MQWux4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH 5.4 072/152] remoteproc: qcom_q6v5_mss: Validate MBA firmware size before load
-Date:   Thu, 20 Aug 2020 11:20:39 +0200
-Message-Id: <20200820091557.405250411@linuxfoundation.org>
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.4 064/152] watchdog: f71808e_wdt: clear watchdog timeout occurred flag
+Date:   Thu, 20 Aug 2020 11:20:31 +0200
+Message-Id: <20200820091557.006281830@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,60 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-commit e013f455d95add874f310dc47c608e8c70692ae5 upstream.
+commit 4f39d575844148fbf3081571a1f3b4ae04150958 upstream.
 
-The following mem abort is observed when the mba firmware size exceeds
-the allocated mba region. MBA firmware size is restricted to a maximum
-size of 1M and remaining memory region is used by modem debug policy
-firmware when available. Hence verify whether the MBA firmware size lies
-within the allocated memory region and is not greater than 1M before
-loading.
+The flag indicating a watchdog timeout having occurred normally persists
+till Power-On Reset of the Fintek Super I/O chip. The user can clear it
+by writing a `1' to the bit.
 
-Err Logs:
-Unable to handle kernel paging request at virtual address
-Mem abort info:
-...
-Call trace:
-  __memcpy+0x110/0x180
-  rproc_start+0x40/0x218
-  rproc_boot+0x5b4/0x608
-  state_store+0x54/0xf8
-  dev_attr_store+0x44/0x60
-  sysfs_kf_write+0x58/0x80
-  kernfs_fop_write+0x140/0x230
-  vfs_write+0xc4/0x208
-  ksys_write+0x74/0xf8
-  __arm64_sys_write+0x24/0x30
-...
+The driver doesn't offer a restart method, so regular system reboot
+might not reset the Super I/O and if the watchdog isn't enabled, we
+won't touch the register containing the bit on the next boot.
+In this case all subsequent regular reboots will be wrongly flagged
+by the driver as being caused by the watchdog.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
+Fix this by having the flag cleared after read. This is also done by
+other drivers like those for the i6300esb and mpc8xxx_wdt.
+
+Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200722201047.12975-2-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200611191750.28096-5-a.fatoum@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/remoteproc/qcom_q6v5_mss.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/watchdog/f71808e_wdt.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -381,6 +381,12 @@ static int q6v5_load(struct rproc *rproc
- {
- 	struct q6v5 *qproc = rproc->priv;
+--- a/drivers/watchdog/f71808e_wdt.c
++++ b/drivers/watchdog/f71808e_wdt.c
+@@ -705,6 +705,13 @@ static int __init watchdog_init(int sioa
+ 	wdt_conf = superio_inb(sioaddr, F71808FG_REG_WDT_CONF);
+ 	watchdog.caused_reboot = wdt_conf & BIT(F71808FG_FLAG_WDTMOUT_STS);
  
-+	/* MBA is restricted to a maximum size of 1M */
-+	if (fw->size > qproc->mba_size || fw->size > SZ_1M) {
-+		dev_err(qproc->dev, "MBA firmware load failed\n");
-+		return -EINVAL;
-+	}
++	/*
++	 * We don't want WDTMOUT_STS to stick around till regular reboot.
++	 * Write 1 to the bit to clear it to zero.
++	 */
++	superio_outb(sioaddr, F71808FG_REG_WDT_CONF,
++		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
 +
- 	memcpy(qproc->mba_region, fw->data, fw->size);
+ 	superio_exit(sioaddr);
  
- 	return 0;
+ 	err = watchdog_set_timeout(timeout);
 
 
