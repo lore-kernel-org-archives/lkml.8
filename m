@@ -2,55 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E3C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF70C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D273120724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E91A206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918426;
-	bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
+	s=default; t=1597918431;
+	bh=j7dy0bSZdJMy0fQ8xfWCUsGcJ0bQlI1YyTEiGg3ult0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wqsuXpxOiyX9dFIsg4FfgkE/MJJTka7nSnBn8FPOg+RKTf8JWrkkhNYFnskIn/Vsz
-	 Cgi5IGVQJT63eYwiBVYpDbmhfWRQROizNc3x7pNENE4oHUwdLE/2ZgmPER6brNfKkK
-	 80QBfI/k6tSAzRc/2dtVhesVdfp364O/oY1SXlm8=
+	b=Zq+2Pqxe0HeRwMUgXy/Nx1QvfXEknK4pWEw9BqMczza4TSTZIgE0mG3x/SXxNvDYH
+	 6UW4oLiS0c63oQsLLrTMO/KOUi0SXAh8lOgt2pIq0jvegoEVhwrXWAvhdJTQON9D+z
+	 EsMhMi3TwJfQJu81+ixjixx1ebb1+Zi8MBE8dLr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgHTKNp (ORCPT
+        id S1731054AbgHTKNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54292 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:13:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731054AbgHTKMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:31 -0400
+        id S1731026AbgHTKNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B810120738;
-        Thu, 20 Aug 2020 10:12:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1FC8020724;
+        Thu, 20 Aug 2020 10:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918351;
-        bh=wEHEpnY21BIQiJBhHTEDRxYaJnYW3PivCC0GcHmkWe0=;
+        s=default; t=1597918389;
+        bh=j7dy0bSZdJMy0fQ8xfWCUsGcJ0bQlI1YyTEiGg3ult0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xyCMXaoAbmDbsoOtSE3xTXI5MDLOqUTEUpwSbXInTfw6Z4UyY/mV8Wch7RIpUKplz
-         jzNtX/Fn+NFxbFba87CAQiQFM2ZMgyxLSZUGfSD4ESSsYLFJ/6X1Vzh4PGsopijxsu
-         o5OolsrWwsSIbt8YiUxyMjA47VPY0/QkHrUTvOxY=
+        b=d42NyCBxsgZjexirkAop6GJeTgyrWzaAeLGe1fxEPcCc18lz9iMtoQkcnjcOPXfLF
+         jtLcMT9rC6P3C5hCvATkp9giLUpeVjdovzGWj74RzYoz/8hauz9CCEp8jBwSzuoRLp
+         12gEuV68RxJps09YV3S+CZtsLoI2F7v7FaIld5TQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sedat Dilek <sedat.dilek@gmail.com>,
-        Fangrui Song <maskray@google.com>,
-        Jian Cai <caij2003@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        stable@vger.kernel.org, Hanjun Guo <guohanjun@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 138/228] crypto: aesni - add compatibility with IAS
-Date:   Thu, 20 Aug 2020 11:21:53 +0200
-Message-Id: <20200820091614.486103051@linuxfoundation.org>
+Subject: [PATCH 4.14 122/228] PCI: Release IVRS table in AMD ACS quirk
+Date:   Thu, 20 Aug 2020 11:21:37 +0200
+Message-Id: <20200820091613.689102252@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -63,76 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Cai <caij2003@gmail.com>
+From: Hanjun Guo <guohanjun@huawei.com>
 
-[ Upstream commit 44069737ac9625a0f02f0f7f5ab96aae4cd819bc ]
+[ Upstream commit 090688fa4e448284aaa16136372397d7d10814db ]
 
-Clang's integrated assembler complains "invalid reassignment of
-non-absolute variable 'var_ddq_add'" while assembling
-arch/x86/crypto/aes_ctrby8_avx-x86_64.S. It was because var_ddq_add was
-reassigned with non-absolute values several times, which IAS did not
-support. We can avoid the reassignment by replacing the uses of
-var_ddq_add with its definitions accordingly to have compatilibility
-with IAS.
+The acpi_get_table() should be coupled with acpi_put_table() if the mapped
+table is not used at runtime to release the table mapping.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/1008
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reported-by: Fangrui Song <maskray@google.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com> # build+boot Linux v5.7.5; clang v11.0.0-git
-Signed-off-by: Jian Cai <caij2003@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+In pci_quirk_amd_sb_acs(), IVRS table is just used for checking AMD IOMMU
+is supported, not used at runtime, so put the table after using it.
+
+Fixes: 15b100dfd1c9 ("PCI: Claim ACS support for AMD southbridge devices")
+Link: https://lore.kernel.org/r/1595411068-15440-1-git-send-email-guohanjun@huawei.com
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/crypto/aes_ctrby8_avx-x86_64.S | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/pci/quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-index 5f6a5af9c489b..77043a82da510 100644
---- a/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-+++ b/arch/x86/crypto/aes_ctrby8_avx-x86_64.S
-@@ -127,10 +127,6 @@ ddq_add_8:
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 243b16ce0c8eb..da790f26d2950 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4307,6 +4307,8 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+ 	if (ACPI_FAILURE(status))
+ 		return -ENODEV;
  
- /* generate a unique variable for ddq_add_x */
++	acpi_put_table(header);
++
+ 	/* Filter out flags not applicable to multifunction */
+ 	acs_flags &= (PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_EC | PCI_ACS_DT);
  
--.macro setddq n
--	var_ddq_add = ddq_add_\n
--.endm
--
- /* generate a unique variable for xmm register */
- .macro setxdata n
- 	var_xdata = %xmm\n
-@@ -140,9 +136,7 @@ ddq_add_8:
- 
- .macro club name, id
- .altmacro
--	.if \name == DDQ_DATA
--		setddq %\id
--	.elseif \name == XDATA
-+	.if \name == XDATA
- 		setxdata %\id
- 	.endif
- .noaltmacro
-@@ -165,9 +159,8 @@ ddq_add_8:
- 
- 	.set i, 1
- 	.rept (by - 1)
--		club DDQ_DATA, i
- 		club XDATA, i
--		vpaddq	var_ddq_add(%rip), xcounter, var_xdata
-+		vpaddq	(ddq_add_1 + 16 * (i - 1))(%rip), xcounter, var_xdata
- 		vptest	ddq_low_msk(%rip), var_xdata
- 		jnz 1f
- 		vpaddq	ddq_high_add_1(%rip), var_xdata, var_xdata
-@@ -180,8 +173,7 @@ ddq_add_8:
- 	vmovdqa	1*16(p_keys), xkeyA
- 
- 	vpxor	xkey0, xdata0, xdata0
--	club DDQ_DATA, by
--	vpaddq	var_ddq_add(%rip), xcounter, xcounter
-+	vpaddq	(ddq_add_1 + 16 * (by - 1))(%rip), xcounter, xcounter
- 	vptest	ddq_low_msk(%rip), xcounter
- 	jnz	1f
- 	vpaddq	ddq_high_add_1(%rip), xcounter, xcounter
 -- 
 2.25.1
 
