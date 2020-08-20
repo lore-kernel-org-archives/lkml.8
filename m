@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9677C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84624C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BA320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF7C20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926335;
-	bh=nDS9YM9aJxkFu5ZzfkTqvZdFAxXbEzlO2tlYmVHlIJo=;
+	s=default; t=1597926343;
+	bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F6efouO0CsyyLdlA4GdEL04u8LhMNY4zDnOB5VfUTFnf3lSaoIv/TVx0s060oGqfB
-	 t/J8GjfRQUxSdK3+A/f0VcmBqwqUlfgP6pHUke7fSZccg6lyaXV7cWnieZIBE1wK/X
-	 O9Tyzg2vGmTGSvkhi+e57+0xjYv+1U3rPj8solaE=
+	b=IqeSzlz31eMQLJVFeDoFl8LR1P02NsthfUy6q7U2jOjK3Tj0P8bQDqzlhc2YAqqDk
+	 3NQM/WSPFG+9dmqQksTzYCqWGZf+4FW5DBI5DUEW0XU0ZK+QhCWYfMBIIsDSyUDuR4
+	 FIiVVtQKeYXfjSHSkKr8XBeLilomhF/nRJr4y4nQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgHTMZc (ORCPT
+        id S1729970AbgHTJxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:25:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35180 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729455AbgHTJxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:23 -0400
+        id S1729918AbgHTJxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B8492075E;
-        Thu, 20 Aug 2020 09:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3E372075E;
+        Thu, 20 Aug 2020 09:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917202;
-        bh=nDS9YM9aJxkFu5ZzfkTqvZdFAxXbEzlO2tlYmVHlIJo=;
+        s=default; t=1597917186;
+        bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eda2NLqv6yOYee+CoyL+mcXm8cG7aczWcAxzMzWTS8ZobWO++Vo2x06Ehjta9V7wf
-         kH/rPwUEAVZFzGGoOS8Ou+1IB2WEfgbpR13sm4yDQraTYnIIQQaCEg8mKds0ZtcOFK
-         VBkniqCWCl0+sFx7959ixq+lOwWnGu7Qnj7fMT7M=
+        b=mXbTcMRc1G8fZqu2uvWNcAHX6PpQNPd6B02tOaiPy8lGB6IjXmsI/D2ZlRlIJDwKs
+         HNMsToqXjVPdfI6SlGA5anTn+sV2ErS6aZltdu+/hLRCp4yhfVcNM88QWWnmg2VIkc
+         nVT7OOSKC43p9YB6inSxzpw+1BYewM7W21WKUjbg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hao <haokexin@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 39/92] tracing/hwlat: Honor the tracing_cpumask
-Date:   Thu, 20 Aug 2020 11:21:24 +0200
-Message-Id: <20200820091539.647153467@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.19 33/92] MIPS: CPU#0 is not hotpluggable
+Date:   Thu, 20 Aug 2020 11:21:18 +0200
+Message-Id: <20200820091539.317589293@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,54 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 96b4833b6827a62c295b149213c68b559514c929 upstream.
+commit 9cce844abf07b683cff5f0273977d5f8d0af94c7 upstream.
 
-In calculation of the cpu mask for the hwlat kernel thread, the wrong
-cpu mask is used instead of the tracing_cpumask, this causes the
-tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
+Now CPU#0 is not hotpluggable on MIPS, so prevent to create /sys/devices
+/system/cpu/cpu0/online which confuses some user-space tools.
 
-Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
-
-Cc: Ingo Molnar <mingo@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_hwlat.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/mips/kernel/topology.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -270,6 +270,7 @@ static bool disable_migrate;
- static void move_to_next_cpu(void)
- {
- 	struct cpumask *current_mask = &save_cpumask;
-+	struct trace_array *tr = hwlat_trace;
- 	int next_cpu;
+--- a/arch/mips/kernel/topology.c
++++ b/arch/mips/kernel/topology.c
+@@ -20,7 +20,7 @@ static int __init topology_init(void)
+ 	for_each_present_cpu(i) {
+ 		struct cpu *c = &per_cpu(cpu_devices, i);
  
- 	if (disable_migrate)
-@@ -283,7 +284,7 @@ static void move_to_next_cpu(void)
- 		goto disable;
- 
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
- 	put_online_cpus();
- 
-@@ -360,7 +361,7 @@ static int start_kthread(struct trace_ar
- 	/* Just pick the first CPU on first iteration */
- 	current_mask = &save_cpumask;
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	put_online_cpus();
- 	next_cpu = cpumask_first(current_mask);
- 
+-		c->hotpluggable = 1;
++		c->hotpluggable = !!i;
+ 		ret = register_cpu(c, i);
+ 		if (ret)
+ 			printk(KERN_WARNING "topology_init: register_cpu %d "
 
 
