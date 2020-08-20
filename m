@@ -2,116 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D90C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268FC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9716F206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:57:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eYx+D+Yo"
+	by mail.kernel.org (Postfix) with ESMTP id 03A1C206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597921167;
+	bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vLWPdWyncgFpae9Y1B9zBVmYwsWU+pN9tt8PlSVw8ZEBCY2wUvkNMXvErONXYwLCs
+	 2KsXMAtizSX333GHuCvXGwlxWRyaFtHGK11QtjNxen2CgBT2iwSWeJnNE0DEQvKyZk
+	 2u0ICTteZNSM1lBoUrLw1uf5E9jet5kTaZZVyllg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730792AbgHTK5N (ORCPT
+        id S1731573AbgHTK7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:57:13 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44729 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731162AbgHTK4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:56:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597920992;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uYbV8VLkse7x10+SVN80YNuWWr3hGT+D+KMqbsymh68=;
-        b=eYx+D+YoCP2ChyKvT+kCjWxRLpclSz3jtRb2v54tdlvOXhOrRrNeEr2w1frXN64/w3cdFJ
-        j8tDWNlxxm0oC0RygDG+ATtRYnHvDuqIu86v6FcKIquTOJGcoVI8EEpdd4ffeBEQ4ioHBN
-        0tPvZ9CxnwxvFVIYA5eyVHtlAGgKwC8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-384-hWJLFjQNPwmPnM0BmojkMA-1; Thu, 20 Aug 2020 06:29:11 -0400
-X-MC-Unique: hWJLFjQNPwmPnM0BmojkMA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 06:59:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731136AbgHTKNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1304C186A56B;
-        Thu, 20 Aug 2020 10:27:06 +0000 (UTC)
-Received: from starship (unknown [10.35.206.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 31B405D9F1;
-        Thu, 20 Aug 2020 10:26:57 +0000 (UTC)
-Message-ID: <76c13e7d8f3c26583411fc6d42f50c98e92ebc1c.camel@redhat.com>
-Subject: Re: [PATCH 8/8] KVM: nSVM: read only changed fields of the nested
- guest data area
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Date:   Thu, 20 Aug 2020 13:26:57 +0300
-In-Reply-To: <be88aaae-c776-32d2-fa69-00c6aace787d@redhat.com>
-References: <20200820091327.197807-1-mlevitsk@redhat.com>
-         <20200820091327.197807-9-mlevitsk@redhat.com>
-         <53afbfba-427e-72f5-73a6-faea7606e78e@redhat.com>
-         <33166884f54569ab47cc17a4c3e01f9dbc96401a.camel@redhat.com>
-         <be88aaae-c776-32d2-fa69-00c6aace787d@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FF8D206DA;
+        Thu, 20 Aug 2020 10:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918433;
+        bh=Ihlg5gtctDVm2xDUIMMHWVH+lViW3wLRwTsxbd0cDkk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WIUX9+3/al0bn3YDSoFjfwMo3M6pdpo28zzX6OH3OZFX3Zg5HlGIZzd9Af7vlnhNY
+         ztsXlJQZI3LDOcBLw3JqkWUf/wHZ6/mw7SvVX8VuvntPy4+mnT8h1qqkxnmcLu3PXB
+         qx76HXPFi6+VgVzPmXd7+BrFIRmUxGualm2CxbsY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vasily Averin <vvs@virtuozzo.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.14 168/228] PCI: hotplug: ACPI: Fix context refcounting in acpiphp_grab_context()
+Date:   Thu, 20 Aug 2020 11:22:23 +0200
+Message-Id: <20200820091615.970583898@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-20 at 12:18 +0200, Paolo Bonzini wrote:
-> On 20/08/20 12:05, Maxim Levitsky wrote:
-> > > You probably should set clean to 0 also if the guest doesn't have the
-> > > VMCBCLEAN feature (so, you first need an extra patch to add the
-> > > VMCBCLEAN feature to cpufeatures.h).  It's probably best to cache the
-> > > guest vmcbclean in struct vcpu_svm, too.
-> > Right, I totally forgot about this one.
-> > 
-> > One thing why I made this patch optional, is that I can instead drop it,
-> > and not 'read back' the saved area on vmexit, this will probably be faster
-> > that what this optimization does. What do you think? Is this patch worth it?
-> > (I submitted it because I already implemented this and wanted to hear opinion
-> > on this).
-> 
-> Yeah, good point.  It's one copy either way, either on vmexit (and
-> partly on vmentry depending on clean bits) or on vmentry.  I had not
-> considered the need to copy from vmcb02 to the cached vmcb12 on vmexit. :(
-> 
-> Let's shelve this for a bit, and revisit it once we have separate vmcb01
-> and vmcb02.  Then we might still use the clean bits to avoid copying
-> data from vmcb12 to vmcb02, including avoiding consistency checks
-> because we know the vmcb02 data is legit.
-It makes sense I guess. The vmcb02 would then play the role of the cache of
-vmcb12
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-> 
-> Patches 1-5 are still worthwhile, so you can clean them up and send them.
-> 
-> Paolo
+commit dae68d7fd4930315389117e9da35b763f12238f9 upstream.
 
-OK, on it now.
+If context is not NULL in acpiphp_grab_context(), but the
+is_going_away flag is set for the device's parent, the reference
+counter of the context needs to be decremented before returning
+NULL or the context will never be freed, so make that happen.
 
-Best regards,
-	Maxim Levitsky
-> 
+Fixes: edf5bf34d408 ("ACPI / dock: Use callback pointers from devices' ACPI hotplug contexts")
+Reported-by: Vasily Averin <vvs@virtuozzo.com>
+Cc: 3.15+ <stable@vger.kernel.org> # 3.15+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/pci/hotplug/acpiphp_glue.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+--- a/drivers/pci/hotplug/acpiphp_glue.c
++++ b/drivers/pci/hotplug/acpiphp_glue.c
+@@ -136,13 +136,21 @@ static struct acpiphp_context *acpiphp_g
+ 	struct acpiphp_context *context;
+ 
+ 	acpi_lock_hp_context();
++
+ 	context = acpiphp_get_context(adev);
+-	if (!context || context->func.parent->is_going_away) {
+-		acpi_unlock_hp_context();
+-		return NULL;
++	if (!context)
++		goto unlock;
++
++	if (context->func.parent->is_going_away) {
++		acpiphp_put_context(context);
++		context = NULL;
++		goto unlock;
+ 	}
++
+ 	get_bridge(context->func.parent);
+ 	acpiphp_put_context(context);
++
++unlock:
+ 	acpi_unlock_hp_context();
+ 	return context;
+ }
 
 
