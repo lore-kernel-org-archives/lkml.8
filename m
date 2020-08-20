@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D514C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF6BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16D122D6D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9395922D70
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916694;
-	bh=mLYNCZxyp2OqWqRYpDxGEIUdDitmV51HAxOn4ZojxjI=;
+	s=default; t=1597916697;
+	bh=PDLp1CxscdXoVwsTM/35DSuWEbuY7TZmg6Yw/NaueCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wnFtFLm9BeTg9lXoTfd8MNxpu6y9Z8eVG2aQ2r0lWa9wJlmlKLGBSh8pnlrFY/Y8V
-	 tG5hrCy6MYKIKmEVKzSwGw6qOCq3rNik6KvI9OPBh/+LeBxCgbah3GVD23EbktDo9e
-	 eevyjtMbk+2a3COGvAm3ngkVxjCRL0xSg4tuXTm8=
+	b=N7MS0yY7frpesx6NXA+ot2T7IEcGyzrBbPtLsGE6dAn8CFXEsh7fFZ42t027VGRMW
+	 4msk4FcfciK0vTAM6AlZcbxBsveaGMsHjsVJsEd6gay24+nyEdEF6ur03rf/8w2LT6
+	 PgkmHFr+LsSIvTYdTu5Q3adgWD3eao2sdyLeotMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgHTJon (ORCPT
+        id S1729293AbgHTJoH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:44:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39044 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:44:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbgHTJmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:47 -0400
+        id S1729019AbgHTJm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D0BB22D02;
-        Thu, 20 Aug 2020 09:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B09A22BED;
+        Thu, 20 Aug 2020 09:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916566;
-        bh=mLYNCZxyp2OqWqRYpDxGEIUdDitmV51HAxOn4ZojxjI=;
+        s=default; t=1597916546;
+        bh=PDLp1CxscdXoVwsTM/35DSuWEbuY7TZmg6Yw/NaueCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X3MBsAIuo2DlxDjTnooU9mkqutYoIZu+oZ9a5RZqkSCnyP0Kr6Pv0xLfTA04OJoCG
-         miccOsG3pM8zqezwY3vuDY02LaJiGPyH2ngoKSMF1zJtrYmw4j5hKv3ZPvbyu62WEV
-         Io2brHxygCVIuT3GdCrUVSzn8R/hfc6Lh1sjjqIY=
+        b=ucfEI1ir2A2hkTl9YWaFIi1nps/IFM6lkVquSZuThYJ/mSJ2xbzOxSqCutao1fydT
+         3HlMplx2ejp55yNwMD8KA14Rt9rPrxAhSEeLj5A2/Xvwy09M7c40H4KkXPNVvgsIbX
+         x1LfsP5IIw8M2q2PbpMiYfcw8apc6BGHI7AYzEZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <james.smart@broadcom.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 156/204] scsi: lpfc: nvmet: Avoid hang / use-after-free again when destroying targetport
-Date:   Thu, 20 Aug 2020 11:20:53 +0200
-Message-Id: <20200820091614.024997990@linuxfoundation.org>
+Subject: [PATCH 5.7 167/204] vdpa: Fix pointer math bug in vdpasim_get_config()
+Date:   Thu, 20 Aug 2020 11:21:04 +0200
+Message-Id: <20200820091614.561085683@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,45 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ewan D. Milne <emilne@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit af6de8c60fe9433afa73cea6fcccdccd98ad3e5e ]
+[ Upstream commit cf16fe9243bfa2863491026fc727618c7c593c84 ]
 
-We cannot wait on a completion object in the lpfc_nvme_targetport structure
-in the _destroy_targetport() code path because the NVMe/fc transport will
-free that structure immediately after the .targetport_delete() callback.
-This results in a use-after-free, and a crash if slub_debug=FZPU is
-enabled.
+If "offset" is non-zero then we end up copying from beyond the end of
+the config because of pointer math.  We can fix this by casting the
+struct to a u8 pointer.
 
-An earlier fix put put the completion on the stack, but commit 2a0fb340fcc8
-("scsi: lpfc: Correct localport timeout duration error") subsequently
-changed the code to reference the completion through a pointer in the
-object rather than the local stack variable.  Fix this by using the stack
-variable directly.
-
-Link: https://lore.kernel.org/r/20200729231011.13240-1-emilne@redhat.com
-Fixes: 2a0fb340fcc8 ("scsi: lpfc: Correct localport timeout duration error")
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 2c53d0f64c06 ("vdpasim: vDPA device simulator")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/20200406144552.GF68494@mwanda
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvmet.c | 2 +-
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index 565419bf8d74a..40b2df6e304ad 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1914,7 +1914,7 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 		}
- 		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
- 		nvmet_fc_unregister_targetport(phba->targetport);
--		if (!wait_for_completion_timeout(tgtp->tport_unreg_cmp,
-+		if (!wait_for_completion_timeout(&tport_unreg_cmp,
- 					msecs_to_jiffies(LPFC_NVMET_WAIT_TMO)))
- 			lpfc_printf_log(phba, KERN_ERR, LOG_NVME,
- 					"6179 Unreg targetport x%px timeout "
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index 3554f8de00e64..4907c1cfe6671 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -521,7 +521,7 @@ static void vdpasim_get_config(struct vdpa_device *vdpa, unsigned int offset,
+ 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+ 
+ 	if (offset + len < sizeof(struct virtio_net_config))
+-		memcpy(buf, &vdpasim->config + offset, len);
++		memcpy(buf, (u8 *)&vdpasim->config + offset, len);
+ }
+ 
+ static void vdpasim_set_config(struct vdpa_device *vdpa, unsigned int offset,
 -- 
 2.25.1
 
