@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA78C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 902FF20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46333208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922843;
-	bh=Gtl2GUwVxg3GvtMHD2tUtCb4j/1WNS8hc/PhUv3xZy4=;
+	s=default; t=1597922847;
+	bh=DysMUwl484aGB1bJ1JQyqTW8i1SgBbgM8jezoFTjklk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kmNVkcRlXpaqGFXJ6qELJr0ZusdWUYPRoUSaxpnKOR9sC8L2rTjrfIfHav2a3IX0f
-	 sj5XRgxo/G1aKZtweFPwf1jr6dSJgjMREE6nxSxDj8aAa/IXzusAnN8U5ApD8ecPwE
-	 t+Z8K97U3dsWYB57+4SEA6FPLhKDXXbIevM0wu98=
+	b=vs/nkdkz0h8w6CJaOnP8wvbbCH23n0j7mxA+MhiXor6zXAAAD16T4RLYvWuR3g214
+	 yiQuHw/b9Qq5RPlgEs6OdLvzOUyNYABysCm8LiPy/c6W1EGyca2g5QzFdNyeJt5QR9
+	 OEoHtP1iaQ7UoDkjtMkoRwNEE6vr+AXEtB7SbcU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbgHTL1W (ORCPT
+        id S1730189AbgHTL1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:27:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:27:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730653AbgHTKGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:05 -0400
+        id S1730656AbgHTKGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D88FD2078D;
-        Thu, 20 Aug 2020 10:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC0D220738;
+        Thu, 20 Aug 2020 10:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917964;
-        bh=Gtl2GUwVxg3GvtMHD2tUtCb4j/1WNS8hc/PhUv3xZy4=;
+        s=default; t=1597917967;
+        bh=DysMUwl484aGB1bJ1JQyqTW8i1SgBbgM8jezoFTjklk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQ4QRAYWggwdLBuzX7BXy+hg/fdjHrtuqr5flXL0S5KVRjDRwHwGZoy2T2jfXpNmc
-         vibs9NloCYlW/MkpgypCWtig2ug9q6oEFtDln4WqgKzhTsnrzzS0tKNGjj03BB6Tji
-         MxQ/bAF/+QN6S3AMxvZQkI1lB2G3/tQKCZPQhUEc=
+        b=19BBsnBaWOdQbRzFnUTwZTDZeXzb8eojKIqiVRAPaW5snj8pHZL2PSWq39GmPDAUb
+         yTblJYdZZ+xv55BdhxO4LBsMzzSxGEkKWuFQzuoMQS/dDwV9/65Rub8MzIKy2LmbSz
+         F4W2DV+TQROQqo7uwWJAToF5lyRXKASZQXv/r++g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Jeffrey Mitchell <jeffrey.mitchell@starlab.io>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 204/212] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
-Date:   Thu, 20 Aug 2020 11:22:57 +0200
-Message-Id: <20200820091612.651354827@linuxfoundation.org>
+Subject: [PATCH 4.9 205/212] nfs: Fix getxattr kernel panic and memory overflow
+Date:   Thu, 20 Aug 2020 11:22:58 +0200
+Message-Id: <20200820091612.701761193@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,55 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
 
-[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
+[ Upstream commit b4487b93545214a9db8cbf32e86411677b0cca21 ]
 
-Fix the missing clk_disable_unprepare() before return
-from emac_clks_phase1_init() in the error handling case.
+Move the buffer size check to decode_attr_security_label() before memcpy()
+Only call memcpy() if the buffer is large enough
 
-Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Timur Tabi <timur@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
+Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+[Trond: clean up duplicate test of label->len != 0]
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4proc.c | 2 --
+ fs/nfs/nfs4xdr.c  | 6 +++++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
-index 57b35aeac51a0..adc088033c15d 100644
---- a/drivers/net/ethernet/qualcomm/emac/emac.c
-+++ b/drivers/net/ethernet/qualcomm/emac/emac.c
-@@ -477,13 +477,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
- 
- 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
- 	if (ret)
--		return ret;
-+		goto disable_clk_axi;
- 
- 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
- 	if (ret)
--		return ret;
-+		goto disable_clk_cfg_ahb;
-+
-+	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+	if (ret)
-+		goto disable_clk_cfg_ahb;
- 
--	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
-+	return 0;
-+
-+disable_clk_cfg_ahb:
-+	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
-+disable_clk_axi:
-+	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
-+
-+	return ret;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index c189722bf9c71..714457bb1440a 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5212,8 +5212,6 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
+ 		return ret;
+ 	if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
+ 		return -ENOENT;
+-	if (buflen < label.len)
+-		return -ERANGE;
+ 	return 0;
  }
  
- /* Enable clocks; needs emac_clks_phase1_init to be called before */
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index d7f8d5ce30e3e..0a7c4e30a385e 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4163,7 +4163,11 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 			goto out_overflow;
+ 		if (len < NFS4_MAXLABELLEN) {
+ 			if (label) {
+-				memcpy(label->label, p, len);
++				if (label->len) {
++					if (label->len < len)
++						return -ERANGE;
++					memcpy(label->label, p, len);
++				}
+ 				label->len = len;
+ 				label->pi = pi;
+ 				label->lfs = lfs;
 -- 
 2.25.1
 
