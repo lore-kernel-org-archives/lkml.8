@@ -2,90 +2,79 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BC9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46EBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64377207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:11:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925462;
-	bh=STXLrylRawS0FDnZRpizntYAvlmMhGLBh2PNJnSnZzE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CjqTMNPhMfol6twULoXw/HtoAubelKfk/icCWWjeJiawx0f5f/NmJtrlFHbg5zluq
-	 L+5EkEVEp79p21X1QwK6GI1W10cEZVydcw8PpXtxXa26BGhHIaD4bq0n1qotjWplM8
-	 epDXx7AGzYeU3NwzClYKZx1SxIDIa0vRj4PqcMkA=
+	by mail.kernel.org (Postfix) with ESMTP id B47AC207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbgHTMKr (ORCPT
+        id S1730572AbgHTMLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41690 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:11:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48346 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729456AbgHTJ5v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:51 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7354820855;
-        Thu, 20 Aug 2020 09:57:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917471;
-        bh=STXLrylRawS0FDnZRpizntYAvlmMhGLBh2PNJnSnZzE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xECS6iZh9Za5WssvU1QLFc63PLoOuS+cL3/jibOEpn1mX3ED/PoMzuI2BAXdo4Fh7
-         h2XK6ZML246plJqp7fFQ0EKwfpAFeEqItomfCp5M1RaGoWBySA/8JHbOpNI98E4Y51
-         ol1FbscEB+o3sAuMdPRU/LP8d4JoFbDDOevj/ouk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wanpeng Li <wanpengli@tencent.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.9 043/212] KVM: LAPIC: Prevent setting the tscdeadline timer if the lapic is hw disabled
-Date:   Thu, 20 Aug 2020 11:20:16 +0200
-Message-Id: <20200820091604.540887080@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728925AbgHTMKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:10:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DDDCEAC23;
+        Thu, 20 Aug 2020 12:10:58 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 14:10:29 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Mike Stunes <mstunes@vmware.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, "x86@kernel.org" <x86@kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v5 00/75] x86: SEV-ES Guest Support
+Message-ID: <20200820121029.GD3354@suse.de>
+References: <20200724160336.5435-1-joro@8bytes.org>
+ <B65392F4-FD42-4AA3-8AA8-6C0C0D1FF007@vmware.com>
+ <20200730122645.GA3257@8bytes.org>
+ <F5603CBB-31FB-4EE8-B67A-A1F2DBEE28D8@vmware.com>
+ <20200818150746.GA3319@8bytes.org>
+ <6F9275F4-D5A4-4D30-8729-A57989568CA7@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <6F9275F4-D5A4-4D30-8729-A57989568CA7@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Mike,
 
-commit d2286ba7d574ba3103a421a2f9ec17cb5b0d87a1 upstream.
+On Thu, Aug 20, 2020 at 12:58:13AM +0000, Mike Stunes wrote:
+> Yes, I still see the issue — APs are offline after boot. I’ll spend
+> some time seeing if I can figure out what the problem is. Thanks!
 
-Prevent setting the tscdeadline timer if the lapic is hw disabled.
+Thanks. I think the first step here would be to find out where on the
+APs (which RIP) the first #VC exception happens. I guess in the #VC
+entry code it triggers the next exception when trying to execute the
+fsgsbase instructions.
 
-Fixes: bce87cce88 (KVM: x86: consolidate different ways to test for in-kernel LAPIC)
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-Message-Id: <1596165141-28874-1-git-send-email-wanpengli@tencent.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Regards,
 
----
- arch/x86/kvm/lapic.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1756,7 +1756,7 @@ void kvm_set_lapic_tscdeadline_msr(struc
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 
--	if (!lapic_in_kernel(vcpu) || apic_lvtt_oneshot(apic) ||
-+	if (!kvm_apic_present(vcpu) || apic_lvtt_oneshot(apic) ||
- 			apic_lvtt_period(apic))
- 		return;
- 
-
-
+	Joerg
