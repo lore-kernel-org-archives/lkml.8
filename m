@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0364AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65BD3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E043B22B3F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:11:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B141208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbgHTPLx (ORCPT
+        id S1728655AbgHTPJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:11:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:41100 "EHLO foss.arm.com"
+        Thu, 20 Aug 2020 11:09:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:40714 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbgHTPJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:09:36 -0400
+        id S1727920AbgHTPI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:08:58 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A704E1477;
-        Thu, 20 Aug 2020 08:09:35 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82CFDD6E;
+        Thu, 20 Aug 2020 08:08:57 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 226C33F6CF;
-        Thu, 20 Aug 2020 08:09:32 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E35423F6CF;
+        Thu, 20 Aug 2020 08:08:53 -0700 (PDT)
 From:   Robin Murphy <robin.murphy@arm.com>
 To:     hch@lst.de, joro@8bytes.org, linux@armlinux.org.uk
 Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
@@ -41,9 +41,9 @@ Cc:     will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
         linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
         dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/18] iommu/omap: Add IOMMU_DOMAIN_DMA support
-Date:   Thu, 20 Aug 2020 16:08:30 +0100
-Message-Id: <5ac3788f9f61f7698cfa9c5924d62714e230f678.1597931876.git.robin.murphy@arm.com>
+Subject: [PATCH 01/18] ARM/dma-mapping: Drop .dma_supported for IOMMU ops
+Date:   Thu, 20 Aug 2020 16:08:20 +0100
+Message-Id: <8bcf5f908d23883af00a42c0bb88d44d25c019f5.1597931876.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.28.0.dirty
 In-Reply-To: <cover.1597931875.git.robin.murphy@arm.com>
 References: <cover.1597931875.git.robin.murphy@arm.com>
@@ -54,81 +54,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that arch/arm is wired up for default domains and iommu-dma,
-implement the corresponding driver-side support for DMA domains.
+When an IOMMU is present, we trust that it should be capable
+of remapping any physical memory, and since the device masks
+represent the input (virtual) addresses to the IOMMU it makes
+no sense to validate them against physical PFNs anyway.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- drivers/iommu/omap-iommu.c | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ arch/arm/mm/dma-mapping.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index 71f29c0927fc..ea25c2fe0418 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -9,6 +9,7 @@
-  *		Paul Mundt and Toshihiro Kobayashi
-  */
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index 8a8949174b1c..ffa387f343dc 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -1997,8 +1997,6 @@ static const struct dma_map_ops iommu_ops = {
  
-+#include <linux/dma-iommu.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-@@ -1574,13 +1575,19 @@ static struct iommu_domain *omap_iommu_domain_alloc(unsigned type)
- {
- 	struct omap_iommu_domain *omap_domain;
- 
--	if (type != IOMMU_DOMAIN_UNMANAGED)
-+	if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
- 		return NULL;
- 
- 	omap_domain = kzalloc(sizeof(*omap_domain), GFP_KERNEL);
- 	if (!omap_domain)
- 		return NULL;
- 
-+	if (type == IOMMU_DOMAIN_DMA &&
-+	    iommu_get_dma_cookie(&omap_domain->domain)) {
-+		kfree(omap_domain);
-+		return NULL;
-+	}
-+
- 	spin_lock_init(&omap_domain->lock);
- 
- 	omap_domain->domain.geometry.aperture_start = 0;
-@@ -1601,6 +1608,7 @@ static void omap_iommu_domain_free(struct iommu_domain *domain)
- 	if (omap_domain->dev)
- 		_omap_iommu_detach_dev(omap_domain, omap_domain->dev);
- 
-+	iommu_put_dma_cookie(&omap_domain->domain);
- 	kfree(omap_domain);
- }
- 
-@@ -1736,6 +1744,17 @@ static struct iommu_group *omap_iommu_device_group(struct device *dev)
- 	return group;
- }
- 
-+static int omap_iommu_of_xlate(struct device *dev,
-+			       struct of_phandle_args *args)
-+{
-+	/*
-+	 * Logically, some of the housekeeping from _omap_iommu_add_device()
-+	 * should probably move here, but the minimum we *need* is simply to
-+	 * cooperate with of_iommu at all to let iommu-dma work.
-+	 */
-+	return 0;
-+}
-+
- static const struct iommu_ops omap_iommu_ops = {
- 	.domain_alloc	= omap_iommu_domain_alloc,
- 	.domain_free	= omap_iommu_domain_free,
-@@ -1747,6 +1766,7 @@ static const struct iommu_ops omap_iommu_ops = {
- 	.probe_device	= omap_iommu_probe_device,
- 	.release_device	= omap_iommu_release_device,
- 	.device_group	= omap_iommu_device_group,
-+	.of_xlate	= omap_iommu_of_xlate,
- 	.pgsize_bitmap	= OMAP_IOMMU_PGSIZES,
+ 	.map_resource		= arm_iommu_map_resource,
+ 	.unmap_resource		= arm_iommu_unmap_resource,
+-
+-	.dma_supported		= arm_dma_supported,
  };
  
+ static const struct dma_map_ops iommu_coherent_ops = {
+@@ -2015,8 +2013,6 @@ static const struct dma_map_ops iommu_coherent_ops = {
+ 
+ 	.map_resource	= arm_iommu_map_resource,
+ 	.unmap_resource	= arm_iommu_unmap_resource,
+-
+-	.dma_supported		= arm_dma_supported,
+ };
+ 
+ /**
 -- 
 2.28.0.dirty
 
