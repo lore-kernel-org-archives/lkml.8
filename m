@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BF4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E95C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE8722B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFA92173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916852;
-	bh=LNdruWfsdbl7VgaTM+oKt/5xrO+jpxMzIJCb/U8B/98=;
+	s=default; t=1597916873;
+	bh=UpYTKo9YBI4Wb/ngMmtCZOnOgqcl6SDDieR0IfyJbOU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=REFqFPUWtie4/0/WIRCOvrQbGcAcU/wmQdE0f8+HD/WEH3Za+DUwBDf+o2SWqaZZC
-	 sw+qw8TPHHQLRqDUg1fvX4bbzwTNty4yTps63MwAertNfDIGIY8ZRaPQ8OcRttrFOW
-	 emNz9lawbKNhd2HCDLznPcSyFRwGkF7Bzkvy5Dx0=
+	b=aRR3UaBEqK2j9hVwJEVd98G0+DDT0HdqapVd436rVm28rmNo0yMGhR2tHOwjvgsca
+	 2YmRQSMlf40fyKDd9VSVpQy8LbzOD7ezMlNczd+0ylECn2ibVjxPDhzPJNHC9oH9H9
+	 mIF124cWD2XMtyeKV+8rLR/tIZZLx/PwvW5AxIqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbgHTJra (ORCPT
+        id S1729411AbgHTJru (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:47:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50602 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbgHTJrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:13 -0400
+        id S1729450AbgHTJr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 345782224D;
-        Thu, 20 Aug 2020 09:47:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1E472173E;
+        Thu, 20 Aug 2020 09:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916832;
-        bh=LNdruWfsdbl7VgaTM+oKt/5xrO+jpxMzIJCb/U8B/98=;
+        s=default; t=1597916848;
+        bh=UpYTKo9YBI4Wb/ngMmtCZOnOgqcl6SDDieR0IfyJbOU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oaP7Wt/+Iig07XImrSMF/O1tdxWDZJHlSW+4Ihd/26UgwGBJ9Cyb/dM70qiImph49
-         TOXH+mvlX5FyWG38BJPd4uH3UDP4AAQGmFQ9Ut//dH3H8AKHkZezQ3Oxd+Qwne50t0
-         6L+H8Lnoi+oFeVw3tI4Cg+HxfbV/UyBP8jDUO6fc=
+        b=WcPaJ2iDOyXO+BhdxLZ4q2vJ7cXPYXUX44TyXq6GnYtryCySH1tbULy7pejEZjDy8
+         Ju1fFJO5NZ5QuIKKVvMN85fni7VVrnQqw27TvRrffFnq2j0Qq2Cfhg5cpwXZQTTpVd
+         bIm5yOIslqk/LUQmk+L4aAh2plaB5OWd01NkWPdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Subject: [PATCH 5.4 062/152] watchdog: f71808e_wdt: indicate WDIOF_CARDRESET support in watchdog_info.options
-Date:   Thu, 20 Aug 2020 11:20:29 +0200
-Message-Id: <20200820091556.901619073@linuxfoundation.org>
+        stable@vger.kernel.org, Anton Blanchard <anton@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 067/152] pseries: Fix 64 bit logical memory block panic
+Date:   Thu, 20 Aug 2020 11:20:34 +0200
+Message-Id: <20200820091557.157499539@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,38 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+From: Anton Blanchard <anton@ozlabs.org>
 
-commit e871e93fb08a619dfc015974a05768ed6880fd82 upstream.
+commit 89c140bbaeee7a55ed0360a88f294ead2b95201b upstream.
 
-The driver supports populating bootstatus with WDIOF_CARDRESET, but so
-far userspace couldn't portably determine whether absence of this flag
-meant no watchdog reset or no driver support. Or-in the bit to fix this.
+Booting with a 4GB LMB size causes us to panic:
 
-Fixes: b97cb21a4634 ("watchdog: f71808e_wdt: Fix WDTMOUT_STS register read")
+  qemu-system-ppc64: OS terminated: OS panic:
+      Memory block size not suitable: 0x0
+
+Fix pseries_memory_block_size() to handle 64 bit LMBs.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200611191750.28096-3-a.fatoum@pengutronix.de
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Anton Blanchard <anton@ozlabs.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200715000820.1255764-1-anton@ozlabs.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/watchdog/f71808e_wdt.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/hotplug-memory.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/watchdog/f71808e_wdt.c
-+++ b/drivers/watchdog/f71808e_wdt.c
-@@ -691,7 +691,8 @@ static int __init watchdog_init(int sioa
- 	watchdog.sioaddr = sioaddr;
- 	watchdog.ident.options = WDIOC_SETTIMEOUT
- 				| WDIOF_MAGICCLOSE
--				| WDIOF_KEEPALIVEPING;
-+				| WDIOF_KEEPALIVEPING
-+				| WDIOF_CARDRESET;
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -27,7 +27,7 @@ static bool rtas_hp_event;
+ unsigned long pseries_memory_block_size(void)
+ {
+ 	struct device_node *np;
+-	unsigned int memblock_size = MIN_MEMORY_BLOCK_SIZE;
++	u64 memblock_size = MIN_MEMORY_BLOCK_SIZE;
+ 	struct resource r;
  
- 	snprintf(watchdog.ident.identity,
- 		sizeof(watchdog.ident.identity), "%s watchdog",
+ 	np = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
 
 
