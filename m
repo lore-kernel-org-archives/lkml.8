@@ -2,300 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E98DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:00:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0423C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:02:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA172078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:00:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5FE2078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="k1g2GUsD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YnPCB7Gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHTCAU (ORCPT
+        id S1726816AbgHTCCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:00:20 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40208 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726640AbgHTCAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:00:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597888816; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=wcVoVZaavMf++fqDuxT3/6m9eN4VPSyrzZggPqhLt7k=; b=k1g2GUsDttwmAVqBZbi4Emnx03xAwbJQE6qDXp0YFhcPN2PsKPBVg3gyg+jTgyfUerZYsJbL
- Wz1lwuoboQrhdsBvj/dcaw8WH6QC4NtwRPc8eZ4xaIAWrPAM0Nk4kIrVhl76AdT7LG1mbCqV
- 4fVzYf/AY7+kXJlqSYmOetFTeK0=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f3dd8f0c651aed294b3d890 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 01:59:12
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0CF21C433C6; Thu, 20 Aug 2020 01:59:12 +0000 (UTC)
-Received: from [10.110.104.6] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9D865C433C6;
-        Thu, 20 Aug 2020 01:59:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9D865C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH] usb: dwc3: Stop active transfers before halting the
- controller
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "jackp@codeaurora.org" <jackp@codeaurora.org>
-References: <20200819051739.22123-1-wcheng@codeaurora.org>
- <3917c516-7251-5b13-2192-0820c125eced@synopsys.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <65645474-c136-c226-7762-db46ddb2c67a@codeaurora.org>
-Date:   Wed, 19 Aug 2020 18:59:09 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Wed, 19 Aug 2020 22:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbgHTCCB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:02:01 -0400
+Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C767AC061384
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 19:01:59 -0700 (PDT)
+Received: by mail-ot1-x341.google.com with SMTP id h16so261731oti.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 19:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=a6AI5eeMLSnuHLbo6ZZjQDIfs8rhjaUq4nVIf2nIA4s=;
+        b=YnPCB7GyyenNNj4m6DTSkuaI05qpfHVG/QgzwK6ZW5cfzjXcjHWN5LAYlS6/sxdjkz
+         Q3B6OAL6VkfXwnio6GpcqFThGxYHL16LeanA7XHdVMfn26QoX0g+phi2xhTniJx/oG4b
+         By+2BEurn0lcdeK0Stus91++uccTrtAGABYgjAbl+ipAdepdfWEyi3uEFSsTuQd5UZBx
+         BRrztqVUVKEKekr/BYTkoCsnvAO2Pj7IHdqvtB+4JORdtJ9ivIHukRoFwzuDiHXHnEM+
+         GW1diuJzzXcDmzpqOY7Sm35sNw8MEKZLt3qU+FvbRqjP0SgosGrMRbrNiWiPtlstFAhc
+         xoVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=a6AI5eeMLSnuHLbo6ZZjQDIfs8rhjaUq4nVIf2nIA4s=;
+        b=auKgOyYy9NYE1/rrbVcg+cbM633gbVTMIRpBNbdkqnoutTEs9dXjJVozAoL/VkYa05
+         fD3jxeezE6ZBF8rd9pyENh1GPEBw6HpywZVNrhyfSaerX8OSMfyLOJpJmS+0osQ2hnRN
+         uWkPgdiU4r+4l9MZUVoRLcoNz1irbgsbF7M3rZtZfO7OdXcc0hAqWpZRvUNYpxZwg3i4
+         Bw7p/PmwB00KyngvRrGmbPLbG33SkeY7rEptm0zJRQLBtu6PqyEzADuPI6fs58MH5Odt
+         8O7jHtzzHwyMoXqYplQ4sfliJ906pqOM7t7vOWXHoAOEBDQZSUSw8YzyE1e80gXsg6KX
+         PWDA==
+X-Gm-Message-State: AOAM532/b3EVXLaRlGuKijsRzR9fgPhUvTYRzZsStHwh44XGhTL07vjO
+        JW3TmUQHUSDidXXtre+3TJ85knLJkPFPZFYPQnmFZA==
+X-Google-Smtp-Source: ABdhPJy4t5xNUInvTbrdNktpIEEwJa9WXJ3VbyfLmNGHa9Tlogcfk1xfE/pD2NZhBS1V2JSKNp49dZbkVm49zRPUArk=
+X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr528934oth.352.1597888918873;
+ Wed, 19 Aug 2020 19:01:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3917c516-7251-5b13-2192-0820c125eced@synopsys.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1597833138.git.mchehab+huawei@kernel.org> <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+In-Reply-To: <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Wed, 19 Aug 2020 19:01:46 -0700
+Message-ID: <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Liuyao An <anliuyao@huawei.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 19, 2020 at 2:36 PM John Stultz <john.stultz@linaro.org> wrote:
+>
+> On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> > So, IMO, the best is to keep it on staging for a while, until those
+> > remaining bugs gets solved.
+> >
+> > I added this series, together with the regulator driver and
+> > a few other patches (including a hack to fix a Kernel 5.8
+> > regression at WiFi ) at:
+> >
+> >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
+>
+> Sorry, one more small request: Could you create a branch that only has
+> the DRM driver changes in it?
+>
+> The reason I ask, is that since the HiKey960 isn't affected by the
+> majority of the problems you listed as motivation for going through
+> staging. So if we can validate that your tree works fine on HiKey960,
+> the series can be cleaned up and submitted properly upstream to enable
+> that SoC, and the outstanding 970 issues can be worked out afterwards
+> against mainline.
 
+Just as a heads up, I tried testing your tree with my HiKey960, and
+after fixing the compat string inconsistency, the drivers seem to load
+properly. However the drm_hwcomposer seems to have some trouble with
+the driver:
+01-01 00:12:41.456   345   345 E hwc-drm-display-compositor: Commit
+test failed for display 0, FIXME
+01-01 00:12:41.456   345   345 E hwc-drm-two: Failed to apply the
+frame composition ret=-22
+01-01 00:12:41.456   351   351 E HWComposer:
+presentAndGetReleaseFences: present failed for display 0: BadParameter
+(4)
 
-On 8/19/2020 2:42 PM, Thinh Nguyen wrote:
-> Hi,
-> 
-> Wesley Cheng wrote:
->> In the DWC3 databook, for a device initiated disconnect, the driver is
->> required to send dependxfer commands for any pending transfers.
->> In addition, before the controller can move to the halted state, the SW
->> needs to acknowledge any pending events.  If the controller is not halted
->> properly, there is a chance the controller will continue accessing stale or
->> freed TRBs and buffers.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->>
->> ---
->> Verified fix by adding a check for ETIMEDOUT during the run stop call.
->> Shell script writing to the configfs UDC file to trigger disconnect and
->> connect.  Batch script to have PC execute data transfers over adb (ie adb
->> push)  After a few iterations, we'd run into a scenario where the
->> controller wasn't halted.  With the following change, no failed halts after
->> many iterations.
->> ---
->>  drivers/usb/dwc3/ep0.c    |  2 +-
->>  drivers/usb/dwc3/gadget.c | 59 +++++++++++++++++++++++++++++++++++++--
->>  2 files changed, 57 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
->> index 59f2e8c31bd1..456aa87e8778 100644
->> --- a/drivers/usb/dwc3/ep0.c
->> +++ b/drivers/usb/dwc3/ep0.c
->> @@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
->>  	int				ret;
->>  
->>  	spin_lock_irqsave(&dwc->lock, flags);
->> -	if (!dep->endpoint.desc) {
->> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
->>  		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
->>  				dep->name);
->>  		ret = -ESHUTDOWN;
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 3ab6f118c508..1f981942d7f9 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -1516,7 +1516,7 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
->>  {
->>  	struct dwc3		*dwc = dep->dwc;
->>  
->> -	if (!dep->endpoint.desc) {
->> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
->>  		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
->>  				dep->name);
->>  		return -ESHUTDOWN;
->> @@ -1926,6 +1926,24 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
->>  	return 0;
->>  }
->>  
->> +static void dwc3_stop_active_transfers(struct dwc3 *dwc)
->> +{
->> +	u32 epnum;
->> +
->> +	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
->> +		struct dwc3_ep *dep;
->> +
->> +		dep = dwc->eps[epnum];
->> +		if (!dep)
->> +			continue;
->> +
->> +		if (!(dep->flags & DWC3_EP_ENABLED))
->> +			continue;
->> +
->> +		dwc3_remove_requests(dwc, dep);
->> +	}
->> +}
->> +
->>  static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
->>  {
->>  	u32			reg;
->> @@ -1950,16 +1968,37 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
->>  
->>  		dwc->pullups_connected = true;
->>  	} else {
->> +		dwc->pullups_connected = false;
->> +
->> +		__dwc3_gadget_ep_disable(dwc->eps[0]);
->> +		__dwc3_gadget_ep_disable(dwc->eps[1]);
-> 
-> run_stop() function shouldn't be doing this. This is done in
-> dwc3_gadget_stop(). Also, if it's device-initiated disconnect, driver
-> needs to wait for control transfers to complete.
-> 
+I'll dig in a bit further as to why, but wanted to give you a heads up.
 
-Hi Thinh ,
-
-Thanks for the feedback.
-
-We already wait for the ep0state to move to the setup stage before
-running the run stop routine, but events can still be triggered until
-the controller is halted. (which is not started until we attempt to
-write to the DCTL register) The reasoning will be the same as the below
-comment.
-
->> +
->> +		/*
->> +		 * The databook explicitly mentions for a device-initiated
->> +		 * disconnect sequence, the SW needs to ensure that it ends any
->> +		 * active transfers.
->> +		 */
->> +		dwc3_stop_active_transfers(dwc);
-> 
-> It shouldn't be done here. Maybe move this to the dwc3_gadget_pullup()
-> function. The run_stop() function can be called for other context beside
-> this (e.g. hibernation).
-> 
-
-It was preferred to have it placed after the pullups_connected was set
-to false, so that further ep queues would be blocked (with the added
-check), and we can ensure after the stop active xfers was run, nothing
-could be pending.
-
-Also, for the hibernation case, the databook mentions that we should
-issue the end transfer routine as well for the hibernation w/ device
-disconnected situation. (I don't believe the current DWC3 gadget driver
-supports the hibernation while device connected case, which has some
-considerations we would need to address)
-
->> +
->>  		reg &= ~DWC3_DCTL_RUN_STOP;
->>  
->>  		if (dwc->has_hibernation && !suspend)
->>  			reg &= ~DWC3_DCTL_KEEP_CONNECT;
->> -
->> -		dwc->pullups_connected = false;
->>  	}
->>  
->>  	dwc3_gadget_dctl_write_safe(dwc, reg);
->>  
->> +	/* Controller is not halted until pending events are acknowledged */
->> +	if (!is_on) {
->> +		reg = dwc3_readl(dwc->regs, DWC3_GEVNTCOUNT(0));
->> +		reg &= DWC3_GEVNTCOUNT_MASK;
->> +		if (reg > 0) {
->> +			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), reg);
->> +			dwc->ev_buf->lpos = (dwc->ev_buf->lpos + reg) %
->> +						dwc->ev_buf->length;
->> +		}
->> +	}
->> +
-> 
-> Driver should handle the events before clearing the run_stop bit, not
-> just acknowledging and ignoring them.
-> 
-
-Do you think its better if we call the dwc3_check_event_buf() and
-dwc3_process_event_buf() here?  That will handle the clearing of the
-events and allow them to be handled.  There are some snippets in the
-databook, which mentions that we don't need to handle/process the
-events, and just acknowledge them. (it mentions this in the hibernation
-section)
-
->>  	do {
->>  		reg = dwc3_readl(dwc->regs, DWC3_DSTS);
->>  		reg &= DWC3_DSTS_DEVCTRLHLT;
->> @@ -1994,9 +2033,15 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
->>  		}
->>  	}
->>  
->> +	/*
->> +	 * Synchronize and disable any further event handling while controller
->> +	 * is being enabled/disabled.
->> +	 */
->> +	disable_irq(dwc->irq_gadget);
->>  	spin_lock_irqsave(&dwc->lock, flags);
->>  	ret = dwc3_gadget_run_stop(dwc, is_on, false);
->>  	spin_unlock_irqrestore(&dwc->lock, flags);
->> +	enable_irq(dwc->irq_gadget);
->>  
->>  	return ret;
->>  }
->> @@ -3535,6 +3580,14 @@ static irqreturn_t dwc3_check_event_buf(struct dwc3_event_buffer *evt)
->>  	if (!count)
->>  		return IRQ_NONE;
->>  
->> +	/* Controller is halted; ignore new/pending events */
->> +	if (!dwc->pullups_connected) {
->> +		dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), count);
->> +		dwc->ev_buf->lpos = (dwc->ev_buf->lpos + count) %
->> +					dwc->ev_buf->length;
->> +		return IRQ_HANDLED;
->> +	}
->> +
-> 
-> Why? Are you getting any event after the controller is halted? Also,
-> make sure to take account of hibernation. The controller can get PMU
-> event after halted to bring it out of hibernation.
-> 
-
-We aren't getting any events after the controller is halted, but before
-we go and try to clear the run stop bit.  I added a print in the run
-stop API after clearing the RS bit, and there were pending events in the
-controller at that time.  It might be redundant to have this if we are
-disabling the IRQ already before the run stop call.
-
-I see, so maybe to ensure we don't block the PMU event, we can remove
-this, and rely on the disable_irq() and the run stop API to ensure no
-events will be pending.
-
->>  	evt->count = count;
->>  	evt->flags |= DWC3_EVENT_PENDING;
->>  
-> 
-> If you're making these fixes, can you also fix handling reset interrupt
-> ? It also needs to end all the active transfers.
-> 
-
-Sure, I can consider that as well.
-
-Thanks
-Wesley
-
-> Thanks,
-> Thinh
-> 
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+thanks
+-john
