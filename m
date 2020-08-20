@@ -2,113 +2,114 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B28CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E42BD20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7B0206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Tl+eqpzM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWAnRGtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731273AbgHTK4a (ORCPT
+        id S1730753AbgHTK4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:56:30 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56169 "EHLO
+        Thu, 20 Aug 2020 06:56:49 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34543 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731309AbgHTK4R (ORCPT
+        by vger.kernel.org with ESMTP id S1730638AbgHTK4l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:56:17 -0400
+        Thu, 20 Aug 2020 06:56:41 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597920976;
+        s=mimecast20190719; t=1597921000;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zXZn0ptz4OdIcD8qJiz0sPtwyG4FrJg7hkfvx+FDmUI=;
-        b=Tl+eqpzMq8xCFHLkgOHKU/ajmyruQ71vpw/yhFc0gFDjvWAzjTtIsabEyLml1rdkGe9HZt
-        a3p1r63051d3A05sZR2vKNBOGOppwiux6+LcS3S7VK8Y99kCnDS/6x6LU5kP6OIKVValVQ
-        +ekdk7LvGzqM3TAX/y1pP/Cml1i/hzg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-558-P_V1LyLiOz2MfwMupSW5mw-1; Thu, 20 Aug 2020 06:56:12 -0400
-X-MC-Unique: P_V1LyLiOz2MfwMupSW5mw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29506871803;
-        Thu, 20 Aug 2020 10:56:07 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.73])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 5E00C5D9F1;
-        Thu, 20 Aug 2020 10:55:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 20 Aug 2020 12:56:06 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 12:55:56 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     mhocko@suse.com, christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820105555.GA4546@redhat.com>
-References: <20200820002053.1424000-1-surenb@google.com>
+        bh=YyUbWiVt+/pd6NCJLIhu4YVJj7CJ58kl1EyN+2zcEbc=;
+        b=UWAnRGtXTK3s66cnQZSThr8J8neiyuiL+INDKpacViA8/6lHekSE+595gdGTKy7IFf3btS
+        lcyu9map2/U88NeLkUHtAU7faoL60XW0y8Vp3QgWRBlWkasZeCzMm3tdMEgYddH/SnbV7Z
+        tiJK7sIhfDkJ2HevnF02EpL8lKOs7DU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-AUaUt2zkM4yyczV2Gqu5YA-1; Thu, 20 Aug 2020 06:56:38 -0400
+X-MC-Unique: AUaUt2zkM4yyczV2Gqu5YA-1
+Received: by mail-wm1-f70.google.com with SMTP id d22so654145wmd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:56:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YyUbWiVt+/pd6NCJLIhu4YVJj7CJ58kl1EyN+2zcEbc=;
+        b=np64JnKamIW09YFSEl+J6ZSz5IfPntQL6ml3lTry+pYNNM0vRDdNtC09/tf8rbjYQA
+         9/Pf3V/AU8bQ/yOjB3R0ilfCd/vvcFZBQAHoC0/Dmf7Zo81jL7VdaMy0DdGceiMx1A1R
+         sUTr/oDgV7rFlJG1sL5hKlu0CysJjv9CJdEzVsdyaI0tlSvY7xkArjzwk9yWFdpgdKU5
+         K5azG4lOmSErhOo2Ir6bf/bAY+j7c21Zoc0XQdyalfu70S3PK8CEU2ISP3+ClhB4I1N1
+         Pgcrzm9oNu83oPogF6BgG388tpDzIwuTF0xEbmCOYv2MYhR4Sjp8rPCzaDZ1hIH5vwuL
+         T5QQ==
+X-Gm-Message-State: AOAM532doz4xlxhHeIUDSGXqlYp0lzNUQBv2zwpTVe3Uq0YdQal28cf0
+        lS5R6bEBTEUFRfALhVLMz31FPopSes0HNWOd4CEcOwFaL67aeZexhoBm8rkGSMWejCXC0sxS2p8
+        dYMT+wsDLnRWa4G2kL1FObM8Y
+X-Received: by 2002:a1c:7f17:: with SMTP id a23mr2873503wmd.28.1597920997679;
+        Thu, 20 Aug 2020 03:56:37 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwz4y78/vex3lvu61KJP6j3mDCaLwnKwb2xiZYks8rpAtkPmpBciNL88mgoiDLwRjYGmwwlnw==
+X-Received: by 2002:a1c:7f17:: with SMTP id a23mr2873484wmd.28.1597920997427;
+        Thu, 20 Aug 2020 03:56:37 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
+        by smtp.gmail.com with ESMTPSA id t14sm3842691wrg.38.2020.08.20.03.56.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 03:56:36 -0700 (PDT)
+Subject: Re: [PATCH 2/8] KVM: nSVM: rename nested 'vmcb' to vmcb_gpa in few
+ places
+To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20200820091327.197807-1-mlevitsk@redhat.com>
+ <20200820091327.197807-3-mlevitsk@redhat.com>
+ <f6bf9494-f337-2e53-6e6c-e0b8a847ec8d@redhat.com>
+ <608fe03082dc5e4db142afe3c0eb5f7c165f342b.camel@redhat.com>
+ <2e8185af-08fc-18c3-c1ca-fa1f7d4665dd@redhat.com>
+ <2b8faaead6f7744dc10b4701bd1583a2b494d4f4.camel@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <3effc656-20e8-40c9-d0e3-5c700d9b5572@redhat.com>
+Date:   Thu, 20 Aug 2020 12:56:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820002053.1424000-1-surenb@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <2b8faaead6f7744dc10b4701bd1583a2b494d4f4.camel@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/19, Suren Baghdasaryan wrote:
->
-> Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
-> used the additional mutex lock in that path of the clone() syscall should
-> not affect its overall performance. Clearing the MMF_PROC_SHARED flag
-> (when the last process sharing the mm exits) is left out of this patch to
-> keep it simple and because it is believed that this threading model is
-> rare.
+On 20/08/20 12:23, Maxim Levitsky wrote:
+> I fully agree that adding local variable is a good idea anyway.
+> 
+> I was just noting that svm->nested.vmcb is already about the nested
+> (e.g vmcb12) thus I was thinking that naming this field vmcb12 would be
+> redundant and not accepted this way.
 
-vfork() ?
+We want to have both svm->nested.vmcb12 and svm->nested.vmcb02 in there,
+and hsave is also a VMCB of sort (somewhat like a vmcb01 that is only
+used while running a nested guest).  So it is clearer to write _which_
+vmcb it is, and it also helps by making terminology consistent between
+VMX and SVM.
 
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
->  	if (clone_flags & CLONE_VM) {
->  		mmget(oldmm);
->  		mm = oldmm;
-> +		if (!(clone_flags & CLONE_SIGHAND)) {
-
-I agree with Christian, you need CLONE_THREAD
-
-> +			/* We need to synchronize with __set_oom_adj */
-> +			mutex_lock(&oom_adj_lock);
-> +			set_bit(MMF_PROC_SHARED, &mm->flags);
-> +			/* Update the values in case they were changed after copy_signal */
-> +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
-> +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
-> +			mutex_unlock(&oom_adj_lock);
-
-I don't understand how this can close the race with __set_oom_adj...
-
-What if __set_oom_adj() is called right after mutex_unlock() ? It will see
-MMF_PROC_SHARED, but for_each_process() won't find the new child until
-copy_process() does list_add_tail_rcu(&p->tasks, &init_task.tasks) ?
-
-Oleg.
+Paolo
 
