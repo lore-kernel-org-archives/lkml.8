@@ -2,110 +2,135 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D261CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8464FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA3420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:21:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584B020724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:22:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DkpdICMe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgPWAn6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbgHTRVn (ORCPT
+        id S1730575AbgHTRWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:21:43 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31154 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730544AbgHTRVc (ORCPT
+        Thu, 20 Aug 2020 13:22:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45306 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730559AbgHTRVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:21:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597944089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rvDNF5Q3wwtznjdzEy9L2Cc3y4PlB8JtkjTiFM9v96o=;
-        b=DkpdICMe113oxxJXIOehcL4LNQRw8VTuKvnZzLwRbEukHCy1ZemG0oJUdSfpWm39cDi9qW
-        1yd1AXYB31TtFZm9/jW5Kz0mEFevum7+0zoYaPPWbwI58cgH+T6DpCmf6F7T351LJM3aPy
-        MgU63+Cwaj2yBVY/HYSpx/Cp081sUnM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-DJeVJEdTNtK3jEvIg62OwQ-1; Thu, 20 Aug 2020 13:21:25 -0400
-X-MC-Unique: DJeVJEdTNtK3jEvIg62OwQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 824E8873155;
-        Thu, 20 Aug 2020 17:21:23 +0000 (UTC)
-Received: from treble (ovpn-117-70.rdu2.redhat.com [10.10.117.70])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A46305C893;
-        Thu, 20 Aug 2020 17:21:20 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 12:21:18 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     peterz@infradead.org, Brian Gerst <brgerst@gmail.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [RFC][PATCH 4/7] x86/debug: Move historical SYSENTER junk into
- exc_debug_kernel()
-Message-ID: <20200820172118.n5injemo3ic63x6j@treble>
-References: <20200820163453.GE1362448@hirez.programming.kicks-ass.net>
- <156769F5-0BCC-4FB8-A56D-0E92601F558A@amacapital.net>
+        Thu, 20 Aug 2020 13:21:38 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BF7C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:21:38 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id k20so2312995wmi.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4uWUfvcvtlbQW5JFnpOK+hjAu8lWAyrOUrT32VpIiuI=;
+        b=AgPWAn6KcYpaUgZNdnQDrZpEE4Ja69FANSIymzvKytxdV0F7ganAaAA5yN5fLc9+1g
+         EwliSW76cTQxHDGzRgYdb6/BBrIeQyEK9MaHHmbZbE/QnYmY0sKuZcdtUflFjjWvrn2L
+         e86YlAz7w7fZatTbnRQoh7CX0Z7jK1vgQifn/i27v+z1sYX1T17I5gLLwsTiW9qi0B5O
+         oCrDynXkE8FKWL8sGlM9xB4SOomoCGJnz3+ueXC7KaFLx6Rg27aDWBhB10IsqPXgcJLo
+         7TR166fr4WSJK7DXxzs+7IkxABGHwvl6PfzSAP7MoY6Jr0Ts8RENSleRnPHygA+iK9Df
+         nz0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=4uWUfvcvtlbQW5JFnpOK+hjAu8lWAyrOUrT32VpIiuI=;
+        b=YfNg7IfaOi78o+WB3+xAz/Z6xv+J1Kg/8TiNQ9TGfVQ8fQCdwI+5jEZEhremOYHigv
+         qBQnCHJQZBng0Wy5hOcEeC3Y4asVUlDDrAsbyJoJXv5kSkqrAgFG4AqxEnzBS8hfdGMQ
+         TxLJyKwhyP54sHIL10gRCbGXW/sFc6zPOnqJ/usdYFxxiXvWuYDuq6t72fGfoCYtw5j+
+         hGEw/Ysz7mk2wCshlCHvcMZdSohd+QSs27v44cauzi1URo6C8RvqQWHG98Ictbtq9ZXW
+         C/vMUVpjlBa8X+EGPBRRlMV6IQGUjrJFml5O7VSounguiQ9khG7SoL4vvLqWp/z5CMBs
+         sYBA==
+X-Gm-Message-State: AOAM530rbx7Bpu0p/gXsTloH5DgY/7wVQ1gJitnXNzEo/WIxgI+S2oc8
+        /4Vy4AHbdY6XnzH1BUHOSl0=
+X-Google-Smtp-Source: ABdhPJyNwdvZcCBCsA4v68ZOL1cjBR2XTgTJ6IvFAFZq/BX6AHTjYvq48ZTwTZCPpp2kEu7bST60lA==
+X-Received: by 2002:a05:600c:202:: with SMTP id 2mr4173075wmi.147.1597944096808;
+        Thu, 20 Aug 2020 10:21:36 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id y2sm5724061wmg.25.2020.08.20.10.21.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 10:21:36 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Markus Mayer <mmayer@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH v2] memory: brcmstb_dpfe: Fix memory leak
+Date:   Thu, 20 Aug 2020 18:21:18 +0100
+Message-Id: <20200820172118.781324-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <156769F5-0BCC-4FB8-A56D-0E92601F558A@amacapital.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 09:43:15AM -0700, Andy Lutomirski wrote:
-> 
-> 
-> > On Aug 20, 2020, at 9:35 AM, peterz@infradead.org wrote:
-> > 
-> > ﻿On Thu, Aug 20, 2020 at 11:17:29AM -0500, Josh Poimboeuf wrote:
-> >> On Thu, Aug 20, 2020 at 05:21:11PM +0200, peterz@infradead.org wrote:
-> > 
-> >>> qemu-gdb stub should eat the event before it lands in the guest
-> >> 
-> >> Are we sure about that?  I triggered the warning just now, stepping
-> >> through the debug handler.
-> > 
-> > Not sure at all, that's what seemed reasonable, but since when did that
-> > stop virt ;-)
-> > 
-> > Also, can you trigger that same with upstream? Because I suspect this
-> > ought to tickle the old code too.
-> 
-> I’ve lost track of how many bugs QEMU and KVM have in this space.
-> Let’s keep it as a warning, but a bug. But let’s get rid of the
-> totally bogus TIF_SINGLESTEP manipulation.
+In brcmstb_dpfe_download_firmware(), memory is allocated to variable fw by
+firmware_request_nowarn(), but never released. Fix up to release fw on
+all return paths.
 
-By "but a bug", I assume you mean "not a bug" :-)
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+v2: Don't assign ret unnecessarily (Krzysztof)
+---
+ drivers/memory/brcmstb_dpfe.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
+diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+index 60e8633b1175..e08528b12cbd 100644
+--- a/drivers/memory/brcmstb_dpfe.c
++++ b/drivers/memory/brcmstb_dpfe.c
+@@ -647,8 +647,10 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+ 		return (ret == -ENOENT) ? -EPROBE_DEFER : ret;
+ 
+ 	ret = __verify_firmware(&init, fw);
+-	if (ret)
+-		return -EFAULT;
++	if (ret) {
++		ret = -EFAULT;
++		goto release_fw;
++	}
+ 
+ 	__disable_dcpu(priv);
+ 
+@@ -667,18 +669,20 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+ 
+ 	ret = __write_firmware(priv->dmem, dmem, dmem_size, is_big_endian);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 	ret = __write_firmware(priv->imem, imem, imem_size, is_big_endian);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 
+ 	ret = __verify_fw_checksum(&init, priv, header, init.chksum);
+ 	if (ret)
+-		return ret;
++		goto release_fw;
+ 
+ 	__enable_dcpu(priv);
+ 
+-	return 0;
++release_fw:
++	release_firmware(fw);
++	return ret;
+ }
+ 
+ static ssize_t generic_show(unsigned int command, u32 response[],
 -- 
-Josh
+2.28.0
 
