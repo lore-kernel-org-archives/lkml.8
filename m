@@ -2,447 +2,102 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C76C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD286206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9544C206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TjqZL/ol"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4hYkwVV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgHTSif (ORCPT
+        id S1727897AbgHTSi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:38:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:49492 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727012AbgHTSiV (ORCPT
+        Thu, 20 Aug 2020 14:38:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbgHTSi5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:38:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597948699;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hwDTQto2EJFjavZgAL+q7WDXNOyGUc1xSFD1wpx2kLM=;
-        b=TjqZL/olYbb3tzH5RUzkcSTqOJycMhZY252s4sQS6WTGEPTQLDN9JlXEwV2EIj9449L4gE
-        6B0WWYPpZfNOcqvaSOm+76eifAFcgWPtqLD7xFoI1WOMrD5DY6j7QyR9wO/GVw0oEIMvOK
-        phfWGaL2B+H/47I8K9UUH54hWhzXmmc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-H15DHBhXN3C346x-puNliA-1; Thu, 20 Aug 2020 14:38:08 -0400
-X-MC-Unique: H15DHBhXN3C346x-puNliA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 904C210082E6;
-        Thu, 20 Aug 2020 18:38:06 +0000 (UTC)
-Received: from x1.home (ovpn-112-71.phx2.redhat.com [10.3.112.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 744E019D7D;
-        Thu, 20 Aug 2020 18:38:02 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 12:38:02 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ming Mao <maoming.maoming@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>,
-        <cohuck@redhat.com>, <jianjay.zhou@huawei.com>,
-        <weidong.huang@huawei.com>, <peterx@redhat.com>,
-        <aarcange@redhat.com>
-Subject: Re: [PATCH V2] vfio dma_map/unmap: optimized for hugetlbfs pages
-Message-ID: <20200820123802.724afd4a@x1.home>
-In-Reply-To: <20200814023729.2270-1-maoming.maoming@huawei.com>
-References: <20200814023729.2270-1-maoming.maoming@huawei.com>
-Organization: Red Hat
+        Thu, 20 Aug 2020 14:38:57 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A6FC061385;
+        Thu, 20 Aug 2020 11:38:56 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 83so264198wme.4;
+        Thu, 20 Aug 2020 11:38:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PgRf0Ar5MulFcCJvaCQyug2lmRa/ai0OZaAGSl3iEgY=;
+        b=H4hYkwVVPQYi9sO0a0/uLgOj8mXjpo7sKsrsj0dTHZy/XBHYoiNaAXeTSx/OL5Wlx3
+         dBrNi4aPjLVP+/AEvLkeoPT8OQJ8dZYUjPKUo0Y+ugsDL0vs1NBSj0gESCIgYO8hF/bC
+         Hycyy9kkoy6tGRRv2l1Wutk7sQ0lxJfrUtY+bTvYyI35YZ75rT2nUbAUg5TMNQ/kjjlY
+         4wa5aXdTpnQyL7DVapgmwaBwOdsTo7iI+DYqXBQr6ITMBpItHvHL5jf6QB8UgyQ1UwHU
+         tMoLD6WXbHU/w5yoAwWnbNSnfrTg5jUpyAV69BPvyoZvjMNyIjghUisXzRNWxHPpNObD
+         dXag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PgRf0Ar5MulFcCJvaCQyug2lmRa/ai0OZaAGSl3iEgY=;
+        b=oiIU52eQs5HV2nXWJfi0D9//59ktOYDDWyj0yeVJsD0Cu9z2SHh0kGOiHpZQ+yDSZ8
+         jAz7gwZoPksyj6ADKLONovnltxZ9+sWTKHJsK62tEFRGxAGM45wzKNX2X2nAMFJtobvV
+         lQ6BYRVMgCy9gP6rEBjkGG0ZnT4qfxUjySaclvRg2vVQ5aU7z0ABxlpJJs4UOe/U/Dkk
+         TtaroDLTpvFrsb4cfnUdxDoaWh8N5UqEePwboZXSwUZF+JY9/L/fzJBQneoUhLAPWFPM
+         VUOiiNhLEU4RztIbBQHVDe1XmJssJYrEUoFI0+4BmlT90iA5QjZbhq+J0K/z49Q/MyUK
+         B0Ug==
+X-Gm-Message-State: AOAM5334l8paN11cSMqL3EOdLC6tvoeSQoGmyFH5C6TfNU283OmRjlHx
+        DEmlEMQgo1NBH6efB5LrAwGnzloTQEJZN8yr
+X-Google-Smtp-Source: ABdhPJwNRbuc6tSHftgEA+hcCV17PDfcinJw4n/pz9l/504EM/GlQARZj9wibS2vkPEgwsV69p/2/g==
+X-Received: by 2002:a1c:9a02:: with SMTP id c2mr52135wme.16.1597948735669;
+        Thu, 20 Aug 2020 11:38:55 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id b139sm6147232wmd.19.2020.08.20.11.38.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 11:38:55 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nfc: st21nfca: Remove unnecessary cast
+Date:   Thu, 20 Aug 2020 19:38:36 +0100
+Message-Id: <20200820183840.912558-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 10:37:29 +0800
-Ming Mao <maoming.maoming@huawei.com> wrote:
+In st21nfca_connectivity_event_received(), the return value of
+devm_kzalloc() is unnecessarily cast from void*. Remove cast.
 
-> In the original process of pinning/unpinning pages for VFIO-devices,
-> to make sure the pages are contiguous, we have to check them one by one.
-> As a result, dma_map/unmap could spend a long time.
-> Using the hugetlb pages, we can avoid this problem.
-> All pages in hugetlb pages are contiguous.And the hugetlb
-> page should not be split.So we can delete the for loops and use
-> some operations(such as atomic_add,page_ref_add) instead.
-> 
-> Signed-off-by: Ming Mao <maoming.maoming@huawei.com>
-> ---
->  drivers/vfio/vfio_iommu_type1.c | 233 +++++++++++++++++++++++++++++++-
->  1 file changed, 230 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-> index 5e556ac91..8957013c1 100644
-> --- a/drivers/vfio/vfio_iommu_type1.c
-> +++ b/drivers/vfio/vfio_iommu_type1.c
-> @@ -415,6 +415,46 @@ static int put_pfn(unsigned long pfn, int prot)
->  	return 0;
->  }
->  
-> +/*
-> + * put pfns for a hugetlb page
-> + * @start:the PAGE_SIZE-page we start to put,can be any page in this hugetlb page
-> + * @npage:the number of PAGE_SIZE-pages need to put
-> + * @prot:IOMMU_READ/WRITE
-> + */
-> +static int hugetlb_put_pfn(unsigned long start, unsigned int npage, int prot)
-> +{
-> +	struct page *page;
-> +	struct page *head;
-> +
-> +	if (!npage || !pfn_valid(start))
-> +		return 0;
-> +
-> +	page = pfn_to_page(start);
-> +	if (!page || !PageHuge(page))
-> +		return 0;
-> +	head = compound_head(page);
-> +	/*
-> +	 * The last page should be in this hugetlb page.
-> +	 * The number of putting pages should be equal to the number
-> +	 * of getting pages.So the hugepage pinned refcount and the normal
-> +	 * page refcount can not be smaller than npage.
-> +	 */
-> +	if ((head != compound_head(pfn_to_page(start + npage - 1)))
-> +	    || (page_ref_count(head) < npage)
-> +	    || (compound_pincount(page) < npage))
-> +		return 0;
-> +
-> +	if ((prot & IOMMU_WRITE) && !PageDirty(page))
-> +		set_page_dirty_lock(page);
-> +
-> +	atomic_sub(npage, compound_pincount_ptr(head));
-> +	if (page_ref_sub_and_test(head, npage))
-> +		__put_page(head);
-> +
-> +	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_RELEASED, npage);
-> +	return 1;
-> +}
-> +
->  static int follow_fault_pfn(struct vm_area_struct *vma, struct mm_struct *mm,
->  			    unsigned long vaddr, unsigned long *pfn,
->  			    bool write_fault)
-> @@ -479,6 +519,105 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
->  	return ret;
->  }
->  
-> +static bool is_hugetlbpage(unsigned long pfn)
-> +{
-> +	struct page *page;
-> +
-> +	if (!pfn_valid(pfn))
-> +		return false;
-> +
-> +	page = pfn_to_page(pfn);
-> +	/* only check for hugetlb pages */
-> +	if (!page || !PageHuge(page))
-> +		return false;
-> +
-> +	return true;
+Issue identified with Coccinelle.
 
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/nfc/st21nfca/se.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-return page && PageHuge(page);
-
-
-> +}
-> +
-> +/*
-> + * get the number of residual PAGE_SIZE-pages in a hugetlb page
-> + * (including the page which pointed by this address)
-> + * @address: we count residual pages from this address to the end of
-> + * a hugetlb page
-> + * @order: the order of the same hugetlb page
-> + */
-> +static long
-> +hugetlb_get_residual_pages(unsigned long address, unsigned int order)
-> +{
-> +	unsigned long hugetlb_npage;
-> +	unsigned long hugetlb_mask;
-> +
-> +	if (!order)
-> +		return -1;
-
-Use a real errno please.
-
-> +
-> +	hugetlb_npage = _AC(1, UL) << order;
-
-This doesn't seem an appropriate use of _AC(), 1UL << order should be
-fine.
-
-> +	hugetlb_mask = (hugetlb_npage << PAGE_SHIFT) - 1;
-> +	address = ALIGN_DOWN(address, PAGE_SIZE);
-
-hugetlb_mask doesn't need to be in bytes, it could be in pages
-(hugetlb_npage - 1), then we could simply convert address to pfn
-(address >> PAGE_SHIFT), then we avoid the shift below:
-
-return hugetlb_npage - ((address >> PAGE_SHIFT) & (hugetlb_npage - 1));
-
-> +
-> +	/*
-> +	 * Since we count the page pointed by this address, the number of
-> +	 * residual PAGE_SIZE-pages is greater than or equal to 1.
-> +	 */
-> +	return hugetlb_npage - ((address & hugetlb_mask) >> PAGE_SHIFT);
-> +}
-> +
-> +static unsigned int
-> +hugetlb_page_get_externally_pinned_num(struct vfio_dma *dma,
-> +				unsigned long start,
-> +				unsigned long npage)
-> +{
-> +	struct vfio_pfn *vpfn;
-> +	struct rb_node *node;
-> +	unsigned long end = start + npage - 1;
-> +	unsigned int num = 0;
-> +
-> +	if (!dma || !npage)
-> +		return 0;
-> +
-> +	/* If we find a page in dma->pfn_list, this page has been pinned externally */
-> +	for (node = rb_first(&dma->pfn_list); node; node = rb_next(node)) {
-> +		vpfn = rb_entry(node, struct vfio_pfn, node);
-> +		if ((vpfn->pfn >= start) && (vpfn->pfn <= end))
-> +			num++;
-> +	}
-> +
-> +	return num;
-> +}
-> +
-> +static long hugetlb_page_vaddr_get_pfn(unsigned long vaddr, long npage,
-> +						unsigned long pfn)
-> +{
-> +	long hugetlb_residual_npage;
-> +	long contiguous_npage;
-> +	struct page *head = compound_head(pfn_to_page(pfn));
-> +
-> +	/*
-> +	 * If pfn is valid,
-> +	 * hugetlb_residual_npage is greater than or equal to 1.
-> +	 */
-> +	hugetlb_residual_npage = hugetlb_get_residual_pages(vaddr,
-> +						compound_order(head));
-> +	if (hugetlb_residual_npage < 0)
-> +		return -1;
-
-Forward the errno
-
-> +
-> +	/* The page of vaddr has been gotten by vaddr_get_pfn */
-> +	contiguous_npage = min_t(long, (hugetlb_residual_npage - 1), npage);
-> +	if (!contiguous_npage)
-> +		return 0;
-> +	/*
-> +	 * Unlike THP, the splitting should not happen for hugetlb pages.
-> +	 * Since PG_reserved is not relevant for compound pages, and the pfn of
-> +	 * PAGE_SIZE page which in hugetlb pages is valid,
-> +	 * it is not necessary to check rsvd for hugetlb pages.
-> +	 * We do not need to alloc pages because of vaddr and we can finish all
-> +	 * work by a single operation to the head page.
-> +	 */
-> +	atomic_add(contiguous_npage, compound_pincount_ptr(head));
-> +	page_ref_add(head, contiguous_npage);
-> +	mod_node_page_state(page_pgdat(head), NR_FOLL_PIN_ACQUIRED, contiguous_npage);
-> +
-> +	return contiguous_npage;
-> +}
->  /*
->   * Attempt to pin pages.  We really don't want to track all the pfns and
->   * the iommu can only map chunks of consecutive pfns anyway, so get the
-> @@ -492,6 +631,7 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  	long ret, pinned = 0, lock_acct = 0;
->  	bool rsvd;
->  	dma_addr_t iova = vaddr - dma->vaddr + dma->iova;
-> +	long contiguous_npage;
->  
->  	/* This code path is only user initiated */
->  	if (!current->mm)
-> @@ -523,7 +663,8 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  
->  	/* Lock all the consecutive pages from pfn_base */
->  	for (vaddr += PAGE_SIZE, iova += PAGE_SIZE; pinned < npage;
-> -	     pinned++, vaddr += PAGE_SIZE, iova += PAGE_SIZE) {
-> +	     pinned += contiguous_npage, vaddr += contiguous_npage * PAGE_SIZE,
-> +	     iova += contiguous_npage * PAGE_SIZE) {
->  		ret = vaddr_get_pfn(current->mm, vaddr, dma->prot, &pfn);
->  		if (ret)
->  			break;
-> @@ -545,6 +686,54 @@ static long vfio_pin_pages_remote(struct vfio_dma *dma, unsigned long vaddr,
->  			}
->  			lock_acct++;
->  		}
-> +
-> +		contiguous_npage = 0;
-> +		/*
-> +		 * It is not necessary to get pages one by one for hugetlb pages.
-> +		 * All PAGE_SIZE-pages in hugetlb pages are contiguous.
-> +		 * If npage - pinned is 1, all pages are pinned.
-> +		 */
-
-I really don't like this result of trying to squeeze hugepages into the
-end of the existing algorithm.  We currently pin the first page, then
-pin each next page until we find one that is not contiguous or we hit
-our desired length or limit.  As I understand the modified algorithm,
-for each next page, after we've pinned it, we test if it's a hugetlbfs
-page, then pin the remainder of the pages via a different mechanism, up
-to the desired length or limit, continuing by again pinning the next
-individual page and repeating the hugetlbfs test.  This means we're
-typically starting from the second page and mixing pages pinned
-individually vs via the hugepage.
-
-Would it be cleaner to move hugetlbfs handling to the start of the
-loop?  In the single page case, we pin the next page in order to
-determine if it's contiugous, unpinning if it's not.  In the hugetlbfs
-case, we can determine from the initial page the extent of the
-contiguous range.
-
-Moving to the head of the loop might not be sufficient to achieve the
-simplification I'm looking for, but I think we need to cleanup the
-various off-by-one or off-by-two corrections that occur in this
-implementation, they're hard to follow.
-
-
-> +		if ((npage - pinned > 1) && is_hugetlbpage(pfn)) {
-> +			/*
-> +			 * We must use the vaddr to get the contiguous pages.
-> +			 * Because it is possible that the page of vaddr
-> +			 * is the last PAGE_SIZE-page. In this case, vaddr + PAGE_SIZE
-> +			 * is in another hugetlb page.
-> +			 * And the left pages is npage - pinned - 1(vaddr).
-> +			 */
-> +			contiguous_npage = hugetlb_page_vaddr_get_pfn(vaddr,
-> +							npage - pinned - 1, pfn);
-> +			if (contiguous_npage < 0) {
-> +				put_pfn(pfn, dma->prot);
-> +				ret = -EINVAL;
-
-This should return the errno from hugetlb_page_vaddr_get_pfn() rather
-than inventing one.
-
-> +				goto unpin_out;
-> +			}
-> +			/*
-> +			 * If contiguous_npage is 0, the vaddr is the last PAGE_SIZE-page
-> +			 * of a hugetlb page.
-> +			 * We should continue and find the next one.
-> +			 */
-> +			if (!contiguous_npage) {
-> +				/* set 1 for the vaddr */
-> +				contiguous_npage = 1;
-> +				continue;
-> +			}
-> +			lock_acct += contiguous_npage - hugetlb_page_get_externally_pinned_num(dma,
-> +					pfn, contiguous_npage);
-> +
-> +			if (!dma->lock_cap &&
-> +			    current->mm->locked_vm + lock_acct > limit) {
-> +				for (; contiguous_npage; pfn++, contiguous_npage--)
-> +					put_pfn(pfn, dma->prot);
-
-This seems really asymmetric to the pinning, where we've used hugetlbfs
-mechanisms to make the pinned pages, but we're releasing them
-individually.  Ideally we should use the same mechanism per page.
-
-> +				pr_warn("%s: RLIMIT_MEMLOCK (%ld) exceeded\n",
-> +					__func__, limit << PAGE_SHIFT);
-> +				ret = -ENOMEM;
-> +				goto unpin_out;
-> +			}
-> +		}
-> +
-> +		/* add for the vaddr */
-> +		contiguous_npage++;
->  	}
->  
->  out:
-> @@ -569,13 +758,38 @@ static long vfio_unpin_pages_remote(struct vfio_dma *dma, dma_addr_t iova,
->  {
->  	long unlocked = 0, locked = 0;
->  	long i;
-> +	long hugetlb_residual_npage;
-> +	long contiguous_npage;
-> +	struct page *head;
->  
-> -	for (i = 0; i < npage; i++, iova += PAGE_SIZE) {
-> +	for (i = 0; i < npage; i += contiguous_npage, iova += contiguous_npage * PAGE_SIZE) {
-> +		if (is_hugetlbpage(pfn)) {
-> +			/*
-> +			 * Since pfn is valid,
-> +			 * hugetlb_residual_npage is greater than or equal to 1.
-> +			 */
-> +			head = compound_head(pfn_to_page(pfn));
-> +			hugetlb_residual_npage = hugetlb_get_residual_pages(iova,
-> +									compound_order(head));
-> +			contiguous_npage = min_t(long, hugetlb_residual_npage, (npage - i));
-> +
-> +			/* try the slow path if failed */
-> +			if (!hugetlb_put_pfn(pfn, contiguous_npage, dma->prot))
-> +				goto slow_path;
-> +
-> +			pfn += contiguous_npage;
-> +			unlocked += contiguous_npage;
-> +			locked += hugetlb_page_get_externally_pinned_num(dma, pfn,
-> +									contiguous_npage);
-> +			continue;
-> +		}
-> +slow_path:
->  		if (put_pfn(pfn++, dma->prot)) {
->  			unlocked++;
->  			if (vfio_find_vpfn(dma, iova))
->  				locked++;
->  		}
-> +		contiguous_npage = 1;
->  	}
->  
->  	if (do_accounting)
-> @@ -893,6 +1107,9 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
->  	while (iova < end) {
->  		size_t unmapped, len;
->  		phys_addr_t phys, next;
-> +		long hugetlb_residual_npage;
-> +		long contiguous_npage;
-> +		struct page *head;
->  
->  		phys = iommu_iova_to_phys(domain->domain, iova);
->  		if (WARN_ON(!phys)) {
-> @@ -906,10 +1123,20 @@ static long vfio_unmap_unpin(struct vfio_iommu *iommu, struct vfio_dma *dma,
->  		 * largest contiguous physical memory chunk to unmap.
->  		 */
->  		for (len = PAGE_SIZE;
-> -		     !domain->fgsp && iova + len < end; len += PAGE_SIZE) {
-> +		    !domain->fgsp && iova + len < end; len += PAGE_SIZE * contiguous_npage) {
->  			next = iommu_iova_to_phys(domain->domain, iova + len);
->  			if (next != phys + len)
->  				break;
-> +
-> +			if (((dma->size - len) >> PAGE_SHIFT)
-> +				&& is_hugetlbpage(next >> PAGE_SHIFT)) {
-> +				head = compound_head(pfn_to_page(next >> PAGE_SHIFT));
-> +				hugetlb_residual_npage = hugetlb_get_residual_pages(iova + len,
-> +									compound_order(head));
-> +				contiguous_npage = min_t(long, ((dma->size - len) >> PAGE_SHIFT),
-> +								hugetlb_residual_npage);
-
-Same idea here as above, we're again starting from the 2nd page to
-determine hugetlbfs pages, it feels very ad hoc.  Thanks,
-
-Alex
-
-> +			} else
-> +				contiguous_npage = 1;
->  		}
->  
->  		/*
+diff --git a/drivers/nfc/st21nfca/se.c b/drivers/nfc/st21nfca/se.c
+index 6586378cacb0..c8bdf078d111 100644
+--- a/drivers/nfc/st21nfca/se.c
++++ b/drivers/nfc/st21nfca/se.c
+@@ -315,8 +315,7 @@ int st21nfca_connectivity_event_received(struct nfc_hci_dev *hdev, u8 host,
+ 		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
+ 			return -EPROTO;
+ 
+-		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+-						   skb->len - 2, GFP_KERNEL);
++		transaction = devm_kzalloc(dev, skb->len - 2, GFP_KERNEL);
+ 		if (!transaction)
+ 			return -ENOMEM;
+ 
+-- 
+2.28.0
 
