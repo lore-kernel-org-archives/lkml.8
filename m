@@ -2,68 +2,84 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CCC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D989C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4932620786
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597898540;
-	bh=JCJwEh+pvWXAwmuka6F/zKcU8KQZ9rz00Az2wUHTDrA=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=lvCokEbcdtResvWgvvQiqqTJmOS7xSVPBgL/K+sAm+0rQqfKj+Y2ws1CrZV07X/8x
-	 KoZMNgz4DzKyOfrW3arTfeZr64qeI8nxf34f7gi4aFg0JkhQFrTOiI+ensq019M7mR
-	 xb3nQKg7FfLo0ZVNJafy3t0KVzvnOVSb+jflSlQo=
+	by mail.kernel.org (Postfix) with ESMTP id 47BA320786
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:43:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgHTEmS (ORCPT
+        id S1726745AbgHTEny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:42:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53412 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 00:43:54 -0400
+Received: from verein.lst.de ([213.95.11.211]:40376 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725793AbgHTEmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:42:16 -0400
-Subject: Re: [GIT PULL] VFIO fix for v5.9-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597898535;
-        bh=JCJwEh+pvWXAwmuka6F/zKcU8KQZ9rz00Az2wUHTDrA=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qbrVBIL7xA39n0zYp3qn9IrQP8glP8rxmTcu5C0bH6K3TXCtN67yRSHpWXlCXu1+7
-         UAvRsoXDPvT1INl2M/f3l2s65QcBY670QybkJcPSTOeEwTkmdUGyWFzAy1cDy+CM4k
-         q/qaYG9t7eXw6oDb9ojvki7fHalvssL3CJOu4Fjw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200819130422.357ea56c@x1.home>
-References: <20200819130422.357ea56c@x1.home>
-X-PR-Tracked-List-Id: <kvm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200819130422.357ea56c@x1.home>
-X-PR-Tracked-Remote: git://github.com/awilliam/linux-vfio.git tags/vfio-v5.9-rc2
-X-PR-Tracked-Commit-Id: aae7a75a821a793ed6b8ad502a5890fb8e8f172d
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7eac66d0456fe12a462e5c14c68e97c7460989da
-Message-Id: <159789853523.19113.7573931403105003828.pr-tracker-bot@kernel.org>
-Date:   Thu, 20 Aug 2020 04:42:15 +0000
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+        id S1725772AbgHTEnx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 00:43:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5BE8868BEB; Thu, 20 Aug 2020 06:43:47 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 06:43:47 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        alsa-devel@alsa-project.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-parisc@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>
+Subject: Re: [PATCH 05/28] media/v4l2: remove
+ V4L2-FLAG-MEMORY-NON-CONSISTENT
+Message-ID: <20200820044347.GA4533@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de> <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com> <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 19 Aug 2020 13:04:22 -0600:
+On Wed, Aug 19, 2020 at 03:57:53PM +0200, Tomasz Figa wrote:
+> > > Could you explain what makes you think it's unused? It's a feature of
+> > > the UAPI generally supported by the videobuf2 framework and relied on
+> > > by Chromium OS to get any kind of reasonable performance when
+> > > accessing V4L2 buffers in the userspace.
+> >
+> > Because it doesn't do anything except on PARISC and non-coherent MIPS,
+> > so by definition it isn't used by any of these media drivers.
+> 
+> It's still an UAPI feature, so we can't simply remove the flag, it
+> must stay there as a no-op, until the problem is resolved.
 
-> git://github.com/awilliam/linux-vfio.git tags/vfio-v5.9-rc2
+Ok, I'll switch to just ignoring it for the next version.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7eac66d0456fe12a462e5c14c68e97c7460989da
+> Also, it of course might be disputable as an out-of-tree usage, but
+> selecting CONFIG_DMA_NONCOHERENT_CACHE_SYNC makes the flag actually do
+> something on other platforms, including ARM64.
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+It isn't just disputable, but by kernel policies simply is not relevant.
