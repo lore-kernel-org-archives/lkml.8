@@ -2,53 +2,58 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87A8A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3151120658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919304;
-	bh=TjitsgFuZiyYlbYU2DcETl6PV1B8ThCsYIQg+Knl+X4=;
+	s=default; t=1597919307;
+	bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NAl+Kd4hOUgjCOLrZKNsQZCjLftCYMs4mfxeapCaAdTiZX5N6JG88LU7tj9oRXX1G
-	 aUlmPC48tO/0sYPcNr4hKFz4VxqEPSH/lRmsAjYGQs2ITjJWZmEoIBWNa/daF2hRsl
-	 WXFJXxCbKUq5GC7u7YD/OrVOw0ubwqrn15TmYFDQ=
+	b=dpEm8PcOdRO9295RbUHk/TLFAwvpBZ2Fe+eSOqKhJEIHS0IJjkYd/RXHjC/tRLl08
+	 eGceHdOiFpgTgl5xQtY9cn99oss06FGFHZdxwjO4wYQPbHX9TNITz+kEzSEwgPzZYu
+	 Ixbe6nDaequ4r5Dq3C4d/HP9aYTMVvEINPLbEygI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbgHTKVt (ORCPT
+        id S1731866AbgHTK2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:21:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731560AbgHTKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:40 -0400
+        id S1731572AbgHTKVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B97B720658;
-        Thu, 20 Aug 2020 10:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 610D420738;
+        Thu, 20 Aug 2020 10:21:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918899;
-        bh=TjitsgFuZiyYlbYU2DcETl6PV1B8ThCsYIQg+Knl+X4=;
+        s=default; t=1597918913;
+        bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sjmwQqK2ATA3z6cxEjf25fg8hWsM/h7IciXkSzTAb5yMJsGy8wkiRmX5SUDKn3SRm
-         02uZgvk4OcyjfWOAGq3PJWYM+ZS1SRGHUxOilKY66T3d8z7PmFdyVsYhtSvC6k6FgQ
-         3JKhBBpj2W8LGMan9U2QfC5jtfEy80a6yDYRVMNI=
+        b=tJrsJctUmOoYyRelw5RorCkMRhhuUoLujLsuie+zDNHWjHz5KqDkTze8qEw/t/r2J
+         C/4Gj/TIsC0bn36AdXuQBgA2PCH3RYHwEIAudjYyBX8FBGb5lTFydWBy8913eJ5C04
+         tTb3lFvD5O21QNlRcXJGkSPbKeVPLdvk9WtSGU8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erik Kaneda <erik.kaneda@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 076/149] ACPICA: Do not increment operation_region reference counts for field units
-Date:   Thu, 20 Aug 2020 11:22:33 +0200
-Message-Id: <20200820092129.412128599@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
+        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
+        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 113/149] fs/minix: reject too-large maximum file size
+Date:   Thu, 20 Aug 2020 11:23:10 +0200
+Message-Id: <20200820092131.171897020@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,80 +66,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erik Kaneda <erik.kaneda@intel.com>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
+commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
 
-ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
+If the minix filesystem tries to map a very large logical block number to
+its on-disk location, block_to_path() can return offsets that are too
+large, causing out-of-bounds memory accesses when accessing indirect index
+blocks.  This should be prevented by the check against the maximum file
+size, but this doesn't work because the maximum file size is read directly
+from the on-disk superblock and isn't validated itself.
 
-Object reference counts are used as a part of ACPICA's garbage
-collection mechanism. This mechanism keeps track of references to
-heap-allocated structures such as the ACPI operand objects.
+Fix this by validating the maximum file size at mount time.
 
-Recent server firmware has revealed that this reference count can
-overflow on large servers that declare many field units under the
-same operation_region. This occurs because each field unit declaration
-will add a reference count to the source operation_region.
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
+Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
+Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-This change solves the reference count overflow for operation_regions
-objects by preventing fieldunits from incrementing their
-operation_region's reference count. Each operation_region's reference
-count will not be changed by named objects declared under the Field
-operator. During namespace deletion, the operation_region namespace
-node will be deleted and each fieldunit will be deleted without
-touching the deleted operation_region object.
-
-Link: https://github.com/acpica/acpica/commit/e17b28cf
-Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/exprep.c   | 4 ----
- drivers/acpi/acpica/utdelete.c | 6 +-----
- 2 files changed, 1 insertion(+), 9 deletions(-)
+ fs/minix/inode.c |   22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
-index 4c2836dc825be..47d8a85c90ff5 100644
---- a/drivers/acpi/acpica/exprep.c
-+++ b/drivers/acpi/acpica/exprep.c
-@@ -502,10 +502,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
- 				    (u8)access_byte_width;
- 			}
- 		}
--		/* An additional reference for the container */
--
--		acpi_ut_add_reference(obj_desc->field.region_obj);
--
- 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
- 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
- 				  obj_desc->field.start_field_bit_offset,
-diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
-index 1638312e3d8f9..9f8b088e21d7e 100644
---- a/drivers/acpi/acpica/utdelete.c
-+++ b/drivers/acpi/acpica/utdelete.c
-@@ -590,11 +590,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			next_object = object->buffer_field.buffer_obj;
- 			break;
+--- a/fs/minix/inode.c
++++ b/fs/minix/inode.c
+@@ -155,6 +155,23 @@ static int minix_remount (struct super_b
+ 	return 0;
+ }
  
--		case ACPI_TYPE_LOCAL_REGION_FIELD:
--
--			next_object = object->field.region_obj;
--			break;
--
- 		case ACPI_TYPE_LOCAL_BANK_FIELD:
++static bool minix_check_superblock(struct minix_sb_info *sbi)
++{
++	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
++		return false;
++
++	/*
++	 * s_max_size must not exceed the block mapping limitation.  This check
++	 * is only needed for V1 filesystems, since V2/V3 support an extra level
++	 * of indirect blocks which places the limit well above U32_MAX.
++	 */
++	if (sbi->s_version == MINIX_V1 &&
++	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
++		return false;
++
++	return true;
++}
++
+ static int minix_fill_super(struct super_block *s, void *data, int silent)
+ {
+ 	struct buffer_head *bh;
+@@ -233,11 +250,12 @@ static int minix_fill_super(struct super
+ 	} else
+ 		goto out_no_fs;
  
- 			next_object = object->bank_field.bank_obj;
-@@ -635,6 +630,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
- 			}
- 			break;
- 
-+		case ACPI_TYPE_LOCAL_REGION_FIELD:
- 		case ACPI_TYPE_REGION:
- 		default:
- 
--- 
-2.25.1
-
++	if (!minix_check_superblock(sbi))
++		goto out_illegal_sb;
++
+ 	/*
+ 	 * Allocate the buffer map to keep the superblock small.
+ 	 */
+-	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
+-		goto out_illegal_sb;
+ 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
+ 	map = kzalloc(i, GFP_KERNEL);
+ 	if (!map)
 
 
