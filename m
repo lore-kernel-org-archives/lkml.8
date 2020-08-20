@@ -2,87 +2,96 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 663AFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61070C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A44620658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC9720658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919432;
+	bh=+Ap2wQZ5CvXjKST15Vs/LrwEjznqAVZjmrVx/SdkBzk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HHpk3WTOcfnoagXIcwua/hQzYSVs5YEODiymXYFsh5Uf+TEgXkwAn8raTfnd83CCQ
+	 XiE9AtKxRq5emlhwGDlpzNBN+SXg2EPMPO4NsPZzpcjvwITxNPYoJpkEDd/TNZGrEK
+	 GZ7erha3/hKK+0LUZj1dLYfEg7pnm5UZEch4weiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbgHTKaF (ORCPT
+        id S1731511AbgHTKUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:30:05 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:34649
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731506AbgHTKU4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:56 -0400
-X-IronPort-AV: E=Sophos;i="5.76,332,1592863200"; 
-   d="scan'208";a="356907302"
-Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 12:20:51 +0200
-Date:   Thu, 20 Aug 2020 12:20:51 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-cc:     kbuild-all@lists.01.org, selinux@vger.kernel.org,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>,
-        Tom Rix <trix@redhat.com>,
-        Ethan Edwards <ethancarteredwards@gmail.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] selinux: fix memdup.cocci warnings
-Message-ID: <alpine.DEB.2.22.394.2008201218350.2524@hadrien>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Thu, 20 Aug 2020 06:20:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728040AbgHTKUn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F31C720658;
+        Thu, 20 Aug 2020 10:20:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918842;
+        bh=+Ap2wQZ5CvXjKST15Vs/LrwEjznqAVZjmrVx/SdkBzk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=reAYrC1KF5ZMYbw0JPbhDHx9CA6WJ/VomuQBccamckSaYSkw7hw2htUTR6EywSDS6
+         w2ttvZACdpDPyybj4MfDnUwDMwmXOHGvGdyTo9Gn9i9khhi5PlBk1j9zT4k1pnBNJU
+         gX468lvKdADn9dLT2zFh7ryWpG3niMswsYCVi3mM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 087/149] scsi: eesox: Fix different dev_id between request_irq() and free_irq()
+Date:   Thu, 20 Aug 2020 11:22:44 +0200
+Message-Id: <20200820092129.940896936@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: kernel test robot <lkp@intel.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Use kmemdup rather than duplicating its implementation
+[ Upstream commit 86f2da1112ccf744ad9068b1d5d9843faf8ddee6 ]
 
-Generated by: scripts/coccinelle/api/memdup.cocci
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-Fixes: c7c556f1e81b ("selinux: refactor changing booleans")
-CC: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Julia Lawall <julia.lawall@inria.fr>
-
+Link: https://lore.kernel.org/r/20200626040553.944352-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/scsi/arm/eesox.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git next
-head:   37ea433c66070fcef09c6d118492c36299eb72ba
-commit: c7c556f1e81bb9e09656ed6650d0c44c84b7c016 [4/6] selinux: refactor changing booleans
-:::::: branch date: 4 hours ago
-:::::: commit date: 2 days ago
+diff --git a/drivers/scsi/arm/eesox.c b/drivers/scsi/arm/eesox.c
+index a8ad6880dd914..cf01442d91363 100644
+--- a/drivers/scsi/arm/eesox.c
++++ b/drivers/scsi/arm/eesox.c
+@@ -575,7 +575,7 @@ static int eesoxscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_remove:
+ 	fas216_remove(host);
+-- 
+2.25.1
 
- conditional.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/security/selinux/ss/conditional.c
-+++ b/security/selinux/ss/conditional.c
-@@ -686,12 +686,11 @@ static int cond_bools_copy(struct hashta
- {
- 	struct cond_bool_datum *datum;
 
--	datum = kmalloc(sizeof(struct cond_bool_datum), GFP_KERNEL);
-+	datum = kmemdup(orig->datum, sizeof(struct cond_bool_datum),
-+			GFP_KERNEL);
- 	if (!datum)
- 		return -ENOMEM;
-
--	memcpy(datum, orig->datum, sizeof(struct cond_bool_datum));
--
- 	new->key = orig->key; /* No need to copy, never modified */
- 	new->datum = datum;
- 	return 0;
