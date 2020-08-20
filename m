@@ -2,52 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43F4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEF3C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D40720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D663D20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919288;
-	bh=YBhuNgEYpgNDbtRXg8Vtp8+E5sDwJguPGeeJEgMwyMY=;
+	s=default; t=1597919294;
+	bh=vHK/cYfCkH6S2lRCLbZoov92dZX5JyM42uxfEnSmiag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0E1BnbXKgUFCP3yT647p4+odMmm1DryvKd/S1NZlQ5gxWLNXTV1Ox+u4DxOMoELHP
-	 Hq8iTqYSIhPE/bBCZlKb7jS0Nmne8yqUUtedfuU/xFKXAQWmo+zVibkw0Dydy0Dphq
-	 POIJvAZW0xWkGUkW0DJww/fZv63N4ZCTrnfzTuAI=
+	b=l1rRFlHME3U0TCdf/xI9nYAzlMzPC2sIq6f9xS6kWo6j5zDq4fTR7GE1UgL2ZVg2q
+	 39D8QSJdycRnrRaN2xTnrSHGckM6IkOVlkmUr1ANHsue9BNLW9gx6IwWTUQUiH1Qdb
+	 Ni+/mmaQHl54roLvooDZBgvKiO2Ug1mRcwa+ws4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731858AbgHTK2F (ORCPT
+        id S1731583AbgHTKWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731604AbgHTKWK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:10 -0400
+        id S1731372AbgHTKVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D54842072D;
-        Thu, 20 Aug 2020 10:22:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A1052078B;
+        Thu, 20 Aug 2020 10:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918930;
-        bh=YBhuNgEYpgNDbtRXg8Vtp8+E5sDwJguPGeeJEgMwyMY=;
+        s=default; t=1597918907;
+        bh=vHK/cYfCkH6S2lRCLbZoov92dZX5JyM42uxfEnSmiag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LzqsfZQ5RKOkiC3emViDPISZfDMAqHoQepcDxJBvtUgMQ2V+wHFcTiNFN/ZDrlTde
-         h3gyUOBLOcCSupHHHgHFg3rCpO3Fqxf6npd8SxRO0Lzav2/0nczT5EZWvm+11UVloq
-         RhoOrOdHWFPgJ2/KRyMJY3fksEiQnLF/Ai8Vi6jg=
+        b=fZETCCtcxglXzkrI9wsa9L/Rz/npl+9NpHKjE7VA2/xIxWYjvBOXmlcAq8zQDzCx/
+         GKw/5cS1sOhDtF3TMCf63qp/Y1WnB1wAs/nQd1uSOb0rhsDJthBf8+X+FIYngjPNj6
+         intltgaRulLcdTFoQBrwwhYw6QbAGETpGv2pT2Hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.4 119/149] xen/balloon: make the balloon wait interruptible
-Date:   Thu, 20 Aug 2020 11:23:16 +0200
-Message-Id: <20200820092131.463240018@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>,
+        David Teigland <teigland@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 102/149] dlm: Fix kobject memleak
+Date:   Thu, 20 Aug 2020 11:22:59 +0200
+Message-Id: <20200820092130.645244184@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,41 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
+[ Upstream commit 0ffddafc3a3970ef7013696e7f36b3d378bc4c16 ]
 
-So it can be killed, or else processes can get hung indefinitely
-waiting for balloon pages.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Set do_unreg = 1 before kobject_init_and_add() to ensure that
+kobject_put() can be called in its error patch.
 
+Fixes: 901195ed7f4b ("Kobject: change GFS2 to use kobject_init_and_add")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Signed-off-by: David Teigland <teigland@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/balloon.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/dlm/lockspace.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -623,11 +623,13 @@ static int add_ballooned_pages(int nr_pa
- 	if (xen_hotplug_unpopulated) {
- 		st = reserve_additional_memory();
- 		if (st != BP_ECANCELED) {
-+			int rc;
-+
- 			mutex_unlock(&balloon_mutex);
--			wait_event(balloon_wq,
-+			rc = wait_event_interruptible(balloon_wq,
- 				   !list_empty(&ballooned_pages));
- 			mutex_lock(&balloon_mutex);
--			return 0;
-+			return rc ? -ENOMEM : 0;
- 		}
- 	}
+diff --git a/fs/dlm/lockspace.c b/fs/dlm/lockspace.c
+index b14bb2c460426..499f54f99891c 100644
+--- a/fs/dlm/lockspace.c
++++ b/fs/dlm/lockspace.c
+@@ -626,6 +626,9 @@ static int new_lockspace(const char *name, const char *cluster,
+ 	wait_event(ls->ls_recover_lock_wait,
+ 		   test_bit(LSFL_RECOVER_LOCK, &ls->ls_flags));
  
++	/* let kobject handle freeing of ls if there's an error */
++	do_unreg = 1;
++
+ 	ls->ls_kobj.kset = dlm_kset;
+ 	error = kobject_init_and_add(&ls->ls_kobj, &dlm_ktype, NULL,
+ 				     "%s", ls->ls_name);
+@@ -633,9 +636,6 @@ static int new_lockspace(const char *name, const char *cluster,
+ 		goto out_recoverd;
+ 	kobject_uevent(&ls->ls_kobj, KOBJ_ADD);
+ 
+-	/* let kobject handle freeing of ls if there's an error */
+-	do_unreg = 1;
+-
+ 	/* This uevent triggers dlm_controld in userspace to add us to the
+ 	   group of nodes that are members of this lockspace (managed by the
+ 	   cluster infrastructure.)  Once it's done that, it tells us who the
+-- 
+2.25.1
+
 
 
