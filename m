@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B30DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D70C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673FA22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B98BF20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916789;
-	bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+	s=default; t=1597916799;
+	bh=ZF7fIbxPHaUXniRTO6yvOsfLh+iz09ZMAnI6TM/7UzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AGlSNOdZAA1NwPIjssmvc5hkQHotdkKYFcoqBLSJw4WKpcSxMDOqS8eovgMdf7WOh
-	 xxe3oMR54Vl0P7MCddmrKfC3q7V4x5fHCxFZIFRNwte67GXDQnHxLYkKfyqUJ7Pl5l
-	 oqq3X1cxggQlQwL/4We6LbwOJkSlzR9VuIQMvIpc=
+	b=pDt35TC9IYMqHfCtBA80St4kfN+3J+UFMCzBmICi4vOfVCSIbexIRufCG7Educque
+	 9ujK5oMFcQWp/HN4x0+hcdWvffqNCWVMUO2AUjsJ49IP1aJ43X+nKcXyYTF1vNH1B0
+	 PHv7yPuQQH3O+ey86vG7vWT3qvxasvmQerc/pAgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgHTJq1 (ORCPT
+        id S1729335AbgHTJqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42796 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:46:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729289AbgHTJoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:44:06 -0400
+        id S1729165AbgHTJqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:46:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E25622CF7;
-        Thu, 20 Aug 2020 09:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9F3E2224D;
+        Thu, 20 Aug 2020 09:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916645;
-        bh=mdP55MQ5hZd+LjwfofX9mTruh9HHZctyninsRPIAus0=;
+        s=default; t=1597916763;
+        bh=ZF7fIbxPHaUXniRTO6yvOsfLh+iz09ZMAnI6TM/7UzQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vV68AjZEvkX64i9slCa6rI6RgITA+yr922xNVWP03OG3IMgXbxKrU8C+F9Ny/caex
-         eukIhlK41R0K6pvC1BgxC/LDfC2AXpDXGLkiY4TW5bBmDZYcwa9riAiNxKkICCbnI6
-         83jO32aFuyRD2pu/x/BS1AhXxIkFibXFOOkhowbc=
+        b=J5qQbwCbfS5nmEyiaMKEbYrurzfrmzWILRjkqPEmFp0iicH0TJBrWHesGYADT+E8B
+         oRUoob9kX8SOcK7CcL7dtmtwp+P/JBEaQkQcLA1rMGOKWu8RK0CYt8+EzK3c/Ecc97
+         y2mloveavOeMp4YYuH4QRgOZZEIyz2foc+EnSsnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sandeep Raghuraman <sandy.8925@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 202/204] drm/amdgpu: Fix bug where DPM is not enabled after hibernate and resume
-Date:   Thu, 20 Aug 2020 11:21:39 +0200
-Message-Id: <20200820091616.272171291@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Lane <tgl@sss.pgh.pa.us>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 037/152] powerpc: Allow 4224 bytes of stack expansion for the signal frame
+Date:   Thu, 20 Aug 2020 11:20:04 +0200
+Message-Id: <20200820091555.553110141@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,60 +60,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sandeep Raghuraman <sandy.8925@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit f87812284172a9809820d10143b573d833cd3f75 upstream.
+commit 63dee5df43a31f3844efabc58972f0a206ca4534 upstream.
 
-Reproducing bug report here:
-After hibernating and resuming, DPM is not enabled. This remains the case
-even if you test hibernate using the steps here:
-https://www.kernel.org/doc/html/latest/power/basic-pm-debugging.html
+We have powerpc specific logic in our page fault handling to decide if
+an access to an unmapped address below the stack pointer should expand
+the stack VMA.
 
-I debugged the problem, and figured out that in the file hardwaremanager.c,
-in the function, phm_enable_dynamic_state_management(), the check
-'if (!hwmgr->pp_one_vf && smum_is_dpm_running(hwmgr) && !amdgpu_passthrough(adev) && adev->in_suspend)'
-returns true for the hibernate case, and false for the suspend case.
+The code was originally added in 2004 "ported from 2.4". The rough
+logic is that the stack is allowed to grow to 1MB with no extra
+checking. Over 1MB the access must be within 2048 bytes of the stack
+pointer, or be from a user instruction that updates the stack pointer.
 
-This means that for the hibernate case, the AMDGPU driver doesn't enable DPM
-(even though it should) and simply returns from that function.
-In the suspend case, it goes ahead and enables DPM, even though it doesn't need to.
+The 2048 byte allowance below the stack pointer is there to cover the
+288 byte "red zone" as well as the "about 1.5kB" needed by the signal
+delivery code.
 
-I debugged further, and found out that in the case of suspend, for the
-CIK/Hawaii GPUs, smum_is_dpm_running(hwmgr) returns false, while in the case of
-hibernate, smum_is_dpm_running(hwmgr) returns true.
+Unfortunately since then the signal frame has expanded, and is now
+4224 bytes on 64-bit kernels with transactional memory enabled. This
+means if a process has consumed more than 1MB of stack, and its stack
+pointer lies less than 4224 bytes from the next page boundary, signal
+delivery will fault when trying to expand the stack and the process
+will see a SEGV.
 
-For CIK, the ci_is_dpm_running() function calls the ci_is_smc_ram_running() function,
-which is ultimately used to determine if DPM is currently enabled or not,
-and this seems to provide the wrong answer.
+The total size of the signal frame is the size of struct rt_sigframe
+(which includes the red zone) plus __SIGNAL_FRAMESIZE (128 bytes on
+64-bit).
 
-I've changed the ci_is_dpm_running() function to instead use the same method that
-some other AMD GPU chips do (e.g Fiji), which seems to read the voltage controller.
-I've tested on my R9 390 and it seems to work correctly for both suspend and
-hibernate use cases, and has been stable so far.
+The 2048 byte allowance was correct until 2008 as the signal frame
+was:
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=208839
-Signed-off-by: Sandeep Raghuraman <sandy.8925@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1440 */
+        /* --- cacheline 11 boundary (1408 bytes) was 32 bytes ago --- */
+        long unsigned int          _unused[2];           /*  1440    16 */
+        unsigned int               tramp[6];             /*  1456    24 */
+        struct siginfo *           pinfo;                /*  1480     8 */
+        void *                     puc;                  /*  1488     8 */
+        struct siginfo     info;                         /*  1496   128 */
+        /* --- cacheline 12 boundary (1536 bytes) was 88 bytes ago --- */
+        char                       abigap[288];          /*  1624   288 */
+
+        /* size: 1920, cachelines: 15, members: 7 */
+        /* padding: 8 */
+};
+
+1920 + 128 = 2048
+
+Then in commit ce48b2100785 ("powerpc: Add VSX context save/restore,
+ptrace and signal support") (Jul 2008) the signal frame expanded to
+2304 bytes:
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */	<--
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        long unsigned int          _unused[2];           /*  1696    16 */
+        unsigned int               tramp[6];             /*  1712    24 */
+        struct siginfo *           pinfo;                /*  1736     8 */
+        void *                     puc;                  /*  1744     8 */
+        struct siginfo     info;                         /*  1752   128 */
+        /* --- cacheline 14 boundary (1792 bytes) was 88 bytes ago --- */
+        char                       abigap[288];          /*  1880   288 */
+
+        /* size: 2176, cachelines: 17, members: 7 */
+        /* padding: 8 */
+};
+
+2176 + 128 = 2304
+
+At this point we should have been exposed to the bug, though as far as
+I know it was never reported. I no longer have a system old enough to
+easily test on.
+
+Then in 2010 commit 320b2b8de126 ("mm: keep a guard page below a
+grow-down stack segment") caused our stack expansion code to never
+trigger, as there was always a VMA found for a write up to PAGE_SIZE
+below r1.
+
+That meant the bug was hidden as we continued to expand the signal
+frame in commit 2b0a576d15e0 ("powerpc: Add new transactional memory
+state to the signal context") (Feb 2013):
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        struct ucontext    uc_transact;                  /*  1696  1696 */	<--
+        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
+        long unsigned int          _unused[2];           /*  3392    16 */
+        unsigned int               tramp[6];             /*  3408    24 */
+        struct siginfo *           pinfo;                /*  3432     8 */
+        void *                     puc;                  /*  3440     8 */
+        struct siginfo     info;                         /*  3448   128 */
+        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
+        char                       abigap[288];          /*  3576   288 */
+
+        /* size: 3872, cachelines: 31, members: 8 */
+        /* padding: 8 */
+        /* last cacheline: 32 bytes */
+};
+
+3872 + 128 = 4000
+
+And commit 573ebfa6601f ("powerpc: Increase stack redzone for 64-bit
+userspace to 512 bytes") (Feb 2014):
+
+struct rt_sigframe {
+        struct ucontext    uc;                           /*     0  1696 */
+        /* --- cacheline 13 boundary (1664 bytes) was 32 bytes ago --- */
+        struct ucontext    uc_transact;                  /*  1696  1696 */
+        /* --- cacheline 26 boundary (3328 bytes) was 64 bytes ago --- */
+        long unsigned int          _unused[2];           /*  3392    16 */
+        unsigned int               tramp[6];             /*  3408    24 */
+        struct siginfo *           pinfo;                /*  3432     8 */
+        void *                     puc;                  /*  3440     8 */
+        struct siginfo     info;                         /*  3448   128 */
+        /* --- cacheline 27 boundary (3456 bytes) was 120 bytes ago --- */
+        char                       abigap[512];          /*  3576   512 */	<--
+
+        /* size: 4096, cachelines: 32, members: 8 */
+        /* padding: 8 */
+};
+
+4096 + 128 = 4224
+
+Then finally in 2017, commit 1be7107fbe18 ("mm: larger stack guard
+gap, between vmas") exposed us to the existing bug, because it changed
+the stack VMA to be the correct/real size, meaning our stack expansion
+code is now triggered.
+
+Fix it by increasing the allowance to 4224 bytes.
+
+Hard-coding 4224 is obviously unsafe against future expansions of the
+signal frame in the same way as the existing code. We can't easily use
+sizeof() because the signal frame structure is not in a header. We
+will either fix that, or rip out all the custom stack expansion
+checking logic entirely.
+
+Fixes: ce48b2100785 ("powerpc: Add VSX context save/restore, ptrace and signal support")
+Cc: stable@vger.kernel.org # v2.6.27+
+Reported-by: Tom Lane <tgl@sss.pgh.pa.us>
+Tested-by: Daniel Axtens <dja@axtens.net>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200724092528.1578671-2-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/fault.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/smumgr/ci_smumgr.c
-@@ -2725,7 +2725,10 @@ static int ci_initialize_mc_reg_table(st
- 
- static bool ci_is_dpm_running(struct pp_hwmgr *hwmgr)
- {
--	return ci_is_smc_ram_running(hwmgr);
-+	return (1 == PHM_READ_INDIRECT_FIELD(hwmgr->device,
-+					     CGS_IND_REG__SMC, FEATURE_STATUS,
-+					     VOLTAGE_CONTROLLER_ON))
-+		? true : false;
+--- a/arch/powerpc/mm/fault.c
++++ b/arch/powerpc/mm/fault.c
+@@ -241,6 +241,9 @@ static bool bad_kernel_fault(struct pt_r
+ 	return false;
  }
  
- static int ci_smu_init(struct pp_hwmgr *hwmgr)
++// This comes from 64-bit struct rt_sigframe + __SIGNAL_FRAMESIZE
++#define SIGFRAME_MAX_SIZE	(4096 + 128)
++
+ static bool bad_stack_expansion(struct pt_regs *regs, unsigned long address,
+ 				struct vm_area_struct *vma, unsigned int flags,
+ 				bool *must_retry)
+@@ -248,7 +251,7 @@ static bool bad_stack_expansion(struct p
+ 	/*
+ 	 * N.B. The POWER/Open ABI allows programs to access up to
+ 	 * 288 bytes below the stack pointer.
+-	 * The kernel signal delivery code writes up to about 1.5kB
++	 * The kernel signal delivery code writes a bit over 4KB
+ 	 * below the stack pointer (r1) before decrementing it.
+ 	 * The exec code can write slightly over 640kB to the stack
+ 	 * before setting the user r1.  Thus we allow the stack to
+@@ -273,7 +276,7 @@ static bool bad_stack_expansion(struct p
+ 		 * between the last mapped region and the stack will
+ 		 * expand the stack rather than segfaulting.
+ 		 */
+-		if (address + 2048 >= uregs->gpr[1])
++		if (address + SIGFRAME_MAX_SIZE >= uregs->gpr[1])
+ 			return false;
+ 
+ 		if ((flags & FAULT_FLAG_WRITE) && (flags & FAULT_FLAG_USER) &&
 
 
