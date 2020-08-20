@@ -2,99 +2,253 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50003C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909C1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D39D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921431;
-	bh=nmcxt3WZtflwJ7Qs7MCerLyMF7yzlsKp1exKahSiFsQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PiTitV6FTjM3Ps67s/6uq6LDrdQEskKR5SAUTjkGs3sIbxeGPB3al6k+GavaLy0+Z
-	 y0XCDdxsMmZZdJPUVlG+Tr8cC5xG1S5wz357UTaa6DD29Pzdk7u34p/rfvfkC3fubk
-	 ryy7YnDseOwFxK43ekBZ1Kzj+tURh8nEIipC+y74=
+	by mail.kernel.org (Postfix) with ESMTP id 7B62C2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:03:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgHTLB4 (ORCPT
+        id S1728565AbgHTLBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:01:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731102AbgHTKNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:13:44 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 07:01:54 -0400
+Received: from auth-smtp.nebula.fi ([217.149.52.145]:56946 "EHLO
+        auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731583AbgHTK6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:58:46 -0400
+Received: from developer-Precision-3630-Tower (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F902075E;
-        Thu, 20 Aug 2020 10:13:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918424;
-        bh=nmcxt3WZtflwJ7Qs7MCerLyMF7yzlsKp1exKahSiFsQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmtDr7FI86dZBMmFSsYOeOqBQ44fE0ckdaKKA9h0+lXQfciQxahwj+14fPvP2GZvh
-         ND0I5/RCYw4Dz+yE6QwWSbqEXyi8ETsFEL1BYgA3w0d6JPUo0EbqlFMx/diKQLiLlR
-         9aSP5i55rq6X5S8DpJMQkV+z/fqtR/ri/hMTAxAk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.14 165/228] xen/balloon: make the balloon wait interruptible
-Date:   Thu, 20 Aug 2020 11:22:20 +0200
-Message-Id: <20200820091615.822015614@linuxfoundation.org>
+        (Authenticated sender: xipheracom)
+        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id A35354456;
+        Thu, 20 Aug 2020 13:58:06 +0300 (EEST)
+From:   Atte Tommiska <atte.tommiska@xiphera.com>
+To:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Atte Tommiska <atte.tommiska@xiphera.com>
+Subject: [PATCH v2 3/3] hwrng: xiphera-trng: add support for XIP8001B hwrng
+Date:   Thu, 20 Aug 2020 13:51:22 +0300
+Message-Id: <fdfe7889bf59f7b2b866ce25cd72ef323f508a3c.1597914503.git.atte.tommiska@xiphera.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <cover.1597914503.git.atte.tommiska@xiphera.com>
+References: <cover.1597914503.git.atte.tommiska@xiphera.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roger Pau Monne <roger.pau@citrix.com>
+Xiphera XIP8001B is an FPGA-based True Random Number Generator
+Intellectual Property (IP) Core which can be instantiated in
+multiple FPGA families. This driver adds Linux support for it through
+the hwrng interface.
 
-commit 88a479ff6ef8af7f07e11593d58befc644244ff7 upstream.
-
-So it can be killed, or else processes can get hung indefinitely
-waiting for balloon pages.
-
-Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200727091342.52325-3-roger.pau@citrix.com
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
 ---
- drivers/xen/balloon.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/char/hw_random/Kconfig        |  10 ++
+ drivers/char/hw_random/Makefile       |   1 +
+ drivers/char/hw_random/xiphera-trng.c | 151 ++++++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
+ create mode 100644 drivers/char/hw_random/xiphera-trng.c
 
---- a/drivers/xen/balloon.c
-+++ b/drivers/xen/balloon.c
-@@ -633,11 +633,13 @@ static int add_ballooned_pages(int nr_pa
- 	if (xen_hotplug_unpopulated) {
- 		st = reserve_additional_memory();
- 		if (st != BP_ECANCELED) {
-+			int rc;
-+
- 			mutex_unlock(&balloon_mutex);
--			wait_event(balloon_wq,
-+			rc = wait_event_interruptible(balloon_wq,
- 				   !list_empty(&ballooned_pages));
- 			mutex_lock(&balloon_mutex);
--			return 0;
-+			return rc ? -ENOMEM : 0;
- 		}
- 	}
+diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
+index f976a49e1fb5..007d765a9253 100644
+--- a/drivers/char/hw_random/Kconfig
++++ b/drivers/char/hw_random/Kconfig
+@@ -512,6 +512,16 @@ config HW_RANDOM_CCTRNG
+ 	  will be called cctrng.
+ 	  If unsure, say 'N'.
  
-
++config HW_RANDOM_XIPHERA
++	tristate "Xiphera FPGA based True Random Number Generator support"
++	depends on HAS_IOMEM
++	help
++	  This driver provides kernel-side support for Xiphera True Random
++	  Number Generator Intellectual Property Core.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called xiphera-trng.
++
+ endif # HW_RANDOM
+ 
+ config UML_RANDOM
+diff --git a/drivers/char/hw_random/Makefile b/drivers/char/hw_random/Makefile
+index 26ae06844f09..dfdcac81e384 100644
+--- a/drivers/char/hw_random/Makefile
++++ b/drivers/char/hw_random/Makefile
+@@ -44,3 +44,4 @@ obj-$(CONFIG_HW_RANDOM_KEYSTONE) += ks-sa-rng.o
+ obj-$(CONFIG_HW_RANDOM_OPTEE) += optee-rng.o
+ obj-$(CONFIG_HW_RANDOM_NPCM) += npcm-rng.o
+ obj-$(CONFIG_HW_RANDOM_CCTRNG) += cctrng.o
++obj-$(CONFIG_HW_RANDOM_XIPHERA) += xiphera-trng.o
+diff --git a/drivers/char/hw_random/xiphera-trng.c b/drivers/char/hw_random/xiphera-trng.c
+new file mode 100644
+index 000000000000..2f082eb8e8a5
+--- /dev/null
++++ b/drivers/char/hw_random/xiphera-trng.c
+@@ -0,0 +1,151 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2020 Xiphera Ltd. */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/hw_random.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/delay.h>
++
++#define CONTROL_REG			0x00000000
++#define STATUS_REG			0x00000004
++#define RAND_REG			0x00000000
++
++#define HOST_TO_TRNG_RESET		0x00000001
++#define HOST_TO_TRNG_RELEASE_RESET	0x00000002
++#define HOST_TO_TRNG_ENABLE		0x80000000
++#define HOST_TO_TRNG_ZEROIZE		0x80000004
++#define HOST_TO_TRNG_ACK_ZEROIZE	0x80000008
++#define HOST_TO_TRNG_READ		0x8000000F
++
++/* trng statuses */
++#define TRNG_ACK_RESET			0x000000AC
++#define TRNG_SUCCESSFUL_STARTUP		0x00000057
++#define TRNG_FAILED_STARTUP		0x000000FA
++#define TRNG_NEW_RAND_AVAILABLE		0x000000ED
++
++struct xiphera_trng {
++	void __iomem *mem;
++	struct hwrng rng;
++};
++
++static int xiphera_trng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
++{
++	struct xiphera_trng *trng = container_of(rng, struct xiphera_trng, rng);
++	int ret = 0;
++
++	while (max >= sizeof(u32)) {
++		/* check for data */
++		if (readl(trng->mem + STATUS_REG) == TRNG_NEW_RAND_AVAILABLE) {
++			*(u32 *)buf = readl(trng->mem + RAND_REG);
++			/*
++			 * Inform the trng of the read
++			 * and re-enable it to produce a new random number
++			 */
++			writel(HOST_TO_TRNG_READ, trng->mem + CONTROL_REG);
++			writel(HOST_TO_TRNG_ENABLE, trng->mem + CONTROL_REG);
++			ret += sizeof(u32);
++			buf += sizeof(u32);
++			max -= sizeof(u32);
++		} else {
++			break;
++		}
++	}
++	return ret;
++}
++
++static int xiphera_trng_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct xiphera_trng *trng;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++
++	trng = devm_kzalloc(dev, sizeof(*trng), GFP_KERNEL);
++	if (!trng)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	trng->mem = devm_ioremap_resource(dev, res);
++	if (IS_ERR(trng->mem))
++		return PTR_ERR(trng->mem);
++
++	/*
++	 * the trng needs to be reset first which might not happen in time,
++	 * hence we incorporate a small delay to ensure proper behaviour
++	 */
++	writel(HOST_TO_TRNG_RESET, trng->mem + CONTROL_REG);
++	usleep_range(100, 200);
++
++	if (readl(trng->mem + STATUS_REG) != TRNG_ACK_RESET) {
++		/*
++		 * there is a small chance the trng is just not ready yet,
++		 * so we try one more time. If the second time fails, we give up
++		 */
++		usleep_range(100, 200);
++		if (readl(trng->mem + STATUS_REG) != TRNG_ACK_RESET) {
++			dev_err(dev, "failed to reset the trng ip\n");
++			return -ENODEV;
++		}
++	}
++
++	/*
++	 * once again, to ensure proper behaviour we sleep
++	 * for a while after zeroizing the trng
++	 */
++	writel(HOST_TO_TRNG_RELEASE_RESET, trng->mem + CONTROL_REG);
++	writel(HOST_TO_TRNG_ENABLE, trng->mem + CONTROL_REG);
++	writel(HOST_TO_TRNG_ZEROIZE, trng->mem + CONTROL_REG);
++	msleep(20);
++
++	if (readl(trng->mem + STATUS_REG) != TRNG_SUCCESSFUL_STARTUP) {
++		/* diagnose the reason for the failure */
++		if (readl(trng->mem + STATUS_REG) == TRNG_FAILED_STARTUP) {
++			dev_err(dev, "trng ip startup-tests failed\n");
++			return -ENODEV;
++		}
++		dev_err(dev, "startup-tests yielded no response\n");
++		return -ENODEV;
++	}
++
++	writel(HOST_TO_TRNG_ACK_ZEROIZE, trng->mem + CONTROL_REG);
++
++	trng->rng.name = pdev->name;
++	trng->rng.read = xiphera_trng_read;
++	trng->rng.quality = 900;
++
++	ret = devm_hwrng_register(dev, &trng->rng);
++	if (ret) {
++		dev_err(dev, "failed to register rng device: %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, trng);
++
++	return 0;
++}
++
++static const struct of_device_id xiphera_trng_of_match[] = {
++	{ .compatible = "xiphera,xip8001b-trng", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, xiphera_trng_of_match);
++
++static struct platform_driver xiphera_trng_driver = {
++	.driver = {
++		.name = "xiphera-trng",
++		.owner = THIS_MODULE,
++		.of_match_table	= xiphera_trng_of_match,
++	},
++	.probe = xiphera_trng_probe,
++};
++
++module_platform_driver(xiphera_trng_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Atte Tommiska");
++MODULE_DESCRIPTION("Xiphera FPGA-based true random number generator driver");
+-- 
+2.28.0
 
