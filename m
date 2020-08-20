@@ -2,131 +2,303 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E31C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EC6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:23:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD218206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D659206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:23:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OYtshLzB";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hTDd5SA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728790AbgHTPWJ (ORCPT
+        id S1729017AbgHTPXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:22:09 -0400
-Received: from mga09.intel.com ([134.134.136.24]:37830 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728701AbgHTPV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:21:57 -0400
-IronPort-SDR: o391UOYadY2uUabqdqap5z5WBbv3lbc2P803DCniatqWuckQZgWWS2Lk4mv/afIAripSwrORz2
- L1WH0pMANsLA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="156380765"
-X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="156380765"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 08:21:56 -0700
-IronPort-SDR: Uaqrd/K30h5wHd4hAWWBSBxaz5iW8psIfFE0swpnJhZezQjFqTuwBal0dg/2RfKBcsYsEXqlWe
- nVG01Lo2vUBQ==
-X-IronPort-AV: E=Sophos;i="5.76,333,1592895600"; 
-   d="scan'208";a="327462679"
-Received: from nguerr1-mobl1.amr.corp.intel.com (HELO [10.251.25.200]) ([10.251.25.200])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 08:21:55 -0700
-Subject: Re: [RFC][PATCH 5/9] mm/migrate: demote pages during reclaim
-To:     "Huang, Ying" <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, yang.shi@linux.alibaba.com,
-        rientjes@google.com, dan.j.williams@intel.com,
-        Linux-MM <linux-mm@kvack.org>
-References: <20200818184122.29C415DF@viggo.jf.intel.com>
- <20200818184131.C972AFCC@viggo.jf.intel.com>
- <87lfi9wxk9.fsf@yhuang-dev.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
- CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
- 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
- K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
- VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
- e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
- ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
- kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
- rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
- f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
- mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
- UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
- sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
- 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
- cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
- UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
- db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
- lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
- kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
- gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
- AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
- XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
- e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
- pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
- YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
- lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
- M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
- 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
- 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
- OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
- ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
- z5cecg==
-Message-ID: <6a378a57-a453-0318-924b-05dfa0a10c1f@intel.com>
-Date:   Thu, 20 Aug 2020 08:21:55 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <87lfi9wxk9.fsf@yhuang-dev.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 20 Aug 2020 11:23:48 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:29506 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728393AbgHTPXk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:23:40 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KFKXio011761;
+        Thu, 20 Aug 2020 08:22:52 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=PpUOmZJIFqBGA7iqvKRjmt2IgcoJ3mlJkG5iTJCVdjI=;
+ b=OYtshLzBdnPeNnaHbPcXzImlk+/dCtypWjHiJZdFKGvmxkf7gSiQmfCuylsKFvA3+Scl
+ gJLgNpOBlzMBxP8y/iuTOtYWaDOuDGj6I1X/gjMNcHp8cPgufZU/Ff2OG0XZRuML2qZJ
+ yDM/eOBr7ki75zSELzxMPbDdh2MUzCHbcek= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 331d50knbs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 20 Aug 2020 08:22:51 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Thu, 20 Aug 2020 08:22:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ldEF/1B3TGvp2U/flZly+iuSRR5UTaVStX+po+FREFlUUlREYlVefRiQKM3RWHXnjr+bRn2HXK4nVTr45k6luReK575EjQr+QokZyejqMGLmGGkmh2IdEJzywy5LWCcF1YCW/H3zttIBdvXDKjci+2CdgMM5TPk/ygsklV+U4WsekAkBX1hKkf304fHw5oyg2g0h2L9ZZn1smOeUTQLoSn02sQ1+7Hk59UVDBKMV/V+40+cFf23aUPdU9UydGLok8hE7dA5S3CS6rpcsP07OcFNDBGij22lK9QtAx1y5IhkHVhyfb460et2UVypEh04xUy2Q6EfnGrcZoVQ3q4+w+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PpUOmZJIFqBGA7iqvKRjmt2IgcoJ3mlJkG5iTJCVdjI=;
+ b=gEmKD1ACsCOJne2FbcLip2aWN4ci8WuobnfOoOpydjs0ZxKhUswRzECuPQvBDvsB38HSAouQAmYsD45MUt66pI5UAU8WnZn0b/bJKSwHQi74sfESPmq1iiBylf8V8U0pfJHtgS5BLR76yhAY5HmZtKUfDIFeQKtHoTDooG49sEUueuz4W33YMVyl+rrl3NlZuyd6g/OoPJPuA2PqUe/dmV98fsDrYMFLpahQTmD8t1pNOtT9CN5yigRz/YO4A3EXH7iPezr/q/SJSl1BRIKOSqGo18kfN3mBRRnau4RxeBxJVd180nN4sSrX3BUC3buJN74qqce93Tz/CjygnYdEng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PpUOmZJIFqBGA7iqvKRjmt2IgcoJ3mlJkG5iTJCVdjI=;
+ b=hTDd5SA9mVueGFloGZw9Sh47INmKoXkGgJhqGvIl/GDdQ54rkOUx3X4T748+i9ps44j4gem/zo78GyxNMOL12efcx8FyAMegdSEcteM5TM0nua2z5us/OwNsHx6VG73d0uMRaHocHRiFWLru4MYXPh1BzVbj3bhExIp72dwLnqo=
+Authentication-Results: cloudflare.com; dkim=none (message not signed)
+ header.d=none;cloudflare.com; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
+ 2020 15:22:36 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3305.026; Thu, 20 Aug 2020
+ 15:22:36 +0000
+Subject: Re: [PATCH bpf-next v1 1/8] bpf: Introduce pseudo_btf_id
+To:     Hao Luo <haoluo@google.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>
+CC:     Shuah Khan <shuah@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+References: <20200819224030.1615203-1-haoluo@google.com>
+ <20200819224030.1615203-2-haoluo@google.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <35519fec-754c-0a17-4f01-9d6e39a8a7e8@fb.com>
+Date:   Thu, 20 Aug 2020 08:22:29 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
+In-Reply-To: <20200819224030.1615203-2-haoluo@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR05CA0021.namprd05.prod.outlook.com
+ (2603:10b6:208:c0::34) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by MN2PR05CA0021.namprd05.prod.outlook.com (2603:10b6:208:c0::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Thu, 20 Aug 2020 15:22:32 +0000
+X-Originating-IP: [2620:10d:c091:480::1:7ec1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 34815f96-e2b8-4913-a34d-08d8451cde0d
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3046:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR15MB304697D131E6F6CD3AAF2D20D35A0@BYAPR15MB3046.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 89TYIm1l3WO/CR2GBJ/BnjLuq3gz5JiXL3b4d+kpWAB5NrSccraUZw/KsqGHKhcMkDT9zqx7G6/UgPHZY3yK8y35L1489moyRx2RctzxVXRkoOrAGrGUhcPFr1s5l2qvzNrUoS+Of3IiifhL4AVNWh0qUtc647jp7q4oY+g/zoF6Z5VdAVZQY3U8tVWOw5MGupu7IqG1X4lzKkZmFcKp+rvXKcv3AH7+SRHnJmlBOOT0V009HvBPF1x1EcC8wDKJGhemLUc6hDNDEtBTBeZ08Thg3tcjI9YPfW0XCDZqq25CnvzjFRrMqFgeql901Eh2rMJI2YywOrWPFuRdWT5tjb/crSRzfhN3SOKiNI67ztEkVMntx1skw4/+5//ZopRoeU9KvYmxXShfYMHmi5rFrA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(366004)(376002)(39860400002)(66476007)(66556008)(31696002)(66946007)(2906002)(83380400001)(7416002)(86362001)(6666004)(53546011)(6486002)(5660300002)(186003)(478600001)(36756003)(4326008)(52116002)(2616005)(956004)(110011004)(31686004)(316002)(8676002)(8936002)(54906003)(16576012)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: iwXB19JHQw66Td3LRg5Un7cGNNF9h4sBVG34UqBKHuTVNHMpOWR9lWOwlZ99cru1tS8HGKGdvUVJcs7wGggFFMcOuor3U5+dZOL+mE/pCtqBKXB97aTJCGS5xVG5AaQ+LCbrVDF8/JTmsyVcO4DPoB3o85uAdBxuPMg+UbiGvTm3CVFC411J5RNKNMzWuHAHwZxeBHA14CIvbXVyQpbWcdXxr9Bf0rwf8EZKX4lQYWB01wuNSpUFNdupne1mvKR3tNQz5MAjBghy7vshY0mbgt4FLLjIiQxWViVEshhz1djiR/N5Dn9pLcwG+fLBOcqZRiNeDB7hSgHUNK5jmC9WuA2j1U9jWzH7QjBiB0rAQGNh8QP/PsoEXI1YWdHDGTDtwmTsEFjvq7NgXux2MPJ6qHYy+eloeRQ0IaZ0WD2A1H8rmd6TaX774qq4XUTwy4MR5CXBBQWOIdniNpDQ32cyhx9vgMsY3BWv3fUiOxoB9+h4rUwrzRKNbFXD4016OLVUtjyYlh7WXsqn7UP818WIClk2TM9/PvwQM7QT9nVdTbh7PGMUi4At5G+OAEXo/fU324XYaPLPf9Ja7u2Ptr6+iztqGlvPxmiR2jOk+Xsnt0GJTGE9/cQTM1uVMDVBIuyMmZSdakWrdUd9x44rAbxuq8ZEYz9d8GtOlmFsffYFvedWCGLj+Y/fqEYJrc+2lGrX
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34815f96-e2b8-4913-a34d-08d8451cde0d
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 15:22:36.0751
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jLz1uWuTjfiNkfoj/LKrEHgttQXhiNxV8x7nWDpXOT5tfPd7X2jqlEtLe8ANjQ2c
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
+ clxscore=1011 phishscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008200127
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 1:06 AM, Huang, Ying wrote:
->> +	/* Migrate pages selected for demotion */
->> +	nr_reclaimed += demote_page_list(&ret_pages, &demote_pages, pgdat, sc);
->> +
->>  	pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
->>  
->>  	mem_cgroup_uncharge_list(&free_pages);
->> _
-> Generally, it's good to batch the page migration.  But one side effect
-> is that, if the pages are failed to be migrated, they will be placed
-> back to the LRU list instead of falling back to be reclaimed really.
-> This may cause some issue in some situation.  For example, if there's no
-> enough space in the PMEM (slow) node, so the page migration fails, OOM
-> may be triggered, because the direct reclaiming on the DRAM (fast) node
-> may make no progress, while it can reclaim some pages really before.
 
-Yes, agreed.
 
-There are a couple of ways we could fix this.  Instead of splicing
-'demote_pages' back into 'ret_pages', we could try to get them back on
-'page_list' and goto the beginning on shrink_page_list().  This will
-probably yield the best behavior, but might be a bit ugly.
+On 8/19/20 3:40 PM, Hao Luo wrote:
+> Pseudo_btf_id is a type of ld_imm insn that associates a btf_id to a
+> ksym so that further dereferences on the ksym can use the BTF info
+> to validate accesses. Internally, when seeing a pseudo_btf_id ld insn,
+> the verifier reads the btf_id stored in the insn[0]'s imm field and
+> marks the dst_reg as PTR_TO_BTF_ID. The btf_id points to a VAR_KIND,
+> which is encoded in btf_vminux by pahole. If the VAR is not of a struct
+> type, the dst reg will be marked as PTR_TO_MEM instead of PTR_TO_BTF_ID
+> and the mem_size is resolved to the size of the VAR's type.
+> 
+>  From the VAR btf_id, the verifier can also read the address of the
+> ksym's corresponding kernel var from kallsyms and use that to fill
+> dst_reg.
+> 
+> Therefore, the proper functionality of pseudo_btf_id depends on (1)
+> kallsyms and (2) the encoding of kernel global VARs in pahole, which
+> should be available since pahole v1.18.
 
-We could also add a field to 'struct scan_control' and just stop trying
-to migrate after it has failed one or more times.  The trick will be
-picking a threshold that doesn't mess with either the normal reclaim
-rate or the migration rate.
+I tried your patch with latest pahole but it did not generate
+expected BTF_TYPE_VARs. My pahole head is:
+   f3d9054ba8ff btf_encoder: Teach pahole to store percpu variables in 
+vmlinux BTF.
 
-This is on my list to fix up next.
+First I made the following changes to facilitate debugging:
+diff --git a/btf_encoder.c b/btf_encoder.c
+index 982f59d..f94c3a6 100644
+--- a/btf_encoder.c
++++ b/btf_encoder.c
+@@ -334,6 +334,9 @@ int cu__encode_btf(struct cu *cu, int verbose, bool 
+force)
+                 /* percpu variables are allocated in global space */
+                 if (variable__scope(var) != VSCOPE_GLOBAL)
+                         continue;
++               /* type 0 is void, probably an internal error */
++               if (var->ip.tag.type == 0)
++                       continue;
+                 has_global_var = true;
+                 head = &hash_addr[hashaddr__fn(var->ip.addr)];
+                 hlist_add_head(&var->tool_hnode, head);
+@@ -399,8 +402,8 @@ int cu__encode_btf(struct cu *cu, int verbose, bool 
+force)
+                 }
+
+                 if (verbose)
+-                       printf("symbol '%s' of address 0x%lx encoded\n",
+-                              sym_name, addr);
++                       printf("symbol '%s' of address 0x%lx encoded, 
+type %u\n",
++                              sym_name, addr, type);
+
+                 /* add a BTF_KIND_VAR in btfe->types */
+                 linkage = var->external ? BTF_VAR_GLOBAL_ALLOCATED : 
+BTF_VAR_STATIC;
+diff --git a/libbtf.c b/libbtf.c
+index 7a01ded..3a0d8d7 100644
+--- a/libbtf.c
++++ b/libbtf.c
+@@ -304,6 +304,8 @@ static const char * const btf_kind_str[NR_BTF_KINDS] = {
+         [BTF_KIND_RESTRICT]     = "RESTRICT",
+         [BTF_KIND_FUNC]         = "FUNC",
+         [BTF_KIND_FUNC_PROTO]   = "FUNC_PROTO",
++       [BTF_KIND_VAR]          = "VAR",
++       [BTF_KIND_DATASEC]      = "DATASEC",
+  };
+
+  static const char *btf_elf__name_in_gobuf(const struct btf_elf *btfe, 
+uint32_t offset)
+@@ -671,7 +673,7 @@ int32_t btf_elf__add_var_type(struct btf_elf *btfe, 
+uint32_t type, uint32_t name
+                 return -1;
+         }
+
+-       btf_elf__log_type(btfe, &t.type, false, false, "type=%u name=%s",
++       btf_elf__log_type(btfe, &t.type, false, false, "type=%u name=%s\n",
+                           t.type.type, btf_elf__name_in_gobuf(btfe, 
+t.type.name_off));
+
+         return btfe->type_index;
+
+It would be good if you can add some of the above changes to
+pahole for easier `pahole -JV` dump.
+
+With the above change, I only got static per cpu variables.
+For example,
+    static DEFINE_PER_CPU(unsigned int , mirred_rec_level);
+in net/sched/act_mirred.c.
+
+[10] INT 'unsigned int' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[74536] VAR 'mirred_rec_level' type_id=10, linkage=static
+
+The dwarf debug_info entry for `mirred_rec_level`:
+0x0001d8d6:   DW_TAG_variable
+                 DW_AT_name      ("mirred_rec_level")
+                 DW_AT_decl_file 
+("/data/users/yhs/work/net-next/net/sched/act_mirred.c")
+                 DW_AT_decl_line (31)
+                 DW_AT_decl_column       (0x08)
+                 DW_AT_type      (0x00000063 "unsigned int")
+                 DW_AT_location  (DW_OP_addr 0x0)
+It is not a declaration and it contains type.
+
+All global per cpu variables do not have BTF_KIND_VAR generated.
+I did a brief investigation and found this mostly like to be a
+pahole issue. For example, for global per cpu variable
+bpf_prog_active,
+   include/linux/bpf.h
+         DECLARE_PER_CPU(int , bpf_prog_active);
+   kernel/bpf/syscall.c
+         DEFINE_PER_CPU(int , bpf_prog_active);
+it is declared in the header include/linux/bpf.h and
+defined in kernel/bpf/syscall.c.
+
+In many cu's, you will see:
+0x0003592a:   DW_TAG_variable
+                 DW_AT_name      ("bpf_prog_active")
+                 DW_AT_decl_file 
+("/data/users/yhs/work/net-next/include/linux/bpf.h")
+                 DW_AT_decl_line (1074)
+                 DW_AT_decl_column       (0x01)
+                 DW_AT_type      (0x0001fa7e "int")
+                 DW_AT_external  (true)
+                 DW_AT_declaration       (true)
+
+In kernel/bpf/syscall.c, I see
+the following dwarf entry for real definition:
+0x00013534:   DW_TAG_variable
+                 DW_AT_name      ("bpf_prog_active")
+                 DW_AT_decl_file 
+("/data/users/yhs/work/net-next/include/linux/bpf.h")
+                 DW_AT_decl_line (1074)
+                 DW_AT_decl_column       (0x01)
+                 DW_AT_type      (0x000000d6 "int")
+                 DW_AT_external  (true)
+                 DW_AT_declaration       (true)
+
+0x00021a25:   DW_TAG_variable
+                 DW_AT_specification     (0x00013534 "bpf_prog_active")
+                 DW_AT_decl_file 
+("/data/users/yhs/work/net-next/kernel/bpf/syscall.c")
+                 DW_AT_decl_line (43)
+                 DW_AT_location  (DW_OP_addr 0x0)
+
+Note that for the second entry DW_AT_specification points to the 
+declaration. I am not 100% sure whether pahole handle this properly or 
+not. It generates a type id 0 (void) for bpf_prog_active variable.
+
+Could you investigate this a little more?
+
+I am using gcc 8.2.1. Using kernel default dwarf (dwarf 2) exposed
+the above issue. Tries to use dwarf 4 and the problem still exists.
+
+
+> 
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
+>   include/linux/btf.h      | 15 +++++++++
+>   include/uapi/linux/bpf.h | 38 ++++++++++++++++------
+>   kernel/bpf/btf.c         | 15 ---------
+>   kernel/bpf/verifier.c    | 68 ++++++++++++++++++++++++++++++++++++++++
+>   4 files changed, 112 insertions(+), 24 deletions(-)
+> 
+[...]
