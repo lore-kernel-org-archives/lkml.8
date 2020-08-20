@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7892C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A29C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F627207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55511207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926994;
-	bh=HMeLencfP79QnOTHpQu9SCQ8crUYfKYEweeJFlkvMmY=;
+	s=default; t=1597927008;
+	bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAgUFQgcQoQ8PYP3b21eoGKC+7/EP1EGlk31XKuT6y8Eb5G0UZhaa3QTl/ykY5ssQ
-	 VnyV0gcNE7okGUp74Q+PzkbW+NvwTiGD4t7/0PYkO0fStVDuD4k/ua4xfTrDmv2xrO
-	 KSjo/A4rpEV1s1GN+jS16BEj+xEViE68RP6PKE34=
+	b=lg3Er/k2VlDd0N6MBVAWKSfaJAFAEzbMuAbVtd2kBjOK9gCvYSJ7/x64Wj8J6QFFD
+	 RvoEHPoRH6Q0tMH+6BWE49lt94O2Xz3yCymXa9LpDoCflWi0vdnwll6vl7F4GD8fuW
+	 mwdcpGlJ4X1TeAZ9cRqBuaoglADcqbL29PCTPNQ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgHTMgc (ORCPT
+        id S1729265AbgHTMgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:36:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52362 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:36:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729459AbgHTJsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:01 -0400
+        id S1729253AbgHTJr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B642920724;
-        Thu, 20 Aug 2020 09:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EE362078D;
+        Thu, 20 Aug 2020 09:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916881;
-        bh=HMeLencfP79QnOTHpQu9SCQ8crUYfKYEweeJFlkvMmY=;
+        s=default; t=1597916878;
+        bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KN8+3S08a+x+eKuhIhepzWwCoYdBmZIPEwn0ZuNcmEH+Q/iaJAxUOlb89pAIWCfR+
-         8beqa/zS44ZHAIgKZUVbniMSgEkwuRuwWQiu4l1wGkz3Ihu/qJ4kfm12vETyUCk2LN
-         GL9m4q3yWjf0lDyxvFHaITYszgefC9SgbZlN7BQU=
+        b=W9nsYB/5sts59QPDI+sfruVCLUxOQV+M5DEcb/JdABogf0XrC1LvycFUGwDMglAxd
+         5ACn1ZK4NeveWN0wUKthQjFdl0jXf95YllfmZxFsNhRQ208oC8UrY6UfCaVzTYI7AM
+         A+8sQb5EiiFjJ9RTtKHYpmM+MtxK++vvgoowbjwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: [PATCH 5.4 050/152] MIPS: qi_lb60: Fix routing to audio amplifier
-Date:   Thu, 20 Aug 2020 11:20:17 +0200
-Message-Id: <20200820091556.268336106@linuxfoundation.org>
+Subject: [PATCH 5.4 049/152] MIPS: CPU#0 is not hotpluggable
+Date:   Thu, 20 Aug 2020 11:20:16 +0200
+Message-Id: <20200820091556.214462547@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,34 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 0889a67a9e7a56ba39af223d536630b20b877fda upstream.
+commit 9cce844abf07b683cff5f0273977d5f8d0af94c7 upstream.
 
-The ROUT (right channel output of audio codec) was connected to INL
-(left channel of audio amplifier) instead of INR (right channel of audio
-amplifier).
+Now CPU#0 is not hotpluggable on MIPS, so prevent to create /sys/devices
+/system/cpu/cpu0/online which confuses some user-space tools.
 
-Fixes: 8ddebad15e9b ("MIPS: qi_lb60: Migrate to devicetree")
-Cc: stable@vger.kernel.org # v5.3
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/dts/ingenic/qi_lb60.dts |    2 +-
+ arch/mips/kernel/topology.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/boot/dts/ingenic/qi_lb60.dts
-+++ b/arch/mips/boot/dts/ingenic/qi_lb60.dts
-@@ -69,7 +69,7 @@
- 			"Speaker", "OUTL",
- 			"Speaker", "OUTR",
- 			"INL", "LOUT",
--			"INL", "ROUT";
-+			"INR", "ROUT";
+--- a/arch/mips/kernel/topology.c
++++ b/arch/mips/kernel/topology.c
+@@ -20,7 +20,7 @@ static int __init topology_init(void)
+ 	for_each_present_cpu(i) {
+ 		struct cpu *c = &per_cpu(cpu_devices, i);
  
- 		simple-audio-card,aux-devs = <&amp>;
- 
+-		c->hotpluggable = 1;
++		c->hotpluggable = !!i;
+ 		ret = register_cpu(c, i);
+ 		if (ret)
+ 			printk(KERN_WARNING "topology_init: register_cpu %d "
 
 
