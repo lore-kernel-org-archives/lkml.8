@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D95C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EE4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6301206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5FB8206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920705;
-	bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+	s=default; t=1597920719;
+	bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eFLC9b0R4NSh/CydNu7mCLBiGHBv9YbV/4G3E2UwljdA5+TPi5B6H2ErSi7pGPFc
-	 Mbo9MjGYUPTydAkrE9b0Pzti3L1bUsmPf4l5wfVGxp9jElbLyAuMXCGCTw4Y3FZrvd
-	 0ZwAA8Zs05MLl+L8DnAdJgU9G4bS7Jpsa462pKKE=
+	b=qT6ZrZ7JTkK/ed4cchr8QseqnRFtNMkuIZrKa+ESkIBSEdIsZBevZbZRGLDWWudeM
+	 DaDIdMqun6aeNPFWIoqdlnS6G+mDXWG451+ykRBw8g17xWgDvZGaZz+Y062c4S/Kb3
+	 uDikyayG82qLp3mgNj0PxUNzbtHo6nZ5TN9SVw2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgHTKvk (ORCPT
+        id S1731254AbgHTKv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33298 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:51:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731202AbgHTKOl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:41 -0400
+        id S1731189AbgHTKOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6198020724;
-        Thu, 20 Aug 2020 10:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00A432067C;
+        Thu, 20 Aug 2020 10:14:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918480;
-        bh=0vbpsik9GH1sOS6luzvN5FmPVmEen3xws3Rpjd3rdO4=;
+        s=default; t=1597918474;
+        bh=6Ph9bjp28ZJvGhNXbLdFvK04Ec5xSbH1QX9g4Ch7iaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cr47rsZVzKGk6bBPoo5Z+xBvA7s4uo/VnxDK450sQLNrXxci4FMjVkUYrZY8VjqcY
-         R6Zgmtpzht3o/IGeKEyQp4qm76qAfYuvgI3NICIV8BH7+MB5s1gecBiShBf0KPYRC2
-         qCGOkqtB1ZTyXpKQRsVqzFSBuWA4KWFWsmYoW1zU=
+        b=Qp+UrJdr8YAeiqWyvXCxzNq8WPeaoxt1TYBArGheQZBj4t3iaVnC8ITm9BN8vgh/5
+         sDDhlo874TM6OVvUQqbWvSuaurYuQgDzKURac3I5h5tGkiaS52K+qx3DkDZXPhjl8m
+         UX0thiTq8ldt+pvIHaA9V5R+ByCN1KBFSWOUoqq4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com,
-        syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com,
-        syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 155/228] fs/minix: reject too-large maximum file size
-Date:   Thu, 20 Aug 2020 11:22:10 +0200
-Message-Id: <20200820091615.329868478@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.14 182/228] MIPS: CPU#0 is not hotpluggable
+Date:   Thu, 20 Aug 2020 11:22:37 +0200
+Message-Id: <20200820091616.671326927@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -66,76 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit 270ef41094e9fa95273f288d7d785313ceab2ff3 upstream.
+commit 9cce844abf07b683cff5f0273977d5f8d0af94c7 upstream.
 
-If the minix filesystem tries to map a very large logical block number to
-its on-disk location, block_to_path() can return offsets that are too
-large, causing out-of-bounds memory accesses when accessing indirect index
-blocks.  This should be prevented by the check against the maximum file
-size, but this doesn't work because the maximum file size is read directly
-from the on-disk superblock and isn't validated itself.
+Now CPU#0 is not hotpluggable on MIPS, so prevent to create /sys/devices
+/system/cpu/cpu0/online which confuses some user-space tools.
 
-Fix this by validating the maximum file size at mount time.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+c7d9ec7a1a7272dd71b3@syzkaller.appspotmail.com
-Reported-by: syzbot+3b7b03a0c28948054fb5@syzkaller.appspotmail.com
-Reported-by: syzbot+6e056ee473568865f3e6@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-4-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/inode.c |   22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
+ arch/mips/kernel/topology.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/minix/inode.c
-+++ b/fs/minix/inode.c
-@@ -155,6 +155,23 @@ static int minix_remount (struct super_b
- 	return 0;
- }
+--- a/arch/mips/kernel/topology.c
++++ b/arch/mips/kernel/topology.c
+@@ -20,7 +20,7 @@ static int __init topology_init(void)
+ 	for_each_present_cpu(i) {
+ 		struct cpu *c = &per_cpu(cpu_devices, i);
  
-+static bool minix_check_superblock(struct minix_sb_info *sbi)
-+{
-+	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
-+		return false;
-+
-+	/*
-+	 * s_max_size must not exceed the block mapping limitation.  This check
-+	 * is only needed for V1 filesystems, since V2/V3 support an extra level
-+	 * of indirect blocks which places the limit well above U32_MAX.
-+	 */
-+	if (sbi->s_version == MINIX_V1 &&
-+	    sbi->s_max_size > (7 + 512 + 512*512) * BLOCK_SIZE)
-+		return false;
-+
-+	return true;
-+}
-+
- static int minix_fill_super(struct super_block *s, void *data, int silent)
- {
- 	struct buffer_head *bh;
-@@ -233,11 +250,12 @@ static int minix_fill_super(struct super
- 	} else
- 		goto out_no_fs;
- 
-+	if (!minix_check_superblock(sbi))
-+		goto out_illegal_sb;
-+
- 	/*
- 	 * Allocate the buffer map to keep the superblock small.
- 	 */
--	if (sbi->s_imap_blocks == 0 || sbi->s_zmap_blocks == 0)
--		goto out_illegal_sb;
- 	i = (sbi->s_imap_blocks + sbi->s_zmap_blocks) * sizeof(bh);
- 	map = kzalloc(i, GFP_KERNEL);
- 	if (!map)
+-		c->hotpluggable = 1;
++		c->hotpluggable = !!i;
+ 		ret = register_cpu(c, i);
+ 		if (ret)
+ 			printk(KERN_WARNING "topology_init: register_cpu %d "
 
 
