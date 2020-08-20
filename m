@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53268C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F22C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1640720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DCF420674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931027;
-	bh=8gTAWMHmKWWQ19Ho78or6u9zEjW6IwLD3rcYFIbm1AE=;
+	s=default; t=1597931036;
+	bh=WIKSys58th+7AjM3t2XfP0sozcAs5fjDqMdZLR227Zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vAef+4hYtRNFurrrV3BtIQoQ517xS058OLX8csTSJ8IccIKO2yzR/SFoSWsVvL/ns
-	 HtoEXOp9f8AyNOgBHYxdW3QL32HYovhcKVopNZowhT7oJ4pBStg0M5nFjDoWeYvbbt
-	 /jQaizZfE4gzMB8sns5Ff3Vel3WjJmo2cjvQGQ/0=
+	b=V8XKniPgzol4p6CQOTrNmt/HQKS61YCFPoiTEBcEcOWpnK+Ac1DOZx+3UkO/PWms2
+	 UjIzFUBOK15c2zuueHB4CCiMyTn7eBspjrGMkiQcLmcp0Ngl1CvfA9kefgArcs5znZ
+	 h0uVqGXpHX/hPPNrjvCS/RfjtkHpAFeeOfxIYrFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbgHTNm5 (ORCPT
+        id S1727991AbgHTNnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:42:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:43:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727854AbgHTJ3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:23 -0400
+        id S1727873AbgHTJ33 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AC4E22D07;
-        Thu, 20 Aug 2020 09:29:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BE4922CB1;
+        Thu, 20 Aug 2020 09:29:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915763;
-        bh=8gTAWMHmKWWQ19Ho78or6u9zEjW6IwLD3rcYFIbm1AE=;
+        s=default; t=1597915768;
+        bh=WIKSys58th+7AjM3t2XfP0sozcAs5fjDqMdZLR227Zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=doa3yl6MGZaQMt3UjWA6XQZWX8IplGmV/xcdJtB0EwpJ6uESWbTBvEmGmIk2wTIIJ
-         fzikcVO3oyFIuWcrrGmWcuh2QjZnHYZr4ocL+0V/BofEN5kCrxxBYlVKsPXtrU0NAN
-         /JDkzYBtDADVcrfhxcjQDOCMpce/SYqJbHiI5Q3E=
+        b=l7cD8eWeIDK0BfKcK65tV0zDTuHKSdGVC4giS1YOYha0rTiwLSh+hAc18pTyUjRSR
+         M7SuYe55UDlViWQS/YNXXqNll6GgWbf6TMwukgMm1N+gNtTr1RIvXqPNM3+CfIxXb4
+         vUGVmRJBNbA4H4j8SwCItYDdwuznxPbXfTenYGkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Patrick Donnelly <pdonnell@redhat.com>
-Subject: [PATCH 5.8 096/232] ceph: handle zero-length feature mask in session messages
-Date:   Thu, 20 Aug 2020 11:19:07 +0200
-Message-Id: <20200820091617.478856293@linuxfoundation.org>
+        stable@vger.kernel.org, John Dorminy <jdorminy@redhat.com>,
+        Heinz Mauelshagen <heinzm@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.8 098/232] dm ebs: Fix incorrect checking for REQ_OP_FLUSH
+Date:   Thu, 20 Aug 2020 11:19:09 +0200
+Message-Id: <20200820091617.578250486@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,47 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: John Dorminy <jdorminy@redhat.com>
 
-commit 02e37571f9e79022498fd0525c073b07e9d9ac69 upstream.
+commit 4cb6f22612511ff2aba4c33fb0f281cae7c23772 upstream.
 
-Most session messages contain a feature mask, but the MDS will
-routinely send a REJECT message with one that is zero-length.
+REQ_OP_FLUSH was being treated as a flag, but the operation
+part of bio->bi_opf must be treated as a whole. Change to
+accessing the operation part via bio_op(bio) and checking
+for equality.
 
-Commit 0fa8263367db ("ceph: fix endianness bug when handling MDS
-session feature bits") fixed the decoding of the feature mask,
-but failed to account for the MDS sending a zero-length feature
-mask. This causes REJECT message decoding to fail.
-
-Skip trying to decode a feature mask if the word count is zero.
-
+Signed-off-by: John Dorminy <jdorminy@redhat.com>
+Acked-by: Heinz Mauelshagen <heinzm@redhat.com>
+Fixes: d3c7b35c20d60 ("dm: add emulated block size target")
 Cc: stable@vger.kernel.org
-URL: https://tracker.ceph.com/issues/46823
-Fixes: 0fa8263367db ("ceph: fix endianness bug when handling MDS session feature bits")
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Tested-by: Patrick Donnelly <pdonnell@redhat.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/mds_client.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/dm-ebs-target.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3279,8 +3279,10 @@ static void handle_session(struct ceph_m
- 			goto bad;
- 		/* version >= 3, feature bits */
- 		ceph_decode_32_safe(&p, end, len, bad);
--		ceph_decode_64_safe(&p, end, features, bad);
--		p += len - sizeof(features);
-+		if (len) {
-+			ceph_decode_64_safe(&p, end, features, bad);
-+			p += len - sizeof(features);
-+		}
- 	}
+--- a/drivers/md/dm-ebs-target.c
++++ b/drivers/md/dm-ebs-target.c
+@@ -363,7 +363,7 @@ static int ebs_map(struct dm_target *ti,
+ 	bio_set_dev(bio, ec->dev->bdev);
+ 	bio->bi_iter.bi_sector = ec->start + dm_target_offset(ti, bio->bi_iter.bi_sector);
  
- 	mutex_lock(&mdsc->mutex);
+-	if (unlikely(bio->bi_opf & REQ_OP_FLUSH))
++	if (unlikely(bio_op(bio) == REQ_OP_FLUSH))
+ 		return DM_MAPIO_REMAPPED;
+ 	/*
+ 	 * Only queue for bufio processing in case of partial or overlapping buffers
 
 
