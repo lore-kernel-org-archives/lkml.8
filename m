@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E011DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961CCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE581207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D2E207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925244;
-	bh=72cAI67VtDDZt1mKfeA6RIpba9BunW+7lZj51ljgIhI=;
+	s=default; t=1597925259;
+	bh=Gg+kEkswDRxTKOBGrIllN4zRgEO19H9gT8252jAy1aY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PRvtj2O9INsTZRmySPCajVnS2xMkDb2u2/fkp7iFOW5X6jjShzJDlBHGnoJxEqvI8
-	 T/mqWGwrQek+eQwlqV5c9+Fe3thniWtN7mLMIiLmSepssmKQsOnQzPxxIcoQUkKXjr
-	 9jPCCEdFvu3Oo7qcisc0hNXdl0ixLHrdBbgTy0xU=
+	b=PrjJ7YnqQvfWJmWCLepWufBeqXtKssTd7JEwl9xioyrbOf3OwXoCc2sJahuSVIvBg
+	 Us/RSiH/lOksNMrGfZ0z2eJZ7AwTVOTWSSKRhfAb1fgLQoNaoH8G05mF6C7rCKPv2E
+	 carJVubZ/aqVN4P25HJhoDf7AzvZAsIfqCvmWtAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbgHTMGq (ORCPT
+        id S1730420AbgHTMHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:06:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43628 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:07:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729619AbgHTJ6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:45 -0400
+        id S1730405AbgHTJ63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8764208DB;
-        Thu, 20 Aug 2020 09:58:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89B2A207FB;
+        Thu, 20 Aug 2020 09:58:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917525;
-        bh=72cAI67VtDDZt1mKfeA6RIpba9BunW+7lZj51ljgIhI=;
+        s=default; t=1597917509;
+        bh=Gg+kEkswDRxTKOBGrIllN4zRgEO19H9gT8252jAy1aY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2M/Qe/rXixwA+nZEwzh4pipo7aao21ISjGWWPHbH5AB1yVUbyzM1dii/xB4VDoX/C
-         kgiqsSKjhStJ95xwFJWtI6Ic2Yfd+YfLasW1Uxy12q9dK+gYRX0EQhxlhQ14mve60U
-         3gGB95nQwxbgVpEPTjOriV8KIrzEi+Q/sW7xFY2Q=
+        b=fUCwQpc8eXATsEOvC8NvUfiaogGgRAnqKJqo9wirdfItfbADoHcHpTgl/z+OT/fIu
+         oqouXl4mZQQXMkV4ZOhxf4bPsllvAkZvqkvFNo8SkvpCdSMGJkm1at4+4ZdyLVyBTd
+         V+7vIARfFW0kL8zxdcr8MR+haS8Cb0icl1PYJWt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 4.9 061/212] leds: da903x: fix use-after-free on unbind
-Date:   Thu, 20 Aug 2020 11:20:34 +0200
-Message-Id: <20200820091605.450174433@linuxfoundation.org>
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 055/212] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_evt()
+Date:   Thu, 20 Aug 2020 11:20:28 +0200
+Message-Id: <20200820091605.150679931@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,61 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 6f4aa35744f69ed9b0bf5a736c9ca9b44bc1dcea upstream.
+commit 75bbd2ea50ba1c5d9da878a17e92eac02fe0fd3a upstream.
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+Check `num_rsp` before using it as for-loop counter.
 
-Fixes: eed16255d66b ("leds: da903x: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-da903x.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ net/bluetooth/hci_event.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/leds/leds-da903x.c
-+++ b/drivers/leds/leds-da903x.c
-@@ -113,12 +113,23 @@ static int da903x_led_probe(struct platf
- 	led->flags = pdata->flags;
- 	led->master = pdev->dev.parent;
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2094,7 +2094,7 @@ static void hci_inquiry_result_evt(struc
  
--	ret = devm_led_classdev_register(led->master, &led->cdev);
-+	ret = led_classdev_register(led->master, &led->cdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", id);
- 		return ret;
- 	}
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
  
-+	platform_set_drvdata(pdev, led);
-+
-+	return 0;
-+}
-+
-+static int da903x_led_remove(struct platform_device *pdev)
-+{
-+	struct da903x_led *led = platform_get_drvdata(pdev);
-+
-+	led_classdev_unregister(&led->cdev);
-+
- 	return 0;
- }
+-	if (!num_rsp)
++	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
+ 		return;
  
-@@ -127,6 +138,7 @@ static struct platform_driver da903x_led
- 		.name	= "da903x-led",
- 	},
- 	.probe		= da903x_led_probe,
-+	.remove		= da903x_led_remove,
- };
- 
- module_platform_driver(da903x_led_driver);
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
 
 
