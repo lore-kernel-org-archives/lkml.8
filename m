@@ -2,114 +2,118 @@ Return-Path: <SRS0=flm+=CO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743B4C43461
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:04:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B1AC43461
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30A412074A
-	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:04:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A119520760
+	for <linux-kernel@archiver.kernel.org>; Sat,  5 Sep 2020 02:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhSZsLne"
+	dkim=pass (1024-bit key) header.d=mail.ustc.edu.cn header.i=@mail.ustc.edu.cn header.b="Ekwlpd2I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgIECEi (ORCPT
+        id S1728286AbgIECGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 4 Sep 2020 22:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54284 "EHLO
+        Fri, 4 Sep 2020 22:06:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbgIECEh (ORCPT
+        with ESMTP id S1726317AbgIECGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 4 Sep 2020 22:04:37 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E780C061244;
-        Fri,  4 Sep 2020 19:04:36 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b16so4010366pjp.0;
-        Fri, 04 Sep 2020 19:04:36 -0700 (PDT)
+        Fri, 4 Sep 2020 22:06:39 -0400
+X-Greylist: delayed 337 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 04 Sep 2020 19:06:38 PDT
+Received: from ustc.edu.cn (email6.ustc.edu.cn [IPv6:2001:da8:d800::8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1923C061244
+        for <linux-kernel@vger.kernel.org>; Fri,  4 Sep 2020 19:06:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n+kZoKqKGDj4sxz/spgYXr9LUZZuZ+0ogBgOuprttQg=;
-        b=uhSZsLneznox8j/wfTxJSSTDG30ykKmjtFg76kdzEeZLYy/fOrBdy2QgFGXwCKlf00
-         TBtbJTueT11YFsFBkNqv2h7LKAf4bUOoigdlQZxT3U99VyTdqLoEeKJMYm/RYODVk6Fs
-         LwjgGVYTI9gNPsPUxZFkT92XD244ihXCTgyY/bDaeEZ0LLT2OUgeWv5JDxBnbua2IP8i
-         FrCxFp05KjRAaU5qD/0WwO8oHm86YSF9W3aksgUToopVNjzUclLczjEciCwoUGMlh5IJ
-         6QSlRmCNY5K7ztgh6WsrLaCr38Jf+9hTlyY/D7Qr9r17CPEPIEErx7p2wCVsD538JqFb
-         llRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=n+kZoKqKGDj4sxz/spgYXr9LUZZuZ+0ogBgOuprttQg=;
-        b=dehFF2cN3brBxg/Wr5stzwLBdZG3sH/saP1j1LH/wx6s1VpFkvy3nNqmWqXqWJe3Wb
-         RvJzLl8R5bnz2/De/eu31N42M315Mr+JVtpBJBeID6VjhgI364BucnVvIYAt7P5SQzGc
-         8+zeJbtoBbvI7FJ5LRzzdA0ZNQs+s8GMZBgtNjeO7RPm2S5fME+p37AFPFtWlKd9D4Q0
-         wEQ0yEfTCpDa1NFzUeTzEW+CRG1prVWbgu7R5qwYIqV+zPFhqZDaTev8sSGt+bfTBzZP
-         9oeRBixPuwMUBmTJaxKh1v9PRsy9jb027owyo2zXay3TgK2umSi/p1ZcpuGmefbbVLal
-         /RmQ==
-X-Gm-Message-State: AOAM533UG0HQU+h9S0SmP4niNiS94Ze364hLUmTx2P9Zn7YFejxEWOex
-        zcQYwXa3imkG/mc+NQfGcyDFqFRAqAW3io7q
-X-Google-Smtp-Source: ABdhPJxseGxIt0034578p+AgKbObcHKZ69MVPLi1F41nrP4o5X6UV+hRLg5jABu0zSRgG8VcoBhCAw==
-X-Received: by 2002:a17:90b:4d0f:: with SMTP id mw15mr10517822pjb.174.1599271474699;
-        Fri, 04 Sep 2020 19:04:34 -0700 (PDT)
-Received: from localhost.localdomain ([49.207.195.77])
-        by smtp.gmail.com with ESMTPSA id x19sm2245332pge.22.2020.09.04.19.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2020 19:04:33 -0700 (PDT)
-From:   Anant Thazhemadam <anant.thazhemadam@gmail.com>
-To:     linux-kernel-mentees@lists.linuxfoundation.org
-Cc:     Anant Thazhemadam <anant.thazhemadam@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [Linux-kernel-mentees] [PATCH] Fix uninit-value in hci_chan_lookup_handle
-Date:   Sat,  5 Sep 2020 07:34:10 +0530
-Message-Id: <20200905020410.20350-1-anant.thazhemadam@gmail.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        d=mail.ustc.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=WDY/ng54ptRjxNOdlrNswcBzY0b31g2Ob6RSh0Ebatc=; b=E
+        kwlpd2IWey2PfXRRtQAsFBhUlEpungtVhMjTadjjYfJUZ4dapmPP49RhQ38PrD8L
+        cEGHlhNLYSbRvxg4Uu5A/vROGUozaLXi2HJEihnq2KHj/Bz9RieE44xOe08exZ2m
+        pXPgnP48QlFLTMS8UlxZxCX5FGy84SawI0e1gDk+YM=
+Received: from localhost.localdomain (unknown [112.32.131.40])
+        by newmailweb.ustc.edu.cn (Coremail) with SMTP id LkAmygBXcZ9Q8VJfUjcCAA--.4145S2;
+        Sat, 05 Sep 2020 10:00:49 +0800 (CST)
+From:   Calvin Zhang <zhq2014@mail.ustc.edu.cn>
+To:     yhs@fb.com
+Cc:     mhiramat@kernel.org, daniel@iogearbox.net, songliubraving@fb.com,
+        acme@redhat.com, zhq2014@mail.ustc.edu.cn,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] tools: fix incorrect setting of CC_NO_CLANG
+Date:   Wed, 19 Aug 2020 20:50:56 -0400
+Message-Id: <20200820005056.3357743-1-zhq2014@mail.ustc.edu.cn>
+X-Mailer: git-send-email 2.18.4
+X-CM-TRANSID: LkAmygBXcZ9Q8VJfUjcCAA--.4145S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7ZrykCw1fJr1fKrWfKr17ZFb_yoW8Aw18pa
+        n0kw47C3y8trW0kw1kCa1qqr1UJa18tryqqFyvg3WkZF4fCrn2vrZ3tr45KF43uFsFya1U
+        ta4agryUX3WDG37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9I14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2jI8I6cxK6x804I0_KFvE3s1l8cAvFVAK0II2c7
+        xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE
+        2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjc
+        xK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY
+        6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr
+        I_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0E
+        wIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
+        0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
+        zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
+        4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_
+        WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJb
+        IYCTnIWIevJa73UjIFyTuYvjfUFYFADUUUU
+X-CM-SenderInfo: h2ktjiyru6zt1loo32lwfovvfxof0/1tbiAQsHAVQhnwvOKAAesV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the amount of data stored in the location corresponding to
-iov_iter *from is less then 4, some data seems to go uninitialized.
+CC_NO_CLANG should be set according to the value of CC after overridden.
 
-Updating this condition accordingly, makes sense both intuitively and 
-logically as well, since the other check for extreme condition done is if
-len > HCI_MAX_FRAME_SIZE, which is HCI_MAX_ACL_SIZE (which is 1024) + 4;
-which itself gives some idea about what must be the ideal mininum size.
+I have linked /usr/bin/cc to /usr/bin/clang and I built perf with a gcc
+cross-compiler:
 
-Reported-and-tested by: syzbot+4c14a8f574461e1c3659@syzkaller.appspotmail.com
-Signed-off-by: Anant Thazhemadam <anant.thazhemadam@gmail.com>
+    $ ARCH=arm64 CROSS_COMPILE=aarch64-calvin-linux-gnu- make -C \
+        ../linux/tools/perf/ O=$(pwd)
+
+It worked well. But when I tried to rebuild that with FIXDEP=1:
+
+    $ ARCH=arm64 CROSS_COMPILE=aarch64-calvin-linux-gnu- make -C \
+        ../linux/tools/perf/ O=$(pwd) FIXDEP=1
+
+Every .o files were rebuilt since EXTRA_WARNINGS was changed due to
+false value of CC_NO_CLANG. Things worked in first build because submake
+of Makefile.perf inherited CC from first make and CC_NO_CLANG was
+rectified in submake.
+
+Signed-off-by: Calvin Zhang <zhq2014@mail.ustc.edu.cn>
 ---
-If there is some explicit reason why len < 4 doesn't work, and only len < 2 works, 
-please do let me know.
-The commit message that introduced the initial change 
-(512b2268156a4e15ebf897f9a883bdee153a54b7) wasn't exactly very helpful in this 
-respect, and I couldn't find a whole lot of discussion regarding this either.
+ tools/scripts/Makefile.include | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/bluetooth/hci_vhci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/bluetooth/hci_vhci.c b/drivers/bluetooth/hci_vhci.c
-index 8ab26dec5f6e..0c49821d7b98 100644
---- a/drivers/bluetooth/hci_vhci.c
-+++ b/drivers/bluetooth/hci_vhci.c
-@@ -159,7 +159,7 @@ static inline ssize_t vhci_get_user(struct vhci_data *data,
- 	__u8 pkt_type, opcode;
- 	int ret;
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index a7974638561c..dc887669828b 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -39,8 +39,6 @@ EXTRA_WARNINGS += -Wundef
+ EXTRA_WARNINGS += -Wwrite-strings
+ EXTRA_WARNINGS += -Wformat
  
--	if (len < 2 || len > HCI_MAX_FRAME_SIZE)
-+	if (len < 4 || len > HCI_MAX_FRAME_SIZE)
- 		return -EINVAL;
+-CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
+-
+ # Makefiles suck: This macro sets a default value of $(2) for the
+ # variable named by $(1), unless the variable has been set by
+ # environment or command line. This is necessary for CC and AR
+@@ -59,6 +57,8 @@ $(call allow-override,LD,$(CROSS_COMPILE)ld)
+ $(call allow-override,CXX,$(CROSS_COMPILE)g++)
+ $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
  
- 	skb = bt_skb_alloc(len, GFP_KERNEL);
++CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
++
+ ifeq ($(CC_NO_CLANG), 1)
+ EXTRA_WARNINGS += -Wstrict-aliasing=3
+ endif
 -- 
-2.25.1
+2.18.4
+
 
