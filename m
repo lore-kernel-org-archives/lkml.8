@@ -2,52 +2,55 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A55C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE66A2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2D972078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925993;
-	bh=5UJlsbh62S5WTF46gRZp+YqxZvryI9EakSVfIoAb5zs=;
+	s=default; t=1597925998;
+	bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sS6omc69AggiEDdG426vhMKgq12m5j4ckMetlD3maye0wQA0WyHmnH7ty79CrEAw3
-	 ZVaXaS/rORECczcHFv1mE7bgYYH1tGt5ZSt/gUkBa5hpqGJaBPeIv8Jl6Ia9QLFD3B
-	 OV850lscfMs5TeVdWzhP88Igg/Jlrq58N1g1ouUA=
+	b=TXqDRlaWVptZ3i0PX4VsCzL7im+WgiSIB00S9pzK69CXRcY6EVNqH/lh6KOaeOLgK
+	 BTFQlbNXVZJAB5Kiw2b+TCYezA4z8gwpvovCGRV7e9zHk1hRg3ZNKnjLP2d3JS+PEg
+	 dT5RgpfbH6Blvz1LQ+OEhl8pkhl98abRi7oKoHH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgHTJz4 (ORCPT
+        id S1730265AbgHTMT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38720 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730215AbgHTJzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:42 -0400
+        id S1730226AbgHTJzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FDDF2078D;
-        Thu, 20 Aug 2020 09:55:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E06BC20855;
+        Thu, 20 Aug 2020 09:55:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917336;
-        bh=5UJlsbh62S5WTF46gRZp+YqxZvryI9EakSVfIoAb5zs=;
+        s=default; t=1597917353;
+        bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4k9HITeYWeZl/WFhxOqkjmI1ko0PmNo/STVfgcsdygI/FOAJ7p2f49XgBilvvvTM
-         iZEyZ3B6KHtG/5OXiOur1G8nz3zoV+W2/nbhUYnb+6gDp/2CSayiolfdJwd11lNMkY
-         NFXNJ4C6C7IeCHPwdZyOUiZ0b2BTAYkt3qSxmy88=
+        b=qkYSDsdk5gfLaBjdaeUrmvjmXqh0w6j5PMVGg9+P6AIvS7e4/ggjW4AMEfnzJcWxJ
+         1nP3I36KQXqnwPAIBKH+INUW0tTXsV/L0lpaAAIU/ehXBTkHVYzLbrChSZC0TIG+Hm
+         K1NbfXad5t5JnJqPvYqyUGpllqB8Y0hjqpZKmjvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>
-Subject: [PATCH 4.19 89/92] arm64: dts: marvell: espressobin: add ethernet alias
-Date:   Thu, 20 Aug 2020 11:22:14 +0200
-Message-Id: <20200820091542.273955917@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 80/92] fs/minix: remove expected error message in block_to_path()
+Date:   Thu, 20 Aug 2020 11:22:05 +0200
+Message-Id: <20200820091541.816423267@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,37 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Maciej Nowak <tmn505@gmail.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 5253cb8c00a6f4356760efb38bca0e0393aa06de upstream.
+[ Upstream commit f666f9fb9a36f1c833b9d18923572f0e4d304754 ]
 
-The maker of this board and its variants, stores MAC address in U-Boot
-environment. Add alias for bootloader to recognise, to which ethernet
-node inject the factory MAC address.
+When truncating a file to a size within the last allowed logical block,
+block_to_path() is called with the *next* block.  This exceeds the limit,
+causing the "block %ld too big" error message to be printed.
 
-Signed-off-by: Tomasz Maciej Nowak <tmn505@gmail.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-[pali: Backported to 5.4 and older versions]
-Signed-off-by: Pali Rohár <pali@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This case isn't actually an error; there are just no more blocks past that
+point.  So, remove this error message.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Link: http://lkml.kernel.org/r/20200628060846.682158-7-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/minix/itree_v1.c | 12 ++++++------
+ fs/minix/itree_v2.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -19,6 +19,12 @@
- 	model = "Globalscale Marvell ESPRESSOBin Board";
- 	compatible = "globalscale,espressobin", "marvell,armada3720", "marvell,armada3710";
- 
-+	aliases {
-+		ethernet0 = &eth0;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index 405573a79aab4..1fed906042aa8 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,12 +29,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, inode->i_sb->s_bdev);
+-	} else if (block < 7) {
++		return 0;
++	}
++	if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes)
++		return 0;
 +
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
++	if (block < 7) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= 7) < 512) {
+ 		offsets[n++] = 7;
+diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
+index ee8af2f9e2828..9d00f31a2d9d1 100644
+--- a/fs/minix/itree_v2.c
++++ b/fs/minix/itree_v2.c
+@@ -32,12 +32,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, sb->s_bdev);
+-	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, sb->s_bdev);
+-	} else if (block < DIRCOUNT) {
++		return 0;
++	}
++	if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes)
++		return 0;
++
++	if (block < DIRCOUNT) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= DIRCOUNT) < INDIRCOUNT(sb)) {
+ 		offsets[n++] = DIRCOUNT;
+-- 
+2.25.1
+
 
 
