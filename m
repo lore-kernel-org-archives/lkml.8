@@ -2,108 +2,124 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78027C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48EFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5094D2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918E12076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:48:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931321;
-	bh=FimYMkYiuCDAGzXaOaFsHcjupgUWLh69vV0SwtvI274=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2IgCLt1jKrezefEwddF0GY4aa/HAZnCJdup4b6fZEBcnA93L6l9PbnoylD+X9AvNb
-	 8vhCJxL/gI/8v8s1UaF+6ENSB6nEkv8P0lTWNudxLfVnO+1qaE2Y7RnTLtY/ZX0WO7
-	 PBgJsAKxdxVTcTXBj9F1vXoiMumnJHSRH4dZViGU=
+	s=default; t=1597931335;
+	bh=aMJupPBQ4LxbwYlKEK/6QB+6fhqLMcVfiMNCpsaL+xs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1pDp41wToNnyOcTpHJ4KtLH3JJkjx1A0GdpyG7UfJgOeiRsXC6wBKqDjdond+gg04
+	 lXa+uILiIs3njC2CH2C37pBB9zTRHykGh2ysGlNG5Ij0g4f2pPrvurTRQW2UOqbx5C
+	 sRICVnfEUMpwOWBh9FjDNoW7rbNCmdkGNlXGn4h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbgHTNsj (ORCPT
+        id S1730486AbgHTNjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:48:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:39:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729802AbgHTNsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:48:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725916AbgHTJal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:41 -0400
+Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 547CF2076E;
-        Thu, 20 Aug 2020 13:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD926207FB;
+        Thu, 20 Aug 2020 09:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597931315;
-        bh=FimYMkYiuCDAGzXaOaFsHcjupgUWLh69vV0SwtvI274=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ncOdIJhtiTxsJ9QTmxsqNlnXldF8i7NK/RsboPTTA31D0Jjg6CngNl3P/2TehtER2
-         Fv2QvLF9/6tVbcAVaNVOYvDmvyl2ZrZ1ZqMG/nZftl1DETQ+18PWb1ncuGRzV/aPml
-         NU6S9v22GUrQ4Gu5c7bmSwTLJXmYGSbugShuEsuA=
-Date:   Thu, 20 Aug 2020 15:48:55 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Wei Hu <weh@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 5.8 164/232] PCI: hv: Fix a timing issue which causes
- kdump to fail occasionally
-Message-ID: <20200820134855.GB1533625@kroah.com>
-References: <20200820091612.692383444@linuxfoundation.org>
- <20200820091620.754492308@linuxfoundation.org>
- <MW2PR2101MB10522B1242B1309BF35EFFEED75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <20200820132924.GA8670@sasha-vm>
- <20200820134823.GA1533625@kroah.com>
+        s=default; t=1597915839;
+        bh=aMJupPBQ4LxbwYlKEK/6QB+6fhqLMcVfiMNCpsaL+xs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=f4sMLbF3Ul/oSOcXWDtf7iwQrI3+vQvCq5y7Yl3ym07AuGuA3UOAR7s39x12gHGk1
+         bdOJyPHLfbdDmAyl1/S0WykPWX7i9HcBevqZzcszcsR/S/s/QWZrnc/71hV3B+fF8y
+         IcfGhTLfd4jaho8ZwXiXIA1vEWA3QC+wAsjyhP+c=
+Received: by mail-oi1-f171.google.com with SMTP id z22so1331795oid.1;
+        Thu, 20 Aug 2020 02:30:38 -0700 (PDT)
+X-Gm-Message-State: AOAM530RY4IMwYFWRqpHw7op23RTsLivnLutRFYlTm1Uz4U7Ip3WnfBC
+        p1RcQx7Ozr82/YTz8SB2y97mUtf5D4JW6HxcJPk=
+X-Google-Smtp-Source: ABdhPJxemHzFYiAaONEKxIjjxb830jZ1kTPr+TQsBCiFxqktaVfNOEcVPetmqS9UkEP59AbuX1DST0GcTwJkFK5yo5k=
+X-Received: by 2002:a05:6808:b:: with SMTP id u11mr1168892oic.33.1597915838236;
+ Thu, 20 Aug 2020 02:30:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820134823.GA1533625@kroah.com>
+References: <20200819092838.11290-1-jlee@suse.com>
+In-Reply-To: <20200819092838.11290-1-jlee@suse.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 20 Aug 2020 11:30:27 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
+Message-ID: <CAMj1kXGx=34tqSWqDUbfJ5WAB-3rWhBc1xsh2-kk2pQgcnfbRQ@mail.gmail.com>
+Subject: Re: [PATCH] efi/efivars: create efivars mount point when get variable
+ services are available
+To:     "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 03:48:23PM +0200, Greg Kroah-Hartman wrote:
-> On Thu, Aug 20, 2020 at 09:29:24AM -0400, Sasha Levin wrote:
-> > On Thu, Aug 20, 2020 at 01:00:51PM +0000, Michael Kelley wrote:
-> > > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> Sent: Thursday, August 20, 2020 2:20 AM
-> > > > 
-> > > > From: Wei Hu <weh@microsoft.com>
-> > > > 
-> > > > [ Upstream commit d6af2ed29c7c1c311b96dac989dcb991e90ee195 ]
-> > > > 
-> > > > Kdump could fail sometime on Hyper-V guest because the retry in
-> > > > hv_pci_enter_d0() releases child device structures in hv_pci_bus_exit().
-> > > > 
-> > > > Although there is a second asynchronous device relations message sending
-> > > > from the host, if this message arrives to the guest after
-> > > > hv_send_resource_allocated() is called, the retry would fail.
-> > > > 
-> > > > Fix the problem by moving retry to hv_pci_probe() and start the retry
-> > > > from hv_pci_query_relations() call.  This will cause a device relations
-> > > > message to arrive to the guest synchronously; the guest would then be
-> > > > able to rebuild the child device structures before calling
-> > > > hv_send_resource_allocated().
-> > > > 
-> > > > Link:
-> > > > https://lore.kernel.org/linux-hyperv/20200727071731.18516-1-weh@microsoft.com/
-> > > > Fixes: c81992e7f4aa ("PCI: hv: Retry PCI bus D0 entry on invalid device state")
-> > > > Signed-off-by: Wei Hu <weh@microsoft.com>
-> > > > [lorenzo.pieralisi@arm.com: fixed a comment and commit log]
-> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > > > ---
-> > > >  drivers/pci/controller/pci-hyperv.c | 71 +++++++++++++++--------------
-> > > >  1 file changed, 37 insertions(+), 34 deletions(-)
-> > > > 
-> > > 
-> > > This patch came through three days ago, and I indicated then that we don't want
-> > > it backported to 5.8 and earlier.
-> > 
-> > Uh, I re-added it by mistake, sorry.
-> 
-> Ok, let me go drop it...
+On Wed, 19 Aug 2020 at 11:28, Lee, Chun-Yi <joeyli.kernel@gmail.com> wrote:
+>
+> The efivars filesystem depends on GetVariable or GetNextVariable EFI
+> runtime services. So the /sys/firmware/efi/efivars does not need to be
+> created when GetVariable and GetNextVariable are not available.
+>
+> It is useful for userland to determine the availability of efivars
+> filesystem.
+>
+> Cc: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: "Lee, Chun-Yi" <jlee@suse.com>
 
-Oops, you already did :)
+Hello Joey,
+
+This is not the right check to perform here: the efivarfs code could
+be instantiated using a different efivars abstraction, so whether the
+RT services are implemented is not entirely relevant.
+
+Please look at commit f88814cc2578c121e6edef686365036db72af0ed
+("efi/efivars: Expose RT service availability via efivars
+abstraction") for an explanation of the underlying issue, and update
+your patch accordingly.
+
+
+> ---
+>  drivers/firmware/efi/efi.c | 13 ++++++++-----
+>  1 file changed, 8 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index fdd1db025dbf..929fbf4dfd5d 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -404,11 +404,14 @@ static int __init efisubsys_init(void)
+>         if (error)
+>                 goto err_remove_group;
+>
+> -       /* and the standard mountpoint for efivarfs */
+> -       error = sysfs_create_mount_point(efi_kobj, "efivars");
+> -       if (error) {
+> -               pr_err("efivars: Subsystem registration failed.\n");
+> -               goto err_remove_group;
+> +       if (efi_rt_services_supported(EFI_RT_SUPPORTED_GET_VARIABLE |
+> +                                     EFI_RT_SUPPORTED_GET_NEXT_VARIABLE_NAME)) {
+> +               /* and the standard mountpoint for efivarfs */
+> +               error = sysfs_create_mount_point(efi_kobj, "efivars");
+> +               if (error) {
+> +                       pr_err("efivars: Subsystem registration failed.\n");
+> +                       goto err_remove_group;
+> +               }
+>         }
+>
+>         if (efi_enabled(EFI_DBG) && efi_enabled(EFI_PRESERVE_BS_REGIONS))
+> --
+> 2.16.4
+>
