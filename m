@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C22DBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66394C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D669208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43E10208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882094;
-	bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
+	s=default; t=1597882099;
+	bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v3aesCQpqyqV/NpUXEtGfLCdshrRFaiqshJrE1H0KUMgBWxTkHQ/MQg/0PT7udb6+
-	 a8xvaK890KVWRaGwE20hOlJiHNGEiuSjSVzSOZUnu+OLvUeAQbWiQQAwQq2Wribu1F
-	 qwjv+1RL0UCmhRGGdU87+rgpLd72a5wFvFbv/WKo=
+	b=nSaxiDFVrTCOKhWIQ0IIsc2xbR2tL8qdduYVPqODKKkvbYvAh7TmjrJT2gzE1RSQ3
+	 EBhrbkB1M+AF6j6Szk8RztNf9sJMRwPzMj5jFW/FUO7PXxMQtxYw90sHi3YwkchV1n
+	 Cp7JloJYgctxpLZjaHbrZlmbrZQ1+fBOK+RX3z9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgHTAIL (ORCPT
+        id S1728444AbgHTAIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:08:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728173AbgHTADL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:11 -0400
+        id S1728148AbgHTADI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4EF0D2224D;
-        Thu, 20 Aug 2020 00:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2F6A207FB;
+        Thu, 20 Aug 2020 00:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881791;
-        bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
+        s=default; t=1597881788;
+        bh=nG/68UkyJbPFo39KSSnnMAkMSDLG37DYiU7yZfHaGPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y0JcY0nI6BXwhrpMDI7aXOKex5CIJc+dHGQYawgvp8NF+H4KZydJAo4N8PPRA4F9M
-         Dod1Yq3nDJ22CKczb9IzLOOsJ63snIPd06okzvaGAbn4Tfl9+zuDW46RxTYMCM1LRb
-         OhLSyPXTwpl9/e67xZeU4qPgc3kzczImKyGPq0LI=
+        b=wJU9WejEUi+qH3PFWsxeMhXT7YZQ4rTap+3HXw9mHN61CEeQaCpjVCYQ+DH76SswG
+         JoEoP12pb3ZUScvMO3OeHnSkcxYCOzro9iIJq2+OaxL55kLLEh/xuTp+ivEL0rfX0C
+         0gpGNv5kt7zKznhdPuVpTVOyfhExPaSC0Muk6DF8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/18] Input: psmouse - add a newline when printing 'proto' by sysfs
-Date:   Wed, 19 Aug 2020 20:02:49 -0400
-Message-Id: <20200820000302.215560-6-sashal@kernel.org>
+Cc:     Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rtc@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 04/18] rtc: goldfish: Enable interrupt in set_alarm() when necessary
+Date:   Wed, 19 Aug 2020 20:02:47 -0400
+Message-Id: <20200820000302.215560-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -59,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
+[ Upstream commit 22f8d5a1bf230cf8567a4121fc3789babb46336d ]
 
-When I cat parameter 'proto' by sysfs, it displays as follows. It's
-better to add a newline for easy reading.
+When use goldfish rtc, the "hwclock" command fails with "select() to
+/dev/rtc to wait for clock tick timed out". This is because "hwclock"
+need the set_alarm() hook to enable interrupt when alrm->enabled is
+true. This operation is missing in goldfish rtc (but other rtc drivers,
+such as cmos rtc, enable interrupt here), so add it.
 
-root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
-autoroot@syzkaller:~#
-
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Link: https://lore.kernel.org/r/1592654683-31314-1-git-send-email-chenhc@lemote.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/mouse/psmouse-base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/rtc/rtc-goldfish.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
-index d3ff1fc09af71..a9040c0fb4c3f 100644
---- a/drivers/input/mouse/psmouse-base.c
-+++ b/drivers/input/mouse/psmouse-base.c
-@@ -2044,7 +2044,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
- {
- 	int type = *((unsigned int *)kp->arg);
- 
--	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
-+	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
- }
- 
- static int __init psmouse_init(void)
+diff --git a/drivers/rtc/rtc-goldfish.c b/drivers/rtc/rtc-goldfish.c
+index a1c44d0c85578..30cbe22c57a8e 100644
+--- a/drivers/rtc/rtc-goldfish.c
++++ b/drivers/rtc/rtc-goldfish.c
+@@ -87,6 +87,7 @@ static int goldfish_rtc_set_alarm(struct device *dev,
+ 		rtc_alarm64 = rtc_alarm * NSEC_PER_SEC;
+ 		writel((rtc_alarm64 >> 32), base + TIMER_ALARM_HIGH);
+ 		writel(rtc_alarm64, base + TIMER_ALARM_LOW);
++		writel(1, base + TIMER_IRQ_ENABLED);
+ 	} else {
+ 		/*
+ 		 * if this function was called with enabled=0
 -- 
 2.25.1
 
