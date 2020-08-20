@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99C6C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFF322CAE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8615D22CA1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930385;
-	bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
+	s=default; t=1597930394;
+	bh=FRhj0fd/gxv4u0flgC5GWm9bPJ52v60YYmcJEsaryAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lVAchFS2Ma5DIZhtNXF3eDVpGjFa0o2uDHfT5PdQoX0/9L1n7Xr2BlO9nMb8C+5yg
-	 wFEDo2IhRUnPrdOw3H/yXTN/TgL9UjPs95noYcagPFvTJNSfeGKifhTs86/7/D8dY5
-	 lI9xOrQMFPtEd/AldK20LsyJPWHQ4x9JylxCxPpc=
+	b=JHVsDTdP9XkCTCN4rIoyiGFv1I3sEmHgdp4YGFbM/ZgX70VV/J/43tcvjeURcuTIK
+	 ksyzcuFMtuB0lwgtSh5M4GHXhRpAFYMuR0H2jRZNcLx9Q384X2gA43YVqnRBeVWdH6
+	 OFkkkpCJ5850QPi9gIOecgSnqMxm7wLXMT2/UVYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbgHTNdD (ORCPT
+        id S1728977AbgHTNdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:33:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:33:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728027AbgHTJbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:08 -0400
+        id S1728203AbgHTJbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C411F20855;
-        Thu, 20 Aug 2020 09:31:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5935207FB;
+        Thu, 20 Aug 2020 09:31:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915868;
-        bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
+        s=default; t=1597915865;
+        bh=FRhj0fd/gxv4u0flgC5GWm9bPJ52v60YYmcJEsaryAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pTVoGRVLFcP/I7zh0Dpo5DNbCqBumVe2M17lReklrCm31UYcaTlSbwmMhoqy3/9VZ
-         PxHyyQEqZm/T/LqQlHhygeJilW/prvQcy0Jupr+sMg7yK/Dt0nUPZn7MSRcBivUQJH
-         k/a/ByQnEDIy+IsoWbCqyybkg8esn201PSBxIfz4=
+        b=KBVMj9empRdRxpD+Rvq+8ZopPmvJJDBgU2oKZXCuUZHHPMDG0WEirv9dtmHYX6zHu
+         0wGvLrV4htGRaX0kyuEnkpCbv+xCdP7WN+z8sUfTz64lpfV3dMeerPV4uwIkyoYsdw
+         CuANDPkWqkkiORMW/0jePU5xrIgU/5Hde91ZGM7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Sicelo A. Mhlongo" <absicsz@gmail.com>,
-        Dev Null <devnull@uvos.xyz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Martin KaFai Lau <kafai@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 123/232] rtc: cpcap: fix range
-Date:   Thu, 20 Aug 2020 11:19:34 +0200
-Message-Id: <20200820091618.773946743@linuxfoundation.org>
+Subject: [PATCH 5.8 132/232] bpf: selftests: Restore netns after each test
+Date:   Thu, 20 Aug 2020 11:19:43 +0200
+Message-Id: <20200820091619.211152710@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -64,43 +61,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
+From: Martin KaFai Lau <kafai@fb.com>
 
-[ Upstream commit 3180cfabf6fbf982ca6d1a6eb56334647cc1416b ]
+[ Upstream commit 811d7e375d08312dba23f3b6bf7e58ec14aa5dcb ]
 
-Unbreak CPCAP driver, which has one more bit in the day counter
-increasing the max. range from 2014 to 2058. The original commit
-introducing the range limit was obviously wrong, since the driver
-has only been written in 2017 (3 years after 14 bits would have
-run out).
+It is common for networking tests creating its netns and making its own
+setting under this new netns (e.g. changing tcp sysctl).  If the test
+forgot to restore to the original netns, it would affect the
+result of other tests.
 
-Fixes: d2377f8cc5a7 ("rtc: cpcap: set range")
-Reported-by: Sicelo A. Mhlongo <absicsz@gmail.com>
-Reported-by: Dev Null <devnull@uvos.xyz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Tested-by: Merlijn Wajer <merlijn@wizzup.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Merlijn Wajer <merlijn@wizzup.org>
-Link: https://lore.kernel.org/r/20200629114123.27956-1-sebastian.reichel@collabora.com
+This patch saves the original netns at the beginning and then restores it
+after every test.  Since the restore "setns()" is not expensive, it does it
+on all tests without tracking if a test has created a new netns or not.
+
+The new restore_netns() could also be done in test__end_subtest() such
+that each subtest will get an automatic netns reset.  However,
+the individual test would lose flexibility to have total control
+on netns for its own subtests.  In some cases, forcing a test to do
+unnecessary netns re-configure for each subtest is time consuming.
+e.g. In my vm, forcing netns re-configure on each subtest in sk_assign.c
+increased the runtime from 1s to 8s.  On top of that,  test_progs.c
+is also doing per-test (instead of per-subtest) cleanup for cgroup.
+Thus, this patch also does per-test restore_netns().  The only existing
+per-subtest cleanup is reset_affinity() and no test is depending on this.
+Thus, it is removed from test__end_subtest() to give a consistent
+expectation to the individual tests.  test_progs.c only ensures
+any affinity/netns/cgroup change made by an earlier test does not
+affect the following tests.
+
+Signed-off-by: Martin KaFai Lau <kafai@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200702004858.2103728-1-kafai@fb.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-cpcap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 23 +++++++++++++++++++++--
+ tools/testing/selftests/bpf/test_progs.h |  2 ++
+ 2 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/rtc/rtc-cpcap.c b/drivers/rtc/rtc-cpcap.c
-index a603f1f211250..800667d73a6fb 100644
---- a/drivers/rtc/rtc-cpcap.c
-+++ b/drivers/rtc/rtc-cpcap.c
-@@ -261,7 +261,7 @@ static int cpcap_rtc_probe(struct platform_device *pdev)
- 		return PTR_ERR(rtc->rtc_dev);
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index da70a4f72f547..6218b2b5a3f62 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -121,6 +121,24 @@ static void reset_affinity() {
+ 	}
+ }
  
- 	rtc->rtc_dev->ops = &cpcap_rtc_ops;
--	rtc->rtc_dev->range_max = (1 << 14) * SECS_PER_DAY - 1;
-+	rtc->rtc_dev->range_max = (timeu64_t) (DAY_MASK + 1) * SECS_PER_DAY - 1;
++static void save_netns(void)
++{
++	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
++	if (env.saved_netns_fd == -1) {
++		perror("open(/proc/self/ns/net)");
++		exit(-1);
++	}
++}
++
++static void restore_netns(void)
++{
++	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
++		stdio_restore();
++		perror("setns(CLONE_NEWNS)");
++		exit(-1);
++	}
++}
++
+ void test__end_subtest()
+ {
+ 	struct prog_test_def *test = env.test;
+@@ -138,8 +156,6 @@ void test__end_subtest()
+ 	       test->test_num, test->subtest_num,
+ 	       test->subtest_name, sub_error_cnt ? "FAIL" : "OK");
  
- 	err = cpcap_get_vendor(dev, rtc->regmap, &rtc->vendor);
- 	if (err)
+-	reset_affinity();
+-
+ 	free(test->subtest_name);
+ 	test->subtest_name = NULL;
+ }
+@@ -643,6 +659,7 @@ int main(int argc, char **argv)
+ 		return -1;
+ 	}
+ 
++	save_netns();
+ 	stdio_hijack();
+ 	for (i = 0; i < prog_test_cnt; i++) {
+ 		struct prog_test_def *test = &prog_test_defs[i];
+@@ -673,6 +690,7 @@ int main(int argc, char **argv)
+ 			test->error_cnt ? "FAIL" : "OK");
+ 
+ 		reset_affinity();
++		restore_netns();
+ 		if (test->need_cgroup_cleanup)
+ 			cleanup_cgroup_environment();
+ 	}
+@@ -686,6 +704,7 @@ int main(int argc, char **argv)
+ 	free_str_set(&env.subtest_selector.blacklist);
+ 	free_str_set(&env.subtest_selector.whitelist);
+ 	free(env.subtest_selector.num_set);
++	close(env.saved_netns_fd);
+ 
+ 	if (env.succ_cnt + env.fail_cnt + env.skip_cnt == 0)
+ 		return EXIT_FAILURE;
+diff --git a/tools/testing/selftests/bpf/test_progs.h b/tools/testing/selftests/bpf/test_progs.h
+index f4503c926acad..b809246039181 100644
+--- a/tools/testing/selftests/bpf/test_progs.h
++++ b/tools/testing/selftests/bpf/test_progs.h
+@@ -78,6 +78,8 @@ struct test_env {
+ 	int sub_succ_cnt; /* successful sub-tests */
+ 	int fail_cnt; /* total failed tests + sub-tests */
+ 	int skip_cnt; /* skipped tests */
++
++	int saved_netns_fd;
+ };
+ 
+ extern struct test_env env;
 -- 
 2.25.1
 
