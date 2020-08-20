@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5182C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EECC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 813B820738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6022F20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919318;
-	bh=dFDUeVvVdY8Fs9I9C6hZNkObUoIHi4TQ5HEz4oU+ZtI=;
+	s=default; t=1597919322;
+	bh=k3wht7a5DX1U9Aa/TvBmtEezKgpqipZxjo4IhICNmKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KpMBa2iAC3t67iECKq2CBoAaNcVQ+rJ57gkfFTR62z2k4wCUgJ2SZOYp2orwAWmD7
-	 +RFmuVml7FrZQl5/P5OlukMWHeZha3s+HHBVqOm8CfPfEBy8Olwsi9EEXzkuEGA+7F
-	 pPfZifKfN290lg5N4GKaccU4UTrLY/wN1gNJqd64=
+	b=kwncEseXJH9QMRBWC9ZWXXMTgjlkiPaS9nBZBCrM+iw/DJlq5+3hLLHzXHkBdykf2
+	 hageBqisoSdgC96qA9bOCArCg4JVp1HyeDRz6ZqgqOkYW185RJje2ly8wIcRaB5JlB
+	 30iGfl7MFMzSjD6FWgQDOexnsPukKRNn9klm1yvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731563AbgHTKVl (ORCPT
+        id S1731571AbgHTK2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:28:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731542AbgHTKVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:31 -0400
+        id S1731566AbgHTKVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C8BF2072D;
-        Thu, 20 Aug 2020 10:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28C782072D;
+        Thu, 20 Aug 2020 10:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918889;
-        bh=dFDUeVvVdY8Fs9I9C6hZNkObUoIHi4TQ5HEz4oU+ZtI=;
+        s=default; t=1597918901;
+        bh=k3wht7a5DX1U9Aa/TvBmtEezKgpqipZxjo4IhICNmKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zk0lpkvWT0YJBqpNBWTF7s50o9m5wKITbuwEE9Hi0Pv5bfO0wW69mWF2oAwyVQV1t
-         25J9gvLPgtNlpqYQ273KG2POcMm13ljzDZIqjj1nlJaWzvet6cyGFvsyaiz0ltLDJr
-         j0mPtKEqfw+I3ItYta/suPUpGIysH9xp+GHqYutc=
+        b=oJqb6LjjFuqRBsDKqooPOtwu/BrCJdp4Tky2hsCa6ApY0mAY7kEo3lM46N6EZ/MFl
+         J5Q0jxreLgzipiAV+RRmHFz1vxm/iNafMhnDaeuwzYEmGGOZPY0LMRDgAthKAf7gmo
+         yElOFi0KbqjI7ZcBrLyeeqOHxRWNTzYAk7sLkq3c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasi Kumar <sasi.kumar@broadcom.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 073/149] bdc: Fix bug causing crash after multiple disconnects
-Date:   Thu, 20 Aug 2020 11:22:30 +0200
-Message-Id: <20200820092129.269882909@linuxfoundation.org>
+Subject: [PATCH 4.4 077/149] agp/intel: Fix a memory leak on module initialisation failure
+Date:   Thu, 20 Aug 2020 11:22:34 +0200
+Message-Id: <20200820092129.457360989@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,90 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sasi Kumar <sasi.kumar@broadcom.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit a95bdfd22076497288868c028619bc5995f5cc7f ]
+[ Upstream commit b975abbd382fe442713a4c233549abb90e57c22b ]
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+In intel_gtt_setup_scratch_page(), pointer "page" is not released if
+pci_dma_mapping_error() return an error, leading to a memory leak on
+module initialisation failure.  Simply fix this issue by freeing "page"
+before return.
 
-Signed-off-by: Sasi Kumar <sasi.kumar@broadcom.com>
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 0e87d2b06cb46 ("intel-gtt: initialize our own scratch page")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200522083451.7448-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/char/agp/intel-gtt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index e9bd8d4abca00..f09a74d79c9eb 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -286,6 +286,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -295,6 +296,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index 3a65272fbed86..9f5f18891ba85 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -621,7 +621,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
- 	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
- 		return ret;
+diff --git a/drivers/char/agp/intel-gtt.c b/drivers/char/agp/intel-gtt.c
+index 76afc841232cf..3d11f5adb355e 100644
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -303,8 +303,10 @@ static int intel_gtt_setup_scratch_page(void)
+ 	if (intel_private.needs_dmar) {
+ 		dma_addr = pci_map_page(intel_private.pcidev, page, 0,
+ 				    PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+-		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr))
++		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr)) {
++			__free_page(page);
+ 			return -EINVAL;
++		}
  
-@@ -767,10 +766,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1921,7 +1923,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
- 	}
- 	spin_lock_irqsave(&bdc->lock, flags);
+ 		intel_private.scratch_page_dma = dma_addr;
+ 	} else
 -- 
 2.25.1
 
