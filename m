@@ -7,138 +7,218 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3EEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B369620885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7AA20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WYASPIx5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A0ZQt9t9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgHTVZz (ORCPT
+        id S1728792AbgHTV0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
+        Thu, 20 Aug 2020 17:26:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgHTVZy (ORCPT
+        with ESMTP id S1728781AbgHTV0N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:25:54 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE80C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:25:54 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id y2so3722289ljc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:25:54 -0700 (PDT)
+        Thu, 20 Aug 2020 17:26:13 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E91CCC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:26:12 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id g1so742165oop.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:26:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qg7ruuG7drWC0btRbr1uOGU4H3EwWSnI1pvnZe6oIgQ=;
-        b=WYASPIx5hMDjYGgzF+G0RR6vw6melkP0mguy36kGh/wXS2V3ohz4Yii1y0Dtu6iU+C
-         lgRRuCa0Yz5B35a2ewWAKf33bxKi/ZqAeyD8rQWw85LdFb2z8gOVCfCrvbQvZJodRNNh
-         93t7iBP1COzAj3azTPFpmNT9k287RMuDfF0QdK0dNPN9GZd/Pm2A1vVPjU1lJWZkZaHf
-         nU6xPpk8TwGTW75Mc7AKO0NSOXk++jx1+LU8HnsQ1FWGYEidvRi3cymONp0dCcu0QeUG
-         4+nCMyIA/qqZc1mDImkpEjw/YDWEjMczSHz8TTIH2lTkWLwJ5jB54ykxBxVdOEh8OdXx
-         YVpw==
+        bh=zqKTYOEG1DwYjtBQ9y/f511uazsbR+LoedmcdkZBfe8=;
+        b=A0ZQt9t964myH4QDetGdxWQIQxuyjhjFuuRs0X8Tw9MfjlHlpxGotJl1u5n2HibBbT
+         3ZO83y0aI6ZvSnSicpML6Ay5paF16ZVsmi/Hu0oFon5u+dvmENv3bfa4prfr7Gngdb61
+         YNzvQsu8/TS/8KOhz1gUFCq/R0UuoKhPctdFS2XIQBIj/itrRNkQvQ4HL5ChDIvpCm0I
+         NEysrGxvx7lNCL0k33dVjNO1qeLN9/UlMwDr16ARJuNsoE0JiusEDhDb7uDTlWEhuuH4
+         zkmoS/vVQkIl067M9CPxnDoBM9ax7eczf8QfKkjH6rzu3arOR6z0QjXew9oHzIueoXob
+         vfiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qg7ruuG7drWC0btRbr1uOGU4H3EwWSnI1pvnZe6oIgQ=;
-        b=Zk8YFnxQcxzPElEnJBhWQz/F6pn4xpAMh7yeDc+kKEatIaUUc9dOeKrFh6y3Exs1nG
-         Fdl/rJf84SjvMToakXrbD6dk5/R355QsXDZh5nLFB0pwZOX6kOUrXQvvLLHoYPWSi2Z5
-         BazD9R+GL3P/NmgmnKXUhTB8IrvMVOLkBVDgrq7j9Gx5H0ajxTQtwr4a6qEkwg0HkR0P
-         x7IrlK9VY3u1KwduXEpepDnP0BV26dk5Upu3qoghKN+j4QaF41Gp8McLFAON/01vTL4u
-         budBXzlNT/eRx4Z3eHSvCfLH/kMyuGGR1R0Zc+AEkEkFCggQ5cjLh0xEzknv7EqcKO7B
-         VBsA==
-X-Gm-Message-State: AOAM532dhqDoDbDRwRWa84zV2eZcaFlpoVaCj0xTPIQCVk0YW1oGZc02
-        0O+9T7XPZc4vQQSZ6A9fsPRUmptb9yobwRW1wG2gyw==
-X-Google-Smtp-Source: ABdhPJzqYADzY46O//FIwuGauKEriUJHxgBT1Pgq+Qn+KFzEpsr1NawCQfd1pK50vIf1JrU/YAnSLFtnkF/7XxmoXBo=
-X-Received: by 2002:a2e:9396:: with SMTP id g22mr121322ljh.446.1597958752359;
- Thu, 20 Aug 2020 14:25:52 -0700 (PDT)
+        bh=zqKTYOEG1DwYjtBQ9y/f511uazsbR+LoedmcdkZBfe8=;
+        b=iwwZh6lUPSglUTNT0EUd57XOTWF8zHF7URg28ADwa4670KIybdYnAiygUrs6UYdnEE
+         QFGBTNMhEJGB42y1ZRoNCRQuk5AWLY3VSzVSWrxJsHZZrEimj+ifmC1n5yHNL+DSBx0e
+         7E7Ua3d6JLxXsdFNBOqYyw6gQjamyp7C6gXGEaoCBpOaI3W2WSN6RJskMs6jApdefiEC
+         iiYfaYjhLyvDIj7SPft8A3yqP/N/Jt644MsSaWVEOQrJISx4aKwbT3PSLS7fbUESOO0K
+         gbi2plVcyIdn/gIRAf+NgsguSKBKfHFDHDrUSjm83IHcNGEkstrrkKFYcxnYG9sNi/0Z
+         TU1A==
+X-Gm-Message-State: AOAM531FZAMjrIE6VgOYkM1pK8WVivmQRPCIgl3z/ixv++qF4KU2JM8z
+        Ii7Wm0ZRVwB3PS8ECLMjk19zRPcCjpfsInR2fr5Tgw==
+X-Google-Smtp-Source: ABdhPJyioHPMz5XS5FlItbQ0oss7WkHtSHvZnygv9matvE8GzQ/jiGfgLwBcuSybMid2JD/t3XGTQH9GsqJW/cvZn30=
+X-Received: by 2002:a4a:d2d8:: with SMTP id j24mr443720oos.82.1597958771940;
+ Thu, 20 Aug 2020 14:26:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820130350.3211-1-longman@redhat.com> <20200820130350.3211-3-longman@redhat.com>
- <20200820173546.GB912520@cmpxchg.org> <a3d4783b-5aee-da40-06c0-ac63e292ccdb@redhat.com>
-In-Reply-To: <a3d4783b-5aee-da40-06c0-ac63e292ccdb@redhat.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 20 Aug 2020 14:25:41 -0700
-Message-ID: <CALvZod6GARMuO8YzMp-1FZaasSZJ8t2b9dUu5tXUcDeuHxA6KA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm/memcg: Simplify mem_cgroup_get_max()
-To:     Waiman Long <longman@redhat.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tejun Heo <tj@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Chris Down <chris@chrisdown.name>,
-        Roman Gushchin <guro@fb.com>,
-        Yafang Shao <laoar.shao@gmail.com>
+References: <20200820133339.372823-1-mlevitsk@redhat.com> <20200820133339.372823-4-mlevitsk@redhat.com>
+In-Reply-To: <20200820133339.372823-4-mlevitsk@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 20 Aug 2020 14:26:00 -0700
+Message-ID: <CALMp9eRoYLqFEGqcVf2tExGvG4bJwy6CURrHiAnYqQ9TrS4eDg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/7] KVM: SVM: refactor msr permission bitmap allocation
+To:     Maxim Levitsky <mlevitsk@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 1:29 PM Waiman Long <longman@redhat.com> wrote:
+On Thu, Aug 20, 2020 at 6:34 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
 >
-> On 8/20/20 1:35 PM, Johannes Weiner wrote:
-> > On Thu, Aug 20, 2020 at 09:03:49AM -0400, Waiman Long wrote:
-> >> The mem_cgroup_get_max() function used to get memory+swap max from
-> >> both the v1 memsw and v2 memory+swap page counters & return the maximum
-> >> of these 2 values. This is redundant and it is more efficient to just
-> >> get either the v1 or the v2 values depending on which one is currently
-> >> in use.
-> >>
-> >> Signed-off-by: Waiman Long <longman@redhat.com>
-> >> ---
-> >>   mm/memcontrol.c | 14 +++++---------
-> >>   1 file changed, 5 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> >> index 26b7a48d3afb..d219dca5239f 100644
-> >> --- a/mm/memcontrol.c
-> >> +++ b/mm/memcontrol.c
-> >> @@ -1633,17 +1633,13 @@ void mem_cgroup_print_oom_meminfo(struct mem_cgroup *memcg)
-> >>    */
-> >>   unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg)
-> >>   {
-> >> -    unsigned long max;
-> >> +    unsigned long max = READ_ONCE(memcg->memory.max);
-> >>
-> >> -    max = READ_ONCE(memcg->memory.max);
-> >>      if (mem_cgroup_swappiness(memcg)) {
-> >> -            unsigned long memsw_max;
-> >> -            unsigned long swap_max;
-> >> -
-> >> -            memsw_max = memcg->memsw.max;
-> >> -            swap_max = READ_ONCE(memcg->swap.max);
-> >> -            swap_max = min(swap_max, (unsigned long)total_swap_pages);
-> >> -            max = min(max + swap_max, memsw_max);
-> >> +            if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
-> >> +                    max += READ_ONCE(memcg->swap.max);
-> >> +            else
-> >> +                    max = memcg->memsw.max;
-> > I agree with the premise of the patch, but v1 and v2 have sufficiently
-> > different logic, and the way v1 overrides max from the innermost
-> > branch again also doesn't help in understanding what's going on.
-> >
-> > Can you please split out the v1 and v2 code?
-> >
-> >       if (cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
-> >               max = READ_ONCE(memcg->memory.max);
-> >               if (mem_cgroup_swappiness(memcg))
-> >                       max += READ_ONCE(memcg->swap.max);
-> >       } else {
-> >               if (mem_cgroup_swappiness(memcg))
-> >                       max = memcg->memsw.max;
-> >               else
-> >                       max = READ_ONCE(memcg->memory.max);
-> >       }
-> >
-> > It's slightly repetitive, but IMO much more readable.
-> >
-> Sure. That makes it even better.
+> Replace svm_vcpu_init_msrpm with svm_vcpu_alloc_msrpm, that also allocates
+> the msr bitmap and add svm_vcpu_free_msrpm to free it.
 >
+> This will be used later to move the nested msr permission bitmap allocation
+> to nested.c
+>
+> No functional change intended.
+>
+> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> ---
+>  arch/x86/kvm/svm/svm.c | 45 +++++++++++++++++++++---------------------
+>  1 file changed, 23 insertions(+), 22 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index d33013b9b4d7..7bb094bf6494 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -609,18 +609,29 @@ static void set_msr_interception(u32 *msrpm, unsigned msr,
+>         msrpm[offset] = tmp;
+>  }
+>
+> -static void svm_vcpu_init_msrpm(u32 *msrpm)
+> +static u32 *svm_vcpu_alloc_msrpm(void)
 
-Can you please also add in the commit message why it is ok to drop
-total_swap_pages comparison from mem_cgroup_get_max()?
+I prefer the original name, since this function does more than allocation.
+
+>  {
+>         int i;
+> +       u32 *msrpm;
+> +       struct page *pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> +
+> +       if (!pages)
+> +               return NULL;
+>
+> +       msrpm = page_address(pages);
+>         memset(msrpm, 0xff, PAGE_SIZE * (1 << MSRPM_ALLOC_ORDER));
+>
+>         for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++) {
+>                 if (!direct_access_msrs[i].always)
+>                         continue;
+> -
+>                 set_msr_interception(msrpm, direct_access_msrs[i].index, 1, 1);
+>         }
+> +       return msrpm;
+> +}
+> +
+> +static void svm_vcpu_free_msrpm(u32 *msrpm)
+> +{
+> +       __free_pages(virt_to_page(msrpm), MSRPM_ALLOC_ORDER);
+>  }
+>
+>  static void add_msr_offset(u32 offset)
+> @@ -1172,9 +1183,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+>  {
+>         struct vcpu_svm *svm;
+>         struct page *vmcb_page;
+> -       struct page *msrpm_pages;
+>         struct page *hsave_page;
+> -       struct page *nested_msrpm_pages;
+>         int err;
+>
+>         BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
+> @@ -1185,21 +1194,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+>         if (!vmcb_page)
+>                 goto out;
+>
+> -       msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> -       if (!msrpm_pages)
+> -               goto free_page1;
+> -
+> -       nested_msrpm_pages = alloc_pages(GFP_KERNEL_ACCOUNT, MSRPM_ALLOC_ORDER);
+> -       if (!nested_msrpm_pages)
+> -               goto free_page2;
+> -
+
+Reordering the allocations does seem like a functional change to me,
+albeit one that should (hopefully) be benign. For example, if the
+MSRPM_ALLOC_ORDER allocations fail, in the new version of the code,
+the hsave_page will be cleared, but in the old version of the code, no
+page would be cleared.
+
+>         hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
+
+Speaking of clearing pages, why not add __GFP_ZERO to the flags above
+and skip the clear_page() call below?
+
+>         if (!hsave_page)
+> -               goto free_page3;
+> +               goto free_page1;
+>
+>         err = avic_init_vcpu(svm);
+>         if (err)
+> -               goto free_page4;
+> +               goto free_page2;
+>
+>         /* We initialize this flag to true to make sure that the is_running
+>          * bit would be set the first time the vcpu is loaded.
+> @@ -1210,11 +1211,13 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+>         svm->nested.hsave = page_address(hsave_page);
+>         clear_page(svm->nested.hsave);
+>
+> -       svm->msrpm = page_address(msrpm_pages);
+> -       svm_vcpu_init_msrpm(svm->msrpm);
+> +       svm->msrpm = svm_vcpu_alloc_msrpm();
+> +       if (!svm->msrpm)
+> +               goto free_page2;
+>
+> -       svm->nested.msrpm = page_address(nested_msrpm_pages);
+> -       svm_vcpu_init_msrpm(svm->nested.msrpm);
+> +       svm->nested.msrpm = svm_vcpu_alloc_msrpm();
+> +       if (!svm->nested.msrpm)
+> +               goto free_page3;
+>
+>         svm->vmcb = page_address(vmcb_page);
+>         clear_page(svm->vmcb);
+> @@ -1227,12 +1230,10 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+>
+>         return 0;
+>
+> -free_page4:
+> -       __free_page(hsave_page);
+>  free_page3:
+> -       __free_pages(nested_msrpm_pages, MSRPM_ALLOC_ORDER);
+> +       svm_vcpu_free_msrpm(svm->msrpm);
+>  free_page2:
+> -       __free_pages(msrpm_pages, MSRPM_ALLOC_ORDER);
+> +       __free_page(hsave_page);
+>  free_page1:
+>         __free_page(vmcb_page);
+>  out:
+
+While you're here, could you improve these labels? Coding-style.rst says:
+
+Choose label names which say what the goto does or why the goto exists.  An
+example of a good name could be ``out_free_buffer:`` if the goto frees
+``buffer``.
+Avoid using GW-BASIC names like ``err1:`` and ``err2:``, as you would have to
+renumber them if you ever add or remove exit paths, and they make correctness
+difficult to verify anyway.
