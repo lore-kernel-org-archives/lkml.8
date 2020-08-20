@@ -2,136 +2,184 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758EEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E38BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 523F7208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD3CC208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GxjAAHVE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+0iidhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729611AbgHTNU0 (ORCPT
+        id S1729366AbgHTNWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:20:26 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:44945 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728439AbgHTJfA (ORCPT
+        Thu, 20 Aug 2020 09:22:04 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29228 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729578AbgHTNTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:00 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BA2BA5C00E2;
-        Thu, 20 Aug 2020 05:34:59 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Thu, 20 Aug 2020 05:34:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=KlpKEu
-        wCoUOMNODDk2NCxK/d+w7GprnH5JN5nth+uqI=; b=GxjAAHVEytKq/BXRBWsDxY
-        Dxd+QGSxNyMLn8B6w2bmBHtKm0VvhbkJfRUN+wyQ76fLyGOXps4Bp6lYyc4OslUw
-        CviOtRimIJz9e2GPwAWHPkkz3VZaVHMy2Z6/iya0NhhpWD5ntBeJ90TymbMmOduH
-        3krwawSMZhRk62Fen4KFAIwaFpKwtMjkHuPsycm80afeY8OO2MMdzaVumezTlJuR
-        KNdi/GebTHioOcjUAw+WHIL42E1ecSYrMhFzPEmoMIHdf2zRwB0mvdaIyXsWN/X3
-        Y3J3scEeV/uBB9xAOB9U+m+IL8p1ufOJM6tCcD6E2OXIw8nHg8Q0JAp/YVuc6/DA
-        ==
-X-ME-Sender: <xms:w0M-X1DHNrYONv3eKsbyxF6ogxOn86preXDIu8-vS1TG9SLjSV9H_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddutddgudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
-    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
-    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeetveff
-    iefghfekhffggeeffffhgeevieektedthfehveeiheeiiedtudegfeetffenucfkpheple
-    durdeigedrudejtddrkeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsg
-    drtghomh
-X-ME-Proxy: <xmx:w0M-XzjZGjLAp3n9_azWu0HJ-2LvhXEr0Nw-aGIfzOfEUa-iC2utxg>
-    <xmx:w0M-XwkllzvvDnn213E9uwXCMcpLM26j6UTX6b_kkAMDZan5hXrRSA>
-    <xmx:w0M-X_xG0GH2nOXoQYwBW64vVgXzNJnUgZ3q0__ohYa9b3uWuoJnZg>
-    <xmx:w0M-X4efRSIXmsgZm_bWKk2FYgEeFvwbXRzwjLNLAlD7ehekjMRMOw>
-Received: from mail-itl (ip5b40aa59.dynamic.kabel-deutschland.de [91.64.170.89])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 60BFA3280060;
-        Thu, 20 Aug 2020 05:34:58 -0400 (EDT)
-Date:   Thu, 20 Aug 2020 11:34:54 +0200
-From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
-        <marmarek@invisiblethingslab.com>
-To:     Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-Cc:     Norbert Kaminski <norbert.kaminski@3mdeb.com>,
-        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
-        xen-devel@lists.xenproject.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Maciej Pijanowski <maciej.pijanowski@3mdeb.com>,
-        piotr.krol@3mdeb.com
-Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
-Message-ID: <20200820093454.GS1626@mail-itl>
-References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
- <20200817090013.GN975@Air-de-Roger>
- <20200818120135.GK1679@mail-itl>
- <20200818124710.GK828@Air-de-Roger>
- <20200818150020.GL1679@mail-itl>
- <20200818172114.GO828@Air-de-Roger>
- <20200818184018.GN1679@mail-itl>
- <20200819081930.GQ828@Air-de-Roger>
- <3d405b0c-4e2b-0d29-56bb-e315f4c21d03@3mdeb.com>
- <20200820093025.GT828@Air-de-Roger>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pssgfZQbIK00CPi6"
-Content-Disposition: inline
-In-Reply-To: <20200820093025.GT828@Air-de-Roger>
+        Thu, 20 Aug 2020 09:19:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597929582;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=EYEbh/d854a4Cvi1ZmxUctES1NziyUONjpMTuL++zu0=;
+        b=U+0iidhgi9u9snAkDQ9TDVUc2PkBoI57W3PkqraAcoc+fZNmQhbhK0O5ntUAdHl37lATFu
+        bwdjzjkLTe+AorJeuiG33PdjU/rD4QLjsl79YfnvNm/XWsimwEXNzSWP6nVdfKgJvNnc2N
+        5t/VIQcK1W5kZ8HpS1AsM1qgvGESGeg=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-69-aY8ZLKuyOc6uRq5QO-umDA-1; Thu, 20 Aug 2020 09:19:38 -0400
+X-MC-Unique: aY8ZLKuyOc6uRq5QO-umDA-1
+Received: by mail-qt1-f197.google.com with SMTP id m88so1500181qtd.15
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EYEbh/d854a4Cvi1ZmxUctES1NziyUONjpMTuL++zu0=;
+        b=X+BPSf5j4oQb6YjA1RVhKJH6qFnkBJt/kSiij3v50Dzw4okldPrZ/OTC43KNw69GZ0
+         D2TWqdAcbbkOpcQJG4CQD04e0D1saNe7RSLcYcG4UGjsKaU4kNEPWva8TleQHVZ6libO
+         0anXX1JcA7pTPU0ydRUat1QIC1EISIXc/Wo7CngcOni4VPt4nIaJFhRm6CdVay2bKcz1
+         Ge1bccc4z2PhwQ9C2hjNarod7uvt7tZPm5w0tG8ubWrCYb0gmTF99k68Rg8Nz64TH8yT
+         YuBhSr5L48x31n/tR8T6jbO7+KgcR1hdC0DvHjn1qsfjnNIwiMmSoDdxep+hQ8niapMO
+         ceOA==
+X-Gm-Message-State: AOAM531P3frXugvOsV6yipF6TQmsq9+TBPFKh6eLf1H9fex4BtOPY1p/
+        Hea66fV/IRV24YVBAm4aqHecO/3J27KqdmefFXcbCVthua4Y299MiU5MZOgNuRPiRjdfyafa5xU
+        +7Jqplp/yalkxKVHseGS/VZ3X
+X-Received: by 2002:ac8:71d6:: with SMTP id i22mr2532262qtp.371.1597929578429;
+        Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJylmGEqva8k65GQbvrfrvomBJaM4CqPY7z4t1eMT+zT+dmuDhYUfv1MeCKO+nFkDiWH+W8K5w==
+X-Received: by 2002:ac8:71d6:: with SMTP id i22mr2532245qtp.371.1597929578139;
+        Thu, 20 Aug 2020 06:19:38 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id b37sm3022312qtk.85.2020.08.20.06.19.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 06:19:37 -0700 (PDT)
+From:   trix@redhat.com
+To:     rydberg@bitmath.org, jdelvare@suse.com, linux@roeck-us.net
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tom Rix <trix@redhat.com>
+Subject: [PATCH] hwmon: applesmc: check status earlier.
+Date:   Thu, 20 Aug 2020 06:19:32 -0700
+Message-Id: <20200820131932.10590-1-trix@redhat.com>
+X-Mailer: git-send-email 2.18.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Tom Rix <trix@redhat.com>
 
---pssgfZQbIK00CPi6
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+clang static analysis reports this representative problem
 
-On Thu, Aug 20, 2020 at 11:30:25AM +0200, Roger Pau Monn=C3=A9 wrote:
-> Right, so you only need access to the ESRT table, that's all. Then I
-> think we need to make sure Xen doesn't use this memory for anything
-> else, which will require some changes in Xen (or at least some
-> checks?).
->=20
-> We also need to decide what to do if the table turns out to be placed
-> in a wrong region. How are we going to prevent dom0 from using it
-> then? My preference would be to completely hide it from dom0 in that
-> case, such that it believes there's no ESRT at all if possible.
+applesmc.c:758:10: warning: 1st function call argument is an
+  uninitialized value
+        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Yes, that makes sense. As discussed earlier, that probably means
-re-constructing SystemTable before giving it to dom0. We'd need to do
-that in PVH case anyway, to adjust addresses, right? Is there something
-like this in the Xen codebase already, or it needs to be written from
-scratch?
+buffer is filled by the earlier call
 
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
+	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
 
---pssgfZQbIK00CPi6
-Content-Type: application/pgp-signature; name="signature.asc"
+This problem is reported because a goto skips the status check.
+Other similar problems use data from applesmc_read_key before checking
+the status.  So move the checks to before the use.
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl8+Q74ACgkQ24/THMrX
-1yw4EQgAk4AIcF8Tu2i2t9vctatIRr4NIxuooAyuGeLDLt9gHLT6RnXWj19wse+9
-mkWk5O2lq9WtIrO4gWqBScO0uPAbH9EV6RapfhhGHc/gTtG2rXieaCOiwOW1QKuA
-1QhKHmzSWb16MAQD30cNvyThc7CWEtDz87/gPzxYSOzSEtPIRp3SwJDXifNOPAUK
-w5rzHYjmANwxAw2kNmGuF+AmwZgHQhGkCLzUMMkZ7hPEGxnKRferTQHmU2Hs3WBC
-hDiq05yOY5i4YUsJiPJrkGLuhwRRjbq38Rb3CWlwhLRMEzQhw4i6+T/EETRy8MZm
-2t/zlNB3JyO+sFY32S+zBBXoYBe+lg==
-=7TLR
------END PGP SIGNATURE-----
+diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
+index 316618409315..a18887990f4a 100644
+--- a/drivers/hwmon/applesmc.c
++++ b/drivers/hwmon/applesmc.c
+@@ -753,15 +753,18 @@ static ssize_t applesmc_light_show(struct device *dev,
+ 	}
+ 
+ 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
++	if (ret)
++		goto out;
+ 	/* newer macbooks report a single 10-bit bigendian value */
+ 	if (data_length == 10) {
+ 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
+ 		goto out;
+ 	}
+ 	left = buffer[2];
++
++	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	if (ret)
+ 		goto out;
+-	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
+ 	right = buffer[2];
+ 
+ out:
+@@ -810,12 +813,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
+ 		  to_index(attr));
+ 
+ 	ret = applesmc_read_key(newkey, buffer, 2);
+-	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
++
++	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
++	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+ }
+ 
+ static ssize_t applesmc_store_fan_speed(struct device *dev,
+@@ -851,12 +853,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
+ 	u8 buffer[2];
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
++
++	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
+ }
+ 
+ static ssize_t applesmc_store_fan_manual(struct device *dev,
+@@ -872,10 +873,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
+ 		return -EINVAL;
+ 
+ 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
+-	val = (buffer[0] << 8 | buffer[1]);
+ 	if (ret)
+ 		goto out;
+ 
++	val = (buffer[0] << 8 | buffer[1]);
++
+ 	if (input)
+ 		val = val | (0x01 << to_index(attr));
+ 	else
+@@ -951,13 +953,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
+ 	u32 count;
+ 
+ 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
+-	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
+-						((u32)buffer[2]<<8) + buffer[3];
+-
+ 	if (ret)
+ 		return ret;
+-	else
+-		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
++
++	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
++						((u32)buffer[2]<<8) + buffer[3];
++	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
+ }
+ 
+ static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+-- 
+2.18.1
 
---pssgfZQbIK00CPi6--
