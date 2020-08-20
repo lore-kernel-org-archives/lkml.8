@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB043C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45514206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8651D206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920722;
-	bh=+A7dgYrhmSz0Iyr0Yl0y4R65UKkk26bWGrDgGtQ//yU=;
+	s=default; t=1597920734;
+	bh=pkvvXZauKQ4Yty9w49X1OqoXSooFZ3+QrwNAsM8G9Yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7LArxt1VyX9p/rl1dw4QHOeJxAJaZBzmd1gACl9LGOYhHceHFj1RgDrCrQKZBNqx
-	 MynBPDmDAdgmKskRcyUXwsKwn1HNB+fqS6JhL0yyoYjChv5ntb/wT7OF4tVdLJnuKM
-	 Vio/ySylnbVEGt6yoeorimPwYrkAPOVVwn+mPtBc=
+	b=t9+DoXWgUkkbRL0nzzHgOjU2TZK+K0Ab5kjRFAzpBkMPlNkjUPSYc2ltFl0D98p7P
+	 tLGsQ+Q9/iQJBaOpxTt9bC59yF9a1kb5uHs4OcbfN8HXM2uxEwk6UkYl/Qg5bsPgei
+	 TiKfZ65I731AIvfVMAp+qHhO5ZO3PV/m32rrbfr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbgHTKOd (ORCPT
+        id S1731153AbgHTKwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:52:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730918AbgHTKOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:04 -0400
+        id S1730973AbgHTKO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 504C52075E;
-        Thu, 20 Aug 2020 10:14:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84780206DA;
+        Thu, 20 Aug 2020 10:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918443;
-        bh=+A7dgYrhmSz0Iyr0Yl0y4R65UKkk26bWGrDgGtQ//yU=;
+        s=default; t=1597918467;
+        bh=pkvvXZauKQ4Yty9w49X1OqoXSooFZ3+QrwNAsM8G9Yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gk3T4OW3R5xl3oyP8aKOIqcVtZ/pbWQH+IRXm4NLmfhnXr1nNJHUMUSPFYvqZtYR5
-         m+TvSnjdk7UiMtiO05PgNyYcx3VImXyjnYH/IoNx7BKYCAeb/wsMC2TDpOA53Nt3FJ
-         5sLZdTr1H8l7rk0uO0n3Qjlg+X3DW1vqLjEXAH5g=
+        b=gDQ9+09G6KvOCdPDv22So4CD+I6x9e+RjRX3tNqRAg0I1Ub2jZSArNNAdc7xWXqyx
+         iqAgVJljUwOfUaPLqTDYesis3km/bTiPi25DnnZAFPiHAO4FS7HucYiw6e+iYX0orX
+         DZ1GB/mFlA18t+tyZs/UTTxiKqejW3lrvEEbrNWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 171/228] btrfs: fix memory leaks after failure to lookup checksums during inode logging
-Date:   Thu, 20 Aug 2020 11:22:26 +0200
-Message-Id: <20200820091616.128171630@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 180/228] bcache: allocate meta data pages as compound pages
+Date:   Thu, 20 Aug 2020 11:22:35 +0200
+Message-Id: <20200820091616.573741584@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,54 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Coly Li <colyli@suse.de>
 
-commit 4f26433e9b3eb7a55ed70d8f882ae9cd48ba448b upstream.
+commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
 
-While logging an inode, at copy_items(), if we fail to lookup the checksums
-for an extent we release the destination path, free the ins_data array and
-then return immediately. However a previous iteration of the for loop may
-have added checksums to the ordered_sums list, in which case we leak the
-memory used by them.
+There are some meta data of bcache are allocated by multiple pages,
+and they are used as bio bv_page for I/Os to the cache device. for
+example cache_set->uuids, cache->disk_buckets, journal_write->data,
+bset_tree->data.
 
-So fix this by making sure we iterate the ordered_sums list and free all
-its checksums before returning.
+For such meta data memory, all the allocated pages should be treated
+as a single memory block. Then the memory management and underlying I/O
+code can treat them more clearly.
 
-Fixes: 3650860b90cc2a ("Btrfs: remove almost all of the BUG()'s from tree-log.c")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+This patch adds __GFP_COMP flag to all the location allocating >0 order
+pages for the above mentioned meta data. Then their pages are treated
+as compound pages now.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/md/bcache/bset.c    |    2 +-
+ drivers/md/bcache/btree.c   |    2 +-
+ drivers/md/bcache/journal.c |    4 ++--
+ drivers/md/bcache/super.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3854,11 +3854,8 @@ static noinline int copy_items(struct bt
- 						fs_info->csum_root,
- 						ds + cs, ds + cs + cl - 1,
- 						&ordered_sums, 0);
--				if (ret) {
--					btrfs_release_path(dst_path);
--					kfree(ins_data);
--					return ret;
--				}
-+				if (ret)
-+					break;
- 			}
- 		}
- 	}
-@@ -3871,7 +3868,6 @@ static noinline int copy_items(struct bt
- 	 * we have to do this after the loop above to avoid changing the
- 	 * log tree while trying to change the log tree.
- 	 */
--	ret = 0;
- 	while (!list_empty(&ordered_sums)) {
- 		struct btrfs_ordered_sum *sums = list_entry(ordered_sums.next,
- 						   struct btrfs_ordered_sum,
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -319,7 +319,7 @@ int bch_btree_keys_alloc(struct btree_ke
+ 
+ 	b->page_order = page_order;
+ 
+-	t->data = (void *) __get_free_pages(gfp, b->page_order);
++	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
+ 	if (!t->data)
+ 		goto err;
+ 
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -794,7 +794,7 @@ int bch_btree_cache_alloc(struct cache_s
+ 	mutex_init(&c->verify_lock);
+ 
+ 	c->verify_ondisk = (void *)
+-		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
++		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
+ 
+ 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
+ 
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -838,8 +838,8 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[1].c = c;
+ 
+ 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+-	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+-	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
++	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
++	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1468,7 +1468,7 @@ void bch_cache_set_unregister(struct cac
+ }
+ 
+ #define alloc_bucket_pages(gfp, c)			\
+-	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
++	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
+ 
+ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ {
 
 
