@@ -2,223 +2,253 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD552C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 848E8208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A14207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:36:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qYE/2AT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgHTHdA (ORCPT
+        id S1726347AbgHTHgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:33:00 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55008 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgHTHdA (ORCPT
+        Thu, 20 Aug 2020 03:36:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39354 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbgHTHgA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:33:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 045EA28E289
-Message-ID: <bac2020eabb375a6c9dbc689c0c5a3f6eae16e1e.camel@collabora.com>
-Subject: Re: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size'
- field
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Maxime Ripard <mripard@kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Date:   Thu, 20 Aug 2020 04:32:46 -0300
-In-Reply-To: <20200819135430.GA1566@aptenodytes>
-References: <20200806151310.98624-1-ezequiel@collabora.com>
-         <20200806151310.98624-9-ezequiel@collabora.com>
-         <20200806155028.GB1621078@aptenodytes>
-         <7e0ad157cabb656cbb4f24354146197e6a1d3f36.camel@collabora.com>
-         <20200819135430.GA1566@aptenodytes>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3-1 
+        Thu, 20 Aug 2020 03:36:00 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B274C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:36:00 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id v9so1000831ljk.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:36:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jhY7jQSIRXqAqE/qK3hnmZGj7G68p1VfW36/dFGhyXo=;
+        b=qYE/2AT4aPIVrosYiM+YX8IPsRzTrnXm57n+ZSXVc9NtQHEMTVvZMoVdlJ+UM7xJgh
+         DNLn6wM2unFXOTfR1z8Kap3wPcv0Ld79fgjSo3u1GGgBO42Ldtei1nPlBZoOYzvcRnta
+         75R8piKkarTy5uGIH9SAqY88zqu09RSH6ggCjQKw3H5GAVzSr4iOy/5UMD0fapDL8Maw
+         j/ax1VOpaMKH9DbT9NdIzCY0u9kRRuRcU8niZsXh3Ksj9RsMm2HvN5FHqFQidJyynoo1
+         woL29iLTMcyy4d7k6F8SDre62kA6psjIUzZ4XUCofG7qzpUxPz5WMu2FEOCHU188qBxG
+         084g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jhY7jQSIRXqAqE/qK3hnmZGj7G68p1VfW36/dFGhyXo=;
+        b=J0tnme0onFJtAWtWPREVVOV+LQ/p54txIcbFcg288H0xL0/T4E7RGkMMJdL5hIPL/Z
+         kKSyn7XCqi+Vd1L52/5cqxlMxIeRCDmWZ7VHuUM5Bm6QBCRlnTKPoNhYLjmGYncR5CNe
+         iRdu3Hno56OAoHCr2Z1Ii3oxK6GN6yt9JGdiQJDjwvqoTEyxushnd+qzXivTnqIhrqEV
+         pSpPHVxNydMEIaS7XCiv/DlyMk6iRrWn5BpFBs556Zedtg4K9XGu0NONmXJBeouY4RbN
+         Ht2KINZE4LCBee5vFdOmqr44FJ9Us+pXuwF/hna0EwE/+P+FuSlk4p0anEnQg35XDc8B
+         KYsg==
+X-Gm-Message-State: AOAM533NGZbYjULjHPTmmR5XffoqrExe/C9th+tZev2LgnNdA2rO0Lp8
+        a8rmXHlX3x2+BMs+fmGvf4sIl55/3O1JnmC3jA4dYg==
+X-Google-Smtp-Source: ABdhPJxIueGc9nT7kqP8k7xAIe2QKuKZ5D5HUHao0VW6Ra7yIL/hn7C/Dy7sNSaXCrtse1u4dNmJQiQF8a58xGAC8ZY=
+X-Received: by 2002:a2e:9990:: with SMTP id w16mr929513lji.156.1597908958592;
+ Thu, 20 Aug 2020 00:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200801023248.90104-1-benbjiang@gmail.com> <5ed0fd46-3a3d-3c1a-5d75-03a74864e640@arm.com>
+ <592F24A7-BF43-457D-AC40-DC5E35279730@tencent.com> <8bef1f94-f9bf-08a5-2ff3-3485d7796a96@arm.com>
+ <8629CB9F-AFC8-43D6-BD14-B60A0B85ADB3@tencent.com> <5f870781-1648-b4ac-6026-557dfc347109@arm.com>
+ <CCA1D942-3669-4216-92BD-768967B1ECE5@tencent.com> <4964e359-afc5-a256-4950-853a9485eeff@arm.com>
+ <70236E62-AA36-48C1-9382-86353649253C@tencent.com> <3a1047fc-a86a-014a-b17a-eae71f669da1@arm.com>
+ <643B0ECE-D758-4D08-8B1B-C70F34DD9943@tencent.com> <55f04582-69d6-aeb4-85be-3e46a3b15beb@arm.com>
+ <755BFAD0-9072-4D73-9CD7-AF4F74A79D21@tencent.com> <729675a2-b083-4211-62c0-f7ed7f483ae2@arm.com>
+ <CAKfTPtATf94n4t6EnB5_76ygox26xd9EwvEHiv5cGN=E9BdLgg@mail.gmail.com>
+ <bb7456af-6a4d-874c-e635-8d21e1ab3efc@arm.com> <A8E52241-0206-447D-9EA0-699F8F82AFAB@tencent.com>
+ <CAKfTPtBiZHwkhCkMQs9iOF=eBLgubsJkARN5zOKZzmfo_jTJzg@mail.gmail.com> <3A85DD77-2A4B-466F-A1F4-1BF2AF02CF58@tencent.com>
+In-Reply-To: <3A85DD77-2A4B-466F-A1F4-1BF2AF02CF58@tencent.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 20 Aug 2020 09:35:46 +0200
+Message-ID: <CAKfTPtATpDB+ihpMf854nTdDfy4Bw_BU=21PRHVczEcE42271Q@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: reduce preemption with IDLE tasks
+ runable(Internet mail)
+To:     =?UTF-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Jiang Biao <benbjiang@gmail.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+On Thu, 20 Aug 2020 at 02:13, benbjiang(=E8=92=8B=E5=BD=AA) <benbjiang@tenc=
+ent.com> wrote:
+>
+>
+>
+> > On Aug 19, 2020, at 10:55 PM, Vincent Guittot <vincent.guittot@linaro.o=
+rg> wrote:
+> >
+> > On Wed, 19 Aug 2020 at 16:27, benbjiang(=E8=92=8B=E5=BD=AA) <benbjiang@=
+tencent.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Aug 19, 2020, at 7:55 PM, Dietmar Eggemann <dietmar.eggemann@arm.c=
+om> wrote:
+> >>>
+> >>> On 19/08/2020 13:05, Vincent Guittot wrote:
+> >>>> On Wed, 19 Aug 2020 at 12:46, Dietmar Eggemann <dietmar.eggemann@arm=
+.com> wrote:
+> >>>>>
+> >>>>> On 17/08/2020 14:05, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>>> On Aug 17, 2020, at 4:57 PM, Dietmar Eggemann <dietmar.eggemann@a=
+rm.com> wrote:
+> >>>>>>>
+> >>>>>>> On 14/08/2020 01:55, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>> Hi,
+> >>>>>>>>
+> >>>>>>>>> On Aug 13, 2020, at 2:39 AM, Dietmar Eggemann <dietmar.eggemann=
+@arm.com> wrote:
+> >>>>>>>>>
+> >>>>>>>>> On 12/08/2020 05:19, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>> Hi,
+> >>>>>>>>>>
+> >>>>>>>>>>> On Aug 11, 2020, at 11:54 PM, Dietmar Eggemann <dietmar.eggem=
+ann@arm.com> wrote:
+> >>>>>>>>>>>
+> >>>>>>>>>>> On 11/08/2020 02:41, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>>>> Hi,
+> >>>>>>>>>>>>
+> >>>>>>>>>>>>> On Aug 10, 2020, at 9:24 PM, Dietmar Eggemann <dietmar.egge=
+mann@arm.com> wrote:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> On 06/08/2020 17:52, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>>>>>> Hi,
+> >>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>> On Aug 6, 2020, at 9:29 PM, Dietmar Eggemann <dietmar.egg=
+emann@arm.com> wrote:
+> >>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>> On 03/08/2020 13:26, benbjiang(=E8=92=8B=E5=BD=AA) wrote:
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> On Aug 3, 2020, at 4:16 PM, Dietmar Eggemann <dietmar.e=
+ggemann@arm.com> wrote:
+> >>>>>>>>>>>>>>>>>
+> >>>>>>>>>>>>>>>>> On 01/08/2020 04:32, Jiang Biao wrote:
+> >>>>>>>>>>>>>>>>>> From: Jiang Biao <benbjiang@tencent.com>
+> >>>>>
+> >>>>> [...]
+> >>>>>
+> >>>>>>> Are you sure about this?
+> >>>>>> Yes. :)
+> >>>>>>>
+> >>>>>>> The math is telling me for the:
+> >>>>>>>
+> >>>>>>> idle task:      (3 / (1024 + 1024 + 3))^(-1) * 4ms =3D 2735ms
+> >>>>>>>
+> >>>>>>> normal task: (1024 / (1024 + 1024 + 3))^(-1) * 4ms =3D    8ms
+> >>>>>>>
+> >>>>>>> (4ms - 250 Hz)
+> >>>>>> My tick is 1ms - 1000HZ, which seems reasonable for 600ms? :)
+> >>>>>
+> >>>>> OK, I see.
+> >>>>>
+> >>>>> But here the different sched slices (check_preempt_tick()->
+> >>>>> sched_slice()) between normal tasks and the idle task play a role t=
+o.
+> >>>>>
+> >>>>> Normal tasks get ~3ms whereas the idle task gets <0.01ms.
+> >>>>
+> >>>> In fact that depends on the number of CPUs on the system
+> >>>> :sysctl_sched_latency =3D 6ms * (1 + ilog(ncpus)) . On a 8 cores sys=
+tem,
+> >>>> normal task will run around 12ms in one shoot and the idle task stil=
+l
+> >>>> one tick period
+> >>>
+> >>> True. This is on a single CPU.
+> >> Agree. :)
+> >>
+> >>>
+> >>>> Also, you can increase even more the period between 2 runs of idle
+> >>>> task by using cgroups and min shares value : 2
+> >>>
+> >>> Ah yes, maybe this is what Jiang wants to do then? If his runtime doe=
+s
+> >>> not have other requirements preventing this.
+> >> That could work for increasing the period between 2 runs. But could no=
+t
+> >> reduce the single runtime of idle task I guess, which means normal tas=
+k
+> >> could have 1-tick schedule latency because of idle task.
+> >
+> > Yes.  An idle task will preempt an always running task during 1 tick
+> > every 680ms. But also you should keep in mind that a waking normal
+> > task will preempt the idle task immediately which means that it will
+> > not add scheduling latency to a normal task but "steal" 0.14% of
+> > normal task throughput (1/680) at most
+> That=E2=80=99s true. But in the VM case, when VM are busy(MWAIT passthrou=
+gh
+> or running cpu eating works), the 1-tick scheduling latency could be
+> detected by cyclictest running in the VM.
+>
+> OTOH, we compensate vruntime in place_entity() to boot waking
+> without distinguish SCHED_IDLE task, do you think it=E2=80=99s necessary =
+to
+> do that? like
+>
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4115,7 +4115,7 @@ place_entity(struct cfs_rq *cfs_rq, struct sched_en=
+tity *se, int initial)
+>                 vruntime +=3D sched_vslice(cfs_rq, se);
+>
+>         /* sleeps up to a single latency don't count. */
+> -       if (!initial) {
+> +       if (!initial && likely(!task_has_idle_policy(task_of(se)))) {
+>                 unsigned long thresh =3D sysctl_sched_latency;
 
-On Wed, 2020-08-19 at 15:54 +0200, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Fri 07 Aug 20, 11:44, Ezequiel Garcia wrote:
-> > On Thu, 2020-08-06 at 17:50 +0200, Paul Kocialkowski wrote:
-> > > Hi,
-> > > 
-> > > On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
-> > > > The SLICE_PARAMS control is intended for slice-based
-> > > > devices. In this mode, the OUTPUT buffer contains
-> > > > a single slice, and so the buffer's plane payload size
-> > > > can be used to query the slice size.
-> > > 
-> > > If we later extend the API for supporting multiple slices with dynamic array
-> > > controls, I guess we'll need to know the size of each slice in each control
-> > > elements. So I'd rather keep that even if it's indeed redundant with
-> > > vb2_get_plane_payload in single-slice mode.
-> > > 
-> > 
-> > If we later extend the API, another control (possibly
-> > another decoding mode?) shall be introduced.
-> > 
-> > This API covers single-slice-per-request as specified
-> > and documented in patch 9/14 "Clarify SLICE_BASED mode".
-> > 
-> > This is along the lines of the proposal drafted by Nicolas,
-> > see my reply: https://lkml.org/lkml/2020/8/5/791.
-> > 
-> > This applies to num_slices, slice size and slice start offset.
-> > 
-> > There are multiple ways of doing this.
-> 
-> If feels a bit problematic to remove these fields without a clear plan yet
-> on how to support multiple slices in the future. These may need to be added
-> again later, except that it will be too late and new controls will need to be
-> introduced.
-> 
+Yeah, this is a good improvement.
+Does it solve your problem ?
 
-As Nicolas and I have repeatedly mentioned we do have a plan :)
-
-Nothing prevents us from implementing this now, but since it seems
-we don't have any need since the 1-slice-per-buffer is working well,
-there is no motivation for it.
-
-As you well mention, it does require new controls. This is
-totally expected since new decoding semantics will need new controls.
-
-Here's my version of the plan:
-
-enum v4l2_mpeg_video_h264_decode_mode {
-        V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
-        V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_ARRAY_BASED,
-        V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
-};
-
-#define V4L2_CID_MPEG_VIDEO_H264_SLICE_ARRAY    (V4L2_CID_MPEG_BASE+1008)
-
-struct v4l2_ctrl_h264_slice_array {
-        __u16 num_slices;
-
-        struct v4l2_ctrl_h264_slice slices[16];
-}
-
-struct v4l2_ctrl_h264_slice {
-        __u32 size;
-        __u32 start_byte_offset;
-        struct v4l2_ctrl_h264_slice_params params;
-}
-
-Now, the _specific_ way this will be done is not under
-discussion at the moment.
-
-> Also, could we consider adding more reserved fields to handle such future needs?
-> 
-
-I have considered that (on each control), but I fail
-to see the reason for it. The same may be said of all controls,
-yet I don't think we bloat each one just in case. 
-
-Thanks,
-Ezequiel
-
-> Cheers,
-> 
-> Paul
-> 
-> > Thanks!
-> > Ezequiel
-> > 
-> > > What do you think?
-> > > 
-> > > Paul
-> > > 
-> > > > To reduce the API surface drop the size from the
-> > > > SLICE_PARAMS control.
-> > > > 
-> > > > A follow-up change will remove other members in SLICE_PARAMS
-> > > > so we don't need to add padding fields here.
-> > > > 
-> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > ---
-> > > >  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
-> > > >  include/media/h264-ctrls.h                                | 3 ---
-> > > >  3 files changed, 3 insertions(+), 10 deletions(-)
-> > > > 
-> > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > index 427fc5727ec0..fff74b7bf32a 100644
-> > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
-> > > > @@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
-> > > >      :stub-columns: 0
-> > > >      :widths:       1 1 2
-> > > >  
-> > > > -    * - __u32
-> > > > -      - ``size``
-> > > > -      -
-> > > >      * - __u32
-> > > >        - ``start_byte_offset``
-> > > >          Offset (in bytes) from the beginning of the OUTPUT buffer to the start
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > index a9ba78b15907..8b6f05aadbe8 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > @@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
-> > > >  	struct vb2_buffer *src_buf = &run->src->vb2_buf;
-> > > >  	struct cedrus_dev *dev = ctx->dev;
-> > > >  	dma_addr_t src_buf_addr;
-> > > > -	u32 len = slice->size * 8;
-> > > > +	size_t slice_bytes = vb2_get_plane_payload(src_buf, 0);
-> > > >  	unsigned int pic_width_in_mbs;
-> > > >  	bool mbaff_pic;
-> > > >  	u32 reg;
-> > > >  
-> > > > -	cedrus_write(dev, VE_H264_VLD_LEN, len);
-> > > > +	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
-> > > >  	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
-> > > >  
-> > > >  	src_buf_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
-> > > > -	cedrus_write(dev, VE_H264_VLD_END,
-> > > > -		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
-> > > > +	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
-> > > >  	cedrus_write(dev, VE_H264_VLD_ADDR,
-> > > >  		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
-> > > >  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
-> > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> > > > index 4f05ee265997..f74736fcfa00 100644
-> > > > --- a/include/media/h264-ctrls.h
-> > > > +++ b/include/media/h264-ctrls.h
-> > > > @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
-> > > >  };
-> > > >  
-> > > >  struct v4l2_ctrl_h264_slice_params {
-> > > > -	/* Size in bytes, including header */
-> > > > -	__u32 size;
-> > > > -
-> > > >  	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
-> > > >  	__u32 start_byte_offset;
-> > > >  
-> > > > -- 
-> > > > 2.27.0
-> > > > 
-
-
+>
+> >
+> >> OTOH, cgroups(shares) could introduce extra complexity. :)
+> >>
+> >> I wonder if there=E2=80=99s any possibility to make SCHED_IDLEs=E2=80=
+=99 priorities absolutely
+> >> lower than SCHED_NORMAL(OTHER), which means no weights/shares
+> >> for them, and they run only when no other task=E2=80=99s runnable.
+> >> I guess there may be priority inversion issue if we do that. But maybe=
+ we
+> >
+> > Exactly, that's why we must ensure a minimum running time for sched_idl=
+e task
+>
+> Still for VM case, different VMs have been much isolated from each other,
+> priority inversion issue could be very rare, we=E2=80=99re trying to make=
+ offline tasks
+> absoultly harmless to online tasks. :)
+>
+> Thanks a lot for your time.
+> Regards,
+> Jiang
+>
+> >
+> >> could avoid it by load-balance more aggressively, or it(priority inver=
+sion)
+> >> could be ignored in some special case.
+> >>
+> >>>
+>
