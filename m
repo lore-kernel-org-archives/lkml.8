@@ -2,105 +2,149 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949D0C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1E4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6010C2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF164207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928040;
-	bh=Mlo04NAwqU0Kk+zWv/II0kvQJ5NJbELIWe+SPqU84EM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hCSLf2mhvvJKfpOJFM5ehvx4pfWGbVPywF/easyBJcgFqrZyQq1aKIHiMUCfQPYZp
-	 bu5RBXTWMbpWwyWE+zIRkEAjXMqPrxD1LN4rd++LwwQLakFbesiSy+BaYggGokrfvy
-	 mN0/8rTflg1/FEIpxPICcl8NyKSeHzN4nAkKRvQM=
+	s=default; t=1597928049;
+	bh=CnunxCsOvBU/gUFXe+EXz0IAGG4b1qj7pIVDUrpfZWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i/iY/NrYiAv3Z/16XNl4sc1cxyRvNwX0/k53KJUiCdVCvLZzcLjtosSpxZzhekqcY
+	 b7pJeeAIHNBw0UHdEUgM/R+3o3nRaQdi2hHxd1Mp0Iys1OB6PK4L/F2VEe77bjwv1d
+	 Q+xbyO9RnXH670A85ELERzVqYldcczTwg7CBvStM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730213AbgHTMx4 (ORCPT
+        id S1730176AbgHTMyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41364 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgHTJnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1729236AbgHTJnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:23 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E163A20724;
-        Thu, 20 Aug 2020 09:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C285F20724;
+        Thu, 20 Aug 2020 09:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916611;
-        bh=Mlo04NAwqU0Kk+zWv/II0kvQJ5NJbELIWe+SPqU84EM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c87WqE88mGuaq6tX/rxvckxMKr3ynhdDYkD66jOhBlh6qibXpuA0NhW1BsslfjDgi
-         SU3QvmuVsXr+ncRsDMTykq4GmkBngpnv8L2ktkZ2rmKVYzmUQn94e6ncFfl3sbnTGZ
-         6TzKgF1m2kf9nh6QutNUnttFsKezGtZRt3Y0JWQg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 159/204] watchdog: rti-wdt: balance pm runtime enable calls
-Date:   Thu, 20 Aug 2020 11:20:56 +0200
-Message-Id: <20200820091614.173060527@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1597916602;
+        bh=CnunxCsOvBU/gUFXe+EXz0IAGG4b1qj7pIVDUrpfZWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LxUe/5zOhpUu0yX3QPQi/2NIS3QBRStNZyzIAXegfpS5FX55TPD3T3rBBxX49W404
+         pxpLHhvfzBFfEL+qweR6QBJe8n8M0SifTa+Y0PGkqpTqM1J2zqQNThqD9utBYHkaWm
+         UJ3W7NW4FCAaIbpLQhWuXnyKqLZ+xGPa//aVByaE=
+Date:   Thu, 20 Aug 2020 10:43:15 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        Wei Chen <Wei.Chen@arm.com>, nd <nd@arm.com>
+Subject: Re: [PATCH v13 2/9] arm/arm64: KVM: Advertise KVM UID to guests via
+ SMCCC
+Message-ID: <20200820094314.GA18838@willie-the-truck>
+References: <20200619130120.40556-1-jianyong.wu@arm.com>
+ <20200619130120.40556-3-jianyong.wu@arm.com>
+ <HE1PR0802MB255577943C260898A6C686ABF4720@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+ <20200727113821.GB20437@willie-the-truck>
+ <HE1PR0802MB25551F426910F76E95523383F4730@HE1PR0802MB2555.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <HE1PR0802MB25551F426910F76E95523383F4730@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+On Tue, Jul 28, 2020 at 01:07:14AM +0000, Jianyong Wu wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Will Deacon <will@kernel.org>
+> > Sent: Monday, July 27, 2020 7:38 PM
+> > To: Jianyong Wu <Jianyong.Wu@arm.com>
+> > Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
+> > tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
+> > maz@kernel.org; richardcochran@gmail.com; Mark Rutland
+> > <Mark.Rutland@arm.com>; Suzuki Poulose <Suzuki.Poulose@arm.com>;
+> > Steven Price <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-
+> > arm-kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
+> > kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
+> > <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; Wei Chen
+> > <Wei.Chen@arm.com>; nd <nd@arm.com>
+> > Subject: Re: [PATCH v13 2/9] arm/arm64: KVM: Advertise KVM UID to guests
+> > via SMCCC
+> > 
+> > On Mon, Jul 27, 2020 at 03:45:37AM +0000, Jianyong Wu wrote:
+> > > > From: Will Deacon <will@kernel.org>
+> > > >
+> > > > We can advertise ourselves to guests as KVM and provide a basic
+> > > > features bitmap for discoverability of future hypervisor services.
+> > > >
+> > > > Cc: Marc Zyngier <maz@kernel.org>
+> > > > Signed-off-by: Will Deacon <will@kernel.org>
+> > > > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> > > > ---
+> > > >  arch/arm64/kvm/hypercalls.c | 29 +++++++++++++++++++----------
+> > > >  1 file changed, 19 insertions(+), 10 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/kvm/hypercalls.c
+> > > > b/arch/arm64/kvm/hypercalls.c index 550dfa3e53cd..db6dce3d0e23
+> > > > 100644
+> > > > --- a/arch/arm64/kvm/hypercalls.c
+> > > > +++ b/arch/arm64/kvm/hypercalls.c
+> > > > @@ -12,13 +12,13 @@
+> > > >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)  {
+> > > >  	u32 func_id = smccc_get_function(vcpu);
+> > > > -	long val = SMCCC_RET_NOT_SUPPORTED;
+> > > > +	u32 val[4] = {SMCCC_RET_NOT_SUPPORTED};
+> > >
+> > > There is a risk as this u32 value will return here and a u64 value
+> > > will be obtained in guest. For example, The val[0] is initialized as
+> > > -1 of 0xffffffff and the guest get 0xffffffff then it will be compared
+> > > with -1 of 0xffffffffffffffff Also this problem exists for the
+> > > transfer of address in u64 type. So the following assignment to "val"
+> > > should be split into two
+> > > u32 value and assign to val[0] and val[1] respectively.
+> > > WDYT?
+> > 
+> > Yes, I think you're right that this is a bug, but isn't the solution just to make
+> > that an array of 'long'?
+> > 
+> > 	long val [4];
+> > 
+> > That will sign-extend the negative error codes as required, while leaving the
+> > explicitly unsigned UID constants alone.
+> 
+> Ok, that's much better. I will fix it at next version.
+> 
+> By the way, I wonder when will you update this patch set. I see someone like me
+> adopt this patch set as code base and need rebase it every time, so expect your update.
 
-[ Upstream commit d5b29c2c5ba2bd5bbdb5b744659984185d17d079 ]
+I'm not working on it, so please feel free to include it along with the
+patches that add an upstream user.
 
-PM runtime should be disabled in the fail path of probe and when
-the driver is removed.
-
-Fixes: 2d63908bdbfb ("watchdog: Add K3 RTI watchdog support")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200717132958.14304-5-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/watchdog/rti_wdt.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-index d456dd72d99a0..c904496fff65e 100644
---- a/drivers/watchdog/rti_wdt.c
-+++ b/drivers/watchdog/rti_wdt.c
-@@ -211,6 +211,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
- 
- err_iomap:
- 	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return ret;
- }
-@@ -221,6 +222,7 @@ static int rti_wdt_remove(struct platform_device *pdev)
- 
- 	watchdog_unregister_device(&wdt->wdd);
- 	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return 0;
- }
--- 
-2.25.1
-
-
-
+Will
