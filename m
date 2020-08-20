@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D44ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB07EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A37B3208A9
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1D32076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2cxsz/PD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DOYQ2qUF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgHTHuI (ORCPT
+        id S1725925AbgHTHu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:50:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41516 "EHLO
+        Thu, 20 Aug 2020 03:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbgHTHuD (ORCPT
+        with ESMTP id S1726803AbgHTHuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:50:03 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D982C061383
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:50:03 -0700 (PDT)
+        Thu, 20 Aug 2020 03:50:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81C68C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:50:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=p4eRIR77yIGD/mPyvDgT8xgRYIo4YZjUUfy/H+LOeA8=; b=2cxsz/PDgaS6jBYG8HNJnDuavO
-        tp+Y21KrUgmfm2uLCKJ/Mm4rQtWcd5kQmZfNUmZAYRRJQoYTfxrHPW3twS9rrbeswuT2yN2+VoPgg
-        Y1sm7+zSFU02iDviS6d7qZpz+VXq8aCqZ1qUSUHOGEK/9F27zhZS00hsOeb4ewHNnHkJES/+SseJB
-        +8RbfnA/KRVqVJHVkYHYgVLE2zq5xMY3UdjCSqy87cjEjqMbgyFLmxAfr2smPgK66Wu3Ly58IWkOF
-        tZGYONLiHCMHVx2rcpXggGLXkNWM2CElrhcj1NYBkbTu7Mruq6M8xrvMlalXIYbjjK9pNhiVx8WPc
-        GZdWY92w==;
+        bh=OYLx5mxfIutc54xRo+CbyTsmOq/yjZvSPQ0mZkvF7LI=; b=DOYQ2qUFO6TB7tH1ifvbY0x7U5
+        5LnOHneNXqN+4aq5l9SGVfGHAJsA2kPn/gbOai+EOzfBtHKtCl27uJ72IClgFgfevVs9t1o/Jc+UR
+        9oaTupNePDV5j3cflUIgoC1WUJcKAdgFNP2uYTG8SaGxZN507s/jWAxdHP3bnrA0XWLgFBODMAe2A
+        O3sz57GsGWMlztfcZSzBsg0eSy7yF7u7O9a11VqDWHs/c+xRcoKLRc7G2YRvDU65S8AAFOIcUso5l
+        RJezLmS/mQrtrD26BAQczOQ5LFUA4GJVgkApGNfcCGulkvKLsC5NFGyKqQz1nczxdwOZ1k4BXb3th
+        +2lXtGgA==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8fKX-0007Dc-Gt; Thu, 20 Aug 2020 07:49:49 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8fKU-0000Md-UN; Thu, 20 Aug 2020 07:49:48 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 63ECC305815;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7443C305DD1;
         Thu, 20 Aug 2020 09:49:43 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 5588128B7E826; Thu, 20 Aug 2020 09:49:43 +0200 (CEST)
-Message-ID: <20200820074640.342269393@infradead.org>
+        id 57C8528B7E841; Thu, 20 Aug 2020 09:49:43 +0200 (CEST)
+Message-ID: <20200820074640.401636694@infradead.org>
 User-Agent: quilt/0.66
-Date:   Thu, 20 Aug 2020 09:30:32 +0200
+Date:   Thu, 20 Aug 2020 09:30:33 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org
 Cc:     npiggin@gmail.com, elver@google.com, jgross@suse.com,
         paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
         joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
         peterz@infradead.org
-Subject: [PATCH 1/9] lockdep: Use raw_cpu_*() for per-cpu variables
+Subject: [PATCH 2/9] sched,idle,rcu: Push rcu_idle deeper into the idle path
 References: <20200820073031.886217423@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,121 +64,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sven reported that commit a21ee6055c30 ("lockdep: Change
-hardirq{s_enabled,_context} to per-cpu variables") caused trouble on
-s390 because their this_cpu_*() primitives disable preemption which
-then lands back tracing.
+Lots of things take locks, due to a wee bug, rcu_lockdep didn't notice
+that the locking tracepoints were using RCU.
 
-On the one hand, per-cpu ops should use preempt_*able_notrace() and
-raw_local_irq_*(), on the other hand, we can trivialy use raw_cpu_*()
-ops for this.
+Push rcu_idle_{enter,exit}() as deep as possible into the idle paths,
+this also resolves a lot of _rcuidle()/RCU_NONIDLE() usage.
 
-Fixes: a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context} to per-cpu variables")
-Reported-by: Sven Schnelle <svens@linux.ibm.com>
+Specifically, sched_clock_idle_wakeup_event() will use ktime which
+will use seqlocks which will tickle lockdep.
+
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- include/linux/irqflags.h |    6 +++---
- include/linux/lockdep.h  |   18 +++++++++++++-----
- kernel/locking/lockdep.c |    4 ++--
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ drivers/cpuidle/cpuidle.c            |   15 +++++++++++----
+ kernel/sched/idle.c                  |   18 ++++++------------
+ kernel/time/tick-broadcast-hrtimer.c |   29 ++++++++++++-----------------
+ 3 files changed, 29 insertions(+), 33 deletions(-)
 
---- a/include/linux/irqflags.h
-+++ b/include/linux/irqflags.h
-@@ -53,13 +53,13 @@ DECLARE_PER_CPU(int, hardirq_context);
-   extern void trace_hardirqs_off_finish(void);
-   extern void trace_hardirqs_on(void);
-   extern void trace_hardirqs_off(void);
--# define lockdep_hardirq_context()	(this_cpu_read(hardirq_context))
-+# define lockdep_hardirq_context()	(raw_cpu_read(hardirq_context))
- # define lockdep_softirq_context(p)	((p)->softirq_context)
- # define lockdep_hardirqs_enabled()	(this_cpu_read(hardirqs_enabled))
- # define lockdep_softirqs_enabled(p)	((p)->softirqs_enabled)
- # define lockdep_hardirq_enter()			\
- do {							\
--	if (this_cpu_inc_return(hardirq_context) == 1)	\
-+	if (__this_cpu_inc_return(hardirq_context) == 1)\
- 		current->hardirq_threaded = 0;		\
- } while (0)
- # define lockdep_hardirq_threaded()		\
-@@ -68,7 +68,7 @@ do {						\
- } while (0)
- # define lockdep_hardirq_exit()			\
- do {						\
--	this_cpu_dec(hardirq_context);		\
-+	__this_cpu_dec(hardirq_context);	\
- } while (0)
- # define lockdep_softirq_enter()		\
- do {						\
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -535,19 +535,27 @@ do {									\
- DECLARE_PER_CPU(int, hardirqs_enabled);
- DECLARE_PER_CPU(int, hardirq_context);
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -145,22 +145,27 @@ static void enter_s2idle_proper(struct c
+ 	 * executing it contains RCU usage regarded as invalid in the idle
+ 	 * context, so tell RCU about that.
+ 	 */
+-	RCU_NONIDLE(tick_freeze());
++	tick_freeze();
+ 	/*
+ 	 * The state used here cannot be a "coupled" one, because the "coupled"
+ 	 * cpuidle mechanism enables interrupts and doing that with timekeeping
+ 	 * suspended is generally unsafe.
+ 	 */
++	rcu_idle_enter();
+ 	stop_critical_timings();
+ 	drv->states[index].enter_s2idle(dev, drv, index);
+-	WARN_ON(!irqs_disabled());
++	if (WARN_ON(!irqs_disabled()))
++		local_irq_disable();
+ 	/*
+ 	 * timekeeping_resume() that will be called by tick_unfreeze() for the
+ 	 * first CPU executing it calls functions containing RCU read-side
+ 	 * critical sections, so tell RCU about that.
++	 *
++	 * FIXME, order against rcu_idle_exit ?
+ 	 */
+ 	RCU_NONIDLE(tick_unfreeze());
+ 	start_critical_timings();
++	rcu_idle_exit();
  
-+/*
-+ * The below lockdep_assert_*() macros se raw_cpu_read() to access the above
-+ * per-cpu variables. This is required because this_cpu_read() will potentially
-+ * call into preempt/irq-disable and that obviously isn't right. This is also
-+ * correct because when IRQs are enabled, it doesn't matter if we accidentally
-+ * read the value from our previous CPU.
-+ */
+ 	time_end = ns_to_ktime(local_clock());
+ 
+@@ -228,16 +233,18 @@ int cpuidle_enter_state(struct cpuidle_d
+ 	/* Take note of the planned idle state. */
+ 	sched_idle_set_state(target_state);
+ 
+-	trace_cpu_idle_rcuidle(index, dev->cpu);
++	trace_cpu_idle(index, dev->cpu);
+ 	time_start = ns_to_ktime(local_clock());
+ 
++	rcu_idle_enter();
+ 	stop_critical_timings();
+ 	entered_state = target_state->enter(dev, drv, index);
+ 	start_critical_timings();
++	rcu_idle_exit();
+ 
+ 	sched_clock_idle_wakeup_event();
+ 	time_end = ns_to_ktime(local_clock());
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, dev->cpu);
++	trace_cpu_idle(PWR_EVENT_EXIT, dev->cpu);
+ 
+ 	/* The cpu is no longer idle or about to enter idle. */
+ 	sched_idle_set_state(NULL);
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -54,17 +54,18 @@ __setup("hlt", cpu_idle_nopoll_setup);
+ 
+ static noinline int __cpuidle cpu_idle_poll(void)
+ {
++	trace_cpu_idle(0, smp_processor_id());
+ 	rcu_idle_enter();
+-	trace_cpu_idle_rcuidle(0, smp_processor_id());
+ 	local_irq_enable();
+ 	stop_critical_timings();
+ 
+ 	while (!tif_need_resched() &&
+-		(cpu_idle_force_poll || tick_check_broadcast_expired()))
++	       (cpu_idle_force_poll || tick_check_broadcast_expired()))
+ 		cpu_relax();
 +
- #define lockdep_assert_irqs_enabled()					\
- do {									\
--	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirqs_enabled));	\
-+	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirqs_enabled));	\
- } while (0)
+ 	start_critical_timings();
+-	trace_cpu_idle_rcuidle(PWR_EVENT_EXIT, smp_processor_id());
+ 	rcu_idle_exit();
++	trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
  
- #define lockdep_assert_irqs_disabled()					\
- do {									\
--	WARN_ON_ONCE(debug_locks && this_cpu_read(hardirqs_enabled));	\
-+	WARN_ON_ONCE(debug_locks && raw_cpu_read(hardirqs_enabled));	\
- } while (0)
+ 	return 1;
+ }
+@@ -90,9 +91,11 @@ void __cpuidle default_idle_call(void)
+ 	if (current_clr_polling_and_test()) {
+ 		local_irq_enable();
+ 	} else {
++		rcu_idle_enter();
+ 		stop_critical_timings();
+ 		arch_cpu_idle();
+ 		start_critical_timings();
++		rcu_idle_exit();
+ 	}
+ }
  
- #define lockdep_assert_in_irq()						\
- do {									\
--	WARN_ON_ONCE(debug_locks && !this_cpu_read(hardirq_context));	\
-+	WARN_ON_ONCE(debug_locks && !raw_cpu_read(hardirq_context));	\
- } while (0)
+@@ -158,7 +161,6 @@ static void cpuidle_idle_call(void)
  
- #define lockdep_assert_preemption_enabled()				\
-@@ -555,7 +563,7 @@ do {									\
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
- 		     debug_locks			&&		\
- 		     (preempt_count() != 0		||		\
--		      !this_cpu_read(hardirqs_enabled)));		\
-+		      !raw_cpu_read(hardirqs_enabled)));		\
- } while (0)
+ 	if (cpuidle_not_available(drv, dev)) {
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
  
- #define lockdep_assert_preemption_disabled()				\
-@@ -563,7 +571,7 @@ do {									\
- 	WARN_ON_ONCE(IS_ENABLED(CONFIG_PREEMPT_COUNT)	&&		\
- 		     debug_locks			&&		\
- 		     (preempt_count() == 0		&&		\
--		      this_cpu_read(hardirqs_enabled)));		\
-+		      raw_cpu_read(hardirqs_enabled)));			\
- } while (0)
+ 		default_idle_call();
+ 		goto exit_idle;
+@@ -178,21 +180,17 @@ static void cpuidle_idle_call(void)
+ 		u64 max_latency_ns;
  
- #else
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3756,7 +3756,7 @@ void noinstr lockdep_hardirqs_on(unsigne
+ 		if (idle_should_enter_s2idle()) {
+-			rcu_idle_enter();
  
- skip_checks:
- 	/* we'll do an OFF -> ON transition: */
--	this_cpu_write(hardirqs_enabled, 1);
-+	__this_cpu_write(hardirqs_enabled, 1);
- 	trace->hardirq_enable_ip = ip;
- 	trace->hardirq_enable_event = ++trace->irq_events;
- 	debug_atomic_inc(hardirqs_on_events);
-@@ -3795,7 +3795,7 @@ void noinstr lockdep_hardirqs_off(unsign
+ 			entered_state = call_cpuidle_s2idle(drv, dev);
+ 			if (entered_state > 0)
+ 				goto exit_idle;
+ 
+-			rcu_idle_exit();
+-
+ 			max_latency_ns = U64_MAX;
+ 		} else {
+ 			max_latency_ns = dev->forced_idle_latency_limit_ns;
+ 		}
+ 
+ 		tick_nohz_idle_stop_tick();
+-		rcu_idle_enter();
+ 
+ 		next_state = cpuidle_find_deepest_state(drv, dev, max_latency_ns);
+ 		call_cpuidle(drv, dev, next_state);
+@@ -209,8 +207,6 @@ static void cpuidle_idle_call(void)
+ 		else
+ 			tick_nohz_idle_retain_tick();
+ 
+-		rcu_idle_enter();
+-
+ 		entered_state = call_cpuidle(drv, dev, next_state);
  		/*
- 		 * We have done an ON -> OFF transition:
- 		 */
--		this_cpu_write(hardirqs_enabled, 0);
-+		__this_cpu_write(hardirqs_enabled, 0);
- 		trace->hardirq_disable_ip = ip;
- 		trace->hardirq_disable_event = ++trace->irq_events;
- 		debug_atomic_inc(hardirqs_off_events);
+ 		 * Give the governor an opportunity to reflect on the outcome
+@@ -226,8 +222,6 @@ static void cpuidle_idle_call(void)
+ 	 */
+ 	if (WARN_ON_ONCE(irqs_disabled()))
+ 		local_irq_enable();
+-
+-	rcu_idle_exit();
+ }
+ 
+ /*
 
 
