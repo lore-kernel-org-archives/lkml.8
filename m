@@ -2,93 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BA2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5675C2086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC6082076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbgHTFv7 (ORCPT
+        id S1726416AbgHTFxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:51:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:40681 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727125AbgHTFv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:51:58 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9F2D568BEB; Thu, 20 Aug 2020 07:51:54 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 07:51:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     David Fugate <david.fugate@linux.intel.com>
-Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>,
-        Javier Gonzalez <javier.gonz@samsung.com>,
-        david.fugate@intel.com
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200820055154.GA5758@lst.de>
-References: <20200818052936.10995-1-joshi.k@samsung.com> <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com> <20200818052936.10995-3-joshi.k@samsung.com> <20200818071249.GB2544@lst.de> <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com> <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk> <d19605da52eb7aa3eb4132ad1781b5fbf636a8a0.camel@linux.intel.com> <20200819221054.GB26818@dhcp-10-100-145-180.wdl.wdc.com> <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d9cc3ece0c70b51c2d40998081375ad3fa39ece2.camel@linux.intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Thu, 20 Aug 2020 01:53:16 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:37384 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725866AbgHTFxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:53:15 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app4 (Coremail) with SMTP id cS_KCgA3f_+5Dz5fhE0iAQ--.4459S4;
+        Thu, 20 Aug 2020 13:53:01 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Ajay Singh <ajay.kathat@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] wilc1000: Fix memleak in wilc_bus_probe
+Date:   Thu, 20 Aug 2020 13:52:56 +0800
+Message-Id: <20200820055256.24333-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgA3f_+5Dz5fhE0iAQ--.4459S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFWUAw4fWF4UZrykJrWxCrg_yoWktFg_CF
+        40vFnYy34xur1jy34jkrW5ZrZIyFWkuFn5Cws2q3yfCa1UArZ7CFWfuF4fJwsIkF109F4j
+        kr4DWFy3Ar4SqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbV8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_
+        JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
+        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Zr0_Wr1UMIIF0xvE
+        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x0JUp6wZUUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAPsQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:43:29PM -0600, David Fugate wrote:
-> There were queries? My key takeaways were a maintainer NAK followed by
-> instructions to make the Intel drive align with the driver by
-> implementing NOIOB. While I disagree with the rejection as it appeared
-> to be based entirely on politics, I can accept it as the quirk wasn't
-> in the spec.
+When devm_clk_get() returns -EPROBE_DEFER, spi_priv
+should be freed just like when wilc_cfg80211_init()
+fails.
 
-Stop the crap now please.  I'm really offended.  I'm offended by you
-implying that I pay corporate poitics.  I'm primary a Linux developer,
-and I stand for what I think is good for Linux.  I fight inside companies
-that pay me what is good for Linux, I work hard with companies that do not
-pay to convinve them what is right.  I waste a lot of precious time to sit
-in standards meetings to do what is right for Linux.  And now you come
-here with the politics arguments.  Stop, it please.
+Fixes: 854d66df74aed ("staging: wilc1000: look for rtc_clk clock in spi mode")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
-The Intel NOIOB quirk was in the driver since day 1, added by Matthew
-probably with no bad intent, but we kept growing the lists and finally
-got Intel to standardized because it was good for Linux, and to be
-honest good for Intel as updating quirks in half a dozen drivers
-simply does not scale.  We got a really nice trivial TP out of it.  But
-we really should not see any new drivers that do not implement one damn
-trivial field a long time after the TP has been publushed.  That is not
-politics.
+Changelog:
 
-Making a fuzz and playing the corporate card on a Linux mailing list
-is politics, really bad politics and you need to stop it.
+v2: - Remove 'staging' prefix in subject.
+---
+ drivers/net/wireless/microchip/wilc1000/spi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> It's not fair to make this same "your drive should align with the
-> driver" demand of Samsung because we *are* talking about a spec'ed
-> feature here.
+diff --git a/drivers/net/wireless/microchip/wilc1000/spi.c b/drivers/net/wireless/microchip/wilc1000/spi.c
+index 3f19e3f38a39..a18dac0aa6b6 100644
+--- a/drivers/net/wireless/microchip/wilc1000/spi.c
++++ b/drivers/net/wireless/microchip/wilc1000/spi.c
+@@ -112,9 +112,10 @@ static int wilc_bus_probe(struct spi_device *spi)
+ 	wilc->dev_irq_num = spi->irq;
+ 
+ 	wilc->rtc_clk = devm_clk_get(&spi->dev, "rtc_clk");
+-	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER)
++	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER) {
++		kfree(spi_priv);
+ 		return -EPROBE_DEFER;
+-	else if (!IS_ERR(wilc->rtc_clk))
++	} else if (!IS_ERR(wilc->rtc_clk))
+ 		clk_prepare_enable(wilc->rtc_clk);
+ 
+ 	return 0;
+-- 
+2.17.1
 
-Huh.  Next time Dell or NetApp or Facebook are going to require an
-optional NVMe feature, and OCP feature or even a vendor specific
-feature you are going to go to them and say "you don't play fair"?
-
-> Technical critques of their patches and real performance
-> degrades observed are fair game and objective; "your company did
-> the nastiest possible move violating the normal NVMe procedures to make
-> it optional" is not.
-
-It is pretty fair game if you know the background, that is that I spent
-countless hours to make this feature fit the Linux I/O stack requirement
-perfecty and worked that it is there.  We might as well rely on it.
