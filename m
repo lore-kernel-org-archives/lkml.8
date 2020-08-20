@@ -2,51 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F74C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1AD20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A8A20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919301;
-	bh=OE314dlREHwftamZAUJHXC4kUWq7DSSXV5toaxDKDP4=;
+	s=default; t=1597919304;
+	bh=TjitsgFuZiyYlbYU2DcETl6PV1B8ThCsYIQg+Knl+X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mD64+UmbXMx4KwmRMaGg8dTJEF89V98vECJLgfgz9eHIwyzsZJwaju9988h+zhfFB
-	 KLx3do4WBa5yFUoaE38SwJhaKgDcq682w3Qx3AoAjiwCsZ8b8LGdwc+O82d50/vjnI
-	 CQhHA9aJcHQVclPgYLxHPXgx6jMwmWyPYVx2hRII=
+	b=NAl+Kd4hOUgjCOLrZKNsQZCjLftCYMs4mfxeapCaAdTiZX5N6JG88LU7tj9oRXX1G
+	 aUlmPC48tO/0sYPcNr4hKFz4VxqEPSH/lRmsAjYGQs2ITjJWZmEoIBWNa/daF2hRsl
+	 WXFJXxCbKUq5GC7u7YD/OrVOw0ubwqrn15TmYFDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbgHTK2S (ORCPT
+        id S1731568AbgHTKVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49046 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731576AbgHTKV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:57 -0400
+        id S1731560AbgHTKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DC6A20658;
-        Thu, 20 Aug 2020 10:21:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B97B720658;
+        Thu, 20 Aug 2020 10:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918916;
-        bh=OE314dlREHwftamZAUJHXC4kUWq7DSSXV5toaxDKDP4=;
+        s=default; t=1597918899;
+        bh=TjitsgFuZiyYlbYU2DcETl6PV1B8ThCsYIQg+Knl+X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QxwFEKHz5XJvu1hO6H4j8573oAyv7bvOqxxMiUlXOvSrY0T0cTur6/osmzA3+sP6q
-         sev3AdViADScViq02zNeRqIXyW1OA91T/uEWQhWZmqhFqsg3uk9pxIH+aYZonjzr8b
-         iNpnY05i9uKy8gg+r38n58ePqjWgbuzstbH19dcE=
+        b=sjmwQqK2ATA3z6cxEjf25fg8hWsM/h7IciXkSzTAb5yMJsGy8wkiRmX5SUDKn3SRm
+         02uZgvk4OcyjfWOAGq3PJWYM+ZS1SRGHUxOilKY66T3d8z7PmFdyVsYhtSvC6k6FgQ
+         3JKhBBpj2W8LGMan9U2QfC5jtfEy80a6yDYRVMNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 114/149] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
-Date:   Thu, 20 Aug 2020 11:23:11 +0200
-Message-Id: <20200820092131.220609205@linuxfoundation.org>
+        stable@vger.kernel.org, Erik Kaneda <erik.kaneda@intel.com>,
+        Bob Moore <robert.moore@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 076/149] ACPICA: Do not increment operation_region reference counts for field units
+Date:   Thu, 20 Aug 2020 11:22:33 +0200
+Message-Id: <20200820092129.412128599@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,80 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Erik Kaneda <erik.kaneda@intel.com>
 
-commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
+[ Upstream commit 6a54ebae6d047c988a31f5ac5a64ab5cf83797a2 ]
 
-Further investigation of the L-R swap problem on the MS2109 reveals that
-the problem isn't that the channels are swapped, but rather that they
-are swapped and also out of phase by one sample. In other words, the
-issue is actually that the very first frame that comes from the hardware
-is a half-frame containing only the right channel, and after that
-everything becomes offset.
+ACPICA commit e17b28cfcc31918d0db9547b6b274b09c413eb70
 
-So introduce a new quirk field to drop the very first 2 bytes that come
-in after the format is configured and a capture stream starts. This puts
-the channels in phase and in the correct order.
+Object reference counts are used as a part of ACPICA's garbage
+collection mechanism. This mechanism keeps track of references to
+heap-allocated structures such as the ACPI operand objects.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Recent server firmware has revealed that this reference count can
+overflow on large servers that declare many field units under the
+same operation_region. This occurs because each field unit declaration
+will add a reference count to the source operation_region.
 
+This change solves the reference count overflow for operation_regions
+objects by preventing fieldunits from incrementing their
+operation_region's reference count. Each operation_region's reference
+count will not be changed by named objects declared under the Field
+operator. During namespace deletion, the operation_region namespace
+node will be deleted and each fieldunit will be deleted without
+touching the deleted operation_region object.
+
+Link: https://github.com/acpica/acpica/commit/e17b28cf
+Signed-off-by: Erik Kaneda <erik.kaneda@intel.com>
+Signed-off-by: Bob Moore <robert.moore@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/card.h   |    1 +
- sound/usb/pcm.c    |    6 ++++++
- sound/usb/quirks.c |    3 +++
- sound/usb/stream.c |    1 +
- 4 files changed, 11 insertions(+)
+ drivers/acpi/acpica/exprep.c   | 4 ----
+ drivers/acpi/acpica/utdelete.c | 6 +-----
+ 2 files changed, 1 insertion(+), 9 deletions(-)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -125,6 +125,7 @@ struct snd_usb_substream {
- 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
- 	unsigned int fmt_type;		/* USB audio format type (1-3) */
- 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-+	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
- 
- 	unsigned int running: 1;	/* running status */
- 
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1302,6 +1302,12 @@ static void retire_capture_urb(struct sn
- 			// continue;
+diff --git a/drivers/acpi/acpica/exprep.c b/drivers/acpi/acpica/exprep.c
+index 4c2836dc825be..47d8a85c90ff5 100644
+--- a/drivers/acpi/acpica/exprep.c
++++ b/drivers/acpi/acpica/exprep.c
+@@ -502,10 +502,6 @@ acpi_status acpi_ex_prep_field_value(struct acpi_create_field_info *info)
+ 				    (u8)access_byte_width;
+ 			}
  		}
- 		bytes = urb->iso_frame_desc[i].actual_length;
-+		if (subs->stream_offset_adj > 0) {
-+			unsigned int adj = min(subs->stream_offset_adj, bytes);
-+			cp += adj;
-+			bytes -= adj;
-+			subs->stream_offset_adj -= adj;
-+		}
- 		frames = bytes / stride;
- 		if (!subs->txfr_quirk)
- 			bytes = frames * stride;
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1122,6 +1122,9 @@ void snd_usb_set_format_quirk(struct snd
- 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
- 		set_format_emu_quirk(subs, fmt);
- 		break;
-+	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
-+		subs->stream_offset_adj = 2;
-+		break;
- 	}
- }
+-		/* An additional reference for the container */
+-
+-		acpi_ut_add_reference(obj_desc->field.region_obj);
+-
+ 		ACPI_DEBUG_PRINT((ACPI_DB_BFIELD,
+ 				  "RegionField: BitOff %X, Off %X, Gran %X, Region %p\n",
+ 				  obj_desc->field.start_field_bit_offset,
+diff --git a/drivers/acpi/acpica/utdelete.c b/drivers/acpi/acpica/utdelete.c
+index 1638312e3d8f9..9f8b088e21d7e 100644
+--- a/drivers/acpi/acpica/utdelete.c
++++ b/drivers/acpi/acpica/utdelete.c
+@@ -590,11 +590,6 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			next_object = object->buffer_field.buffer_obj;
+ 			break;
  
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -95,6 +95,7 @@ static void snd_usb_init_substream(struc
- 	subs->tx_length_quirk = as->chip->tx_length_quirk;
- 	subs->speed = snd_usb_get_speed(subs->dev);
- 	subs->pkt_offset_adj = 0;
-+	subs->stream_offset_adj = 0;
+-		case ACPI_TYPE_LOCAL_REGION_FIELD:
+-
+-			next_object = object->field.region_obj;
+-			break;
+-
+ 		case ACPI_TYPE_LOCAL_BANK_FIELD:
  
- 	snd_usb_set_pcm_ops(as->pcm, stream);
+ 			next_object = object->bank_field.bank_obj;
+@@ -635,6 +630,7 @@ acpi_ut_update_object_reference(union acpi_operand_object *object, u16 action)
+ 			}
+ 			break;
  
++		case ACPI_TYPE_LOCAL_REGION_FIELD:
+ 		case ACPI_TYPE_REGION:
+ 		default:
+ 
+-- 
+2.25.1
+
 
 
