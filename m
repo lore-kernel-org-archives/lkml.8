@@ -2,179 +2,180 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE4CC433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D46C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7637520724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:29:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sba2bQKZ"
+	by mail.kernel.org (Postfix) with ESMTP id 804CE20639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgHTD3B (ORCPT
+        id S1726862AbgHTDcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726884AbgHTD27 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 23:28:59 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76791C061386
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id h16so380413oti.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:28:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
-        b=sba2bQKZNNe3zs7DYGbWWnjDeDgJKgdgFl32qpVY2IcZo+5it6qr30pLargiHNS1VF
-         9N2ljSuI1xb3X3jUO3hdYU4FwW/zbxBKCLHKGFFsylv7KVY9AwKKe/OCHH7ah7bgWAFP
-         0V/R+fYE35vhDbNT1QyHmR93yxMFHFfQuxa+rksura1/kna69BSVHKM97tFjQwmJg6Xu
-         1e73cN9AHHnV7VLtkVZmiIYzq2UYw7luIiq9vXs3LcbNgGTzGCdWCnbhSJyxl00LgsnJ
-         hcclkwsEGFVhEzVEODFZJQ+fBkc8rglEjeeUhLVeARy2aLUwp5EkeZXVFgo5EOUBJLA9
-         mH3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fF+dRt58CyDJkqe2eFqFPurhOlRy+MhyKYgh/jsdn+Q=;
-        b=pNrHkYICAHLZASK0TneTAR9NT6Vpm/m90gtEbnJ1FZ/Xq0yFvdXBiq3PQrVxwn/Lco
-         LQe/ZMPRSiskCmCe1pkfUlYOGiYQPZC+sjrKIOpL852m1odDSd8hNdnq/wFAHiPipB5e
-         nbiGarDUArSxU4FINTjmfPkjCVw9H/qMgwVho7yDncpqqsye629tORwkph+kqp1zgOgx
-         Waf5T3h2RjQRgqkBPA7C9aCD0lSkLmHP3/S6Ok3IqzIuVmxwIX5Az3X8mFMEIN5L2cTG
-         rc2drwim842Ot+NbIs5lZxDZN0QZnU4Gjos3l4tGkWYRCpMTjcXxYDOQIpM/4B3Moo84
-         VNZA==
-X-Gm-Message-State: AOAM531O+XhhDPLEpYM/JjVwq7YCnic632IoHcyGNeNDjUr4t8SW9IrO
-        FO2aUClcqgZpHSszuKDAk4ZN94ZOsWJsEorQ+g6CvA==
-X-Google-Smtp-Source: ABdhPJxZ7nw2s4Dxik9WLGdcKtJi9XiOGz8t6RoivsF5sQizqu4GALCfVQirCeiffIuh9kOf+5CS/1tORO2ndusgNc4=
-X-Received: by 2002:a05:6830:237b:: with SMTP id r27mr722568oth.352.1597894136679;
- Wed, 19 Aug 2020 20:28:56 -0700 (PDT)
+        Wed, 19 Aug 2020 23:32:45 -0400
+Received: from mga06.intel.com ([134.134.136.31]:60344 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726698AbgHTDcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 23:32:43 -0400
+IronPort-SDR: 4SRboyQGcOy9J7mluKLMzczxS02sZUQlSlNLLRBDGjDXHIzvYu23P5G52r8kXlfr3FxHtFVHcW
+ RMfPKjWDdmDg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="216765273"
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="216765273"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 20:32:42 -0700
+IronPort-SDR: axVaO01PiEwdrsY0XR0Zs3O9fWoXIXfcdqJr+2+0OrOhS2gTJz67WfqAXaLG9BdFPh2R/m8ouo
+ ZkY7Asw5Ghhg==
+X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
+   d="scan'208";a="472477121"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.238.4.128]) ([10.238.4.128])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2020 20:32:36 -0700
+Subject: Re: [PATCH v1 01/11] perf/x86/core: Support KVM to assign a dedicated
+ counter for guest PEBS
+To:     Peter Zijlstra <peterz@infradead.org>,
+        "Paolo Bonzini (KVM Super Maintainer)" <pbonzini@redhat.com>
+Cc:     "Kang, Luwei" <luwei.kang@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@redhat.com" <jolsa@redhat.com>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "pawan.kumar.gupta@linux.intel.com" 
+        <pawan.kumar.gupta@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+ <1583431025-19802-2-git-send-email-luwei.kang@intel.com>
+ <20200306135317.GD12561@hirez.programming.kicks-ass.net>
+ <b72cb68e-1a0a-eeff-21b4-ce412e939cfd@linux.intel.com>
+ <20200309100443.GG12561@hirez.programming.kicks-ass.net>
+ <97ce1ba4-d75a-8db2-ea2f-7d334942b4e6@linux.intel.com>
+ <20200309150526.GI12561@hirez.programming.kicks-ass.net>
+ <DM5PR1101MB22667E832B3E9C1EF5389F2280810@DM5PR1101MB2266.namprd11.prod.outlook.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <34cb1d8c-d7c0-0dc1-49b2-072147f37379@linux.intel.com>
+Date:   Thu, 20 Aug 2020 11:32:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com> <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
-In-Reply-To: <CALAqxLW98nVc-=8Q6nx-wRP1z8pzkw1_zNc9M7V3GhnJQqM9rg@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 19 Aug 2020 20:28:44 -0700
-Message-ID: <CALAqxLULQvW3UikCHpEzSDnpeYnBy8wDSsWZNbSrmivQTW3_Sg@mail.gmail.com>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxarm@huawei.com, mauro.chehab@huawei.com,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        driverdevel <devel@driverdev.osuosl.org>,
-        BPF Mailing List <bpf@vger.kernel.org>,
-        linux-media <linux-media@vger.kernel.org>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Liuyao An <anliuyao@huawei.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Network Development <netdev@vger.kernel.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Chen Feng <puck.chen@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <DM5PR1101MB22667E832B3E9C1EF5389F2280810@DM5PR1101MB2266.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 7:01 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Wed, Aug 19, 2020 at 2:36 PM John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
-> > <mchehab+huawei@kernel.org> wrote:
-> > > So, IMO, the best is to keep it on staging for a while, until those
-> > > remaining bugs gets solved.
-> > >
-> > > I added this series, together with the regulator driver and
-> > > a few other patches (including a hack to fix a Kernel 5.8
-> > > regression at WiFi ) at:
-> > >
-> > >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master
-> >
-> > Sorry, one more small request: Could you create a branch that only has
-> > the DRM driver changes in it?
-> >
-> > The reason I ask, is that since the HiKey960 isn't affected by the
-> > majority of the problems you listed as motivation for going through
-> > staging. So if we can validate that your tree works fine on HiKey960,
-> > the series can be cleaned up and submitted properly upstream to enable
-> > that SoC, and the outstanding 970 issues can be worked out afterwards
-> > against mainline.
->
-> Just as a heads up, I tried testing your tree with my HiKey960, and
-> after fixing the compat string inconsistency, the drivers seem to load
-> properly. However the drm_hwcomposer seems to have some trouble with
-> the driver:
-> 01-01 00:12:41.456   345   345 E hwc-drm-display-compositor: Commit
-> test failed for display 0, FIXME
-> 01-01 00:12:41.456   345   345 E hwc-drm-two: Failed to apply the
-> frame composition ret=-22
-> 01-01 00:12:41.456   351   351 E HWComposer:
-> presentAndGetReleaseFences: present failed for display 0: BadParameter
-> (4)
->
-> I'll dig in a bit further as to why, but wanted to give you a heads up.
+Hi Peter,
 
-Ok, I've mostly gotten it sorted out:
-  - You're missing a few color formats.
-  - And I re-discovered a crash that was already fixed in my tree.
+On 2020/6/12 13:28, Kang, Luwei wrote:
+>>>> Suppose your KVM thing claims counter 0/2 (ICL/SKL) for some random
+>>>> PEBS event, and then the host wants to use PREC_DIST.. Then one of
+>>>> them will be screwed for no reason what so ever.
+>>>>
+>>>
+>>> The multiplexing should be triggered.
+>>>
+>>> For host, if both user A and user B requires PREC_DIST, the
+>>> multiplexing should be triggered for them.
+>>> Now, the user B is KVM. I don't think there is difference. The
+>>> multiplexing should still be triggered. Why it is screwed?
+>>
+>> Becuase if KVM isn't PREC_DIST we should be able to reschedule it to a
+>> different counter.
+>>
+>>>> How is that not destroying scheduling freedom? Any other situation
+>>>> we'd have moved the !PREC_DIST PEBS event to another counter.
+>>>>
+>>>
+>>> All counters are equivalent for them. It doesn't matter if we move it
+>>> to another counter. There is no impact for the user.
+>>
+>> But we cannot move it to another counter, because you're pinning it.
+> 
+> Hi Peter,
+> 
+> To avoid the pinning counters, I have tried to do some evaluation about
+> patching the PEBS record for guest in KVM. In this approach, about ~30%
+> time increased on guest PEBS PMI handler latency (
+> e.g.perf record -e branch-loads:p -c 1000 ~/Tools/br_instr a).
+> 
+> Some implementation details as below:
+> 1. Patching the guest PEBS records "Applicable Counters" filed when the guest
+>       required counter is not the same with the host. Because the guest PEBS
+>       driver will drop these PEBS records if the "Applicable Counters" not the
+>       same with the required counter index.
+> 2. Traping the guest driver's behavior(VM-exit) of disabling PEBS.
+>       It happens before reading PEBS records (e.g. PEBS PMI handler, before
+>       application exit and so on)
+> 3. To patch the Guest PEBS records in KVM, we need to get the HPA of the
+>       guest PEBS buffer.
+>       <1> Trapping the guest write of IA32_DS_AREA register and get the GVA
+>               of guest DS_AREA.
+>       <2> Translate the DS AREA GVA to GPA(kvm_mmu_gva_to_gpa_read)
+>               and get the GVA of guest PEBS buffer from DS AREA
+>               (kvm_vcpu_read_guest_atomic).
+>       <3> Although we have got the GVA of PEBS buffer, we need to do the
+>               address translation(GVA->GPA->HPA) for each page. Because we can't
+>               assume the GPAs of Guest PEBS buffer are always continuous.
+> 	
+> But we met another issue about the PEBS counter reset field in DS AREA.
+> pebs_event_reset in DS area has to be set for auto reload, which is per
+> counter. Guest and Host may use different counters. Let's say guest wants to
+> use counter 0, but host assign counter 1 to guest. Guest sets the reset value to
+> pebs_event_reset[0]. However, since counter 1 is the one which is eventually
+> scheduled, HW will use  pebs_event_reset[1] as reset value.
+> 
+> We can't copy the value of the guest pebs_event_reset[0] to
+> pebs_event_reset[1] directly(Patching DS AREA) because the guest driver may
+> confused, and we can't assume the guest counter 0 and 1 are not used for this
+> PEBS task at the same time. And what's more, KVM can't aware the guest
+> read/write to the DS AREA because it just a general memory for guest.
+> 
+> What is your opinion or do you have a better proposal?
 
-I'll send those patches in a few here.
+Do we have any update or clear attitude
+on this "patching the PEBS record for guest in KVM" proposal ？
 
-That said even with the patches I've got on top of your series, I
-still see a few issues:
-1) I'm seeing red-blue swap with your driver.  I need to dig a bit to
-see what the difference is, I know gralloc has a config option for
-this, and maybe the version of the driver I'm carrying has it wrong?
-2) Performance is noticeably worse. Whereas with my tree, I see close
-to 60fps (that clk issue we mentioned earlier is why it's not exactly
-60) in most tests, but with yours it mostly hovers around 30some fps,
-occasionally speeding up to 40 and then back down.
+Thanks,
+Like Xu
 
-Obviously with some work I suspect we'll be able to sort these out,
-but I also do feel that the set you're starting with for upstreaming
-is pretty old. The driver I'm carrying was heavily refactored around
-5.0 to share code with the existing kirin driver, in the hopes of
-making usptreaming easier, and it seems a shame to throw that out and
-focus your efforts on the older tree.
+> 
+> Thanks,
+> Luwei Kang
+> 
+>>
+>>> In the new proposal, KVM user is treated the same as other host events
+>>> with event constraint. The scheduler is free to choose whether or not
+>>> to assign a counter for it.
+>>
+>> That's what it does, I understand that. I'm saying that that is creating artificial
+>> contention.
+>>
+>>
+>> Why is this needed anyway? Can't we force the guest to flush and then move it
+>> over to a new counter?
 
-But to be fair, I've not had time to upstream the driver myself, and
-it's obviously your choice on how you spend your time.  I am really
-excited to see your efforts here, regardless of which driver you end
-up pushing.
-
-thanks
--john
