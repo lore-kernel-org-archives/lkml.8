@@ -2,92 +2,170 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12C1C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:39:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D53FC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D75322B3F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:39:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QrMiXd53"
+	by mail.kernel.org (Postfix) with ESMTP id 4477E20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597930760;
+	bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gekBtkdt8Rr0f8s0NT4nvukoTJ1+82Bm4mGRo0vC5r0mzF6Xvg6uW7AnDpqqZydFP
+	 Y+wME/DaN327GQA2TC2bp/wpOMPodCVrv/k1JJRXp/hVn0DTJ6+4eIxJwy/JQ57f+9
+	 O0n8B0KPthst1QlBhAGHh2kyxdIuZLu/Wq6o5sO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgHTNjM (ORCPT
+        id S1729643AbgHTNjT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:39:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23611 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729146AbgHTNhY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:37:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597930643;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=vFj18jwFWtUN6hhoDL/QEtPCTvLXhKIQr7i8wJCO8RQ=;
-        b=QrMiXd53k3AkjrtOqwEuNA/UCxXIpkyZ9zK6DR7z+gPLE4CzQOnqmZ/I2SvX6qHkGkvzEW
-        79VD008DbrXBSzluuqw43z0QS95lqCgVa0rk95ie/0M+M5y4ZB8n/OEVhMzk7fBbTbjALp
-        ipiV0/n6bR+bMrm/LA2rr5+sSRUogRg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-hqViGMAXP4u9y5q1I_038w-1; Thu, 20 Aug 2020 09:37:15 -0400
-X-MC-Unique: hqViGMAXP4u9y5q1I_038w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 09:39:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727828AbgHTJam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7E088100CA92;
-        Thu, 20 Aug 2020 13:37:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-127.rdu2.redhat.com [10.10.120.127])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40DEF100EBA5;
-        Thu, 20 Aug 2020 13:37:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] afs: Fix key ref leak in afs_put_operation()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Dave Botsch <botsch@cnf.cornell.edu>, dhowells@redhat.com,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 20 Aug 2020 14:37:12 +0100
-Message-ID: <159793063245.3494970.902074379601812922.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A2420855;
+        Thu, 20 Aug 2020 09:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915842;
+        bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l0Xbcp4s6LeWuK3aGfiGAiKi8ty8gakiLL6VpHV//TnaqlCqaUEIC51uBQxMPV3D2
+         vLIwMpEf9HebEZdMafoTJI25hanw7izHMhulcvbd7nysobms/iZ0F4pLcRbb/q+FFk
+         BjQ1eWQJylLGHpi7HwKyYSYffc0HRYcBc/DX0Ok0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 152/232] selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
+Date:   Thu, 20 Aug 2020 11:20:03 +0200
+Message-Id: <20200820091620.172673057@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The afs_put_operation() function needs to put the reference to the key
-that's authenticating the operation.
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-Fixes: e49c7b2f6de7 ("afs: Build an abstraction around an "operation" concept")
-Reported-by: Dave Botsch <botsch@cnf.cornell.edu>
-Signed-off-by: David Howells <dhowells@redhat.com>
+[ Upstream commit 9a11f12e0a6c374b3ef1ce81e32ce477d28eb1b8 ]
+
+Rename variable to indicate that they are invalid values which we will
+use to test ptrace update of pkeys.
+
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-21-aneesh.kumar@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 26 +++++++++----------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
- fs/afs/fs_operation.c |    1 +
- 1 file changed, 1 insertion(+)
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index bdbbbe8431e03..f9216c7a1829e 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -44,7 +44,7 @@ struct shared_info {
+ 	unsigned long amr2;
+ 
+ 	/* AMR value that ptrace should refuse to write to the child. */
+-	unsigned long amr3;
++	unsigned long invalid_amr;
+ 
+ 	/* IAMR value the parent expects to read from the child. */
+ 	unsigned long expected_iamr;
+@@ -57,8 +57,8 @@ struct shared_info {
+ 	 * (even though they're valid ones) because userspace doesn't have
+ 	 * access to those registers.
+ 	 */
+-	unsigned long new_iamr;
+-	unsigned long new_uamor;
++	unsigned long invalid_iamr;
++	unsigned long invalid_uamor;
+ };
+ 
+ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+@@ -100,7 +100,7 @@ static int child(struct shared_info *info)
+ 
+ 	info->amr1 |= 3ul << pkeyshift(pkey1);
+ 	info->amr2 |= 3ul << pkeyshift(pkey2);
+-	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
++	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
+ 
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+@@ -111,8 +111,8 @@ static int child(struct shared_info *info)
+ 
+ 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+ 				3ul << pkeyshift(pkey2);
+-	info->new_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->new_uamor |= 3ul << pkeyshift(pkey1);
++	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
++	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
+ 
+ 	/*
+ 	 * We won't use pkey3. We just want a plausible but invalid key to test
+@@ -196,9 +196,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	info->amr1 = info->amr2 = info->amr3 = regs[0];
+-	info->expected_iamr = info->new_iamr = regs[1];
+-	info->expected_uamor = info->new_uamor = regs[2];
++	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
++	info->expected_iamr = info->invalid_iamr = regs[1];
++	info->expected_uamor = info->invalid_uamor = regs[2];
+ 
+ 	/* Wake up child so that it can set itself up. */
+ 	ret = prod_child(&info->child_sync);
+@@ -234,10 +234,10 @@ static int parent(struct shared_info *info, pid_t pid)
+ 		return ret;
+ 
+ 	/* Write invalid AMR value in child. */
+-	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
++	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
+ 
+-	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
++	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
+ 
+ 	/* Wake up child so that it can verify it didn't change. */
+ 	ret = prod_child(&info->child_sync);
+@@ -249,7 +249,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 
+ 	/* Try to write to IAMR. */
+ 	regs[0] = info->amr1;
+-	regs[1] = info->new_iamr;
++	regs[1] = info->invalid_iamr;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
+@@ -257,7 +257,7 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	       ptrace_write_running, regs[0], regs[1]);
+ 
+ 	/* Try to write to IAMR and UAMOR. */
+-	regs[2] = info->new_uamor;
++	regs[2] = info->invalid_uamor;
+ 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
+ 	PARENT_FAIL_IF(!ret, &info->child_sync);
+ 
+-- 
+2.25.1
 
-diff --git a/fs/afs/fs_operation.c b/fs/afs/fs_operation.c
-index 24fd163c6323..97cab12b0a6c 100644
---- a/fs/afs/fs_operation.c
-+++ b/fs/afs/fs_operation.c
-@@ -235,6 +235,7 @@ int afs_put_operation(struct afs_operation *op)
- 	afs_end_cursor(&op->ac);
- 	afs_put_serverlist(op->net, op->server_list);
- 	afs_put_volume(op->net, op->volume, afs_volume_trace_put_put_op);
-+	key_put(op->key);
- 	kfree(op);
- 	return ret;
- }
 
 
