@@ -2,51 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2838C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46F69C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 872522078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D89720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919045;
-	bh=BbVjOawr2HPM457F4RYi76yZJrjyaGdSN/XIGqZ/k9Y=;
+	s=default; t=1597919048;
+	bh=T0MbZLRGYeJaKY9aY7xqR2LSaHty8Sods/WB4VGiUCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JbBLf/y7XvUqdKVWitiU/slJRAYWEC9WIR/XtQhAFrHBBcb540RUKdu7wrbDV467e
-	 UlywK83kREirk9HI0Cx47M13lfKP/30/c1a4ezAFqtp5I5jy9rjsWnVOKTYz33bUyR
-	 hUheVAHWdZdIPIVSZrwJ4uyNNCsMTTu12UeWXRd8=
+	b=2U3x214ODUlI7jsccmFJmaZeMWNT3iMZpa0YCAsN6jWZdcqOXL935wZpl41Zr4fxi
+	 Mav08d+KZTd9ks1xRA1txa7YFPpd5qPDJUigVIu9ldxVitCR86JSl4a3GKHFYpeWwZ
+	 pcJ7jc8i1RGnZ/wP5Hm9ylQC1tpUUfY10Xg+1suc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbgHTKYD (ORCPT
+        id S1730727AbgHTKX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731776AbgHTKXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:46 -0400
+        id S1731530AbgHTKXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:23:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3532420738;
-        Thu, 20 Aug 2020 10:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 654D820658;
+        Thu, 20 Aug 2020 10:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919025;
-        bh=BbVjOawr2HPM457F4RYi76yZJrjyaGdSN/XIGqZ/k9Y=;
+        s=default; t=1597919017;
+        bh=T0MbZLRGYeJaKY9aY7xqR2LSaHty8Sods/WB4VGiUCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tOQHGzl/7ABWCT3XZtfo7OElG2+11cL2pn0E921shugLC0bf22N0ubWUDADGtVceS
-         1fIigubXEsyCLta1vuXP3Cc1xDtnEkZiJozQFBFtGUkiSPb8TNGPfME9q/noA/fDkQ
-         JCWjD/0c8TO4v2Jz8+YRp5y/6pZkbNUL8Dh1WNvE=
+        b=Mbaj0de44G8ZloYmcNotTzL+LgzYsqBHMpQRPCjfR1Ba8wC7XRvNRkq12imooGexg
+         t7O+2/Tp0eXCSh1SCIGMM/fCUvNLs1Y1LUZ5PAlGFly60qfP+jjKGA0xRA7jRpU8zl
+         GJfPFAWaa5/vo97ObmLPP/3d/5Vr3GJChzzXy/mY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Blanchard <anton@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 133/149] pseries: Fix 64 bit logical memory block panic
-Date:   Thu, 20 Aug 2020 11:23:30 +0200
-Message-Id: <20200820092132.146054417@linuxfoundation.org>
+        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
+        Barry Song <baohua@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 140/149] clk: clk-atlas6: fix return value check in atlas6_clk_init()
+Date:   Thu, 20 Aug 2020 11:23:37 +0200
+Message-Id: <20200820092132.475487794@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,37 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Blanchard <anton@ozlabs.org>
+From: Xu Wang <vulab@iscas.ac.cn>
 
-commit 89c140bbaeee7a55ed0360a88f294ead2b95201b upstream.
+[ Upstream commit 12b90b40854a8461a02ef19f6f4474cc88d64b66 ]
 
-Booting with a 4GB LMB size causes us to panic:
+In case of error, the function clk_register() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value check
+should be replaced with IS_ERR().
 
-  qemu-system-ppc64: OS terminated: OS panic:
-      Memory block size not suitable: 0x0
-
-Fix pseries_memory_block_size() to handle 64 bit LMBs.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Anton Blanchard <anton@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200715000820.1255764-1-anton@ozlabs.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20200713032143.21362-1-vulab@iscas.ac.cn
+Acked-by: Barry Song <baohua@kernel.org>
+Fixes: 7bf21bc81f28 ("clk: sirf: re-arch to make the codes support both prima2 and atlas6")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |    2 +-
+ drivers/clk/sirf/clk-atlas6.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -29,7 +29,7 @@ static bool rtas_hp_event;
- unsigned long pseries_memory_block_size(void)
- {
- 	struct device_node *np;
--	unsigned int memblock_size = MIN_MEMORY_BLOCK_SIZE;
-+	u64 memblock_size = MIN_MEMORY_BLOCK_SIZE;
- 	struct resource r;
+diff --git a/drivers/clk/sirf/clk-atlas6.c b/drivers/clk/sirf/clk-atlas6.c
+index c5eaa9d162476..9af2d0dcd6a0f 100644
+--- a/drivers/clk/sirf/clk-atlas6.c
++++ b/drivers/clk/sirf/clk-atlas6.c
+@@ -137,7 +137,7 @@ static void __init atlas6_clk_init(struct device_node *np)
  
- 	np = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
+ 	for (i = pll1; i < maxclk; i++) {
+ 		atlas6_clks[i] = clk_register(NULL, atlas6_clk_hw_array[i]);
+-		BUG_ON(!atlas6_clks[i]);
++		BUG_ON(IS_ERR(atlas6_clks[i]));
+ 	}
+ 	clk_register_clkdev(atlas6_clks[cpu], NULL, "cpu");
+ 	clk_register_clkdev(atlas6_clks[io],  NULL, "io");
+-- 
+2.25.1
+
 
 
