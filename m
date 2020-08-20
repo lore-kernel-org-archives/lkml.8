@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75B902075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F182320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919132;
-	bh=BOjAsGPtbJQYY1chuWkpdg5mJVtRTxQcinkcqu30H+E=;
+	s=default; t=1597919154;
+	bh=WuWUFoM8glOjWZTJLhMfKnsgfVWQ7Vo3QZ4kDFUqIRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbFsk9O0GeueEwoo60E8GmjZS6jA7/melAjMksXBywiyiqyrYdkM1ugpPrytqztJG
-	 JLUT1thYO8uL0QLyGjxF1IiI/Z12rUhxU53OwF+LiAwFcVucCRVzZGD0U2FbEZcsNB
-	 qgmhIteSyqb+XisCEIyWZyEgPVWJ07bBcDGfImtM=
+	b=Hk8oennnZjqL1xn5BM307prLLkFRBU8oehte+hwz/pJil4n4l+2CXwwe4Rz3K0jqv
+	 r2hMyPW9AXW2aokMZPaZhCQG7/0eUmHKkDObKu7MikAbylaHrU3idGow3t/uhR7kpz
+	 LR/fYisRJ9TKJUvjd1NPKjgLGtwkIHNHggyLXYp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbgHTKZb (ORCPT
+        id S1729639AbgHTKZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57310 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731680AbgHTKZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:25:26 -0400
+        id S1731717AbgHTKZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:25:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C4C20658;
-        Thu, 20 Aug 2020 10:25:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 467AA2075E;
+        Thu, 20 Aug 2020 10:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597919125;
-        bh=BOjAsGPtbJQYY1chuWkpdg5mJVtRTxQcinkcqu30H+E=;
+        s=default; t=1597919127;
+        bh=WuWUFoM8glOjWZTJLhMfKnsgfVWQ7Vo3QZ4kDFUqIRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tpJejPWg1yxrOH1xsXfHSPfvoyogk7X55PODEaXOe1jkG3323bssfe6OMqPBCB5LI
-         hs0Q4HAvCJwlS8ISOr85faR/aTANdyN3EHFZBCpJY8sjwV7QK0D/2+Tdo/6uFVczKE
-         6t5JPif+bCYY+TKGmBLoxM7+R1CArEldj/n3AZcU=
+        b=pIGqP6QAB0ADSO5hzPWm1fE3Q3Lo3pCeW5lIAIuYXGgQZ8N3+eHu/OYBlWC1bF1Gw
+         pAFQ3MNWNAHVXFd4L3zVHrI8otgEjcc+dyBAaoZtXLra3Q4pHwOMW0dR7gHKpsgDCs
+         tUisIFQ+MBBiSO4yJjL5k8tUa5AuuOTdqGHj0GUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,13 +46,15 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Eric Sandeen <sandeen@redhat.com>,
         "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 003/212] xfs: dont call xfs_da_shrink_inode with NULL bp
-Date:   Thu, 20 Aug 2020 11:19:36 +0200
-Message-Id: <20200820091602.424819869@linuxfoundation.org>
+Subject: [PATCH 4.4 001/149] xfs: dont call xfs_da_shrink_inode with NULL bp
+Date:   Thu, 20 Aug 2020 11:21:18 +0200
+Message-Id: <20200820092125.757209674@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -86,10 +88,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/fs/xfs/libxfs/xfs_attr_leaf.c b/fs/xfs/libxfs/xfs_attr_leaf.c
-index c6c15e5717e42..70da4113c2baf 100644
+index 01a5ecfedfcf1..445a3f2f871fb 100644
 --- a/fs/xfs/libxfs/xfs_attr_leaf.c
 +++ b/fs/xfs/libxfs/xfs_attr_leaf.c
-@@ -785,9 +785,8 @@ xfs_attr_shortform_to_leaf(xfs_da_args_t *args)
+@@ -779,9 +779,8 @@ xfs_attr_shortform_to_leaf(xfs_da_args_t *args)
  	ASSERT(blkno == 0);
  	error = xfs_attr3_leaf_create(args, blkno, &bp);
  	if (error) {
