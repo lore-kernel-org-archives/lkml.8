@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E63C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E585720674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCA322BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929343;
-	bh=Hs1Xz//+v/ly/pTeXAoOFdj5f0tq4o3DFLI+JX6P4pc=;
+	s=default; t=1597929349;
+	bh=f7dSuZvjHUqqU4m9HMc+xEo9Fm4qh0voDgmShpezLN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q9o5w2/3Z8+RD7VRWTtEwc4kpYzYUGSOUMExvdQJNZ2Jv0Ndx5TOFt5GxcauEzOLO
-	 SxYNvYArc/Uf/rtv6ZLLZn5altt82ds9dFUzFWiFeXRH+cIPZnddDlsm0CbWAYCS7n
-	 3g0BgiUrOW/3nWm6JpjoRn3gHk+xHahpJuFnQK2Q=
+	b=DtyWYV2sv//saToq2rabNHopH16FugYv5LdKZnmYHe4BUufaCGRRbn1nAGi/VL2MN
+	 II8hbN6faFvKUJEOSJ9g1RVvbS2gsCc06rMiwbx5tI2RZ3NzmzSNLsmTlWNKbcMpgx
+	 EdENgjPbZ0KkL9AxrF+L+4zU7pMYTRWUPBoaVWno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgHTNPl (ORCPT
+        id S1728882AbgHTNPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49812 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:15:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbgHTJfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:52 -0400
+        id S1728510AbgHTJfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:35:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5593420724;
-        Thu, 20 Aug 2020 09:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7384520724;
+        Thu, 20 Aug 2020 09:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916151;
-        bh=Hs1Xz//+v/ly/pTeXAoOFdj5f0tq4o3DFLI+JX6P4pc=;
+        s=default; t=1597916140;
+        bh=f7dSuZvjHUqqU4m9HMc+xEo9Fm4qh0voDgmShpezLN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GZxA/glaK9AB56upqTStcDAsXbdXoMs6LSoTe7MnlkyiItq6jwYG1ypam2VdCtqvn
-         FRFSgQrHNuQKq7ZI1llc3O5P7eQJBBcYruEk/zqREOD3w53AurDuij2Cqt7CFMbDSZ
-         KiD16kA+4wdPjvcq8tsVlb2p38/ywTGj7OwRx6Kc=
+        b=gOGVBuAVAhx0xdYfDChABlm+HwoVJEPN6TFaLdf0VWBQNAU6vm8rTT8e+xYL4RhEc
+         e8ymD2NvJAo4dNi4dc/bWWP2BOevOgKmRSCcu1sg+eg2/7llNwnBFcY7bKySbeOy4q
+         5E2SDsyZSvpKDqEAD1saUBtMdRUghJJtoIuYXSik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.7 006/204] PCI: Mark AMD Navi10 GPU rev 0x00 ATS as broken
-Date:   Thu, 20 Aug 2020 11:18:23 +0200
-Message-Id: <20200820091606.518241784@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 024/204] btrfs: avoid possible signal interruption of btrfs_drop_snapshot() on relocation tree
+Date:   Thu, 20 Aug 2020 11:18:41 +0200
+Message-Id: <20200820091607.468694190@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,56 +59,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 45beb31d3afb651bb5c41897e46bd4fa9980c51c upstream.
+commit f3e3d9cc35252a70a2fd698762c9687718268ec6 upstream.
 
-We are seeing AMD Radeon Pro W5700 doesn't work when IOMMU is enabled:
+[BUG]
+There is a bug report about bad signal timing could lead to read-only
+fs during balance:
 
-  iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01a0]
-  iommu ivhd0: AMD-Vi: Event logged [IOTLB_INV_TIMEOUT device=63:00.0 address=0x42b5b01c0]
+  BTRFS info (device xvdb): balance: start -d -m -s
+  BTRFS info (device xvdb): relocating block group 73001861120 flags metadata
+  BTRFS info (device xvdb): found 12236 extents, stage: move data extents
+  BTRFS info (device xvdb): relocating block group 71928119296 flags data
+  BTRFS info (device xvdb): found 3 extents, stage: move data extents
+  BTRFS info (device xvdb): found 3 extents, stage: update data pointers
+  BTRFS info (device xvdb): relocating block group 60922265600 flags metadata
+  BTRFS: error (device xvdb) in btrfs_drop_snapshot:5505: errno=-4 unknown
+  BTRFS info (device xvdb): forced readonly
+  BTRFS info (device xvdb): balance: ended with status: -4
 
-The error also makes graphics driver fail to probe the device.
+[CAUSE]
+The direct cause is the -EINTR from the following call chain when a
+fatal signal is pending:
 
-It appears to be the same issue as commit 5e89cd303e3a ("PCI: Mark AMD
-Navi14 GPU rev 0xc5 ATS as broken") addresses, and indeed the same ATS
-quirk can workaround the issue.
+ relocate_block_group()
+ |- clean_dirty_subvols()
+    |- btrfs_drop_snapshot()
+       |- btrfs_start_transaction()
+          |- btrfs_delayed_refs_rsv_refill()
+             |- btrfs_reserve_metadata_bytes()
+                |- __reserve_metadata_bytes()
+                   |- wait_reserve_ticket()
+                      |- prepare_to_wait_event();
+                      |- ticket->error = -EINTR;
 
-See-also: 5e89cd303e3a ("PCI: Mark AMD Navi14 GPU rev 0xc5 ATS as broken")
-See-also: d28ca864c493 ("PCI: Mark AMD Stoney Radeon R7 GPU ATS as broken")
-See-also: 9b44b0b09dec ("PCI: Mark AMD Stoney GPU ATS as broken")
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208725
-Link: https://lore.kernel.org/r/20200728104554.28927-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Normally this behavior is fine for most btrfs_start_transaction()
+callers, as they need to catch any other error, same for the signal, and
+exit ASAP.
+
+However for balance, especially for the clean_dirty_subvols() case, we're
+already doing cleanup works, getting -EINTR from btrfs_drop_snapshot()
+could cause a lot of unexpected problems.
+
+>From the mentioned forced read-only report, to later balance error due
+to half dropped reloc trees.
+
+[FIX]
+Fix this problem by using btrfs_join_transaction() if
+btrfs_drop_snapshot() is called from relocation context.
+
+Since btrfs_join_transaction() won't get interrupted by signal, we can
+continue the cleanup.
+
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>3
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/extent-tree.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5207,7 +5207,8 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SE
-  */
- static void quirk_amd_harvest_no_ats(struct pci_dev *pdev)
- {
--	if (pdev->device == 0x7340 && pdev->revision != 0xc5)
-+	if ((pdev->device == 0x7312 && pdev->revision != 0x00) ||
-+	    (pdev->device == 0x7340 && pdev->revision != 0xc5))
- 		return;
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -5313,7 +5313,14 @@ int btrfs_drop_snapshot(struct btrfs_roo
+ 		goto out;
+ 	}
  
- 	pci_info(pdev, "disabling ATS\n");
-@@ -5218,6 +5219,8 @@ static void quirk_amd_harvest_no_ats(str
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x98e4, quirk_amd_harvest_no_ats);
- /* AMD Iceland dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6900, quirk_amd_harvest_no_ats);
-+/* AMD Navi10 dGPU */
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7312, quirk_amd_harvest_no_ats);
- /* AMD Navi14 dGPU */
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7340, quirk_amd_harvest_no_ats);
- #endif /* CONFIG_PCI_ATS */
+-	trans = btrfs_start_transaction(tree_root, 0);
++	/*
++	 * Use join to avoid potential EINTR from transaction start. See
++	 * wait_reserve_ticket and the whole reservation callchain.
++	 */
++	if (for_reloc)
++		trans = btrfs_join_transaction(tree_root);
++	else
++		trans = btrfs_start_transaction(tree_root, 0);
+ 	if (IS_ERR(trans)) {
+ 		err = PTR_ERR(trans);
+ 		goto out_free;
 
 
