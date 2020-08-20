@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE2DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52079207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9703D207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926791;
-	bh=IitLRjEgnk8wxQIX58zrZmcAiP+QM9i1Sxs3AHwkNxk=;
+	s=default; t=1597926805;
+	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m94cirEyCp0PofMMVkVDy/OCN1FYGLYI90rSee6rDQtMASGAxlBYmt+jVmrKJnIDY
-	 hiBKNN/KP30Dzn3jTLBmdHYeA4rnb+deOF/Kaz7YHuL4WnEnWHu0TU8d+XEWjqGvs/
-	 qEDzoKfPFKimz/pB8bXRbi2JgQvphdu9H8jDVSEk=
+	b=pSex54yL6MuZYeLt5C/lrSj1D4a9SAPVehiAnSDSf2xG0Fcwf3ilJnrlqHuVYBQHu
+	 H7kgRotfPZxww4/GYq/oLtY41pXFYskKFpc+b1AeSVsu9uWAzucLlexyvtuIwZw7LL
+	 k7flLYFXY2D2DECmFav8fhj26gmTfZN/bEmn43MY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730476AbgHTMdK (ORCPT
+        id S1729657AbgHTJtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56184 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729682AbgHTJtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:42 -0400
+        id S1728912AbgHTJtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 166ED2173E;
-        Thu, 20 Aug 2020 09:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62CC12078D;
+        Thu, 20 Aug 2020 09:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916981;
-        bh=IitLRjEgnk8wxQIX58zrZmcAiP+QM9i1Sxs3AHwkNxk=;
+        s=default; t=1597916953;
+        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zRJ56U0aSoFoiIWr4cxsnk2pn3Xk4VtMBjT0XsjaoQguojMP9M/CQVwLHcL3OIzBI
-         GTb7gFUJSIOpSXMW2YB4Ll4fRcFlta3UFjdkexpCNKpnYXHxRuzAKJOoys2mtE333H
-         /Zo+K/LmjO4l+QG9l7yK+Zl3o4rHLDZPR1G26kF4=
+        b=wN4qv487K7vr/eTS6ozJ8XKsXMJjftvwQf7LsKKGw38rZpmcAM90HsLFs3cKdtYEd
+         oRKM3sHjDDbE2w8l3Tm/ALJeiKrKK2j8LSmWFFiejXilX3EFD4D7lxWsOjN8Am5wRX
+         EUa956zev2I7hZBxOysqhc2oKjTIYWU8c2gI1IRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kheib@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/152] RDMA/ipoib: Fix ABBA deadlock with ipoib_reap_ah()
-Date:   Thu, 20 Aug 2020 11:20:50 +0200
-Message-Id: <20200820091557.997849751@linuxfoundation.org>
+Subject: [PATCH 5.4 103/152] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
+Date:   Thu, 20 Aug 2020 11:21:10 +0200
+Message-Id: <20200820091559.034720681@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -60,214 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit 65936bf25f90fe440bb2d11624c7d10fab266639 ]
+[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
 
-ipoib_mcast_carrier_on_task() insanely open codes a rtnl_lock() such that
-the only time flush_workqueue() can be called is if it also clears
-IPOIB_FLAG_OPER_UP.
-
-Thus the flush inside ipoib_flush_ah() will deadlock if it gets unlucky
-enough, and lockdep doesn't help us to find it early:
-
-          CPU0               CPU1          CPU2
-   __ipoib_ib_dev_flush()
-      down_read(vlan_rwsem)
-
-                         ipoib_vlan_add()
-                           rtnl_trylock()
-                           down_write(vlan_rwsem)
-
-				      ipoib_mcast_carrier_on_task()
-					 while (!rtnl_trylock())
-					      msleep(20);
-
-      ipoib_flush_ah()
-	flush_workqueue(priv->wq)
-
-Clean up the ah_reaper related functions and lifecycle to make sense:
-
- - Start/Stop of the reaper should only be done in open/stop NDOs, not in
-   any other places
-
- - cancel and flush of the reaper should only happen in the stop NDO.
-   cancel is only functional when combined with IPOIB_STOP_REAPER.
-
- - Non-stop places were flushing the AH's just need to flush out dead AH's
-   synchronously and ignore the background task completely. It is fully
-   locked and harmless to leave running.
-
-Which ultimately fixes the ABBA deadlock by removing the unnecessary
-flush_workqueue() from the problematic place under the vlan_rwsem.
-
-Fixes: efc82eeeae4e ("IB/ipoib: No longer use flush as a parameter")
-Link: https://lore.kernel.org/r/20200625174219.290842-1-kamalheib1@gmail.com
-Reported-by: Kamal Heib <kheib@redhat.com>
-Tested-by: Kamal Heib <kheib@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_ib.c   | 65 ++++++++++-------------
- drivers/infiniband/ulp/ipoib/ipoib_main.c |  2 +
- 2 files changed, 31 insertions(+), 36 deletions(-)
+ .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
+ 1 file changed, 12 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-index 6ee64c25aaff4..494f413dc3c6c 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -670,13 +670,12 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
- 	return rc;
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index f9216c7a1829e..bc33d748d95b4 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
+ 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
  }
  
--static void __ipoib_reap_ah(struct net_device *dev)
-+static void ipoib_reap_dead_ahs(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
- 	struct ipoib_ah *ah, *tah;
- 	unsigned long flags;
- 
--	netif_tx_lock_bh(dev);
-+	netif_tx_lock_bh(priv->dev);
- 	spin_lock_irqsave(&priv->lock, flags);
- 
- 	list_for_each_entry_safe(ah, tah, &priv->dead_ahs, list)
-@@ -687,37 +686,37 @@ static void __ipoib_reap_ah(struct net_device *dev)
- 		}
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
--	netif_tx_unlock_bh(dev);
-+	netif_tx_unlock_bh(priv->dev);
- }
- 
- void ipoib_reap_ah(struct work_struct *work)
- {
- 	struct ipoib_dev_priv *priv =
- 		container_of(work, struct ipoib_dev_priv, ah_reap_task.work);
--	struct net_device *dev = priv->dev;
- 
--	__ipoib_reap_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
- 
- 	if (!test_bit(IPOIB_STOP_REAPER, &priv->flags))
- 		queue_delayed_work(priv->wq, &priv->ah_reap_task,
- 				   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_flush_ah(struct net_device *dev)
-+static void ipoib_start_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	cancel_delayed_work(&priv->ah_reap_task);
--	flush_workqueue(priv->wq);
--	ipoib_reap_ah(&priv->ah_reap_task.work);
-+	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
-+	queue_delayed_work(priv->wq, &priv->ah_reap_task,
-+			   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_stop_ah(struct net_device *dev)
-+static void ipoib_stop_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
- 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	ipoib_flush_ah(dev);
-+	cancel_delayed_work(&priv->ah_reap_task);
-+	/*
-+	 * After ipoib_stop_ah_reaper() we always go through
-+	 * ipoib_reap_dead_ahs() which ensures the work is really stopped and
-+	 * does a final flush out of the dead_ah's list
-+	 */
- }
- 
- static int recvs_pending(struct net_device *dev)
-@@ -846,16 +845,6 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
- 	return 0;
- }
- 
--void ipoib_ib_dev_stop(struct net_device *dev)
+-static int sys_pkey_free(int pkey)
 -{
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	priv->rn_ops->ndo_stop(dev);
--
--	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_flush_ah(dev);
+-	return syscall(__NR_pkey_free, pkey);
 -}
 -
- int ipoib_ib_dev_open_default(struct net_device *dev)
+ static int child(struct shared_info *info)
  {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -899,10 +888,7 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 		return -1;
- 	}
+ 	unsigned long reg;
+@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
  
--	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
--	queue_delayed_work(priv->wq, &priv->ah_reap_task,
--			   round_jiffies_relative(HZ));
+ 	info->amr1 |= 3ul << pkeyshift(pkey1);
+ 	info->amr2 |= 3ul << pkeyshift(pkey2);
+-	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
++	/*
++	 * invalid amr value where we try to force write
++	 * things which are deined by a uamor setting.
++	 */
++	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
+ 
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
+ 
+ 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+ 				3ul << pkeyshift(pkey2);
+-	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
+-	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
 -
-+	ipoib_start_ah_reaper(priv);
- 	if (priv->rn_ops->ndo_open(dev)) {
- 		pr_warn("%s: Failed to open dev\n", dev->name);
- 		goto dev_stop;
-@@ -913,13 +899,20 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 	return 0;
- 
- dev_stop:
--	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	cancel_delayed_work(&priv->ah_reap_task);
--	set_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_ib_dev_stop(dev);
-+	ipoib_stop_ah_reaper(priv);
- 	return -1;
- }
- 
-+void ipoib_ib_dev_stop(struct net_device *dev)
-+{
-+	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-+
-+	priv->rn_ops->ndo_stop(dev);
-+
-+	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
-+	ipoib_stop_ah_reaper(priv);
-+}
-+
- void ipoib_pkey_dev_check_presence(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -1230,7 +1223,7 @@ static void __ipoib_ib_dev_flush(struct ipoib_dev_priv *priv,
- 		ipoib_mcast_dev_flush(dev);
- 		if (oper_up)
- 			set_bit(IPOIB_FLAG_OPER_UP, &priv->flags);
--		ipoib_flush_ah(dev);
-+		ipoib_reap_dead_ahs(priv);
- 	}
- 
- 	if (level >= IPOIB_FLUSH_NORMAL)
-@@ -1305,7 +1298,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev)
- 	 * the neighbor garbage collection is stopped and reaped.
- 	 * That should all be done now, so make a final ah flush.
+ 	/*
+-	 * We won't use pkey3. We just want a plausible but invalid key to test
+-	 * whether ptrace will let us write to AMR bits we are not supposed to.
+-	 *
+-	 * This also tests whether the kernel restores the UAMOR permissions
+-	 * after a key is freed.
++	 * Create an IAMR value different from expected value.
++	 * Kernel will reject an IAMR and UAMOR change.
  	 */
--	ipoib_stop_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
+-	sys_pkey_free(pkey3);
++	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
++	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
  
- 	clear_bit(IPOIB_PKEY_ASSIGNED, &priv->flags);
+ 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
+ 	       user_write, info->amr1, pkey1, pkey2, pkey3);
+@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
+ 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
+ 	PARENT_FAIL_IF(ret, &info->child_sync);
  
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index 4fd095fd63b6f..044bcacad6e48 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1979,6 +1979,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
+-	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
+-	info->expected_iamr = info->invalid_iamr = regs[1];
+-	info->expected_uamor = info->invalid_uamor = regs[2];
++	info->amr1 = info->amr2 = regs[0];
++	info->expected_iamr = regs[1];
++	info->expected_uamor = regs[2];
  
- 	/* no more works over the priv->wq */
- 	if (priv->wq) {
-+		/* See ipoib_mcast_carrier_on_task() */
-+		WARN_ON(test_bit(IPOIB_FLAG_OPER_UP, &priv->flags));
- 		flush_workqueue(priv->wq);
- 		destroy_workqueue(priv->wq);
- 		priv->wq = NULL;
+ 	/* Wake up child so that it can set itself up. */
+ 	ret = prod_child(&info->child_sync);
 -- 
 2.25.1
 
