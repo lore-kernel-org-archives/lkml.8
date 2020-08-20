@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0ADC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 090D52173E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5134A22CBE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916722;
-	bh=SF7eZVx4AhMDo5pdZzuuQPK0L9OAcx0WeH2nI2baB1I=;
+	s=default; t=1597916730;
+	bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bSN356RK9E/4gOPWkasHm7t+G0uzgRRSKQvZBIE1Cprh3OED5sSitFLYQRJjIAn80
-	 H3vxFVaDs+5cRmiOQkyMziH36z8H3ASidn3SC7q559tOPKruKPlzftNvi6XwEl/7MU
-	 o8tnvsd4wF4al2JWfEkptnSu7z9tByz0ZJXJ55LQ=
+	b=u+ymjCqMK4PtB7zWzjvSHFNgWT22mm1SDj54G5sSxgbBdxJ0Tsl48WPTZKtdgeGOX
+	 PCFx+z71dBpgECIyxoBQ29a0SCh/mFiSz36y+fg7w7MUD0WrxmqAE2X+5y8zR/3E5p
+	 IQi9zhrgCFd3sMtT9ur8hGrrRXE/O1h0gwyempfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgHTJpU (ORCPT
+        id S1729211AbgHTJp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39234 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:45:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36266 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729200AbgHTJmw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:52 -0400
+        id S1728490AbgHTJmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C123D22D07;
-        Thu, 20 Aug 2020 09:42:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCA120724;
+        Thu, 20 Aug 2020 09:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916569;
-        bh=SF7eZVx4AhMDo5pdZzuuQPK0L9OAcx0WeH2nI2baB1I=;
+        s=default; t=1597916520;
+        bh=0X7WpuY/jCJp0/tIa44IIaSK8ndpAN4TJYDqNrG0RlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMyKJf7+z0tFaAj+qH9YRmYzrPZbHk2S3j1E6J82g19MClBNEiraIuWu32Utitp/x
-         MTReLZe8ZSLdWVhCYcwfwuehCZ9wshXc+pDE8NHpcaHTSFJ+Sva0H69YoCXkn9yKR6
-         NmpJyoY0n3FM4umVLVb2TWHlW6rrLYUtUuh4PO4Q=
+        b=Xz4wWHZ8P+pPoudsxVY30efaHryXB7bk2b6juxR2SchLLeHkZBeA9wvUUL1bEl8r4
+         +fvkIN0H/5gciyJebEgGG6Jhz3+DcnSX5J7h7MKmleF+JKeyiVs0hEDBvzJ3hJq29g
+         A/mj9FU0st/qOrKAgVYAxrR47d12z8t1d6L94zsA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 174/204] NFS: Fix flexfiles read failover
-Date:   Thu, 20 Aug 2020 11:21:11 +0200
-Message-Id: <20200820091614.897263643@linuxfoundation.org>
+Subject: [PATCH 5.7 127/204] crypto: caam - Remove broken arc4 support
+Date:   Thu, 20 Aug 2020 11:20:24 +0200
+Message-Id: <20200820091612.632767074@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,179 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit 563c53e73b8b6ec842828736f77e633f7b0911e9 ]
+[ Upstream commit eeedb618378f8a09779546a3eeac16b000447d62 ]
 
-The current mirrored read failover code is correctly resetting the mirror
-index between failed reads, however it is not able to actually flip the
-RPC call over to the next RPC client.
-The end result is that we keep resending the RPC call to the same client
-over and over.
+The arc4 algorithm requires storing state in the request context
+in order to allow more than one encrypt/decrypt operation.  As this
+driver does not seem to do that, it means that using it for more
+than one operation is broken.
 
-The fix is to use the pnfs_read_resend_pnfs() mechanism to schedule a
-new RPC call, but we need to add the ability to pass in a mirror
-index so that we always retry the next mirror in the list.
-
-Fixes: 166bd5b889ac ("pNFS/flexfiles: Fix layoutstats handling during read failovers")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: eaed71a44ad9 ("crypto: caam - add ecb(*) support")
+Link: https://lore.kernel.org/linux-crypto/CAMj1kXGvMe_A_iQ43Pmygg9xaAM-RLy=_M=v+eg--8xNmv9P+w@mail.gmail.com
+Link: https://lore.kernel.org/linux-crypto/20200702101947.682-1-ardb@kernel.org
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Horia Geantă <horia.geanta@nxp.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 50 ++++++++++++++++++--------
- fs/nfs/pnfs.c                          |  4 ++-
- fs/nfs/pnfs.h                          |  2 +-
- 3 files changed, 40 insertions(+), 16 deletions(-)
+ drivers/crypto/caam/caamalg.c | 29 -----------------------------
+ drivers/crypto/caam/compat.h  |  1 -
+ 2 files changed, 30 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index de03e440b7eef..048272d60a165 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -790,6 +790,19 @@ ff_layout_choose_best_ds_for_read(struct pnfs_layout_segment *lseg,
- 	return ff_layout_choose_any_ds_for_read(lseg, start_idx, best_idx);
+diff --git a/drivers/crypto/caam/caamalg.c b/drivers/crypto/caam/caamalg.c
+index bf90a4fcabd1f..8149ac4d6ef22 100644
+--- a/drivers/crypto/caam/caamalg.c
++++ b/drivers/crypto/caam/caamalg.c
+@@ -810,12 +810,6 @@ static int ctr_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 	return skcipher_setkey(skcipher, key, keylen, ctx1_iv_off);
  }
  
-+static struct nfs4_pnfs_ds *
-+ff_layout_get_ds_for_read(struct nfs_pageio_descriptor *pgio, int *best_idx)
-+{
-+	struct pnfs_layout_segment *lseg = pgio->pg_lseg;
-+	struct nfs4_pnfs_ds *ds;
-+
-+	ds = ff_layout_choose_best_ds_for_read(lseg, pgio->pg_mirror_idx,
-+					       best_idx);
-+	if (ds || !pgio->pg_mirror_idx)
-+		return ds;
-+	return ff_layout_choose_best_ds_for_read(lseg, 0, best_idx);
-+}
-+
- static void
- ff_layout_pg_get_read(struct nfs_pageio_descriptor *pgio,
- 		      struct nfs_page *req,
-@@ -840,7 +853,7 @@ ff_layout_pg_init_read(struct nfs_pageio_descriptor *pgio,
- 			goto out_nolseg;
- 	}
- 
--	ds = ff_layout_choose_best_ds_for_read(pgio->pg_lseg, 0, &ds_idx);
-+	ds = ff_layout_get_ds_for_read(pgio, &ds_idx);
- 	if (!ds) {
- 		if (!ff_layout_no_fallback_to_mds(pgio->pg_lseg))
- 			goto out_mds;
-@@ -1028,11 +1041,24 @@ static void ff_layout_reset_write(struct nfs_pgio_header *hdr, bool retry_pnfs)
- 	}
- }
- 
-+static void ff_layout_resend_pnfs_read(struct nfs_pgio_header *hdr)
-+{
-+	u32 idx = hdr->pgio_mirror_idx + 1;
-+	int new_idx = 0;
-+
-+	if (ff_layout_choose_any_ds_for_read(hdr->lseg, idx + 1, &new_idx))
-+		ff_layout_send_layouterror(hdr->lseg);
-+	else
-+		pnfs_error_mark_layout_for_return(hdr->inode, hdr->lseg);
-+	pnfs_read_resend_pnfs(hdr, new_idx);
-+}
-+
- static void ff_layout_reset_read(struct nfs_pgio_header *hdr)
+-static int arc4_skcipher_setkey(struct crypto_skcipher *skcipher,
+-				const u8 *key, unsigned int keylen)
+-{
+-	return skcipher_setkey(skcipher, key, keylen, 0);
+-}
+-
+ static int des_skcipher_setkey(struct crypto_skcipher *skcipher,
+ 			       const u8 *key, unsigned int keylen)
  {
- 	struct rpc_task *task = &hdr->task;
+@@ -1967,21 +1961,6 @@ static struct caam_skcipher_alg driver_algs[] = {
+ 		},
+ 		.caam.class1_alg_type = OP_ALG_ALGSEL_3DES | OP_ALG_AAI_ECB,
+ 	},
+-	{
+-		.skcipher = {
+-			.base = {
+-				.cra_name = "ecb(arc4)",
+-				.cra_driver_name = "ecb-arc4-caam",
+-				.cra_blocksize = ARC4_BLOCK_SIZE,
+-			},
+-			.setkey = arc4_skcipher_setkey,
+-			.encrypt = skcipher_encrypt,
+-			.decrypt = skcipher_decrypt,
+-			.min_keysize = ARC4_MIN_KEY_SIZE,
+-			.max_keysize = ARC4_MAX_KEY_SIZE,
+-		},
+-		.caam.class1_alg_type = OP_ALG_ALGSEL_ARC4 | OP_ALG_AAI_ECB,
+-	},
+ };
  
- 	pnfs_layoutcommit_inode(hdr->inode, false);
-+	pnfs_error_mark_layout_for_return(hdr->inode, hdr->lseg);
+ static struct caam_aead_alg driver_aeads[] = {
+@@ -3457,7 +3436,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 	struct caam_drv_private *priv = dev_get_drvdata(ctrldev);
+ 	int i = 0, err = 0;
+ 	u32 aes_vid, aes_inst, des_inst, md_vid, md_inst, ccha_inst, ptha_inst;
+-	u32 arc4_inst;
+ 	unsigned int md_limit = SHA512_DIGEST_SIZE;
+ 	bool registered = false, gcm_support;
  
- 	if (!test_and_set_bit(NFS_IOHDR_REDO, &hdr->flags)) {
- 		dprintk("%s Reset task %5u for i/o through MDS "
-@@ -1234,6 +1260,12 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- 		break;
- 	case NFS4ERR_NXIO:
- 		ff_layout_mark_ds_unreachable(lseg, idx);
-+		/*
-+		 * Don't return the layout if this is a read and we still
-+		 * have layouts to try
-+		 */
-+		if (opnum == OP_READ)
-+			break;
- 		/* Fallthrough */
- 	default:
- 		pnfs_error_mark_layout_for_return(lseg->pls_layout->plh_inode,
-@@ -1247,7 +1279,6 @@ static void ff_layout_io_track_ds_error(struct pnfs_layout_segment *lseg,
- static int ff_layout_read_done_cb(struct rpc_task *task,
- 				struct nfs_pgio_header *hdr)
- {
--	int new_idx = hdr->pgio_mirror_idx;
- 	int err;
+@@ -3477,8 +3455,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 			   CHA_ID_LS_DES_SHIFT;
+ 		aes_inst = cha_inst & CHA_ID_LS_AES_MASK;
+ 		md_inst = (cha_inst & CHA_ID_LS_MD_MASK) >> CHA_ID_LS_MD_SHIFT;
+-		arc4_inst = (cha_inst & CHA_ID_LS_ARC4_MASK) >>
+-			    CHA_ID_LS_ARC4_SHIFT;
+ 		ccha_inst = 0;
+ 		ptha_inst = 0;
  
- 	if (task->tk_status < 0) {
-@@ -1267,10 +1298,6 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
- 	clear_bit(NFS_IOHDR_RESEND_MDS, &hdr->flags);
- 	switch (err) {
- 	case -NFS4ERR_RESET_TO_PNFS:
--		if (ff_layout_choose_best_ds_for_read(hdr->lseg,
--					hdr->pgio_mirror_idx + 1,
--					&new_idx))
--			goto out_layouterror;
- 		set_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags);
- 		return task->tk_status;
- 	case -NFS4ERR_RESET_TO_MDS:
-@@ -1281,10 +1308,6 @@ static int ff_layout_read_done_cb(struct rpc_task *task,
+@@ -3499,7 +3475,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		md_inst = mdha & CHA_VER_NUM_MASK;
+ 		ccha_inst = rd_reg32(&priv->ctrl->vreg.ccha) & CHA_VER_NUM_MASK;
+ 		ptha_inst = rd_reg32(&priv->ctrl->vreg.ptha) & CHA_VER_NUM_MASK;
+-		arc4_inst = rd_reg32(&priv->ctrl->vreg.afha) & CHA_VER_NUM_MASK;
+ 
+ 		gcm_support = aesa & CHA_VER_MISC_AES_GCM;
  	}
+@@ -3522,10 +3497,6 @@ int caam_algapi_init(struct device *ctrldev)
+ 		if (!aes_inst && (alg_sel == OP_ALG_ALGSEL_AES))
+ 				continue;
  
- 	return 0;
--out_layouterror:
--	ff_layout_read_record_layoutstats_done(task, hdr);
--	ff_layout_send_layouterror(hdr->lseg);
--	hdr->pgio_mirror_idx = new_idx;
- out_eagain:
- 	rpc_restart_call_prepare(task);
- 	return -EAGAIN;
-@@ -1411,10 +1434,9 @@ static void ff_layout_read_release(void *data)
- 	struct nfs_pgio_header *hdr = data;
- 
- 	ff_layout_read_record_layoutstats_done(&hdr->task, hdr);
--	if (test_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags)) {
--		ff_layout_send_layouterror(hdr->lseg);
--		pnfs_read_resend_pnfs(hdr);
--	} else if (test_bit(NFS_IOHDR_RESEND_MDS, &hdr->flags))
-+	if (test_bit(NFS_IOHDR_RESEND_PNFS, &hdr->flags))
-+		ff_layout_resend_pnfs_read(hdr);
-+	else if (test_bit(NFS_IOHDR_RESEND_MDS, &hdr->flags))
- 		ff_layout_reset_read(hdr);
- 	pnfs_generic_rw_release(data);
- }
-diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-index d61dac48dff50..75e988caf3cd7 100644
---- a/fs/nfs/pnfs.c
-+++ b/fs/nfs/pnfs.c
-@@ -2939,7 +2939,8 @@ pnfs_try_to_read_data(struct nfs_pgio_header *hdr,
- }
- 
- /* Resend all requests through pnfs. */
--void pnfs_read_resend_pnfs(struct nfs_pgio_header *hdr)
-+void pnfs_read_resend_pnfs(struct nfs_pgio_header *hdr,
-+			   unsigned int mirror_idx)
- {
- 	struct nfs_pageio_descriptor pgio;
- 
-@@ -2950,6 +2951,7 @@ void pnfs_read_resend_pnfs(struct nfs_pgio_header *hdr)
- 
- 		nfs_pageio_init_read(&pgio, hdr->inode, false,
- 					hdr->completion_ops);
-+		pgio.pg_mirror_idx = mirror_idx;
- 		hdr->task.tk_status = nfs_pageio_resend(&pgio, hdr);
- 	}
- }
-diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
-index 8e0ada581b92e..2661c44c62db4 100644
---- a/fs/nfs/pnfs.h
-+++ b/fs/nfs/pnfs.h
-@@ -311,7 +311,7 @@ int _pnfs_return_layout(struct inode *);
- int pnfs_commit_and_return_layout(struct inode *);
- void pnfs_ld_write_done(struct nfs_pgio_header *);
- void pnfs_ld_read_done(struct nfs_pgio_header *);
--void pnfs_read_resend_pnfs(struct nfs_pgio_header *);
-+void pnfs_read_resend_pnfs(struct nfs_pgio_header *, unsigned int mirror_idx);
- struct pnfs_layout_segment *pnfs_update_layout(struct inode *ino,
- 					       struct nfs_open_context *ctx,
- 					       loff_t pos,
+-		/* Skip ARC4 algorithms if not supported by device */
+-		if (!arc4_inst && alg_sel == OP_ALG_ALGSEL_ARC4)
+-			continue;
+-
+ 		/*
+ 		 * Check support for AES modes not available
+ 		 * on LP devices.
+diff --git a/drivers/crypto/caam/compat.h b/drivers/crypto/caam/compat.h
+index 60e2a54c19f11..c3c22a8de4c00 100644
+--- a/drivers/crypto/caam/compat.h
++++ b/drivers/crypto/caam/compat.h
+@@ -43,7 +43,6 @@
+ #include <crypto/akcipher.h>
+ #include <crypto/scatterwalk.h>
+ #include <crypto/skcipher.h>
+-#include <crypto/arc4.h>
+ #include <crypto/internal/skcipher.h>
+ #include <crypto/internal/hash.h>
+ #include <crypto/internal/rsa.h>
 -- 
 2.25.1
 
