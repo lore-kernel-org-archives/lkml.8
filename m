@@ -2,91 +2,128 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NORMAL_HTTP_TO_IP,NUMERIC_HTTP_ADDR,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC16C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14028C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 465C5206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597943742;
-	bh=uHl9rwumtu2rtih013lnF70L1ucw8l6/5BB+iJYt+6U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L+ychp5sX3YT+6bTKqhti/WXmUJrmbp79BrSK0TU/CkZH/Wd5m2wSTzyPu4t/D5hM
-	 8MvQ+l2PhX2Kpiuiy7vnrHtLp3nhZje/1hvWGXVXNF91ro5HUqL1A6gDtyaduvCwlM
-	 j7WIArMliyuDyRmf9BYaa6Qda2SbqZoQjgOooPOM=
+	by mail.kernel.org (Postfix) with ESMTP id DD534206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:15:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmjpW6tp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbgHTRPX (ORCPT
+        id S1730524AbgHTRPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbgHTRPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:15:05 -0400
-Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7623E208E4;
-        Thu, 20 Aug 2020 17:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597943703;
-        bh=uHl9rwumtu2rtih013lnF70L1ucw8l6/5BB+iJYt+6U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T7cEqDiMm+cN7TjgJG5SkIhf1Loo+IeVMmngS+zPnVPMf9ef31TtQbGTXrkeeJ0L0
-         b0GudN+PV7zktBqe4YHYycKROj+Qidfnd8MLoqcG0y+eZqb4FhMTf0DjAQM+ui36Bh
-         WnXYpM1GXgAcnS5XzjEViczd1TXeuxuHMKD+5lkg=
-Date:   Thu, 20 Aug 2020 18:14:30 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, joel@jms.id.au,
-        bradleyb@fuzziesquirrel.com, robh+dt@kernel.org, arnd@arndb.de
-Subject: Re: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted
- property
-Message-ID: <20200820171430.GH5854@sirena.org.uk>
-References: <20200820170228.42053-1-eajames@linux.ibm.com>
- <20200820170228.42053-5-eajames@linux.ibm.com>
+        Thu, 20 Aug 2020 13:15:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44382 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730203AbgHTRPh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:15:37 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DFEC061388
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:15:34 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so1730143qtg.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=424up9fRXsuplUqex8JuKJ4P67ivI7g/11qg3X2brrU=;
+        b=JmjpW6tpJxpmlmER/V+lEb7+vVPrpClcfvWoeMKntJNV5zlykvfG8b7O71gh1eN+fv
+         G5Y9NdDehL3kLIhehElg/dP5K4FuQL9G8vxrUSz9pM2CG2VF1/IcKqMtA/FC+ET5ktWc
+         lijIlMoeqfAsxiXjbaqDyQRyk50axCMAd8cRBCkF9zTM7BbrTrJJUkiSDV7u+/wWfWD6
+         4qzeGQWv7VjDx7F25x4KvbF8zeNIa/JrsBJgVy8V0dMgeBic7a/z+Lj78KfPcBT3byCr
+         OzhJE3D4NNwxzRrXapKNmrKzc4AtbCadPQuwMzYo/iDOZZQjVcHhT4bpMmXf/cQYCVyT
+         1i0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=424up9fRXsuplUqex8JuKJ4P67ivI7g/11qg3X2brrU=;
+        b=FA9aEL8UWRNF2gwfD6ZVxVz3GUkZV0Yczp90WYxTVMzdm1ayJ+10baKDPBRr8oQt+d
+         ZqEu1VHF607cb8hRmwKBcGDj7lsb/VBH7npIA23+/MIVpfmBQLmZqv4b2zsbo2RREBVO
+         H9nRUAILRKVJfUsSYFBiS7fJww/pl58fMdsX6OLRDHsfAyYM142CVoQX4VabxhS8Jnz+
+         sp1cPJnlaeTmmpHi6Dow1JNRIM3Md3dsWKsApU5k/iXtjBh6fqkCRmETupU9lEWV5krX
+         6an1UsYTem4/JVUm/zm3fD2sVs/8ejFcVIprlkLKVGY2lZi8mlMFuesDibhhp9jFCwBO
+         57Hw==
+X-Gm-Message-State: AOAM53285G6I6zuOSOedCV+UQNsXxulKLZyJo3RZYwhiTZll7CVdiE5S
+        nTudRGHr51glJsULD7Zwz6mubbUouc12jC6M9ZrKRw==
+X-Google-Smtp-Source: ABdhPJzYoJN1dKfspxwMxJB4tZMPYOymu0BBSs/+T5H0coi/llS74fnfsvlE1ZRo/WWhYpivmjqX0Il2hYKtx6/uPBY=
+X-Received: by 2002:ac8:7609:: with SMTP id t9mr3599622qtq.158.1597943727622;
+ Thu, 20 Aug 2020 10:15:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3VRmKSg17yJg2MZg"
-Content-Disposition: inline
-In-Reply-To: <20200820170228.42053-5-eajames@linux.ibm.com>
-X-Cookie: Dead? No excuse for laying off work.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <000000000000568fc005ad3b57c3@google.com> <CACT4Y+bxvHp9gq_OEBAYdMTsm9vxw3CuviuDpxHCXcZHv_A0nw@mail.gmail.com>
+ <CAEf4BzYHJgAtO2+6R70MYKQmXjiGy8OVgojNpvEPJ+FQb_DnKg@mail.gmail.com>
+In-Reply-To: <CAEf4BzYHJgAtO2+6R70MYKQmXjiGy8OVgojNpvEPJ+FQb_DnKg@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Thu, 20 Aug 2020 19:15:16 +0200
+Message-ID: <CACT4Y+aYWgq853nPn3EoW4A0TU9pTJb+vwWHwTiguYy_T3K5rw@mail.gmail.com>
+Subject: Re: unregister_netdevice: waiting for DEV to become free (4)
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     syzbot <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 20, 2020 at 7:07 PM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+> > On Wed, Aug 19, 2020 at 3:54 PM syzbot
+> > <syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following issue on:
+> > >
+> > > HEAD commit:    18445bf4 Merge tag 'spi-fix-v5.9-rc1' of git://git.kernel...
+> > > git tree:       upstream
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1710d97a900000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=bb68b9e8a8cc842f
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=df400f2f24a1677cd7e0
+> > > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15859986900000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1228fea1900000
+> > >
+> > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > Reported-by: syzbot+df400f2f24a1677cd7e0@syzkaller.appspotmail.com
+> > >
+> > > unregister_netdevice: waiting for lo to become free. Usage count = 1
+> >
+> > Based on the repro, it looks bpf/bpf link related:
+> >
+> > syz_emit_ethernet(0x86, &(0x7f0000000000)={@local, @empty=[0x2],
+> > @void, {@ipv4={0x800, @udp={{0x5, 0x4, 0x0, 0x0, 0x78, 0x0, 0x0, 0x0,
+> > 0x11, 0x0, @empty, @empty}, {0x0, 0x1b59, 0x64, 0x0,
+> > @wg=@response={0x5, 0x0, 0x0, "020000010865390406030500000000010900",
+> > "9384bbeb3018ad591b661fe808b21b77",
+> > {"694c875dfb1be5d2a0057a62022a1564",
+> > "a329d3a73b8268129e5fa4316a5d8c69"}}}}}}}, 0x0)
+> > mkdirat(0xffffffffffffff9c, &(0x7f0000000000)='./file0\x00', 0x0)
+> > mount(0x0, &(0x7f0000000080)='./file0\x00',
+> > &(0x7f0000000040)='cgroup2\x00', 0x0, 0x0)
+> > r0 = openat$cgroup_root(0xffffffffffffff9c, &(0x7f0000000000), 0x200002, 0x0)
+> > r1 = bpf$PROG_LOAD(0x5, &(0x7f0000000080)={0x9, 0x4,
+> > &(0x7f0000000000)=@framed={{}, [@alu={0x8000000201a7f19, 0x0, 0x6,
+> > 0x2, 0x1}]}, &(0x7f0000000100)='GPL\x00', 0x0, 0x0, 0x0, 0x0, 0x0, [],
+> > 0x0, 0x0, 0xffffffffffffffff, 0x8, 0x0, 0x0, 0x10, 0x0}, 0x70)
+> > bpf$BPF_LINK_CREATE(0x1c, &(0x7f0000000100)={r1, r0, 0x2}, 0x10)
+> >
+>
+> The only place where BPF link-related code is bumping refcount for
+> net_device is in bpf_xdp_link_attach(), but both success and failure
+> code paths always do dev_put() in the end. bpf_link itself has a
+> pointer on net_device, but it's protected by rtnl_lock() only, no
+> refcnt associated with it. So I don't see how bpf_link can cause this.
+> I also couldn't reproduce this locally, using the provided C
+> reproducer.
 
---3VRmKSg17yJg2MZg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Aug 20, 2020 at 12:02:25PM -0500, Eddie James wrote:
-> Add documentation for the "fsi2spi,restricted" property which indicates
-> a controller shouldn't sequence loops and therefore has a smaller
-> transfer size.
-
-In what situation might someone set this?  It sounds like a
-configuration option rather than a description of the hardware.
-
---3VRmKSg17yJg2MZg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8+r3UACgkQJNaLcl1U
-h9Aq3wf/SqHPeYRrE3/ONd0Rh9Ufbay8ktjHb5kTNGZTI498NUBHdxCLAkaWuc2m
-j+xGVCPGzSrjMA88WwQkzqiDA+KSO0oSzmCh7Q3U6sY24upbJVIWBltKfMJ8DOd6
-A5qWIrI+m63MY83W1qQ7mO0dtd5U6b2cHwWKX8DMMdo3gqTI4FrkABHAdyDb3mdu
-9WEdsck2qWf23Z3SQTxBlTdCmTeoA2Pm6vcj7hOuJ3nM6mO0d6eCFATIFGPL5Eai
-7zLRyvoUt94GM/sSddLCwSwMfO1RtIxHPjX4+dJSMSEuGmcgCQY+nd4yO4QqcDjl
-MZ9zDEDQkkbRoZWV0Fq6LVqi3NTvJg==
-=lis6
------END PGP SIGNATURE-----
-
---3VRmKSg17yJg2MZg--
+I was able to reproduce this in qemu the first time.
