@@ -2,254 +2,141 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019FBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F362C433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4C6D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1255E22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:48:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597924100;
+	bh=BQTI3+tiI15DcT22dfSVE6yp8o122jIZ19LZBh6aKMw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X6TXtAXrEkAsez8GCTsHI7OJElBUkM7fjQEWLkeJSFCTvZ99hTzfOw5DkX8e6qyCL
+	 lk0M6wzf69NyF7ICtgj1N2ebJns/UvJuZxpUii8geqVl3oaYUND064eL40akMtEHW/
+	 aeowpJXTUgp+4zNKmY73YDGeIFNhC2jW56cRyfs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgHTLr1 (ORCPT
+        id S1730261AbgHTKDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:47:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9793 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729640AbgHTLqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:46:54 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D5DE7A295A6771F01718;
-        Thu, 20 Aug 2020 19:46:44 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
- 19:46:36 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <darrick.wong@oracle.com>, <cmaiolino@redhat.com>,
-        <dchinner@redhat.com>, <bfoster@redhat.com>,
-        <chandanrlinux@gmail.com>, <sandeen@redhat.com>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH] xfs: Convert to use the preferred fallthrough macro
-Date:   Thu, 20 Aug 2020 07:45:31 -0400
-Message-ID: <20200820114531.47465-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Thu, 20 Aug 2020 06:03:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730490AbgHTKBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5D8E22BED;
+        Thu, 20 Aug 2020 10:01:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917707;
+        bh=BQTI3+tiI15DcT22dfSVE6yp8o122jIZ19LZBh6aKMw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZVEvLjZRGVx3P4jPKSywdGW2YNiCD5bzgbQBiiD4CZjiz1uVa3uDv6F+pK4Bx1rYq
+         qJDJUrRratM0O+eaw2+3ec+wK8S8YLjwfxmp8WeROO37xn8FVGx2C4Bt0kvvwOIfZ3
+         QNMdjydmVpbmfta6jnmOHarKS/nadMyTT3P0P7MM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 127/212] mwifiex: Prevent memory corruption handling keys
+Date:   Thu, 20 Aug 2020 11:21:40 +0200
+Message-Id: <20200820091608.764536979@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the uses of fallthrough comments to fallthrough macro. Please see
-commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
-keyword for switch/case use") for detail.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+[ Upstream commit e18696786548244914f36ec3c46ac99c53df99c3 ]
+
+The length of the key comes from the network and it's a 16 bit number.  It
+needs to be capped to prevent a buffer overflow.
+
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200708115857.GA13729@mwanda
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_ag_resv.c  | 4 ++--
- fs/xfs/libxfs/xfs_da_btree.c | 2 +-
- fs/xfs/scrub/bmap.c          | 2 +-
- fs/xfs/scrub/btree.c         | 2 +-
- fs/xfs/scrub/common.c        | 6 +++---
- fs/xfs/scrub/dabtree.c       | 2 +-
- fs/xfs/scrub/repair.c        | 2 +-
- fs/xfs/xfs_bmap_util.c       | 2 +-
- fs/xfs/xfs_file.c            | 2 +-
- fs/xfs/xfs_fsmap.c           | 2 +-
- fs/xfs/xfs_ioctl.c           | 2 +-
- fs/xfs/xfs_trans_buf.c       | 2 +-
- 12 files changed, 15 insertions(+), 15 deletions(-)
+ .../wireless/marvell/mwifiex/sta_cmdresp.c    | 22 +++++++++++++------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-diff --git a/fs/xfs/libxfs/xfs_ag_resv.c b/fs/xfs/libxfs/xfs_ag_resv.c
-index fdfe6dc0d307..0b061a027e4e 100644
---- a/fs/xfs/libxfs/xfs_ag_resv.c
-+++ b/fs/xfs/libxfs/xfs_ag_resv.c
-@@ -338,7 +338,7 @@ xfs_ag_resv_alloc_extent(
- 		break;
- 	default:
- 		ASSERT(0);
--		/* fall through */
-+		fallthrough;
- 	case XFS_AG_RESV_NONE:
- 		field = args->wasdel ? XFS_TRANS_SB_RES_FDBLOCKS :
- 				       XFS_TRANS_SB_FDBLOCKS;
-@@ -380,7 +380,7 @@ xfs_ag_resv_free_extent(
- 		break;
- 	default:
- 		ASSERT(0);
--		/* fall through */
-+		fallthrough;
- 	case XFS_AG_RESV_NONE:
- 		xfs_trans_mod_sb(tp, XFS_TRANS_SB_FDBLOCKS, (int64_t)len);
- 		return;
-diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-index e46bc03365db..5a13bfe0ebbf 100644
---- a/fs/xfs/libxfs/xfs_da_btree.c
-+++ b/fs/xfs/libxfs/xfs_da_btree.c
-@@ -282,7 +282,7 @@ xfs_da3_node_read_verify(
- 						__this_address);
- 				break;
- 			}
--			/* fall through */
-+			fallthrough;
- 		case XFS_DA_NODE_MAGIC:
- 			fa = xfs_da3_node_verify(bp);
- 			if (fa)
-diff --git a/fs/xfs/scrub/bmap.c b/fs/xfs/scrub/bmap.c
-index 955302e7cdde..6abd469d49d2 100644
---- a/fs/xfs/scrub/bmap.c
-+++ b/fs/xfs/scrub/bmap.c
-@@ -270,7 +270,7 @@ xchk_bmap_iextent_xref(
- 	case XFS_DATA_FORK:
- 		if (xfs_is_reflink_inode(info->sc->ip))
- 			break;
--		/* fall through */
-+		fallthrough;
- 	case XFS_ATTR_FORK:
- 		xchk_xref_is_not_shared(info->sc, agbno,
- 				irec->br_blockcount);
-diff --git a/fs/xfs/scrub/btree.c b/fs/xfs/scrub/btree.c
-index f52a7b8256f9..990a379fc322 100644
---- a/fs/xfs/scrub/btree.c
-+++ b/fs/xfs/scrub/btree.c
-@@ -43,7 +43,7 @@ __xchk_btree_process_error(
- 		/* Note the badness but don't abort. */
- 		sc->sm->sm_flags |= errflag;
- 		*error = 0;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		if (cur->bc_flags & XFS_BTREE_ROOT_IN_INODE)
- 			trace_xchk_ifork_btree_op_error(sc, cur, level,
-diff --git a/fs/xfs/scrub/common.c b/fs/xfs/scrub/common.c
-index 18876056e5e0..63f13c8ed8c7 100644
---- a/fs/xfs/scrub/common.c
-+++ b/fs/xfs/scrub/common.c
-@@ -81,7 +81,7 @@ __xchk_process_error(
- 		/* Note the badness but don't abort. */
- 		sc->sm->sm_flags |= errflag;
- 		*error = 0;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		trace_xchk_op_error(sc, agno, bno, *error,
- 				ret_ip);
-@@ -134,7 +134,7 @@ __xchk_fblock_process_error(
- 		/* Note the badness but don't abort. */
- 		sc->sm->sm_flags |= errflag;
- 		*error = 0;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		trace_xchk_file_op_error(sc, whichfork, offset, *error,
- 				ret_ip);
-@@ -713,7 +713,7 @@ xchk_get_inode(
- 		if (error)
- 			return -ENOENT;
- 		error = -EFSCORRUPTED;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		trace_xchk_op_error(sc,
- 				XFS_INO_TO_AGNO(mp, sc->sm->sm_ino),
-diff --git a/fs/xfs/scrub/dabtree.c b/fs/xfs/scrub/dabtree.c
-index e56786f0a13c..2b3fb0b37e18 100644
---- a/fs/xfs/scrub/dabtree.c
-+++ b/fs/xfs/scrub/dabtree.c
-@@ -47,7 +47,7 @@ xchk_da_process_error(
- 		/* Note the badness but don't abort. */
- 		sc->sm->sm_flags |= XFS_SCRUB_OFLAG_CORRUPT;
- 		*error = 0;
--		/* fall through */
-+		fallthrough;
- 	default:
- 		trace_xchk_file_op_error(sc, ds->dargs.whichfork,
- 				xfs_dir2_da_to_db(ds->dargs.geo,
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index 25e86c71e7b9..c814b18efba9 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -944,7 +944,7 @@ xrep_ino_dqattach(
- 			xrep_force_quotacheck(sc, XFS_DQTYPE_GROUP);
- 		if (XFS_IS_PQUOTA_ON(sc->mp) && !sc->ip->i_pdquot)
- 			xrep_force_quotacheck(sc, XFS_DQTYPE_PROJ);
--		/* fall through */
-+		fallthrough;
- 	case -ESRCH:
- 		error = 0;
- 		break;
-diff --git a/fs/xfs/xfs_bmap_util.c b/fs/xfs/xfs_bmap_util.c
-index 73cafc843cd7..6045cc20b0fb 100644
---- a/fs/xfs/xfs_bmap_util.c
-+++ b/fs/xfs/xfs_bmap_util.c
-@@ -244,7 +244,7 @@ xfs_bmap_count_blocks(
- 		 */
- 		*count += btblocks - 1;
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+index 8548027abf71b..1e26936c0d727 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmdresp.c
+@@ -586,6 +586,11 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+ {
+ 	struct host_cmd_ds_802_11_key_material *key =
+ 						&resp->params.key_material;
++	int len;
++
++	len = le16_to_cpu(key->key_param_set.key_len);
++	if (len > sizeof(key->key_param_set.key))
++		return -EINVAL;
  
--		/* fall through */
-+		fallthrough;
- 	case XFS_DINODE_FMT_EXTENTS:
- 		*nextents = xfs_bmap_count_leaves(ifp, count);
- 		break;
-diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
-index c31cd3be9fb2..976306724093 100644
---- a/fs/xfs/xfs_file.c
-+++ b/fs/xfs/xfs_file.c
-@@ -772,7 +772,7 @@ xfs_break_layouts(
- 			error = xfs_break_dax_layouts(inode, &retry);
- 			if (error || retry)
- 				break;
--			/* fall through */
-+			fallthrough;
- 		case BREAK_WRITE:
- 			error = xfs_break_leased_layouts(inode, iolock, &retry);
- 			break;
-diff --git a/fs/xfs/xfs_fsmap.c b/fs/xfs/xfs_fsmap.c
-index 4eebcec4aae6..c334550aeea7 100644
---- a/fs/xfs/xfs_fsmap.c
-+++ b/fs/xfs/xfs_fsmap.c
-@@ -100,7 +100,7 @@ xfs_fsmap_owner_to_rmap(
- 		dest->rm_owner = XFS_RMAP_OWN_COW;
- 		break;
- 	case XFS_FMR_OWN_DEFECTIVE:	/* not implemented */
--		/* fall through */
-+		fallthrough;
- 	default:
- 		return -EINVAL;
- 	}
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 6f22a66777cd..85d6631f7e99 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -557,7 +557,7 @@ xfs_ioc_attrmulti_one(
- 	case ATTR_OP_REMOVE:
- 		value = NULL;
- 		*len = 0;
--		/* fall through */
-+		fallthrough;
- 	case ATTR_OP_SET:
- 		error = mnt_want_write_file(parfilp);
- 		if (error)
-diff --git a/fs/xfs/xfs_trans_buf.c b/fs/xfs/xfs_trans_buf.c
-index 11cd666cd99a..86ba71580ffd 100644
---- a/fs/xfs/xfs_trans_buf.c
-+++ b/fs/xfs/xfs_trans_buf.c
-@@ -310,7 +310,7 @@ xfs_trans_read_buf_map(
- 	default:
- 		if (tp && (tp->t_flags & XFS_TRANS_DIRTY))
- 			xfs_force_shutdown(tp->t_mountp, SHUTDOWN_META_IO_ERROR);
--		/* fall through */
-+		fallthrough;
- 	case -ENOMEM:
- 	case -EAGAIN:
- 		return error;
+ 	if (le16_to_cpu(key->action) == HostCmd_ACT_GEN_SET) {
+ 		if ((le16_to_cpu(key->key_param_set.key_info) & KEY_MCAST)) {
+@@ -599,9 +604,8 @@ static int mwifiex_ret_802_11_key_material_v1(struct mwifiex_private *priv,
+ 
+ 	memset(priv->aes_key.key_param_set.key, 0,
+ 	       sizeof(key->key_param_set.key));
+-	priv->aes_key.key_param_set.key_len = key->key_param_set.key_len;
+-	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key,
+-	       le16_to_cpu(priv->aes_key.key_param_set.key_len));
++	priv->aes_key.key_param_set.key_len = cpu_to_le16(len);
++	memcpy(priv->aes_key.key_param_set.key, key->key_param_set.key, len);
+ 
+ 	return 0;
+ }
+@@ -616,9 +620,14 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
+ 					      struct host_cmd_ds_command *resp)
+ {
+ 	struct host_cmd_ds_802_11_key_material_v2 *key_v2;
+-	__le16 len;
++	int len;
+ 
+ 	key_v2 = &resp->params.key_material_v2;
++
++	len = le16_to_cpu(key_v2->key_param_set.key_params.aes.key_len);
++	if (len > WLAN_KEY_LEN_CCMP)
++		return -EINVAL;
++
+ 	if (le16_to_cpu(key_v2->action) == HostCmd_ACT_GEN_SET) {
+ 		if ((le16_to_cpu(key_v2->key_param_set.key_info) & KEY_MCAST)) {
+ 			mwifiex_dbg(priv->adapter, INFO, "info: key: GTK is set\n");
+@@ -634,10 +643,9 @@ static int mwifiex_ret_802_11_key_material_v2(struct mwifiex_private *priv,
+ 	memset(priv->aes_key_v2.key_param_set.key_params.aes.key, 0,
+ 	       WLAN_KEY_LEN_CCMP);
+ 	priv->aes_key_v2.key_param_set.key_params.aes.key_len =
+-				key_v2->key_param_set.key_params.aes.key_len;
+-	len = priv->aes_key_v2.key_param_set.key_params.aes.key_len;
++				cpu_to_le16(len);
+ 	memcpy(priv->aes_key_v2.key_param_set.key_params.aes.key,
+-	       key_v2->key_param_set.key_params.aes.key, le16_to_cpu(len));
++	       key_v2->key_param_set.key_params.aes.key, len);
+ 
+ 	return 0;
+ }
 -- 
-2.19.1
+2.25.1
+
+
 
