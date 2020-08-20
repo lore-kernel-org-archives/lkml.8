@@ -2,208 +2,148 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 113D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2087BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D89432072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EBhq4gqu"
+	by mail.kernel.org (Postfix) with ESMTP id EEB842072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597921525;
+	bh=0HD+PdibKx0WpBI1QWnfb7b763tjZrSmw3YiJDUjSDE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VtN6NpKw/5BvHM/Begf6H+MWhEGHSXr/X6BnTEYmFnIcGhcZzLue6/S2aG6BOjjz4
+	 2cW6fYD1TrGUE3Vqn0wli52Qp6cXlDs/R5lhpm+fjEfko7eFexv+r+z60E6jSIlbdW
+	 HQYYiV4+G1lB2Mz+TRzFZjx/9A8nnGayx1xpDXZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgHTLFG (ORCPT
+        id S1729392AbgHTLFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:05:06 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:42628 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731097AbgHTKMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:55 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200820101252euoutp020cf5a73ddbb1153ee0f9bb4b580e6736~s8ksYweFh1616116161euoutp02l;
-        Thu, 20 Aug 2020 10:12:52 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200820101252euoutp020cf5a73ddbb1153ee0f9bb4b580e6736~s8ksYweFh1616116161euoutp02l
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1597918372;
-        bh=Eca9rhf9QUv2Wht7tEgouWJ5QtgOlNZgYftYPW/BMps=;
+        Thu, 20 Aug 2020 07:05:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729964AbgHTKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A751206DA;
+        Thu, 20 Aug 2020 10:12:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918345;
+        bh=0HD+PdibKx0WpBI1QWnfb7b763tjZrSmw3YiJDUjSDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EBhq4gquN+cSmsUrAfubyFcN1m1/UszRxUyTEwCkCFPFhSn80lMpJokAzebv7CMrd
-         14X4KpF7m9tU6K5PMQZ7cWYKQcHw8bgF09IEDM9eZh6qX9PrlxeFENuDqnXUqsFPE3
-         Ecxc+c9U/uwjNc4fAmKng33FXsxt5jsG4wtZEUq4=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200820101251eucas1p1fa32323daa091eab92f59f36b54b3af2~s8kr8mKWy2913229132eucas1p1U;
-        Thu, 20 Aug 2020 10:12:51 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id C8.53.05997.3AC4E3F5; Thu, 20
-        Aug 2020 11:12:51 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200820101251eucas1p237a794cc11f44c709c0ccdfef766702c~s8krpBSbM0965809658eucas1p2L;
-        Thu, 20 Aug 2020 10:12:51 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200820101251eusmtrp11c30144971bf8177c7a1ac34d73fe7af~s8kroUCtj0130701307eusmtrp1u;
-        Thu, 20 Aug 2020 10:12:51 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-9c-5f3e4ca35d51
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9B.E2.06017.3AC4E3F5; Thu, 20
-        Aug 2020 11:12:51 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200820101251eusmtip1654a532dfde40f6aee5232a6cc38cac7~s8krdzWLi0662106621eusmtip1f;
-        Thu, 20 Aug 2020 10:12:51 +0000 (GMT)
-From:   Lukasz Stelmach <l.stelmach@samsung.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi@etezian.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        m.szyprowski@samsung.com, b.zolnierkie@samsung.com
-Subject: Re: [PATCH 1/8] spi: spi-s3c64xx: swap s3c64xx_spi_set_cs() and
- s3c64xx_enable_datapath()
-Date:   Thu, 20 Aug 2020 12:12:40 +0200
-In-Reply-To: <20200819191227.GG5441@sirena.org.uk> (Mark Brown's message of
-        "Wed, 19 Aug 2020 20:12:27 +0100")
-Message-ID: <dleftjh7sxzkvb.fsf%l.stelmach@samsung.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        b=KphHcdfxT+4eYiqxXk27dw+tpnP7MP1cI3ofe5Whb4kKtTYxQdOqDE9xDRjR/o0mp
+         HaZwpVSsMzm2gT8eO2Z0TXOmlbgWifvPvmcmyhovdH3LNwYAzh8gWaDmthfbDRSYOT
+         v9p4eYIgRWyA3BhcJDLg+5WJm56ZTDD5jgygND9k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Markus T Metzger <markus.t.metzger@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Shankar <ravi.v.shankar@intel.com>,
+        Rik van Riel <riel@surriel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>
+Subject: [PATCH 4.14 137/228] x86/fsgsbase/64: Fix NULL deref in 86_fsgsbase_read_task
+Date:   Thu, 20 Aug 2020 11:21:52 +0200
+Message-Id: <20200820091614.435538879@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-        protocol="application/pgp-signature"
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRju2zk7Oxstvk3Dt1US64IZqd3sdFEqKhZkLPqRGKVLD2u1TdlR
-        y4hMTFHTLkoXrfAyazLdpmuYSBmslpXkxC5qWeKFzJlEN7KIynkW9O/5ntv7vvDRhLxLqKB1
-        xnTWZNTolZSEbH74w7vcvDM2McpuXsKYJ0cFTNMVh5C5ODhCMeeGxwnG620UMc7hl0LmWes1
-        irnibRMwOZ/6RIztwRvRJomqp/YzoXJaCynVrdps1VmXFam+OEPVwgTJxhRWr8tkTZGxSZJD
-        eZUuMq1l/rGfz+zkKeSAIiSmAa+G5wVniCIkoeW4DoH5XaOIf3xF0Jb3hOQfXxB86LNT/yJn
-        WjopXrAgyL/YHsiPIsgdqJxSaJrCEWCzxfsDwXghvPh+d7qJwA0CuDpoQ34hCKfAeGuxwO8n
-        8WL4nKP302KcBr7CbpEfS/FaGOl5TPrxbLwOXO8HArwMHpePTPMENkC59wPy9wN+JYKRqmLE
-        b7oV3BMWAY+DwNfuEvF4HnSUFZP+uYCzoaw0ms8WI2i+Nknyng3Q3/kzcPFmGH59neL9s6B3
-        QsbPnQWlzZcJnpZCQb6cdy8C+7k7gRYFlPjqAtuooM9VP72BHOchyPOEnEcLKv67puK/ayqm
-        Wgm8FBytkTy9DG5WjxM8jgG7/SNZhYRWFMJmcAYty600skcjOI2ByzBqI5JTDU409bc6frd/
-        bUGtvw66EaaRcqZUrYxJlAs1mVyWwY0WTTUNNdZ3IQVpTDWyymDplqcdB+TSFE3WcdaUmmjK
-        0LOcG82lSWWIdFXN2H451mrS2SMsm8aa/qkCWqw4hbTlKy/Jer9te7Xvfu+N/nvdkYdPR+kn
-        ky2lesXCHdEycXXDmO/RwJyhBsWQ7uia7XdPdr3dlkzV3RbYdm/KVq9/oDrRs1e1XFfaPWNy
-        oibLFR7mibfkcmVhzY6m+793VcXJfJQ4ocAcVPXngmeMtdalNqnjToTtCXWVzJ0Zk+RRK0nu
-        kGZFOGHiNH8BM+uEfGMDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrGIsWRmVeSWpSXmKPExsVy+t/xu7qLfeziDXbeFLJY/OM5k8XGGetZ
-        LaY+fMJm0f/4NbPF+fMb2C02Pb7GanF51xw2ixnn9zFZNH68yW6x9shddgcuj+tLPjF7bFrV
-        yeaxeUm9R9+WVYwenzfJBbBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp
-        29mkpOZklqUW6dsl6GW0zt/CUrBDtuLX5XUsDYzrJboYOTkkBEwkunecY+ti5OIQEljKKNG4
-        YgaQwwGUkJJYOTcdokZY4s+1Lqiap4wSHdPPsYLUsAnoSaxdGwFSIyKgLHH1+14WEJtZYCmT
-        xPu7riC2sECSxKUDl1hAyoUEDCVW/dADMVkEVCU+NeaAVHAKFEi86rzEDmLzCphLPLl+EmyK
-        qIClxJYX96HighInZz6Bmp4t8XX1c+YJjAKzkKRmIUnNAtrALKApsX6XPkRYW2LZwtfMELat
-        xLp171kWMLKuYhRJLS3OTc8tNtIrTswtLs1L10vOz93ECIy3bcd+btnB2PUu+BCjAAejEg9v
-        gJJtvBBrYllxZe4hRhWgMY82rL7AKMWSl5+XqiTC63T2dJwQb0piZVVqUX58UWlOavEhRlOg
-        NycyS4km5wNTRF5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBkbh
-        R+uP/Zz5Odsyad7k7IMxX2YITmmanbvO99MaWVkNztBVB3s0L6daN6wsZyhuPG9ctNvbZIPN
-        GpWq/8Xb+e8YGHNvYT/re8lnRySnYH2NW/+NB2WXrDInbAue22k5U3jnjDN6n6YZ6nPWzRe4
-        kHdy+gxnKffdx3xurL57aEsXX7PS+7VN782UWIozEg21mIuKEwGT+LDR2QIAAA==
-X-CMS-MailID: 20200820101251eucas1p237a794cc11f44c709c0ccdfef766702c
-X-Msg-Generator: CA
-X-RootMTR: 20200820101251eucas1p237a794cc11f44c709c0ccdfef766702c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200820101251eucas1p237a794cc11f44c709c0ccdfef766702c
-References: <20200819191227.GG5441@sirena.org.uk>
-        <CGME20200820101251eucas1p237a794cc11f44c709c0ccdfef766702c@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Eric Dumazet <edumazet@google.com>
 
-It was <2020-08-19 =C5=9Bro 20:12>, when Mark Brown wrote:
-> On Wed, Aug 19, 2020 at 04:01:52PM +0200, Lukasz Stelmach wrote:
->> It was <2020-08-19 =C5=9Bro 14:16>, when Mark Brown wrote:
->>> On Wed, Aug 19, 2020 at 02:58:22PM +0200, Krzysztof Kozlowski wrote:
->>>> On Wed, Aug 19, 2020 at 02:51:27PM +0200, Lukasz Stelmach wrote:
->>>>
->>>>>     0732a9d2a155 spi/s3c64xx: Use core message handling
->>>>
->>>> Then describe at least this... maybe Mark knows why he brough back old
->>>> code after refactoring?
->>>>
->>> I'm not sure what's being referred to as being lost in the second commit
->>> TBH.
->
->> Order of enable_cs() and enable_datapath(). The order 0f5a sets makes
->> (for a reaseon I don't know) my devices work. In the latter commit,
->> which rewrites "everything", enable_datapath() is called before what
->> later (in aa4964c4eb3e) became s3c64xx_spi_set_cs().
->
-> That's doesn't look like what the changes do.  Note that the enable_cs()
-> function that got moved in 0f5a751ace250097 (spi/s3c64xx: Enable GPIO
-> /CS prior to starting hardware) does not touch the chip registers at
-> all, it only manipulates GPIOs, code that was subsequently factored out
-> into the core.
+[ Upstream commit 8ab49526b53d3172d1d8dd03a75c7d1f5bd21239 ]
 
-Indeed, you are 100% right. Anyway that commit has inspired me after
-days of trying different stuff to switch enable_datapath() and set_cs()
-and it worked. Even if without any technical connection with your commit.
+syzbot found its way in 86_fsgsbase_read_task() and triggered this oops:
 
-> The write to the _SLAVE_SEL register has so far as I can see always
-> been after enable_datapath() right back to the initial commit, it just
-> got made more complex for the Exynos7 controller (I'm guessing your
-> new one might be an ancestor of that?) in bf77cba95f8c06 (spi:
-> s3c64xx: add support for exynos7 SPI controller) and then factored out
-> in the commit you mention above.
->
-> Are you sure your new ordering works for all controller revisions?
+   KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+   CPU: 0 PID: 6866 Comm: syz-executor262 Not tainted 5.8.0-syzkaller #0
+   RIP: 0010:x86_fsgsbase_read_task+0x16d/0x310 arch/x86/kernel/process_64.c:393
+   Call Trace:
+     putreg32+0x3ab/0x530 arch/x86/kernel/ptrace.c:876
+     genregs32_set arch/x86/kernel/ptrace.c:1026 [inline]
+     genregs32_set+0xa4/0x100 arch/x86/kernel/ptrace.c:1006
+     copy_regset_from_user include/linux/regset.h:326 [inline]
+     ia32_arch_ptrace arch/x86/kernel/ptrace.c:1061 [inline]
+     compat_arch_ptrace+0x36c/0xd90 arch/x86/kernel/ptrace.c:1198
+     __do_compat_sys_ptrace kernel/ptrace.c:1420 [inline]
+     __se_compat_sys_ptrace kernel/ptrace.c:1389 [inline]
+     __ia32_compat_sys_ptrace+0x220/0x2f0 kernel/ptrace.c:1389
+     do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+     __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+     do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+     entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
 
-Not 100%, but we've tested it on several differnt SoCs, and haven't seen
-any problems.
+This can happen if ptrace() or sigreturn() pokes an LDT selector into FS
+or GS for a task with no LDT and something tries to read the base before
+a return to usermode notices the bad selector and fixes it.
 
-> According to the comment the _set_cs() is what's actually kicking off
-> the transfer
+The fix is to make sure ldt pointer is not NULL.
 
-I don't think so. Indeed, without the CS_AUTO quirk CS is pulled down
-(the SPI device is selected) but for the transfer to start the SPI clock
-needs to start ticking.
+Fixes: 07e1d88adaae ("x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately")
+Co-developed-by: Jann Horn <jannh@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+Cc: Chang S. Bae <chang.seok.bae@intel.com>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Markus T Metzger <markus.t.metzger@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ravi Shankar <ravi.v.shankar@intel.com>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/kernel/ptrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Please include human readable descriptions of things like commits and
-> issues being discussed in e-mail in your mails, this makes them much
-> easier for humans to read especially when they have no internet access.
+diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
+index 734549492a18b..dc4d27000aa35 100644
+--- a/arch/x86/kernel/ptrace.c
++++ b/arch/x86/kernel/ptrace.c
+@@ -374,7 +374,7 @@ static unsigned long task_seg_base(struct task_struct *task,
+ 		 */
+ 		mutex_lock(&task->mm->context.lock);
+ 		ldt = task->mm->context.ldt;
+-		if (unlikely(idx >= ldt->nr_entries))
++		if (unlikely(!ldt || idx >= ldt->nr_entries))
+ 			base = 0;
+ 		else
+ 			base = get_desc_base(ldt->entries + idx);
+-- 
+2.25.1
 
-I will.
 
->>> I don't know that I ever actually used a system that used the native
->>> chip select as the actual chip select.  Perhaps some quirk was
->>> introduced where the chip select signal does something?
->>>
->>> The commit is also lacking a description of what the issues that are
->>> being fixed are.
->>
->> On Exynos3250 DMA transfers from SPI longer than 512 fail.
->
-> Could you expand on "fail" please?
 
-Stopping a transfer and hitting timeout with a few bytes (<20) left
-pending in the SPI controller.
-
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl8+TJgACgkQsK4enJil
-gBCfDgf+Nsy7Obq4x9IRVYhgZCzbEpbVDv10JUhPSq/wNVnSvTj4QcAKQXE2MTcV
-1fg5actyzuu912NigSdtrYgMexq/xIEDZVZ0Fv9uKbHeA/K9Q4ytJJD81rfy8B5W
-pC8shdxshfzqxoUdTO4wqW7WmQy/IFQwXaT6L0xDNTKpUWTHcFi7Oa78T740WwGx
-tLf69SfFsEiKDFTPV3MrBawaV8t5FuuyluYWHDlSjHlXquqwrnpwrxSrTyjdq0LI
-xYIxtRsxITOk768GhZX8w/TPVRuij5FuYUD9z5iuPjb5CmVtcZzBoIR2hHHHNYVj
-Yi5y+2wy5FHgLamD3J0A2P9bq1L5lQ==
-=kEPr
------END PGP SIGNATURE-----
---=-=-=--
