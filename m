@@ -5,48 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6AA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E18AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E03A2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5C22075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917186;
-	bh=1Z+yY8883xRpttdCFfESM34OdyzWiQYyO4wws3jJvZY=;
+	s=default; t=1597917200;
+	bh=C/84CIoJYHv4E/FABQ0fh8uf1gdQweNA4EgZRAF4Klc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NK80oY9uJbcaICFWvSDAiA6U7o57no6D5XdRW6W7K7wjuWTvWNeL4GoxfERa4lzzt
-	 ydXufTqp4Aepp0IVAWn/OJpqnZ29T2iw6eQ6P4h3daWJLmXfzmYnmLu7aoBafef6Bm
-	 5bRtRmi0xK71dftiHDbrXuBPDV0UEQQn/Rwi0UZs=
+	b=vx0nHGEbbEOVNq82Y28zqQiv/XyNtIXZFy3bNV/Lo8iCktgdPCQi2J92L5RS0lemO
+	 0aT18TiC64K13o+A86OdRRSmPcFFdAnq/8EVuwHljEPZiCq+T3YZRQLA9NGI50qp2N
+	 8IYzUILKOGL6HLGYBFqh0El+HcmMX9YCeVb6Qi2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbgHTJww (ORCPT
+        id S1729982AbgHTJxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34094 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:53:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgHTJwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:39 -0400
+        id S1729942AbgHTJxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECCC02075E;
-        Thu, 20 Aug 2020 09:52:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF2F2067C;
+        Thu, 20 Aug 2020 09:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917159;
-        bh=1Z+yY8883xRpttdCFfESM34OdyzWiQYyO4wws3jJvZY=;
+        s=default; t=1597917194;
+        bh=C/84CIoJYHv4E/FABQ0fh8uf1gdQweNA4EgZRAF4Klc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PwlHziDZtN0r1KXil1ZpPOOTUeSik+xn/RI8Mdje5GckWXzyG1hTtfg6YfriJjngZ
-         zQCr4pJLtASzVOTMMj7RXRGbH+h7ZtF/IH47koaXa1zM3HpQU7efQLRKxARPMz9eC0
-         S6Srxu8YFyUCtniIvvXbbu+DmMepYFOnTT13HH0Y=
+        b=W3KJ90pMJ48T4uwLaY3IEvaG9NmMWR+kSnMadnw/5PrHmWtZulO2a0U2jge7y8pVV
+         2Bsmt5X0y3kgZIclPmN5RqLcR4+UFmqJV4OoIc6jjydqpwOPrbHD69nxtyjOeAD3Dr
+         RaPyYiRtHr+PWECFAhTL4DeBlVx8CoutPV8HmnZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 25/92] net: ethernet: stmmac: Disable hardware multicast filter
-Date:   Thu, 20 Aug 2020 11:21:10 +0200
-Message-Id: <20200820091538.866981520@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 36/92] mm/page_counter.c: fix protection usage propagation
+Date:   Thu, 20 Aug 2020 11:21:21 +0200
+Message-Id: <20200820091539.474561462@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,39 +65,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan McDowell <noodles@earth.li>
+From: Michal Koutný <mkoutny@suse.com>
 
-commit df43dd526e6609769ae513a81443c7aa727c8ca3 upstream.
+commit a6f23d14ec7d7d02220ad8bb2774be3322b9aeec upstream.
 
-The IPQ806x does not appear to have a functional multicast ethernet
-address filter. This was observed as a failure to correctly receive IPv6
-packets on a LAN to the all stations address. Checking the vendor driver
-shows that it does not attempt to enable the multicast filter and
-instead falls back to receiving all multicast packets, internally
-setting ALLMULTI.
+When workload runs in cgroups that aren't directly below root cgroup and
+their parent specifies reclaim protection, it may end up ineffective.
 
-Use the new fallback support in the dwmac1000 driver to correctly
-achieve the same with the mainline IPQ806x driver. Confirmed to fix IPv6
-functionality on an RB3011 router.
+The reason is that propagate_protected_usage() is not called in all
+hierarchy up.  All the protected usage is incorrectly accumulated in the
+workload's parent.  This means that siblings_low_usage is overestimated
+and effective protection underestimated.  Even though it is transitional
+phenomenon (uncharge path does correct propagation and fixes the wrong
+children_low_usage), it can undermine the intended protection
+unexpectedly.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+We have noticed this problem while seeing a swap out in a descendant of a
+protected memcg (intermediate node) while the parent was conveniently
+under its protection limit and the memory pressure was external to that
+hierarchy.  Michal has pinpointed this down to the wrong
+siblings_low_usage which led to the unwanted reclaim.
+
+The fix is simply updating children_low_usage in respective ancestors also
+in the charging path.
+
+Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.18+]
+Link: http://lkml.kernel.org/r/20200803153231.15477-1-mhocko@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c |    1 +
- 1 file changed, 1 insertion(+)
+ mm/page_counter.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-@@ -350,6 +350,7 @@ static int ipq806x_gmac_probe(struct pla
- 	plat_dat->has_gmac = true;
- 	plat_dat->bsp_priv = gmac;
- 	plat_dat->fix_mac_speed = ipq806x_gmac_fix_mac_speed;
-+	plat_dat->multicast_filter_bins = 0;
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -77,7 +77,7 @@ void page_counter_charge(struct page_cou
+ 		long new;
  
- 	err = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
- 	if (err)
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * This is indeed racy, but we can live with some
+ 		 * inaccuracy in the watermark.
+@@ -121,7 +121,7 @@ bool page_counter_try_charge(struct page
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+ 		if (new > c->max) {
+ 			atomic_long_sub(nr_pages, &c->usage);
+-			propagate_protected_usage(counter, new);
++			propagate_protected_usage(c, new);
+ 			/*
+ 			 * This is racy, but we can live with some
+ 			 * inaccuracy in the failcnt.
+@@ -130,7 +130,7 @@ bool page_counter_try_charge(struct page
+ 			*fail = c;
+ 			goto failed;
+ 		}
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * Just like with failcnt, we can live with some
+ 		 * inaccuracy in the watermark.
 
 
