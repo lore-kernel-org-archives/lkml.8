@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E351C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40CAB2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134CB2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928111;
-	bh=NnN6YacW0a2xO0gvCRIxh7ybG+jk2VHafX/DGDFWdoM=;
+	s=default; t=1597928116;
+	bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrXs+5WL96vzOj4dlBGJlX7pe1kc/0hkHerGpiS+SE43f4ui/5NV8MWAIhuOlrftv
-	 TwDGvfEOkmYl60AAbnxNNTuR0wJ0qcZt6oAS26ogeF5FmJu6RjFcl8UzeAxUxZOKfv
-	 XL0vi5GLu5wyiNGgdnJuxsWzjVBh4vS+m0D/1bWc=
+	b=WqYPnmwRQaeN7AJrmfAvU+EAgp26llU9jXzNIU9sA3zSG2ux5VzfeT67et1Qzd/Z2
+	 39D1J1VV9n7viC0ESk+YfNdtO58aH5GkNkQfQhBrOlXaq8zqbF2V+7pzdZpleN3kuP
+	 sN5yZolSfvg47StyzwZumndzo8E30eecwVSAgfw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729964AbgHTMzJ (ORCPT
+        id S1728972AbgHTJnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:55:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:43:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729089AbgHTJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:17 -0400
+        id S1729150AbgHTJmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F7CE207DE;
-        Thu, 20 Aug 2020 09:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF9A2075E;
+        Thu, 20 Aug 2020 09:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916596;
-        bh=NnN6YacW0a2xO0gvCRIxh7ybG+jk2VHafX/DGDFWdoM=;
+        s=default; t=1597916538;
+        bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fCmmi+7IhafKvwcynK5Jffc9AGuhA9RH4z9vHaRlgKBt8vp4g/vq2s0E/3FoK+ppx
-         gcE2dx5HjUZd/20OySvLUyeWrN8bc6hsZRetp71dARIc+spq0vG80CQ9RdKdw4IxtB
-         56uWBtBdkYM1WikJzqyRaxZyfe16yYNZ/JLk1EBw=
+        b=jPWkqFAWpodNfWG/XIkkcqYEt0eknpP/Oo0ixQxl2cESrMdYguk3mW1DgkpPZJtAz
+         UojZiM0BO3PVKDYNKz6bTotQqzm77D2JYg+7rFAvK2e5zzydud/3zMyIYt6S6wzZXc
+         J2Nk12nHOowVH9AVw8s0EeYLXspOCOX8Zw0T4em0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 157/204] nfs: nfs_file_write() should check for writeback errors
-Date:   Thu, 20 Aug 2020 11:20:54 +0200
-Message-Id: <20200820091614.073906138@linuxfoundation.org>
+Subject: [PATCH 5.7 164/204] Input: sentelic - fix error return when fsp_reg_write fails
+Date:   Thu, 20 Aug 2020 11:21:01 +0200
+Message-Id: <20200820091614.411816259@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,72 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit ce368536dd614452407dc31e2449eb84681a06af ]
+[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
 
-The NFS_CONTEXT_ERROR_WRITE flag (as well as the check of said flag) was
-removed by commit 6fbda89b257f.  The absence of an error check allows
-writes to be continually queued up for a server that may no longer be
-able to handle them.  Fix it by adding an error check using the generic
-error reporting functions.
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
 
-Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with generic one")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/file.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/input/mouse/sentelic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index d72496efa17b0..63940a7a70be1 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -590,12 +590,14 @@ static const struct vm_operations_struct nfs_file_vm_ops = {
- 	.page_mkwrite = nfs_vm_page_mkwrite,
- };
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index e99d9bf1a267d..e78c4c7eda34d 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
  
--static int nfs_need_check_write(struct file *filp, struct inode *inode)
-+static int nfs_need_check_write(struct file *filp, struct inode *inode,
-+				int error)
- {
- 	struct nfs_open_context *ctx;
+ 	fsp_reg_write_enable(psmouse, false);
  
- 	ctx = nfs_file_open_context(filp);
--	if (nfs_ctx_key_to_expire(ctx, inode))
-+	if (nfs_error_is_fatal_on_server(error) ||
-+	    nfs_ctx_key_to_expire(ctx, inode))
- 		return 1;
- 	return 0;
+-	return count;
++	return retval;
  }
-@@ -606,6 +608,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	struct inode *inode = file_inode(file);
- 	unsigned long written = 0;
- 	ssize_t result;
-+	errseq_t since;
-+	int error;
  
- 	result = nfs_key_timeout_notify(file, inode);
- 	if (result)
-@@ -630,6 +634,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	if (iocb->ki_pos > i_size_read(inode))
- 		nfs_revalidate_mapping(inode, file->f_mapping);
- 
-+	since = filemap_sample_wb_err(file->f_mapping);
- 	nfs_start_io_write(inode);
- 	result = generic_write_checks(iocb, from);
- 	if (result > 0) {
-@@ -648,7 +653,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 		goto out;
- 
- 	/* Return error values */
--	if (nfs_need_check_write(file, inode)) {
-+	error = filemap_check_wb_err(file->f_mapping, since);
-+	if (nfs_need_check_write(file, inode, error)) {
- 		int err = nfs_wb_all(inode);
- 		if (err < 0)
- 			result = err;
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
 -- 
 2.25.1
 
