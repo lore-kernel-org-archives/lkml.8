@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9750CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A181C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBC3206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7F3206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931983;
-	bh=hzqSWuJzDmtvb2qez9IAyU9QTeXi2mHqD9sN/gJRJcg=;
+	s=default; t=1597931996;
+	bh=yKmAMZWwCOzOAmbAJPyXG2Z9j6Mu8i6EZ/wMCEjEhhM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyoPZ5rVimxCw2eXbbvyvA3YgBwabH/oPWniZYIjA3jM82+ngvAAedDVLngHj+PjL
-	 JBtKBDMPJdIDhJVm7BvhoWa/S+XTwEFy0tA/BSThVazNwplyo+s6VDU+uD6nDVxS1D
-	 myxduNCpUUcYJMnL6efS9c+LsHpV8rdB+fs+1wqo=
+	b=uDR6bWxS/+QXwgXmVFemiw53zG+8/kjPZb7WkpfBrKwMUHvwVrc49nWEyBZ3lp9bl
+	 uLGO5FBddsyh0xP2udAA2JaM30bwSry5OMF1BQkzKp4nL52fL++sCn0SkMAU/RsUlx
+	 15sP/JQYIMKofbRlW0ILhDUR+jEF4bEybyXYXD98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgHTN7l (ORCPT
+        id S1727047AbgHTN7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:59:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:59:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbgHTJYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:03 -0400
+        id S1726735AbgHTJX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:23:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9811522CA1;
-        Thu, 20 Aug 2020 09:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B682222D02;
+        Thu, 20 Aug 2020 09:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915442;
-        bh=hzqSWuJzDmtvb2qez9IAyU9QTeXi2mHqD9sN/gJRJcg=;
+        s=default; t=1597915439;
+        bh=yKmAMZWwCOzOAmbAJPyXG2Z9j6Mu8i6EZ/wMCEjEhhM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k39D4FyswGLj957dda8GIEDvXmDubusGtaZnJb2GlyQcUjBMybOpqur7y0Fp8sjmP
-         FkDB9hboAu2cNOUiiHm2nETIcdm8bSeA0+MGd/plIQubvpOjPG/rbQTNKZhj1QYZ8E
-         fVDtFd+c5W+xR913la+eulVhgatQDln8HOwle3JQ=
+        b=1aMdTWsMzF0+ccw/wp86aOS3twRhTJp/5AGuxev5xrePU4ecc9lsirsCv0H6yj3ad
+         zFX8mOp6wedkpw006Zv1/V9MkjGrTNReiCCB31KzEHWbdrYP7SVBD1KMz62m8PYreB
+         vl7l9DXMHGlIzAMJfvkW31aUipgZyAJn4n/JHPtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
         Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 015/232] btrfs: dont allocate anonymous block device for user invisible roots
-Date:   Thu, 20 Aug 2020 11:17:46 +0200
-Message-Id: <20200820091613.468585852@linuxfoundation.org>
+Subject: [PATCH 5.8 014/232] btrfs: free anon block device right after subvolume deletion
+Date:   Thu, 20 Aug 2020 11:17:45 +0200
+Message-Id: <20200820091613.418255504@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,11 +62,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Qu Wenruo <wqu@suse.com>
 
-commit 851fd730a743e072badaf67caf39883e32439431 upstream.
+commit 082b6c970f02fefd278c7833880cda29691a5f34 upstream.
 
 [BUG]
 When a lot of subvolumes are created, there is a user report about
-transaction aborted:
+transaction aborted caused by slow anonymous block device reclaim:
 
   BTRFS: Transaction aborted (error -24)
   WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
@@ -90,25 +90,14 @@ transaction aborted:
   BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
 
 [CAUSE]
-The error is EMFILE (Too many files open) and comes from the anonymous
-block device allocation. The ids are in a shared pool of size 1<<20.
-
-The ids are assigned to live subvolumes, ie. the root structure exists
-in memory (eg. after creation or after the root appears in some path).
-The pool could be exhausted if the numbers are not reclaimed fast
-enough, after subvolume deletion or if other system component uses the
-anon block devices.
+The anonymous device pool is shared and its size is 1M. It's possible to
+hit that limit if the subvolume deletion is not fast enough and the
+subvolumes to be cleaned keep the ids allocated.
 
 [WORKAROUND]
-Since it's not possible to completely solve the problem, we can only
-minimize the time the id is allocated to a subvolume root.
-
-Firstly, we can reduce the use of anon_dev by trees that are not
-subvolume roots, like data reloc tree.
-
-This patch will do extra check on root objectid, to skip roots that
-don't need anon_dev.  Currently it's only data reloc tree and orphan
-roots.
+We can't avoid the anon device pool exhaustion but we can shorten the
+time the id is attached to the subvolume root once the subvolume becomes
+invisible to the user.
 
 Reported-by: Greed Rong <greedrong@gmail.com>
 Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
@@ -120,30 +109,19 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ fs/btrfs/inode.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1428,9 +1428,16 @@ static int btrfs_init_fs_root(struct btr
- 	spin_lock_init(&root->ino_cache_lock);
- 	init_waitqueue_head(&root->ino_cache_wait);
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -4041,6 +4041,8 @@ int btrfs_delete_subvolume(struct inode
+ 		}
+ 	}
  
--	ret = get_anon_bdev(&root->anon_dev);
--	if (ret)
--		goto fail;
-+	/*
-+	 * Don't assign anonymous block device to roots that are not exposed to
-+	 * userspace, the id pool is limited to 1M
-+	 */
-+	if (is_fstree(root->root_key.objectid) &&
-+	    btrfs_root_refs(&root->root_item) > 0) {
-+		ret = get_anon_bdev(&root->anon_dev);
-+		if (ret)
-+			goto fail;
-+	}
- 
- 	mutex_lock(&root->objectid_mutex);
- 	ret = btrfs_find_highest_objectid(root,
++	free_anon_bdev(dest->anon_dev);
++	dest->anon_dev = 0;
+ out_end_trans:
+ 	trans->block_rsv = NULL;
+ 	trans->bytes_reserved = 0;
 
 
