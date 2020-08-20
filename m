@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9750CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78122206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CBC3206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931974;
-	bh=2zNQvTpp5k7RZuk30s8XlS+dyW8wMKyqVTDGMrdR33E=;
+	s=default; t=1597931983;
+	bh=hzqSWuJzDmtvb2qez9IAyU9QTeXi2mHqD9sN/gJRJcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JkE5E7+Rnc40BL/t0/ocM4ynGYUXXZyOIxy6/eDwmzelGIL0BeAwEjNySBpW2iEmS
-	 dD49/jtzJtWk2YSRnm21pP8O9jFtOvL5JXmeeXlEsJBwCEConnK0Iu/0UKPdUR4eqM
-	 UKNnmPOB4upI2kIpc/R8CRdAsGZ5QsX8g0IKwmZc=
+	b=oyoPZ5rVimxCw2eXbbvyvA3YgBwabH/oPWniZYIjA3jM82+ngvAAedDVLngHj+PjL
+	 JBtKBDMPJdIDhJVm7BvhoWa/S+XTwEFy0tA/BSThVazNwplyo+s6VDU+uD6nDVxS1D
+	 myxduNCpUUcYJMnL6efS9c+LsHpV8rdB+fs+1wqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgHTN73 (ORCPT
+        id S1728850AbgHTN7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:59:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:59:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgHTJYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:22 -0400
+        id S1726851AbgHTJYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F4CA22CA1;
-        Thu, 20 Aug 2020 09:24:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9811522CA1;
+        Thu, 20 Aug 2020 09:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915461;
-        bh=2zNQvTpp5k7RZuk30s8XlS+dyW8wMKyqVTDGMrdR33E=;
+        s=default; t=1597915442;
+        bh=hzqSWuJzDmtvb2qez9IAyU9QTeXi2mHqD9sN/gJRJcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FBaNdzMt0QgXEbuZRvOVck65hi1qjXYMfHcVPRBia/GBPSWx82XnNOlQX7c9rYqeJ
-         N2F4lTb8E4Y+O/naDc5YVYYZOb6ZacQk7T1auKHJoG9LPnL270b0uCHsVXDwESFxHu
-         SMc6O26YAX/YR799jd/V6n5l6hYC6wqUhCMFydRY=
+        b=k39D4FyswGLj957dda8GIEDvXmDubusGtaZnJb2GlyQcUjBMybOpqur7y0Fp8sjmP
+         FkDB9hboAu2cNOUiiHm2nETIcdm8bSeA0+MGd/plIQubvpOjPG/rbQTNKZhj1QYZ8E
+         fVDtFd+c5W+xR913la+eulVhgatQDln8HOwle3JQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
+        stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 021/232] btrfs: remove no longer needed use of log_writers for the log root tree
-Date:   Thu, 20 Aug 2020 11:17:52 +0200
-Message-Id: <20200820091613.767414822@linuxfoundation.org>
+Subject: [PATCH 5.8 015/232] btrfs: dont allocate anonymous block device for user invisible roots
+Date:   Thu, 20 Aug 2020 11:17:46 +0200
+Message-Id: <20200820091613.468585852@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,122 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit a93e01682e283f6de09d6ce8f805dc52a2e942fb upstream.
+commit 851fd730a743e072badaf67caf39883e32439431 upstream.
 
-When syncing the log, we used to update the log root tree without holding
-neither the log_mutex of the subvolume root nor the log_mutex of log root
-tree.
+[BUG]
+When a lot of subvolumes are created, there is a user report about
+transaction aborted:
 
-We used to have two critical sections delimited by the log_mutex of the
-log root tree, so in the first one we incremented the log_writers of the
-log root tree and on the second one we decremented it and waited for the
-log_writers counter to go down to zero. This was because the update of
-the log root tree happened between the two critical sections.
+  BTRFS: Transaction aborted (error -24)
+  WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  RIP: 0010:create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  Call Trace:
+   create_pending_snapshots+0x82/0xa0 [btrfs]
+   btrfs_commit_transaction+0x275/0x8c0 [btrfs]
+   btrfs_mksubvol+0x4b9/0x500 [btrfs]
+   btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
+   btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
+   btrfs_ioctl+0x11a4/0x2da0 [btrfs]
+   do_vfs_ioctl+0xa9/0x640
+   ksys_ioctl+0x67/0x90
+   __x64_sys_ioctl+0x1a/0x20
+   do_syscall_64+0x5a/0x110
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ---[ end trace 33f2f83f3d5250e9 ]---
+  BTRFS: error (device sda1) in create_pending_snapshot:1576: errno=-24 unknown
+  BTRFS info (device sda1): forced readonly
+  BTRFS warning (device sda1): Skipping commit of aborted transaction.
+  BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
 
-The use of two critical sections allowed a little bit more of parallelism
-and required the use of the log_writers counter, necessary to make sure
-we didn't miss any log root tree update when we have multiple tasks trying
-to sync the log in parallel.
+[CAUSE]
+The error is EMFILE (Too many files open) and comes from the anonymous
+block device allocation. The ids are in a shared pool of size 1<<20.
 
-However after commit 06989c799f0481 ("Btrfs: fix race updating log root
-item during fsync") the log root tree update was moved into a critical
-section delimited by the subvolume's log_mutex. Later another commit
-moved the log tree update from that critical section into the second
-critical section delimited by the log_mutex of the log root tree. Both
-commits addressed different bugs.
+The ids are assigned to live subvolumes, ie. the root structure exists
+in memory (eg. after creation or after the root appears in some path).
+The pool could be exhausted if the numbers are not reclaimed fast
+enough, after subvolume deletion or if other system component uses the
+anon block devices.
 
-The end result is that the first critical section delimited by the
-log_mutex of the log root tree became pointless, since there's nothing
-done between it and the second critical section, we just have an unlock
-of the log_mutex followed by a lock operation. This means we can merge
-both critical sections, as the first one does almost nothing now, and we
-can stop using the log_writers counter of the log root tree, which was
-incremented in the first critical section and decremented in the second
-criticial section, used to make sure no one in the second critical section
-started writeback of the log root tree before some other task updated it.
+[WORKAROUND]
+Since it's not possible to completely solve the problem, we can only
+minimize the time the id is allocated to a subvolume root.
 
-So just remove the mutex_unlock() followed by mutex_lock() of the log root
-tree, as well as the use of the log_writers counter for the log root tree.
+Firstly, we can reduce the use of anon_dev by trees that are not
+subvolume roots, like data reloc tree.
 
-This patch is part of a series that has the following patches:
+This patch will do extra check on root objectid, to skip roots that
+don't need anon_dev.  Currently it's only data reloc tree and orphan
+roots.
 
-1/4 btrfs: only commit the delayed inode when doing a full fsync
-2/4 btrfs: only commit delayed items at fsync if we are logging a directory
-3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
-4/4 btrfs: remove no longer needed use of log_writers for the log root tree
-
-After the entire patchset applied I saw about 12% decrease on max latency
-reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
-ram, using kvm and using a raw NVMe device directly (no intermediary fs on
-the host). The test was invoked like the following:
-
-  mkfs.btrfs -f /dev/sdk
-  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
-  dbench -D /mnt/sdk -t 300 8
-  umount /mnt/dsk
-
-CC: stable@vger.kernel.org # 5.4+
+Reported-by: Greed Rong <greedrong@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
+CC: stable@vger.kernel.org # 4.4+
 Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ctree.h    |    1 +
- fs/btrfs/tree-log.c |   13 -------------
- 2 files changed, 1 insertion(+), 13 deletions(-)
+ fs/btrfs/disk-io.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -1059,6 +1059,7 @@ struct btrfs_root {
- 	wait_queue_head_t log_writer_wait;
- 	wait_queue_head_t log_commit_wait[2];
- 	struct list_head log_ctxs[2];
-+	/* Used only for log trees of subvolumes, not for the log root tree */
- 	atomic_t log_writers;
- 	atomic_t log_commit[2];
- 	/* Used only for log trees of subvolumes, not for the log root tree */
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3116,28 +3116,17 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 	btrfs_init_log_ctx(&root_log_ctx, NULL);
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1428,9 +1428,16 @@ static int btrfs_init_fs_root(struct btr
+ 	spin_lock_init(&root->ino_cache_lock);
+ 	init_waitqueue_head(&root->ino_cache_wait);
  
- 	mutex_lock(&log_root_tree->log_mutex);
--	atomic_inc(&log_root_tree->log_writers);
+-	ret = get_anon_bdev(&root->anon_dev);
+-	if (ret)
+-		goto fail;
++	/*
++	 * Don't assign anonymous block device to roots that are not exposed to
++	 * userspace, the id pool is limited to 1M
++	 */
++	if (is_fstree(root->root_key.objectid) &&
++	    btrfs_root_refs(&root->root_item) > 0) {
++		ret = get_anon_bdev(&root->anon_dev);
++		if (ret)
++			goto fail;
++	}
  
- 	index2 = log_root_tree->log_transid % 2;
- 	list_add_tail(&root_log_ctx.list, &log_root_tree->log_ctxs[index2]);
- 	root_log_ctx.log_transid = log_root_tree->log_transid;
- 
--	mutex_unlock(&log_root_tree->log_mutex);
--
--	mutex_lock(&log_root_tree->log_mutex);
--
- 	/*
- 	 * Now we are safe to update the log_root_tree because we're under the
- 	 * log_mutex, and we're a current writer so we're holding the commit
- 	 * open until we drop the log_mutex.
- 	 */
- 	ret = update_log_root(trans, log, &new_root_item);
--
--	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
--		/* atomic_dec_and_test implies a barrier */
--		cond_wake_up_nomb(&log_root_tree->log_writer_wait);
--	}
--
- 	if (ret) {
- 		if (!list_empty(&root_log_ctx.list))
- 			list_del_init(&root_log_ctx.list);
-@@ -3183,8 +3172,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 				root_log_ctx.log_transid - 1);
- 	}
- 
--	wait_for_writer(log_root_tree);
--
- 	/*
- 	 * now that we've moved on to the tree of log tree roots,
- 	 * check the full commit flag again
+ 	mutex_lock(&root->objectid_mutex);
+ 	ret = btrfs_find_highest_objectid(root,
 
 
