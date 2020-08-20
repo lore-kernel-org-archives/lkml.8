@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D34C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0850207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC97322B49
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916077;
-	bh=KkTpjo3ubxOjKtyVT6Vor4FVC+SUr0Oso39gyEFrEDs=;
+	s=default; t=1597916082;
+	bh=wp8G5LoikT6tMvWTrOAsmUvkum57qThOs0SmGsnDMmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufwEjBYY+SwMQ/uh69LeawdXioob1Pgua/VTIr4T8i5L4yZZD2uS7dENwGLhd5OHU
-	 Sk/NE6KXn+rLLH1AKzznGXUCgmRoIYfYnNhXaKOBfjp3lWFEfiXqzkiFze4561dNcI
-	 cub2oL+fPR6x1jHGQiUt5KxWCTJyULovE37gZ1I4=
+	b=1imSAE/iME2WLIDHd6t9lh9cKUMCLtGlI9y8TCAa2sJJTo639QHaIeK2CkMT9rJ42
+	 244xbhdbbffJ31qFpalyJ7ci9IK5Ehi1Lg7fU+OGRvAXPx2hwSi/45cClJ8ejJfepN
+	 xeB0TKXoXLUUB8GcykRE8Z7lRP6r6uqYEnbl4Glw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgHTJee (ORCPT
+        id S1728210AbgHTJeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:34:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43764 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbgHTJbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:41 -0400
+        id S1728236AbgHTJbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B19C207DE;
-        Thu, 20 Aug 2020 09:31:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9337122B3F;
+        Thu, 20 Aug 2020 09:31:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915900;
-        bh=KkTpjo3ubxOjKtyVT6Vor4FVC+SUr0Oso39gyEFrEDs=;
+        s=default; t=1597915898;
+        bh=wp8G5LoikT6tMvWTrOAsmUvkum57qThOs0SmGsnDMmE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hVhDLkCspo1RVxZ0AAtugtVlUP8nxU5TZ/MP9u6HJ0htFn4AVwAZq4SXpKkV+Z4ap
-         uL4GHkwth4eb48Fpy/fQPvj4UFKtNNU7exiNeo+A9ECWE9wGd3+66y13cOssQYagwK
-         AMr9BlFMgQ8IcVuPO8uFtxjdUpa0kcSJazufQOlg=
+        b=jHg4W3l6z93G80sxfHYFssGiWTOf3pRCVpzsSvJJ+mbowONt1j7a8A6MXS4iME8eC
+         wCz2rMzYrPi3ocl34AOQn9vWdzMwLTpWYnvYpMbZNB1fuXpzVCc0C31nQcxdOURNDa
+         QkbI3mgPQugCXO42e1tMkmcEfbT24rW2TH6x3U7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com,
+        Richard Weinberger <richard@nod.at>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 157/232] clk: qcom: clk-alpha-pll: remove unused/incorrect PLL_CAL_VAL
-Date:   Thu, 20 Aug 2020 11:20:08 +0200
-Message-Id: <20200820091620.415414589@linuxfoundation.org>
+Subject: [PATCH 5.8 174/232] ubi: fastmap: Dont produce the initial next anchor PEB when fastmap is disabled
+Date:   Thu, 20 Aug 2020 11:20:25 +0200
+Message-Id: <20200820091621.246072260@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,42 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-[ Upstream commit c8b9002f44e4a1d2771b2f59f6de900864b1f9d7 ]
+[ Upstream commit 3b185255bb2f34fa6927619b9ef27f192a3d9f5a ]
 
-0x44 isn't a register offset, it is the value that goes into CAL_L_VAL.
+Following process triggers a memleak caused by forgetting to release the
+initial next anchor PEB (CONFIG_MTD_UBI_FASTMAP is disabled):
+1. attach -> __erase_worker -> produce the initial next anchor PEB
+2. detach -> ubi_fastmap_close (Do nothing, it should have released the
+   initial next anchor PEB)
 
-Fixes: 548a909597d5 ("clk: qcom: clk-alpha-pll: Add support for Trion PLLs")
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20200709135251.643-3-jonathan@marek.ca
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Don't produce the initial next anchor PEB in __erase_worker() when fastmap
+is disabled.
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Suggested-by: Sascha Hauer <s.hauer@pengutronix.de>
+Fixes: f9c34bb529975fe ("ubi: Fix producing anchor PEBs")
+Reported-by: syzbot+d9aab50b1154e3d163f5@syzkaller.appspotmail.com
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/clk-alpha-pll.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/mtd/ubi/wl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index 9b2dfa08acb2a..1325139173c95 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -56,7 +56,6 @@
- #define PLL_STATUS(p)		((p)->offset + (p)->regs[PLL_OFF_STATUS])
- #define PLL_OPMODE(p)		((p)->offset + (p)->regs[PLL_OFF_OPMODE])
- #define PLL_FRAC(p)		((p)->offset + (p)->regs[PLL_OFF_FRAC])
--#define PLL_CAL_VAL(p)		((p)->offset + (p)->regs[PLL_OFF_CAL_VAL])
+diff --git a/drivers/mtd/ubi/wl.c b/drivers/mtd/ubi/wl.c
+index 27636063ed1bb..42cac572f82dc 100644
+--- a/drivers/mtd/ubi/wl.c
++++ b/drivers/mtd/ubi/wl.c
+@@ -1086,7 +1086,8 @@ static int __erase_worker(struct ubi_device *ubi, struct ubi_work *wl_wrk)
+ 	if (!err) {
+ 		spin_lock(&ubi->wl_lock);
  
- const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
- 	[CLK_ALPHA_PLL_TYPE_DEFAULT] =  {
-@@ -115,7 +114,6 @@ const u8 clk_alpha_pll_regs[][PLL_OFF_MAX_REGS] = {
- 		[PLL_OFF_STATUS] = 0x30,
- 		[PLL_OFF_OPMODE] = 0x38,
- 		[PLL_OFF_ALPHA_VAL] = 0x40,
--		[PLL_OFF_CAL_VAL] = 0x44,
- 	},
- 	[CLK_ALPHA_PLL_TYPE_LUCID] =  {
- 		[PLL_OFF_L_VAL] = 0x04,
+-		if (!ubi->fm_next_anchor && e->pnum < UBI_FM_MAX_START) {
++		if (!ubi->fm_disabled && !ubi->fm_next_anchor &&
++		    e->pnum < UBI_FM_MAX_START) {
+ 			/* Abort anchor production, if needed it will be
+ 			 * enabled again in the wear leveling started below.
+ 			 */
 -- 
 2.25.1
 
