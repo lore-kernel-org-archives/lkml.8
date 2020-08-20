@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9582072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C34672072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921731;
-	bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
+	s=default; t=1597921736;
+	bh=XJ5DmlNOlYa9O5RhsrLNP3SNVFa/vv5QstJP+KMrTms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=geCOnn3zLtmjzvY0Lj0Ot5knXDRYL4NrIGNMj34inOYr9NtxNiYpKOABDjRt+JF0g
-	 2BQttq/FCCwrQ3y3N0zPyotZHEbhgk3k1kyocUd/Bzw8ChwWBWZ2fqfdRF6w8x41s4
-	 3Fc5gk73/4jKVweKI/JGLfco4Da18xQZw1MXMiFc=
+	b=aZhjpvPTMhKVGabcZYzaZa1xWQirYqPbHVmhWL1CnIi0mJ8dOG1RJZdazjS7SIX7K
+	 Bym2fvGWNeV+m6K31OK8wn9f0hNle6lmKlfbxPLbAMbBb79KT/na6AweiJlQgKyh3l
+	 DbAcuQcYVwYMq8PP+COB0aM/0aiDPfyw2HlK/lvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgHTKKO (ORCPT
+        id S1728976AbgHTLIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:08:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730867AbgHTKKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:10 -0400
+        id S1730648AbgHTKKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BDA62067C;
-        Thu, 20 Aug 2020 10:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243BC2067C;
+        Thu, 20 Aug 2020 10:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918209;
-        bh=2V8O/8NIypxvZs/NebqPdpo3C9WCOWyFh1QBb239wzo=;
+        s=default; t=1597918203;
+        bh=XJ5DmlNOlYa9O5RhsrLNP3SNVFa/vv5QstJP+KMrTms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=joRJZRE8bV/Q9NUCeKG+7Ge0XCwrmAY8dK+YbdUes1ml9IAICqNb0+RnSKaSDaYE/
-         uzxpXZkgvmmSP/bQTwSiRqLmq3sj9+7EKn6L3APA7gykNDTrBLsz3BeBMOrRR2p96b
-         KNC3TQ7uFejUDyoYXSvKpZ7EKe1IQBGuhz37QDX0=
+        b=b36zhDYbvBr+965GA0WamGSxJ9k8ma6qRuWsZ2CcVcRNUot2Db6iC5zjrua0l/OXb
+         bqnV6Rq+FQWQcewZhugZ3r4ZKM/UrcMs+JJOyPJGO/5dj7U0JvsKYv1q2YZsaFc/9A
+         khzvkpUyrL2bQ4bOuO/bejkaCoMGf4x9mBcgVwPo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Jyri Sarha <jsarha@ti.com>, Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 060/228] drm/tilcdc: fix leak & null ref in panel_connector_get_modes
-Date:   Thu, 20 Aug 2020 11:20:35 +0200
-Message-Id: <20200820091610.605460401@linuxfoundation.org>
+Subject: [PATCH 4.14 058/228] spi: lantiq: fix: Rx overflow error in full duplex mode
+Date:   Thu, 20 Aug 2020 11:20:33 +0200
+Message-Id: <20200820091610.506196666@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,49 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-[ Upstream commit 3f9c1c872cc97875ddc8d63bc9fe6ee13652b933 ]
+[ Upstream commit 661ccf2b3f1360be50242726f7c26ced6a9e7d52 ]
 
-If videomode_from_timings() returns true, the mode allocated with
-drm_mode_create will be leaked.
+In full duplex mode, rx overflow error is observed. To overcome the error,
+wait until the complete data got received and proceed further.
 
-Also, the return value of drm_mode_create() is never checked, and thus
-could cause NULL deref.
-
-Fix these two issues.
-
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200429104234.18910-1-tomi.valkeinen@ti.com
-Reviewed-by: Jyri Sarha <jsarha@ti.com>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Fixes: 17f84b793c01 ("spi: lantiq-ssc: add support for Lantiq SSC SPI controller")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Link: https://lore.kernel.org/r/efb650b0faa49a00788c4e0ca8ef7196bdba851d.1594957019.git.eswara.kota@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/tilcdc/tilcdc_panel.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/spi/spi-lantiq-ssc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/gpu/drm/tilcdc/tilcdc_panel.c b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-index 1813a3623ce60..0484b2cf0e2b5 100644
---- a/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-+++ b/drivers/gpu/drm/tilcdc/tilcdc_panel.c
-@@ -152,12 +152,16 @@ static int panel_connector_get_modes(struct drm_connector *connector)
- 	int i;
+diff --git a/drivers/spi/spi-lantiq-ssc.c b/drivers/spi/spi-lantiq-ssc.c
+index d5976615d924b..dc740b5f720ba 100644
+--- a/drivers/spi/spi-lantiq-ssc.c
++++ b/drivers/spi/spi-lantiq-ssc.c
+@@ -187,6 +187,7 @@ struct lantiq_ssc_spi {
+ 	unsigned int			tx_fifo_size;
+ 	unsigned int			rx_fifo_size;
+ 	unsigned int			base_cs;
++	unsigned int			fdx_tx_level;
+ };
  
- 	for (i = 0; i < timings->num_timings; i++) {
--		struct drm_display_mode *mode = drm_mode_create(dev);
-+		struct drm_display_mode *mode;
- 		struct videomode vm;
+ static u32 lantiq_ssc_readl(const struct lantiq_ssc_spi *spi, u32 reg)
+@@ -484,6 +485,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int tx_free = tx_fifo_free(spi);
  
- 		if (videomode_from_timings(timings, &vm, i))
- 			break;
++	spi->fdx_tx_level = 0;
+ 	while (spi->tx_todo && tx_free) {
+ 		switch (spi->bits_per_word) {
+ 		case 2 ... 8:
+@@ -512,6 +514,7 @@ static void tx_fifo_write(struct lantiq_ssc_spi *spi)
  
-+		mode = drm_mode_create(dev);
-+		if (!mode)
-+			break;
+ 		lantiq_ssc_writel(spi, data, LTQ_SPI_TB);
+ 		tx_free--;
++		spi->fdx_tx_level++;
+ 	}
+ }
+ 
+@@ -523,6 +526,13 @@ static void rx_fifo_read_full_duplex(struct lantiq_ssc_spi *spi)
+ 	u32 data;
+ 	unsigned int rx_fill = rx_fifo_level(spi);
+ 
++	/*
++	 * Wait until all expected data to be shifted in.
++	 * Otherwise, rx overrun may occur.
++	 */
++	while (rx_fill != spi->fdx_tx_level)
++		rx_fill = rx_fifo_level(spi);
 +
- 		drm_display_mode_from_videomode(&vm, mode);
+ 	while (rx_fill) {
+ 		data = lantiq_ssc_readl(spi, LTQ_SPI_RB);
  
- 		mode->type = DRM_MODE_TYPE_DRIVER;
 -- 
 2.25.1
 
