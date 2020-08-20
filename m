@@ -2,185 +2,135 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E09C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD91C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 271A3208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A041A208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z11Hdhb8"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jXgPzXqx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgHTRK3 (ORCPT
+        id S1730485AbgHTRKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730151AbgHTRGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:06:54 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F7ADC061344;
-        Thu, 20 Aug 2020 10:05:38 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id u18so2268482wmc.3;
-        Thu, 20 Aug 2020 10:05:38 -0700 (PDT)
+        Thu, 20 Aug 2020 13:10:55 -0400
+Received: from mail-dm6nam10on2071.outbound.protection.outlook.com ([40.107.93.71]:31070
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730285AbgHTRGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:06:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h6bwJVg1lFKwKtCoOoRUkiUHT3dJE3DgEXi1ztP0Zxyn0zn97TxjB2kNw1zi1VTLmV+GwVBAJwEJbhQh8m+JEgRZ59rcGuG5+RbGCprCRxzhlhZrWVI1QUSqTEygLlJjFJfvQx3ka8PA2Ps9Y9kO6tQSb1TK3joF8dzb0eQ97HrIJw1xfRZFTY6wExyNsOn2y6iG/47FQp5GQAYxThVBVWi2QbLPXYBpAOKEoRUh+42ytbEUOrwXqoPNNmLPflJmBSuE3yZeDk6cc3QVlTockpXidcuOD629RBco7yxd4FMWbmuw12up3tdBPr+GPQULqoverR+8XU8of6adE14sVA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6CCmaC8O8Z+Z2nkxbusO1E5t+kGU1TfGDjslFBXhPlE=;
+ b=HtVxWpF6Ap9SSJjpwCfVTTdC/fdyTqOmul2x1QfAqO5D1bPu/ec8FErOFf3YvF2npiWNmatpCbZj+wNLNC2zTO86d7nMt8UqYSFLR9D8uWhniX5kXdhDN5+VNGox2WdC4KL9fZZ5GgeEtqbIYKAY7yBNre/mxTFd+JeYcQkXFlXT6PPkId9LbNInT+iT3sFfyO3rMZEk0wORuOVW75V6TpKytMx3dk5HsPpyTr/enTWHG67jV5E86XSBgJ6ZuTs4C85yt2hV6WxHEmAknrnU3z1KU1NZDGpsP41F2bWQJ8jIDsYas9/1n71iQFIYwBQCznBYCVahy/J1lvx627gEKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4eX00c0ckm8hT0A0C/n4MyfX4EjjAaDz31mN/Lb//fY=;
-        b=Z11Hdhb8fIf+RWDsfZYkftMhqk7M2OXy0n6MgA0ETp9jr3pQV8ulNcpRKj/wKp+Jcb
-         TJydKyyk8agCFCKNNVnmf/LSzwt5bkfqxPoBrJfk9wIeWsj3ZxeZ0ypZrs1MtkVmxRRX
-         x81JDHis0hoohcY0Q6Ywz9FkA4+uo/uBfiR3m6br16gLBDZ0jm2DrQuA5qDaLjy/F60S
-         V1fg+5A7e4NKYugc3e5Xg2R7tNWQTDUK4LztV5U6/Rt21jkXnI9pXAOnIuQyz923d1dR
-         HzHV5ev7gLhj5R1KTo733m06xj4N6pqkhAWVg59VKP5cboJK1OKaF5Gqsjv4rsSG1r1h
-         /zsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4eX00c0ckm8hT0A0C/n4MyfX4EjjAaDz31mN/Lb//fY=;
-        b=W7viDUIzQeVWC4fmHbZnzjL+PO/ocamtCcGRVbGD0NCpaaG/aa4jR6mGhIByr93I7f
-         SGeUXhiEFNVRN+2797aPBmyV0H5soFmbHJBrTGxxA3c48ZF3KhOSt4vE8j/r7k8HPTwI
-         IDDtoTrQMMPMb3Mqo48PpYY/actmh78WXexKjbMCjlz0YL8YlS/md7TzMOKOo4sa2NHg
-         VyPDqisW5phnZ3JsqGifqRT+TK6iiVVx/4KzDsBVjZ5LEqIsSmmcykwXXabRpJ4Zrgfs
-         ODmaateMyqQCTxS2EJ8CGHlaWP8V6SLiEw3Q2HZKLGCjBpRWKnZckjq1f15iw9BvzGJ4
-         sZJw==
-X-Gm-Message-State: AOAM533E4ix4X1ebe6UxaRiTRi7hNGbor95VCmjX2lFNnc7vfZ9ogSdS
-        I4jYnOz/hwwYC/ivdkuSvQ50T66K7xZl1ZKoN5o=
-X-Google-Smtp-Source: ABdhPJyyd8HHoirSU/WeVEZLJyRDkczRjPGF9/eWaPA4wGBOVGhOy7ejxlGod+q0XjTYTyGC7MJSrAGP/V2HLxQLL8g=
-X-Received: by 2002:a1c:4c17:: with SMTP id z23mr4638247wmf.49.1597943137022;
- Thu, 20 Aug 2020 10:05:37 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6CCmaC8O8Z+Z2nkxbusO1E5t+kGU1TfGDjslFBXhPlE=;
+ b=jXgPzXqxQkkpAIng63f+4AaqFAWke/hGlqgGRugCabJihZNrIRJL/JAhtWn4LYUFfOvL2W2R0iFZc12jax4rpXfUa1XOa19eEqYSm7s4Nq1RaRWYsHPWIBBLZ9Hp+D9g2xr2s3nFA5lavi2UuBqLLwJY+JV5rD+Geg9t51Wukgo=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com (2603:10b6:408:40::20)
+ by BN8PR12MB3602.namprd12.prod.outlook.com (2603:10b6:408:49::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
+ 2020 17:06:48 +0000
+Received: from BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::1ef:8f33:480b:e2d0]) by BN8PR12MB3108.namprd12.prod.outlook.com
+ ([fe80::1ef:8f33:480b:e2d0%4]) with mapi id 15.20.3283.024; Thu, 20 Aug 2020
+ 17:06:48 +0000
+From:   Yazen Ghannam <Yazen.Ghannam@amd.com>
+To:     linux-edac@vger.kernel.org
+Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, bp@suse.de, tony.luck@intel.com,
+        x86@kernel.org, Smita.KoralahalliChannabasappa@amd.com
+Subject: [PATCH] x86/mce: Increase maximum number of banks to 64
+Date:   Thu, 20 Aug 2020 17:06:24 +0000
+Message-Id: <20200820170624.1855825-1-Yazen.Ghannam@amd.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM6PR11CA0046.namprd11.prod.outlook.com
+ (2603:10b6:5:14c::23) To BN8PR12MB3108.namprd12.prod.outlook.com
+ (2603:10b6:408:40::20)
 MIME-Version: 1.0
-References: <cover.1597931875.git.robin.murphy@arm.com> <93d7de3533cfd952aecd6198b9221d7a58c0e521.1597931876.git.robin.murphy@arm.com>
- <CAF6AEGuKa4P=gfus08CdfT2H5pG6a2PBumGb=Pw3qvD=NWueig@mail.gmail.com> <b5aa001f-6a1c-af0b-1526-c5b7a2e29ef7@arm.com>
-In-Reply-To: <b5aa001f-6a1c-af0b-1526-c5b7a2e29ef7@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Thu, 20 Aug 2020 10:05:25 -0700
-Message-ID: <CAF6AEGs1JyZqNYyHC6DsjZa2wbHVhP-M=ZVJxHqYjeFQPZ3APA@mail.gmail.com>
-Subject: Re: [PATCH 10/18] iommu/msm: Add IOMMU_DOMAIN_DMA support
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Joerg Roedel <joro@8bytes.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        digetx@gmail.com, Suman Anna <s-anna@ti.com>,
-        Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        "moderated list:ARM/S5P EXYNOS AR..." 
-        <linux-samsung-soc@vger.kernel.org>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Andy Gross <agross@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
-        linux-media@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>, linux-tegra@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        t-kristo@ti.com,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from yaz-ethanolx.amd.com (165.204.78.2) by DM6PR11CA0046.namprd11.prod.outlook.com (2603:10b6:5:14c::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 17:06:47 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [165.204.78.2]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a94b16ce-2602-44a0-8b59-08d8452b6c6d
+X-MS-TrafficTypeDiagnostic: BN8PR12MB3602:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN8PR12MB36022F46857F155B9C0DFDF6F85A0@BN8PR12MB3602.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:800;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 80W2OuujGi44uMTiCz+6Wodb1kY71cqsaPQtLpVyRmF67riUCT6JAPzg5YKP8MTWQwtfPDDUSaCdrKFOoy9n3XxOpKkEj83W5EK3HltL0pY/QI6DsO5SvJhGQnakQVky+OCc6anvojcc5ZGWsco66jhlt7tkO7FfNoP8XBLPypwL6zakZhZ1OFSoPO8nY8zw63QTWdUOaFRZ1qB/vyqLk+toWs+Smm7qGc3iu77FkX5q78XBYycv33JtrwdwhlRmRzM2S6RRwPRu8Nn0AyiK+G/hkd/XN4hVbUsmozhrs3o1QyIv5ueVeOFTJDycC3ZsIAMA35dq/R/ovWUGP8Y4JA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3108.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(396003)(366004)(136003)(186003)(8936002)(16526019)(26005)(478600001)(4326008)(6666004)(1076003)(86362001)(5660300002)(6486002)(66946007)(8676002)(66476007)(316002)(956004)(7696005)(15650500001)(36756003)(2906002)(83380400001)(2616005)(52116002)(6916009)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 7DuMsL6+SY3X/K8Fn90yGKJira8TTCbhpopJZGezjXjDTTb0Dd9SigpJRW2Q+9UIFhmutCap0pmR5XZ/lxVqmFXlQnw3Ivoa7H73AxDk4qcLSpLgHgXV8neXAx0VC8YNtN0JyaRBWKgn64nVp10xMYUaDEav+oh0E1o3AAtz1IjdyqLNmEHbP77VZbBt3wBVrbIdvX0JzPxdHa7fHciT03tIJv7P5h1mjP23SNLA+v/uqLn9P9IPiPuNCcWZN061kJmg6Tb8OICDu4IQqeHiH/lhbVakqBTIoFRWxgXDXxEB2q0yuvl+DLMSMA4Cyc6xv280m9FsJfua1d3rKe1SVq2TGXQZeI1RRaEbEoG7lwPLv/yq3L3Pwh3ra9R/NPCXFMrmvu4+vTvPXSAnKkRweZRzsnbgvLOcqh9E0Irayb5YFd3TMGawWR2nEqehCefMeuZh2zmLcnkRqXbPglq3LW4nZ8YIKzV7VfPxAYzNgxgeO8lYG3nvoyETWDgvOkHS5wtA+ixn3nJCJB+VlcTY8AUWAz38wSz7NqYdDY85IRqeFiHXUL3uTg1Sz7hlaVg0J2C+wpmWtvINXpeKM7eeZ4XpyojJTwzdEeDb55HhPqB1uUauI93SanSZ8xf5+OqTc9uX309h89MmzZzpKxfakQ==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a94b16ce-2602-44a0-8b59-08d8452b6c6d
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3108.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 17:06:48.0462
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mX2a6M1hrRSLOt7NGx9Trj0XdfOTysYgC6CgYyCpnf9OujIQJyU4hChB2Gsmzo6oXuidpecHlivQpZXlN6/vnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3602
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 9:58 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-08-20 16:55, Rob Clark wrote:
-> > Side note, I suspect we'll end up needing something like
-> > 0e764a01015dfebff8a8ffd297d74663772e248a .. if someone can dig a 32b
-> > device out of the closet and dust it off, the fix is easy enough.
-> > Just wanted to mention that here so anyone with a 32b device could
-> > find what is needed.
->
-> FWIW there shouldn't be any material change here - the generic default
-> domain is installed under the same circumstances as the Arm
-> dma_iommu_mapping was, so if any platform does have an issue, then it
-> should already have started 4 years with f78ebca8ff3d ("iommu/msm: Add
-> support for generic master bindings").
+From: Akshay Gupta <Akshay.Gupta@amd.com>
 
-ok, it has, I guess, been a while since playing with 32b things..
-someone on IRC had mentioned a problem that sounded like what
-0e764a01015dfebff8a8ffd297d74663772e248a solved, unless they disabled
-some ARCH_HAS_xyz thing (IIRC), which I guess is related..
+...because future AMD systems will support up to 64 MCA banks per CPU.
 
-BR,
--R
+MAX_NR_BANKS is used to allocate a number of data structures, and it is
+used as a ceiling for values read from MCG_CAP[Count]. Therefore, this
+change will have no functional effect on existing systems with 32 or
+fewer MCA banks per CPU.
 
-> Robin.
->
-> >
-> > BR,
-> > -R
-> >
-> > On Thu, Aug 20, 2020 at 8:09 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> >>
-> >> Now that arch/arm is wired up for default domains and iommu-dma,
-> >> implement the corresponding driver-side support for DMA domains.
-> >>
-> >> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> >> ---
-> >>   drivers/iommu/msm_iommu.c | 7 ++++++-
-> >>   1 file changed, 6 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
-> >> index 3615cd6241c4..f34efcbb0b2b 100644
-> >> --- a/drivers/iommu/msm_iommu.c
-> >> +++ b/drivers/iommu/msm_iommu.c
-> >> @@ -8,6 +8,7 @@
-> >>   #include <linux/kernel.h>
-> >>   #include <linux/init.h>
-> >>   #include <linux/platform_device.h>
-> >> +#include <linux/dma-iommu.h>
-> >>   #include <linux/errno.h>
-> >>   #include <linux/io.h>
-> >>   #include <linux/io-pgtable.h>
-> >> @@ -314,13 +315,16 @@ static struct iommu_domain *msm_iommu_domain_alloc(unsigned type)
-> >>   {
-> >>          struct msm_priv *priv;
-> >>
-> >> -       if (type != IOMMU_DOMAIN_UNMANAGED)
-> >> +       if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
-> >>                  return NULL;
-> >>
-> >>          priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> >>          if (!priv)
-> >>                  goto fail_nomem;
-> >>
-> >> +       if (type == IOMMU_DOMAIN_DMA && iommu_get_dma_cookie(&priv->domain))
-> >> +               goto fail_nomem;
-> >> +
-> >>          INIT_LIST_HEAD(&priv->list_attached);
-> >>
-> >>          priv->domain.geometry.aperture_start = 0;
-> >> @@ -339,6 +343,7 @@ static void msm_iommu_domain_free(struct iommu_domain *domain)
-> >>          struct msm_priv *priv;
-> >>          unsigned long flags;
-> >>
-> >> +       iommu_put_dma_cookie(domain);
-> >>          spin_lock_irqsave(&msm_iommu_lock, flags);
-> >>          priv = to_msm_priv(domain);
-> >>          kfree(priv);
-> >> --
-> >> 2.28.0.dirty
-> >>
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Akshay Gupta <Akshay.Gupta@amd.com>
+[ Adjust commit message and code comment. ]
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+---
+ arch/x86/include/asm/mce.h | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 6adced6e7dd3..109af5c7f515 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -200,12 +200,8 @@ void mce_setup(struct mce *m);
+ void mce_log(struct mce *m);
+ DECLARE_PER_CPU(struct device *, mce_device);
+ 
+-/*
+- * Maximum banks number.
+- * This is the limit of the current register layout on
+- * Intel CPUs.
+- */
+-#define MAX_NR_BANKS 32
++/* Maximum number of MCA banks per CPU. */
++#define MAX_NR_BANKS 64
+ 
+ #ifdef CONFIG_X86_MCE_INTEL
+ void mce_intel_feature_init(struct cpuinfo_x86 *c);
+-- 
+2.25.1
+
