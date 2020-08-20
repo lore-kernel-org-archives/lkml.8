@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D249C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8751822C9F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC0A22BF5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917739;
-	bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+	s=default; t=1597917789;
+	bh=lxe8g7FX23dHva9JYODgWaxoPdH/vB0tpCeu2DOon2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZuiIyWhgzPRbm6yJ9Y6+buStW1Ee6Q1OOaWs2Mjtfg8KhH8U3espJnM7Ay6Qr/H3j
-	 y4bvEMS20aj0keLayzfBV19oiuxdMcv9YAhmoUJdxDFcBl+5EVQ3S/jY/J4hnw8iS+
-	 1NmtVQI0qAh+CRKSLq0YdCCUKH9pqNvS+aRPU6tE=
+	b=PKHWRlNyzpCTnxOs5+WUJ+nWqeNNSVrVRl2M0n68uPPFNTrB/d9EzpczsNOQDDD5F
+	 SeJv4HIauYJADbMMxCpgbHfWNZu+0iBXYgXBJlpT8s5jmfbBLfIVExvT6xONyKlLbj
+	 p+7kMoxYP048a6zc87HtEa8sQGsJKF0vh9FHUylU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgHTKCQ (ORCPT
+        id S1730521AbgHTKCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:02:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:02:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730480AbgHTKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729999AbgHTKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 06:01:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B786622B4B;
-        Thu, 20 Aug 2020 10:01:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46E7622B49;
+        Thu, 20 Aug 2020 10:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917666;
-        bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+        s=default; t=1597917663;
+        bh=lxe8g7FX23dHva9JYODgWaxoPdH/vB0tpCeu2DOon2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nDjaIW9BgaWd0SIyzixisOxaonwaAL5jNoCzkqbibpQOWrcuicRagP6T5CBcKX4OO
-         mjVYlOA2E/x3mojVJf+FxdpgujzATLfdBO9UmMwIOw2itDB3i+BFgDgc2ocP4qQWmg
-         2WsarqTlxVeRBZA58EmpDsAoksrTk1Hq8dOm6mas=
+        b=Q31OqFv/NGPH//+EBMVuPjiyzefj8JG/g6aczEwevinS/MJlr8F5DWH0NLrHJlaz6
+         ikf5Whf1G9lApkNEs1/hCdpZaP+CVxCowFa3/qhcIrHoXiHG3LXSo7/1/yW1ksUzxX
+         qxD/DShEC+mFEvlq/Gw8CAmtQOzTvQOjV1ZBd1B4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 114/212] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
-Date:   Thu, 20 Aug 2020 11:21:27 +0200
-Message-Id: <20200820091608.105321353@linuxfoundation.org>
+Subject: [PATCH 4.9 113/212] media: omap3isp: Add missed v4l2_ctrl_handler_free() for preview_init_entities()
+Date:   Thu, 20 Aug 2020 11:21:26 +0200
+Message-Id: <20200820091608.055312257@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,36 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
+[ Upstream commit dc7690a73017e1236202022e26a6aa133f239c8c ]
 
-The dev_id used in request_irq() and free_irq() should match.  Use 'info'
-in both cases.
+preview_init_entities() does not call v4l2_ctrl_handler_free() when
+it fails.
+Add the missed function to fix it.
 
-Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: de1135d44f4f ("[media] omap3isp: CCDC, preview engine and resizer")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/cumana_2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/omap3isp/isppreview.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
-index edce5f3cfdba0..93ba83e3148eb 100644
---- a/drivers/scsi/arm/cumana_2.c
-+++ b/drivers/scsi/arm/cumana_2.c
-@@ -454,7 +454,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
+diff --git a/drivers/media/platform/omap3isp/isppreview.c b/drivers/media/platform/omap3isp/isppreview.c
+index e981eb2330f18..ac005ae4d21b4 100644
+--- a/drivers/media/platform/omap3isp/isppreview.c
++++ b/drivers/media/platform/omap3isp/isppreview.c
+@@ -2290,7 +2290,7 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	me->ops = &preview_media_ops;
+ 	ret = media_entity_pads_init(me, PREV_PADS_NUM, pads);
+ 	if (ret < 0)
+-		return ret;
++		goto error_handler_free;
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
+ 	preview_init_formats(sd, NULL);
  
-  out_release:
- 	fas216_release(host);
+@@ -2323,6 +2323,8 @@ static int preview_init_entities(struct isp_prev_device *prev)
+ 	omap3isp_video_cleanup(&prev->video_in);
+ error_video_in:
+ 	media_entity_cleanup(&prev->subdev.entity);
++error_handler_free:
++	v4l2_ctrl_handler_free(&prev->ctrls);
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
