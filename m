@@ -2,81 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 206A9C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE10F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3402120724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kdJLB6xv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zkaFZto0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbgHTKqw (ORCPT
+        id S1728060AbgHTKq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40230 "EHLO
+        Thu, 20 Aug 2020 06:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731373AbgHTKoc (ORCPT
+        with ESMTP id S1731884AbgHTKoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:44:32 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B381FC061344
+        Thu, 20 Aug 2020 06:44:20 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CF8C061387
         for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:44:19 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id k13so730130plk.13
+Received: by mail-pf1-x444.google.com with SMTP id d188so837774pfd.2
         for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:44:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RX8jH7WYd4F2NVJ6VgmGb3ASYy7lGOBAgdZtCkqBvgg=;
-        b=kdJLB6xvJRzMw7YX5ULxAs3uZEqeFAoojfyPwZGYu+aBdj6Ph7yQ0NOWZklMEqNtVg
-         CAg5NoZLrksr02/KRsMQAlBdpxV7alLNPycJflXgUYlJ3YGYTSgE3Yt2sulqK6O3u74f
-         0pPfT82L00RoAauHAovkXrF0UhOb7nt4XEsR3cCmZbPyRBk46P02Ih5tAQk4QMotcLEb
-         FJLOVNuynnZvkkJZUNxNZnxweZRXDIxbcv6Mm61B6vWMhgvLjBUhFrjJI8wDk4tSxgFz
-         Ze/Jy3wG4otR5A+kN/cKBR1hw2oMICfuKmcfrXw4vsmU5k4Pgd7BifURwVtXbU5lhD6R
-         xfPA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3PXtPhgN15xkqptqDoOT+6OR5bz1DwLunRYJNev9KR4=;
+        b=zkaFZto0eMoTUXrhXnN5c215rPk2SI+mYKS6axiQrRCTTNkAxc+HQ1zvbE+9q8CdK3
+         ejrwiC5XvbU1VEVR0PkGPGG669EkRUf07na+UAjM95hQEAsG4rAcauD7W4QS/mQQK9Ji
+         aHAzBEJD8cb3YAopp2IN0BnKR0TfeOemTuipy2eA7MsVI9rqpSpfngZuJ3YGffGgvoOr
+         2qaNwaJ3BQvjLM/eOrXzy4yluttDslK9WrVaLBIAQGyCyGmcBfTPfVT8FfIY5a1ueI/3
+         qAMmm3cwSJncp0MSZc3c4f5Ucf1L5617fzuL31JE1OimTfSyQCLy69f4jWzzKMfRVtbY
+         sboA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RX8jH7WYd4F2NVJ6VgmGb3ASYy7lGOBAgdZtCkqBvgg=;
-        b=i+W3cP1v//rzTmfsmofbzjWq/jF505q7jY7TjTTGph6dQm4ZCwzew3zw3/NrY9lkNK
-         fkstz5YIWorZVZ3xmjjgS70246cJOmrFcN86cB6ZvKXiaXva2xGKipcRkmiPRP9zHTUX
-         lx803DawOzO6V3c0BaxKo23GFcnKanRFD/7wZBrPo5xxcq6gTfJMottPfiuWdffnPNMb
-         tl1e5hCJtHfp2g/+icJbaYzGJ05zqNh33yTcuY0ZJzPpqWkpull5IOwDlzapa2zynQSx
-         BqZEjEhqV3QNWY7NczTbd5WrpmIa9X0LYR99F3jB3GaJKPuw5aVr68gSrRJ9Sw1hXpeS
-         3p2Q==
-X-Gm-Message-State: AOAM531W9lO8DKXyItI6dvaMWnLCGI90PkzfyPKMyzofp68c2Ngi6WpN
-        nOoZC0Ygbi5Zc9shiiJMMoHHGQ==
-X-Google-Smtp-Source: ABdhPJwYvC+Z5ZdgGh31gUC2Q60ovUZ9XGSX4w1+f97jUslWlDxDur07VZVEPifi0eTRojgeMah0+g==
-X-Received: by 2002:a17:902:ac84:: with SMTP id h4mr2112048plr.334.1597920258939;
-        Thu, 20 Aug 2020 03:44:18 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3PXtPhgN15xkqptqDoOT+6OR5bz1DwLunRYJNev9KR4=;
+        b=ZRcECuncXMouYjE88eMJI7/YMKIaHcy12AWYylhQspSOk6dmSRrvE8vpPgw0rW32lD
+         yMc+mZNLgMm6D4PZ69oZCjLTuQdKJrBFhDfF1iK+VYIjgR0UtHtuCdnh7Fp+7CHSAkF9
+         dcp3lT+sdhGf9YCt4xy8kleriptwZbq8QGgVPD50QMRTPhYqdtuzugo/c7drYrwAtkeP
+         EhwDaQz2Z9dyB63NoSGHoTCst8Qxmc7JKNfPm6mudpgfvog+f9MFEyAtXuKr77Pu6KZ3
+         djlx2WPH9uWY/nKzLcF22BBkQcFf4Ir1+cDKfRBrsA+lL1bOkhBtJedhd/XMSkvxi+gZ
+         hE7Q==
+X-Gm-Message-State: AOAM530F2FNvJSevPoEGciTgEdj/nH/YagfJd2JMq+0lO4pOLgt/0s1H
+        mlEDwHtfrTGKf6a228Vd5Gvc5w==
+X-Google-Smtp-Source: ABdhPJzGI4PMt2rxPglqL7BKdt2SWVVgHiE/GuL96GZfgXci06o5FRoVl3y2qYxeBmL8p5wYvmHOSw==
+X-Received: by 2002:a65:4808:: with SMTP id h8mr2045357pgs.113.1597920255960;
+        Thu, 20 Aug 2020 03:44:15 -0700 (PDT)
 Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id e125sm2435256pfh.69.2020.08.20.03.44.17
+        by smtp.gmail.com with ESMTPSA id e8sm2352323pfd.34.2020.08.20.03.44.14
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 03:44:18 -0700 (PDT)
+        Thu, 20 Aug 2020 03:44:15 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     rnayak@codeaurora.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
+To:     rnayak@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
         Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Qiang Yu <yuq825@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Clark <robdclark@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Paul <sean@poorly.run>, Shawn Guo <shawnguo@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-pm@vger.kernel.org,
         Vincent Guittot <vincent.guittot@linaro.org>,
         Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] cpufreq: imx6q: Unconditionally call dev_pm_opp_of_remove_table()
-Date:   Thu, 20 Aug 2020 16:13:50 +0530
-Message-Id: <d720fb56f6d526fda30d1a22931597f94f8cf5df.1597919647.git.viresh.kumar@linaro.org>
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        lima@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH 0/8] opp: Unconditionally call dev_pm_opp_of_remove_table()
+Date:   Thu, 20 Aug 2020 16:13:49 +0530
+Message-Id: <cover.1597919647.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
-In-Reply-To: <cover.1597919647.git.viresh.kumar@linaro.org>
-References: <cover.1597919647.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,58 +97,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
-find the OPP table with error -ENODEV (i.e. OPP table not present for
-the device). And we can call dev_pm_opp_of_remove_table()
-unconditionally here.
+Hello,
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/cpufreq/imx6q-cpufreq.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+This cleans up some of the user code around calls to
+dev_pm_opp_of_remove_table().
 
-diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
-index ef7b34c1fd2b..5bf5fc759881 100644
---- a/drivers/cpufreq/imx6q-cpufreq.c
-+++ b/drivers/cpufreq/imx6q-cpufreq.c
-@@ -48,7 +48,6 @@ static struct clk_bulk_data clks[] = {
- };
- 
- static struct device *cpu_dev;
--static bool free_opp;
- static struct cpufreq_frequency_table *freq_table;
- static unsigned int max_freq;
- static unsigned int transition_latency;
-@@ -390,9 +389,6 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- 		goto put_reg;
- 	}
- 
--	/* Because we have added the OPPs here, we must free them */
--	free_opp = true;
--
- 	if (of_machine_is_compatible("fsl,imx6ul") ||
- 	    of_machine_is_compatible("fsl,imx6ull")) {
- 		ret = imx6ul_opp_check_speed_grading(cpu_dev);
-@@ -507,8 +503,7 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
- free_freq_table:
- 	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table);
- out_free_opp:
--	if (free_opp)
--		dev_pm_opp_of_remove_table(cpu_dev);
-+	dev_pm_opp_of_remove_table(cpu_dev);
- put_reg:
- 	if (!IS_ERR(arm_reg))
- 		regulator_put(arm_reg);
-@@ -528,8 +523,7 @@ static int imx6q_cpufreq_remove(struct platform_device *pdev)
- {
- 	cpufreq_unregister_driver(&imx6q_cpufreq_driver);
- 	dev_pm_opp_free_cpufreq_table(cpu_dev, &freq_table);
--	if (free_opp)
--		dev_pm_opp_of_remove_table(cpu_dev);
-+	dev_pm_opp_of_remove_table(cpu_dev);
- 	regulator_put(arm_reg);
- 	if (!IS_ERR(pu_reg))
- 		regulator_put(pu_reg);
+All the patches can be picked by respective maintainers directly except
+for the last patch, which needs the previous two to get merged first.
+
+These are based for 5.9-rc1.
+
+Rajendra, Since most of these changes are related to qcom stuff, it
+would be great if you can give them a try. I wasn't able to test them
+due to lack of hardware.
+
+Viresh Kumar (8):
+  cpufreq: imx6q: Unconditionally call dev_pm_opp_of_remove_table()
+  drm/lima: Unconditionally call dev_pm_opp_of_remove_table()
+  drm/msm: Unconditionally call dev_pm_opp_of_remove_table()
+  mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+  spi: spi-geni-qcom: Unconditionally call dev_pm_opp_of_remove_table()
+  spi: spi-qcom-qspi: Unconditionally call dev_pm_opp_of_remove_table()
+  tty: serial: qcom_geni_serial: Unconditionally call
+    dev_pm_opp_of_remove_table()
+  qcom-geni-se: remove has_opp_table
+
+ drivers/cpufreq/imx6q-cpufreq.c         | 10 ++--------
+ drivers/gpu/drm/lima/lima_devfreq.c     |  6 +-----
+ drivers/gpu/drm/lima/lima_devfreq.h     |  1 -
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 10 +++-------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h |  1 -
+ drivers/gpu/drm/msm/dsi/dsi_host.c      |  8 ++------
+ drivers/mmc/host/sdhci-msm.c            | 11 +++--------
+ drivers/spi/spi-geni-qcom.c             | 10 +++-------
+ drivers/spi/spi-qcom-qspi.c             | 11 +++--------
+ drivers/tty/serial/qcom_geni_serial.c   | 10 +++-------
+ include/linux/qcom-geni-se.h            |  2 --
+ 11 files changed, 20 insertions(+), 60 deletions(-)
+
 -- 
 2.25.0.rc1.19.g042ed3e048af
 
