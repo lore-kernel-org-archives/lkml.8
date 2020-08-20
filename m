@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB608C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94715C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C93D122B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66EBF208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:43:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916623;
-	bh=MDDyBPpHCPkjL6gnxEy7Y1yVEhWZUKASThmRxTHfrlk=;
+	s=default; t=1597916631;
+	bh=nr/2VzfFW/HOWdF78Zd5ouU6Ua0NDBxDOqvDSXOvJ9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dv+XzFDZOl0KL7R8WAhcvP2yp35QqiyF6z/+BAoKcZY1frwBkLQ9dRfgXMgR4JlH9
-	 VodOBzT2QRyQqZJEy2Vvk3RQqMxYiVSjRSPuLL3RedMS5kLw/2fIzVNjQAFrUZlvgp
-	 bz1M3eP7hc5XwGqIdhKnpS4LrjsQMOWknoFGu03w=
+	b=rtY1JYN3W4GJS66OclPjvgUhq/rSTnppOE8xUog6zIkCnUwppDlBJoax6SyfGiw1G
+	 9D69hB+f60A19ewyjg4uIQ8xSQHffK+3O4aUQwbbz6ZoZX+rRHwdNxrDnvGmKTgaQQ
+	 qjWmBnbbgTaCINjsi7eAjofPaSl/d2Mi3cj80EUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgHTJni (ORCPT
+        id S1729270AbgHTJns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:43:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36668 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:43:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729145AbgHTJmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:12 -0400
+        id S1728902AbgHTJmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E738620724;
-        Thu, 20 Aug 2020 09:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A521E20855;
+        Thu, 20 Aug 2020 09:42:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916531;
-        bh=MDDyBPpHCPkjL6gnxEy7Y1yVEhWZUKASThmRxTHfrlk=;
+        s=default; t=1597916541;
+        bh=nr/2VzfFW/HOWdF78Zd5ouU6Ua0NDBxDOqvDSXOvJ9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w73rahNLUgJxiBtDMvu1oeR3M7MvmoEAt4inrHFI2nUPrSu3S0sWxmk/wKAl6Qu4F
-         BwrVrYUCoASkl65AT4peDOu/QfPqhYk5GjQk34qH06LgQJ/qFF68IyND9FMprBRDGK
-         ueGErDXYl6i7sk6eubacRwNu2F3hPuY0m6j8Ps3M=
+        b=GGOD8rxHUSrbo+cMycOh3CloluEwCc+tvb0d+euU/n4VVYJ0REo46QMaprlZNaLnO
+         LH1FOUDSM+ntCYihJ1Qf7sZuva2j+ut3nF/ObQxnMr/oANkdf6UrkBzQJudBld/KRb
+         gX8vQ1GSqww7DZMuLhFXi68rzvDFLJV0th3bsWV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 131/204] ima: Fail rule parsing when appraise_flag=blacklist is unsupportable
-Date:   Thu, 20 Aug 2020 11:20:28 +0200
-Message-Id: <20200820091612.823232441@linuxfoundation.org>
+Subject: [PATCH 5.7 165/204] vdpa_sim: init iommu lock
+Date:   Thu, 20 Aug 2020 11:21:02 +0200
+Message-Id: <20200820091614.460785917@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,66 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
+From: Michael S. Tsirkin <mst@redhat.com>
 
-[ Upstream commit 5f3e92657bbfb63ad3109433d843c89996114b03 ]
+[ Upstream commit 1e3e792650d2c0df8dd796906275b7c79e278664 ]
 
-Verifying that a file hash is not blacklisted is currently only
-supported for files with appended signatures (modsig).  In the future,
-this might change.
+The patch adding the iommu lock did not initialize it.
+The struct is zero-initialized so this is mostly a problem
+when using lockdep.
 
-For now, the "appraise_flag" option is only appropriate for appraise
-actions and its "blacklist" value is only appropriate when
-CONFIG_IMA_APPRAISE_MODSIG is enabled and "appraise_flag=blacklist" is
-only appropriate when "appraise_type=imasig|modsig" is also present.
-Make this clear at policy load so that IMA policy authors don't assume
-that other uses of "appraise_flag=blacklist" are supported.
-
-Fixes: 273df864cf74 ("ima: Check against blacklisted hashes for files with modsig")
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Reivewed-by: Nayna Jain <nayna@linux.ibm.com>
-Tested-by: Nayna Jain <nayna@linux.ibm.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Cc: Max Gurtovoy <maxg@mellanox.com>
+Fixes: 0ea9ee430e74 ("vdpasim: protect concurrent access to iommu iotlb")
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/integrity/ima/ima_policy.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ drivers/vdpa/vdpa_sim/vdpa_sim.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 3e3e568c81309..a59bf2f5b2d4f 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -1035,6 +1035,11 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 		return false;
- 	}
+diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+index e2dc8edd680e0..3554f8de00e64 100644
+--- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
++++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
+@@ -330,6 +330,7 @@ static struct vdpasim *vdpasim_create(void)
  
-+	/* Ensure that combinations of flags are compatible with each other */
-+	if (entry->flags & IMA_CHECK_BLACKLIST &&
-+	    !(entry->flags & IMA_MODSIG_ALLOWED))
-+		return false;
-+
- 	return true;
- }
+ 	INIT_WORK(&vdpasim->work, vdpasim_work);
+ 	spin_lock_init(&vdpasim->lock);
++	spin_lock_init(&vdpasim->iommu_lock);
  
-@@ -1371,9 +1376,17 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
- 				result = -EINVAL;
- 			break;
- 		case Opt_appraise_flag:
-+			if (entry->action != APPRAISE) {
-+				result = -EINVAL;
-+				break;
-+			}
-+
- 			ima_log_string(ab, "appraise_flag", args[0].from);
--			if (strstr(args[0].from, "blacklist"))
-+			if (IS_ENABLED(CONFIG_IMA_APPRAISE_MODSIG) &&
-+			    strstr(args[0].from, "blacklist"))
- 				entry->flags |= IMA_CHECK_BLACKLIST;
-+			else
-+				result = -EINVAL;
- 			break;
- 		case Opt_permit_directio:
- 			entry->flags |= IMA_PERMIT_DIRECTIO;
+ 	dev = &vdpasim->vdpa.dev;
+ 	dev->coherent_dma_mask = DMA_BIT_MASK(64);
 -- 
 2.25.1
 
