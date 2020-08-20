@@ -2,148 +2,98 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A44C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B316C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91BAC20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:42:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="IAMNJsQo"
+	by mail.kernel.org (Postfix) with ESMTP id 20AD820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597963403;
+	bh=5xHB7attkpmdUNvdTySFDMgYf8GNV6BlGCYBOuLcHEc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QdS9gSsakW2mCAacOVBRnhtZWpD1TgEhN4CDt1i6pPITH52jfMAon9A4oqxHkelp5
+	 5RA8wZE7VzIGmwklSsmUqzsNUnqtngUoOh3jzorRbggHqyjDkjct/xsqsVXvBmz7xD
+	 UD69Rpsld7O7MSCVkNKUjcSa+Bqiw8OGRL8dbLi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgHTWmz (ORCPT
+        id S1728580AbgHTWnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:42:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38161 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728477AbgHTWmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:42:53 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com ([134.134.139.76])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 07KMfYf0053672
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Thu, 20 Aug 2020 15:41:34 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 07KMfYf0053672
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020072401; t=1597963300;
-        bh=s4KiY6IVPnssifxLe3ApzH+AtYKkZ/XrfXH15ucZ9e0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IAMNJsQo4KkZCk6UDBgAsJFK1T4nqrdipQ0KSG2bi5XlLefzOFyNzJfd6JBp/Eqnj
-         VHbE4iAUQMWz5ocgQpUMbWJZ48TsXSpcvRbzTndwkfz78DBqhhQshfKmOQgTqfl/Wj
-         RBrRX6RLrQLFcyq+62UQqNTl5iqXyJkx64mYyx75plbxBnh30PzkIKu+Mutd3qUOT0
-         A4ujtEmGkcsIjEOIH+UIsRNZ+WEbjtLf8z10eiI1dZo9znixEIR6kWCNqNX8JEo+kL
-         Mat2a2XlApq5aNd3GFkvQ74Yb62mM52q5ryXOb1H145zrd8cWYB0dPr/gIaowZMVMU
-         Kmllk8PLEm/fA==
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Nick Desaulniers <ndesaulniers@google.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-References: <20200817220212.338670-1-ndesaulniers@google.com>
- <fae91af3-4e08-a929-e5c3-25271ad7324b@zytor.com>
- <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com>
- <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan>
- <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <edd38955-dad1-ca6c-d783-6cb529d8dd3a@zytor.com>
-Date:   Thu, 20 Aug 2020 15:41:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 20 Aug 2020 18:43:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728477AbgHTWnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 18:43:21 -0400
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 248BA22B40
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 22:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597963400;
+        bh=5xHB7attkpmdUNvdTySFDMgYf8GNV6BlGCYBOuLcHEc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=COYHVBXO3lN06Rb02cRiYn5f/fqzDSmlDtxTdw1OZp0e9jpSARPBBrCgxDlqxBLz8
+         3zUefbTY6RZimHz3I2/okoRrPpv88Ovypw14zYVVXm/XzNuCCy22hRi0qNBQST53YK
+         /tCG9XElPADBs8w74fIZAZbk6itbOWNkyAxd3fps=
+Received: by mail-wr1-f44.google.com with SMTP id 88so189626wrh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:43:20 -0700 (PDT)
+X-Gm-Message-State: AOAM532AQUC/Th4z/vftcadPJQRJRURjHf7AXOUKKjUugPOW42inopCi
+        oS0IJm/oyaXvnCmXvIOY+y6nnQlATI6gXDF1uFHXCw==
+X-Google-Smtp-Source: ABdhPJyIgAqsMA8JsQyikj/7ZlGQn610nb8EEcUeoTdpgwBdv87N4yg0Jjwegi5kVutkq43iZp2VoPR538rleGH4AVg=
+X-Received: by 2002:adf:cc88:: with SMTP id p8mr7829wrj.70.1597963398679; Thu,
+ 20 Aug 2020 15:43:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <8b9bd05f187231df008d48cf818a6a311cbd5c98.1597882384.git.luto@kernel.org>
+ <20200820084427.GO2674@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200820084427.GO2674@hirez.programming.kicks-ass.net>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Thu, 20 Aug 2020 15:43:07 -0700
+X-Gmail-Original-Message-ID: <CALCETrXkZdR4Vvk1UXeWapHrBug+d6Nr-=VcbFHzw8PKzvLJCw@mail.gmail.com>
+Message-ID: <CALCETrXkZdR4Vvk1UXeWapHrBug+d6Nr-=VcbFHzw8PKzvLJCw@mail.gmail.com>
+Subject: Re: [PATCH] x86/debug: Allow a single level of #DB recursion
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        "Robert O'Callahan" <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Will Deacon <will@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-18 13:58, Nick Desaulniers wrote:
-> On Tue, Aug 18, 2020 at 1:27 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
->>
->> On Tue, Aug 18, 2020 at 1:24 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->>>
->>> On Tue, Aug 18, 2020 at 12:13:22PM -0700, Linus Torvalds wrote:
->>>> On Tue, Aug 18, 2020 at 12:03 PM H. Peter Anvin <hpa@zytor.com> wrote:
->>>>>
->>>>> I'm not saying "change the semantics", nor am I saying that playing
->>>>> whack-a-mole *for a limited time* is unreasonable. But I would like to go back
->>>>> to the compiler authors and get them to implement such a #pragma: "this
->>>>> freestanding implementation *does* support *this specific library function*,
->>>>> and you are free to call it."
->>>>
->>>> I'd much rather just see the library functions as builtins that always
->>>> do the right thing (with the fallback being "just call the standard
->>>> function").
->>>>
->>>> IOW, there's nothing wrong with -ffreestanding if you then also have
->>>> __builtin_memcpy() etc, and they do the sane compiler optimizations
->>>> for memcpy().
->>>>
->>>> What we want to avoid is the compiler making *assumptions* based on
->>>> standard names, because we may implement some of those things
->>>> differently.
->>>>
->>>
->>> -ffreestanding as it stands today does have __builtin_memcpy and
->>> friends. But you need to then use #define memcpy __builtin_memcpy etc,
->>> which is messy and also doesn't fully express what you want. #pragma, or
->>> even just allowing -fbuiltin-foo options would be useful.
-> 
-> I do really like the idea of -fbuiltin-foo.  For example, you'd specify:
-> 
-> -ffreestanding -fbuiltin-bcmp
-> 
-> as an example. `-ffreestanding` would opt you out of ALL libcall
-> optimizations, `-fbuiltin-bcmp` would then opt you back in to
-> transforms that produce bcmp.  That way you're informing the compiler
-> more precisely about the environment you'd be targeting.  It feels
-> symmetric to existing `-fno-` flags (clang makes -f vs -fno- pretty
-> easy when there is such symmetry).  And it's already convention that
-> if you specify multiple conflicting compiler flags, then the latter
-> one specified "wins."  In that sense, turning back on specific
-> libcalls after disabling the rest looks more ergonomic to me.
-> 
-> Maybe Eli or David have thoughts on why that may or may not be as
-> ergonomic or possible to implement as I imagine?
-> 
+On Thu, Aug 20, 2020 at 1:44 AM <peterz@infradead.org> wrote:
+>
+> On Wed, Aug 19, 2020 at 05:15:43PM -0700, Andy Lutomirski wrote:
+> > +static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
+> > +{
+> > +     *dr6 = debug_read_clear_dr6();
+> >  }
+> >
+> >  static __always_inline void debug_exit(unsigned long dr7)
+> >  {
+> > -     local_db_restore(dr7);
+> >  }
+>
+> That's all unused after this patch, might as well remove it.
 
-I would prefer this to be a #pragma for a header file, rather than
-having a very long command line for everything...
-
-	-hpa
-
+Whoops.
