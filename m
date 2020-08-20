@@ -2,123 +2,144 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6046AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ECAC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261BB204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED45208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:14:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QVv6MSZ8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qd5r04De"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgHTSL0 (ORCPT
+        id S1727011AbgHTSOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:11:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53004 "EHLO
+        Thu, 20 Aug 2020 14:14:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgHTSLW (ORCPT
+        with ESMTP id S1726819AbgHTSOR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:11:22 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C191C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:11:21 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a5so2993014wrm.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:11:21 -0700 (PDT)
+        Thu, 20 Aug 2020 14:14:17 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FDDC061385;
+        Thu, 20 Aug 2020 11:14:17 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id p14so2551217wmg.1;
+        Thu, 20 Aug 2020 11:14:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oPlGwJIUawBNMyu0GOt8u+swdga2De9aEs3KqrqQvrs=;
-        b=QVv6MSZ8Sh06WnMusxMgELfzaIEbb2IkEvNAueK335WPwymR2s7FFHdnAs6qw0+41z
-         YucDvXomV/OWqs4SUkwEyzhxh2dS9zJBFLzIARA3RBrRM4kf08+EqfGyeAVtUtpkaV6t
-         Zg1TXHJZKyik23/eXCy/rv/Kb2gOmaARcKGnMgnbNLBKH2QmOSqIYUPZ9qyTuvgunnwL
-         5K/pjUcfgkt0KK0iIDZIOg0G2X79W7y/BYlk6djqWExJ2pQajQ0Z3pn7i8ie2S9CyhGD
-         l3BiPQcBqCIde/rfb6123vgwXvhQsYQPWHUT/ZSLTbgULk/JiKICKi7/lixWk/wKQPcj
-         ekdA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hq9NJIrIHetIv+8ZmpoQGrS4jg1QkLt04qsY0F4sVgU=;
+        b=Qd5r04DeY7+xT7tiXOhB1GIYKnSQf/0M1zwfsOJcbcUOxwu+/TLg6DVeGpr10KJdjq
+         JgWR8jmmoTmnkEwfgS3DV/HJqQi4/bPVG1luMnos4gRDkLmeAwoyQsJ4lk9ftRXbmBaX
+         QLCyjjtEGpVRfH0BWHxdt+BGmwkZHvvFaEoqeDu80vevOZSCxl+AkWMvjvKSvE5F++dv
+         FugyjLXidUlLVL4KpDTAxJFDx2uMYMBCfYbAtUopsNb0310DLKYu56CO5JwEMLN5FnSO
+         OsUorCqzsSlIFn7BnKgCIGA4sz65uenJT8jD3eYf30sWORxZEouANJhaU4eMRVkwNs1q
+         uFHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oPlGwJIUawBNMyu0GOt8u+swdga2De9aEs3KqrqQvrs=;
-        b=XYqSjexm3LKI+YDQ7U2RijeiiPKn5d59HQKqJQCeUKrKwn+S4pc86kQ0N0akoe3Bdh
-         vR3zNZAiJL9JeCsLkQD8EeT1A26+O3fcPZpCZnVf+0z95LUwygI2hJkRaAop0j6va1P9
-         NHvqzDK6veeOhjvUYfvLo1eaGcBRiuf3ThBes1wdBRzL/0n6LK9Tmi2cNZrP7/IeY6yh
-         jP30OpmNiFj46Cc9iw5y8TAretMFmDc+b0AyxoG93devYP+Cbdr3k9uv8Pp+SpM/4kNl
-         A/NNOH+1vtowUHhVkiDYVBDl7jpHpFrqZDVVmCyhJK3DJtrmeFYjBkfeJQ0uWlKvobpC
-         1IvA==
-X-Gm-Message-State: AOAM533LlZby4Z9YJuxM2xTONxAfLK3NtxHqdonbogzwU09Bg8JM8UL1
-        7tZX4daA8FWVHLxPF1+wzzAgNFyXzESCCS9pgpU=
-X-Google-Smtp-Source: ABdhPJxuIGpO6/AQWt7ia2owpwQILxjXyYzx0hIYF34TL+5QaBNo3srd6VF6rJurt0B1vw0fUdiH500DdzT7oNp8RSk=
-X-Received: by 2002:adf:a351:: with SMTP id d17mr4251209wrb.111.1597947079898;
- Thu, 20 Aug 2020 11:11:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hq9NJIrIHetIv+8ZmpoQGrS4jg1QkLt04qsY0F4sVgU=;
+        b=sRA2G+yBehlNwAzPB6FQVrYYeVcPME/4sc79Ejt87Bj2aJX9AYN9qla7H2ipexSOL4
+         rQI8551R/TLRDACW8yadw5LA0iwWu3oVoyuEe2qVOSjAZkCB/pI6wySenOv5LMijyv2c
+         utCGKAcWTchL9crbXK9B4qX4G0tnNRC1opI9DGthctBVxTf3B70YngrdrD58Hs40eGa2
+         l9HfunvjdxqnucjJlniubQ7t8XUWk1bKUuKvvZ4erJ2ADq3E6NgyBiOCvAQ3+Mh+Ai1U
+         qEwPh5fQXhMWMwTeCqIQObAwKtTsYoneypiq6MXFr9bt4xjMsdH3CYEufI4ARfj8LyYQ
+         r3IQ==
+X-Gm-Message-State: AOAM532WX97UZfIt/0XLkO8TcrCAgPtYjOXksFZ6nMnyT+LLmR9r8+X1
+        1GS7oXX53Q6GOi634OKzASE=
+X-Google-Smtp-Source: ABdhPJwsj2mTHtO2vkobg4pVo9KBxN7sxwBHx9GxCi2/tYI7dIwaKFah6UY49305CyAZK3rA7aSnXg==
+X-Received: by 2002:a1c:7f17:: with SMTP id a23mr82793wmd.28.1597947256403;
+        Thu, 20 Aug 2020 11:14:16 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id p22sm5347045wmc.38.2020.08.20.11.14.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 11:14:15 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Bradley Grove <linuxdrivers@attotech.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] scsi: esas2r: Remove unnecessary casts
+Date:   Thu, 20 Aug 2020 19:14:11 +0100
+Message-Id: <20200820181411.866057-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-References: <20200819113409.10137-1-wanghai38@huawei.com> <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
-In-Reply-To: <DM6PR12MB26191A1647B5AADB390CDE77E45A0@DM6PR12MB2619.namprd12.prod.outlook.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 20 Aug 2020 14:11:08 -0400
-Message-ID: <CADnq5_O_+GJ6z4gN9nf4pm38v83VCA9paNrumJPSSx-S0wD2eA@mail.gmail.com>
-Subject: Re: [PATCH -next] drm/amd/powerplay: remove duplicate include
-To:     "Quan, Evan" <Evan.Quan@amd.com>
-Cc:     Wang Hai <wanghai38@huawei.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
+In a number of places in esas2r_ioctl.c, the void* returned from
+pci_alloc_consistent() is cast unnecessarily. Remove casts.
 
-Alex
+Issue identified with Coccinelle.
 
-On Wed, Aug 19, 2020 at 11:00 PM Quan, Evan <Evan.Quan@amd.com> wrote:
->
-> [AMD Official Use Only - Internal Distribution Only]
->
-> Reviewed-by: Evan Quan <evan.quan@amd.com>
->
-> -----Original Message-----
-> From: Wang Hai <wanghai38@huawei.com>
-> Sent: Wednesday, August 19, 2020 7:34 PM
-> To: Quan, Evan <Evan.Quan@amd.com>; Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian <Christian.Koenig@amd.com>; airlied@linux.ie; daniel@ffwll.ch
-> Cc: amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH -next] drm/amd/powerplay: remove duplicate include
->
-> Remove asic_reg/nbio/nbio_6_1_offset.h which is included more than once
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Wang Hai <wanghai38@huawei.com>
-> ---
->  drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
-> index e6d9e84059e1..0d08c57d3bca 100644
-> --- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
-> +++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_inc.h
-> @@ -34,7 +34,6 @@
->  #include "asic_reg/gc/gc_9_2_1_offset.h"
->  #include "asic_reg/gc/gc_9_2_1_sh_mask.h"
->
-> -#include "asic_reg/nbio/nbio_6_1_offset.h"
->  #include "asic_reg/nbio/nbio_6_1_offset.h"
->  #include "asic_reg/nbio/nbio_6_1_sh_mask.h"
->
-> --
-> 2.17.1
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/scsi/esas2r/esas2r_ioctl.c | 28 +++++++++++++---------------
+ 1 file changed, 13 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/scsi/esas2r/esas2r_ioctl.c b/drivers/scsi/esas2r/esas2r_ioctl.c
+index cc620f10eabc..08f4e43c7d9e 100644
+--- a/drivers/scsi/esas2r/esas2r_ioctl.c
++++ b/drivers/scsi/esas2r/esas2r_ioctl.c
+@@ -1548,11 +1548,10 @@ static int allocate_fw_buffers(struct esas2r_adapter *a, u32 length)
+ 
+ 	a->firmware.orig_len = length;
+ 
+-	a->firmware.data = (u8 *)dma_alloc_coherent(&a->pcid->dev,
+-						    (size_t)length,
+-						    (dma_addr_t *)&a->firmware.
+-						    phys,
+-						    GFP_KERNEL);
++	a->firmware.data = dma_alloc_coherent(&a->pcid->dev,
++					      (size_t)length,
++					      (dma_addr_t *)&a->firmware.phys,
++					      GFP_KERNEL);
+ 
+ 	if (!a->firmware.data) {
+ 		esas2r_debug("buffer alloc failed!");
+@@ -1895,11 +1894,11 @@ int esas2r_write_vda(struct esas2r_adapter *a, const char *buf, long off,
+ 
+ 	if (!a->vda_buffer) {
+ 		dma_addr_t dma_addr;
+-		a->vda_buffer = (u8 *)dma_alloc_coherent(&a->pcid->dev,
+-							 (size_t)
+-							 VDA_MAX_BUFFER_SIZE,
+-							 &dma_addr,
+-							 GFP_KERNEL);
++		a->vda_buffer = dma_alloc_coherent(&a->pcid->dev,
++						   (size_t)
++						   VDA_MAX_BUFFER_SIZE,
++						   &dma_addr,
++						   GFP_KERNEL);
+ 
+ 		a->ppvda_buffer = dma_addr;
+ 	}
+@@ -2064,11 +2063,10 @@ int esas2r_write_fs(struct esas2r_adapter *a, const char *buf, long off,
+ re_allocate_buffer:
+ 			a->fs_api_buffer_size = length;
+ 
+-			a->fs_api_buffer = (u8 *)dma_alloc_coherent(
+-				&a->pcid->dev,
+-				(size_t)a->fs_api_buffer_size,
+-				(dma_addr_t *)&a->ppfs_api_buffer,
+-				GFP_KERNEL);
++			a->fs_api_buffer = dma_alloc_coherent(&a->pcid->dev,
++							      (size_t)a->fs_api_buffer_size,
++							      (dma_addr_t *)&a->ppfs_api_buffer,
++							      GFP_KERNEL);
+ 		}
+ 	}
+ 
+-- 
+2.28.0
+
