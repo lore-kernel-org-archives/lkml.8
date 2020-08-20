@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C56C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40082C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF3372078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141B32078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916927;
-	bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
+	s=default; t=1597916931;
+	bh=t9cMJsQx9/T2NSfwXlKPPTrbCGc8m3ntagvDxn3lkC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eMd0cAIOPIWyvYc8XyH+gFiQStNVj9JdVOBxRt+gXkQncCgtQ6l6zN3++x9LHxDv
-	 EFGNixRki3Dw0nLboe8nqvPW8IoT3gvEYrjPQfEc8/KbNVryyLp5WeLWGWG6kioN+W
-	 B4Pgm2ltoUaDgx9KivHBLjskPjReXlQNmHrR+VVc=
+	b=we73rDtjvJTVU/L0rPuu+rNwWekOAPY308oOgbe84qwPR6muD92KX7xunK38Zo0T7
+	 5SWWxUjPW42gQaAVO4SMiAWuJyOVfXIBXZUdPw663WvCJ4cW4/lqEOuP81oo5YcUBH
+	 yUHaQIlkvjimQ8aIs14DrFPIr5c0iu8UM0p0dgr8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgHTJsp (ORCPT
+        id S1729576AbgHTJss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:48:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53358 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:48:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgHTJs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:29 -0400
+        id S1729562AbgHTJsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4840E2078D;
-        Thu, 20 Aug 2020 09:48:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C082C2224D;
+        Thu, 20 Aug 2020 09:48:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916908;
-        bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
+        s=default; t=1597916917;
+        bh=t9cMJsQx9/T2NSfwXlKPPTrbCGc8m3ntagvDxn3lkC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p7Z01Xvkx1A2O3h033xRTdSI1vNj3Jc3Wy+0Y+kjt49WqLvL+tUv+J/yMydy6RVsd
-         4GYVrTLxkl+tZ7o0HQQRapAd6nxgEcoDlygst24+9HHKfLM0IgzzfHbX7eYHavk1pB
-         okT91J6MIya6h7oIah8X0Q1XhdfiC3vwR47OAtKs=
+        b=AkeJ2zQOL8nidBHWWRwQYl2r6LmdZUaad+vCuH0OcUxo04D4p5xnVxZTSRHphgKX5
+         lEjssFZKkxt0Tc3e5zGByasXfcD3zRIhbJDBtt5bZanCNWZ5iTELhrtXwLToEK1ZHy
+         O+2dCcwYbhPhX7pWzRm1a9hdDKB5GLlCojcRThGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/152] USB: serial: ftdi_sio: make process-packet buffer unsigned
-Date:   Thu, 20 Aug 2020 11:20:56 +0200
-Message-Id: <20200820091558.295106724@linuxfoundation.org>
+Subject: [PATCH 5.4 092/152] crypto: af_alg - Fix regression on empty requests
+Date:   Thu, 20 Aug 2020 11:20:59 +0200
+Message-Id: <20200820091558.445873116@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -59,94 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-[ Upstream commit ab4cc4ef6724ea588e835fc1e764c4b4407a70b7 ]
+[ Upstream commit 662bb52f50bca16a74fe92b487a14d7dccb85e1a ]
 
-Use an unsigned type for the process-packet buffer argument and give it
-a more apt name.
+Some user-space programs rely on crypto requests that have no
+control metadata.  This broke when a check was added to require
+the presence of control metadata with the ctx->init flag.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+This patch fixes the regression by setting ctx->init as long as
+one sendmsg(2) has been made, with or without a control message.
+
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ crypto/af_alg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 9ad44a96dfe3a..96b9e2768ac5c 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2480,12 +2480,12 @@ static int ftdi_prepare_write_buffer(struct usb_serial_port *port,
- #define FTDI_RS_ERR_MASK (FTDI_RS_BI | FTDI_RS_PE | FTDI_RS_FE | FTDI_RS_OE)
+diff --git a/crypto/af_alg.c b/crypto/af_alg.c
+index ed8ace8675b77..35e026ba2c7ed 100644
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -851,6 +851,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 		err = -EINVAL;
+ 		goto unlock;
+ 	}
++	ctx->init = true;
  
- static int ftdi_process_packet(struct usb_serial_port *port,
--		struct ftdi_private *priv, char *packet, int len)
-+		struct ftdi_private *priv, unsigned char *buf, int len)
- {
-+	unsigned char status;
-+	unsigned char *ch;
- 	int i;
--	char status;
- 	char flag;
--	char *ch;
+ 	if (init) {
+ 		ctx->enc = enc;
+@@ -858,7 +859,6 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
+ 			memcpy(ctx->iv, con.iv->iv, ivsize);
  
- 	if (len < 2) {
- 		dev_dbg(&port->dev, "malformed packet\n");
-@@ -2495,7 +2495,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	/* Compare new line status to the old one, signal if different/
- 	   N.B. packet may be processed more than once, but differences
- 	   are only processed once.  */
--	status = packet[0] & FTDI_STATUS_B0_MASK;
-+	status = buf[0] & FTDI_STATUS_B0_MASK;
- 	if (status != priv->prev_status) {
- 		char diff_status = status ^ priv->prev_status;
- 
-@@ -2521,7 +2521,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 		ctx->aead_assoclen = con.aead_assoclen;
+-		ctx->init = true;
  	}
  
- 	/* save if the transmitter is empty or not */
--	if (packet[1] & FTDI_RS_TEMT)
-+	if (buf[1] & FTDI_RS_TEMT)
- 		priv->transmit_empty = 1;
- 	else
- 		priv->transmit_empty = 0;
-@@ -2535,29 +2535,29 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 * data payload to avoid over-reporting.
- 	 */
- 	flag = TTY_NORMAL;
--	if (packet[1] & FTDI_RS_ERR_MASK) {
-+	if (buf[1] & FTDI_RS_ERR_MASK) {
- 		/* Break takes precedence over parity, which takes precedence
- 		 * over framing errors */
--		if (packet[1] & FTDI_RS_BI) {
-+		if (buf[1] & FTDI_RS_BI) {
- 			flag = TTY_BREAK;
- 			port->icount.brk++;
- 			usb_serial_handle_break(port);
--		} else if (packet[1] & FTDI_RS_PE) {
-+		} else if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
--		} else if (packet[1] & FTDI_RS_FE) {
-+		} else if (buf[1] & FTDI_RS_FE) {
- 			flag = TTY_FRAME;
- 			port->icount.frame++;
- 		}
- 		/* Overrun is special, not associated with a char */
--		if (packet[1] & FTDI_RS_OE) {
-+		if (buf[1] & FTDI_RS_OE) {
- 			port->icount.overrun++;
- 			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
- 		}
- 	}
- 
- 	port->icount.rx += len;
--	ch = packet + 2;
-+	ch = buf + 2;
- 
- 	if (port->port.console && port->sysrq) {
- 		for (i = 0; i < len; i++, ch++) {
+ 	while (size) {
 -- 
 2.25.1
 
