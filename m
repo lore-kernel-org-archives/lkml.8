@@ -2,192 +2,99 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A14BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A56620885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:52:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Paw7cVq8"
+	by mail.kernel.org (Postfix) with ESMTP id 8118B208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597946030;
+	bh=S2onjtKk+azyB8BSeqLN/PMWfiLyxvx6Y7RncQLJJJk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Hi/JUTLKfnjOHJ7sOhB+HdbISmyzHogLMA52UWsQcns/aIKWmzIjTTZnEI9QVNNFv
+	 /Rhp8JhuDu4g1ELP7aIHseIeyC9oJh5cT1oWxkL78oFl8On4U/SLjiN1n7WtZ5dHwH
+	 08TFdLAvzwv7/hrbGFaW0OrKIRQYBjMQiGtHEvuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgHTRwj (ORCPT
+        id S1726923AbgHTRxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:52:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50128 "EHLO
+        Thu, 20 Aug 2020 13:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbgHTRwh (ORCPT
+        with ESMTP id S1725859AbgHTRxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:52:37 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19146C061385;
-        Thu, 20 Aug 2020 10:52:37 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id v16so1392341plo.1;
-        Thu, 20 Aug 2020 10:52:37 -0700 (PDT)
+        Thu, 20 Aug 2020 13:53:41 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC13C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:53:40 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id g6so3039197ljn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:53:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=SO5U3LrCCVrf0dhuFlFyMlSOUAOsC6v7W5XQx077kFg=;
-        b=Paw7cVq8IFNYWJuVDtDRqbXOeBEhfkSKmXF4VPw4sZ3HY7RS0bmIUeryQL9QLF9Ag1
-         3JA54+ZzAsWPyuMqhr0rLj3AxuMlWxcc/G+HScpYXRhNpnIYw7/9HXs9yZAsawCVtD5t
-         QWaJ7sgIwbwyqsXGvYGn/pBDcYVUqWGiLe7fjfnA9Hj37ghG03btEL4DNCNRr6GaW17p
-         5E6bzkjwoABE59EcUkMP+6fLwQXH0YVXU+DcMdjD4DAcoNDk6aIDX1GcILDbJnx5hf8s
-         LsZ2UQwJ3SxFes81ci5/BoKNPJLTIoV4OiRG8RoAqQiUe+fb0duAIFemxcuSx2ZKPoB0
-         pYgA==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Cm21W0ohZmom7e6D74SA9Oqp3/uYQ8Zu3LrYYFjK3Q=;
+        b=JSxg4bImHGUfW0cdAyT+bgSlPvjg/mp577Jw/orQ0CYHrpkzK6/oAP2Wj+yQVdM+ug
+         ljkr5mGFRCExcB8RA4NWPULgum40XCPwRGsc5byRJEdYiPH0FY19TfKMhX/9HHyWuGlu
+         P0GNfV+5flShjCc0A/iYqsE3kT4F66MDtWirU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=SO5U3LrCCVrf0dhuFlFyMlSOUAOsC6v7W5XQx077kFg=;
-        b=t8hReHGnbHo+gHUgfnfl7Kq0on2ZbDmCTFH7UX73A7Rm+ihISyreOKmA8BQJh5hfGU
-         ByyrlV3MSE0bap6ncFK1+MWfUMaUITjlvrUw5vqUpC/IXnM7b6qvCANQg5Qa5bzc/19m
-         n/Oe4uhrmALKu4M0odK6NIJ1xDfsw1VkWEpMH3dYgQwjv7WEvEurgIzov3P0cs7QQT5D
-         jy80jtMf1r+zv1W1fQbG0w6bajg6jDYeBYSZWU8w47ObBnM11DFNwbAKTdzSVSm5W54j
-         Vo6mpaCHQVPf59P/TGTKo89LaBm7FQv1S42epraYTcMkPGebjE6H6h/CdQq6H43+90U4
-         AxLA==
-X-Gm-Message-State: AOAM533wiRxGPqS9JGv7nudYy4+VdnDejNv+0SHCeyigjg/HUdFamth+
-        RYIaGo7qIIKRhC8ZL3443g==
-X-Google-Smtp-Source: ABdhPJzgjNLdGHMdCDp5swqoxlSW24QwZJ+2gkR4xTOfq2s5l36kJ4AyJCj3jEGPSK/jRxQQePOPjg==
-X-Received: by 2002:a17:90a:3b09:: with SMTP id d9mr3533629pjc.210.1597945956504;
-        Thu, 20 Aug 2020 10:52:36 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2409:4071:230b:2f0d:b051:6744:d734:a674])
-        by smtp.gmail.com with ESMTPSA id d93sm2918274pjk.44.2020.08.20.10.52.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 10:52:35 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Thu, 20 Aug 2020 23:22:28 +0530
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     madhuparnabhowmik10@gmail.com, dan.j.williams@intel.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-Subject: Re: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe
- and irq handler
-Message-ID: <20200820175228.GA7168@madhuparna-HP-Notebook>
-References: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
- <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Cm21W0ohZmom7e6D74SA9Oqp3/uYQ8Zu3LrYYFjK3Q=;
+        b=loFEhKbN/iguQ1IVaz0c9gqaV2+oVIqDXEkSWBDcmC4IhPCIeLV3LANjsqxe8mWdbN
+         V9prgiNPsoYVnZlHO3ba7ksSGInHHnc2/WG0YbZ1bM06F/6cM6P38Wd9fd8WlRFC7yWh
+         oNUaty3i02GuSp+rdcnh61bv/1M/mxATAUXiHjOyPbzL9bE2OgU+ajRWPxmMyzwkhVn/
+         uTgJjYCXbjQf0JHPmpA5nn0CT7GMcB41vsvEIi9OqUKFVUaXL/NVJRThQ3UXd7fvZZfI
+         /Djv7VYX/qDd8XYxHYdk2XYKoF6iaZ2D4MFWVDjLBWks3fq4WR1uM056WMV55tzmoWNG
+         eJnA==
+X-Gm-Message-State: AOAM5319pegZ3okjiJrSakNkD/vdv/JA417hwjzojgG0uGVWv9czS9nN
+        Dkzb5LQXeWisu1zDfTq4fTpgpjBK/Ha53Q==
+X-Google-Smtp-Source: ABdhPJxh9UiFP/43vWxsy2xbfnko5wYEX7bz/UDF8C+bR+f4/gCcG4qIafrQqKn43oASfXG1i5dQ+A==
+X-Received: by 2002:a2e:8098:: with SMTP id i24mr2194676ljg.50.1597946018373;
+        Thu, 20 Aug 2020 10:53:38 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id t27sm568855ljd.101.2020.08.20.10.53.35
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 10:53:36 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id k13so1397631lfo.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:53:35 -0700 (PDT)
+X-Received: by 2002:a05:6512:3b7:: with SMTP id v23mr2148237lfp.10.1597946015439;
+ Thu, 20 Aug 2020 10:53:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+ <20200819232632.13418-3-john.ogness@linutronix.de> <CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com>
+ <472f2e553805b52d9834d64e4056db965edee329.camel@perches.com>
+In-Reply-To: <472f2e553805b52d9834d64e4056db965edee329.camel@perches.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 20 Aug 2020 10:53:19 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiVd6=XaN1d8qLouWGWHDw6sPz4_VsXjv2OMVAt7rH=cg@mail.gmail.com>
+Message-ID: <CAHk-=wiVd6=XaN1d8qLouWGWHDw6sPz4_VsXjv2OMVAt7rH=cg@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/5] sysrq: use pr_cont_t for cont messages
+To:     Joe Perches <joe@perches.com>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:59:23PM +0200, Paul Cercueil wrote:
-> Hi,
-> 
-> Le dim. 16 août 2020 à 12:52, madhuparnabhowmik10@gmail.com a écrit :
-> > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > 
-> > In probe IRQ is requested before zchan->id is initialized which can be
-> > read in the irq handler. Hence, shift request irq and enable clock after
-> > other initializations complete. Here, enable clock part is not part of
-> > the race, it is just shifted down after request_irq to keep the error
-> > path same as before.
-> > 
-> > Found by Linux Driver Verification project (linuxtesting.org).
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> I don't think there is a race at all, the interrupt handler won't be called
-> before the DMA is registered.
-> 
-> More importantly, this patch will break things, as there are now register
-> writes in the probe before the clock is enabled.
+On Thu, Aug 20, 2020 at 10:48 AM Joe Perches <joe@perches.com> wrote:
 >
-Okay, thanks for reviewing the patch anyway, and sorry for the trouble.
+> Maybe something like this would be reasonable:
 
-Regards,
-Madhuparna
-> Cheers,
-> -Paul
-> 
-> > ---
-> >  drivers/dma/dma-jz4780.c | 44 ++++++++++++++++++++--------------------
-> >  1 file changed, 22 insertions(+), 22 deletions(-)
-> > 
-> > diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-> > index 448f663da89c..5cbc8c3bd6c7 100644
-> > --- a/drivers/dma/dma-jz4780.c
-> > +++ b/drivers/dma/dma-jz4780.c
-> > @@ -879,28 +879,6 @@ static int jz4780_dma_probe(struct platform_device
-> > *pdev)
-> >  		return -EINVAL;
-> >  	}
-> > 
-> > -	ret = platform_get_irq(pdev, 0);
-> > -	if (ret < 0)
-> > -		return ret;
-> > -
-> > -	jzdma->irq = ret;
-> > -
-> > -	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0,
-> > dev_name(dev),
-> > -			  jzdma);
-> > -	if (ret) {
-> > -		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
-> > -		return ret;
-> > -	}
-> > -
-> > -	jzdma->clk = devm_clk_get(dev, NULL);
-> > -	if (IS_ERR(jzdma->clk)) {
-> > -		dev_err(dev, "failed to get clock\n");
-> > -		ret = PTR_ERR(jzdma->clk);
-> > -		goto err_free_irq;
-> > -	}
-> > -
-> > -	clk_prepare_enable(jzdma->clk);
-> > -
-> >  	/* Property is optional, if it doesn't exist the value will remain 0.
-> > */
-> >  	of_property_read_u32_index(dev->of_node, "ingenic,reserved-channels",
-> >  				   0, &jzdma->chan_reserved);
-> > @@ -949,6 +927,28 @@ static int jz4780_dma_probe(struct platform_device
-> > *pdev)
-> >  		jzchan->vchan.desc_free = jz4780_dma_desc_free;
-> >  	}
-> > 
-> > +	ret = platform_get_irq(pdev, 0);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	jzdma->irq = ret;
-> > +
-> > +	ret = request_irq(jzdma->irq, jz4780_dma_irq_handler, 0,
-> > dev_name(dev),
-> > +			  jzdma);
-> > +	if (ret) {
-> > +		dev_err(dev, "failed to request IRQ %u!\n", jzdma->irq);
-> > +		return ret;
-> > +	}
-> > +
-> > +	jzdma->clk = devm_clk_get(dev, NULL);
-> > +	if (IS_ERR(jzdma->clk)) {
-> > +		dev_err(dev, "failed to get clock\n");
-> > +		ret = PTR_ERR(jzdma->clk);
-> > +		goto err_free_irq;
-> > +	}
-> > +
-> > +	clk_prepare_enable(jzdma->clk);
-> > +
-> >  	ret = dmaenginem_async_device_register(dd);
-> >  	if (ret) {
-> >  		dev_err(dev, "failed to register device\n");
-> > --
-> > 2.17.1
-> > 
-> 
-> 
+Yes. At this point this improves the code, rather than making it less legible.
+
+              Linus
