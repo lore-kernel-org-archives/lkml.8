@@ -2,117 +2,89 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE17C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3B020738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926144;
-	bh=XpGUqht0qUztE+MXz8gadBtnxnI03zDezShBJQHV9vk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l7KQbq0ewM5kbel8Y/T0FUEknnXQdpW5KOOI5pUz3ZDxgLZNTkmE8nxNqHqagb8eY
-	 NUQf1Lek5gLn+T2s8KNtvV2fkFGk59fUAHRkLmK5oq7NnhYaF8uGICK/abQB6nhpI+
-	 U/mALHdxN8vySBye02ybpth8adFQoq3mevC92QFA=
+	by mail.kernel.org (Postfix) with ESMTP id BA83A22CAD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbgHTMWX (ORCPT
+        id S1730670AbgHTMWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:22:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730175AbgHTJzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:22:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbgHTJzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:55:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 146B02067C;
-        Thu, 20 Aug 2020 09:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917313;
-        bh=XpGUqht0qUztE+MXz8gadBtnxnI03zDezShBJQHV9vk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GffnBkHDt5/RFlicLnsvx+/y+UjALvIWZoNCbgpsAsEXLB36Rtam8rfAsR/A+kkxt
-         SJV3TesIjCMTHkaMJEn1ZIgCB5ttaDQvbCmsqJ5gYz8OF4eyt58N8CfQWMW745ZEEY
-         GVbxvVr93nC8NqnJTr5ai8PBqk1EM6sd8Zpwpu9E=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kamalheib1@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/92] RDMA/ipoib: Return void from ipoib_ib_dev_stop()
-Date:   Thu, 20 Aug 2020 11:21:35 +0200
-Message-Id: <20200820091540.250143988@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
-References: <20200820091537.490965042@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA50C061757;
+        Thu, 20 Aug 2020 02:55:12 -0700 (PDT)
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1k8hHZ-007L1T-Cn; Thu, 20 Aug 2020 11:54:53 +0200
+Message-ID: <8d35f1aa44b4f228e104275a824adaacf0b36674.camel@sipsolutions.net>
+Subject: Re: WARNING in __cfg80211_connect_result
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
+Cc:     David Miller <davem@davemloft.net>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
+        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-kselftest@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        syzkaller-bugs@googlegroups.com
+Date:   Thu, 20 Aug 2020 11:54:51 +0200
+In-Reply-To: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
+References: <000000000000a7e38a05a997edb2@google.com>
+         <0000000000005c13f505ad3f5c42@google.com>
+         <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamal Heib <kamalheib1@gmail.com>
+On Thu, 2020-08-20 at 11:47 +0200, Jason A. Donenfeld wrote:
+> On Wed, Aug 19, 2020 at 8:42 PM syzbot
+> <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com> wrote:
+> > syzbot has bisected this issue to:
+> > 
+> > commit e7096c131e5161fa3b8e52a650d7719d2857adfd
+> > Author: Jason A. Donenfeld <Jason@zx2c4.com>
+> > Date:   Sun Dec 8 23:27:34 2019 +0000
+> > 
+> >     net: WireGuard secure network tunnel
+> > 
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
+> > start commit:   e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
+> > git tree:       net-next
+> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=14dad8b1900000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=10dad8b1900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
+> > 
+> > Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
+> > Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
+> 
+> Having trouble linking this back to wireguard... Those oopses don't
+> have anything to do with it either. Bisection error?
 
-[ Upstream commit 95a5631f6c9f3045f26245e6045244652204dfdb ]
+Probably the typical generic netlink issue - syzbot often hits the
+generic netlink family by ID, rather than by name. So when it has a
+kernel without WG a generic netlink family disappears, the later ones
+get different IDs, and the issue no longer happens since the ID is now
+no longer valid or hitting some completely different code path ...
 
-The return value from ipoib_ib_dev_stop() is always 0 - change it to be
-void.
-
-Link: https://lore.kernel.org/r/20200623105236.18683-1-kamalheib1@gmail.com
-Signed-off-by: Kamal Heib <kamalheib1@gmail.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/ulp/ipoib/ipoib.h    | 2 +-
- drivers/infiniband/ulp/ipoib/ipoib_ib.c | 4 +---
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib.h b/drivers/infiniband/ulp/ipoib/ipoib.h
-index 85267bbf48360..ef12221017053 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib.h
-+++ b/drivers/infiniband/ulp/ipoib/ipoib.h
-@@ -513,7 +513,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev);
- 
- int ipoib_ib_dev_open_default(struct net_device *dev);
- int ipoib_ib_dev_open(struct net_device *dev);
--int ipoib_ib_dev_stop(struct net_device *dev);
-+void ipoib_ib_dev_stop(struct net_device *dev);
- void ipoib_ib_dev_up(struct net_device *dev);
- void ipoib_ib_dev_down(struct net_device *dev);
- int ipoib_ib_dev_stop_default(struct net_device *dev);
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-index 0f2e80f54d333..925258ffbde3c 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -846,7 +846,7 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
- 	return 0;
- }
- 
--int ipoib_ib_dev_stop(struct net_device *dev)
-+void ipoib_ib_dev_stop(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
- 
-@@ -854,8 +854,6 @@ int ipoib_ib_dev_stop(struct net_device *dev)
- 
- 	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
- 	ipoib_flush_ah(dev);
--
--	return 0;
- }
- 
- int ipoib_ib_dev_open_default(struct net_device *dev)
--- 
-2.25.1
-
-
+johannes
 
