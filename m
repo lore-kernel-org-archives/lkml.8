@@ -2,210 +2,262 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E980FC433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BECC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC81821744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708C52078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbgHTIrg (ORCPT
+        id S1726840AbgHTIrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:47:36 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35196 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgHTIr3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:47:29 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1k8gDo-0002Tf-5o; Thu, 20 Aug 2020 08:46:56 +0000
-Date:   Thu, 20 Aug 2020 10:46:54 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Suren Baghdasaryan <surenb@google.com>
-Cc:     mhocko@suse.com, mingo@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, esyr@redhat.com, christian@kellner.me,
-        areber@redhat.com, shakeelb@google.com, cyphar@cyphar.com,
-        oleg@redhat.com, adobriyan@gmail.com, akpm@linux-foundation.org,
-        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820084654.jdl6jqgxsga7orvf@wittgenstein>
-References: <20200820002053.1424000-1-surenb@google.com>
+        Thu, 20 Aug 2020 04:47:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54708 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbgHTIrn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:47:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7033AAFFD;
+        Thu, 20 Aug 2020 08:48:06 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 10:47:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org
+Subject: Re: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
+Message-ID: <20200820084738.GD4353@alley>
+References: <20200814101933.574326079@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820002053.1424000-1-surenb@google.com>
+In-Reply-To: <20200814101933.574326079@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:20:53PM -0700, Suren Baghdasaryan wrote:
-> Currently __set_oom_adj loops through all processes in the system to
-> keep oom_score_adj and oom_score_adj_min in sync between processes
-> sharing their mm. This is done for any task with more that one mm_users,
-> which includes processes with multiple threads (sharing mm and signals).
-> However for such processes the loop is unnecessary because their signal
-> structure is shared as well.
-> Android updates oom_score_adj whenever a tasks changes its role
-> (background/foreground/...) or binds to/unbinds from a service, making
-> it more/less important. Such operation can happen frequently.
-> We noticed that updates to oom_score_adj became more expensive and after
-> further investigation found out that the patch mentioned in "Fixes"
-> introduced a regression. Using Pixel 4 with a typical Android workload,
-> write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
-> this regression linearly depends on the number of multi-threaded
-> processes running on the system.
-> Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
-> CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
-> instead of mm_users to decide whether oom_score_adj update should be
-> synchronized between multiple processes. To prevent races between clone()
-> and __set_oom_adj(), when oom_score_adj of the process being cloned might
-> be modified from userspace, we use oom_adj_mutex. Its scope is changed to
-> global and it is renamed into oom_adj_lock for naming consistency with
-> oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
-> used the additional mutex lock in that path of the clone() syscall should
-> not affect its overall performance. Clearing the MMF_PROC_SHARED flag
-> (when the last process sharing the mm exits) is left out of this patch to
-> keep it simple and because it is believed that this threading model is
-> rare. Should there ever be a need for optimizing that case as well, it
-> can be done by hooking into the exit path, likely following the
-> mm_update_next_owner pattern.
-> With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
-> regression is gone after the change is applied.
+On Fri 2020-08-14 12:19:33, Thomas Gleixner wrote:
+> printk intends to store various timestamps (MONOTONIC, REALTIME, BOOTTIME)
+> to make correlation of dmesg accross different machines easier.
 > 
-> Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
-> Reported-by: Tim Murray <timmurray@google.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> ---
->  fs/proc/base.c                 | 7 +++----
->  include/linux/oom.h            | 1 +
->  include/linux/sched/coredump.h | 1 +
->  kernel/fork.c                  | 9 +++++++++
->  mm/oom_kill.c                  | 2 ++
->  5 files changed, 16 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 617db4e0faa0..cff1a58a236c 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
->  
->  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
->  {
-> -	static DEFINE_MUTEX(oom_adj_mutex);
->  	struct mm_struct *mm = NULL;
->  	struct task_struct *task;
->  	int err = 0;
-> @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
->  	if (!task)
->  		return -ESRCH;
->  
-> -	mutex_lock(&oom_adj_mutex);
-> +	mutex_lock(&oom_adj_lock);
->  	if (legacy) {
->  		if (oom_adj < task->signal->oom_score_adj &&
->  				!capable(CAP_SYS_RESOURCE)) {
-> @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
->  		struct task_struct *p = find_lock_task_mm(task);
->  
->  		if (p) {
-> -			if (atomic_read(&p->mm->mm_users) > 1) {
-> +			if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
->  				mm = p->mm;
->  				mmgrab(mm);
->  			}
-> @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
->  		mmdrop(mm);
->  	}
->  err_unlock:
-> -	mutex_unlock(&oom_adj_mutex);
-> +	mutex_unlock(&oom_adj_lock);
->  	put_task_struct(task);
->  	return err;
->  }
-> diff --git a/include/linux/oom.h b/include/linux/oom.h
-> index f022f581ac29..861f22bd4706 100644
-> --- a/include/linux/oom.h
-> +++ b/include/linux/oom.h
-> @@ -55,6 +55,7 @@ struct oom_control {
->  };
->  
->  extern struct mutex oom_lock;
-> +extern struct mutex oom_adj_lock;
->  
->  static inline void set_current_oom_origin(void)
->  {
-> diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-> index ecdc6542070f..070629b722df 100644
-> --- a/include/linux/sched/coredump.h
-> +++ b/include/linux/sched/coredump.h
-> @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
->  #define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
->  #define MMF_OOM_VICTIM		25	/* mm is the oom victim */
->  #define MMF_OOM_REAP_QUEUED	26	/* mm was queued for oom_reaper */
-> +#define MMF_PROC_SHARED	27	/* mm is shared while sighand is not */
->  #define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
->  
->  #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 4d32190861bd..9177a76bf840 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
->  	if (clone_flags & CLONE_VM) {
->  		mmget(oldmm);
->  		mm = oldmm;
-> +		if (!(clone_flags & CLONE_SIGHAND)) {
-> +			/* We need to synchronize with __set_oom_adj */
-> +			mutex_lock(&oom_adj_lock);
-> +			set_bit(MMF_PROC_SHARED, &mm->flags);
+> The NMI safe timekeeper allows to retrieve these timestamps from any
+> context.
 
-This seems fine.
+For both patches:
 
-> +			/* Update the values in case they were changed after copy_signal */
-> +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
-> +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+Tested-by: Petr Mladek <pmladek@suse.com>
 
-But this seems wrong to me.
-copy_signal() should be the only place where ->signal is set. Just from
-a pure conceptual perspective. The copy_*() should be as self-contained
-as possible imho.
-Also, now I have to remember/look for two different locations where
-oom_score_adj{_min} is initialized during fork. And this also creates a
-dependency between copy_signal() and copy_mm() that doesn't need to be
-there imho. I'm not a fan.
+I am not familiar with the timekeeping code so that I could not
+provide a valuable review. Anyway, the patches seem to work
+as expected.
 
-Also, you're in a branch where you're not sharing signal struct. So
-after copy_signal() why would the parent changing their
-oom_score_adj{_min} value matter? If that "race" is really important to
-handle than you need to verify that the child has expected oom settings
-after process creation anyway and should probably set it again from
-userspace to make sure. This seems like an unnecessary optimization that
-just makes the code that tiny bit more complex than it needs to be.
+The interface is perfectly fine for printk() needs.
 
-I'd really just do:
 
-if (!(clone_flags & CLONE_SIGHAND)) {
-	/* We need to synchronize with __set_oom_adj */
-	mutex_lock(&oom_adj_lock);
-	set_bit(MMF_PROC_SHARED, &mm->flags);
-	mutex_unlock(&oom_adj_lock);
-}
+I tested them with the patch below. The first timestamps appear
+as early as before:
 
-makes this look way cleaner too imho.
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: cpu 0, msr 129c01001, primary cpu clock
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: using sched offset of 56519600356309 cycles
+[    0.000008] [    0.000008][1970-01-01T00:00:00][    T0] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000022] [    0.000022][1970-01-01T00:00:00][    T0] tsc: Detected 2112.000 MHz processor
+[    0.000835] [    0.000835][1970-01-01T00:00:00][    T0] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
 
-Christian
+The realtime timestamps get ready later as expected:
+
+[    0.073075] [    0.073075][1970-01-01T00:00:00][    T0] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=3
+[    0.075847] [    0.075847][1970-01-01T00:00:00][    T0] NR_IRQS: 524544, nr_irqs: 448, preallocated irqs: 16
+[    0.076014] [    0.076014][2020-08-20T07:58:46][    T0] Console: colour dummy device 80x25
+[    0.076014] [    0.076014][2020-08-20T07:58:46][    T0] printk: console [tty0] enabled
+
+Also suspend resume seems to work as expected. I tested it the follwing way:
+
+echo core > /sys/power/pm_test
+echo reboot > /sys/power/disk
+echo disk > /sys/power/state
+
+and the result is:
+
+[  224.422540] [  224.422540][2020-08-20T08:02:31][ T5124] Disabling non-boot CPUs ...
+[  224.424171] [  224.424171][2020-08-20T08:02:31][   T15] IRQ fixup: irq 21 move in progress, old vector 36
+[  224.425304] [  224.425304][2020-08-20T08:02:31][ T5124] smpboot: CPU 1 is now offline
+[  224.426664] [  224.426664][2020-08-20T08:02:31][   T20] IRQ 21: no longer affine to CPU2
+[  224.426685] [  224.426685][2020-08-20T08:02:31][   T20] IRQ 24: no longer affine to CPU2
+[  224.426717] [  224.426717][2020-08-20T08:02:31][   T20] IRQ 27: no longer affine to CPU2
+[  224.427765] [  224.427765][2020-08-20T08:02:31][ T5124] smpboot: CPU 2 is now offline
+[  224.428016] [  224.428016][2020-08-20T08:02:31][ T5124] PM: hibernation: debug: Waiting for 5 seconds.
+[  224.428218] [  229.618141][2020-08-20T08:02:36][ T5124] Enabling non-boot CPUs ...
+   ^^^            ^^^                          ^^
+[  224.428560] [  229.618483][2020-08-20T08:02:36][ T5124] x86: Booting SMP configuration:
+[  224.428564] [  229.618486][2020-08-20T08:02:36][ T5124] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[  224.428766] [  229.618688][2020-08-20T08:02:36][    T0] kvm-clock: cpu 1, msr 129c01041, secondary cpu clock
+[  224.449192] [  229.639115][2020-08-20T08:02:36][   T14] kvm-guest: stealtime: cpu 1, msr 17fbf2080
+
+
+And here is the patch that I used for testing:
+
+From 39bdfebfa94fc55616fe23f2f0b80e06479b65e0 Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 20 Aug 2020 10:18:57 +0200
+Subject: [PATCH] printk: Test using all three timestamps: mono, boot, real
+
+Test timekeeper enhancements proposed at
+https://lore.kernel.org/r/20200814101933.574326079@linutronix.de
+
+Allow to store and show all three timestamp (mono, boot, real).
+
+It is not final solution. The prefix takes 83 characters that might
+make the real text invisible or hard to read. Fragments of seconds
+are lost in when printing real time timestamp. Offset is not provided
+for crashdump tools.
+
+Only syslog interface is supported. The log can be seen on consoles
+or via:
+
+    dmesg -S
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/printk/printk.c | 40 ++++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9b75f6bfc333..329f3595b024 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -366,7 +366,7 @@ enum log_flags {
+ };
+ 
+ struct printk_log {
+-	u64 ts_nsec;		/* timestamp in nanoseconds */
++	struct ktime_timestamps ts; /* timestamps */
+ 	u16 len;		/* length of entire record */
+ 	u16 text_len;		/* length of text buffer */
+ 	u16 dict_len;		/* length of dictionary buffer */
+@@ -443,7 +443,7 @@ static u64 clear_seq;
+ static u32 clear_idx;
+ 
+ #ifdef CONFIG_PRINTK_CALLER
+-#define PREFIX_MAX		48
++#define PREFIX_MAX		48+14+21
+ #else
+ #define PREFIX_MAX		32
+ #endif
+@@ -614,7 +614,7 @@ static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+ 
+ /* insert record into the buffer, discard old ones, update heads */
+ static int log_store(u32 caller_id, int facility, int level,
+-		     enum log_flags flags, u64 ts_nsec,
++		     enum log_flags flags, struct ktime_timestamps *ts,
+ 		     const char *dict, u16 dict_len,
+ 		     const char *text, u16 text_len)
+ {
+@@ -657,10 +657,10 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	msg->facility = facility;
+ 	msg->level = level & 7;
+ 	msg->flags = flags & 0x1f;
+-	if (ts_nsec > 0)
+-		msg->ts_nsec = ts_nsec;
++	if (ts)
++		msg->ts = *ts;
+ 	else
+-		msg->ts_nsec = local_clock();
++		ktime_get_fast_timestamps(&msg->ts);
+ #ifdef CONFIG_PRINTK_CALLER
+ 	msg->caller_id = caller_id;
+ #endif
+@@ -726,7 +726,7 @@ static void append_char(char **pp, char *e, char c)
+ static ssize_t msg_print_ext_header(char *buf, size_t size,
+ 				    struct printk_log *msg, u64 seq)
+ {
+-	u64 ts_usec = msg->ts_nsec;
++	u64 ts_usec = msg->ts.mono;
+ 	char caller[20];
+ #ifdef CONFIG_PRINTK_CALLER
+ 	u32 id = msg->caller_id;
+@@ -1090,8 +1090,8 @@ void log_buf_vmcoreinfo_setup(void)
+ 	 * parse it and detect any changes to structure down the line.
+ 	 */
+ 	VMCOREINFO_STRUCT_SIZE(printk_log);
+-	VMCOREINFO_OFFSET(printk_log, ts_nsec);
+-	VMCOREINFO_OFFSET(printk_log, len);
++/*	VMCOREINFO_OFFSET(printk_log, ts);
++ */	VMCOREINFO_OFFSET(printk_log, len);
+ 	VMCOREINFO_OFFSET(printk_log, text_len);
+ 	VMCOREINFO_OFFSET(printk_log, dict_len);
+ #ifdef CONFIG_PRINTK_CALLER
+@@ -1308,6 +1308,14 @@ static size_t print_time(u64 ts, char *buf)
+ 		       (unsigned long)ts, rem_nsec / 1000);
+ }
+ 
++static size_t print_real_time(u64 ts, char *buf)
++{
++	u64 ts_nsec = ts / 1000000000;
++
++	return sprintf(buf, "[%ptT]", &ts_nsec);
++}
++
++
+ #ifdef CONFIG_PRINTK_CALLER
+ static size_t print_caller(u32 id, char *buf)
+ {
+@@ -1329,8 +1337,12 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog,
+ 	if (syslog)
+ 		len = print_syslog((msg->facility << 3) | msg->level, buf);
+ 
+-	if (time)
+-		len += print_time(msg->ts_nsec, buf + len);
++
++	if (time) {
++		len += print_time(msg->ts.mono, buf + len);
++		len += print_time(msg->ts.boot, buf + len);
++		len += print_real_time(msg->ts.real, buf + len);
++	}
+ 
+ 	len += print_caller(msg->caller_id, buf + len);
+ 
+@@ -1855,7 +1867,7 @@ static struct cont {
+ 	char buf[LOG_LINE_MAX];
+ 	size_t len;			/* length == 0 means unused buffer */
+ 	u32 caller_id;			/* printk_caller_id() of first print */
+-	u64 ts_nsec;			/* time of first print */
++	struct ktime_timestamps ts;	/* time of first print */
+ 	u8 level;			/* log level of first message */
+ 	u8 facility;			/* log facility of first message */
+ 	enum log_flags flags;		/* prefix, newline flags */
+@@ -1867,7 +1879,7 @@ static void cont_flush(void)
+ 		return;
+ 
+ 	log_store(cont.caller_id, cont.facility, cont.level, cont.flags,
+-		  cont.ts_nsec, NULL, 0, cont.buf, cont.len);
++		  &cont.ts, NULL, 0, cont.buf, cont.len);
+ 	cont.len = 0;
+ }
+ 
+@@ -1884,7 +1896,7 @@ static bool cont_add(u32 caller_id, int facility, int level,
+ 		cont.facility = facility;
+ 		cont.level = level;
+ 		cont.caller_id = caller_id;
+-		cont.ts_nsec = local_clock();
++		ktime_get_fast_timestamps(&cont.ts);
+ 		cont.flags = flags;
+ 	}
+ 
+-- 
+2.26.2
+
