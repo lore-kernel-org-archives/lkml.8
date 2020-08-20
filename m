@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F135C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC66220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F29A020738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926361;
-	bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
+	s=default; t=1597926363;
+	bh=e4/buyq7QhnQ2BYUONH8IhBcD+F6dhW6MaDiGC/pQRg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KTmY64y47oO781GInFuXDYH/K7Co2AhvLLwA2HKJWJbbmD8dcWwVko62xpAB2havr
-	 Y0+zokqMpPkAPvqXlxs4kZWtNJvF/AHprwV9dzETLqQ2AT2zRJu4XBuBSXigIsqX0C
-	 DO3h6uvIt3SaYVW1YvDE0hJ/UqQLpL4TBBJqChCY=
+	b=CDKbQZpV237zkSlmSVmkjkS69cUkBHCbBcY35+m1lwtVzdOS6BFlDblSNk7IfpLZ5
+	 eZjQcvzferUnLT5keivXNmN0wa1u9FO+VrxB/rI5ypuxkaz2WBeAiuBqc6Y8wjs269
+	 h5n88MKYovHubDXDaZJeg2gNYzRowY43AoGdZ96A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730245AbgHTMZ5 (ORCPT
+        id S1729779AbgHTJxJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgHTJxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:53:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729949AbgHTJxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 59B582067C;
-        Thu, 20 Aug 2020 09:53:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42BCC2075E;
+        Thu, 20 Aug 2020 09:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917188;
-        bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
+        s=default; t=1597917180;
+        bh=e4/buyq7QhnQ2BYUONH8IhBcD+F6dhW6MaDiGC/pQRg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QppLR81f0zaMwlWN6+5AggINSla+ChiD/8ha61H7YB4UT3hdXJN99OmiAVgEgiJq7
-         f18hiVe2rGp/dL1IfqiCj+DxqbsawK459+aytrXZwK6s+MGHSgbpIhWM6hGJcVUkRS
-         EISj74JD+g5NXDa07H3KHHcbgDZ2iaWIIY2XZ1SU=
+        b=VNYoCKEOJpV12f05KpNF547Lu21GRicrVW40tnMuBzcxhwQ33D1PpQbhcmXbaM5QD
+         27hWLDpXplPwTB3nc0agnR/ztWoPUGvx9GOKRl/7ejBt0+5UnJlWghEwUxux7suzHA
+         JTHyDifnfLH9aLN02hDPqqTnQ0KYrEv35hF7f3Gc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 34/92] ext2: fix missing percpu_counter_inc
-Date:   Thu, 20 Aug 2020 11:21:19 +0200
-Message-Id: <20200820091539.376655618@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.19 31/92] mac80211: fix misplaced while instead of if
+Date:   Thu, 20 Aug 2020 11:21:16 +0200
+Message-Id: <20200820091539.211167586@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,46 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
+commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
 
-sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
-increased. This patch fixes it.
+This never was intended to be a 'while' loop, it should've
+just been an 'if' instead of 'while'. Fix this.
 
-Note that sbi->s_freeinodes_counter is only used in the algorithm that
-tries to find the group for new allocations, so this bug is not easily
-visible (the only visibility is that the group finding algorithm selects
-inoptinal result).
+I noticed this while applying another patch from Ben that
+intended to fix a busy loop at this spot.
 
-Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
+Reported-by: Ben Greear <greearb@candelatech.com>
+Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/ialloc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mac80211/sta_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext2/ialloc.c
-+++ b/fs/ext2/ialloc.c
-@@ -80,6 +80,7 @@ static void ext2_release_inode(struct su
- 	if (dir)
- 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
- 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
-+	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
- 	if (dir)
- 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
- 	mark_buffer_dirty(bh);
-@@ -531,7 +532,7 @@ got:
- 		goto fail;
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -979,7 +979,7 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
+ 
+-	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
+ 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+ 		WARN_ON_ONCE(ret);
  	}
- 
--	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
-+	percpu_counter_dec(&sbi->s_freeinodes_counter);
- 	if (S_ISDIR(mode))
- 		percpu_counter_inc(&sbi->s_dirs_counter);
- 
 
 
