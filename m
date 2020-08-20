@@ -2,53 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B632DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5759EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CFF920738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3608620738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597932414;
-	bh=+ovO2cUVQ9x1FMkutMCyDN2YYRsnBrHjjN50/X+tt9g=;
+	s=default; t=1597932417;
+	bh=avcBHyqrkzSdswKWmM8x1RCkJC0BbdbsDhQaxrT6diM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z+SB+U0af9jxgT5qmk6vuEQizSYw6wo+O0D10dBBWp47UgFnT7CjHuUvkyZnCET7n
-	 vAPivm5UIx1BcnREuLIHmp5mmxm1816YFnc5Ze8zDXLISZrvJmC0bKw48XiRlbzVnr
-	 yyReR39mxf5irS5LHHUHxY9f7i8FdSXpDV0+k5tA=
+	b=Pjbjec8/iQ7+CGiHwi8xsBnrKTldTsQrEo0aCgEtcEn+BV1I5gDz1T85aj1kxD/sd
+	 hOaA3JY/NUt+0eSXGQC7xt5JqfKdLxcMFKYUDpJUu2znWk6tATj7+1rSczMryQKG9b
+	 SwnlHM0o3YaSho1JO4PLDxgKjy0oFYygUUwSH+xA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbgHTN7L (ORCPT
+        id S1731261AbgHTN6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:59:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60614 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:58:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbgHTJYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:25 -0400
+        id S1727011AbgHTJZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:25:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A29122CB1;
-        Thu, 20 Aug 2020 09:24:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D17722D03;
+        Thu, 20 Aug 2020 09:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915464;
-        bh=+ovO2cUVQ9x1FMkutMCyDN2YYRsnBrHjjN50/X+tt9g=;
+        s=default; t=1597915506;
+        bh=avcBHyqrkzSdswKWmM8x1RCkJC0BbdbsDhQaxrT6diM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rmBJXqt0voH9cEA475+ufLb+R/9T9ltWzAPrEXVIIWgLG1pa+M6EJPC9JFSo7CElu
-         9f2SLRfwU871QC78TD82MIGZCIVhKR9WZZRWLspP4K8nx8g5RgeXPpKRbGoS8OzfC5
-         9Gysnxg4xTTygAkfE9I2MLSDlVlnTShacFAqV9UI=
+        b=dphiwbMAF2/92NpIr2UkuBLM8ORktpUoXyidzbdKrII4BOJjbctXVt0q6HkZnkYYd
+         LDhqsW+O9RoDxRBPmrozCsHbiF1c7YmurqXtlMxKdKYaMy2b03yPyRglK3gi4F2hRs
+         de+3Xl7ITnlyJLOX2FW5jCKo2CXjL21xHCo1RcNk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Anand Jain <anand.jain@oracle.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 022/232] btrfs: dont traverse into the seed devices in show_devname
-Date:   Thu, 20 Aug 2020 11:17:53 +0200
-Message-Id: <20200820091613.821160235@linuxfoundation.org>
+Subject: [PATCH 5.8 038/232] btrfs: trim: fix underflow in trim length to prevent access beyond device boundary
+Date:   Thu, 20 Aug 2020 11:18:09 +0200
+Message-Id: <20200820091614.619601643@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,123 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 4faf55b03823e96c44dc4e364520000ed3b12fdb upstream.
+commit c57dd1f2f6a7cd1bb61802344f59ccdc5278c983 upstream.
 
-->show_devname currently shows the lowest devid in the list. As the seed
-devices have the lowest devid in the sprouted filesystem, the userland
-tool such as findmnt end up seeing seed device instead of the device from
-the read-writable sprouted filesystem. As shown below.
+[BUG]
+The following script can lead to tons of beyond device boundary access:
 
- mount /dev/sda /btrfs
- mount: /btrfs: WARNING: device write-protected, mounted read-only.
+  mkfs.btrfs -f $dev -b 10G
+  mount $dev $mnt
+  trimfs $mnt
+  btrfs filesystem resize 1:-1G $mnt
+  trimfs $mnt
 
- findmnt --output SOURCE,TARGET,UUID /btrfs
- SOURCE   TARGET UUID
- /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+[CAUSE]
+Since commit 929be17a9b49 ("btrfs: Switch btrfs_trim_free_extents to
+find_first_clear_extent_bit"), we try to avoid trimming ranges that's
+already trimmed.
 
- btrfs dev add -f /dev/sdb /btrfs
+So we check device->alloc_state by finding the first range which doesn't
+have CHUNK_TRIMMED and CHUNK_ALLOCATED not set.
 
- umount /btrfs
- mount /dev/sdb /btrfs
+But if we shrunk the device, that bits are not cleared, thus we could
+easily got a range starts beyond the shrunk device size.
 
- findmnt --output SOURCE,TARGET,UUID /btrfs
- SOURCE   TARGET UUID
- /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
+This results the returned @start and @end are all beyond device size,
+then we call "end = min(end, device->total_bytes -1);" making @end
+smaller than device size.
 
-All sprouts from a single seed will show the same seed device and the
-same fsid. That's confusing.
-This is causing problems in our prototype as there isn't any reference
-to the sprout file-system(s) which is being used for actual read and
-write.
+Then finally we goes "len = end - start + 1", totally underflow the
+result, and lead to the beyond-device-boundary access.
 
-This was added in the patch which implemented the show_devname in btrfs
-commit 9c5085c14798 ("Btrfs: implement ->show_devname").
-I tried to look for any particular reason that we need to show the seed
-device, there isn't any.
+[FIX]
+This patch will fix the problem in two ways:
 
-So instead, do not traverse through the seed devices, just show the
-lowest devid in the sprouted fsid.
+- Clear CHUNK_TRIMMED | CHUNK_ALLOCATED bits when shrinking device
+  This is the root fix
 
-After the patch:
+- Add extra safety check when trimming free device extents
+  We check and warn if the returned range is already beyond current
+  device.
 
- mount /dev/sda /btrfs
- mount: /btrfs: WARNING: device write-protected, mounted read-only.
-
- findmnt --output SOURCE,TARGET,UUID /btrfs
- SOURCE   TARGET UUID
- /dev/sda /btrfs 899f7027-3e46-4626-93e7-7d4c9ad19111
-
- btrfs dev add -f /dev/sdb /btrfs
- mount -o rw,remount /dev/sdb /btrfs
-
- findmnt --output SOURCE,TARGET,UUID /btrfs
- SOURCE   TARGET UUID
- /dev/sdb /btrfs 595ca0e6-b82e-46b5-b9e2-c72a6928be48
-
- mount /dev/sda /btrfs1
- mount: /btrfs1: WARNING: device write-protected, mounted read-only.
-
- btrfs dev add -f /dev/sdc /btrfs1
-
- findmnt --output SOURCE,TARGET,UUID /btrfs1
- SOURCE   TARGET  UUID
- /dev/sdc /btrfs1 ca1dbb7a-8446-4f95-853c-a20f3f82bdbb
-
- cat /proc/self/mounts | grep btrfs
- /dev/sdb /btrfs btrfs rw,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
- /dev/sdc /btrfs1 btrfs ro,relatime,noacl,space_cache,subvolid=5,subvol=/ 0 0
-
-Reported-by: Martin K. Petersen <martin.petersen@oracle.com>
-CC: stable@vger.kernel.org # 4.19+
-Tested-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+Link: https://github.com/kdave/btrfs-progs/issues/282
+Fixes: 929be17a9b49 ("btrfs: Switch btrfs_trim_free_extents to find_first_clear_extent_bit")
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |   21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ fs/btrfs/extent-io-tree.h |    2 ++
+ fs/btrfs/extent-tree.c    |   14 ++++++++++++++
+ fs/btrfs/volumes.c        |    4 ++++
+ 3 files changed, 20 insertions(+)
 
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -2296,9 +2296,7 @@ static int btrfs_unfreeze(struct super_b
- static int btrfs_show_devname(struct seq_file *m, struct dentry *root)
- {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(root->d_sb);
--	struct btrfs_fs_devices *cur_devices;
- 	struct btrfs_device *dev, *first_dev = NULL;
--	struct list_head *head;
+--- a/fs/btrfs/extent-io-tree.h
++++ b/fs/btrfs/extent-io-tree.h
+@@ -34,6 +34,8 @@ struct io_failure_record;
+  */
+ #define CHUNK_ALLOCATED				EXTENT_DIRTY
+ #define CHUNK_TRIMMED				EXTENT_DEFRAG
++#define CHUNK_STATE_MASK			(CHUNK_ALLOCATED |		\
++						 CHUNK_TRIMMED)
  
- 	/*
- 	 * Lightweight locking of the devices. We should not need
-@@ -2308,18 +2306,13 @@ static int btrfs_show_devname(struct seq
- 	 * least until the rcu_read_unlock.
- 	 */
- 	rcu_read_lock();
--	cur_devices = fs_info->fs_devices;
--	while (cur_devices) {
--		head = &cur_devices->devices;
--		list_for_each_entry_rcu(dev, head, dev_list) {
--			if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
--				continue;
--			if (!dev->name)
--				continue;
--			if (!first_dev || dev->devid < first_dev->devid)
--				first_dev = dev;
--		}
--		cur_devices = cur_devices->seed;
-+	list_for_each_entry_rcu(dev, &fs_info->fs_devices->devices, dev_list) {
-+		if (test_bit(BTRFS_DEV_STATE_MISSING, &dev->dev_state))
-+			continue;
-+		if (!dev->name)
-+			continue;
-+		if (!first_dev || dev->devid < first_dev->devid)
-+			first_dev = dev;
+ enum {
+ 	IO_TREE_FS_PINNED_EXTENTS,
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -33,6 +33,7 @@
+ #include "delalloc-space.h"
+ #include "block-group.h"
+ #include "discard.h"
++#include "rcu-string.h"
+ 
+ #undef SCRAMBLE_DELAYED_REFS
+ 
+@@ -5668,6 +5669,19 @@ static int btrfs_trim_free_extents(struc
+ 					    &start, &end,
+ 					    CHUNK_TRIMMED | CHUNK_ALLOCATED);
+ 
++		/* Check if there are any CHUNK_* bits left */
++		if (start > device->total_bytes) {
++			WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
++			btrfs_warn_in_rcu(fs_info,
++"ignoring attempt to trim beyond device size: offset %llu length %llu device %s device size %llu",
++					  start, end - start + 1,
++					  rcu_str_deref(device->name),
++					  device->total_bytes);
++			mutex_unlock(&fs_info->chunk_mutex);
++			ret = 0;
++			break;
++		}
++
+ 		/* Ensure we skip the reserved area in the first 1M */
+ 		start = max_t(u64, start, SZ_1M);
+ 
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4720,6 +4720,10 @@ again:
  	}
  
- 	if (first_dev)
+ 	mutex_lock(&fs_info->chunk_mutex);
++	/* Clear all state bits beyond the shrunk device size */
++	clear_extent_bits(&device->alloc_state, new_size, (u64)-1,
++			  CHUNK_STATE_MASK);
++
+ 	btrfs_device_set_disk_total_bytes(device, new_size);
+ 	if (list_empty(&device->post_commit_list))
+ 		list_add_tail(&device->post_commit_list,
 
 
