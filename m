@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF36C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBE812078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B84A420658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928126;
-	bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
+	s=default; t=1597928132;
+	bh=IMDH4ncHnM240DJnj3dWut5SxDOtQztyg1THaPfngCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di6ziOQ4LwFJtB8dGvQ42z2Nwx+k3lNcWmh3RN4vEHlv4YHKMVrlcQON4smbZGYC8
-	 p6hwKnBL/a9cQk+FR5dCQE3HhbIIGnOjPBOShrtOJ2i+O4JLgLVgm+nwAMvh35vtdz
-	 sfJnIhELvtqPDVH0XHw4m88+hJRWICUu6islEcDw=
+	b=1wXDcepqrNthfbMn8KGUHigBFgSaZotocfg9LHHvVLhC5MI2xL0+yEYQqnOqLyZYG
+	 TMLGQ/Jfd2Y1bjf083/GetwChmlfe7wotqZws7csmeqHU0Zt0pFhqnNLsVY3fc/l1x
+	 +0wrkuD+DGanSndiT7XTsXQGDxolrgtYAn/7SplA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgHTJnF (ORCPT
+        id S1729148AbgHTMz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:43:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:55:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728876AbgHTJmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:17 -0400
+        id S1728662AbgHTJnI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5F8D207FB;
-        Thu, 20 Aug 2020 09:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 533C8207DE;
+        Thu, 20 Aug 2020 09:43:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916536;
-        bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
+        s=default; t=1597916587;
+        bh=IMDH4ncHnM240DJnj3dWut5SxDOtQztyg1THaPfngCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCY43tw/h13Rva+qWq/oUBP7St+6dGoL2+DuG1dxW5wMEKR+92AcpbvX0Pb88QUD5
-         OG5R0xjvNOcV319yG3nrMM/w+PM49rJscwIulZlrJ9ULCv4AaFoBcTHBO7pext9rxu
-         lrxilsMOT+glsn+hH449Ywdft89neag6Q++l3yAo=
+        b=PY239ETClCE5TOH44n6hAeFEIXWJ0UCVG3dQ59DLB0zmkZeuM1S08H9W188LMjwt9
+         V0k/2aypvy/zC9BtELoN0T4lcuNfH4H1V+XIIl+t6IIj+wkyYF7DTznWXxGQiaajtE
+         77FV9AtsCLdZWdRxrcbCMf4h9YMsUCnKX39e0bXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        stable@vger.kernel.org,
+        Dhananjay Phadke <dphadke@linux.microsoft.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 155/204] openrisc: Fix oops caused when dumping stack
-Date:   Thu, 20 Aug 2020 11:20:52 +0200
-Message-Id: <20200820091613.981058173@linuxfoundation.org>
+Subject: [PATCH 5.7 181/204] i2c: iproc: fix race between client unreg and isr
+Date:   Thu, 20 Aug 2020 11:21:18 +0200
+Message-Id: <20200820091615.242305426@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,94 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stafford Horne <shorne@gmail.com>
+From: Dhananjay Phadke <dphadke@linux.microsoft.com>
 
-[ Upstream commit 57b8e277c33620e115633cdf700a260b55095460 ]
+[ Upstream commit b1eef236f50ba6afea680da039ef3a2ca9c43d11 ]
 
-When dumping a stack with 'cat /proc/#/stack' the kernel would oops.
-For example:
+When i2c client unregisters, synchronize irq before setting
+iproc_i2c->slave to NULL.
 
-    # cat /proc/690/stack
-    Unable to handle kernel access
-     at virtual address 0x7fc60f58
+(1) disable_irq()
+(2) Mask event enable bits in control reg
+(3) Erase slave address (avoid further writes to rx fifo)
+(4) Flush tx and rx FIFOs
+(5) Clear pending event (interrupt) bits in status reg
+(6) enable_irq()
+(7) Set client pointer to NULL
 
-    Oops#: 0000
-    CPU #: 0
-       PC: c00097fc    SR: 0000807f    SP: d6f09b9c
-    GPR00: 00000000 GPR01: d6f09b9c GPR02: d6f09bb8 GPR03: d6f09bc4
-    GPR04: 7fc60f5c GPR05: c00099b4 GPR06: 00000000 GPR07: d6f09ba3
-    GPR08: ffffff00 GPR09: c0009804 GPR10: d6f08000 GPR11: 00000000
-    GPR12: ffffe000 GPR13: dbb86000 GPR14: 00000001 GPR15: dbb86250
-    GPR16: 7fc60f63 GPR17: 00000f5c GPR18: d6f09bc4 GPR19: 00000000
-    GPR20: c00099b4 GPR21: ffffffc0 GPR22: 00000000 GPR23: 00000000
-    GPR24: 00000001 GPR25: 000002c6 GPR26: d78b6850 GPR27: 00000001
-    GPR28: 00000000 GPR29: dbb86000 GPR30: ffffffff GPR31: dbb862fc
-      RES: 00000000 oGPR11: ffffffff
-    Process cat (pid: 702, stackpage=d79d6000)
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000318
 
-    Stack:
-    Call trace:
-    [<598977f2>] save_stack_trace_tsk+0x40/0x74
-    [<95063f0e>] stack_trace_save_tsk+0x44/0x58
-    [<b557bfdd>] proc_pid_stack+0xd0/0x13c
-    [<a2df8eda>] proc_single_show+0x6c/0xf0
-    [<e5a737b7>] seq_read+0x1b4/0x688
-    [<2d6c7480>] do_iter_read+0x208/0x248
-    [<2182a2fb>] vfs_readv+0x64/0x90
+[  371.020421] pc : bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.025098] lr : __handle_irq_event_percpu+0x6c/0x170
+[  371.030309] sp : ffff800010003e40
+[  371.033727] x29: ffff800010003e40 x28: 0000000000000060
+[  371.039206] x27: ffff800010ca9de0 x26: ffff800010f895df
+[  371.044686] x25: ffff800010f18888 x24: ffff0008f7ff3600
+[  371.050165] x23: 0000000000000003 x22: 0000000001600000
+[  371.055645] x21: ffff800010f18888 x20: 0000000001600000
+[  371.061124] x19: ffff0008f726f080 x18: 0000000000000000
+[  371.066603] x17: 0000000000000000 x16: 0000000000000000
+[  371.072082] x15: 0000000000000000 x14: 0000000000000000
+[  371.077561] x13: 0000000000000000 x12: 0000000000000001
+[  371.083040] x11: 0000000000000000 x10: 0000000000000040
+[  371.088519] x9 : ffff800010f317c8 x8 : ffff800010f317c0
+[  371.093999] x7 : ffff0008f805b3b0 x6 : 0000000000000000
+[  371.099478] x5 : ffff0008f7ff36a4 x4 : ffff8008ee43d000
+[  371.104957] x3 : 0000000000000000 x2 : ffff8000107d64c0
+[  371.110436] x1 : 00000000c00000af x0 : 0000000000000000
 
-This was caused by the stack trace code in save_stack_trace_tsk using
-the wrong stack pointer.  It was using the user stack pointer instead of
-the kernel stack pointer.  Fix this by using the right stack.
+[  371.115916] Call trace:
+[  371.118439]  bcm_iproc_i2c_isr+0x530/0x11f0
+[  371.122754]  __handle_irq_event_percpu+0x6c/0x170
+[  371.127606]  handle_irq_event_percpu+0x34/0x88
+[  371.132189]  handle_irq_event+0x40/0x120
+[  371.136234]  handle_fasteoi_irq+0xcc/0x1a0
+[  371.140459]  generic_handle_irq+0x24/0x38
+[  371.144594]  __handle_domain_irq+0x60/0xb8
+[  371.148820]  gic_handle_irq+0xc0/0x158
+[  371.152687]  el1_irq+0xb8/0x140
+[  371.155927]  arch_cpu_idle+0x10/0x18
+[  371.159615]  do_idle+0x204/0x290
+[  371.162943]  cpu_startup_entry+0x24/0x60
+[  371.166990]  rest_init+0xb0/0xbc
+[  371.170322]  arch_call_rest_init+0xc/0x14
+[  371.174458]  start_kernel+0x404/0x430
 
-Also for good measure we add try_get_task_stack/put_task_stack to ensure
-the task is not lost while we are walking it's stack.
+Fixes: c245d94ed106 ("i2c: iproc: Add multi byte read-write support for slave mode")
 
-Fixes: eecac38b0423a ("openrisc: support framepointers and STACKTRACE_SUPPORT")
-Signed-off-by: Stafford Horne <shorne@gmail.com>
+Signed-off-by: Dhananjay Phadke <dphadke@linux.microsoft.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Ray Jui <ray.jui@broadcom.com>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/openrisc/kernel/stacktrace.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-bcm-iproc.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/arch/openrisc/kernel/stacktrace.c b/arch/openrisc/kernel/stacktrace.c
-index 43f140a28bc72..54d38809e22cb 100644
---- a/arch/openrisc/kernel/stacktrace.c
-+++ b/arch/openrisc/kernel/stacktrace.c
-@@ -13,6 +13,7 @@
- #include <linux/export.h>
- #include <linux/sched.h>
- #include <linux/sched/debug.h>
-+#include <linux/sched/task_stack.h>
- #include <linux/stacktrace.h>
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index d091a12596ad2..85aee6d365b40 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -1074,7 +1074,7 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	if (!iproc_i2c->slave)
+ 		return -EINVAL;
  
- #include <asm/processor.h>
-@@ -68,12 +69,25 @@ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
- {
- 	unsigned long *sp = NULL;
+-	iproc_i2c->slave = NULL;
++	disable_irq(iproc_i2c->irq);
  
-+	if (!try_get_task_stack(tsk))
-+		return;
-+
- 	if (tsk == current)
- 		sp = (unsigned long *) &sp;
--	else
--		sp = (unsigned long *) KSTK_ESP(tsk);
-+	else {
-+		unsigned long ksp;
-+
-+		/* Locate stack from kernel context */
-+		ksp = task_thread_info(tsk)->ksp;
-+		ksp += STACK_FRAME_OVERHEAD;	/* redzone */
-+		ksp += sizeof(struct pt_regs);
-+
-+		sp = (unsigned long *) ksp;
-+	}
+ 	/* disable all slave interrupts */
+ 	tmp = iproc_i2c_rd_reg(iproc_i2c, IE_OFFSET);
+@@ -1087,6 +1087,17 @@ static int bcm_iproc_i2c_unreg_slave(struct i2c_client *slave)
+ 	tmp &= ~BIT(S_CFG_EN_NIC_SMB_ADDR3_SHIFT);
+ 	iproc_i2c_wr_reg(iproc_i2c, S_CFG_SMBUS_ADDR_OFFSET, tmp);
  
- 	unwind_stack(trace, sp, save_stack_address_nosched);
++	/* flush TX/RX FIFOs */
++	tmp = (BIT(S_FIFO_RX_FLUSH_SHIFT) | BIT(S_FIFO_TX_FLUSH_SHIFT));
++	iproc_i2c_wr_reg(iproc_i2c, S_FIFO_CTRL_OFFSET, tmp);
 +
-+	put_task_stack(tsk);
++	/* clear all pending slave interrupts */
++	iproc_i2c_wr_reg(iproc_i2c, IS_OFFSET, ISR_MASK_SLAVE);
++
++	iproc_i2c->slave = NULL;
++
++	enable_irq(iproc_i2c->irq);
++
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
  
 -- 
 2.25.1
