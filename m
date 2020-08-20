@@ -2,68 +2,153 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890D1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:14:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD1F3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71EAD221E2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:14:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A114207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:16:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597896967;
+	bh=hHRsYP718ddajzYq24IX947vu2NoEkAnXIogSlbYtRU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xkrf3dOO2LbHBHgArpYbTOpUJB0WFO4/P0HDCovjLJDhik2NGPjs8zWfMbW6J06sh
+	 0OPOOxKLYtjDyS/4MUtsxKdAv6FjJhnxp6SZU0cUEE1s37UwiN30J57bRIve4hmPuv
+	 qRdOaWh8pD+C5XGfdsWqpv8+FzNjUMozzymxnyT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbgHTEOs (ORCPT
+        id S1726734AbgHTEQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:14:48 -0400
-Received: from muru.com ([72.249.23.125]:41188 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725819AbgHTEOr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:14:47 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 99986807A;
-        Thu, 20 Aug 2020 04:14:44 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 07:15:12 +0300
-From:   Tony Lindgren <tony@atomide.com>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-omap@vger.kernel.org, sre@kernel.org, nekit1000@gmail.com,
-        mpartap@gmx.net, merlijn@wizzup.org, martin_rysavy@centrum.cz,
-        linux-pm@vger.kernel.org, "Arthur D." <spinal.by@gmail.com>
-Subject: Re: [RFC] Limiting charge current on Droid 4 (and N900)
-Message-ID: <20200820041512.GH2994@atomide.com>
-References: <20200615140557.GA22781@duo.ucw.cz>
- <20200629155515.GR37466@atomide.com>
+        Thu, 20 Aug 2020 00:16:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36381 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgHTEQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 00:16:05 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m8so422424pfh.3;
+        Wed, 19 Aug 2020 21:16:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=psruhL6kP2y+77pARz32ZAlvQOnrz7I/f+lDFZBZTxo=;
+        b=mJNoGVuVLW/U4NhIyO1ZvmqkATW5Ur+18KXSfVQXQkVtI8Ovb9aAhPdsdxk1oYRQUV
+         WerdmZ5lKcNNce2GTEBOLt/LkpJkQx2Xl5CkWETgp7vXAItuyrvuPYHgx7FYy8hC8pEd
+         MB04OgZxEZjB7eAmoPI/7jn2cOWuu7K6lQAft0dU71/3WOImxeXi98THdVaEl8+d7v4j
+         6SqD1NyvT/32ku40SiRejzbmfJ6VUPYRlV/AfBo1vScG+3Yn/sL5KssLZTZXCrG4hcXC
+         eewU6XIN1sJgvohEOU/4NWYAxzxtWAwUWPGY0WSFwNb9B6SzMVhqxCpCDzY785focFxt
+         or5Q==
+X-Gm-Message-State: AOAM530UuhRneQDUgGSl8meYrd8378GLry1ANGWYrBbi+uhX3XOj1lMp
+        HAscBkvOGmNC4sPwS4Ivpzg=
+X-Google-Smtp-Source: ABdhPJyhVpS3P+FmZ7FaV4fi1lHj4qKf7ppMVW/5r9T//2lUwM3LH0R2PaEDygfP4lxWQN2SjEH6uA==
+X-Received: by 2002:a63:4f22:: with SMTP id d34mr1211375pgb.320.1597896964343;
+        Wed, 19 Aug 2020 21:16:04 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id n26sm849147pff.30.2020.08.19.21.16.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 21:16:03 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 21:16:03 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Xu Yilun <yilun.xu@intel.com>
+Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org, trix@redhat.com, lgoncalv@redhat.com
+Subject: Re: [PATCH v7 0/3] Modularization of DFL private feature drivers
+Message-ID: <20200820041603.GC4022@epycbox.lan>
+References: <1597823121-26424-1-git-send-email-yilun.xu@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629155515.GR37466@atomide.com>
+In-Reply-To: <1597823121-26424-1-git-send-email-yilun.xu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [200629 18:46]:
-> * Pavel Machek <pavel@ucw.cz> [200615 07:06]:
-> > Hi!
-> > 
-> > Droid 4 has same problem as N900: it is often neccessary to manually
-> > tweak current draw from USB, for example when using thin charging cable.
-> > 
-> > N900 creates unique attribute by hand, but I believe
-> > POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT looks suitable. (Should N900 be
-> > converted?)
-> > 
-> > Comments? Would the patch be acceptable after fixing whitespace?
+Hi Xu,
+
+On Wed, Aug 19, 2020 at 03:45:18PM +0800, Xu Yilun wrote:
+> This patchset makes it possible to develop independent driver modules
+> for DFL private features. It also helps to leverage existing kernel
+> drivers to enable some IP blocks in DFL.
 > 
-> Looks OK to me. Until we have better charger vs host vs usb3 charging hub
-> detection in place this seems like a good thing to do.
+> Patch #1: Release the dfl mmio regions after enumeration, so that private
+>           feature drivers could request mmio region in their own drivers.
+> Patch #2: Introduce the dfl bus, then dfl devices could be supported by
+>           independent dfl drivers.
+> Patch #3: An example of the dfl driver for N3000 nios private feature.
+> 
+> 
+> Main changes from v1:
+> - Add the new Patch #1, to improve the feature id definition.
+> - Change the dfl bus uevent format.
+> - Change the dfl device's sysfs name format.
+> - refactor dfl_dev_add()
+> - Add the Patch #4 as an example of the dfl driver.
+> - A lot of minor fixes for comments from Hao and Tom.
+> 
+> Main changes from v2:
+> - Add the doc for dfl-n3000-nios driver.
+> - Minor fixes for comments from Tom.
+> 
+> Main changes from v3:
+> - improve the dfl devices' uevent format, 4 bits for type & 12 bits for id
+> - change dfl_device->type to u8
+> - A dedicate field in struct dfl_feature for dfl device instance.
+> - error out if dfl_device already exist on dfl_devs_init().
+> - Move the err log in regmap implementation, and delete
+>    n3000_nios_writel/readl(), they have nothing to wrapper now.
+> - Minor fixes and comments improvement.
+> 
+> Main changes from v4:
+> - The patch "fpga: dfl: change data type of feature id to u16" is already
+>    applied to for-next
+> - Unify the naming of some functions in dfl.c
+> - Fix the output of fec_mode sysfs inf to "no" on 10G configuration, cause
+>    no FEC mode could be configured for 10G.
+> - Change the N3000 Nios driver name from "dfl-n3000-nios" to "n3000-nios",
+>    and also rename some structures and functions from dfl_n3000_nios_* to
+>    n3000_nios_*
+> - Minor fixes and comments improvement.
+> 
+> Main changes from v5:
+> - Fix the output of fec_mode sysfs inf to "not supported" if in 10G,
+>    or the firmware version major < 3.
+> - The input param of dfl_devs_add() changes to
+>    struct dfl_feature_platform_data.
+> - Minor fixes and improves comments.
+> 
+> Main changes from v6:
+> - Rebased to 5.9-rc1.
+> - Improves comments.
+> 
+> Xu Yilun (3):
+>   fpga: dfl: map feature mmio resources in their own feature drivers
+>   fpga: dfl: create a dfl bus type to support DFL devices
+>   fpga: dfl: add support for N3000 Nios private feature
+> 
+>  Documentation/ABI/testing/sysfs-bus-dfl            |  15 +
+>  .../ABI/testing/sysfs-bus-dfl-devices-n3000-nios   |  21 +
+>  Documentation/fpga/dfl-n3000-nios.rst              |  80 +++
+>  Documentation/fpga/index.rst                       |   1 +
+>  drivers/fpga/Kconfig                               |  11 +
+>  drivers/fpga/Makefile                              |   2 +
+>  drivers/fpga/dfl-n3000-nios.c                      | 542 +++++++++++++++++++++
+>  drivers/fpga/dfl-pci.c                             |  24 +-
+>  drivers/fpga/dfl.c                                 | 449 ++++++++++++++---
+>  drivers/fpga/dfl.h                                 |  93 +++-
+>  10 files changed, 1153 insertions(+), 85 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-dfl-devices-n3000-nios
+>  create mode 100644 Documentation/fpga/dfl-n3000-nios.rst
+>  create mode 100644 drivers/fpga/dfl-n3000-nios.c
+> 
+> -- 
+> 2.7.4
+> 
 
-FYI, I'm cleaning up the pending charger and battery patches to send out
-for review. So that includes my earlier RFC battery status patches, and
-Spinal's additions, and this patch. It will likely be several days before
-I have the series ready for posting though.
+I'll get to your series this week, sorry for the delay.
 
-Regards,
-
-Tony
+Thanks,
+Moritz
