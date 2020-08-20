@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6298C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D48FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8429222D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A0A22DA9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916660;
-	bh=ACTaPf3WB8xQMkrMtFCoSoFHetoXM3EoWgiMsXUUXhU=;
+	s=default; t=1597916676;
+	bh=x7Q9qCp+MY8vZ7KOdTXouEdvuAm/+Ue87rUmmdF7JZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQe+gXt0xLEyN8dPiBdz/hrwrw8uCpF65Vc6pj/Dfkmj/XseJ61eWM3rpEy+TdJPK
-	 vazWa/wNXTpwj+EmLAa4dTJi2BBJgkhJ1DxaoPN0lhERJt3iAmOucGqJzTg7zG4Nfl
-	 EvoyEYiSX7ioRJ4EZ2XClJqxdfhhc6Xg0FO9S5s0=
+	b=sE6nDZ4xLHO/uzf7l5RMHNfMKafzeYBCQ/ZptzlrszmM1AUdP/xat0NVkzeUw0S0F
+	 JXk5OgJmIsH/2Ayk8Z0/vcmPE6JeEitrRk61ud/T3+J1hTYSJVJxxFOTieHxzucZby
+	 b2DjEeWsxlNdDWJVxyL9C2sDoeKXY+340pU008Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgHTJoS (ORCPT
+        id S1729006AbgHTJo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:44:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729169AbgHTJmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:40 -0400
+        id S1729180AbgHTJmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC3DA22C9F;
-        Thu, 20 Aug 2020 09:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 721AD20724;
+        Thu, 20 Aug 2020 09:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916555;
-        bh=ACTaPf3WB8xQMkrMtFCoSoFHetoXM3EoWgiMsXUUXhU=;
+        s=default; t=1597916561;
+        bh=x7Q9qCp+MY8vZ7KOdTXouEdvuAm/+Ue87rUmmdF7JZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qcPaY3wO9rNWisxvS4OjL0mklM/K3qGSuDptiZFtYSpWcwH0j4OpeYe0XptdBoIGY
-         QgfVO0DH97ndu4zfadZFf68Sjq7JzEQpVnjhRKg9flY7MTzOgYzGfLhcRUHgfWCLDN
-         FCrihLuaSRUv5NP1PsPbaqwoJuzP2WnqyjtGKPao=
+        b=RbPnqmWw2BPIruDJGh5ZsYsAj6ngcK/TzXU2CVYbZUp4y4bex+hx9blZiEz0HRzmo
+         tE66S8Ddtr1OO826iRN8hksREjigzylZU6gYsvbeREgEOwENyiZFSSrpliGwLyq3qv
+         ouQyoUq2nrPyXINcNc2YWH5XyILPnjiHD2uf5jZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 170/204] s390/test_unwind: fix possible memleak in test_unwind()
-Date:   Thu, 20 Aug 2020 11:21:07 +0200
-Message-Id: <20200820091614.699700594@linuxfoundation.org>
+Subject: [PATCH 5.7 172/204] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
+Date:   Thu, 20 Aug 2020 11:21:09 +0200
+Message-Id: <20200820091614.797571638@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -64,33 +63,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 75d3e7f4769d276a056efa1cc7f08de571fc9b4b ]
+[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
 
-test_unwind() misses to call kfree(bt) in an error path.
-Add the missed function call to fix it.
+Fix the missing clk_disable_unprepare() before return
+from emac_clks_phase1_init() in the error handling case.
 
-Fixes: 0610154650f1 ("s390/test_unwind: print verbose unwinding results")
+Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
 Reported-by: Hulk Robot <hulkci@huawei.com>
 Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Acked-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/lib/test_unwind.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-index 32b7a30b2485d..b0b12b46bc572 100644
---- a/arch/s390/lib/test_unwind.c
-+++ b/arch/s390/lib/test_unwind.c
-@@ -63,6 +63,7 @@ static noinline int test_unwind(struct task_struct *task, struct pt_regs *regs,
- 			break;
- 		if (state.reliable && !addr) {
- 			pr_err("unwind state reliable but addr is 0\n");
-+			kfree(bt);
- 			return -EINVAL;
- 		}
- 		sprint_symbol(sym, addr);
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
+index 18b0c7a2d6dcb..90e794c79f667 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -473,13 +473,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
+ 
+ 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_axi;
+ 
+ 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_cfg_ahb;
++
++	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	if (ret)
++		goto disable_clk_cfg_ahb;
+ 
+-	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	return 0;
++
++disable_clk_cfg_ahb:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
++disable_clk_axi:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
++
++	return ret;
+ }
+ 
+ /* Enable clocks; needs emac_clks_phase1_init to be called before */
 -- 
 2.25.1
 
