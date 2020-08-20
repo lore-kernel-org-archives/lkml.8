@@ -2,95 +2,135 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD223C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:24:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B487C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E34204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="mccu0oQk"
+	by mail.kernel.org (Postfix) with ESMTP id 3B8ED208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:25:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597947924;
+	bh=HD+6B26pOM3xOHTkv4x7zLa79Thbsh5pJUjBsUjrp/w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fzpp2N8CA2i17AcVP+iArhiWrQcLrKcOuPTUNvtqfTGwjJMlUAn1a2ypieP+MwOlq
+	 kjV6XlTqya3835JZsyOYYMVGVB/vy6h2jsQatW9jeY7uPyLZQHGW5WKmvS3mknK1Jr
+	 F/kWvVdtwJ84wbH8Bk1LqD1UV8X/i8ta5WuWhQvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgHTSXy (ORCPT
+        id S1727786AbgHTSZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:23:54 -0400
-Received: from www381.your-server.de ([78.46.137.84]:54198 "EHLO
-        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726949AbgHTSXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:23:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
-         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
-        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=Pba3wqITnv1HSpWANOUiwdXFXFAyf2fUBM6+eV5vKqA=; b=mccu0oQkjLx5k/gEQ8IzLxYpyX
-        h1dzqZiLk5lGWwrDefLML+xi1PbKVHeCS5wmwalrBkanPFJ7s1LLy2WCXjw0HGngC+k9wNOUTVUL7
-        hCRZ1nnCa5inJZ0drhD9yckBGW5WtMjfHzT6XyFp/xb4iYmrQlPqjuqdKZZi0jfk7EgyQOLFRvwoL
-        1H/Ll+strO7/vg3Shygo90l1iafT5nuCFZZeutaheRVbZjn+iAuB+/GI3iKCy/WbwUy3+nQ41gR/H
-        DnLeKokhdtC+5e2nFtVBDJxz65+gTJdJaic0DqE3a4rAL1zNWjV4nHkKN/IHcShx7TFk+sJH9C47x
-        ZbXCd42A==;
-Received: from sslproxy06.your-server.de ([78.46.172.3])
-        by www381.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <lars@metafoo.de>)
-        id 1k8pDt-0005Xe-3p; Thu, 20 Aug 2020 20:23:37 +0200
-Received: from [2001:a61:25dc:8101:9e5c:8eff:fe01:8578]
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <lars@metafoo.de>)
-        id 1k8pDs-000D44-US; Thu, 20 Aug 2020 20:23:36 +0200
-Subject: Re: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe
- and irq handler
-To:     Paul Cercueil <paul@crapouillou.net>, madhuparnabhowmik10@gmail.com
-Cc:     dan.j.williams@intel.com, vkoul@kernel.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrianov@ispras.ru, ldv-project@linuxtesting.org
-References: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
- <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
-From:   Lars-Peter Clausen <lars@metafoo.de>
-Message-ID: <e1961c04-e2aa-fe3a-fb84-bb3b33fae5dc@metafoo.de>
-Date:   Thu, 20 Aug 2020 20:23:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 14:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726896AbgHTSZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:25:20 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 336AA204FD;
+        Thu, 20 Aug 2020 18:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597947918;
+        bh=HD+6B26pOM3xOHTkv4x7zLa79Thbsh5pJUjBsUjrp/w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2apTTtZszk/WzWxBLqb/GueTDxRXME6bRh6QcMCrNyO3oVk9djn5GlimeaQC41dpa
+         Zw62S5Yh/2y87P89CE4SeNzYO72SecBzL6gocrBJJDApjxzjILh0IFlfiQJAu2HQ5o
+         nDFntFlLqzJpbcftsqC+BSodnlGcJY19CIVjW39g=
+Date:   Thu, 20 Aug 2020 11:25:16 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        LTP List <ltp@lists.linux.it>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [PATCH 5.8 000/232] 5.8.3-rc1 review
+Message-ID: <20200820182516.GA49496@sol.localdomain>
+References: <20200820091612.692383444@linuxfoundation.org>
+ <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Authenticated-Sender: lars@metafoo.de
-X-Virus-Scanned: Clear (ClamAV 0.102.4/25905/Thu Aug 20 15:09:58 2020)
+In-Reply-To: <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 1:59 PM, Paul Cercueil wrote:
-> Hi,
->
-> Le dim. 16 août 2020 à 12:52, madhuparnabhowmik10@gmail.com a écrit :
->> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>
->> In probe IRQ is requested before zchan->id is initialized which can be
->> read in the irq handler. Hence, shift request irq and enable clock after
->> other initializations complete. Here, enable clock part is not part of
->> the race, it is just shifted down after request_irq to keep the error
->> path same as before.
->>
->> Found by Linux Driver Verification project (linuxtesting.org).
->>
->> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->
-> I don't think there is a race at all, the interrupt handler won't be 
-> called before the DMA is registered.
->
- From a purely formal verification perspective there is a bug. The 
-interrupt could fire if i.e. the hardware is buggy or something. In 
-general it is a good idea to not request the IRQ until all the resources 
-that are used in the interrupt handler are properly set up. Even if you 
-know that in practice the interrupt will never fire this early.
+On Thu, Aug 20, 2020 at 08:57:57PM +0530, Naresh Kamboju wrote:
+> On Thu, 20 Aug 2020 at 14:55, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.8.3 release.
+> > There are 232 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.3-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> > Herbert Xu <herbert@gondor.apana.org.au>
+> >     crypto: af_alg - Fix regression on empty requests
+> 
+> Results from Linaro’s test farm.
+> Regressions detected.
+> 
+>   ltp-crypto-tests:
+>     * af_alg02
+>   ltp-cve-tests:
+>     * cve-2017-17805
+> 
+> af_alg02.c:52: BROK: Timed out while reading from request socket.
+> We are running the LTP 20200515 tag released test suite.
+>  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
+> 
+> Summary
+> ------------------------------------------------------------------------
+> 
+> kernel: 5.8.3-rc1
+> git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+> git branch: linux-5.8.y
+> git commit: 201fff807310ce10485bcff294d47be95f3769eb
+> git describe: v5.8.2-233-g201fff807310
+> Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/build/v5.8.2-233-g201fff807310
+> 
+> Regressions (compared to build v5.8.2)
+> ------------------------------------------------------------------------
+> 
+> x15:
+>   ltp-crypto-tests:
+>     * af_alg02
+> 
+>   ltp-cve-tests:
+>     * cve-2017-17805
+> 
 
+Looks like this test is still "broken" because it assumes behavior that isn't
+clearly specified, as previously discussed at
+https://lkml.kernel.org/r/20200702033221.GA19367@gondor.apana.org.au.
+
+I sent out LTP patches to fix it:
+https://lkml.kernel.org/linux-crypto/20200820181918.404758-1-ebiggers@kernel.org/T/#u
+
+- Eric
