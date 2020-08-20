@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6ACC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 923BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC1B420738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B6B9207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926732;
-	bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
+	s=default; t=1597926734;
+	bh=VEvNQNqKm62xvEsep9xrnDsoUlwfW7KDTVBzKhVrnrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBPtb0AETORfBVorW8AbJZ+FOlulgQG2WOS5c8wz8qp1CLygGHyKpInAAtVUDuvjK
-	 lu0pptiSwJ8l0yVjfpHFVgORLrz038/e6RtNJTfPty0vQM/eLDhT+BKyWIukw78e/o
-	 v8mW7DTppcC/bCU3Yp6mROuyZbEpHq4Ir7TPw/+A=
+	b=1Ek5RvmXMeKDHxnC/8mphsWR/BOGP8teupr+Xdk4mq2v5fngvgn/Kah52/Rec+EV4
+	 8rwpFkdX2CX0gN9H29071znPEONCn6SXmqTEWYHB3Vz8XhH/Qhf2jvsf14EGTrapmB
+	 sCEG6Nra0Msqs+4n6wSYqAwC72pLlhfb/E3nsuu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729877AbgHTMcL (ORCPT
+        id S1729714AbgHTMcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:32:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57350 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:32:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729698AbgHTJuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:09 -0400
+        id S1729710AbgHTJuL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F422173E;
-        Thu, 20 Aug 2020 09:50:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1D9A20724;
+        Thu, 20 Aug 2020 09:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917008;
-        bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
+        s=default; t=1597917011;
+        bh=VEvNQNqKm62xvEsep9xrnDsoUlwfW7KDTVBzKhVrnrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Ex1hx5UmGr5tJaGKvEBqxg87TxiNuZ5K1Luu4xrul67JvzUKztaV7JY3A6MUvN2+
-         rzz0UNau437FXCw8xT7QVADPw6jwzMIGFu5pCvizcB8myzqIMTbMNHPskic+yOKMEH
-         amBLXpOgmgU4YPNkQHTjzFxxqb+rdgSfYptHtsYo=
+        b=IWGx+f+9yjgo24l4/2bWKOCVrTQWc+AHC2HL9xBGYA5lzJz1SQB/UUN1LlXvZwpBh
+         YflfxTqGYKPqjT3GaxoHwqwRvQb5hXH6/BmOZ849hcFHml2/1y3tW93L95jve6vaf4
+         vuaAFp9Fxy4LfnYKXHtaGOtgAkfxxdsT77WewI8o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Dilip Kota <eswara.kota@linux.intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/152] md-cluster: Fix potential error pointer dereference in resize_bitmaps()
-Date:   Thu, 20 Aug 2020 11:21:31 +0200
-Message-Id: <20200820091600.147128687@linuxfoundation.org>
+Subject: [PATCH 5.4 125/152] x86/tsr: Fix tsc frequency enumeration bug on Lightning Mountain SoC
+Date:   Thu, 20 Aug 2020 11:21:32 +0200
+Message-Id: <20200820091600.202943354@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,35 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dilip Kota <eswara.kota@linux.intel.com>
 
-[ Upstream commit e8abe1de43dac658dacbd04a4543e0c988a8d386 ]
+[ Upstream commit 7d98585860d845e36ee612832a5ff021f201dbaf ]
 
-The error handling calls md_bitmap_free(bitmap) which checks for NULL
-but will Oops if we pass an error pointer.  Let's set "bitmap" to NULL
-on this error path.
+Frequency descriptor of Lightning Mountain SoC doesn't have all the
+frequency entries so resulting in the below failure causing a kernel hang:
 
-Fixes: afd756286083 ("md-cluster/raid10: resize all the bitmaps before start reshape")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+    Error MSR_FSB_FREQ index 15 is unknown
+    tsc: Fast TSC calibration failed
+
+So, add all the frequency entries in the Lightning Mountain SoC frequency
+descriptor.
+
+Fixes: 0cc5359d8fd45 ("x86/cpu: Update init data for new Airmont CPU model")
+Fixes: 812c2d7506fd ("x86/tsc_msr: Use named struct initializers")
+Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Link: https://lore.kernel.org/r/211c643ae217604b46cbec43a2c0423946dc7d2d.1596440057.git.eswara.kota@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-cluster.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kernel/tsc_msr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 73fd50e779754..d50737ec40394 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1139,6 +1139,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
- 		bitmap = get_bitmap_from_slot(mddev, i);
- 		if (IS_ERR(bitmap)) {
- 			pr_err("can't get bitmap from slot %d\n", i);
-+			bitmap = NULL;
- 			goto out;
- 		}
- 		counts = &bitmap->counts;
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index c65adaf813848..41200706e6da1 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -133,10 +133,15 @@ static const struct freq_desc freq_desc_ann = {
+ 	.mask = 0x0f,
+ };
+ 
+-/* 24 MHz crystal? : 24 * 13 / 4 = 78 MHz */
++/*
++ * 24 MHz crystal? : 24 * 13 / 4 = 78 MHz
++ * Frequency step for Lightning Mountain SoC is fixed to 78 MHz,
++ * so all the frequency entries are 78000.
++ */
+ static const struct freq_desc freq_desc_lgm = {
+ 	.use_msr_plat = true,
+-	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
++	.freqs = { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000,
++		   78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ 	.mask = 0x0f,
+ };
+ 
 -- 
 2.25.1
 
