@@ -2,120 +2,120 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D677C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A54DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E615820674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:32:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmSuTZ6K"
+	by mail.kernel.org (Postfix) with ESMTP id 2097120674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:34:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgHTWcn (ORCPT
+        id S1728368AbgHTWef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:32:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36932 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgHTWck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:32:40 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFF8CC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:32:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id b11so148398pld.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:32:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=cqYejF0FPIa+d7AlSTm/Gc7YgLZloIvNKdqMBUt+AsY=;
-        b=ZmSuTZ6KCJTKQKYPSjUEzF+uUSfIT436CakTl8Wsy2kuSFOCKhSZFNeBCpXzco52S5
-         4Hs2YyW722vCbqGe6gp2y9myXYF2tYNIalRG2jhoX2/cyZAGdMOrE1magYkANmez1tkB
-         WJzvolLoKBbHKRRGw8UYPOxKughFUpBFbelIKntmosFIOYkKVD1X59zjvpxAew/7dkN+
-         /76RUY4lJF2MnQ4++9d31b9hChdA83/hAYV41+1UwncGCXplygCGZgsFiMQC1+PVYi2m
-         6kluZlpaiDDUXJEeTXDU2yg5NXK2UUtGo0gmLTKDBKXQrrpwxO7E9qijtMURRvVMHul4
-         JkQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cqYejF0FPIa+d7AlSTm/Gc7YgLZloIvNKdqMBUt+AsY=;
-        b=kzL/llK1U9KXHBAwCJhTWAVwThLex3gea+JU9+xfPd3pWdIf+QbPDwn9YlfO3L8tEp
-         pGZK9FdswiNt/w90ASr2vqHK/G71/rnQb0WT8fz9BAgELRpNwqNebMmFIimhngxa1m9p
-         onsdqUtr1iXR349pi9qq441B6j8+AQRA8Yf2elEhplFPGVKV8eMZvgMgBtz7QeZHsh+n
-         qq10Y/8S2PBvioQoJoInKTl67DzyGMtFdDTTGn8yFiIPMr/LlZbUEviFgdeeUunC7kJV
-         GwU4aUoTUZMOCnflRi5gLDrysyWOY49c9waw3MQq3gSMFqML63pqiApzc4gpJ1AzJiRu
-         eAmA==
-X-Gm-Message-State: AOAM5302jnnd7N9ao3H4yOB2ebsrypK4KaJuZ/SABEDHONoAras7hUyv
-        qwf0YfY/SgMZlUPLnHtZptGRXxH2wJd4RA==
-X-Google-Smtp-Source: ABdhPJzIZKSmzqbOJ/OvBUM7dtVdBJmB4A1oPC9M9oRFcPdN/Poitr5UR9RtoyQf6dkCuvOxp8hm5g==
-X-Received: by 2002:a17:902:82c1:: with SMTP id u1mr451157plz.224.1597962758478;
-        Thu, 20 Aug 2020 15:32:38 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h19sm11668pjv.41.2020.08.20.15.32.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 15:32:38 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 16:32:36 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH 0/9] introduce name service announcement rpmsg driver
-Message-ID: <20200820223236.GB3938186@xps15>
-References: <20200731114732.12815-1-arnaud.pouliquen@st.com>
+        Thu, 20 Aug 2020 18:34:35 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13363 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726666AbgHTWee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 18:34:34 -0400
+IronPort-SDR: hBjZ9GT3i0px5RDw5DDaDm54NjgS6Tmih0X8AydHbWKAcIRLdry2+RPAPoCM8BHzKGWgfWwYPs
+ NzA8hioo9yTw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="156473935"
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="156473935"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 15:34:34 -0700
+IronPort-SDR: M9a8VIwmIYg9vmlw98pQBFNG63T5/n3EcIMbTlXje/QT7KcRQxs6jbVFMv80HTw62qbuClWvb/
+ 5GI5Kra5fi8w==
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="321053505"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 15:34:33 -0700
+Date:   Thu, 20 Aug 2020 15:34:31 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: FSGSBASE causing panic on 5.9-rc1
+Message-ID: <20200820223431.GB10269@sjchrist-ice>
+References: <f6694ee6-d672-1cf9-deaf-4d600bc4e9eb@amd.com>
+ <5756198D-C8BD-4290-BFCA-04424EB230A6@amacapital.net>
+ <20200820220507.GA10269@sjchrist-ice>
+ <CALCETrXxfZtLSPx+QFMRdnvDE6+zT=Jy8CYX03Va7o8M0VvKng@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200731114732.12815-1-arnaud.pouliquen@st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrXxfZtLSPx+QFMRdnvDE6+zT=Jy8CYX03Va7o8M0VvKng@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jul 31, 2020 at 01:47:23PM +0200, Arnaud Pouliquen wrote:
-> The NS announcement is implemented by several backends, but could be
-> considered as part the RPMsg protocol. 
-> In this case it should be managed as a reserved rpmsg service and so
-> implemented on top of the rpmsg protocol.
+On Thu, Aug 20, 2020 at 03:07:10PM -0700, Andy Lutomirski wrote:
+> On Thu, Aug 20, 2020 at 3:05 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Thu, Aug 20, 2020 at 01:36:46PM -0700, Andy Lutomirski wrote:
+> > >
+> > >
+> > > > On Aug 20, 2020, at 1:15 PM, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> > > >
+> > > > ﻿On 8/20/20 3:07 PM, Dave Hansen wrote:
+> > > >> On 8/20/20 12:05 PM, Tom Lendacky wrote:
+> > > >>>> I added a quick hack to save TSC_AUX to a new variable in the SVM
+> > > >>>> struct and then restore it right after VMEXIT (just after where GS is
+> > > >>>> restored in svm_vcpu_enter_exit()) and my guest is no longer crashing.
+> > > >>>
+> > > >>> Sorry, I mean my host is no longer crashing.
+> > > >> Just to make sure I've got this:
+> > > >> 1. Older CPUs didn't have X86_FEATURE_RDPID
+> > > >> 2. FSGSBASE patches started using RDPID in the NMI entry path when
+> > > >>    supported *AND* FSGSBASE was enabled
+> > > >> 3. There was a latent SVM bug which did not restore the RDPID data
+> > > >>    before NMIs were reenabled after VMEXIT
+> > > >> 4. If an NMI comes in the window between VMEXIT and the
+> > > >>    wrmsr(TSC_AUX)... boom
+> > > >
+> > > > Right, which means that the setting of TSC_AUX to the guest value needs to be moved, too.
+> > > >
+> > >
+> > > Depending on how much of a perf hit this is, we could also skip using RDPID
+> > > in the paranoid path on SVM-capable CPUs.
+> >
+> > Doesn't this affect VMX as well?  KVM+VMX doesn't restore TSC_AUX until the
+> > kernel returns to userspace.  I don't see anything that prevents the NMI
+> > RDPID path from affecting Intel CPUs.
+> >
+> > Assuming that's the case, I would strongly prefer this be handled in the
+> > paranoid path.  NMIs are unblocked immediately on VMX VM-Exit, which means
+> > using the MSR load lists in the VMCS, and I hate those with a vengeance.
+> >
+> > Perf overhead on VMX would be 8-10% for VM-Exits that would normally stay
+> > in KVM's run loop, e.g. ~125 cycles for the WMRSR, ~1300-1500 cycles to
+> > handle the most common VM-Exits.  It'd be even higher overhead for the
+> > VMX preemption timer, which is handled without even enabling IRQs and is
+> > a hot path as it's used to emulate the TSC deadline timer for the guest.
 > 
-> This series introduces the rpmsg_ns driver that handles the name service
-> announcement. The virtio backend is updated in consequence to use this
-> service.
+> I'm fine with that -- let's get rid of RDPID unconditionally in the
+> paranoid path.  Want to send a patch that also adds as comment
+> explaining why we're not using RDPID?
 
-I have started to review this set, comments will be spread over a few days. 
-
-Thanks,
-Mathieu
-
-> 
-> Applies cleanly on Bjorn rpmsg-next branch (ddd1930d6e3e)
-> 
-> Arnaud Pouliquen (9):
->   rpmsg: virtio: rename rpmsg_create_channel
->   rpmsg: core: add channel creation internal API
->   rpmsg: virtio: add rpmsg channel device ops
->   rpmsg: define the name service announcement as reserved address
->   rpmsg: introduce reserved rpmsg driver for ns announcement
->   rpmsg: virtio: use rpmsg ns device for the ns announcement
->   rpmsg: ns: add name service announcement service
->   rpmsg: virtio: use rpmsg_ns driver to manage ns announcement
->   rpmsg: ns: name service announcement endianness
-> 
->  drivers/rpmsg/Kconfig            |   9 ++
->  drivers/rpmsg/Makefile           |   1 +
->  drivers/rpmsg/rpmsg_core.c       |  37 ++++++
->  drivers/rpmsg/rpmsg_internal.h   |  32 +++++
->  drivers/rpmsg/rpmsg_ns.c         | 175 +++++++++++++++++++++++++
->  drivers/rpmsg/virtio_rpmsg_bus.c | 213 +++++++++----------------------
->  include/linux/rpmsg.h            |   9 ++
->  7 files changed, 325 insertions(+), 151 deletions(-)
->  create mode 100644 drivers/rpmsg/rpmsg_ns.c
-> 
-> -- 
-> 2.17.1
-> 
+Sure, though I won't object if Tom beats me to the punch :-)
