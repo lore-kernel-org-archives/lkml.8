@@ -2,249 +2,180 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B59C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 348C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87E552075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:59:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092BC208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:01:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="e3fL0rOP"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="o1gmSDr8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgHTO7J (ORCPT
+        id S1727866AbgHTPBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51474 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728071AbgHTO67 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:58:59 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66F1CC061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:58:59 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id k18so1367027qtm.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 07:58:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ET2XNn7lo6854zHDsZgOcJetJM+mPFVXCCN5RTBo4Y4=;
-        b=e3fL0rOPM9Az7uh5AHamHJ50dIupBoi/OfZc/qL/TLDmvBdn4eeyFTpZXeE4C0sF6L
-         a417LcbqRavsf/rTuhY+Mc00F7D7pOd6frm1H1x3mXpjAp9yaPwDI1H5wLO+vDr7lLqa
-         RCcPulhFgDj7yKuI+1YHyY5My5b/SeTxEZw7x/ov/qPgGEG+8KNIl1io3YEM9SynRaK1
-         6l2M6W95Ki8cgKrGfCSoWJaZfyxovqQKqT3/EzzaP0j4TxdsWgJMbJJmLCueu3jDTCMe
-         tIGAzlr2ANoNAn5si8f3rjdhN964mWxgzoZqqXlb4Jmd1rxt8FCSHPl4CVG4HqGYnEf7
-         LOqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ET2XNn7lo6854zHDsZgOcJetJM+mPFVXCCN5RTBo4Y4=;
-        b=ruedHUoYS0ELx9eQaVSlHp4mKuDKL/ILVv6/SoeLQtQ13xSHqqvHcq14s46anoKF/V
-         v06qsbWLV4XUk8HDaBXPhABPzOYq8T1fiGrJHXZfGp1MiqVwoQ4fvW/FMDqkJiDXQkHq
-         /oHsSiHwiSFpHrZrTNkADLxoKXB2WkUugaQmEyllw1FprCnSNIpTPfT2G0pvIIdOHAXN
-         +MUN1W7Z5W9N/v42GA2+LpMy7wXtdV7KfQcCnC06VUJO/Evty1tyoNoJaWTjaaeIoDPT
-         ctmqnxSvjQU5ADmwotPxR6OFgpH0w3qdPCgHLhOsgoUcmORMzxFtD8lBajlEM6TtA0GJ
-         cjrA==
-X-Gm-Message-State: AOAM532dAi14ZBkmlbPXoQ+EYGLjfjKzQuekgciIotN4fU/TX88egOkY
-        jt/2TnBd7EJHEULDbkeMoNJ6ng==
-X-Google-Smtp-Source: ABdhPJxWGGOSspYzql2tmJck2qZCfnXfYvAHgccBUHwOtRGUHK7NlTlGLG/OArJVybgph5qV0SdEEw==
-X-Received: by 2002:ac8:35f9:: with SMTP id l54mr3105281qtb.25.1597935538466;
-        Thu, 20 Aug 2020 07:58:58 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id n85sm2428135qkn.80.2020.08.20.07.58.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 07:58:57 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:58:51 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Resend PATCH 1/6] mm/memcg: warning on !memcg after readahead
- page charged
-Message-ID: <20200820145850.GA4622@lca.pw>
-References: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
+        Thu, 20 Aug 2020 11:01:51 -0400
+Received: from mail-eopbgr60078.outbound.protection.outlook.com ([40.107.6.78]:6373
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726854AbgHTPBs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:01:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SdJbIaLUaF4Px5EIuDiBNGYFK3rRY7jNYbn0IjivJt5FaM1S+P78WfxK2NZFzppeY3KlYw1dYt42pahNMwgmYslfTR01ZKAkG3lyR2Rica5fw4+ib/H7k1CaHaqLiyZEa5nxnYqp9YhvtlNsN5jmt0kZsZbusPEGEq0JFoO7YckaEAz9BPAEIcM4E3ihURDrIomS6VnK9AktqIhDlPqaNLpSlWp3Ss9mUld3+w5s6i2SI0lB5/fhENncs50l+iuDrWntXEDEbI/AOZb3dC24SavL649sQHNG+rmNMsZpo2e3Xjb2pqICMwEHZcjL8e0NKsTZFxFO7zrQdUAkQCavIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZdhWFIYBIyHxtfv2TMR9UO8e2r+fwkCZHmqScpn0P4k=;
+ b=iaqpXwDmZM4lvMSpdVs0WaFLQye1WoVNmeMydZBJOOIOVnyHlWTN5yMDkI9TYlap10hSKAvL2u+eTjTNevHkQ7jc5CAr2VxNec34Ua15FSo0zMOC7PYLSq/EmdIlYdSx88tAZsI3KKi+5GjUzEi6xW67PrItE30wglNczs1/kVnjJp65XF+t7r2pGrTAveKrLgTtzbk09jWhyIfUxXOOI76z9QB8e+eE6XcSM1nn6z8SzeWGcIT3nLVchghyylFFy8F6a0MEs3Ga3CFBahCLConc6C1mivuyiA437q01kTf8E3KDcdH4YCDbL/LFlYMM5B9zbhhh3Axm3MVMOifBNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZdhWFIYBIyHxtfv2TMR9UO8e2r+fwkCZHmqScpn0P4k=;
+ b=o1gmSDr81CAlGPvweZ4/WB947sXwrmPsvOZ0NbY2IYkFJaN4msV2+Rc/rE2Rcb60pSWKZFqZFaTYzDwpuLG3bG11bE4fD8jLMney+rKFxxas3Z7IHvB1TvFqYZyW9/otrOFEqZGw8mzhcqXYI3CXSWNCgoVJMjArG8UAfs74pak=
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
+ by VE1PR04MB7343.eurprd04.prod.outlook.com (2603:10a6:800:1a2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
+ 2020 15:01:45 +0000
+Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::ad7f:d95a:5413:a950]) by VE1PR04MB6638.eurprd04.prod.outlook.com
+ ([fe80::ad7f:d95a:5413:a950%3]) with mapi id 15.20.3283.027; Thu, 20 Aug 2020
+ 15:01:45 +0000
+From:   Robin Gong <yibin.gong@nxp.com>
+To:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
+        Lars-Peter Clausen <lars@metafoo.de>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
+Subject: RE: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Topic: pcm|dmaengine|imx-sdma race condition on i.MX6
+Thread-Index: AQHWcWQbD9eqMlwY2U27XyctTVPmVak3Rd/wgASnXICAA2IfgIAANxuAgAFCSvA=
+Date:   Thu, 20 Aug 2020 15:01:44 +0000
+Message-ID: <VE1PR04MB6638A7AC625B6771F9A69F0D895A0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+ <6b5799a567d14cfb9ce34d278a33017d@skidata.com>
+In-Reply-To: <6b5799a567d14cfb9ce34d278a33017d@skidata.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: skidata.com; dkim=none (message not signed)
+ header.d=none;skidata.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.235.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 9bb7857f-79f5-415d-0f11-08d84519f497
+x-ms-traffictypediagnostic: VE1PR04MB7343:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB7343600441659F288374C4E3895A0@VE1PR04MB7343.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t5fVH0mbJ4+YPV7nk5Ad73lzNocbaTtDPhFYWGfloZIU1/eDQnOP3rKfOAow6gP022gvTHBmXtyx3AfkWhYinf8XafLd0NgDqd1ClGDHI42TMtUqeasoRczTJgyPWQeoFtp2Ps8ZKB3GZXON13icmClqBb02wzZcL+TFUlaN5nCWMuW0a6qtO4JzMHrNGpTO64NC74iSG0KGF810TcHOqba6lk4UUExDC6m4qPLgwLU7SMbIzXwhSeGTpJd+4bqznFQoVkX/u/ewNn6Ra4iZycugPp/pGxtRudognDE7epO1hqUgprEcOp/2T0ejmCjwpwTG29qL4zdEhAnNJy/6dg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(478600001)(55016002)(8676002)(9686003)(86362001)(64756008)(66556008)(66476007)(66946007)(8936002)(76116006)(4326008)(52536014)(2906002)(33656002)(66446008)(7416002)(5660300002)(316002)(53546011)(26005)(7696005)(83380400001)(71200400001)(110136005)(54906003)(6506007)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: WqUbWRixlKXxaEeSIoGUFMksPU7BnuSLboUMH4jXhWkuuLzZkMC4Y4Wasewf9WQLqfTXtkkDC69IRrmbHAFMOZgKCAjjQd0nz8HYwyrM/d3CVOeZi27ufrHvFlLq9XVK4OSw6rO2fPBfsdGt7wp21fKBczfTkcgd23pSjIKqxxbXzLgFv8fxy2SQmfZpVuzOGiF2kcL+Ti1AD7hKFsib115EhDoz9cPqFJi5SaWFzHl+9pjW+1GxgWcyR5I1ksRiuWTEgVQ9WWR6FCJCA3JRUA0kWRP/4zsoKILcGJ87p0achI0ynWNPfXlF5O4Xpx2zGYeEM9JCtst5C+98O9XjFN92kIXBaGcJ2nGD/IClun9coR91qZzGlYVYYJjOP3iMfh631v7ZQ88KlZJNEqyqxwzihzFzqzrDNEf/ZuYi4vBNMEKLQpe5ced13mscH/Aewg7ffq0kPuH6D68OcIr59iPH2UNaKY3DyvuHW+oWPTLCbajDEnH79mXxC6Tq74P7SATYLLYzw2WgtlfmzDhkB/y88UXeWrNNvK1i1yDSrwvYXJZsidHeKGEJxVx+vjepv4nDAvFqAOH/0uuV0CrjxP6f3AjyUG5cc2unQ8fntKCgE0t+PpzCaXohTYcoWOzuw3anfJF2fkSxQug7ofYMpw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597144232-11370-1-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bb7857f-79f5-415d-0f11-08d84519f497
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 15:01:45.1675
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6/V6b/ZenbtPqZ0nkdpYJOnq/J3lrrAql8UiXdyrKTppGIbd9i0O0/KYAnnWyiGjMa4AGF71jIXY1PEPLru4cA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7343
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 11, 2020 at 07:10:27PM +0800, Alex Shi wrote:
-> Since readahead page is charged on memcg too, in theory we don't have to
-> check this exception now. Before safely remove them all, add a warning
-> for the unexpected !memcg.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-
-This will trigger,
-
-[ 1863.916499] LTP: starting move_pages12
-[ 1863.946520] page:000000008ccc1062 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1fd3c0
-[ 1863.946553] head:000000008ccc1062 order:5 compound_mapcount:0 compound_pincount:0
-[ 1863.946568] anon flags: 0x7fff800001000d(locked|uptodate|dirty|head)
-[ 1863.946584] raw: 007fff800001000d c000000016ebfcd8 c000000016ebfcd8 c000001feaf46d59
-[ 1863.946609] raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-[ 1863.946632] page dumped because: VM_WARN_ON_ONCE_PAGE(!memcg)
-[ 1863.946669] ------------[ cut here ]------------
-[ 1863.946694] WARNING: CPU: 16 PID: 35307 at mm/memcontrol.c:6908 mem_cgroup_migrate+0x5f8/0x610
-[ 1863.946708] Modules linked in: vfio_pci vfio_virqfd vfio_iommu_spapr_tce vfio vfio_spapr_eeh loop kvm_hv kvm ip_tables x_tables sd_mod bnx2x tg3 ahci libahci libphy mdio firmware_class libata dm_mirror dm_region_hash dm_log dm_mod
-[ 1863.946801] CPU: 16 PID: 35307 Comm: move_pages12 Not tainted 5.9.0-rc1-next-20200820 #4
-[ 1863.946834] NIP:  c0000000003fcb48 LR: c0000000003fcb38 CTR: 0000000000000000
-[ 1863.946856] REGS: c000000016ebf6f0 TRAP: 0700   Not tainted  (5.9.0-rc1-next-20200820)
-[ 1863.946879] MSR:  900000000282b033 <SF,HV,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  CR: 28242882  XER: 00000000
-[ 1863.946915] CFAR: c00000000032c644 IRQMASK: 0 
-               GPR00: c0000000003fcb38 c000000016ebf980 c000000005923200 0000000000000031 
-               GPR04: 0000000000000000 0000000000000000 0000000000000027 c000001ffd727190 
-               GPR08: 0000000000000023 0000000000000001 c0000000058f3200 0000000000000001 
-               GPR12: 0000000000002000 c000001ffffe3800 c000000000b26a68 0000000000000000 
-               GPR16: c000000016ebfc20 c000000016ebfcd8 0000000000000020 0000000000000001 
-               GPR20: c00c00080724f000 c0000000003c8770 0000000000000000 c000000016ebfcd0 
-               GPR24: 0000000000000000 fffffffffffffff5 0000000000000002 0000000000000000 
-               GPR28: 0000000000000000 0000000000000001 0000000000000000 c00c000007f4f000 
-[ 1863.947142] NIP [c0000000003fcb48] mem_cgroup_migrate+0x5f8/0x610
-[ 1863.947164] LR [c0000000003fcb38] mem_cgroup_migrate+0x5e8/0x610
-[ 1863.947185] Call Trace:
-[ 1863.947203] [c000000016ebf980] [c0000000003fcb38] mem_cgroup_migrate+0x5e8/0x610 (unreliable)
-[ 1863.947241] [c000000016ebf9c0] [c0000000003c9080] migrate_page_states+0x4e0/0xce0
-[ 1863.947274] [c000000016ebf9f0] [c0000000003cbbec] migrate_page+0x8c/0x120
-[ 1863.947307] [c000000016ebfa30] [c0000000003ccf10] move_to_new_page+0x190/0x670
-[ 1863.947341] [c000000016ebfaf0] [c0000000003ced08] migrate_pages+0xfb8/0x1880
-[ 1863.947365] [c000000016ebfc00] [c0000000003cf670] move_pages_and_store_status.isra.45+0xa0/0x160
-[ 1863.947399] [c000000016ebfc80] [c0000000003cfef4] sys_move_pages+0x7c4/0xed0
-[ 1863.947434] [c000000016ebfdc0] [c00000000002c678] system_call_exception+0xf8/0x1d0
-[ 1863.947459] [c000000016ebfe20] [c00000000000d0a8] system_call_common+0xe8/0x218
-[ 1863.947481] Instruction dump:
-[ 1863.947502] 7fc3f378 4bfee82d 7c0802a6 3c82fb20 7fe3fb78 38844fc8 f8010050 4bf2fad5 
-[ 1863.947527] 60000000 39200001 3d42fffd 992a82fb <0fe00000> e8010050 eb810020 7c0803a6 
-[ 1863.947563] CPU: 16 PID: 35307 Comm: move_pages12 Not tainted 5.9.0-rc1-next-20200820 #4
-[ 1863.947594] Call Trace:
-[ 1863.947615] [c000000016ebf4d0] [c0000000006f6008] dump_stack+0xfc/0x174 (unreliable)
-[ 1863.947642] [c000000016ebf520] [c0000000000c9004] __warn+0xc4/0x14c
-[ 1863.947665] [c000000016ebf5b0] [c0000000006f4b68] report_bug+0x108/0x1f0
-[ 1863.947689] [c000000016ebf650] [c0000000000234f4] program_check_exception+0x104/0x2e0
-[ 1863.947724] [c000000016ebf680] [c000000000009664] program_check_common_virt+0x2c4/0x310
-[ 1863.947751] --- interrupt: 700 at mem_cgroup_migrate+0x5f8/0x610
-                   LR = mem_cgroup_migrate+0x5e8/0x610
-[ 1863.947786] [c000000016ebf9c0] [c0000000003c9080] migrate_page_states+0x4e0/0xce0
-[ 1863.947810] [c000000016ebf9f0] [c0000000003cbbec] migrate_page+0x8c/0x120
-[ 1863.947843] [c000000016ebfa30] [c0000000003ccf10] move_to_new_page+0x190/0x670
-[ 1863.947867] [c000000016ebfaf0] [c0000000003ced08] migrate_pages+0xfb8/0x1880
-[ 1863.947901] [c000000016ebfc00] [c0000000003cf670] move_pages_and_store_status.isra.45+0xa0/0x160
-[ 1863.947936] [c000000016ebfc80] [c0000000003cfef4] sys_move_pages+0x7c4/0xed0
-[ 1863.947969] [c000000016ebfdc0] [c00000000002c678] system_call_exception+0xf8/0x1d0
-[ 1863.948002] [c000000016ebfe20] [c00000000000d0a8] system_call_common+0xe8/0x218
-[ 1863.948034] irq event stamp: 410
-[ 1863.948054] hardirqs last  enabled at (409): [<c000000000184564>] console_unlock+0x6b4/0x990
-[ 1863.948092] hardirqs last disabled at (410): [<c00000000000965c>] program_check_common_virt+0x2bc/0x310
-[ 1863.948126] softirqs last  enabled at (0): [<c0000000000c59a8>] copy_process+0x788/0x1950
-[ 1863.948229] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[ 1863.948316] ---[ end trace 74f8f4df751b0259 ]---
-
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/mmdebug.h | 13 +++++++++++++
->  mm/memcontrol.c         | 15 ++++++++-------
->  2 files changed, 21 insertions(+), 7 deletions(-)
-> 
-> diff --git a/include/linux/mmdebug.h b/include/linux/mmdebug.h
-> index 2ad72d2c8cc5..4ed52879ce55 100644
-> --- a/include/linux/mmdebug.h
-> +++ b/include/linux/mmdebug.h
-> @@ -37,6 +37,18 @@
->  			BUG();						\
->  		}							\
->  	} while (0)
-> +#define VM_WARN_ON_ONCE_PAGE(cond, page)	({			\
-> +	static bool __section(.data.once) __warned;			\
-> +	int __ret_warn_once = !!(cond);					\
-> +									\
-> +	if (unlikely(__ret_warn_once && !__warned)) {			\
-> +		dump_page(page, "VM_WARN_ON_ONCE_PAGE(" __stringify(cond)")");\
-> +		__warned = true;					\
-> +		WARN_ON(1);						\
-> +	}								\
-> +	unlikely(__ret_warn_once);					\
-> +})
-> +
->  #define VM_WARN_ON(cond) (void)WARN_ON(cond)
->  #define VM_WARN_ON_ONCE(cond) (void)WARN_ON_ONCE(cond)
->  #define VM_WARN_ONCE(cond, format...) (void)WARN_ONCE(cond, format)
-> @@ -48,6 +60,7 @@
->  #define VM_BUG_ON_MM(cond, mm) VM_BUG_ON(cond)
->  #define VM_WARN_ON(cond) BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ON_ONCE(cond) BUILD_BUG_ON_INVALID(cond)
-> +#define VM_WARN_ON_ONCE_PAGE(cond, page)  BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN_ONCE(cond, format...) BUILD_BUG_ON_INVALID(cond)
->  #define VM_WARN(cond, format...) BUILD_BUG_ON_INVALID(cond)
->  #endif
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 130093bdf74b..299382fc55a9 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1322,10 +1322,8 @@ struct lruvec *mem_cgroup_page_lruvec(struct page *page, struct pglist_data *pgd
->  	}
->  
->  	memcg = page->mem_cgroup;
-> -	/*
-> -	 * Swapcache readahead pages are added to the LRU - and
-> -	 * possibly migrated - before they are charged.
-> -	 */
-> +	/* Readahead page is charged too, to see if other page uncharged */
-> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
->  	if (!memcg)
->  		memcg = root_mem_cgroup;
->  
-> @@ -6906,8 +6904,9 @@ void mem_cgroup_migrate(struct page *oldpage, struct page *newpage)
->  	if (newpage->mem_cgroup)
->  		return;
->  
-> -	/* Swapcache readahead pages can get replaced before being charged */
->  	memcg = oldpage->mem_cgroup;
-> +	/* Readahead page is charged too, to see if other page uncharged */
-> +	VM_WARN_ON_ONCE_PAGE(!memcg, oldpage);
->  	if (!memcg)
->  		return;
->  
-> @@ -7104,7 +7103,8 @@ void mem_cgroup_swapout(struct page *page, swp_entry_t entry)
->  
->  	memcg = page->mem_cgroup;
->  
-> -	/* Readahead page, never charged */
-> +	/* Readahead page is charged too, to see if other page uncharged */
-> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
->  	if (!memcg)
->  		return;
->  
-> @@ -7168,7 +7168,8 @@ int mem_cgroup_try_charge_swap(struct page *page, swp_entry_t entry)
->  
->  	memcg = page->mem_cgroup;
->  
-> -	/* Readahead page, never charged */
-> +	/* Readahead page is charged too, to see if other page uncharged */
-> +	VM_WARN_ON_ONCE_PAGE(!memcg, page);
->  	if (!memcg)
->  		return 0;
->  
-> -- 
-> 1.8.3.1
-> 
-> 
+T24gMjAyMC8wOC8xOSAyMjoyNiBCZW5qYW1pbiBCYXJhIC0gU0tJREFUQSA8QmVuamFtaW4uQmFy
+YUBza2lkYXRhLmNvbT4gd3JvdGU6IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+ID4gRnJvbTogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+DQo+ID4gU2VudDog
+TWl0dHdvY2gsIDE5LiBBdWd1c3QgMjAyMCAxMzowOA0KPiA+IEkgdGhpbmsgdGhpcyBtaWdodCBi
+ZSBhbiBzZG1hIHNwZWNpZmljIHByb2JsZW0gYWZ0ZXIgYWxsLg0KPiA+IGRtYWVuZ2luZV90ZXJt
+aW5hdGVfYXN5bmMoKSB3aWxsIGlzc3VlIGEgcmVxdWVzdCB0byBzdG9wIHRoZSBETUEuIEJ1dA0K
+PiA+IGl0IGlzIHN0aWxsIHNhZmUgdG8gaXNzdWUgdGhlIG5leHQgdHJhbnNmZXIsIGV2ZW4gd2l0
+aG91dCBjYWxsaW5nDQo+ID4gZG1hZW5naW5lX3N5bmNocm9uaXplKCkuIFRoZSBETUEgc2hvdWxk
+IHN0YXJ0IHRoZSBuZXcgdHJhbnNmZXIgYXQgaXRzDQo+ID4gZWFybGllc3QgY29udmVuaWVuY2Ug
+aW4gdGhhdCBjYXNlLg0KPiA+DQo+ID4gZG1hZWdpbmVfc3luY2hyb25pemUoKSBpcyBzbyB0aGF0
+IHRoZSBjb25zdW1lciBoYXMgYSBndWFyYW50ZWUgdGhhdA0KPiA+IHRoZSBETUEgaXMgZmluaXNo
+ZWQgdXNpbmcgdGhlIHJlc291cmNlcyAoZS5nLiB0aGUgbWVtb3J5IGJ1ZmZlcnMpDQo+ID4gYXNz
+b2NpYXRlZCB3aXRoIHRoZSBETUEgdHJhbnNmZXIgc28gaXQgY2FuIHNhZmVseSBmcmVlIHRoZW0u
+DQo+IA0KPiBUaGFuayB5b3UgZm9yIHRoZSBjbGFyaWZpY2F0aW9ucyENCj4gDQo+ID4gSSBkb24n
+dCBrbm93IGhvdyBmZWFzaWJsZSB0aGlzIGlzIHRvIGltcGxlbWVudCBpbiB0aGUgU0RNQSBkbWFl
+bmdpbmUNCj4gPiBkcml2ZXIuIEJ1dCBJIHRoaW5rIHdoYXQgaXMgc2hvdWxkIGRvIGlzIHRvIGhh
+dmUgc29tZSBmbGFnIHRvIGluZGljYXRlDQo+ID4gaWYgYSB0ZXJtaW5hdGUgaXMgaW4gcHJvZ3Jl
+c3MuIElmIGEgbmV3IHRyYW5zZmVyIGlzIGlzc3VlZCB3aGlsZQ0KPiA+IHRlcm1pbmF0ZSBpcyBp
+biBwcm9ncmVzcyB0aGUgdHJhbnNmZXIgc2hvdWxkIGdvIG9uIGEgbGlzdC4gT25jZQ0KPiA+IHRl
+cm1pbmF0ZSBmaW5pc2hlcyBpdCBzaG91bGQgY2hlY2sgdGhlIGxpc3QgYW5kIHN0YXJ0IHRoZSB0
+cmFuc2ZlciBpZg0KPiA+IHRoZXJlIGFyZSBhbnkgb24gdGhlIGxpc3QuDQo+IA0KPiBJTUhPIHRo
+YXQncyBuZWFybHkgd2hhdCBSb2JpbidzIHBhdGNoZXMgZG9lcywgc28gdGhpcyBzaG91bGQgYmUg
+c3VmZmljaWVudDoNCj4gUHV0dGluZyB0aGUgZGVzY3JpcHRvcnMgdG8gZnJlZSBpbiBhbiBleHRy
+YSB0ZXJtaW5hdGlvbiBsaXN0IGFuZCBlbnN1cmluZyB0aGF0IGENCj4gbmV3IHRyYW5zZmVyIGlz
+IGhhbmRsZWQgYWZ0ZXIgdGhlIGxhc3QgdGVybWluYXRpb24gaXMgZG9uZS4NCkhlbGxvIEJlbmph
+bWluLCANCiAgSXQgc2VlbXMgTGFycydzIGxpc3QgaXMgbm90IHRoZSBleHRyYSB0ZXJtaW5hdGlv
+biBsaXN0IGluIG15IHBhdGNoLg0KSW5zdGVhZCwgaGUgbWVhbnMgdGhlIG5leHQgZGVzY3JpcHRv
+ciBzaG91bGQgYmUgbW92ZWQgaW4gYW5vdGhlciBwZW5kaW5nIGxpc3QNCmlmIHRoZSBsYXN0IGNo
+YW5uZWwgdGVybWluYXRlZCBub3QgZG9uZSB5ZXQgYW5kIHJlc3RhcnQgdG8gaGFuZGxlIHRoZSBw
+ZW5kaW5nIGxpc3QNCmFmdGVyIHRoZSBsYXN0IGNoYW5uZWwgdGVybWluYXRlZCBkb25lIGlmIHRo
+ZSBsaXN0IGlzIG5vdCBlbXB0eS4NCg0KICBJIGxpa2UgdGhlIGlkZWEsIGJ1dCBvbiBTRE1BIHRo
+YXQgcmFjZSBjb25kaXRpb24gbWF5IG5ldmVyIGhhcHBlbiBJIHRoaW5rLCBiZWNhdXNlDQp0aGF0
+IG9uY2UgdGhlIG5leHQgZGVzY3JpcHRvciBnb3QgZHVyaW5nIHVzbGVlcF9yYW5nZSBpbiBzZG1h
+X2NoYW5uZWxfdGVybWluYXRlX3dvcmssDQptZWFucyB0aGUgbGFzdCBjaGFubmVsIHN0b3BwZWQg
+aW5kZWVkLiBJIGhhdmUgbWVudGlvbmVkIGJlZm9yZToNCicgYmVjYXVzZSBsb2FkIGNvbnRleHQo
+c2RtYV9sb2FkX2NvbnRleHQpIGRvbmUgYnkgY2hhbm5lbDAgd2hpY2ggaXMgdGhlDQogbG93ZXN0
+IHByaW9yaXR5LiBJbiBvdGhlciB3b3JkcywgY2FsbGluZyBzdWNjZXNzZnVsbHkgZG1hZW5naW5l
+X3ByZXBfKiBpbiB0aGUNCiBuZXh0IHRyYW5zZmVyIG1lYW5zIG5ldyBub3JtYWwgdHJhbnNmZXIg
+d2l0aG91dCBhbnkgbGFzdCB0ZXJtaW5hdGVkIHRyYW5zZmVyIGltcGFjdCAnDQpub3JtYWwgZGF0
+YSB0cmFuc2ZlciBvbiBkbWEgbm9uLWNoYW5uZWwwLCBzdWNoIGFzIGNoYW5uZWwxLDIuLi5ldGMg
+d2hpY2ggaGFzIGhpZ2hlcg0KcHJpb3JpdHkgdGhhbiBjaGFubmVsMCwgc28gaWYgY2hhbm5lbDAg
+Z2V0IHRvIHJ1biB0byBsb2FkIGNvbnRleHQgbWVhbnMgdGhlICdwb3RlbnRpYWwgdHJhbnNmZXIn
+IG9uIHRoZSBsYXN0IHRlcm1pbmF0ZWQgY2hhbm5lbCBoYXZlIGJlZW4gZG9uZS4gU28gbm8gbmVl
+ZCB0byBtb3ZlIGxpc3Qgc2luY2UNCml0J3Mgbm8gZGlmZmVyZW50IHdpdGggbm9ybWFsIHRyYW5z
+ZmVyIGFsdGhvdWdoIHNkbWFfY2hhbm5lbF90ZXJtaW5hdGVfd29yayBtYXkgZ2V0DQp0byBydW4g
+bGF0ZXIgdG8gZnJlZSB0aGUgbGFzdCBkZXNjcmlwdG9yKG9ubHkgc29mdHdhcmUgaW1wYWN0IHdo
+aWNoIG15IHBhdGNoIGZpeCkuDQogIFRyYW5zZmVyIG9uIHNkbWEgY2hhbm5lbCB3aWxsIGJlIHNw
+bGl0IGludG8gbWFueSBzbWFsbCBwaWVjZXMgb2YgdHJhbnNmZXIgDQooV2F0ZXItTWFyay1MZXZl
+bCBzaXplKS4gT25jZSBkbWEgcmVxdWVzdCBldmVudCBhY2tub3dsZWRnZWQgYW5kIHNjaGVkdWxl
+ZCBieSBzZG1hDQpjb3JlLCB0aGlzIHNkbWEgY2hhbm5lbCB3aWxsIHN0YXJ0IHRvIHRyYW5zZmVy
+IFdNTCBzaXplIG9mIGRhdGEgYW5kIHRoZW4gc2NoZWR1bGUgb3V0IHRvDQpvdGhlciBjaGFubmVs
+LiBOb3cgdGhlICdwb3RlbnRpYWwgdHJhbnNmZXInIGFsaXZlIG9uIHRlcm1pbmF0ZWQgY2hhbm5l
+bCBvbmx5IGhhcHBlbiBpbg0KdGhlIGJlbG93IHR3byB0aGluZ3MgY29tZSBvdXQgaW4gdGhlIHNh
+bWUgdGltZToNCiAgIFsxXS5UaGUgY2hhbm5lbCBpcyBydW5uaW5nIHRvIHRyYW5zZmVyIFdhdGVy
+LU1hcmstTGV2ZWwgc2l6ZSAoc2RtYSBzaWRlKS4NCiAgIFsyXS5UaGUgY2hhbm5lbCBpcyB0ZXJt
+aW5hdGVkIGJ5IHNkbWFfZGlzYWJsZV9jaGFubmVsIGF0IHRoZSBzYW1lIHRpbWUoYXJtIHNpZGUp
+Lg0KRXZlbiBpZiBpdCBoYXBwZW4sIHRoZSAncG90ZW50aWFsIHRyYW5zZmVyJyBvbiBzZG1hIGlz
+IHZlcnkgc2hvcnQsIGJlY2F1c2UgZmV0Y2hpbmcvZmlsbGluZw0KZmlmbyBpbiBXTUwgc2l6ZShm
+aWZvIHNpemUgb3IgaGFsZiBmaWZvIHNpemUpIGlzIHZlcnkgcXVpY2suIEFmdGVyIHRoYXQsIHRo
+aXMgY2hhbm5lbCBpcw0KdGVybWluYXRlZCBhdCBIVyBsZXZlbC4gSGVyZSAxbXMgZnJvbSBkZXNp
+Z24gdGVhbSBqdXN0IGZvciBiaWcgc2FmZSBJIHRoaW5rLiBTbyBJIGRvbid0DQp0aGluayB0aGF0
+J3MgYSBiaWcgZGVhbCBpZiBtZW1vcnkgYnVmZmVyIGlzIGF2YWlsYWJsZSBhbmQgZGVzY3JpcHRv
+ciBhcmUgdGFrZW4gY2FyZSB0bw0Kbm8gaW1wYWN0IG9uIHRoZSBuZXh0IHRyYW5zZmVyIGFzIG15
+IHBhdGNoIGRpZC4gDQoNCj4gDQo+IA0KPiBAUm9iaW46DQo+IElzIGl0IHBvc3NpYmxlIHRvIHRh
+ZyB0aGUgY29tbWl0cyBmb3IgdGhlIHN0YWJsZS10cmVlDQo+IENjOiBzdGFibGVAdmdlci5rZXJu
+ZWwub3JnPw0KQ291bGQgbXkgcGF0Y2ggd29yayBpbiB5b3VyIHNpZGU/IElmIHllcywgSSB3aWxs
+IGFkZA0KQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcgDQoNCj4gDQo+IEJlc3QgcmVnYXJkcyBh
+bmQgdGhhbmsgeW91IGFsbCENCj4gQmVuamFtaW4NCj4gUmljaGFyZA0KDQo=
