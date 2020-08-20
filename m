@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED70C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7D2E208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BD422B47
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929852;
-	bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
+	s=default; t=1597929861;
+	bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vw8JUZ+5LGrEHnXSSmBDUsaRM7GhmzsNcdwMk2JVwaj4m084XiPxaW+D+S3MXtKkI
-	 TdghkYBzumIrqvIcaCSkHho7PP1qD8viXBv3xrIhpB9NwUFV3xmi273hMVDiw6/S4d
-	 V2VfhHUTlf9vFL0VJdApnmXZxVR2eDWcibtybp1Y=
+	b=O4jPsm+p3jyqYA+fkXMns7T5aziImua7ef0jtZqiLmaG5VFNxnCvAI/eLkzRpBedi
+	 cMCcLx8iSXWqYI3M/EaneBg8QxvBCB15KFPxJ92kVWGWVw44eslHbt7/6+yhPhmG49
+	 87RUycqPXrnTm6oGK7d2NAU2MewETPNuRcV4VCcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgHTNYJ (ORCPT
+        id S1730502AbgHTNYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:24:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47024 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:24:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727075AbgHTJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:12 -0400
+        id S1727900AbgHTJdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:33:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0076822CA0;
-        Thu, 20 Aug 2020 09:34:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A523207DE;
+        Thu, 20 Aug 2020 09:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916051;
-        bh=Q1zIU5SuzkyJ10BIgp1gFKULbwqkncB9RaWdhQ0CRdY=;
+        s=default; t=1597916001;
+        bh=cecQAWHLmwsCCrinzA06frVhhV1249x+4mNIPD1Sj6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IXJuuQtrNTArGW2DkDW5IKD6stb491fJyg2wcCIKc0rtBNqpi/gW5jTrp0aDWPl7q
-         n/KdlUQv7iHIWrEzhrT9Rj+hFv1wXOxesvysCgTGDtYsj2zudhqOTxgI71WeN0j/kp
-         Q2TJViNKJSK6pXyLAcvquv0CdPPs7QhBvtdPraq0=
+        b=DHJc4fH/KJsLbtHLqz0SOsVh8sH6i2EnVqFM/yGMUfVpeD8JgZaR9qlolsttZHMZg
+         zJNdPCx6zt/ECBNTJqXgujRaJSgv/cMe0c4eMWgoc19bqShHr/GI5Vggas43jXXkYJ
+         xvZbrXiTV7PzBjeG+ut2dU+J5TDv9a1LJnJAxVvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
-        Song Liu <songliubraving@fb.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 187/232] md-cluster: Fix potential error pointer dereference in resize_bitmaps()
-Date:   Thu, 20 Aug 2020 11:20:38 +0200
-Message-Id: <20200820091621.853179966@linuxfoundation.org>
+Subject: [PATCH 5.8 209/232] fs/ufs: avoid potential u32 multiplication overflow
+Date:   Thu, 20 Aug 2020 11:21:00 +0200
+Message-Id: <20200820091622.934009523@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,35 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit e8abe1de43dac658dacbd04a4543e0c988a8d386 ]
+[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
 
-The error handling calls md_bitmap_free(bitmap) which checks for NULL
-but will Oops if we pass an error pointer.  Let's set "bitmap" to NULL
-on this error path.
+The 64 bit ino is being compared to the product of two u32 values,
+however, the multiplication is being performed using a 32 bit multiply so
+there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
+to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
+overflow.
 
-Fixes: afd756286083 ("md-cluster/raid10: resize all the bitmaps before start reshape")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Fixes: f3e2a520f5fb ("ufs: NFS support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Evgeniy Dushistov <dushistov@mail.ru>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
+Addresses-Coverity: ("Unintentional integer overflow")
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/md-cluster.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/ufs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/md/md-cluster.c b/drivers/md/md-cluster.c
-index 73fd50e779754..d50737ec40394 100644
---- a/drivers/md/md-cluster.c
-+++ b/drivers/md/md-cluster.c
-@@ -1139,6 +1139,7 @@ static int resize_bitmaps(struct mddev *mddev, sector_t newsize, sector_t oldsiz
- 		bitmap = get_bitmap_from_slot(mddev, i);
- 		if (IS_ERR(bitmap)) {
- 			pr_err("can't get bitmap from slot %d\n", i);
-+			bitmap = NULL;
- 			goto out;
- 		}
- 		counts = &bitmap->counts;
+diff --git a/fs/ufs/super.c b/fs/ufs/super.c
+index 1da0be667409b..e3b69fb280e8c 100644
+--- a/fs/ufs/super.c
++++ b/fs/ufs/super.c
+@@ -101,7 +101,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
+ 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
+ 	struct inode *inode;
+ 
+-	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
++	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
+ 		return ERR_PTR(-ESTALE);
+ 
+ 	inode = ufs_iget(sb, ino);
 -- 
 2.25.1
 
