@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA37AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B334207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787CB207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916331;
-	bh=F/lWx3rCyAx0QUIFhY6nhve4Bh0dW3+M/Nm1ZT3P9w8=;
+	s=default; t=1597916334;
+	bh=yLpcs7nLt1ItWDLK/1O1qK6gtIEVmxM/EWbIXoZQufA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+I8gZxCKpHnnnF26EIKPufXcSnMvIpTw6MwcFsR/JuMUdYoGLa1UB3j8b7hYHRAt
-	 OvJBwpzdExDLuoAkce8P9O6PNhJC/1jEcz2vdHX6hmA++1ViwwJiNtxauyoXrXCHsm
-	 AesoCuuFvg55sSNHmlzGJ+vLFY1LNIfWRbWjXGbg=
+	b=C+Su3AXTUici36ubZDIYlmZYKZ0dzFMpBwdcfh65Zl0a+kXM7JbbFHfYpdNIvoKus
+	 ynAgVw2gzB1ljUT5tKXopiC3iMWGc8J6zeFFfDlMxGGIGEKmSS944576T10JBzm8nk
+	 AiBoSynzZ5uGYeOHBM0JR9aTmCCgTNMRKxifRvC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728898AbgHTJiu (ORCPT
+        id S1728905AbgHTJix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56224 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbgHTJi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:28 -0400
+        id S1728867AbgHTJih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AB2520724;
-        Thu, 20 Aug 2020 09:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813E920724;
+        Thu, 20 Aug 2020 09:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916307;
-        bh=F/lWx3rCyAx0QUIFhY6nhve4Bh0dW3+M/Nm1ZT3P9w8=;
+        s=default; t=1597916317;
+        bh=yLpcs7nLt1ItWDLK/1O1qK6gtIEVmxM/EWbIXoZQufA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N8j/evRkFu2XMgES6eeSQdtQk3yyl6g/Ag8/A5DtK2nqwRzm+an5yjbPRKZwHET9H
-         bM4MmuQiXbFSK5pgDem9Ucj+asi9tshEFYoO3as/5ud9Rm9aJ9IS14Wh/C3AzlxBZ/
-         Mc5LmyLY0P6yhD8xedPvZc+mqPAwjuJZb1ltIFdI=
+        b=q03+gX1+dhhX3yP6TKxm18Zo4mxSJG3OE4z//oKfgI4cb+o67tlDJ7PgxkSY22uZ8
+         CNiS8JNjq55KA9iY143zJ7BCF0+buxKA3tf44UB93MWVn0J3sp1KoQEJjjfzxcjdyq
+         vPPSgSqKCpr+xRwqKaqxA9udQzbvMwK/QQWCyFGo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>
-Subject: [PATCH 5.7 083/204] ceph: set sec_context xattr on symlink creation
-Date:   Thu, 20 Aug 2020 11:19:40 +0200
-Message-Id: <20200820091610.486448645@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.7 086/204] dm: dont call report zones for more than the user requested
+Date:   Thu, 20 Aug 2020 11:19:43 +0200
+Message-Id: <20200820091610.633981297@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,38 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Johannes Thumshirn <johannes.thumshirn@wdc.com>
 
-commit b748fc7a8763a5b3f8149f12c45711cd73ef8176 upstream.
+commit a9cb9f4148ef6bb8fabbdaa85c42b2171fbd5a0d upstream.
 
-Symlink inodes should have the security context set in their xattrs on
-creation. We already set the context on creation, but we don't attach
-the pagelist. The effect is that symlink inodes don't get an SELinux
-context set on them at creation, so they end up unlabeled instead of
-inheriting the proper context. Make it do so.
+Don't call report zones for more zones than the user actually requested,
+otherwise this can lead to out-of-bounds accesses in the callback
+functions.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Such a situation can happen if the target's ->report_zones() callback
+function returns 0 because we've reached the end of the target and then
+restart the report zones on the second target.
+
+We're again calling into ->report_zones() and ultimately into the user
+supplied callback function but when we're not subtracting the number of
+zones already processed this may lead to out-of-bounds accesses in the
+user callbacks.
+
+Signed-off-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Fixes: d41003513e61 ("block: rework zone reporting")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ceph/dir.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/md/dm.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ceph/dir.c
-+++ b/fs/ceph/dir.c
-@@ -924,6 +924,10 @@ static int ceph_symlink(struct inode *di
- 	req->r_num_caps = 2;
- 	req->r_dentry_drop = CEPH_CAP_FILE_SHARED | CEPH_CAP_AUTH_EXCL;
- 	req->r_dentry_unless = CEPH_CAP_FILE_EXCL;
-+	if (as_ctx.pagelist) {
-+		req->r_pagelist = as_ctx.pagelist;
-+		as_ctx.pagelist = NULL;
-+	}
- 	err = ceph_mdsc_do_request(mdsc, dir, req);
- 	if (!err && !req->r_reply_info.head->is_dentry)
- 		err = ceph_handle_notrace_create(dir, dentry);
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -503,7 +503,8 @@ static int dm_blk_report_zones(struct ge
+ 		}
+ 
+ 		args.tgt = tgt;
+-		ret = tgt->type->report_zones(tgt, &args, nr_zones);
++		ret = tgt->type->report_zones(tgt, &args,
++					      nr_zones - args.zone_idx);
+ 		if (ret < 0)
+ 			goto out;
+ 	} while (args.zone_idx < nr_zones &&
 
 
