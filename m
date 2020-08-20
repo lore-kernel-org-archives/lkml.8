@@ -2,69 +2,105 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8440C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F845C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9989F2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:19:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597958398;
-	bh=LpHLI5zWx/R79E5iCR5MaeHXWs+4w+la5T/EIrcC6g8=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=0u+eiXQJN69pHKT18qcdoSyrHC8QEDHO4Xvk/0TGauawAABQGwMsf8X209TDxWpJz
-	 jDBGrC30a8YndMm3MQXjSKhlD9MJ7z3JawxAEfVKBmQ+2+84WlBd2JewURwnDnvFAB
-	 CdICVdgplxNpb8LVlYAGolrrCtFz/vg9dcz7ZgBM=
+	by mail.kernel.org (Postfix) with ESMTP id 3844D207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K8tXDB6r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgHTVT4 (ORCPT
+        id S1728745AbgHTVVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:19:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726781AbgHTVT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:19:56 -0400
-Subject: Re: [GIT PULL] PCI fixes for v5.9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597958395;
-        bh=LpHLI5zWx/R79E5iCR5MaeHXWs+4w+la5T/EIrcC6g8=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vp0XH0+qSLbS6m1Rbg/WERBKDjQJduOQ0htypMXT8jvz99c3MXTMrrUfnrNZDl48g
-         oJHGg5Yccne2+zXHTJOR/P2jUfqTd7rKW0SbWhmmK6ICSoMNzsjBezRuEDIl4Hwcsc
-         LLyIEsLTRqUA9Jk6OHIv8OTzLQ1iFSShM0iwXD3g=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200820205034.GA1565627@bjorn-Precision-5520>
-References: <20200820205034.GA1565627@bjorn-Precision-5520>
-X-PR-Tracked-List-Id: <linux-pci.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200820205034.GA1565627@bjorn-Precision-5520>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.9-fixes-1
-X-PR-Tracked-Commit-Id: 7c2308f79fc81ba0bf24ccd2429fb483a91bcd51
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: da2968ff879b9e74688cdc658f646971991d2c56
-Message-Id: <159795839574.11229.5737153371339944893.pr-tracker-bot@kernel.org>
-Date:   Thu, 20 Aug 2020 21:19:55 +0000
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>
+        Thu, 20 Aug 2020 17:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726976AbgHTVVs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 17:21:48 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03D22C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:21:47 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d188so1687pfd.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:21:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=EsAjRN4EWGdA6npeygguQ2Nt+2Qs2ZtAg82JTA4fjFU=;
+        b=K8tXDB6rNbGscQlHY1IKoadl3x/vhZyQ/BPRzUIJ9ekNpyEgrFUp8WnYNBdytMLT03
+         xspi1TS1YHRjFLBTubnUoUCSmJYUJobp6DsgeFT/F5cu26hy9hImQkk6Jen/Ec5jLEk3
+         nP64duWEgISYePfLB3r9Xmac7cfpySG0j2bUg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EsAjRN4EWGdA6npeygguQ2Nt+2Qs2ZtAg82JTA4fjFU=;
+        b=jVS+E/vgiDZ5bqz5CxsYv6GxVOZ3axEDmtkTvMw1hSq6HGyPsqVITwSJ0m25kB/Ctl
+         5n8NLM045CPXv3gso340QepXPsuBDnqZbgcDvqOJguXjZepTsi0rSv0k7ASEkFWCirhm
+         vPV+7NKvOi44fiNsgAjdYay/cvcWeMgkt3dkorWUDl8JR7/DIDtAWqhnSqfPlCnUomZV
+         +vdtLPj7/s5LX/UdTOxLVyhN8KOtaVWucx9hcHfM+UzPDNYur4SY2kf5ht+uSoqOU3lv
+         YHZjKmpiV/O3309zosbgV5qkiqklr7uFXQr9pldQXJtLDPPtVrkifgJGRC8eeHDm7SAZ
+         rSTQ==
+X-Gm-Message-State: AOAM532cABzUVLi5ix4UQI9gTXCLDl1tonheV20cotMDPzzmReN35Dux
+        YvpBD/llDl2/d2hSWlAgLCx1gA==
+X-Google-Smtp-Source: ABdhPJwJ5uE9q3Uz8BjfaU+FBc50PS+4PET4V3mUpf4QuQZJT1QCIhsKZQ8JLt5HhxkLcLP/YQvrnQ==
+X-Received: by 2002:a05:6a00:228f:: with SMTP id f15mr503972pfe.222.1597958506806;
+        Thu, 20 Aug 2020 14:21:46 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k8sm3680437pgt.54.2020.08.20.14.21.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 14:21:46 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 14:21:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>
+Subject: Re: [PATCH] mm/migrate: Avoid possible unnecessary
+ ptrace_may_access() call in kernel_move_pages()
+Message-ID: <202008201420.D9F0CB3E@keescook>
+References: <9ce6209f41b64734b2cac748783aa441@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ce6209f41b64734b2cac748783aa441@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 20 Aug 2020 15:50:34 -0500:
+On Thu, Aug 20, 2020 at 02:18:21AM +0000, linmiaohe wrote:
+> Kees Cook <keescook@chromium.org> wrote:
+> >On Mon, Aug 17, 2020 at 07:59:33AM -0400, Miaohe Lin wrote:
+> >> There is no need to check if this process has the right to modify the 
+> >> specified process when they are same.
+> >> 
+> >> Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+> >> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> >
+> >NAK, please don't do this -- the ptrace and security hooks already do these kinds of self-introspection checks, and I'd like to keep a central place to perform these kinds of checks.
+> >
+> 
+> Many thanks for your reply.
+> We also avoid get_task_struct/ put_task_struct pair of atomic ops, rcu_lock, task_lock and so on this way.
+> 
+> >Is there a specific problem you've encountered that this fixes?
+> >
+> 
+> I'am sorry but there's no specific problem. I do this mainly to skip the unnecessary ptrace and security hooks.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git tags/pci-v5.9-fixes-1
+Cool. Let's keep this as-is so we continue to have centralized
+instrumentation of these things in the LSM. :)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/da2968ff879b9e74688cdc658f646971991d2c56
-
-Thank you!
+Thanks for your attention to performance!
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Kees Cook
