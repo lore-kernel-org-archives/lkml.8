@@ -2,219 +2,163 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89645C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52D15206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05863207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="crVt546v"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="x8sJzjCS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHTSld (ORCPT
+        id S1727882AbgHTSnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:41:33 -0400
-Received: from mail-dm6nam12on2067.outbound.protection.outlook.com ([40.107.243.67]:50016
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727068AbgHTSl3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:41:29 -0400
+        Thu, 20 Aug 2020 14:43:23 -0400
+Received: from mga05.intel.com ([192.55.52.43]:37920 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726836AbgHTSnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:43:21 -0400
+IronPort-SDR: xdvgu4FJr+QQ5ziH+viTcoY8/KzY15+T4YNbCWTz9DnWulA4BHl1HU9rCEyUEQdkWSUCL+kJDn
+ YTT2PFbg2KVQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="240208720"
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="240208720"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 11:43:20 -0700
+IronPort-SDR: BVz6pYtoPT0JDFge2U3cbJR7Ku4s3ZPEuVXVEn0rIE+3UWLjlLvsbcHxSHGKW9wIPGUhoIwOHn
+ TEo07lQ2eKcg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="293579572"
+Received: from fmsmsx601-2.cps.intel.com (HELO fmsmsx601.amr.corp.intel.com) ([10.18.84.211])
+  by orsmga003.jf.intel.com with ESMTP; 20 Aug 2020 11:43:19 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 20 Aug 2020 11:43:17 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 20 Aug 2020 11:43:17 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.176)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Thu, 20 Aug 2020 11:43:15 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lv7UAKpAWZxeLlfeMY2tDPeZJ78zCs1Ymk4N7PLHtOdoihUlFNSa7qSr2kN8+hAJ8kdhOFf8EryA1UzsqEKJxE7YqBFlyj3DvZUDyItElh/11qNuWJF2G1zsjpubb8Uo9ZKwkThZ1ObM25XU9K1hXjXoJqRKTHhFL5Q3rHihQxfggX15fGD7szvUuaSzkXu2xtCklYm9iS9LmB8yR8+xzpIgEOKnD1Qg2wdJ2PSaN1IwiwJrSvFOfpKxWCFb5yvxwSJY4AN7Ow6UxZ2CCXsjnK9g4KgSmeCWwK4aGVQvGcaBQGoCXikRWHyZC483TDubdRBHmma9fjQ88LxLFL0ofg==
+ b=jOQCFwrS+XatWD8NCKpeoU27YWA8WE4Wvnb6l9tP4Do/odQfR1904MuZOAHushXMi279cl8oLH83GxUuLagMJdrRc29hWxsg2Ihl7e96RahnJGgEQnj6lCkKrrwPQWudyRnsIMW6uW59SGtGpoylUPskDufmCtz36ZrKMNchr1HzRbOx87rWmwsNqgloVsbGsaDiYBaV7pscD9xl/g6c3H82Jg6Cxru7EtfhKTEXkgGy8PqS1QRZavaTAYToNqK7Tt8SSQDxyeXfm5QSIPPRo9mo7K/3h9c0dOoW6H/bSZFDzN9Af6K+4pVDFqLDfFMJ52qoaWsENFHVuLB+ld9gaw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ta5/5TtGlX9zsCCd6OHLtnqkvyGfwdaDlNOm3OhivOU=;
- b=D30nNL/rUEvuocbFYAHl7i3CDUua5FIcIXH9GIhPZ30fVXtjSwJ62CGxDdTodt/+Xy3Bis8s3KOL22f16u2gBCPrdN3ReBwQWcdl4OZwp/Vj8Uk18po3ZrxDsFnHv323C6qSjDlbFSfpdxGCYfpvzO4maRS1muAb+gUKnkDl0dzLKpHy5OgZQUs+rA/6erC7aKa9b8CMI+zY/tb8OTViT0ZYjKmly6NDoUh3NZuq06BJ8DdyGm1hCfGHQ6s2V+Z9DAegRb5sfWoq+DDvlXw7cn3NrnwIrWrpFH4BL8XIhQJeEMtPyS3fWtSr2mKNRatkKFsPB8PbcO7Ccm2aG/ubWA==
+ bh=Dg4Idkj7Du7d7AJUiJGQBo5enbJHrkYh+IzJN+s7LvI=;
+ b=dKUxQxCtS4aIWRJ5Ab4je3EvcdTuRoWtAVi/O5lyHlHVYmzwZuyQBTREjG8AMcHT2vMlO1t1vjjcxNL19lazhdNw9zqKr+DIej9Vyl9R+qdzyKJExj4cVsyDI+4aw40mmOxeWXO+L/aMmau7usUTOI3cmzYrzhkWIt6lKEpcey1IQfGuHZH9XP+KtbND5Bvs5nrm8/0A7J3+KU+jIqsSxuYjhnU9odP7PmfK1l5yOl3KvoXUY8rOPIuQrntcpQhud2Lw5aMEQ0AtU3viPPoHfE3ymaKPB420XLO4irCcJnckyNUylUCbnuZZqKxis7CEL4NT3Yq9aedtoeYoviWdEA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ta5/5TtGlX9zsCCd6OHLtnqkvyGfwdaDlNOm3OhivOU=;
- b=crVt546v654ticYtgl+a+5SnUemI2G30w0q9L8WjH0Sc6h8jZJ0CkGnAUyMlQz+qU/i+IRdR6q67CeEpk6sLTIgf8de+jhLj3jYG4NsDYfLaryMHa3hRa8WdfP4eUUFMDKIlwZOy2XLIROQVhKUrd631lBKc/Iv/Y9Fbuj1zk4Y=
-Authentication-Results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
- DM6PR12MB4484.namprd12.prod.outlook.com (2603:10b6:5:28f::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.24; Thu, 20 Aug 2020 18:41:27 +0000
-Received: from DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::299a:8ed2:23fc:6346]) by DM5PR12MB1355.namprd12.prod.outlook.com
- ([fe80::299a:8ed2:23fc:6346%3]) with mapi id 15.20.3305.026; Thu, 20 Aug 2020
- 18:41:26 +0000
-Subject: Re: FSGSBASE causing panic on 5.9-rc1
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+ bh=Dg4Idkj7Du7d7AJUiJGQBo5enbJHrkYh+IzJN+s7LvI=;
+ b=x8sJzjCSsc0xiBDVXgcrz+sJBmoSG8qFlTd55VlCLA6C2zVjuTjY5zhl7/9suNoMDh+7YhvynmyYxyCtnvt0WTZK3bqlgoVkdiCA6rbBJOs60043OrQtRIYWmg1UVRarwvicTAQZcvVblhi0P7WVmh1hL6xuoupjoIo8PmSLHG4=
+Received: from BY5PR11MB4056.namprd11.prod.outlook.com (2603:10b6:a03:18c::17)
+ by BYAPR11MB2774.namprd11.prod.outlook.com (2603:10b6:a02:c1::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 20 Aug
+ 2020 18:43:10 +0000
+Received: from BY5PR11MB4056.namprd11.prod.outlook.com
+ ([fe80::b8cb:b59f:8cbb:75a7]) by BY5PR11MB4056.namprd11.prod.outlook.com
+ ([fe80::b8cb:b59f:8cbb:75a7%6]) with mapi id 15.20.3283.027; Thu, 20 Aug 2020
+ 18:43:10 +0000
+From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
+To:     Tom Lendacky <thomas.lendacky@amd.com>
+CC:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
         Joerg Roedel <joro@8bytes.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Wanpeng Li <wanpengli@tencent.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Jim Mattson <jmattson@google.com>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>,
         Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>
+Subject: Re: FSGSBASE causing panic on 5.9-rc1
+Thread-Topic: FSGSBASE causing panic on 5.9-rc1
+Thread-Index: AQHWdlOaEZ0YyP9OxUGfkNFdu56IAKk/vf6AgAAzyICAADFJgIAA+HaAgAAC/YCAADhWgA==
+Date:   Thu, 20 Aug 2020 18:43:10 +0000
+Message-ID: <5D0385FC-D535-457A-A0D9-E5F013F301BE@intel.com>
 References: <39d57e4d-5db4-f536-6f5e-6b0414c0dccc@amd.com>
  <7dedb0ab-56a6-5d96-577b-21ab1ecdad24@amd.com>
  <CALCETrUArZ04UqJjp2mEheuMpZyPwLeEgGM7mdDdmWxmx=GN4Q@mail.gmail.com>
  <CALCETrWcXgp+GzFNrOKcX740+R-57FgNu3Wt3g=_sRCMYFzbMg@mail.gmail.com>
  <20200820151049.GA26595@sjchrist-ice>
  <362f5a45-b808-25ad-b99b-449e05717c4a@amd.com>
- <CALCETrW8SWgWxDdMXuMPD-A1avztvNcpwLAKKRQ4ojmcz07B6A@mail.gmail.com>
- <45e16c5c-ce99-33da-99c8-ea52ef0945db@amd.com>
- <c7f65dbc-316b-efb9-d2c3-c7c212289dce@amd.com>
- <68478297-ff21-fa38-a37b-2e1e515fdc5e@amd.com>
- <CALMp9eQDuwzxdLXndnq9FZfDXaNS7U36WDW7CqixjVBareYAwQ@mail.gmail.com>
- <CALMp9eRXvM9un1LVsuMZqE6aKSzdxp+UXAMrZS1RD-jxEdZqZg@mail.gmail.com>
-From:   Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <50e7c7f6-d212-4e90-09b7-2c568087084e@amd.com>
-Date:   Thu, 20 Aug 2020 13:41:24 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <CALMp9eRXvM9un1LVsuMZqE6aKSzdxp+UXAMrZS1RD-jxEdZqZg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <362f5a45-b808-25ad-b99b-449e05717c4a@amd.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0015.namprd08.prod.outlook.com
- (2603:10b6:805:66::28) To DM5PR12MB1355.namprd12.prod.outlook.com
- (2603:10b6:3:6e::7)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.120.23.2.1)
+authentication-results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [73.189.248.82]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 67ba1fdd-8c0d-4c49-e6bd-08d84538e33c
+x-ms-traffictypediagnostic: BYAPR11MB2774:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR11MB277484ECADB7EB660B84BF9AD85A0@BYAPR11MB2774.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mOWGX2wo7/h2x8AXoHZGmeRVNibFAwNpbR65EDPHZJnW/1AHIF1EcuCwI9jeDTJNCE7SPFbIyAKbr3MYaBVEnYZH9qhxs6FWhcB2lQp7FWik1JZxhYxW/UcRGIZEvIkS7DCG9/Aso0vaoomlfW0++5Q2vSyJyzZSZu6vHUAhnP+W8wyzOwFDJeHSSsQbuTz/KawNmITeLCTe2ffS8Lc74WLG9aVLEIR9IPfr6uNU3mGzFr1M6EkAUcbaEX2XF09wW6PzK1W7j1U1KjDymJFDlzbk7lIocxF5MZWr2kWPIl0tnXZGd9Y4xJqUlPrt4CKY
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR11MB4056.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(346002)(376002)(39860400002)(136003)(2906002)(66446008)(316002)(64756008)(66946007)(66556008)(71200400001)(86362001)(66476007)(5660300002)(6486002)(76116006)(6512007)(4744005)(26005)(6916009)(36756003)(186003)(478600001)(53546011)(8936002)(54906003)(33656002)(7416002)(107886003)(4326008)(8676002)(2616005)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: VP/KD8r46PGijifRsp/+Oah/rcE8/SaRTvygPNllcYYxUDYpZu9EpVjuLuMmEvxvuHmytzrvo6LtpAYlAxQ+g8dU/z4qPFem/wMmoDEMjP3GH0lYQuPEHd0H/fJIzTLr9qliag7ipJuovhOFtI/5U9DalXUovgJvmDoLUn07NPyuTJ1oH2fBm0OMqycQpBsOKB6sNjxO4g4tIbvUNnO86ZZNLwQKfFsonBe5omoE9UrRxPNvlOJ+Le20H6vPsAQGay4nmoVatn8bT+/M+dLNgUFYY67URMlYRKe2rUtYQ98bpkEjyo3NQmlQ8AtJjZpdWzBURE6vkDKmP9KJZi/WSiKqe+8Da1zbsQMhWtr36yh3+nlW/vRzmH+LuU18/Rb+F/oUmHjVLWqZeI6ioQd4kg3fjWI+nNojlELHjd9/nQ5xMHbJckFQaQof3Xs7Cd2g88JmExoFqiQKJQiN7g0Uk6jfj9Q1gWIvbfCPF56G84pvRMegOTiVJesRO7sL/WPt5W8sSsA15QPjNuDLcBFsz5Xy1x+MWdtNGEbufQ2tEL2GI5WBAKiHz//NSohdvFhHJKVANeRIGcB5/rRuWswCf0qsYWRFipeu3cFwzEBKLQK4st7IleiQ1SEwjqwOccBXSjW5AhRzuBs3X4y9jJ/gGA==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <72FC2BC180CFE74998EA790EAA6D1DF7@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SN6PR08CA0015.namprd08.prod.outlook.com (2603:10b6:805:66::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 18:41:25 +0000
-X-Originating-IP: [67.79.209.213]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 84d9d1a4-5d5d-480c-56b3-08d84538a55a
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4484:
-X-Microsoft-Antispam-PRVS: <DM6PR12MB4484F64D21CBD52C64640E01EC5A0@DM6PR12MB4484.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VpPnOUO6DVDcoeIQYH5xk5HvOYKpoR+dM1lfr89nrR5IV9NyMz1PyPh8K6r55VnLzdiI1t5WLhEuMEx6dMfhzk7mimtPnKx6hBeMjdsV+22/1Gq2tpNAm9htmtj0HjTBOeHk5tMgQfmtvFpKhGDXOu22shMCtDdfVTkB/Cv1BaTvCCbSZsCUmD35J1AqyVMwwq8J5o+fj2GGvBnXW+oDTDFN50EpHHAbGGP8ymibHIzvK4TdmLRuGgdguzYVR8/KEfJTOFfdXUkTdh1qGnP5krLed6oxSDw7YiU6cX7f50fqckD0pTCTzodYBpGL0jvo4ecC1lVOwhXadVhaa8pT1g2WOmxhG59dzCTZOluGXUFSq9a8uNa9DZeNveuapUED0dOLU/KV0q4qgE8SP9AuTHkvIvQaDrv4V05NrFGCJoQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(136003)(396003)(366004)(66476007)(66946007)(5660300002)(6916009)(7416002)(83380400001)(66556008)(36756003)(86362001)(31696002)(26005)(478600001)(52116002)(53546011)(186003)(316002)(2616005)(16576012)(4326008)(6486002)(2906002)(956004)(31686004)(8936002)(54906003)(8676002)(110011004)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: TvQymLU0E1QdRLzEzE05/dzxeKltSaeJPqRCW30sR3KXrEwn7ilMxDN4JHQAFDvZAjsRoeDBD3hDUDMV6rSVPluGaaILIbHyY+rQ+6C6XXVNQ0RRfH74hI35Ay5/Sg1aw5r6qyO88RB7dD0ARE3d6LsPBwtfUQaZmi6aAr658PT4695vXv7E5AOZrc1SPGgU7N2sQexfQRTG1JdgN2kEgMpESbHQE9qfIjgUr36efZiIIDdBRtAeZ4Ekexwj5FSxZmhtOJbk5ybwcmFJwX1FOas1fW2aL4nFpgHut3GSllUzhOrfr9sLSwaTjLMj+RurTa9OnG5wr/8WpqGpe033qfHSxx7Y7yHI/9atsd17T9jaNzZN7ueoFBahlYRVz+Gjb44EzNKGX1p09/UJgmQ0WPVDRPMZ+O7X6jyOlqF1uScwice5ZxZSqCbD9eXLFakgTVnvyWKhUM9e4oJ6Dl1z7G66p94bO2Aczu1V21AbyDzIrg/u7NhQOYE2jhO9/QLay5cWxnJqhb5rdmFPJBZ6JdjZhe73io62FuIdoPOl7vEw1PjtZHGrF/8uA3kFma3LUbXPfJKBcvDE4F159QKBW1ND0NDtFBpHxMOy5OSlIO26x1isy9qAKZQksPfVOWyi7Iz7am7ySMZbAtL42dTM2g==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84d9d1a4-5d5d-480c-56b3-08d84538a55a
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1355.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 18:41:26.8780
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR11MB4056.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 67ba1fdd-8c0d-4c49-e6bd-08d84538e33c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 18:43:10.4990
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UnSUPxlsFLygSUvS4AJP9Qo/sI/FzfsNegnvgU/l0TXliftdBUjetpRfMqsJq8kLKQem9syMELfbW2g2ru1OoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4484
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xyO7ViY+cOiQdhpar4k2YLHbrSpjAMAw4QBC7Q3k+1siq4q8aD+rEMu1cJutdBzPutce7T/0WG6Z/Kw8xQpXYBw1ZIingsWcKhaIcjgn8wQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2774
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 1:39 PM, Jim Mattson wrote:
-> On Thu, Aug 20, 2020 at 11:38 AM Jim Mattson <jmattson@google.com> wrote:
->>
->> On Thu, Aug 20, 2020 at 11:34 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
->>>
->>> On 8/20/20 11:30 AM, Tom Lendacky wrote:
->>>> On 8/20/20 11:17 AM, Tom Lendacky wrote:
->>>>> On 8/20/20 10:55 AM, Andy Lutomirski wrote:
->>>>>> On Thu, Aug 20, 2020 at 8:21 AM Tom Lendacky <thomas.lendacky@amd.com>
->>>>>> wrote:
->>>>>>>
->>>>>>> On 8/20/20 10:10 AM, Sean Christopherson wrote:
->>>>>>>> On Wed, Aug 19, 2020 at 05:21:33PM -0700, Andy Lutomirski wrote:
->>>>>>>>> On Wed, Aug 19, 2020 at 2:25 PM Andy Lutomirski <luto@kernel.org>
->>>>>>>>> wrote:
->>>>>>>>>>
->>>>>>>>>> On Wed, Aug 19, 2020 at 11:19 AM Tom Lendacky
->>>>>>>>>> <thomas.lendacky@amd.com> wrote:
->>>>>>>>>>>
->>>>>>>>>>> On 8/19/20 1:07 PM, Tom Lendacky wrote:
->>>>>>>>>>>> It looks like the FSGSBASE support is crashing my second
->>>>>>>>>>>> generation EPYC
->>>>>>>>>>>> system. I was able to bisect it to:
->>>>>>>>>>>>
->>>>>>>>>>>> b745cfba44c1 ("x86/cpu: Enable FSGSBASE on 64bit by default and
->>>>>>>>>>>> add a chicken bit")
->>>>>>>>>>>>
->>>>>>>>>>>> The panic only happens when using KVM. Doing kernel builds or stress
->>>>>>>>>>>> on bare-metal appears fine. But if I fire up, in this case, a
->>>>>>>>>>>> 64-vCPU
->>>>>>>>>>>> guest and do a kernel build within the guest, I get the following:
->>>>>>>>>>>
->>>>>>>>>>> I should clarify that this panic is on the bare-metal system, not
->>>>>>>>>>> in the
->>>>>>>>>>> guest. And that specifying nofsgsbase on the bare-metal command
->>>>>>>>>>> line fixes
->>>>>>>>>>> the issue.
->>>>>>>>>>
->>>>>>>>>> I certainly see some oddities:
->>>>>>>>>>
->>>>>>>>>> We have this code:
->>>>>>>>>>
->>>>>>>>>> static void svm_vcpu_put(struct kvm_vcpu *vcpu)
->>>>>>>>>> {
->>>>>>>>>>            struct vcpu_svm *svm = to_svm(vcpu);
->>>>>>>>>>            int i;
->>>>>>>>>>
->>>>>>>>>>            avic_vcpu_put(vcpu);
->>>>>>>>>>
->>>>>>>>>>            ++vcpu->stat.host_state_reload;
->>>>>>>>>>            kvm_load_ldt(svm->host.ldt);
->>>>>>>>>> #ifdef CONFIG_X86_64
->>>>>>>>>>            loadsegment(fs, svm->host.fs);
->>>>>>>>>>            wrmsrl(MSR_KERNEL_GS_BASE, current->thread.gsbase);
->>>>>>>>
->>>>>>>> Pretty sure current->thread.gsbase can be stale, i.e. this needs:
->>>>>>>>
->>>>>>>>         current_save_fsgs();
->>>>>>>
->>>>>>> I did try adding current_save_fsgs() in svm_vcpu_load(), saving the
->>>>>>> current->thread.gsbase value to a new variable in the svm struct. I then
->>>>>>> used that variable in the wrmsrl below, but it still crashed.
->>>>>>
->>>>>> Can you try bisecting all the way back to:
->>>>>>
->>>>>> commit dd649bd0b3aa012740059b1ba31ecad28a408f7f
->>>>>> Author: Andy Lutomirski <luto@kernel.org>
->>>>>> Date:   Thu May 28 16:13:48 2020 -0400
->>>>>>
->>>>>>       x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
->>>>>>
->>>>>> and adding the unsafe_fsgsbase command line option while you bisect.
->>>>>
->>>>> I'll give that a try.
->>>
->>> Bisecting with unsafe_fsgsbase identified:
->>>
->>> c82965f9e530 ("x86/entry/64: Handle FSGSBASE enabled paranoid entry/exit")
->>>
->>> But I'm thinking that could be because it starts using GET_PERCPU_BASE,
->>> which on Rome would use RDPID. So is SVM restoring TSC_AUX_MSR too late?
->>> That would explain why I don't see the issue on Naples, which doesn't
->>> support RDPID.
->>
->> It looks to me like SVM loads the guest TSC_AUX from vcpu_load to
->> vcpu_put, with this comment:
->>
->> /* This assumes that the kernel never uses MSR_TSC_AUX */
->> if (static_cpu_has(X86_FEATURE_RDTSCP))
->>          wrmsrl(MSR_TSC_AUX, svm->tsc_aux);
-> 
-> Correction: It never restores TSC_AUX, AFAICT.
 
-It does, it's in the host_save_user_msrs array.
+> On Aug 20, 2020, at 08:21, Tom Lendacky <thomas.lendacky@amd.com> wrote:
+> On 8/20/20 10:10 AM, Sean Christopherson wrote:
+>>=20
+>> Pretty sure current->thread.gsbase can be stale, i.e. this needs:
+>> 	current_save_fsgs();
+>=20
+> I did try adding current_save_fsgs() in svm_vcpu_load(), saving the curre=
+nt->thread.gsbase value to a new variable in the svm struct. I then used th=
+at variable in the wrmsrl below, but it still crashed.
+
+Then, current->thread.gsbase is from __rdgsbase_inactive() which is
+user GSBASE.
+
+If you do the wrmsrl below, it overwrites the current GSBASE with the=20
+user value.
+
+>> 	wrmsrl(MSR_KERNEL_GS_BASE, current->thread.gsbase);
 
 Thanks,
-Tom
-
-> 
+Chang=
