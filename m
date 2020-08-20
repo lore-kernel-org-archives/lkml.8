@@ -2,153 +2,211 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323D6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB445C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE532076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A648C2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:50:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XlaONjDn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LVsXuj5W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHTHt3 (ORCPT
+        id S1726841AbgHTHuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41412 "EHLO
+        Thu, 20 Aug 2020 03:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbgHTHtZ (ORCPT
+        with ESMTP id S1726803AbgHTHuE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:49:25 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFF7C061384
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:49:24 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id y3so1059793wrl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=XgD7oAraMYDOqNsfZffx0IqUVAmFZfcgzGRKvwI8mIc=;
-        b=XlaONjDnEdsYg/6xqFFyWyTH0yWrgNaxkmvE+JWcDVZbLe+f/V7HKdjYROy7dyRpgD
-         0dP7O6uThUl2ocYIR33bisbTsV7PY13WDhwdzpoG+1juP2BKSoKiEUd4Vt3PTFRroRgA
-         CKWIaTIqQLz/3rnEaEMJlfnH2LOTDEFgtejdx0YcZnIibXmUIW8mrTOAvdg1MlPqsu01
-         n4D3DHqkiUh/PUQcvUhn/MDFi/qLIJr1VljuscrpP3WooR3pcPufopgFHfsC1aJqsMPG
-         YS204VOVM7RsVE5k9miArRNcssfkXrf1ORtWY/QTAhKAThyjJpNspv/DCPSgCLSS8wMB
-         aMUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=XgD7oAraMYDOqNsfZffx0IqUVAmFZfcgzGRKvwI8mIc=;
-        b=B5x9U1GvVYQ3DrCztIHQeUiqPy0QS9cbunBxqDrx32XkBDVd7B0X3bIMrzH8hgub8d
-         jOoFlrNTSxMlr6ezJCpoWhylVtrLP5SQmC8Wu+zg7O3l/rNTvy4+xWfH4OYU2aQ9gr6x
-         ApxMXu2tkeI7AXAFDcVZ96JnwJ6XU/yeEFRX4k3khPg16CCZ59TDT/H3v1Zm/nq1VCQ+
-         jP3+R+IQ5M0A/0uW1XpatEprnnCKKkogss9OpHYvZhmqUgcJDQ73ETfT+sLCPMYt69i7
-         7021MR2TY/XQy5HoAqNyKkXix6Av51IYWMmpgwMUMaLyxXCORBtAMD/uz+LLub9f1Jg8
-         lUKQ==
-X-Gm-Message-State: AOAM531PrywwQS5ZcbTMV35IRrzhcZEL/bnSAUTb8nDLsvQyYu8NOpXN
-        tbezKuRsvcLYEmNAmcKwFnOhBg==
-X-Google-Smtp-Source: ABdhPJyboEGZAaF6RXm5GpaE/mKR6TYvk3Fye/goK+ikDC5z1N0gxsGJDDrfdepMKqxed6kq885b0w==
-X-Received: by 2002:a5d:60cb:: with SMTP id x11mr1737733wrt.281.1597909761789;
-        Thu, 20 Aug 2020 00:49:21 -0700 (PDT)
-Received: from dell ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id s2sm2438068wrr.55.2020.08.20.00.49.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 00:49:21 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 08:49:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     dinghao.liu@zju.edu.cn
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Bryan Wu <cooloney@gmail.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Gyungoh Yoo <jack.yoo@skyworksinc.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Kangjie Lu <kjlu@umn.edu>
-Subject: Re: Re: Re: [PATCH] video: backlight: sky81452-backlight: Fix
- reference count imbalance on error
-Message-ID: <20200820074916.GE3248864@dell>
-References: <321fb03d-2307-7f60-f437-cfb99184dfd6@web.de>
- <20200819165702.GC3248864@dell>
- <217e3c0c.b58c.17409fd7496.Coremail.dinghao.liu@zju.edu.cn>
- <20200820062301.GD3248864@dell>
- <3f9fbdb1.bc96.1740a9560d5.Coremail.dinghao.liu@zju.edu.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3f9fbdb1.bc96.1740a9560d5.Coremail.dinghao.liu@zju.edu.cn>
+        Thu, 20 Aug 2020 03:50:04 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C1A8C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=oKmfoGegSJfXzJuA5gewBqXh+JiK5i+tRgbhZuhhiOk=; b=LVsXuj5WD5cdjoPZtAPtubYb9/
+        js13qKgrdlHnCBf5LLjRzEw8g2pgV2Bh+uJUdjNne9KAgxIWiQSlt7Z+Y29SaTjRvRdmbv2cdVbWC
+        VxP+MbHjThwrVcKQBfHqEWl1FgxoJPJngUOsoSxBPQmXdWeDwKnAdijBXCyXcLWRVEQUoPqY4u0cO
+        WXBiI/7a76W1IvCZE6+tz5jwfzgzm4oFk3FDdNEYK6eMpBWiZorLHiMbRYNvPIKhnRTg3F2ei7UdT
+        DgBjUfdH7JrUM9Yn5rApkiJNbPgtrO4ozfyPNcLj1qNJuk3xTphLYd1YierrvURs8dxFh9laFlh37
+        hRvKTHIw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8fKW-0007DH-23; Thu, 20 Aug 2020 07:49:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 64C783059C6;
+        Thu, 20 Aug 2020 09:49:43 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id 520A828B7E840; Thu, 20 Aug 2020 09:49:43 +0200 (CEST)
+Message-ID: <20200820073031.886217423@infradead.org>
+User-Agent: quilt/0.66
+Date:   Thu, 20 Aug 2020 09:30:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org
+Cc:     npiggin@gmail.com, elver@google.com, jgross@suse.com,
+        paulmck@kernel.org, rostedt@goodmis.org, rjw@rjwysocki.net,
+        joel@joelfernandes.org, svens@linux.ibm.com, tglx@linutronix.de,
+        peterz@infradead.org
+Subject: [PATCH 0/9] TRACE_IRQFLAGS wreckage
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020, dinghao.liu@zju.edu.cn wrote:
 
-> > On Thu, 20 Aug 2020, dinghao.liu@zju.edu.cn wrote:
-> > 
-> > > > On Wed, 19 Aug 2020, Markus Elfring wrote:
-> > > > 
-> > > > > > When of_property_read_u32_array() returns an error code,
-> > > > > > a pairing refcount decrement is needed to keep np's refcount balanced.
-> > > > > 
-> > > > > Can another imperative wording be helpful for the change description?
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst?id=18445bf405cb331117bc98427b1ba6f12418ad17#n151
-> > > > > 
-> > > > > Would an other commit message be a bit nicer?
-> > > > > 
-> > > > > 
-> > > > > …
-> > > > > > +++ b/drivers/video/backlight/sky81452-backlight.c
-> > > > > > @@ -217,6 +217,7 @@ static struct sky81452_bl_platform_data *sky81452_bl_parse_dt(
-> > > > > >  					num_entry);
-> > > > > >  		if (ret < 0) {
-> > > > > >  			dev_err(dev, "led-sources node is invalid.\n");
-> > > > > > +			of_node_put(np);
-> > > > > >  			return ERR_PTR(-EINVAL);
-> > > > > >  		}
-> > > > > 
-> > > > > I propose to add the jump target “put_node” so that a bit of common exception
-> > > > > handling code can be better reused at the end of this function implementation.
-> > > > > 
-> > > > > Regards,
-> > > > > Markus
-> > > > 
-> > > > You can safely ignore any review comments from Markus!
-> > > > 
-> > > > However, this patch doesn't appear to be in my inbox.
-> > > > 
-> > > > Any ideas as to why?
-> > > > 
-> > > 
-> > > Thank you for your advice. My outbox shows that this patch
-> > > has reached your email server successfully. Maybe this
-> > > ended up in your junk mail file?
-> > 
-> > This has happened recently, so I was sure to check.
-> > 
-> > Not there either unfortunately.
-> > 
-> > Would you be kind enough to bounce/resend please?
-> 
-> Sure.
+TRACE_IRQFLAGS
 
-Looks like you sent it *only* to me.  Please keep everyone else in Cc
-when doing that, or I can't respond to everyone.
+local_irq_*() keeps a software state that mirrors the hardware state,
+used for lockdep, includes tracepoints.
 
-Anyway, besides the subject line (which I can fix easily), the patch
-looks good to me, but Daniel T must review.
+raw_local_irq_*() does not update the software state, no tracing.
 
-Reviewed-by: Lee Jones <lee.jones@linaro.org>
+---
 
---
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Problem 1:
+
+	raw_local_irq_save(); // software state on
+	local_irq_save(); // software state off
+	...
+	local_irq_restore(); // software state still off, because we don't enable IRQs
+	raw_local_irq_restore(); // software state still off, *whoopsie*
+
+existing instances:
+
+ - lock_acquire()
+     raw_local_irq_save()
+     __lock_acquire()
+       arch_spin_lock(&graph_lock)
+         pv_wait() := kvm_wait() (same or worse for Xen/HyperV)
+           local_irq_save()
+
+ - trace_clock_global()
+     raw_local_irq_save()
+     arch_spin_lock()
+       pv_wait() := kvm_wait()
+	 local_irq_save()
+
+ - apic_retrigger_irq()
+     raw_local_irq_save()
+     apic->send_IPI() := default_send_IPI_single_phys()
+       local_irq_save()
+
+Possible solutions:
+
+ A) make it work by enabling the tracing inside raw_*()
+ B) make it work by keeping tracing disabled inside raw_*()
+ C) call it broken and clean it up now
+
+Now, given that the only reason to use the raw_* variant is because you don't
+want tracing. Therefore A) seems like a weird option (although it can be done).
+C) is tempting, but OTOH it ends up converting a _lot_ of code to raw just
+because there is one raw user, this strips the validation/tracing off for all
+the other users.
+
+So we pick B) and declare any code that ends up doing:
+
+	raw_local_irq_save()
+	local_irq_save()
+	lockdep_assert_irqs_disabled();
+
+broken. AFAICT this problem has existed forever, the only reason it came
+up is because I changed IRQ tracing vs lockdep recursion and the first
+instance is fairly common, the other cases hardly ever happen.
+
+---
+
+Problem 2:
+
+	raw_local_irq_save(); // software state on
+	trace_*()
+          ...
+          perf_tp_event()
+            ...
+            perf_callchain()
+	    <#PF>
+	      trace_hardirqs_off(); // software state off
+	      ...
+	      if (regs_irqs_disabled(regs)) // false
+	        trace_hardirqs_on();
+	    </#PF>
+	raw_local_irq_restore(); // software state stays off, *whoopsie*
+
+existing instances:
+
+ - lock_acquire() / lock_release()
+     raw_local_irq_save()
+     trace_lock_acquire() / trace_lock_release()
+
+ - function tracing
+
+Possible solutions:
+
+ A) fix every architecture's entry code
+ B) only fix kernel/entry/common.c
+ C) fix lockdep tracepoints and pray
+
+This series does C, AFAICT this problem has existed forever.
+
+---
+
+Problem 3:
+
+	raw_local_irq_save(); // software state on
+	<#NMI>
+	  trace_hardirqs_off(); // software state off
+	  ...
+	  if (regs_irqs_disabled(regs)) // false
+	    trace_hardirqs_on();
+	</#NMI>
+	raw_local_irq_restore(); // software state stays off, *whoopsie*
+
+Possible solutions:
+
+This *should* not be a problem if an architecture has it's entry ordering
+right. In particular we rely on the architecture doing nmi_enter() before
+trace_hardirqs_off().
+
+In that case, in_nmi() will be true, and lockdep_hardirqs_*() should NO-OP,
+except if CONFIG_TRACE_IRQFLAGS_NMI (x86).
+
+There might be a problem with using lockdep_assert_irqs_disabled() from NMI
+context, if so, those needs a little TLC.
+
+---
+
+The patches in this series do (in reverse order):
+
+ - 2C
+ - 1B
+ - fix fallout in idle due to the trace_lock_*() tracepoints suddenly
+   being visible to rcu-lockdep.
+
+---
+ arch/arm/mach-omap2/pm34xx.c      |    4 --
+ arch/arm64/kernel/process.c       |    2 -
+ arch/nds32/include/asm/irqflags.h |    5 ++
+ arch/powerpc/include/asm/hw_irq.h |   11 ++---
+ arch/s390/kernel/idle.c           |    3 -
+ arch/x86/entry/thunk_32.S         |    5 --
+ arch/x86/include/asm/mmu.h        |    1 
+ arch/x86/kernel/process.c         |    4 --
+ arch/x86/mm/tlb.c                 |   13 +-----
+ drivers/cpuidle/cpuidle.c         |   19 +++++++--
+ drivers/idle/intel_idle.c         |   16 --------
+ include/linux/cpuidle.h           |   13 +++---
+ include/linux/irqflags.h          |   73 ++++++++++++++++++++------------------
+ include/linux/lockdep.h           |   18 ++++++---
+ include/linux/mmu_context.h       |    5 ++
+ kernel/locking/lockdep.c          |   18 +++++----
+ kernel/sched/idle.c               |   21 ++++------
+ 17 files changed, 112 insertions(+), 119 deletions(-)
+
+
+
