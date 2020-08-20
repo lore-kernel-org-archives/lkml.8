@@ -2,54 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35A3C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD54208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3534721775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917481;
-	bh=d48/wqnRyveoPbGeJevVTB9ec4J9pTMHqjBH7dZK2gs=;
+	s=default; t=1597917487;
+	bh=r9w4WXp9/e7/WqILGWIDl0giQdfpbmYMY9CwCYFkm6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j9Auu52O/QfDsRSe4sYlKaWWv2aS/6IJKespX+MXOfnoiTvKmgURbRFVqyMw7WDKW
-	 hEQvmKh2I1zj562e7AT7tj6ywSF7Tt8gWA9VG8hRSIzUeMcwm8jKPFP4z5kLOmIhne
-	 Slz3RY5b8P9FjQMYu01AApYMSaBppR6pQnbfNNyM=
+	b=Zdz9gq4SHd/EHEdqaspfVDmbifOizdh3ds+gDgA+i4IQmTn7b3u7M/gwOoJ3YjYMA
+	 g1osUbn51nhoctAZEfcOBIIYm5DfEGz4TqR6VcHPQb7tkSV79ohN/5Z+5RgoOypsPw
+	 WeQpRBUO9CNAIjnFbDbsNIsFU7rioVLx8TR0Gn4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730197AbgHTJ57 (ORCPT
+        id S1730228AbgHTJ6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:57:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41068 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:58:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730290AbgHTJ5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:30 -0400
+        id S1730335AbgHTJ5k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:57:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E1F8207FB;
-        Thu, 20 Aug 2020 09:57:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69F90207FB;
+        Thu, 20 Aug 2020 09:57:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917449;
-        bh=d48/wqnRyveoPbGeJevVTB9ec4J9pTMHqjBH7dZK2gs=;
+        s=default; t=1597917458;
+        bh=r9w4WXp9/e7/WqILGWIDl0giQdfpbmYMY9CwCYFkm6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkWF7PN//VntkQ2jK7VBKadw6FObivtvDClaM8S3535uPozIvJ0QsJdDsLFITtSZn
-         +1KRyZ/4maPQMVBbmJxPI4HH37sD+xvEbw7MSfhNV1Jh7+8OE793lC5Ob2RTXfhHbD
-         r3T9yuFEwVdq57192utLgZ1TL4jCkY6OVUKZzAJ0=
+        b=aerKHIFzZUi0i0cup1a8pyeKjYz8rM3GX64EPqnAvI2u5BUGyO+YgKLe2c0gNSm5i
+         uU4sdNtARYuVEh2q86mW2yOvA+mTr20uxEpohAlAAjKDjP0QxTE9JHuoJI1Oc3kiq/
+         qZ1OT0l8MmcKXNCz+epcwGc0qqz0WLY6PQJNScjs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 006/212] media: rc: prevent memory leak in cx23888_ir_probe
-Date:   Thu, 20 Aug 2020 11:19:39 +0200
-Message-Id: <20200820091602.571979921@linuxfoundation.org>
+        stable@vger.kernel.org, Robert Hancock <hancockrwd@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.9 009/212] PCI/ASPM: Disable ASPM on ASMedia ASM1083/1085 PCIe-to-PCI bridge
+Date:   Thu, 20 Aug 2020 11:19:42 +0200
+Message-Id: <20200820091602.794106606@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,40 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Robert Hancock <hancockrwd@gmail.com>
 
-[ Upstream commit a7b2df76b42bdd026e3106cf2ba97db41345a177 ]
+commit b361663c5a40c8bc758b7f7f2239f7a192180e7c upstream.
 
-In cx23888_ir_probe if kfifo_alloc fails the allocated memory for state
-should be released.
+Recently ASPM handling was changed to allow ASPM on PCIe-to-PCI/PCI-X
+bridges.  Unfortunately the ASMedia ASM1083/1085 PCIe to PCI bridge device
+doesn't seem to function properly with ASPM enabled.  On an Asus PRIME
+H270-PRO motherboard, it causes errors like these:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  pcieport 0000:00:1c.0: AER: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Transmitter ID)
+  pcieport 0000:00:1c.0: AER:   device [8086:a292] error status/mask=00003000/00002000
+  pcieport 0000:00:1c.0: AER:    [12] Timeout
+  pcieport 0000:00:1c.0: AER: Corrected error received: 0000:00:1c.0
+  pcieport 0000:00:1c.0: AER: can't find device of ID00e0
+
+In addition to flooding the kernel log, this also causes the machine to
+wake up immediately after suspend is initiated.
+
+The device advertises ASPM L0s and L1 support in the Link Capabilities
+register, but the ASMedia web page for ASM1083 [1] claims "No PCIe ASPM
+support".
+
+Windows 10 (build 2004) enables L0s, but it also logs correctable PCIe
+errors.
+
+Add a quirk to disable ASPM for this device.
+
+[1] https://www.asmedia.com.tw/eng/e_show_products.php?cate_index=169&item=114
+
+[bhelgaas: commit log]
+Fixes: 66ff14e59e8a ("PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208667
+Link: https://lore.kernel.org/r/20200722021803.17958-1-hancockrwd@gmail.com
+Signed-off-by: Robert Hancock <hancockrwd@gmail.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/media/pci/cx23885/cx23888-ir.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/media/pci/cx23885/cx23888-ir.c b/drivers/media/pci/cx23885/cx23888-ir.c
-index c1aa888af7054..83864a99d3a66 100644
---- a/drivers/media/pci/cx23885/cx23888-ir.c
-+++ b/drivers/media/pci/cx23885/cx23888-ir.c
-@@ -1179,8 +1179,11 @@ int cx23888_ir_probe(struct cx23885_dev *dev)
- 		return -ENOMEM;
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -2046,6 +2046,19 @@ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_IN
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x10f4, quirk_disable_aspm_l0s);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL, 0x1508, quirk_disable_aspm_l0s);
  
- 	spin_lock_init(&state->rx_kfifo_lock);
--	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE, GFP_KERNEL))
-+	if (kfifo_alloc(&state->rx_kfifo, CX23888_IR_RX_KFIFO_SIZE,
-+			GFP_KERNEL)) {
-+		kfree(state);
- 		return -ENOMEM;
-+	}
- 
- 	state->dev = dev;
- 	sd = &state->sd;
--- 
-2.25.1
-
++static void quirk_disable_aspm_l0s_l1(struct pci_dev *dev)
++{
++	pci_info(dev, "Disabling ASPM L0s/L1\n");
++	pci_disable_link_state(dev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
++}
++
++/*
++ * ASM1083/1085 PCIe-PCI bridge devices cause AER timeout errors on the
++ * upstream PCIe root port when ASPM is enabled. At least L0s mode is affected;
++ * disable both L0s and L1 for now to be safe.
++ */
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ASMEDIA, 0x1080, quirk_disable_aspm_l0s_l1);
++
+ /*
+  * Some Pericom PCIe-to-PCI bridges in reverse mode need the PCIe Retrain
+  * Link bit cleared after starting the link retrain process to allow this
 
 
