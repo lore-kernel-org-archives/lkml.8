@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2375C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF36C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC222078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBE812078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928119;
-	bh=cFSsyY+N9kTR0Cd7a0UjjTB3fTM2An8IueZiXLqrQhw=;
+	s=default; t=1597928126;
+	bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AJKzWeGyOBE0HcMJ2CO4rhKtP0gH59necdGfWZl/RHXLHgq6Ij9sEDIeIkP2y5AmQ
-	 ZaFC/WwttdmfrSszuBndwiyh1qt2WXIpKkMzXcy0+QnW0b4+foQpcImMB49oCQknVu
-	 HhZiKYiSk5870Je566bXCdCc/SfBOAP+kYqWUGtQ=
+	b=Di6ziOQ4LwFJtB8dGvQ42z2Nwx+k3lNcWmh3RN4vEHlv4YHKMVrlcQON4smbZGYC8
+	 p6hwKnBL/a9cQk+FR5dCQE3HhbIIGnOjPBOShrtOJ2i+O4JLgLVgm+nwAMvh35vtdz
+	 sfJnIhELvtqPDVH0XHw4m88+hJRWICUu6islEcDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgHTMzS (ORCPT
+        id S1728056AbgHTJnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40530 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:43:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbgHTJnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:43:11 -0400
+        id S1728876AbgHTJmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0814A208E4;
-        Thu, 20 Aug 2020 09:43:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F8D207FB;
+        Thu, 20 Aug 2020 09:42:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916590;
-        bh=cFSsyY+N9kTR0Cd7a0UjjTB3fTM2An8IueZiXLqrQhw=;
+        s=default; t=1597916536;
+        bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1ViXoWB1AcZkhv+MRo30zaSeN/AkkHkH6VtjZsJAGkYTEQ+IoRL7T326VvUQoPId
-         CmA7yaw3G9k6mlZVvBbEyNEG4YWow47frSwOcnXUq5IbvZKhnEVlXwmwRIA+1xsfWh
-         ULNpNdrJK/QBdOssIDKncymPPdey5uPfoIIE9skI=
+        b=eCY43tw/h13Rva+qWq/oUBP7St+6dGoL2+DuG1dxW5wMEKR+92AcpbvX0Pb88QUD5
+         OG5R0xjvNOcV319yG3nrMM/w+PM49rJscwIulZlrJ9ULCv4AaFoBcTHBO7pext9rxu
+         lrxilsMOT+glsn+hH449Ywdft89neag6Q++l3yAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 182/204] mfd: dln2: Run event handler loop under spinlock
-Date:   Thu, 20 Aug 2020 11:21:19 +0200
-Message-Id: <20200820091615.290159493@linuxfoundation.org>
+Subject: [PATCH 5.7 155/204] openrisc: Fix oops caused when dumping stack
+Date:   Thu, 20 Aug 2020 11:20:52 +0200
+Message-Id: <20200820091613.981058173@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,66 +59,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
+[ Upstream commit 57b8e277c33620e115633cdf700a260b55095460 ]
 
-The event handler loop must be run with interrupts disabled.
-Otherwise we will have a warning:
+When dumping a stack with 'cat /proc/#/stack' the kernel would oops.
+For example:
 
-[ 1970.785649] irq 31 handler lineevent_irq_handler+0x0/0x20 enabled interrupts
-[ 1970.792739] WARNING: CPU: 0 PID: 0 at kernel/irq/handle.c:159 __handle_irq_event_percpu+0x162/0x170
-[ 1970.860732] RIP: 0010:__handle_irq_event_percpu+0x162/0x170
-...
-[ 1970.946994] Call Trace:
-[ 1970.949446]  <IRQ>
-[ 1970.951471]  handle_irq_event_percpu+0x2c/0x80
-[ 1970.955921]  handle_irq_event+0x23/0x43
-[ 1970.959766]  handle_simple_irq+0x57/0x70
-[ 1970.963695]  generic_handle_irq+0x42/0x50
-[ 1970.967717]  dln2_rx+0xc1/0x210 [dln2]
-[ 1970.971479]  ? usb_hcd_unmap_urb_for_dma+0xa6/0x1c0
-[ 1970.976362]  __usb_hcd_giveback_urb+0x77/0xe0
-[ 1970.980727]  usb_giveback_urb_bh+0x8e/0xe0
-[ 1970.984837]  tasklet_action_common.isra.0+0x4a/0xe0
-...
+    # cat /proc/690/stack
+    Unable to handle kernel access
+     at virtual address 0x7fc60f58
 
-Recently xHCI driver switched to tasklets in the commit 36dc01657b49
-("usb: host: xhci: Support running urb giveback in tasklet context").
+    Oops#: 0000
+    CPU #: 0
+       PC: c00097fc    SR: 0000807f    SP: d6f09b9c
+    GPR00: 00000000 GPR01: d6f09b9c GPR02: d6f09bb8 GPR03: d6f09bc4
+    GPR04: 7fc60f5c GPR05: c00099b4 GPR06: 00000000 GPR07: d6f09ba3
+    GPR08: ffffff00 GPR09: c0009804 GPR10: d6f08000 GPR11: 00000000
+    GPR12: ffffe000 GPR13: dbb86000 GPR14: 00000001 GPR15: dbb86250
+    GPR16: 7fc60f63 GPR17: 00000f5c GPR18: d6f09bc4 GPR19: 00000000
+    GPR20: c00099b4 GPR21: ffffffc0 GPR22: 00000000 GPR23: 00000000
+    GPR24: 00000001 GPR25: 000002c6 GPR26: d78b6850 GPR27: 00000001
+    GPR28: 00000000 GPR29: dbb86000 GPR30: ffffffff GPR31: dbb862fc
+      RES: 00000000 oGPR11: ffffffff
+    Process cat (pid: 702, stackpage=d79d6000)
 
-The handle_irq_event_* functions are expected to be called with interrupts
-disabled and they rightfully complain here because we run in tasklet context
-with interrupts enabled.
+    Stack:
+    Call trace:
+    [<598977f2>] save_stack_trace_tsk+0x40/0x74
+    [<95063f0e>] stack_trace_save_tsk+0x44/0x58
+    [<b557bfdd>] proc_pid_stack+0xd0/0x13c
+    [<a2df8eda>] proc_single_show+0x6c/0xf0
+    [<e5a737b7>] seq_read+0x1b4/0x688
+    [<2d6c7480>] do_iter_read+0x208/0x248
+    [<2182a2fb>] vfs_readv+0x64/0x90
 
-Use a event spinlock to protect event handler from being interrupted.
+This was caused by the stack trace code in save_stack_trace_tsk using
+the wrong stack pointer.  It was using the user stack pointer instead of
+the kernel stack pointer.  Fix this by using the right stack.
 
-Note, that there are only two users of this GPIO and ADC drivers and both of
-them are using generic_handle_irq() which makes above happen.
+Also for good measure we add try_get_task_stack/put_task_stack to ensure
+the task is not lost while we are walking it's stack.
 
-Fixes: 338a12814297 ("mfd: Add support for Diolan DLN-2 devices")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: eecac38b0423a ("openrisc: support framepointers and STACKTRACE_SUPPORT")
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/dln2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/openrisc/kernel/stacktrace.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/dln2.c b/drivers/mfd/dln2.c
-index 39276fa626d2b..83e676a096dc1 100644
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -287,7 +287,11 @@ static void dln2_rx(struct urb *urb)
- 	len = urb->actual_length - sizeof(struct dln2_header);
+diff --git a/arch/openrisc/kernel/stacktrace.c b/arch/openrisc/kernel/stacktrace.c
+index 43f140a28bc72..54d38809e22cb 100644
+--- a/arch/openrisc/kernel/stacktrace.c
++++ b/arch/openrisc/kernel/stacktrace.c
+@@ -13,6 +13,7 @@
+ #include <linux/export.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
++#include <linux/sched/task_stack.h>
+ #include <linux/stacktrace.h>
  
- 	if (handle == DLN2_HANDLE_EVENT) {
-+		unsigned long flags;
+ #include <asm/processor.h>
+@@ -68,12 +69,25 @@ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
+ {
+ 	unsigned long *sp = NULL;
+ 
++	if (!try_get_task_stack(tsk))
++		return;
 +
-+		spin_lock_irqsave(&dln2->event_cb_lock, flags);
- 		dln2_run_event_callbacks(dln2, id, echo, data, len);
-+		spin_unlock_irqrestore(&dln2->event_cb_lock, flags);
- 	} else {
- 		/* URB will be re-submitted in _dln2_transfer (free_rx_slot) */
- 		if (dln2_transfer_complete(dln2, urb, handle, echo))
+ 	if (tsk == current)
+ 		sp = (unsigned long *) &sp;
+-	else
+-		sp = (unsigned long *) KSTK_ESP(tsk);
++	else {
++		unsigned long ksp;
++
++		/* Locate stack from kernel context */
++		ksp = task_thread_info(tsk)->ksp;
++		ksp += STACK_FRAME_OVERHEAD;	/* redzone */
++		ksp += sizeof(struct pt_regs);
++
++		sp = (unsigned long *) ksp;
++	}
+ 
+ 	unwind_stack(trace, sp, save_stack_address_nosched);
++
++	put_task_stack(tsk);
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
+ 
 -- 
 2.25.1
 
