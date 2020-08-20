@@ -2,163 +2,117 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0412DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303C8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5191208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597956921;
-	bh=0sC4plwLSrHCEwGCAy2r05gwxbQdkP/sGe8Xwz3RSX0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a+X0EK9jTloVVZMWsPXP+QhnPBfUlttLIaDXo+aP683eM7NrJPgp1oeuo+8VYNCKu
-	 uJvFhVgd9cCXNPPm37UL/PfGVoBtpvSoWWEe8jWOOxO9wlB+V/bp216+h1ZRYisBb5
-	 m2SH/epSef9zHnQ2sE9OWjXe19ifuCNgLlojT1F8=
+	by mail.kernel.org (Postfix) with ESMTP id 03D7320885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:55:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CHhcoDKt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgHTUzU (ORCPT
+        id S1728582AbgHTUz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Aug 2020 16:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728524AbgHTUzU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 16:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33972 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHTUzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:55:18 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E89BB20885;
-        Thu, 20 Aug 2020 20:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597956916;
-        bh=0sC4plwLSrHCEwGCAy2r05gwxbQdkP/sGe8Xwz3RSX0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KtEB4K2Mxe1YWeBfBpp3kbuupp93sDeZqu4W10cnBxvmYNgrjShbUr0OMMtAIQjP7
-         lZBfhetsS8S/oetCoDroqLe+PjwWsWeZOh8x/xndisyuxV+YdpX5yd8s5j18W1ef/F
-         azzTZZq2iebAalbcSX7ngCZBAPabFw5wZG5hOMaI=
-Date:   Thu, 20 Aug 2020 13:55:15 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
-        linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: mm/gup.c:1922:7: error: implicit declaration of function
- =?UTF-8?B?4oCYaXNfdmFsaWRfZ3VwX2ZsYWdz4oCZ?=
-Message-Id: <20200820135515.c36b35449143c723f0800f5b@linux-foundation.org>
-In-Reply-To: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
-References: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F456C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:55:19 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id t6so1516169pjr.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6TwpGd/r4Mn7ElBnoIBBXdYs8NqZlyvUTn+/6xljtGs=;
+        b=CHhcoDKt92P1iuNMF43slopBF975xWzQO8yW5YBGHg/9KvAqPC6nDIlGAI6P/26qwM
+         luvU2EGK0XbYmRxl62bkFdq1CAkHI4F/txV5fLisV4kHNY329v1Ne802gQs1YUIqH029
+         x1cqhd0YCIykAPQ2zUZMLY9MjppCRF+tACTSQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6TwpGd/r4Mn7ElBnoIBBXdYs8NqZlyvUTn+/6xljtGs=;
+        b=FjFsnrRlN7PlXKfnQcfM/4/sM6zvc4GxDhsh0plF3Kj4sXo0FVcWwtYzPplMiRyz/y
+         K3C0yFc8X6rTi47uq6zt69ShFGqpPgVP6lZHlr9yqdq4v8oq5n7zwMCCMbpGuq3kslSs
+         X7QbQs5M0RwCRJxb7llokjV3ULoVPaUeUkBD0XOin532z4Cae70/uGtZ3U67D9gqNmG4
+         2U+2O9940HUnwZ29rltIT6bDUsdWTLP0RQpNQEQymmVIzPIN9HFXHq1yVVU1S3QVShbV
+         7rqCFOB+Kgq5QAMohN0dwQbgCerYAnQugpW4BHxNJ/TWA8GWXgXnkqvkqPLLIX8eN6xq
+         OaRQ==
+X-Gm-Message-State: AOAM532WUwVt2BclNNa+zNXgsQuXeDYprlnoDqBhJCGnPAGk4IC5qY9l
+        Q6rH8GLIVgwmW1tXJI3CSZXBLQ==
+X-Google-Smtp-Source: ABdhPJyvxjAB9vUUKZhW2l/MVLX392ebZRXBxMpnl3mO9WmQLI2Sqvs5yNtSbNoNJMbsb4I73E8ZsQ==
+X-Received: by 2002:a17:90b:8c5:: with SMTP id ds5mr103938pjb.110.1597956918710;
+        Thu, 20 Aug 2020 13:55:18 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a17sm3470764pgi.26.2020.08.20.13.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 13:55:17 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 13:55:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Branden <scott.branden@broadcom.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v2 1/3] bcm-vk: add bcm_vk UAPI
+Message-ID: <202008201353.F342E59EC@keescook>
+References: <20200806004631.8102-1-scott.branden@broadcom.com>
+ <20200806004631.8102-2-scott.branden@broadcom.com>
+ <20200818135313.GB495837@kroah.com>
+ <8894c3c4-4d5c-cb94-bc90-a26833ebf268@broadcom.com>
+ <20200818174451.GA749919@kroah.com>
+ <4adbd70e-c49b-c2d4-84c7-5e910f05e449@broadcom.com>
+ <20200819070044.GA1004396@kroah.com>
+ <fdbb7404-03c3-22b1-d409-5b6d8745ff2b@broadcom.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <fdbb7404-03c3-22b1-d409-5b6d8745ff2b@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 14:59:52 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-
-> arm and riscv architecture build failed on linux next 20200820 tag.
+On Thu, Aug 20, 2020 at 09:37:46AM -0700, Scott Branden wrote:
+> On 2020-08-19 12:00 a.m., Greg Kroah-Hartman wrote:
+> > On Tue, Aug 18, 2020 at 05:35:04PM -0700, Scott Branden wrote:
+> >>
+> >> On 2020-08-18 10:44 a.m., Greg Kroah-Hartman wrote:
+> >>> On Tue, Aug 18, 2020 at 10:23:42AM -0700, Scott Branden wrote:
+> >>>>>> +#define VK_FWSTS_RELOCATION_ENTRY	BIT(0)
+> >>>>> <snip>
+> >>>>>
+> >>>>> I thought BIT() was not allowed in uapi .h files, this really works
+> >>>>> properly???
+> >>>> I did some investigation and it looks like a few other header files in include/uapi also use the BIT() macro:
+> >>>> include/uapi/misc/uacce/uacce.h
+> >>>> include/uapi/linux/psci.h
+> >>>> include/uapi/linux/v4l2-subdev.h
+> >>> Does the header install test target now fail for these?
+> >> I do not understand the question above.� make headers_install works.
+> >> But I guess the above headers would have similar issue with the BIT macro.
+> > Try enabling CONFIG_UAPI_HEADER_TEST and see what happens :)
+> I enabled CONFIG_UAPI_HEADER_TEST and then
+> built using "make" and "make headers_install".
 > 
-> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm
-> CROSS_COMPILE=arm-linux-gnueabihf- HOSTCC=gcc CC="sccache
-> arm-linux-gnueabihf-gcc" O=build zImage
-> 
-> 348#
-> 349../mm/gup.c: In function ‘get_user_pages’:
-> 350../mm/gup.c:1922:7: error: implicit declaration of function
-> ‘is_valid_gup_flags’ [-Werror=implicit-function-declaration]
-> 351 1922 | if (!is_valid_gup_flags(gup_flags))
-> 352 | ^~~~~~~~~~~~~~~~~~
-> 353cc1: some warnings being treated as errors
-> 
+> There didn't appear to be any issue with the BIT macro in the headers.
 
-Yes, thanks.
+FWIW, other subsystems have not been so lucky:
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mm-gup-dont-permit-users-to-call-get_user_pages-with-foll_longterm-fix
+https://git.kernel.org/linus/23b2c96fad21886c53f5e1a4ffedd45ddd2e85ba
 
-fix CONFIG_MMU=n build
+It may just be better to avoid BIT(), even if it works "by accident"(?)
+for some header combinations...
 
-Link: https://lkml.kernel.org/r/CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Barry Song <song.bao.hua@hisilicon.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
-
- mm/gup.c |   38 +++++++++++++++++++-------------------
- 1 file changed, 19 insertions(+), 19 deletions(-)
-
---- a/mm/gup.c~mm-gup-dont-permit-users-to-call-get_user_pages-with-foll_longterm-fix
-+++ a/mm/gup.c
-@@ -1759,6 +1759,25 @@ static __always_inline long __gup_longte
- }
- #endif /* CONFIG_FS_DAX || CONFIG_CMA */
- 
-+static bool is_valid_gup_flags(unsigned int gup_flags)
-+{
-+	/*
-+	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
-+	 * never directly by the caller, so enforce that with an assertion:
-+	 */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
-+		return false;
-+	/*
-+	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
-+	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
-+	 * FOLL_PIN.
-+	 */
-+	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
-+		return false;
-+
-+	return true;
-+}
-+
- #ifdef CONFIG_MMU
- static long __get_user_pages_remote(struct mm_struct *mm,
- 				    unsigned long start, unsigned long nr_pages,
-@@ -1789,25 +1808,6 @@ static long __get_user_pages_remote(stru
- 				       gup_flags | FOLL_TOUCH | FOLL_REMOTE);
- }
- 
--static bool is_valid_gup_flags(unsigned int gup_flags)
--{
--	/*
--	 * FOLL_PIN must only be set internally by the pin_user_pages*() APIs,
--	 * never directly by the caller, so enforce that with an assertion:
--	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
--		return false;
--	/*
--	 * FOLL_PIN is a prerequisite to FOLL_LONGTERM. Another way of saying
--	 * that is, FOLL_LONGTERM is a specific case, more restrictive case of
--	 * FOLL_PIN.
--	 */
--	if (WARN_ON_ONCE(gup_flags & FOLL_LONGTERM))
--		return false;
--
--	return true;
--}
--
- /**
-  * get_user_pages_remote() - pin user pages in memory
-  * @mm:		mm_struct of target mm
-_
-
+-- 
+Kees Cook
