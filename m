@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45683C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8FE214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DAD214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881746;
-	bh=bEjCleIxmOPiFhdtMIeCAd9DTLvi9E9m0OfrRBUtUA0=;
+	s=default; t=1597881747;
+	bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ScRBVRvWSCVcEi9dm9yctX0kHhBMYJ8nhg34h646kZbC0J+I80NKLgE42gOrCKOuz
-	 FcvS4WQWwJnCVNwmxqUCdBW/43pJIy3VtWWyowK0UGx54WbxEKSAZGDb4AuB4041HZ
-	 zXhSLxppYZVDV4Nim3vmzhL7GCqEanpd5bjbgMF0=
+	b=2pv3euiQrvtNUwUkNvLOrFX1d4HCm4DwVaQh+lWOIjrxu/SZebb66KM35DIHXE79F
+	 JoKxgzYdtpsc3M6sdWvgOAUgfi8NUKtoqQW0jswEPhwMcHxW5RQ/S3ewRFlLfvATyM
+	 ack42WXiaU700HSG7MTPX0xg/ucs3HOp6jGDNWmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgHTACY (ORCPT
+        id S1727955AbgHTACZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgHTACK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:10 -0400
+        id S1727830AbgHTACN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6294D208E4;
-        Thu, 20 Aug 2020 00:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32E8A214F1;
+        Thu, 20 Aug 2020 00:02:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881730;
-        bh=bEjCleIxmOPiFhdtMIeCAd9DTLvi9E9m0OfrRBUtUA0=;
+        s=default; t=1597881732;
+        bh=nzildonZ2Cp5d5EqEk9pDNpe/ArGo68DTb1T0ykhnEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcH1dPvAqzjcJMjRaJ+/Q1FFAbDCCGyHWGIKjoeJATpBkuTZGMQDsy03Iof52IrXF
-         V4XAAHqPI+Fy7fBy7p2wkIwp+uHd1GVhIsekP3TJmi1FuyvsIVEg2TxHeh2XHDhauH
-         aBv1BYxzuNepsr7xMEHLlcI+teS+lmtnC9iO+U8A=
+        b=xkxGtGanMCKnMO1XfzpC3qwE5pr42J7J06rvB/BCDvCAWomXm+s8i7xQ00PWAbfy0
+         gcgrEuDWDJ+NGsUPKCz5z+st4x0JS1CkGJPJknOkWxYPI49+eZrDFiOgwa5+SdPoaw
+         9CdBrfxNFuJU/4A6pKVNNBZq8CZr/L5LOmAeKfLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 11/24] xfs: fix inode quota reservation checks
-Date:   Wed, 19 Aug 2020 20:01:42 -0400
-Message-Id: <20200820000155.215089-11-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 13/24] riscv: Fixup static_obj() fail
+Date:   Wed, 19 Aug 2020 20:01:44 -0400
+Message-Id: <20200820000155.215089-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000155.215089-1-sashal@kernel.org>
 References: <20200820000155.215089-1-sashal@kernel.org>
@@ -61,54 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
+[ Upstream commit 6184358da0004c8fd940afda6c0a0fa4027dc911 ]
 
-xfs_trans_dqresv is the function that we use to make reservations
-against resource quotas.  Each resource contains two counters: the
-q_core counter, which tracks resources allocated on disk; and the dquot
-reservation counter, which tracks how much of that resource has either
-been allocated or reserved by threads that are working on metadata
-updates.
+When enable LOCKDEP, static_obj() will cause error. Because some
+__initdata static variables is before _stext:
 
-For disk blocks, we compare the proposed reservation counter against the
-hard and soft limits to decide if we're going to fail the operation.
-However, for inodes we inexplicably compare against the q_core counter,
-not the incore reservation count.
+static int static_obj(const void *obj)
+{
+        unsigned long start = (unsigned long) &_stext,
+                      end   = (unsigned long) &_end,
+                      addr  = (unsigned long) obj;
 
-Since the q_core counter is always lower than the reservation count and
-we unlock the dquot between reservation and transaction commit, this
-means that multiple threads can reserve the last inode count before we
-hit the hard limit, and when they commit, we'll be well over the hard
-limit.
+        /*
+         * static variable?
+         */
+        if ((addr >= start) && (addr < end))
+                return 1;
 
-Fix this by checking against the incore inode reservation counter, since
-we would appear to maintain that correctly (and that's what we report in
-GETQUOTA).
+[    0.067192] INFO: trying to register non-static key.
+[    0.067325] the code is fine but needs lockdep annotation.
+[    0.067449] turning off the locking correctness validator.
+[    0.067718] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.7.0-rc7-dirty #44
+[    0.067945] Call Trace:
+[    0.068369] [<ffffffe00020323c>] walk_stackframe+0x0/0xa4
+[    0.068506] [<ffffffe000203422>] show_stack+0x2a/0x34
+[    0.068631] [<ffffffe000521e4e>] dump_stack+0x94/0xca
+[    0.068757] [<ffffffe000255a4e>] register_lock_class+0x5b8/0x5bc
+[    0.068969] [<ffffffe000255abe>] __lock_acquire+0x6c/0x1d5c
+[    0.069101] [<ffffffe0002550fe>] lock_acquire+0xae/0x312
+[    0.069228] [<ffffffe000989a8e>] _raw_spin_lock_irqsave+0x40/0x5a
+[    0.069357] [<ffffffe000247c64>] complete+0x1e/0x50
+[    0.069479] [<ffffffe000984c38>] rest_init+0x1b0/0x28a
+[    0.069660] [<ffffffe0000016a2>] 0xffffffe0000016a2
+[    0.069779] [<ffffffe000001b84>] 0xffffffe000001b84
+[    0.069953] [<ffffffe000001092>] 0xffffffe000001092
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+static __initdata DECLARE_COMPLETION(kthreadd_done);
+
+noinline void __ref rest_init(void)
+{
+	...
+	complete(&kthreadd_done);
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_dquot.c | 2 +-
+ arch/riscv/kernel/vmlinux.lds.S | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index d1b9869bc5fa6..af3636a99bf60 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -647,7 +647,7 @@ xfs_trans_dqresv(
- 			}
- 		}
- 		if (ninos > 0) {
--			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
-+			total_count = dqp->q_res_icount + ninos;
- 			timer = be32_to_cpu(dqp->q_core.d_itimer);
- 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
- 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
+diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+index 0339b6bbe11ab..bf3f34dbe630b 100644
+--- a/arch/riscv/kernel/vmlinux.lds.S
++++ b/arch/riscv/kernel/vmlinux.lds.S
+@@ -22,6 +22,7 @@ SECTIONS
+ 	/* Beginning of code and text segment */
+ 	. = LOAD_OFFSET;
+ 	_start = .;
++	_stext = .;
+ 	HEAD_TEXT_SECTION
+ 	. = ALIGN(PAGE_SIZE);
+ 
+@@ -49,7 +50,6 @@ SECTIONS
+ 	. = ALIGN(SECTION_ALIGN);
+ 	.text : {
+ 		_text = .;
+-		_stext = .;
+ 		TEXT_TEXT
+ 		SCHED_TEXT
+ 		CPUIDLE_TEXT
 -- 
 2.25.1
 
