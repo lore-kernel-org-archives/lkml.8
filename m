@@ -2,55 +2,155 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F283AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76798C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D75F7208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5610522D02
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2Ohspes"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729341AbgHTPtu (ORCPT
+        id S1729353AbgHTPvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:49:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:42808 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbgHTPto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:49:44 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 617AF68AFE; Thu, 20 Aug 2020 17:49:41 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 17:49:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Christoph Hellwig <hch@lst.de>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: boot failure after merge of the dma-mapping tree
-Message-ID: <20200820154941.GA11349@lst.de>
-References: <20200820155112.29459f41@canb.auug.org.au> <20200820083617.GA6124@Asurada>
+        Thu, 20 Aug 2020 11:51:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43123 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728209AbgHTPvl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:51:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597938699;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=R6ghZf9v2o9kk/8rogKtOdOOtqVr3hm3Y5dvwh2/Dy0=;
+        b=g2Ohspesn9N6QBM2rCCWapOMELf6QJeDDGE/+h4SCmV9gtrJwFk8HsP6tcYK50tjeS6wJN
+        LQ9ZdLCcfg/rvZofEN1P8Jln5gui54Y61l+uj+QojFe9fn1vJsTb/6TanAe3Svp8Jwh9jl
+        NTEU0jbjlM5kZbuYuLyfmEVsuXbY/vE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-265-lMVDHeFMMuKcctS_nkLwSg-1; Thu, 20 Aug 2020 11:51:37 -0400
+X-MC-Unique: lMVDHeFMMuKcctS_nkLwSg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24DE08030B1;
+        Thu, 20 Aug 2020 15:51:36 +0000 (UTC)
+Received: from optiplex-lnx (unknown [10.3.128.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EBDDD19C66;
+        Thu, 20 Aug 2020 15:51:27 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 11:51:25 -0400
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Dave Chinner <david@fromorbit.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200820155125.GB3071325@optiplex-lnx>
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820083617.GA6124@Asurada>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:36:17AM -0700, Nicolin Chen wrote:
-> Took a quick look -- the boundary_size is seemingly passed from
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/arch/powerpc/kernel/iommu.c#n240
+On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
+> SWP_FS is used to make swap_{read,write}page() go through
+> the filesystem, and it's only used for swap files over
+> NFS. So, !SWP_FS means non NFS for now, it could be either
+> file backed or device backed. Something similar goes with
+> legacy SWP_FILE.
 > 
-> 	boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> 			1 << tbl->it_page_shift);
+> So in order to achieve the goal of the original patch,
+> SWP_BLKDEV should be used instead.
 > 
-> Looks like an overflow happens due to (ULONG_MAX + 1). Should
-> we fix here instead (or also)?
+> FS corruption can be observed with SSD device + XFS +
+> fragmented swapfile due to CONFIG_THP_SWAP=y.
+> 
+> I reproduced the issue with the following details:
+> 
+> Environment:
+> QEMU + upstream kernel + buildroot + NVMe (2 GB)
+> 
+> Kernel config:
+> CONFIG_BLK_DEV_NVME=y
+> CONFIG_THP_SWAP=y
+> 
+> Some reproducable steps:
+> mkfs.xfs -f /dev/nvme0n1
+> mkdir /tmp/mnt
+> mount /dev/nvme0n1 /tmp/mnt
+> bs="32k"
+> sz="1024m"    # doesn't matter too much, I also tried 16m
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -F -S 0 -b $bs 0 $sz" -c "fdatasync" /tmp/mnt/sw
+> xfs_io -f -c "pwrite -R -b $bs 0 $sz" -c "fsync" /tmp/mnt/sw
+> 
+> mkswap /tmp/mnt/sw
+> swapon /tmp/mnt/sw
+> 
+> stress --vm 2 --vm-bytes 600M   # doesn't matter too much as well
+> 
+> Symptoms:
+>  - FS corruption (e.g. checksum failure)
+>  - memory corruption at: 0xd2808010
+>  - segfault
+> 
+> Fixes: f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
+> Fixes: 38d8b4e6bdc8 ("mm, THP, swap: delay splitting THP during swap out")
+> Cc: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Cc: Rafael Aquini <aquini@redhat.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
+> ---
+> v1: https://lore.kernel.org/r/20200819195613.24269-1-hsiangkao@redhat.com
+> 
+> changes since v1:
+>  - improve commit message description
+> 
+> Hi Andrew,
+> Kindly consider this one instead if no other concerns...
+> 
+> Thanks,
+> Gao Xiang
+> 
+>  mm/swapfile.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/swapfile.c b/mm/swapfile.c
+> index 6c26916e95fd..2937daf3ca02 100644
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
+>  			goto nextsi;
+>  		}
+>  		if (size == SWAPFILE_CLUSTER) {
+> -			if (!(si->flags & SWP_FS))
+> +			if (si->flags & SWP_BLKDEV)
+>  				n_ret = swap_alloc_cluster(si, swp_entries);
+>  		} else
+>  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
+> -- 
+> 2.18.1
+> 
+Acked-by: Rafael Aquini <aquini@redhat.com>
 
-Yes, please.  I'll drop the patch again for now, but once we've
-got this sorted out I'll readd it.
