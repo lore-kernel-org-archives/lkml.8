@@ -2,147 +2,132 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E351C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAFBC2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CAB2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597928111;
+	bh=NnN6YacW0a2xO0gvCRIxh7ybG+jk2VHafX/DGDFWdoM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mrXs+5WL96vzOj4dlBGJlX7pe1kc/0hkHerGpiS+SE43f4ui/5NV8MWAIhuOlrftv
+	 TwDGvfEOkmYl60AAbnxNNTuR0wJ0qcZt6oAS26ogeF5FmJu6RjFcl8UzeAxUxZOKfv
+	 XL0vi5GLu5wyiNGgdnJuxsWzjVBh4vS+m0D/1bWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgHTMym (ORCPT
+        id S1729964AbgHTMzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:54:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43960 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 08:55:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730541AbgHTMxD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:53:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3ECC6B0BA;
-        Thu, 20 Aug 2020 12:53:28 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id CCF4A1E1312; Thu, 20 Aug 2020 14:53:00 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 14:53:00 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ritesh Harjani <riteshh@linux.ibm.com>
-Cc:     linux-ext4@vger.kernel.org, jack@suse.cz, tytso@mit.edu,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [RFC 1/1] ext4: Optimize ext4 DAX overwrites
-Message-ID: <20200820125300.GK1902@quack2.suse.cz>
-References: <cover.1597855360.git.riteshh@linux.ibm.com>
- <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
+        id S1729089AbgHTJnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F7CE207DE;
+        Thu, 20 Aug 2020 09:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916596;
+        bh=NnN6YacW0a2xO0gvCRIxh7ybG+jk2VHafX/DGDFWdoM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fCmmi+7IhafKvwcynK5Jffc9AGuhA9RH4z9vHaRlgKBt8vp4g/vq2s0E/3FoK+ppx
+         gcE2dx5HjUZd/20OySvLUyeWrN8bc6hsZRetp71dARIc+spq0vG80CQ9RdKdw4IxtB
+         56uWBtBdkYM1WikJzqyRaxZyfe16yYNZ/JLk1EBw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 157/204] nfs: nfs_file_write() should check for writeback errors
+Date:   Thu, 20 Aug 2020 11:20:54 +0200
+Message-Id: <20200820091614.073906138@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <696f5386f1c306e769be409c8b1d90a3358bbf8d.1597855360.git.riteshh@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 17:06:28, Ritesh Harjani wrote:
-> Currently in case of DAX, we are starting a transaction
-> everytime for IOMAP_WRITE case. This can be optimized
-> away in case of an overwrite (where the blocks were already
-> allocated). This could give a significant performance boost
-> for multi-threaded random writes.
-> 
-> Reported-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Ritesh Harjani <riteshh@linux.ibm.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-Thanks for returning to this and I'm glad to see how much this helped :)
-BTW, I'd suspect there could be also significant contention and cache line
-bouncing on j_state_lock and transaction's atomic counters...
+[ Upstream commit ce368536dd614452407dc31e2449eb84681a06af ]
 
-> ---
->  fs/ext4/ext4.h  | 1 +
->  fs/ext4/file.c  | 2 +-
->  fs/ext4/inode.c | 8 +++++++-
->  3 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> index 42f5060f3cdf..9a2138afc751 100644
-> --- a/fs/ext4/ext4.h
-> +++ b/fs/ext4/ext4.h
-> @@ -3232,6 +3232,7 @@ extern const struct dentry_operations ext4_dentry_ops;
->  extern const struct inode_operations ext4_file_inode_operations;
->  extern const struct file_operations ext4_file_operations;
->  extern loff_t ext4_llseek(struct file *file, loff_t offset, int origin);
-> +extern bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len);
->  
->  /* inline.c */
->  extern int ext4_get_max_inline_size(struct inode *inode);
-> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
-> index 2a01e31a032c..51cd92ac1758 100644
-> --- a/fs/ext4/file.c
-> +++ b/fs/ext4/file.c
-> @@ -188,7 +188,7 @@ ext4_extending_io(struct inode *inode, loff_t offset, size_t len)
->  }
->  
->  /* Is IO overwriting allocated and initialized blocks? */
-> -static bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
-> +bool ext4_overwrite_io(struct inode *inode, loff_t pos, loff_t len)
->  {
->  	struct ext4_map_blocks map;
->  	unsigned int blkbits = inode->i_blkbits;
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 10dd470876b3..f0ac0ee9e991 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -3423,6 +3423,7 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	int ret;
->  	struct ext4_map_blocks map;
->  	u8 blkbits = inode->i_blkbits;
-> +	bool overwrite = false;
->  
->  	if ((offset >> blkbits) > EXT4_MAX_LOGICAL_BLOCK)
->  		return -EINVAL;
-> @@ -3430,6 +3431,9 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	if (WARN_ON_ONCE(ext4_has_inline_data(inode)))
->  		return -ERANGE;
->  
-> +	if (IS_DAX(inode) && (flags & IOMAP_WRITE) &&
-> +	    ext4_overwrite_io(inode, offset, length))
-> +		overwrite = true;
+The NFS_CONTEXT_ERROR_WRITE flag (as well as the check of said flag) was
+removed by commit 6fbda89b257f.  The absence of an error check allows
+writes to be continually queued up for a server that may no longer be
+able to handle them.  Fix it by adding an error check using the generic
+error reporting functions.
 
-So the patch looks correct but using ext4_overwrite_io() seems a bit
-foolish since under the hood it does ext4_map_blocks() only to be able to
-decide whether to call ext4_map_blocks() once again with exactly the same
-arguments :). So I'd rather slightly refactor the code in
-ext4_iomap_begin() to avoid this double calling of ext4_map_blocks() for
-the fast path.
+Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with generic one")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfs/file.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-								Honza
-
->  	/*
->  	 * Calculate the first and last logical blocks respectively.
->  	 */
-> @@ -3437,13 +3441,15 @@ static int ext4_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
->  	map.m_len = min_t(loff_t, (offset + length - 1) >> blkbits,
->  			  EXT4_MAX_LOGICAL_BLOCK) - map.m_lblk + 1;
->  
-> -	if (flags & IOMAP_WRITE)
-> +	if ((flags & IOMAP_WRITE) && !overwrite)
->  		ret = ext4_iomap_alloc(inode, &map, flags);
->  	else
->  		ret = ext4_map_blocks(NULL, inode, &map, 0);
->  
->  	if (ret < 0)
->  		return ret;
-> +	if (IS_DAX(inode) && overwrite)
-> +		WARN_ON(!(map.m_flags & EXT4_MAP_MAPPED));
->  
->  	ext4_set_iomap(inode, iomap, &map, offset, length);
->  
-> -- 
-> 2.25.4
-> 
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index d72496efa17b0..63940a7a70be1 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -590,12 +590,14 @@ static const struct vm_operations_struct nfs_file_vm_ops = {
+ 	.page_mkwrite = nfs_vm_page_mkwrite,
+ };
+ 
+-static int nfs_need_check_write(struct file *filp, struct inode *inode)
++static int nfs_need_check_write(struct file *filp, struct inode *inode,
++				int error)
+ {
+ 	struct nfs_open_context *ctx;
+ 
+ 	ctx = nfs_file_open_context(filp);
+-	if (nfs_ctx_key_to_expire(ctx, inode))
++	if (nfs_error_is_fatal_on_server(error) ||
++	    nfs_ctx_key_to_expire(ctx, inode))
+ 		return 1;
+ 	return 0;
+ }
+@@ -606,6 +608,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	struct inode *inode = file_inode(file);
+ 	unsigned long written = 0;
+ 	ssize_t result;
++	errseq_t since;
++	int error;
+ 
+ 	result = nfs_key_timeout_notify(file, inode);
+ 	if (result)
+@@ -630,6 +634,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	if (iocb->ki_pos > i_size_read(inode))
+ 		nfs_revalidate_mapping(inode, file->f_mapping);
+ 
++	since = filemap_sample_wb_err(file->f_mapping);
+ 	nfs_start_io_write(inode);
+ 	result = generic_write_checks(iocb, from);
+ 	if (result > 0) {
+@@ -648,7 +653,8 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 		goto out;
+ 
+ 	/* Return error values */
+-	if (nfs_need_check_write(file, inode)) {
++	error = filemap_check_wb_err(file->f_mapping, since);
++	if (nfs_need_check_write(file, inode, error)) {
+ 		int err = nfs_wb_all(inode);
+ 		if (err < 0)
+ 			result = err;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.1
+
+
+
