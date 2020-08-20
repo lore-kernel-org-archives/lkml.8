@@ -2,55 +2,80 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14962C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EACC433F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0A5922D07
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD0D22B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929779;
-	bh=7cAz3Ec2k+7Y8nlZLkYt3m3jyL4YEhx1BCEiANHBXnE=;
+	s=default; t=1597929782;
+	bh=K9KMQFAcyvXCpKGPLlOIGzdhg4xgO8vb0fMc0YLqKwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0Y1401/eK3ZEIEctMpLS2TtrOQje0zPMO/1O2JP+fiDa6nX9TvR09fdOEXBZGm4Bi
-	 Ia9naqHYMqOCcSx0d+ixRLYu4zSt5buEoTZiPVJ76J8RBcU61A4z5E1r0MU5pD5x3X
-	 2QQl+V37o6xlrUtCCA85JB9Pwlg0Yo4QhJxYwG04=
+	b=GaA0j8GFZTaJi9tqoWa617xdLR3jvMdu8sQLh3TA5lus0/aS8NKgAcAwDytGIn5AU
+	 5cur5gIFlnN8rXc5pxrfl6oCcGx6ncyaXg5BGyncv0TpWxzH2f0iWuxFhNJ4bCizv8
+	 YivpmvJa/AcjV/M5H9fN6tEmJY3zNvJHdQm9cdf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbgHTNRq (ORCPT
+        id S1729236AbgHTNW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:22:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgHTJez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:55 -0400
+        id S1728412AbgHTJdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:33:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBC7B20724;
-        Thu, 20 Aug 2020 09:34:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6602B22B49;
+        Thu, 20 Aug 2020 09:33:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916095;
-        bh=7cAz3Ec2k+7Y8nlZLkYt3m3jyL4YEhx1BCEiANHBXnE=;
+        s=default; t=1597916005;
+        bh=K9KMQFAcyvXCpKGPLlOIGzdhg4xgO8vb0fMc0YLqKwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVYNB8h6WrwwGG52s+B8KvIB/FgJ9Egxag0xMvTrz32Tnme5EZnbxgYfDjkwYR60R
-         W3dApJnv/kfFdiCGX39329y/OAE/o4pWtEYTlpvzCW4Ra9JQCqzs5KGcNcSTL64yWc
-         uDlOfoSniVhuIhMPs6ma/x7FPUlrVJKgLtRKO4Gw=
+        b=cCd9f/Sz5efkJPkhyADsA6KX85bQ68hfJOHSW2oKEkeF2dk6IaR/BqbakOnHrAuxf
+         OVXUq1t9lYuAZeQWCAgccbszAq3GSoC/CKOtKeKyGjO9uwSOb4ZIUhYbJPDAHG3Y7T
+         hx3dmLP4n35kAv7g/AVl2WFbwp+bfBMVi27SzDQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 010/204] btrfs: allow use of global block reserve for balance item deletion
-Date:   Thu, 20 Aug 2020 11:18:27 +0200
-Message-Id: <20200820091606.724524770@linuxfoundation.org>
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Sergey Kvachonok <ravenexp@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tony Vroon <chainsaw@gentoo.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 210/232] test_kmod: avoid potential double free in trigger_config_run_type()
+Date:   Thu, 20 Aug 2020 11:21:01 +0200
+Message-Id: <20200820091622.982699256@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,50 +85,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 3502a8c0dc1bd4b4970b59b06e348f22a1c05581 upstream.
+[ Upstream commit 0776d1231bec0c7ab43baf440a3f5ef5f49dd795 ]
 
-On a filesystem with exhausted metadata, but still enough to start
-balance, it's possible to hit this error:
+Reset the member "test_fs" of the test configuration after a call of the
+function "kfree_const" to a null pointer so that a double memory release
+will not be performed.
 
-[324402.053842] BTRFS info (device loop0): 1 enospc errors during balance
-[324402.060769] BTRFS info (device loop0): balance: ended with status: -28
-[324402.172295] BTRFS: error (device loop0) in reset_balance_state:3321: errno=-28 No space left
-
-It fails inside reset_balance_state and turns the filesystem to
-read-only, which is unnecessary and should be fixed too, but the problem
-is caused by lack for space when the balance item is deleted. This is a
-one-time operation and from the same rank as unlink that is allowed to
-use the global block reserve. So do the same for the balance item.
-
-Status of the filesystem (100GiB) just after the balance fails:
-
-$ btrfs fi df mnt
-Data, single: total=80.01GiB, used=38.58GiB
-System, single: total=4.00MiB, used=16.00KiB
-Metadata, single: total=19.99GiB, used=19.48GiB
-GlobalReserve, single: total=512.00MiB, used=50.11MiB
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: J. Bruce Fields <bfields@fieldses.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Sergei Trofimovich <slyfox@gentoo.org>
+Cc: Sergey Kvachonok <ravenexp@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tony Vroon <chainsaw@gentoo.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Link: http://lkml.kernel.org/r/20200610154923.27510-4-mcgrof@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/volumes.c |    2 +-
+ lib/test_kmod.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -3235,7 +3235,7 @@ static int del_balance_item(struct btrfs
- 	if (!path)
- 		return -ENOMEM;
- 
--	trans = btrfs_start_transaction(root, 0);
-+	trans = btrfs_start_transaction_fallback_global_rsv(root, 0);
- 	if (IS_ERR(trans)) {
- 		btrfs_free_path(path);
- 		return PTR_ERR(trans);
+diff --git a/lib/test_kmod.c b/lib/test_kmod.c
+index e651c37d56dbd..eab52770070d6 100644
+--- a/lib/test_kmod.c
++++ b/lib/test_kmod.c
+@@ -745,7 +745,7 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+ 		break;
+ 	case TEST_KMOD_FS_TYPE:
+ 		kfree_const(config->test_fs);
+-		config->test_driver = NULL;
++		config->test_fs = NULL;
+ 		copied = config_copy_test_fs(config, test_str,
+ 					     strlen(test_str));
+ 		break;
+-- 
+2.25.1
+
 
 
