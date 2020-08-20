@@ -2,74 +2,125 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3ADC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C2DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 594982076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FD72076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgHTBbZ (ORCPT
+        id S1726723AbgHTBjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:31:25 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:42429 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726646AbgHTBbY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:31:24 -0400
-Received: (qmail 202460 invoked by uid 1000); 19 Aug 2020 21:31:22 -0400
-Date:   Wed, 19 Aug 2020 21:31:22 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-media@vger.kernel.org, linux-uvc-devel@lists.sourceforge.net,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: Protecting uvcvideo againt USB device disconnect [Was: Re:
- Protecting usb_set_interface() against device removal]
-Message-ID: <20200820013122.GA202178@rowland.harvard.edu>
-References: <b0a7247c-bed3-934b-2c73-7f4b0adb5e75@roeck-us.net>
- <20200815020739.GB52242@rowland.harvard.edu>
- <20200816003315.GA13826@roeck-us.net>
- <20200816121816.GC32174@pendragon.ideasonboard.com>
- <9bb20ed7-b156-f6c2-4d25-6acac1a0021b@roeck-us.net>
- <20200816235155.GA7729@pendragon.ideasonboard.com>
- <0684b71c-8ac5-8962-cbd5-c0bcaa8b6881@xs4all.nl>
- <20200819013002.GL2360@pendragon.ideasonboard.com>
- <20200819230851.GA222844@roeck-us.net>
+        Wed, 19 Aug 2020 21:39:04 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9852 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726435AbgHTBjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 21:39:03 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 69F0E3C0B36DF5F8F594;
+        Thu, 20 Aug 2020 09:39:00 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.103) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 09:38:54 +0800
+Subject: Re: [RFC PATCH V3] iomap: add support to track dirty state of sub
+ pages
+To:     Gao Xiang <hsiangkao@redhat.com>
+CC:     <hch@infradead.org>, <darrick.wong@oracle.com>,
+        <willy@infradead.org>, <david@fromorbit.com>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>
+References: <20200819120542.3780727-1-yukuai3@huawei.com>
+ <20200819125608.GA24051@xiangao.remote.csb>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <43dc04bf-17bb-9f15-4f1c-dfd6c47c3fb1@huawei.com>
+Date:   Thu, 20 Aug 2020 09:38:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819230851.GA222844@roeck-us.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200819125608.GA24051@xiangao.remote.csb>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.103]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 04:08:51PM -0700, Guenter Roeck wrote:
+On 2020/8/19 20:56, Gao Xiang wrote:
+> On Wed, Aug 19, 2020 at 08:05:42PM +0800, Yu Kuai wrote:
+> 
+> ...
+> 
+>> +static void
+>> +iomap_iop_set_range_dirty(struct page *page, unsigned int off,
+>> +		unsigned int len)
+>> +{
+>> +	struct iomap_page *iop = to_iomap_page(page);
+>> +	struct inode *inode = page->mapping->host;
+>> +	unsigned int first = DIRTY_BITS(off >> inode->i_blkbits);
+>> +	unsigned int last = DIRTY_BITS((off + len - 1) >> inode->i_blkbits);
+>> +	unsigned long flags;
+>> +	unsigned int i;
+>> +
+>> +	spin_lock_irqsave(&iop->state_lock, flags);
+>> +	for (i = first; i <= last; i++)
+>> +		set_bit(i, iop->state);
+>> +
+>> +	if (last >= first)
+>> +		iomap_set_page_dirty(page);
+> 
+> set_page_dirty() in the atomic context?
+> 
 
-> usb_set_interface() should not be called anymore after uvc_disconnect(),
-> or at east I think so (is that documented anywhere ?).
+Hi,
 
-It may be documented somewhere, but basically it goes without saying.  
+You'are right, this shouldn't be inside spin_lock.
 
-A main feature of the device model design is that drivers get bound to 
-devices by having their probe routine called, and they get unbound by 
-having their disconnect routine called.  It should go without saying 
-that once a driver is unbound from a device, it must not communicate 
-with that device any more.
+>> +
+>> +	spin_unlock_irqrestore(&iop->state_lock, flags);
+>> +}
+>> +
+>> +static void
+>> +iomap_set_range_dirty(struct page *page, unsigned int off,
+>> +		unsigned int len)
+>> +{
+>> +	if (PageError(page))
+>> +		return;
+>> +
+>> +	if (page_has_private(page))
+>> +		iomap_iop_set_range_dirty(page, off, len);
+> 
+> 
+> I vaguely remembered iomap doesn't always set up PagePrivate.
+>
 
-It might be nice if this requirement could be enforced (say in the USB 
-core), but doing so is impractical.  It would require every I/O request 
-to include some sort of cookie proving that the caller is authorized to 
-make the request.  That's not how the kernel works; it trusts drivers 
-to generally do the right thing without constant checking.
+If so, maybe I should move iomap_set_page_dirty() to
+ioamp_set_range_dirty().
 
-Alan Stern
+Thanks,
+Yu Kuai
+
+> 
+> @@ -705,7 +770,7 @@ __iomap_write_end(struct inode *inode, loff_t pos, unsigned len,
+>   	if (unlikely(copied < len && !PageUptodate(page)))
+>   		return 0;
+>   	iomap_set_range_uptodate(page, offset_in_page(pos), len);
+> -	iomap_set_page_dirty(page);
+> +	iomap_set_range_dirty(page, offset_in_page(pos), len);
+>   	return copied;
+>   }
+> 
+> so here could be suspectable, but I might be wrong here since
+> I just take a quick look.
+> 
+> Thanks,
+> Gao Xiang
+> 
+> 
+> .
+> 
+
