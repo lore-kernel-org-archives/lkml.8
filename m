@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96178C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F185208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD032078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926169;
-	bh=Zt11HEx9mwqoY2DnBPQJ+cHLfqM7iyelikVjN7g0opE=;
+	s=default; t=1597926174;
+	bh=tSM3fUxeu8LXI30koBvOLHwugcmoLw+gNZiAMdNIypw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xk4oVt0mTDuxntsC2Hd6/DusXm40FOdxXm0ZxHlj2rC6nEIlfJ7BHyVoFS2vHEryl
-	 ZV63M5tFVjFOLyG5Ll0ZwGVHXqTjuPO7EzlxaqVK+aPcWM0/pLGj6iGsUaaTOpPQWY
-	 7BxUZp0oGLIgi31Eq3Q0sImH8VXzHlz1IR/2qMNM=
+	b=tcSpI1gGLQPL+L1uxG5Gm5HwGn5fXIE6D706xlkD0GIjSNJb+DpQyowgqkv4OB4ov
+	 Q5f/IGUnowQ76HcXnBfkx4XUZDopWLYsBXQJV41M43qAknuITuY9uNuvnm0u6d1ATA
+	 aRjhtofrwYUtPI4ZKMaam24sdaiwwkRy8snt3KRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbgHTMWr (ORCPT
+        id S1730166AbgHTJyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:22:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38062 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726749AbgHTJzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:11 -0400
+        id S1730146AbgHTJyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F626207FB;
-        Thu, 20 Aug 2020 09:55:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E482067C;
+        Thu, 20 Aug 2020 09:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917311;
-        bh=Zt11HEx9mwqoY2DnBPQJ+cHLfqM7iyelikVjN7g0opE=;
+        s=default; t=1597917278;
+        bh=tSM3fUxeu8LXI30koBvOLHwugcmoLw+gNZiAMdNIypw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tgo2+HArl+fzDpv+X+d+w8GVhDfFfVF+3a5RKrIGH7V0fBJzTZrn/sTnagCMt2rql
-         Bzd0MqlrzGYYkbzBYJCTNdM9IjagFdrnTKq3vR2OFMvz9vHMA086HLw/KW5tyAk/Oi
-         i2ZfthXRSwEsfnHOZa7hkNf6NPpJpwHTy13uuS8A=
+        b=nS/hhV+IP2knEWWe8jZpTKfD9BXCcJzpUe5vNEaesWPWf8ODCNEqG5Cn00mtnZ9xq
+         nKMP78Z7d2X2kvxbrBVD2VWPG/P4/acmR481fZWVcufC5rsxZQtWSH0DZ9y3k7xmGu
+         L4rflSnkHkEPiLnewUhnDVyxkzvynPobPiK2SipI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
+        Barry Song <baohua@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 49/92] mfd: arizona: Ensure 32k clock is put on driver unbind and error
-Date:   Thu, 20 Aug 2020 11:21:34 +0200
-Message-Id: <20200820091540.200469560@linuxfoundation.org>
+Subject: [PATCH 4.19 66/92] clk: clk-atlas6: fix return value check in atlas6_clk_init()
+Date:   Thu, 20 Aug 2020 11:21:51 +0200
+Message-Id: <20200820091541.051178604@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -61,63 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+From: Xu Wang <vulab@iscas.ac.cn>
 
-[ Upstream commit ddff6c45b21d0437ce0c85f8ac35d7b5480513d7 ]
+[ Upstream commit 12b90b40854a8461a02ef19f6f4474cc88d64b66 ]
 
-Whilst it doesn't matter if the internal 32k clock register settings
-are cleaned up on exit, as the part will be turned off losing any
-settings, hence the driver hasn't historially bothered. The external
-clock should however be cleaned up, as it could cause clocks to be
-left on, and will at best generate a warning on unbind.
+In case of error, the function clk_register() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value check
+should be replaced with IS_ERR().
 
-Add clean up on both the probe error path and unbind for the 32k
-clock.
-
-Fixes: cdd8da8cc66b ("mfd: arizona: Add gating of external MCLKn clocks")
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+Link: https://lore.kernel.org/r/20200713032143.21362-1-vulab@iscas.ac.cn
+Acked-by: Barry Song <baohua@kernel.org>
+Fixes: 7bf21bc81f28 ("clk: sirf: re-arch to make the codes support both prima2 and atlas6")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/arizona-core.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/clk/sirf/clk-atlas6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index a4403a57ddc89..09acaa2cf74a2 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -1433,6 +1433,15 @@ int arizona_dev_init(struct arizona *arizona)
- 	arizona_irq_exit(arizona);
- err_pm:
- 	pm_runtime_disable(arizona->dev);
-+
-+	switch (arizona->pdata.clk32k_src) {
-+	case ARIZONA_32KZ_MCLK1:
-+	case ARIZONA_32KZ_MCLK2:
-+		arizona_clk32k_disable(arizona);
-+		break;
-+	default:
-+		break;
-+	}
- err_reset:
- 	arizona_enable_reset(arizona);
- 	regulator_disable(arizona->dcvdd);
-@@ -1455,6 +1464,15 @@ int arizona_dev_exit(struct arizona *arizona)
- 	regulator_disable(arizona->dcvdd);
- 	regulator_put(arizona->dcvdd);
+diff --git a/drivers/clk/sirf/clk-atlas6.c b/drivers/clk/sirf/clk-atlas6.c
+index 0cd11e6893afa..25ed60776560e 100644
+--- a/drivers/clk/sirf/clk-atlas6.c
++++ b/drivers/clk/sirf/clk-atlas6.c
+@@ -136,7 +136,7 @@ static void __init atlas6_clk_init(struct device_node *np)
  
-+	switch (arizona->pdata.clk32k_src) {
-+	case ARIZONA_32KZ_MCLK1:
-+	case ARIZONA_32KZ_MCLK2:
-+		arizona_clk32k_disable(arizona);
-+		break;
-+	default:
-+		break;
-+	}
-+
- 	mfd_remove_devices(arizona->dev);
- 	arizona_free_irq(arizona, ARIZONA_IRQ_UNDERCLOCKED, arizona);
- 	arizona_free_irq(arizona, ARIZONA_IRQ_OVERCLOCKED, arizona);
+ 	for (i = pll1; i < maxclk; i++) {
+ 		atlas6_clks[i] = clk_register(NULL, atlas6_clk_hw_array[i]);
+-		BUG_ON(!atlas6_clks[i]);
++		BUG_ON(IS_ERR(atlas6_clks[i]));
+ 	}
+ 	clk_register_clkdev(atlas6_clks[cpu], NULL, "cpu");
+ 	clk_register_clkdev(atlas6_clks[io],  NULL, "io");
 -- 
 2.25.1
 
