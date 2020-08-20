@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B152C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7103C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75FB722B4E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8460D208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931273;
-	bh=m/pOPloSaYdwhN/rKdqLfvawP/Ad664Qe3L31mMTvLE=;
+	s=default; t=1597931276;
+	bh=ZmkRKJFMFMMbtBcj158Q2/2WwFdK5oFv+emdxE+DEcg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2rjU6TNyETuyOe/CHDVcx92Hh6jyARuwiu7KVrI0eXOUXrjIaLsKt6zEoNcmCGt2r
-	 1YUuY8yelygP/u9s201tMMdJmlkrosU9qCH+m9OjaJ7a1Zu5aSY7JcsXBkgylAT1VO
-	 T72yvJlHlhcYs2c2l72vxP9qfxYN6y/pluKo1KBw=
+	b=2nX5eNHEkLGY351K8kTSPlbQlcly6jJIXfzHD/md7LfjaLKmCcSLskr+4RMHg2+PX
+	 nT05+roG3aUFTb01eChXXRwPiahdo26QpcjyTGcFh0KmTeypfhvWQ+PSzMIUCF8Npq
+	 KQ5BuOJTrFct3LQRGE8Mw++tF/hSmYQVjztLEENs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbgHTNmn (ORCPT
+        id S1730658AbgHTNmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:42:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40126 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728082AbgHTJ3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:38 -0400
+        id S1727000AbgHTJ3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A67F922D00;
-        Thu, 20 Aug 2020 09:29:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01E3922CF6;
+        Thu, 20 Aug 2020 09:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915777;
-        bh=m/pOPloSaYdwhN/rKdqLfvawP/Ad664Qe3L31mMTvLE=;
+        s=default; t=1597915774;
+        bh=ZmkRKJFMFMMbtBcj158Q2/2WwFdK5oFv+emdxE+DEcg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ivv8TNVGp0dtt16Y36a4MA/oWCzvGkUn4rmSIbF552kfR5HmgrvDuB3vsl7GNd5xD
-         Uew0jfaV/0vD9Kf4i4XXoFTg6jDBCQknqh78FQFcy5Ttrwpk/QbrT5XlBMJO93W9QE
-         6leqUqL87SDAsGcDMKUFgmqiQVXRXbVaH12NRf0U=
+        b=JWks3WQYEDIkCwgfOiTk2dDPsvqOwEba6kUSmGoucNXRWda6YVvJ9QIJbWyu3YDRW
+         rP0WLjG/kL5C4GBtK0sSi9DXS7t7roaVTrH+Nzs6cMiE33IvJmbRssqVRE9SITcUix
+         PafDzDoN7xFv2f05h/RP3ESUzylxZ1OzXzT7dt5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.8 091/232] tracing: Use trace_sched_process_free() instead of exit() for pid tracing
-Date:   Thu, 20 Aug 2020 11:19:02 +0200
-Message-Id: <20200820091617.243792188@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
+Subject: [PATCH 5.8 100/232] module: Correctly truncate sysfs sections output
+Date:   Thu, 20 Aug 2020 11:19:11 +0200
+Message-Id: <20200820091617.675961344@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,72 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Kees Cook <keescook@chromium.org>
 
-commit afcab636657421f7ebfa0783a91f90256bba0091 upstream.
+commit 11990a5bd7e558e9203c1070fc52fb6f0488e75b upstream.
 
-On exit, if a process is preempted after the trace_sched_process_exit()
-tracepoint but before the process is done exiting, then when it gets
-scheduled in, the function tracers will not filter it properly against the
-function tracing pid filters.
+The only-root-readable /sys/module/$module/sections/$section files
+did not truncate their output to the available buffer size. While most
+paths into the kernfs read handlers end up using PAGE_SIZE buffers,
+it's possible to get there through other paths (e.g. splice, sendfile).
+Actually limit the output to the "count" passed into the read function,
+and report it back correctly. *sigh*
 
-That is because the function tracing pid filters hooks to the
-sched_process_exit() tracepoint to remove the exiting task's pid from the
-filter list. Because the filtering happens at the sched_switch tracepoint,
-when the exiting task schedules back in to finish up the exit, it will no
-longer be in the function pid filtering tables.
-
-This was noticeable in the notrace self tests on a preemptable kernel, as
-the tests would fail as it exits and preempted after being taken off the
-notrace filter table and on scheduling back in it would not be in the
-notrace list, and then the ending of the exit function would trace. The test
-detected this and would fail.
-
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/lkml/20200805002015.GE23458@shao2-debian
+Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
 Cc: stable@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 1e10486ffee0a ("ftrace: Add 'function-fork' trace option")
-Fixes: c37775d57830a ("tracing: Add infrastructure to allow set_event_pid to follow children"
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c       |    4 ++--
- kernel/trace/trace_events.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ kernel/module.c |   22 +++++++++++++++++++---
+ 1 file changed, 19 insertions(+), 3 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6969,12 +6969,12 @@ void ftrace_pid_follow_fork(struct trace
- 	if (enable) {
- 		register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
- 						  tr);
--		register_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
-+		register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
- 						  tr);
- 	} else {
- 		unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
- 						    tr);
--		unregister_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
-+		unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
- 						    tr);
- 	}
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1520,18 +1520,34 @@ struct module_sect_attrs {
+ 	struct module_sect_attr attrs[];
+ };
+ 
++#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
+ static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
+ 				struct bin_attribute *battr,
+ 				char *buf, loff_t pos, size_t count)
+ {
+ 	struct module_sect_attr *sattr =
+ 		container_of(battr, struct module_sect_attr, battr);
++	char bounce[MODULE_SECT_READ_SIZE + 1];
++	size_t wrote;
+ 
+ 	if (pos != 0)
+ 		return -EINVAL;
+ 
+-	return sprintf(buf, "0x%px\n",
+-		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
++	/*
++	 * Since we're a binary read handler, we must account for the
++	 * trailing NUL byte that sprintf will write: if "buf" is
++	 * too small to hold the NUL, or the NUL is exactly the last
++	 * byte, the read will look like it got truncated by one byte.
++	 * Since there is no way to ask sprintf nicely to not write
++	 * the NUL, we have to use a bounce buffer.
++	 */
++	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
++			 kallsyms_show_value(file->f_cred)
++				? (void *)sattr->address : NULL);
++	count = min(count, wrote);
++	memcpy(buf, bounce, count);
++
++	return count;
  }
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -538,12 +538,12 @@ void trace_event_follow_fork(struct trac
- 	if (enable) {
- 		register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
- 						       tr, INT_MIN);
--		register_trace_prio_sched_process_exit(event_filter_pid_sched_process_exit,
-+		register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
- 						       tr, INT_MAX);
- 	} else {
- 		unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
- 						    tr);
--		unregister_trace_sched_process_exit(event_filter_pid_sched_process_exit,
-+		unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
- 						    tr);
+ 
+ static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
+@@ -1580,7 +1596,7 @@ static void add_sect_attrs(struct module
+ 			goto out;
+ 		sect_attrs->nsections++;
+ 		sattr->battr.read = module_sect_read;
+-		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
++		sattr->battr.size = MODULE_SECT_READ_SIZE;
+ 		sattr->battr.attr.mode = 0400;
+ 		*(gattr++) = &(sattr++)->battr;
  	}
- }
 
 
