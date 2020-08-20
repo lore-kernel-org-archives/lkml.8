@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC2BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF18F2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C9F82075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918872;
-	bh=kWs4muxCzOiLp83mocfcq5fC24GhCoVS5HOY531HJDs=;
+	s=default; t=1597918887;
+	bh=EHuWEAqef+MFu2ZDsYXQpvGQaTZJwqP5kF7KV4YBlUM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j90RLZox/CZ0X+MFbvybN76l7atWTnjzjH0az5irAY4eVlbjv+z6AUcD7TjQH8tlD
-	 4v+L4PcLFBRfh8stxNyx4pmi1lYC4eTtz/5Yom9s6B+iVwd/rBa5oHyLgLrPUljMj9
-	 b2VVcBj8477dK6Ep+UxMNCJNejqFmN70CmA15Xy4=
+	b=tlIZK1+hfgfRLHkY9y7Y8x8p4dxcp0QTGCOK0Z4mWRHI1QNB7RCfJCXDuTIuyab/c
+	 RMYsJAFC8xmdFk6WQCZ6kpXfhcP3a0VAO/PyTv0mOJ3gbbn7YKbPa1fGcDMKCYfyGC
+	 zyBD1OKPHe9T4TLrYwHv3Dl4rvMO0Vzq4uN1982k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbgHTKVI (ORCPT
+        id S1731533AbgHTKVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46926 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:21:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731522AbgHTKVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:00 -0400
+        id S1731529AbgHTKVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B476A20738;
-        Thu, 20 Aug 2020 10:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB5B20738;
+        Thu, 20 Aug 2020 10:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918860;
-        bh=kWs4muxCzOiLp83mocfcq5fC24GhCoVS5HOY531HJDs=;
+        s=default; t=1597918866;
+        bh=EHuWEAqef+MFu2ZDsYXQpvGQaTZJwqP5kF7KV4YBlUM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DcJHbRyXxHmMUZOHVV4/n2cAlQ9ZOnX8t0vllrSuWah1SBIvv+jqusleda0Sq5Qpg
-         8M4MM/C7SQ0GokueOkvyTNSntSGpeJaAvhnFbcO5bd048IXL6Xf0HXwW7+xrPLr5HO
-         nS/pUWJrJSxb+iNoNUFmB+HgDD//h4NFM4BJflN0=
+        b=yvNAoiZ8s/JJPLiTJQvxHnPh/QdRPTuWC94gi6MmqXprV1kihJ6F5zf8G+e9eLzFn
+         Hf+iyQ7NE9G0KxGwMxq3osgSvm9BJA3Y0cEdm9Zj9QgSYbmQ0GSI6cVXi24gcuGHIQ
+         uldn+CfNoauKo2ZaEtyIrBVJoD87NdWtDV4jCMRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
-        Anton Blanchard <anton@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 092/149] powerpc/vdso: Fix vdso cpu truncation
-Date:   Thu, 20 Aug 2020 11:22:49 +0200
-Message-Id: <20200820092130.180810916@linuxfoundation.org>
+Subject: [PATCH 4.4 094/149] usb: dwc2: Fix error path in gadget registration
+Date:   Thu, 20 Aug 2020 11:22:51 +0200
+Message-Id: <20200820092130.275835519@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,42 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milton Miller <miltonm@us.ibm.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
+[ Upstream commit 33a06f1300a79cfd461cea0268f05e969d4f34ec ]
 
-The code in vdso_cpu_init that exposes the cpu and numa node to
-userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
-that any kernel running on a box with more than 4096 threads (NR_CPUS
-advertises a limit of of 8192 cpus) would expose userspace to two cpu
-contexts running at the same time with the same cpu number.
+When gadget registration fails, one should not call usb_del_gadget_udc().
+Ensure this by setting gadget->udc to NULL. Also in case of a failure
+there is no need to disable low-level hardware, so return immiedetly
+instead of jumping to error_init label.
 
-Note: I'm not aware of any distro shipping a kernel with support for more
-than 4096 threads today, nor of any system image that currently exceeds
-4096 threads. Found via code browsing.
+This fixes the following kernel NULL ptr dereference on gadget failure
+(can be easily triggered with g_mass_storage without any module
+parameters):
 
-Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
-Signed-off-by: Milton Miller <miltonm@us.ibm.com>
-Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
+dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter besl=1
+dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter g_np_tx_fifo_size=1024
+dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
+Mass Storage Function, version: 2009/09/11
+LUN: removable file: (no medium)
+no file given for LUN0
+g_mass_storage 12480000.hsotg: failed to start g_mass_storage: -22
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 00000104
+pgd = (ptrval)
+[00000104] *pgd=00000000
+Internal error: Oops: 805 [#1] PREEMPT SMP ARM
+Modules linked in:
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc5 #3133
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: events deferred_probe_work_func
+PC is at usb_del_gadget_udc+0x38/0xc4
+LR is at __mutex_lock+0x31c/0xb18
+...
+Process kworker/0:1 (pid: 12, stack limit = 0x(ptrval))
+Stack: (0xef121db0 to 0xef122000)
+...
+[<c076bf3c>] (usb_del_gadget_udc) from [<c0726bec>] (dwc2_hsotg_remove+0x10/0x20)
+[<c0726bec>] (dwc2_hsotg_remove) from [<c0711208>] (dwc2_driver_probe+0x57c/0x69c)
+[<c0711208>] (dwc2_driver_probe) from [<c06247c0>] (platform_drv_probe+0x6c/0xa4)
+[<c06247c0>] (platform_drv_probe) from [<c0621df4>] (really_probe+0x200/0x48c)
+[<c0621df4>] (really_probe) from [<c06221e8>] (driver_probe_device+0x78/0x1fc)
+[<c06221e8>] (driver_probe_device) from [<c061fcd4>] (bus_for_each_drv+0x74/0xb8)
+[<c061fcd4>] (bus_for_each_drv) from [<c0621b54>] (__device_attach+0xd4/0x16c)
+[<c0621b54>] (__device_attach) from [<c0620c98>] (bus_probe_device+0x88/0x90)
+[<c0620c98>] (bus_probe_device) from [<c06211b0>] (deferred_probe_work_func+0x3c/0xd0)
+[<c06211b0>] (deferred_probe_work_func) from [<c0149280>] (process_one_work+0x234/0x7dc)
+[<c0149280>] (process_one_work) from [<c014986c>] (worker_thread+0x44/0x51c)
+[<c014986c>] (worker_thread) from [<c0150b1c>] (kthread+0x158/0x1a0)
+[<c0150b1c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xef121fb0 to 0xef121ff8)
+...
+---[ end trace 9724c2fc7cc9c982 ]---
+
+While fixing this also fix the double call to dwc2_lowlevel_hw_disable()
+if dr_mode is set to USB_DR_MODE_PERIPHERAL. In such case low-level
+hardware is already disabled before calling usb_add_gadget_udc(). That
+function correctly preserves low-level hardware state, there is no need
+for the second unconditional dwc2_lowlevel_hw_disable() call.
+
+Fixes: 207324a321a8 ("usb: dwc2: Postponed gadget registration to the udc class driver")
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/platform.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index b457bfa284360..05c17429e5442 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -702,7 +702,7 @@ int vdso_getcpu_init(void)
- 	node = cpu_to_node(cpu);
- 	WARN_ON_ONCE(node > 0xffff);
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 5e554b1d5a8f9..d9fafd6a7927f 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -458,6 +458,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	if (hsotg->gadget_enabled) {
+ 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
+ 		if (retval) {
++			hsotg->gadget.udc = NULL;
+ 			dwc2_hsotg_remove(hsotg);
+ 			goto error;
+ 		}
+@@ -466,7 +467,8 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	return 0;
  
--	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
-+	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
- 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
- 	get_paca()->sprg_vdso = val;
+ error:
+-	dwc2_lowlevel_hw_disable(hsotg);
++	if (hsotg->dr_mode != USB_DR_MODE_PERIPHERAL)
++		dwc2_lowlevel_hw_disable(hsotg);
+ 	return retval;
+ }
  
 -- 
 2.25.1
