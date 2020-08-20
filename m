@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014EDC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6859E22BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00F222B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930201;
-	bh=ACTaPf3WB8xQMkrMtFCoSoFHetoXM3EoWgiMsXUUXhU=;
+	s=default; t=1597930212;
+	bh=zX065Jj8yZv2ZjljmxDbv1KjrqSbKCATFwprplDdImQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ig3JWEGuBWdnyoF0HzOFGRDd7wANCGl3swTcteiHT9TsmyCvgrz0ZkZFw4pxlMaq9
-	 49v4v8rU7VmEmjNDhC8OV5O7i9EhdmnE2JUK1FRZQB7qafQi4gc9zOkfA5k6PFTLoC
-	 7O5/R176CCbaCB6byo9sKV6O88JGvnx3UkuyrhqU=
+	b=mECtNRj3Y8X7s7zCdSNrKVNSBBIzOIUo9avfPXEhS0x5sYnLtT54kTwBx33eN4zPr
+	 VrncSnnbF8s4PvQSUlBtK0fj8RojcOmBWPG0k4AT9HEpwJOGNrU09Bh3E97cfbeH4f
+	 5z7JMwFDldT9E8XiSfwsFs49f2dMG+LrOo3AvEfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgHTN35 (ORCPT
+        id S1727968AbgHTJc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgHTJc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728257AbgHTJby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 765EE22BEA;
-        Thu, 20 Aug 2020 09:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5571922BF5;
+        Thu, 20 Aug 2020 09:31:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915973;
-        bh=ACTaPf3WB8xQMkrMtFCoSoFHetoXM3EoWgiMsXUUXhU=;
+        s=default; t=1597915912;
+        bh=zX065Jj8yZv2ZjljmxDbv1KjrqSbKCATFwprplDdImQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+PcxT1bBYHDPhmmKOFBtm9FEflpZ7e69OYeDOJvk9OX2GPwYWjQ349I6joOBQUTs
-         hbG/n+Wm9htNJy4B6xX4q4L/HrGMOrpgZYjCHAtT1XIdoTjYjcvMUlNyyx6KQMO/ME
-         t3p6FIwvYywhlhNeRHH9XTcUh9rn64YHa7QwDjFc=
+        b=jp4oJKsf5zbG4UfoNXg//tpVjdFFFw19IoiO8Z+rbx5YmxZrcKArVG6gEhra9jvjl
+         vqNrLxZg+7DXFCz00p4YeGkMpggmkktgpLn72wSJMD+/HNWw3FFTOMRis1QMUsa7A7
+         zD0mXCj0pPvcNxY0NDoA35v471wASAZFps07lzL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Wang Hai <wanghai38@huawei.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 200/232] s390/test_unwind: fix possible memleak in test_unwind()
-Date:   Thu, 20 Aug 2020 11:20:51 +0200
-Message-Id: <20200820091622.495075224@linuxfoundation.org>
+Subject: [PATCH 5.8 178/232] clk: bcm2835: Do not use prediv with bcm2711s PLLs
+Date:   Thu, 20 Aug 2020 11:20:29 +0200
+Message-Id: <20200820091621.432573048@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,35 +63,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit 75d3e7f4769d276a056efa1cc7f08de571fc9b4b ]
+[ Upstream commit f34e4651ce66a754f41203284acf09b28b9dd955 ]
 
-test_unwind() misses to call kfree(bt) in an error path.
-Add the missed function call to fix it.
+Contrary to previous SoCs, bcm2711 doesn't have a prescaler in the PLL
+feedback loop. Bypass it by zeroing fb_prediv_mask when running on
+bcm2711.
 
-Fixes: 0610154650f1 ("s390/test_unwind: print verbose unwinding results")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Note that, since the prediv configuration bits were re-purposed, this
+was triggering miscalculations on all clocks hanging from the VPU clock,
+notably the aux UART, making its output unintelligible.
+
+Fixes: 42de9ad400af ("clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support")
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Link: https://lore.kernel.org/r/20200730182619.23246-1-nsaenzjulienne@suse.de
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/lib/test_unwind.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/bcm/clk-bcm2835.c | 25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-index 32b7a30b2485d..b0b12b46bc572 100644
---- a/arch/s390/lib/test_unwind.c
-+++ b/arch/s390/lib/test_unwind.c
-@@ -63,6 +63,7 @@ static noinline int test_unwind(struct task_struct *task, struct pt_regs *regs,
- 			break;
- 		if (state.reliable && !addr) {
- 			pr_err("unwind state reliable but addr is 0\n");
-+			kfree(bt);
- 			return -EINVAL;
- 		}
- 		sprint_symbol(sym, addr);
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 6bb7efa12037b..011802f1a6df9 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -314,6 +314,7 @@ struct bcm2835_cprman {
+ 	struct device *dev;
+ 	void __iomem *regs;
+ 	spinlock_t regs_lock; /* spinlock for all clocks */
++	unsigned int soc;
+ 
+ 	/*
+ 	 * Real names of cprman clock parents looked up through
+@@ -525,6 +526,20 @@ static int bcm2835_pll_is_on(struct clk_hw *hw)
+ 		A2W_PLL_CTRL_PRST_DISABLE;
+ }
+ 
++static u32 bcm2835_pll_get_prediv_mask(struct bcm2835_cprman *cprman,
++				       const struct bcm2835_pll_data *data)
++{
++	/*
++	 * On BCM2711 there isn't a pre-divisor available in the PLL feedback
++	 * loop. Bits 13:14 of ANA1 (PLLA,PLLB,PLLC,PLLD) have been re-purposed
++	 * for to for VCO RANGE bits.
++	 */
++	if (cprman->soc & SOC_BCM2711)
++		return 0;
++
++	return data->ana->fb_prediv_mask;
++}
++
+ static void bcm2835_pll_choose_ndiv_and_fdiv(unsigned long rate,
+ 					     unsigned long parent_rate,
+ 					     u32 *ndiv, u32 *fdiv)
+@@ -582,7 +597,7 @@ static unsigned long bcm2835_pll_get_rate(struct clk_hw *hw,
+ 	ndiv = (a2wctrl & A2W_PLL_CTRL_NDIV_MASK) >> A2W_PLL_CTRL_NDIV_SHIFT;
+ 	pdiv = (a2wctrl & A2W_PLL_CTRL_PDIV_MASK) >> A2W_PLL_CTRL_PDIV_SHIFT;
+ 	using_prediv = cprman_read(cprman, data->ana_reg_base + 4) &
+-		data->ana->fb_prediv_mask;
++		       bcm2835_pll_get_prediv_mask(cprman, data);
+ 
+ 	if (using_prediv) {
+ 		ndiv *= 2;
+@@ -665,6 +680,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	struct bcm2835_pll *pll = container_of(hw, struct bcm2835_pll, hw);
+ 	struct bcm2835_cprman *cprman = pll->cprman;
+ 	const struct bcm2835_pll_data *data = pll->data;
++	u32 prediv_mask = bcm2835_pll_get_prediv_mask(cprman, data);
+ 	bool was_using_prediv, use_fb_prediv, do_ana_setup_first;
+ 	u32 ndiv, fdiv, a2w_ctl;
+ 	u32 ana[4];
+@@ -682,7 +698,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	for (i = 3; i >= 0; i--)
+ 		ana[i] = cprman_read(cprman, data->ana_reg_base + i * 4);
+ 
+-	was_using_prediv = ana[1] & data->ana->fb_prediv_mask;
++	was_using_prediv = ana[1] & prediv_mask;
+ 
+ 	ana[0] &= ~data->ana->mask0;
+ 	ana[0] |= data->ana->set0;
+@@ -692,10 +708,10 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
+ 	ana[3] |= data->ana->set3;
+ 
+ 	if (was_using_prediv && !use_fb_prediv) {
+-		ana[1] &= ~data->ana->fb_prediv_mask;
++		ana[1] &= ~prediv_mask;
+ 		do_ana_setup_first = true;
+ 	} else if (!was_using_prediv && use_fb_prediv) {
+-		ana[1] |= data->ana->fb_prediv_mask;
++		ana[1] |= prediv_mask;
+ 		do_ana_setup_first = false;
+ 	} else {
+ 		do_ana_setup_first = true;
+@@ -2238,6 +2254,7 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, cprman);
+ 
+ 	cprman->onecell.num = asize;
++	cprman->soc = pdata->soc;
+ 	hws = cprman->onecell.hws;
+ 
+ 	for (i = 0; i < asize; i++) {
 -- 
 2.25.1
 
