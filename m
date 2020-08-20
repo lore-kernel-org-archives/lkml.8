@@ -2,84 +2,119 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A1AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104CBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C592207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F7F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597928523;
+	bh=TR0u0Tg/4wUTCtl8JfcQ5s5qtVO/WCoEmg9siCooIaY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v42PvopGuVl/pNUXDBCqbiDz+51i0rDXP+zvrlLmivzJU/BjGYN/qUcbmUHjnyK6b
+	 wJTt2GKTnFHuvzMkuVOFGvsDJZTtbX73yoHYCbLm3wJpygGGhfBE6aiXm4CxrlO8QB
+	 feZ5vqbZLg5VqCVprEFBa4NielCH6jUtAyU8OeM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbgHTNB5 (ORCPT
+        id S1729166AbgHTNCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:01:57 -0400
-Received: from mga05.intel.com ([192.55.52.43]:44475 "EHLO mga05.intel.com"
+        Thu, 20 Aug 2020 09:02:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729033AbgHTJkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:41 -0400
-IronPort-SDR: ZLFWryVtWQ2sbvEQWyNXSFbHoj79jmR0bGsufnMp9JmdvE+ZmSEwEodLn1QOxUonp9DqZMRRbR
- ClI/Kr3sJi9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="240093999"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="240093999"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 02:40:38 -0700
-IronPort-SDR: E40CW/24bwrXLELWjiM6ePuqcHQIEYJyWgdOpngCph/tENCwJFg+8CovzvyYfMS1FKZoIu8e0O
- nlaEONdqORFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="327377344"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 20 Aug 2020 02:40:37 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1k8h3k-00A50Z-2Y; Thu, 20 Aug 2020 12:40:36 +0300
-Date:   Thu, 20 Aug 2020 12:40:36 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the pinctrl-intel tree
-Message-ID: <20200820094036.GU1891694@smile.fi.intel.com>
-References: <20200820113039.71120e6a@canb.auug.org.au>
+        id S1729032AbgHTJkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:35 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC3D2075E;
+        Thu, 20 Aug 2020 09:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916435;
+        bh=TR0u0Tg/4wUTCtl8JfcQ5s5qtVO/WCoEmg9siCooIaY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tbp/Yf8zqSmf56Wx7HHTFgQRRrK9mi41I/UP5n3dUm74nDxo/GHPJ1K7YQQuSAV5x
+         lTR9p2ViYmyBcbzVDA/kmhyN0mPwC4miDbYHvgCCf2Y/VJadn1ehH3wqrGWcf9xDKl
+         30go38LluMgcrEacVtcLtLYm1RcQZ8tuJPi3iI3g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH 5.7 096/204] remoteproc: qcom_q6v5_mss: Validate modem blob firmware size before load
+Date:   Thu, 20 Aug 2020 11:19:53 +0200
+Message-Id: <20200820091611.127579684@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820113039.71120e6a@canb.auug.org.au>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 11:30:39AM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the pinctrl-intel tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
-> 
-> x86_64-linux-gnu-ld: drivers/pinctrl/intel/pinctrl-baytrail.o: in function `byt_pinctrl_probe':
-> pinctrl-baytrail.c:(.text+0x12bf): undefined reference to `intel_pinctrl_get_soc_data'
-> 
-> Caused by commit
-> 
->   2db97df9f29d ("pinctrl: baytrail: Switch to use intel_pinctrl_get_soc_data()")
+From: Sibi Sankar <sibis@codeaurora.org>
 
-Right, I have updated it. Shouldn't be issues now.
+commit 135b9e8d1cd8ba5ac9ad9bcf24b464b7b052e5b8 upstream.
 
-> CONFIG_PINCTRL_BAYTRAIL=y
-> CONFIG_PINCTRL_INTEL=m
-> 
-> I have ised the pinctrl-intel tree from next-20200819 for today.
+The following mem abort is observed when one of the modem blob firmware
+size exceeds the allocated mpss region. Fix this by restricting the copy
+size to segment size using request_firmware_into_buf before load.
 
-Thanks!
+Err Logs:
+Unable to handle kernel paging request at virtual address
+Mem abort info:
+...
+Call trace:
+  __memcpy+0x110/0x180
+  rproc_start+0xd0/0x190
+  rproc_boot+0x404/0x550
+  state_store+0x54/0xf8
+  dev_attr_store+0x44/0x60
+  sysfs_kf_write+0x58/0x80
+  kernfs_fop_write+0x140/0x230
+  vfs_write+0xc4/0x208
+  ksys_write+0x74/0xf8
+...
 
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 051fb70fd4ea4 ("remoteproc: qcom: Driver for the self-authenticating Hexagon v5")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200722201047.12975-3-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/remoteproc/qcom_q6v5_mss.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1145,15 +1145,14 @@ static int q6v5_mpss_load(struct q6v5 *q
+ 		} else if (phdr->p_filesz) {
+ 			/* Replace "xxx.xxx" with "xxx.bxx" */
+ 			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
+-			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
++			ret = request_firmware_into_buf(&seg_fw, fw_name, qproc->dev,
++							ptr, phdr->p_filesz);
+ 			if (ret) {
+ 				dev_err(qproc->dev, "failed to load %s\n", fw_name);
+ 				iounmap(ptr);
+ 				goto release_firmware;
+ 			}
+ 
+-			memcpy(ptr, seg_fw->data, seg_fw->size);
+-
+ 			release_firmware(seg_fw);
+ 		}
+ 
 
 
