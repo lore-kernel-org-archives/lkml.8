@@ -2,187 +2,100 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1169C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF7FA207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="XPae7+kr"
+	by mail.kernel.org (Postfix) with ESMTP id BE651207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926876;
+	bh=Nahniq3tivwXHlULeR3BZ+n9Or9Il37c18TVMl+h06Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1ckT9UCPHDiUq5jmEtiTtDTjq/b2dqKUhoQKJoQNLB+x6DtdLVlz188zTrUOHRQPk
+	 mDbY8nvq0MQDb72Sd3Z8+7L5BXqW71bt8n2N9Le0ypZwpk8imhCjAvpAsqM2LWiOL3
+	 COuNuNW6bqQiAx6nt+8lzR8bo0wGu7kf2sgGXYpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgHTMe1 (ORCPT
+        id S1729602AbgHTMeg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730105AbgHTMeK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:34:10 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0491C061387
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 05:34:09 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id h16so1298417oti.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 05:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BIs6d/jQFwGlnkZ5L4RtC3BBouLuQNHRbQqNyXKW5UA=;
-        b=XPae7+krQuaIKLfqBwHPdeeqh4BCT2yAY1Kx/KY4xCqMP8r+sRNyl0bTAEA1mCUV/6
-         W6JulKNVZzjnr/6wCrVOicF//Ednj9hvSSv9Y2pP3FVoJpWIRv3zJ9+vZCTYlPkLOo0W
-         BtfK4tT9nkXPhvzon3pOhchSSBcJxqBNfiHZ0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BIs6d/jQFwGlnkZ5L4RtC3BBouLuQNHRbQqNyXKW5UA=;
-        b=r5CCibQMiC/XFwqUrIk4x29w1IMxNjHh9aWdZNeUZGo4E1VFLU5h0ReRIQMtdLrnKt
-         /7BfIFRLn4+49nf/Qgm+6BgitpJjm/RodYYg0qTgCKOGh1gbdBdnBVKrZWY6p/epVlHn
-         A+Ii1h+YQaSQwPQSxGpyt8En2uIVegEp/D3ZVAl1kQ6JtqOTuNU7wG/EjlLaT8Iuf/GR
-         rJEveGmzIO8rFIxT4zkNXkZ+1km9ue3qoCkewDekpAhZeeu0UB9+gaqCmlACTldbjSp4
-         JmZzda/y++RMhkEivF5zAX0eoHbzlFXOVO/2k1eQL9tJ318NGdIiMn7YjfMO694PTciG
-         Ox6g==
-X-Gm-Message-State: AOAM5300I0yvZgkoiTVSow2WftuU6KPVBxOAXx1pcGp0ut72ntdbx1IV
-        qNmKpCHepatIU5rjdyOwiv59JeLdnItwuyXkM+jNqw==
-X-Google-Smtp-Source: ABdhPJzN7dBfvBuuP0F4Tco7q0JAyPALhhyXQWprRuputnZqvXCVX5jNbqueDmKE8m8pQCaVCnop35OD4eN2Ba1w4w4=
-X-Received: by 2002:a9d:6e18:: with SMTP id e24mr1890875otr.132.1597926848493;
- Thu, 20 Aug 2020 05:34:08 -0700 (PDT)
+        Thu, 20 Aug 2020 08:34:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729574AbgHTJsq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:48:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F84520724;
+        Thu, 20 Aug 2020 09:48:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916926;
+        bh=Nahniq3tivwXHlULeR3BZ+n9Or9Il37c18TVMl+h06Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AxBiNsh3DFkWOYy8sCt/Bv+6SuRlrTJUamQXkVnxNL4iAWDK2BOqoeaUuhP6KB9xt
+         3X1hbYTgBucc3n6GJftRYq3sB0lYdFtdJq0ktkZ+PrbzpOan04m4CBvJl/hnnZ28XQ
+         T2pcKBivRT10J1FVIt2eZ6hibuYt/mAIN5JeqZvM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 094/152] RDMA/counter: Only bind user QPs in auto mode
+Date:   Thu, 20 Aug 2020 11:21:01 +0200
+Message-Id: <20200820091558.542037319@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200819092436.58232-1-lmb@cloudflare.com> <20200819092436.58232-5-lmb@cloudflare.com>
- <5d64158b-35ed-d28d-9857-6ee725d287f2@fb.com>
-In-Reply-To: <5d64158b-35ed-d28d-9857-6ee725d287f2@fb.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Thu, 20 Aug 2020 13:33:57 +0100
-Message-ID: <CACAyw9_4_PZ1bHd0W-mAN5b0i-ZriTZSxWtoS59baXdRg6wk0g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 4/6] bpf: override the meaning of
- ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Aug 2020 at 21:13, Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 8/19/20 2:24 AM, Lorenz Bauer wrote:
-> > The verifier assumes that map values are simple blobs of memory, and
-> > therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
-> > map types where this isn't true. For example, sockmap and sockhash store
-> > sockets. In general this isn't a big problem: we can just
-> > write helpers that explicitly requests PTR_TO_SOCKET instead of
-> > ARG_PTR_TO_MAP_VALUE.
-> >
-> > The one exception are the standard map helpers like map_update_elem,
-> > map_lookup_elem, etc. Here it would be nice we could overload the
-> > function prototype for different kinds of maps. Unfortunately, this
-> > isn't entirely straight forward:
-> > We only know the type of the map once we have resolved meta->map_ptr
-> > in check_func_arg. This means we can't swap out the prototype
-> > in check_helper_call until we're half way through the function.
-> >
-> > Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE* to
-> > mean "the native type for the map" instead of "pointer to memory"
-> > for sockmap and sockhash. This means we don't have to modify the
-> > function prototype at all
-> >
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >   kernel/bpf/verifier.c | 40 ++++++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 40 insertions(+)
-> >
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index b6ccfce3bf4c..47f9b94bb9d4 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -3872,6 +3872,38 @@ static int int_ptr_type_to_size(enum bpf_arg_type type)
-> >       return -EINVAL;
-> >   }
-> >
-> > +static int override_map_arg_type(struct bpf_verifier_env *env,
-> > +                              const struct bpf_call_arg_meta *meta,
-> > +                              enum bpf_arg_type *arg_type)
-> > +{
-> > +     if (!meta->map_ptr) {
-> > +             /* kernel subsystem misconfigured verifier */
-> > +             verbose(env, "invalid map_ptr to access map->type\n");
-> > +             return -EACCES;
-> > +     }
-> > +
-> > +     switch (meta->map_ptr->map_type) {
-> > +     case BPF_MAP_TYPE_SOCKMAP:
-> > +     case BPF_MAP_TYPE_SOCKHASH:
-> > +             switch (*arg_type) {
-> > +             case ARG_PTR_TO_MAP_VALUE:
-> > +                     *arg_type = ARG_PTR_TO_SOCKET;
-> > +                     break;
-> > +             case ARG_PTR_TO_MAP_VALUE_OR_NULL:
-> > +                     *arg_type = ARG_PTR_TO_SOCKET_OR_NULL;
-> > +                     break;
-> > +             default:
-> > +                     verbose(env, "invalid arg_type for sockmap/sockhash\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +             break;
-> > +
-> > +     default:
-> > +             break;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> >   static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
-> >                         struct bpf_call_arg_meta *meta,
-> >                         const struct bpf_func_proto *fn)
-> > @@ -3904,6 +3936,14 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
-> >               return -EACCES;
-> >       }
-> >
-> > +     if (arg_type == ARG_PTR_TO_MAP_VALUE ||
-> > +         arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
-> > +         arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
->
-> We probably do not need ARG_PTR_TO_UNINIT_MAP_VALUE here.
->
-> Do we need ARG_PTR_TO_MAP_VALUE_OR_NULL? bpf_map_update_elem arg type
-> is ARG_PTR_TO_MAP_VALUE.
+From: Mark Zhang <markz@mellanox.com>
 
-I did this to be consistent: in a single function definition you
-either get the map specific
-types or the regular semantics. You don't get to mix and match them.
-For the same
-reason I included ARG_PTR_TO_UNINIT_MAP_VALUE: the semantics don't make
-sense for sockmap, so a function using this doesn't make sense either.
+[ Upstream commit c9f557421e505f75da4234a6af8eff46bc08614b ]
 
->
-> > +             err = override_map_arg_type(env, meta, &arg_type);
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> >       if (arg_type == ARG_PTR_TO_MAP_KEY ||
-> >           arg_type == ARG_PTR_TO_MAP_VALUE ||
-> >           arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
-> >
+In auto mode only bind user QPs to a dynamic counter, since this feature
+is mainly used for system statistic and diagnostic purpose, while there's
+no need to counter kernel QPs so far.
 
+Fixes: 99fa331dc862 ("RDMA/counter: Add "auto" configuration mode support")
+Link: https://lore.kernel.org/r/20200702082933.424537-3-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/core/counters.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
+index 11210bf7fd61b..42809f612c2c4 100644
+--- a/drivers/infiniband/core/counters.c
++++ b/drivers/infiniband/core/counters.c
+@@ -284,7 +284,7 @@ int rdma_counter_bind_qp_auto(struct ib_qp *qp, u8 port)
+ 	struct rdma_counter *counter;
+ 	int ret;
+ 
+-	if (!qp->res.valid)
++	if (!qp->res.valid || rdma_is_kernel_res(&qp->res))
+ 		return 0;
+ 
+ 	if (!rdma_is_port_valid(dev, port))
 -- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+2.25.1
 
-www.cloudflare.com
+
+
