@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAF7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2911EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE9D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AD320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919271;
-	bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
+	s=default; t=1597919277;
+	bh=UQ9bBscGua1StUs2Lns9LflTuLYe5Z2moAJYhe5l1Wc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qCdcQDGQMwKhAF4uW+PLEPcOieV65cU2PwJcyLaoIO2Fky4TvGanyscRDQx4zXgpb
-	 YZerciSGG9/Pd14qjMysl06VRIVB9tTxicReGnroAt4zsYL7WRlP332YNycS8/eVj6
-	 ZCh0p5JUOQrjd88vstyYPRU72VMuMf4RPOaxre24=
+	b=Woz2798I3j4pyyhHveEB6WNnNuuAD0gi4KKTKKE/dPlaXiZXiznW0G3wrUFiOY4Sg
+	 bfwramuJ6yGqxEpoLGSjfGAjoPbCSCojnDzIoxE/v4ykdXCpeRZWOJHQuR3fAQsA8H
+	 /TOvMDA9GLddEs2SeziwCAT7ip+1Q5va92forY3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731597AbgHTKWJ (ORCPT
+        id S1731316AbgHTK1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48778 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731569AbgHTKVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:21:49 -0400
+        id S1731592AbgHTKWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D908920658;
-        Thu, 20 Aug 2020 10:21:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02D5D20658;
+        Thu, 20 Aug 2020 10:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918909;
-        bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
+        s=default; t=1597918942;
+        bh=UQ9bBscGua1StUs2Lns9LflTuLYe5Z2moAJYhe5l1Wc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p2WY2XQRa9f5fcYllscB2s+85apvuBaMnxibSPvySLTtJbDr2N2yLR9rV8nde+MD/
-         8bP/7LR6BXGCUSEhbejk4NboxdNrkOmWPEmx4LBT0ZK2xzlO7qQtWF+4lFWb9zVxNI
-         ZO6TTId+wjjijFm9elFGGOkVyy70EWkpusjyON9E=
+        b=dsmaZKvpnhUN8f+QzF2v2nX/c+sy1i4l/kSsH6Z/ZDTvstqHEy03c9F/rp5yeBBgS
+         nLMcoKT+OMKi/DMOMfEu1E6y75ByPNGh+ZOjh5w3LCdbhQJohDrDQE3WetpY95o9X1
+         FyldJkF62X2QsnPAjVaIM23z1I6LrjKtafvdGb8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 111/149] fs/minix: check return value of sb_getblk()
-Date:   Thu, 20 Aug 2020 11:23:08 +0200
-Message-Id: <20200820092131.077639425@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 123/149] powerpc: Fix circular dependency between percpu.h and mmu.h
+Date:   Thu, 20 Aug 2020 11:23:20 +0200
+Message-Id: <20200820092131.658741805@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -64,78 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
+commit 0c83b277ada72b585e6a3e52b067669df15bcedb upstream.
 
-Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
+Recently random.h started including percpu.h (see commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity")), which broke corenet64_smp_defconfig:
 
-This series fixes all syzbot bugs in the minix filesystem:
+  In file included from /linux/arch/powerpc/include/asm/paca.h:18,
+                   from /linux/arch/powerpc/include/asm/percpu.h:13,
+                   from /linux/include/linux/random.h:14,
+                   from /linux/lib/uuid.c:14:
+  /linux/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
+    139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
 
-	KASAN: null-ptr-deref Write in get_block
-	KASAN: use-after-free Write in get_block
-	KASAN: use-after-free Read in get_block
-	WARNING in inc_nlink
-	KMSAN: uninit-value in get_block
-	WARNING in drop_nlink
+This is due to a circular header dependency:
+  asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
+  includes asm/mmu.h
 
-It also fixes the minix filesystem to set s_maxbytes correctly, so that
-userspace sees the correct behavior when exceeding the max file size.
+Which means DECLARE_PER_CPU() isn't defined when mmu.h needs it.
 
-This patch (of 6):
+We can fix it by moving the include of paca.h below the include of
+asm-generic/percpu.h.
 
-sb_getblk() can fail, so check its return value.
+This moves the include of paca.h out of the #ifdef __powerpc64__, but
+that is OK because paca.h is almost entirely inside #ifdef
+CONFIG_PPC64 anyway.
 
-This fixes a NULL pointer dereference.
+It also moves the include of paca.h out of the #ifdef CONFIG_SMP,
+which could possibly break something, but seems to have no ill
+effects.
 
-Originally from Qiujun Huang.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Cc: stable@vger.kernel.org # v5.8
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200804130558.292328-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/itree_common.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/powerpc/include/asm/percpu.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -74,6 +74,7 @@ static int alloc_branch(struct inode *in
- 	int n = 0;
- 	int i;
- 	int parent = minix_new_block(inode);
-+	int err = -ENOSPC;
+--- a/arch/powerpc/include/asm/percpu.h
++++ b/arch/powerpc/include/asm/percpu.h
+@@ -9,8 +9,6 @@
  
- 	branch[0].key = cpu_to_block(parent);
- 	if (parent) for (n = 1; n < num; n++) {
-@@ -84,6 +85,11 @@ static int alloc_branch(struct inode *in
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, nr);
-+			err = -ENOMEM;
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
-@@ -102,7 +108,7 @@ static int alloc_branch(struct inode *in
- 		bforget(branch[i].bh);
- 	for (i = 0; i < n; i++)
- 		minix_free_block(inode, block_to_cpu(branch[i].key));
--	return -ENOSPC;
-+	return err;
- }
+ #ifdef CONFIG_SMP
  
- static inline int splice_branch(struct inode *inode,
+-#include <asm/paca.h>
+-
+ #define __my_cpu_offset local_paca->data_offset
+ 
+ #endif /* CONFIG_SMP */
+@@ -18,4 +16,6 @@
+ 
+ #include <asm-generic/percpu.h>
+ 
++#include <asm/paca.h>
++
+ #endif /* _ASM_POWERPC_PERCPU_H_ */
 
 
