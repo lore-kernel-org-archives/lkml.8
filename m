@@ -2,53 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B75F9C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB2520639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BFA20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919861;
-	bh=UtA49LqjWfOiF+UegpH3bqGT9EIXZNTUrGsjO15YjNA=;
+	s=default; t=1597919879;
+	bh=dEDmkRG7YeHU1IZmCwE7m7T5vhaWdxv/IdSIN41lr+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tchd9smZTAllRptk0OtxmfxDuFTSyys+348iVRutGjLlYnjmbXipIIeTUttr5FHaA
-	 DsNeVLc+pbf5NAyXM9yCGYFDppmNzxcI/oKCxnKkwTEkJLhXCN7800AUbX1KOQp1mR
-	 2jBx6w0aw0o5elcHoGxXXVoSzgRA7ANATjthoCqw=
+	b=hDMVkEDoccrQ25DPY5XiVq4lhsilgjNBtF9xLxa2PPCk5wV6+8sDkkv62gk20npoD
+	 TJ4tdX6HgjlNT7ATv4sNQ2TsWMXoIMq6+2FyEvo1VyeVFAdcsN/mKardVW3BKR2f8Y
+	 MTBoOTSl0Rf/Ek14UzawllJhYEi7gbtI5RlPyZfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbgHTKSD (ORCPT
+        id S1730403AbgHTKht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:18:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38338 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:37:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729368AbgHTKRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:17:15 -0400
+        id S1731382AbgHTKSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D7BA2075E;
-        Thu, 20 Aug 2020 10:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9A0620738;
+        Thu, 20 Aug 2020 10:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918634;
-        bh=UtA49LqjWfOiF+UegpH3bqGT9EIXZNTUrGsjO15YjNA=;
+        s=default; t=1597918709;
+        bh=dEDmkRG7YeHU1IZmCwE7m7T5vhaWdxv/IdSIN41lr+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2N2eXMzFK7GvyzKXLZqi3znQtGJH4UgmMT3uwaMtiudpbsq5oylHTnYtb1Kn54rF1
-         i8fizR2bAJbc4K8iYotveOJGmBCaTSNRY3RbhFIDLkJwaq2RLk0A/RWGXCk4vZcGr6
-         8kX5oSwe3S1GxCyOvq26ZHt5l3IqR0Id1zBaeElc=
+        b=gamUFoQ4cbau2JHPRM3ey4CfGY5Ib1jxRKM7YtW1e+UzU1FaxAWo/afj/3tYwIVK3
+         /Xj7m8Oq/oUZmXyeiZ5QRA/1EfvTuO91m1bRTbn/FvFGw6DmmTyb6M107Misl5yubB
+         EuX/AyxkE/yNh/Io1VO4LXzZhjSLLMxoGl6wNlyI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 004/149] ath9k_htc: release allocated buffer if timed out
-Date:   Thu, 20 Aug 2020 11:21:21 +0200
-Message-Id: <20200820092125.903127111@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.4 008/149] drm/amdgpu: Prevent kernel-infoleak in amdgpu_info_ioctl()
+Date:   Thu, 20 Aug 2020 11:21:25 +0200
+Message-Id: <20200820092126.097749742@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,51 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 853acf7caf10b828102d92d05b5c101666a6142b ]
+commit 543e8669ed9bfb30545fd52bc0e047ca4df7fb31 upstream.
 
-In htc_config_pipe_credits, htc_setup_complete, and htc_connect_service
-if time out happens, the allocated buffer needs to be released.
-Otherwise there will be memory leak.
+Compiler leaves a 4-byte hole near the end of `dev_info`, causing
+amdgpu_info_ioctl() to copy uninitialized kernel stack memory to userspace
+when `size` is greater than 356.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In 2015 we tried to fix this issue by doing `= {};` on `dev_info`, which
+unfortunately does not initialize that 4-byte hole. Fix it by using
+memset() instead.
+
+Cc: stable@vger.kernel.org
+Fixes: c193fa91b918 ("drm/amdgpu: information leak in amdgpu_info_ioctl()")
+Fixes: d38ceaf99ed0 ("drm/amdgpu: add core driver (v4)")
+Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/ath/ath9k/htc_hst.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/htc_hst.c b/drivers/net/wireless/ath/ath9k/htc_hst.c
-index 257b6ee51e54b..1af216aa5adae 100644
---- a/drivers/net/wireless/ath/ath9k/htc_hst.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_hst.c
-@@ -175,6 +175,7 @@ static int htc_config_pipe_credits(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC credit config timeout\n");
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -428,9 +428,10 @@ static int amdgpu_info_ioctl(struct drm_
+ 		return n ? -EFAULT : 0;
  	}
+ 	case AMDGPU_INFO_DEV_INFO: {
+-		struct drm_amdgpu_info_device dev_info = {};
++		struct drm_amdgpu_info_device dev_info;
+ 		struct amdgpu_cu_info cu_info;
  
-@@ -211,6 +212,7 @@ static int htc_setup_complete(struct htc_target *target)
- 	time_left = wait_for_completion_timeout(&target->cmd_wait, HZ);
- 	if (!time_left) {
- 		dev_err(target->dev, "HTC start timeout\n");
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
-@@ -284,6 +286,7 @@ int htc_connect_service(struct htc_target *target,
- 	if (!time_left) {
- 		dev_err(target->dev, "Service connection timeout for: %d\n",
- 			service_connreq->service_id);
-+		kfree_skb(skb);
- 		return -ETIMEDOUT;
- 	}
- 
--- 
-2.25.1
-
++		memset(&dev_info, 0, sizeof(dev_info));
+ 		dev_info.device_id = dev->pdev->device;
+ 		dev_info.chip_rev = adev->rev_id;
+ 		dev_info.external_rev = adev->external_rev_id;
 
 
