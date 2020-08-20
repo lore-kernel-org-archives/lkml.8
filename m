@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60D0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB988C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72A272054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2A05204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923587;
-	bh=DvfvlL1zxeyA/MWFiJ3gR3Z2fR3+JimAzNL285sngmI=;
+	s=default; t=1597923588;
+	bh=jEodp2XBbycLqhu6saZoTXE2lkh+HwkeWPk6lozDk6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLU6dAUhkl5gkZfbtQQcneG1YYpToOJyktf0Cgn7O9TOs2C2w4VYPJTOaHTJhYx6x
-	 NRQs86PX3TEc7crxhAlkjI2Kf2i/u2ViM7ivIk/TUg95gA39hatglJeMlI+zfkvoVe
-	 UcRuiwDarUiBdprwDEbu4CfQRSFodNWUApcC3LyI=
+	b=Q6blcV9EHzb9MAbHSGDCBVQlKzd3vF9Xb76wN7s78HM62Cq7HvNrA6OInrqGUFDdU
+	 uHAYzB/RjP5+wz+qMoWYXxSmHJ+2WKnfe23FA9YxG/ZkloHk8VJtReMR8JlX/8t/qq
+	 Y0I2leMhotVkDRkGQw02mHrwQRBiC+jS60LN5c3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgHTLjn (ORCPT
+        id S1729790AbgHTLjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:39:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59088 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:39:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729708AbgHTKF0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:26 -0400
+        id S1730475AbgHTKFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B901820855;
-        Thu, 20 Aug 2020 10:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E99B722B43;
+        Thu, 20 Aug 2020 10:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917926;
-        bh=DvfvlL1zxeyA/MWFiJ3gR3Z2fR3+JimAzNL285sngmI=;
+        s=default; t=1597917922;
+        bh=jEodp2XBbycLqhu6saZoTXE2lkh+HwkeWPk6lozDk6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CwgkYPZz7PNpHGqeFZ6QxzVF7B5996f2XJCbwWXkJcXOXQaoGiswwE8mts/bnxCui
-         ubVNfp4pNoi0HnOWydZTHO9TpaFkskf3//SPli6NPAxltTSGC/nBHb54w5laDhmLZ4
-         0UmUQehoygBeK3gnPlTpZvwP0hs66c7LfkxnXd/w=
+        b=CYWNAHkcOQNaK0ZoktK59aFhaqJ5KuEkYjoibg9vlpdrW727+pPX8/lUrNaLkzuhx
+         dkUfsszD1Q/0EgKxSj4dUuqTNj2b8fQCxRRnkjtz/EFatJCzkLJIGN1ndeiFt2YpyA
+         SLTCRIm4YIvSMhBmoZiUA1pKM597qiMQ1N9WRXzY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 206/212] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:22:59 +0200
-Message-Id: <20200820091612.752613708@linuxfoundation.org>
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 197/212] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
+Date:   Thu, 20 Aug 2020 11:22:50 +0200
+Message-Id: <20200820091612.307306966@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -65,40 +61,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+It is possible for the call to omap_iommu_dump_ctx to return
+a negative error number, so check for the failure and return
+the error number rather than pass the negative value to
+simple_read_from_buffer.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
+Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
 Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
+Addresses-Coverity: ("Improper use of negative value")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ufs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/omap-iommu-debug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index 351162ff1bfd2..e320d824ee4d9 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -99,7 +99,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
+diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
+index 505548aafeff2..cec33e90e3998 100644
+--- a/drivers/iommu/omap-iommu-debug.c
++++ b/drivers/iommu/omap-iommu-debug.c
+@@ -101,8 +101,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
+ 	mutex_lock(&iommu_debug_lock);
  
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
+ 	bytes = omap_iommu_dump_ctx(obj, p, count);
++	if (bytes < 0)
++		goto err;
+ 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
  
- 	inode = ufs_iget(sb, ino);
++err:
+ 	mutex_unlock(&iommu_debug_lock);
+ 	kfree(buf);
+ 
 -- 
 2.25.1
 
