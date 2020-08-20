@@ -2,30 +2,31 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C94BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EF5AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 093C32072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0482072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgHTLBe (ORCPT
+        id S1728432AbgHTLBm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:01:34 -0400
-Received: from auth-smtp.nebula.fi ([217.149.52.145]:57641 "EHLO
+        Thu, 20 Aug 2020 07:01:42 -0400
+Received: from auth-smtp.nebula.fi ([217.149.52.145]:50133 "EHLO
         auth-smtp.nebula.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731568AbgHTK60 (ORCPT
+        with ESMTP id S1731574AbgHTK6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:58:26 -0400
+        Thu, 20 Aug 2020 06:58:47 -0400
 Received: from developer-Precision-3630-Tower (82-203-173-204.bb.dnainternet.fi [82.203.173.204])
         (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: xipheracom)
-        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id 610584468;
-        Thu, 20 Aug 2020 13:58:02 +0300 (EEST)
+        by auth-smtp.nebula.fi (Postfix) with ESMTPSA id 8978943AE;
+        Thu, 20 Aug 2020 13:58:05 +0300 (EEST)
 From:   Atte Tommiska <atte.tommiska@xiphera.com>
 To:     Matt Mackall <mpm@selenic.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
@@ -35,10 +36,12 @@ To:     Matt Mackall <mpm@selenic.com>,
         linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Atte Tommiska <atte.tommiska@xiphera.com>
-Subject: [PATCH v2 0/3] hwrng: add support for Xiphera XIP8001B
-Date:   Thu, 20 Aug 2020 13:51:19 +0300
-Message-Id: <cover.1597914503.git.atte.tommiska@xiphera.com>
+Subject: [PATCH v2 2/3] dt-bindings: rng: add bindings for Xiphera XIP8001B hwnrg
+Date:   Thu, 20 Aug 2020 13:51:21 +0300
+Message-Id: <d385a6e0f8edaaf7c8a26eb45fa0a4608d029b13.1597914503.git.atte.tommiska@xiphera.com>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <cover.1597914503.git.atte.tommiska@xiphera.com>
+References: <cover.1597914503.git.atte.tommiska@xiphera.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,28 +49,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patchset introduces a linux driver for Xiphera's XIP8001B IP.
-The IP is an FPGA-based TRNG which can be used in various FPGA families.
-The IP is in use in multiple customer projects and in Xiphera's own products.
+Document the device tree bindings of Xiphera's XIP8001B-trng IP.
 
-v2: fixed the 'make dt_binding_check' errors in the devicetree schema.
-
-Atte Tommiska (3):
-  dt-bindings: vendor-prefixes: Add Xiphera vendor prefix
-  dt-bindings: rng: add bindings for Xiphera XIP8001B hwnrg
-  hwrng: xiphera-trng: add support for XIP8001B hwrng
-
- .../bindings/rng/xiphera,xip8001b-trng.yaml   |  33 ++++
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- drivers/char/hw_random/Kconfig                |  10 ++
- drivers/char/hw_random/Makefile               |   1 +
- drivers/char/hw_random/xiphera-trng.c         | 151 ++++++++++++++++++
- 5 files changed, 197 insertions(+)
+Signed-off-by: Atte Tommiska <atte.tommiska@xiphera.com>
+---
+ .../bindings/rng/xiphera,xip8001b-trng.yaml   | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
- create mode 100644 drivers/char/hw_random/xiphera-trng.c
 
-
-base-commit: bc752d2f345bf55d71b3422a6a24890ea03168dc
+diff --git a/Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml b/Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
+new file mode 100644
+index 000000000000..1e17e55762f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/xiphera,xip8001b-trng.yaml
+@@ -0,0 +1,33 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/xiphera,xip8001b-trng.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Xiphera XIP8001B-trng bindings
++
++maintainers:
++  - Atte Tommiska <atte.tommiska@xiphera.com>
++
++description: |
++  Xiphera FPGA-based true random number generator intellectual property core.
++
++properties:
++  compatible:
++    const: xiphera,xip8001b-trng
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    rng@43c00000 {
++        compatible = "xiphera,xip8001b-trng";
++        reg = <0x43c00000 0x10000>;
++    };
 -- 
 2.28.0
 
