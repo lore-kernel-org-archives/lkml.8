@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0479C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EE8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08C022CA0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5322122BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931156;
-	bh=B6T1WnONVu3nGNV9d/4qR06ceS4AT9zZ5Pds7b1uD8g=;
+	s=default; t=1597931171;
+	bh=qODI7FfI8D79fxtK+8MRpGep8DMuZaOYzP9AJdDA99k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vfMbfl0VaBWNmKjLcu1p8CyyL3YlXLP63uS0kUNHBO2IaxiF2xWS9f5mfrY7Gpf/J
-	 /WkiZSgrDF+6UoA7PDpqBGWW6akaSgz+iyR/bvHI631onZ2Dye7703frgzN+FVcIx2
-	 SxAu1rvNwAZsOyTRnCqUzp98UfVNUtOl73DHz2wE=
+	b=MU6CWXjS1JkZvgLUaE3CFeOmPo6Iz9+5ZCelQYbdhBkc3KWTiu0ANaY6Tptbth8F/
+	 Xe2ONcCkwbxxX9CJzBEqyzESVL1mmprZ0PR1Giw9pO2bgRRTj+ugyikyuBb12SNOdi
+	 r9eEwqVWGzzkL7rEiMKOIa03KviHWuJZZVM6saCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbgHTNpz (ORCPT
+        id S1730647AbgHTNqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgHTJaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:16 -0400
+        id S1727899AbgHTJ2i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B48822B4B;
-        Thu, 20 Aug 2020 09:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E471522CB1;
+        Thu, 20 Aug 2020 09:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915816;
-        bh=B6T1WnONVu3nGNV9d/4qR06ceS4AT9zZ5Pds7b1uD8g=;
+        s=default; t=1597915718;
+        bh=qODI7FfI8D79fxtK+8MRpGep8DMuZaOYzP9AJdDA99k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mt+Vir9EdBrqL8pBYFcKS7QouVak/cZgQQuuvZBdTVxy0JEjIiF9H9GjpG1FWmIYU
-         xVEKP7AqDeLjhYT9m7mgA2ZbsyXzoZCd6yST7w9To0uYrJ4CZs274TRJux2ff+ERdj
-         C3FzjtTIuODXk7zYi+O6SvzGbnFKwBE3BIq56LOs=
+        b=Kby8K5Ffht2g/QF0thXRp/4kZGSl9FkHezrFigR3nCq8HvcnTpJ+nzbq6KvtXeq+p
+         S79WneX2D7pOSx/gCkadr2oJNEsGrEioaDiaF+NrTaoFx13MFCaiTlOnxV3kNtx7uf
+         i19ISaHlnPIaczrol+YgAI0hsECuCQGR8RHBkyBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 143/232] rtw88: pci: disable aspm for platform inter-op with module parameter
-Date:   Thu, 20 Aug 2020 11:19:54 +0200
-Message-Id: <20200820091619.749346624@linuxfoundation.org>
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>
+Subject: [PATCH 5.8 093/232] watchdog: f71808e_wdt: remove use of wrong watchdog_info option
+Date:   Thu, 20 Aug 2020 11:19:04 +0200
+Message-Id: <20200820091617.340152564@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,69 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yan-Hsuan Chuang <yhchuang@realtek.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-[ Upstream commit 68aa716b7dd36f55e080da9e27bc594346334c41 ]
+commit 802141462d844f2e6a4d63a12260d79b7afc4c34 upstream.
 
-Some platforms cannot read the DBI register successfully for the
-ASPM settings. After the read failed, the bus could be unstable,
-and the device just became unavailable [1]. For those platforms,
-the ASPM should be disabled. But as the ASPM can help the driver
-to save the power consumption in power save mode, the ASPM is still
-needed. So, add a module parameter for them to disable it, then
-the device can still work, while others can benefit from the less
-power consumption that brings by ASPM enabled.
+The flags that should be or-ed into the watchdog_info.options by drivers
+all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
+driver's watchdog_ops has a usable set_timeout.
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=206411
-[2] Note that my lenovo T430 is the same.
+WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
+equals:
 
-Fixes: 3dff7c6e3749 ("rtw88: allows to enable/disable HCI link PS mechanism")
-Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200605074703.32726-1-yhchuang@realtek.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+   WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
+   WDIOF_MAGICCLOSE | 0xc0045000
+
+These were so far indicated to userspace on WDIOC_GETSUPPORT.
+As the driver has not yet been migrated to the new watchdog kernel API,
+the constant can just be dropped without substitute.
+
+Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for Fintek F71808E and F71882FG")
+Cc: stable@vger.kernel.org
+Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200611191750.28096-4-a.fatoum@pengutronix.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/wireless/realtek/rtw88/pci.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/watchdog/f71808e_wdt.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
-index 8228db9a5fc86..3413973bc4750 100644
---- a/drivers/net/wireless/realtek/rtw88/pci.c
-+++ b/drivers/net/wireless/realtek/rtw88/pci.c
-@@ -14,8 +14,11 @@
- #include "debug.h"
+--- a/drivers/watchdog/f71808e_wdt.c
++++ b/drivers/watchdog/f71808e_wdt.c
+@@ -690,8 +690,7 @@ static int __init watchdog_init(int sioa
+ 	 * into the module have been registered yet.
+ 	 */
+ 	watchdog.sioaddr = sioaddr;
+-	watchdog.ident.options = WDIOC_SETTIMEOUT
+-				| WDIOF_MAGICCLOSE
++	watchdog.ident.options = WDIOF_MAGICCLOSE
+ 				| WDIOF_KEEPALIVEPING
+ 				| WDIOF_CARDRESET;
  
- static bool rtw_disable_msi;
-+static bool rtw_pci_disable_aspm;
- module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
-+module_param_named(disable_aspm, rtw_pci_disable_aspm, bool, 0644);
- MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
-+MODULE_PARM_DESC(disable_aspm, "Set Y to disable PCI ASPM support");
- 
- static u32 rtw_pci_tx_queue_idx_addr[] = {
- 	[RTW_TX_QUEUE_BK]	= RTK_PCI_TXBD_IDX_BKQ,
-@@ -1200,6 +1203,9 @@ static void rtw_pci_clkreq_set(struct rtw_dev *rtwdev, bool enable)
- 	u8 value;
- 	int ret;
- 
-+	if (rtw_pci_disable_aspm)
-+		return;
-+
- 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to read CLKREQ_L1, ret=%d", ret);
-@@ -1219,6 +1225,9 @@ static void rtw_pci_aspm_set(struct rtw_dev *rtwdev, bool enable)
- 	u8 value;
- 	int ret;
- 
-+	if (rtw_pci_disable_aspm)
-+		return;
-+
- 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
- 	if (ret) {
- 		rtw_err(rtwdev, "failed to read ASPM, ret=%d", ret);
--- 
-2.25.1
-
 
 
