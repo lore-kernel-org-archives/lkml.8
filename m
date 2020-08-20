@@ -2,210 +2,159 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA1C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81EDC433E8
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D70C7206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597932276;
-	bh=BJZ3khMHnakcxXd+d87ppc6iMeGURSC9HUcleIi3LsA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K2VA2bKtdofTso1UTzLs4HDJjredVDut+KYmQKMUqChIm0sXBhKI0hdHDua2Ehy/H
-	 762MvvkeuqcL2el0gtQ/wUNqT2YVuIYLRW/evtYwxdsxukL/L/XgU1DVmTlJhI+3xg
-	 RHAGK7xdpoCola5hfhHdXC8idG3+jcufbUpQwD2A=
+	by mail.kernel.org (Postfix) with ESMTP id 793A620724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgHTODG (ORCPT
+        id S1729569AbgHTOEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:03:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33272 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 10:04:23 -0400
+Received: from comms.puri.sm ([159.203.221.185]:55664 "EHLO comms.puri.sm"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbgHTJZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85E4E2173E;
-        Thu, 20 Aug 2020 09:25:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915531;
-        bh=BJZ3khMHnakcxXd+d87ppc6iMeGURSC9HUcleIi3LsA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xeiw4zc/LeppE7ITtWlQ1UvCTKd6KxzmZxm91UpH3FekebMrfRzIMKgOJ5F6Jo0Ah
-         OOHq4Yf9Ul5jF+5l7jYM4di/Ke8pnCCAZpP5PPadi41lvISAZikGCfbvp7AKcE050J
-         f6u/vi53Orkj6RrOIaEkNhRfd60WsJoDqmrQbZII=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 029/232] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
-Date:   Thu, 20 Aug 2020 11:18:00 +0200
-Message-Id: <20200820091614.166494761@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        id S1727103AbgHTN7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:59:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by comms.puri.sm (Postfix) with ESMTP id 021E6DF4A1;
+        Thu, 20 Aug 2020 06:58:49 -0700 (PDT)
+Received: from comms.puri.sm ([127.0.0.1])
+        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3msrRQTT8y4p; Thu, 20 Aug 2020 06:58:48 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] arm64: dts: imx8mq-librem5-devkit: Enable the LCD
+ panel
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1597913263.git.agx@sigxcpu.org>
+ <f03b599160804142f738eb53d0fe8686234c4896.1597913263.git.agx@sigxcpu.org>
+From:   Martin Kepplinger <martin.kepplinger@puri.sm>
+Autocrypt: addr=martin.kepplinger@puri.sm; keydata=
+ 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
+ ekMtxgNYb/8oDry09UFHbGHLsWn6oBo=
+Message-ID: <0a7c0d7b-0fb6-2914-b6d5-a2f7cedd20d1@puri.sm>
+Date:   Thu, 20 Aug 2020 15:58:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <f03b599160804142f738eb53d0fe8686234c4896.1597913263.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
-
-commit fbabd4a36faaf74c83142d0b3d950c11ec14fda1 upstream.
-
-Eric reported seeing this message while running generic/475
-
-  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
-
-Full stack trace:
-
-  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
-  BTRFS info (device dm-0): forced readonly
-  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
-  ------------[ cut here ]------------
-  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
-  BTRFS: Transaction aborted (error -117)
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
-  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
-  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
-  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
-  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
-  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
-  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
-  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
-  Call Trace:
-   ? finish_wait+0x90/0x90
-   ? __mutex_unlock_slowpath+0x45/0x2a0
-   ? lock_acquire+0xa3/0x440
-   ? lockref_put_or_lock+0x9/0x30
-   ? dput+0x20/0x4a0
-   ? dput+0x20/0x4a0
-   ? do_raw_spin_unlock+0x4b/0xc0
-   ? _raw_spin_unlock+0x1f/0x30
-   btrfs_sync_file+0x335/0x490 [btrfs]
-   do_fsync+0x38/0x70
-   __x64_sys_fsync+0x10/0x20
-   do_syscall_64+0x50/0xe0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f6a6ef1b6e3
-  Code: Bad RIP value.
-  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
-  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
-  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
-  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
-  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  irq event stamp: 0
-  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last disabled at (0): [<0000000000000000>] 0x0
-  ---[ end trace af146e0e38433456 ]---
-  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
-
-This ret came from btrfs_write_marked_extents().  If we get an aborted
-transaction via EIO before, we'll see it in btree_write_cache_pages()
-and return EUCLEAN, which gets printed as "Filesystem corrupted".
-
-Except we shouldn't be returning EUCLEAN here, we need to be returning
-EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
-
-We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
-elsewhere, but we want to use EROFS for this particular case.  The
-original transaction abort has the real error code for why we ended up
-with an aborted transaction, all subsequent actions just need to return
-EROFS because they may not have a trans handle and have no idea about
-the original cause of the abort.
-
-After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
-stacktrace will not be dumped either.
-
-Reported-by: Eric Sandeen <esandeen@redhat.com>
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add full test stacktrace ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/extent_io.c   |    2 +-
- fs/btrfs/scrub.c       |    2 +-
- fs/btrfs/transaction.c |    5 ++++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
-
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4127,7 +4127,7 @@ retry:
- 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
- 		ret = flush_write_bio(&epd);
- 	} else {
--		ret = -EUCLEAN;
-+		ret = -EROFS;
- 		end_write_bio(&epd, ret);
- 	}
- 	return ret;
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -3758,7 +3758,7 @@ static noinline_for_stack int scrub_supe
- 	struct btrfs_fs_info *fs_info = sctx->fs_info;
- 
- 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
--		return -EIO;
-+		return -EROFS;
- 
- 	/* Seed devices of a new filesystem has their own generation. */
- 	if (scrub_dev->fs_devices != fs_info->fs_devices)
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -937,7 +937,10 @@ static int __btrfs_end_transaction(struc
- 	if (TRANS_ABORTED(trans) ||
- 	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
- 		wake_up_process(info->transaction_kthread);
--		err = -EIO;
-+		if (TRANS_ABORTED(trans))
-+			err = trans->aborted;
-+		else
-+			err = -EROFS;
- 	}
- 
- 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
+On 20.08.20 10:50, Guido Günther wrote:
+> Enable LCD panel output by adding nodes for the NWL DSI host controller,
+> the Rocktech panel and the eLCDIF display controller.
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> ---
+>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
 
 
+Hi Guido,
+
+Tested-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+
+thanks,
+                              martin
