@@ -2,102 +2,157 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 306DAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D48C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAD4B207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927199;
-	bh=JhwcJ/tqepTYH27UU61VLZNErKUrP6QK/XJvsBUTs9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MCeXhtG166EC2VuCGzgdKqgixB3b1ZUSeu1EZiPZcW4Hiy+BSCovJfoQi0AJEcmhM
-	 dZzyA8EQyQhCWeweIcp6hwUivs7j0zx0If7ojxerEhoByuaMPHtrJ2WfI4tBtkrW0d
-	 vqNWYaSMiCcBCXaHhZmGtfRX5+nI6uILEjcYudFk=
+	by mail.kernel.org (Postfix) with ESMTP id 465A1207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgHTMj4 (ORCPT
+        id S1729545AbgHTMja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:39:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51650 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729482AbgHTJrk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:40 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Thu, 20 Aug 2020 08:39:30 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56372 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729397AbgHTJrJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:09 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B963320724;
-        Thu, 20 Aug 2020 09:47:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916860;
-        bh=JhwcJ/tqepTYH27UU61VLZNErKUrP6QK/XJvsBUTs9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EstavljkfRUQADvAUFTGTDs0mZLic/YN5SyT6yO8bo7jH/JwN6cfM+rLJZpVM0/Sd
-         fBRCbSN9R38CCbVRlqgkFwaB0fvE/7T3MgjFVsTuMc8sa+Ok1h7+wOMB4o43Xi2ByV
-         Xk/APSsjWi1c1BCfY/XlsV/HWb3hHZfgCxbrE7ak=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.4 071/152] remoteproc: qcom: q6v5: Update running state before requesting stop
-Date:   Thu, 20 Aug 2020 11:20:38 +0200
-Message-Id: <20200820091557.359022608@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6967429A219;
+        Thu, 20 Aug 2020 10:47:07 +0100 (BST)
+Date:   Thu, 20 Aug 2020 11:47:02 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Parshuram Raju Thombare <pthombar@cadence.com>
+Cc:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "vitor.soares@synopsys.com" <vitor.soares@synopsys.com>,
+        Milind Parab <mparab@cadence.com>,
+        "praneeth@ti.com" <praneeth@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Przemyslaw Gaj <pgaj@cadence.com>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>
+Subject: Re: [PATCH v2 2/2] i3c: master: fix for SETDASA and DAA process
+Message-ID: <20200820114702.4c4cd58a@collabora.com>
+In-Reply-To: <DM5PR07MB31965D54B61E191E3C1325FEC15A0@DM5PR07MB3196.namprd07.prod.outlook.com>
+References: <1590053467-32079-1-git-send-email-pthombar@cadence.com>
+        <1590053581-803-1-git-send-email-pthombar@cadence.com>
+        <20200819101238.760d4e90@collabora.com>
+        <DM5PR07MB31965D54B61E191E3C1325FEC15A0@DM5PR07MB3196.namprd07.prod.outlook.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sibi Sankar <sibis@codeaurora.org>
+On Thu, 20 Aug 2020 09:23:25 +0000
+Parshuram Raju Thombare <pthombar@cadence.com> wrote:
 
-commit 5b7be880074c73540948f8fc597e0407b98fabfa upstream.
+> Hi Boris,
+> 
+> Thanks for your comments.
+> 
+> >> +	 * We anyway don't attach devices which are not addressable  
+> >
+> >You can drop the anyway.  
+> Sure, I will make above mentioned change in the comment.
+> 
+> >> +	 * (no static_addr and dyn_addr) and devices with static_addr
+> >> +	 * but no init_dyn_addr will participate in DAA.
+> >> +	 */
+> >> +	if (!boardinfo->static_addr || !boardinfo->init_dyn_addr)
+> >> +		return -EINVAL;  
+> >
+> >If we consider this as an error, we should probably check that before
+> >calling i3c_master_pre_assign_dyn_addr() in i3c_master_bus_init().  
+> Ok, I will move this check to i3c_master_bus_init(), before calling
+> i3c_master_pre_assign_dyn_addr. It will probably add extra if condition,
+> but will save one function call.
+> 
+> >>   * 5. Pre-assign dynamic addresses requested by the FW with SETDASA for I3C
+> >> - *    devices that have a static address
+> >> + *    devices that have a static address and attach corresponding statically
+> >> + *    defined I3C devices to the master.  
+> >
+> >					     and attach them to the
+> >					     master if
+> >	  the dynamic address assignment succeeds  
+> Sure, I will append above mentioned change to the comment.
+> 
+> >> +		/*
+> >> +		 * Free reserved init_dyn_addr so that attach can
+> >> +		 * get it before trying setnewda.
+> >> +		 */
+> >> +		if (i3cboardinfo->init_dyn_addr)
+> >> +			i3c_bus_set_addr_slot_status(&master->bus,
+> >> +						     init_dyn_addr,
+> >> +						     I3C_ADDR_SLOT_FREE);  
+> >
+> >Hm, it's a bit more complicated. I don't think we can unconditionally
+> >release the init_dyn_addr here. Say you have a device that's been
+> >assigned its init_dyn_addr, and userspace decided to re-assign a new
+> >one (the feature is not available yet, but I thought about letting
+> >userspace write to the dyn_addr sysfs entry and wire that to a SETDA).
+> >The init_dyn_addr can now be re-assigned to a different device. After
+> >some time the device ends up resetting and thus lose its DA. A new DAA
+> >is issued to re-discover it, but you want this device to be assigned its
+> >last known address not the init address. And when
+> >i3c_master_attach_boardinfo() is called on this new device, you release
+> >a slot that's no longer yours.
+> >
+> >That was the rational behind the "address slots are attached to i3cdevs
+> >not boardinfo". Maybe we should have another list where we keep i3c
+> >devs that have not been discovered yet but have boardinfo attached to
+> >them. This way we can reserve dynamic addresses without blocking a
+> >slot in the master device table.  
+> 
+> I think the sequence of events you are discussing here is
+> 1. User assign address to device A with init_dyn_addr in boardinfo.
+> 2. That particular init_dyn_addr is assigned to device B, which may be hotplugged ?
+>     and don't have boardinfo or init_dyn_addr in boardinfo ? 
+> 3. Device A resets and trigger DAA due to hot plug ?
+>    A. Here now init_dyn_addr is already assigned to device B so device A shouldn't be freeing it.
+>    B. Now preferable dyn_addr is the one received from user in step 1.
 
-Sometimes the stop triggers a watchdog rather than a stop-ack. Update
-the running state to false on requesting stop to skip the watchdog
-instead.
+No, that's not what I'm talking about. I meant:
 
-Error Logs:
-$ echo stop > /sys/class/remoteproc/remoteproc0/state
-ipa 1e40000.ipa: received modem stopping event
-remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force stop
-qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
-ipa 1e40000.ipa: received modem offline event
-remoteproc0: stopped remote processor 4080000.remoteproc-modem
+1. Device A is assigned a default init address X in the DT.
+2. Device B has no init address
+3. The framework reserves address X for and assigns it to device A
+   when it appears on the bus (DAA, SETDASA or HJ+DDA)
+4. Device B is assigned address Y
+5. User decides to explicitly assign a different address to device A by
+   issuing "echo Z > /sys/bus/i3c/..../<i3c-dev>/dyn_addr" (not yet
+   supported, but I think we should allow that at some point), such
+   that device A gets a lower/higher priority
+6. User manually assigns address X to device B (that should be allowed
+   since device A no longer uses X)
+7. Device A is reset for some reason and loses its dynamic address,
+   thus requiring a new DAA (or HJ+DAA). During this new discovery,
+   device A is re-assigned its last known address (Z), but in the
+   meantime you've marked address X as free (when attaching boardinfo
+   to the newdev object).
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource handling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Link: https://lore.kernel.org/r/20200602163257.26978-1-sibis@codeaurora.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> If we are to prefer init_dyn_addr always, that will rule out possibility of making init_dyn_addr 
+> available to any other device when original device is assigned with user or master
+> provided address owing to SETDATA or SETNEWDA failures. And we can be sure of not freeing
+> init_dyn_addr inadvertently while it is being used by any other device.
+> 
+> Else if we want to prefer user provided address even across resets, since we don't need init_dyn_addr
+> anymore, it can be used to store user provided address. This will serve both the purposes A and B stated above.
+>  
+> And in my opinion this can be handled when we add code to allow user to change the device address.
 
----
- drivers/remoteproc/qcom_q6v5.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/remoteproc/qcom_q6v5.c
-+++ b/drivers/remoteproc/qcom_q6v5.c
-@@ -151,6 +151,8 @@ int qcom_q6v5_request_stop(struct qcom_q
- {
- 	int ret;
- 
-+	q6v5->running = false;
-+
- 	qcom_smem_state_update_bits(q6v5->state,
- 				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
- 
-
-
+If we go for a temporary solution, I'd opt for relaxing the test done
+in i3c_master_get_i3c_addrs() to not reserve the init address (since it
+should have been reserved at probe time) and keep those init addressed
+reserved.
