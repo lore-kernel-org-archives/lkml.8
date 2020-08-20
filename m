@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA01C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93B6A22BEB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2FCE22BED
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916027;
-	bh=yXQvIeh6zMjicGaFl3Np+uvH08uFB6zeEjIw7UUyD0E=;
+	s=default; t=1597916037;
+	bh=7/xGhS2jXg70AQL+LrjRaZ6SVzc0mVFtwhK0uFYVNso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZTc1JuaoMmBQH4Zae5iV72vRUZ0IFPkTLvQEM0VrlPV25iCfx4AyU264U/EgbYO12
-	 4WSrAxBDq+Fo0f5AcA0tAqfYamQxl4bntz1G5VauZv4btWYwPYsHx1UuYWdUgJk0uV
-	 vTpp+R5ZcWVbMf03Ip4gdL7kI+1yadAHzu7kTejs=
+	b=Os6bqtRRUR4p+4HVe33NsWKrHseOrDdrjkpVjmT7DyW1OgvWZgBt8wsktiZ0VZ95A
+	 tH+obLWXdD4yibrso8z60gjFPy5OngCRvvOutxR9k9NTdmtQJEKyftSNB9vYP7cEFz
+	 mb/dQB8S64BHZjDSZb9hNSxupSkpGZdKlvXzbLz8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHTJdk (ORCPT
+        id S1728155AbgHTJdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:33:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44194 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:33:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728258AbgHTJb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:59 -0400
+        id S1728255AbgHTJbu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4656322B43;
-        Thu, 20 Aug 2020 09:31:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7FEA21775;
+        Thu, 20 Aug 2020 09:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915918;
-        bh=yXQvIeh6zMjicGaFl3Np+uvH08uFB6zeEjIw7UUyD0E=;
+        s=default; t=1597915910;
+        bh=7/xGhS2jXg70AQL+LrjRaZ6SVzc0mVFtwhK0uFYVNso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sa9gfU/BLaZXHb2ttuChyK8+VGNVnICfPl6ZMk2VIMETqt9WJMVotXPSZUSp6h2EU
-         /uUu8PaVtqXrp2qANsb2tma8W6W8W9bKj2awrZXvXByG0VnNbQYx2ydAhYCDN8TOMt
-         vKtyp/y2XxxnRESpQhTL7+wvlNktIeHnze3rJFNw=
+        b=aNIUOCv0Sfp579sMuTCU8chBMCn4CZVB7cHqQkrhnovB5A5dTGZNf90FH+/Kp7Mrn
+         pTqca48eZDC+ClonahCvqcI9S+7YNKht+bWew2rXl6hQbpRpdejkBHqExfias+PORN
+         PeTyicvpqUgPbrS/MrlT0E9QawL3s87w3eFFy18Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 180/232] libnvdimm/security: ensure sysfs poll thread woke up and fetch updated attr
-Date:   Thu, 20 Aug 2020 11:20:31 +0200
-Message-Id: <20200820091621.523221974@linuxfoundation.org>
+Subject: [PATCH 5.8 177/232] clk: hsdk: Fix bad dependency on IOMEM
+Date:   Thu, 20 Aug 2020 11:20:28 +0200
+Message-Id: <20200820091621.388674950@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,57 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jane Chu <jane.chu@oracle.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit 7f674025d9f7321dea11b802cc0ab3f09cbe51c5 ]
+[ Upstream commit bd8548d0dcdab514e08e35a3451667486d879dae ]
 
-commit 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-adds a sysfs_notify_dirent() to wake up userspace poll thread when the "overwrite"
-operation has completed. But the notification is issued before the internal
-dimm security state and flags have been updated, so the userspace poll thread
-wakes up and fetches the not-yet-updated attr and falls back to sleep, forever.
-But if user from another terminal issue "ndctl wait-overwrite nmemX" again,
-the command returns instantly.
+CONFIG_IOMEM does not exist.  The correct symbol to depend on is
+CONFIG_HAS_IOMEM.
 
-Link: https://lore.kernel.org/r/1596494499-9852-3-git-send-email-jane.chu@oracle.com
-Fixes: 7d988097c546 ("acpi/nfit, libnvdimm/security: Add security DSM overwrite support")
-Cc: Dave Jiang <dave.jiang@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+Fixes: 1e7468bd9d30a21e ("clk: Specify IOMEM dependency for HSDK pll driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/20200803084835.21838-1-geert+renesas@glider.be
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/security.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/clk/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index 8f3971cf16541..4b80150e4afa7 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -450,14 +450,19 @@ void __nvdimm_security_overwrite_query(struct nvdimm *nvdimm)
- 	else
- 		dev_dbg(&nvdimm->dev, "overwrite completed\n");
- 
--	if (nvdimm->sec.overwrite_state)
--		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	/*
-+	 * Mark the overwrite work done and update dimm security flags,
-+	 * then send a sysfs event notification to wake up userspace
-+	 * poll threads to picked up the changed state.
-+	 */
- 	nvdimm->sec.overwrite_tmo = 0;
- 	clear_bit(NDD_SECURITY_OVERWRITE, &nvdimm->flags);
- 	clear_bit(NDD_WORK_PENDING, &nvdimm->flags);
--	put_device(&nvdimm->dev);
- 	nvdimm->sec.flags = nvdimm_security_flags(nvdimm, NVDIMM_USER);
- 	nvdimm->sec.ext_flags = nvdimm_security_flags(nvdimm, NVDIMM_MASTER);
-+	if (nvdimm->sec.overwrite_state)
-+		sysfs_notify_dirent(nvdimm->sec.overwrite_state);
-+	put_device(&nvdimm->dev);
- }
- 
- void nvdimm_security_overwrite_query(struct work_struct *work)
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 326f91b2dda9f..5f952e111ab5a 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -50,7 +50,7 @@ source "drivers/clk/versatile/Kconfig"
+ config CLK_HSDK
+ 	bool "PLL Driver for HSDK platform"
+ 	depends on OF || COMPILE_TEST
+-	depends on IOMEM
++	depends on HAS_IOMEM
+ 	help
+ 	  This driver supports the HSDK core, system, ddr, tunnel and hdmi PLLs
+ 	  control.
 -- 
 2.25.1
 
