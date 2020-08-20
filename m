@@ -2,98 +2,139 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEC0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBB9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF56F207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:47:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B4B207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="fYAtf8gw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="mC1/OzJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727884AbgHTSq7 (ORCPT
+        id S1727882AbgHTSvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:46:59 -0400
-Received: from crapouillou.net ([89.234.176.41]:39054 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbgHTSq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:46:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1597949214; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Oe+2PzmcXagWqtHK6eruhPSrZ2v5G13GkG9wQ/HZ1cs=;
-        b=fYAtf8gwkPTmy7EvKXUOId6/yyPBKKLJcTIWeZXyz17Z/uNiLIfqfi27YdH2m5E5i/3iNw
-        pNxIjqBMUz4Mq2KCE20q1qqzJ9eE5Zp7qa3vurFMyTH2YGOdmisubrVsRiR3o4N7xQ0CpZ
-        slrqpspbtoTDQWy0l9X7GA2z5ySVo5A=
-Date:   Thu, 20 Aug 2020 20:46:43 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe
- and irq handler
-To:     Lars-Peter Clausen <lars@metafoo.de>
-Cc:     madhuparnabhowmik10@gmail.com, dan.j.williams@intel.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-Message-Id: <VHLDFQ.HR10VPMY1GHD3@crapouillou.net>
-In-Reply-To: <e1961c04-e2aa-fe3a-fb84-bb3b33fae5dc@metafoo.de>
-References: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
-        <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
-        <e1961c04-e2aa-fe3a-fb84-bb3b33fae5dc@metafoo.de>
+        Thu, 20 Aug 2020 14:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgHTSvS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:51:18 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B65C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:18 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id a15so3105857wrh.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6ameYpcCA2W6630D7Ht8ESefas4lH/iMvLqK3bNcEnI=;
+        b=mC1/OzJHy2Q6KdGaj8c/Xxnq3vlZKin57UYP/FhZHGChWhTrRL0+zkQNFqeZolsP2J
+         93Dbh46OdIPyFugBQlqsm1gAhoYg4CwJpsZjeaw47CIsY7/tocWRIX5Mmj4W7Cm3whb2
+         gbjsgb1YIruGDmtvd8CUqcIYdejOUMNNX0pUMqwOo6YhW0fOlP25apL8VD1vnaV53qz7
+         ekb6+3Whv94Y70IDNeS7JggOgM63GK5mz2Wy6bdpJI3PtAECGqsdp/Sie6jqhgfn3yci
+         F359UzzzTBoRxkBu4ltLiPfO5j9iRssEhfpu33LwtAn0mqS3PzVQu2LpSR7BilSCPcA9
+         44Cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6ameYpcCA2W6630D7Ht8ESefas4lH/iMvLqK3bNcEnI=;
+        b=Yic7YfaIVZuqyl+JNTyW37zP3oA5wAIPA+Vvn8fNM+ZAweUBUPpA769io23IGDX5Nm
+         PMB/3rP2/+PBAaNhWLusUPE0Vx2gJxyi5/8AD1o76cBg6gCeWs2NeGYk47U70DHnmpHH
+         GGnHNB7dBRcXUfOj9+d1cmjAohy3Dyl1RoCra4r1NiZGwCC1yEflgAaTwgBMNFamWCR1
+         0VEVZ34t2ogOpvl/qzz4qeMeTSLm1iufeaPRgHJhCISUQtfAMH7vMqTlWExL9BARKmo3
+         nbovFCIdGlFgr47oaW78QeDdfNnVDw5Q+uFGJrlNOI7D0AOTjQT+7hmFRzmViZSOhnyC
+         epZA==
+X-Gm-Message-State: AOAM533Y4XAxd2oGz3/qavwgEnl3LVzUvXc5KxtcoChqz2ILnbs0C0VY
+        65Uqcp8L/dLmzi+w99p97I43AA==
+X-Google-Smtp-Source: ABdhPJx7JoCSuUmAo6zDhTt4HTnEcwB1mBZ6Nf/XfN5adGcmnixz1MRo1Mz+9qa1RMBohOjLfw1ktg==
+X-Received: by 2002:adf:82d5:: with SMTP id 79mr96433wrc.282.1597949476975;
+        Thu, 20 Aug 2020 11:51:16 -0700 (PDT)
+Received: from debian-brgl.home (lfbn-nic-1-68-20.w2-15.abo.wanadoo.fr. [2.15.159.20])
+        by smtp.gmail.com with ESMTPSA id q2sm5694019wro.8.2020.08.20.11.51.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 11:51:16 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v8 0/3] devres: provide and use devm_krealloc()
+Date:   Thu, 20 Aug 2020 20:51:07 +0200
+Message-Id: <20200820185110.17828-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
+Regular krealloc() obviously can't work with managed memory. This series
+implements devm_krealloc() and adds two first users with hope that this
+helper will be adopted by other drivers currently using non-managed
+krealloc().
 
-Le jeu. 20 ao=FBt 2020 =E0 20:23, Lars-Peter Clausen <lars@metafoo.de> a=20
-=E9crit :
-> On 8/20/20 1:59 PM, Paul Cercueil wrote:
->> Hi,
->>=20
->> Le dim. 16 ao=FBt 2020 =E0 12:52, madhuparnabhowmik10@gmail.com a=20
->> =E9crit :
->>> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>>=20
->>> In probe IRQ is requested before zchan->id is initialized which can=20
->>> be
->>> read in the irq handler. Hence, shift request irq and enable clock=20
->>> after
->>> other initializations complete. Here, enable clock part is not part=20
->>> of
->>> the race, it is just shifted down after request_irq to keep the=20
->>> error
->>> path same as before.
->>>=20
->>> Found by Linux Driver Verification project (linuxtesting.org).
->>>=20
->>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
->>=20
->> I don't think there is a race at all, the interrupt handler won't be=20
->> =7Fcalled before the DMA is registered.
->>=20
-> From a purely formal verification perspective there is a bug. The=20
-> interrupt could fire if i.e. the hardware is buggy or something. In=20
-> general it is a good idea to not request the IRQ until all the=20
-> resources that are used in the interrupt handler are properly set up.=20
-> Even if you know that in practice the interrupt will never fire this=20
-> early.
->=20
+v1 -> v2:
+- remove leftover call to hwmon_device_unregister() from pmbus_core.c
+- add a patch extending devm_kmalloc() to handle zero size case
+- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
+  a pointer to non-managed memory
+- correctly handle the case when devm_krealloc() is passed a pointer to
+  memory in .rodata (potentially returned by devm_kstrdup_const())
+- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
 
-Fair enough, I'm fine with that, but the patch should be reworked so=20
-that the clk_prepare_enable() call is not moved.
+v2 -> v3:
+- drop already applied patches
+- collect Acks
+- add an additional user in iio
 
-Cheers,
--Paul
+v3 -> v4:
+- add the kerneldoc for devm_krealloc()
+- WARN() outside of spinlock
+- rename local variable
 
+v4 -> v5:
+- tweak the kerneldoc
+
+v5 -> v6:
+- tweak the devres_lock handling in devm_krealloc()
+
+v6 -> v7:
+- rework devm_krealloc() to avoid calling krealloc() with spinlock taken
+
+v7 -> v8:
+- drop unnecessary explicit pointer casting in to_devres()
+- check the return value of ksize() to make sure the pointer actually
+  points to a dynamically allocated chunk
+- add more comments to explain the locking strategy and resource handling
+
+Bartosz Golaszewski (3):
+  devres: provide devm_krealloc()
+  hwmon: pmbus: use more devres helpers
+  iio: adc: xilinx-xadc: use devm_krealloc()
+
+ .../driver-api/driver-model/devres.rst        |   1 +
+ drivers/base/devres.c                         | 114 ++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus_core.c              |  28 ++---
+ drivers/iio/adc/xilinx-xadc-core.c            |  16 +--
+ include/linux/device.h                        |   2 +
+ 5 files changed, 134 insertions(+), 27 deletions(-)
+
+-- 
+2.26.1
 
