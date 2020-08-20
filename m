@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D15BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D96C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B882E21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5540207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915854;
-	bh=vUMlRPXZX8LWcxjNTSMNJN5QyXqT7sG8LtdI37FiEJg=;
+	s=default; t=1597915862;
+	bh=9sLNKiGr0kKL5eCm7ftNJRKjGAReaohKKsu6DTFpr2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fvFytSWBOAyBLInhQ3yiBkYHP4XPu1cxmlesea6YEyFXlKSVqIA3jvJPm8xl5/zqL
-	 zD7bb9sKYgxq8ifbwXfSS2eRh5k1d1HRqOS9JMcEXGDr4NJGVjX7yhrR4l0hZpjTMN
-	 xdqobMS7Who7wdkoMg/O+SSp/3dX0rgkBM5Ptf04=
+	b=RO8xWR4kjvG0lNy98lB9pSlcegLIC1EhNgPONLpDqkBufKAgOwC3Sls7RGt0Ngepj
+	 wUBTfLMyRltykdnTOSmUN2C6BEC/oZ6eyaeH7N6Rlm69TjktOvT6EKGVOVlZ44xwqm
+	 8fSNs1pU96iaqBrRKhbdn+xE05dAJJcbvfsUergQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbgHTJau (ORCPT
+        id S1727959AbgHTJbA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41544 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:31:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgHTJaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:30 -0400
+        id S1726884AbgHTJag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1FDE20855;
-        Thu, 20 Aug 2020 09:30:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B48F5207DE;
+        Thu, 20 Aug 2020 09:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915830;
-        bh=vUMlRPXZX8LWcxjNTSMNJN5QyXqT7sG8LtdI37FiEJg=;
+        s=default; t=1597915836;
+        bh=9sLNKiGr0kKL5eCm7ftNJRKjGAReaohKKsu6DTFpr2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GjYlkHjqXdGJd7msDAHoN3DUSE8fAYDzdgIkBYVpjR8JdhpxQcK+I+x5nY6jXSLEB
-         fwR6iCgNqMUm1aMaZc6Rhm/8UCrto3KvBCyON83H5DHvVUscJVHzSMndybc/EjgEKC
-         890j0+aRWwClrCh5Yep4Kbyg4mClPolAv82EUmwc=
+        b=HMnUImU52J6gsuSN6fLTr9g5SRP+iyX3i9CUzNhl5mYST/S+omiFZqyn1YQ/BI6uE
+         A/Map0r7P2s7b/UVhtAeATfbItnesAUo6S/5jGUyPpR/4hU4Ix4D5yB23IwGghz8cD
+         fgdVg5x5GLC4kg+Yqzz8U05Bt5BD9vvrWEGwIL+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 148/232] dm rq: dont call blk_mq_queue_stopped() in dm_stop_queue()
-Date:   Thu, 20 Aug 2020 11:19:59 +0200
-Message-Id: <20200820091619.981973887@linuxfoundation.org>
+Subject: [PATCH 5.8 150/232] f2fs: compress: fix to avoid memory leak on cc->cpages
+Date:   Thu, 20 Aug 2020 11:20:01 +0200
+Message-Id: <20200820091620.078275416@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,43 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit e766668c6cd49d741cfb49eaeb38998ba34d27bc ]
+[ Upstream commit 02772fbfcba8597eef9d5c5f7f94087132d0c1d4 ]
 
-dm_stop_queue() only uses blk_mq_quiesce_queue() so it doesn't
-formally stop the blk-mq queue; therefore there is no point making the
-blk_mq_queue_stopped() check -- it will never be stopped.
+Memory allocated for storing compressed pages' poitner should be
+released after f2fs_write_compressed_pages(), otherwise it will
+cause memory leak issue.
 
-In addition, even though dm_stop_queue() actually tries to quiesce hw
-queues via blk_mq_quiesce_queue(), checking with blk_queue_quiesced()
-to avoid unnecessary queue quiesce isn't reliable because: the
-QUEUE_FLAG_QUIESCED flag is set before synchronize_rcu() and
-dm_stop_queue() may be called when synchronize_rcu() from another
-blk_mq_quiesce_queue() is in-progress.
-
-Fixes: 7b17c2f7292ba ("dm: Fix a race condition related to stopping and starting queues")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-rq.c | 3 ---
- 1 file changed, 3 deletions(-)
+ fs/f2fs/compress.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 85e0daabad49c..20745e2e34b94 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -70,9 +70,6 @@ void dm_start_queue(struct request_queue *q)
- 
- void dm_stop_queue(struct request_queue *q)
- {
--	if (blk_mq_queue_stopped(q))
--		return;
--
- 	blk_mq_quiesce_queue(q);
- }
- 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index 1e02a8c106b0a..f6fbe61b1251e 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1353,6 +1353,8 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
+ 		err = f2fs_write_compressed_pages(cc, submitted,
+ 							wbc, io_type);
+ 		cops->destroy_compress_ctx(cc);
++		kfree(cc->cpages);
++		cc->cpages = NULL;
+ 		if (!err)
+ 			return 0;
+ 		f2fs_bug_on(F2FS_I_SB(cc->inode), err != -EAGAIN);
 -- 
 2.25.1
 
