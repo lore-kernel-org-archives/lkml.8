@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA20DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C92C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8362A207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD56A207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881955;
-	bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
+	s=default; t=1597881962;
+	bh=+RV2FbktRp7uqlTiDsB12n09uKQ1Y76sFMGEZrnZyhU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tH+whs6MHosC5eJ5SjxVbrd+YcDWO+0doQ8xiqdI3oyEr93RlvTtjLuuu+EegHuYQ
-	 GPytLIaoWlXGgocEID1IyZnYmayJ0DPdSwgqNqXI92TztjxTdOkVsQ8HO5wAIGuRx5
-	 b5mns1oPexgN0bpI/9gtzjVobG40yRWSVhQ+T1U8=
+	b=uTezZbELTRna8+98IarOnNbza7arbIJj8IVEUBjKfk3CCXQRFuTbvqV5iw0ylo3Hh
+	 Qg6O0tVpXQPXgao5OMe9NjYL3eF4Tkkr6iuinWkH+V7xR/tOmF6diIs5nA7z9QVRTA
+	 ZhTKQQWk3GLEdTHpOiFo7xoTAeZj4IBrICHcDe1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgHTAFw (ORCPT
+        id S1728121AbgHTAF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:05:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:05:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbgHTAD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:59 -0400
+        id S1728387AbgHTAD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 817D1207FB;
-        Thu, 20 Aug 2020 00:03:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03E88214F1;
+        Thu, 20 Aug 2020 00:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881839;
-        bh=gz1Ql6wLuLKli3sxEIWh60v0JCTWQm0FhUAHNyRqBJY=;
+        s=default; t=1597881838;
+        bh=+RV2FbktRp7uqlTiDsB12n09uKQ1Y76sFMGEZrnZyhU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sQD8tiaCwcOwOJRE0IRBIFF0t7RUh+zYG3SpAjQiptkqDC2s5pRtfd0eFDx9ZLfhr
-         JhYZEp2pVLwxCRG3WwD9rKoOX+ZaGsJ6sltrAe5kblsV88sH1azlZ+KyJw3Bys4388
-         zRj+4sF5f4UW/gwj1wU8yos0/2YEsdf70UDJc3Rk=
+        b=pjnoC2CU716VcqDx6Srr7vbWfkZWndPtCiEd89rDe4o+m+6p83TQbmLiCI79KTZDE
+         VT1CSfSVmCpBxgsf5nGHAYAKkuEkcrrhWX4Ggt6LZq0/TeofhmyjrXsuTpF4pv1Tzx
+         wJEGfK8o9xD4b0on8cNAX1OZ59vM5FBsr47WHEoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhe Li <lizhe67@huawei.com>, Hou Tao <houtao1@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 07/11] jffs2: fix UAF problem
-Date:   Wed, 19 Aug 2020 20:03:44 -0400
-Message-Id: <20200820000348.215911-7-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 06/11] xfs: fix inode quota reservation checks
+Date:   Wed, 19 Aug 2020 20:03:43 -0400
+Message-Id: <20200820000348.215911-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
 References: <20200820000348.215911-1-sashal@kernel.org>
@@ -59,78 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhe Li <lizhe67@huawei.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-The log of UAF problem is listed below.
-BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
-Read of size 4 by task rm/8283
-=============================================================================
-BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
------------------------------------------------------------------------------
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
-        0xb0bba6ef
-        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
-        __slab_alloc.isra.21.constprop.25+0x2c/0x44
-        __kmalloc+0x1dc/0x370
-        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
-        jffs2_do_unlink+0x328/0x5fc [jffs2]
-        jffs2_rmdir+0x110/0x1cc [jffs2]
-        vfs_rmdir+0x180/0x268
-        do_rmdir+0x2cc/0x300
-        ret_from_syscall+0x0/0x3c
-INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
-        0x2e9173
-        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
-        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
-        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
-        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
-        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
-        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
-        kthread+0x1a8/0x1b0
-        ret_from_kernel_thread+0x5c/0x64
-Call Trace:
-[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
-[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
-[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
-[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
-[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
 
-The root cause is that we don't get "jffs2_inode_info.sem" before
-we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
-This patch add codes to get "jffs2_inode_info.sem" before we scan
-"jffs2_inode_info.dents" to slove the UAF problem.
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
 
-Signed-off-by: Zhe Li <lizhe67@huawei.com>
-Reviewed-by: Hou Tao <houtao1@huawei.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/dir.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
-index e5a6deb38e1e1..f4a5ec92f5dc7 100644
---- a/fs/jffs2/dir.c
-+++ b/fs/jffs2/dir.c
-@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
- 	int ret;
- 	uint32_t now = get_seconds();
- 
-+	mutex_lock(&f->sem);
- 	for (fd = f->dents ; fd; fd = fd->next) {
--		if (fd->ino)
-+		if (fd->ino) {
-+			mutex_unlock(&f->sem);
- 			return -ENOTEMPTY;
-+		}
- 	}
-+	mutex_unlock(&f->sem);
- 
- 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
- 			      dentry->d_name.len, f, now);
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c3d547211d160..9c42e50a5cb7e 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -669,7 +669,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
