@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FE9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E29C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59EE2204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87613206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597932048;
-	bh=3MdOltG8YQMna49ftWkPa7aprubDtN2/vcl8KDI5weg=;
+	s=default; t=1597932058;
+	bh=VNURiwepPfOHCYWSBAiSVCnkHz/Eyq1gIpHIveQMb1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EPUg9fueAUAhTWk4kB1tgsWZv6KmmcJktL4K+OxVzrDSfcM6pJAnQxU0x5LcWuerx
-	 saQ8d+XXmuedbWjO4Gs1hZZXnG1WHCMQ+PjY15strf2wf8UaESZuxGNeTtStgUfBmj
-	 E6NH2aZCgviitmd4NU+fhqFykukT2U7i7Seqh8ZQ=
+	b=uEV5CdFlw3VoTsYYUarzfwdVzDCc5/qHSQTFPhYpwPIYBm97cY94lY8b+dY8vNFP2
+	 lX5atcn2I9sOKT2H5h57OXIoM64sRx0SfxFlvDkmp/rciPWD+dcxQQnTUMs9OmiVNr
+	 zCMITy+d1orR5ovyUfHYCFtHHiXDL4hP+vVJvDjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgHTOAi (ORCPT
+        id S1727846AbgHTOAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33352 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 10:00:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727875AbgHTJ0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:21 -0400
+        id S1727050AbgHTJ0R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310962173E;
-        Thu, 20 Aug 2020 09:26:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B12CD2075E;
+        Thu, 20 Aug 2020 09:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915581;
-        bh=3MdOltG8YQMna49ftWkPa7aprubDtN2/vcl8KDI5weg=;
+        s=default; t=1597915577;
+        bh=VNURiwepPfOHCYWSBAiSVCnkHz/Eyq1gIpHIveQMb1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eMaVGDUf7arVHt/cQ5aQHelyz9vrEfUXc6HRhbipZ8AMRslJQmsfEdOhNGJ8GUWbm
-         T+CCEv+op9NjiX49eCjcD2+mGjtB/+t5PDHtJHOW1CdZcaNHwSNZFC6InQo2wme7PN
-         4uqF+KRnvh+K9SXtHFHYeYy+ibiRlvnhT5EPDogo=
+        b=HU0SPkfsizh2u0hM1Tm1vAwPdFgWJhieaUtecygOmP4WtFimBVVbwE4aXb5qqdr2L
+         a69lvBU7suEVQT5qdNXhc3GcDyhXvOnwgrep1CwTiAMzxTkEpmeixhUzR21xE6XfJ1
+         6aQxRydM/7m5vqqPrCTKbFdZ1zEfJ/tWU+gEkCzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 034/232] btrfs: fix messages after changing compression level by remount
-Date:   Thu, 20 Aug 2020 11:18:05 +0200
-Message-Id: <20200820091614.418036047@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Murphy <chris@colorremedies.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 033/232] btrfs: dont show full path of bind mounts in subvol=
+Date:   Thu, 20 Aug 2020 11:18:04 +0200
+Message-Id: <20200820091614.367868253@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -58,84 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 27942c9971cc405c60432eca9395e514a2ae9f5e upstream.
+commit 3ef3959b29c4a5bd65526ab310a1a18ae533172a upstream.
 
-Reported by Forza on IRC that remounting with compression options does
-not reflect the change in level, or at least it does not appear to do so
-according to the messages:
+Chris Murphy reported a problem where rpm ostree will bind mount a bunch
+of things for whatever voodoo it's doing.  But when it does this
+/proc/mounts shows something like
 
-  mount -o compress=zstd:1 /dev/sda /mnt
-  mount -o remount,compress=zstd:15 /mnt
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo/bar 0 0
 
-does not print the change to the level to syslog:
+Despite subvolid=256 being subvol=/foo.  This is because we're just
+spitting out the dentry of the mount point, which in the case of bind
+mounts is the source path for the mountpoint.  Instead we should spit
+out the path to the actual subvol.  Fix this by looking up the name for
+the subvolid we have mounted.  With this fix the same test looks like
+this
 
-  [   41.366060] BTRFS info (device vda): use zstd compression, level 1
-  [   41.368254] BTRFS info (device vda): disk space caching is enabled
-  [   41.390429] BTRFS info (device vda): disk space caching is enabled
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
 
-What really happens is that the message is lost but the level is actualy
-changed.
-
-There's another weird output, if compression is reset to 'no':
-
-  [   45.413776] BTRFS info (device vda): use no compression, level 4
-
-To fix that, save the previous compression level and print the message
-in that case too and use separate message for 'no' compression.
-
-CC: stable@vger.kernel.org # 4.19+
+Reported-by: Chris Murphy <chris@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/super.c |   14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+ fs/btrfs/super.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 --- a/fs/btrfs/super.c
 +++ b/fs/btrfs/super.c
-@@ -449,6 +449,7 @@ int btrfs_parse_options(struct btrfs_fs_
- 	char *compress_type;
- 	bool compress_force = false;
- 	enum btrfs_compression_type saved_compress_type;
-+	int saved_compress_level;
- 	bool saved_compress_force;
- 	int no_compress = 0;
+@@ -1312,6 +1312,7 @@ static int btrfs_show_options(struct seq
+ {
+ 	struct btrfs_fs_info *info = btrfs_sb(dentry->d_sb);
+ 	const char *compress_type;
++	const char *subvol_name;
  
-@@ -531,6 +532,7 @@ int btrfs_parse_options(struct btrfs_fs_
- 				info->compress_type : BTRFS_COMPRESS_NONE;
- 			saved_compress_force =
- 				btrfs_test_opt(info, FORCE_COMPRESS);
-+			saved_compress_level = info->compress_level;
- 			if (token == Opt_compress ||
- 			    token == Opt_compress_force ||
- 			    strncmp(args[0].from, "zlib", 4) == 0) {
-@@ -575,6 +577,8 @@ int btrfs_parse_options(struct btrfs_fs_
- 				no_compress = 0;
- 			} else if (strncmp(args[0].from, "no", 2) == 0) {
- 				compress_type = "no";
-+				info->compress_level = 0;
-+				info->compress_type = 0;
- 				btrfs_clear_opt(info->mount_opt, COMPRESS);
- 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
- 				compress_force = false;
-@@ -595,11 +599,11 @@ int btrfs_parse_options(struct btrfs_fs_
- 				 */
- 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
- 			}
--			if ((btrfs_test_opt(info, COMPRESS) &&
--			     (info->compress_type != saved_compress_type ||
--			      compress_force != saved_compress_force)) ||
--			    (!btrfs_test_opt(info, COMPRESS) &&
--			     no_compress == 1)) {
-+			if (no_compress == 1) {
-+				btrfs_info(info, "use no compression");
-+			} else if ((info->compress_type != saved_compress_type) ||
-+				   (compress_force != saved_compress_force) ||
-+				   (info->compress_level != saved_compress_level)) {
- 				btrfs_info(info, "%s %s compression, level %d",
- 					   (compress_force) ? "force" : "use",
- 					   compress_type, info->compress_level);
+ 	if (btrfs_test_opt(info, DEGRADED))
+ 		seq_puts(seq, ",degraded");
+@@ -1398,8 +1399,13 @@ static int btrfs_show_options(struct seq
+ 		seq_puts(seq, ",ref_verify");
+ 	seq_printf(seq, ",subvolid=%llu",
+ 		  BTRFS_I(d_inode(dentry))->root->root_key.objectid);
+-	seq_puts(seq, ",subvol=");
+-	seq_dentry(seq, dentry, " \t\n\\");
++	subvol_name = btrfs_get_subvol_name_from_objectid(info,
++			BTRFS_I(d_inode(dentry))->root->root_key.objectid);
++	if (!IS_ERR(subvol_name)) {
++		seq_puts(seq, ",subvol=");
++		seq_escape(seq, subvol_name, " \t\n\\");
++		kfree(subvol_name);
++	}
+ 	return 0;
+ }
+ 
 
 
