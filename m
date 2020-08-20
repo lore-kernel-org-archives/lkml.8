@@ -2,78 +2,164 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86248C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF044C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0F0207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B3Kb6GTH"
+	by mail.kernel.org (Postfix) with ESMTP id C0E9F207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:39:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597927172;
+	bh=bHJHwNmJXUROGFe8pMHB6dazDbjUUBkWXzGhIAmLMSI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NGVHNyV6n5a031HEVYBHWlUDp8mFggIRAdyQHuM5qhqtg7udZfSlNcSfEjg/fRRJ2
+	 DCxOO6p4VOpXq+Ez8nN56VcTRb3hFqmOf5PlJhGDfzWljfHp/rpHdiW6ufr+iVHPDf
+	 I9XfhR/2YPp7X0v0dhSiQH3tJpulElEue0Z2GJ3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgHTMjV (ORCPT
+        id S1729451AbgHTMjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729551AbgHTMjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:39:13 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694F8C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 05:39:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=H65NUm+bQ5sPpf/4kMedwil6nQoa7FfLin0/1Ntxdok=; b=B3Kb6GTHEe538ZTHkDlkzt37Lr
-        f1lPcYcQjCiup/UNSHgxYSiEeSUTHblkbJNVQqhkHKcEdPIY3qYYNLmg5uXHrEy1YfLaw2EGyr1vk
-        Y/0eDt2eSx6ponu2AfnvdEA59zRfS2bpdstl1OPD6dAtfMPJR7zURV+pEhBpuXpjMTeZn2SslEbWW
-        yV3tjiL3Oc6y5/KB2YGfm1IFaiEFdx05/sN8FfWK1W60qmu39I+V7P7z5wujuBB5tzf0B0EotSa+M
-        lIO44j+NJCeOWdK7R0sJJk8h9kmUb4XxIH1ZNZWUeH9TR4ggRnSKmETFkt0+YThVpXDIhEj6+RK30
-        /eO76N+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8jqP-0007W7-F2; Thu, 20 Aug 2020 12:39:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 20 Aug 2020 08:39:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729395AbgHTJrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C791305B23;
-        Thu, 20 Aug 2020 14:38:59 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4CF942BE72C5B; Thu, 20 Aug 2020 14:38:59 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 14:38:59 +0200
-From:   peterz@infradead.org
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will@kernel.org>, tglx@linutronix.de,
-        kent.overstreet@gmail.com
-Subject: Re: [PATCH] lockdep: Do no validate wait context for novalidate class
-Message-ID: <20200820123859.GS2674@hirez.programming.kicks-ass.net>
-References: <20200629201529.1017485-1-bigeasy@linutronix.de>
- <20200820114036.GQ2674@hirez.programming.kicks-ass.net>
- <20200820114348.giwwlbihjwpl4kxz@linutronix.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9BA22B43;
+        Thu, 20 Aug 2020 09:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916827;
+        bh=bHJHwNmJXUROGFe8pMHB6dazDbjUUBkWXzGhIAmLMSI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ueqXuxmXWENoEUD/P4vioIfyPyKAbfUZkAj/ndZuqlOM91xp3zF3WUefkEE7bLhfz
+         3MVFczUHwNpzi08X5c4GX9kLLe1LnYRs7BttOlv4nvMpoLGvLSNNZpNIGjmNrw9Gx8
+         MaDqm0uZeL4uqkHggvVKQIPic4XcoQIgLgxQQBZE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        dann frazier <dann.frazier@canonical.com>
+Subject: [PATCH 5.4 061/152] tracing: Move pipe reference to trace array instead of current_tracer
+Date:   Thu, 20 Aug 2020 11:20:28 +0200
+Message-Id: <20200820091556.846156608@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820114348.giwwlbihjwpl4kxz@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 01:43:48PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-08-20 13:40:36 [+0200], peterz@infradead.org wrote:
-> > Anyway, all 3 users should have the same wait context, so where is the
-> > actual problem?
-> 
-> I have one in RT which is a per-CPU spinlock within local_bh_disable()
-> to act as a per-CPU BLK like mainline.
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Then can we get to see that code and an explanation for what the problem
-is and why it is still correct?
+commit 7ef282e05132d56b6f6b71e3873f317664bea78b upstream.
 
-Because as is, this patch isn't needed.
+If a process has the trace_pipe open on a trace_array, the current tracer
+for that trace array should not be changed. This was original enforced by a
+global lock, but when instances were introduced, it was moved to the
+current_trace. But this structure is shared by all instances, and a
+trace_pipe is for a single instance. There's no reason that a process that
+has trace_pipe open on one instance should prevent another instance from
+changing its current tracer. Move the reference counter to the trace_array
+instead.
+
+This is marked as "Fixes" but is more of a clean up than a true fix.
+Backport if you want, but its not critical.
+
+Fixes: cf6ab6d9143b1 ("tracing: Add ref count to tracer for when they are being read by pipe")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+[Resolved conflict in __remove_instance()]
+Signed-off-by: dann frazier <dann.frazier@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ kernel/trace/trace.c |   12 ++++++------
+ kernel/trace/trace.h |    2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
+
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5686,7 +5686,7 @@ static int tracing_set_tracer(struct tra
+ 	}
+ 
+ 	/* If trace pipe files are being read, we can't change the tracer */
+-	if (tr->current_trace->ref) {
++	if (tr->trace_ref) {
+ 		ret = -EBUSY;
+ 		goto out;
+ 	}
+@@ -5902,7 +5902,7 @@ static int tracing_open_pipe(struct inod
+ 
+ 	nonseekable_open(inode, filp);
+ 
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ out:
+ 	mutex_unlock(&trace_types_lock);
+ 	return ret;
+@@ -5921,7 +5921,7 @@ static int tracing_release_pipe(struct i
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	tr->current_trace->ref--;
++	tr->trace_ref--;
+ 
+ 	if (iter->trace->pipe_close)
+ 		iter->trace->pipe_close(iter);
+@@ -7230,7 +7230,7 @@ static int tracing_buffers_open(struct i
+ 
+ 	filp->private_data = info;
+ 
+-	tr->current_trace->ref++;
++	tr->trace_ref++;
+ 
+ 	mutex_unlock(&trace_types_lock);
+ 
+@@ -7331,7 +7331,7 @@ static int tracing_buffers_release(struc
+ 
+ 	mutex_lock(&trace_types_lock);
+ 
+-	iter->tr->current_trace->ref--;
++	iter->tr->trace_ref--;
+ 
+ 	__trace_array_put(iter->tr);
+ 
+@@ -8470,7 +8470,7 @@ static int __remove_instance(struct trac
+ {
+ 	int i;
+ 
+-	if (tr->ref || (tr->current_trace && tr->current_trace->ref))
++	if (tr->ref || (tr->current_trace && tr->trace_ref))
+ 		return -EBUSY;
+ 
+ 	list_del(&tr->list);
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -309,6 +309,7 @@ struct trace_array {
+ 	struct trace_event_file *trace_marker_file;
+ 	cpumask_var_t		tracing_cpumask; /* only trace on set CPUs */
+ 	int			ref;
++	int			trace_ref;
+ #ifdef CONFIG_FUNCTION_TRACER
+ 	struct ftrace_ops	*ops;
+ 	struct trace_pid_list	__rcu *function_pids;
+@@ -498,7 +499,6 @@ struct tracer {
+ 	struct tracer		*next;
+ 	struct tracer_flags	*flags;
+ 	int			enabled;
+-	int			ref;
+ 	bool			print_max;
+ 	bool			allow_instances;
+ #ifdef CONFIG_TRACER_MAX_TRACE
+
+
