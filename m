@@ -2,53 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9278C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 480E9C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8852B20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25D4A20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918758;
-	bh=YKOLualWO9C4qYdvL7Xb+bTQPwiEtuBFqCinjF8SZNY=;
+	s=default; t=1597918761;
+	bh=lu8YdjRAoO37AzoS6BKU+m9uMfPbro2rrdOyBq4AXxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PkJjQJuxSjCez2YQpSSB+h7TfAzfI3Vim9Q596U8HrGNfpLtwKv4SqHNk8IBNUAhc
-	 LQC3PCqWrHLrRwIou+TXdlGULWSHVvI9blljQKblEHifFytUw7hRnLCT3ZiGV9Z99d
-	 6EjJCPu5SsffiLjSabmpLX8g8MWsC8Qc+CcnDfDk=
+	b=LwfMXnJYlqFmPPHphlpjiGlROcdIQ8Gw+JHdZjRgbNnwm8PCAPdI6Ds2Yy2dWUuc5
+	 fZ9I0kO1r3t7n6i/23atwJD4UPCuhj+Y4SKrSJ/nfz+L5RNW/ZbSAMTQw+xVGGSB87
+	 13PdQWjIQ3/C0e3lQiHbuvYi3bM4VyepaCL9W7hs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbgHTKTQ (ORCPT
+        id S1730310AbgHTKTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40230 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:19:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731154AbgHTKSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:18:21 -0400
+        id S1731390AbgHTKSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B83020738;
-        Thu, 20 Aug 2020 10:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A909D2078D;
+        Thu, 20 Aug 2020 10:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918701;
-        bh=YKOLualWO9C4qYdvL7Xb+bTQPwiEtuBFqCinjF8SZNY=;
+        s=default; t=1597918719;
+        bh=lu8YdjRAoO37AzoS6BKU+m9uMfPbro2rrdOyBq4AXxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G9NX+Q4tlYUjiMqHrOx7wD3E4roQlKmRVimUDi6Fm/SHhyHQjJurGmYCfzisHHTec
-         fcBoB3+O8YW149q1AhbtzoGMqDbjB9eh5Dru1EGtW/CYNW3b4p8NTo6MCR+p0tpOPc
-         djcbIcFMr3mXhwa1oBD55DrVssUf3ljCus5EUwOA=
+        b=YKB1T7KXJPRMEOXM7N7bALIpxx7l/OVs4K0gg0GHLG5HoDKTjg7WimbMhYIWS5t8H
+         H/rQPPyryB5ADhVxx26gOUZ2PzskZbbPKYChrmn0jK753W6sjsSuCZyArtDbGVfxrJ
+         i04I4pnqBf+iHDnp0esKtuZQKha0jr9lJoGcUu5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
-        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 034/149] ALSA: seq: oss: Serialize ioctls
-Date:   Thu, 20 Aug 2020 11:21:51 +0200
-Message-Id: <20200820092127.381677453@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Machado <luis.machado@linaro.org>,
+        Will Deacon <will@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 012/149] ARM: 8986/1: hw_breakpoint: Dont invoke overflow handler on uaccess watchpoints
+Date:   Thu, 20 Aug 2020 11:21:29 +0200
+Message-Id: <20200820092126.284846663@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,51 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Will Deacon <will@kernel.org>
 
-commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
+[ Upstream commit eec13b42d41b0f3339dcf0c4da43734427c68620 ]
 
-Some ioctls via OSS sequencer API may race and lead to UAF when the
-port create and delete are performed concurrently, as spotted by a
-couple of syzkaller cases.  This patch is an attempt to address it by
-serializing the ioctls with the existing register_mutex.
+Unprivileged memory accesses generated by the so-called "translated"
+instructions (e.g. LDRT) in kernel mode can cause user watchpoints to fire
+unexpectedly. In such cases, the hw_breakpoint logic will invoke the user
+overflow handler which will typically raise a SIGTRAP back to the current
+task. This is futile when returning back to the kernel because (a) the
+signal won't have been delivered and (b) userspace can't handle the thing
+anyway.
 
-Basically OSS sequencer API is an obsoleted interface and was designed
-without much consideration of the concurrency.  There are very few
-applications with it, and the concurrent performance isn't asked,
-hence this "big hammer" approach should be good enough.
+Avoid invoking the user overflow handler for watchpoints triggered by
+kernel uaccess routines, and instead single-step over the faulting
+instruction as we would if no overflow handler had been installed.
 
-Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
-Reported-by: syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com
-Suggested-by: Hillf Danton <hdanton@sina.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200804185815.2453-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f81ef4a920c8 ("ARM: 6356/1: hw-breakpoint: add ARM backend for the hw-breakpoint framework")
+Reported-by: Luis Machado <luis.machado@linaro.org>
+Tested-by: Luis Machado <luis.machado@linaro.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/oss/seq_oss.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/arm/kernel/hw_breakpoint.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
---- a/sound/core/seq/oss/seq_oss.c
-+++ b/sound/core/seq/oss/seq_oss.c
-@@ -180,10 +180,16 @@ static long
- odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct seq_oss_devinfo *dp;
-+	long rc;
-+
- 	dp = file->private_data;
- 	if (snd_BUG_ON(!dp))
- 		return -ENXIO;
--	return snd_seq_oss_ioctl(dp, cmd, arg);
-+
-+	mutex_lock(&register_mutex);
-+	rc = snd_seq_oss_ioctl(dp, cmd, arg);
-+	mutex_unlock(&register_mutex);
-+	return rc;
+diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
+index abcbea1ae30ba..78c6be1b27145 100644
+--- a/arch/arm/kernel/hw_breakpoint.c
++++ b/arch/arm/kernel/hw_breakpoint.c
+@@ -688,6 +688,12 @@ static void disable_single_step(struct perf_event *bp)
+ 	arch_install_hw_breakpoint(bp);
  }
  
- #ifdef CONFIG_COMPAT
++static int watchpoint_fault_on_uaccess(struct pt_regs *regs,
++				       struct arch_hw_breakpoint *info)
++{
++	return !user_mode(regs) && info->ctrl.privilege == ARM_BREAKPOINT_USER;
++}
++
+ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+ 			       struct pt_regs *regs)
+ {
+@@ -747,16 +753,27 @@ static void watchpoint_handler(unsigned long addr, unsigned int fsr,
+ 		}
+ 
+ 		pr_debug("watchpoint fired: address = 0x%x\n", info->trigger);
++
++		/*
++		 * If we triggered a user watchpoint from a uaccess routine,
++		 * then handle the stepping ourselves since userspace really
++		 * can't help us with this.
++		 */
++		if (watchpoint_fault_on_uaccess(regs, info))
++			goto step;
++
+ 		perf_bp_event(wp, regs);
+ 
+ 		/*
+-		 * If no overflow handler is present, insert a temporary
+-		 * mismatch breakpoint so we can single-step over the
+-		 * watchpoint trigger.
++		 * Defer stepping to the overflow handler if one is installed.
++		 * Otherwise, insert a temporary mismatch breakpoint so that
++		 * we can single-step over the watchpoint trigger.
+ 		 */
+-		if (!wp->overflow_handler)
+-			enable_single_step(wp, instruction_pointer(regs));
++		if (wp->overflow_handler)
++			goto unlock;
+ 
++step:
++		enable_single_step(wp, instruction_pointer(regs));
+ unlock:
+ 		rcu_read_unlock();
+ 	}
+-- 
+2.25.1
+
 
 
