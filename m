@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC9BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0B2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82E37207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C517207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927214;
-	bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
+	s=default; t=1597927222;
+	bh=nDS9YM9aJxkFu5ZzfkTqvZdFAxXbEzlO2tlYmVHlIJo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z3e3j0chLzPV2I0gwdcisPiRPU1LAytkRRg5nDBWAQC46DaHyxJAuqOnZhuFy4n2O
-	 7VrqxJZNnOGFJsPZsp2dtyMiKkoc9DNRRfGKNv1xcYUG1H9avtGX6U1AdaTaZTC2dB
-	 vZhERmgmpxVMVkcd/pkHyB5lC2ymGxJTXDfRSI58=
+	b=kTW5Ha6NFfv0UNDBD19bG1t5VQ1rglzTdjGLiqUhkokeIMw3S33+sJgmb7xN8l3GV
+	 gUVks6lRQP+ByleCBzyT5bNnNAOeVVs8+wqA2z1UN2fe5qfu+EI+L836V0ss56SQVa
+	 jZH/0zg1SGseHfzM47JqnDQTB3zNrblCknjiIgJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726868AbgHTMj3 (ORCPT
+        id S1729542AbgHTMkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:39:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50506 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:40:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbgHTJrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:47:10 -0400
+        id S1729384AbgHTJrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8D522CAF;
-        Thu, 20 Aug 2020 09:47:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F29782173E;
+        Thu, 20 Aug 2020 09:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916830;
-        bh=SW4+g7OfKA6Arr8ceXscYLl9fVSNED6ekhTMBBbbgcE=;
+        s=default; t=1597916821;
+        bh=nDS9YM9aJxkFu5ZzfkTqvZdFAxXbEzlO2tlYmVHlIJo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eQweyDRAwpnyJaVkM5KC3gu31WdpWhKvGYTquRkYlIyso+URljLW7QUbnLzebhbR4
-         mtsbrt+y/tmZBMdXMJpZWTrGHz9MYwF44Uage1oPiHe7qelN+HRIm5ZEiu2A7J5hrs
-         zvYaYVaKIe3TIYI3pZOjP65K3HiOOiRoAMnBrOpA=
+        b=SE9wXRPTO27aesx1js2jlZyefnqIGIkN+LAds6BVRS/Z5Ot7vT7hzvNndnazFN11B
+         wPOHPmmIFaDPP1JblaKOExD71dq2uyOwNLLVodSsnjuMFQ/fMKFnrpHLJLBIJqbdG5
+         FvNiW7GokOgO4Kw3Qr8T2BIjerKxi744ucfMATto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
-        BingJing Chang <bingjingc@synology.com>,
-        Danny Shih <dannyshih@synology.com>,
-        ChangSyun Peng <allenpeng@synology.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 5.4 044/152] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
-Date:   Thu, 20 Aug 2020 11:20:11 +0200
-Message-Id: <20200820091555.925358506@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hao <haokexin@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 059/152] tracing/hwlat: Honor the tracing_cpumask
+Date:   Thu, 20 Aug 2020 11:20:26 +0200
+Message-Id: <20200820091556.747022048@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -62,55 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChangSyun Peng <allenpeng@synology.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
+commit 96b4833b6827a62c295b149213c68b559514c929 upstream.
 
-In degraded raid5, we need to read parity to do reconstruct-write when
-data disks fail. However, we can not read parity from
-handle_stripe_dirtying() in force reconstruct-write mode.
+In calculation of the cpu mask for the hwlat kernel thread, the wrong
+cpu mask is used instead of the tracing_cpumask, this causes the
+tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
 
-Reproducible Steps:
+Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
 
-1. Create degraded raid5
-mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
-2. Set rmw_level to 0
-echo 0 > /sys/block/md2/md/rmw_level
-3. IO to raid5
-
-Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
-the parity in this situation.
-
-Cc: <stable@vger.kernel.org> # v4.4+
-Reviewed-by: Alex Wu <alexwu@synology.com>
-Reviewed-by: BingJing Chang <bingjingc@synology.com>
-Reviewed-by: Danny Shih <dannyshih@synology.com>
-Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/trace_hwlat.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3604,6 +3604,7 @@ static int need_this_block(struct stripe
- 	 * is missing/faulty, then we need to read everything we can.
- 	 */
- 	if (sh->raid_conf->level != 6 &&
-+	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
- 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
- 		/* reconstruct-write isn't being forced */
- 		return 0;
-@@ -4839,7 +4840,7 @@ static void handle_stripe(struct stripe_
- 	 * or to load a block that is being partially written.
- 	 */
- 	if (s.to_read || s.non_overwrite
--	    || (conf->level == 6 && s.to_write && s.failed)
-+	    || (s.to_write && s.failed)
- 	    || (s.syncing && (s.uptodate + s.compute < disks))
- 	    || s.replacing
- 	    || s.expanding)
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -270,6 +270,7 @@ static bool disable_migrate;
+ static void move_to_next_cpu(void)
+ {
+ 	struct cpumask *current_mask = &save_cpumask;
++	struct trace_array *tr = hwlat_trace;
+ 	int next_cpu;
+ 
+ 	if (disable_migrate)
+@@ -283,7 +284,7 @@ static void move_to_next_cpu(void)
+ 		goto disable;
+ 
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
+ 	put_online_cpus();
+ 
+@@ -360,7 +361,7 @@ static int start_kthread(struct trace_ar
+ 	/* Just pick the first CPU on first iteration */
+ 	current_mask = &save_cpumask;
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	put_online_cpus();
+ 	next_cpu = cpumask_first(current_mask);
+ 
 
 
