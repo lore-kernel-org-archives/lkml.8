@@ -2,58 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1824AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB8512075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB39E20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918600;
-	bh=6dI0CNvOKwmuS/gIjbOsji8rI6oY/jW+DitWteIa12w=;
+	s=default; t=1597918604;
+	bh=GKHyCbLTdZXm6mCYdf9FI4u3uE2H1zpw2fG7pVGW3NM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UTQZO01nmAymwMTxaUPQFk1OBTVtZq2HMvl1jVm0RYw2c/TowJmc60kN51Kj8I7zU
-	 MrKCwcL7egXjwLUKmcbSEovVLrUDibQ/Hcf38b97NtWCNq4jEmYvwCOdw0LBfdbuBY
-	 xGr+yRO8ZOqXlju1XZFeHq1/ENXW8gQUinzHo0zI=
+	b=a1iVUwJzPAt/RuKjlASaaLDVdY7MeCPOngj3rmrG4QNfBYQN5NyAmtAUGGJhw2zpy
+	 XnTavtoTSP6AeetolDH5yWVSMjZyBAnxV73ZaR1t0gE3Nx2OUEP90vctAM46EI/joy
+	 wZMoPhXYgwTLVKUWoh1IAz2gAV7B3p7KvTM8JgAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbgHTKQj (ORCPT
+        id S1730372AbgHTKQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:16:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:16:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728498AbgHTKQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:27 -0400
+        id S1730950AbgHTKQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3B2C20885;
-        Thu, 20 Aug 2020 10:16:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5090C20738;
+        Thu, 20 Aug 2020 10:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918586;
-        bh=6dI0CNvOKwmuS/gIjbOsji8rI6oY/jW+DitWteIa12w=;
+        s=default; t=1597918588;
+        bh=GKHyCbLTdZXm6mCYdf9FI4u3uE2H1zpw2fG7pVGW3NM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NEPKq3OCHX5yBxQ9NDa1ZibJQIHJKipSO/fpUZwZVJsJS+6br64t9rIy/YJg7F3CH
-         gp0XI5bTPKwOHhmQicqKsOe/m6lJzWEM9aVDjARYqt0sfHHTwMYJGqnQ1dy6YZYiFA
-         7MRwrQPPsui/Ux+Va5wkw7i9QYxN3B3VeHwhZOk4=
+        b=JpFVix+Znl37mklt/6Pbx8fyzMONXRul2q200oZ3u3VsLoZgvmn8XfMl2vd39F43T
+         0jG7Su3m6pHvGPLRULAAdXykzrplxbVpXO2aOsgeg0HWCrWGVyRT5yE97yCB4ntKpF
+         0HQQ9eul78wbOPRPdtFkIfD9iiDgZP4+x8pv0rF4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>,
-        Jun Piao <piaojun@huawei.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 184/228] ocfs2: change slot number type s16 to u16
-Date:   Thu, 20 Aug 2020 11:22:39 +0200
-Message-Id: <20200820091616.770989662@linuxfoundation.org>
+        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 217/228] ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
+Date:   Thu, 20 Aug 2020 11:23:12 +0200
+Message-Id: <20200820091618.357427131@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -66,87 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
+[ Upstream commit 5a25de6df789cc805a9b8ba7ab5deef5067af47e ]
 
-Dan Carpenter reported the following static checker warning.
+Freeing chip on error may lead to an Oops at the next time
+the system goes to resume. Fix this by removing all
+snd_echo_free() calls on error.
 
-	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
-	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
-	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
-
-That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
-never negative, so change s16 to u16.
-
-Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Reviewed-by: Gang He <ghe@suse.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Link: https://lore.kernel.org/r/20200813074632.17022-1-dinghao.liu@zju.edu.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ocfs2.h    |    4 ++--
- fs/ocfs2/suballoc.c |    4 ++--
- fs/ocfs2/super.c    |    4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ sound/pci/echoaudio/echoaudio.c | 2 --
+ 1 file changed, 2 deletions(-)
 
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -336,8 +336,8 @@ struct ocfs2_super
- 	spinlock_t osb_lock;
- 	u32 s_next_generation;
- 	unsigned long osb_flags;
--	s16 s_inode_steal_slot;
--	s16 s_meta_steal_slot;
-+	u16 s_inode_steal_slot;
-+	u16 s_meta_steal_slot;
- 	atomic_t s_num_inodes_stolen;
- 	atomic_t s_num_meta_stolen;
+diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
+index e1f0bcd45c378..b58a098a7270d 100644
+--- a/sound/pci/echoaudio/echoaudio.c
++++ b/sound/pci/echoaudio/echoaudio.c
+@@ -2215,7 +2215,6 @@ static int snd_echo_resume(struct device *dev)
+ 	if (err < 0) {
+ 		kfree(commpage_bak);
+ 		dev_err(dev, "resume init_hw err=%d\n", err);
+-		snd_echo_free(chip);
+ 		return err;
+ 	}
  
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -895,9 +895,9 @@ static void __ocfs2_set_steal_slot(struc
- {
- 	spin_lock(&osb->osb_lock);
- 	if (type == INODE_ALLOC_SYSTEM_INODE)
--		osb->s_inode_steal_slot = slot;
-+		osb->s_inode_steal_slot = (u16)slot;
- 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
--		osb->s_meta_steal_slot = slot;
-+		osb->s_meta_steal_slot = (u16)slot;
- 	spin_unlock(&osb->osb_lock);
- }
- 
---- a/fs/ocfs2/super.c
-+++ b/fs/ocfs2/super.c
-@@ -92,7 +92,7 @@ struct mount_options
- 	unsigned long	commit_interval;
- 	unsigned long	mount_opt;
- 	unsigned int	atime_quantum;
--	signed short	slot;
-+	unsigned short	slot;
- 	int		localalloc_opt;
- 	unsigned int	resv_level;
- 	int		dir_resv_level;
-@@ -1369,7 +1369,7 @@ static int ocfs2_parse_options(struct su
- 				goto bail;
- 			}
- 			if (option)
--				mopt->slot = (s16)option;
-+				mopt->slot = (u16)option;
- 			break;
- 		case Opt_commit:
- 			if (match_int(&args[0], &option)) {
+@@ -2242,7 +2241,6 @@ static int snd_echo_resume(struct device *dev)
+ 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
+ 			KBUILD_MODNAME, chip)) {
+ 		dev_err(chip->card->dev, "cannot grab irq\n");
+-		snd_echo_free(chip);
+ 		return -EBUSY;
+ 	}
+ 	chip->irq = pci->irq;
+-- 
+2.25.1
+
 
 
