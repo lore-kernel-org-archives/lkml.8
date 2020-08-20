@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461C1C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6155C433E3
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1612320658
+	by mail.kernel.org (Postfix) with ESMTP id B3A1B20658
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597919539;
-	bh=L0itbpPiO4MRlbECPSP6dIepO+SW5mw2otITVqoXJVM=;
+	bh=De2zk7qjFmsbhkJJUIbIDk8nhAWIFH4lcx20Cc9CYWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=omX1wTMgiyb5dwq76bgH37703BWdpqogIzF/HqvUPF9JeK6BhjBVECVkBCcbxYK08
-	 WNG/t2PPkJShGeQ2gRmX3IaGwX7a86aA5Q0YTdEtfK9AThGWqocA5tgDX83yBkO95b
-	 yCS+pCdjSum9ip28H19Ftj8hJbSE/JExcjZJlXyE=
+	b=L7tsl+RKzHZu2MGPHJfMXoZ9XUE1pL6QahwCWRiRXPyKUt5SI27S6gsUm8SYLnaGm
+	 hlhL+9A7gBPM5nVLlFgWXQunrsqd2z/jO2vBT3LfqwB7tQqR5g2FfE1ivlHgJVkQ04
+	 6tr5Y+TRzS28ypQT8KiPwyGO+uiYXCZA2zY47/nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731081AbgHTKcR (ORCPT
+        id S1731675AbgHTKcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:32:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbgHTKUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:18 -0400
+        id S1728578AbgHTKUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0417206DA;
-        Thu, 20 Aug 2020 10:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC5CF2067C;
+        Thu, 20 Aug 2020 10:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918818;
-        bh=L0itbpPiO4MRlbECPSP6dIepO+SW5mw2otITVqoXJVM=;
+        s=default; t=1597918815;
+        bh=De2zk7qjFmsbhkJJUIbIDk8nhAWIFH4lcx20Cc9CYWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IMnlHN8vTL2sTi78KDIJURkPF5IhsP2ZYPCnj7Y6gG7TiSzFmqfjToH/R6kh/GFRG
-         CWLeyJZfWyYw6uJIABIsc55vhy2/2kLNnCHd6FCeCGJB1MOL+xv2Gg4RgvLD0Qtr6l
-         CbXzqG143aimoRi2iXyTj1npcNiY+VRTJ3K327pM=
+        b=I+C/v0X57C5kxIoS4TT8c4mCYUijyQIskFCqEG04ihOujka7Wceq4C63IpierEoMe
+         CQVlAcMuNIOGjTd2YmqGn3dRO1dRqBdkfb45xRcHYK55EFNtLE8RH42YJv54y8JLey
+         3OIxZgIivXWAsF0nS9PRgbU/+FJNaiMKZjr4jdHc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Teddy Wang <teddy.wang@siliconmotion.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 078/149] video: fbdev: sm712fb: fix an issue about iounmap for a wrong address
-Date:   Thu, 20 Aug 2020 11:22:35 +0200
-Message-Id: <20200820092129.506302936@linuxfoundation.org>
+Subject: [PATCH 4.4 069/149] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
+Date:   Thu, 20 Aug 2020 11:22:26 +0200
+Message-Id: <20200820092129.076571262@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -64,40 +62,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-[ Upstream commit 98bd4f72988646c35569e1e838c0ab80d06c77f6 ]
+[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
 
-the sfb->fb->screen_base is not save the value get by iounmap() when
-the chip id is 0x720. so iounmap() for address sfb->fb->screen_base
-is not right.
+A large process running on a heavily loaded system can encounter the
+following RCU CPU stall warning:
 
-Fixes: 1461d6672864854 ("staging: sm7xxfb: merge sm712fb with fbdev")
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-Cc: Teddy Wang <teddy.wang@siliconmotion.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200422160719.27763-1-zhengdejin5@gmail.com
+  rcu: INFO: rcu_sched self-detected stall on CPU
+  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
+  	(t=21013 jiffies g=1005461 q=132576)
+  NMI backtrace for cpu 3
+  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
+  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x60
+   nmi_cpu_backtrace.cold.3+0x13/0x50
+   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x99/0xc7
+   rcu_sched_clock_irq.cold.87+0x1aa/0x397
+   ? tick_sched_do_timer+0x60/0x60
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x37/0x70
+   __hrtimer_run_queues+0xfe/0x270
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x5e/0x120
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:kmem_cache_free+0x223/0x300
+  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
+  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
+  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
+  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
+  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
+  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
+   ? remove_vma+0x4f/0x60
+   remove_vma+0x4f/0x60
+   exit_mmap+0xd6/0x160
+   mmput+0x4a/0x110
+   do_exit+0x278/0xae0
+   ? syscall_trace_enter+0x1d3/0x2b0
+   ? handle_mm_fault+0xaa/0x1c0
+   do_group_exit+0x3a/0xa0
+   __x64_sys_exit_group+0x14/0x20
+   do_syscall_64+0x42/0x100
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
+for a very long time given a large process.  This commit therefore adds
+a cond_resched() to this loop, providing RCU any needed quiescent states.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: <linux-mm@kvack.org>
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/sm712fb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ mm/mmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/video/fbdev/sm712fb.c b/drivers/video/fbdev/sm712fb.c
-index 589ac7e754130..c8ee58e0ae3ec 100644
---- a/drivers/video/fbdev/sm712fb.c
-+++ b/drivers/video/fbdev/sm712fb.c
-@@ -1428,6 +1428,8 @@ static int smtc_map_smem(struct smtcfb_info *sfb,
- static void smtc_unmap_smem(struct smtcfb_info *sfb)
- {
- 	if (sfb && sfb->fb->screen_base) {
-+		if (sfb->chip_id == 0x720)
-+			sfb->fb->screen_base -= 0x00200000;
- 		iounmap(sfb->fb->screen_base);
- 		sfb->fb->screen_base = NULL;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index a24e424770012..135cccce41f88 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -2954,6 +2954,7 @@ void exit_mmap(struct mm_struct *mm)
+ 		if (vma->vm_flags & VM_ACCOUNT)
+ 			nr_accounted += vma_pages(vma);
+ 		vma = remove_vma(vma);
++		cond_resched();
  	}
+ 	vm_unacct_memory(nr_accounted);
+ }
 -- 
 2.25.1
 
