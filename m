@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3CDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7ECF20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77272072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930275;
-	bh=aTkfAVIahRMmhZXljbsWvSDq4bZNkxIkqqnsC9HJsng=;
+	s=default; t=1597930285;
+	bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e+teJ3DEFLNEIJK1oS8P5/9SEVp6Flkakiyg2oKLXxDnEhpBlUUIvRc7jw0IfBFcL
-	 OJvo/++coi1GK+JtKQ+Xn6tRdyTa9+snhl/KGCwOPysOeUlZC1bGnSc24mArBnGLkp
-	 AHwTaGI2y0SvZeYVqNbklYd/XJoguPMy3L8qFYfw=
+	b=Z78fdrJSofK7bZmv9z3RA5tAarhWoFgMLkJMR0kzjDnueYeFrerlz0KxdVrUuHt70
+	 Xu3vjnXYwqDyKKHjSDao9hMw19lPRWmaJY7TmNmkTOo5ZfmNSPRLqky3ajvID+xOcz
+	 EZIMpzRS+7E4jMkidOPjWiykcJVf053e5Coo42zI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgHTNbO (ORCPT
+        id S1728404AbgHTNbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45210 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbgHTJcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:32:45 -0400
+        id S1728325AbgHTJck (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:32:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B8F522B3F;
-        Thu, 20 Aug 2020 09:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EFFD22B49;
+        Thu, 20 Aug 2020 09:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915965;
-        bh=aTkfAVIahRMmhZXljbsWvSDq4bZNkxIkqqnsC9HJsng=;
+        s=default; t=1597915960;
+        bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XsHq/N6IjQDyobib+0S/OuiriVT6Tf8rwPH5pPhCxV3D8UqWmOVpaDMLjhRKzKYhn
-         9sjEqllxSnb6vgXfSxwSEJVolPyATHrvwjx1sWK5t34vSO16XBLAB0+uOUknmnNkmk
-         TZROIg6l8z6P1KM9UIPasW/xVBayFVeWqvP2CXOE=
+        b=E7WC2qozEZbbECcjCSd5JMPA5RuQQ0TRONm8QhrnNJUneA42MGSeJzCFYEikzpqkv
+         IsjydxV7u46LfUKMquTW3ciJ0xxSRLXRTnZngWTAjF2TlKnz6zkTVwW00PwORRpgIK
+         YiKFhL2KefWo17YvGs5hgqM+GYFvN1q7D7qWUpUg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 197/232] vdpa: Fix pointer math bug in vdpasim_get_config()
-Date:   Thu, 20 Aug 2020 11:20:48 +0200
-Message-Id: <20200820091622.334300890@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 155/232] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
+Date:   Thu, 20 Aug 2020 11:20:06 +0200
+Message-Id: <20200820091620.319305365@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,37 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit cf16fe9243bfa2863491026fc727618c7c593c84 ]
+[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
 
-If "offset" is non-zero then we end up copying from beyond the end of
-the config because of pointer math.  We can fix this by casting the
-struct to a u8 pointer.
+It is possible for the call to omap_iommu_dump_ctx to return
+a negative error number, so check for the failure and return
+the error number rather than pass the negative value to
+simple_read_from_buffer.
 
-Fixes: 2c53d0f64c06 ("vdpasim: vDPA device simulator")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200406144552.GF68494@mwanda
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
+Addresses-Coverity: ("Improper use of negative value")
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/omap-iommu-debug.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 412fa85ba3653..67956db75013f 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -522,7 +522,7 @@ static void vdpasim_get_config(struct vdpa_device *vdpa, unsigned int offset,
- 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
+diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
+index 8e19bfa94121e..a99afb5d9011c 100644
+--- a/drivers/iommu/omap-iommu-debug.c
++++ b/drivers/iommu/omap-iommu-debug.c
+@@ -98,8 +98,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
+ 	mutex_lock(&iommu_debug_lock);
  
- 	if (offset + len < sizeof(struct virtio_net_config))
--		memcpy(buf, &vdpasim->config + offset, len);
-+		memcpy(buf, (u8 *)&vdpasim->config + offset, len);
- }
+ 	bytes = omap_iommu_dump_ctx(obj, p, count);
++	if (bytes < 0)
++		goto err;
+ 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
  
- static void vdpasim_set_config(struct vdpa_device *vdpa, unsigned int offset,
++err:
+ 	mutex_unlock(&iommu_debug_lock);
+ 	kfree(buf);
+ 
 -- 
 2.25.1
 
