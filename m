@@ -5,49 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628CAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA88C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4262C2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DDCF2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918767;
-	bh=i20cTE8zZsa2S8I21mR46fM0KH4ljoFs0YmBjUWK0kc=;
+	s=default; t=1597918785;
+	bh=0dL8pYVd9qMBr7zVzJoGqGXN8Z9c9tLEAYuKy1M5Sao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YvUecwcTs2S+gzVYmTDLjufU/AmLY5+GXt2zoN1HtGQjCEKQjT5Xg2kex4TJgmzcn
-	 q47+OGHWWQdwO44U5GIizwCJGelVzco0jKhPsLZsBn4jAs6Rln4kbEG8cNpituVcEm
-	 j68lxuu5wpRLY/ArZzhSed9GU8GIuFegJ9ULu1vg=
+	b=lZyTe9LTfvX3/7spyjNDdMrzG2oj9+GnPLYxVbbVq2JeFkN3mmwZXhdq06SaRAr2F
+	 nvvMeypJjs9a3NyQlxQ7o5lWmVc1zFLD1U/X/rScs75cQOSUXzE8ph3m4Vvdr3WVQS
+	 m4+dqFWz8Gh5vcBwvpifXSiXr+mmnJ8rz4hjNGLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgHTKT0 (ORCPT
+        id S1731450AbgHTKTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:19:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41828 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:19:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgHTKSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:18:55 -0400
+        id S1731366AbgHTKTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:19:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 533C92067C;
-        Thu, 20 Aug 2020 10:18:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50DF12067C;
+        Thu, 20 Aug 2020 10:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918734;
-        bh=i20cTE8zZsa2S8I21mR46fM0KH4ljoFs0YmBjUWK0kc=;
+        s=default; t=1597918752;
+        bh=0dL8pYVd9qMBr7zVzJoGqGXN8Z9c9tLEAYuKy1M5Sao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r6X6zdWmeMqaa6aYWkr5qi3HLOI1zUurYE9MZadWxMUCLUzmsqzLnvHJhVrOFi5n2
-         3B+ndDDflQ10HDiqeaOk88vTCur48TKImplSMBJuN64RzaDLufkRfowNKDx1EI2/nr
-         WIvLItkAYXNyqp1OCcwGioJX4P8wiPiA545jCgNE=
+        b=Y7m/U16TdyGLKiUpZ6bivOW1Jasf+OXXJmjyiY2zTUtozMHohQt4ELOWS60wc+nFh
+         84FckLpFG5r4EuhlQlDajcAHjjctx/vYPHDIAhS5DQ9HMOVemvZizVWHL2q3zcmNjr
+         NZtiM4I686bXnZtTFlA9HRqMADUeBauZOIGEKgZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 047/149] ipv4: Silence suspicious RCU usage warning
-Date:   Thu, 20 Aug 2020 11:22:04 +0200
-Message-Id: <20200820092128.011909266@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Simon MacMullen <simonmacm@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 054/149] tracepoint: Mark __tracepoint_strings __used
+Date:   Thu, 20 Aug 2020 11:22:11 +0200
+Message-Id: <20200820092128.347118822@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,80 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit 83f3522860f702748143e022f1a546547314c715 ]
+commit f3751ad0116fb6881f2c3c957d66a9327f69cefb upstream.
 
-fib_trie_unmerge() is called with RTNL held, but not from an RCU
-read-side critical section. This leads to the following warning [1] when
-the FIB alias list in a leaf is traversed with
-hlist_for_each_entry_rcu().
+__tracepoint_string's have their string data stored in .rodata, and an
+address to that data stored in the "__tracepoint_str" section. Functions
+that refer to those strings refer to the symbol of the address. Compiler
+optimization can replace those address references with references
+directly to the string data. If the address doesn't appear to have other
+uses, then it appears dead to the compiler and is removed. This can
+break the /tracing/printk_formats sysfs node which iterates the
+addresses stored in the "__tracepoint_str" section.
 
-Since the function is always called with RTNL held and since
-modification of the list is protected by RTNL, simply use
-hlist_for_each_entry() and silence the warning.
+Like other strings stored in custom sections in this header, mark these
+__used to inform the compiler that there are other non-obvious users of
+the address, so they should still be emitted.
 
-[1]
-WARNING: suspicious RCU usage
-5.8.0-rc4-custom-01520-gc1f937f3f83b #30 Not tainted
------------------------------
-net/ipv4/fib_trie.c:1867 RCU-list traversed in non-reader section!!
+Link: https://lkml.kernel.org/r/20200730224555.2142154-2-ndesaulniers@google.com
 
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by ip/164:
- #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
-
-stack backtrace:
-CPU: 0 PID: 164 Comm: ip Not tainted 5.8.0-rc4-custom-01520-gc1f937f3f83b #30
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
-Call Trace:
- dump_stack+0x100/0x184
- lockdep_rcu_suspicious+0x153/0x15d
- fib_trie_unmerge+0x608/0xdb0
- fib_unmerge+0x44/0x360
- fib4_rule_configure+0xc8/0xad0
- fib_nl_newrule+0x37a/0x1dd0
- rtnetlink_rcv_msg+0x4f7/0xbd0
- netlink_rcv_skb+0x17a/0x480
- rtnetlink_rcv+0x22/0x30
- netlink_unicast+0x5ae/0x890
- netlink_sendmsg+0x98a/0xf40
- ____sys_sendmsg+0x879/0xa00
- ___sys_sendmsg+0x122/0x190
- __sys_sendmsg+0x103/0x1d0
- __x64_sys_sendmsg+0x7d/0xb0
- do_syscall_64+0x54/0xa0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fc80a234e97
-Code: Bad RIP value.
-RSP: 002b:00007ffef8b66798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc80a234e97
-RDX: 0000000000000000 RSI: 00007ffef8b66800 RDI: 0000000000000003
-RBP: 000000005f141b1c R08: 0000000000000001 R09: 0000000000000000
-R10: 00007fc80a2a8ac0 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007ffef8b67008 R15: 0000556fccb10020
-
-Fixes: 0ddcf43d5d4a ("ipv4: FIB Local/MAIN table collapse")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: stable@vger.kernel.org
+Fixes: 102c9323c35a8 ("tracing: Add __tracepoint_string() to export string pointers")
+Reported-by: Tim Murray <timmurray@google.com>
+Reported-by: Simon MacMullen <simonmacm@google.com>
+Suggested-by: Greg Hackmann <ghackmann@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv4/fib_trie.c |    2 +-
+ include/linux/tracepoint.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -1696,7 +1696,7 @@ struct fib_table *fib_trie_unmerge(struc
- 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
- 		struct key_vector *local_l = NULL, *local_tp;
- 
--		hlist_for_each_entry_rcu(fa, &l->leaf, fa_list) {
-+		hlist_for_each_entry(fa, &l->leaf, fa_list) {
- 			struct fib_alias *new_fa;
- 
- 			if (local_tb->tb_id != fa->tb_id)
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -328,7 +328,7 @@ extern void syscall_unregfunc(void);
+ 		static const char *___tp_str __tracepoint_string = str; \
+ 		___tp_str;						\
+ 	})
+-#define __tracepoint_string	__attribute__((section("__tracepoint_str")))
++#define __tracepoint_string	__attribute__((section("__tracepoint_str"), used))
+ #else
+ /*
+  * tracepoint_string() is used to save the string address for userspace
 
 
