@@ -2,136 +2,237 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:51:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C0FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3002076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:51:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A028621744
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:52:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Synaptics.onmicrosoft.com header.i=@Synaptics.onmicrosoft.com header.b="ZJj2qSa7"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="vVTaDo2U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgHTHv4 (ORCPT
+        id S1726957AbgHTHwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:51:56 -0400
-Received: from mail-dm6nam10on2063.outbound.protection.outlook.com ([40.107.93.63]:12768
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbgHTHvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:51:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DpFZ/lHg6fh6FNOZ8DQEiusROr7lhERNEAzSpk7qwMGyh7/BDs8AgBkBf7C4Pge0CY6qfWSfrK+WiXET7Od7NpTcxhRBiyKmY/QXxdwvI+5PtpdaKpl/Q/TiyeUIpvOWmr1JW+9AaB6Ru3ut+Uc7hlJALIDMHTzRv50jtpB/7zgZHarf58FiK7ImBMaCLWdl6NU5Yb2G1hZsjKVMEJ21Mq5ZFU5iihgg8yGSSjBnXbkgM14zm5M2ejVPi5NjC1Boxs/o5fFDtOXPv9MybcR4LkKZbvmY8sfagcOMrgQ8q6FL9OpptQQkuXGl0u4koed67jHxlpIixcuXOK1okQ+v2A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G6r3a7f5HXta43l3bKvwm/ztY7DNODH815tZybl7iU8=;
- b=LpAPsWc/rMQsgYZV3MXF2bWitjzE5C6dXqyvf2LaY3lX+FMYlNhgUT/ZCi1r7FbhrGFhE8TRzUkqawpHWLCwqOt7eiwTlj14nl3I4iaiOnVkeffA6Cb72MSHATzf+hyFEwXM9Ebeuv466qbQaUGB593Ag0Z4kwepwlrYK8tWk4YGii8HlmESlW3AwD+FY22kYGZWiFNR3HoVSi5yFzqgw/mT4y9ULK49oOn7p+a4M5Yt+4SL/kG17vlAU9j9vciyuFBQlN0ckmD+Bnv/fB3IoxuPWO3dTU2B1FZR2Ios3qutLbCibrCExlMKZKTItIS+7tm7aziE4VYFAjGdypg7nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synaptics.com; dmarc=pass action=none
- header.from=synaptics.com; dkim=pass header.d=synaptics.com; arc=none
+        Thu, 20 Aug 2020 03:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbgHTHv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:51:57 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A01C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:51:57 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id o23so1413154ejr.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 00:51:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=Synaptics.onmicrosoft.com; s=selector2-Synaptics-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G6r3a7f5HXta43l3bKvwm/ztY7DNODH815tZybl7iU8=;
- b=ZJj2qSa7YpQGZPYdbd4iIFy+Lc93+ctBEzl9ED0ZICFm5GGh2BSVFE3wsrzWo+pJiqeACc/BnghpdLmKxrQv+UIIEO7icf2lTxtkd7Ze8ATNA+2JL+U3v+0zGQZmPksdazOSpI93WUECpspD0l11LV9Qwbw1hQfdp4tLYqhGPOw=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=synaptics.com;
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com (2603:10b6:408:9::22)
- by BN7PR03MB4563.namprd03.prod.outlook.com (2603:10b6:408:36::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.16; Thu, 20 Aug
- 2020 07:51:49 +0000
-Received: from BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f]) by BN7PR03MB4547.namprd03.prod.outlook.com
- ([fe80::3cda:7634:5802:df5f%7]) with mapi id 15.20.3305.024; Thu, 20 Aug 2020
- 07:51:49 +0000
-Date:   Thu, 20 Aug 2020 15:36:15 +0800
-From:   Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Icenowy Zheng <icenowy@aosc.io>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 06/12] regulator: ltc3676: Fix W=1 build warning when
- CONFIG_OF=n
-Message-ID: <20200820153615.352947f6@xhacker.debian>
-In-Reply-To: <20200820152926.42c48840@xhacker.debian>
-References: <20200820152926.42c48840@xhacker.debian>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: TY1PR01CA0194.jpnprd01.prod.outlook.com (2603:1096:403::24)
- To BN7PR03MB4547.namprd03.prod.outlook.com (2603:10b6:408:9::22)
+        d=android.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3iJ9/fK5LB+6Kor9RoXGNOLvcbD9Ssuir1D7JZUYEZQ=;
+        b=vVTaDo2Ur+t1k5v/hjwxfcOoDSC6nxBbJPQAWOfhKxMOXA13Ayg65BQ4cdgIk57V4m
+         /H/zi0NyhUDS1+NL1r4L5tZdYybjr92n6LYfYS2CMej9pejnQoVFBJUczJ4zGric3avP
+         Y+2aGEJyGAYfvJvqi5EpCv/GwFeWzIgOTysDc9/D64nI/+rl1A6PJDkFacCqxlEs4ovt
+         W+tWkO72YgBOFwtQsIKMv98InuTzozuS9IENFuPIrOkO78YL7YygajKZN9i6i35MsBhN
+         YPGLtTSRax2pKNqruLk9xslwMvIe6YSR1gs/3sbg4fWiYMBQFTLyMJCO8kt7WTSfRiIq
+         pz5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3iJ9/fK5LB+6Kor9RoXGNOLvcbD9Ssuir1D7JZUYEZQ=;
+        b=ZdBxtTmPElFIIXrPm6XWYRN07aoPC26t/EpGPIytzi9Gwc/kcSexJZ1APAxjHQjOkn
+         HrWAxZ4oQaWihaDHqHMCWiyB++br9R/2W82Q7dvolyJ9Y3UtCdQnmKXtFP2y3NZtLlml
+         NR3JnJCJiHFpv9zxhTh/z+fjpRECHo0bGYLepV135lQ6auF5FoYefSwsIKhHJsZzmOid
+         Fx7O8bzR68zALICukeD/dmyqJvsgESQtMWGYwF2U/WFwVFfFD3mnLZm2n7jSeojSQea2
+         cI4Ixc39vjXZeva7x+701IbJX9IY+DCLDKANvvcuEvpdSJjxpyPxVepdIqhTIoP/DPsl
+         FCdg==
+X-Gm-Message-State: AOAM533mDqay3+EZt0ihwqCg6ISJmpy/RS3iFhuQpOECz1TwgTt6jIZk
+        BCfO7mFH0ZoO8oTJMVJS0alj/A==
+X-Google-Smtp-Source: ABdhPJyl6aVYd1dRYJ+2QTDFpYpAk07k8IYLGLewCo+zey/nRl010HIldBrnD28vF0nrOD3pIDDQBQ==
+X-Received: by 2002:a17:906:a3d5:: with SMTP id ca21mr1971315ejb.453.1597909915660;
+        Thu, 20 Aug 2020 00:51:55 -0700 (PDT)
+Received: from maco2.ams.corp.google.com (a83-162-234-235.adsl.xs4all.nl. [83.162.234.235])
+        by smtp.gmail.com with ESMTPSA id p1sm836281edu.11.2020.08.20.00.51.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 00:51:55 -0700 (PDT)
+From:   Martijn Coenen <maco@android.com>
+To:     gregkh@linuxfoundation.org, tkjos@google.com, arve@android.com,
+        joel@joelfernandes.org, christian@brauner.io, hridya@google.com,
+        surenb@google.com
+Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
+        maco@google.com, Martijn Coenen <maco@android.com>
+Subject: [PATCH] binder: print warnings when detecting oneway spamming.
+Date:   Thu, 20 Aug 2020 09:51:33 +0200
+Message-Id: <20200820075133.87040-1-maco@android.com>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by TY1PR01CA0194.jpnprd01.prod.outlook.com (2603:1096:403::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 07:51:45 +0000
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-X-Originating-IP: [124.74.246.114]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 11172cbc-63d1-4e41-f2c7-08d844dde493
-X-MS-TrafficTypeDiagnostic: BN7PR03MB4563:
-X-Microsoft-Antispam-PRVS: <BN7PR03MB4563B3E97BBD373C9C6B3EFFED5A0@BN7PR03MB4563.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:449;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mH0ydswDHdNYylQwBRv75mKUuCWrlGXV0i2byJ178GNHZso6tFTnBrmez5aSXrrEHn+BgeJ3v7MCvFNrt4gdFdVrgGR+x/+xXf3Bbo+9hGDN6BHgcjVoF7ciWcSKUKqH2hBIBIRg20wUPpxyxkFlWkl4TgF+rt6+zIOOrdHvgUinkKjHB9w287zc2yzYRn1o/jlFSIpFC/gekQCQa/31UlBaiEZNALO3oE0AX5YcjgbRY168dcQq4LdsX2y2+oYMi5mGjHOxFrMP+VLOTjx88QAc/A/jliA1dlU0oDToaKlzFgQ1RBtGhgMaitXPlb4LIBNIkMrHXxBxiKK6xfIRgWfA5qVA9gQMTgY2RShqkXhF0TtCiXUdfCnp0s29T/E3
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR03MB4547.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39860400002)(396003)(346002)(136003)(376002)(1076003)(4744005)(4326008)(2906002)(5660300002)(6666004)(478600001)(956004)(9686003)(83380400001)(26005)(316002)(86362001)(52116002)(8676002)(66946007)(16576012)(66556008)(6486002)(110011004)(8936002)(66476007)(110136005)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 6NFwbL6CJIYazAISo/bnG3r+Ds6Wg9sfYCz03SHgYnOFzI82O7XHLHkH0jYeV0IB5P5qAL0w1AvoHMU8irvoY4P2KLdL7rLHwtLUEWYgDMKaYMxdvfdmoqsAxEQ2ZmTDjK6wM0gkDX9/sEcbKcLLdZ7ZcyeC2v6VvBNGzpBomo1Jg/Ff7nT10E9KAd0KDd+AzlXV0+OLBso3z5kb/r4HKsUZsCjWzj1uTgUoRgbfDYjl1pse6mzU34Q8JyuPei9JrQktCWre+B00VtqD8c2537PzF71FeUcvMUVrNamVT9Kv8R1AZekirT0XB/rXL5/TzjBwkZDRNt7/0PFWMAZONcwR8bqpPWrW/hAEJWBwjCrSylvXMe0t4SIPcXf8Xy/fYPXq+Y7rIswPgBgNJ2BGulervlD7oPV9+EUSSHvdFS0KIJZfFpAFDtKaw5ZWCXd47Hh/1FwQH/drQfvcniyEVvrE/GS5vQbrnaY1/gGvIaIbQvlObqvMPJ8NQ69bbmmTTkd0NMwTRIeMFqOpAXLO2dHd24rPDdftDrvJ3RQhWS2ZzjnYqwxeSDYpTgabxtn5tXbkDQUgy7U+ClvlL9siaJFSTwLNRMW0Hm9uvk4DBpnLzA91ARLTvNitphV6ragWndNXg7WCDY+0lO7W8gz5cw==
-X-OriginatorOrg: synaptics.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 11172cbc-63d1-4e41-f2c7-08d844dde493
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR03MB4547.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 07:51:48.9055
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 335d1fbc-2124-4173-9863-17e7051a2a0e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qGPBBTSz2wThhp54meTkCN2myFjZ5Pesw18aKK/dEuJ4jr+rqzNJydq/SnX2Z6plgzndecBPQwIq6/YFkT3D7g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR03MB4563
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix below warning when CONFIG_OF=3Dn:
+The most common cause of the binder transaction buffer filling up is a
+client rapidly firing oneway transactions into a process, before it has
+a chance to handle them. Yet the root cause of this is often hard to
+debug, because either the system or the app will stop, and by that time
+binder debug information we dump in bugreports is no longer relevant.
 
-drivers/regulator/ltc3676.c:371:34: warning: =E2=80=98ltc3676_of_match=E2=
-=80=99 defined but not used [-Wunused-const-variable=3D]
-  371 | static const struct of_device_id ltc3676_of_match[] =3D {
-      |                                  ^~~~~~~~~~~~~~~~
+This change warns as soon as a process dips below 80% of its oneway
+space (less than 100kB available in the configuration), when any one
+process is responsible for either more than 50 transactions, or more
+than 50% of the oneway space.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Signed-off-by: Martijn Coenen <maco@android.com>
 ---
- drivers/regulator/ltc3676.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/android/binder.c       |  2 +-
+ drivers/android/binder_alloc.c | 49 +++++++++++++++++++++++++++++++---
+ drivers/android/binder_alloc.h |  5 +++-
+ 3 files changed, 51 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/regulator/ltc3676.c b/drivers/regulator/ltc3676.c
-index 093b3e4a6303..0778d5bb7559 100644
---- a/drivers/regulator/ltc3676.c
-+++ b/drivers/regulator/ltc3676.c
-@@ -368,11 +368,13 @@ static const struct i2c_device_id ltc3676_i2c_id[] =
-=3D {
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index f936530a19b0..946332bc871a 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -3136,7 +3136,7 @@ static void binder_transaction(struct binder_proc *proc,
+ 
+ 	t->buffer = binder_alloc_new_buf(&target_proc->alloc, tr->data_size,
+ 		tr->offsets_size, extra_buffers_size,
+-		!reply && (t->flags & TF_ONE_WAY));
++		!reply && (t->flags & TF_ONE_WAY), current->tgid);
+ 	if (IS_ERR(t->buffer)) {
+ 		/*
+ 		 * -ESRCH indicates VMA cleared. The target is dying.
+diff --git a/drivers/android/binder_alloc.c b/drivers/android/binder_alloc.c
+index 69609696a843..76e8e633dbd4 100644
+--- a/drivers/android/binder_alloc.c
++++ b/drivers/android/binder_alloc.c
+@@ -338,12 +338,48 @@ static inline struct vm_area_struct *binder_alloc_get_vma(
+ 	return vma;
+ }
+ 
++static void debug_low_async_space_locked(struct binder_alloc *alloc, int pid)
++{
++	/*
++	 * Find the amount and size of buffers allocated by the current caller;
++	 * The idea is that once we cross the threshold, whoever is responsible
++	 * for the low async space is likely to try to send another async txn,
++	 * and at some point we'll catch them in the act. This is more efficient
++	 * than keeping a map per pid.
++	 */
++	struct rb_node *n = alloc->free_buffers.rb_node;
++	struct binder_buffer *buffer;
++	size_t buffer_size;
++	size_t total_alloc_size = 0;
++	size_t num_buffers = 0;
++
++	for (n = rb_first(&alloc->allocated_buffers); n != NULL;
++		 n = rb_next(n)) {
++		buffer = rb_entry(n, struct binder_buffer, rb_node);
++		if (buffer->pid != pid)
++			continue;
++		if (!buffer->async_transaction)
++			continue;
++		buffer_size = binder_alloc_buffer_size(alloc, buffer);
++		total_alloc_size += buffer_size;
++		num_buffers++;
++	}
++
++	// Warn if this pid has more than 50% of async space, or more than 50 txns
++	if (num_buffers > 50 || total_alloc_size > alloc->buffer_size / 4) {
++		binder_alloc_debug(BINDER_DEBUG_USER_ERROR,
++			     "%d: pid %d spamming oneway? %zd buffers allocated for a total size of %zd\n",
++			      alloc->pid, pid, num_buffers, total_alloc_size);
++	}
++}
++
+ static struct binder_buffer *binder_alloc_new_buf_locked(
+ 				struct binder_alloc *alloc,
+ 				size_t data_size,
+ 				size_t offsets_size,
+ 				size_t extra_buffers_size,
+-				int is_async)
++				int is_async,
++				int pid)
+ {
+ 	struct rb_node *n = alloc->free_buffers.rb_node;
+ 	struct binder_buffer *buffer;
+@@ -486,11 +522,16 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
+ 	buffer->offsets_size = offsets_size;
+ 	buffer->async_transaction = is_async;
+ 	buffer->extra_buffers_size = extra_buffers_size;
++	buffer->pid = pid;
+ 	if (is_async) {
+ 		alloc->free_async_space -= size + sizeof(struct binder_buffer);
+ 		binder_alloc_debug(BINDER_DEBUG_BUFFER_ALLOC_ASYNC,
+ 			     "%d: binder_alloc_buf size %zd async free %zd\n",
+ 			      alloc->pid, size, alloc->free_async_space);
++		if (alloc->free_async_space < alloc->buffer_size / 10) {
++			// Start detecting spammers once we reach 80% of async space used
++			debug_low_async_space_locked(alloc, pid);
++		}
+ 	}
+ 	return buffer;
+ 
+@@ -508,6 +549,7 @@ static struct binder_buffer *binder_alloc_new_buf_locked(
+  * @offsets_size:       user specified buffer offset
+  * @extra_buffers_size: size of extra space for meta-data (eg, security context)
+  * @is_async:           buffer for async transaction
++ * @pid:				pid to attribute allocation to (used for debugging)
+  *
+  * Allocate a new buffer given the requested sizes. Returns
+  * the kernel version of the buffer pointer. The size allocated
+@@ -520,13 +562,14 @@ struct binder_buffer *binder_alloc_new_buf(struct binder_alloc *alloc,
+ 					   size_t data_size,
+ 					   size_t offsets_size,
+ 					   size_t extra_buffers_size,
+-					   int is_async)
++					   int is_async,
++					   int pid)
+ {
+ 	struct binder_buffer *buffer;
+ 
+ 	mutex_lock(&alloc->mutex);
+ 	buffer = binder_alloc_new_buf_locked(alloc, data_size, offsets_size,
+-					     extra_buffers_size, is_async);
++					     extra_buffers_size, is_async, pid);
+ 	mutex_unlock(&alloc->mutex);
+ 	return buffer;
+ }
+diff --git a/drivers/android/binder_alloc.h b/drivers/android/binder_alloc.h
+index db9c1b984695..55d8b4106766 100644
+--- a/drivers/android/binder_alloc.h
++++ b/drivers/android/binder_alloc.h
+@@ -32,6 +32,7 @@ struct binder_transaction;
+  * @offsets_size:       size of array of offsets
+  * @extra_buffers_size: size of space for other objects (like sg lists)
+  * @user_data:          user pointer to base of buffer space
++ * @pid:                pid to attribute the buffer to (caller)
+  *
+  * Bookkeeping structure for binder transaction buffers
+  */
+@@ -51,6 +52,7 @@ struct binder_buffer {
+ 	size_t offsets_size;
+ 	size_t extra_buffers_size;
+ 	void __user *user_data;
++	int    pid;
  };
- MODULE_DEVICE_TABLE(i2c, ltc3676_i2c_id);
-=20
-+#ifdef CONFIG_OF
- static const struct of_device_id ltc3676_of_match[] =3D {
- 	{ .compatible =3D "lltc,ltc3676" },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, ltc3676_of_match);
-+#endif
-=20
- static struct i2c_driver ltc3676_driver =3D {
- 	.driver =3D {
---=20
-2.28.0
+ 
+ /**
+@@ -117,7 +119,8 @@ extern struct binder_buffer *binder_alloc_new_buf(struct binder_alloc *alloc,
+ 						  size_t data_size,
+ 						  size_t offsets_size,
+ 						  size_t extra_buffers_size,
+-						  int is_async);
++						  int is_async,
++						  int pid);
+ extern void binder_alloc_init(struct binder_alloc *alloc);
+ extern int binder_alloc_shrinker_init(void);
+ extern void binder_alloc_vma_close(struct binder_alloc *alloc);
+-- 
+2.28.0.220.ged08abb693-goog
 
