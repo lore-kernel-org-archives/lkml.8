@@ -2,248 +2,259 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD9C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1528B2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:37:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="INF+mv1R"
+	by mail.kernel.org (Postfix) with ESMTP id 156A520674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbgHTWhr (ORCPT
+        id S1728503AbgHTWiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726666AbgHTWhp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:37:45 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C47F1C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:37:44 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id o2so1706628qvk.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CQre410z5sGS8Rs1cXo97FI9t6nJ1f4yE8P5wfDuI3E=;
-        b=INF+mv1REoCdw0hR7V1TQUVe8djNEFNRqO7Fk/1X0LPJpSk2T4VFBtqZlfq4PsVsXQ
-         XPT194VPT9rjh0n0+D0pp4hTmQqpas7e5bRSMGzMo8ZoZaeTCGr66q8UZthljgqgN6GN
-         8IZah/PjUSFKAfAlPN1YsRWr+UlB5KY2Xl+yE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CQre410z5sGS8Rs1cXo97FI9t6nJ1f4yE8P5wfDuI3E=;
-        b=kw6dgEO8pwf/tg2J3AvF0owNh9Nni9XHd1ugpLP8HGA87LSbAuWrTfVxZRM4E1Q+mh
-         6ZWGrWC9lJvS58W+xkQPbpQ4iB4bHKLMKGKDY0ygRMs+1njYkn1DkECGjhrq+sSPZwsb
-         ShddfmadVsejfAyc/UAg7z5eQbBo3AJTUBuVVuZ7oECEUSbbgx8BRZrx91EBPtrGaAZn
-         xYexADEeFUUxx4wg0tcQC2FC7N+yovtyoU3EkY8CQw6OgDMhuXmkRWv97LSwNnVlVwJg
-         5Bwj6QtXftw/wO6JZhyolr/EJ0utWpccfyfgu5z9579d5XkId1aYRTnkkl34O3Q7JCRK
-         WfMg==
-X-Gm-Message-State: AOAM53054MtM+VVGdPSua/jWpEH3DW5dECNy+DazvdAQIvkJuz8Lv/ie
-        mS3I1an543uphSsnO6g5zHDsow==
-X-Google-Smtp-Source: ABdhPJwQkINpxQzpdGP+cBUv5yuLXHAc4op7hqcWZMHcS+6K/wnhhLtnw0HXoMXcPFLIw+zrFd1x4A==
-X-Received: by 2002:a0c:bd0c:: with SMTP id m12mr1042717qvg.49.1597963063733;
-        Thu, 20 Aug 2020 15:37:43 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id b23sm4371817qtp.41.2020.08.20.15.37.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 15:37:43 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 18:37:42 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Li, Aubrey" <aubrey.li@linux.intel.com>
-Cc:     viremana@linux.microsoft.com,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Glexiner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vineeth Pillai <vineethrp@gmail.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        "Ning, Hongyu" <hongyu.ning@linux.intel.com>,
-        =?utf-8?B?YmVuYmppYW5nKOiSi+W9qik=?= <benbjiang@tencent.com>
-Subject: Re: [RFC PATCH 00/16] Core scheduling v6
-Message-ID: <20200820223742.GA120898@google.com>
-References: <cover.1593530334.git.vpillai@digitalocean.com>
- <6d0f9fc0-2e34-f559-29bc-4143e6d3f751@linux.intel.com>
- <CAEXW_YS6oW_AAkmOuXNMCj_N5763aG9SXEcWz_onPhQQU2TZ0g@mail.gmail.com>
- <f986f5a9-5c97-10ed-1e44-84bbd929e605@linux.intel.com>
- <20200809164408.GA342447@google.com>
- <162a03cc-66c3-1999-83a2-deaad5aa04c8@linux.intel.com>
- <20200812230850.GA3511387@google.com>
- <5a39735d-dfd8-bdec-f068-81895799640e@linux.intel.com>
+        Thu, 20 Aug 2020 18:38:02 -0400
+Received: from mga03.intel.com ([134.134.136.65]:45376 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728492AbgHTWiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 18:38:02 -0400
+IronPort-SDR: lA52nH3DulRNJHUj9oPP3WxNSSFsL8StsnggIg44qIEF+7v0/cI7YYS8lMtynn7gKMdHkTfa2n
+ hM1Zy5L/iSvQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="155404262"
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="155404262"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 15:38:01 -0700
+IronPort-SDR: 56GHsub0ZbS7dKgKU0Y7VCiNcICQ2w+MnV3IdgCvvNmvhgz1+XfJjBINfxX75DKMA1kmoAAVm7
+ FrNdTs90N5Tw==
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="321054249"
+Received: from ideak-desk.fi.intel.com ([10.237.68.141])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 15:37:57 -0700
+Date:   Fri, 21 Aug 2020 01:37:54 +0300
+From:   Imre Deak <imre.deak@intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     Sean Paul <sean@poorly.run>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        =?iso-8859-1?Q?Jos=E9?= Roberto de Souza 
+        <jose.souza@intel.com>, Wambui Karuga <wambui.karugax@gmail.com>
+Subject: Re: [RFC 13/20] drm/i915/dp: Extract drm_dp_downstream_read_info()
+Message-ID: <20200820223754.GA17451@ideak-desk.fi.intel.com>
+Reply-To: imre.deak@intel.com
+References: <20200811200457.134743-1-lyude@redhat.com>
+ <20200811200457.134743-14-lyude@redhat.com>
+ <20200819151547.GB46474@art_vandelay>
+ <4d74a74aefcd8d0ea048b70252efda18820bc911.camel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5a39735d-dfd8-bdec-f068-81895799640e@linux.intel.com>
+In-Reply-To: <4d74a74aefcd8d0ea048b70252efda18820bc911.camel@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 12:28:17PM +0800, Li, Aubrey wrote:
-> On 2020/8/13 7:08, Joel Fernandes wrote:
-> > On Wed, Aug 12, 2020 at 10:01:24AM +0800, Li, Aubrey wrote:
-> >> Hi Joel,
-> >>
-> >> On 2020/8/10 0:44, Joel Fernandes wrote:
-> >>> Hi Aubrey,
-> >>>
-> >>> Apologies for replying late as I was still looking into the details.
-> >>>
-> >>> On Wed, Aug 05, 2020 at 11:57:20AM +0800, Li, Aubrey wrote:
-> >>> [...]
-> >>>> +/*
-> >>>> + * Core scheduling policy:
-> >>>> + * - CORE_SCHED_DISABLED: core scheduling is disabled.
-> >>>> + * - CORE_COOKIE_MATCH: tasks with same cookie can run
-> >>>> + *                     on the same core concurrently.
-> >>>> + * - CORE_COOKIE_TRUST: trusted task can run with kernel
-> >>>> 			thread on the same core concurrently. 
-> >>>> + * - CORE_COOKIE_LONELY: tasks with cookie can run only
-> >>>> + *                     with idle thread on the same core.
-> >>>> + */
-> >>>> +enum coresched_policy {
-> >>>> +       CORE_SCHED_DISABLED,
-> >>>> +       CORE_SCHED_COOKIE_MATCH,
-> >>>> +	CORE_SCHED_COOKIE_TRUST,
-> >>>> +       CORE_SCHED_COOKIE_LONELY,
-> >>>> +};
-> >>>>
-> >>>> We can set policy to CORE_COOKIE_TRUST of uperf cgroup and fix this kind
-> >>>> of performance regression. Not sure if this sounds attractive?
-> >>>
-> >>> Instead of this, I think it can be something simpler IMHO:
-> >>>
-> >>> 1. Consider all cookie-0 task as trusted. (Even right now, if you apply the
-> >>>    core-scheduling patchset, such tasks will share a core and sniff on each
-> >>>    other. So let us not pretend that such tasks are not trusted).
-> >>>
-> >>> 2. All kernel threads and idle task would have a cookie 0 (so that will cover
-> >>>    ksoftirqd reported in your original issue).
-> >>>
-> >>> 3. Add a config option (CONFIG_SCHED_CORE_DEFAULT_TASKS_UNTRUSTED). Default
-> >>>    enable it. Setting this option would tag all tasks that are forked from a
-> >>>    cookie-0 task with their own cookie. Later on, such tasks can be added to
-> >>>    a group. This cover's PeterZ's ask about having 'default untrusted').
-> >>>    (Users like ChromeOS that don't want to userspace system processes to be
-> >>>    tagged can disable this option so such tasks will be cookie-0).
-> >>>
-> >>> 4. Allow prctl/cgroup interfaces to create groups of tasks and override the
-> >>>    above behaviors.
-> >>
-> >> How does uperf in a cgroup work with ksoftirqd? Are you suggesting I set uperf's
-> >> cookie to be cookie-0 via prctl?
-> > 
-> > Yes, but let me try to understand better. There are 2 problems here I think:
-> > 
-> > 1. ksoftirqd getting idled when HT is turned on, because uperf is sharing a
-> > core with it: This should not be any worse than SMT OFF, because even SMT OFF
-> > would also reduce ksoftirqd's CPU time just core sched is doing. Sure
-> > core-scheduling adds some overhead with IPIs but such a huge drop of perf is
-> > strange. Peter any thoughts on that?
-> > 
-> > 2. Interface: To solve the performance problem, you are saying you want uperf
-> > to share a core with ksoftirqd so that it is not forced into idle.  Why not
-> > just keep uperf out of the cgroup?
+On Wed, Aug 19, 2020 at 05:34:15PM -0400, Lyude Paul wrote:
+> (adding Ville and Imre to the cc here, they might be interested to know about
+> this, comments down below)
 > 
-> I guess this is unacceptable for who runs their apps in container and vm.
+> On Wed, 2020-08-19 at 11:15 -0400, Sean Paul wrote:
+> > On Tue, Aug 11, 2020 at 04:04:50PM -0400, Lyude Paul wrote:
+> > > We're going to be doing the same probing process in nouveau for
+> > > determining downstream DP port capabilities, so let's deduplicate the
+> > > work by moving i915's code for handling this into a shared helper:
+> > > drm_dp_downstream_read_info().
+> > > 
+> > > Note that when we do this, we also do make some functional changes while
+> > > we're at it:
+> > > * We always clear the downstream port info before trying to read it,
+> > >   just to make things easier for the caller
+> > > * We skip reading downstream port info if the DPCD indicates that we
+> > >   don't support downstream port info
+> > > * We only read as many bytes as needed for the reported number of
+> > >   downstream ports, no sense in reading the whole thing every time
+> > > 
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_dp_helper.c         | 32 +++++++++++++++++++++++++
+> > >  drivers/gpu/drm/i915/display/intel_dp.c | 14 ++---------
+> > >  include/drm/drm_dp_helper.h             |  3 +++
+> > >  3 files changed, 37 insertions(+), 12 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_dp_helper.c
+> > > b/drivers/gpu/drm/drm_dp_helper.c
+> > > index 4c21cf69dad5a..9703b33599c3b 100644
+> > > --- a/drivers/gpu/drm/drm_dp_helper.c
+> > > +++ b/drivers/gpu/drm/drm_dp_helper.c
+> > > @@ -423,6 +423,38 @@ bool drm_dp_send_real_edid_checksum(struct drm_dp_aux
+> > > *aux,
+> > >  }
+> > >  EXPORT_SYMBOL(drm_dp_send_real_edid_checksum);
+> > >  
+> > > +/**
+> > > + * drm_dp_downstream_read_info() - read DPCD downstream port info if
+> > > available
+> > > + * @aux: DisplayPort AUX channel
+> > > + * @dpcd: A cached copy of the port's DPCD
+> > > + * @downstream_ports: buffer to store the downstream port info in
+> > > + *
+> > > + * Returns: 0 if either the downstream port info was read successfully or
+> > > + * there was no downstream info to read, or a negative error code
+> > > otherwise.
+> > > + */
+> > > +int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
+> > > +				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > > +				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS])
+> > > +{
+> > > +	int ret;
+> > > +	u8 len;
+> > > +
+> > > +	memset(downstream_ports, 0, DP_MAX_DOWNSTREAM_PORTS);
+> > > +
+> > > +	/* No downstream info to read */
+> > > +	if (!drm_dp_is_branch(dpcd) ||
+> > > +	    dpcd[DP_DPCD_REV] < DP_DPCD_REV_10 ||
+> > > +	    !(dpcd[DP_DOWNSTREAMPORT_PRESENT] & DP_DWN_STRM_PORT_PRESENT))
+> > > +		return 0;
+> > > +
+> > > +	len = (dpcd[DP_DOWN_STREAM_PORT_COUNT] & DP_PORT_COUNT_MASK) * 4;
+> > 
+> > I'm having a hard time rationalizing DP_MAX_DOWNSTREAM_PORTS being 16, but
+> > only
+> > having 4 ports worth of data in the DP_DOWNSTREAM_PORT_* registers. Do you
+> > know
+> > what's supposed to happen if dpcd[DP_DOWN_STREAM_PORT_COUNT] is > 4?
+> > 
+> ok!! Taking a lesson from our available_pbn/full_pbn confusion in the past, I
+> squinted very hard at the specification and eventually found something that I
+> think clears this up. Surprise - we definitely had this implemented incorrectly
+> in i915
 
-I think let us forget about #2, that's just a workaround.  #1 is probably
-what we should look into for your problem. Was talking to Vineeth earlier, is
-it possible that the fairness issues that Aaron and Peter are looking into is
-causing the performance problem here?
+To me it looks correct, only DFP0's cap info is used, by also handling
+the DP_DETAILED_CAP_INFO_AVAILABLE=0/1 cases.
 
-So like, if ksoftirqd being higher prio is making the vruntime delta between
-2 CFS tasks sharing a core to be quite high, then it causes the core-wide
-min_vruntime to be high. Then if uperf gets enqueued, it will get starved by
-ksoftirqd and not able to run till ksoftirqd's vruntime catches up.
+The wording is a bit unclear, but as I understand the Standard only
+calls for the above:
 
-Other than that, the only other thing (AFAIK) is the IPI/scheduler overhead
-is giving uperf worse performance than SMT-off and we ought to reduce the
-overhead some how. Does a kernel perf profile show you any smoking guns?
-
-thanks,
-
- - Joel
+"""
+A DP upstream device shall read the capability from DPCD Addresses 00080h
+through 00083h. A DP Branch device with multiple DFPs shall report the detailed
+capability information of the lowest DFP number to which a downstream device
+is connected, consistent with the DisplayID or legacy EDID access routing policy
+of an SST-only DP Branch device as described in Section 2.1.4.1.
+"""
 
 > 
-> Thanks,
-> -Aubrey
+> From section 5.3.3.1:
 > 
-> > Then it will have cookie 0 and be able to
-> > share core with kernel threads. About user-user isolation that you need, if
-> > you tag any "untrusted" threads by adding it to CGroup, then there will
-> > automatically isolated from uperf while allowing uperf to share CPU with
-> > kernel threads.
+>    Either one or four bytes are used, per DFP type indication. Therefore, up to
+>    16 (with 1-byte descriptor) or four (with 4-byte descriptor) DFP capabilities
+>    can be stored.
+> 
+> So, a couple takeaways from this:
+> 
+>  * A DisplayPort connector can have *multiple* different downstream port types,
+>    which I think actually makes sense as I've seen an adapter like this before.
+>  * We actually added the ability to determine the downstream port type for DP
+>    connectors using the subconnector prop, but it seems like if we want to aim
+>    for completeness we're going to need to come up with a new prop that can
+>    report multiple downstream port types :\.
+
+This makes sense to me.
+
+>  * It's not explicitly mentioned, but I'm assuming the correct way of handling
+>    multiple downstream BPC/pixel clock capabilities is to assume the max
+>    BPC/pixel clock is derived from the lowest max BPC/pixel clock we find on
+>    *connected* downstream ports (anything else wouldn't really make sense, imho)
+
+This would limit the case where the user only cares about the output
+with a higher BW requirement on a DFP even if another DFP with a lower
+BW cap is also connected. Not sure if it's a real world use-case though.
+
+> So I'm going to rewrite this so we handle this properly in
+> drm_dp_downstream_read_info() and related helpers. I don't currently have the
+> time to do this, but if there's interest upstream in properly reporting the
+> downstream port types of DP ports in userspace someone might want to consider
+> coming up with another prop that accounts for multiple different downstream port
+> types.
+> 
+> > Sean
 > > 
-> > Please let me know your thoughts and thanks,
-> > 
-> >  - Joel
-> > 
-> >>
-> >> Thanks,
-> >> -Aubrey
-> >>>
-> >>> 5. Document everything clearly so the semantics are clear both to the
-> >>>    developers of core scheduling and to system administrators.
-> >>>
-> >>> Note that, with the concept of "system trusted cookie", we can also do
-> >>> optimizations like:
-> >>> 1. Disable STIBP when switching into trusted tasks.
-> >>> 2. Disable L1D flushing / verw stuff for L1TF/MDS issues, when switching into
-> >>>    trusted tasks.
-> >>>
-> >>> At least #1 seems to be biting enabling HT on ChromeOS right now, and one
-> >>> other engineer requested I do something like #2 already.
-> >>>
-> >>> Once we get full-syscall isolation working, threads belonging to a process
-> >>> can also share a core so those can just share a core with the task-group
-> >>> leader.
-> >>>
-> >>>>> Is the uperf throughput worse with SMT+core-scheduling versus no-SMT ?
-> >>>>
-> >>>> This is a good question, from the data we measured by uperf,
-> >>>> SMT+core-scheduling is 28.2% worse than no-SMT, :(
-> >>>
-> >>> This is worrying for sure. :-(. We ought to debug/profile it more to see what
-> >>> is causing the overhead. Me/Vineeth added it as a topic for LPC as well.
-> >>>
-> >>> Any other thoughts from others on this?
-> >>>
-> >>> thanks,
-> >>>
-> >>>  - Joel
-> >>>
-> >>>
-> >>>>> thanks,
-> >>>>>
-> >>>>>  - Joel
-> >>>>> PS: I am planning to write a patch behind a CONFIG option that tags
-> >>>>> all processes (default untrusted) so everything gets a cookie which
-> >>>>> some folks said was how they wanted (have a whitelist instead of
-> >>>>> blacklist).
-> >>>>>
-> >>>>
-> >>
+> > > +	ret = drm_dp_dpcd_read(aux, DP_DOWNSTREAM_PORT_0, downstream_ports,
+> > > +			       len);
+> > > +
+> > > +	return ret == len ? 0 : -EIO;
+> > > +}
+> > > +EXPORT_SYMBOL(drm_dp_downstream_read_info);
+> > > +
+> > >  /**
+> > >   * drm_dp_downstream_max_clock() - extract branch device max
+> > >   *                                 pixel rate for legacy VGA
+> > > diff --git a/drivers/gpu/drm/i915/display/intel_dp.c
+> > > b/drivers/gpu/drm/i915/display/intel_dp.c
+> > > index 1e29d3a012856..984e49194ca31 100644
+> > > --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> > > +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> > > @@ -4685,18 +4685,8 @@ intel_dp_get_dpcd(struct intel_dp *intel_dp)
+> > >  			return false;
+> > >  	}
+> > >  
+> > > -	if (!drm_dp_is_branch(intel_dp->dpcd))
+> > > -		return true; /* native DP sink */
+> > > -
+> > > -	if (intel_dp->dpcd[DP_DPCD_REV] == 0x10)
+> > > -		return true; /* no per-port downstream info */
+> > > -
+> > > -	if (drm_dp_dpcd_read(&intel_dp->aux, DP_DOWNSTREAM_PORT_0,
+> > > -			     intel_dp->downstream_ports,
+> > > -			     DP_MAX_DOWNSTREAM_PORTS) < 0)
+> > > -		return false; /* downstream port status fetch failed */
+> > > -
+> > > -	return true;
+> > > +	return drm_dp_downstream_read_info(&intel_dp->aux, intel_dp->dpcd,
+> > > +					   intel_dp->downstream_ports) == 0;
+> > >  }
+> > >  
+> > >  static bool
+> > > diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> > > index 5c28199248626..1349f16564ace 100644
+> > > --- a/include/drm/drm_dp_helper.h
+> > > +++ b/include/drm/drm_dp_helper.h
+> > > @@ -1613,6 +1613,9 @@ int drm_dp_dpcd_read_link_status(struct drm_dp_aux
+> > > *aux,
+> > >  bool drm_dp_send_real_edid_checksum(struct drm_dp_aux *aux,
+> > >  				    u8 real_edid_checksum);
+> > >  
+> > > +int drm_dp_downstream_read_info(struct drm_dp_aux *aux,
+> > > +				const u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > > +				u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS]);
+> > >  int drm_dp_downstream_max_clock(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > >  				const u8 port_cap[4]);
+> > >  int drm_dp_downstream_max_bpc(const u8 dpcd[DP_RECEIVER_CAP_SIZE],
+> > > -- 
+> > > 2.26.2
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> -- 
+> Sincerely,
+>       Lyude Paul (she/her)
+>       Software Engineer at Red Hat
 > 
