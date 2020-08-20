@@ -2,103 +2,223 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254DAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4AA1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02DE1208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848E8208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbgHTHaP (ORCPT
+        id S1725882AbgHTHdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:30:15 -0400
-Received: from mga03.intel.com ([134.134.136.65]:26636 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgHTHaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:30:14 -0400
-IronPort-SDR: 8bBDYl41AyOx7NDwWl206ipj+SdbHB5Qhpi5KFLKwK5o04ELkZXK2noc/khjdoEsg7IIxDTmVg
- FbF0k9dXR1pA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="155225865"
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="155225865"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 00:30:13 -0700
-IronPort-SDR: V0bNGK+unpSW220Mv1SyOPGZuGAnuaTlwOCopnjwvfUbDavGw+l76ufZosNkFRFVu19fHTMzAO
- M3q/6zpbWVFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,332,1592895600"; 
-   d="scan'208";a="497513364"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2020 00:30:13 -0700
-Received: from [10.249.73.140] (ekotax-MOBL.gar.corp.intel.com [10.249.73.140])
-        by linux.intel.com (Postfix) with ESMTP id 0595558045A;
-        Thu, 20 Aug 2020 00:30:11 -0700 (PDT)
-Subject: Re: [PATCH] dt-bindings: PCI: intel,lgm-pcie: Fix matching on all
- snps,dw-pcie instances
-To:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org
-References: <20200819222002.2059917-1-robh@kernel.org>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <e089ab71-e203-7d24-c1a5-6213c925b153@linux.intel.com>
-Date:   Thu, 20 Aug 2020 15:30:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 03:33:00 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55008 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbgHTHdA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 03:33:00 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 045EA28E289
+Message-ID: <bac2020eabb375a6c9dbc689c0c5a3f6eae16e1e.camel@collabora.com>
+Subject: Re: [PATCH v2 08/14] media: uapi: h264: Drop SLICE_PARAMS 'size'
+ field
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Maxime Ripard <mripard@kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Date:   Thu, 20 Aug 2020 04:32:46 -0300
+In-Reply-To: <20200819135430.GA1566@aptenodytes>
+References: <20200806151310.98624-1-ezequiel@collabora.com>
+         <20200806151310.98624-9-ezequiel@collabora.com>
+         <20200806155028.GB1621078@aptenodytes>
+         <7e0ad157cabb656cbb4f24354146197e6a1d3f36.camel@collabora.com>
+         <20200819135430.GA1566@aptenodytes>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3-1 
 MIME-Version: 1.0
-In-Reply-To: <20200819222002.2059917-1-robh@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paul,
 
-On 8/20/2020 6:20 AM, Rob Herring wrote:
-> The intel,lgm-pcie binding is matching on all snps,dw-pcie instances
-> which is wrong. Add a custom 'select' entry to fix this.
->
-> Fixes: e54ea45a4955 ("dt-bindings: PCI: intel: Add YAML schemas for the PCIe RC controller")
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Dilip Kota <eswara.kota@linux.intel.com>
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> I'll take this via the DT tree.
->
-> Rob
->
->   Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> index 64b2c64ca806..a1e2be737eec 100644
-> --- a/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
-> @@ -9,6 +9,14 @@ title: PCIe RC controller on Intel Gateway SoCs
->   maintainers:
->     - Dilip Kota <eswara.kota@linux.intel.com>
->   
-> +select:
-> +  properties:
-> +    compatible:
-> +      contains:
-> +        const: intel,lgm-pcie
-> +  required:
-> +    - compatible
-> +
->   properties:
->     compatible:
->       items:
+On Wed, 2020-08-19 at 15:54 +0200, Paul Kocialkowski wrote:
+> Hi,
+> 
+> On Fri 07 Aug 20, 11:44, Ezequiel Garcia wrote:
+> > On Thu, 2020-08-06 at 17:50 +0200, Paul Kocialkowski wrote:
+> > > Hi,
+> > > 
+> > > On Thu 06 Aug 20, 12:13, Ezequiel Garcia wrote:
+> > > > The SLICE_PARAMS control is intended for slice-based
+> > > > devices. In this mode, the OUTPUT buffer contains
+> > > > a single slice, and so the buffer's plane payload size
+> > > > can be used to query the slice size.
+> > > 
+> > > If we later extend the API for supporting multiple slices with dynamic array
+> > > controls, I guess we'll need to know the size of each slice in each control
+> > > elements. So I'd rather keep that even if it's indeed redundant with
+> > > vb2_get_plane_payload in single-slice mode.
+> > > 
+> > 
+> > If we later extend the API, another control (possibly
+> > another decoding mode?) shall be introduced.
+> > 
+> > This API covers single-slice-per-request as specified
+> > and documented in patch 9/14 "Clarify SLICE_BASED mode".
+> > 
+> > This is along the lines of the proposal drafted by Nicolas,
+> > see my reply: https://lkml.org/lkml/2020/8/5/791.
+> > 
+> > This applies to num_slices, slice size and slice start offset.
+> > 
+> > There are multiple ways of doing this.
+> 
+> If feels a bit problematic to remove these fields without a clear plan yet
+> on how to support multiple slices in the future. These may need to be added
+> again later, except that it will be too late and new controls will need to be
+> introduced.
+> 
 
-Reviewed-by: Dilip Kota <eswara.kota@linux.intel.com>
+As Nicolas and I have repeatedly mentioned we do have a plan :)
 
-Regards,
-Dilip
+Nothing prevents us from implementing this now, but since it seems
+we don't have any need since the 1-slice-per-buffer is working well,
+there is no motivation for it.
+
+As you well mention, it does require new controls. This is
+totally expected since new decoding semantics will need new controls.
+
+Here's my version of the plan:
+
+enum v4l2_mpeg_video_h264_decode_mode {
+        V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_BASED,
+        V4L2_MPEG_VIDEO_H264_DECODE_MODE_SLICE_ARRAY_BASED,
+        V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
+};
+
+#define V4L2_CID_MPEG_VIDEO_H264_SLICE_ARRAY    (V4L2_CID_MPEG_BASE+1008)
+
+struct v4l2_ctrl_h264_slice_array {
+        __u16 num_slices;
+
+        struct v4l2_ctrl_h264_slice slices[16];
+}
+
+struct v4l2_ctrl_h264_slice {
+        __u32 size;
+        __u32 start_byte_offset;
+        struct v4l2_ctrl_h264_slice_params params;
+}
+
+Now, the _specific_ way this will be done is not under
+discussion at the moment.
+
+> Also, could we consider adding more reserved fields to handle such future needs?
+> 
+
+I have considered that (on each control), but I fail
+to see the reason for it. The same may be said of all controls,
+yet I don't think we bloat each one just in case. 
+
+Thanks,
+Ezequiel
+
+> Cheers,
+> 
+> Paul
+> 
+> > Thanks!
+> > Ezequiel
+> > 
+> > > What do you think?
+> > > 
+> > > Paul
+> > > 
+> > > > To reduce the API surface drop the size from the
+> > > > SLICE_PARAMS control.
+> > > > 
+> > > > A follow-up change will remove other members in SLICE_PARAMS
+> > > > so we don't need to add padding fields here.
+> > > > 
+> > > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > > ---
+> > > >  Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst | 3 ---
+> > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c          | 7 +++----
+> > > >  include/media/h264-ctrls.h                                | 3 ---
+> > > >  3 files changed, 3 insertions(+), 10 deletions(-)
+> > > > 
+> > > > diff --git a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > index 427fc5727ec0..fff74b7bf32a 100644
+> > > > --- a/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > +++ b/Documentation/userspace-api/media/v4l/ext-ctrls-codec.rst
+> > > > @@ -1760,9 +1760,6 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type -
+> > > >      :stub-columns: 0
+> > > >      :widths:       1 1 2
+> > > >  
+> > > > -    * - __u32
+> > > > -      - ``size``
+> > > > -      -
+> > > >      * - __u32
+> > > >        - ``start_byte_offset``
+> > > >          Offset (in bytes) from the beginning of the OUTPUT buffer to the start
+> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > > index a9ba78b15907..8b6f05aadbe8 100644
+> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > > @@ -324,17 +324,16 @@ static void cedrus_set_params(struct cedrus_ctx *ctx,
+> > > >  	struct vb2_buffer *src_buf = &run->src->vb2_buf;
+> > > >  	struct cedrus_dev *dev = ctx->dev;
+> > > >  	dma_addr_t src_buf_addr;
+> > > > -	u32 len = slice->size * 8;
+> > > > +	size_t slice_bytes = vb2_get_plane_payload(src_buf, 0);
+> > > >  	unsigned int pic_width_in_mbs;
+> > > >  	bool mbaff_pic;
+> > > >  	u32 reg;
+> > > >  
+> > > > -	cedrus_write(dev, VE_H264_VLD_LEN, len);
+> > > > +	cedrus_write(dev, VE_H264_VLD_LEN, slice_bytes * 8);
+> > > >  	cedrus_write(dev, VE_H264_VLD_OFFSET, 0);
+> > > >  
+> > > >  	src_buf_addr = vb2_dma_contig_plane_dma_addr(src_buf, 0);
+> > > > -	cedrus_write(dev, VE_H264_VLD_END,
+> > > > -		     src_buf_addr + vb2_get_plane_payload(src_buf, 0));
+> > > > +	cedrus_write(dev, VE_H264_VLD_END, src_buf_addr + slice_bytes);
+> > > >  	cedrus_write(dev, VE_H264_VLD_ADDR,
+> > > >  		     VE_H264_VLD_ADDR_VAL(src_buf_addr) |
+> > > >  		     VE_H264_VLD_ADDR_FIRST | VE_H264_VLD_ADDR_VALID |
+> > > > diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
+> > > > index 4f05ee265997..f74736fcfa00 100644
+> > > > --- a/include/media/h264-ctrls.h
+> > > > +++ b/include/media/h264-ctrls.h
+> > > > @@ -158,9 +158,6 @@ struct v4l2_h264_reference {
+> > > >  };
+> > > >  
+> > > >  struct v4l2_ctrl_h264_slice_params {
+> > > > -	/* Size in bytes, including header */
+> > > > -	__u32 size;
+> > > > -
+> > > >  	/* Offset in bytes to the start of slice in the OUTPUT buffer. */
+> > > >  	__u32 start_byte_offset;
+> > > >  
+> > > > -- 
+> > > > 2.27.0
+> > > > 
+
+
