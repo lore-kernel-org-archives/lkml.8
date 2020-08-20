@@ -2,93 +2,136 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 461D1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758EEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 07C0122B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929707;
-	bh=zvFkWaCytbHCWpM+M7cUA2j0g7DnlWbkOTrUhktlVdE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dov3ly4Q9jyocHwHEGHr8Fl5jVv3ahb65r7gvlYRWYZWQfOWCqWvOk/R5RF1EbBsg
-	 iaQShHPpUTxBUWBwFCGSk4FWh++2OaOV4ryMyaVyuZsGXVK7EFPtWOrHwbZl4bIfpU
-	 EQd+l+O+mJIbxz4HeHqKfBJjZuuNxUD6Iu4EOCuo=
+	by mail.kernel.org (Postfix) with ESMTP id 523F7208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GxjAAHVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgHTNUg (ORCPT
+        id S1729611AbgHTNU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:20:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47984 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728068AbgHTJex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29BD922B4B;
-        Thu, 20 Aug 2020 09:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916092;
-        bh=zvFkWaCytbHCWpM+M7cUA2j0g7DnlWbkOTrUhktlVdE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tGRqhlHm59/baCCRFWr69tFbuL7DSj+DdwQsRP2noOTZ3JyoAXEK0KDJpO/w9djZW
-         9hvsohbUdx4i+zM+25YOP5Dtkx0gbjF7w4b+PO85Xl64PrSdKF31usZ/+SeJYYVrOA
-         h7Gs+MIPwX7no4Ftzi+zUStZd8QxWUDDId3n25Ek=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>
-Subject: [PATCH 5.7 001/204] smb3: warn on confusing error scenario with sec=krb5
-Date:   Thu, 20 Aug 2020 11:18:18 +0200
-Message-Id: <20200820091606.268388001@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
+        Thu, 20 Aug 2020 09:20:26 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:44945 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728439AbgHTJfA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:35:00 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id BA2BA5C00E2;
+        Thu, 20 Aug 2020 05:34:59 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Thu, 20 Aug 2020 05:34:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=KlpKEu
+        wCoUOMNODDk2NCxK/d+w7GprnH5JN5nth+uqI=; b=GxjAAHVEytKq/BXRBWsDxY
+        Dxd+QGSxNyMLn8B6w2bmBHtKm0VvhbkJfRUN+wyQ76fLyGOXps4Bp6lYyc4OslUw
+        CviOtRimIJz9e2GPwAWHPkkz3VZaVHMy2Z6/iya0NhhpWD5ntBeJ90TymbMmOduH
+        3krwawSMZhRk62Fen4KFAIwaFpKwtMjkHuPsycm80afeY8OO2MMdzaVumezTlJuR
+        KNdi/GebTHioOcjUAw+WHIL42E1ecSYrMhFzPEmoMIHdf2zRwB0mvdaIyXsWN/X3
+        Y3J3scEeV/uBB9xAOB9U+m+IL8p1ufOJM6tCcD6E2OXIw8nHg8Q0JAp/YVuc6/DA
+        ==
+X-ME-Sender: <xms:w0M-X1DHNrYONv3eKsbyxF6ogxOn86preXDIu8-vS1TG9SLjSV9H_Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedruddutddgudegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeetveff
+    iefghfekhffggeeffffhgeevieektedthfehveeiheeiiedtudegfeetffenucfkpheple
+    durdeigedrudejtddrkeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvthhhihhnghhslhgrsg
+    drtghomh
+X-ME-Proxy: <xmx:w0M-XzjZGjLAp3n9_azWu0HJ-2LvhXEr0Nw-aGIfzOfEUa-iC2utxg>
+    <xmx:w0M-XwkllzvvDnn213E9uwXCMcpLM26j6UTX6b_kkAMDZan5hXrRSA>
+    <xmx:w0M-X_xG0GH2nOXoQYwBW64vVgXzNJnUgZ3q0__ohYa9b3uWuoJnZg>
+    <xmx:w0M-X4efRSIXmsgZm_bWKk2FYgEeFvwbXRzwjLNLAlD7ehekjMRMOw>
+Received: from mail-itl (ip5b40aa59.dynamic.kabel-deutschland.de [91.64.170.89])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 60BFA3280060;
+        Thu, 20 Aug 2020 05:34:58 -0400 (EDT)
+Date:   Thu, 20 Aug 2020 11:34:54 +0200
+From:   Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>
+To:     Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+Cc:     Norbert Kaminski <norbert.kaminski@3mdeb.com>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Maciej Pijanowski <maciej.pijanowski@3mdeb.com>,
+        piotr.krol@3mdeb.com
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
+Message-ID: <20200820093454.GS1626@mail-itl>
+References: <20200816001949.595424-1-marmarek@invisiblethingslab.com>
+ <20200817090013.GN975@Air-de-Roger>
+ <20200818120135.GK1679@mail-itl>
+ <20200818124710.GK828@Air-de-Roger>
+ <20200818150020.GL1679@mail-itl>
+ <20200818172114.GO828@Air-de-Roger>
+ <20200818184018.GN1679@mail-itl>
+ <20200819081930.GQ828@Air-de-Roger>
+ <3d405b0c-4e2b-0d29-56bb-e315f4c21d03@3mdeb.com>
+ <20200820093025.GT828@Air-de-Roger>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pssgfZQbIK00CPi6"
+Content-Disposition: inline
+In-Reply-To: <20200820093025.GT828@Air-de-Roger>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
 
-commit 0a018944eee913962bce8ffebbb121960d5125d9 upstream.
+--pssgfZQbIK00CPi6
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] efi: discover ESRT table on Xen PV too
 
-When mounting with Kerberos, users have been confused about the
-default error returned in scenarios in which either keyutils is
-not installed or the user did not properly acquire a krb5 ticket.
-Log a warning message in the case that "ENOKEY" is returned
-from the get_spnego_key upcall so that users can better understand
-why mount failed in those two cases.
+On Thu, Aug 20, 2020 at 11:30:25AM +0200, Roger Pau Monn=C3=A9 wrote:
+> Right, so you only need access to the ESRT table, that's all. Then I
+> think we need to make sure Xen doesn't use this memory for anything
+> else, which will require some changes in Xen (or at least some
+> checks?).
+>=20
+> We also need to decide what to do if the table turns out to be placed
+> in a wrong region. How are we going to prevent dom0 from using it
+> then? My preference would be to completely hide it from dom0 in that
+> case, such that it believes there's no ESRT at all if possible.
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Yes, that makes sense. As discussed earlier, that probably means
+re-constructing SystemTable before giving it to dom0. We'd need to do
+that in PVH case anyway, to adjust addresses, right? Is there something
+like this in the Xen codebase already, or it needs to be written from
+scratch?
 
----
- fs/cifs/smb2pdu.c |    2 ++
- 1 file changed, 2 insertions(+)
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -1347,6 +1347,8 @@ SMB2_auth_kerberos(struct SMB2_sess_data
- 	spnego_key = cifs_get_spnego_key(ses);
- 	if (IS_ERR(spnego_key)) {
- 		rc = PTR_ERR(spnego_key);
-+		if (rc == -ENOKEY)
-+			cifs_dbg(VFS, "Verify user has a krb5 ticket and keyutils is installed\n");
- 		spnego_key = NULL;
- 		goto out;
- 	}
+--pssgfZQbIK00CPi6
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAl8+Q74ACgkQ24/THMrX
+1yw4EQgAk4AIcF8Tu2i2t9vctatIRr4NIxuooAyuGeLDLt9gHLT6RnXWj19wse+9
+mkWk5O2lq9WtIrO4gWqBScO0uPAbH9EV6RapfhhGHc/gTtG2rXieaCOiwOW1QKuA
+1QhKHmzSWb16MAQD30cNvyThc7CWEtDz87/gPzxYSOzSEtPIRp3SwJDXifNOPAUK
+w5rzHYjmANwxAw2kNmGuF+AmwZgHQhGkCLzUMMkZ7hPEGxnKRferTQHmU2Hs3WBC
+hDiq05yOY5i4YUsJiPJrkGLuhwRRjbq38Rb3CWlwhLRMEzQhw4i6+T/EETRy8MZm
+2t/zlNB3JyO+sFY32S+zBBXoYBe+lg==
+=7TLR
+-----END PGP SIGNATURE-----
+
+--pssgfZQbIK00CPi6--
