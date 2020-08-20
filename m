@@ -2,138 +2,153 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63BCC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB83AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9233B207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7813208B3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WJVp6uka"
+	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="R84jP9dg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728477AbgHTRmj (ORCPT
+        id S1727809AbgHTRmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48526 "EHLO
+        Thu, 20 Aug 2020 13:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbgHTRmU (ORCPT
+        with ESMTP id S1728009AbgHTRmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 13:42:20 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A72FC061387
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:18 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id b2so979208edw.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:18 -0700 (PDT)
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5F2C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:19 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id d20so812593ual.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=posk.io; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=++DU+mGMau0wCVk26WL7BRudLdRoW/TdcNVBaFfSVeo=;
-        b=WJVp6ukadTpNcM9SYJpDROIRN+tD3gRH5NoPQs0+HAsQmLtJTImp5dRFMc7wGC3HgN
-         R/lFt0vUnPt7BGWZ9GyHNRaZ0vNwnvZs2Kqg3u8nexS2ZBfKmw9OlPBaaVZioiS7BHsl
-         YQ4r7w5vrJPUKxgqdugvjbGIbRfRLzSot++CY=
+        bh=AgLB407bKm54/IrZ6UCuTIQNo2tX1E4LKdmKF7McOxA=;
+        b=R84jP9dgvDeMoE2uEu+DF3AzBT5JNaKMCWQ4uCwEUKPxuNmwM7AXtxgRmH9vE+TQeE
+         Oah0ew6Va5dDXIcJ0Sjl3icIyEVfYvHNPq8+dsWbA5eS34smi/yPvhdLGCumnolaqKui
+         1iy5tM5Uhau+Nia85uAx+l7BXvdZETkn6m3ZEH1nuhX3Tj0SqLsa/xSeSX0gHVdhqOiH
+         KRH4n7yk+2B6HP3lvzpEoCHT43c6QW0Diq65ONkUD+NF8moo5oSe4bnh39RVq09Zxt3o
+         gie0sMhFlgaUUUx4EWO/KhD2g5nwgrshfLBAmIYzxWT1sn90RWDl4ymlzJ9sUDtv3cT4
+         iLqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=++DU+mGMau0wCVk26WL7BRudLdRoW/TdcNVBaFfSVeo=;
-        b=IZEd22bpdlEhisVAjFQPaHpOtSqfTMKM9y0D4ddeXFhYyuaZJYzy2zKsCIDRBXodZr
-         PbNZed+g8AkQyzfq8Y6Ecd9BHjClb5F0DDOu3woIBmcxvuwhxCXgdwOmi/xojQs+DfyY
-         WGe0qqwWuVhs0hcuwmk02/bd2HPk63RkvlcbXnDllygIr74JAHqE5xj6MWUlZ5sIrgZ7
-         sEujS/uMWdNdG/sT/o/M+i0tyYvneucpXZpDZuU7oQiEWdq4SHovfHySXh3l6EaBF/SX
-         A4sbUo4brMlZdr5fTdjSEAikFEk2gUVzxJUK3pR3y3gIAy18M32usqkbazHlSm99sN+D
-         C2kw==
-X-Gm-Message-State: AOAM531a6NBl6lqqXwe66HRz6gZx15WQJZZUtrvvr2EnrQW10JCgJx0u
-        YoPDQx8kKHgHb8FXny3KHceEprH+REpmcQ==
-X-Google-Smtp-Source: ABdhPJzhwDmx9HXVO6sfDFfdOpOkJHK90ObGBKI76s04d3pqBHAGkR3JU5F1v3JEEcu1BbhK8f0Zpg==
-X-Received: by 2002:aa7:c544:: with SMTP id s4mr3943651edr.51.1597945337308;
-        Thu, 20 Aug 2020 10:42:17 -0700 (PDT)
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
-        by smtp.gmail.com with ESMTPSA id p21sm1676781edr.59.2020.08.20.10.42.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 10:42:17 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id 88so2876042wrh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:16 -0700 (PDT)
-X-Received: by 2002:adf:ec4f:: with SMTP id w15mr4013793wrn.385.1597944841643;
- Thu, 20 Aug 2020 10:34:01 -0700 (PDT)
+        bh=AgLB407bKm54/IrZ6UCuTIQNo2tX1E4LKdmKF7McOxA=;
+        b=aVaj+XLEn/Chr+LDlWlh3X2dviu7E62F3DCotzhsarKMsjb/qZdQ1wSSaQZ4SKR1a9
+         PmIIelI22pV4yh2yXbNDm7FVXPXCvMi+EWftd4kEz7+pz9O90EmNztAEhxBLa2w4SE5J
+         uGR2c+J5/q4n6ieoC2b2KKcBWuMS9+gC6RGFEjKia7ElKrWEufQ7YprP+SS57o5PQxGN
+         Dy805NGv11sL8bfBxRimBHMVRRImb+D5Z2cWctHKkJpLpzeeyA0/+X3K86Y+36UunHaw
+         r3TL2jmTfWgA585FZmdovmYf1kG2V/HZMdhMfzooAC5dx3Fuc5mcdxX1KX9ahcLaMBAr
+         Qn6w==
+X-Gm-Message-State: AOAM531ImgEiBpZJk+K5KxLinZkTxScPsyTJUo249M/uoa8AXuTy70kw
+        OXjXyngoURTGAte9eKYXEsDGSQFweEpjpb6BwP6pQg==
+X-Google-Smtp-Source: ABdhPJzordxKYzj0nMYhDbICoBQiPfB/Pg2v8UB5v7axF5xFZh2v9ZTA7zbfzsT9wsEFZZcAPTL0/FOaQB/ZTm+f+Bg=
+X-Received: by 2002:ab0:7183:: with SMTP id l3mr2519103uao.139.1597945336910;
+ Thu, 20 Aug 2020 10:42:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de>
- <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com>
- <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com>
- <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de>
- <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com> <20200820165407.GD12693@lst.de>
-In-Reply-To: <20200820165407.GD12693@lst.de>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Thu, 20 Aug 2020 19:33:48 +0200
-X-Gmail-Original-Message-ID: <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
-Message-ID: <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
-Subject: Re: [PATCH 05/28] media/v4l2: remove V4L2-FLAG-MEMORY-NON-CONSISTENT
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     alsa-devel@alsa-project.org, linux-ia64@vger.kernel.org,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
-        linux-mips@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        linux-mm@kvack.org,
-        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        linux-scsi@vger.kernel.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+References: <20200811000959.2486636-1-posk@google.com> <20200811062733.GP3982@worktop.programming.kicks-ass.net>
+ <CAFTs51XK0HLwCCvXCcfE5P7a4ExANPNPw7UvNigwHZ8sZVP+nQ@mail.gmail.com>
+ <1003774683.6088.1597257002027.JavaMail.zimbra@efficios.com>
+ <CAFTs51XJhKXn7M2U2dZpFRsTrog4juy=UQfbtcdJfOj5TUSbqQ@mail.gmail.com> <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com>
+From:   Peter Oskolkov <posk@posk.io>
+Date:   Thu, 20 Aug 2020 10:42:05 -0700
+Message-ID: <CAFTs51Uwf7+Vs+Mbf=LZxoytFA+3WEtRB5zUanatxgk272MP7Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Peter Oskolkov <posk@google.com>, paulmck <paulmck@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 6:54 PM Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Aug 12, 2020 at 12:44 PM Mathieu Desnoyers
+<mathieu.desnoyers@efficios.com> wrote:
 >
-> On Thu, Aug 20, 2020 at 12:05:29PM +0200, Tomasz Figa wrote:
-> > The UAPI and V4L2/videobuf2 changes are in good shape and the only
-> > wrong part is the use of DMA API, which was based on an earlier email
-> > guidance anyway, and a change to the synchronization part . I find
-> > conclusions like the above insulting for people who put many hours
-> > into designing and implementing the related functionality, given the
-> > complexity of the videobuf2 framework and how ill-defined the DMA API
-> > was, and would feel better if such could be avoided in future
-> > communication.
+[...]
 >
-> It wasn't meant to be too insulting, but I found this out when trying
-> to figure out how to just disable it.  But it also ends up using
-> the actual dma attr flags for it's own consistency checks, so just
-> not setting the flag did not turn out to work that easily.
+> > One way of doing what you suggest is to allow some commands to be bitwise-ORed.
+> >
+> > So, for example, the user could call
+> >
+> > membarrier(CMD_PRIVATE_EXPEDITED_SYNC_CORE | CMD_PRIVATE_EXPEDITED_RSEQ, cpu_id)
+> >
+> > Is this what you have in mind?
 >
+> Not really. This would not take care of the fact that we would end up multiplying
+> the number of commands as we allow combinations. E.g. if we ever want to have RSEQ
+> work in private and global, and in non-expedited and expedited, we end up needing:
+>
+> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ
+> - CMD_PRIVATE_EXPEDITED_RSEQ
+> - CMD_PRIVATE_RSEQ
+> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ
+> - CMD_GLOBAL_EXPEDITED_RSEQ
+> - CMD_GLOBAL_RSEQ
+>
+> The only thing we would save by OR'ing it with the SYNC_CORE command is the additional
+> list:
+>
+> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+> - CMD_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
+> - CMD_PRIVATE_RSEQ_SYNC_CORE
+> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+> - CMD_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
+> - CMD_GLOBAL_RSEQ_SYNC_CORE
+>
+> But unless we receive feedback that doing a membarrier with RSEQ+sync_core all in
+> one go is a significant use-case, I am tempted to leave out that scenario for now.
+> If we go for new commands, this means we could add (for private-expedited-rseq):
+>
+> - MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ,
+> - MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
+>
+> I do however have use-cases for using RSEQ across shared memory (between
+> processes). Not currently for a rseq-fence, but for rseq acting as per-cpu
+> atomic operations. If I ever end up needing rseq-fence across shared memory,
+> that would result in the following new commands:
+>
+> - MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ,
+> - MEMBARRIER_CMD_GLOBAL_EXPEDITED_RSEQ,
+>
+> The remaining open question is whether it would be OK to define a new
+> membarrier flag=MEMBARRIER_FLAG_CPU, which would expect an additional
+> @cpu parameter.
 
-Yes, sadly the videobuf2 ended up becoming quite counterintuitive
-after growing for the long years and that is reflected in the design
-of this feature as well. I think we need to do something about it.
+Hi  Mathieu,
 
-> But in general it helps to add a few more people to the Cc list for
-> such things that do stranger things.  Especially if you think you did
-> it based on the advice of those people.
+I do not think there is any reason to wait for additional feedback, so I believe
+we should finalize the API/ABI.
 
-Indeed, we should have CCed you and other DMA folks. Sergey who worked
-on this series is quite new to these areas of the kernel (although not
-to the kernel itself) and it's my fault for not explicitly letting him
-know to do that.
+I see two issues to resolve:
+1: how to combine commands:
+  - you do not like adding new commands that are combinations of existing ones;
+  - you do not like ORing.
+=> I'm not sure what other options we have here?
 
-Best regards,
-Tomasz
+2: should @flags be repurposed for cpu_id, or MEMBARRIER_FLAG_CPU
+   added with a new syscall parameter.
+=> I'm still not sure a new parameter can be cleanly added, but I can try
+   it in the next patchset if you prefer it this way.
+
+Please let me know your thoughts.
+
+Thanks,
+Peter
