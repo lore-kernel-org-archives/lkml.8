@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B188AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A31920738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE0520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926183;
-	bh=gkyn4aFGhKY9SDdydZTGTsLeU28H236Tk3wbC9RA6Mo=;
+	s=default; t=1597926198;
+	bh=z8abWbrQfvKrdo/2l/V5xVkWfRiUU1HPSskqPVkafqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8osQP1e7F6PJ+8/qhMDieOuvWMtv6nAbnerWdWIvV1m09v0vVxM8WzG7CIGqpHyh
-	 pKOMHGLuhUGld6C5TFdCM6q3ZwFmjFUk+w7mijO+UH1BPkUIYqBzxdWyyBWKHTxkYk
-	 8F3r8bLpqYzmh/By43E9v6zZLhjkNcgwS/rFMDg8=
+	b=k7iJNHqj5ZABMS4uyb5Jf/V6rY8jySY4XZv3GezNBzlSaLR9ijV6M+oi0LISUikqu
+	 Fal3liybFXNDkfUC3fB1b1cN/C3GfC/DHX1B1ThWxTMFFk7vsRQTuCsU4rvPX43jRd
+	 fLi1V8Ej3aR5VY6mcQyuP0IVJ/DTp9w7ZxGb3+pI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgHTMW7 (ORCPT
+        id S1729871AbgHTMXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:22:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgHTJyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:52 -0400
+        id S1730157AbgHTJyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6A0A207FB;
-        Thu, 20 Aug 2020 09:54:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDB61207FB;
+        Thu, 20 Aug 2020 09:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917292;
-        bh=gkyn4aFGhKY9SDdydZTGTsLeU28H236Tk3wbC9RA6Mo=;
+        s=default; t=1597917286;
+        bh=z8abWbrQfvKrdo/2l/V5xVkWfRiUU1HPSskqPVkafqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L+kRcYb5sZ6VC5/4skRC/YG5dILWdoAlcYfl1/o/8T0AZ6gsiUErqSooX49RfNWZo
-         KZTwpo8Bo7Vvb1Pgx2ZpnsWLM1DsRRw3CEhCuIuo2e/OAATioUkkQgaEPwprzP6QeW
-         Gw6kMfuFNt8zITfMU9bB7ZzjzN8UZwLza00Zjukg=
+        b=rP9jGJjkcfHAkUPFPWuaOFnJW2SlxTrqorPeDFSn7tqyRUKd2LWODRW9nMURmG3PG
+         vnOQi43y4Pg5TMBs7QJIKBAWBbg2jn2PjrfXyrjaNHFJQWWD2+lNPM+JhzTt5Z/SSy
+         efJTnU6CcHvQqH4Nk3HFykQWWZC1lSpVxWRUr5cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <james.smart@broadcom.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 71/92] scsi: lpfc: nvmet: Avoid hang / use-after-free again when destroying targetport
-Date:   Thu, 20 Aug 2020 11:21:56 +0200
-Message-Id: <20200820091541.356760236@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 69/92] i2c: rcar: avoid race when unregistering slave
+Date:   Thu, 20 Aug 2020 11:21:54 +0200
+Message-Id: <20200820091541.220955447@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -61,45 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ewan D. Milne <emilne@redhat.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-[ Upstream commit af6de8c60fe9433afa73cea6fcccdccd98ad3e5e ]
+[ Upstream commit c7c9e914f9a0478fba4dc6f227cfd69cf84a4063 ]
 
-We cannot wait on a completion object in the lpfc_nvme_targetport structure
-in the _destroy_targetport() code path because the NVMe/fc transport will
-free that structure immediately after the .targetport_delete() callback.
-This results in a use-after-free, and a crash if slub_debug=FZPU is
-enabled.
+Due to the lockless design of the driver, it is theoretically possible
+to access a NULL pointer, if a slave interrupt was running while we were
+unregistering the slave. To make this rock solid, disable the interrupt
+for a short time while we are clearing the interrupt_enable register.
+This patch is purely based on code inspection. The OOPS is super-hard to
+trigger because clearing SAR (the address) makes interrupts even more
+unlikely to happen as well. While here, reinit SCR to SDBS because this
+bit should always be set according to documentation. There is no effect,
+though, because the interface is disabled.
 
-An earlier fix put put the completion on the stack, but commit 2a0fb340fcc8
-("scsi: lpfc: Correct localport timeout duration error") subsequently
-changed the code to reference the completion through a pointer in the
-object rather than the local stack variable.  Fix this by using the stack
-variable directly.
-
-Link: https://lore.kernel.org/r/20200729231011.13240-1-emilne@redhat.com
-Fixes: 2a0fb340fcc8 ("scsi: lpfc: Correct localport timeout duration error")
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 7b814d852af6 ("i2c: rcar: avoid race when unregistering slave client")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_nvmet.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-rcar.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
-index 768eba8c111d9..5bc33817568ea 100644
---- a/drivers/scsi/lpfc/lpfc_nvmet.c
-+++ b/drivers/scsi/lpfc/lpfc_nvmet.c
-@@ -1712,7 +1712,7 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
- 		}
- 		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
- 		nvmet_fc_unregister_targetport(phba->targetport);
--		if (!wait_for_completion_timeout(tgtp->tport_unreg_cmp,
-+		if (!wait_for_completion_timeout(&tport_unreg_cmp,
- 					msecs_to_jiffies(LPFC_NVMET_WAIT_TMO)))
- 			lpfc_printf_log(phba, KERN_ERR, LOG_NVME,
- 					"6179 Unreg targetport %p timeout "
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 11d1977616858..dcdce18fc7062 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -861,12 +861,14 @@ static int rcar_unreg_slave(struct i2c_client *slave)
+ 
+ 	WARN_ON(!priv->slave);
+ 
+-	/* disable irqs and ensure none is running before clearing ptr */
++	/* ensure no irq is running before clearing ptr */
++	disable_irq(priv->irq);
+ 	rcar_i2c_write(priv, ICSIER, 0);
+-	rcar_i2c_write(priv, ICSCR, 0);
++	rcar_i2c_write(priv, ICSSR, 0);
++	enable_irq(priv->irq);
++	rcar_i2c_write(priv, ICSCR, SDBS);
+ 	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
+ 
+-	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
 -- 
 2.25.1
 
