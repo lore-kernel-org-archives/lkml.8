@@ -2,84 +2,73 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A432C433E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBA5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59BFD206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776BF2067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729342AbgHTNxR (ORCPT
+        id S1729533AbgHTNxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:53:17 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59341 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730149AbgHTNuh (ORCPT
+        Thu, 20 Aug 2020 09:53:30 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:33484 "EHLO
+        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbgHTNwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:50:37 -0400
-Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07KDml2B045145;
-        Thu, 20 Aug 2020 22:48:47 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp);
- Thu, 20 Aug 2020 22:48:47 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav107.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07KDml2i045137
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 20 Aug 2020 22:48:47 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Suren Baghdasaryan <surenb@google.com>, timmurray@google.com
-Cc:     Michal Hocko <mhocko@suse.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
-        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200820002053.1424000-1-surenb@google.com>
- <87zh6pxzq6.fsf@x220.int.ebiederm.org> <20200820124241.GJ5033@dhcp22.suse.cz>
- <87lfi9xz7y.fsf@x220.int.ebiederm.org> <87d03lxysr.fsf@x220.int.ebiederm.org>
- <20200820132631.GK5033@dhcp22.suse.cz>
- <20200820133454.ch24kewh42ax4ebl@wittgenstein>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
-Date:   Thu, 20 Aug 2020 22:48:43 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200820133454.ch24kewh42ax4ebl@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Aug 2020 09:52:01 -0400
+Received: from ironmsg-lv-alpha.qualcomm.com ([10.47.202.13])
+  by alexa-out.qualcomm.com with ESMTP; 20 Aug 2020 06:51:59 -0700
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by ironmsg-lv-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Aug 2020 06:51:58 -0700
+Received: from c-skakit-linux.ap.qualcomm.com (HELO c-skakit-linux.qualcomm.com) ([10.242.51.242])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 20 Aug 2020 19:21:33 +0530
+Received: by c-skakit-linux.qualcomm.com (Postfix, from userid 2344709)
+        id 8207C440F; Thu, 20 Aug 2020 19:21:31 +0530 (IST)
+From:   satya priya <skakit@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>, gregkh@linuxfoundation.org,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com,
+        satya priya <skakit@codeaurora.org>
+Subject: [PATCH V3 0/3] Add wakeup support over UART RX
+Date:   Thu, 20 Aug 2020 19:21:04 +0530
+Message-Id: <1597931467-24268-1-git-send-email-skakit@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/20 22:34, Christian Brauner wrote:
-> On Thu, Aug 20, 2020 at 03:26:31PM +0200, Michal Hocko wrote:
->> If you can handle vfork by other means then I am all for it. There were
->> no patches in that regard proposed yet. Maybe it will turn out simpler
->> then the heavy lifting we have to do in the oom specific code.
-> 
-> Eric's not wrong. I fiddled with this too this morning but since
-> oom_score_adj is fiddled with in a bunch of places this seemed way more
-> code churn then what's proposed here.
+Changes in V2:
+ - As per Matthias's comment added wakeup support for all the UARTs
+   of SC7180.
+ - Added sleep state in sc7180-idp.dts file.
+ - Modify the if check in set_mctrl API in serial driver to avoid
+   making RFR high during suspend.
 
-I prefer simply reverting commit 44a70adec910d692 ("mm, oom_adj: make sure
-processes sharing mm have same view of oom_score_adj").
+Changes in V3:
+ - As per Matthias's comments modify the idp dts pin config to keep
+   only the required pin settings.
+ - Remove the extra parentheses from serial driver patch.
 
-  https://lore.kernel.org/patchwork/patch/1037208/
+satya priya (3):
+  arm64: dts: sc7180: Add wakeup support over UART RX
+  arm64: dts: qcom: sc7180: Add sleep pin ctrl for BT uart
+  tty: serial: qcom_geni_serial: Fix the UART wakeup issue
+
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts | 54 +++++++++++++++---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi    | 98 ++++++++++++++++++++++++++++-----
+ drivers/tty/serial/qcom_geni_serial.c   |  2 +-
+ 3 files changed, 130 insertions(+), 24 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
