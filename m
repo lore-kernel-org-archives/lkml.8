@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 466E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C99C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16B6422BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DEC72072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921591;
-	bh=yFQbJc/EOVgnddYLEayofDZFETxGTAIux4q8PSfvB3E=;
+	s=default; t=1597921592;
+	bh=dU8mWmZj2y/PLg8r9aam5cB2sbSCPZqhnJStU6/e1cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exr7CZWC/kHfraj0sSyREfCGIwrUEAC8Yl8C3B9EtFOdntHwFcOjIJ+kvFNRswj0p
-	 9RvgqBYlwQXeU3qBcl6dp0AMe26f7U6ABVgJMk1jU6dwdLIRINo4R898i70GHR3wEX
-	 eDy6OiPOOPcWX6n16593A37FwG0TJV4g5wndnwtU=
+	b=jLIuMgCBZF8ccExgqn4w9lZ2/9VTuZ6ZVod3l06pxgJu6dL0bfuDkUEe3fpxuEyXc
+	 Vsu/c9KujS6qvdkopCMXBujyW4w72n3C7ZO0ujUHn894kaLE7k3+3xrnJzjyW6nhTZ
+	 806v1+GIVDcTdaLC+n0VXzI1qCD5Ybfz5QjjerKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbgHTLG0 (ORCPT
+        id S1730245AbgHTLGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgHTKL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:11:56 -0400
+        id S1730223AbgHTKMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0B520738;
-        Thu, 20 Aug 2020 10:11:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E807F20738;
+        Thu, 20 Aug 2020 10:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918315;
-        bh=yFQbJc/EOVgnddYLEayofDZFETxGTAIux4q8PSfvB3E=;
+        s=default; t=1597918321;
+        bh=dU8mWmZj2y/PLg8r9aam5cB2sbSCPZqhnJStU6/e1cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fjI8DmUh2FogED7T9y+m7/wd0nUIXVHRIzEnhU2iSG2f06xjoFR+VEd5463HnrDm+
-         +dj9R+4MJixSvjT65fx/Em00sSy+6SBZa6Tm0E7RQMD7FEyIyv9p9yaJik/urLc1Ik
-         IWyAscglaWhmVZTldeuWPdpblFHP6mC4sLnaTwNg=
+        b=chxIm6+AgO8AGkp0BNVJLBi0kcRS5orsQhHuxQ0COUgJYzFVvHmUXBDmNfjzHdUEk
+         KCboMp9NfYhGNw0GyOcPTyWfDGXaEPFFvPhasQPOW8vbh8E5nqxcPPBnzLLdS7MzVI
+         38qSmZdDHUVm5db5/JOGkbGdkukiMuj+eA/6pdT0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 119/228] power: supply: check if calc_soc succeeded in pm860x_init_battery
-Date:   Thu, 20 Aug 2020 11:21:34 +0200
-Message-Id: <20200820091613.542297160@linuxfoundation.org>
+Subject: [PATCH 4.14 129/228] net: spider_net: Fix the size used in a dma_free_coherent() call
+Date:   Thu, 20 Aug 2020 11:21:44 +0200
+Message-Id: <20200820091614.035744041@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,56 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit ccf193dee1f0fff55b556928591f7818bac1b3b1 ]
+[ Upstream commit 36f28f7687a9ce665479cce5d64ce7afaa9e77ae ]
 
-clang static analysis flags this error
+Update the size used in 'dma_free_coherent()' in order to match the one
+used in the corresponding 'dma_alloc_coherent()', in
+'spider_net_init_chain()'.
 
-88pm860x_battery.c:522:19: warning: Assigned value is
-  garbage or undefined [core.uninitialized.Assign]
-                info->start_soc = soc;
-                                ^ ~~~
-soc is set by calling calc_soc.
-But calc_soc can return without setting soc.
-
-So check the return status and bail similarly to other
-checks in pm860x_init_battery and initialize soc to
-silence the warning.
-
-Fixes: a830d28b48bf ("power_supply: Enable battery-charger for 88pm860x")
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: d4ed8f8d1fb7 ("Spidernet DMA coalescing")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/88pm860x_battery.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/toshiba/spider_net.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/88pm860x_battery.c b/drivers/power/supply/88pm860x_battery.c
-index 63c57dc82ac1d..4eda5065b5bbc 100644
---- a/drivers/power/supply/88pm860x_battery.c
-+++ b/drivers/power/supply/88pm860x_battery.c
-@@ -436,7 +436,7 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
- 	int ret;
- 	int data;
- 	int bat_remove;
--	int soc;
-+	int soc = 0;
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index da136b8843dd9..a0fed9035f537 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -296,8 +296,8 @@ spider_net_free_chain(struct spider_net_card *card,
+ 		descr = descr->next;
+ 	} while (descr != chain->ring);
  
- 	/* measure enable on GPADC1 */
- 	data = MEAS1_GP1;
-@@ -499,7 +499,9 @@ static void pm860x_init_battery(struct pm860x_battery_info *info)
- 	}
- 	mutex_unlock(&info->lock);
+-	dma_free_coherent(&card->pdev->dev, chain->num_desc,
+-	    chain->hwring, chain->dma_addr);
++	dma_free_coherent(&card->pdev->dev, chain->num_desc * sizeof(struct spider_net_hw_descr),
++			  chain->hwring, chain->dma_addr);
+ }
  
--	calc_soc(info, OCV_MODE_ACTIVE, &soc);
-+	ret = calc_soc(info, OCV_MODE_ACTIVE, &soc);
-+	if (ret < 0)
-+		goto out;
- 
- 	data = pm860x_reg_read(info->i2c, PM8607_POWER_UP_LOG);
- 	bat_remove = data & BAT_WU_LOG;
+ /**
 -- 
 2.25.1
 
