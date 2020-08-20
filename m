@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4472C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D8DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2875207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC68208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882060;
-	bh=0yGrpJu7gFKvvJbC+j+tbevmFHvNI47Gc6ry9YWKlB0=;
+	s=default; t=1597882076;
+	bh=cl6pCi7Kvd90yBpkRdLa9gsjAZiENQRRie7QpCBE7YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMC4Vm4WRjW3Y9T9uuN6STeaGXVg4TnncaPJcfyoBhTFmqnkuvutZryFwBXiYPkY/
-	 NAu2NRpvC/csKbIxKRLBoy2no680gZqYIaSCK59n+KjMC+IpcEDZ3V+aq1AJkekx9f
-	 5h3MqIila1DImMK2jn5V89KNZGxIJNnXLNO1MXN8=
+	b=lTY18QxLRk5NlanZ6XTdc5zEh6erM8xnH1A1S96HJ/2kAhrCNFkz5qhbGhgoQyesK
+	 M7ZCnG0Roc0QIms9KLRYcRzJpeltJJ0i8q60IQF0u77FYryrBXWKX8s63FuWAhhbKW
+	 KVoA8cTE6EOh2E2PNoK5YgrrrlxGDNVqxCdLYNAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgHTAHi (ORCPT
+        id S1728742AbgHTAHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:07:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32770 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728244AbgHTADS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:18 -0400
+        id S1728239AbgHTADN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 434BC21744;
-        Thu, 20 Aug 2020 00:03:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E2DC20FC3;
+        Thu, 20 Aug 2020 00:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881797;
-        bh=0yGrpJu7gFKvvJbC+j+tbevmFHvNI47Gc6ry9YWKlB0=;
+        s=default; t=1597881793;
+        bh=cl6pCi7Kvd90yBpkRdLa9gsjAZiENQRRie7QpCBE7YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqVKnU5wUwdOtGVNItp4VAq7cZBco2Ol0S6O0NoJQKQU2p0S6W+5LOSSQV5tILjj2
-         cDs5wUh0HPPGSFAgkNTrgLpdbiL7X8cxFj4jwj1ez9mO43YRBDr5IeVeoHDsQyzk7G
-         JkKYChiLUzyjpGDjviTT6P14DO8t1mtaElVtY7Gs=
+        b=Tu3zNMks04jR61XX7UzBKKwehlatSNNSqCNWc+yn/wi+U6kzHxLVU2+xyyVccoSYx
+         UfyXv4YfZRmWzufStNSp+oO137mKUXBzdmFeeDxh4+staQx6pU7eKMxcPcWlEs5fe8
+         YLuEbXTbj+fzSuJN8QYN9RKWHrNe8LWag2kt8aXo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>,
-        syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/18] ceph: fix use-after-free for fsc->mdsc
-Date:   Wed, 19 Aug 2020 20:02:54 -0400
-Message-Id: <20200820000302.215560-11-sashal@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 08/18] svcrdma: Fix another Receive buffer leak
+Date:   Wed, 19 Aug 2020 20:02:51 -0400
+Message-Id: <20200820000302.215560-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -61,42 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit a7caa88f8b72c136f9a401f498471b8a8e35370d ]
+[ Upstream commit 64d26422516b2e347b32e6d9b1d40b3c19a62aae ]
 
-If the ceph_mdsc_init() fails, it will free the mdsc already.
+During a connection tear down, the Receive queue is flushed before
+the device resources are freed. Typically, all the Receives flush
+with IB_WR_FLUSH_ERR.
 
-Reported-by: syzbot+b57f46d8d6ea51960b8c@syzkaller.appspotmail.com
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+However, any pending successful Receives flush with IB_WR_SUCCESS,
+and the server automatically posts a fresh Receive to replace the
+completing one. This happens even after the connection has closed
+and the RQ is drained. Receives that are posted after the RQ is
+drained appear never to complete, causing a Receive resource leak.
+The leaked Receive buffer is left DMA-mapped.
+
+To prevent these late-posted recv_ctxt's from leaking, block new
+Receive posting after XPT_CLOSE is set.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index a2e903203bf9f..0fa14d8b9c64c 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3682,7 +3682,6 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 16c8174658fd1..252495ff9010d 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -268,6 +268,8 @@ static int svc_rdma_post_recv(struct svcxprt_rdma *rdma)
+ {
+ 	struct svc_rdma_recv_ctxt *ctxt;
+ 
++	if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
++		return 0;
+ 	ctxt = svc_rdma_recv_ctxt_get(rdma);
+ 	if (!ctxt)
  		return -ENOMEM;
- 	}
- 
--	fsc->mdsc = mdsc;
- 	init_completion(&mdsc->safe_umount_waiters);
- 	init_waitqueue_head(&mdsc->session_close_wq);
- 	INIT_LIST_HEAD(&mdsc->waiting_for_map);
-@@ -3723,6 +3722,8 @@ int ceph_mdsc_init(struct ceph_fs_client *fsc)
- 
- 	strscpy(mdsc->nodename, utsname()->nodename,
- 		sizeof(mdsc->nodename));
-+
-+	fsc->mdsc = mdsc;
- 	return 0;
- }
- 
 -- 
 2.25.1
 
