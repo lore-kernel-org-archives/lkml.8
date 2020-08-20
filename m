@@ -2,51 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE29D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2005B20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920473;
-	bh=6DHbHLVvao1IOlB/zt8+RprsouiSiHG/qkIEQ1H8n/k=;
+	s=default; t=1597920506;
+	bh=En6sewYv3zZ/49fERCeelrcePnIU8NtokRx/j4grgBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m8iLlyBswDGKcSsrGNRCB+0T61u+cjc5Fit1NapC3BPxP6xobM0vAh6j3e2uG2Yxk
-	 v+Lzy/7jNt5vSXBNB0vMAsETCNMw/EDnbMW2LpabXb1ePgGKecAJm9X1LSJDyJx4mF
-	 aMguqBnlP0IGI/sXEBiEePRcYGhMhOPoOIZMc8ms=
+	b=ZOj5xb1ITizBxpE1ZG1LgDVkz9OjAWIS5s0Fi8JHLZIxpLH/EI+A/ZSQIbJTr+DY8
+	 GD8fiFq7dDn9v60cUoTHRXiakvif40Tv7VrpwDGf3kbA7SyclHNx232D99wEz2VugO
+	 vZfb3NgmGKD7fDupcB25MwmoIDjX292STM3ofZzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731120AbgHTKPh (ORCPT
+        id S1729668AbgHTKsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33802 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:48:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731224AbgHTKO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:56 -0400
+        id S1731265AbgHTKPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:15:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6418320724;
-        Thu, 20 Aug 2020 10:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 915E02067C;
+        Thu, 20 Aug 2020 10:15:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918495;
-        bh=6DHbHLVvao1IOlB/zt8+RprsouiSiHG/qkIEQ1H8n/k=;
+        s=default; t=1597918551;
+        bh=En6sewYv3zZ/49fERCeelrcePnIU8NtokRx/j4grgBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B66iuBnZ28ijEuin1xOsWN6LWMoesHib7iskyMMnKvipHZVAxWCJACKa63Xjn5YDc
-         P9mgAMinvR7Y2mJdvgxUriJcv84KGSlsY7QA3XTNYlq6SnnyFf/dLpdV7J7cwHr25B
-         nxafjTiikLNFR9g/PzrI6C1eHz3mezrLjyOAmrfA=
+        b=n98/WbBFMoH2TRjR5RHo4g7bTEyJxm6hBpCsAtd8ajVq7Buz8m9fXamhtZ/Iuu5Z1
+         AhnpbnpGvA9tg68EHNY+GPvC//M+G5QL/Dp5N/0DF5QkNwzB1oS7jojfuzJV+3fe+D
+         8RC2u9jLCL8jaQx7lsAZC2FsIrxcLVu9C82OebQ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 151/228] crypto: cpt - dont sleep of CRYPTO_TFM_REQ_MAY_SLEEP was not specified
-Date:   Thu, 20 Aug 2020 11:22:06 +0200
-Message-Id: <20200820091615.125267995@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Roland Scheidegger <sroland@vmware.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 210/228] drm/vmwgfx: Use correct vmw_legacy_display_unit pointer
+Date:   Thu, 20 Aug 2020 11:23:05 +0200
+Message-Id: <20200820091618.023722982@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,103 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 9e27c99104707f083dccd3b4d79762859b5a0614 upstream.
+[ Upstream commit 1d2c0c565bc0da25f5e899a862fb58e612b222df ]
 
-There is this call chain:
-cvm_encrypt -> cvm_enc_dec -> cptvf_do_request -> process_request -> kzalloc
-where we call sleeping allocator function even if CRYPTO_TFM_REQ_MAY_SLEEP
-was not specified.
+The "entry" pointer is an offset from the list head and it doesn't
+point to a valid vmw_legacy_display_unit struct.  Presumably the
+intent was to point to the last entry.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Cc: stable@vger.kernel.org	# v4.11+
-Fixes: c694b233295b ("crypto: cavium - Add the Virtual Function driver for CPT")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Also the "i++" wasn't used so I have removed that as well.
 
+Fixes: d7e1958dbe4a ("drm/vmwgfx: Support older hardware.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/cavium/cpt/cptvf_algs.c       |    1 +
- drivers/crypto/cavium/cpt/cptvf_reqmanager.c |   12 ++++++------
- drivers/crypto/cavium/cpt/request_manager.h  |    2 ++
- 3 files changed, 9 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/crypto/cavium/cpt/cptvf_algs.c
-+++ b/drivers/crypto/cavium/cpt/cptvf_algs.c
-@@ -205,6 +205,7 @@ static inline int cvm_enc_dec(struct abl
- 	int status;
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+index 3824595fece12..39f4ad0dab8db 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ldu.c
+@@ -79,7 +79,7 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 	struct vmw_legacy_display_unit *entry;
+ 	struct drm_framebuffer *fb = NULL;
+ 	struct drm_crtc *crtc = NULL;
+-	int i = 0;
++	int i;
  
- 	memset(req_info, 0, sizeof(struct cpt_request_info));
-+	req_info->may_sleep = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) != 0;
- 	memset(fctx, 0, sizeof(struct fc_context));
- 	create_input_list(req, enc, enc_iv_len);
- 	create_output_list(req, enc_iv_len);
---- a/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
-+++ b/drivers/crypto/cavium/cpt/cptvf_reqmanager.c
-@@ -136,7 +136,7 @@ static inline int setup_sgio_list(struct
+ 	/* If there is no display topology the host just assumes
+ 	 * that the guest will set the same layout as the host.
+@@ -90,12 +90,11 @@ static int vmw_ldu_commit_list(struct vmw_private *dev_priv)
+ 			crtc = &entry->base.crtc;
+ 			w = max(w, crtc->x + crtc->mode.hdisplay);
+ 			h = max(h, crtc->y + crtc->mode.vdisplay);
+-			i++;
+ 		}
  
- 	/* Setup gather (input) components */
- 	g_sz_bytes = ((req->incnt + 3) / 4) * sizeof(struct sglist_component);
--	info->gather_components = kzalloc(g_sz_bytes, GFP_KERNEL);
-+	info->gather_components = kzalloc(g_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->gather_components) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -153,7 +153,7 @@ static inline int setup_sgio_list(struct
+ 		if (crtc == NULL)
+ 			return 0;
+-		fb = entry->base.crtc.primary->state->fb;
++		fb = crtc->primary->state->fb;
  
- 	/* Setup scatter (output) components */
- 	s_sz_bytes = ((req->outcnt + 3) / 4) * sizeof(struct sglist_component);
--	info->scatter_components = kzalloc(s_sz_bytes, GFP_KERNEL);
-+	info->scatter_components = kzalloc(s_sz_bytes, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->scatter_components) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -170,7 +170,7 @@ static inline int setup_sgio_list(struct
- 
- 	/* Create and initialize DPTR */
- 	info->dlen = g_sz_bytes + s_sz_bytes + SG_LIST_HDR_SIZE;
--	info->in_buffer = kzalloc(info->dlen, GFP_KERNEL);
-+	info->in_buffer = kzalloc(info->dlen, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->in_buffer) {
- 		ret = -ENOMEM;
- 		goto  scatter_gather_clean;
-@@ -198,7 +198,7 @@ static inline int setup_sgio_list(struct
- 	}
- 
- 	/* Create and initialize RPTR */
--	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, GFP_KERNEL);
-+	info->out_buffer = kzalloc(COMPLETION_CODE_SIZE, req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (!info->out_buffer) {
- 		ret = -ENOMEM;
- 		goto scatter_gather_clean;
-@@ -434,7 +434,7 @@ int process_request(struct cpt_vf *cptvf
- 	struct cpt_vq_command vq_cmd;
- 	union cpt_inst_s cptinst;
- 
--	info = kzalloc(sizeof(*info), GFP_KERNEL);
-+	info = kzalloc(sizeof(*info), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (unlikely(!info)) {
- 		dev_err(&pdev->dev, "Unable to allocate memory for info_buffer\n");
- 		return -ENOMEM;
-@@ -456,7 +456,7 @@ int process_request(struct cpt_vf *cptvf
- 	 * Get buffer for union cpt_res_s response
- 	 * structure and its physical address
- 	 */
--	info->completion_addr = kzalloc(sizeof(union cpt_res_s), GFP_KERNEL);
-+	info->completion_addr = kzalloc(sizeof(union cpt_res_s), req->may_sleep ? GFP_KERNEL : GFP_ATOMIC);
- 	if (unlikely(!info->completion_addr)) {
- 		dev_err(&pdev->dev, "Unable to allocate memory for completion_addr\n");
- 		ret = -ENOMEM;
---- a/drivers/crypto/cavium/cpt/request_manager.h
-+++ b/drivers/crypto/cavium/cpt/request_manager.h
-@@ -65,6 +65,8 @@ struct cpt_request_info {
- 	union ctrl_info ctrl; /* User control information */
- 	struct cptvf_request req; /* Request Information (Core specific) */
- 
-+	bool may_sleep;
-+
- 	struct buf_ptr in[MAX_BUF_CNT];
- 	struct buf_ptr out[MAX_BUF_CNT];
- 
+ 		return vmw_kms_write_svga(dev_priv, w, h, fb->pitches[0],
+ 					  fb->format->cpp[0] * 8,
+-- 
+2.25.1
+
 
 
