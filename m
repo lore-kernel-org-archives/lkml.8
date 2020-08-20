@@ -2,693 +2,174 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3423C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52CA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C04A5208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EQFAHYcB"
+	by mail.kernel.org (Postfix) with ESMTP id 2D714207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597942126;
+	bh=lfa1yZPfjn3/JQsBFE7GS4+xci6+Eh/ymSOUanYtVJw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fiQFDJV5d1Xdr+0RF7wwdipyumqkrlgDIoxnQNpYv3r75L0j7hV3MUkcJKvQNi8im
+	 qTyGYihWMfbdtLjLHSG5A1zYzUwgUORvUHkcl4RjK47N0+cRZ94ZYr9Kz6r50/IuAf
+	 c5K6KDIrTGbadpXIFfj3gAC6vRLo7oNHiHXhn0tY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbgHTQsX (ORCPT
+        id S1730349AbgHTQsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40102 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730314AbgHTQsF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:48:05 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44A11C061387
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:48:05 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id k8so2209613wma.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oxmz0NDVIOsG9YgC8QPtNaiWi6rrmT2HCpKolU9eu/U=;
-        b=EQFAHYcBjnpXbZ99PYgtgmkMP/pAfGRfbRQ/U+zEANP1QBI4hLmqIXyCbvTRWhffhx
-         NrjJ+2gI7Zg30fyblg2NnVySzhE9wYNamOARSrQgh1Gq53kXpoEU/6xzVWPo8COgDzjm
-         r8ZqE04Ce3SYBTWlQRHuURIwaesAl8edHrq1U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oxmz0NDVIOsG9YgC8QPtNaiWi6rrmT2HCpKolU9eu/U=;
-        b=rLGpnrRZ+MWXQJo0IPHYs5qX8IIuIyjQKfc+lxXqwieogsJDYVrcL4oIeMFY8qaUIO
-         t/cGP89CDUeCbGM0a5P8AFvWunu4F8QiLgsX8wjeneBinsv49qaqolobkSYQz7sKSVqM
-         0m9li4QyBxxlE3m6DqxBx1cgoKVs6vWAYerGb1WXpGBMLwu0BTsK8a/ZTKFGZz8CU+0Z
-         kv9WO/Dy7JzEafrR4IpzGkIorQDbGk5WVE+AOoF6leo1TFRgGDeDD1+QerVbXpqJMwg0
-         6kZDc6G9TGzR1OOhFzSMUpRu9Id2e679S8Bvo/4RBn9Ze/YusmVmp2rmLnbw8Dt8awZh
-         c65Q==
-X-Gm-Message-State: AOAM530Pn8uc/SCgnHFITbk6gjRkVb8HIVBW2F+EVA9+8lU/z7xkQh3p
-        vPUP4wdAOFHFb50yBwcxbTh5TvQPmRN7RA==
-X-Google-Smtp-Source: ABdhPJwEaWVVEG7rRRU6uJ6G42gYJeH/hHrq6GXMRNV4/IhwaApHEdWvr0p1FnKJv55hB3iEdAFjjw==
-X-Received: by 2002:a1c:a70c:: with SMTP id q12mr575372wme.89.1597942083365;
-        Thu, 20 Aug 2020 09:48:03 -0700 (PDT)
-Received: from localhost ([2a00:79e0:42:204:1ea0:b8ff:fe80:839])
-        by smtp.gmail.com with ESMTPSA id 6sm5366196wmf.4.2020.08.20.09.48.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 09:48:02 -0700 (PDT)
-From:   Brendan Jackman <jackmanb@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Paul Renauld <renauld@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, pjt@google.com,
-        jannh@google.com, peterz@infradead.org, rafael.j.wysocki@intel.com,
-        keescook@chromium.org, thgarnie@chromium.org, kpsingh@google.com,
-        paul.renauld.epfl@gmail.com, Brendan Jackman <jackmanb@google.com>
-Subject: [RFC] security: replace indirect calls with static calls
-Date:   Thu, 20 Aug 2020 18:47:53 +0200
-Message-Id: <20200820164753.3256899-1-jackmanb@chromium.org>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+        Thu, 20 Aug 2020 12:48:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730286AbgHTQsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:48:06 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 549722072D;
+        Thu, 20 Aug 2020 16:48:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597942085;
+        bh=lfa1yZPfjn3/JQsBFE7GS4+xci6+Eh/ymSOUanYtVJw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=COm+eYc2qcj4HirKjaLwOwt1wXPsM8CBCxxCCJa+60SuPMIQTq/yU3vn4eGu/AiJL
+         4rBS8xCE86TeAATdvi9XE7b9XHqhZnJi/k/laPpbT8UP/j2GXJurrRfx1F9fwF3ZbY
+         QId1F6JCA7+eZKF2bZxQDe3mjPWllad+T0Eiq4dw=
+Date:   Thu, 20 Aug 2020 19:47:59 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        William Kucharski <william.kucharski@oracle.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jan Kara <jack@suse.cz>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/7] mm: Add an 'end' parameter to find_get_entries
+Message-ID: <20200820164759.GE752365@kernel.org>
+References: <20200819150555.31669-1-willy@infradead.org>
+ <20200819150555.31669-4-willy@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819150555.31669-4-willy@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Renauld <renauld@google.com>
+On Wed, Aug 19, 2020 at 04:05:51PM +0100, Matthew Wilcox (Oracle) wrote:
+> This simplifies the callers and leads to a more efficient implementation
+> since the XArray has this functionality already.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  include/linux/pagemap.h |  4 ++--
+>  mm/filemap.c            |  9 +++++----
+>  mm/shmem.c              | 10 ++++------
+>  mm/swap.c               |  2 +-
+>  4 files changed, 12 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index 7de11dcd534d..3f0dc8d00f2a 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -387,8 +387,8 @@ static inline struct page *find_subpage(struct page *head, pgoff_t index)
+>  struct page *find_get_entry(struct address_space *mapping, pgoff_t offset);
+>  struct page *find_lock_entry(struct address_space *mapping, pgoff_t offset);
+>  unsigned find_get_entries(struct address_space *mapping, pgoff_t start,
+> -			  unsigned int nr_entries, struct page **entries,
+> -			  pgoff_t *indices);
+> +		pgoff_t end, unsigned int nr_entries, struct page **entries,
+> +		pgoff_t *indices);
+>  unsigned find_get_pages_range(struct address_space *mapping, pgoff_t *start,
+>  			pgoff_t end, unsigned int nr_pages,
+>  			struct page **pages);
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 1aaea26556cc..159cf3d6f1ae 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -1742,6 +1742,7 @@ EXPORT_SYMBOL(pagecache_get_page);
+>   * find_get_entries - gang pagecache lookup
+>   * @mapping:	The address_space to search
+>   * @start:	The starting page cache index
+> + * @end:	The highest page cache index to return.
 
-LSMs have high overhead due to indirect function calls through
-retpolines. This RPC proposes to replace these with static calls [1]
-instead.
+Maybe add here whether 'end' is inclusive or exclusive?
 
-This overhead is especially significant for the "bpf" LSM which supports
-the implementation of LSM hooks with eBPF programs (security/bpf)[2]. In
-order to facilitate this, the "bpf" LSM provides a default nop callback for
-all LSM hooks. When enabled, the "bpf", LSM incurs an unnecessary /
-avoidable indirect call to this nop callback.
+>   * @nr_entries:	The maximum number of entries
+>   * @entries:	Where the resulting entries are placed
+>   * @indices:	The cache indices corresponding to the entries in @entries
+> @@ -1765,9 +1766,9 @@ EXPORT_SYMBOL(pagecache_get_page);
+>   *
+>   * Return: the number of pages and shadow entries which were found.
+>   */
+> -unsigned find_get_entries(struct address_space *mapping,
+> -			  pgoff_t start, unsigned int nr_entries,
+> -			  struct page **entries, pgoff_t *indices)
+> +unsigned find_get_entries(struct address_space *mapping, pgoff_t start,
+> +		pgoff_t end, unsigned int nr_entries, struct page **entries,
+> +		pgoff_t *indices)
+>  {
+>  	XA_STATE(xas, &mapping->i_pages, start);
+>  	struct page *page;
+> @@ -1777,7 +1778,7 @@ unsigned find_get_entries(struct address_space *mapping,
+>  		return 0;
+>  
+>  	rcu_read_lock();
+> -	xas_for_each(&xas, page, ULONG_MAX) {
+> +	xas_for_each(&xas, page, end) {
+>  		if (xas_retry(&xas, page))
+>  			continue;
+>  		/*
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 0f9f149f4b5e..abdbe61a1aa7 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -906,9 +906,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+>  	pagevec_init(&pvec);
+>  	index = start;
+>  	while (index < end) {
+> -		pvec.nr = find_get_entries(mapping, index,
+> -			min(end - index, (pgoff_t)PAGEVEC_SIZE),
+> -			pvec.pages, indices);
+> +		pvec.nr = find_get_entries(mapping, index, end - 1,
+> +				PAGEVEC_SIZE, pvec.pages, indices);
+>  		if (!pvec.nr)
+>  			break;
+>  		for (i = 0; i < pagevec_count(&pvec); i++) {
+> @@ -977,9 +976,8 @@ static void shmem_undo_range(struct inode *inode, loff_t lstart, loff_t lend,
+>  	while (index < end) {
+>  		cond_resched();
+>  
+> -		pvec.nr = find_get_entries(mapping, index,
+> -				min(end - index, (pgoff_t)PAGEVEC_SIZE),
+> -				pvec.pages, indices);
+> +		pvec.nr = find_get_entries(mapping, index, end - 1,
+> +				PAGEVEC_SIZE, pvec.pages, indices);
+>  		if (!pvec.nr) {
+>  			/* If all gone or hole-punch or unfalloc, we're done */
+>  			if (index == start || end != -1)
+> diff --git a/mm/swap.c b/mm/swap.c
+> index d16d65d9b4e0..fcf6ccb94b09 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -1060,7 +1060,7 @@ unsigned pagevec_lookup_entries(struct pagevec *pvec,
+>  				pgoff_t start, unsigned nr_entries,
+>  				pgoff_t *indices)
+>  {
+> -	pvec->nr = find_get_entries(mapping, start, nr_entries,
+> +	pvec->nr = find_get_entries(mapping, start, ULONG_MAX, nr_entries,
+>  				    pvec->pages, indices);
+>  	return pagevec_count(pvec);
+>  }
+> -- 
+> 2.28.0
+> 
+> 
 
-The performance impact on a simple syscall eventfd_write (which triggers
-the file_permission hook) was measured with and without "bpf" LSM
-enabled. Activating the LSM resulted in an overhead of 4% [3].
-
-This overhead prevents the adoption of bpf LSM on performance critical
-systems, and also, in general, slows down all LSMs.
-
-Currently, the LSM hook callbacks are stored in a linked list and
-dispatched as indirect calls. Using static calls can remove this overhead
-by replacing all indirect calls with direct calls.
-
-During the discussion of the "bpf" LSM patch-set it was proposed to special
-case BPF LSM to avoid the overhead by using static keys. This was however
-not accepted and it was decided to [4]:
-
-- Not special-case the "bpf" LSM.
-- Implement a general solution benefitting the whole LSM framework.
-
-This is based on the static call branch [5].
-
-For each LSM hook, a table of static calls is defined (referred to as
-"static slots", or "slots"). When all the LSMs are initialized and linked
-lists are filled, the hook callbacks are copied to the appropriate static
-slot. The callbacks are continuously added at the end of the table, and the
-index of the first slot that is non empty is stored.  Then, when a LSM hook
-is called (macro call_[int/void]_hook), the execution jumps to this first
-non-empty slot and all of the subsequent static slots are executed.
-
-The static calls are re-initialized every time the linked list is modified,
-i.e. after the early LSM init, and the LSM init.
-
-Let's say, there are 5 static slots per LSM hook, and 3 LSMs implement some
-hook with the callbacks A, B, C.
-
-Previously, the code for this hook would have looked like this:
-
-	ret = DEFAULT_RET;
-
-        for each cb in [A, B, C]:
-                ret = cb(args); <--- costly indirect call here
-                if ret != 0:
-                        break;
-
-        return ret;
-
-Static calls are defined at build time and are initially empty (NOP
-instructions). When the LSMs are initialized, the slots are filled as
-follows:
-
- slot idx     content
-           |-----------|
-    0      |           |
-           |-----------|
-    1      |           |
-           |-----------|
-    2      |   call A  | <-- base_slot_idx = 2
-           |-----------|
-    3      |   call B  |
-           |-----------|
-    4      |   call C  |
-           |-----------|
-
-The generated code will unroll the foreach loop to have a static call for
-each possible LSM:
-
-        ret = DEFAULT_RET;
-        switch(base_slot_idx):
-
-                case 0:
-                        NOP
-                        if ret != 0:
-                                break;
-                        // fallthrough
-                case 1:
-                        NOP
-                        if ret != 0:
-                                break;
-                        // fallthrough
-                case 2:
-                        ret = A(args); <--- direct call, no retpoline
-                        if ret != 0:
-                                break;
-                        // fallthrough
-                case 3:
-                        ret = B(args); <--- direct call, no retpoline
-                        if ret != 0:
-                                break;
-                        // fallthrough
-
-                [...]
-
-                default:
-                        break;
-
-        return ret;
-
-A similar logic is applied for void hooks.
-
-Why this trick with a switch statement? The table of static call is defined
-at compile time. The number of hook callbacks that will be defined is
-unknown at that time, and the table cannot be resized at runtime.  Static
-calls do not define a conditional execution for a non-void function, so the
-executed slots must be non-empty.  With this use of the table and the
-switch, it is possible to jump directly to the first used slot and execute
-all of the slots after. This essentially makes the entry point of the table
-dynamic. Instead, it would also be possible to start from 0 and break after
-the final populated slot, but that would require an additional conditional
-after each slot.
-
-This macro is used to generate the code for each static slot, (e.g. each
-case statement in the previous example). This will expand into a call to
-MACRO for each static slot defined. For example, if with again 5 slots:
-
-SECURITY_FOREACH_STATIC_SLOT(MACRO, x, y) ->
-
-	MACRO(0, x, y)
-	MACRO(1, x, y)
-	MACRO(2, x, y)
-	MACRO(3, x, y)
-	MACRO(4, x, y)
-
-This is used in conjunction with LSM_HOOK definitions in
-linux/lsm_hook_defs.h to execute a macro for each static slot of each LSM
-hook.
-
-The patches for static calls [6] are not upstreamed yet.
-
-The number of available slots for each LSM hook is currently fixed at
-11 (the number of LSMs in the kernel). Ideally, it should automatically
-adapt to the number of LSMs compiled into the kernel.
-
-If there’s no practical way to implement such automatic adaptation, an
-option instead would be to remove the panic call by falling-back to the old
-linked-list mechanism, which is still present anyway (see below).
-
-A few special cases of LSM don't use the macro call_[int/void]_hook but
-have their own calling logic. The linked-lists are kept as a possible slow
-path fallback for them.
-
-Before:
-
-https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/62437b1416829ca0e8a0ed9101530bc90fd42d69/lsm-performance.png
-
-After:
-
-https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/00e414b73e0c38c2eae8f05d5363a745179ba285/faster-lsm-results.png
-
-With this implementation, any overhead of the indirect call in the LSM
-framework is completely mitigated (performance results: [7]). This
-facilitates the adoption of "bpf" LSM on production machines and also
-benefits all other LSMs.
-
-[1]: https://lwn.net/ml/linux-kernel/20200710133831.943894387@infradead.org/
-[2]: https://lwn.net/Articles/798157/
-[3] measurements: https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/62437b1416829ca0e8a0ed9101530bc90fd42d69/lsm-performance.png
-protocol: https://gist.github.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5#file-measurement-protocol-md
-[4]: https://lwn.net/Articles/813261/
-[5]: git://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git x86/static_call
-[6]: https://lwn.net/ml/linux-kernel/20200710133831.943894387@infradead.org/#t
-[7]: https://gist.githubusercontent.com/PaulRenauld/fe3ee7b51121556e03c181432c8b3dd5/raw/00e414b73e0c38c2eae8f05d5363a745179ba285/faster-lsm-results.png
-
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: James Morris <jmorris@namei.org>
-Cc: pjt@google.com
-Cc: jannh@google.com
-Cc: peterz@infradead.org
-Cc: rafael.j.wysocki@intel.com
-Cc: keescook@chromium.org
-Cc: thgarnie@chromium.org
-Cc: kpsingh@google.com
-Cc: paul.renauld.epfl@gmail.com
-
-Signed-off-by: Paul Renauld <renauld@google.com>
-Signed-off-by: KP Singh <kpsingh@google.com>
-Signed-off-by: Brendan Jackman <jackmanb@google.com>
----
- include/linux/lsm_hooks.h       |   1 +
- include/linux/lsm_static_call.h | 134 ++++++++++++++++++++
- security/security.c             | 217 ++++++++++++++++++++++++++++----
- 3 files changed, 331 insertions(+), 21 deletions(-)
- create mode 100644 include/linux/lsm_static_call.h
-
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 95b7c1d32062..d11e116b588e 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -1524,6 +1524,7 @@ union security_list_options {
- 	#define LSM_HOOK(RET, DEFAULT, NAME, ...) RET (*NAME)(__VA_ARGS__);
- 	#include "lsm_hook_defs.h"
- 	#undef LSM_HOOK
-+	void *generic_func;
- };
- 
- struct security_hook_heads {
-diff --git a/include/linux/lsm_static_call.h b/include/linux/lsm_static_call.h
-new file mode 100644
-index 000000000000..f5f5698292e0
---- /dev/null
-+++ b/include/linux/lsm_static_call.h
-@@ -0,0 +1,134 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (C) 2020 Google LLC.
-+ */
-+
-+#ifndef __LINUX_LSM_STATIC_CALL_H
-+#define __LINUX_LSM_STATIC_CALL_H
-+
-+/*
-+ * Static slots are used in security/security.c to avoid costly
-+ * indirect calls by replacing them with static calls.
-+ * The number of static calls for each LSM hook is fixed.
-+ */
-+#define SECURITY_STATIC_SLOT_COUNT 11
-+
-+/*
-+ * Identifier for the LSM static slots.
-+ * HOOK is an LSM hook as defined in linux/lsm_hookdefs.h
-+ * IDX is the index of the slot. 0 <= NUM < SECURITY_STATIC_SLOT_COUNT
-+ */
-+#define STATIC_SLOT(HOOK, IDX) security_static_slot_##HOOK##_##IDX
-+
-+/*
-+ * Call the macro M for each LSM hook slot.
-+ * M should take as first argument the index and then
-+ * the same __VA_ARGS__
-+ * Essentially, this will expand to:
-+ *	M(0, ...)
-+ *	M(1, ...)
-+ *	M(2, ...)
-+ *	...
-+ * Note that no trailing semicolon is placed so M should be defined
-+ * accordingly.
-+ * This adapts to a change to SECURITY_STATIC_SLOT_COUNT.
-+ */
-+#define SECURITY_FOREACH_STATIC_SLOT(M, ...)		\
-+	UNROLL_MACRO_LOOP(SECURITY_STATIC_SLOT_COUNT, M, __VA_ARGS__)
-+
-+/*
-+ * Intermediate macros to expand SECURITY_STATIC_SLOT_COUNT
-+ */
-+#define UNROLL_MACRO_LOOP(N, MACRO, ...)		\
-+	_UNROLL_MACRO_LOOP(N, MACRO, __VA_ARGS__)
-+
-+#define _UNROLL_MACRO_LOOP(N, MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP(N, MACRO, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP(N, MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_##N(MACRO, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_0(MACRO, ...)
-+
-+#define __UNROLL_MACRO_LOOP_1(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_0(MACRO, __VA_ARGS__)	\
-+	MACRO(0, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_2(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_1(MACRO, __VA_ARGS__)	\
-+	MACRO(1, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_3(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_2(MACRO, __VA_ARGS__)	\
-+	MACRO(2, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_4(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_3(MACRO, __VA_ARGS__)	\
-+	MACRO(3, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_5(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_4(MACRO, __VA_ARGS__)	\
-+	MACRO(4, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_6(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_5(MACRO, __VA_ARGS__)	\
-+	MACRO(5, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_7(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_6(MACRO, __VA_ARGS__)	\
-+	MACRO(6, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_8(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_7(MACRO, __VA_ARGS__)	\
-+	MACRO(7, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_9(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_8(MACRO, __VA_ARGS__)	\
-+	MACRO(8, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_10(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_9(MACRO, __VA_ARGS__)	\
-+	MACRO(9, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_11(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_10(MACRO, __VA_ARGS__)	\
-+	MACRO(10, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_12(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_11(MACRO, __VA_ARGS__)	\
-+	MACRO(11, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_13(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_12(MACRO, __VA_ARGS__)	\
-+	MACRO(12, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_14(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_13(MACRO, __VA_ARGS__)	\
-+	MACRO(13, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_15(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_14(MACRO, __VA_ARGS__)	\
-+	MACRO(14, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_16(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_15(MACRO, __VA_ARGS__)	\
-+	MACRO(15, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_17(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_16(MACRO, __VA_ARGS__)	\
-+	MACRO(16, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_18(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_17(MACRO, __VA_ARGS__)	\
-+	MACRO(17, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_19(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_18(MACRO, __VA_ARGS__)	\
-+	MACRO(18, __VA_ARGS__)
-+
-+#define __UNROLL_MACRO_LOOP_20(MACRO, ...)		\
-+	__UNROLL_MACRO_LOOP_19(MACRO, __VA_ARGS__)	\
-+	MACRO(19, __VA_ARGS__)
-+
-+#endif /* __LINUX_LSM_STATIC_CALL_H */
-diff --git a/security/security.c b/security/security.c
-index 70a7ad357bc6..15026bc716f2 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -28,6 +28,8 @@
- #include <linux/string.h>
- #include <linux/msg.h>
- #include <net/flow.h>
-+#include <linux/static_call.h>
-+#include <linux/lsm_static_call.h>
- 
- #define MAX_LSM_EVM_XATTR	2
- 
-@@ -86,6 +88,128 @@ static __initconst const char * const builtin_lsm_order = CONFIG_LSM;
- static __initdata struct lsm_info **ordered_lsms;
- static __initdata struct lsm_info *exclusive;
- 
-+/*
-+ * Necessary information about a static
-+ * slot to call __static_call_update
-+ */
-+struct static_slot {
-+	/* static call key as defined by STATIC_CALL_KEY */
-+	struct static_call_key *key;
-+	/* static call trampoline as defined by STATIC_CALL_TRAMP */
-+	void *trampoline;
-+};
-+
-+/*
-+ * Table of the static calls for each LSM hook.
-+ * Once the LSMs are initialized, their callbacks will be copied to these
-+ * tables such that the slots are filled backwards (from last to first).
-+ * This way, we can jump directly to the first used slot, and execute
-+ * all of them after. This essentially makes the entry point point
-+ * dynamic to adapt the number of slot to the number of callbacks.
-+ */
-+struct static_slot_list {
-+	#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
-+		struct static_slot NAME[SECURITY_STATIC_SLOT_COUNT];
-+	#include <linux/lsm_hook_defs.h>
-+	#undef LSM_HOOK
-+} __randomize_layout;
-+
-+/*
-+ * Index of the first used static call for each LSM hook
-+ * in the corresponding static_slot_list table.
-+ * All slots with greater indices are used.
-+ * If no slot is used, the default value is INT_MAX.
-+ */
-+struct base_slot_idx {
-+	#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
-+		int NAME;
-+	#include <linux/lsm_hook_defs.h>
-+	#undef LSM_HOOK
-+} __randomize_layout;
-+
-+/*
-+ * Create the static slots for each LSM hook, initially empty.
-+ * This will expand to:
-+ *
-+ * [...]
-+ *
-+ * DEFINE_STATIC_CALL_NULL(security_static_slot_file_permission_0,
-+ *			   *((int(*)(struct file *file, int mask)))NULL);
-+ * DEFINE_STATIC_CALL_NULL(security_static_slot_file_permission_1, ...);
-+ *
-+ * [...]
-+ */
-+#define CREATE_STATIC_SLOT(NUM, NAME, RET, ...)				\
-+	DEFINE_STATIC_CALL_NULL(STATIC_SLOT(NAME, NUM),			\
-+				*((RET(*)(__VA_ARGS__))NULL));
-+
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
-+	SECURITY_FOREACH_STATIC_SLOT(CREATE_STATIC_SLOT, NAME, RET, __VA_ARGS__)
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
-+#undef CREATE_STATIC_SLOT
-+
-+/*
-+ * Initialise a table of static slots for each LSM hook.
-+ * When defined with DEFINE_STATIC_CALL_NULL as above, a static call is
-+ * a key and a trampoline. Both are needed to use __static_call_update.
-+ * This will expand to:
-+ * struct static_slot_list static_slots = {
-+ *	[...]
-+ *	.file_permission = {
-+ *		(struct static_slot) {
-+ *			.key = &STATIC_CALL_KEY(
-+ *				security_static_slot_file_permission_0),
-+ *			.trampoline = &STATIC_CALL_TRAMP(
-+ *				security_static_slot_file_permission_0)
-+ *		},
-+ *		(struct static_slot) {
-+ *			.key = &STATIC_CALL_KEY(
-+ *				security_static_slot_file_permission_1),
-+ *			.trampoline = &STATIC_CALL_TRAMP(
-+ *				security_static_slot_file_permission_1)
-+ *		},
-+ *		[...]
-+ *	},
-+ *	.file_alloc_security = {
-+ *		[...]
-+ *	},
-+ *	[...]
-+ * }
-+ */
-+static struct static_slot_list static_slots __initdata = {
-+#define DEFINE_SLOT(NUM, NAME)						\
-+	(struct static_slot) {					\
-+		.key = &STATIC_CALL_KEY(STATIC_SLOT(NAME, NUM)),	\
-+		.trampoline = &STATIC_CALL_TRAMP(STATIC_SLOT(NAME, NUM))\
-+	},
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
-+	.NAME = {							\
-+		SECURITY_FOREACH_STATIC_SLOT(DEFINE_SLOT, NAME)		\
-+	},
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
-+#undef DEFINE_SLOT
-+};
-+
-+/*
-+ * The base slot index for each is initially INT_MAX, which means
-+ * that no slot is used yet.
-+ * When expanded, this results in:
-+ * struct base_slot_idx base_slot_idx = {
-+ *	[...]
-+ *	.file_permission = INT_MAX,
-+ *	.file_alloc_security = INT_MAX,
-+ *	[...]
-+ * }
-+ */
-+static struct base_slot_idx base_slot_idx __lsm_ro_after_init = {
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
-+	.NAME = INT_MAX,
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
-+};
-+
- static __initdata bool debug;
- #define init_debug(...)						\
- 	do {							\
-@@ -307,6 +431,46 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
- 	kfree(sep);
- }
- 
-+static void __init lsm_init_hook_static_slot(struct static_slot *slots,
-+					     struct hlist_head *head,
-+					     int *first_slot_idx)
-+{
-+	struct security_hook_list *pos;
-+	struct static_slot *slot;
-+	int slot_cnt;
-+
-+	slot_cnt = 0;
-+	hlist_for_each_entry_rcu(pos, head, list)
-+		slot_cnt++;
-+
-+	if (slot_cnt > SECURITY_STATIC_SLOT_COUNT)
-+		panic("%s - No static hook slot remaining to add LSM hook.\n",
-+		      __func__);
-+
-+	if (slot_cnt == 0) {
-+		*first_slot_idx = INT_MAX;
-+		return;
-+	}
-+
-+	*first_slot_idx = SECURITY_STATIC_SLOT_COUNT - slot_cnt;
-+	slot = slots + *first_slot_idx;
-+	hlist_for_each_entry_rcu(pos, head, list) {
-+		__static_call_update(slot->key, slot->trampoline,
-+				     pos->hook.generic_func);
-+		slot++;
-+	}
-+}
-+
-+static void __init lsm_init_static_slots(void)
-+{
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...)				\
-+	lsm_init_hook_static_slot(static_slots.NAME,			\
-+				  &security_hook_heads.NAME,		\
-+				  &base_slot_idx.NAME);
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
-+}
-+
- static void __init lsm_early_cred(struct cred *cred);
- static void __init lsm_early_task(struct task_struct *task);
- 
-@@ -354,6 +518,7 @@ static void __init ordered_lsm_init(void)
- 	lsm_early_task(current);
- 	for (lsm = ordered_lsms; *lsm; lsm++)
- 		initialize_lsm(*lsm);
-+	lsm_init_static_slots();
- 
- 	kfree(ordered_lsms);
- }
-@@ -374,6 +539,7 @@ int __init early_security_init(void)
- 		prepare_lsm(lsm);
- 		initialize_lsm(lsm);
- 	}
-+	lsm_init_static_slots();
- 
- 	return 0;
- }
-@@ -696,27 +862,36 @@ static void __init lsm_early_task(struct task_struct *task)
-  * call_int_hook:
-  *	This is a hook that returns a value.
-  */
--
--#define call_void_hook(FUNC, ...)				\
--	do {							\
--		struct security_hook_list *P;			\
--								\
--		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) \
--			P->hook.FUNC(__VA_ARGS__);		\
--	} while (0)
--
--#define call_int_hook(FUNC, IRC, ...) ({			\
--	int RC = IRC;						\
--	do {							\
--		struct security_hook_list *P;			\
--								\
--		hlist_for_each_entry(P, &security_hook_heads.FUNC, list) { \
--			RC = P->hook.FUNC(__VA_ARGS__);		\
--			if (RC != 0)				\
--				break;				\
--		}						\
--	} while (0);						\
--	RC;							\
-+#define __CASE_CALL_STATIC_VOID(NUM, HOOK, ...)				\
-+	case NUM:							\
-+		static_call(STATIC_SLOT(HOOK, NUM))(__VA_ARGS__);	\
-+		fallthrough;
-+
-+#define call_void_hook(FUNC, ...) do {					\
-+	switch (base_slot_idx.FUNC) {					\
-+	SECURITY_FOREACH_STATIC_SLOT(__CASE_CALL_STATIC_VOID,		\
-+				     FUNC, __VA_ARGS__)			\
-+	default :							\
-+		break;							\
-+	}								\
-+} while (0)
-+
-+#define __CASE_CALL_STATIC_INT(NUM, R, HOOK, ...)			\
-+	case NUM:							\
-+		R = static_call(STATIC_SLOT(HOOK, NUM))(__VA_ARGS__);	\
-+		if (R != 0)						\
-+			break;						\
-+		fallthrough;
-+
-+#define call_int_hook(FUNC, IRC, ...) ({				\
-+	int RC = IRC;							\
-+	switch (base_slot_idx.FUNC) {					\
-+	SECURITY_FOREACH_STATIC_SLOT(__CASE_CALL_STATIC_INT,		\
-+				     RC, FUNC, __VA_ARGS__)		\
-+	default :							\
-+		break;							\
-+	}								\
-+	RC;								\
- })
- 
- /* Security operations */
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+Sincerely yours,
+Mike.
