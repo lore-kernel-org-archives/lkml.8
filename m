@@ -2,129 +2,96 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB83C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D47BC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEEE5206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:16:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfBzuLHZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A59B20724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597943981;
+	bh=DXObe3yllUjgowlYXeYGYXXG6O44syV5/SCwu1zMnR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i1dxXdZDdzabZjdsxVE0o2s8KyxkIieaT3xh3e8FC8uoaHCX4tYtUjt6p8D1UoQkH
+	 0qjot/AnlhdvvOlXpF3/dsmgICXRpJmJwOFUz3X/7PbHJssRCIh4nBu9moUxW3D4/t
+	 PfbmpjApUT3xaPjXijJMDsWf5uRIz8pWmL9PtUQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgHTRQX (ORCPT
+        id S1730154AbgHTRTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44376 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730489AbgHTRPh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:15:37 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0020C061387;
-        Thu, 20 Aug 2020 10:15:29 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id z3so2297990ilh.3;
-        Thu, 20 Aug 2020 10:15:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MOQmfZn9DA4QXnKxyQeBWYBG/mA3vxQqGH4PKhYLc5o=;
-        b=OfBzuLHZ2eSHGCtzyhVtTLqGYyG1Up4rJEWA0nr8ye40oTw8lvfrlQJXFRysqMYoDt
-         eOGvCWmxBFoWGMLHQXoBHqnzSy4h2NC9VOv3VeXXQu1kI/PhBB+F+2MKDFp1BIXr78HS
-         Vk33HZ2ECIEDzTQu95hzffvCTm5bzMONFui3vlVPtr7YAlnSkn55SMJ1RCht2TTIMMOh
-         zEeiOHkWMWGWHZdpzhItd55aQryuPukj72Ij6RXsM2UGmfaFWCtz7UAePAj3B/nHqWRt
-         7Dat4Z8Yb74jW1xR4XiSMT9Ho29VZs0MO7r5ePNd999lahMd89om26IvTh5fLLk0Dctf
-         AWvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MOQmfZn9DA4QXnKxyQeBWYBG/mA3vxQqGH4PKhYLc5o=;
-        b=fWFOSedBaHUyYLUvaYMV4ITGy3Mx7oz+oPsrHo8QXkNEANOh/XujZfKMxI40Tu0fzb
-         VCnrKL8ZzUcfg6rDLnNhpyadMwIBe4lrfeDrRwa6fgX1krQRFqRWwJGdpz6yfmLRV2aM
-         CiSw4xEaQYlBrRhIAJeGVdzKlFoILjcGvSiNXC0cZVdDxNHs2MN0I6i8r8dM2VwH6Zij
-         l+SHhVRDEj4me772D/9eec831+AIdE2ifUXlhbWhIDUdBiT2ejU+4nPtJHSIY2jeuE8d
-         EsyRtO2trpBk242DWuBcJXntXflSTzJFMyNSyC9Q9hVpQJsgIciE9IcSEJ8HHNQp2Kqi
-         CSGQ==
-X-Gm-Message-State: AOAM530jhAz6tn/xFjf9lRUrVDOrOLLDzFI4dber0LElMnKdEV849dfw
-        ptBOhcqgoVRO9JSbS8+tvVgjPko9/vtQTdQznY4=
-X-Google-Smtp-Source: ABdhPJzhT90NxQEDROP7MsMMwa4plorb/IpX1WdMHQHJMHCNn3LrLx1qXWTMcLhjtdyEkwkUV8Fqvrkh7A6b529fmDI=
-X-Received: by 2002:a92:ae06:: with SMTP id s6mr3311682ilh.64.1597943728468;
- Thu, 20 Aug 2020 10:15:28 -0700 (PDT)
+        Thu, 20 Aug 2020 13:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33380 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729359AbgHTRTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 13:19:37 -0400
+Received: from localhost (cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net [82.37.168.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87E38206B5;
+        Thu, 20 Aug 2020 17:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597943976;
+        bh=DXObe3yllUjgowlYXeYGYXXG6O44syV5/SCwu1zMnR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RZv+DNRRK2jOkMVZE8xtcia8ygssFpKxLyBUZLr1tLkhYId/rPyEdAFQz0BwA81GO
+         wqdPLlpuK1U9aMlBgoCZ6JKfzXzylEDI6YUN4JMZUMix/XUHYgF6lWgnoBUtiFkU5K
+         AC23qNm7qWY6hq6+gle2JKpwCog4YVyetiWWGs3w=
+Date:   Thu, 20 Aug 2020 18:19:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, joel@jms.id.au,
+        bradleyb@fuzziesquirrel.com, robh+dt@kernel.org, arnd@arndb.de
+Subject: Re: [PATCH 5/7] spi: fsi: Implement restricted size for certain
+ controllers
+Message-ID: <20200820171903.GI5854@sirena.org.uk>
+References: <20200820170228.42053-1-eajames@linux.ibm.com>
+ <20200820170228.42053-6-eajames@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200819041852.23414.95939.stgit@localhost.localdomain>
- <20200819042738.23414.60815.stgit@localhost.localdomain> <084c58a7-7aac-820c-9606-19391c35b9b5@linux.alibaba.com>
- <CAKgT0Ud3CZ8KHLXCrWNGJAX85x23-EWLnAV63-NMmJ+5vD1JAA@mail.gmail.com> <87ded438-e908-117d-ecfb-1af7224d46da@linux.alibaba.com>
-In-Reply-To: <87ded438-e908-117d-ecfb-1af7224d46da@linux.alibaba.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 20 Aug 2020 10:15:17 -0700
-Message-ID: <CAKgT0Ueibb_MBvq4CeOO2ZkQfigv5SOC4=13Bfdzdj_9zt4O7Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 5/5] mm: Split move_pages_to_lru into 3 separate passes
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
-        kbuild test robot <lkp@intel.com>,
-        Rong Chen <rong.a.chen@intel.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Hugh Dickins <hughd@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-mm <linux-mm@kvack.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="itqfrb9Qq3wY07cp"
+Content-Disposition: inline
+In-Reply-To: <20200820170228.42053-6-eajames@linux.ibm.com>
+X-Cookie: Dead? No excuse for laying off work.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 2:58 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
-:
->
->
->
-> =E5=9C=A8 2020/8/19 =E4=B8=8B=E5=8D=8810:42, Alexander Duyck =E5=86=99=E9=
-=81=93:
-> >> It's actually changed the meaning from current func. which I had seen =
-a bug if no relock.
-> >> but after move to 5.9 kernel, I can not reprodce the bug any more. I a=
-m not sure if 5.9 fixed
-> >> the problem, and we don't need relock here.
-> > So I am not sure what you mean here about "changed the meaning from
-> > the current func". Which function are you referring to and what
-> > changed?
-> >
-> > From what I can tell the pages cannot change memcg because they were
-> > isolated and had the LRU flag stripped. They shouldn't be able to
-> > change destination LRU vector as a result. Assuming that, then they
-> > can all be processed under same LRU lock and we can avoid having to
-> > release it until we are forced to do so to call putback_lru_page or
-> > destroy the compound pages that were freed while we were shrinking the
-> > LRU lists.
-> >
->
-> I had sent a bug which base on 5.8 kernel.
-> https://lkml.org/lkml/2020/7/28/465
->
-> I am not sure it was fixed in new kernel. The original line was introduce=
-d by Hugh Dickins
-> I believe it would be great if you can get comments from him.
 
-When I brought this up before you had pointed to the relocking being
-due to the fact that the function was reacquiring the lruvec for some
-reason. I wonder if the fact that the LRU bit stripping serializing
-things made it so that the check for the lruvec after releasing the
-lock became redundant.
+--itqfrb9Qq3wY07cp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Alex
+On Thu, Aug 20, 2020 at 12:02:26PM -0500, Eddie James wrote:
+> Some of the FSI-attached SPI controllers cannot use the loop command in
+> programming the sequencer due to security requirements. Add a boolean
+> devicetree property that describes this condition and restrict the
+> size for these controllers. Also, add more transfers directly in the
+> sequence up to the length of the sequence register.
+
+If there is one difference between implementations of the controller
+there are likely to be more - why have a property here rather than use
+compatible strings for the different hardware variants?  Compatible
+strings mean that as more differences are discovered existing DTs
+continue to work.
+
+--itqfrb9Qq3wY07cp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8+sIYACgkQJNaLcl1U
+h9CaYAgAgwerWqlI1BrlSYQTl94DDZ5osIs6bNoENTGD08ZgpFKKcktclTRPnvbE
++DHLD2cKelydFh3t2BYStjGRPKH+4Rp0r7Isc7+aXvhHUHbf/JWcop3LCL90LZ8W
+f54xEu7PoMPJGenGOPWMKYpyt1kwC5Vqys+ygqSrnGQtoJN2grxbEgn/GpJL2/eQ
+FaMZ4oJzLRvV2F3e6LJoPwUa2WMAdJi2QpmHZQhyxkq58q3uI10oLY2Da4MSxRad
+ZRI3AcKKbqXfyYcnx6hQDGF0jhMc1CSlC2O/3TsEF0PE4EjYyL36o5VMoMDOGT1c
+IdUm8rDXR68hXgk0DdWnTk9ieQU57w==
+=NofV
+-----END PGP SIGNATURE-----
+
+--itqfrb9Qq3wY07cp--
