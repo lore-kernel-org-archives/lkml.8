@@ -2,143 +2,101 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D00FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A277DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49C3D207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:14:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922049;
-	bh=r/KTWf0t6xqLREPTsTOA1ZJgkn5LmLXmM9KiU13s534=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zgvlp7pLRLCEfOpM6C5eHYbgroMKcMhxIRMz8a1dEONECZL5Zw4N9aXtGhgM+K3dE
-	 87lLskxT6obOn1PYooiThiJcXbig8cETQi/pOseOvE7maTSp/XMm+T6Uw1m7AVwCyi
-	 oyLGvDX9qbFBdUk5X2pzETZDdoVDX1bCmVpkF2x4=
+	by mail.kernel.org (Postfix) with ESMTP id 7D4D82078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbgHTLOF (ORCPT
+        id S1729897AbgHTLOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:14:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42590 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:14:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:44956 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730774AbgHTKJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:09:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07DB82067C;
-        Thu, 20 Aug 2020 10:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918147;
-        bh=r/KTWf0t6xqLREPTsTOA1ZJgkn5LmLXmM9KiU13s534=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z8RF2LW81VJAwQAOLy0djDES9lqnacPZrJ2A3mXa6NeBM+aoaCKfegbVSlfI0SZLO
-         PnOHZbNDaujpoibu7mGbAgcMGjf7+N84mVspc58X0TDWckZwcnVCLwwWTmEHuJI9gm
-         1Mic6s3I/5Edl7IgTM9d3YccBMRpyuOGofxYJcmA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org, Shakeel Butt <shakeelb@google.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 070/228] mm/mmap.c: Add cond_resched() for exit_mmap() CPU stalls
-Date:   Thu, 20 Aug 2020 11:20:45 +0200
-Message-Id: <20200820091611.102380875@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729583AbgHTLOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:14:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 16BF9B804;
+        Thu, 20 Aug 2020 11:14:22 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 13:13:49 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        christian.brauner@ubuntu.com, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
+        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820111349.GE5033@dhcp22.suse.cz>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <20200820105555.GA4546@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820105555.GA4546@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+On Thu 20-08-20 12:55:56, Oleg Nesterov wrote:
+> On 08/19, Suren Baghdasaryan wrote:
+> >
+> > Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> > used the additional mutex lock in that path of the clone() syscall should
+> > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> > (when the last process sharing the mm exits) is left out of this patch to
+> > keep it simple and because it is believed that this threading model is
+> > rare.
+> 
+> vfork() ?
 
-[ Upstream commit 0a3b3c253a1eb2c7fe7f34086d46660c909abeb3 ]
+Could you be more specific?
 
-A large process running on a heavily loaded system can encounter the
-following RCU CPU stall warning:
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+> >  	if (clone_flags & CLONE_VM) {
+> >  		mmget(oldmm);
+> >  		mm = oldmm;
+> > +		if (!(clone_flags & CLONE_SIGHAND)) {
+> 
+> I agree with Christian, you need CLONE_THREAD
 
-  rcu: INFO: rcu_sched self-detected stall on CPU
-  rcu: 	3-....: (20998 ticks this GP) idle=4ea/1/0x4000000000000002 softirq=556558/556558 fqs=5190
-  	(t=21013 jiffies g=1005461 q=132576)
-  NMI backtrace for cpu 3
-  CPU: 3 PID: 501900 Comm: aio-free-ring-w Kdump: loaded Not tainted 5.2.9-108_fbk12_rc3_3858_gb83b75af7909 #1
-  Hardware name: Wiwynn   HoneyBadger/PantherPlus, BIOS HBM6.71 02/03/2016
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x60
-   nmi_cpu_backtrace.cold.3+0x13/0x50
-   ? lapic_can_unplug_cpu.cold.27+0x34/0x34
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x99/0xc7
-   rcu_sched_clock_irq.cold.87+0x1aa/0x397
-   ? tick_sched_do_timer+0x60/0x60
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x37/0x70
-   __hrtimer_run_queues+0xfe/0x270
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x5e/0x120
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:kmem_cache_free+0x223/0x300
-  Code: 88 00 00 00 0f 85 ca 00 00 00 41 8b 55 18 31 f6 f7 da 41 f6 45 0a 02 40 0f 94 c6 83 c6 05 9c 41 5e fa e8 a0 a7 01 00 41 56 9d <49> 8b 47 08 a8 03 0f 85 87 00 00 00 65 48 ff 08 e9 3d fe ff ff 65
-  RSP: 0018:ffffc9000e8e3da8 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-  RAX: 0000000000020000 RBX: ffff88861b9de960 RCX: 0000000000000030
-  RDX: fffffffffffe41e8 RSI: 000060777fe3a100 RDI: 000000000001be18
-  RBP: ffffea00186e7780 R08: ffffffffffffffff R09: ffffffffffffffff
-  R10: ffff88861b9dea28 R11: ffff88887ffde000 R12: ffffffff81230a1f
-  R13: ffff888854684dc0 R14: 0000000000000206 R15: ffff8888547dbc00
-   ? remove_vma+0x4f/0x60
-   remove_vma+0x4f/0x60
-   exit_mmap+0xd6/0x160
-   mmput+0x4a/0x110
-   do_exit+0x278/0xae0
-   ? syscall_trace_enter+0x1d3/0x2b0
-   ? handle_mm_fault+0xaa/0x1c0
-   do_group_exit+0x3a/0xa0
-   __x64_sys_exit_group+0x14/0x20
-   do_syscall_64+0x42/0x100
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This was my suggestion to Suren, likely because I've misrememberd which
+clone flag is responsible for the signal delivery. But now, after double
+checking we do explicitly disallow CLONE_SIGHAND && !CLONE_VM. So
+CLONE_THREAD is the right thing to check.
 
-And on a PREEMPT=n kernel, the "while (vma)" loop in exit_mmap() can run
-for a very long time given a large process.  This commit therefore adds
-a cond_resched() to this loop, providing RCU any needed quiescent states.
+> > +			/* We need to synchronize with __set_oom_adj */
+> > +			mutex_lock(&oom_adj_lock);
+> > +			set_bit(MMF_PROC_SHARED, &mm->flags);
+> > +			/* Update the values in case they were changed after copy_signal */
+> > +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+> > +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+> > +			mutex_unlock(&oom_adj_lock);
+> 
+> I don't understand how this can close the race with __set_oom_adj...
+> 
+> What if __set_oom_adj() is called right after mutex_unlock() ? It will see
+> MMF_PROC_SHARED, but for_each_process() won't find the new child until
+> copy_process() does list_add_tail_rcu(&p->tasks, &init_task.tasks) ?
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: <linux-mm@kvack.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- mm/mmap.c | 1 +
- 1 file changed, 1 insertion(+)
+Good point. Then we will have to move this thing there.
 
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 8c6ed06983f9e..724b7c4f1a5b5 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3065,6 +3065,7 @@ void exit_mmap(struct mm_struct *mm)
- 		if (vma->vm_flags & VM_ACCOUNT)
- 			nr_accounted += vma_pages(vma);
- 		vma = remove_vma(vma);
-+		cond_resched();
- 	}
- 	vm_unacct_memory(nr_accounted);
- }
+Thanks!
 -- 
-2.25.1
-
-
-
+Michal Hocko
+SUSE Labs
