@@ -2,52 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B97C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CEFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01BCD207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B90A207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925153;
-	bh=Jcg2bOCFaxvQaQmqPtBJ/NnpJgFsRnFkdboU3XNsS4Q=;
+	s=default; t=1597925162;
+	bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1eZbnR6+ZOhgI2m+fVnwt/O78t6dyiX2U7ecIi0zWJm/SZ5SaJWWTe0zgL49rqmkc
-	 ccqtAcLMLCfHCA7muJ5vcesfeLD89JdVGu2USqg2n3HAf2dDMj6MCDiCBxW4525fnB
-	 yxLgcxxV3/D0QFxteR/NLj//lqFNKi5CYfPwK9Ls=
+	b=KIEJtyeWNZ4jde9Kwj4EfVmIVoSR8laPmHuJEFttInhiBC5IEufPpws81kY3429Ch
+	 d34P5tcnB5K6wDcSCpWXdDWcgpMqcE69Dw7RLmL+yS+8P0sjJ0TlAfo21Qt6k41QYf
+	 pF12CnrPZ3X3t8+tgJK0N3ZhUvlk2Ads/jkxl3RM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgHTMFv (ORCPT
+        id S1730344AbgHTMGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44156 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:06:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbgHTJ64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:56 -0400
+        id S1730354AbgHTJ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78FA2207FB;
-        Thu, 20 Aug 2020 09:58:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD6332173E;
+        Thu, 20 Aug 2020 09:58:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917536;
-        bh=Jcg2bOCFaxvQaQmqPtBJ/NnpJgFsRnFkdboU3XNsS4Q=;
+        s=default; t=1597917530;
+        bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gp+IuFaofhtmEd6yDKCpbacDoVAtmfBLooeM1eA1KMeXZNNfARMJQt8teTqCIZBUB
-         ZvDqOXyMwlqwe+8lAp9RNK3AkgmINaYI5gJSogT/Hu+7VFPUwtOZuHO3bA/h7NWrEb
-         sYNHHH4+Q+wjq+2XvG1doV4W1xxt3E+HPSTF+4go=
+        b=cem9mQI/ORaSVuxNkVuqwrd5wVjmmR1ZNaRWKg/HyzO7lKGjifHV8OW+chfZbrC8D
+         iH99P+brm9rA5FOVXkFBLbe7bMMN47ZYuzxWYDa2878KEHoZLX0K3xjIlzMiEXycOT
+         uOKeEhXSSe1uUN6G5WDofVSzmNJdU+vZX7nlwtyg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 036/212] usb: hso: Fix debug compile warning on sparc32
-Date:   Thu, 20 Aug 2020 11:20:09 +0200
-Message-Id: <20200820091604.190926174@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 4.9 062/212] leds: lm3533: fix use-after-free on unbind
+Date:   Thu, 20 Aug 2020 11:20:35 +0200
+Message-Id: <20200820091605.504108480@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,52 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit e0484010ec05191a8edf980413fc92f28050c1cc ]
+commit d584221e683bbd173738603b83a315f27d27d043 upstream.
 
-On sparc32, tcflag_t is "unsigned long", unlike on all other
-architectures, where it is "unsigned int":
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-    drivers/net/usb/hso.c: In function ‘hso_serial_set_termios’:
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 4 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
-    include/linux/kern_levels.h:5:18: warning: format ‘%d’ expects argument of type ‘unsigned int’, but argument 5 has type ‘tcflag_t {aka long unsigned int}’ [-Wformat=]
-    drivers/net/usb/hso.c:1393:3: note: in expansion of macro ‘hso_dbg’
-       hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
-       ^~~~~~~
+Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-As "unsigned long" is 32-bit on sparc32, fix this by casting all tcflag_t
-parameters to "unsigned int".
-While at it, use "%u" to format unsigned numbers.
-
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/hso.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/leds/leds-lm3533.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/usb/hso.c b/drivers/net/usb/hso.c
-index 27fc699d8be5b..2ae30db06bfa1 100644
---- a/drivers/net/usb/hso.c
-+++ b/drivers/net/usb/hso.c
-@@ -1404,8 +1404,9 @@ static void hso_serial_set_termios(struct tty_struct *tty, struct ktermios *old)
- 	unsigned long flags;
+--- a/drivers/leds/leds-lm3533.c
++++ b/drivers/leds/leds-lm3533.c
+@@ -698,7 +698,7 @@ static int lm3533_led_probe(struct platf
  
- 	if (old)
--		hso_dbg(0x16, "Termios called with: cflags new[%d] - old[%d]\n",
--			tty->termios.c_cflag, old->c_cflag);
-+		hso_dbg(0x16, "Termios called with: cflags new[%u] - old[%u]\n",
-+			(unsigned int)tty->termios.c_cflag,
-+			(unsigned int)old->c_cflag);
+ 	platform_set_drvdata(pdev, led);
  
- 	/* the actual setup */
- 	spin_lock_irqsave(&serial->serial_lock, flags);
--- 
-2.25.1
-
+-	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
++	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
+ 		return ret;
+@@ -708,13 +708,18 @@ static int lm3533_led_probe(struct platf
+ 
+ 	ret = lm3533_led_setup(led, pdata);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
+ 
+ 	ret = lm3533_ctrlbank_enable(&led->cb);
+ 	if (ret)
+-		return ret;
++		goto err_deregister;
+ 
+ 	return 0;
++
++err_deregister:
++	led_classdev_unregister(&led->cdev);
++
++	return ret;
+ }
+ 
+ static int lm3533_led_remove(struct platform_device *pdev)
+@@ -724,6 +729,7 @@ static int lm3533_led_remove(struct plat
+ 	dev_dbg(&pdev->dev, "%s\n", __func__);
+ 
+ 	lm3533_ctrlbank_disable(&led->cb);
++	led_classdev_unregister(&led->cdev);
+ 
+ 	return 0;
+ }
 
 
