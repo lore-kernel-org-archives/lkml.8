@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D86C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82C3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4AC207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C53E3207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DeKkUMwe"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="bBDpkn/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbgHTFs2 (ORCPT
+        id S1727101AbgHTFsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:48:28 -0400
+        Thu, 20 Aug 2020 01:48:33 -0400
 Received: from m43-7.mailgun.net ([69.72.43.7]:55879 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgHTFsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:48:13 -0400
+        id S1726809AbgHTFsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:48:32 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597902493; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1597902511; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=E4tgfIUmQgTARzHHWslv8bK34Zyfjsi8x+gcu7MVJTE=; b=DeKkUMweS6nX21UOQsOmvhgyw5jeIgJLT+k98f1SFSeWWbYwVFG0GaQHu9ncavuhEwnwFqz9
- vi4in/S9lou0Wm7CJTIz/Hz9NvanNeBUMaDe/0fjUDaQmnhkMLY48ILB248zxQ2xaFgXQLAl
- 35mEYtlIVoIVvZp+9hmPRGlEKUg=
+ Sender; bh=sgHf5RdH5NSLatlP0u6s2NYUEwytZERgJAj09Fj0IO4=; b=bBDpkn/WIAvjkNtmuNvQnwewNS6xzkQviLse6FH3qtQOrr0vrRiVtWBnms+ulii3f/US+o70
+ 5XnUVIAdZghIq/B39kDu8pWZrsZ5olEdUGPpmW6IiO6+snd2ePZaPIaQ0IzyRg7JDdihHHl1
+ nXh6aDGQryI3+27yGdVtCOxXkrM=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f3e0e8ec651aed294ebb03f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:47:58
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f3e0e89e8bbfbec10d2ae36 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:47:53
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 222ABC433A0; Thu, 20 Aug 2020 05:47:57 +0000 (UTC)
+        id C468FC433A1; Thu, 20 Aug 2020 05:47:51 +0000 (UTC)
 Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16FA0C4344A;
-        Thu, 20 Aug 2020 05:47:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 16FA0C4344A
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89A0EC433CA;
+        Thu, 20 Aug 2020 05:47:46 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89A0EC433CA
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
 From:   Tingwei Zhang <tingwei@codeaurora.org>
@@ -52,21 +52,20 @@ To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Mike Leach <mike.leach@linaro.org>
-Cc:     Kim Phillips <kim.phillips@arm.com>,
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Leo Yan <leo.yan@linaro.org>,
         Randy Dunlap <rdunlap@infradead.org>,
         Russell King <linux@armlinux.org.uk>,
+        Kim Phillips <kim.phillips@arm.com>,
         Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Mao Jinlong <jinlmao@codeaurora.org>,
         coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <Suzuki.Poulose@arm.com>,
-        Tingwei Zhang <tingwei@codeaurora.org>
-Subject: [PATCH v9 03/24] coresight: use IS_ENABLED for CONFIGs that may be modules
-Date:   Thu, 20 Aug 2020 13:46:57 +0800
-Message-Id: <20200820054718.20115-4-tingwei@codeaurora.org>
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v9 02/24] coresight: cpu_debug: define MODULE_DEVICE_TABLE
+Date:   Thu, 20 Aug 2020 13:46:56 +0800
+Message-Id: <20200820054718.20115-3-tingwei@codeaurora.org>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200820054718.20115-1-tingwei@codeaurora.org>
 References: <20200820054718.20115-1-tingwei@codeaurora.org>
@@ -77,68 +76,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kim Phillips <kim.phillips@arm.com>
+Define a MODULE_DEVICE_TABLE for cpu_debug so module can
+be auto loaded on boot.
 
-Checking for ifdef CONFIG_x fails if CONFIG_x=m.  Use IS_ENABLED
-that is true for both built-ins and modules, instead.  Required
-when building coresight components as modules.
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
 Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.h | 2 +-
- drivers/hwtracing/coresight/coresight-priv.h     | 2 +-
- include/linux/coresight.h                        | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/hwtracing/coresight/coresight-cpu-debug.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
-index 015213abe00a..05f89723e282 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.h
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
-@@ -57,7 +57,7 @@ struct etm_event_data {
- 	struct list_head * __percpu *path;
+diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+index 96544b348c27..1d0880b3764a 100644
+--- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
++++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+@@ -665,6 +665,8 @@ static const struct amba_id debug_ids[] = {
+ 	{},
  };
  
--#ifdef CONFIG_CORESIGHT
-+#if IS_ENABLED(CONFIG_CORESIGHT)
- int etm_perf_symlink(struct coresight_device *csdev, bool link);
- int etm_perf_add_symlink_sink(struct coresight_device *csdev);
- void etm_perf_del_symlink_sink(struct coresight_device *csdev);
-diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
-index f2dc625ea585..d801a2755432 100644
---- a/drivers/hwtracing/coresight/coresight-priv.h
-+++ b/drivers/hwtracing/coresight/coresight-priv.h
-@@ -165,7 +165,7 @@ int coresight_make_links(struct coresight_device *orig,
- void coresight_remove_links(struct coresight_device *orig,
- 			    struct coresight_connection *conn);
- 
--#ifdef CONFIG_CORESIGHT_SOURCE_ETM3X
-+#if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM3X)
- extern int etm_readl_cp14(u32 off, unsigned int *val);
- extern int etm_writel_cp14(u32 off, u32 val);
- #else
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 58fffdecdbfd..3bb738f9a326 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -324,7 +324,7 @@ struct coresight_ops {
- 	const struct coresight_ops_ect *ect_ops;
- };
- 
--#ifdef CONFIG_CORESIGHT
-+#if IS_ENABLED(CONFIG_CORESIGHT)
- extern struct coresight_device *
- coresight_register(struct coresight_desc *desc);
- extern void coresight_unregister(struct coresight_device *csdev);
++MODULE_DEVICE_TABLE(amba, debug_ids);
++
+ static struct amba_driver debug_driver = {
+ 	.drv = {
+ 		.name   = "coresight-cpu-debug",
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
