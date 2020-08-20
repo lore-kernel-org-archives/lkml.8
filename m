@@ -4,52 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D51C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E12A207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DADD207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882032;
-	bh=xAbJ9aQ6MAPazak0G1KJ0FiE6uz5m2Kr0/xkdHt9jSI=;
+	s=default; t=1597882038;
+	bh=XIIXTbt/QIRGAo/NW8dnaqnoj6NT/0V7mQ4/PLFvF3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ewt3Loxc5SeWJJtEoVmBV3hkTlbJ4PyHF5kyntOX+Rl81LL1naqWDF7mAbN6DO9a6
-	 Ns2VJYwGpTZry1qZ0fHW5BRiZHki96qQGzl5beEXSnn7nr+KuCL1rPE6swyt5y+TZ6
-	 i8DaFVcjuKssKrrOW5ffAsgJgFLNnlSvJopEjOp4=
+	b=ysP6c/HdE7AdVjb0NSngz0L3VIN9TS/iah1pkfscab0AcYIBywc2t4qdt+KqTsbub
+	 Z6hjumtPisdaZ48xApZZ01qwYIOG07F64t5BkXJlPO11hwzrcaqRa4IiuPLqjyOG0Q
+	 sKcH7RGkh++kUSte4nmJunXymx1mfAaGyuDmbaGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgHTAHK (ORCPT
+        id S1728415AbgHTAHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:07:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33130 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgHTAD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:27 -0400
+        id S1728270AbgHTAD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87112207FB;
-        Thu, 20 Aug 2020 00:03:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C14221E2;
+        Thu, 20 Aug 2020 00:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881807;
-        bh=xAbJ9aQ6MAPazak0G1KJ0FiE6uz5m2Kr0/xkdHt9jSI=;
+        s=default; t=1597881806;
+        bh=XIIXTbt/QIRGAo/NW8dnaqnoj6NT/0V7mQ4/PLFvF3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqpS+NHG1kWpn5Q3R4bgt12LpfuqoX47pljRZrapp0ronIV+0bIplq2+EmTckzLa8
-         /NZ9jwZ8QPOI6Li0iwoFbcqKdNwqDFKa/jLYRySngWWID3dWZD8RjiWrxvjlYBfpU0
-         XgFaM552kCFDAaQR5bWBz0ElIB3STNSI8NwOkuPU=
+        b=ffBVLl3VbPxa/lCViNfIaTnrM48WeIdoV2D0K3M1n1dN7ByPc+oZDnvvUU2Rb2nep
+         BxyvuoWd7dLfVa2Etu1SamTk5xQkSqwzSZDDVtXWlxC+5wLDqw1YCmH0Ti1Z3wbiWW
+         0iDQrI17BqQuBVl201TGLF9cv4KH90NL4fHro6Vo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Helge Deller <deller@gmx.de>,
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        kernel test robot <lkp@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Laurent Vivier <laurent@vivier.eu>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fsdevel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 18/18] fs/signalfd.c: fix inconsistent return codes for signalfd4
-Date:   Wed, 19 Aug 2020 20:03:01 -0400
-Message-Id: <20200820000302.215560-18-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-alpha@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 17/18] alpha: fix annotation of io{read,write}{16,32}be()
+Date:   Wed, 19 Aug 2020 20:03:00 -0400
+Message-Id: <20200820000302.215560-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -62,58 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 
-[ Upstream commit a089e3fd5a82aea20f3d9ec4caa5f4c65cc2cfcc ]
+[ Upstream commit bd72866b8da499e60633ff28f8a4f6e09ca78efe ]
 
-The kernel signalfd4() syscall returns different error codes when called
-either in compat or native mode.  This behaviour makes correct emulation
-in qemu and testing programs like LTP more complicated.
+These accessors must be used to read/write a big-endian bus.  The value
+returned or written is native-endian.
 
-Fix the code to always return -in both modes- EFAULT for unaccessible user
-memory, and EINVAL when called with an invalid signal mask.
+However, these accessors are defined using be{16,32}_to_cpu() or
+cpu_to_be{16,32}() to make the endian conversion but these expect a
+__be{16,32} when none is present.  Keeping them would need a force cast
+that would solve nothing at all.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+So, do the conversion using swab{16,32}, like done in asm-generic for
+similar situations.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Laurent Vivier <laurent@vivier.eu>
-Link: http://lkml.kernel.org/r/20200530100707.GA10159@ls3530.fritz.box
+Cc: Richard Henderson <rth@twiddle.net>
+Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+Cc: Matt Turner <mattst88@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: http://lkml.kernel.org/r/20200622114232.80039-1-luc.vanoostenryck@gmail.com
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/signalfd.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/alpha/include/asm/io.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/signalfd.c b/fs/signalfd.c
-index 4fcd1498acf52..3c40a3bf772ce 100644
---- a/fs/signalfd.c
-+++ b/fs/signalfd.c
-@@ -313,9 +313,10 @@ SYSCALL_DEFINE4(signalfd4, int, ufd, sigset_t __user *, user_mask,
- {
- 	sigset_t mask;
- 
--	if (sizemask != sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask != sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, flags);
+diff --git a/arch/alpha/include/asm/io.h b/arch/alpha/include/asm/io.h
+index eb09d5aee9106..0bba9e991189d 100644
+--- a/arch/alpha/include/asm/io.h
++++ b/arch/alpha/include/asm/io.h
+@@ -507,10 +507,10 @@ extern inline void writeq(u64 b, volatile void __iomem *addr)
  }
+ #endif
  
-@@ -324,9 +325,10 @@ SYSCALL_DEFINE3(signalfd, int, ufd, sigset_t __user *, user_mask,
- {
- 	sigset_t mask;
+-#define ioread16be(p) be16_to_cpu(ioread16(p))
+-#define ioread32be(p) be32_to_cpu(ioread32(p))
+-#define iowrite16be(v,p) iowrite16(cpu_to_be16(v), (p))
+-#define iowrite32be(v,p) iowrite32(cpu_to_be32(v), (p))
++#define ioread16be(p) swab16(ioread16(p))
++#define ioread32be(p) swab32(ioread32(p))
++#define iowrite16be(v,p) iowrite16(swab16(v), (p))
++#define iowrite32be(v,p) iowrite32(swab32(v), (p))
  
--	if (sizemask != sizeof(sigset_t) ||
--	    copy_from_user(&mask, user_mask, sizeof(mask)))
-+	if (sizemask != sizeof(sigset_t))
- 		return -EINVAL;
-+	if (copy_from_user(&mask, user_mask, sizeof(mask)))
-+		return -EFAULT;
- 	return do_signalfd4(ufd, &mask, 0);
- }
- 
+ #define inb_p		inb
+ #define inw_p		inw
 -- 
 2.25.1
 
