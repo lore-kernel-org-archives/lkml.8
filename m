@@ -2,113 +2,66 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0948DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB65A2087D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="jp0ZPR0F"
+	by mail.kernel.org (Postfix) with ESMTP id 0605D206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgHTWKJ (ORCPT
+        id S1728123AbgHTWKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33370 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgHTWKF (ORCPT
+        Thu, 20 Aug 2020 18:10:52 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58227 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgHTWKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:10:05 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76DBC061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:10:04 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id a75so24798ybg.15
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:10:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=yJwAau26hmxXDK7LYJ3raaNV0n3CHaFw9SQbcJH8sEA=;
-        b=jp0ZPR0FxAheFL9TaDHJpLBdkF8RMdsuqogh+TQsc9O5logL4ZbPUmQXt4iFAVsdPt
-         t0UFCsaxtebtbQEIpwLN2OHQ5vGZsaiZEaq2rdf8iL05k1zGifwMycxpvfUA4aZSNLn9
-         InR5iNt0Gz7hK9ENo46ajMKo+wMsmjep/Mhb6o1rpxtHftfrEcU2ZhPiki61DOBVgbLq
-         NbGrKmZT/TrgsZqgo+lGWiy/85ElcfQYu9/O/UALRL7Cgo2b1thGr9vBRbMPBGFbHr/X
-         hPUtkCfENG9wxazhmpR0QLpIzsWGzMUxm+uvG/QcI97aHX8Jpv+6S5K6dLDCfAyilJON
-         4Mlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=yJwAau26hmxXDK7LYJ3raaNV0n3CHaFw9SQbcJH8sEA=;
-        b=T3wWY3FdIWrA3TjZB2IxFzPK8jg60CNZARypAcN6RXt8VtncWrcpsquaXKUzh5L8Hs
-         Y7hNogImyubCQG38mk8jwMH18aBNWEXyjS7gDT1rDvnnceROLIhygyJ9+6oj996kZvTH
-         lUeooume84d9N5SVmY0iJJq+5vyFqFiEHj/20XBT0GuO55OXULAFSfNtbxojXjilB0UM
-         V4YkGfP+TQmSlWHselB5IjTJDX8tTb2OSeuGmYOo3RTIeXbVoi1SbVUPERGO6uEmPPou
-         FZTFfEv5pRH7aCLuKYbWNr/m9t3v7MYOKvTxVtu5DAJIsvvMPtlCT+eV+qzPRAT9W0He
-         UNPg==
-X-Gm-Message-State: AOAM530izFTnrc8eX3Mhe6pjvnLBmkS5nRlv0DkFrDH9fcvGWy2kC9zH
-        OWkcun4H5jok/NRRPo/DqlmCSwgFlzGbgieOoGs=
-X-Google-Smtp-Source: ABdhPJx30GNZ3GSuvsFhK/9SM8q9Vjp2kLIGiXlPALUfITy+qGebu7li50lrnbr4PyABra6n07ZFPtW+mf+/2rTZOzo=
-X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a25:d812:: with SMTP id
- p18mr462820ybg.460.1597961401739; Thu, 20 Aug 2020 15:10:01 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 15:09:55 -0700
-Message-Id: <20200820220955.3325555-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-Subject: [PATCH] Makefile: add -fuse-ld=lld to KBUILD_HOSTLDFLAGS when LLVM=1
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>, stable@vger.kernel.org,
-        Matthias Maennich <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Aug 2020 18:10:51 -0400
+X-Originating-IP: 90.66.108.79
+Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F1BF1240003;
+        Thu, 20 Aug 2020 22:10:48 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Victor Ding <victording@google.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>
+Subject: Re: [PATCH v2] rtc: cmos: zero-init wkalrm when reading from CMOS
+Date:   Fri, 21 Aug 2020 00:10:48 +0200
+Message-Id: <159796143347.2239022.2687430267906057170.b4-ty@bootlin.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200814191654.v2.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+References: <20200814191654.v2.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While moving Android kernels over to use LLVM=1, we observe the failure
-when building in a hermetic docker image:
-  HOSTCC  scripts/basic/fixdep
-clang: error: unable to execute command: Executable "ld" doesn't exist!
+On Fri, 14 Aug 2020 19:17:30 +1000, Victor Ding wrote:
+> cmos_read_alarm() may leave certain fields of a struct rtc_wkalrm
+> untouched; therefore, these fields contain garbage if not properly
+> initialized, leading to inconsistent values when converting into
+> time64_t. This patch to zero initialize the struct before calling
+> cmos_read_alarm().
+> 
+> Note that this patch is not intended to produce a correct time64_t, it
+> is only to produce a consistent value. In the case of suspend/resume, a
+> correct time64_t is not necessary; a consistent value is sufficient to
+> correctly perform an equality test for t_current_expires and
+> t_saved_expires. Logic to deduce a correct time64_t is expensive and
+> hence should be avoided.
 
-The is because the build of the host utility fixdep builds the fixdep
-executable in one step by invoking the compiler as the driver, rather
-than individual compile then link steps.
+Applied, thanks!
 
-Clang when configured from source defaults to use the system's linker,
-and not LLVM's own LLD, unless the CMake config
--DCLANG_DEFAULT_LINKER='lld' is set when configuring a build of clang
-itself.
+[1/1] rtc: cmos: zero-init wkalrm when reading from CMOS
+      commit: c254bcd7231a3eeafc453f6ee3a483a2e7ff486e
 
-Don't rely on the compiler's implicit default linker; be explicit.
-
-Cc: stable@vger.kernel.org
-Fixes: commit a0d1c951ef08 ("kbuild: support LLVM=1 to switch the default tools to Clang/LLVM")
-Reported-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
----
- Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Makefile b/Makefile
-index def590b743a9..b4e93b228a26 100644
---- a/Makefile
-+++ b/Makefile
-@@ -436,6 +436,7 @@ OBJDUMP		= llvm-objdump
- READELF		= llvm-readelf
- OBJSIZE		= llvm-size
- STRIP		= llvm-strip
-+KBUILD_HOSTLDFLAGS	+= -fuse-ld=lld
- else
- CC		= $(CROSS_COMPILE)gcc
- LD		= $(CROSS_COMPILE)ld
+Best regards,
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+Alexandre Belloni <alexandre.belloni@bootlin.com>
