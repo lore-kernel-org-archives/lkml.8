@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E16C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EF9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C34DE207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB7C207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882009;
-	bh=RlpcFNhQhQeGISJeB07hKfvLDYKsouJijQsNCkkp6Do=;
+	s=default; t=1597882013;
+	bh=KsG7lhYjGtEOo5pRqW4HDh0Yda+6027PDm5WZMqw23Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZSj/nyuzlwaAkOjWTexnPrZV7+N8LFzjNICevvSoH2l7nVJAXx2cpdpoJ8S9zEulK
-	 iYMwiW2rmyoU6e+qwB1qmUQZGViHZWiGGt/nHag2Ehk4rxUmUSFB9PlqgCvIgFkwWo
-	 zLB4Ofm1uyzrgUANtPoHAKRxgmGwyNunUD+hMw3I=
+	b=cExlaDR6Dg4b4DV5EAjLOM27AnOmK+MDs8x6JdTs2rmLE7VxVTvjwTBsBAvuKmbwT
+	 fFTs1PSbRIfJMMEKD9BYsceAnM59sYpny4Rg8CeeavvpVpapnOs5IGbe8KeRhh33ty
+	 c7sFgFZv5p0bgJ1rQpEhz4ITwVpEO6ZeSg5s7bLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgHTADj (ORCPT
+        id S1728614AbgHTAGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:03:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32810 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:06:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728193AbgHTADS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:18 -0400
+        id S1728306AbgHTADf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3D1208E4;
-        Thu, 20 Aug 2020 00:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E256207FB;
+        Thu, 20 Aug 2020 00:03:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881798;
-        bh=RlpcFNhQhQeGISJeB07hKfvLDYKsouJijQsNCkkp6Do=;
+        s=default; t=1597881814;
+        bh=KsG7lhYjGtEOo5pRqW4HDh0Yda+6027PDm5WZMqw23Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZeTbH4GQnQEdnhWnGMgXaDPJBum4uMVDKfuNs+ZVUSgtdA7BpRf7c26vgz3yaI8fH
-         Hg5v+KJLMK5YlFwt6Ryj7yJSBswPgSlp+YdMEfPgFZ64+6dW3zG6oeWGEEsa6cG1gm
-         KeTFsZb5qiEgupKgZbRRH7jaZ5MhBm8+NC1F9Yeg=
+        b=P/V8AUaJizyZwv4rJ675bg6KDPLHA+YAzdZ+HusadRagT4NyvZjp+2ibeqRMHtyhv
+         6j8cC4gtWs5CFHdT/+2kt8g24+0h4GzB37O2EZA2EG5QkFogTMtaPWhjae6rBVOaWK
+         JI7e44YvMM/HLgCutAclpAM65GQ1Oy53mZgOb+m0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 12/18] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
-Date:   Wed, 19 Aug 2020 20:02:55 -0400
-Message-Id: <20200820000302.215560-12-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 04/13] media: vpss: clean up resources in init
+Date:   Wed, 19 Aug 2020 20:03:19 -0400
+Message-Id: <20200820000328.215755-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
-References: <20200820000302.215560-1-sashal@kernel.org>
+In-Reply-To: <20200820000328.215755-1-sashal@kernel.org>
+References: <20200820000328.215755-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
-this MSR via BIOS settings on some systems or can use msr tools to update.
-Also some systems boot with value = 0.
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-This results in display of cpufreq/cpuinfo_max_freq wrong. This value
-will be equal to cpufreq/base_frequency, even though turbo is enabled.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-But platform will still function normally in HWP mode as we get max
-1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
-to calculate cpu->pstate.turbo_freq, which is used for to set
-policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
-is used. For example to set policy->max.
-
-To fix this, also update cpu->pstate.turbo_pstate when updating
-cpu->pstate.turbo_freq.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index e7b3d4ed8eff4..99166000ffb77 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -1431,6 +1431,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index 2ee4cd9e6d80f..d984f45c03149 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -514,19 +514,31 @@ static void vpss_exit(void)
  
- 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
- 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
-+		cpu->pstate.turbo_pstate = phy_max;
- 	} else {
- 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+ static int __init vpss_init(void)
+ {
++	int ret;
++
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
+ 
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
  	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
+ }
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
