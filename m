@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3F4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0FAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0297A20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7848320658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928293;
-	bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+	s=default; t=1597928300;
+	bh=d/jGMt1oCsLc4aGnO5K2JI8v956XOiQWLDA7FUVXzRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PryBXkt/EyldyHgm3PHvRdQTeU4dZDS7SdOXCU8J6ZaKgcSfwrQ9TUi239Kq/zplq
-	 syQ5uuDs72Wdt3ohjXyj/TZvESExEY2kKE8R1ZsnbwGj2znjG+Jloo47t91xQnl/XI
-	 N3cSTuufUqbMK5spO25akBlFTjohISWA0di+zu+s=
+	b=i2X8EVa9VLKYOM0ycIVntYJ81a9vl+BK6mx0yxJm3mdTcr0IYqoySbq+910uybqjk
+	 +4A7NmL4qh+z236pFSZvPM2sVFHV2BI+5P2iT6c6UpC0gopEbpFxR37lJEbH1aFWpl
+	 /YNJcEZLCGHYrhGTBnXa9c2qaEFCOkJQoJyedXlI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728958AbgHTM6J (ORCPT
+        id S1728589AbgHTM6Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:58:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33610 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:58:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgHTJky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:54 -0400
+        id S1729055AbgHTJkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E528207DE;
-        Thu, 20 Aug 2020 09:40:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1912320855;
+        Thu, 20 Aug 2020 09:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916453;
-        bh=BP2uJ9ktq3oZUfwxtBO2odfhgCbCxzcgJfknfPirCqk=;
+        s=default; t=1597916448;
+        bh=d/jGMt1oCsLc4aGnO5K2JI8v956XOiQWLDA7FUVXzRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XM50L5LYJ6fWp8GmtNqmHYY3CHdEFbLa8SoXgJjB0dV3pdjEBAjPTO+Q7+eyTqnUp
-         ZMzaI+80xTyBH5CuFsr6qjh6TcJuk7YyJjP8hT5M7/1rs6yumh1W/6eJBtpqeDUt17
-         yQNDPgV3iD/rDyLQvFaBz9uHlXMG48thBxlidZqs=
+        b=d7RNM4jB2icLYVOPnBWayqmihC+2iN/DX5bs6kKY1T3pvSNsdTG0rSxUgBK4DBlXh
+         Yf0Dy/vYCGwR2iZo71e8l4NY37kBlaHv/VuErWFbTz9t2aef9+rLYzJQ72i99WfZ6d
+         oqVJ9UbLUsGY9YPFd6uiL0jceu1r4CRpoTHrCaMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 134/204] selftests/powerpc: ptrace-pkey: Rename variables to make it easier to follow code
-Date:   Thu, 20 Aug 2020 11:20:31 +0200
-Message-Id: <20200820091612.964479699@linuxfoundation.org>
+Subject: [PATCH 5.7 132/204] f2fs: compress: fix to avoid memory leak on cc->cpages
+Date:   Thu, 20 Aug 2020 11:20:29 +0200
+Message-Id: <20200820091612.871866317@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,109 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 9a11f12e0a6c374b3ef1ce81e32ce477d28eb1b8 ]
+[ Upstream commit 02772fbfcba8597eef9d5c5f7f94087132d0c1d4 ]
 
-Rename variable to indicate that they are invalid values which we will
-use to test ptrace update of pkeys.
+Memory allocated for storing compressed pages' poitner should be
+released after f2fs_write_compressed_pages(), otherwise it will
+cause memory leak issue.
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-21-aneesh.kumar@linux.ibm.com
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/powerpc/ptrace/ptrace-pkey.c    | 26 +++++++++----------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ fs/f2fs/compress.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index bdbbbe8431e03..f9216c7a1829e 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -44,7 +44,7 @@ struct shared_info {
- 	unsigned long amr2;
- 
- 	/* AMR value that ptrace should refuse to write to the child. */
--	unsigned long amr3;
-+	unsigned long invalid_amr;
- 
- 	/* IAMR value the parent expects to read from the child. */
- 	unsigned long expected_iamr;
-@@ -57,8 +57,8 @@ struct shared_info {
- 	 * (even though they're valid ones) because userspace doesn't have
- 	 * access to those registers.
- 	 */
--	unsigned long new_iamr;
--	unsigned long new_uamor;
-+	unsigned long invalid_iamr;
-+	unsigned long invalid_uamor;
- };
- 
- static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
-@@ -100,7 +100,7 @@ static int child(struct shared_info *info)
- 
- 	info->amr1 |= 3ul << pkeyshift(pkey1);
- 	info->amr2 |= 3ul << pkeyshift(pkey2);
--	info->amr3 |= info->amr2 | 3ul << pkeyshift(pkey3);
-+	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
- 
- 	if (disable_execute)
- 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
-@@ -111,8 +111,8 @@ static int child(struct shared_info *info)
- 
- 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
- 				3ul << pkeyshift(pkey2);
--	info->new_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
--	info->new_uamor |= 3ul << pkeyshift(pkey1);
-+	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
-+	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
- 
- 	/*
- 	 * We won't use pkey3. We just want a plausible but invalid key to test
-@@ -196,9 +196,9 @@ static int parent(struct shared_info *info, pid_t pid)
- 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	info->amr1 = info->amr2 = info->amr3 = regs[0];
--	info->expected_iamr = info->new_iamr = regs[1];
--	info->expected_uamor = info->new_uamor = regs[2];
-+	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
-+	info->expected_iamr = info->invalid_iamr = regs[1];
-+	info->expected_uamor = info->invalid_uamor = regs[2];
- 
- 	/* Wake up child so that it can set itself up. */
- 	ret = prod_child(&info->child_sync);
-@@ -234,10 +234,10 @@ static int parent(struct shared_info *info, pid_t pid)
- 		return ret;
- 
- 	/* Write invalid AMR value in child. */
--	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->amr3, 1);
-+	ret = ptrace_write_regs(pid, NT_PPC_PKEY, &info->invalid_amr, 1);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->amr3);
-+	printf("%-30s AMR: %016lx\n", ptrace_write_running, info->invalid_amr);
- 
- 	/* Wake up child so that it can verify it didn't change. */
- 	ret = prod_child(&info->child_sync);
-@@ -249,7 +249,7 @@ static int parent(struct shared_info *info, pid_t pid)
- 
- 	/* Try to write to IAMR. */
- 	regs[0] = info->amr1;
--	regs[1] = info->new_iamr;
-+	regs[1] = info->invalid_iamr;
- 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 2);
- 	PARENT_FAIL_IF(!ret, &info->child_sync);
- 
-@@ -257,7 +257,7 @@ static int parent(struct shared_info *info, pid_t pid)
- 	       ptrace_write_running, regs[0], regs[1]);
- 
- 	/* Try to write to IAMR and UAMOR. */
--	regs[2] = info->new_uamor;
-+	regs[2] = info->invalid_uamor;
- 	ret = ptrace_write_regs(pid, NT_PPC_PKEY, regs, 3);
- 	PARENT_FAIL_IF(!ret, &info->child_sync);
- 
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index a5b2e72174bb1..527d50edcb956 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1250,6 +1250,8 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
+ 		err = f2fs_write_compressed_pages(cc, submitted,
+ 							wbc, io_type);
+ 		cops->destroy_compress_ctx(cc);
++		kfree(cc->cpages);
++		cc->cpages = NULL;
+ 		if (!err)
+ 			return 0;
+ 		f2fs_bug_on(F2FS_I_SB(cc->inode), err != -EAGAIN);
 -- 
 2.25.1
 
