@@ -2,101 +2,75 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE737C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1D6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC93D207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:39:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vUNZOjju"
+	by mail.kernel.org (Postfix) with ESMTP id 29A542075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:42:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725838AbgHTFjv (ORCPT
+        id S1726751AbgHTFma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:39:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49736 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbgHTFjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:39:49 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49168C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 22:39:49 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id m34so610135pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 22:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=THYhk6JOC4TXpYcTdTNB05bB3kc64g/hoRGOJ2KPS5g=;
-        b=vUNZOjjum+PBtEM3XlGi73tWZ5COii2DJIxmx3PWecAaYP9ZkvQUA7habblAnQnr6d
-         alqrkUOAhgfUDXVG7WOOUGxceCadhsQh/LBW98JK8KmX/2c1Kn/PUn7HN4V2K6cx6p3U
-         GsKt+ALuaCIaI6S2b8rxVKkNQrxFMMbHXW2e22cCB0gpgwnewwThTAttwYA8fGBN7CdO
-         Fn1oNlNG1TB0kVnpI0/8Ei7m3hcwPoWdPiyd3cAwl2G1Sarxl5ZcSBxtB+1kvyO7TVrw
-         SYyTOaFPJbATGo+HmKy+0kwEAYwvH3C58ILx1n9AmgRcUtE4veIvTM11S2CUZ3ZIeVBm
-         WnXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=THYhk6JOC4TXpYcTdTNB05bB3kc64g/hoRGOJ2KPS5g=;
-        b=oabiNi6A3izMpHb12iNRfShWQGNaWCKysjYT9nO0hFjZR275vLCX/oEo2r+bcVi+Z7
-         Majm/zbND5NNT3VZ38W9WmWMf69uhcWBBkHr3OlcGmNxQPLw8B+Lneyq2mni8i4ABS0t
-         w5fkGRlaCbBJsDFbjYdeU3vCDP2iT3Z8Rpf2y2VeDjNbEvumiYuAqUnRH8gu+ulRoIrN
-         ImOQxk+j6t+WCfCunPGcRMRgNQxKy4JAk7xzTXuzJsiRZCIE1j0tBE2Kpe7JOBFdaw94
-         wkOU3GP+/Bm5Ss31tmne39AW2R1U3G86jgFPaXlqn+eJhz5X+6ZlgSRfKrpcrlB0XIWg
-         VfgA==
-X-Gm-Message-State: AOAM5319Z8pXwzrMGFEUJTHIewA96FZ8cls1VsCHOeQEC7f2OgBW0ePk
-        qtaAyLYv6lYQ3ujkQM2nu/HmFQ==
-X-Google-Smtp-Source: ABdhPJyiv6R/08txV3btGY8Wex4DoNWiQ9V8i7TVrXG6grrAcw0P8NDqDoa/L6UCGKZqA6mKxIB7VA==
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr1028280pfk.219.1597901988631;
-        Wed, 19 Aug 2020 22:39:48 -0700 (PDT)
-Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id u21sm802708pjn.27.2020.08.19.22.39.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Aug 2020 22:39:47 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 11:09:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     sudeep.holla@arm.com, rjw@rjwysocki.net, catalin.marinas@arm.com,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        bbasu@nvidia.com, wangkefeng.wang@huawei.com
-Subject: Re: [Patch] cpufreq: replace cpu_logical_map with read_cpuid_mpir
-Message-ID: <20200820053945.xlwtpkvbt4o23flk@vireshk-i7>
-References: <1597174997-22505-1-git-send-email-sumitg@nvidia.com>
+        Thu, 20 Aug 2020 01:42:30 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:36668 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbgHTFma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:42:30 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Thu, 20 Aug 2020 13:42:11
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Thu, 20 Aug 2020 13:42:11 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     Ajay.Kathat@microchip.com
+Cc:     kjlu@umn.edu, Claudiu.Beznea@microchip.com, kvalo@codeaurora.org,
+        davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
+        Eugen.Hristev@microchip.com, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] staging: wilc1000: Fix memleak in wilc_sdio_probe
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+In-Reply-To: <0f59db10-4aec-4ce6-2695-43ddf5017cb2@microchip.com>
+References: <20200819115014.28955-1-dinghao.liu@zju.edu.cn>
+ <0f59db10-4aec-4ce6-2695-43ddf5017cb2@microchip.com>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597174997-22505-1-git-send-email-sumitg@nvidia.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Message-ID: <3b9f1c74.ba0a.1740a63917b.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgBH_94zDT5fcJftAg--.44373W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAMsT
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbAIS07vEb7Iv0x
+        C_Xr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_Jr0_Jr4lV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVACI402YVCY1x02628vn2kIc2xKxwCS07vE7I0Y64k_MIAIbVCY0x0Ix7I2Y4
+        AK64vIr41lV2xY6xAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCS07vE4x8a6x804xWlV2xY
+        6xC20s026xCaFVCjc4AY6r1j6r4UMIAIbVC20s026c02F40E14v26r1j6r18MIAIbVC20s
+        026x8GjcxK67AKxVWUGVWUWwCS07vEx4CE17CEb7AF67AKxVWUtVW8ZwCS07vEIxAIcVC0
+        I7IYx2IY67AKxVWUJVWUCwCS07vEIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIAIbV
+        CI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        V2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12-08-20, 01:13, Sumit Gupta wrote:
-> Commit eaecca9e7710 ("arm64: Fix __cpu_logical_map undefined issue")
-> fixes the issue with building tegra194 cpufreq driver as module. But
-> the fix might cause problem while supporting physical cpu hotplug[1].
-> 
-> This patch fixes the original problem by avoiding use of cpu_logical_map().
-> Instead calling read_cpuid_mpidr() to get MPIDR on target cpu.
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/20200724131059.GB6521@bogus/
-> 
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  drivers/cpufreq/tegra194-cpufreq.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-
-Applied. Thanks.
-
--- 
-viresh
+CgpBamF5LkthdGhhdEBtaWNyb2NoaXAuY29t5YaZ6YGT77yaCj4gVGhhbmtzIGZvciBzdWJtaXR0
+aW5nIHRoZSBwYXRjaC4gVGhlIGNvZGUgY2hhbmdlcyBsb29rcyBva2F5IHRvIG1lLgo+IAo+IFRo
+ZSBkcml2ZXIgaXMgbm93IG1vdmVkIG91dCBvZiBzdGFnaW5nIHNvICdzdGFnaW5nJyBwcmVmaXgg
+aXMgbm90Cj4gcmVxdWlyZWQgaW4gc3ViamVjdC4gRm9yIGZ1dHVyZSBwYXRjaGVzIG9uIHdpbGMg
+ZHJpdmVyLCB0aGUgJ3N0YWdpbmcnCj4gcHJlZml4IGNhbiBiZSByZW1vdmVkLgo+IAo+IEZvciB0
+aGlzIHBhdGNoLCBJIGFtIG5vdCBzdXJlIGlmIEthbGxlIGNhbiBhcHBseSBhcyBpcyBvdGhlcndp
+c2UgcGxlYXNlCj4gc3VibWl0IGEgcGF0Y2ggYnkgcmVtb3ZpbmcgJ3N0YWdpbmcnIGZyb20gc3Vi
+amVjdCBzbyBpdCBjYW4gYmUgYXBwbGllZAo+IGRpcmVjdGx5Lgo+IAo+IFJlZ2FyZHMsCj4gQWph
+eQo+IAoKVGhhbmtzIGZvciB5b3VyIGNvcnJlY3Rpb24uIEknbGwgc2VuZCBhIG5ldyBwYXRjaCBz
+b29uLgoKUmVnYXJkcywKRGluZ2hhbwo=
