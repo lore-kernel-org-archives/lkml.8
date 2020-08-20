@@ -2,171 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66B1C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE84C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFDEC20639
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35322072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 03:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJ9D3ITY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vTe4qnU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbgHTDeX (ORCPT
+        id S1726803AbgHTDjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 23:34:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58800 "EHLO
+        Wed, 19 Aug 2020 23:39:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbgHTDeW (ORCPT
+        with ESMTP id S1726698AbgHTDjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 23:34:22 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63CA1C061757;
-        Wed, 19 Aug 2020 20:34:22 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id 2so469783qkf.10;
-        Wed, 19 Aug 2020 20:34:22 -0700 (PDT)
+        Wed, 19 Aug 2020 23:39:46 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4941C061757
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:39:45 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id u20so390775pfn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 20:39:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rR24exBfQVkWtacavopzrmH6PxpvBA+Nf0yqd/BMG9E=;
-        b=HJ9D3ITYMCvLAArz8DK8SGV59PkSSo29GqCB9Z9SJ6XraYNdLynVE691bcdGgMSDDN
-         hxxLdJyCMuzmbOtjTKDRoGlRqt5vH8x39y2B/Se5AyD93apZP7ce4Qyj85d70i/cEkPy
-         4IGmJneYPp0H3t+8UkWhwm6xBijIPn/+5zXLaIpW+DQ3qtlgGSwpjbSca8L5hWoVnI5y
-         tl8EqNvSJjKx5W78/Sc1N9SDbg94vSZB0kJrpSH9onIdKswBLq5kEqaaptNxGhlvf0BB
-         JuX1RPN/Uc7YH85ejg34Y6LPup/+D1xOGXN9TKU1uRuZDMq9wtYHZ/Z4M8ySdAvFaOIV
-         oyEw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=1Pl5M3ukYq8iQYrf+dpnwbhWHmgNw4KikJbcw2NDFaY=;
+        b=vTe4qnU9syJCWAEG6DywC43aFT6u9KZAlrNQGmPhdjb381EGy/7CuoAm9utkz4bzrG
+         4SG+ix3+/d12Nxe5oanUjOKPqMy5JQTG0Au7MQCx6D1b3h5hrYHptueFtC0w8E22GncH
+         DB2Y7zUz/eoUKXh71v8MfxvstgAeMB+V62r5YgLgPyBICXwPYQHT/m3+h1M0Q2csztN0
+         TCDTkwGAvRaH5KrhuFHXK1EGUaAK2H0SFsB9FNscx4D1VkVetzaiZddED0nXU/abKuOG
+         Nx1wDsfslpX8BT0VVyTmT1fo8OBVjpFGcYyAarNIrOlWcuEFZHuQsf1Q6XNSoIPGiVFP
+         4XNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rR24exBfQVkWtacavopzrmH6PxpvBA+Nf0yqd/BMG9E=;
-        b=EhjHwQ4WapOefVFIOO6YkLAFyzzoRtbIsoXrQYRAD/dh84BjkKigcnMByfC6h6vB6+
-         prIF8KQb9L0s85X+wStnrilq3iCxSBvT1lPvbp0Dj+d54gKdbzWZLajCcJD5xtmkzdji
-         HseqP71Yt/buLgqlho/2rl97IegJSqXwVwyaDlRqoSdAiOtfxP2wwtLsDeN/OF89cSI1
-         fZFv7DpnyWOxVgf8J73u1+zQ3EoBfNqQHTrELOY3vX3yFfPxB+rw6M3pw6Sltk/MbC3P
-         qFjmlg7/yd+aJg8FAZBTjgoYM4MwpG7CLKFI91ZSlezz9QrTka77uyOM8fy4DYQwjjNn
-         O37A==
-X-Gm-Message-State: AOAM53039z9XcU8D/rwe4orq/ky/6/N0QY1ufdz6/5T31FZYsZAZ9MhM
-        86Zhx3Zw892zl4SA/X3kW0Q=
-X-Google-Smtp-Source: ABdhPJzic2ynnUlv8fsvPVT9UW/uNizR8J71CrvkvSNpOU+Ea0IlZKCor7tcjK61capu5RqbLNkjpw==
-X-Received: by 2002:a37:62cf:: with SMTP id w198mr1047965qkb.172.1597894461585;
-        Wed, 19 Aug 2020 20:34:21 -0700 (PDT)
-Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id o47sm1545390qtk.19.2020.08.19.20.34.20
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=1Pl5M3ukYq8iQYrf+dpnwbhWHmgNw4KikJbcw2NDFaY=;
+        b=Zolci5iwDUxyYhArjJqkKlbINTTXZYc8BszlFiwFBsbra8h+fPFzoMM+xNw4uK1Jm7
+         5dYwLX4C9ZZCJJfGcu+b65QpE6Q3rifvuHTIBadvrMf1cUQTluPOMwzBloYYLn8HG3sv
+         YHA1u6tgDA2rqiXedtjruGPY3vzyar9TvsQ+i01xHJvQ0Vr8On2roy8sWL6lwlw6/QI7
+         rYf9PBSwr7bVJSm0FlvW8q6HCzSocECBfYTwf8Njh26h+xBNmfzqaHDUGjBncxNEFYif
+         /hZqpdhPYAQL4BKydWmFHUmdAVWM7O+/6/yrsl2Z6RU2kPDwOJ0f/c0RdqLCHVGUjPAJ
+         ysgw==
+X-Gm-Message-State: AOAM530mm2W6CyC8Z7iuj7Ml9QYe2kG3s+NqmMsvzXowrNgkYbrj8YsF
+        tXo7+alaYV9eEH1cSunQDdm+ebGt0utzcA==
+X-Google-Smtp-Source: ABdhPJw7+wbEcxeGvP6s6ZJ+K9s54oBWBNNce+Q9YhzT/XYIL8Tlrz5uMXzYbvij9iHIj3eAZ0TnWg==
+X-Received: by 2002:a63:5a1e:: with SMTP id o30mr1131758pgb.62.1597894784312;
+        Wed, 19 Aug 2020 20:39:44 -0700 (PDT)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id h9sm803062pfq.18.2020.08.19.20.39.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 20:34:20 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 20:34:19 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>, x86@kernel.org,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>,
-        Andi Kleen <ak@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        =?iso-8859-1?Q?D=E1vid_Bolvansk=FD?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>
-Subject: Re: [PATCH v2 3/5] Revert "lib/string.c: implement a basic bcmp"
-Message-ID: <20200820033419.GC2167124@ubuntu-n2-xlarge-x86>
-References: <20200819191654.1130563-1-ndesaulniers@google.com>
- <20200819191654.1130563-4-ndesaulniers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819191654.1130563-4-ndesaulniers@google.com>
+        Wed, 19 Aug 2020 20:39:43 -0700 (PDT)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chen Feng <puck.chen@hisilicon.com>
+Subject: [PATCH 1/3] drm: hikey9xx: Fix inconsistent compat string
+Date:   Thu, 20 Aug 2020 03:39:39 +0000
+Message-Id: <20200820033939.127932-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1597833138.git.mchehab+huawei@kernel.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 12:16:52PM -0700, Nick Desaulniers wrote:
-> This reverts commit 5f074f3e192f10c9fade898b9b3b8812e3d83342.
-> 
-> An earlier commit in the series prevents the compiler from emitting
-> calls to bcmp as part of "libcall optimization," and there are no
-> explicit callers, so we can now safely remove this interface.
-> 
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+This is against Mauro's tree here:
+https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commits/master/
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+A previous patch changed this string to be
+"hisilicon,kirin960-dpe", but there are other place where the
+code still expects "hisilicon,hi3660-dpe", so change it back.
 
-> ---
->  include/linux/string.h |  3 ---
->  lib/string.c           | 20 --------------------
->  2 files changed, 23 deletions(-)
-> 
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index b1f3894a0a3e..f3bdb74bc230 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -155,9 +155,6 @@ extern void * memscan(void *,int,__kernel_size_t);
->  #ifndef __HAVE_ARCH_MEMCMP
->  extern int memcmp(const void *,const void *,__kernel_size_t);
->  #endif
-> -#ifndef __HAVE_ARCH_BCMP
-> -extern int bcmp(const void *,const void *,__kernel_size_t);
-> -#endif
->  #ifndef __HAVE_ARCH_MEMCHR
->  extern void * memchr(const void *,int,__kernel_size_t);
->  #endif
-> diff --git a/lib/string.c b/lib/string.c
-> index 6012c385fb31..69328b8353e1 100644
-> --- a/lib/string.c
-> +++ b/lib/string.c
-> @@ -922,26 +922,6 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
->  EXPORT_SYMBOL(memcmp);
->  #endif
->  
-> -#ifndef __HAVE_ARCH_BCMP
-> -/**
-> - * bcmp - returns 0 if and only if the buffers have identical contents.
-> - * @a: pointer to first buffer.
-> - * @b: pointer to second buffer.
-> - * @len: size of buffers.
-> - *
-> - * The sign or magnitude of a non-zero return value has no particular
-> - * meaning, and architectures may implement their own more efficient bcmp(). So
-> - * while this particular implementation is a simple (tail) call to memcmp, do
-> - * not rely on anything but whether the return value is zero or non-zero.
-> - */
-> -#undef bcmp
-> -int bcmp(const void *a, const void *b, size_t len)
-> -{
-> -	return memcmp(a, b, len);
-> -}
-> -EXPORT_SYMBOL(bcmp);
-> -#endif
-> -
->  #ifndef __HAVE_ARCH_MEMSCAN
->  /**
->   * memscan - Find a character in an area of memory.
-> -- 
-> 2.28.0.297.g1956fa8f8d-goog
-> 
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Manivannan Sadhasivam <mani@kernel.org>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>
+Cc: Liwei Cai <cailiwei@hisilicon.com>
+Cc: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
+index 18fec5a1b59d..efa5727612f5 100644
+--- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
++++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
+@@ -339,7 +339,7 @@ static int kirin_drm_platform_resume(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id kirin_drm_dt_ids[] = {
+-	{ .compatible = "hisilicon,kirin960-dpe",
++	{ .compatible = "hisilicon,hi3660-dpe",
+ 	  .data = &kirin960_dss_dc_ops,
+ 	},
+ 	{ .compatible = "hisilicon,kirin970-dpe",
+-- 
+2.17.1
+
