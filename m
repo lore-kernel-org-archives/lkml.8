@@ -2,73 +2,94 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80079C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2503C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 451EF20885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:33:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597883597;
-	bh=3l/w2O5akRgsmLKW822D+h7KpzfmQAREhsNut0acb88=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TZ0J7O3EK0iTMBgAK7aZXiotXwSrAmoytIO/G/dFfLrjTSOdmULa4OW5fQVvW00YT
-	 cJ3FfzvogUpPgocaa8W5kFN5aAMr6vFe/6VJZbuwVM+fiV+OLn2CDP817FugLUZvpN
-	 Y21udwI9PHE1yIRaF6aCturmUNDAhvs5Gnokr6e8=
+	by mail.kernel.org (Postfix) with ESMTP id A18FB208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726815AbgHTAdP (ORCPT
+        id S1726858AbgHTAd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55464 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgHTAdP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:33:15 -0400
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71BDB20885;
-        Thu, 20 Aug 2020 00:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597883594;
-        bh=3l/w2O5akRgsmLKW822D+h7KpzfmQAREhsNut0acb88=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LHM0spli8a+Ks91qeosSQyO0SyvYKhlXdCspZS/wFJCdzVOgcEx8tla/8SfEca9Bz
-         VxTHyfiTYCFvfqssKNjle+yjC7tHH/iqWtJK44giXpAy4yLUgjWfdVtvDdPp81xBVR
-         IgQIOeYDO9pQYIsO2l9IyrIegAS02OmlVX18cFdI=
-Received: by mail-lf1-f48.google.com with SMTP id j22so96235lfm.2;
-        Wed, 19 Aug 2020 17:33:14 -0700 (PDT)
-X-Gm-Message-State: AOAM5310cU+2Pb11I+Uv66kvg08geO2H+FtX7TixmTISiK1HR4xpkEsD
-        Hn71Q5wf+Qzxax9UjDA84RWRs8heFzVLsp2FPF8=
-X-Google-Smtp-Source: ABdhPJy+Vsx6a462h7J5Pc9ZaLy/3hOyZVBo0ipdYDRMBhPUWjfeRNjF2u+4jPw+BtZoIjYiH87E+lblPzYfrHufAYY=
-X-Received: by 2002:ac2:4881:: with SMTP id x1mr311819lfc.162.1597883592706;
- Wed, 19 Aug 2020 17:33:12 -0700 (PDT)
+        Wed, 19 Aug 2020 20:33:56 -0400
+Received: from smtprelay0073.hostedemail.com ([216.40.44.73]:33372 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726715AbgHTAdz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:33:55 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id B4E68181D3028;
+        Thu, 20 Aug 2020 00:33:54 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: berry50_5c0699f2702c
+X-Filterd-Recvd-Size: 2006
+Received: from XPS-9350.home (unknown [47.151.133.149])
+        (Authenticated sender: joe@perches.com)
+        by omf11.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 20 Aug 2020 00:33:53 +0000 (UTC)
+Message-ID: <e1e3164eabf69e04ad9e9ddc259ca685f48c5e27.camel@perches.com>
+Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
+From:   Joe Perches <joe@perches.com>
+To:     John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 19 Aug 2020 17:33:51 -0700
+In-Reply-To: <20200819232632.13418-2-john.ogness@linutronix.de>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+         <20200819232632.13418-2-john.ogness@linutronix.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 MIME-Version: 1.0
-References: <20200818054206.6612-1-tian.xianting@h3c.com>
-In-Reply-To: <20200818054206.6612-1-tian.xianting@h3c.com>
-From:   Song Liu <song@kernel.org>
-Date:   Wed, 19 Aug 2020 17:33:01 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4gkOOuG899FKromGDL9A2MQve3jdkD_BbgEi+EhiygEA@mail.gmail.com>
-Message-ID: <CAPhsuW4gkOOuG899FKromGDL9A2MQve3jdkD_BbgEi+EhiygEA@mail.gmail.com>
-Subject: Re: [PATCH] md: only calculate blocksize once and use i_blocksize()
-To:     Xianting Tian <tian.xianting@h3c.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 10:49 PM Xianting Tian <tian.xianting@h3c.com> wrote:
->
-> We alreday has the interface i_blocksize(), which can be used
-> to get blocksize, so use it.
-> Only calculate blocksize once and use it within read_page().
->
-> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+On Thu, 2020-08-20 at 01:32 +0206, John Ogness wrote:
+> Implement a new buffering mechanism for pr_cont messages.
+> 
+> Old mechanism syntax:
+> 
+>     printk(KERN_INFO "text");
+>     printk(KERN_CONT " continued");
+>     printk(KERN_CONT "\n");
+> 
+> New mechanism syntax:
+> 
+>     pr_cont_t c;
+> 
+>     pr_cont_begin(&c, KERN_INFO "text");
 
-Thanks for the patch. Applied to md-next.
+bikeshed:
+
+I suggest:
+
+	printk_begin(&printk_context, fmt, ...)
+	printk_continue(&printk_context, fmt, ...) (maybe printk_next())
+	printk_end(&printk_context, fmt, ...)
+
+and macros using pr_<level>_begin
+
+ie:
+
+#define pr_info_begin(context, fmt, ...)		\
+	printk_begin(context, KERN_INFO pr_fmt(fmt), ##__VA_ARGS__)
+
+and each continued bit would use printk_continue or printk_end
+as appropriate.
+
+KERN_<LEVEL> could be a separate argument, but it's simple
+enough to use
+printk_get_level on the format.
+
+
