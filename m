@@ -2,52 +2,77 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33312C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B924C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 132A02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB01920639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:42:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597920172;
-	bh=puvKffSzIc9VgFsOKv/Hz0j402nCyaacHYWMEmCK1R4=;
+	bh=hAHgVOWfNzZJr03v5cMvaqxdLXR40PEOLqcTAMy3kP0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AAeLzmDef7Gr71aJgixcV8w470M/UjhYsFqTSrfEDNpfxwRYsSz6fAkjaDt/G1ovs
-	 9l8saaCzNU9FdiHaAwE+TnveVT1TPJFddPQn0hpnEy57PC1noyuwabVne6zRCYs/u6
-	 GEnTbmQqzwEpac00prCoKcX4o9HATb1beBWlvsa8=
+	b=uLaIN57PyovfNqsZEPeA3EyV28Bv4g79N5dSyR6lYVBRPp43CDIFXlkbWcf836uL8
+	 kuqCeo6I7wsMPOL8PpwQjDmQbHTO+u1DkvVkl2tM0ycHZEM1kWfkjssGjM3WOpPBi7
+	 MS+3W9mJU3okv9gw9TTpfFKL7cilDIUlK5cMybKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731276AbgHTKQf (ORCPT
+        id S1730943AbgHTKQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730092AbgHTKQY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:24 -0400
+        id S1730639AbgHTKQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2256B2075E;
-        Thu, 20 Aug 2020 10:16:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09410208E4;
+        Thu, 20 Aug 2020 10:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918583;
-        bh=puvKffSzIc9VgFsOKv/Hz0j402nCyaacHYWMEmCK1R4=;
+        s=default; t=1597918568;
+        bh=hAHgVOWfNzZJr03v5cMvaqxdLXR40PEOLqcTAMy3kP0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0YWNQG629PgZ6VLNBdw/jZzy+j8C7iHeiHLC32FqvqUPgUukL0pDWCxKValAXoL5J
-         qAMewMvjt4FpnkJ/bmTFA3UEyxade0H+qafC2ZRCK+SrF3iKflt4fBPYb0qC8bR8Hv
-         y0DMYPJIwwPOvhW6b5ybRnywkRLFW68q2hy7uYGo=
+        b=Zpw//n8ZgCoKOmtgxBqi38hBJB0dpPIlbJqXNHudMbJU3QhiHXE11/xqbgLwouQlK
+         TPUwzDwo/dcQPqHa9CO7LOwf/+zm/G36kaWvbnJG8Lfa2MLA+leLr6FHeVWcwSEbvU
+         3GoGVGiODyyXeBsE4xVDnhLIUYCc0gObji1qV8Mk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 4.14 193/228] perf intel-pt: Fix FUP packet state
-Date:   Thu, 20 Aug 2020 11:22:48 +0200
-Message-Id: <20200820091617.206453657@linuxfoundation.org>
+        stable@vger.kernel.org, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kees Cook <keescook@chromium.org>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Sergei Trofimovich <slyfox@gentoo.org>,
+        Sergey Kvachonok <ravenexp@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tony Vroon <chainsaw@gentoo.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 215/228] test_kmod: avoid potential double free in trigger_config_run_type()
+Date:   Thu, 20 Aug 2020 11:23:10 +0200
+Message-Id: <20200820091618.264115068@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,76 +85,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adrian Hunter <adrian.hunter@intel.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
 
-commit 401136bb084fd021acd9f8c51b52fe0a25e326b2 upstream.
+[ Upstream commit 0776d1231bec0c7ab43baf440a3f5ef5f49dd795 ]
 
-While walking code towards a FUP ip, the packet state is
-INTEL_PT_STATE_FUP or INTEL_PT_STATE_FUP_NO_TIP. That was mishandled
-resulting in the state becoming INTEL_PT_STATE_IN_SYNC prematurely.  The
-result was an occasional lost EXSTOP event.
+Reset the member "test_fs" of the test configuration after a call of the
+function "kfree_const" to a null pointer so that a double memory release
+will not be performed.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: stable@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20200710151104.15137-2-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: d9c6a72d6fa2 ("kmod: add test driver to stress test the module loader")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: James Morris <jmorris@namei.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: J. Bruce Fields <bfields@fieldses.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Sergei Trofimovich <slyfox@gentoo.org>
+Cc: Sergey Kvachonok <ravenexp@gmail.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Tony Vroon <chainsaw@gentoo.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Link: http://lkml.kernel.org/r/20200610154923.27510-4-mcgrof@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   21 ++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ lib/test_kmod.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-+++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
-@@ -1129,6 +1129,7 @@ static int intel_pt_walk_fup(struct inte
- 			return 0;
- 		if (err == -EAGAIN ||
- 		    intel_pt_fup_with_nlip(decoder, &intel_pt_insn, ip, err)) {
-+			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			if (intel_pt_fup_event(decoder))
- 				return 0;
- 			return -EAGAIN;
-@@ -1780,17 +1781,13 @@ next:
- 			}
- 			if (decoder->set_fup_mwait)
- 				no_tip = true;
-+			if (no_tip)
-+				decoder->pkt_state = INTEL_PT_STATE_FUP_NO_TIP;
-+			else
-+				decoder->pkt_state = INTEL_PT_STATE_FUP;
- 			err = intel_pt_walk_fup(decoder);
--			if (err != -EAGAIN) {
--				if (err)
--					return err;
--				if (no_tip)
--					decoder->pkt_state =
--						INTEL_PT_STATE_FUP_NO_TIP;
--				else
--					decoder->pkt_state = INTEL_PT_STATE_FUP;
--				return 0;
--			}
-+			if (err != -EAGAIN)
-+				return err;
- 			if (no_tip) {
- 				no_tip = false;
- 				break;
-@@ -2375,15 +2372,11 @@ const struct intel_pt_state *intel_pt_de
- 			err = intel_pt_walk_tip(decoder);
- 			break;
- 		case INTEL_PT_STATE_FUP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_fup_tip(decoder);
--			else if (!err)
--				decoder->pkt_state = INTEL_PT_STATE_FUP;
- 			break;
- 		case INTEL_PT_STATE_FUP_NO_TIP:
--			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
- 			err = intel_pt_walk_fup(decoder);
- 			if (err == -EAGAIN)
- 				err = intel_pt_walk_trace(decoder);
+diff --git a/lib/test_kmod.c b/lib/test_kmod.c
+index cf619795a1822..c0ce0156d54bb 100644
+--- a/lib/test_kmod.c
++++ b/lib/test_kmod.c
+@@ -747,7 +747,7 @@ static int trigger_config_run_type(struct kmod_test_device *test_dev,
+ 		break;
+ 	case TEST_KMOD_FS_TYPE:
+ 		kfree_const(config->test_fs);
+-		config->test_driver = NULL;
++		config->test_fs = NULL;
+ 		copied = config_copy_test_fs(config, test_str,
+ 					     strlen(test_str));
+ 		break;
+-- 
+2.25.1
+
 
 
