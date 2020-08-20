@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F7BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80656C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 960E220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B4922CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929631;
-	bh=hKw4VeEPTvlU9LP6XXahCcYoetS6SUJD6tZ/nSvmgRE=;
+	s=default; t=1597929638;
+	bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3KgmNdqsTnYziZywHBsiIQkESvwJTGGWGaeCAmLTdw9Y591b9CNPYBOfI3wCPRXf
-	 hnZkCuchH2BL3RzethRex9nlvlu4P65cEa5KBzyci2zPU9KHHvgqLr3TWIzcHwrbW5
-	 J22Mla5Aw5e/NeUOiZU8y9OzBcyyQb2EpeE5hzgw=
+	b=oOSk9iUql2CIvGEXLPOcFHnZA9V+mYL+eIS7xwhl6SY/r/MfYvOuLijgyBTi2VkeO
+	 UxLUrGFv3f7OY/y7rBF1QVo5Ru/0SZQ/s0ziQwZrIN6fKUyc68y+s0Q1KljiPIPZgx
+	 hc8wkDsfHqeRtgW5HlGs0BFW1+KRgGwtoetVJ6Gk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgHTNUa (ORCPT
+        id S1730434AbgHTNUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47984 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728253AbgHTJfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:05 -0400
+        id S1728376AbgHTJer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46256208E4;
-        Thu, 20 Aug 2020 09:35:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 822E722B3F;
+        Thu, 20 Aug 2020 09:34:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916104;
-        bh=hKw4VeEPTvlU9LP6XXahCcYoetS6SUJD6tZ/nSvmgRE=;
+        s=default; t=1597916087;
+        bh=hrY0NhL1R5l5ToViiwDTlNThpTbAJifen/N2VMBxI74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/C8BGRD+5i1qhYNyBcivis/qKhuSXFOUPX/YxzN6pndLsNZ2zbPldI4idRcToOy8
-         Opc0v/vHrGgvfnEh5b94QU6Iw5NKaVhFXTm8sPhRN3G//4B/hcYGz0I9TAK8lOzSBn
-         bqxoTcNNyh6/vDDHB9Qnskak8CZB4rc9UEzt/ItI=
+        b=mAuSoCN7XPd0xYjscw9Ylur4gOBfyP2WbRCtE5PdCiaNo2Sd7LbRSXoxuGc9Ba6uz
+         U/obnRDmS6PZM/C06fFg21vtVO+u+e+MMObgK8fXDY+ZOQufS8mecnVI/apiRzoEGE
+         NZtbJk6KKDqw9voPjD93nUT+Payf4Rw6DEk6ChZM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 013/204] btrfs: ref-verify: fix memory leak in add_block_entry
-Date:   Thu, 20 Aug 2020 11:18:30 +0200
-Message-Id: <20200820091606.884297691@linuxfoundation.org>
+        stable@vger.kernel.org, Marius Iacob <themariusus@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Subject: [PATCH 5.8 228/232] drm: Added orientation quirk for ASUS tablet model T103HAF
+Date:   Thu, 20 Aug 2020 11:21:19 +0200
+Message-Id: <20200820091623.817191872@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,50 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Marius Iacob <themariusus@gmail.com>
 
-commit d60ba8de1164e1b42e296ff270c622a070ef8fe7 upstream.
+commit b5ac98cbb8e5e30c34ebc837d1e5a3982d2b5f5c upstream.
 
-clang static analysis flags this error
-
-fs/btrfs/ref-verify.c:290:3: warning: Potential leak of memory pointed to by 're' [unix.Malloc]
-                kfree(be);
-                ^~~~~
-
-The problem is in this block of code:
-
-	if (root_objectid) {
-		struct root_entry *exist_re;
-
-		exist_re = insert_root_entry(&exist->roots, re);
-		if (exist_re)
-			kfree(re);
-	}
-
-There is no 'else' block freeing when root_objectid is 0. Add the
-missing kfree to the else branch.
-
-Fixes: fd708b81d972 ("Btrfs: add a extent ref verify tool")
-CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Marius Iacob <themariusus@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200801123445.1514567-1-themariusus@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ref-verify.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/fs/btrfs/ref-verify.c
-+++ b/fs/btrfs/ref-verify.c
-@@ -286,6 +286,8 @@ static struct block_entry *add_block_ent
- 			exist_re = insert_root_entry(&exist->roots, re);
- 			if (exist_re)
- 				kfree(re);
-+		} else {
-+			kfree(re);
- 		}
- 		kfree(be);
- 		return exist;
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -121,6 +121,12 @@ static const struct dmi_system_id orient
+ 		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T101HA"),
+ 		},
+ 		.driver_data = (void *)&lcd800x1280_rightside_up,
++	}, {	/* Asus T103HAF */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "T103HAF"),
++		},
++		.driver_data = (void *)&lcd800x1280_rightside_up,
+ 	}, {	/* GPD MicroPC (generic strings, also match on bios date) */
+ 		.matches = {
+ 		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "Default string"),
 
 
