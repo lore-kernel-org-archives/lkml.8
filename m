@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BECDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D42A722BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFF322CAE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930380;
-	bh=glrZ8+Vz8mqHzTmrL71cuHD1+DnBP22ANxGQaarC4NQ=;
+	s=default; t=1597930385;
+	bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgjCVGvKYSsGgB9aRKOlGSntQsVfX7tRPhF1nxtA3zL3PiE8t0ApMCwbwWo9d6/f6
-	 tOttdNvDDSMuLwv/6/dSkt9OO9c/J7VxLZLExCAd3cBOYaAN4yA6mQF62gVDkwPXG2
-	 ZDUAZFg6AaChxXKb6Ov6G19KQ+l0Ppl/7avTewzc=
+	b=lVAchFS2Ma5DIZhtNXF3eDVpGjFa0o2uDHfT5PdQoX0/9L1n7Xr2BlO9nMb8C+5yg
+	 wFEDo2IhRUnPrdOw3H/yXTN/TgL9UjPs95noYcagPFvTJNSfeGKifhTs86/7/D8dY5
+	 lI9xOrQMFPtEd/AldK20LsyJPWHQ4x9JylxCxPpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729405AbgHTNc7 (ORCPT
+        id S1728756AbgHTNdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42824 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:33:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgHTJbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:11 -0400
+        id S1728027AbgHTJbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63EB720724;
-        Thu, 20 Aug 2020 09:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C411F20855;
+        Thu, 20 Aug 2020 09:31:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915870;
-        bh=glrZ8+Vz8mqHzTmrL71cuHD1+DnBP22ANxGQaarC4NQ=;
+        s=default; t=1597915868;
+        bh=vKgxG8WeJeP6CWDsoICmWqROrUHc7Mxhq5QDNjEq+kM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJdB0Wu+7+/KQVI9y9pluyzgIERKEBJFrODVEf9hvkrEM/Bs5gg7Omg7D4gZI/g3X
-         H9ncCMuBYUGySpOzvzk7Oj0kvo2Ju4n8R39/w3RxeQ6tF3pW43SVucDvT4jY0SYKPy
-         781gFIn1v0IZeCExGnBl69jyS4/bjds2gb4tWwA8=
+        b=pTVoGRVLFcP/I7zh0Dpo5DNbCqBumVe2M17lReklrCm31UYcaTlSbwmMhoqy3/9VZ
+         PxHyyQEqZm/T/LqQlHhygeJilW/prvQcy0Jupr+sMg7yK/Dt0nUPZn7MSRcBivUQJH
+         k/a/ByQnEDIy+IsoWbCqyybkg8esn201PSBxIfz4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, "Sicelo A. Mhlongo" <absicsz@gmail.com>,
+        Dev Null <devnull@uvos.xyz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 156/232] clk: qcom: gcc: fix sm8150 GPU and NPU clocks
-Date:   Thu, 20 Aug 2020 11:20:07 +0200
-Message-Id: <20200820091620.367063405@linuxfoundation.org>
+Subject: [PATCH 5.8 123/232] rtc: cpcap: fix range
+Date:   Thu, 20 Aug 2020 11:19:34 +0200
+Message-Id: <20200820091618.773946743@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,76 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-[ Upstream commit 667f39b59b494d96ae70f4217637db2ebbee3df0 ]
+[ Upstream commit 3180cfabf6fbf982ca6d1a6eb56334647cc1416b ]
 
-Fix the parents and set BRANCH_HALT_SKIP. From the downstream driver it
-should be a 500us delay and not skip, however this matches what was done
-for other clocks that had 500us delay in downstream.
+Unbreak CPCAP driver, which has one more bit in the day counter
+increasing the max. range from 2014 to 2058. The original commit
+introducing the range limit was obviously wrong, since the driver
+has only been written in 2017 (3 years after 14 bits would have
+run out).
 
-Fixes: f73a4230d5bb ("clk: qcom: gcc: Add GPU and NPU clocks for SM8150")
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20200709135251.643-2-jonathan@marek.ca
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: d2377f8cc5a7 ("rtc: cpcap: set range")
+Reported-by: Sicelo A. Mhlongo <absicsz@gmail.com>
+Reported-by: Dev Null <devnull@uvos.xyz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Tested-by: Merlijn Wajer <merlijn@wizzup.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Merlijn Wajer <merlijn@wizzup.org>
+Link: https://lore.kernel.org/r/20200629114123.27956-1-sebastian.reichel@collabora.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/qcom/gcc-sm8150.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/rtc/rtc-cpcap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-index 72524cf110487..55e9d6d75a0cd 100644
---- a/drivers/clk/qcom/gcc-sm8150.c
-+++ b/drivers/clk/qcom/gcc-sm8150.c
-@@ -1617,6 +1617,7 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
- };
+diff --git a/drivers/rtc/rtc-cpcap.c b/drivers/rtc/rtc-cpcap.c
+index a603f1f211250..800667d73a6fb 100644
+--- a/drivers/rtc/rtc-cpcap.c
++++ b/drivers/rtc/rtc-cpcap.c
+@@ -261,7 +261,7 @@ static int cpcap_rtc_probe(struct platform_device *pdev)
+ 		return PTR_ERR(rtc->rtc_dev);
  
- static struct clk_branch gcc_gpu_gpll0_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(15),
-@@ -1632,13 +1633,14 @@ static struct clk_branch gcc_gpu_gpll0_clk_src = {
- };
+ 	rtc->rtc_dev->ops = &cpcap_rtc_ops;
+-	rtc->rtc_dev->range_max = (1 << 14) * SECS_PER_DAY - 1;
++	rtc->rtc_dev->range_max = (timeu64_t) (DAY_MASK + 1) * SECS_PER_DAY - 1;
  
- static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(16),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_gpu_gpll0_div_clk_src",
- 			.parent_hws = (const struct clk_hw *[]){
--				&gcc_gpu_gpll0_clk_src.clkr.hw },
-+				&gpll0_out_even.clkr.hw },
- 			.num_parents = 1,
- 			.flags = CLK_SET_RATE_PARENT,
- 			.ops = &clk_branch2_ops,
-@@ -1729,6 +1731,7 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
- };
- 
- static struct clk_branch gcc_npu_gpll0_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(18),
-@@ -1744,13 +1747,14 @@ static struct clk_branch gcc_npu_gpll0_clk_src = {
- };
- 
- static struct clk_branch gcc_npu_gpll0_div_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(19),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_npu_gpll0_div_clk_src",
- 			.parent_hws = (const struct clk_hw *[]){
--				&gcc_npu_gpll0_clk_src.clkr.hw },
-+				&gpll0_out_even.clkr.hw },
- 			.num_parents = 1,
- 			.flags = CLK_SET_RATE_PARENT,
- 			.ops = &clk_branch2_ops,
+ 	err = cpcap_get_vendor(dev, rtc->regmap, &rtc->vendor);
+ 	if (err)
 -- 
 2.25.1
 
