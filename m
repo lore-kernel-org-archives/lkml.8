@@ -2,97 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB63C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FF5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27EB82078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924570;
-	bh=DmdG/bHokmLdRs93LHOjww+JEXTHyUySZ26OQc0iFYc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQx4yDjHJJuNrF46EkZzqcJAZFahitL9vZFd1QPhOdhCxWTlMohlFL4lL8FdSgLsF
-	 1i/+3fHvWrRhBSGG3do3nFX7hMfhvt/salbRs2XVDkV9V60BEu6yWJ1Ho7dKzivxkH
-	 L6bjk90TtbjgPZl4t7e+7ijyGa02t7QDzgvxfzPc=
+	by mail.kernel.org (Postfix) with ESMTP id B7CF622B4E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:56:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QMbqis+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728611AbgHTL4H (ORCPT
+        id S1729870AbgHTLzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:56:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730088AbgHTKBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 07:55:44 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53892 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730434AbgHTKCY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:02:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597917743;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MP/JNWR1yLBisgN4+PEfbtEeM9N/uel00En3KvNqgSw=;
+        b=QMbqis+BrmfZPUATvl3OaErsaowb+CVIQdpNmqwnv3yDNStOvZU5bFVkSUlNNA+2ffunng
+        WdHasYJQfwjMYw1Ovbx8G/vq3LHNBQLuFB8nNjvzCCW61TYg8eJmZwyBzu5DmJny8USsbs
+        l+7btbQW1DeOdw6rSBR10zSt6o8Hd2E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-59-urWTE_gTNuekkPMYyCy3Yg-1; Thu, 20 Aug 2020 06:02:21 -0400
+X-MC-Unique: urWTE_gTNuekkPMYyCy3Yg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51A3B2067C;
-        Thu, 20 Aug 2020 10:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917678;
-        bh=DmdG/bHokmLdRs93LHOjww+JEXTHyUySZ26OQc0iFYc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dnIZVXHr91o8x3tMtqSCN0bXB0xBuL7tpsmb6s3NlYr5FOAcKtmjQHgKgR8dKQAp5
-         m1sO0XJTadN7KU5IUeFvu2ByBK3HOOtrLEKCkU9LklDto3/FBsmEMd1A4zS4SGimqf
-         BQ0FNhpBZ9VFn1BIYCgWxzCTDbNZM7lRaHdae400=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 117/212] drm/radeon: fix array out-of-bounds read and write issues
-Date:   Thu, 20 Aug 2020 11:21:30 +0200
-Message-Id: <20200820091608.260104874@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 08AD3801ADD;
+        Thu, 20 Aug 2020 10:02:20 +0000 (UTC)
+Received: from starship (unknown [10.35.206.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF03F5D9E8;
+        Thu, 20 Aug 2020 10:02:16 +0000 (UTC)
+Message-ID: <faedeeb06b63a115a1ab733b1226ae6822d2a907.camel@redhat.com>
+Subject: Re: [PATCH 5/8] KVM: nSVM: implement ondemand allocation of the
+ nested state
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Date:   Thu, 20 Aug 2020 13:02:15 +0300
+In-Reply-To: <476eecc8-a861-203c-40f5-46707d8c0237@redhat.com>
+References: <20200820091327.197807-1-mlevitsk@redhat.com>
+         <20200820091327.197807-6-mlevitsk@redhat.com>
+         <476eecc8-a861-203c-40f5-46707d8c0237@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Thu, 2020-08-20 at 11:58 +0200, Paolo Bonzini wrote:
+> On 20/08/20 11:13, Maxim Levitsky wrote:
+> > @@ -3912,6 +3914,14 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
+> >  	vmcb_gpa = GET_SMSTATE(u64, smstate, 0x7ee0);
+> >  
+> >  	if (guest) {
+> > +		/*
+> > +		 * This can happen if SVM was not enabled prior to #SMI,
+> > +		 * but guest corrupted the #SMI state and marked it as
+> > +		 * enabled it there
+> > +		 */
+> > +		if (!svm->nested.initialized)
+> > +			return 1;
+> > +
+> >  		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map) == -EINVAL)
+> >  			return 1;
+> 
+> This can also happen if you live migrate while in SMM (EFER.SVME=0).
+> You need to check for the SVME bit in the SMM state save area, and:
+> 
+> 1) triple fault if it is clear
+> 
+> 2) call svm_allocate_nested if it is set.
+> 
+> Paolo
+> 
+Makes sense, will do.
 
-[ Upstream commit 7ee78aff9de13d5dccba133f4a0de5367194b243 ]
-
-There is an off-by-one bounds check on the index into arrays
-table->mc_reg_address and table->mc_reg_table_entry[k].mc_data[j] that
-can lead to reads and writes outside of arrays. Fix the bound checking
-off-by-one error.
-
-Addresses-Coverity: ("Out-of-bounds read/write")
-Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
-index be43582811dfc..50bad42527b1c 100644
---- a/drivers/gpu/drm/radeon/ci_dpm.c
-+++ b/drivers/gpu/drm/radeon/ci_dpm.c
-@@ -4348,7 +4348,7 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
- 					table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
- 			}
- 			j++;
--			if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
-+			if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
- 				return -EINVAL;
- 
- 			if (!pi->mem_gddr5) {
--- 
-2.25.1
-
-
+Best regards,
+	Maxim Levitsky
 
