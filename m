@@ -2,56 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8240C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF538C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3A1C2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5862076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931353;
-	bh=Mbyu94M5Ib3Jy3y7GVySoutrnyeR4/0pRXPAij6sL4o=;
+	s=default; t=1597931375;
+	bh=KxGgK/4VuD2mTN5Rtf1RJ71X4mSNQsxCLP9wnf98x84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znMV3+0lLFQ00CMWIU7NBYZmO55YBNIOWZsEcTLDhtAyQemNvmFhnZqcEEwKTm2OI
-	 Z24vy++/2W3wCJ+/qqNAqk3vAtUGjMbXjt0hJJVWiAbARQQ86raQvn6pMMI49NqX2e
-	 k9roPUSycc80TmKOhnFqX934DyeMy3o+nY1NIQtc=
+	b=V/PsIL3rCWHEmYdOUAAqKFav7MfaKaAD5bBkVBxwKccXJbYD6rctabjgKzMvPNYXe
+	 qjOHAsfpJuW7dR4Cn3H99tVlYO3UEBPSFH0IzPbrQgZ0eCGL0329fhAdfu0aT0qnxy
+	 4k3u9g/uTrpz3FObrpcmG5GdeoH5HNdHxF9rK5RI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgHTNjS (ORCPT
+        id S1729002AbgHTNte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:39:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42046 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgHTJap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:45 -0400
+        id S1726803AbgHTJ1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:27:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD11920724;
-        Thu, 20 Aug 2020 09:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF84422CF7;
+        Thu, 20 Aug 2020 09:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915845;
-        bh=Mbyu94M5Ib3Jy3y7GVySoutrnyeR4/0pRXPAij6sL4o=;
+        s=default; t=1597915659;
+        bh=KxGgK/4VuD2mTN5Rtf1RJ71X4mSNQsxCLP9wnf98x84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKazDKGCafaNUVDgBNfyEV8cVeKSznq4Y0awl/uYofqKIrdSM6nB3rvyoGPiARFta
-         T7P3EqwoQkgJqZFMSSAAHTCSsu2xNWHi09ayOah3DnwE44vjZeFrFOWcLUFDbJ+fo9
-         5J2Qrxj5cw3166OBhCbb23sXyXVM1Ii7L7Onc6A4=
+        b=ZzQx5UCm+gdc6ruooj+voDz8salZEcKmDV7H0eL/jctthMWFvPb8176qVknPG+03+
+         UHJC3ESLzxBxAN4MHcdjj7Aj586Tf8ENeKVrDLlgYFqUtwCJTLK/1sINkSkCCPHR0A
+         9g8Y7C9rsvXqLc2Q1RozPuzCUpw/UjmuMV2R64qs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 126/232] media: staging: rkisp1: rsz: set default format if the given format is not RKISP1_ISP_SD_SRC
-Date:   Thu, 20 Aug 2020 11:19:37 +0200
-Message-Id: <20200820091618.918297764@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.8 089/232] kprobes: Fix NULL pointer dereference at kprobe_ftrace_handler
+Date:   Thu, 20 Aug 2020 11:19:00 +0200
+Message-Id: <20200820091617.143997246@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -64,71 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+From: Muchun Song <songmuchun@bytedance.com>
 
-[ Upstream commit 206003b18bb264521607440752814ccff59f91f3 ]
+commit 0cb2f1372baa60af8456388a574af6133edd7d80 upstream.
 
-When setting the sink format of the 'rkisp1_resizer'
-the format should be supported by 'rkisp1_isp' on
-the video source pad. This patch checks this condition
-and sets the format to default if the condition is false.
+We found a case of kernel panic on our server. The stack trace is as
+follows(omit some irrelevant information):
 
-Fixes: 56e3b29f9f6b "media: staging: rkisp1: add streaming paths"
-Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Reviewed-by: Tomasz Figa <tfiga@chromium.org>
-Acked-by: Helen Koike <helen.koike@collabora.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  BUG: kernel NULL pointer dereference, address: 0000000000000080
+  RIP: 0010:kprobe_ftrace_handler+0x5e/0xe0
+  RSP: 0018:ffffb512c6550998 EFLAGS: 00010282
+  RAX: 0000000000000000 RBX: ffff8e9d16eea018 RCX: 0000000000000000
+  RDX: ffffffffbe1179c0 RSI: ffffffffc0535564 RDI: ffffffffc0534ec0
+  RBP: ffffffffc0534ec1 R08: ffff8e9d1bbb0f00 R09: 0000000000000004
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff8e9d1f797060 R14: 000000000000bacc R15: ffff8e9ce13eca00
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000080 CR3: 00000008453d0005 CR4: 00000000003606e0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   <IRQ>
+   ftrace_ops_assist_func+0x56/0xe0
+   ftrace_call+0x5/0x34
+   tcpa_statistic_send+0x5/0x130 [ttcp_engine]
+
+The tcpa_statistic_send is the function being kprobed. After analysis,
+the root cause is that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. Why regs is NULL? We use the crash tool to analyze the kdump.
+
+  crash> dis tcpa_statistic_send -r
+         <tcpa_statistic_send>: callq 0xffffffffbd8018c0 <ftrace_caller>
+
+The tcpa_statistic_send calls ftrace_caller instead of ftrace_regs_caller.
+So it is reasonable that the fourth parameter regs of kprobe_ftrace_handler
+is NULL. In theory, we should call the ftrace_regs_caller instead of the
+ftrace_caller. After in-depth analysis, we found a reproducible path.
+
+  Writing a simple kernel module which starts a periodic timer. The
+  timer's handler is named 'kprobe_test_timer_handler'. The module
+  name is kprobe_test.ko.
+
+  1) insmod kprobe_test.ko
+  2) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+  3) echo 0 > /proc/sys/kernel/ftrace_enabled
+  4) rmmod kprobe_test
+  5) stop step 2) kprobe
+  6) insmod kprobe_test.ko
+  7) bpftrace -e 'kretprobe:kprobe_test_timer_handler {}'
+
+We mark the kprobe as GONE but not disarm the kprobe in the step 4).
+The step 5) also do not disarm the kprobe when unregister kprobe. So
+we do not remove the ip from the filter. In this case, when the module
+loads again in the step 6), we will replace the code to ftrace_caller
+via the ftrace_module_enable(). When we register kprobe again, we will
+not replace ftrace_caller to ftrace_regs_caller because the ftrace is
+disabled in the step 3). So the step 7) will trigger kernel panic. Fix
+this problem by disarming the kprobe when the module is going away.
+
+Link: https://lkml.kernel.org/r/20200728064536.24405-1-songmuchun@bytedance.com
+
+Cc: stable@vger.kernel.org
+Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/staging/media/rkisp1/rkisp1-common.h  | 3 +++
- drivers/staging/media/rkisp1/rkisp1-isp.c     | 3 ---
- drivers/staging/media/rkisp1/rkisp1-resizer.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ kernel/kprobes.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/staging/media/rkisp1/rkisp1-common.h b/drivers/staging/media/rkisp1/rkisp1-common.h
-index 0c4fe503adc90..12bd9d05050db 100644
---- a/drivers/staging/media/rkisp1/rkisp1-common.h
-+++ b/drivers/staging/media/rkisp1/rkisp1-common.h
-@@ -22,6 +22,9 @@
- #include "rkisp1-regs.h"
- #include "uapi/rkisp1-config.h"
- 
-+#define RKISP1_ISP_SD_SRC BIT(0)
-+#define RKISP1_ISP_SD_SINK BIT(1)
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2113,6 +2113,13 @@ static void kill_kprobe(struct kprobe *p
+ 	 * the original probed function (which will be freed soon) any more.
+ 	 */
+ 	arch_remove_kprobe(p);
 +
- #define RKISP1_ISP_MAX_WIDTH		4032
- #define RKISP1_ISP_MAX_HEIGHT		3024
- #define RKISP1_ISP_MIN_WIDTH		32
-diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
-index abfedb604303f..b21a67aea433c 100644
---- a/drivers/staging/media/rkisp1/rkisp1-isp.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
-@@ -23,9 +23,6 @@
++	/*
++	 * The module is going away. We should disarm the kprobe which
++	 * is using ftrace.
++	 */
++	if (kprobe_ftrace(p))
++		disarm_kprobe_ftrace(p);
+ }
  
- #define RKISP1_ISP_DEV_NAME	RKISP1_DRIVER_NAME "_isp"
- 
--#define RKISP1_ISP_SD_SRC BIT(0)
--#define RKISP1_ISP_SD_SINK BIT(1)
--
- /*
-  * NOTE: MIPI controller and input MUX are also configured in this file.
-  * This is because ISP Subdev describes not only ISP submodule (input size,
-diff --git a/drivers/staging/media/rkisp1/rkisp1-resizer.c b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-index e188944941b58..a2b35961bc8b7 100644
---- a/drivers/staging/media/rkisp1/rkisp1-resizer.c
-+++ b/drivers/staging/media/rkisp1/rkisp1-resizer.c
-@@ -542,7 +542,7 @@ static void rkisp1_rsz_set_sink_fmt(struct rkisp1_resizer *rsz,
- 					    which);
- 	sink_fmt->code = format->code;
- 	mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
--	if (!mbus_info) {
-+	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SRC)) {
- 		sink_fmt->code = RKISP1_DEF_FMT;
- 		mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
- 	}
--- 
-2.25.1
-
+ /* Disable one kprobe */
 
 
