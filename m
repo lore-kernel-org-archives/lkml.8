@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29626C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D0BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 06B5A2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4352075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917179;
-	bh=WFe0tgNbzxSOUsl4jNl26+8rxpegbb7YMIfqndC5tFc=;
+	s=default; t=1597917183;
+	bh=e3PHNaPZbXXHsSDmp/hxKF/IgaOygT0Bj3lJXk/y4PQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTtXiWHZFfTJAsa6W6FS8YBY43k3CdRWzjuH2GBw35s3uCLPrth4PTi7LjGlkOJYe
-	 j0i5PEjfmKk86eM7lApTobhwuJpfOC9DEnbmkgYSE8+XGc+sJFeUZi+zUDSWvABHKx
-	 niIePJ4l/N0QaKL++DA6hooznYYijmzrSdJjdctc=
+	b=n2AcicgwJ6/8PL3H152iL+we0wyQ4PJSCYe5CVi/GPKY13FUPtIb3yHgtoCHCMtw/
+	 oZvmIhM8HjDfhmopAQeYMovsxuYlyVqzMEzVRQELmQkXhaaRrgepcPgji6/bjE3V7v
+	 bkavvqpZSaBzIL27kj9H2AcF+VqaSg5l78LPtyI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729941AbgHTJw5 (ORCPT
+        id S1729164AbgHTJxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34442 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:53:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729930AbgHTJwz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:55 -0400
+        id S1729939AbgHTJw6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2D1B2067C;
-        Thu, 20 Aug 2020 09:52:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9092067C;
+        Thu, 20 Aug 2020 09:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917174;
-        bh=WFe0tgNbzxSOUsl4jNl26+8rxpegbb7YMIfqndC5tFc=;
+        s=default; t=1597917177;
+        bh=e3PHNaPZbXXHsSDmp/hxKF/IgaOygT0Bj3lJXk/y4PQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vfcm3m0y3YfJEbLfXZkumtes2abBSKrvTl6td/rwPgnxBtfU6dtjCKDbb9lZHNuK1
-         9Fbai48iSGnTBABrEU5PHXMAxvx9HHR5RqZCy2o9y/rMRCEYmowm6E0E+u8vy3h9L9
-         gBP4/B2VtbyqPpF5IXK0KBhuocl2fN7Gkj5ga/u8=
+        b=U9qpwSpnrGoneBTU4QJhUhloR2e+Akqoi8YadkKg8tdy3TjikqxWaASEgIHvpsiwQ
+         Y9BGVlGRt40WqnldYDjRW1HqSzU/Lfj5l9Fuo0P9Goqfc2pSFm0pKEZRlxh0iQqgIL
+         ymaBJd0ojsJsz/wLriMkagcoPCOGol17R6dAqPIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Ken Raeburn <raeburn@redhat.com>
-Subject: [PATCH 4.19 30/92] bcache: fix overflow in offset_to_stripe()
-Date:   Thu, 20 Aug 2020 11:21:15 +0200
-Message-Id: <20200820091539.154745687@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 13/92] btrfs: open device without device_list_mutex
+Date:   Thu, 20 Aug 2020 11:20:58 +0200
+Message-Id: <20200820091538.231538692@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,136 +59,253 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 7a1481267999c02abf4a624515c1b5c7c1fccbd6 upstream.
+commit 18c850fdc5a801bad4977b0f1723761d42267e45 upstream.
 
-offset_to_stripe() returns the stripe number (in type unsigned int) from
-an offset (in type uint64_t) by the following calculation,
-	do_div(offset, d->stripe_size);
-For large capacity backing device (e.g. 18TB) with small stripe size
-(e.g. 4KB), the result is 4831838208 and exceeds UINT_MAX. The actual
-returned value which caller receives is 536870912, due to the overflow.
+There's long existed a lockdep splat because we open our bdev's under
+the ->device_list_mutex at mount time, which acquires the bd_mutex.
+Usually this goes unnoticed, but if you do loopback devices at all
+suddenly the bd_mutex comes with a whole host of other dependencies,
+which results in the splat when you mount a btrfs file system.
 
-Indeed in bcache_device_init(), bcache_device->nr_stripes is limited in
-range [1, INT_MAX]. Therefore all valid stripe numbers in bcache are
-in range [0, bcache_dev->nr_stripes - 1].
+======================================================
+WARNING: possible circular locking dependency detected
+5.8.0-0.rc3.1.fc33.x86_64+debug #1 Not tainted
+------------------------------------------------------
+systemd-journal/509 is trying to acquire lock:
+ffff970831f84db0 (&fs_info->reloc_mutex){+.+.}-{3:3}, at: btrfs_record_root_in_trans+0x44/0x70 [btrfs]
 
-This patch adds a upper limition check in offset_to_stripe(): the max
-valid stripe number should be less than bcache_device->nr_stripes. If
-the calculated stripe number from do_div() is equal to or larger than
-bcache_device->nr_stripe, -EINVAL will be returned. (Normally nr_stripes
-is less than INT_MAX, exceeding upper limitation doesn't mean overflow,
-therefore -EOVERFLOW is not used as error code.)
+but task is already holding lock:
+ffff97083144d598 (sb_pagefaults){.+.+}-{0:0}, at: btrfs_page_mkwrite+0x59/0x560 [btrfs]
 
-This patch also changes nr_stripes' type of struct bcache_device from
-'unsigned int' to 'int', and return value type of offset_to_stripe()
-from 'unsigned int' to 'int', to match their exact data ranges.
+which lock already depends on the new lock.
 
-All locations where bcache_device->nr_stripes and offset_to_stripe() are
-referenced also get updated for the above type change.
+the existing dependency chain (in reverse order) is:
 
-Reported-and-tested-by: Ken Raeburn <raeburn@redhat.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Cc: stable@vger.kernel.org
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ -> #6 (sb_pagefaults){.+.+}-{0:0}:
+       __sb_start_write+0x13e/0x220
+       btrfs_page_mkwrite+0x59/0x560 [btrfs]
+       do_page_mkwrite+0x4f/0x130
+       do_wp_page+0x3b0/0x4f0
+       handle_mm_fault+0xf47/0x1850
+       do_user_addr_fault+0x1fc/0x4b0
+       exc_page_fault+0x88/0x300
+       asm_exc_page_fault+0x1e/0x30
+
+ -> #5 (&mm->mmap_lock#2){++++}-{3:3}:
+       __might_fault+0x60/0x80
+       _copy_from_user+0x20/0xb0
+       get_sg_io_hdr+0x9a/0xb0
+       scsi_cmd_ioctl+0x1ea/0x2f0
+       cdrom_ioctl+0x3c/0x12b4
+       sr_block_ioctl+0xa4/0xd0
+       block_ioctl+0x3f/0x50
+       ksys_ioctl+0x82/0xc0
+       __x64_sys_ioctl+0x16/0x20
+       do_syscall_64+0x52/0xb0
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+ -> #4 (&cd->lock){+.+.}-{3:3}:
+       __mutex_lock+0x7b/0x820
+       sr_block_open+0xa2/0x180
+       __blkdev_get+0xdd/0x550
+       blkdev_get+0x38/0x150
+       do_dentry_open+0x16b/0x3e0
+       path_openat+0x3c9/0xa00
+       do_filp_open+0x75/0x100
+       do_sys_openat2+0x8a/0x140
+       __x64_sys_openat+0x46/0x70
+       do_syscall_64+0x52/0xb0
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+ -> #3 (&bdev->bd_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x7b/0x820
+       __blkdev_get+0x6a/0x550
+       blkdev_get+0x85/0x150
+       blkdev_get_by_path+0x2c/0x70
+       btrfs_get_bdev_and_sb+0x1b/0xb0 [btrfs]
+       open_fs_devices+0x88/0x240 [btrfs]
+       btrfs_open_devices+0x92/0xa0 [btrfs]
+       btrfs_mount_root+0x250/0x490 [btrfs]
+       legacy_get_tree+0x30/0x50
+       vfs_get_tree+0x28/0xc0
+       vfs_kern_mount.part.0+0x71/0xb0
+       btrfs_mount+0x119/0x380 [btrfs]
+       legacy_get_tree+0x30/0x50
+       vfs_get_tree+0x28/0xc0
+       do_mount+0x8c6/0xca0
+       __x64_sys_mount+0x8e/0xd0
+       do_syscall_64+0x52/0xb0
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+ -> #2 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x7b/0x820
+       btrfs_run_dev_stats+0x36/0x420 [btrfs]
+       commit_cowonly_roots+0x91/0x2d0 [btrfs]
+       btrfs_commit_transaction+0x4e6/0x9f0 [btrfs]
+       btrfs_sync_file+0x38a/0x480 [btrfs]
+       __x64_sys_fdatasync+0x47/0x80
+       do_syscall_64+0x52/0xb0
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+ -> #1 (&fs_info->tree_log_mutex){+.+.}-{3:3}:
+       __mutex_lock+0x7b/0x820
+       btrfs_commit_transaction+0x48e/0x9f0 [btrfs]
+       btrfs_sync_file+0x38a/0x480 [btrfs]
+       __x64_sys_fdatasync+0x47/0x80
+       do_syscall_64+0x52/0xb0
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+ -> #0 (&fs_info->reloc_mutex){+.+.}-{3:3}:
+       __lock_acquire+0x1241/0x20c0
+       lock_acquire+0xb0/0x400
+       __mutex_lock+0x7b/0x820
+       btrfs_record_root_in_trans+0x44/0x70 [btrfs]
+       start_transaction+0xd2/0x500 [btrfs]
+       btrfs_dirty_inode+0x44/0xd0 [btrfs]
+       file_update_time+0xc6/0x120
+       btrfs_page_mkwrite+0xda/0x560 [btrfs]
+       do_page_mkwrite+0x4f/0x130
+       do_wp_page+0x3b0/0x4f0
+       handle_mm_fault+0xf47/0x1850
+       do_user_addr_fault+0x1fc/0x4b0
+       exc_page_fault+0x88/0x300
+       asm_exc_page_fault+0x1e/0x30
+
+other info that might help us debug this:
+
+Chain exists of:
+  &fs_info->reloc_mutex --> &mm->mmap_lock#2 --> sb_pagefaults
+
+Possible unsafe locking scenario:
+
+     CPU0                    CPU1
+     ----                    ----
+ lock(sb_pagefaults);
+                             lock(&mm->mmap_lock#2);
+                             lock(sb_pagefaults);
+ lock(&fs_info->reloc_mutex);
+
+ *** DEADLOCK ***
+
+3 locks held by systemd-journal/509:
+ #0: ffff97083bdec8b8 (&mm->mmap_lock#2){++++}-{3:3}, at: do_user_addr_fault+0x12e/0x4b0
+ #1: ffff97083144d598 (sb_pagefaults){.+.+}-{0:0}, at: btrfs_page_mkwrite+0x59/0x560 [btrfs]
+ #2: ffff97083144d6a8 (sb_internal){.+.+}-{0:0}, at: start_transaction+0x3f8/0x500 [btrfs]
+
+stack backtrace:
+CPU: 0 PID: 509 Comm: systemd-journal Not tainted 5.8.0-0.rc3.1.fc33.x86_64+debug #1
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
+Call Trace:
+ dump_stack+0x92/0xc8
+ check_noncircular+0x134/0x150
+ __lock_acquire+0x1241/0x20c0
+ lock_acquire+0xb0/0x400
+ ? btrfs_record_root_in_trans+0x44/0x70 [btrfs]
+ ? lock_acquire+0xb0/0x400
+ ? btrfs_record_root_in_trans+0x44/0x70 [btrfs]
+ __mutex_lock+0x7b/0x820
+ ? btrfs_record_root_in_trans+0x44/0x70 [btrfs]
+ ? kvm_sched_clock_read+0x14/0x30
+ ? sched_clock+0x5/0x10
+ ? sched_clock_cpu+0xc/0xb0
+ btrfs_record_root_in_trans+0x44/0x70 [btrfs]
+ start_transaction+0xd2/0x500 [btrfs]
+ btrfs_dirty_inode+0x44/0xd0 [btrfs]
+ file_update_time+0xc6/0x120
+ btrfs_page_mkwrite+0xda/0x560 [btrfs]
+ ? sched_clock+0x5/0x10
+ do_page_mkwrite+0x4f/0x130
+ do_wp_page+0x3b0/0x4f0
+ handle_mm_fault+0xf47/0x1850
+ do_user_addr_fault+0x1fc/0x4b0
+ exc_page_fault+0x88/0x300
+ ? asm_exc_page_fault+0x8/0x30
+ asm_exc_page_fault+0x1e/0x30
+RIP: 0033:0x7fa3972fdbfe
+Code: Bad RIP value.
+
+Fix this by not holding the ->device_list_mutex at this point.  The
+device_list_mutex exists to protect us from modifying the device list
+while the file system is running.
+
+However it can also be modified by doing a scan on a device.  But this
+action is specifically protected by the uuid_mutex, which we are holding
+here.  We cannot race with opening at this point because we have the
+->s_mount lock held during the mount.  Not having the
+->device_list_mutex here is perfectly safe as we're not going to change
+the devices at this point.
+
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add some comments ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bcache.h    |    2 +-
- drivers/md/bcache/writeback.c |   14 +++++++++-----
- drivers/md/bcache/writeback.h |   19 +++++++++++++++++--
- 3 files changed, 27 insertions(+), 8 deletions(-)
+ fs/btrfs/volumes.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -264,7 +264,7 @@ struct bcache_device {
- #define BCACHE_DEV_UNLINK_DONE		2
- #define BCACHE_DEV_WB_RUNNING		3
- #define BCACHE_DEV_RATE_DW_RUNNING	4
--	unsigned int		nr_stripes;
-+	int			nr_stripes;
- 	unsigned int		stripe_size;
- 	atomic_t		*stripe_sectors_dirty;
- 	unsigned long		*full_dirty_stripes;
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@ -506,15 +506,19 @@ void bcache_dev_sectors_dirty_add(struct
- 				  uint64_t offset, int nr_sectors)
- {
- 	struct bcache_device *d = c->devices[inode];
--	unsigned int stripe_offset, stripe, sectors_dirty;
-+	unsigned int stripe_offset, sectors_dirty;
-+	int stripe;
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -155,7 +155,9 @@ static int __btrfs_map_block(struct btrf
+  *
+  * global::fs_devs - add, remove, updates to the global list
+  *
+- * does not protect: manipulation of the fs_devices::devices list!
++ * does not protect: manipulation of the fs_devices::devices list in general
++ * but in mount context it could be used to exclude list modifications by eg.
++ * scan ioctl
+  *
+  * btrfs_device::name - renames (write side), read is RCU
+  *
+@@ -168,6 +170,9 @@ static int __btrfs_map_block(struct btrf
+  * may be used to exclude some operations from running concurrently without any
+  * modifications to the list (see write_all_supers)
+  *
++ * Is not required at mount and close times, because our device list is
++ * protected by the uuid_mutex at that point.
++ *
+  * balance_mutex
+  * -------------
+  * protects balance structures (status, state) and context accessed from
+@@ -656,6 +661,11 @@ static void btrfs_free_stale_devices(con
+ 	}
+ }
  
- 	if (!d)
- 		return;
++/*
++ * This is only used on mount, and we are protected from competing things
++ * messing with our fs_devices by the uuid_mutex, thus we do not need the
++ * fs_devices->device_list_mutex here.
++ */
+ static int btrfs_open_one_device(struct btrfs_fs_devices *fs_devices,
+ 			struct btrfs_device *device, fmode_t flags,
+ 			void *holder)
+@@ -1153,8 +1163,14 @@ int btrfs_open_devices(struct btrfs_fs_d
+ 	int ret;
  
-+	stripe = offset_to_stripe(d, offset);
-+	if (stripe < 0)
-+		return;
-+
- 	if (UUID_FLASH_ONLY(&c->uuids[inode]))
- 		atomic_long_add(nr_sectors, &c->flash_dev_dirty_sectors);
+ 	lockdep_assert_held(&uuid_mutex);
++	/*
++	 * The device_list_mutex cannot be taken here in case opening the
++	 * underlying device takes further locks like bd_mutex.
++	 *
++	 * We also don't need the lock here as this is called during mount and
++	 * exclusion is provided by uuid_mutex
++	 */
  
--	stripe = offset_to_stripe(d, offset);
- 	stripe_offset = offset & (d->stripe_size - 1);
+-	mutex_lock(&fs_devices->device_list_mutex);
+ 	if (fs_devices->opened) {
+ 		fs_devices->opened++;
+ 		ret = 0;
+@@ -1162,7 +1178,6 @@ int btrfs_open_devices(struct btrfs_fs_d
+ 		list_sort(NULL, &fs_devices->devices, devid_cmp);
+ 		ret = open_fs_devices(fs_devices, flags, holder);
+ 	}
+-	mutex_unlock(&fs_devices->device_list_mutex);
  
- 	while (nr_sectors) {
-@@ -554,12 +558,12 @@ static bool dirty_pred(struct keybuf *bu
- static void refill_full_stripes(struct cached_dev *dc)
- {
- 	struct keybuf *buf = &dc->writeback_keys;
--	unsigned int start_stripe, stripe, next_stripe;
-+	unsigned int start_stripe, next_stripe;
-+	int stripe;
- 	bool wrapped = false;
- 
- 	stripe = offset_to_stripe(&dc->disk, KEY_OFFSET(&buf->last_scanned));
--
--	if (stripe >= dc->disk.nr_stripes)
-+	if (stripe < 0)
- 		stripe = 0;
- 
- 	start_stripe = stripe;
---- a/drivers/md/bcache/writeback.h
-+++ b/drivers/md/bcache/writeback.h
-@@ -28,10 +28,22 @@ static inline uint64_t bcache_dev_sector
  	return ret;
  }
- 
--static inline unsigned int offset_to_stripe(struct bcache_device *d,
-+static inline int offset_to_stripe(struct bcache_device *d,
- 					uint64_t offset)
- {
- 	do_div(offset, d->stripe_size);
-+
-+	/* d->nr_stripes is in range [1, INT_MAX] */
-+	if (unlikely(offset >= d->nr_stripes)) {
-+		pr_err("Invalid stripe %llu (>= nr_stripes %d).\n",
-+			offset, d->nr_stripes);
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Here offset is definitly smaller than INT_MAX,
-+	 * return it as int will never overflow.
-+	 */
- 	return offset;
- }
- 
-@@ -39,7 +51,10 @@ static inline bool bcache_dev_stripe_dir
- 					   uint64_t offset,
- 					   unsigned int nr_sectors)
- {
--	unsigned int stripe = offset_to_stripe(&dc->disk, offset);
-+	int stripe = offset_to_stripe(&dc->disk, offset);
-+
-+	if (stripe < 0)
-+		return false;
- 
- 	while (1) {
- 		if (atomic_read(dc->disk.stripe_sectors_dirty + stripe))
 
 
