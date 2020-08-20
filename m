@@ -2,53 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F49EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB173C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44A5122B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9371B207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925120;
-	bh=e45O64EGQzQMOrrWcSMj0I5jzsqG5i/oLqrPSK2fkXQ=;
+	s=default; t=1597925128;
+	bh=sB3O8RsK+WNH9GoiGeAlv0G4heZHl6LbPgI8bJi86mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WINxyH+AMNwK8TyldCk2QC9rWyThThjdn1EECONswG8/K/Ps8IGjmQozm/6fp2EU
-	 7lki7RZmMbCoZnPJPzpugAciFoxPwT9+7oupz3pOsWlyKAssW0+gVDggwpg+WrC+80
-	 kWkJ1PvBa4cYnPgIsBpIClSa2EGpmDFh6ADnrns4=
+	b=ALVda8qVbRmLLRQ3YP9/2fGOmRuGMJCFxLjpcnkkvpfskBkmWm/0YZ/tLw5FJk5cp
+	 XC2v9xMtzkWP2F9Q0zR89Q/uPuu0/yIkc32UU7kPPaNm2CqR7j76EstZ4PzJRi50l7
+	 Sbwi2i7vuzG5pd7CDaE/A9shNb2cmRFJQHU/As+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbgHTMFT (ORCPT
+        id S1730360AbgHTJ7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44854 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:59:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgHTJ7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:11 -0400
+        id S1729652AbgHTJ6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:58:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B28442067C;
-        Thu, 20 Aug 2020 09:59:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CA442067C;
+        Thu, 20 Aug 2020 09:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917550;
-        bh=e45O64EGQzQMOrrWcSMj0I5jzsqG5i/oLqrPSK2fkXQ=;
+        s=default; t=1597917522;
+        bh=sB3O8RsK+WNH9GoiGeAlv0G4heZHl6LbPgI8bJi86mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w9dndAOZPeqGDKfyegyVecBytgy04xfMXewT9nXZnkbXPKZIya/R1nUOBjtafNDqL
-         Q22J2pHWsKcvInU/j1Mw3ZTyj46VIQSXutrtHoRaOaEH6B2jfU7OURjjq4azMhKBJN
-         kozN4z/bxTUrvjGGuYfHJZd/THCsw/b1c+yDpk0c=
+        b=jor7D8PRGeoSPKj2dSEtfSLFDT4CkFCW+e9AgC0fv2YujPkeiNG9jt4ZnRQvShsDu
+         ogNfW4/zwAQqn3ejc43XoYhB0+TmbR3EB9LGSV2xAzEzTpAW3ZBLtWBOQo8TJS6914
+         t2FgRTVxtrnrxQlCzBDmgw2bFdrBWHxsPwuk6AE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Raviteja Narayanam <raviteja.narayanam@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 041/212] Revert "i2c: cadence: Fix the hold bit setting"
-Date:   Thu, 20 Aug 2020 11:20:14 +0200
-Message-Id: <20200820091604.435281791@linuxfoundation.org>
+        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
+        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH 4.9 060/212] leds: wm831x-status: fix use-after-free on unbind
+Date:   Thu, 20 Aug 2020 11:20:33 +0200
+Message-Id: <20200820091605.400259432@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,74 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 0db9254d6b896b587759e2c844c277fb1a6da5b9 ]
+commit 47a459ecc800a17109d0c496a4e21e478806ee40 upstream.
 
-This reverts commit d358def706880defa4c9e87381c5bf086a97d5f9.
+Several MFD child drivers register their class devices directly under
+the parent device. This means you cannot blindly do devres conversions
+so that deregistration ends up being tied to the parent device,
+something which leads to use-after-free on driver unbind when the class
+device is released while still being registered.
 
-There are two issues with "i2c: cadence: Fix the hold bit setting" commit.
+Fixes: 8d3b6a4001ce ("leds: wm831x-status: Use devm_led_classdev_register")
+Cc: stable <stable@vger.kernel.org>     # 4.6
+Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-1. In case of combined message request from user space, when the HOLD
-bit is cleared in cdns_i2c_mrecv function, a STOP condition is sent
-on the bus even before the last message is started. This is because when
-the HOLD bit is cleared, the FIFOS are empty and there is no pending
-transfer. The STOP condition should occur only after the last message
-is completed.
-
-2. The code added by the commit is redundant. Driver is handling the
-setting/clearing of HOLD bit in right way before the commit.
-
-The setting of HOLD bit based on 'bus_hold_flag' is taken care in
-cdns_i2c_master_xfer function even before cdns_i2c_msend/cdns_i2c_recv
-functions.
-
-The clearing of HOLD bit is taken care at the end of cdns_i2c_msend and
-cdns_i2c_recv functions based on bus_hold_flag and byte count.
-Since clearing of HOLD bit is done after the slave address is written to
-the register (writing to address register triggers the message transfer),
-it is ensured that STOP condition occurs at the right time after
-completion of the pending transfer (last message).
-
-Signed-off-by: Raviteja Narayanam <raviteja.narayanam@xilinx.com>
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-cadence.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/leds/leds-wm831x-status.c |   14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-cadence.c b/drivers/i2c/busses/i2c-cadence.c
-index 59c08d5b75d6a..45d6771fac8ce 100644
---- a/drivers/i2c/busses/i2c-cadence.c
-+++ b/drivers/i2c/busses/i2c-cadence.c
-@@ -382,10 +382,8 @@ static void cdns_i2c_mrecv(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if ((id->recv_count > CDNS_I2C_FIFO_DEPTH)  || id->bus_hold_flag)
-+	if (id->recv_count > CDNS_I2C_FIFO_DEPTH)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
--	else
--		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
+--- a/drivers/leds/leds-wm831x-status.c
++++ b/drivers/leds/leds-wm831x-status.c
+@@ -283,12 +283,23 @@ static int wm831x_status_probe(struct pl
+ 	drvdata->cdev.blink_set = wm831x_status_blink_set;
+ 	drvdata->cdev.groups = wm831x_status_groups;
  
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
+-	ret = devm_led_classdev_register(wm831x->dev, &drvdata->cdev);
++	ret = led_classdev_register(wm831x->dev, &drvdata->cdev);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
+ 		return ret;
+ 	}
  
-@@ -442,11 +440,8 @@ static void cdns_i2c_msend(struct cdns_i2c *id)
- 	 * Check for the message size against FIFO depth and set the
- 	 * 'hold bus' bit if it is greater than FIFO depth.
- 	 */
--	if ((id->send_count > CDNS_I2C_FIFO_DEPTH) || id->bus_hold_flag)
-+	if (id->send_count > CDNS_I2C_FIFO_DEPTH)
- 		ctrl_reg |= CDNS_I2C_CR_HOLD;
--	else
--		ctrl_reg = ctrl_reg & ~CDNS_I2C_CR_HOLD;
--
- 	cdns_i2c_writereg(ctrl_reg, CDNS_I2C_CR_OFFSET);
++	platform_set_drvdata(pdev, drvdata);
++
++	return 0;
++}
++
++static int wm831x_status_remove(struct platform_device *pdev)
++{
++	struct wm831x_status *drvdata = platform_get_drvdata(pdev);
++
++	led_classdev_unregister(&drvdata->cdev);
++
+ 	return 0;
+ }
  
- 	/* Clear the interrupts in interrupt status register. */
--- 
-2.25.1
-
+@@ -297,6 +308,7 @@ static struct platform_driver wm831x_sta
+ 		   .name = "wm831x-status",
+ 		   },
+ 	.probe = wm831x_status_probe,
++	.remove = wm831x_status_remove,
+ };
+ 
+ module_platform_driver(wm831x_status_driver);
 
 
