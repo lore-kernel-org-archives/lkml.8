@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54EF42078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC092078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:22:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922552;
-	bh=Ofg4/dVgAiAPGUREgmieVN2sg9r6v57yymOc9GfbJg0=;
+	s=default; t=1597922563;
+	bh=S/OKAAmpyKPQwQl+ZwrYX+SBy+gYw8Q9o+atq4gVS/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=str+7Bs2BnhUBlpp7uz/EYYbymnl/nJCeYRFI1H23XdtAR9NaBERHvStFvOjd2gKZ
-	 uu8D+MS91BiRaFuKfYvbpfczh5KLIaar+gQSHE5tWTHKr4YLhF0i/LVO2dwuDYrk8T
-	 yv/6pRVsy42bwK88ypx3mBz7a8VOnC6yLo1q9TF4=
+	b=No2F2UVUnhj+0bUZ4HVZwRbhQMdP5umXjNrpcRxn5nCh/2wp9DdRDEqx6ayhKZL4/
+	 FGQPxeKElinxdo6EhXm/wXLnu5m9a2BRrgYckqSW/FEkGaNhnUvNgkiN4tGzWJUJbS
+	 /G0a3ov+da6pL/FzAapIY4vTjoTN8wrOI72NKyqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgHTLWb (ORCPT
+        id S1730688AbgHTLWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37826 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgHTKH1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:07:27 -0400
+        id S1730328AbgHTKHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79DD92067C;
-        Thu, 20 Aug 2020 10:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A511208E4;
+        Thu, 20 Aug 2020 10:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918047;
-        bh=Ofg4/dVgAiAPGUREgmieVN2sg9r6v57yymOc9GfbJg0=;
+        s=default; t=1597918041;
+        bh=S/OKAAmpyKPQwQl+ZwrYX+SBy+gYw8Q9o+atq4gVS/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NwbCeAgg9Qq8LoxUS31poRhQLnYixKRkdCZRi8XeBJMWtv0IPO+6DvnbkTO79T/ec
-         m5nLT5CvWYzb3+R3MmZ9o8VwkBwSjZ/l7clTVy2QCWloaUBI3ZIUu9lsPrJXN9YKXJ
-         QEcI7u8unsIbnIRFu/UufQhYFR3iPY3FEPkz5Fk0=
+        b=eAAeUJmM20FXHfEISDT+xuGzD4PCLXppQ6/QPls2vo8CO9OTpYPnsi3QW3SMxam6x
+         Dee/LF0MZOYdE+HEMY5D5uuxD/cFrTiSZIuKudkMjqgZSbEwsE79KZpoQ+JXRBCTs5
+         JpyyhSa1Pzyl3aN9OJtrERpCoaRT5CM1RgcFvL10=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Shah, Ashish N" <ashish.n.shah@intel.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 035/228] hv_netvsc: do not use VF device if link is down
-Date:   Thu, 20 Aug 2020 11:20:10 +0200
-Message-Id: <20200820091609.290364108@linuxfoundation.org>
+Subject: [PATCH 4.14 033/228] vxlan: Ensure FDB dump is performed under RCU
+Date:   Thu, 20 Aug 2020 11:20:08 +0200
+Message-Id: <20200820091609.193060077@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,45 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Hemminger <stephen@networkplumber.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 7c9864bbccc23e1812ac82966555d68c13ea4006 ]
+[ Upstream commit b5141915b5aec3b29a63db869229e3741ebce258 ]
 
-If the accelerated networking SRIOV VF device has lost carrier
-use the synthetic network device which is available as backup
-path. This is a rare case since if VF link goes down, normally
-the VMBus device will also loose external connectivity as well.
-But if the communication is between two VM's on the same host
-the VMBus device will still work.
+The commit cited below removed the RCU read-side critical section from
+rtnl_fdb_dump() which means that the ndo_fdb_dump() callback is invoked
+without RCU protection.
 
-Reported-by: "Shah, Ashish N" <ashish.n.shah@intel.com>
-Fixes: 0c195567a8f6 ("netvsc: transparent VF management")
-Signed-off-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+This results in the following warning [1] in the VXLAN driver, which
+relied on the callback being invoked from an RCU read-side critical
+section.
+
+Fix this by calling rcu_read_lock() in the VXLAN driver, as already done
+in the bridge driver.
+
+[1]
+WARNING: suspicious RCU usage
+5.8.0-rc4-custom-01521-g481007553ce6 #29 Not tainted
+-----------------------------
+drivers/net/vxlan.c:1379 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by bridge/166:
+ #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: netlink_dump+0xea/0x1090
+
+stack backtrace:
+CPU: 1 PID: 166 Comm: bridge Not tainted 5.8.0-rc4-custom-01521-g481007553ce6 #29
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+Call Trace:
+ dump_stack+0x100/0x184
+ lockdep_rcu_suspicious+0x153/0x15d
+ vxlan_fdb_dump+0x51e/0x6d0
+ rtnl_fdb_dump+0x4dc/0xad0
+ netlink_dump+0x540/0x1090
+ __netlink_dump_start+0x695/0x950
+ rtnetlink_rcv_msg+0x802/0xbd0
+ netlink_rcv_skb+0x17a/0x480
+ rtnetlink_rcv+0x22/0x30
+ netlink_unicast+0x5ae/0x890
+ netlink_sendmsg+0x98a/0xf40
+ __sys_sendto+0x279/0x3b0
+ __x64_sys_sendto+0xe6/0x1a0
+ do_syscall_64+0x54/0xa0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fe14fa2ade0
+Code: Bad RIP value.
+RSP: 002b:00007fff75bb5b88 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00005614b1ba0020 RCX: 00007fe14fa2ade0
+RDX: 000000000000011c RSI: 00007fff75bb5b90 RDI: 0000000000000003
+RBP: 00007fff75bb5b90 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00005614b1b89160
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Fixes: 5e6d24358799 ("bridge: netlink dump interface at par with brctl")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/vxlan.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -532,12 +532,13 @@ static int netvsc_start_xmit(struct sk_b
- 	u32 hash;
- 	struct hv_page_buffer pb[MAX_PAGE_BUFFER_COUNT];
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -974,6 +974,7 @@ static int vxlan_fdb_dump(struct sk_buff
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
+ 		struct vxlan_fdb *f;
  
--	/* if VF is present and up then redirect packets
--	 * already called with rcu_read_lock_bh
-+	/* If VF is present and up then redirect packets to it.
-+	 * Skip the VF if it is marked down or has no carrier.
-+	 * If netpoll is in uses, then VF can not be used either.
- 	 */
- 	vf_netdev = rcu_dereference_bh(net_device_ctx->vf_netdev);
- 	if (vf_netdev && netif_running(vf_netdev) &&
--	    !netpoll_tx_running(net))
-+	    netif_carrier_ok(vf_netdev) && !netpoll_tx_running(net))
- 		return netvsc_vf_xmit(net, vf_netdev, skb);
++		rcu_read_lock();
+ 		hlist_for_each_entry_rcu(f, &vxlan->fdb_head[h], hlist) {
+ 			struct vxlan_rdst *rd;
  
- 	/* We will atmost need two pages to describe the rndis
+@@ -986,12 +987,15 @@ static int vxlan_fdb_dump(struct sk_buff
+ 						     cb->nlh->nlmsg_seq,
+ 						     RTM_NEWNEIGH,
+ 						     NLM_F_MULTI, rd);
+-				if (err < 0)
++				if (err < 0) {
++					rcu_read_unlock();
+ 					goto out;
++				}
+ skip:
+ 				*idx += 1;
+ 			}
+ 		}
++		rcu_read_unlock();
+ 	}
+ out:
+ 	return err;
 
 
