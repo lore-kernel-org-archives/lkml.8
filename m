@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 014EDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF59C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D00F222B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A53A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:30:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930212;
-	bh=zX065Jj8yZv2ZjljmxDbv1KjrqSbKCATFwprplDdImQ=;
+	s=default; t=1597930218;
+	bh=7w8lY9SNuQ0ArZc90EjzHkvXIEhkKVW3Y126jgQbW8w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mECtNRj3Y8X7s7zCdSNrKVNSBBIzOIUo9avfPXEhS0x5sYnLtT54kTwBx33eN4zPr
-	 VrncSnnbF8s4PvQSUlBtK0fj8RojcOmBWPG0k4AT9HEpwJOGNrU09Bh3E97cfbeH4f
-	 5z7JMwFDldT9E8XiSfwsFs49f2dMG+LrOo3AvEfE=
+	b=mHhBbGvhfUlKRpW+u13q8Aj2g2M40YR+MqP+YVkbTnXqHD4JQ3tfT5t4Jy6FbgLMM
+	 f2etozjl3dv2kEJLNntEMq24wWx5UTSEiv1mHFJ0IqV26Fb8OxKQKKKRGDktkN3Ln8
+	 3qzEYOHndjrrNvW7bnHNcbmZ0N/SOsnwwLF/8Rks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHTJc7 (ORCPT
+        id S1728449AbgHTNaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44042 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:30:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728257AbgHTJby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:54 -0400
+        id S1728270AbgHTJc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:32:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5571922BF5;
-        Thu, 20 Aug 2020 09:31:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E38820724;
+        Thu, 20 Aug 2020 09:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915912;
-        bh=zX065Jj8yZv2ZjljmxDbv1KjrqSbKCATFwprplDdImQ=;
+        s=default; t=1597915975;
+        bh=7w8lY9SNuQ0ArZc90EjzHkvXIEhkKVW3Y126jgQbW8w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jp4oJKsf5zbG4UfoNXg//tpVjdFFFw19IoiO8Z+rbx5YmxZrcKArVG6gEhra9jvjl
-         vqNrLxZg+7DXFCz00p4YeGkMpggmkktgpLn72wSJMD+/HNWw3FFTOMRis1QMUsa7A7
-         zD0mXCj0pPvcNxY0NDoA35v471wASAZFps07lzL8=
+        b=AJ07W0TL3iHiV/DmU6s6Yu6/+knz3Mq2o8LbHL2LuJ6NkRrhcuioIaGRUNcwC4i1T
+         kkJEs7UfQAnEfikB5F+bamZd2/bY3V/LFmziPvlAI1nR1zr6hMIhyWtznl5E6gWyAf
+         3P9nEnKa0VqvvTJ2Z7wKfo2CbcmbD1KWOZ2v8lQE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 178/232] clk: bcm2835: Do not use prediv with bcm2711s PLLs
-Date:   Thu, 20 Aug 2020 11:20:29 +0200
-Message-Id: <20200820091621.432573048@linuxfoundation.org>
+Subject: [PATCH 5.8 201/232] s390/Kconfig: add missing ZCRYPT dependency to VFIO_AP
+Date:   Thu, 20 Aug 2020 11:20:52 +0200
+Message-Id: <20200820091622.542844253@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -63,110 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit f34e4651ce66a754f41203284acf09b28b9dd955 ]
+[ Upstream commit 929a343b858612100cb09443a8aaa20d4a4706d3 ]
 
-Contrary to previous SoCs, bcm2711 doesn't have a prescaler in the PLL
-feedback loop. Bypass it by zeroing fb_prediv_mask when running on
-bcm2711.
+The VFIO_AP uses ap_driver_register() (and deregister) functions
+implemented in ap_bus.c (compiled into ap.o).  However the ap.o will be
+built only if CONFIG_ZCRYPT is selected.
 
-Note that, since the prediv configuration bits were re-purposed, this
-was triggering miscalculations on all clocks hanging from the VPU clock,
-notably the aux UART, making its output unintelligible.
+This was not visible before commit e93a1695d7fb ("iommu: Enable compile
+testing for some of drivers") because the CONFIG_VFIO_AP depends on
+CONFIG_S390_AP_IOMMU which depends on the missing CONFIG_ZCRYPT.  After
+adding COMPILE_TEST, it is possible to select a configuration with
+VFIO_AP and S390_AP_IOMMU but without the ZCRYPT.
 
-Fixes: 42de9ad400af ("clk: bcm2835: Add BCM2711_CLOCK_EMMC2 support")
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Link: https://lore.kernel.org/r/20200730182619.23246-1-nsaenzjulienne@suse.de
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Add proper dependency to the VFIO_AP to fix build errors:
+
+ERROR: modpost: "ap_driver_register" [drivers/s390/crypto/vfio_ap.ko] undefined!
+ERROR: modpost: "ap_driver_unregister" [drivers/s390/crypto/vfio_ap.ko] undefined!
+
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: e93a1695d7fb ("iommu: Enable compile testing for some of drivers")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c | 25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ arch/s390/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 6bb7efa12037b..011802f1a6df9 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -314,6 +314,7 @@ struct bcm2835_cprman {
- 	struct device *dev;
- 	void __iomem *regs;
- 	spinlock_t regs_lock; /* spinlock for all clocks */
-+	unsigned int soc;
- 
- 	/*
- 	 * Real names of cprman clock parents looked up through
-@@ -525,6 +526,20 @@ static int bcm2835_pll_is_on(struct clk_hw *hw)
- 		A2W_PLL_CTRL_PRST_DISABLE;
- }
- 
-+static u32 bcm2835_pll_get_prediv_mask(struct bcm2835_cprman *cprman,
-+				       const struct bcm2835_pll_data *data)
-+{
-+	/*
-+	 * On BCM2711 there isn't a pre-divisor available in the PLL feedback
-+	 * loop. Bits 13:14 of ANA1 (PLLA,PLLB,PLLC,PLLD) have been re-purposed
-+	 * for to for VCO RANGE bits.
-+	 */
-+	if (cprman->soc & SOC_BCM2711)
-+		return 0;
-+
-+	return data->ana->fb_prediv_mask;
-+}
-+
- static void bcm2835_pll_choose_ndiv_and_fdiv(unsigned long rate,
- 					     unsigned long parent_rate,
- 					     u32 *ndiv, u32 *fdiv)
-@@ -582,7 +597,7 @@ static unsigned long bcm2835_pll_get_rate(struct clk_hw *hw,
- 	ndiv = (a2wctrl & A2W_PLL_CTRL_NDIV_MASK) >> A2W_PLL_CTRL_NDIV_SHIFT;
- 	pdiv = (a2wctrl & A2W_PLL_CTRL_PDIV_MASK) >> A2W_PLL_CTRL_PDIV_SHIFT;
- 	using_prediv = cprman_read(cprman, data->ana_reg_base + 4) &
--		data->ana->fb_prediv_mask;
-+		       bcm2835_pll_get_prediv_mask(cprman, data);
- 
- 	if (using_prediv) {
- 		ndiv *= 2;
-@@ -665,6 +680,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
- 	struct bcm2835_pll *pll = container_of(hw, struct bcm2835_pll, hw);
- 	struct bcm2835_cprman *cprman = pll->cprman;
- 	const struct bcm2835_pll_data *data = pll->data;
-+	u32 prediv_mask = bcm2835_pll_get_prediv_mask(cprman, data);
- 	bool was_using_prediv, use_fb_prediv, do_ana_setup_first;
- 	u32 ndiv, fdiv, a2w_ctl;
- 	u32 ana[4];
-@@ -682,7 +698,7 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
- 	for (i = 3; i >= 0; i--)
- 		ana[i] = cprman_read(cprman, data->ana_reg_base + i * 4);
- 
--	was_using_prediv = ana[1] & data->ana->fb_prediv_mask;
-+	was_using_prediv = ana[1] & prediv_mask;
- 
- 	ana[0] &= ~data->ana->mask0;
- 	ana[0] |= data->ana->set0;
-@@ -692,10 +708,10 @@ static int bcm2835_pll_set_rate(struct clk_hw *hw,
- 	ana[3] |= data->ana->set3;
- 
- 	if (was_using_prediv && !use_fb_prediv) {
--		ana[1] &= ~data->ana->fb_prediv_mask;
-+		ana[1] &= ~prediv_mask;
- 		do_ana_setup_first = true;
- 	} else if (!was_using_prediv && use_fb_prediv) {
--		ana[1] |= data->ana->fb_prediv_mask;
-+		ana[1] |= prediv_mask;
- 		do_ana_setup_first = false;
- 	} else {
- 		do_ana_setup_first = true;
-@@ -2238,6 +2254,7 @@ static int bcm2835_clk_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cprman);
- 
- 	cprman->onecell.num = asize;
-+	cprman->soc = pdata->soc;
- 	hws = cprman->onecell.hws;
- 
- 	for (i = 0; i < asize; i++) {
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index c7d7ede6300c5..4907a5149a8a3 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -769,6 +769,7 @@ config VFIO_AP
+ 	def_tristate n
+ 	prompt "VFIO support for AP devices"
+ 	depends on S390_AP_IOMMU && VFIO_MDEV_DEVICE && KVM
++	depends on ZCRYPT
+ 	help
+ 		This driver grants access to Adjunct Processor (AP) devices
+ 		via the VFIO mediated device interface.
 -- 
 2.25.1
 
