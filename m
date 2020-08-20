@@ -2,100 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D7AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03406206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/AMsDWM"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBF122B43
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:52:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725859AbgHTIwU (ORCPT
+        id S1726766AbgHTIwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:52:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51010 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgHTIwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:52:03 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EEF3C061757;
-        Thu, 20 Aug 2020 01:52:03 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id j21so804610pgi.9;
-        Thu, 20 Aug 2020 01:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=42LHFfcuO9OCjNNDenDSDBxfXF+eWcdOYM33HnzRkkA=;
-        b=D/AMsDWMmGjqPOmGzc/ZrcVMnXBlKKxevHtTRrXrCFS470G8yvkN2lrQNQxSDd1gPY
-         +cSKVPDhYWEpC8+aQHLvEKU+16Dk/TfVtTHrfYZMqx0clBut1kHlMq6csIOMXhc0TUvE
-         XEKWfa6tdomxl5Xh9HlJQ/EgcAK8VAMpbag97nX0BbhxQ6ef4OaTqo2Tpf+2HGQL+dLR
-         O3NlatgEdA01dTzYREmPl5nnNSKMD1qJpLVa0b+HCw1SKdFxgIkUSsFW+i0ulq7QJt4q
-         Qz+PAYhiiyqrf/cygKg2IeMyXuLWXUE2oSj2WXWe7479y3sW+W8z6FU2WZpeRc3tshTR
-         S/8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=42LHFfcuO9OCjNNDenDSDBxfXF+eWcdOYM33HnzRkkA=;
-        b=kYlhwFLKh4cTnCuuMEvJhL9AQazfYiJnl4LRsCqM/zFmYIWYm/8bES8PJiXvoJGlUH
-         /9V83pb0wOuYhwDewZNfTMGtTPSW+7RFwmUJpwcf4jGkU1FlDSiwNG3hV4LIvt1tekpY
-         6YyZsOqbUKr+2UG9L08HcD7rLkIlk01Uz8gUZFQy0qX14b8p2jnkwBYWRfNHtSa45g5b
-         /Pj4fpsuWHhWs/eaZx6KKUCBFz/9Ze+PMszvDF1rDV7pXjWHMUH/ZYSrZjxl1CnMUzjF
-         0oknAMW8hwkT1kDj6EHu34mVYZ0J7BwvG7y+Fvy1YId+u/emP8wdOPYAJWHZIqZ8SDK1
-         wZVQ==
-X-Gm-Message-State: AOAM533+v2kZiLew+I38QLVNMFIps9pr0x9K64BDnYlEeIuEa7y+RNAm
-        OCB08GX1EDNx+B+roMI2JDeQ+HAWKqylAOoP
-X-Google-Smtp-Source: ABdhPJzNiuiAOv5HpPKi+OcC2h1oicHKgHcdYtsQkbme88/1JmARxKFJgi1V9VMZX+Y1s2FYEdZLKg==
-X-Received: by 2002:a62:158e:: with SMTP id 136mr1639419pfv.36.1597913522755;
-        Thu, 20 Aug 2020 01:52:02 -0700 (PDT)
-Received: from blackclown ([103.88.82.201])
-        by smtp.gmail.com with ESMTPSA id o7sm1025906pjl.48.2020.08.20.01.52.00
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 01:52:02 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 14:21:49 +0530
-From:   Suraj Upadhyay <usuraj35@gmail.com>
-To:     jerome.pouiller@silabs.com, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH 6/6] staging: wfx/hif_tx.c: Fix spelling mistake "carefull"
- => "careful"
-Message-ID: <45b7f521c7d4c9ba09786930909414942fcedca8.1597913333.git.usuraj35@gmail.com>
-References: <834139101223e627665c939388cd7c542920c531.1597913333.git.usuraj35@gmail.com>
+        Thu, 20 Aug 2020 04:52:51 -0400
+Received: from honk.sigxcpu.org ([24.134.29.49]:59042 "EHLO honk.sigxcpu.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbgHTIwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:52:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by honk.sigxcpu.org (Postfix) with ESMTP id 5A1EEFB03;
+        Thu, 20 Aug 2020 10:52:48 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
+Received: from honk.sigxcpu.org ([127.0.0.1])
+        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id BdvBbg0DRbpX; Thu, 20 Aug 2020 10:52:47 +0200 (CEST)
+Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
+        id BFDC2457CB; Thu, 20 Aug 2020 10:52:46 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 10:52:46 +0200
+From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 3/3] arm64: defconfig: Enable imx8mq-librem5-devkit
+ display stack
+Message-ID: <20200820085246.GA7671@bogon.m.sigxcpu.org>
+References: <cover.1596025057.git.agx@sigxcpu.org>
+ <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
+ <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <834139101223e627665c939388cd7c542920c531.1597913333.git.usuraj35@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Suraj Upadhyay <usuraj35@gmail.com>
----
- drivers/staging/wfx/hif_tx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Fabio,
+On Thu, Aug 20, 2020 at 01:11:28AM -0300, Fabio Estevam wrote:
+> Hi Guido,
+> 
+> On Wed, Jul 29, 2020 at 9:19 AM Guido Günther <agx@sigxcpu.org> wrote:
+> >
+> > Enable the panel, NWL DSI host controller and dphy. This
+> > also needs the reset controller.
+> >
+> > Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> > ---
+> >  arch/arm64/configs/defconfig | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index e0f33826819f..608019f6408d 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -640,10 +640,12 @@ CONFIG_DRM_MSM=m
+> >  CONFIG_DRM_TEGRA=m
+> >  CONFIG_DRM_PANEL_LVDS=m
+> >  CONFIG_DRM_PANEL_SIMPLE=m
+> > -CONFIG_DRM_SIMPLE_BRIDGE=m
+> > +CONFIG_DRM_PANEL_SITRONIX_ST7703=m
+> >  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=m
+> >  CONFIG_DRM_DISPLAY_CONNECTOR=m
+> > +CONFIG_DRM_NWL_MIPI_DSI=m
+> >  CONFIG_DRM_SII902X=m
+> > +CONFIG_DRM_SIMPLE_BRIDGE=m
+> 
+> One nit: I suppose the CONFIG_DRM_SIMPLE_BRIDGE=m move comes from a
+> defconfig re-sync.
+> 
+> Maybe this re-sync could be part of a separate patch?
 
-diff --git a/drivers/staging/wfx/hif_tx.c b/drivers/staging/wfx/hif_tx.c
-index 5110f9b93762..fc12f9dcefce 100644
---- a/drivers/staging/wfx/hif_tx.c
-+++ b/drivers/staging/wfx/hif_tx.c
-@@ -125,7 +125,7 @@ int wfx_cmd_send(struct wfx_dev *wdev, struct hif_msg *request,
- 
- // This function is special. After HIF_REQ_ID_SHUT_DOWN, chip won't reply to any
- // request anymore. We need to slightly hack struct wfx_hif_cmd for that job. Be
--// carefull to only call this funcion during device unregister.
-+// careful to only call this function during device unregister.
- int hif_shutdown(struct wfx_dev *wdev)
- {
- 	int ret;
--- 
-2.17.1
+I've moved re-sync of the drm related bits to a separate patch in v2. I
+didn't do a full resync since this varies between kernel version but i
+can do that too - maybe against 5.9-rc1 if that helps.
 
+> Thanks for adding these options to the defconfig so that we could have
+> MIPI DSI working by default on i.MX8M:
+> 
+> Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> 
+
+Thanks!
+ -- Guido
