@@ -2,103 +2,193 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5326C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E84E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:06:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82CFA207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:06:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DeUdFykn"
+	by mail.kernel.org (Postfix) with ESMTP id C1DFE207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:06:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597928778;
+	bh=leFGFO6VIFJLxyhjNyZWZnKHXhV2UKbC1qbZhu5S6/w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DMYKB8OK0dCJqFxHEVpLdrewI7fE/c/n2JkkjhGr+vGFROrLCQ+NgHq2l/gfPq/Tv
+	 XGQcQnd3WbZsXGJKAO7TW+ikglIflQBl8s7mc3aVIgmlrOzOZ9V0KNxzwGEKtMVZrf
+	 8ONNBxOVQPbYO7Zc66KG8kCl8BNyKBLsGncC6Yfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgHTNGK (ORCPT
+        id S1728917AbgHTJi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:06:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728871AbgHTNGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:06:01 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59459C061385;
-        Thu, 20 Aug 2020 06:06:01 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g15so1008628plj.6;
-        Thu, 20 Aug 2020 06:06:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=diWOF1th57LrHj7EG5tnoK7CBPOeUfDwxvRZ4lqQiP0=;
-        b=DeUdFyknlpSmv5kkr6H1ATJsndaWr8MvMFne3KWTmGJG2YERGgiOrFBxV8km9lA2JU
-         Oa6V7i+KP6qIv/FWA1Np283lXNOL3vRdGSIfwsFfjMhZKMY0/wcj28w6WCZAlYqMricd
-         Be3+/O982WCiUXb4tsZAS9OEr/KdI9lmibNYy3XMw9HIowe2Rcv/4LpCoaBXo9dP8yXh
-         CRznHv/OOUqYi5+iTNJzawAu6SO/kUXt4h3YBtZjIChyxiaFt77BG+zh/9lOdN6NSMog
-         sVhkkOprbhTKlcnllopmB/AHS/eMfTPZmxPZ3XGQs2b2kqpFwjs1pyjTdZrCAtPc062G
-         wvig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=diWOF1th57LrHj7EG5tnoK7CBPOeUfDwxvRZ4lqQiP0=;
-        b=e//lRh9AMYuQTZVwCmflB4EyxTOOHT/7Onqa91elCj610CNrtA3bod7IeRBtwSDEGF
-         sHNq9qpd4SLqvsfppmieYjXA8Db2tVoKnD3r7OyODmFLU6QqMcbuxorlMiUCQ4L7rIFH
-         bHfGQ/56RrDfVAemhXD+iDNFvL+WJprfrYXIOeZfydVzrBPZt0fpREqsfoSjxHpmFms0
-         9w6Cci7qAQ51+QvuFXFTErR85EO8XupODV7Pk+5Q2hoqeZWyX3sD7ZboeyRUfXjzMQnG
-         M+gnQxmAfmkL8lG4iRKyj/sUOZVOHQb1VZbKyX4vs9T9ZeWyxYBtUR0ErPzCiBRMAi1u
-         87/A==
-X-Gm-Message-State: AOAM533griJg3l0fI7SoYTGrwcsvbhPzBQp6HZK/av8Huz8A/nCUgS+l
-        Z83WmxuqKqZHM1ifYxkQFVuijs31fV5ktcDoTNg=
-X-Google-Smtp-Source: ABdhPJxA7srVMSku0uu1P5zHAAAti2hEfo+ytXQ/cTrfBTaGNEDKCsEeSr7WtE6tLnyFBWb9/IWKQ2RbXaPhzu0Togo=
-X-Received: by 2002:a17:90a:bc41:: with SMTP id t1mr2333932pjv.181.1597928760579;
- Thu, 20 Aug 2020 06:06:00 -0700 (PDT)
+        Thu, 20 Aug 2020 05:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56660 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728895AbgHTJik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D37E2173E;
+        Thu, 20 Aug 2020 09:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916320;
+        bh=leFGFO6VIFJLxyhjNyZWZnKHXhV2UKbC1qbZhu5S6/w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nHH5m4KsLOxxEgerZZMYSJYzQy7KKYQfX0vl+3sEzN3g0lmuKysEV9i7sLYl3VGQO
+         tfpAHHfMwR7r2AFHdRqyKc/dQEbbtNG3SHo9Dw0tn0okMYd1FWZ3L9oUKOHNxc9Fxm
+         sfYgPoErO0sGR+5xLsidVBNkKhCZpLWI8Z3L/184=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Ken Raeburn <raeburn@redhat.com>
+Subject: [PATCH 5.7 060/204] bcache: fix overflow in offset_to_stripe()
+Date:   Thu, 20 Aug 2020 11:19:17 +0200
+Message-Id: <20200820091609.265726854@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1597892486-3236-1-git-send-email-tiantao6@hisilicon.com> <CA+U=DsojNXFxT812=i-0ceRGUV3gJXhMMb-ungP=DO166jjZMA@mail.gmail.com>
-In-Reply-To: <CA+U=DsojNXFxT812=i-0ceRGUV3gJXhMMb-ungP=DO166jjZMA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Aug 2020 16:05:44 +0300
-Message-ID: <CAHp75VdqrczNjsgR7JZTsK8+=RmgFopGJ1VZdD4+BYxBHMHukg@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: adi-axi-adc: Use kobj_to_dev() instead of container_of()
-To:     Alexandru Ardelean <ardeleanalex@gmail.com>
-Cc:     Tian Tao <tiantao6@hisilicon.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 12:10 PM Alexandru Ardelean
-<ardeleanalex@gmail.com> wrote:
-> On Thu, Aug 20, 2020 at 6:04 AM Tian Tao <tiantao6@hisilicon.com> wrote:
-> >
-> > Use kobj_to_dev() instead of container_of()
+From: Coly Li <colyli@suse.de>
 
-> Good point.
->
-> Acked-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+commit 7a1481267999c02abf4a624515c1b5c7c1fccbd6 upstream.
 
-...
+offset_to_stripe() returns the stripe number (in type unsigned int) from
+an offset (in type uint64_t) by the following calculation,
+	do_div(offset, d->stripe_size);
+For large capacity backing device (e.g. 18TB) with small stripe size
+(e.g. 4KB), the result is 4831838208 and exceeds UINT_MAX. The actual
+returned value which caller receives is 536870912, due to the overflow.
 
-> > -       struct device *dev = container_of(kobj, struct device, kobj);
-> > +       struct device *dev = kobj_to_dev(kobj);
-> >         struct iio_dev *indio_dev = dev_to_iio_dev(dev);
+Indeed in bcache_device_init(), bcache_device->nr_stripes is limited in
+range [1, INT_MAX]. Therefore all valid stripe numbers in bcache are
+in range [0, bcache_dev->nr_stripes - 1].
 
-And now this can be one line since dev is not used separately.
+This patch adds a upper limition check in offset_to_stripe(): the max
+valid stripe number should be less than bcache_device->nr_stripes. If
+the calculated stripe number from do_div() is equal to or larger than
+bcache_device->nr_stripe, -EINVAL will be returned. (Normally nr_stripes
+is less than INT_MAX, exceeding upper limitation doesn't mean overflow,
+therefore -EOVERFLOW is not used as error code.)
 
-> >         struct adi_axi_adc_state *st = iio_priv(indio_dev);
-> >         struct adi_axi_adc_conv *conv = &st->client->conv;
+This patch also changes nr_stripes' type of struct bcache_device from
+'unsigned int' to 'int', and return value type of offset_to_stripe()
+from 'unsigned int' to 'int', to match their exact data ranges.
 
--- 
-With Best Regards,
-Andy Shevchenko
+All locations where bcache_device->nr_stripes and offset_to_stripe() are
+referenced also get updated for the above type change.
+
+Reported-and-tested-by: Ken Raeburn <raeburn@redhat.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1783075
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/md/bcache/bcache.h    |    2 +-
+ drivers/md/bcache/writeback.c |   14 +++++++++-----
+ drivers/md/bcache/writeback.h |   19 +++++++++++++++++--
+ 3 files changed, 27 insertions(+), 8 deletions(-)
+
+--- a/drivers/md/bcache/bcache.h
++++ b/drivers/md/bcache/bcache.h
+@@ -264,7 +264,7 @@ struct bcache_device {
+ #define BCACHE_DEV_UNLINK_DONE		2
+ #define BCACHE_DEV_WB_RUNNING		3
+ #define BCACHE_DEV_RATE_DW_RUNNING	4
+-	unsigned int		nr_stripes;
++	int			nr_stripes;
+ 	unsigned int		stripe_size;
+ 	atomic_t		*stripe_sectors_dirty;
+ 	unsigned long		*full_dirty_stripes;
+--- a/drivers/md/bcache/writeback.c
++++ b/drivers/md/bcache/writeback.c
+@@ -523,15 +523,19 @@ void bcache_dev_sectors_dirty_add(struct
+ 				  uint64_t offset, int nr_sectors)
+ {
+ 	struct bcache_device *d = c->devices[inode];
+-	unsigned int stripe_offset, stripe, sectors_dirty;
++	unsigned int stripe_offset, sectors_dirty;
++	int stripe;
+ 
+ 	if (!d)
+ 		return;
+ 
++	stripe = offset_to_stripe(d, offset);
++	if (stripe < 0)
++		return;
++
+ 	if (UUID_FLASH_ONLY(&c->uuids[inode]))
+ 		atomic_long_add(nr_sectors, &c->flash_dev_dirty_sectors);
+ 
+-	stripe = offset_to_stripe(d, offset);
+ 	stripe_offset = offset & (d->stripe_size - 1);
+ 
+ 	while (nr_sectors) {
+@@ -571,12 +575,12 @@ static bool dirty_pred(struct keybuf *bu
+ static void refill_full_stripes(struct cached_dev *dc)
+ {
+ 	struct keybuf *buf = &dc->writeback_keys;
+-	unsigned int start_stripe, stripe, next_stripe;
++	unsigned int start_stripe, next_stripe;
++	int stripe;
+ 	bool wrapped = false;
+ 
+ 	stripe = offset_to_stripe(&dc->disk, KEY_OFFSET(&buf->last_scanned));
+-
+-	if (stripe >= dc->disk.nr_stripes)
++	if (stripe < 0)
+ 		stripe = 0;
+ 
+ 	start_stripe = stripe;
+--- a/drivers/md/bcache/writeback.h
++++ b/drivers/md/bcache/writeback.h
+@@ -52,10 +52,22 @@ static inline uint64_t bcache_dev_sector
+ 	return ret;
+ }
+ 
+-static inline unsigned int offset_to_stripe(struct bcache_device *d,
++static inline int offset_to_stripe(struct bcache_device *d,
+ 					uint64_t offset)
+ {
+ 	do_div(offset, d->stripe_size);
++
++	/* d->nr_stripes is in range [1, INT_MAX] */
++	if (unlikely(offset >= d->nr_stripes)) {
++		pr_err("Invalid stripe %llu (>= nr_stripes %d).\n",
++			offset, d->nr_stripes);
++		return -EINVAL;
++	}
++
++	/*
++	 * Here offset is definitly smaller than INT_MAX,
++	 * return it as int will never overflow.
++	 */
+ 	return offset;
+ }
+ 
+@@ -63,7 +75,10 @@ static inline bool bcache_dev_stripe_dir
+ 					   uint64_t offset,
+ 					   unsigned int nr_sectors)
+ {
+-	unsigned int stripe = offset_to_stripe(&dc->disk, offset);
++	int stripe = offset_to_stripe(&dc->disk, offset);
++
++	if (stripe < 0)
++		return false;
+ 
+ 	while (1) {
+ 		if (atomic_read(dc->disk.stripe_sectors_dirty + stripe))
+
+
