@@ -2,51 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2702BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 488DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E83A820724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E45F206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920647;
-	bh=NpEfmaKHeUijj1qkQb+570DDHX861Pxw0DtZh3WCRSY=;
+	s=default; t=1597920662;
+	bh=YEXaHg2iBlaYXdD+t5XXIh39qL4/7luoV72oGLb54/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0fvc8SwrR5IwilEGINzgX+xMwuL3w3QiadJ28Pw/kSzvCn1v4IoM6HZ+t+LWOnI0Z
-	 djTASMuKL9Y0bGsLUC9ysBQqyFfcqyG/yfI2E/nrGJ08jX1sEVvKztmYw16wBl3yKm
-	 knRlvbhgOQWZIytlAGf7CCsYDr5hRVNvULD4hjWg=
+	b=esfXIQuVG1pdaePt3R+Ku7ENN2eEm10s58m2oq1CXAfM4PcKxbX18eSX/v3cxlGcO
+	 XcvcfxxiiuBBcziAhJGPhfcW8YwgN2VEpXGCWvmXgxlRrYEyeXlXhCs3TKWYymhy1l
+	 6Xyk8Nz5fofFbC+fLu8esyyMZ9hLNcZPTIpy8wds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgHTKuj (ORCPT
+        id S1728945AbgHTKvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:50:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34456 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:51:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731239AbgHTKPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:15:16 -0400
+        id S1731190AbgHTKPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:15:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 416312067C;
-        Thu, 20 Aug 2020 10:15:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9871F206DA;
+        Thu, 20 Aug 2020 10:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918515;
-        bh=NpEfmaKHeUijj1qkQb+570DDHX861Pxw0DtZh3WCRSY=;
+        s=default; t=1597918501;
+        bh=YEXaHg2iBlaYXdD+t5XXIh39qL4/7luoV72oGLb54/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WY0/wYwgfZ7IbtErk94iPg/HQhQYXiRqtnFH4l/tmxE6XiBRxY/3GdpZMgIX4FITv
-         YrPnAmWBtCaqLeiSU7urCqpsXjQZOIdci40KEzNQu3ZdPIKpVB+RY26t4wN4eeqsKR
-         d/lc4rQb4sTeJ4ccgT2H7S3Hdz+vCVG3Ah0EZcX0=
+        b=wRlY/9VPZmrcti/pVZ2My8rVcws80BVwMpAdr2XGg12370LwsB4aJ3uuOh4K+WVxg
+         IwFttnS2nlh8UOHpVpidDwPdVhpp/PWYDdE4L660ScOxQoe5bPiLSLjclw0wH7BP78
+         GGW/Xdrtd5gOfXGNDbUHNKVMnr/j4PrBnL4Wtwqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 199/228] USB: serial: ftdi_sio: fix break and sysrq handling
-Date:   Thu, 20 Aug 2020 11:22:54 +0200
-Message-Id: <20200820091617.506494293@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Liu Ying <victor.liu@nxp.com>
+Subject: [PATCH 4.14 194/228] drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
+Date:   Thu, 20 Aug 2020 11:22:49 +0200
+Message-Id: <20200820091617.259294266@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,87 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Liu Ying <victor.liu@nxp.com>
 
-[ Upstream commit 733fff67941dad64b8a630450b8372b1873edc41 ]
+commit 3b2a999582c467d1883716b37ffcc00178a13713 upstream.
 
-Only the last NUL in a packet should be flagged as a break character,
-for example, to avoid dropping unrelated characters when IGNBRK is set.
+Both of the two LVDS channels should be disabled for split mode
+in the encoder's ->disable() callback, because they are enabled
+in the encoder's ->enable() callback.
 
-Also make sysrq work by consuming the break character instead of having
-it immediately cancel the sysrq request, and by not processing it
-prematurely to avoid triggering a sysrq based on an unrelated character
-received in the same packet (which was received *before* the break).
+Fixes: 6556f7f82b9c ("drm: imx: Move imx-drm driver out of staging")
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Liu Ying <victor.liu@nxp.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Note that the break flag can be left set also for a packet received
-immediately following a break and that and an ending NUL in such a
-packet will continue to be reported as a break as there's no good way to
-tell it apart from an actual break.
-
-Tested on FT232R and FT232H.
-
-Fixes: 72fda3ca6fc1 ("USB: serial: ftd_sio: implement sysrq handling on break")
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/imx/imx-ldb.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 8abb30c797d30..0574bf03b3171 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2045,6 +2045,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 		struct ftdi_private *priv, unsigned char *buf, int len)
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -311,18 +311,19 @@ static void imx_ldb_encoder_disable(stru
  {
- 	unsigned char status;
-+	bool brkint = false;
- 	int i;
- 	char flag;
+ 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+ 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
++	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
+ 	int mux, ret;
  
-@@ -2096,13 +2097,17 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 */
- 	flag = TTY_NORMAL;
- 	if (buf[1] & FTDI_RS_ERR_MASK) {
--		/* Break takes precedence over parity, which takes precedence
--		 * over framing errors */
--		if (buf[1] & FTDI_RS_BI) {
--			flag = TTY_BREAK;
-+		/*
-+		 * Break takes precedence over parity, which takes precedence
-+		 * over framing errors. Note that break is only associated
-+		 * with the last character in the buffer and only when it's a
-+		 * NUL.
-+		 */
-+		if (buf[1] & FTDI_RS_BI && buf[len - 1] == '\0') {
- 			port->icount.brk++;
--			usb_serial_handle_break(port);
--		} else if (buf[1] & FTDI_RS_PE) {
-+			brkint = true;
-+		}
-+		if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
- 		} else if (buf[1] & FTDI_RS_FE) {
-@@ -2118,8 +2123,13 @@ static int ftdi_process_packet(struct usb_serial_port *port,
+ 	drm_panel_disable(imx_ldb_ch->panel);
  
- 	port->icount.rx += len - 2;
+-	if (imx_ldb_ch == &ldb->channel[0])
++	if (imx_ldb_ch == &ldb->channel[0] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
+-	else if (imx_ldb_ch == &ldb->channel[1])
++	if (imx_ldb_ch == &ldb->channel[1] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
  
--	if (port->port.console && port->sysrq) {
-+	if (brkint || (port->port.console && port->sysrq)) {
- 		for (i = 2; i < len; i++) {
-+			if (brkint && i == len - 1) {
-+				if (usb_serial_handle_break(port))
-+					return len - 3;
-+				flag = TTY_BREAK;
-+			}
- 			if (usb_serial_handle_sysrq_char(port, buf[i]))
- 				continue;
- 			tty_insert_flip_char(&port->port, buf[i], flag);
--- 
-2.25.1
-
+ 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
+ 
+-	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
++	if (dual) {
+ 		clk_disable_unprepare(ldb->clk[0]);
+ 		clk_disable_unprepare(ldb->clk[1]);
+ 	}
 
 
