@@ -2,54 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF495C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4505EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEC72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4952173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917279;
-	bh=+wJePM7tFVWHEgDK9v3I9eBY8WSJUwrrp6TR6uB9qXg=;
+	s=default; t=1597917284;
+	bh=puvKffSzIc9VgFsOKv/Hz0j402nCyaacHYWMEmCK1R4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kxX5Njs7EhOpgHPPfh3x8hOd/QGAot3tJmwEZO0EwMGd44xTgwyqQqKJpo/2/AAt2
-	 1nVUqWm/5nAwUqrQAzaBvxf1hae0/lEaGD0tdUvSZsXj7NmUcTjHzllBTtjeuutBsH
-	 7U3W5GBBlFTTwPH8omGDoWBtnrRSlDXj0WfNYinY=
+	b=EltpZ2KX5VY5LWMdoM3we4B7RcDfHlJDeBZW0ydYsimjMTSCnUw3WIv1tHUUFNAjS
+	 W5j6YKjL7YcQ2IlbRMOiMOsUcTETMQNlNdqhC2DwyB4hFeRVR5sS2ir0kbOBDb3HOt
+	 zLB+eYb4mYrNatmih49aAfQyPRNx4gT0AyiOMYVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgHTJyi (ORCPT
+        id S1730149AbgHTJym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37140 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729410AbgHTJye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:54:34 -0400
+        id S1730136AbgHTJyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC7D820855;
-        Thu, 20 Aug 2020 09:54:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0516B2078D;
+        Thu, 20 Aug 2020 09:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917273;
-        bh=+wJePM7tFVWHEgDK9v3I9eBY8WSJUwrrp6TR6uB9qXg=;
+        s=default; t=1597917270;
+        bh=puvKffSzIc9VgFsOKv/Hz0j402nCyaacHYWMEmCK1R4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y7aS5i2dAKLf0oIX6HhOS2U9V/zcFh2amh2UcIGWCQ0gLZNyj0aXQZ0L7/FKjkIDR
-         oDlzDSka4nu1vp4uPh9RJ4k7i4n7IDEjz4s6GvBP9zTJ4KTv9Bn44eN8Y+BncSx2CW
-         avOC8ugaU/gKVz1NmpO/RF6/diJcw5eCLLelYeZM=
+        b=N80iez1PpQ6PrcJ9/olia2zNr93tyXssHb+r3UtAX4srWPklmXLqvac7rO/G6N94J
+         RHDzymRsaW1XZIHXPf/lkUfizrlnebkIaS9EE4V1S6VhKx/Dv3K+6XX6p3PXuAUycd
+         HJIO6CcVkbDJApdejh99Oa4lhLmExIZmfJl9Hr5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 64/92] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Thu, 20 Aug 2020 11:21:49 +0200
-Message-Id: <20200820091540.934456104@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 46/92] perf intel-pt: Fix FUP packet state
+Date:   Thu, 20 Aug 2020 11:21:31 +0200
+Message-Id: <20200820091540.059971103@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -62,40 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
+commit 401136bb084fd021acd9f8c51b52fe0a25e326b2 upstream.
 
-Set proper masks to avoid invalid input spillover to reserved bits.
+While walking code towards a FUP ip, the packet state is
+INTEL_PT_STATE_FUP or INTEL_PT_STATE_FUP_NO_TIP. That was mishandled
+resulting in the state becoming INTEL_PT_STATE_IN_SYNC prematurely.  The
+result was an occasional lost EXSTOP event.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200710151104.15137-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   21 ++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index b1b4411b4c6b8..539f4a84412f4 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -308,8 +308,8 @@ enum {
- 
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
--- 
-2.25.1
-
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1129,6 +1129,7 @@ static int intel_pt_walk_fup(struct inte
+ 			return 0;
+ 		if (err == -EAGAIN ||
+ 		    intel_pt_fup_with_nlip(decoder, &intel_pt_insn, ip, err)) {
++			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			if (intel_pt_fup_event(decoder))
+ 				return 0;
+ 			return -EAGAIN;
+@@ -1780,17 +1781,13 @@ next:
+ 			}
+ 			if (decoder->set_fup_mwait)
+ 				no_tip = true;
++			if (no_tip)
++				decoder->pkt_state = INTEL_PT_STATE_FUP_NO_TIP;
++			else
++				decoder->pkt_state = INTEL_PT_STATE_FUP;
+ 			err = intel_pt_walk_fup(decoder);
+-			if (err != -EAGAIN) {
+-				if (err)
+-					return err;
+-				if (no_tip)
+-					decoder->pkt_state =
+-						INTEL_PT_STATE_FUP_NO_TIP;
+-				else
+-					decoder->pkt_state = INTEL_PT_STATE_FUP;
+-				return 0;
+-			}
++			if (err != -EAGAIN)
++				return err;
+ 			if (no_tip) {
+ 				no_tip = false;
+ 				break;
+@@ -2375,15 +2372,11 @@ const struct intel_pt_state *intel_pt_de
+ 			err = intel_pt_walk_tip(decoder);
+ 			break;
+ 		case INTEL_PT_STATE_FUP:
+-			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			err = intel_pt_walk_fup(decoder);
+ 			if (err == -EAGAIN)
+ 				err = intel_pt_walk_fup_tip(decoder);
+-			else if (!err)
+-				decoder->pkt_state = INTEL_PT_STATE_FUP;
+ 			break;
+ 		case INTEL_PT_STATE_FUP_NO_TIP:
+-			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			err = intel_pt_walk_fup(decoder);
+ 			if (err == -EAGAIN)
+ 				err = intel_pt_walk_trace(decoder);
 
 
