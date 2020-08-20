@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5158C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C6AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858822075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D720207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916480;
-	bh=0mOpG+4Dx+/t0qGb2Ucxbs/NO8xyTowGeePEyf6kuW8=;
+	s=default; t=1597916493;
+	bh=YwCUYJ3M+NOBCMTGQwF6bnEEU2OBYP4CIDFQrvVrv8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NlFn6MCSivm8epWQi2bUF3WxuXRpmq/jWLOa5HZE3fIas2NvSkqdvu1hUsMVYCQ/3
-	 1+8urax7WfOrp7Im5XpBVxIgwaSEcT7wUqQRFOLyoMofZOoDWYnyX7P6uPoPOIIhjt
-	 sKJC+eAhgF1vSlzO9cMFJ6X8NqGAyUn985Rn+S5Q=
+	b=Ybr8GFqaqRdiUElvQXwXc+iOZgWyhG/usmMY8zYqQPdztf8x9b+4HOZWRrXPeEvlB
+	 a1id2h4ClQxDIWkPiDwAIdXAyR047yDvO+Wm77G2glA8hx2IpzEl4uraTI79DkJgJW
+	 FcoQqCd7gJdM6BAsn6Mh4aDCRBnspKb5MtZWDH9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgHTJlT (ORCPT
+        id S1728694AbgHTJlc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:41:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34352 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:41:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgHTJlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:13 -0400
+        id S1728856AbgHTJlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:41:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E02D20724;
-        Thu, 20 Aug 2020 09:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 264AD20724;
+        Thu, 20 Aug 2020 09:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916472;
-        bh=0mOpG+4Dx+/t0qGb2Ucxbs/NO8xyTowGeePEyf6kuW8=;
+        s=default; t=1597916478;
+        bh=YwCUYJ3M+NOBCMTGQwF6bnEEU2OBYP4CIDFQrvVrv8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLHxI+HFig/QtHHuncs483BHdCrtgrlSsgZJs3eit2dntkH8593z7YqdfsOpgmziE
-         jbKBSffbOkXIzWYP3DECzAXv8bRjaSV62x8hpAZP0vPA3SnNN9EUxF95wtqa2uIBl/
-         5MKGNpsBa9VuB0TJm4SCaiZjaQqVzqJ+NsbFmpRI=
+        b=l1+4pzc6Gm3C9zwCfAmQqAAsgtXsbgVAA9jfHtrQl1w9v+pDD8Y7fyBMrrTUGaENn
+         ZzXLceSHuwGWC3WQXJZiMLk9Za4SPNbtglOvMuSQdp/tngXfjM/G1Hiorjbn3Nj3T6
+         RZWKgYXGrRtS1MweUhDiPNlAvq1Cu/6bheaNcep0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 141/204] i2c: rcar: slave: only send STOP event when we have been addressed
-Date:   Thu, 20 Aug 2020 11:20:38 +0200
-Message-Id: <20200820091613.296403546@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 142/204] f2fs: compress: fix to update isize when overwriting compressed file
+Date:   Thu, 20 Aug 2020 11:20:39 +0200
+Message-Id: <20200820091613.347167633@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,53 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Chao Yu <yuchao0@huawei.com>
 
-[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
+[ Upstream commit 944dd22ea4475bd11180fd2f431a4a547ca4d8f5 ]
 
-When the SSR interrupt is activated, it will detect every STOP condition
-on the bus, not only the ones after we have been addressed. So, enable
-this interrupt only after we have been addressed, and disable it
-otherwise.
+We missed to update isize of compressed file in write_end() with
+below case:
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+cluster size is 16KB
+
+- write 14KB data from offset 0
+- overwrite 16KB data from offset 0
+
+Fixes: 4c8ff7095bef ("f2fs: support data compression")
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/f2fs/data.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 50dd98803ca0c..76bcdb27070e1 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -583,13 +583,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
- 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
- 		}
- 
--		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
-+		/* Clear SSR, too, because of old STOPs to other clients than us */
-+		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 10491ae1cb850..329afa55a581c 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3353,6 +3353,10 @@ static int f2fs_write_end(struct file *file,
+ 	if (f2fs_compressed_file(inode) && fsdata) {
+ 		f2fs_compress_write_end(inode, fsdata, page->index, copied);
+ 		f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
++
++		if (pos + copied > i_size_read(inode) &&
++				!f2fs_verity_in_progress(inode))
++			f2fs_i_size_write(inode, pos + copied);
+ 		return copied;
  	}
- 
- 	/* master sent stop */
- 	if (ssr_filtered & SSR) {
- 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
--		rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+		rcar_i2c_write(priv, ICSIER, SAR);
- 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
- 	}
- 
-@@ -853,7 +854,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
- 	priv->slave = slave;
- 	rcar_i2c_write(priv, ICSAR, slave->addr);
- 	rcar_i2c_write(priv, ICSSR, 0);
--	rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+	rcar_i2c_write(priv, ICSIER, SAR);
- 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
- 
- 	return 0;
+ #endif
 -- 
 2.25.1
 
