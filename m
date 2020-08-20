@@ -2,102 +2,161 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EA5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB39E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918604;
-	bh=GKHyCbLTdZXm6mCYdf9FI4u3uE2H1zpw2fG7pVGW3NM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a1iVUwJzPAt/RuKjlASaaLDVdY7MeCPOngj3rmrG4QNfBYQN5NyAmtAUGGJhw2zpy
-	 XnTavtoTSP6AeetolDH5yWVSMjZyBAnxV73ZaR1t0gE3Nx2OUEP90vctAM46EI/joy
-	 wZMoPhXYgwTLVKUWoh1IAz2gAV7B3p7KvTM8JgAM=
+	by mail.kernel.org (Postfix) with ESMTP id D0A3220738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgHTKQm (ORCPT
+        id S1728747AbgHTKQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36760 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:16:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36728 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730950AbgHTKQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5090C20738;
-        Thu, 20 Aug 2020 10:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918588;
-        bh=GKHyCbLTdZXm6mCYdf9FI4u3uE2H1zpw2fG7pVGW3NM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpFVix+Znl37mklt/6Pbx8fyzMONXRul2q200oZ3u3VsLoZgvmn8XfMl2vd39F43T
-         0jG7Su3m6pHvGPLRULAAdXykzrplxbVpXO2aOsgeg0HWCrWGVyRT5yE97yCB4ntKpF
-         0HQQ9eul78wbOPRPdtFkIfD9iiDgZP4+x8pv0rF4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 217/228] ALSA: echoaudio: Fix potential Oops in snd_echo_resume()
-Date:   Thu, 20 Aug 2020 11:23:12 +0200
-Message-Id: <20200820091618.357427131@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730374AbgHTKQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 0BCDCAD19;
+        Thu, 20 Aug 2020 10:16:53 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 12:16:25 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
+Message-ID: <20200820101625.GE4353@alley>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+ <20200819232632.13418-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819232632.13418-2-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+On Thu 2020-08-20 01:32:28, John Ogness wrote:
+> Implement a new buffering mechanism for pr_cont messages.
+> 
+> Old mechanism syntax:
+> 
+>     printk(KERN_INFO "text");
+>     printk(KERN_CONT " continued");
+>     printk(KERN_CONT "\n");
+> 
+> New mechanism syntax:
+> 
+>     pr_cont_t c;
+> 
+>     pr_cont_begin(&c, KERN_INFO "text");
+>     pr_cont_append(&c, " continued");
+>     pr_cont_end(&c);
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> ---
+>  include/linux/printk.h |  19 ++++++
+>  kernel/printk/printk.c | 137 +++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 156 insertions(+)
+> 
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index 34c1a7be3e01..4d9ce18e4afa 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -380,6 +380,25 @@ extern int kptr_restrict;
+>  #define pr_cont(fmt, ...) \
+>  	printk(KERN_CONT fmt, ##__VA_ARGS__)
+>  
+> +/* opaque handle for continuous printk messages */
+> +typedef struct {
+> +	u8	index;
+> +	u8	loglevel;
+> +	u16	text_len;
+> +} pr_cont_t;
+> +
+> +/* initialize handle, provide loglevel and initial message text */
+> +int pr_cont_begin(pr_cont_t *c, const char *fmt, ...);
+> +
+> +/* append message text */
+> +int pr_cont_append(pr_cont_t *c, const char *fmt, ...);
+> +
+> +/* flush message to kernel buffer */
+> +void pr_cont_flush(pr_cont_t *c);
+> +
+> +/* flush message to kernel buffer, cleanup handle */
+> +void pr_cont_end(pr_cont_t *c);
+> +
+>  /**
+>   * pr_devel - Print a debug-level message conditionally
+>   * @fmt: format string
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index ad8d1dfe5fbe..10113e7ea350 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3495,3 +3495,140 @@ void kmsg_dump_rewind(struct kmsg_dumper *dumper)
+>  EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
+>  
+>  #endif
+> +
+> +#define CONT_LINE_MAX LOG_LINE_MAX
+> +#define CONT_BUF_COUNT 10
+> +static char cont_buf[CONT_BUF_COUNT][CONT_LINE_MAX];
+> +static DECLARE_BITMAP(cont_buf_map, CONT_BUF_COUNT);
+> +
+> +static int get_cont_buf(void)
+> +{
+> +	int bit;
+> +
+> +	do {
+> +		bit = find_first_zero_bit(cont_buf_map, CONT_BUF_COUNT);
+> +		if (bit == CONT_BUF_COUNT)
+> +			break;
+> +	} while (test_and_set_bit(bit, cont_buf_map));
+> +
+> +	return bit;
+> +}
 
-[ Upstream commit 5a25de6df789cc805a9b8ba7ab5deef5067af47e ]
+My big problem with this solution is a forgotten pr_cont_end(). It
+will cause:
 
-Freeing chip on error may lead to an Oops at the next time
-the system goes to resume. Fix this by removing all
-snd_echo_free() calls on error.
+   + the message will never get printed
 
-Fixes: 47b5d028fdce8 ("ALSA: Echoaudio - Add suspend support #2")
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Link: https://lore.kernel.org/r/20200813074632.17022-1-dinghao.liu@zju.edu.cn
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/echoaudio/echoaudio.c | 2 --
- 1 file changed, 2 deletions(-)
+   + several calls into such a broken code will exhaust the pool of
+     cont buffers and it will stop working for the entire system
 
-diff --git a/sound/pci/echoaudio/echoaudio.c b/sound/pci/echoaudio/echoaudio.c
-index e1f0bcd45c378..b58a098a7270d 100644
---- a/sound/pci/echoaudio/echoaudio.c
-+++ b/sound/pci/echoaudio/echoaudio.c
-@@ -2215,7 +2215,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (err < 0) {
- 		kfree(commpage_bak);
- 		dev_err(dev, "resume init_hw err=%d\n", err);
--		snd_echo_free(chip);
- 		return err;
- 	}
- 
-@@ -2242,7 +2241,6 @@ static int snd_echo_resume(struct device *dev)
- 	if (request_irq(pci->irq, snd_echo_interrupt, IRQF_SHARED,
- 			KBUILD_MODNAME, chip)) {
- 		dev_err(chip->card->dev, "cannot grab irq\n");
--		snd_echo_free(chip);
- 		return -EBUSY;
- 	}
- 	chip->irq = pci->irq;
--- 
-2.25.1
+The above might be solved with some fallback mechanism (timer,
+watchdog) but then it needs some synchronization.
+
+Why is it so bad?
+
+   + it will happen like other bugs
+
+   + it is hard to notice; it is easier to notice hard-lockup than
+     a missing message
 
 
+Now that I think about it. This is the biggest problem with any temporary buffer
+for pr_cont() lines. I am more and more convinced that we should just
+_keep the current behavior_. It is not ideal. But sometimes mixed
+messages are always better than lost ones.
 
+
+That said, some printk() API using local buffer would be still
+valuable for pieces of code where people really want to avoid
+mixed lines. But it should be optional and people should be
+aware of the risks.
+
+Best Regards,
+Petr
