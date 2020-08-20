@@ -2,115 +2,121 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E893C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2345722BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q6l7e3aB"
+	by mail.kernel.org (Postfix) with ESMTP id 7811A22BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:12:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597929143;
+	bh=6Wt2/OLbFhN8zLqB45FFfmCoC7Jels6mZihiQFznnqI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o+uTKQJCKBHnLIiWtHZet4rOMRX2kceKL6ubtTsMZBnYAsDZcban0wPxxaKaD1cak
+	 eFCUT16I6Ji3m1cKwHS3wrMxF0M1pATIhptZwk8Eo2hOO4zt35qH9BH9TP5/eGUTYf
+	 QrK7l+iRqhQQfnZE/X9SsF7mapb3H/Izpx8HfqBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgHTNLb (ORCPT
+        id S1729671AbgHTNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57964 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728719AbgHTJhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:20 -0400
-Received: from mail-vs1-xe43.google.com (mail-vs1-xe43.google.com [IPv6:2607:f8b0:4864:20::e43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BFC4C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:37:20 -0700 (PDT)
-Received: by mail-vs1-xe43.google.com with SMTP id i129so727597vsi.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5ST+s1VgrChigIylT4K0fDa+xlZ9DEdl2V2OEw6xk/A=;
-        b=Q6l7e3aB6cXvDGQDWPmsO6nE8jKBpLQECvMRYe8Lv0fwF1uKRy3O9LStHPIlg5F1Li
-         /ZYJ4VffxOWSR+jebqLcjxeZ/MI36sP7LKWcMWrdV5ggv0+cQ+vAKjNYjB+/UDX0enrQ
-         sDH08Zs7pC7hlzdthniOPY45mIpDgq+nEpsSjljUbApMMXuCM4CGv1+crVue021L61Cq
-         liSfhbH2oEpNSlhQke/evvT8o1faVARSDooE05p9qbq3/5ZqUtmiA8sWYC6EeFsJnf7j
-         REogkKt9AmqYlPlq3n/7tvLM6VGPZrSSoObfENQtxMcyouJ59FIXRXG4iCKJDbI8WkSb
-         iT9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5ST+s1VgrChigIylT4K0fDa+xlZ9DEdl2V2OEw6xk/A=;
-        b=s3sBQQ6aHI7nxSnwkqv9OJF18i6GGYORMVJfkXAK7d8T0oZKnw3l1dB4F2L84wqaMU
-         UotCFjVkAultJV6++/Vds4YDmFy6yYr73cjMxXzBG3aNIP3mbGYYfEkLIxk73coGfGqz
-         YEGeazC+qaF9vMeYBq5XX5VfBYj8KdFbJuoGWQGmhhTHU7vHoogM4YEkA4BuirHeb4ie
-         H6XHEb8tsFNYWkY7QCfbINm0rt15s+09lytEkVGmljNMFONdQH9lhNTXYmnj1ho6eHEV
-         siFP7WT/z6pg8Q3fVomyL6oeByZWX+h31R2WN3CKTHbB0vgNq/IhapxRaw7+abdQExgU
-         Rmmw==
-X-Gm-Message-State: AOAM531xvPVZ2ZPNheXMbhkZ63KIyu6BRiQeXZL3vy1n4CI308aFsMA0
-        r3hriXJRlk0cvzOs5dJX8ko2IMU2nBo0rNH+jRWyrA==
-X-Google-Smtp-Source: ABdhPJykM/Ah+8o5lls+LOP2kgmsthnXq9FjKqghIi9CrMLYv2Lea57WiTqrBpVnWKZxBKh0GsNVTIk/VCu+skb80FE=
-X-Received: by 2002:a67:6996:: with SMTP id e144mr1285283vsc.185.1597916239685;
- Thu, 20 Aug 2020 02:37:19 -0700 (PDT)
+        Thu, 20 Aug 2020 09:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728712AbgHTJhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 922E822B3F;
+        Thu, 20 Aug 2020 09:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916237;
+        bh=6Wt2/OLbFhN8zLqB45FFfmCoC7Jels6mZihiQFznnqI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Q51JtRMUjNlzQKcL4nRSmxWJbAJl8KwKVqauyWzLE/6XwsjkEyG6lcYeeGCArGVay
+         /TvN1xKeTO4BvDc4aIejSfU0X2zQs4eGX56OvM/NuTCG9WoQs3J0XHhAbPNhPUtEo1
+         eu6lz8QOr5kfN7IrlpKLkrS14mlblc8J3sugC0JM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Murphy <chris@colorremedies.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 029/204] btrfs: dont show full path of bind mounts in subvol=
+Date:   Thu, 20 Aug 2020 11:18:46 +0200
+Message-Id: <20200820091607.716450842@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
-In-Reply-To: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 20 Aug 2020 15:07:07 +0530
-Message-ID: <CA+G9fYusZnYMYjKNcjf4cHwFUmV_=fXRHahsbtdsKwUzB98zEQ@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IG1tL2d1cC5jOjE5MjI6NzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIA==?=
-        =?UTF-8?B?ZnVuY3Rpb24g4oCYaXNfdmFsaWRfZ3VwX2ZsYWdz4oCZ?=
-To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 14:59, Naresh Kamboju <naresh.kamboju@linaro.org> wr=
-ote:
->
-> arm and riscv architecture build failed on linux next 20200820 tag.
+From: Josef Bacik <josef@toxicpanda.com>
 
-The pass with defconfig but failed with tinyconfig and allnoconfig.
+commit 3ef3959b29c4a5bd65526ab310a1a18ae533172a upstream.
 
-> make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm
-> CROSS_COMPILE=3Darm-linux-gnueabihf- HOSTCC=3Dgcc CC=3D"sccache
-> arm-linux-gnueabihf-gcc" O=3Dbuild zImage
->
-> 348#
-> 349../mm/gup.c: In function =E2=80=98get_user_pages=E2=80=99:
-> 350../mm/gup.c:1922:7: error: implicit declaration of function
-> =E2=80=98is_valid_gup_flags=E2=80=99 [-Werror=3Dimplicit-function-declara=
-tion]
-> 351 1922 | if (!is_valid_gup_flags(gup_flags))
-> 352 | ^~~~~~~~~~~~~~~~~~
-> 353cc1: some warnings being treated as errors
->
-> Full build log,
-> https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/695005038
-> https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/695005042
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+Chris Murphy reported a problem where rpm ostree will bind mount a bunch
+of things for whatever voodoo it's doing.  But when it does this
+/proc/mounts shows something like
+
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo/bar 0 0
+
+Despite subvolid=256 being subvol=/foo.  This is because we're just
+spitting out the dentry of the mount point, which in the case of bind
+mounts is the source path for the mountpoint.  Instead we should spit
+out the path to the actual subvol.  Fix this by looking up the name for
+the subvolid we have mounted.  With this fix the same test looks like
+this
+
+  /dev/sda /mnt/test btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+  /dev/sda /mnt/test/baz btrfs rw,relatime,subvolid=256,subvol=/foo 0 0
+
+Reported-by: Chris Murphy <chris@colorremedies.com>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/btrfs/super.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1310,6 +1310,7 @@ static int btrfs_show_options(struct seq
+ {
+ 	struct btrfs_fs_info *info = btrfs_sb(dentry->d_sb);
+ 	const char *compress_type;
++	const char *subvol_name;
+ 
+ 	if (btrfs_test_opt(info, DEGRADED))
+ 		seq_puts(seq, ",degraded");
+@@ -1396,8 +1397,13 @@ static int btrfs_show_options(struct seq
+ 		seq_puts(seq, ",ref_verify");
+ 	seq_printf(seq, ",subvolid=%llu",
+ 		  BTRFS_I(d_inode(dentry))->root->root_key.objectid);
+-	seq_puts(seq, ",subvol=");
+-	seq_dentry(seq, dentry, " \t\n\\");
++	subvol_name = btrfs_get_subvol_name_from_objectid(info,
++			BTRFS_I(d_inode(dentry))->root->root_key.objectid);
++	if (!IS_ERR(subvol_name)) {
++		seq_puts(seq, ",subvol=");
++		seq_escape(seq, subvol_name, " \t\n\\");
++		kfree(subvol_name);
++	}
+ 	return 0;
+ }
+ 
+
+
