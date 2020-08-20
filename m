@@ -2,145 +2,198 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DACE8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6233AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B370D2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRSU7EbP"
+	by mail.kernel.org (Postfix) with ESMTP id 2D88D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:09:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgHTJGi (ORCPT
+        id S1726731AbgHTJJK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgHTJGg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:06:36 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F53C061757;
-        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id v15so546933lfg.6;
-        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
-        b=jRSU7EbPYuaZa+y1ww5c1uQFbyH05AS+4/y9F7u0zfd9hNB2tnzBPNp8je59myQNMQ
-         jHPH6tBd1Wwn7BdCa00KVXc60BSdX0Ndq10P7ka8NPFWg1ZJ3LsSZv0w8HBp6uQ3NiAh
-         dj5XA0KHwLfCp0cjSlMmH6bx+JfVFMeQqSseCHBBmtyfNIM9YIojgpQJL8XUFhtSBjsW
-         EUKBfwxwlk5cLYa8WcK31DAuysfcZ2hLaBPSEULzoNNVE+3ShAUapOTgWe+4CkfB57ZP
-         mL01BWILpPiVjIBecOCA99KxCmG02TPxV3cr0jcgUSZ2kUozu8reoSXmgLtmVOjnXzBX
-         ScIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
-        b=Lsh2CwfShDBkNd0QHhxQpJ5PFwQ1O8F9BGOG7/khoezcFf5LJAMoZGtHtZ+OGM4S1t
-         W0/XsySxQa++blbuW0C9ETdM8ZGWeMkPl38hwiELgHemG4gCp9ih2UGuzNe/GujRc+FC
-         54yc/StFO5BdUEj0vM0vKtS4C/Pg/3Gk28AvEaCqo98kxuQmVHyUJkd27LPGY6zFkm7t
-         njkNlXJVXwKYs4NuSCpDj1AnYMCIuS0R51n+YLWEkE/Qh4YFMYuYsS2EpGf36FnRaT5Q
-         6eca+EpWPxIo1Wz2rxy7H44u1N+LWAtrsRqZKkahr2MAkeNdt4uxFPLnMqXWJ4fL12lV
-         JS8w==
-X-Gm-Message-State: AOAM530BxC/WcGbim/ATHLCysKAIaCi3aeOFZKnI9gM7PGg/7HvA9a6O
-        Iv8QqWBaYwqN/6Vs1jhuHPI/GMgpAa/Iwgub
-X-Google-Smtp-Source: ABdhPJx586OB1ZFNi8bmTijB1iKrXx0pOQq+0PCvDWVugFZLEr8cnAEYNYIu9kBNKKo6DTiGbe/wQw==
-X-Received: by 2002:a05:6512:3185:: with SMTP id i5mr1144189lfe.205.1597914394167;
-        Thu, 20 Aug 2020 02:06:34 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b? ([2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b])
-        by smtp.gmail.com with ESMTPSA id j2sm322988ljb.98.2020.08.20.02.06.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 02:06:33 -0700 (PDT)
-Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
- PMIC VBUS booster
-To:     Wesley Cheng <wcheng@codeaurora.org>, sboyd@kernel.org,
-        heikki.krogerus@linux.intel.com, agross@kernel.org,
-        robh+dt@kernel.org, gregkh@linuxfoundation.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-References: <20200812071925.315-1-wcheng@codeaurora.org>
- <20200812071925.315-5-wcheng@codeaurora.org>
- <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
- <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
-From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
-Organization: Brain-dead Software
-Message-ID: <eaf4618c-54da-c522-52c6-1edec7744872@gmail.com>
-Date:   Thu, 20 Aug 2020 12:06:23 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 05:09:10 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40056 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgHTJJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:09:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 5D107B761;
+        Thu, 20 Aug 2020 09:09:29 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 11:09:01 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, ebiederm@xmission.com,
+        gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820090901.GD5033@dhcp22.suse.cz>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <20200820084654.jdl6jqgxsga7orvf@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820084654.jdl6jqgxsga7orvf@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.2020 10:47, Wesley Cheng wrote:
-
-[...]
->>> Add the required DTS node for the USB VBUS output regulator, which is
->>> available on PM8150B.  This will provide the VBUS source to connected
->>> peripherals.
->>>
->>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->>> ---
->>>    arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
->>>    arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
->>>    2 files changed, 10 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>> index 053c659734a7..9e560c1ca30d 100644
->>> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
->>> @@ -53,6 +53,12 @@ power-on@800 {
->>>                status = "disabled";
->>>            };
->>>    +        pm8150b_vbus: dcdc@1100 {
->>
->>     s/dcdc/regulator/? What is "dcdc", anyway?
->>     The device nodes must have the generic names, according to the DT spec.
->>
+On Thu 20-08-20 10:46:54, Christian Brauner wrote:
+> On Wed, Aug 19, 2020 at 05:20:53PM -0700, Suren Baghdasaryan wrote:
+> > Currently __set_oom_adj loops through all processes in the system to
+> > keep oom_score_adj and oom_score_adj_min in sync between processes
+> > sharing their mm. This is done for any task with more that one mm_users,
+> > which includes processes with multiple threads (sharing mm and signals).
+> > However for such processes the loop is unnecessary because their signal
+> > structure is shared as well.
+> > Android updates oom_score_adj whenever a tasks changes its role
+> > (background/foreground/...) or binds to/unbinds from a service, making
+> > it more/less important. Such operation can happen frequently.
+> > We noticed that updates to oom_score_adj became more expensive and after
+> > further investigation found out that the patch mentioned in "Fixes"
+> > introduced a regression. Using Pixel 4 with a typical Android workload,
+> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
+> > this regression linearly depends on the number of multi-threaded
+> > processes running on the system.
+> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
+> > CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
+> > instead of mm_users to decide whether oom_score_adj update should be
+> > synchronized between multiple processes. To prevent races between clone()
+> > and __set_oom_adj(), when oom_score_adj of the process being cloned might
+> > be modified from userspace, we use oom_adj_mutex. Its scope is changed to
+> > global and it is renamed into oom_adj_lock for naming consistency with
+> > oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> > used the additional mutex lock in that path of the clone() syscall should
+> > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> > (when the last process sharing the mm exits) is left out of this patch to
+> > keep it simple and because it is believed that this threading model is
+> > rare. Should there ever be a need for optimizing that case as well, it
+> > can be done by hooking into the exit path, likely following the
+> > mm_update_next_owner pattern.
+> > With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
+> > regression is gone after the change is applied.
+> > 
+> > Fixes: 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
+> > Reported-by: Tim Murray <timmurray@google.com>
+> > Suggested-by: Michal Hocko <mhocko@kernel.org>
+> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
+> > ---
+> >  fs/proc/base.c                 | 7 +++----
+> >  include/linux/oom.h            | 1 +
+> >  include/linux/sched/coredump.h | 1 +
+> >  kernel/fork.c                  | 9 +++++++++
+> >  mm/oom_kill.c                  | 2 ++
+> >  5 files changed, 16 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/proc/base.c b/fs/proc/base.c
+> > index 617db4e0faa0..cff1a58a236c 100644
+> > --- a/fs/proc/base.c
+> > +++ b/fs/proc/base.c
+> > @@ -1055,7 +1055,6 @@ static ssize_t oom_adj_read(struct file *file, char __user *buf, size_t count,
+> >  
+> >  static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >  {
+> > -	static DEFINE_MUTEX(oom_adj_mutex);
+> >  	struct mm_struct *mm = NULL;
+> >  	struct task_struct *task;
+> >  	int err = 0;
+> > @@ -1064,7 +1063,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >  	if (!task)
+> >  		return -ESRCH;
+> >  
+> > -	mutex_lock(&oom_adj_mutex);
+> > +	mutex_lock(&oom_adj_lock);
+> >  	if (legacy) {
+> >  		if (oom_adj < task->signal->oom_score_adj &&
+> >  				!capable(CAP_SYS_RESOURCE)) {
+> > @@ -1095,7 +1094,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >  		struct task_struct *p = find_lock_task_mm(task);
+> >  
+> >  		if (p) {
+> > -			if (atomic_read(&p->mm->mm_users) > 1) {
+> > +			if (test_bit(MMF_PROC_SHARED, &p->mm->flags)) {
+> >  				mm = p->mm;
+> >  				mmgrab(mm);
+> >  			}
+> > @@ -1132,7 +1131,7 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
+> >  		mmdrop(mm);
+> >  	}
+> >  err_unlock:
+> > -	mutex_unlock(&oom_adj_mutex);
+> > +	mutex_unlock(&oom_adj_lock);
+> >  	put_task_struct(task);
+> >  	return err;
+> >  }
+> > diff --git a/include/linux/oom.h b/include/linux/oom.h
+> > index f022f581ac29..861f22bd4706 100644
+> > --- a/include/linux/oom.h
+> > +++ b/include/linux/oom.h
+> > @@ -55,6 +55,7 @@ struct oom_control {
+> >  };
+> >  
+> >  extern struct mutex oom_lock;
+> > +extern struct mutex oom_adj_lock;
+> >  
+> >  static inline void set_current_oom_origin(void)
+> >  {
+> > diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
+> > index ecdc6542070f..070629b722df 100644
+> > --- a/include/linux/sched/coredump.h
+> > +++ b/include/linux/sched/coredump.h
+> > @@ -72,6 +72,7 @@ static inline int get_dumpable(struct mm_struct *mm)
+> >  #define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
+> >  #define MMF_OOM_VICTIM		25	/* mm is the oom victim */
+> >  #define MMF_OOM_REAP_QUEUED	26	/* mm was queued for oom_reaper */
+> > +#define MMF_PROC_SHARED	27	/* mm is shared while sighand is not */
+> >  #define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
+> >  
+> >  #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 4d32190861bd..9177a76bf840 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+> >  	if (clone_flags & CLONE_VM) {
+> >  		mmget(oldmm);
+> >  		mm = oldmm;
+> > +		if (!(clone_flags & CLONE_SIGHAND)) {
+> > +			/* We need to synchronize with __set_oom_adj */
+> > +			mutex_lock(&oom_adj_lock);
+> > +			set_bit(MMF_PROC_SHARED, &mm->flags);
 > 
-> Hi Sergei,
+> This seems fine.
 > 
-> Thanks for the comment!
-
-     You're welcome.
-
-> DCDC is the label that we use for the DC to DC converter block, since
-> the VBUS booster will output 5V to the connected devices.  Would it make
-> more sense to have "dc-dc?"
-
-    Better use s/th like "regulator-dcdc". As I said, the names should be 
-generic, reflecting the device class.
-
-> Thanks
-> Wesley
+> > +			/* Update the values in case they were changed after copy_signal */
+> > +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+> > +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
 > 
->>> +            compatible = "qcom,pm8150b-vbus-reg";
->>> +            status = "disabled";
->>> +            reg = <0x1100>;
->>> +        };
->>> +
->>>            pm8150b_typec: typec@1500 {
->>>                compatible = "qcom,pm8150b-usb-typec";
->>>                status = "disabled";
->> [...]
+> But this seems wrong to me.
+> copy_signal() should be the only place where ->signal is set. Just from
+> a pure conceptual perspective. The copy_*() should be as self-contained
+> as possible imho.
+> Also, now I have to remember/look for two different locations where
+> oom_score_adj{_min} is initialized during fork. And this also creates a
+> dependency between copy_signal() and copy_mm() that doesn't need to be
+> there imho. I'm not a fan.
 
-MBR, Sergei
+Yes, this is not great but we will need it because the __set_oom_adj
+might happen between copy_signal and copy_mm. If that happens then
+__set_oom_adj misses this newly created task and so it will have a
+disagreeing oom_score_adj. 
+
+-- 
+Michal Hocko
+SUSE Labs
