@@ -2,107 +2,119 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C8BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 698C220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B148120738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgHTOUU (ORCPT
+        id S1727833AbgHTOVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:20:20 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:61461 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgHTOUD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:20:03 -0400
-Received: from fsav403.sakura.ne.jp (fsav403.sakura.ne.jp [133.242.250.102])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07KEIi5Q077845;
-        Thu, 20 Aug 2020 23:18:45 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav403.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp);
- Thu, 20 Aug 2020 23:18:44 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav403.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07KEIigG077841
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Thu, 20 Aug 2020 23:18:44 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Suren Baghdasaryan <surenb@google.com>, timmurray@google.com,
-        mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
-        esyr@redhat.com, christian@kellner.me, areber@redhat.com,
-        shakeelb@google.com, cyphar@cyphar.com, oleg@redhat.com,
-        adobriyan@gmail.com, akpm@linux-foundation.org,
-        gladkov.alexey@gmail.com, walken@google.com,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, minchan@kernel.org, kernel-team@android.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200820002053.1424000-1-surenb@google.com>
- <87zh6pxzq6.fsf@x220.int.ebiederm.org> <20200820124241.GJ5033@dhcp22.suse.cz>
- <87lfi9xz7y.fsf@x220.int.ebiederm.org> <87d03lxysr.fsf@x220.int.ebiederm.org>
- <20200820132631.GK5033@dhcp22.suse.cz>
- <20200820133454.ch24kewh42ax4ebl@wittgenstein>
- <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
-Date:   Thu, 20 Aug 2020 23:18:40 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 10:21:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725916AbgHTOVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:21:34 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE15620738;
+        Thu, 20 Aug 2020 14:21:32 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 10:21:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Todor Tomov <todor.too@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 1/3, RESEND] media: camss: vfe: Use trace_printk for
+ debugging only
+Message-ID: <20200820102131.3cd3c08e@oasis.local.home>
+In-Reply-To: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/20 23:00, Christian Brauner wrote:
-> On Thu, Aug 20, 2020 at 10:48:43PM +0900, Tetsuo Handa wrote:
->> On 2020/08/20 22:34, Christian Brauner wrote:
->>> On Thu, Aug 20, 2020 at 03:26:31PM +0200, Michal Hocko wrote:
->>>> If you can handle vfork by other means then I am all for it. There were
->>>> no patches in that regard proposed yet. Maybe it will turn out simpler
->>>> then the heavy lifting we have to do in the oom specific code.
->>>
->>> Eric's not wrong. I fiddled with this too this morning but since
->>> oom_score_adj is fiddled with in a bunch of places this seemed way more
->>> code churn then what's proposed here.
->>
->> I prefer simply reverting commit 44a70adec910d692 ("mm, oom_adj: make sure
->> processes sharing mm have same view of oom_score_adj").
->>
->>   https://lore.kernel.org/patchwork/patch/1037208/
-> 
-> I guess this is a can of worms but just or the sake of getting more
-> background: the question seems to be whether the oom adj score is a
-> property of the task/thread-group or a property of the mm. I always
-> thought the oom score is a property of the task/thread-group and not the
-> mm which is also why it lives in struct signal_struct and not in struct
-> mm_struct. But
-> 
-> 44a70adec910 ("mm, oom_adj: make sure processes sharing mm have same view of oom_score_adj")
-> 
-> reads like it is supposed to be a property of the mm or at least the
-> change makes it so.
+On Thu, 20 Aug 2020 17:14:10 +0800
+Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-Yes, 44a70adec910 is trying to go towards changing from a property of the task/thread-group
-to a property of mm. But I don't think we need to do it at the cost of "__set_oom_adj() latency
-Yong-Taek Lee and Tim Murray have reported" and "complicity for supporting
-vfork() => __set_oom_adj() => execve() sequence".
+> trace_printk should not be used in production code. Since
+> tracing interrupts is presumably latency sensitive, pr_dbg is
+> not appropriate, so guard the call with a preprocessor symbol
+> that can be defined for debugging purpose.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> ---
+> 
+> (resending this patch as part of the whole series, since we need a new
+> patch 3/3 now).
+> 
+>  drivers/media/platform/qcom/camss/camss-vfe-4-1.c | 2 ++
+>  drivers/media/platform/qcom/camss/camss-vfe-4-7.c | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
+> index 174a36be6f5d866..0c57171fae4f9e9 100644
+> --- a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
+> +++ b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
+> @@ -936,8 +936,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
+>  
+>  	vfe->ops->isr_read(vfe, &value0, &value1);
+>  
+> +#ifdef CAMSS_VFE_TRACE_IRQ
+>  	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
+>  		     value0, value1);
+
+Why are these not trace events?
+
+The reason I have that ugly banner is to keep people from doing EXACTLY THIS!
+
+trace_printk() is really easy to add, but it also is not configurable.
+When a trace_printk() is in the code, it is always enabled (well, you
+can turn trace_printk off, but that's an all or nothing. That is, by
+turning trace_printk off, you turn off *all* trace_printks).
+
+Instead, people should add trace events. This here is a perfect place
+to have a trace event. You don't need to add #ifdef around trace events
+because when not enabled, they are simply a nop. When enabled, the nop
+is turned into a jump to the tracing code. It should not affect
+performance. And as a trace event, you get a bunch of features with it
+(filtering, histograms, etc).
+
+-- Steve
+
+
+> +#endif
+>  
+>  	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
+>  		vfe->isr_ops.reset_ack(vfe);
+> diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
+> index 0dca8bf9281e774..307675925e5c779 100644
+> --- a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
+> +++ b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
+> @@ -1058,8 +1058,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
+>  
+>  	vfe->ops->isr_read(vfe, &value0, &value1);
+>  
+> +#ifdef CAMSS_VFE_TRACE_IRQ
+>  	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
+>  		     value0, value1);
+> +#endif
+>  
+>  	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
+>  		vfe->isr_ops.reset_ack(vfe);
 
