@@ -7,62 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2087BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ED6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB842072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9DAE20758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921525;
-	bh=0HD+PdibKx0WpBI1QWnfb7b763tjZrSmw3YiJDUjSDE=;
+	s=default; t=1597921550;
+	bh=OlvRdynhD5MxoW4Rkw37ENzyZiTNek9I+fsnj0/KSD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VtN6NpKw/5BvHM/Begf6H+MWhEGHSXr/X6BnTEYmFnIcGhcZzLue6/S2aG6BOjjz4
-	 2cW6fYD1TrGUE3Vqn0wli52Qp6cXlDs/R5lhpm+fjEfko7eFexv+r+z60E6jSIlbdW
-	 HQYYiV4+G1lB2Mz+TRzFZjx/9A8nnGayx1xpDXZ0=
+	b=Hjli+w22tTJWO76rYn3XlIN/vjDIYUr3uvnzqbqGnHvEctpHs6SYtFhZIOOWAsmkG
+	 mT8hnFfD9wN0bR0sK9K5sLofAJTYnDOeLtCgBEoYTjPrcYQ94ZW1/cgVGhOGQEV7ye
+	 ULNHRJBG0myKsD6MydMFw3OUvtNeJ3wtBiUCQxoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729392AbgHTLFO (ORCPT
+        id S1728893AbgHTLFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:05:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53878 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:05:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729964AbgHTKMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:25 -0400
+        id S1731052AbgHTKM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A751206DA;
-        Thu, 20 Aug 2020 10:12:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3835E20724;
+        Thu, 20 Aug 2020 10:12:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918345;
-        bh=0HD+PdibKx0WpBI1QWnfb7b763tjZrSmw3YiJDUjSDE=;
+        s=default; t=1597918347;
+        bh=OlvRdynhD5MxoW4Rkw37ENzyZiTNek9I+fsnj0/KSD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KphHcdfxT+4eYiqxXk27dw+tpnP7MP1cI3ofe5Whb4kKtTYxQdOqDE9xDRjR/o0mp
-         HaZwpVSsMzm2gT8eO2Z0TXOmlbgWifvPvmcmyhovdH3LNwYAzh8gWaDmthfbDRSYOT
-         v9p4eYIgRWyA3BhcJDLg+5WJm56ZTDD5jgygND9k=
+        b=g2dWc6qHt/hb3+IzxaXn2khCIfyrtxjD94c9Ojv0y9TskRQXavr0tHaPMSRQ4TQAe
+         qvyAjFzpo4zk7pmawAs9pf3iC+aoWQ++p66EgXU5DdnOFwPpxapsI2Oz4AQjGZ6asl
+         Dg1WpajRHXQTyVxPZ5baNX93mB/obcZQxyr5HKAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Borislav Petkov <bp@alien8.de>,
-        Brian Gerst <brgerst@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Denys Vlasenko <dvlasenk@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Markus T Metzger <markus.t.metzger@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Shankar <ravi.v.shankar@intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, Jann Horn <jannh@google.com>
-Subject: [PATCH 4.14 137/228] x86/fsgsbase/64: Fix NULL deref in 86_fsgsbase_read_task
-Date:   Thu, 20 Aug 2020 11:21:52 +0200
-Message-Id: <20200820091614.435538879@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 120/228] Bluetooth: hci_serdev: Only unregister device if it was registered
+Date:   Thu, 20 Aug 2020 11:21:35 +0200
+Message-Id: <20200820091613.588638899@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -75,73 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Nicolas Boichat <drinkcat@chromium.org>
 
-[ Upstream commit 8ab49526b53d3172d1d8dd03a75c7d1f5bd21239 ]
+[ Upstream commit 202798db9570104728dce8bb57dfeed47ce764bc ]
 
-syzbot found its way in 86_fsgsbase_read_task() and triggered this oops:
+We should not call hci_unregister_dev if the device was not
+successfully registered.
 
-   KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-   CPU: 0 PID: 6866 Comm: syz-executor262 Not tainted 5.8.0-syzkaller #0
-   RIP: 0010:x86_fsgsbase_read_task+0x16d/0x310 arch/x86/kernel/process_64.c:393
-   Call Trace:
-     putreg32+0x3ab/0x530 arch/x86/kernel/ptrace.c:876
-     genregs32_set arch/x86/kernel/ptrace.c:1026 [inline]
-     genregs32_set+0xa4/0x100 arch/x86/kernel/ptrace.c:1006
-     copy_regset_from_user include/linux/regset.h:326 [inline]
-     ia32_arch_ptrace arch/x86/kernel/ptrace.c:1061 [inline]
-     compat_arch_ptrace+0x36c/0xd90 arch/x86/kernel/ptrace.c:1198
-     __do_compat_sys_ptrace kernel/ptrace.c:1420 [inline]
-     __se_compat_sys_ptrace kernel/ptrace.c:1389 [inline]
-     __ia32_compat_sys_ptrace+0x220/0x2f0 kernel/ptrace.c:1389
-     do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
-     __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
-     do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
-     entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-
-This can happen if ptrace() or sigreturn() pokes an LDT selector into FS
-or GS for a task with no LDT and something tries to read the base before
-a return to usermode notices the bad selector and fixes it.
-
-The fix is to make sure ldt pointer is not NULL.
-
-Fixes: 07e1d88adaae ("x86/fsgsbase/64: Fix ptrace() to read the FS/GS base accurately")
-Co-developed-by: Jann Horn <jannh@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: Chang S. Bae <chang.seok.bae@intel.com>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Markus T Metzger <markus.t.metzger@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ravi Shankar <ravi.v.shankar@intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/ptrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/bluetooth/hci_serdev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/ptrace.c b/arch/x86/kernel/ptrace.c
-index 734549492a18b..dc4d27000aa35 100644
---- a/arch/x86/kernel/ptrace.c
-+++ b/arch/x86/kernel/ptrace.c
-@@ -374,7 +374,7 @@ static unsigned long task_seg_base(struct task_struct *task,
- 		 */
- 		mutex_lock(&task->mm->context.lock);
- 		ldt = task->mm->context.ldt;
--		if (unlikely(idx >= ldt->nr_entries))
-+		if (unlikely(!ldt || idx >= ldt->nr_entries))
- 			base = 0;
- 		else
- 			base = get_desc_base(ldt->entries + idx);
+diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
+index 69c00a3db5382..72cf2d97b682c 100644
+--- a/drivers/bluetooth/hci_serdev.c
++++ b/drivers/bluetooth/hci_serdev.c
+@@ -361,7 +361,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
+ 	struct hci_dev *hdev = hu->hdev;
+ 
+ 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+-	hci_unregister_dev(hdev);
++	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
++		hci_unregister_dev(hdev);
+ 	hci_free_dev(hdev);
+ 
+ 	cancel_work_sync(&hu->write_work);
 -- 
 2.25.1
 
