@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE919C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9BAC21775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC83208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916248;
-	bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
+	s=default; t=1597916274;
+	bh=9cx+gI22gM4prklQ9V//XRScuzMZd24HfTQfs0e1vVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/Bva6Os0Vx9u9zziMZYJpfAjtP3q2YQ0lTIK8OUaRaU3NxOLRTdhFSx2AQ2sPCPl
-	 Y6DjUBNYCKXeN+CUP0PDCbEF8ozb1XzOfFh1Xghg5lOzE0YD/TvBl6IMDOPXNnzAUy
-	 nLwhY+n4mlzxULK5eguMXMKLqHCe6Ck9G67oqNO0=
+	b=CVNDkluGM++FyI51u1KZRttis1ER8fg7iDUf6LcvRD6Z4oeg82kJz9dvDZIgXlccA
+	 9G/F8lIDh9naFD6QDWY092MwwuFX4qgMAzXkZXfDcQbfZX9qu42bjXiZ9yvIdlQAWE
+	 RqHKfPcn+WJNJATg6+MKGS+b8V/vLONnSu2STEGM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgHTJhV (ORCPT
+        id S1728747AbgHTJhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52842 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgHTJhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:04 -0400
+        id S1728690AbgHTJhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A29120724;
-        Thu, 20 Aug 2020 09:37:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 638BB20724;
+        Thu, 20 Aug 2020 09:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916223;
-        bh=ov1CrJpVQeLLIsOKM+hyYHl1kAdRmAxP2gMG4EbotJ8=;
+        s=default; t=1597916229;
+        bh=9cx+gI22gM4prklQ9V//XRScuzMZd24HfTQfs0e1vVc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNM8WVprMuxf7LjDHupMpn+4L3V0GDDUpQEOdDGkTaW2iwqEkE05yoplMgA1ZOgsR
-         BFlJ+aNZ78vyMQNa9PAeyqsfvdnYbkFRxrvkrdq4/wUPJjV7wv6NUI3jehjAw/Bdvp
-         lDjYXKNLDgPeEhrfM3Z+Lrjlz2bsLRxpm0a2nrY4=
+        b=qriireeNKFSZV8jw+JXX0HF9SO8k5oy1d81RMjkQvx483INu79o/m134IPs+O26gv
+         a52cUIQ1Rl6qA0b3u7qkgt2jRR6b+tMaC8Fi05V8Xdk5iJvzTUfHNL7LLC1UOKeKp8
+         9GSvLetGegxQVqDkyhV2Jul0+ERDrfmuVGBNXeVs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 5.7 053/204] irqchip/loongson-liointc: Fix misuse of gc->mask_cache
-Date:   Thu, 20 Aug 2020 11:19:10 +0200
-Message-Id: <20200820091608.924942423@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.7 028/204] btrfs: fix race between page release and a fast fsync
+Date:   Thu, 20 Aug 2020 11:18:45 +0200
+Message-Id: <20200820091607.673607784@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,60 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huacai Chen <chenhc@lemote.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit c9c73a05413ea4a465cae1cb3593b01b190a233f upstream.
+commit 3d6448e631591756da36efb3ea6355ff6f383c3a upstream.
 
-In gc->mask_cache bits, 1 means enabled and 0 means disabled, but in the
-loongson-liointc driver mask_cache is misused by reverting its meaning.
-This patch fix the bug and update the comments as well.
+When releasing an extent map, done through the page release callback, we
+can race with an ongoing fast fsync and cause the fsync to miss a new
+extent and not log it. The steps for this to happen are the following:
 
-Fixes: dbb152267908c4b2c3639492a ("irqchip: Add driver for Loongson I/O Local Interrupt Controller")
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1596099090-23516-4-git-send-email-chenhc@lemote.com
+1) A page is dirtied for some inode I;
+
+2) Writeback for that page is triggered by a path other than fsync, for
+   example by the system due to memory pressure;
+
+3) When the ordered extent for the extent (a single 4K page) finishes,
+   we unpin the corresponding extent map and set its generation to N,
+   the current transaction's generation;
+
+4) The btrfs_releasepage() callback is invoked by the system due to
+   memory pressure for that no longer dirty page of inode I;
+
+5) At the same time, some task calls fsync on inode I, joins transaction
+   N, and at btrfs_log_inode() it sees that the inode does not have the
+   full sync flag set, so we proceed with a fast fsync. But before we get
+   into btrfs_log_changed_extents() and lock the inode's extent map tree:
+
+6) Through btrfs_releasepage() we end up at try_release_extent_mapping()
+   and we remove the extent map for the new 4Kb extent, because it is
+   neither pinned anymore nor locked. By calling remove_extent_mapping(),
+   we remove the extent map from the list of modified extents, since the
+   extent map does not have the logging flag set. We unlock the inode's
+   extent map tree;
+
+7) The task doing the fast fsync now enters btrfs_log_changed_extents(),
+   locks the inode's extent map tree and iterates its list of modified
+   extents, which no longer has the 4Kb extent in it, so it does not log
+   the extent;
+
+8) The fsync finishes;
+
+9) Before transaction N is committed, a power failure happens. After
+   replaying the log, the 4K extent of inode I will be missing, since
+   it was not logged due to the race with try_release_extent_mapping().
+
+So fix this by teaching try_release_extent_mapping() to not remove an
+extent map if it's still in the list of modified extents.
+
+Fixes: ff44c6e36dc9dc ("Btrfs: do not hold the write_lock on the extent tree while logging")
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-loongson-liointc.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/btrfs/extent_io.c |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
---- a/drivers/irqchip/irq-loongson-liointc.c
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -60,7 +60,7 @@ static void liointc_chained_handle_irq(s
- 	if (!pending) {
- 		/* Always blame LPC IRQ if we have that bug */
- 		if (handler->priv->has_lpc_irq_errata &&
--			(handler->parent_int_map & ~gc->mask_cache &
-+			(handler->parent_int_map & gc->mask_cache &
- 			BIT(LIOINTC_ERRATA_IRQ)))
- 			pending = BIT(LIOINTC_ERRATA_IRQ);
- 		else
-@@ -132,11 +132,11 @@ static void liointc_resume(struct irq_ch
- 	irq_gc_lock_irqsave(gc, flags);
- 	/* Disable all at first */
- 	writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
--	/* Revert map cache */
-+	/* Restore map cache */
- 	for (i = 0; i < LIOINTC_CHIP_IRQ; i++)
- 		writeb(priv->map_cache[i], gc->reg_base + i);
--	/* Revert mask cache */
--	writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
-+	/* Restore mask cache */
-+	writel(gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
- 	irq_gc_unlock_irqrestore(gc, flags);
- }
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4504,15 +4504,25 @@ int try_release_extent_mapping(struct pa
+ 				free_extent_map(em);
+ 				break;
+ 			}
+-			if (!test_range_bit(tree, em->start,
+-					    extent_map_end(em) - 1,
+-					    EXTENT_LOCKED, 0, NULL)) {
++			if (test_range_bit(tree, em->start,
++					   extent_map_end(em) - 1,
++					   EXTENT_LOCKED, 0, NULL))
++				goto next;
++			/*
++			 * If it's not in the list of modified extents, used
++			 * by a fast fsync, we can remove it. If it's being
++			 * logged we can safely remove it since fsync took an
++			 * extra reference on the em.
++			 */
++			if (list_empty(&em->list) ||
++			    test_bit(EXTENT_FLAG_LOGGING, &em->flags)) {
+ 				set_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
+ 					&btrfs_inode->runtime_flags);
+ 				remove_extent_mapping(map, em);
+ 				/* once for the rb tree */
+ 				free_extent_map(em);
+ 			}
++next:
+ 			start = extent_map_end(em);
+ 			write_unlock(&map->lock);
  
-@@ -244,7 +244,7 @@ int __init liointc_of_init(struct device
- 	ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
- 	ct->chip.irq_set_type = liointc_set_type;
- 
--	gc->mask_cache = 0xffffffff;
-+	gc->mask_cache = 0;
- 	priv->gc = gc;
- 
- 	for (i = 0; i < LIOINTC_NUM_PARENT; i++) {
 
 
