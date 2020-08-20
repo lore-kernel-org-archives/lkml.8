@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746EEC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C9EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48B0A22B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7221F22D0B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916843;
-	bh=mBruYFmI5oOlHdrSeRPr+j93XbsAw7qF/kEu5vjxUD4=;
+	s=default; t=1597916848;
+	bh=deq8yjCJDG8hwhZ8bxTLDfbAbLOszTp7MSKDmQytPtc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WvqVL7uMnbCcSYcjL0/cQ6X9rRuKu7CHe163vqXRc3kHRkQ9zVn5k946iQ+0vBfJ2
-	 zXq3Doyhia14KPYoSd+pwD84FoUGS1wWAdysIUNGuTdVnfox+Tx2R+C1RWfs7TABKM
-	 4pK770xVnD4fOcEDQapJPteEnfPwkSSacaUGmBgE=
+	b=sMEts9e5EdBBJQpQwPKN9Y8cTKwPukYPz7AC1anQSrx4SkRUdFY8dHDe/9mVydm7t
+	 BvdzjQGjCqcUg/vuYHiHCaQtPwu4BoVDPgth/h2sXrx0lTiv+MnB9/2/1pQ3Itt+c3
+	 O02DbxCmjygDlrgaeVp4yN11PnAyu8mnzSqSdDw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgHTJrW (ORCPT
+        id S1729448AbgHTJr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:47:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbgHTJq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:46:56 -0400
+        id S1729389AbgHTJrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:47:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5AA12224D;
-        Thu, 20 Aug 2020 09:46:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 048AD20724;
+        Thu, 20 Aug 2020 09:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916816;
-        bh=mBruYFmI5oOlHdrSeRPr+j93XbsAw7qF/kEu5vjxUD4=;
+        s=default; t=1597916824;
+        bh=deq8yjCJDG8hwhZ8bxTLDfbAbLOszTp7MSKDmQytPtc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MiAnAk7IZA89OgSxbYKqkCdcSc+d3aBtJMLjMAId0QvexhUI3LOPUb1SMxjDVT3If
-         WL3d17q35IBJSig5ZBSir1nOFdeDmijrazvFj0pMEcM0WEC29XWzoYUMJO/mqsgYrw
-         6Sac1nL1nEedDReyn1j4cKCQuqvslAqkgIsXqKgs=
+        b=gpXjdeWeMrp430veB2dB+gxZK05IRYnsSt2Qi3WUtR70Tftzq2u/pCsayl95rwKVm
+         +U94kECPG6lxOFQDLdRuz5dYP+HSkZaZ2LfqzgjzOX+C3w1xunejT64J0MexeJ4weN
+         JIwtzNnv15/R9P+2jDkMSafs5Vi6OO5HMo3n+ICM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Chengming Zhou <zhouchengming@bytedance.com>,
-        Muchun Song <songmuchun@bytedance.com>,
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 057/152] ftrace: Setup correct FTRACE_FL_REGS flags for module
-Date:   Thu, 20 Aug 2020 11:20:24 +0200
-Message-Id: <20200820091556.646336482@linuxfoundation.org>
+Subject: [PATCH 5.4 060/152] tracing: Use trace_sched_process_free() instead of exit() for pid tracing
+Date:   Thu, 20 Aug 2020 11:20:27 +0200
+Message-Id: <20200820091556.794463417@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,58 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengming Zhou <zhouchengming@bytedance.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 8a224ffb3f52b0027f6b7279854c71a31c48fc97 upstream.
+commit afcab636657421f7ebfa0783a91f90256bba0091 upstream.
 
-When module loaded and enabled, we will use __ftrace_replace_code
-for module if any ftrace_ops referenced it found. But we will get
-wrong ftrace_addr for module rec in ftrace_get_addr_new, because
-rec->flags has not been setup correctly. It can cause the callback
-function of a ftrace_ops has FTRACE_OPS_FL_SAVE_REGS to be called
-with pt_regs set to NULL.
-So setup correct FTRACE_FL_REGS flags for rec when we call
-referenced_filters to find ftrace_ops references it.
+On exit, if a process is preempted after the trace_sched_process_exit()
+tracepoint but before the process is done exiting, then when it gets
+scheduled in, the function tracers will not filter it properly against the
+function tracing pid filters.
 
-Link: https://lkml.kernel.org/r/20200728180554.65203-1-zhouchengming@bytedance.com
+That is because the function tracing pid filters hooks to the
+sched_process_exit() tracepoint to remove the exiting task's pid from the
+filter list. Because the filtering happens at the sched_switch tracepoint,
+when the exiting task schedules back in to finish up the exit, it will no
+longer be in the function pid filtering tables.
+
+This was noticeable in the notrace self tests on a preemptable kernel, as
+the tests would fail as it exits and preempted after being taken off the
+notrace filter table and on scheduling back in it would not be in the
+notrace list, and then the ending of the exit function would trace. The test
+detected this and would fail.
 
 Cc: stable@vger.kernel.org
-Fixes: 8c4f3c3fa9681 ("ftrace: Check module functions being traced on reload")
-Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 1e10486ffee0a ("ftrace: Add 'function-fork' trace option")
+Fixes: c37775d57830a ("tracing: Add infrastructure to allow set_event_pid to follow children"
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c       |    4 ++--
+ kernel/trace/trace_events.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
 --- a/kernel/trace/ftrace.c
 +++ b/kernel/trace/ftrace.c
-@@ -5699,8 +5699,11 @@ static int referenced_filters(struct dyn
- 	int cnt = 0;
- 
- 	for (ops = ftrace_ops_list; ops != &ftrace_list_end; ops = ops->next) {
--		if (ops_references_rec(ops, rec))
--		    cnt++;
-+		if (ops_references_rec(ops, rec)) {
-+			cnt++;
-+			if (ops->flags & FTRACE_OPS_FL_SAVE_REGS)
-+				rec->flags |= FTRACE_FL_REGS;
-+		}
+@@ -6462,12 +6462,12 @@ void ftrace_pid_follow_fork(struct trace
+ 	if (enable) {
+ 		register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						  tr);
+-		register_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						  tr);
+ 	} else {
+ 		unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						    tr);
  	}
- 
- 	return cnt;
-@@ -5877,8 +5880,8 @@ void ftrace_module_enable(struct module
- 		if (ftrace_start_up)
- 			cnt += referenced_filters(rec);
- 
--		/* This clears FTRACE_FL_DISABLED */
--		rec->flags = cnt;
-+		rec->flags &= ~FTRACE_FL_DISABLED;
-+		rec->flags += cnt;
- 
- 		if (ftrace_start_up && cnt) {
- 			int failed = __ftrace_replace_code(rec, 1);
+ }
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -527,12 +527,12 @@ void trace_event_follow_fork(struct trac
+ 	if (enable) {
+ 		register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						       tr, INT_MIN);
+-		register_trace_prio_sched_process_exit(event_filter_pid_sched_process_exit,
++		register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
+ 						       tr, INT_MAX);
+ 	} else {
+ 		unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(event_filter_pid_sched_process_exit,
++		unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
+ 						    tr);
+ 	}
+ }
 
 
