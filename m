@@ -2,51 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02996C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE7B2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AA0A2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921460;
-	bh=ffqTGUyzM4IrvVsnM7LZhOiyOLhq4zoY6gLQYgl9aoM=;
+	s=default; t=1597921466;
+	bh=mRNhh1lWE0ACQJaCgePkAq8AsNjxTNJsNxwtcfDVRI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W8vX9l9Bn0s0RmHPTds7lmmG63LfEgwjYiTTFLZDef6y5qKk+1LS8QNW3VmBk6X2E
-	 XG3kxLEQx/RQb2kvV81kjS7hr1im0xojr0qjdXHEaKi+ChXPEusrAZqyu25RUVNVmk
-	 s54+ZAew7MtsQlAhJny1oUYo9elZA2IOfnrKFYgs=
+	b=vX9njky7u03Zan1+fJj9JalvGbSu5o0Xy7hc3N9zuCKGFcbPwYZT+aWJH3e9KlrJJ
+	 J6XRetO9JWkNRzSg4D3Odf/uUh/dNbchOrm4Y7+Izv/PtsDOckgRDkSrAnZjnQK6N1
+	 DKWZ0kgi8MJr0937WUtg7jCItEK4smtTpVgj4KaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgHTKNJ (ORCPT
+        id S1726965AbgHTLEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:13:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731088AbgHTKMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:50 -0400
+        id S1731067AbgHTKNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEB6E2067C;
-        Thu, 20 Aug 2020 10:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A59D5206DA;
+        Thu, 20 Aug 2020 10:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918368;
-        bh=ffqTGUyzM4IrvVsnM7LZhOiyOLhq4zoY6gLQYgl9aoM=;
+        s=default; t=1597918392;
+        bh=mRNhh1lWE0ACQJaCgePkAq8AsNjxTNJsNxwtcfDVRI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZVu5DpjkfSudF4eVzN5Fh/uqcb2yBUjJlFP7B20CRqVTZt35ZofNOzyfYw5R7ml/R
-         VUsJwBYwXP5xHmtsh3plZKNbXojPOWyvolPvx1P4W6gsaJjINZfm+l3cUU9FoyBIIx
-         oPyr50GB41Lj/4tbuF2hkcy6P9AlEkRQeuPIAEWo=
+        b=uDEDLuEnfhqWtDR4R2sfe0IF+vhUHp8KkYEvQ3DS9PojI+OUShXNJi18Kj+kMv11X
+         2/LjgPfBUKSEMCFa9oB5oW+kAR4SJNMBH/lN93WIV4KNdujAc7RauPx8Sc8+ZDILnb
+         vAdGB/6t+MbwVU6cs1MMTehNzlznitVDA7N0lXcw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brant Merryman <brant.merryman@silabs.com>,
-        Phu Luu <phu.luu@silabs.com>, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 144/228] USB: serial: cp210x: re-enable auto-RTS on open
-Date:   Thu, 20 Aug 2020 11:21:59 +0200
-Message-Id: <20200820091614.776994772@linuxfoundation.org>
+        stable@vger.kernel.org, Shirisha Ganta <shiganta@in.ibm.com>,
+        Sandipan Das <sandipan@linux.ibm.com>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 123/228] selftests/powerpc: Fix online CPU selection
+Date:   Thu, 20 Aug 2020 11:21:38 +0200
+Message-Id: <20200820091613.740372695@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,61 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brant Merryman <brant.merryman@silabs.com>
+From: Sandipan Das <sandipan@linux.ibm.com>
 
-commit c7614ff9b73a1e6fb2b1b51396da132ed22fecdb upstream.
+[ Upstream commit dfa03fff86027e58c8dba5c03ae68150d4e513ad ]
 
-CP210x hardware disables auto-RTS but leaves auto-CTS when in hardware
-flow control mode and UART on cp210x hardware is disabled. When
-re-opening the port, if auto-CTS is enabled on the cp210x, then auto-RTS
-must be re-enabled in the driver.
+The size of the CPU affinity mask must be large enough for
+systems with a very large number of CPUs. Otherwise, tests
+which try to determine the first online CPU by calling
+sched_getaffinity() will fail. This makes sure that the size
+of the allocated affinity mask is dependent on the number of
+CPUs as reported by get_nprocs_conf().
 
-Signed-off-by: Brant Merryman <brant.merryman@silabs.com>
-Co-developed-by: Phu Luu <phu.luu@silabs.com>
-Signed-off-by: Phu Luu <phu.luu@silabs.com>
-Link: https://lore.kernel.org/r/ECCF8E73-91F3-4080-BE17-1714BC8818FB@silabs.com
-[ johan: fix up tags and problem description ]
-Fixes: 39a66b8d22a3 ("[PATCH] USB: CP2101 Add support for flow control")
-Cc: stable <stable@vger.kernel.org>     # 2.6.12
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 3752e453f6ba ("selftests/powerpc: Add tests of PMU EBBs")
+Reported-by: Shirisha Ganta <shiganta@in.ibm.com>
+Signed-off-by: Sandipan Das <sandipan@linux.ibm.com>
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/a408c4b8e9a23bb39b539417a21eb0ff47bb5127.1596084858.git.sandipan@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/cp210x.c |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ tools/testing/selftests/powerpc/utils.c | 37 +++++++++++++++++--------
+ 1 file changed, 25 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/serial/cp210x.c
-+++ b/drivers/usb/serial/cp210x.c
-@@ -925,6 +925,7 @@ static void cp210x_get_termios_port(stru
- 	u32 baud;
- 	u16 bits;
- 	u32 ctl_hs;
-+	u32 flow_repl;
+diff --git a/tools/testing/selftests/powerpc/utils.c b/tools/testing/selftests/powerpc/utils.c
+index d46916867a6fb..77db4f6ecf2f0 100644
+--- a/tools/testing/selftests/powerpc/utils.c
++++ b/tools/testing/selftests/powerpc/utils.c
+@@ -12,6 +12,7 @@
+ #include <sched.h>
+ #include <stdio.h>
+ #include <sys/stat.h>
++#include <sys/sysinfo.h>
+ #include <sys/types.h>
+ #include <unistd.h>
  
- 	cp210x_read_u32_reg(port, CP210X_GET_BAUDRATE, &baud);
+@@ -81,26 +82,38 @@ void *get_auxv_entry(int type)
  
-@@ -1025,6 +1026,22 @@ static void cp210x_get_termios_port(stru
- 	ctl_hs = le32_to_cpu(flow_ctl.ulControlHandshake);
- 	if (ctl_hs & CP210X_SERIAL_CTS_HANDSHAKE) {
- 		dev_dbg(dev, "%s - flow control = CRTSCTS\n", __func__);
-+		/*
-+		 * When the port is closed, the CP210x hardware disables
-+		 * auto-RTS and RTS is deasserted but it leaves auto-CTS when
-+		 * in hardware flow control mode. When re-opening the port, if
-+		 * auto-CTS is enabled on the cp210x, then auto-RTS must be
-+		 * re-enabled in the driver.
-+		 */
-+		flow_repl = le32_to_cpu(flow_ctl.ulFlowReplace);
-+		flow_repl &= ~CP210X_SERIAL_RTS_MASK;
-+		flow_repl |= CP210X_SERIAL_RTS_SHIFT(CP210X_SERIAL_RTS_FLOW_CTL);
-+		flow_ctl.ulFlowReplace = cpu_to_le32(flow_repl);
-+		cp210x_write_reg_block(port,
-+				CP210X_SET_FLOW,
-+				&flow_ctl,
-+				sizeof(flow_ctl));
+ int pick_online_cpu(void)
+ {
+-	cpu_set_t mask;
+-	int cpu;
++	int ncpus, cpu = -1;
++	cpu_set_t *mask;
++	size_t size;
 +
- 		cflag |= CRTSCTS;
- 	} else {
- 		dev_dbg(dev, "%s - flow control = NONE\n", __func__);
++	ncpus = get_nprocs_conf();
++	size = CPU_ALLOC_SIZE(ncpus);
++	mask = CPU_ALLOC(ncpus);
++	if (!mask) {
++		perror("malloc");
++		return -1;
++	}
+ 
+-	CPU_ZERO(&mask);
++	CPU_ZERO_S(size, mask);
+ 
+-	if (sched_getaffinity(0, sizeof(mask), &mask)) {
++	if (sched_getaffinity(0, size, mask)) {
+ 		perror("sched_getaffinity");
+-		return -1;
++		goto done;
+ 	}
+ 
+ 	/* We prefer a primary thread, but skip 0 */
+-	for (cpu = 8; cpu < CPU_SETSIZE; cpu += 8)
+-		if (CPU_ISSET(cpu, &mask))
+-			return cpu;
++	for (cpu = 8; cpu < ncpus; cpu += 8)
++		if (CPU_ISSET_S(cpu, size, mask))
++			goto done;
+ 
+ 	/* Search for anything, but in reverse */
+-	for (cpu = CPU_SETSIZE - 1; cpu >= 0; cpu--)
+-		if (CPU_ISSET(cpu, &mask))
+-			return cpu;
++	for (cpu = ncpus - 1; cpu >= 0; cpu--)
++		if (CPU_ISSET_S(cpu, size, mask))
++			goto done;
+ 
+ 	printf("No cpus in affinity mask?!\n");
+-	return -1;
++
++done:
++	CPU_FREE(mask);
++	return cpu;
+ }
+-- 
+2.25.1
+
 
 
