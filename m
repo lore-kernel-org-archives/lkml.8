@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F54C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38AAF20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C86212067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918731;
-	bh=eJhFz4v4nKBgF25umfzVqWnZlZbuwOlzvVBA5wXrxhQ=;
+	s=default; t=1597918733;
+	bh=gjOagStaWLs3BiWr22nlgMN5Wfv0Ptg1Vn6Tuvoxuyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UXnqjJavpxakm9iBfBeeW7XGyeKErAP07dWU0Mp2FcgeQU6mdF3J0+H+0ITGFQCQL
-	 kEyjFhdgFdExdNBIKlad6HFl0lnRHhpXNxu0F440c412WbNH8kjsvuppl1Hem9mHXI
-	 fu1Fot4RVjNxtgpzRNkHxqknPpnUfOrLyHphoOIA=
+	b=Lx4JSRJvz+ruPOsTwIx4UOWeCw6a9uQgbYTaDY4xMb9ZXKc882xOTkH5Q87E3tYfr
+	 SxS0iA4lT3e7IKVcVE0u/zb2Nf2DE6A7pBTkvsOBZlLItWqRzxt/JZL7EF3v0zuwIG
+	 uJWoSStO7iVy57Xc1nGnLJkZFLcnJddfqGTMjud0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgHTKSt (ORCPT
+        id S1731407AbgHTKSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38880 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbgHTKRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:17:32 -0400
+        id S1731346AbgHTKRk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:17:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7AF12078D;
-        Thu, 20 Aug 2020 10:17:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10E5206DA;
+        Thu, 20 Aug 2020 10:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918651;
-        bh=eJhFz4v4nKBgF25umfzVqWnZlZbuwOlzvVBA5wXrxhQ=;
+        s=default; t=1597918660;
+        bh=gjOagStaWLs3BiWr22nlgMN5Wfv0Ptg1Vn6Tuvoxuyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mW6stgRrQGisPRH7UIpVN1928gRpxj9jsmX1DYfiCOO1YJ9UJBIRg2E3mwJKY158Q
-         JrD2+YZ2hXSynmSDZ8Y4Fhj5a9twNiwVOBUUvkw92+0jPyRzueq9mk6e2GgdG6wU/X
-         62KRzRNJJS0EujPeUxi+w1F7Ih+5HumtNCqw7YNk=
+        b=P/oBGg9CeL82LMdu1uBlv9btfyPIS2zhWBAiZD3fQnbg44/9ByV5vooNvcBVNAico
+         Oc+vPEaogQrN5Cv7I6L+FIo2z7rGfGIJ/U93XNOCO5tOXDcEByDTNbQJ+J6iNSs+gS
+         HVWyP3G3qKtZ4sw6AvHa0O/V3CoQ0iPJBuJmKiEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Woojung.Huh@microchip.com" <Woojung.Huh@microchip.com>,
-        Johan Hovold <johan@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 018/149] net: lan78xx: add missing endpoint sanity check
-Date:   Thu, 20 Aug 2020 11:21:35 +0200
-Message-Id: <20200820092126.583678502@linuxfoundation.org>
+Subject: [PATCH 4.4 021/149] mac80211: mesh: Free ie data when leaving mesh
+Date:   Thu, 20 Aug 2020 11:21:38 +0200
+Message-Id: <20200820092126.736852958@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,43 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 8d8e95fd6d69d774013f51e5f2ee10c6e6d1fc14 ]
+[ Upstream commit 6a01afcf8468d3ca2bd8bbb27503f60dcf643b20 ]
 
-Add the missing endpoint sanity check to prevent a NULL-pointer
-dereference should a malicious device lack the expected endpoints.
+At ieee80211_join_mesh() some ie data could have been allocated (see
+copy_mesh_setup()) and need to be cleaned up when leaving the mesh.
 
-Note that the driver has a broken endpoint-lookup helper,
-lan78xx_get_endpoints(), which can end up accepting interfaces in an
-altsetting without endpoints as long as *some* altsetting has a bulk-in
-and a bulk-out endpoint.
+This fixes the following kmemleak report:
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Cc: Woojung.Huh@microchip.com <Woojung.Huh@microchip.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+unreferenced object 0xffff0000116bc600 (size 128):
+  comm "wpa_supplicant", pid 608, jiffies 4294898983 (age 293.484s)
+  hex dump (first 32 bytes):
+    30 14 01 00 00 0f ac 04 01 00 00 0f ac 04 01 00  0...............
+    00 0f ac 08 00 00 00 00 c4 65 40 00 00 00 00 00  .........e@.....
+  backtrace:
+    [<00000000bebe439d>] __kmalloc_track_caller+0x1c0/0x330
+    [<00000000a349dbe1>] kmemdup+0x28/0x50
+    [<0000000075d69baa>] ieee80211_join_mesh+0x6c/0x3b8 [mac80211]
+    [<00000000683bb98b>] __cfg80211_join_mesh+0x1e8/0x4f0 [cfg80211]
+    [<0000000072cb507f>] nl80211_join_mesh+0x520/0x6b8 [cfg80211]
+    [<0000000077e9bcf9>] genl_family_rcv_msg+0x374/0x680
+    [<00000000b1bd936d>] genl_rcv_msg+0x78/0x108
+    [<0000000022c53788>] netlink_rcv_skb+0xb0/0x1c0
+    [<0000000011af8ec9>] genl_rcv+0x34/0x48
+    [<0000000069e41f53>] netlink_unicast+0x268/0x2e8
+    [<00000000a7517316>] netlink_sendmsg+0x320/0x4c0
+    [<0000000069cba205>] ____sys_sendmsg+0x354/0x3a0
+    [<00000000e06bab0f>] ___sys_sendmsg+0xd8/0x120
+    [<0000000037340728>] __sys_sendmsg+0xa4/0xf8
+    [<000000004fed9776>] __arm64_sys_sendmsg+0x44/0x58
+    [<000000001c1e5647>] el0_svc_handler+0xd0/0x1a0
+
+Fixes: c80d545da3f7 (mac80211: Let userspace enable and configure vendor specific path selection.)
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Link: https://lore.kernel.org/r/20200704135007.27292-1-repk@triplefau.lt
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ net/mac80211/cfg.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 75a3865a80d23..3f2f524c338d6 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2978,6 +2978,11 @@ static int lan78xx_probe(struct usb_interface *intf,
- 		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
- 	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
+diff --git a/net/mac80211/cfg.c b/net/mac80211/cfg.c
+index cf3917c6da0a6..8360fda24bca0 100644
+--- a/net/mac80211/cfg.c
++++ b/net/mac80211/cfg.c
+@@ -1766,6 +1766,7 @@ static int ieee80211_leave_mesh(struct wiphy *wiphy, struct net_device *dev)
+ 	ieee80211_stop_mesh(sdata);
+ 	mutex_lock(&sdata->local->mtx);
+ 	ieee80211_vif_release_channel(sdata);
++	kfree(sdata->u.mesh.ie);
+ 	mutex_unlock(&sdata->local->mtx);
  
-+	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
-+		ret = -ENODEV;
-+		goto out3;
-+	}
-+
- 	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
- 	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
- 	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
+ 	return 0;
 -- 
 2.25.1
 
