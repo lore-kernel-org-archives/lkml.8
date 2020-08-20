@@ -2,127 +2,161 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3780C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFC6420658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF61622BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597930022;
+	bh=jcRA3/dvIFzvzWTh9Top8KkbsVp7IEUSwTnsevvfODc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=StoytKdqLOInxINa6/SJqHXEmKsjXsUcRJukFb3gVR3l9rdH7P4FVyxJ5wASZbB1U
+	 Ol0d6FWUf4E97q3TcHVll3zNVuZuNFhKFKN5XubvIb/qAQxH/rEtR6UVbLC9ck/X0M
+	 UOn2Osrb6NYPYxOM2cxIsbfvxmywpHVMsQy1KsCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgHTN0i (ORCPT
+        id S1730840AbgHTNZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:26:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38602 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 09:25:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbgHTN0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:26:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3467EB5F9;
-        Thu, 20 Aug 2020 13:26:59 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 15:26:31 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
-        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820132631.GK5033@dhcp22.suse.cz>
-References: <20200820002053.1424000-1-surenb@google.com>
- <87zh6pxzq6.fsf@x220.int.ebiederm.org>
- <20200820124241.GJ5033@dhcp22.suse.cz>
- <87lfi9xz7y.fsf@x220.int.ebiederm.org>
- <87d03lxysr.fsf@x220.int.ebiederm.org>
+        id S1728422AbgHTJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:10 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6FA621775;
+        Thu, 20 Aug 2020 09:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916022;
+        bh=jcRA3/dvIFzvzWTh9Top8KkbsVp7IEUSwTnsevvfODc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=znFHq7HeiZsM/NTEtjo6Jed3iixH1yuoWxQ5LhyAVg61AMFth1Etjb4A9aCQUd3xR
+         2OLSGng7efJh0tIADNbi54k2tv/5QbLeANqbT/s1RIsbliOSbYY/ivMqL4rLxO/g9w
+         xTtKgd2pKcxcBFbLQtaSDzB5CK0InKpa2yyr4aWA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Thomas Hebb <tommyhebb@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Yonghong Song <yhs@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 216/232] tools build feature: Quote CC and CXX for their arguments
+Date:   Thu, 20 Aug 2020 11:21:07 +0200
+Message-Id: <20200820091623.258543906@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d03lxysr.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 07:54:44, Eric W. Biederman wrote:
-> ebiederm@xmission.com (Eric W. Biederman) writes:
-> 
-> 2> Michal Hocko <mhocko@suse.com> writes:
-> >
-> >> On Thu 20-08-20 07:34:41, Eric W. Biederman wrote:
-> >>> Suren Baghdasaryan <surenb@google.com> writes:
-> >>> 
-> >>> > Currently __set_oom_adj loops through all processes in the system to
-> >>> > keep oom_score_adj and oom_score_adj_min in sync between processes
-> >>> > sharing their mm. This is done for any task with more that one mm_users,
-> >>> > which includes processes with multiple threads (sharing mm and signals).
-> >>> > However for such processes the loop is unnecessary because their signal
-> >>> > structure is shared as well.
-> >>> > Android updates oom_score_adj whenever a tasks changes its role
-> >>> > (background/foreground/...) or binds to/unbinds from a service, making
-> >>> > it more/less important. Such operation can happen frequently.
-> >>> > We noticed that updates to oom_score_adj became more expensive and after
-> >>> > further investigation found out that the patch mentioned in "Fixes"
-> >>> > introduced a regression. Using Pixel 4 with a typical Android workload,
-> >>> > write time to oom_score_adj increased from ~3.57us to ~362us. Moreover
-> >>> > this regression linearly depends on the number of multi-threaded
-> >>> > processes running on the system.
-> >>> > Mark the mm with a new MMF_PROC_SHARED flag bit when task is created with
-> >>> > CLONE_VM and !CLONE_SIGHAND. Change __set_oom_adj to use MMF_PROC_SHARED
-> >>> > instead of mm_users to decide whether oom_score_adj update should be
-> >>> > synchronized between multiple processes. To prevent races between clone()
-> >>> > and __set_oom_adj(), when oom_score_adj of the process being cloned might
-> >>> > be modified from userspace, we use oom_adj_mutex. Its scope is changed to
-> >>> > global and it is renamed into oom_adj_lock for naming consistency with
-> >>> > oom_lock. Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
-> >>> > used the additional mutex lock in that path of the clone() syscall should
-> >>> > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
-> >>> > (when the last process sharing the mm exits) is left out of this patch to
-> >>> > keep it simple and because it is believed that this threading model is
-> >>> > rare. Should there ever be a need for optimizing that case as well, it
-> >>> > can be done by hooking into the exit path, likely following the
-> >>> > mm_update_next_owner pattern.
-> >>> > With the combination of CLONE_VM and !CLONE_SIGHAND being quite rare, the
-> >>> > regression is gone after the change is applied.
-> >>> 
-> >>> So I am confused.
-> >>> 
-> >>> Is there any reason why we don't simply move signal->oom_score_adj to
-> >>> mm->oom_score_adj and call it a day?
-> >>
-> >> Yes. Please read through 44a70adec910 ("mm, oom_adj: make sure processes
-> >> sharing mm have same view of oom_score_adj")
-> >
-> > That explains why the scores are synchronized.
-> >
-> > It doesn't explain why we don't do the much simpler thing and move
-> > oom_score_adj from signal_struct to mm_struct. Which is my question.
-> >
-> > Why not put the score where we need it to ensure that the oom score
-> > is always synchronized?  AKA on the mm_struct, not the signal_struct.
-> 
-> Apologies.  That 44a70adec910 does describe that some people have seen
-> vfork users set oom_score.  No details unfortunately.
-> 
-> I will skip the part where posix calls this undefined behavior.  It
-> breaks userspace to change.
-> 
-> It still seems like the code should be able to buffer oom_adj during
-> vfork, and only move the value onto mm_struct during exec.
+From: Daniel Díaz <daniel.diaz@linaro.org>
 
-If you can handle vfork by other means then I am all for it. There were
-no patches in that regard proposed yet. Maybe it will turn out simpler
-then the heavy lifting we have to do in the oom specific code.
+[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
+
+When using a cross-compilation environment, such as OpenEmbedded,
+the CC an CXX variables are set to something more than just a
+command: there are arguments (such as --sysroot) that need to be
+passed on to the compiler so that the right set of headers and
+libraries are used.
+
+For the particular case that our systems detected, CC is set to
+the following:
+
+  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
+
+Without quotes, detection is as follows:
+
+  Auto-detecting system features:
+  ...                         dwarf: [ OFF ]
+  ...            dwarf_getlocations: [ OFF ]
+  ...                         glibc: [ OFF ]
+  ...                          gtk2: [ OFF ]
+  ...                        libbfd: [ OFF ]
+  ...                        libcap: [ OFF ]
+  ...                        libelf: [ OFF ]
+  ...                       libnuma: [ OFF ]
+  ...        numa_num_possible_cpus: [ OFF ]
+  ...                       libperl: [ OFF ]
+  ...                     libpython: [ OFF ]
+  ...                     libcrypto: [ OFF ]
+  ...                     libunwind: [ OFF ]
+  ...            libdw-dwarf-unwind: [ OFF ]
+  ...                          zlib: [ OFF ]
+  ...                          lzma: [ OFF ]
+  ...                     get_cpuid: [ OFF ]
+  ...                           bpf: [ OFF ]
+  ...                        libaio: [ OFF ]
+  ...                       libzstd: [ OFF ]
+  ...        disassembler-four-args: [ OFF ]
+
+  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
+  Makefile.perf:230: recipe for target 'sub-make' failed
+  make[1]: *** [sub-make] Error 2
+  Makefile:69: recipe for target 'all' failed
+  make: *** [all] Error 2
+
+With CC and CXX quoted, some of those features are now detected.
+
+Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
+Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: KP Singh <kpsingh@chromium.org>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Yonghong Song <yhs@fb.com>
+Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ tools/build/Makefile.feature | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 774f0b0ca28ac..e7818b44b48ee 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -8,7 +8,7 @@ endif
+ 
+ feature_check = $(eval $(feature_check_code))
+ define feature_check_code
+-  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
++  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
+ endef
+ 
+ feature_set = $(eval $(feature_set_code))
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
+
+
