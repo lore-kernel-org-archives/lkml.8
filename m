@@ -2,132 +2,114 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7150C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1259CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0C4020674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A7C20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597967646;
-	bh=Lgp8hsNdzOTq4kLm5ig7EfIsrARcaqyBrt2jpFkQe6s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JZ2HtvmOXeqMnNPiKgQUF+9oegd8FMZpMdcUJum+LiAWOWWgBUIBIz8hGVOpxt4ae
-	 2vbWDAFl0z8SLIAM9yBAKOxjrv8BhbkEF0lVxwAU8Grvhc80+4HYQJnMhD8VSqDx6e
-	 70qlRcmiMH+lLXBewByRQ2v0CWuelcXdB9cyfqL0=
+	s=default; t=1597967812;
+	bh=i9WjApUaaqfqz1xBXGuZd4GiTGLLhpAgL4kjGLT0vYE=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=RMM4JBpp24fursxyOW3wlsqxqpxNcrwmToV/JJkh7/R0x+/QMJ/G/lkcsyyIX59AV
+	 NDNpJjNT3CYgseWoHrmjBMccJf8BXPgZoW+iLMIRINYEr/MsMjhqjrRkh5QFwIuHuJ
+	 1ZmkCAqLplC14KhrLe+rco4X5JAlSswwe1ubx1Ec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727036AbgHTXyE (ORCPT
+        id S1727068AbgHTX4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:54:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726309AbgHTXxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:53:45 -0400
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4867F2087D;
-        Thu, 20 Aug 2020 23:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597967175;
-        bh=Lgp8hsNdzOTq4kLm5ig7EfIsrARcaqyBrt2jpFkQe6s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=OZZdzKzBD51K1BPGM0EaH36CMBKdv2QMN7b+GZuFw580TLsXutGo3pLBWhEXxDJjb
-         yyKWfMFiN5pyb8aRWbVR6bWiB3b6XemNhW8ka0ApBKAQewZpX+xuTYvG603BrQW6fU
-         cJrqycD8Iahf+l7FUboEoQsu0APFA7Lj3l5W3YdY=
-Received: by mail-ej1-f41.google.com with SMTP id d6so249824ejr.5;
-        Thu, 20 Aug 2020 16:46:15 -0700 (PDT)
-X-Gm-Message-State: AOAM531nwDGGnzGc73Hd9CggPdWsqPHBVYS+i/ZtdS/2UDEllFZ4pmny
-        lEpuyJiUSj5xlqpIc9iZ6aRWPm4gcmbb+Vsrww==
-X-Google-Smtp-Source: ABdhPJwImiPZfml816TKJ8tULu0ObTfnI7+zw4vuK73Jk4H3K6TAuI9PR6yWIJfRJ60uRj1hxTknbdc2N7ifSaHVAU8=
-X-Received: by 2002:a17:906:2356:: with SMTP id m22mr350366eja.124.1597967173923;
- Thu, 20 Aug 2020 16:46:13 -0700 (PDT)
+        Thu, 20 Aug 2020 19:56:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726309AbgHTX4I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 19:56:08 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD16C06134A
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:50:13 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id j16so815861ooc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yOUlFnTL+XyX6xjHFLowjyeqpIKSlnIJUWb6WpqEMQM=;
+        b=YGJwshJsH1wNFoOWIvfJIQp5Cf1LT/9VcJA/XPy4DFr4x22/NkrMoaLTzY6cAivNtg
+         Lh9nBCOI/Vbu6gnz1rGhh+NjftRRUQqh/SsyS/iWDn4bu3Ne2mhjdWvFJV6orzaMv0PI
+         zl9R11C2LQe7cusYbPVmckA5TjliVE8QTY5aA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yOUlFnTL+XyX6xjHFLowjyeqpIKSlnIJUWb6WpqEMQM=;
+        b=AMU8eksvboYIZX5pw55lVCbwbXck6mh5eFQ491U79FYfuh79pDSRmvOow6F2bFXuIQ
+         LQHGccv4/kiYVvxCR9wpV0IEuaL+9zqcUgV7fSEZElkd0imVOlOB1W5ESEIeMu/dLfOq
+         PTUXaTtpztmbL0xecak1f8BehUv8lyocwKf6BoOTLjmw6W/RK1U/JE2iJiyGujBThi29
+         HiBKN1f7r9mhKA+Y2ccrOvDMcFMBu54SHGefARgZajrPTViErBIHCewgJhUWZhW6CI9X
+         RPdk7U+fiduBFAKlPO92IeV+pGGImFIHokophJHKgcr0jJsb9qbkNLPK5QUbvlrmJC/R
+         uTZg==
+X-Gm-Message-State: AOAM533lDv8/HhkZutHN1SrzNndy7c3FXG71ZIHG6Y3NtyXklBdg131M
+        91Y99d305hgchxl5vzTSRA5Huw==
+X-Google-Smtp-Source: ABdhPJyZG8oH4VKCjS1vegRO13xkgfdCIBly/mLpQtPV8tBdm5byU+kUyvopaaB3/3Zo61WYDw5sEg==
+X-Received: by 2002:a4a:a782:: with SMTP id l2mr181821oom.62.1597967413403;
+        Thu, 20 Aug 2020 16:50:13 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id h21sm16403oib.51.2020.08.20.16.50.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 16:50:12 -0700 (PDT)
+Subject: Re: [PATCH 4.14 000/226] 4.14.194-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200820135009.684062405@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <8de043e7-7b7a-c041-0dd5-f0384fd32713@linuxfoundation.org>
+Date:   Thu, 20 Aug 2020 17:50:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <1597903458-8055-1-git-send-email-yongqiang.niu@mediatek.com> <1597903458-8055-10-git-send-email-yongqiang.niu@mediatek.com>
-In-Reply-To: <1597903458-8055-10-git-send-email-yongqiang.niu@mediatek.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Fri, 21 Aug 2020 07:46:01 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_8rWUdGgNQfvdZh0gCim8uQ=mJ7Pm=WRgCN_z+Dfb_bEQ@mail.gmail.com>
-Message-ID: <CAAOTY_8rWUdGgNQfvdZh0gCim8uQ=mJ7Pm=WRgCN_z+Dfb_bEQ@mail.gmail.com>
-Subject: Re: [PATCH v1 09/21] drm/mediatek: fix aal size config
-To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200820135009.684062405@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On 8/20/20 7:51 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.194 release.
+> There are 226 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 22 Aug 2020 13:49:29 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.194-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Yongqiang Niu <yongqiang.niu@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=8820=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=882:18=E5=AF=AB=E9=81=93=
-=EF=BC=9A
->
-> fix aal size config
->
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/dr=
-m/mediatek/mtk_drm_ddp_comp.c
-> index c90d2ee..fe76387 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -31,8 +31,13 @@
->  #define DISP_REG_UFO_START                     0x0000
->
->  #define DISP_AAL_EN                            0x0000
-> +#define DISP_AAL_CFG                           0x0020
-> +#define AAL_RELAY_MODE                                 BIT(0)
-> +#define AAL_ENGINE_EN                                  BIT(1)
->  #define DISP_AAL_SIZE                          0x0030
->
-> +#define DISP_AAL_OUTPUT_SIZE                   0x04d8
-> +
->  #define DISP_CCORR_EN                          0x0000
->  #define CCORR_EN                               BIT(0)
->  #define DISP_CCORR_CFG                         0x0020
-> @@ -182,7 +187,11 @@ static void mtk_aal_config(struct mtk_ddp_comp *comp=
-, unsigned int w,
->                            unsigned int h, unsigned int vrefresh,
->                            unsigned int bpc, struct cmdq_pkt *cmdq_pkt)
->  {
-> -       mtk_ddp_write(cmdq_pkt, h << 16 | w, comp, DISP_AAL_SIZE);
-> +       mtk_ddp_write(cmdq_pkt, w << 16 | h, comp, DISP_AAL_SIZE);
-> +       mtk_ddp_write(cmdq_pkt, w << 16 | h, comp, DISP_AAL_OUTPUT_SIZE);
-> +
-> +       mtk_ddp_write_mask(NULL, AAL_RELAY_MODE, comp, DISP_AAL_CFG,
-> +                          AAL_RELAY_MODE | AAL_ENGINE_EN);
+Compiled and booted on my test system. No dmesg regressions.
 
-If this only should set in mt8192, add a private data to distinguish this.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Regards,
-Chun-Kuang.
+thanks,
+-- Shuah
 
->  }
->
->  static void mtk_aal_start(struct mtk_ddp_comp *comp)
-> --
-> 1.8.1.1.dirty
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
