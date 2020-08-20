@@ -2,55 +2,56 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80599C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1695DC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DFEA2224D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8F842224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927454;
-	bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+	s=default; t=1597927458;
+	bh=xGSghv4vVlkYjoXq27P/5hyIj+LHqAvkUJ1zVGjpX84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGZ3t0+DIk+j36dfZvcDGcE5nRR9iR/iu47jEGsSKaolLg3X518JT411jC4ehHVff
-	 0+S00fjzA4M5riFXIHwF9dijmf4Fq0s/NOv7vEqSIHLaDwX5RMAKTHRFo8JprLT9lP
-	 zlkFedge2J6i2F3PhQzGcc/yMPLYi+L6Y2IT8NLE=
+	b=fN8VNoNYsuOpysVRjdecn1CuDlakVwbCRDEawH7nbqPfI0Y24GRSPL1h3Odky+IvV
+	 OblSjJQrb0DJuWUNXEZG0wAC/5ovPtx0mJV7HHva9jMkEtgruOU6vL7SXOxQvkscG7
+	 CV6U7w841TiNIp4tk7hnBfjsqXF9xvuDAPzt7mFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729415AbgHTMoI (ORCPT
+        id S1729315AbgHTJpq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:44:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42570 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:45:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbgHTJpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:45:47 -0400
+        id S1728515AbgHTJnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:43:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF6922BEA;
-        Thu, 20 Aug 2020 09:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42347207DE;
+        Thu, 20 Aug 2020 09:43:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916747;
-        bh=gMAJQySplqK3LODlD+yqkkSZmARBSR3jSggcw7cFqr8=;
+        s=default; t=1597916593;
+        bh=xGSghv4vVlkYjoXq27P/5hyIj+LHqAvkUJ1zVGjpX84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R85QHV7HYgtKwD0bHwh5hVRGSp+HdHm/ZoJXx++WG6s1p0Of1xeSWEWq2ccyCIrig
-         e61IGK+bcCfi4SMxhE7f6P9/LTDmgTf69h6rmZcQMxBPQNwLhnZrSj3Ohq1B7yTHGX
-         TZil4PFgBaUKt/gb/LPfzZ4/1SWDMVnlVo5CYmec=
+        b=cVoAx6NBjWW4pMANCR7AHCbU7ikmTc32QST9dPf0VkDdWtyNNqAKRcIwpWzKhZ35u
+         Dl5rEFYb8DHY/4VpljrusHkFNh4gdlimfeQBZmQk5lj2cWeeDLxE4iOmJhLmOQTiZY
+         udVp/wovnxNYDXN99iLrWnmgaNGqj3EnEOZBeLDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Christian Eggers <ceggers@arri.de>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 031/152] dt-bindings: iio: io-channel-mux: Fix compatible string in example code
-Date:   Thu, 20 Aug 2020 11:19:58 +0200
-Message-Id: <20200820091555.246371152@linuxfoundation.org>
+        stable@vger.kernel.org, Stephan Mueller <smueller@chronox.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 183/204] crypto: algif_aead - fix uninitialized ctx->init
+Date:   Thu, 20 Aug 2020 11:21:20 +0200
+Message-Id: <20200820091615.334264775@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,34 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Eggers <ceggers@arri.de>
+From: Ondrej Mosnacek <omosnace@redhat.com>
 
-commit add48ba425192c6e04ce70549129cacd01e2a09e upstream.
+[ Upstream commit 21dfbcd1f5cbff9cf2f9e7e43475aed8d072b0dd ]
 
-The correct compatible string is "gpio-mux" (see
-bindings/mux/gpio-mux.txt).
+In skcipher_accept_parent_nokey() the whole af_alg_ctx structure is
+cleared by memset() after allocation, so add such memset() also to
+aead_accept_parent_nokey() so that the new "init" field is also
+initialized to zero. Without that the initial ctx->init checks might
+randomly return true and cause errors.
 
-Cc: stable@vger.kernel.org # v4.13+
-Reviewed-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Christian Eggers <ceggers@arri.de>
-Link: https://lore.kernel.org/r/20200727101605.24384-1-ceggers@arri.de
-Signed-off-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+While there, also remove the redundant zero assignments in both
+functions.
 
+Found via libkcapi testsuite.
+
+Cc: Stephan Mueller <smueller@chronox.de>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when ctx->more is zero")
+Suggested-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/algif_aead.c     | 6 ------
+ crypto/algif_skcipher.c | 7 +------
+ 2 files changed, 1 insertion(+), 12 deletions(-)
 
---- a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-+++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-@@ -21,7 +21,7 @@ controller state. The mux controller sta
+diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
+index d48d2156e6210..43c6aa784858b 100644
+--- a/crypto/algif_aead.c
++++ b/crypto/algif_aead.c
+@@ -558,12 +558,6 @@ static int aead_accept_parent_nokey(void *private, struct sock *sk)
  
- Example:
- 	mux: mux-controller {
--		compatible = "mux-gpio";
-+		compatible = "gpio-mux";
- 		#mux-control-cells = <0>;
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+-	ctx->aead_assoclen = 0;
+ 	crypto_init_wait(&ctx->wait);
  
- 		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
+ 	ask->private = ctx;
+diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
+index a51ba22fef58f..81c4022285a7c 100644
+--- a/crypto/algif_skcipher.c
++++ b/crypto/algif_skcipher.c
+@@ -333,6 +333,7 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 	ctx = sock_kmalloc(sk, len, GFP_KERNEL);
+ 	if (!ctx)
+ 		return -ENOMEM;
++	memset(ctx, 0, len);
+ 
+ 	ctx->iv = sock_kmalloc(sk, crypto_skcipher_ivsize(tfm),
+ 			       GFP_KERNEL);
+@@ -340,16 +341,10 @@ static int skcipher_accept_parent_nokey(void *private, struct sock *sk)
+ 		sock_kfree_s(sk, ctx, len);
+ 		return -ENOMEM;
+ 	}
+-
+ 	memset(ctx->iv, 0, crypto_skcipher_ivsize(tfm));
+ 
+ 	INIT_LIST_HEAD(&ctx->tsgl_list);
+ 	ctx->len = len;
+-	ctx->used = 0;
+-	atomic_set(&ctx->rcvused, 0);
+-	ctx->more = 0;
+-	ctx->merge = 0;
+-	ctx->enc = 0;
+ 	crypto_init_wait(&ctx->wait);
+ 
+ 	ask->private = ctx;
+-- 
+2.25.1
+
 
 
