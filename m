@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7C6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB394C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 581342086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FA2B208A9
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929030;
-	bh=UeJwsg7fozCpZ80Y5Rbc3gl702P9dpH/K54G/Ivdd2I=;
+	s=default; t=1597929035;
+	bh=YiCWZ5e1HLOx/GrVAEQIblWnR6UfnF5l0qNFx2MaCFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dMwQKXD+gqUUBM2N+homWpUWcVZfLNjXh/+MMcndm/z1Pln8VqtfJ6aVQBYQF/7rG
-	 6OjWfbEivkJZO4M8g/9Qvyg1LF2f7IoPoKhls/5/FHgcDecVC43lOTEcKI2wY1CFUh
-	 o51eIpalXzrHDshPLh4H1A4ZDhh9yrzU2fqmcTAc=
+	b=zwfsvSAtEJz8jmH9qXVkVV7Q8/+tUQmYth3VYFSKPPFDk2zpg49/j+35CYYr48CR3
+	 sd1JvYKzwRq6QUSVtK52rE49n/vU2BREljUJMrYUxSVoRpyqgIVd8ew+HXgH6TPhe8
+	 MfefrEjmXIY/AY1h/h8tIBd3266tnB6Hb6g83bIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbgHTNK3 (ORCPT
+        id S1728886AbgHTNKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgHTJhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:36 -0400
+        id S1728730AbgHTJhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63A5322B3F;
-        Thu, 20 Aug 2020 09:37:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC9D021775;
+        Thu, 20 Aug 2020 09:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916255;
-        bh=UeJwsg7fozCpZ80Y5Rbc3gl702P9dpH/K54G/Ivdd2I=;
+        s=default; t=1597916252;
+        bh=YiCWZ5e1HLOx/GrVAEQIblWnR6UfnF5l0qNFx2MaCFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZUQBdupGyuYwHdHq5p9E51lFOXQzPDcwLySa0kjrNhSgXpANr0d7bnf74y401afPN
-         Z4uyfRxs4HVCddF6f2Bn1ldyuOAMJJ+ZwrzoZ849xWYhKpDsij85zZ9ElcS1Xuyq1g
-         axYV+XoeU0ufeUQkCOtQktvDAWwhx4CGLDAi6uf0=
+        b=L9zRe+4U+vAgAuKStv+4K7fgVXq0kpp4hBniwkDLUye5WEHr/BzfIyjYI3FNT3kTP
+         aMOQsxr7HlFjOEPvJ86IxHJEHZ1OvzMD0zdMoRQLgPGGdr6EATd/7yuq5Si9FqysJf
+         JxZO3Z1O1x3GKKtmGzzL0T2uTYK9fcsqGPuu6OKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 025/204] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
-Date:   Thu, 20 Aug 2020 11:18:42 +0200
-Message-Id: <20200820091607.523759267@linuxfoundation.org>
+Subject: [PATCH 5.7 034/204] btrfs: trim: fix underflow in trim length to prevent access beyond device boundary
+Date:   Thu, 20 Aug 2020 11:18:51 +0200
+Message-Id: <20200820091607.970513537@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,152 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit fbabd4a36faaf74c83142d0b3d950c11ec14fda1 upstream.
+commit c57dd1f2f6a7cd1bb61802344f59ccdc5278c983 upstream.
 
-Eric reported seeing this message while running generic/475
+[BUG]
+The following script can lead to tons of beyond device boundary access:
 
-  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+  mkfs.btrfs -f $dev -b 10G
+  mount $dev $mnt
+  trimfs $mnt
+  btrfs filesystem resize 1:-1G $mnt
+  trimfs $mnt
 
-Full stack trace:
+[CAUSE]
+Since commit 929be17a9b49 ("btrfs: Switch btrfs_trim_free_extents to
+find_first_clear_extent_bit"), we try to avoid trimming ranges that's
+already trimmed.
 
-  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
-  BTRFS info (device dm-0): forced readonly
-  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
-  ------------[ cut here ]------------
-  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
-  BTRFS: Transaction aborted (error -117)
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
-  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
-  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
-  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
-  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
-  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
-  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
-  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
-  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
-  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
-  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
-  Call Trace:
-   ? finish_wait+0x90/0x90
-   ? __mutex_unlock_slowpath+0x45/0x2a0
-   ? lock_acquire+0xa3/0x440
-   ? lockref_put_or_lock+0x9/0x30
-   ? dput+0x20/0x4a0
-   ? dput+0x20/0x4a0
-   ? do_raw_spin_unlock+0x4b/0xc0
-   ? _raw_spin_unlock+0x1f/0x30
-   btrfs_sync_file+0x335/0x490 [btrfs]
-   do_fsync+0x38/0x70
-   __x64_sys_fsync+0x10/0x20
-   do_syscall_64+0x50/0xe0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7f6a6ef1b6e3
-  Code: Bad RIP value.
-  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
-  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
-  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
-  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
-  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  irq event stamp: 0
-  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
-  softirqs last disabled at (0): [<0000000000000000>] 0x0
-  ---[ end trace af146e0e38433456 ]---
-  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+So we check device->alloc_state by finding the first range which doesn't
+have CHUNK_TRIMMED and CHUNK_ALLOCATED not set.
 
-This ret came from btrfs_write_marked_extents().  If we get an aborted
-transaction via EIO before, we'll see it in btree_write_cache_pages()
-and return EUCLEAN, which gets printed as "Filesystem corrupted".
+But if we shrunk the device, that bits are not cleared, thus we could
+easily got a range starts beyond the shrunk device size.
 
-Except we shouldn't be returning EUCLEAN here, we need to be returning
-EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
+This results the returned @start and @end are all beyond device size,
+then we call "end = min(end, device->total_bytes -1);" making @end
+smaller than device size.
 
-We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
-elsewhere, but we want to use EROFS for this particular case.  The
-original transaction abort has the real error code for why we ended up
-with an aborted transaction, all subsequent actions just need to return
-EROFS because they may not have a trans handle and have no idea about
-the original cause of the abort.
+Then finally we goes "len = end - start + 1", totally underflow the
+result, and lead to the beyond-device-boundary access.
 
-After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
-stacktrace will not be dumped either.
+[FIX]
+This patch will fix the problem in two ways:
 
-Reported-by: Eric Sandeen <esandeen@redhat.com>
+- Clear CHUNK_TRIMMED | CHUNK_ALLOCATED bits when shrinking device
+  This is the root fix
+
+- Add extra safety check when trimming free device extents
+  We check and warn if the returned range is already beyond current
+  device.
+
+Link: https://github.com/kdave/btrfs-progs/issues/282
+Fixes: 929be17a9b49 ("btrfs: Switch btrfs_trim_free_extents to find_first_clear_extent_bit")
 CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add full test stacktrace ]
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c   |    2 +-
- fs/btrfs/scrub.c       |    2 +-
- fs/btrfs/transaction.c |    5 ++++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ fs/btrfs/extent-io-tree.h |    2 ++
+ fs/btrfs/extent-tree.c    |   14 ++++++++++++++
+ fs/btrfs/volumes.c        |    4 ++++
+ 3 files changed, 20 insertions(+)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4110,7 +4110,7 @@ retry:
- 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
- 		ret = flush_write_bio(&epd);
- 	} else {
--		ret = -EUCLEAN;
-+		ret = -EROFS;
- 		end_write_bio(&epd, ret);
+--- a/fs/btrfs/extent-io-tree.h
++++ b/fs/btrfs/extent-io-tree.h
+@@ -34,6 +34,8 @@ struct io_failure_record;
+  */
+ #define CHUNK_ALLOCATED				EXTENT_DIRTY
+ #define CHUNK_TRIMMED				EXTENT_DEFRAG
++#define CHUNK_STATE_MASK			(CHUNK_ALLOCATED |		\
++						 CHUNK_TRIMMED)
+ 
+ enum {
+ 	IO_TREE_FS_PINNED_EXTENTS,
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -33,6 +33,7 @@
+ #include "delalloc-space.h"
+ #include "block-group.h"
+ #include "discard.h"
++#include "rcu-string.h"
+ 
+ #undef SCRAMBLE_DELAYED_REFS
+ 
+@@ -5685,6 +5686,19 @@ static int btrfs_trim_free_extents(struc
+ 					    &start, &end,
+ 					    CHUNK_TRIMMED | CHUNK_ALLOCATED);
+ 
++		/* Check if there are any CHUNK_* bits left */
++		if (start > device->total_bytes) {
++			WARN_ON(IS_ENABLED(CONFIG_BTRFS_DEBUG));
++			btrfs_warn_in_rcu(fs_info,
++"ignoring attempt to trim beyond device size: offset %llu length %llu device %s device size %llu",
++					  start, end - start + 1,
++					  rcu_str_deref(device->name),
++					  device->total_bytes);
++			mutex_unlock(&fs_info->chunk_mutex);
++			ret = 0;
++			break;
++		}
++
+ 		/* Ensure we skip the reserved area in the first 1M */
+ 		start = max_t(u64, start, SZ_1M);
+ 
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -4724,6 +4724,10 @@ again:
  	}
- 	return ret;
---- a/fs/btrfs/scrub.c
-+++ b/fs/btrfs/scrub.c
-@@ -3761,7 +3761,7 @@ static noinline_for_stack int scrub_supe
- 	struct btrfs_fs_info *fs_info = sctx->fs_info;
  
- 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
--		return -EIO;
-+		return -EROFS;
- 
- 	/* Seed devices of a new filesystem has their own generation. */
- 	if (scrub_dev->fs_devices != fs_info->fs_devices)
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -937,7 +937,10 @@ static int __btrfs_end_transaction(struc
- 	if (TRANS_ABORTED(trans) ||
- 	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
- 		wake_up_process(info->transaction_kthread);
--		err = -EIO;
-+		if (TRANS_ABORTED(trans))
-+			err = trans->aborted;
-+		else
-+			err = -EROFS;
- 	}
- 
- 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
+ 	mutex_lock(&fs_info->chunk_mutex);
++	/* Clear all state bits beyond the shrunk device size */
++	clear_extent_bits(&device->alloc_state, new_size, (u64)-1,
++			  CHUNK_STATE_MASK);
++
+ 	btrfs_device_set_disk_total_bytes(device, new_size);
+ 	if (list_empty(&device->post_commit_list))
+ 		list_add_tail(&device->post_commit_list,
 
 
