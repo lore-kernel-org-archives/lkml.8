@@ -2,54 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0A4C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45801C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC28A2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2581F204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923266;
-	bh=woRjvQMWZSHzJeQHe1qRaTxqDw8BUnNLYf05/32UtA8=;
+	s=default; t=1597923267;
+	bh=SriRrDedMudRpYmWo2kpmKuWSF9BDf4K95kArhbHnPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gsFQpjUCk2qAnnzsDdnBEU3zPRqch3g4oHFQGMcrjJoRhwVsyLBM4UR2BnZYITT2O
-	 TakiupAHhC4P5f9HI9Vrnlh98gQEF3YxdMpW2ZEw+E4cSGBTcmn893IBoyIk+1sJoY
-	 bJm10ayVKbffpZFqcEUnRNUX68jrpJx+Hr3M+v9s=
+	b=DJyYGRISZIMVIvpOs3RKbHj4/xjVdIBgE/rW3x+X/GfLqoXjoWrfQHv9c5LAf1IoQ
+	 g5WBGxKZ2O8Cujt4WPXRXwGHYB1Bazb7Mk135Y9YqPXQRd9yQgrcXMLGlz+XwQYvPk
+	 fgcquNY9yG77oLeZqxUbPsbQ59EmXqQXvWrE1baE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbgHTLdP (ORCPT
+        id S1730718AbgHTLdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbgHTKFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:46 -0400
+        id S1730590AbgHTKFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31F372067C;
-        Thu, 20 Aug 2020 10:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 998A1206DA;
+        Thu, 20 Aug 2020 10:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917945;
-        bh=woRjvQMWZSHzJeQHe1qRaTxqDw8BUnNLYf05/32UtA8=;
+        s=default; t=1597917943;
+        bh=SriRrDedMudRpYmWo2kpmKuWSF9BDf4K95kArhbHnPQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJqkz6ANZkDOtHJaggmSeE9s3+ldSWeoi9CSQbDatvDhW7MA/0EWT7T39wSSEfzcr
-         RRjfpN/kFm2nakXbVsV4yl9oFDmYdWe6XrjmE1lHRRos2HzBghhcMN+F9Av688Io7Y
-         qrwRokv8Ni7KLJtI4wC+BunZuyXXr3AInwYxZ3LU=
+        b=ZFtMywaPTZjqRPlbcThbw1QGeTxbCQwsh2M1S70E1KSVEV/tbciRTfNxH3Oq8XaoS
+         ZHVhI7dtlHgGav+HnC8g0ZyFwllCa/xXMv7Nz7USMWUfslsZPuvaRJMmKnWToluQbz
+         3ERyu9sVRml9ImrjfL65h0VFzDqAKs1IWByRtfvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liu Yi L <yi.l.liu@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 198/212] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Thu, 20 Aug 2020 11:22:51 +0200
-Message-Id: <20200820091612.357140639@linuxfoundation.org>
+        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.9 212/212] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Thu, 20 Aug 2020 11:23:05 +0200
+Message-Id: <20200820091613.040898601@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,40 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit 5f77d6ca5ca74e4b4a5e2e010f7ff50c45dea326 ]
+commit f29aa08852e1953e461f2d47ab13c34e14bc08b3 upstream.
 
-Set proper masks to avoid invalid input spillover to reserved bits.
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Link: https://lore.kernel.org/r/20200724014925.15523-2-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/ni_dpm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 27dbab59f034c..d86ac620f0aac 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -317,8 +317,8 @@ enum {
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2123,7 +2123,7 @@ static int ni_init_smc_spll_table(struct
+ 		if (p_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_PDIV_SHIFT))
+ 			ret = -EINVAL;
  
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
--- 
-2.25.1
-
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
+ 
+ 		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
 
 
