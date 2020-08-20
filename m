@@ -2,124 +2,73 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13952C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA53C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E82B722D03
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915626;
-	bh=IwOu8fCXa9DdmcQyNO/NbHb+QA/2t8mkqbpPv7+Zhfg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OfBjBwEuV7V8acUAO9uqKC6q4nBzODZrAeL9fHi+C6vCs5zBQdd33DWjW/KdGBbto
-	 7D5YKPExZZ6iHm6SMvNkLkIqlnL7jixH4Y3jZaOwPLRIaW01lbq2SW5AnT+dkhr68W
-	 p3cHNJWrY3woNQIm06d/UTHXHUTlhA5xLuh6IQF0=
+	by mail.kernel.org (Postfix) with ESMTP id C69D42224D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgHTJ06 (ORCPT
+        id S1727966AbgHTJ1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:26:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34806 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:27:14 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59310 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbgHTJ0B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1193D22D04;
-        Thu, 20 Aug 2020 09:25:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915550;
-        bh=IwOu8fCXa9DdmcQyNO/NbHb+QA/2t8mkqbpPv7+Zhfg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjP5llvGhntxomiAmrvDuyX1n2EjA59e5hGsLATKysDXcWegRBWO9RMqGB3CT4iu9
-         i3i80M5VNAZqrunhVlWX1BFGw+f+0kNCwiFP1O11lrejtARSGC49iJnJSwLR1taYYT
-         Km2klZY5D1diX+2/IzZhqSacH093yyPpTUmGkmiA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jo=C3=A3o=20Henrique?= <johnnyonflame@hotmail.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 5.8 053/232] pinctrl: ingenic: Enhance support for IRQ_TYPE_EDGE_BOTH
-Date:   Thu, 20 Aug 2020 11:18:24 +0200
-Message-Id: <20200820091615.351306981@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727866AbgHTJ0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 11E3EAC7D;
+        Thu, 20 Aug 2020 09:26:39 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 11:26:11 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     David Sterba <dsterba@suse.cz>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Stefani <luca.stefani.ge1@gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the tip tree
+Message-ID: <20200820092611.GD17365@zn.tnic>
+References: <20200820161239.25a9b3f4@canb.auug.org.au>
+ <20200820082149.GB17365@zn.tnic>
+ <20200820191502.1df900be@canb.auug.org.au>
+ <20200820092221.GU2026@twin.jikos.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200820092221.GU2026@twin.jikos.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+On Thu, Aug 20, 2020 at 11:22:21AM +0200, David Sterba wrote:
+> (Dunno why not an alias but it works the same way.)
 
-commit 1c95348ba327fe8621d3680890c2341523d3524a upstream.
+I have this alias:
 
-Ingenic SoCs don't natively support registering an interrupt for both
-rising and falling edges. This has to be emulated in software.
+	one = show -s --pretty='format:%h (\"%s\")'
 
-Until now, this was emulated by switching back and forth between
-IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING according to the level of
-the GPIO. While this worked most of the time, when used with GPIOs that
-need debouncing, some events would be lost. For instance, between the
-time a falling-edge interrupt happens and the interrupt handler
-configures the hardware for rising-edge, the level of the pin may have
-already risen, and the rising-edge event is lost.
+and so I do
 
-To address that issue, instead of switching back and forth between
-IRQ_TYPE_EDGE_RISING and IRQ_TYPE_EDGE_FALLING, we now switch back and
-forth between IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_LEVEL_HIGH. Since we
-always switch in the interrupt handler, they actually permit to detect
-level changes. In the example above, if the pin level rises before
-switching the IRQ type from IRQ_TYPE_LEVEL_LOW to IRQ_TYPE_LEVEL_HIGH,
-a new interrupt will raise as soon as the handler exits, and the
-rising-edge event will be properly detected.
+$ git one <sha1>
 
-Fixes: e72394e2ea19 ("pinctrl: ingenic: Merge GPIO functionality")
-Reported-by: João Henrique <johnnyonflame@hotmail.com>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: João Henrique <johnnyonflame@hotmail.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200622214548.265417-1-paul@crapouillou.net
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+and then paste it after Fixes:
 
----
- drivers/pinctrl/pinctrl-ingenic.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I have it this way because quoting commits is kinda very frequent
+operation, not only for Fixes: tags.
 
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1810,9 +1810,9 @@ static void ingenic_gpio_irq_ack(struct
- 		 */
- 		high = ingenic_gpio_get_value(jzgc, irq);
- 		if (high)
--			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_FALLING);
-+			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_LOW);
- 		else
--			irq_set_type(jzgc, irq, IRQ_TYPE_EDGE_RISING);
-+			irq_set_type(jzgc, irq, IRQ_TYPE_LEVEL_HIGH);
- 	}
- 
- 	if (jzgc->jzpc->info->version >= ID_JZ4760)
-@@ -1848,7 +1848,7 @@ static int ingenic_gpio_irq_set_type(str
- 		 */
- 		bool high = ingenic_gpio_get_value(jzgc, irqd->hwirq);
- 
--		type = high ? IRQ_TYPE_EDGE_FALLING : IRQ_TYPE_EDGE_RISING;
-+		type = high ? IRQ_TYPE_LEVEL_LOW : IRQ_TYPE_LEVEL_HIGH;
- 	}
- 
- 	irq_set_type(jzgc, irqd->hwirq, type);
+:-)
 
+-- 
+Regards/Gruss,
+    Boris.
 
+SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
