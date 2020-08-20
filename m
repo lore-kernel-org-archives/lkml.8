@@ -2,187 +2,192 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B56DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 697FE207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E24F2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:18:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="aS8KE4iT"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="U622t66e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgHTQRY (ORCPT
+        id S1729556AbgHTQSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729490AbgHTQQD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:16:03 -0400
-Received: from mail-oo1-xc44.google.com (mail-oo1-xc44.google.com [IPv6:2607:f8b0:4864:20::c44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD21C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:16:03 -0700 (PDT)
-Received: by mail-oo1-xc44.google.com with SMTP id x6so534780ooe.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:16:03 -0700 (PDT)
+        Thu, 20 Aug 2020 12:18:36 -0400
+Received: from mail-dm6nam12on2070.outbound.protection.outlook.com ([40.107.243.70]:38112
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729510AbgHTQRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:17:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dFh5T4djClzuqlqCm+lWdlMf/SdVbI6af5UM17GHKiNXIVCw71G4hutxkGG4nfmq6aO3UyZpz7JYYO0wd/NYh91a3+JndwXIW25OO6Ob68BdqvY48Hbe9ZLM7L6kjHL5QNDNlB2pRZjuxAOc1xqs7+ZWyF8qfa97seNKiiQP8DwFs/Li/d7I0RQ4+6mIm6q51F9fWfx67QK4KwCFFdKtu+XfWkJ+svnnQiAim6sIHZZMeFJ0IOO8vJDfV4gcfhRxmFXQQvoH83QM0k/lxGH3bKDrzQor675tCdW1RxjMItKcFFGPlZ6TtwkLbtqEGHXiijMMB/vt0OkxKdSrWNWQqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5K5FIMUUOzxvEtcrRubE5v1w3htLT/AGA+GT48J8ZEg=;
+ b=NCiDdLqdCC2IkWgz2v4dC+zDZxsprytKa4yVI7AdsEHkjQJnIN3zKSHT1DT+r5hrV//aKR6ccFVCNja7Lhwv1uhKHGYpc9ttGL+akmsBWEw0e+HkwJecK0VxwAdcC7CwzZs4dUdY7ahHz32jhb/W5b5B4S+vW4tIrPzWz1nJ/BU/HNFmA2OK5utQzJcLS4i56V5ZUEiqyfd8kvHOrWizPxcAR2kpShFtuhdSToQQC0/gSeooj27Iibc9+tx7o6FG2w3W69YgezH4U021MpJVHc7/9tur/gvU3zTvvlBRW7iGtypDGFMGInjW/7OWVqH7zHi8ErgcnLP3GbnKmuzOCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UpPzndwiSYhaVueh4zOqhGfv4Oo3BxfBjljCA4pNUIM=;
-        b=aS8KE4iTIRs5uiKqL5IP+COnR+Ldcy7QhNI0Fs+SpBbNkrd+GF28NFlOZwVXfU00zl
-         j9xlxMBX1SaNs94apFw+bOvHsfgwzhfHg1mPOjpSs/xwohYSdnaeU8+R/NArdJ7qfbDH
-         VS5lDOzW9PQPL6PgxyyMlRs2hVSikCAJXxPls=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UpPzndwiSYhaVueh4zOqhGfv4Oo3BxfBjljCA4pNUIM=;
-        b=aZK5+/FIteJa4Q5cGHaqEzqKzhEk6cKFSnf5J/8shpNXDC45Paou0v/SFZy3mNTuUp
-         QE+pWCJwd5l5YV3DXLRSxefYRrjn8RqF3jjONea6MU7sC1TSB04igrkkuid2JWjQufRZ
-         0J8iVsWHMRs2VPy59+eIJ9u2+RFH7wR1lYXSCBfNMZ2UeqW1N5C9hLi35nubD0WygV4z
-         /u3R+81JOK0Ku4cHhRoZ4N+tOToAFRPWMeeEdyjoVqvuEkGBPo9znyZ7sT6Sk6Vc46LJ
-         DUorrhqfoA4ID50TcSg6SfjTAu6dCAU0pknacsl5bRLFIJ6gLxwzrVHZPJljWlJt91it
-         8Bmg==
-X-Gm-Message-State: AOAM531g6liwZ73P8CrQVYTav8EP3jRDwuF4c3+KmdYF+AVInVeuRE2N
-        fz7gVMWWQsit2as+GfaaJk/W5GKR/4Ko0bYAfhQhGA==
-X-Google-Smtp-Source: ABdhPJxhIFwfgHxw3SxwdM5trgHfAXmTzg6cKfXYVIO/ijSC/WKBlr9CdxjuEg4Cgs9XTqRC/fGONcWAjPxBeg7NZYw=
-X-Received: by 2002:a4a:de49:: with SMTP id z9mr3004747oot.6.1597940160388;
- Thu, 20 Aug 2020 09:16:00 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5K5FIMUUOzxvEtcrRubE5v1w3htLT/AGA+GT48J8ZEg=;
+ b=U622t66es38XjtyT9d1iU431d1uQS9gF6KoIAaRpxSuXqnwB/PJmw6npDdGjVNHDI8y9fnOUZA42+fPFWy3Kwy4+te16M7QMuV78U+ANx1KP3SJXAS0TL6rwUTSGFkwgcNVy3XQrNzVnGa3T0lZfXuh5Si+/EHKrwk1LkDtOujg=
+Authentication-Results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com (2603:10b6:3:6e::7) by
+ DM6PR12MB4355.namprd12.prod.outlook.com (2603:10b6:5:2a3::21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3305.25; Thu, 20 Aug 2020 16:17:02 +0000
+Received: from DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::299a:8ed2:23fc:6346]) by DM5PR12MB1355.namprd12.prod.outlook.com
+ ([fe80::299a:8ed2:23fc:6346%3]) with mapi id 15.20.3305.026; Thu, 20 Aug 2020
+ 16:17:02 +0000
+Subject: Re: FSGSBASE causing panic on 5.9-rc1
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        X86 ML <x86@kernel.org>,
+        "Chang S. Bae" <chang.seok.bae@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sasha Levin <sashal@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+References: <39d57e4d-5db4-f536-6f5e-6b0414c0dccc@amd.com>
+ <7dedb0ab-56a6-5d96-577b-21ab1ecdad24@amd.com>
+ <CALCETrUArZ04UqJjp2mEheuMpZyPwLeEgGM7mdDdmWxmx=GN4Q@mail.gmail.com>
+ <CALCETrWcXgp+GzFNrOKcX740+R-57FgNu3Wt3g=_sRCMYFzbMg@mail.gmail.com>
+ <20200820151049.GA26595@sjchrist-ice>
+ <362f5a45-b808-25ad-b99b-449e05717c4a@amd.com>
+ <CALCETrW8SWgWxDdMXuMPD-A1avztvNcpwLAKKRQ4ojmcz07B6A@mail.gmail.com>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <45e16c5c-ce99-33da-99c8-ea52ef0945db@amd.com>
+Date:   Thu, 20 Aug 2020 11:17:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <CALCETrW8SWgWxDdMXuMPD-A1avztvNcpwLAKKRQ4ojmcz07B6A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR05CA0030.namprd05.prod.outlook.com
+ (2603:10b6:805:de::43) To DM5PR12MB1355.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::7)
 MIME-Version: 1.0
-References: <20200820135729.135783-1-lmb@cloudflare.com> <20200820135729.135783-5-lmb@cloudflare.com>
- <34027dbc-d5c6-e886-21f8-f3e73e2fde4a@fb.com>
-In-Reply-To: <34027dbc-d5c6-e886-21f8-f3e73e2fde4a@fb.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Thu, 20 Aug 2020 17:15:48 +0100
-Message-ID: <CACAyw98gaWmpJT-LPhqKbKgaPG9s=aNU=K2Db1144dihFHzXJA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 4/6] bpf: override the meaning of
- ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by SN6PR05CA0030.namprd05.prod.outlook.com (2603:10b6:805:de::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Thu, 20 Aug 2020 16:17:01 +0000
+X-Originating-IP: [67.79.209.213]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: aefbc303-6b9e-4149-ef5b-08d8452478ca
+X-MS-TrafficTypeDiagnostic: DM6PR12MB4355:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB4355A5C752B25300B79E3D20EC5A0@DM6PR12MB4355.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:843;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: FkTyG6j7JchvqxVp0suMq9QQ52UbkN76Zb1hrQHtiQE57SQ+YJ+RcjZXXXQHi3xnXXT9P0nDyg0Ngind+kp1dqRS8YZRtRNppavlZO/5AkVkLS8empI3mODlVTUv18OkrPEKo33mfI+TeYGkw25q4og9p/K4L4ucJ+OowmVfZz7pqOzardZr27LYkRFdkiaG2vXyoInS43LcH4sQ2oIk48HQeOiPS4GRYeW7BH4PGVqGY+6BRdfMMnAAhRfObYHJvXHzEgBeNaoL2ocejsbaFO9xio2cShYqMjHxZSU9acXgNkaLji4J/t5PZagncVDXxkHOft1PwKGaYTR2glRp1AkzJWM0nPkP54j/f1fpUcJQHsGKzYxAboKVF4G8Q4wGWFouPFKsTrb15n4zTl2lFbQ5RLmHRP0uuuBgIl9G9Ec=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1355.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(956004)(2616005)(31686004)(6916009)(110011004)(2906002)(8676002)(52116002)(4326008)(26005)(54906003)(36756003)(6486002)(86362001)(478600001)(16576012)(186003)(316002)(7416002)(66556008)(66476007)(66946007)(31696002)(5660300002)(53546011)(8936002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: lQ2oiZSkxIOvx4/sGfWtyumlX5gSTZesMrr3SMrQuntnvzWQHx1YFdCB/yU4EnQZTMkgCrDygw8VCBjDRmYYvx8XgJhpbm3GUw/JdJW0Ny0hpFZB7d5cH7k3nVV9JMOV3H+LS3aWegKwMsx/4zE7gINJSWOClddPD7GLqaxVMYlAP0RybI4N+faVpogeXIxtJRCBR6imGMfcC7s82twyLQKKmfw2FEwBsEDqGmMrfImOWKfwnScvOKho/sPbn+4HwU4WXD6N820HzHIrQm8nJwwW51vm/TwifS2lbJmWYoNdPM3KQk+dbNV118fY06ro7R1Ssh6NaAHoDIe5wWIZHR+A/5FRps93s0E6/lyQo3JT+VNxVA3UPdjdnhxu/IuFEC/PHM/ZXLGXLk0CwFKY/7MDjeQpEefOsHctTnuTfmE9DQkiFlRXxEqIhVoKp87U5WeKmfs/5wDVnny3y2Rp6YbIhIqUxuV6EhOnRYk5DrEU5t8SdPfGPkKOj0QAiV2LjrKarkn+CvOWY9nDy5nqL5jjBubVap2yllKvCi8c4TOLQFh7h3F1BGBpiqfCnab5dO1rhP9NH4z84Bix1i6/7lw1+oYmijofQRLGQ5bdi0vVJ5a8lh5ZkhDDb9i/r0rvpHj3AspJrOEMqPUuxQbebA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aefbc303-6b9e-4149-ef5b-08d8452478ca
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1355.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 16:17:02.2539
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AZH8ubKDfyWBdr7XmxOkv4x0RTjBOjRqCTzVaxj/Hk1psBbIg8oKOqP0zuQtkxzgzPemQCuoczaMV6OcwV19TQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4355
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 17:10, Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 8/20/20 6:57 AM, Lorenz Bauer wrote:
-> > The verifier assumes that map values are simple blobs of memory, and
-> > therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
-> > map types where this isn't true. For example, sockmap and sockhash store
-> > sockets. In general this isn't a big problem: we can just
-> > write helpers that explicitly requests PTR_TO_SOCKET instead of
-> > ARG_PTR_TO_MAP_VALUE.
-> >
-> > The one exception are the standard map helpers like map_update_elem,
-> > map_lookup_elem, etc. Here it would be nice we could overload the
-> > function prototype for different kinds of maps. Unfortunately, this
-> > isn't entirely straight forward:
-> > We only know the type of the map once we have resolved meta->map_ptr
-> > in check_func_arg. This means we can't swap out the prototype
-> > in check_helper_call until we're half way through the function.
-> >
-> > Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE* to
-> > mean "the native type for the map" instead of "pointer to memory"
-> > for sockmap and sockhash. This means we don't have to modify the
-> > function prototype at all
-> >
-> > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> > ---
-> >   kernel/bpf/verifier.c | 37 +++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 37 insertions(+)
-> >
-> > diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-> > index b6ccfce3bf4c..24feec515d3e 100644
-> > --- a/kernel/bpf/verifier.c
-> > +++ b/kernel/bpf/verifier.c
-> > @@ -3872,6 +3872,35 @@ static int int_ptr_type_to_size(enum bpf_arg_type type)
-> >       return -EINVAL;
-> >   }
-> >
-> > +static int resolve_map_arg_type(struct bpf_verifier_env *env,
-> > +                              const struct bpf_call_arg_meta *meta,
-> > +                              enum bpf_arg_type *arg_type)
-> > +{
-> > +     if (!meta->map_ptr) {
-> > +             /* kernel subsystem misconfigured verifier */
-> > +             verbose(env, "invalid map_ptr to access map->type\n");
-> > +             return -EACCES;
-> > +     }
-> > +
-> > +     switch (meta->map_ptr->map_type) {
-> > +     case BPF_MAP_TYPE_SOCKMAP:
-> > +     case BPF_MAP_TYPE_SOCKHASH:
-> > +             if (*arg_type == ARG_PTR_TO_MAP_VALUE) {
-> > +                     *arg_type = ARG_PTR_TO_SOCKET;
-> > +             } else if (*arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
-> > +                     *arg_type = ARG_PTR_TO_SOCKET_OR_NULL;
->
-> Is this *arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL possible with
-> current implementation?
+On 8/20/20 10:55 AM, Andy Lutomirski wrote:
+> On Thu, Aug 20, 2020 at 8:21 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>>
+>> On 8/20/20 10:10 AM, Sean Christopherson wrote:
+>>> On Wed, Aug 19, 2020 at 05:21:33PM -0700, Andy Lutomirski wrote:
+>>>> On Wed, Aug 19, 2020 at 2:25 PM Andy Lutomirski <luto@kernel.org> wrote:
+>>>>>
+>>>>> On Wed, Aug 19, 2020 at 11:19 AM Tom Lendacky <thomas.lendacky@amd.com> wrote:
+>>>>>>
+>>>>>> On 8/19/20 1:07 PM, Tom Lendacky wrote:
+>>>>>>> It looks like the FSGSBASE support is crashing my second generation EPYC
+>>>>>>> system. I was able to bisect it to:
+>>>>>>>
+>>>>>>> b745cfba44c1 ("x86/cpu: Enable FSGSBASE on 64bit by default and add a chicken bit")
+>>>>>>>
+>>>>>>> The panic only happens when using KVM. Doing kernel builds or stress
+>>>>>>> on bare-metal appears fine. But if I fire up, in this case, a 64-vCPU
+>>>>>>> guest and do a kernel build within the guest, I get the following:
+>>>>>>
+>>>>>> I should clarify that this panic is on the bare-metal system, not in the
+>>>>>> guest. And that specifying nofsgsbase on the bare-metal command line fixes
+>>>>>> the issue.
+>>>>>
+>>>>> I certainly see some oddities:
+>>>>>
+>>>>> We have this code:
+>>>>>
+>>>>> static void svm_vcpu_put(struct kvm_vcpu *vcpu)
+>>>>> {
+>>>>>           struct vcpu_svm *svm = to_svm(vcpu);
+>>>>>           int i;
+>>>>>
+>>>>>           avic_vcpu_put(vcpu);
+>>>>>
+>>>>>           ++vcpu->stat.host_state_reload;
+>>>>>           kvm_load_ldt(svm->host.ldt);
+>>>>> #ifdef CONFIG_X86_64
+>>>>>           loadsegment(fs, svm->host.fs);
+>>>>>           wrmsrl(MSR_KERNEL_GS_BASE, current->thread.gsbase);
+>>>
+>>> Pretty sure current->thread.gsbase can be stale, i.e. this needs:
+>>>
+>>>        current_save_fsgs();
+>>
+>> I did try adding current_save_fsgs() in svm_vcpu_load(), saving the
+>> current->thread.gsbase value to a new variable in the svm struct. I then
+>> used that variable in the wrmsrl below, but it still crashed.
+> 
+> Can you try bisecting all the way back to:
+> 
+> commit dd649bd0b3aa012740059b1ba31ecad28a408f7f
+> Author: Andy Lutomirski <luto@kernel.org>
+> Date:   Thu May 28 16:13:48 2020 -0400
+> 
+>      x86/cpu: Add 'unsafe_fsgsbase' to enable CR4.FSGSBASE
+> 
+> and adding the unsafe_fsgsbase command line option while you bisect.
 
-No, the only user is bpf_sk_storage_get and friends which requires
-BPF_MAP_TYPE_SK_STORAGE.
-I seemed to make sense to map ARG_PTR_TO_MAP_VALUE_OR_NULL, but I can
-remove it as
-well if you prefer. Do you think this is dangerous?
+I'll give that a try.
 
->
-> If not, we can remove this "else if" and return -EINVAL, right?
->
-> > +             } else {
-> > +                     verbose(env, "invalid arg_type for sockmap/sockhash\n");
-> > +                     return -EINVAL;
-> > +             }
-> > +             break;
-> > +
-> > +     default:
-> > +             break;
-> > +     }
-> > +     return 0;
-> > +}
-> > +
-> >   static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
-> >                         struct bpf_call_arg_meta *meta,
-> >                         const struct bpf_func_proto *fn)
-> > @@ -3904,6 +3933,14 @@ static int check_func_arg(struct bpf_verifier_env *env, u32 arg,
-> >               return -EACCES;
-> >       }
-> >
-> > +     if (arg_type == ARG_PTR_TO_MAP_VALUE ||
-> > +         arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
-> > +         arg_type == ARG_PTR_TO_MAP_VALUE_OR_NULL) {
-> > +             err = resolve_map_arg_type(env, meta, &arg_type);
->
-> I am okay with this to cover all MAP_VALUE types with func
-> name resolve_map_arg_type as a generic helper.
->
-> > +             if (err)
-> > +                     return err;
-> > +     }
-> > +
-> >       if (arg_type == ARG_PTR_TO_MAP_KEY ||
-> >           arg_type == ARG_PTR_TO_MAP_VALUE ||
-> >           arg_type == ARG_PTR_TO_UNINIT_MAP_VALUE ||
-> >
+> 
+> Also, you're crashing when you run a guest, right?  Can you try
 
+Right, when the guest is running. The guest boots fine and only when I put 
+some stress on it (kernel build) does it cause the issue. It might be 
+worth trying to pin all the vCPUs and see if the crash still happens.
 
+> running the x86 sefltests on a bad kernel without running any guests?
 
--- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+I'll give that a try.
 
-www.cloudflare.com
+Thanks,
+Tom
+
+> 
+> --Andy
+> 
