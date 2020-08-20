@@ -7,53 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55647C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0FDC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 251AC20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0B32078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925917;
-	bh=nJMVz16Z//JCjia4/16HUl7e5sIkoC/e/9LkHub4gic=;
+	s=default; t=1597925918;
+	bh=BeTxvoNRylsDfFhemtURzi9T/+hctY95SiKy9lsY9ig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gnrOATMGJ61GGftvkQUU2dRFFKh0GFucNbQlR64U78sr2v6qXfc4Tdn/gk9jk7sNV
-	 u0ohj3s9/soYB3AQBMyqKOikMPifLutrcljfLda+2XnQNjXvKInxnHCZhCGuMixKef
-	 BQEhqVyhA91/0/eJR9aCbo/Hv570r1MX/SPBKtjM=
+	b=JRyEgrblleFIr1XDF2uIz8nO5Y46zqZf9Pwx3z02tIvHxIw2EyEpR7lgjwY0PKOon
+	 VnQameBliunZgl0TbS9a/zZIDMNKrvUnldOWiEC4DhxMWTt0niNFLSd0qhkvB3tbIy
+	 nlLhNuchCNsflTgGpgZjv6S54L61/qrBVtQ3aw54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbgHTJ4K (ORCPT
+        id S1730641AbgHTMSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730230AbgHTJz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:57 -0400
+        id S1728929AbgHTJ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D8FD2078D;
-        Thu, 20 Aug 2020 09:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEFA20885;
+        Thu, 20 Aug 2020 09:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917356;
-        bh=nJMVz16Z//JCjia4/16HUl7e5sIkoC/e/9LkHub4gic=;
+        s=default; t=1597917387;
+        bh=BeTxvoNRylsDfFhemtURzi9T/+hctY95SiKy9lsY9ig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DKUahjyCM1bXgTWzuXKTuXhns3AiHZPD9XlQRPemFO9xQexHSN4UbHOigEsQ2LGwF
-         eQ28hUNob3m+QZjqnH3Clnh3vTSYr8h7dsfZvCjv4KsszpnxWV5ocIan1ydOBKnpg5
-         CUus+U9Ol2YCFdjtK0xfF27dk9QcAkY81hZxRe/U=
+        b=sAaCu+4A1KjpbidGyMUKZLIGaRfs+dLKoEEMQfQtKswzAmqlE+Af7cGdioG83k1hg
+         uKpVjCaZhBJg3prZG34jm9Q3lm+mvXHf74Hw0JOAGDIrpaD6jPC/ELzAv+0L5ms+sA
+         weBaLvyoX6ISoYxe5+kYGa3Biz+KofG1eqP+TULE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Gong Chen <gongchen4@huawei.com>,
+        Sheng Yong <shengyong1@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 81/92] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:22:06 +0200
-Message-Id: <20200820091541.867416468@linuxfoundation.org>
+Subject: [PATCH 4.9 014/212] f2fs: check if file namelen exceeds max value
+Date:   Thu, 20 Aug 2020 11:19:47 +0200
+Message-Id: <20200820091603.051946798@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
-References: <20200820091537.490965042@linuxfoundation.org>
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,42 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Sheng Yong <shengyong1@huawei.com>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+[ Upstream commit 720db068634c91553a8e1d9a0fcd8c7050e06d2b ]
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+Dentry bitmap is not enough to detect incorrect dentries. So this patch
+also checks the namelen value of a dentry.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Gong Chen <gongchen4@huawei.com>
+Signed-off-by: Sheng Yong <shengyong1@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ufs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/dir.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index a4e07e910f1b4..6e59e45d7bfbd 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -100,7 +100,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 79d138756acb5..9a11b48e55ca2 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -845,7 +845,8 @@ bool f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
  
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
- 
- 	inode = ufs_iget(sb, ino);
+ 		/* check memory boundary before moving forward */
+ 		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
+-		if (unlikely(bit_pos > d->max)) {
++		if (unlikely(bit_pos > d->max ||
++				le16_to_cpu(de->name_len) > F2FS_NAME_LEN)) {
+ 			f2fs_msg(F2FS_I_SB(d->inode)->sb, KERN_WARNING,
+ 				"%s: corrupted namelen=%d, run fsck to fix.",
+ 				__func__, le16_to_cpu(de->name_len));
 -- 
 2.25.1
 
