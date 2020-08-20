@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A594C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E21A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 136BC22B49
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B992A22BF3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917811;
-	bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
+	s=default; t=1597917852;
+	bh=Oxz/pHHOfZu6DDktw0jpD77BvgosJPVmTpZamkfr8Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XIJ6VNHDFae7H7HTmyhXwvurgSIB+roBkiXWO0z8PNbQV+PNxcVuyF3RT/u/5Z2DE
-	 7E2uBVnORrMkYmI7+25dqIz1bYGr8zRteCpxHQf2YUAyP1r/XNr0Yy4xEJqGH9BDKT
-	 9GRSHxn0qIvyUl7Vmo/xCjr/tTzUTxWza9brC+u8=
+	b=jajTPGfEkzlX5siY7SQ1KKll4jJGiA0/DnZlJ+9fD3gSoaWptUT44ICWjjSJdQ9V5
+	 U5EAEWI0K4v8+y8WcYu8OAhkcDwMslw5Agh8Ne8O8chD0i+PncbQz1HS+x7AoP0ZEF
+	 wdShUVVu6V7PnTYU5NFL8/OiACaVJXoL4n0Csj7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730503AbgHTKCL (ORCPT
+        id S1728740AbgHTKEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50034 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:04:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730406AbgHTKBO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:14 -0400
+        id S1730493AbgHTKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E09020855;
-        Thu, 20 Aug 2020 10:01:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D3A22BF5;
+        Thu, 20 Aug 2020 10:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917661;
-        bh=deAXlMAOnKUuC4bREE4TaknAbxR6vkBJLpB4dFrHtk0=;
+        s=default; t=1597917715;
+        bh=Oxz/pHHOfZu6DDktw0jpD77BvgosJPVmTpZamkfr8Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lz8CVpM0GxcUOB2yh6MuGG4Yi7Jzra68fMjevFaFlbKSU8NWT5SY7gJ6Kk1TvFpKA
-         meiNhkGp+fSl4CADNe9a6+yokL1vPEeMOwQRNtCVLg44Ps7aNjEqZKVSVYR7HiPZBT
-         3conOIHEKlY9Q82FVRzIbH8z3IKwxp0Khyg4lsAI=
+        b=yCLsxO6g+PYYs7DORHgHU04yNGehqyFYwI8WSWO3aGAdtIYBlBlFsbBKqkWu1ZT/F
+         2q8DJwnY+UZSYisefhXJJfeheV8Zay8TBSvSi4O90Qk3JqjFapLaG0TZk9JLakF9HF
+         C5tNyhzMXf44NyB/t38PbxT2NAcHk3ocfeya/pDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 112/212] leds: lm355x: avoid enum conversion warning
-Date:   Thu, 20 Aug 2020 11:21:25 +0200
-Message-Id: <20200820091608.000191831@linuxfoundation.org>
+        stable@vger.kernel.org, Bjorn Helgaas <bjorn@helgaas.com>,
+        Bolarinwa Olayemi Saheed <refactormyself@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 101/212] iwlegacy: Check the return value of pcie_capability_read_*()
+Date:   Thu, 20 Aug 2020 11:21:14 +0200
+Message-Id: <20200820091607.446726802@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,58 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
 
-[ Upstream commit 985b1f596f9ed56f42b8c2280005f943e1434c06 ]
+[ Upstream commit 9018fd7f2a73e9b290f48a56b421558fa31e8b75 ]
 
-clang points out that doing arithmetic between diffent enums is usually
-a mistake:
+On failure pcie_capability_read_dword() sets it's last parameter, val
+to 0. However, with Patch 14/14, it is possible that val is set to ~0 on
+failure. This would introduce a bug because (x & x) == (~0 & x).
 
-drivers/leds/leds-lm355x.c:167:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
-drivers/leds/leds-lm355x.c:178:28: warning: bitwise operation between different enumeration types ('enum lm355x_tx2' and 'enum lm355x_ntc') [-Wenum-enum-conversion]
-                reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-                          ~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~
+This bug can be avoided without changing the function's behaviour if the
+return value of pcie_capability_read_dword is checked to confirm success.
 
-In this driver, it is intentional, so add a cast to hide the false-positive
-warning. It appears to be the only instance of this warning at the moment.
+Check the return value of pcie_capability_read_dword() to ensure success.
 
-Fixes: b98d13c72592 ("leds: Add new LED driver for lm355x chips")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
+Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200713175529.29715-3-refactormyself@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/leds/leds-lm355x.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/intel/iwlegacy/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/leds/leds-lm355x.c b/drivers/leds/leds-lm355x.c
-index 6cb94f9a2f3f3..b9c60dd2b1327 100644
---- a/drivers/leds/leds-lm355x.c
-+++ b/drivers/leds/leds-lm355x.c
-@@ -168,18 +168,19 @@ static int lm355x_chip_init(struct lm355x_chip_data *chip)
- 	/* input and output pins configuration */
- 	switch (chip->type) {
- 	case CHIP_LM3554:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin;
- 		ret = regmap_update_bits(chip->regmap, 0xE0, 0x28, reg_val);
- 		if (ret < 0)
- 			goto out;
--		reg_val = pdata->pass_mode;
-+		reg_val = (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0xA0, 0x04, reg_val);
- 		if (ret < 0)
- 			goto out;
- 		break;
- 
- 	case CHIP_LM3556:
--		reg_val = pdata->pin_tx2 | pdata->ntc_pin | pdata->pass_mode;
-+		reg_val = (u32)pdata->pin_tx2 | (u32)pdata->ntc_pin |
-+		          (u32)pdata->pass_mode;
- 		ret = regmap_update_bits(chip->regmap, 0x0A, 0xC4, reg_val);
- 		if (ret < 0)
- 			goto out;
+diff --git a/drivers/net/wireless/intel/iwlegacy/common.c b/drivers/net/wireless/intel/iwlegacy/common.c
+index db2373fe8ac32..55573d090503b 100644
+--- a/drivers/net/wireless/intel/iwlegacy/common.c
++++ b/drivers/net/wireless/intel/iwlegacy/common.c
+@@ -4302,8 +4302,8 @@ il_apm_init(struct il_priv *il)
+ 	 *    power savings, even without L1.
+ 	 */
+ 	if (il->cfg->set_l0s) {
+-		pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
+-		if (lctl & PCI_EXP_LNKCTL_ASPM_L1) {
++		ret = pcie_capability_read_word(il->pci_dev, PCI_EXP_LNKCTL, &lctl);
++		if (!ret && (lctl & PCI_EXP_LNKCTL_ASPM_L1)) {
+ 			/* L1-ASPM enabled; disable(!) L0S  */
+ 			il_set_bit(il, CSR_GIO_REG,
+ 				   CSR_GIO_REG_VAL_L0S_ENABLED);
 -- 
 2.25.1
 
