@@ -2,84 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F85C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB31320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3EPV3knA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ULPUuc9e"
+	by mail.kernel.org (Postfix) with ESMTP id E503C20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919475;
+	bh=WLyA88J8T3spRMLusXNJPpUS4D63ON4Do1QvNlJ1D3Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2tGmSuVp4exMn/rMsLtWBQJACwvnmOakJRqAr/xcSvkDbUSgUvt7SlfAvuGDeBLvV
+	 pYDu0+DpGgk3CojO7sPsrYn5FUyLslKe90OaFskjdnhcKQwrxrAkG2kHxAYCyr8BbK
+	 CmjaeeZqn5ytwEGCKic9QiXzHnT5v89OfdT/+56k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgHTKbI (ORCPT
+        id S1731492AbgHTKUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:31:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731556AbgHTKa7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:30:59 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24386C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:30:57 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597919455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B7cfqGZkgK3wnJB9jJTRyVdxfvxLDto1zNe1KaB54CQ=;
-        b=3EPV3knAsfXh9CLr4dbF2tNW9e0Oq2HfDbBKBMYqfoaDIbXFkTdm/EytFwE5I24IwNgnuq
-        FuUWBh8VVEpQyS1FqxeyaEag7nXK22qb5G80yozV/xLh3srD/lZ0axqKQQgbcbXQHVPbuS
-        xSaLNSkuwt5T6Yg2hM8LRFUaExEwNRPrSIMeHZ+k1i6lGHyn/U51Jn4TTiQAkN5Rl1oqhp
-        mkZp4L95aPKQ2y+Q6/i/1u7hTcKjAwFnB9PxdNEIBPyCVi489i6KCYnqBkRJM0O5PvE0FV
-        j/kl3aHFTotsHiJJBFaw9gso3GHgMGndn/eDSsMrcuqZyKDSYaVgtFaZzy35uw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597919455;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=B7cfqGZkgK3wnJB9jJTRyVdxfvxLDto1zNe1KaB54CQ=;
-        b=ULPUuc9eUbDuKNnt9MihP1T/D8RAv4BzOgvJSfu8MvLnf9XATyA9okQkvpn1/9lrMsYkxq
-        kNlGeL7PLbFiRcAQ==
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org
-Subject: Re: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
-In-Reply-To: <20200820084738.GD4353@alley>
-References: <20200814101933.574326079@linutronix.de> <20200820084738.GD4353@alley>
-Date:   Thu, 20 Aug 2020 12:30:55 +0200
-Message-ID: <878se9ip7k.fsf@nanos.tec.linutronix.de>
+        Thu, 20 Aug 2020 06:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730384AbgHTKUb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:31 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C49BF2067C;
+        Thu, 20 Aug 2020 10:20:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918831;
+        bh=WLyA88J8T3spRMLusXNJPpUS4D63ON4Do1QvNlJ1D3Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=l4KM/oaI8ZmhPDX6k3lSqxUNzIX94AO605lRe9nzjsLftdB/UPKk9pxp//brOnr3V
+         SVNPxTr3mBCd/SJUmG90ZVP8Eao11xu7zazftkThvWHNtHSsfswAZ0exsHdvDx4q/s
+         Fk6Vwr4sBk54E0S8QPcL6h7czWXyaEz9BLkgjUqk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 083/149] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
+Date:   Thu, 20 Aug 2020 11:22:40 +0200
+Message-Id: <20200820092129.744289920@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Petr,
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-On Thu, Aug 20 2020 at 10:47, Petr Mladek wrote:
-> The interface is perfectly fine for printk() needs.
+[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
 
-Good. So I suggest that I apply that on top of rc1 somewhere in tip and
-tag the top commit. So you can pull that tag into your printk branch and
-go wild.
+The dev_id used in request_irq() and free_irq() should match.  Use 'info'
+in both cases.
 
-Thanks,
+Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/arm/cumana_2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-        tglx
+diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
+index faa1bee07c8ac..0c83a155ceebc 100644
+--- a/drivers/scsi/arm/cumana_2.c
++++ b/drivers/scsi/arm/cumana_2.c
+@@ -454,7 +454,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_release:
+ 	fas216_release(host);
+-- 
+2.25.1
+
 
 
