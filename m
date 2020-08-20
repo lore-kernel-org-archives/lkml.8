@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3EEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1BF22CF8
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F269522B4D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925004;
-	bh=ARihVEuseQCFHZrrPcQ5uuG/aBEPbF+5Kj8+MIjhHeI=;
+	s=default; t=1597925019;
+	bh=MQEJ/9DrOxqDIpB95RQkneAyDumTBMEidzaunoBkBAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MI9RxNanJuKPpjGozqxNF1f3tYu3dMdX9caALcHbcyCYDDQrzjNomi395ODjnJgo9
-	 BtzdI5o85a4TkFTpd8b0xz8S2e/2uFsrq6Lfd6y623fA2kOsXDHlIkhpyAuxzZLNLA
-	 +odZ8/CmOcC0v8THIFiX4hDtnMvCEeOt8H5QIkFY=
+	b=rf0hJ3y9O1o4XezImf73ISdUXfe8qjY/E9m0xcx210pnxq1uv7hhVG7w9Nh9C6rDJ
+	 HlM55mX+MBbn7xv31mFfhMwCmRMal6seAB0pII3+7b0Ua2qzPie/LZNBuI+3rBfp1U
+	 ZeUyLvTv744plv4/sWDvrPNb+q1QLufTMO9q7M4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgHTMDT (ORCPT
+        id S1730705AbgHTMCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:03:19 -0400
+        Thu, 20 Aug 2020 08:02:46 -0400
 Received: from mail.kernel.org ([198.145.29.99]:46310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729754AbgHTJ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:38 -0400
+        id S1730437AbgHTJ7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EDE8207FB;
-        Thu, 20 Aug 2020 09:59:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40701207FB;
+        Thu, 20 Aug 2020 09:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917578;
-        bh=ARihVEuseQCFHZrrPcQ5uuG/aBEPbF+5Kj8+MIjhHeI=;
+        s=default; t=1597917585;
+        bh=MQEJ/9DrOxqDIpB95RQkneAyDumTBMEidzaunoBkBAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jt2wCb2h/J5J+XKJ9fXncZKORtGSuBrtazkUdNwYFgKrBddUdEHXZY8zNKue5ULxJ
-         BqxP6Jj2np0sh6a3oCMioUmwyvBflskRODSxTVUYx6wpDTKK6G/gyuN8Q29B4Ur++/
-         E6fnum0MFycLOu2qEzYs+XojUaGSzXjXprkPmKMI=
+        b=qwtxM0ol2v2ytflgZx2HhH+cgCPz1l2jK5KXRpeYbW1W0kl4zkB/5cN4wYOKf0KAi
+         QBcx1kJfoys+xrbQY5afeHoYtUzW6k/2UsZb4aDsNsqVZg6xnM6001SBtuoGSRyUcF
+         nRP1z0W1uZHk6eORTfkNa5Twtu6hWU+djXoGvB6g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        stable@vger.kernel.org, Julian Squires <julian@cipht.net>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 081/212] cgroup: add missing skcd->no_refcnt check in cgroup_sk_clone()
-Date:   Thu, 20 Aug 2020 11:20:54 +0200
-Message-Id: <20200820091606.449981045@linuxfoundation.org>
+Subject: [PATCH 4.9 066/212] cfg80211: check vendor command doit pointer before use
+Date:   Thu, 20 Aug 2020 11:20:39 +0200
+Message-Id: <20200820091605.703291165@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,32 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Julian Squires <julian@cipht.net>
 
-Add skcd->no_refcnt check which is missed when backporting
-ad0f75e5f57c ("cgroup: fix cgroup_sk_alloc() for sk_clone_lock()").
+[ Upstream commit 4052d3d2e8f47a15053320bbcbe365d15610437d ]
 
-This patch is needed in stable-4.9, stable-4.14 and stable-4.19.
+In the case where a vendor command does not implement doit, and has no
+flags set, doit would not be validated and a NULL pointer dereference
+would occur, for example when invoking the vendor command via iw.
 
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+I encountered this while developing new vendor commands.  Perhaps in
+practice it is advisable to always implement doit along with dumpit,
+but it seems reasonable to me to always check doit anyway, not just
+when NEED_WDEV.
+
+Signed-off-by: Julian Squires <julian@cipht.net>
+Link: https://lore.kernel.org/r/20200706211353.2366470-1-julian@cipht.net
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/cgroup.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/wireless/nl80211.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/cgroup.c b/kernel/cgroup.c
-index f047c73189f36..684d02f343b4c 100644
---- a/kernel/cgroup.c
-+++ b/kernel/cgroup.c
-@@ -6355,6 +6355,8 @@ void cgroup_sk_clone(struct sock_cgroup_data *skcd)
- {
- 	/* Socket clone path */
- 	if (skcd->val) {
-+		if (skcd->no_refcnt)
-+			return;
- 		/*
- 		 * We might be cloning a socket which is left in an empty
- 		 * cgroup and the cgroup might have already been rmdir'd.
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 0048f90944ddf..e107754e29a77 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -11317,13 +11317,13 @@ static int nl80211_vendor_cmd(struct sk_buff *skb, struct genl_info *info)
+ 				if (!wdev->netdev && !wdev->p2p_started)
+ 					return -ENETDOWN;
+ 			}
+-
+-			if (!vcmd->doit)
+-				return -EOPNOTSUPP;
+ 		} else {
+ 			wdev = NULL;
+ 		}
+ 
++		if (!vcmd->doit)
++			return -EOPNOTSUPP;
++
+ 		if (info->attrs[NL80211_ATTR_VENDOR_DATA]) {
+ 			data = nla_data(info->attrs[NL80211_ATTR_VENDOR_DATA]);
+ 			len = nla_len(info->attrs[NL80211_ATTR_VENDOR_DATA]);
 -- 
 2.25.1
 
