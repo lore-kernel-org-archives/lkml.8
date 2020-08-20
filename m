@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2103EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A09C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DCB6B20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8CC207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926835;
-	bh=xW1RePcyO1D+A0SCQ4SXfegUKzuv4CW2G79xpHbRwTo=;
+	s=default; t=1597926839;
+	bh=H45zlV34uzWv6yFUOSzT/yKhOvpoCRwwr64AGhO37eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hPtfTXDuHVg6qZJfhun0wefmBYLrjbymGPeqZ6SJQu2XLC/Sq3mQvw8WR3BF6ArRF
-	 ijEuDuDD8OPHFbl4W0K87gcn9pyKwFhNMAyLYiGJlcOor+thmrLOB1jh0PVcuj39Np
-	 5akzQNRWtHsUKkf1a975MELSWuu0tc478MhPvQxA=
+	b=2OytQhO6A3Jsg2AOZS0avUhJ8gxEDYK6JC3gk+95GkpWKCPnJymZUDj3BYaTgi8fE
+	 6Rt88ZTF5xB3zstm0lUfj/JV8JJTzVHVacrly87rZJ1XclJ5rCcRn+psjXFrQUk0bL
+	 eqJyrt7oXw2ff5kbqdRV1Dnum0iVzBosPQt2oBgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbgHTJtD (ORCPT
+        id S1730450AbgHTMdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:49:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54086 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729583AbgHTJst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:48:49 -0400
+        id S1729318AbgHTJtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD702173E;
-        Thu, 20 Aug 2020 09:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B278420724;
+        Thu, 20 Aug 2020 09:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916929;
-        bh=xW1RePcyO1D+A0SCQ4SXfegUKzuv4CW2G79xpHbRwTo=;
+        s=default; t=1597916944;
+        bh=H45zlV34uzWv6yFUOSzT/yKhOvpoCRwwr64AGhO37eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=byWtFfeBqWnw1A+nz45ywhY+rMv4hczcUGA1j33CYK+vjUsQrB3bt5DQAUHLMzxdN
-         MTUGPx94LS46JU13H5ogFTXEi3h4XSQINjdcfzncniYgBflZVcH0A8QgtLSL04PLrg
-         JpDV5HG3aeMEB30o4uc231JHkOzuRCzXFbQeE5H8=
+        b=EXX2e8N7/aI+/DA402dnImF6wsXcLRoiP/5CUl1KwGB+pon3oq+4esU1kOXgKGvL+
+         gUx5y4HFHE69yYgqjXjUtz9KTojNgvEvTDfC4eWBpQLwwgb91Dw16a+H0W7Jkb+qwN
+         Vy7dfBbia/MvOs1OIEeI6n3bRFjboVY7fXaUonro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 095/152] RDMA/counter: Allow manually bind QPs with different pids to same counter
-Date:   Thu, 20 Aug 2020 11:21:02 +0200
-Message-Id: <20200820091558.600195140@linuxfoundation.org>
+Subject: [PATCH 5.4 100/152] dm rq: dont call blk_mq_queue_stopped() in dm_stop_queue()
+Date:   Thu, 20 Aug 2020 11:21:07 +0200
+Message-Id: <20200820091558.880711889@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -62,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit cbeb7d896c0f296451ffa7b67e7706786b8364c8 ]
+[ Upstream commit e766668c6cd49d741cfb49eaeb38998ba34d27bc ]
 
-In manual mode allow bind user QPs with different pids to same counter,
-since this is allowed in auto mode.
-Bind kernel QPs and user QPs to the same counter are not allowed.
+dm_stop_queue() only uses blk_mq_quiesce_queue() so it doesn't
+formally stop the blk-mq queue; therefore there is no point making the
+blk_mq_queue_stopped() check -- it will never be stopped.
 
-Fixes: 1bd8e0a9d0fd ("RDMA/counter: Allow manual mode configuration support")
-Link: https://lore.kernel.org/r/20200702082933.424537-4-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+In addition, even though dm_stop_queue() actually tries to quiesce hw
+queues via blk_mq_quiesce_queue(), checking with blk_queue_quiesced()
+to avoid unnecessary queue quiesce isn't reliable because: the
+QUEUE_FLAG_QUIESCED flag is set before synchronize_rcu() and
+dm_stop_queue() may be called when synchronize_rcu() from another
+blk_mq_quiesce_queue() is in-progress.
+
+Fixes: 7b17c2f7292ba ("dm: Fix a race condition related to stopping and starting queues")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/counters.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-rq.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/infiniband/core/counters.c b/drivers/infiniband/core/counters.c
-index 42809f612c2c4..f454d63008d69 100644
---- a/drivers/infiniband/core/counters.c
-+++ b/drivers/infiniband/core/counters.c
-@@ -487,7 +487,7 @@ int rdma_counter_bind_qpn(struct ib_device *dev, u8 port,
- 		goto err;
- 	}
+diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
+index 3f8577e2c13be..2bd2444ad99c6 100644
+--- a/drivers/md/dm-rq.c
++++ b/drivers/md/dm-rq.c
+@@ -70,9 +70,6 @@ void dm_start_queue(struct request_queue *q)
  
--	if (counter->res.task != qp->res.task) {
-+	if (rdma_is_kernel_res(&counter->res) != rdma_is_kernel_res(&qp->res)) {
- 		ret = -EINVAL;
- 		goto err_task;
- 	}
+ void dm_stop_queue(struct request_queue *q)
+ {
+-	if (blk_mq_queue_stopped(q))
+-		return;
+-
+ 	blk_mq_quiesce_queue(q);
+ }
+ 
 -- 
 2.25.1
 
