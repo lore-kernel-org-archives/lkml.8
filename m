@@ -2,112 +2,145 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8347720724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE913207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbgHTOsO (ORCPT
+        id S1728412AbgHTOsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:48:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37066 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgHTOsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:48:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id A0178AC6E;
-        Thu, 20 Aug 2020 14:48:31 +0000 (UTC)
-Subject: Re: [PATCH] x86/pci: fix xen.c build error when CONFIG_ACPI is not
- set
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        xen-devel <xen-devel@lists.xenproject.org>
-References: <a020884b-fa44-e732-699f-2b79c9b7d15e@infradead.org>
- <88afdd4a-1b30-d836-05ce-8919b834579b@infradead.org>
- <20200820144020.GA31230@char.us.oracle.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <d4bd7cc9-0194-3833-2098-12a2c3cb2c5d@suse.com>
-Date:   Thu, 20 Aug 2020 16:48:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 10:48:24 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:58406 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgHTOsR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:48:17 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id B6D2820026;
+        Thu, 20 Aug 2020 16:48:09 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 16:48:08 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Chen Feng <puck.chen@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
+        Rob Clark <robdclark@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
+        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200820144808.GA186324@ravnborg.org>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+ <20200819152120.GA106437@ravnborg.org>
+ <20200819174027.70b39ee9@coco.lan>
+ <20200819173558.GA3733@ravnborg.org>
+ <20200820160649.54741194@coco.lan>
 MIME-Version: 1.0
-In-Reply-To: <20200820144020.GA31230@char.us.oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820160649.54741194@coco.lan>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=FQPn5FuWFEp6BKnZ598A:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.20 16:40, Konrad Rzeszutek Wilk wrote:
-> On Wed, Aug 19, 2020 at 08:09:11PM -0700, Randy Dunlap wrote:
->> Hi Konrad,
+Hi Mauro.
+
+On Thu, Aug 20, 2020 at 04:06:49PM +0200, Mauro Carvalho Chehab wrote:
+> Em Wed, 19 Aug 2020 19:35:58 +0200
+> Sam Ravnborg <sam@ravnborg.org> escreveu:
 > 
-> Hey Randy,
+> I'm already handling the other comments from your review (I'll send a
+> more complete comment about them after finishing),
+If you get back only on things you do not understand or do not agree on
+that would be fine. The rest should be visible in the changelog on the
+updated patch - no need to do extra work here.
+
+> but I have a doubt what you meant about this:
 > 
-> I believe Juergen is picking this up.
-
-Yes, have queued it for rc2.
-
-
-Juergen
-
->>
->> ping.
->>
->> I am still seeing this build error. It looks like this is
->> in your territory to merge...
->>
->>
->> On 8/13/20 4:00 PM, Randy Dunlap wrote:
->>> From: Randy Dunlap <rdunlap@infradead.org>
->>>
->>> Fix build error when CONFIG_ACPI is not set/enabled:
->>>
->>> ../arch/x86/pci/xen.c: In function ‘pci_xen_init’:
->>> ../arch/x86/pci/xen.c:410:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
->>>    acpi_noirq_set();
->>>
->>> Fixes: 88e9ca161c13 ("xen/pci: Use acpi_noirq_set() helper to avoid #ifdef")
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
->>> Cc: xen-devel@lists.xenproject.org
->>> Cc: linux-pci@vger.kernel.org
->>> ---
->>>   arch/x86/pci/xen.c |    1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> --- linux-next-20200813.orig/arch/x86/pci/xen.c
->>> +++ linux-next-20200813/arch/x86/pci/xen.c
->>> @@ -26,6 +26,7 @@
->>>   #include <asm/xen/pci.h>
->>>   #include <asm/xen/cpuid.h>
->>>   #include <asm/apic.h>
->>> +#include <asm/acpi.h>
->>>   #include <asm/i8259.h>
->>>   
->>>   static int xen_pcifront_enable_irq(struct pci_dev *dev)
->>>
->>
->>
->> thanks.
->> -- 
->> ~Randy
->>
+> > +static int kirin_drm_bind(struct device *dev)
+> > > +{
+> > > +	struct drm_driver *driver = &kirin_drm_driver;
+> > > +	struct drm_device *drm_dev;
+> > > +	struct kirin_drm_private *priv;
+> > > +	int ret;
+> > > +
+> > > +	drm_dev = drm_dev_alloc(driver, dev);
+> > > +	if (!drm_dev)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	ret = kirin_drm_kms_init(drm_dev);
+> > > +	if (ret)
+> > > +		goto err_drm_dev_unref;
+> > > +
+> > > +	ret = drm_dev_register(drm_dev, 0);  
+> > There is better ways to do this. See drm_drv.c for the code example.
 > 
+> Not sure if I understood your comment here. The drm_drv.c example also calls 
+> drm_dev_register().
 
+This is indeed not obvious from my comments but what I wnated to say is
+that the driver should embed drm_device in some struct,
+maybe in "struct kirin_drm_private".
+
+This should also be part of the referenced example.
+
+I hope this clarifies it.
+
+	Sam
+
+> 
+> The only difference is that it calls it inside driver_probe(), while
+> on this driver, it uses:
+> 
+> 	static const struct component_master_ops kirin_drm_ops = {
+> 		.bind = kirin_drm_bind,
+> 		.unbind = kirin_drm_unbind,
+> 	};
+> 
+> 	static int kirin_drm_platform_probe(struct platform_device *pdev)
+> 	{
+> ...
+> 		drm_of_component_match_add(dev, &match, compare_of, remote);
+> ...
+> 	return component_master_add_with_match(dev, &kirin_drm_ops, match);
+> }
+> 
+> Are you meaning that I should get rid of this component API and call
+> kirin_drm_bind() from kirin_drm_platform_probe()?
+> 
+> Thanks,
+> Mauro
