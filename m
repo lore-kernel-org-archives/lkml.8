@@ -2,106 +2,120 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43933C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A6DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1113D207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925617;
-	bh=EhNYEBsIO18rKFOsMQuUzbghBHiFEH9epIhDr3PrwO8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dwVvnunkLXM9ZJtDqZUwAqoVlwZC660QkZ/98hZ5eN6ixpIvbmKELpApWuzijXwst
-	 K7MYMH3CjdavypDsVSnr/+paFPd17k2L0rpbDzvByKbVVURgMCObyjOEoeP66BXGVw
-	 x39tmcA4WHNgH0jx291MdYPpwo78U9ZZv5yMj8to=
+	by mail.kernel.org (Postfix) with ESMTP id CFF7A207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:14:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vdG3dLdP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbgHTMNg (ORCPT
+        id S1730485AbgHTMNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:13:47 -0400
+Received: from crapouillou.net ([89.234.176.41]:47104 "EHLO crapouillou.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729932AbgHTJ5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:57:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E36B72067C;
-        Thu, 20 Aug 2020 09:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917443;
-        bh=EhNYEBsIO18rKFOsMQuUzbghBHiFEH9epIhDr3PrwO8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tqrV7F2onDiofRtpoVF8W5vZy4Y5dvwkYtqF9aFlgHAlcI3LvrJvCk7atNjB+nL8U
-         leSNJuNtuzOvrCpQXzRrsaQxx/nSklQGcXJE0x0DLMK8RMZyi2fnzqNUwsx1cgSP/H
-         9yMv1YbsMCXOjPdFIZZK2qpc1309usmP1M4dheYQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 004/212] net: phy: mdio-bcm-unimac: fix potential NULL dereference in unimac_mdio_probe()
-Date:   Thu, 20 Aug 2020 11:19:37 +0200
-Message-Id: <20200820091602.475043350@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729772AbgHTMNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:13:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1597925584; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H6AaeB90PvxfVY9WrxZtIpss3tNLOtB/nIbF3+2oWDU=;
+        b=vdG3dLdP29l0b+5WTSa+a7bQKELcpbNkcBt5KYifC1zXijOJWMYVWaj4wKDywkLpevPwvV
+        NxiEnhaTd2cE1wSUvOOQeDxiryKXQfFIE+02B5SaCbWeZfbAld2P9VBYGJtd83odbuPqNH
+        JDMRJkliPlN5CVce7xZyVvl9wsRK7m0=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 2/2] drm/panel: novatek,nt39016: Remove 'dev' field in priv struct
+Date:   Thu, 20 Aug 2020 14:12:56 +0200
+Message-Id: <20200820121256.32037-3-paul@crapouillou.net>
+In-Reply-To: <20200820121256.32037-1-paul@crapouillou.net>
+References: <20200820121256.32037-1-paul@crapouillou.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+There is already a 'struct device' pointer in the drm_panel structure,
+that we can access easily from our priv structure, so there's no need
+for a separate 'dev' field there.
 
-[ Upstream commit 297a6961ffb8ff4dc66c9fbf53b924bd1dda05d5 ]
+v2: Don't initialize drm_panel->dev manually, it is done by
+drm_panel_init().
 
-platform_get_resource() may fail and return NULL, so we should
-better check it's return value to avoid a NULL pointer dereference
-a bit later in the code.
-
-This is detected by Coccinelle semantic patch.
-
-@@
-expression pdev, res, n, t, e, e1, e2;
-@@
-
-res = platform_get_resource(pdev, t, n);
-+ if (!res)
-+   return -EINVAL;
-... when != res == NULL
-e = devm_ioremap(e1, res->start, e2);
-
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/net/phy/mdio-bcm-unimac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/panel/panel-novatek-nt39016.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/phy/mdio-bcm-unimac.c b/drivers/net/phy/mdio-bcm-unimac.c
-index 8c73b2e771ddd..e6ff731d753d9 100644
---- a/drivers/net/phy/mdio-bcm-unimac.c
-+++ b/drivers/net/phy/mdio-bcm-unimac.c
-@@ -177,6 +177,8 @@ static int unimac_mdio_probe(struct platform_device *pdev)
+diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+index daa583030246..f8151fe3ac9a 100644
+--- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
++++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
+@@ -56,7 +56,6 @@ struct nt39016_panel_info {
+ 
+ struct nt39016 {
+ 	struct drm_panel drm_panel;
+-	struct device *dev;
+ 	struct regmap *map;
+ 	struct regulator *supply;
+ 	const struct nt39016_panel_info *panel_info;
+@@ -124,7 +123,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
+ 
+ 	err = regulator_enable(panel->supply);
+ 	if (err) {
+-		dev_err(panel->dev, "Failed to enable power supply: %d\n", err);
++		dev_err(drm_panel->dev, "Failed to enable power supply: %d\n", err);
+ 		return err;
+ 	}
+ 
+@@ -143,7 +142,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
+ 	err = regmap_multi_reg_write(panel->map, nt39016_panel_regs,
+ 				     ARRAY_SIZE(nt39016_panel_regs));
+ 	if (err) {
+-		dev_err(panel->dev, "Failed to init registers: %d\n", err);
++		dev_err(drm_panel->dev, "Failed to init registers: %d\n", err);
+ 		goto err_disable_regulator;
+ 	}
+ 
+@@ -173,7 +172,7 @@ static int nt39016_enable(struct drm_panel *drm_panel)
+ 	ret = regmap_write(panel->map, NT39016_REG_SYSTEM,
+ 			   NT39016_SYSTEM_RESET_N | NT39016_SYSTEM_STANDBY);
+ 	if (ret) {
+-		dev_err(panel->dev, "Unable to enable panel: %d\n", ret);
++		dev_err(drm_panel->dev, "Unable to enable panel: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+@@ -193,7 +192,7 @@ static int nt39016_disable(struct drm_panel *drm_panel)
+ 	err = regmap_write(panel->map, NT39016_REG_SYSTEM,
+ 			   NT39016_SYSTEM_RESET_N);
+ 	if (err) {
+-		dev_err(panel->dev, "Unable to disable panel: %d\n", err);
++		dev_err(drm_panel->dev, "Unable to disable panel: %d\n", err);
+ 		return err;
+ 	}
+ 
+@@ -252,7 +251,6 @@ static int nt39016_probe(struct spi_device *spi)
+ 	if (!panel)
  		return -ENOMEM;
  
- 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!r)
-+		return -EINVAL;
+-	panel->dev = dev;
+ 	spi_set_drvdata(spi, panel);
  
- 	/* Just ioremap, as this MDIO block is usually integrated into an
- 	 * Ethernet MAC controller register range
+ 	panel->panel_info = of_device_get_match_data(dev);
 -- 
-2.25.1
-
-
+2.28.0
 
