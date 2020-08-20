@@ -2,55 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA30C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D57C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D762075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5A720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919177;
-	bh=Q437UooYHqyuMB4DoGJE8zfj50ppfsPBzBkZQm11MSQ=;
+	s=default; t=1597919180;
+	bh=BI+DQuYCNkslX/Bd5yPHLj+Q4aLqc4Wzaa8fkBK1CSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnskQr3pIgpwvCoAd7MiNU7p2920FFMYUR3SvxBtAbQSV1mW4KjR/0Ai66vsE1gy8
-	 EKqEEMzTGu652r9kHkCDFewDN/6HTxCzQOpyboplPiarKglEBHiUJX6o2AxKutpkLh
-	 xmPfyFWVsgE0p7sKhYJyu20m1nY66Lb2TTkvhr2M=
+	b=IRiLn75Fv4/4tmijC4W4njj7P95D9NxnryDdflPZydK7GQCevMiVo4SZCTmicYguX
+	 hoD51Kq/f8RU4En/fcPgxzlSeZbhI0NMGF5MwVYTMfkUZhZVaYjuQ6TM9k55lmtSXp
+	 rxy3gHnCJeSfVfFOmftDbw87rvhegcN0glD3XrGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731538AbgHTK0L (ORCPT
+        id S1731736AbgHTKXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:26:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51912 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:23:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbgHTKXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:23:11 -0400
+        id S1731707AbgHTKWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 812392078D;
-        Thu, 20 Aug 2020 10:23:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67EE12072D;
+        Thu, 20 Aug 2020 10:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918991;
-        bh=Q437UooYHqyuMB4DoGJE8zfj50ppfsPBzBkZQm11MSQ=;
+        s=default; t=1597918959;
+        bh=BI+DQuYCNkslX/Bd5yPHLj+Q4aLqc4Wzaa8fkBK1CSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yVbonfzJCS0CQiVD9QDqEPsBzjc86TQSRYGLP8C5cnYbJXMheAT1YV9ndY91cHaf9
-         RqTvYbA9xU3yHezMxGIqYbzEOSQ70gcD/3E8WGjLMkd6fVgW2z8DRdEw7GCfIH4403
-         qh9Ek6XPc7i8VSMKnqvz9CPRArDOTJ/YMBArqkWY=
+        b=RNkrX5HXq683boIiLCWES9Sk05f+949/8jrtwC8ylTKRe+wq6wMPXZJC7eMAbx9YA
+         7eSyhwFY2hl1L4b6VkIlkxo5OWotoI8V5p7+CtFzgz3y+/LIqQcDkCbVKXbmvnLqyD
+         WsRc2IAbhYhInecPH4wl0benCUO9P7qlAWkhfMtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 144/149] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:23:41 +0200
-Message-Id: <20200820092132.670640680@linuxfoundation.org>
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.4 130/149] ext2: fix missing percpu_counter_inc
+Date:   Thu, 20 Aug 2020 11:23:27 +0200
+Message-Id: <20200820092132.000760243@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -63,44 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
+increased. This patch fixes it.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Note that sbi->s_freeinodes_counter is only used in the algorithm that
+tries to find the group for new allocations, so this bug is not easily
+visible (the only visibility is that the group finding algorithm selects
+inoptinal result).
+
+Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ufs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ext2/ialloc.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index 10f364490833e..be68b48de1cc6 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -99,7 +99,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
+--- a/fs/ext2/ialloc.c
++++ b/fs/ext2/ialloc.c
+@@ -79,6 +79,7 @@ static void ext2_release_inode(struct su
+ 	if (dir)
+ 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
+ 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
++	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
+ 	if (dir)
+ 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
+ 	mark_buffer_dirty(bh);
+@@ -525,7 +526,7 @@ got:
+ 		goto fail;
+ 	}
  
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
+-	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
++	percpu_counter_dec(&sbi->s_freeinodes_counter);
+ 	if (S_ISDIR(mode))
+ 		percpu_counter_inc(&sbi->s_dirs_counter);
  
- 	inode = ufs_iget(sb, ino);
--- 
-2.25.1
-
 
 
