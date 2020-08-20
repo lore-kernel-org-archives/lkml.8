@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB4C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A61382078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93502067C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917157;
-	bh=J54xSCntPSaWHZxpEYggTZx+DXeSiCJF8unRn8cZZio=;
+	s=default; t=1597917162;
+	bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8Z2nsgrpXXKRkRAHC6xEb3u48b2Lim1KnJ4gLjQV+BWNIj+taN1nVVwnTjDIVvh0
-	 cIOwrJsS/eP2TNe/r0rrvTd3sGTnaK3cHkP2ESGiSA72HIo+AxHqJcQIZUjjeOte2e
-	 gqqrV4tFcI5dL1RlslGDCGgKbBOQWm6G+Rne88YM=
+	b=OWWH7mZxpPFH+/0SJie/CoHIyI/CEeN6eYQvcdkEB/3XVBxDMLvX6OXVdzBAwp7ck
+	 oOk4oGV/m3ZMWDEq5H/rDUD7XA8Xp7lzY6Aj1oaUg4DKdS9g0SUbdvrcPRUTXxrWL0
+	 pNeDS1RM3E4KcY08+cKF9VM6RBmoUCGp+Oojyvkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgHTJwM (ORCPT
+        id S1729461AbgHTJwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33162 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:52:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729661AbgHTJwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:00 -0400
+        id S1729623AbgHTJw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86166207FB;
-        Thu, 20 Aug 2020 09:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F75E20855;
+        Thu, 20 Aug 2020 09:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917120;
-        bh=J54xSCntPSaWHZxpEYggTZx+DXeSiCJF8unRn8cZZio=;
+        s=default; t=1597917147;
+        bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qwu9JS3wvvQ5GJx3vy5GNSsIbhVbbXfBJ/I9qvUryP+amQxSeuLChSyq3mXrPlRX1
-         KLGB+yc+Kiwtg1Ua+ppZ5zYFVm8bIQokqPguYRZ96bV68EO5qtTmOHhThUiy4vW2W/
-         e/QuzZF8JHh+pTToulHLTm3s5+pPapkS6RqMflGo=
+        b=iBDt00H9lnaKcS3kpfTFnO/GZk2Pds8gxU60cZ6zw0Deai819VpHV2XKdqj8F3OXm
+         S9Z0YawjbDra0/VPjODs/2TOXdL9GzdW9LnV94Yg03EkTpQwVmuCQ0NXv/LJRlI4g5
+         PbI8exx8YGOWIw99FDjllk2BW9lLw8nCgWd/do8I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Keeping <john@metanate.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 02/92] genirq/affinity: Make affinity setting if activated opt-in
-Date:   Thu, 20 Aug 2020 11:20:47 +0200
-Message-Id: <20200820091537.624101245@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 21/92] cifs: Fix leak when handling lease break for cached root fid
+Date:   Thu, 20 Aug 2020 11:21:06 +0200
+Message-Id: <20200820091538.665967126@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,138 +60,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Paul Aurich <paul@darkrain42.org>
 
-commit f0c7baca180046824e07fc5f1326e83a8fd150c7 upstream.
+commit baf57b56d3604880ccb3956ec6c62ea894f5de99 upstream.
 
-John reported that on a RK3288 system the perf per CPU interrupts are all
-affine to CPU0 and provided the analysis:
+Handling a lease break for the cached root didn't free the
+smb2_lease_break_work allocation, resulting in a leak:
 
- "It looks like what happens is that because the interrupts are not per-CPU
-  in the hardware, armpmu_request_irq() calls irq_force_affinity() while
-  the interrupt is deactivated and then request_irq() with IRQF_PERCPU |
-  IRQF_NOBALANCING.
+    unreferenced object 0xffff98383a5af480 (size 128):
+      comm "cifsd", pid 684, jiffies 4294936606 (age 534.868s)
+      hex dump (first 32 bytes):
+        c0 ff ff ff 1f 00 00 00 88 f4 5a 3a 38 98 ff ff  ..........Z:8...
+        88 f4 5a 3a 38 98 ff ff 80 88 d6 8a ff ff ff ff  ..Z:8...........
+      backtrace:
+        [<0000000068957336>] smb2_is_valid_oplock_break+0x1fa/0x8c0
+        [<0000000073b70b9e>] cifs_demultiplex_thread+0x73d/0xcc0
+        [<00000000905fa372>] kthread+0x11c/0x150
+        [<0000000079378e4e>] ret_from_fork+0x22/0x30
 
-  Now when irq_startup() runs with IRQ_STARTUP_NORMAL, it calls
-  irq_setup_affinity() which returns early because IRQF_PERCPU and
-  IRQF_NOBALANCING are set, leaving the interrupt on its original CPU."
+Avoid this leak by only allocating when necessary.
 
-This was broken by the recent commit which blocked interrupt affinity
-setting in hardware before activation of the interrupt. While this works in
-general, it does not work for this particular case. As contrary to the
-initial analysis not all interrupt chip drivers implement an activate
-callback, the safe cure is to make the deferred interrupt affinity setting
-at activation time opt-in.
-
-Implement the necessary core logic and make the two irqchip implementations
-for which this is required opt-in. In hindsight this would have been the
-right thing to do, but ...
-
-Fixes: baedb87d1b53 ("genirq/affinity: Handle affinity setting on inactive interrupts correctly")
-Reported-by: John Keeping <john@metanate.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Marc Zyngier <maz@kernel.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/87blk4tzgm.fsf@nanos.tec.linutronix.de
+Fixes: a93864d93977 ("cifs: add lease tracking to the cached root fid")
+Signed-off-by: Paul Aurich <paul@darkrain42.org>
+CC: Stable <stable@vger.kernel.org> # v4.18+
+Reviewed-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/apic/vector.c    |    4 ++++
- drivers/irqchip/irq-gic-v3-its.c |    5 ++++-
- include/linux/irq.h              |   13 +++++++++++++
- kernel/irq/manage.c              |    6 +++++-
- 4 files changed, 26 insertions(+), 2 deletions(-)
+ fs/cifs/smb2misc.c |   73 +++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 52 insertions(+), 21 deletions(-)
 
---- a/arch/x86/kernel/apic/vector.c
-+++ b/arch/x86/kernel/apic/vector.c
-@@ -556,6 +556,10 @@ static int x86_vector_alloc_irqs(struct
- 		irqd->chip_data = apicd;
- 		irqd->hwirq = virq + i;
- 		irqd_set_single_target(irqd);
-+
-+		/* Don't invoke affinity setter on deactivated interrupts */
-+		irqd_set_affinity_on_activate(irqd);
-+
- 		/*
- 		 * Legacy vectors are already assigned when the IOAPIC
- 		 * takes them over. They stay on the same vector. This is
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2458,6 +2458,7 @@ static int its_irq_domain_alloc(struct i
- {
- 	msi_alloc_info_t *info = args;
- 	struct its_device *its_dev = info->scratchpad[0].ptr;
-+	struct irq_data *irqd;
- 	irq_hw_number_t hwirq;
- 	int err;
- 	int i;
-@@ -2473,7 +2474,9 @@ static int its_irq_domain_alloc(struct i
- 
- 		irq_domain_set_hwirq_and_chip(domain, virq + i,
- 					      hwirq + i, &its_irq_chip, its_dev);
--		irqd_set_single_target(irq_desc_get_irq_data(irq_to_desc(virq + i)));
-+		irqd = irq_get_irq_data(virq + i);
-+		irqd_set_single_target(irqd);
-+		irqd_set_affinity_on_activate(irqd);
- 		pr_debug("ID:%d pID:%d vID:%d\n",
- 			 (int)(hwirq + i - its_dev->event_map.lpi_base),
- 			 (int)(hwirq + i), virq + i);
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -210,6 +210,8 @@ struct irq_data {
-  * IRQD_CAN_RESERVE		- Can use reservation mode
-  * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
-  *				  required
-+ * IRQD_AFFINITY_ON_ACTIVATE	- Affinity is set on activation. Don't call
-+ *				  irq_chip::irq_set_affinity() when deactivated.
-  */
- enum {
- 	IRQD_TRIGGER_MASK		= 0xf,
-@@ -233,6 +235,7 @@ enum {
- 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
- 	IRQD_CAN_RESERVE		= (1 << 26),
- 	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
-+	IRQD_AFFINITY_ON_ACTIVATE	= (1 << 29),
- };
- 
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
-@@ -407,6 +410,16 @@ static inline bool irqd_msi_nomask_quirk
- 	return __irqd_to_state(d) & IRQD_MSI_NOMASK_QUIRK;
+--- a/fs/cifs/smb2misc.c
++++ b/fs/cifs/smb2misc.c
+@@ -509,15 +509,31 @@ cifs_ses_oplock_break(struct work_struct
+ 	kfree(lw);
  }
  
-+static inline void irqd_set_affinity_on_activate(struct irq_data *d)
++static void
++smb2_queue_pending_open_break(struct tcon_link *tlink, __u8 *lease_key,
++			      __le32 new_lease_state)
 +{
-+	__irqd_to_state(d) |= IRQD_AFFINITY_ON_ACTIVATE;
++	struct smb2_lease_break_work *lw;
++
++	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
++	if (!lw) {
++		cifs_put_tlink(tlink);
++		return;
++	}
++
++	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
++	lw->tlink = tlink;
++	lw->lease_state = new_lease_state;
++	memcpy(lw->lease_key, lease_key, SMB2_LEASE_KEY_SIZE);
++	queue_work(cifsiod_wq, &lw->lease_break);
 +}
 +
-+static inline bool irqd_affinity_on_activate(struct irq_data *d)
-+{
-+	return __irqd_to_state(d) & IRQD_AFFINITY_ON_ACTIVATE;
+ static bool
+-smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp,
+-		    struct smb2_lease_break_work *lw)
++smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp)
+ {
+-	bool found;
+ 	__u8 lease_state;
+ 	struct list_head *tmp;
+ 	struct cifsFileInfo *cfile;
+-	struct cifs_pending_open *open;
+ 	struct cifsInodeInfo *cinode;
+ 	int ack_req = le32_to_cpu(rsp->Flags &
+ 				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
+@@ -556,22 +572,29 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
+ 				  &cinode->flags);
+ 
+ 		cifs_queue_oplock_break(cfile);
+-		kfree(lw);
+ 		return true;
+ 	}
+ 
+-	found = false;
++	return false;
 +}
 +
- #undef __irqd_to_state
++static struct cifs_pending_open *
++smb2_tcon_find_pending_open_lease(struct cifs_tcon *tcon,
++				  struct smb2_lease_break *rsp)
++{
++	__u8 lease_state = le32_to_cpu(rsp->NewLeaseState);
++	int ack_req = le32_to_cpu(rsp->Flags &
++				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
++	struct cifs_pending_open *open;
++	struct cifs_pending_open *found = NULL;
++
+ 	list_for_each_entry(open, &tcon->pending_opens, olist) {
+ 		if (memcmp(open->lease_key, rsp->LeaseKey,
+ 			   SMB2_LEASE_KEY_SIZE))
+ 			continue;
  
- static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -280,12 +280,16 @@ static bool irq_set_affinity_deactivated
- 	struct irq_desc *desc = irq_data_to_desc(data);
+ 		if (!found && ack_req) {
+-			found = true;
+-			memcpy(lw->lease_key, open->lease_key,
+-			       SMB2_LEASE_KEY_SIZE);
+-			lw->tlink = cifs_get_tlink(open->tlink);
+-			queue_work(cifsiod_wq, &lw->lease_break);
++			found = open;
+ 		}
  
- 	/*
-+	 * Handle irq chips which can handle affinity only in activated
-+	 * state correctly
-+	 *
- 	 * If the interrupt is not yet activated, just store the affinity
- 	 * mask and do not call the chip driver at all. On activation the
- 	 * driver has to make sure anyway that the interrupt is in a
- 	 * useable state so startup works.
- 	 */
--	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) || irqd_is_activated(data))
-+	if (!IS_ENABLED(CONFIG_IRQ_DOMAIN_HIERARCHY) ||
-+	    irqd_is_activated(data) || !irqd_affinity_on_activate(data))
- 		return false;
+ 		cifs_dbg(FYI, "found in the pending open list\n");
+@@ -592,14 +615,7 @@ smb2_is_valid_lease_break(char *buffer)
+ 	struct TCP_Server_Info *server;
+ 	struct cifs_ses *ses;
+ 	struct cifs_tcon *tcon;
+-	struct smb2_lease_break_work *lw;
+-
+-	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
+-	if (!lw)
+-		return false;
+-
+-	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
+-	lw->lease_state = rsp->NewLeaseState;
++	struct cifs_pending_open *open;
  
- 	cpumask_copy(desc->irq_common_data.affinity, mask);
+ 	cifs_dbg(FYI, "Checking for lease break\n");
+ 
+@@ -617,11 +633,27 @@ smb2_is_valid_lease_break(char *buffer)
+ 				spin_lock(&tcon->open_file_lock);
+ 				cifs_stats_inc(
+ 				    &tcon->stats.cifs_stats.num_oplock_brks);
+-				if (smb2_tcon_has_lease(tcon, rsp, lw)) {
++				if (smb2_tcon_has_lease(tcon, rsp)) {
+ 					spin_unlock(&tcon->open_file_lock);
+ 					spin_unlock(&cifs_tcp_ses_lock);
+ 					return true;
+ 				}
++				open = smb2_tcon_find_pending_open_lease(tcon,
++									 rsp);
++				if (open) {
++					__u8 lease_key[SMB2_LEASE_KEY_SIZE];
++					struct tcon_link *tlink;
++
++					tlink = cifs_get_tlink(open->tlink);
++					memcpy(lease_key, open->lease_key,
++					       SMB2_LEASE_KEY_SIZE);
++					spin_unlock(&tcon->open_file_lock);
++					spin_unlock(&cifs_tcp_ses_lock);
++					smb2_queue_pending_open_break(tlink,
++								      lease_key,
++								      rsp->NewLeaseState);
++					return true;
++				}
+ 				spin_unlock(&tcon->open_file_lock);
+ 
+ 				if (tcon->crfid.is_valid &&
+@@ -639,7 +671,6 @@ smb2_is_valid_lease_break(char *buffer)
+ 		}
+ 	}
+ 	spin_unlock(&cifs_tcp_ses_lock);
+-	kfree(lw);
+ 	cifs_dbg(FYI, "Can not process lease break - no lease matched\n");
+ 	return false;
+ }
 
 
