@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A288C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A058022B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418462173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916302;
-	bh=L0c2TyP0QmAn666VFjlvTxbnwnAQCCcLSbvt6gQ+sfg=;
+	s=default; t=1597916306;
+	bh=OtKfn/HlWE2VGNAHgPxYKsaEjKVIIibS5w9DplZNHZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Hz6+CtKvLA0dbbMiDA/Qi03h5I84aohYVs4T7Jfu+cRoNe9Y7lodA1lDDx0UpKnd
-	 3ZMf2f65yc3NwWyP9VxsOc6Vbf/KYOwL9CYy88ZQy2WVNmjTMn478HOXqrdGbj6dCW
-	 7u6LbZ+6nY/pugWPQxfHUtiToH94kUoLp4m+GphI=
+	b=gJ8oK6NpfBF+GRThq+4dehZo3Pgdjcccj9U46dovJwjAPzU4/DB/wq+ubxhzpjf9G
+	 3q5FC6B3MYE1HG0Wk6RVwH0/zidC0GQjcJiDV7CZ9eJiElGQTIKdanUzGNhr/QaSat
+	 5p48QSUog1nOIB12yVSmQKkLWAawg6Fw7A8DA4c8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgHTJiU (ORCPT
+        id S1728778AbgHTJiY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:38:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:38:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgHTJiO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:14 -0400
+        id S1728871AbgHTJiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FFD62224D;
-        Thu, 20 Aug 2020 09:38:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF5A020724;
+        Thu, 20 Aug 2020 09:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916293;
-        bh=L0c2TyP0QmAn666VFjlvTxbnwnAQCCcLSbvt6gQ+sfg=;
+        s=default; t=1597916288;
+        bh=OtKfn/HlWE2VGNAHgPxYKsaEjKVIIibS5w9DplZNHZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bya/bbQgLPt0akk+AH7yjIZOpS0popNXuVmtT0q41L1OI7Lnrt31F7o3Zo8P0SKCb
-         tDcAK/U8/cftdjrAY91mspDYv8w9rajcS3uMn1JQWUHGZFIEbFEIwh9r1vLwkgM2zQ
-         7Re9lwekcCK01ZpmRVShVRMzDdKhsVZKvqGfKvJY=
+        b=EV6VwD5wiDNZeSetZa6kNrQBmEhTA3H0pyZhcSlspYTwwcm3KyLROL/hpeAEtL4gY
+         JSqKqFxTyHFB/gL0yPTO8KQ+EEJ0Yr+GL0f4Pz8UIbd8UwY5126fPXKquPeluv11aG
+         SMMsdKPUx5dVkbuCeEO91sNS9hW1+J+AxSGjyOj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hao <haokexin@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.7 078/204] tracing/hwlat: Honor the tracing_cpumask
-Date:   Thu, 20 Aug 2020 11:19:35 +0200
-Message-Id: <20200820091610.249146672@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.7 059/204] bcache: allocate meta data pages as compound pages
+Date:   Thu, 20 Aug 2020 11:19:16 +0200
+Message-Id: <20200820091609.217109868@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,54 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-commit 96b4833b6827a62c295b149213c68b559514c929 upstream.
+commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
 
-In calculation of the cpu mask for the hwlat kernel thread, the wrong
-cpu mask is used instead of the tracing_cpumask, this causes the
-tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
+There are some meta data of bcache are allocated by multiple pages,
+and they are used as bio bv_page for I/Os to the cache device. for
+example cache_set->uuids, cache->disk_buckets, journal_write->data,
+bset_tree->data.
 
-Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
+For such meta data memory, all the allocated pages should be treated
+as a single memory block. Then the memory management and underlying I/O
+code can treat them more clearly.
 
-Cc: Ingo Molnar <mingo@redhat.com>
+This patch adds __GFP_COMP flag to all the location allocating >0 order
+pages for the above mentioned meta data. Then their pages are treated
+as compound pages now.
+
+Signed-off-by: Coly Li <colyli@suse.de>
 Cc: stable@vger.kernel.org
-Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_hwlat.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/md/bcache/bset.c    |    2 +-
+ drivers/md/bcache/btree.c   |    2 +-
+ drivers/md/bcache/journal.c |    4 ++--
+ drivers/md/bcache/super.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -283,6 +283,7 @@ static bool disable_migrate;
- static void move_to_next_cpu(void)
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -322,7 +322,7 @@ int bch_btree_keys_alloc(struct btree_ke
+ 
+ 	b->page_order = page_order;
+ 
+-	t->data = (void *) __get_free_pages(gfp, b->page_order);
++	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
+ 	if (!t->data)
+ 		goto err;
+ 
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -785,7 +785,7 @@ int bch_btree_cache_alloc(struct cache_s
+ 	mutex_init(&c->verify_lock);
+ 
+ 	c->verify_ondisk = (void *)
+-		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
++		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
+ 
+ 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
+ 
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -999,8 +999,8 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[1].c = c;
+ 
+ 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+-	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+-	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
++	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
++	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1775,7 +1775,7 @@ void bch_cache_set_unregister(struct cac
+ }
+ 
+ #define alloc_bucket_pages(gfp, c)			\
+-	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
++	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
+ 
+ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
  {
- 	struct cpumask *current_mask = &save_cpumask;
-+	struct trace_array *tr = hwlat_trace;
- 	int next_cpu;
- 
- 	if (disable_migrate)
-@@ -296,7 +297,7 @@ static void move_to_next_cpu(void)
- 		goto disable;
- 
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
- 	put_online_cpus();
- 
-@@ -373,7 +374,7 @@ static int start_kthread(struct trace_ar
- 	/* Just pick the first CPU on first iteration */
- 	current_mask = &save_cpumask;
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	put_online_cpus();
- 	next_cpu = cpumask_first(current_mask);
- 
 
 
