@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D54C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8245C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C73321775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8296420855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924834;
-	bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
+	s=default; t=1597924836;
+	bh=mNtmXKQUg4DvzsDBIehrHBLSys2p3PLPF+HG+hNVzlw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UBbxxQrsdgHmy88uiWbtkztcnC2cyGrC3qH7tMMYFYSfpUsCVbs0xPgCcF4/F6P4o
-	 OCCmjeu6o3OESGEM9DplLgRbRq3r+ULbOrUWSuIXDQlNcnLe9cajM7WDHBhEN0e9jS
-	 uioDyKJQsg/30MfThfOuWegcEiOsMV3G5fivyElQ=
+	b=zdBcBRM7YPGvoxcPisZeOU1QoLRsKDUPtrbw/hEiM/ITcQtQnxwLeWfG7vJAa7fQy
+	 dRy5t20qVpSURkGLzW4WBwmZWdXfZgVRng/HmLTBFG+HArVU6nYWWXfgNhu7KufYV/
+	 vJ4td4SmoK5XXvMkvZHfkCXI56zC8Xa+UmKBDLwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgHTMAc (ORCPT
+        id S1730281AbgHTMAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:00:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48164 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730462AbgHTKAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:19 -0400
+        id S1730461AbgHTKAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF3421775;
-        Thu, 20 Aug 2020 10:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F44208E4;
+        Thu, 20 Aug 2020 10:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917618;
-        bh=DMfpQ+H8dZEgtsoidfttJ8FPsd91nK2KArIgGobJheI=;
+        s=default; t=1597917616;
+        bh=mNtmXKQUg4DvzsDBIehrHBLSys2p3PLPF+HG+hNVzlw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oyUxqwkbOAh6HwF0BmxQXCBBgO1FQm9edt5D3PA4EvDcHyLvvmWFRI8U76hIhBWoo
-         K2i1ChiYr8AuMueK84h2lNtGLtYO2ewo31ZwrIf1gqSAPYMNqliyPH8y6FLXHNbIwL
-         VLwZgfZS37WBl/KoIPEas2UW9fu9JEu23sGaMHjk=
+        b=qgHcFjkPI97jit2yQLS8kI0KcZhxmQ63XnKE9MoywCdFrfmW2X79GyN6H82zzYd83
+         4Ecb1m2t3WpntBjfK6jPDpq+bwLcIuJChWNu7G0PHW3dxQoQAIfCKmexgL3pdlfotx
+         zhqxZq23DGtYj5APzNk6tahUcOvacxl/S7CL+ap8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 094/212] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Thu, 20 Aug 2020 11:21:07 +0200
-Message-Id: <20200820091607.097614592@linuxfoundation.org>
+Subject: [PATCH 4.9 067/212] igb: reinit_locked() should be called with rtnl_lock
+Date:   Thu, 20 Aug 2020 11:20:40 +0200
+Message-Id: <20200820091605.754730492@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,72 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
+[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-Acked-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+	kworker			reboot -f
+
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
+
+The second panic (a divide error) is caused by this race:
+
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index 432ad7d73cb9b..99e23800cadc7 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -639,8 +639,10 @@ radeon_crtc_set_config(struct drm_mode_set *set)
- 	dev = set->crtc->dev;
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 90eab0521be12..43fb77c6c51ed 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -5381,9 +5381,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
 +	}
++
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
+ }
  
- 	ret = drm_crtc_helper_set_config(set);
- 
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index 30bd4a6a9d466..7648fd0d10751 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
- 	long ret;
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
- 
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index 4388ddeec8d24..96d2a564d9a3c 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -634,8 +634,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
- 
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
-+	}
- 
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+ /**
 -- 
 2.25.1
 
