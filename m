@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F215C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D776BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D17A20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E8820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925883;
-	bh=G+G+Ym26cq/41gK660ylSESL4nMsWXnY8y2UDQq+AgI=;
+	s=default; t=1597925911;
+	bh=ETcx389IbtZs0pnuRneopJhc/DhdLoEkJcrfLvQfUnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxNSg/TPnlLSQfXynSJVlYkJPSuY1YxcERY2dDwSwYoqp9bQXD0SHgk2E9dM6ALF9
-	 UIsCMYH5UbKZ+2jFkAvRzOUUCUdU6Sn1iiVGk4d0E4ibSJZfEI4TL1tvjssKfYPMpp
-	 Wze4eGJWFLD+CNufiz3pAt2iY6BSGmn2GjgrcW6g=
+	b=ryRTIr8cyglR3c+1jsggT9vawoAOKeiN++xGX4bBNCpuy3+tzhsWStQ8OgQi1i81l
+	 QorNSHVsQtRzW/H/NHFGGApohm3U1BoqvbIVIFpTmaiipJJrdzWpCQhNmXVt/AT5GY
+	 8Luyxl4FoNQyM3Gk/pKro9hPUMNCI0+YROP/BLdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730610AbgHTMR7 (ORCPT
+        id S1730241AbgHTMSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40042 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:18:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730230AbgHTJ4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:36 -0400
+        id S1730219AbgHTJ4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC820885;
-        Thu, 20 Aug 2020 09:56:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A5EE20855;
+        Thu, 20 Aug 2020 09:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917395;
-        bh=G+G+Ym26cq/41gK660ylSESL4nMsWXnY8y2UDQq+AgI=;
+        s=default; t=1597917389;
+        bh=ETcx389IbtZs0pnuRneopJhc/DhdLoEkJcrfLvQfUnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1kJ5z9vR51mVmXkSPPyhI8cAk0QMZTjov4SF4dp/eYl6rVVr9hqT4P36PYP3TYfu
-         eRiFJvmneoU5sGpOoNU28nQmtbNOlMSwFvhcjZRGHphTQ9UqL3US5Ifm8OfZc1ru5n
-         Ibm+LgdQro8Xiu49B0nJg7vRXOP1vLbvFIIM82DA=
+        b=YCiXHZnmsR067ROyiJdGdsFTOF3D3RHwJY5g2KWesrBHEOIbRAt0TQgh0kQkLfzp2
+         qL+qEIXEoWuowqVG55I89jtOPR55+Xc1YLR+sAJSvtQhyLTRgsV+fJPJpubknTMAQY
+         CbKF1MXfZyv+tzUGghDHtWlzqmaUb6X1/SCye1q4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 017/212] x86/build/lto: Fix truncated .bss with -fdata-sections
-Date:   Thu, 20 Aug 2020 11:19:50 +0200
-Message-Id: <20200820091603.210193271@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dominique Martinet <dominique.martinet@cea.fr>,
+        syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 015/212] 9p/trans_fd: abort p9_read_work if req status changed
+Date:   Thu, 20 Aug 2020 11:19:48 +0200
+Message-Id: <20200820091603.104543712@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -66,52 +63,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Dominique Martinet <dominique.martinet@cea.fr>
 
-[ Upstream commit 6a03469a1edc94da52b65478f1e00837add869a3 ]
+[ Upstream commit e4ca13f7d075e551dc158df6af18fb412a1dba0a ]
 
-With CONFIG_LD_DEAD_CODE_DATA_ELIMINATION=y, we compile the kernel with
--fdata-sections, which also splits the .bss section.
+p9_read_work would try to handle an errored req even if it got put to
+error state by another thread between the lookup (that worked) and the
+time it had been fully read.
+The request itself is safe to use because we hold a ref to it from the
+lookup (for m->rreq, so it was safe to read into the request data buffer
+until this point), but the req_list has been deleted at the same time
+status changed, and client_cb already has been called as well, so we
+should not do either.
 
-The new section, with a new .bss.* name, which pattern gets missed by the
-main x86 linker script which only expects the '.bss' name. This results
-in the discarding of the second part and a too small, truncated .bss
-section and an unhappy, non-working kernel.
-
-Use the common BSS_MAIN macro in the linker script to properly capture
-and merge all the generated BSS sections.
-
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20190415164956.124067-1-samitolvanen@google.com
-[ Extended the changelog. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: http://lkml.kernel.org/r/1539057956-23741-1-git-send-email-asmadeus@codewreck.org
+Signed-off-by: Dominique Martinet <dominique.martinet@cea.fr>
+Reported-by: syzbot+2222c34dc40b515f30dc@syzkaller.appspotmail.com
+Cc: Eric Van Hensbergen <ericvh@gmail.com>
+Cc: Latchesar Ionkov <lucho@ionkov.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/vmlinux.lds.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/9p/trans_fd.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 097268f85e4ee..0df44e4fe7cb1 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -329,7 +329,7 @@ SECTIONS
- 	.bss : AT(ADDR(.bss) - LOAD_OFFSET) {
- 		__bss_start = .;
- 		*(.bss..page_aligned)
--		*(.bss)
-+		*(BSS_MAIN)
- 		. = ALIGN(PAGE_SIZE);
- 		__bss_stop = .;
- 	}
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index aa4586672cee9..91f71958c2e16 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -295,7 +295,6 @@ static void p9_read_work(struct work_struct *work)
+ {
+ 	int n, err;
+ 	struct p9_conn *m;
+-	int status = REQ_STATUS_ERROR;
+ 
+ 	m = container_of(work, struct p9_conn, rq);
+ 
+@@ -375,11 +374,17 @@ static void p9_read_work(struct work_struct *work)
+ 	if ((m->req) && (m->rc.offset == m->rc.capacity)) {
+ 		p9_debug(P9_DEBUG_TRANS, "got new packet\n");
+ 		spin_lock(&m->client->lock);
+-		if (m->req->status != REQ_STATUS_ERROR)
+-			status = REQ_STATUS_RCVD;
+-		list_del(&m->req->req_list);
+-		/* update req->status while holding client->lock  */
+-		p9_client_cb(m->client, m->req, status);
++		if (m->req->status == REQ_STATUS_SENT) {
++			list_del(&m->req->req_list);
++			p9_client_cb(m->client, m->req, REQ_STATUS_RCVD);
++		} else {
++			spin_unlock(&m->client->lock);
++			p9_debug(P9_DEBUG_ERROR,
++				 "Request tag %d errored out while we were reading the reply\n",
++				 m->rc.tag);
++			err = -EIO;
++			goto error;
++		}
+ 		spin_unlock(&m->client->lock);
+ 		m->rc.sdata = NULL;
+ 		m->rc.offset = 0;
 -- 
 2.25.1
 
