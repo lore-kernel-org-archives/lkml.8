@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73657C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DAA6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 409A022D06
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:23:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2634822B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929832;
-	bh=K7VqwQrctBXFFVmyi6gy4VuQCsQ6TS3YyqT4D9EiO44=;
+	s=default; t=1597929842;
+	bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2GBqEMmOdvZUpEiuA3pr5jRtKNQYP9kTesEPTIHCgu34G6/iQfv4TjR+RENdDoxMC
-	 W0nPy0Ad3YVbwpW3v/lTivI2LIqhohSHxH0XestffwuhSE6wDN+QVD6LvCUEiVCDDK
-	 l0fv4FEn8KSEQ8PbPAyQn7LZkd78xfqt0ENgjRcA=
+	b=ZSe/oM/C25ak2evSTNOR0d8OWwBh0QRwOqqu75t++k3oW2w1ElLkzumGsWqwFQh9o
+	 v0X2P5r6zbpvi+4OghfTNXQba+ba/fWck2R935xyPAVZQ+j1ooHmJTD1N8Bx1Sp5Xy
+	 Y2TWaBRja3qhEzos4nV5ePAd0pzewg14ZLBrGrs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730121AbgHTNXv (ORCPT
+        id S1729967AbgHTNX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:23:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728122AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:11 -0400
+        id S1728089AbgHTJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08E2F22B49;
-        Thu, 20 Aug 2020 09:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C970722BEF;
+        Thu, 20 Aug 2020 09:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916042;
-        bh=K7VqwQrctBXFFVmyi6gy4VuQCsQ6TS3YyqT4D9EiO44=;
+        s=default; t=1597916048;
+        bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t++5L7udo45d+EjHghw0HjL3+kNc7ixFMYeRCJnCztxDcbaz6n1eMO74rfAE2N2ZG
-         Pihr8qivWagfVUDTxpmqd08mnpaUD4Qx9lloa7W1uFphnAV5meXJXIooH5YBcxpaND
-         zvQ6nJv8V2WGpo03+2TLC4u3NPKv0fW7rBc4qyeE=
+        b=nf10lQGBL4dLRPyrtQm/A28Lf8mkuYwfWH3bN8RRC7Qlcyp6WbtVdXFePF5Mq2Jeo
+         rkqLn/7JZof9yBnOGuvqDz/xHU01+MM9XfgE3I1ndErsv8qzepz3zGU/KhH4PdG04N
+         iu3zf7fQtUAgGfBEA6SgyGjTV6mP8+Sq9FVXFLUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Gregory Herrero <gregory.herrero@oracle.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 194/232] selftests/bpf: Fix silent Makefile output
-Date:   Thu, 20 Aug 2020 11:20:45 +0200
-Message-Id: <20200820091622.187340412@linuxfoundation.org>
+Subject: [PATCH 5.8 196/232] recordmcount: Fix build failure on non arm64
+Date:   Thu, 20 Aug 2020 11:20:47 +0200
+Message-Id: <20200820091622.284965844@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,197 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-[ Upstream commit d5ca590525cfbd87ca307dcf498a566e2e7c1767 ]
+[ Upstream commit 3df14264ad9930733a8166e5bd0eccc1727564bb ]
 
-99aacebecb75 ("selftests: do not use .ONESHELL") removed .ONESHELL, which
-changes how Makefile "silences" multi-command target recipes. selftests/bpf's
-Makefile relied (a somewhat unknowingly) on .ONESHELL behavior of silencing
-all commands within the recipe if the first command contains @ symbol.
-Removing .ONESHELL exposed this hack.
+Commit ea0eada45632 leads to the following build failure on powerpc:
 
-This patch fixes the issue by explicitly silencing each command with $(Q).
+  HOSTCC  scripts/recordmcount
+scripts/recordmcount.c: In function 'arm64_is_fake_mcount':
+scripts/recordmcount.c:440: error: 'R_AARCH64_CALL26' undeclared (first use in this function)
+scripts/recordmcount.c:440: error: (Each undeclared identifier is reported only once
+scripts/recordmcount.c:440: error: for each function it appears in.)
+make[2]: *** [scripts/recordmcount] Error 1
 
-Also explicitly define fallback rule for building *.o from *.c, instead of
-relying on non-silent inherited rule. This was causing a non-silent output for
-bench.o object file.
+Make sure R_AARCH64_CALL26 is always defined.
 
-Fixes: 92f7440ecc93 ("selftests/bpf: More succinct Makefile output")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20200807033058.848677-1-andriin@fb.com
+Fixes: ea0eada45632 ("recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.")
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Acked-by: Gregory Herrero <gregory.herrero@oracle.com>
+Cc: Gregory Herrero <gregory.herrero@oracle.com>
+Link: https://lore.kernel.org/r/5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/Makefile | 44 +++++++++++++++-------------
- 1 file changed, 24 insertions(+), 20 deletions(-)
+ scripts/recordmcount.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-index dab182ffec320..4f322d5388757 100644
---- a/tools/testing/selftests/bpf/Makefile
-+++ b/tools/testing/selftests/bpf/Makefile
-@@ -102,7 +102,7 @@ endif
- OVERRIDE_TARGETS := 1
- override define CLEAN
- 	$(call msg,CLEAN)
--	$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
-+	$(Q)$(RM) -r $(TEST_GEN_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(EXTRA_CLEAN)
- endef
+diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
+index e59022b3f1254..b9c2ee7ab43fa 100644
+--- a/scripts/recordmcount.c
++++ b/scripts/recordmcount.c
+@@ -42,6 +42,8 @@
+ #define R_ARM_THM_CALL		10
+ #define R_ARM_CALL		28
  
- include ../lib.mk
-@@ -122,17 +122,21 @@ $(notdir $(TEST_GEN_PROGS)						\
- 	 $(TEST_GEN_PROGS_EXTENDED)					\
- 	 $(TEST_CUSTOM_PROGS)): %: $(OUTPUT)/% ;
- 
-+$(OUTPUT)/%.o: %.c
-+	$(call msg,CC,,$@)
-+	$(Q)$(CC) $(CFLAGS) -c $(filter %.c,$^) $(LDLIBS) -o $@
++#define R_AARCH64_CALL26	283
 +
- $(OUTPUT)/%:%.c
- 	$(call msg,BINARY,,$@)
--	$(LINK.c) $^ $(LDLIBS) -o $@
-+	$(Q)$(LINK.c) $^ $(LDLIBS) -o $@
- 
- $(OUTPUT)/urandom_read: urandom_read.c
- 	$(call msg,BINARY,,$@)
--	$(CC) $(LDFLAGS) -o $@ $< $(LDLIBS) -Wl,--build-id
-+	$(Q)$(CC) $(LDFLAGS) -o $@ $< $(LDLIBS) -Wl,--build-id
- 
- $(OUTPUT)/test_stub.o: test_stub.c $(BPFOBJ)
- 	$(call msg,CC,,$@)
--	$(CC) -c $(CFLAGS) -o $@ $<
-+	$(Q)$(CC) -c $(CFLAGS) -o $@ $<
- 
- VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)				\
- 		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)	\
-@@ -180,11 +184,11 @@ $(BPFOBJ): $(wildcard $(BPFDIR)/*.[ch] $(BPFDIR)/Makefile)		       \
- 
- $(BUILD_DIR)/libbpf $(BUILD_DIR)/bpftool $(INCLUDE_DIR):
- 	$(call msg,MKDIR,,$@)
--	mkdir -p $@
-+	$(Q)mkdir -p $@
- 
- $(INCLUDE_DIR)/vmlinux.h: $(VMLINUX_BTF) | $(BPFTOOL) $(INCLUDE_DIR)
- 	$(call msg,GEN,,$@)
--	$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
-+	$(Q)$(BPFTOOL) btf dump file $(VMLINUX_BTF) format c > $@
- 
- # Get Clang's default includes on this system, as opposed to those seen by
- # '-target bpf'. This fixes "missing" files on some architectures/distros,
-@@ -222,28 +226,28 @@ $(OUTPUT)/flow_dissector_load.o: flow_dissector_load.h
- # $4 - LDFLAGS
- define CLANG_BPF_BUILD_RULE
- 	$(call msg,CLNG-LLC,$(TRUNNER_BINARY),$2)
--	($(CLANG) $3 -O2 -target bpf -emit-llvm				\
-+	$(Q)($(CLANG) $3 -O2 -target bpf -emit-llvm			\
- 		-c $1 -o - || echo "BPF obj compilation failed") | 	\
- 	$(LLC) -mattr=dwarfris -march=bpf -mcpu=v3 $4 -filetype=obj -o $2
- endef
- # Similar to CLANG_BPF_BUILD_RULE, but with disabled alu32
- define CLANG_NOALU32_BPF_BUILD_RULE
- 	$(call msg,CLNG-LLC,$(TRUNNER_BINARY),$2)
--	($(CLANG) $3 -O2 -target bpf -emit-llvm				\
-+	$(Q)($(CLANG) $3 -O2 -target bpf -emit-llvm			\
- 		-c $1 -o - || echo "BPF obj compilation failed") | 	\
- 	$(LLC) -march=bpf -mcpu=v2 $4 -filetype=obj -o $2
- endef
- # Similar to CLANG_BPF_BUILD_RULE, but using native Clang and bpf LLC
- define CLANG_NATIVE_BPF_BUILD_RULE
- 	$(call msg,CLNG-BPF,$(TRUNNER_BINARY),$2)
--	($(CLANG) $3 -O2 -emit-llvm					\
-+	$(Q)($(CLANG) $3 -O2 -emit-llvm					\
- 		-c $1 -o - || echo "BPF obj compilation failed") | 	\
- 	$(LLC) -march=bpf -mcpu=v3 $4 -filetype=obj -o $2
- endef
- # Build BPF object using GCC
- define GCC_BPF_BUILD_RULE
- 	$(call msg,GCC-BPF,$(TRUNNER_BINARY),$2)
--	$(BPF_GCC) $3 $4 -O2 -c $1 -o $2
-+	$(Q)$(BPF_GCC) $3 $4 -O2 -c $1 -o $2
- endef
- 
- SKEL_BLACKLIST := btf__% test_pinning_invalid.c test_sk_assign.c
-@@ -285,7 +289,7 @@ ifeq ($($(TRUNNER_OUTPUT)-dir),)
- $(TRUNNER_OUTPUT)-dir := y
- $(TRUNNER_OUTPUT):
- 	$$(call msg,MKDIR,,$$@)
--	mkdir -p $$@
-+	$(Q)mkdir -p $$@
- endif
- 
- # ensure we set up BPF objects generation rule just once for a given
-@@ -305,7 +309,7 @@ $(TRUNNER_BPF_SKELS): $(TRUNNER_OUTPUT)/%.skel.h:			\
- 		      $(TRUNNER_OUTPUT)/%.o				\
- 		      | $(BPFTOOL) $(TRUNNER_OUTPUT)
- 	$$(call msg,GEN-SKEL,$(TRUNNER_BINARY),$$@)
--	$$(BPFTOOL) gen skeleton $$< > $$@
-+	$(Q)$$(BPFTOOL) gen skeleton $$< > $$@
- endif
- 
- # ensure we set up tests.h header generation rule just once
-@@ -329,7 +333,7 @@ $(TRUNNER_TEST_OBJS): $(TRUNNER_OUTPUT)/%.test.o:			\
- 		      $(TRUNNER_BPF_SKELS)				\
- 		      $$(BPFOBJ) | $(TRUNNER_OUTPUT)
- 	$$(call msg,TEST-OBJ,$(TRUNNER_BINARY),$$@)
--	cd $$(@D) && $$(CC) -I. $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(@F)
-+	$(Q)cd $$(@D) && $$(CC) -I. $$(CFLAGS) -c $(CURDIR)/$$< $$(LDLIBS) -o $$(@F)
- 
- $(TRUNNER_EXTRA_OBJS): $(TRUNNER_OUTPUT)/%.o:				\
- 		       %.c						\
-@@ -337,20 +341,20 @@ $(TRUNNER_EXTRA_OBJS): $(TRUNNER_OUTPUT)/%.o:				\
- 		       $(TRUNNER_TESTS_HDR)				\
- 		       $$(BPFOBJ) | $(TRUNNER_OUTPUT)
- 	$$(call msg,EXT-OBJ,$(TRUNNER_BINARY),$$@)
--	$$(CC) $$(CFLAGS) -c $$< $$(LDLIBS) -o $$@
-+	$(Q)$$(CC) $$(CFLAGS) -c $$< $$(LDLIBS) -o $$@
- 
- # only copy extra resources if in flavored build
- $(TRUNNER_BINARY)-extras: $(TRUNNER_EXTRA_FILES) | $(TRUNNER_OUTPUT)
- ifneq ($2,)
- 	$$(call msg,EXT-COPY,$(TRUNNER_BINARY),$(TRUNNER_EXTRA_FILES))
--	cp -a $$^ $(TRUNNER_OUTPUT)/
-+	$(Q)cp -a $$^ $(TRUNNER_OUTPUT)/
- endif
- 
- $(OUTPUT)/$(TRUNNER_BINARY): $(TRUNNER_TEST_OBJS)			\
- 			     $(TRUNNER_EXTRA_OBJS) $$(BPFOBJ)		\
- 			     | $(TRUNNER_BINARY)-extras
- 	$$(call msg,BINARY,,$$@)
--	$$(CC) $$(CFLAGS) $$(filter %.a %.o,$$^) $$(LDLIBS) -o $$@
-+	$(Q)$$(CC) $$(CFLAGS) $$(filter %.a %.o,$$^) $$(LDLIBS) -o $$@
- 
- endef
- 
-@@ -403,17 +407,17 @@ verifier/tests.h: verifier/*.c
- 		) > verifier/tests.h)
- $(OUTPUT)/test_verifier: test_verifier.c verifier/tests.h $(BPFOBJ) | $(OUTPUT)
- 	$(call msg,BINARY,,$@)
--	$(CC) $(CFLAGS) $(filter %.a %.o %.c,$^) $(LDLIBS) -o $@
-+	$(Q)$(CC) $(CFLAGS) $(filter %.a %.o %.c,$^) $(LDLIBS) -o $@
- 
- # Make sure we are able to include and link libbpf against c++.
- $(OUTPUT)/test_cpp: test_cpp.cpp $(OUTPUT)/test_core_extern.skel.h $(BPFOBJ)
- 	$(call msg,CXX,,$@)
--	$(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
-+	$(Q)$(CXX) $(CFLAGS) $^ $(LDLIBS) -o $@
- 
- # Benchmark runner
- $(OUTPUT)/bench_%.o: benchs/bench_%.c bench.h
- 	$(call msg,CC,,$@)
--	$(CC) $(CFLAGS) -c $(filter %.c,$^) $(LDLIBS) -o $@
-+	$(Q)$(CC) $(CFLAGS) -c $(filter %.c,$^) $(LDLIBS) -o $@
- $(OUTPUT)/bench_rename.o: $(OUTPUT)/test_overhead.skel.h
- $(OUTPUT)/bench_trigger.o: $(OUTPUT)/trigger_bench.skel.h
- $(OUTPUT)/bench_ringbufs.o: $(OUTPUT)/ringbuf_bench.skel.h \
-@@ -426,7 +430,7 @@ $(OUTPUT)/bench: $(OUTPUT)/bench.o $(OUTPUT)/testing_helpers.o \
- 		 $(OUTPUT)/bench_trigger.o \
- 		 $(OUTPUT)/bench_ringbufs.o
- 	$(call msg,BINARY,,$@)
--	$(CC) $(LDFLAGS) -o $@ $(filter %.a %.o,$^) $(LDLIBS)
-+	$(Q)$(CC) $(LDFLAGS) -o $@ $(filter %.a %.o,$^) $(LDLIBS)
- 
- EXTRA_CLEAN := $(TEST_CUSTOM_PROGS) $(SCRATCH_DIR)			\
- 	prog_tests/tests.h map_tests/tests.h verifier/tests.h		\
+ static int fd_map;	/* File descriptor for file being modified. */
+ static int mmap_failed; /* Boolean flag. */
+ static char gpfx;	/* prefix for global symbol name (sometimes '_') */
 -- 
 2.25.1
 
