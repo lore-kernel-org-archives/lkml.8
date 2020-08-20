@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF6BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEA6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9395922D70
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E35D2173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:45:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916697;
-	bh=PDLp1CxscdXoVwsTM/35DSuWEbuY7TZmg6Yw/NaueCg=;
+	s=default; t=1597916715;
+	bh=XNfxmt/kbxj2BQBPav5mMIPjAsXbiARPItUl6kns2pw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7MS0yY7frpesx6NXA+ot2T7IEcGyzrBbPtLsGE6dAn8CFXEsh7fFZ42t027VGRMW
-	 4msk4FcfciK0vTAM6AlZcbxBsveaGMsHjsVJsEd6gay24+nyEdEF6ur03rf/8w2LT6
-	 PgkmHFr+LsSIvTYdTu5Q3adgWD3eao2sdyLeotMc=
+	b=GTVfhbw5Iy0ZVUgS9Iyccs/PtNnOlm2cz8OfYPOcF4t9qX+cJV9myvAi+99ySNce7
+	 aOQmfGhfUrGIh2AADj3/yaUpo2NBK7L5Fr1hv/LpGUPZEsWXsmmXynKpo6aKSO/EVZ
+	 qTri9l/4Nb1PIU2nkcAi0HWlavAFYIsEQQDI/UcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgHTJoH (ORCPT
+        id S1728626AbgHTJpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:44:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37608 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729019AbgHTJm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:42:26 -0400
+        id S1729183AbgHTJmo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:42:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B09A22BED;
-        Thu, 20 Aug 2020 09:42:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9603C208DB;
+        Thu, 20 Aug 2020 09:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916546;
-        bh=PDLp1CxscdXoVwsTM/35DSuWEbuY7TZmg6Yw/NaueCg=;
+        s=default; t=1597916564;
+        bh=XNfxmt/kbxj2BQBPav5mMIPjAsXbiARPItUl6kns2pw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ucfEI1ir2A2hkTl9YWaFIi1nps/IFM6lkVquSZuThYJ/mSJ2xbzOxSqCutao1fydT
-         3HlMplx2ejp55yNwMD8KA14Rt9rPrxAhSEeLj5A2/Xvwy09M7c40H4KkXPNVvgsIbX
-         x1LfsP5IIw8M2q2PbpMiYfcw8apc6BGHI7AYzEZY=
+        b=pQwShqkBvc4yo/sRMdUE/RtD4HR9fykUGWJykp2iC+c6ZkBawkUC9B/xZfmgLfbdk
+         4U0fRrfaTAzboTXlO/2xWWy/rfr0ZWgE5uyK6IuKTh4RPyw4zc2+gHC5gY4VcjyR9i
+         hVxFiIlLvE+axhDF4Oqhj44o3qrbjss7q0CEK2C0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
+        stable@vger.kernel.org,
+        Jeffrey Mitchell <jeffrey.mitchell@starlab.io>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 167/204] vdpa: Fix pointer math bug in vdpasim_get_config()
-Date:   Thu, 20 Aug 2020 11:21:04 +0200
-Message-Id: <20200820091614.561085683@linuxfoundation.org>
+Subject: [PATCH 5.7 173/204] nfs: Fix getxattr kernel panic and memory overflow
+Date:   Thu, 20 Aug 2020 11:21:10 +0200
+Message-Id: <20200820091614.847215277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -61,37 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
 
-[ Upstream commit cf16fe9243bfa2863491026fc727618c7c593c84 ]
+[ Upstream commit b4487b93545214a9db8cbf32e86411677b0cca21 ]
 
-If "offset" is non-zero then we end up copying from beyond the end of
-the config because of pointer math.  We can fix this by casting the
-struct to a u8 pointer.
+Move the buffer size check to decode_attr_security_label() before memcpy()
+Only call memcpy() if the buffer is large enough
 
-Fixes: 2c53d0f64c06 ("vdpasim: vDPA device simulator")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/20200406144552.GF68494@mwanda
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
+Signed-off-by: Jeffrey Mitchell <jeffrey.mitchell@starlab.io>
+[Trond: clean up duplicate test of label->len != 0]
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vdpa/vdpa_sim/vdpa_sim.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 2 --
+ fs/nfs/nfs4xdr.c  | 6 +++++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/vdpa/vdpa_sim/vdpa_sim.c b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-index 3554f8de00e64..4907c1cfe6671 100644
---- a/drivers/vdpa/vdpa_sim/vdpa_sim.c
-+++ b/drivers/vdpa/vdpa_sim/vdpa_sim.c
-@@ -521,7 +521,7 @@ static void vdpasim_get_config(struct vdpa_device *vdpa, unsigned int offset,
- 	struct vdpasim *vdpasim = vdpa_to_sim(vdpa);
- 
- 	if (offset + len < sizeof(struct virtio_net_config))
--		memcpy(buf, &vdpasim->config + offset, len);
-+		memcpy(buf, (u8 *)&vdpasim->config + offset, len);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 2e2dac29a9e91..45e0585e0667c 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5845,8 +5845,6 @@ static int _nfs4_get_security_label(struct inode *inode, void *buf,
+ 		return ret;
+ 	if (!(fattr.valid & NFS_ATTR_FATTR_V4_SECURITY_LABEL))
+ 		return -ENOENT;
+-	if (buflen < label.len)
+-		return -ERANGE;
+ 	return 0;
  }
  
- static void vdpasim_set_config(struct vdpa_device *vdpa, unsigned int offset,
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 47817ef0aadb1..4e0d8a3b89b67 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4166,7 +4166,11 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 			return -EIO;
+ 		if (len < NFS4_MAXLABELLEN) {
+ 			if (label) {
+-				memcpy(label->label, p, len);
++				if (label->len) {
++					if (label->len < len)
++						return -ERANGE;
++					memcpy(label->label, p, len);
++				}
+ 				label->len = len;
+ 				label->pi = pi;
+ 				label->lfs = lfs;
 -- 
 2.25.1
 
