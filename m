@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23353C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1407BC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E01CE208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D158C207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881996;
-	bh=gDxGAOb0qK+ueuz1Ha9bY/C+e/XGqAv2qeL00uHAwHA=;
+	s=default; t=1597882002;
+	bh=yCm5y4Uai+qjD/UrAJ0fgpyeB5mCDfWpo/kMVMdxoJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0FkmjbDHZVm7i6hbddd6+qEiw6Gh03vhcm6vLu+iLlJ0V2wG1BekxuReROjJTPcz
-	 mqd3qdeIfKDvm81rgg0z4Xxw1gDPFvaaaTk318BobxoiiXZSxZGTZuJYAyMgoi/M/7
-	 VQTNFamtN0Lu7ao9DkLs8LLwL3OzhlrnKLlxFi7g=
+	b=O5hhHFy7uq862sh/dWAT7f4+EW13p4b7nxqDriJIX9Ol68XM6iNE0Kq7rj/cMyz9U
+	 tVV0Ys1eHMpREYG6aHgdmbbTuEBItGlQOtR3YRUvRdws0wcppl+HtqNWO+UJ5OSPat
+	 gUMsKEgr2+tz2LioBwJ2DGXyJjT3zAizfsY5jtiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgHTAGe (ORCPT
+        id S1728044AbgHTAGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:06:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33608 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728307AbgHTADo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:44 -0400
+        id S1728338AbgHTADl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C418208E4;
-        Thu, 20 Aug 2020 00:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905EB214F1;
+        Thu, 20 Aug 2020 00:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881824;
-        bh=gDxGAOb0qK+ueuz1Ha9bY/C+e/XGqAv2qeL00uHAwHA=;
+        s=default; t=1597881821;
+        bh=yCm5y4Uai+qjD/UrAJ0fgpyeB5mCDfWpo/kMVMdxoJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CRcznKHtH/PyqVwpWkzzYNAaHaJ1XiMWQIR2/M9T/GVW7cUfiFvbclzcmVZiaRm6N
-         donfcs60nxArnm+cuOz2fNmmbjwIbxnytZXzgOfpiTKf9iIslAIDXQ/ashu8Tj9iOR
-         Y4ow0PVm7p4+IpMfgi8yUvANajSXvr9cPJuhrhro=
+        b=MR+H8c4TGW/jB7CrbSciSlgONAtiihMP8S051q8JXQrCWob87MaVHdP+lhyVGSu1+
+         ABovJHcZHtg3nuuIwfqlEHohlVQz7OFHNwA7lf7w/bWF3j2CyCNnhM9ldxhEwp9NL/
+         t0jqlWRUNzGlNG2PNJ/ipJo9TKLXJtx2pCIE74Aw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mao Wenan <wenan.mao@linux.alibaba.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.14 11/13] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
-Date:   Wed, 19 Aug 2020 20:03:26 -0400
-Message-Id: <20200820000328.215755-11-sashal@kernel.org>
+Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 09/13] cpufreq: intel_pstate: Fix cpuinfo_max_freq when MSR_TURBO_RATIO_LIMIT is 0
+Date:   Wed, 19 Aug 2020 20:03:24 -0400
+Message-Id: <20200820000328.215755-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000328.215755-1-sashal@kernel.org>
 References: <20200820000328.215755-1-sashal@kernel.org>
@@ -61,51 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <wenan.mao@linux.alibaba.com>
+From: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 
-[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
+[ Upstream commit 4daca379c703ff55edc065e8e5173dcfeecf0148 ]
 
-The loop may exist if vq->broken is true,
-virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
-will return NULL, so virtnet_poll will reschedule napi to
-receive packet, it will lead cpu usage(si) to 100%.
+The MSR_TURBO_RATIO_LIMIT can be 0. This is not an error. User can update
+this MSR via BIOS settings on some systems or can use msr tools to update.
+Also some systems boot with value = 0.
 
-call trace as below:
-virtnet_poll
-	virtnet_receive
-		virtqueue_get_buf_ctx
-			virtqueue_get_buf_ctx_packed
-			virtqueue_get_buf_ctx_split
-	virtqueue_napi_complete
-		virtqueue_poll           //return true
-		virtqueue_napi_schedule //it will reschedule napi
+This results in display of cpufreq/cpuinfo_max_freq wrong. This value
+will be equal to cpufreq/base_frequency, even though turbo is enabled.
 
-to fix this, return false if vq is broken in virtqueue_poll.
+But platform will still function normally in HWP mode as we get max
+1-core frequency from the MSR_HWP_CAPABILITIES. This MSR is already used
+to calculate cpu->pstate.turbo_freq, which is used for to set
+policy->cpuinfo.max_freq. But some other places cpu->pstate.turbo_pstate
+is used. For example to set policy->max.
 
-Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
+To fix this, also update cpu->pstate.turbo_pstate when updating
+cpu->pstate.turbo_freq.
+
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/virtio/virtio_ring.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/cpufreq/intel_pstate.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index b82bb0b081615..51278f8bd3ab3 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -829,6 +829,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
- {
- 	struct vring_virtqueue *vq = to_vvq(_vq);
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 1aa0b05c8cbdf..5c41dc9aaa46d 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -1378,6 +1378,7 @@ static void intel_pstate_get_cpu_pstates(struct cpudata *cpu)
  
-+	if (unlikely(vq->broken))
-+		return false;
-+
- 	virtio_mb(vq->weak_barriers);
- 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
- }
+ 		intel_pstate_get_hwp_max(cpu->cpu, &phy_max, &current_max);
+ 		cpu->pstate.turbo_freq = phy_max * cpu->pstate.scaling;
++		cpu->pstate.turbo_pstate = phy_max;
+ 	} else {
+ 		cpu->pstate.turbo_freq = cpu->pstate.turbo_pstate * cpu->pstate.scaling;
+ 	}
 -- 
 2.25.1
 
