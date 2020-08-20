@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA79C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4ECEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4594320738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F6520738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:16:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925798;
-	bh=GhFvoRWDwdlAIbItK878bl23oh/B9FZs/fvE3PNlG3g=;
+	s=default; t=1597925803;
+	bh=1IIpIrA4Hszo9m350XB8njrSAlGAYp0Vv7DBdwIc/VE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V71UmQPEOXqrF5acH1uxpUjAtz+7ya9K29oe8+FChMxfKh7CmXHtdM/pVrB85nscn
-	 Bt8V+d5hp6pSBWbD3o6LwRz6ke7jWsfqAiCZk0xheEtQ25jGBRM4yQffj/PJzqNuYu
-	 Yr9QJNQmf8qTYSWmM8k8Tkp8x9hBGIw66/b7MYgI=
+	b=rumBA/N37857LkTjjVCyxqhavfLOnJy0ugxasRjB7nvmcQN3W/hZl1S2uK2LJ0sLd
+	 NWJuszz7g49Zgml7ByBf5FVv2vlgkNILJzwjeOkmSP6qIUTP1FxAb3M0AoqQDTLIMS
+	 mshh92phx/5GyOovom9qQffB8/EqWniMBsKJx6hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbgHTMQg (ORCPT
+        id S1730379AbgHTMQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:16:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40268 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:16:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730262AbgHTJ4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:45 -0400
+        id S1730257AbgHTJ4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:56:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E28820885;
-        Thu, 20 Aug 2020 09:56:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2504B207FB;
+        Thu, 20 Aug 2020 09:56:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917405;
-        bh=GhFvoRWDwdlAIbItK878bl23oh/B9FZs/fvE3PNlG3g=;
+        s=default; t=1597917401;
+        bh=1IIpIrA4Hszo9m350XB8njrSAlGAYp0Vv7DBdwIc/VE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKgJ7+wOxPwjF4Z+8zCtI8LwTifg6RStLn2tVg0bgqIG/njZ9ASS0bC8V8TyPSOA5
-         6dPEjOwC4awkNeLyg4rL0uMGsYBWJtJAkVQJTo4XlaByf/6ZkGiKVpbbmq3G3BhzHs
-         D2ybEKUWyxIcmbOV58SCQC9XKsJ29w7DMd3pE358=
+        b=Bzqp+fu3fy+3YxrRnTKZHKYSMwQoiPxNfyeXtB7lnLQkcihKsrIKgclovcdX9Dpl0
+         pCqwCs/GUu8fexer/ovrUQg/ddqcnPu4pXwlo7AtKv63ZWNZdBT3bv/a6bdxuKSLTX
+         lkBWaB7dXDXKOHiuqDPKK8UugMlwwqgLljgAUKYM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Xu <wen.xu@gatech.edu>,
-        Dave Chinner <dchinner@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 002/212] xfs: validate cached inodes are free when allocated
-Date:   Thu, 20 Aug 2020 11:19:35 +0200
-Message-Id: <20200820091602.380738506@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
+        syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Subject: [PATCH 4.9 019/212] fbdev: Detect integer underflow at "struct fbcon_ops"->clear_margins.
+Date:   Thu, 20 Aug 2020 11:19:52 +0200
+Message-Id: <20200820091603.311622787@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -63,158 +62,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Chinner <dchinner@redhat.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit afca6c5b2595fc44383919fba740c194b0b76aff ]
+[ Upstream commit 033724d6864245a11f8e04c066002e6ad22b3fd0 ]
 
-A recent fuzzed filesystem image cached random dcache corruption
-when the reproducer was run. This often showed up as panics in
-lookup_slow() on a null inode->i_ops pointer when doing pathwalks.
+syzbot is reporting general protection fault in bitfill_aligned() [1]
+caused by integer underflow in bit_clear_margins(). The cause of this
+problem is when and how do_vc_resize() updates vc->vc_{cols,rows}.
 
-BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-....
-Call Trace:
- lookup_slow+0x44/0x60
- walk_component+0x3dd/0x9f0
- link_path_walk+0x4a7/0x830
- path_lookupat+0xc1/0x470
- filename_lookup+0x129/0x270
- user_path_at_empty+0x36/0x40
- path_listxattr+0x98/0x110
- SyS_listxattr+0x13/0x20
- do_syscall_64+0xf5/0x280
- entry_SYSCALL_64_after_hwframe+0x42/0xb7
+If vc_do_resize() fails (e.g. kzalloc() fails) when var.xres or var.yres
+is going to shrink, vc->vc_{cols,rows} will not be updated. This allows
+bit_clear_margins() to see info->var.xres < (vc->vc_cols * cw) or
+info->var.yres < (vc->vc_rows * ch). Unexpectedly large rw or bh will
+try to overrun the __iomem region and causes general protection fault.
 
-but had many different failure modes including deadlocks trying to
-lock the inode that was just allocated or KASAN reports of
-use-after-free violations.
+Also, vc_resize(vc, 0, 0) does not set vc->vc_{cols,rows} = 0 due to
 
-The cause of the problem was a corrupt INOBT on a v4 fs where the
-root inode was marked as free in the inobt record. Hence when we
-allocated an inode, it chose the root inode to allocate, found it in
-the cache and re-initialised it.
+  new_cols = (cols ? cols : vc->vc_cols);
+  new_rows = (lines ? lines : vc->vc_rows);
 
-We recently fixed a similar inode allocation issue caused by inobt
-record corruption problem in xfs_iget_cache_miss() in commit
-ee457001ed6c ("xfs: catch inode allocation state mismatch
-corruption"). This change adds similar checks to the cache-hit path
-to catch it, and turns the reproducer into a corruption shutdown
-situation.
+exception. Since cols and lines are calculated as
 
-Reported-by: Wen Xu <wen.xu@gatech.edu>
-Signed-Off-By: Dave Chinner <dchinner@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Carlos Maiolino <cmaiolino@redhat.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-[darrick: fix typos in comment]
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+  cols = FBCON_SWAP(ops->rotate, info->var.xres, info->var.yres);
+  rows = FBCON_SWAP(ops->rotate, info->var.yres, info->var.xres);
+  cols /= vc->vc_font.width;
+  rows /= vc->vc_font.height;
+  vc_resize(vc, cols, rows);
+
+in fbcon_modechanged(), var.xres < vc->vc_font.width makes cols = 0
+and var.yres < vc->vc_font.height makes rows = 0. This means that
+
+  const int fd = open("/dev/fb0", O_ACCMODE);
+  struct fb_var_screeninfo var = { };
+  ioctl(fd, FBIOGET_VSCREENINFO, &var);
+  var.xres = var.yres = 1;
+  ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+
+easily reproduces integer underflow bug explained above.
+
+Of course, callers of vc_resize() are not handling vc_do_resize() failure
+is bad. But we can't avoid vc_resize(vc, 0, 0) which returns 0. Therefore,
+as a band-aid workaround, this patch checks integer underflow in
+"struct fbcon_ops"->clear_margins call, assuming that
+vc->vc_cols * vc->vc_font.width and vc->vc_rows * vc->vc_font.heigh do not
+cause integer overflow.
+
+[1] https://syzkaller.appspot.com/bug?id=a565882df74fa76f10d3a6fec4be31098dbb37c6
+
+Reported-and-tested-by: syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200715015102.3814-1-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_icache.c | 73 +++++++++++++++++++++++++++++----------------
- 1 file changed, 48 insertions(+), 25 deletions(-)
+ drivers/video/console/bitblit.c   | 4 ++--
+ drivers/video/console/fbcon_ccw.c | 4 ++--
+ drivers/video/console/fbcon_cw.c  | 4 ++--
+ drivers/video/console/fbcon_ud.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-index 57ec10809f4bf..69c112ddb544d 100644
---- a/fs/xfs/xfs_icache.c
-+++ b/fs/xfs/xfs_icache.c
-@@ -307,6 +307,46 @@ xfs_reinit_inode(
- 	return error;
- }
+diff --git a/drivers/video/console/bitblit.c b/drivers/video/console/bitblit.c
+index dbfe4eecf12e5..05d1d36a56654 100644
+--- a/drivers/video/console/bitblit.c
++++ b/drivers/video/console/bitblit.c
+@@ -216,7 +216,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = 0;
+ 	region.rop = ROP_COPY;
  
-+/*
-+ * If we are allocating a new inode, then check what was returned is
-+ * actually a free, empty inode. If we are not allocating an inode,
-+ * then check we didn't find a free inode.
-+ *
-+ * Returns:
-+ *	0		if the inode free state matches the lookup context
-+ *	-ENOENT		if the inode is free and we are not allocating
-+ *	-EFSCORRUPTED	if there is any state mismatch at all
-+ */
-+static int
-+xfs_iget_check_free_state(
-+	struct xfs_inode	*ip,
-+	int			flags)
-+{
-+	if (flags & XFS_IGET_CREATE) {
-+		/* should be a free inode */
-+		if (VFS_I(ip)->i_mode != 0) {
-+			xfs_warn(ip->i_mount,
-+"Corruption detected! Free inode 0x%llx not marked free! (mode 0x%x)",
-+				ip->i_ino, VFS_I(ip)->i_mode);
-+			return -EFSCORRUPTED;
-+		}
-+
-+		if (ip->i_d.di_nblocks != 0) {
-+			xfs_warn(ip->i_mount,
-+"Corruption detected! Free inode 0x%llx has blocks allocated!",
-+				ip->i_ino);
-+			return -EFSCORRUPTED;
-+		}
-+		return 0;
-+	}
-+
-+	/* should be an allocated inode */
-+	if (VFS_I(ip)->i_mode == 0)
-+		return -ENOENT;
-+
-+	return 0;
-+}
-+
- /*
-  * Check the validity of the inode we just found it the cache
-  */
-@@ -356,12 +396,12 @@ xfs_iget_cache_hit(
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = info->var.xoffset + rs;
+ 		region.dy = 0;
+ 		region.width = rw;
+@@ -224,7 +224,7 @@ static void bit_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
  	}
  
- 	/*
--	 * If lookup is racing with unlink return an error immediately.
-+	 * Check the inode free state is valid. This also detects lookup
-+	 * racing with unlinks.
- 	 */
--	if (VFS_I(ip)->i_mode == 0 && !(flags & XFS_IGET_CREATE)) {
--		error = -ENOENT;
-+	error = xfs_iget_check_free_state(ip, flags);
-+	if (error)
- 		goto out_error;
--	}
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset + bs;
+ 		region.width = rs;
+diff --git a/drivers/video/console/fbcon_ccw.c b/drivers/video/console/fbcon_ccw.c
+index 5a3cbf6dff4d9..34da8bba9273a 100644
+--- a/drivers/video/console/fbcon_ccw.c
++++ b/drivers/video/console/fbcon_ccw.c
+@@ -201,7 +201,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = 0;
+ 	region.rop = ROP_COPY;
  
- 	/*
- 	 * If IRECLAIMABLE is set, we've torn down the VFS inode already.
-@@ -473,29 +513,12 @@ xfs_iget_cache_miss(
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset;
+ 		region.height = rw;
+@@ -209,7 +209,7 @@ static void ccw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
  
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset + bs;
+ 		region.dy = 0;
+                 region.height = info->var.yres_virtual;
+diff --git a/drivers/video/console/fbcon_cw.c b/drivers/video/console/fbcon_cw.c
+index e7ee44db4e98b..0b552b3fc22ab 100644
+--- a/drivers/video/console/fbcon_cw.c
++++ b/drivers/video/console/fbcon_cw.c
+@@ -184,7 +184,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = 0;
+ 	region.rop = ROP_COPY;
  
- 	/*
--	 * If we are allocating a new inode, then check what was returned is
--	 * actually a free, empty inode. If we are not allocating an inode,
--	 * the check we didn't find a free inode.
-+	 * Check the inode free state is valid. This also detects lookup
-+	 * racing with unlinks.
- 	 */
--	if (flags & XFS_IGET_CREATE) {
--		if (VFS_I(ip)->i_mode != 0) {
--			xfs_warn(mp,
--"Corruption detected! Free inode 0x%llx not marked free on disk",
--				ino);
--			error = -EFSCORRUPTED;
--			goto out_destroy;
--		}
--		if (ip->i_d.di_nblocks != 0) {
--			xfs_warn(mp,
--"Corruption detected! Free inode 0x%llx has blocks allocated!",
--				ino);
--			error = -EFSCORRUPTED;
--			goto out_destroy;
--		}
--	} else if (VFS_I(ip)->i_mode == 0) {
--		error = -ENOENT;
-+	error = xfs_iget_check_free_state(ip, flags);
-+	if (error)
- 		goto out_destroy;
--	}
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dx = 0;
+ 		region.dy = info->var.yoffset + rs;
+ 		region.height = rw;
+@@ -192,7 +192,7 @@ static void cw_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
  
- 	/*
- 	 * Preload the radix tree so we can insert safely under the
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dx = info->var.xoffset;
+ 		region.dy = info->var.yoffset;
+                 region.height = info->var.yres;
+diff --git a/drivers/video/console/fbcon_ud.c b/drivers/video/console/fbcon_ud.c
+index 19e3714abfe8f..7f62efe2da526 100644
+--- a/drivers/video/console/fbcon_ud.c
++++ b/drivers/video/console/fbcon_ud.c
+@@ -231,7 +231,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 	region.color = 0;
+ 	region.rop = ROP_COPY;
+ 
+-	if (rw && !bottom_only) {
++	if ((int) rw > 0 && !bottom_only) {
+ 		region.dy = 0;
+ 		region.dx = info->var.xoffset;
+ 		region.width  = rw;
+@@ -239,7 +239,7 @@ static void ud_clear_margins(struct vc_data *vc, struct fb_info *info,
+ 		info->fbops->fb_fillrect(info, &region);
+ 	}
+ 
+-	if (bh) {
++	if ((int) bh > 0) {
+ 		region.dy = info->var.yoffset;
+ 		region.dx = info->var.xoffset;
+                 region.height  = bh;
 -- 
 2.25.1
 
