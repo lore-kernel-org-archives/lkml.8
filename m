@@ -2,172 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BAC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B26C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D373420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VlVqI/2p"
+	by mail.kernel.org (Postfix) with ESMTP id 5631A207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 05:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726786AbgHTFso (ORCPT
+        id S1727786AbgHTFss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 01:48:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:37192 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727108AbgHTFsm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 01:48:42 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597902521; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=1h4fsqhtrfHOIIY9722x00XG5pmAjB4prQT3AFauQ9k=; b=VlVqI/2pMK5DAP0OJ5Qa8PDIvn8me+GMcqDA6pMK9q/8vLKBRe9311bZEQvlrfH4zZIeHUH9
- t73+Qy/Oa5ReH6sDPoiC21BlIt8Dfbs0LBof0/NgFGuw2o+MSZPVDxzoZLUljKHvs25awFQC
- ciSJug9ewlKEYErWmUiebfswke4=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f3e0eb9797e7ddeccddf9b8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 05:48:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EA2F2C43452; Thu, 20 Aug 2020 05:48:40 +0000 (UTC)
-Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9F94AC433A1;
-        Thu, 20 Aug 2020 05:48:33 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9F94AC433A1
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
-From:   Tingwei Zhang <tingwei@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mike Leach <mike.leach@linaro.org>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
+        Thu, 20 Aug 2020 01:48:48 -0400
+Received: from mail.zju.edu.cn ([61.164.42.155]:37076 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726819AbgHTFsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 01:48:41 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app4 (Coremail) with SMTP id cS_KCgDnXXmkDj5fFEIiAQ--.30373S4;
+        Thu, 20 Aug 2020 13:48:24 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Ajay Singh <ajay.kathat@microchip.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eugen Hristev <eugen.hristev@microchip.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Kim Phillips <kim.phillips@arm.com>,
-        Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Mao Jinlong <jinlmao@codeaurora.org>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: [PATCH v9 07/24] coresight: stm: allow to build coresight-stm as a module
-Date:   Thu, 20 Aug 2020 13:47:01 +0800
-Message-Id: <20200820054718.20115-8-tingwei@codeaurora.org>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20200820054718.20115-1-tingwei@codeaurora.org>
-References: <20200820054718.20115-1-tingwei@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] wilc1000: Fix memleak in wilc_sdio_probe
+Date:   Thu, 20 Aug 2020 13:48:19 +0800
+Message-Id: <20200820054819.23365-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgDnXXmkDj5fFEIiAQ--.30373S4
+X-Coremail-Antispam: 1UD129KBjvJXoWruFWUJF4xAw47Ww1rAr4Dtwb_yoW8JryxpF
+        48Gry29ay5CayDG3W7JF4fXFyFy3W3KFW2gF4v93s5urs7AF1FkF4xuFWxur1vvanrGa4x
+        Jw4ktr4a9F18G37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvK1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AE
+        w4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2
+        IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r10
+        6r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+        vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28I
+        cxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJV
+        W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF
+        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+        VjvjDU0xZFpf9x0JUZa9-UUUUU=
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAANsS
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-- Kconfig becomes a tristate, to allow =m
-- add a stm_remove function, for module unload
-- add a MODULE_DEVICE_TABLE for autoloading on boot
+When devm_clk_get() returns -EPROBE_DEFER, sdio_priv
+should be freed just like when wilc_cfg80211_init()
+fails.
 
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@armlinux.org.uk>
-Signed-off-by: Kim Phillips <kim.phillips@arm.com>
-Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-Tested-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Fixes: 8692b047e86cf ("staging: wilc1000: look for rtc_clk clock")
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
 ---
- drivers/hwtracing/coresight/Kconfig         |  5 ++++-
- drivers/hwtracing/coresight/coresight-stm.c | 20 +++++++++++++++++++-
- 2 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 4663fd1bbffc..6433f835fc97 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -86,7 +86,7 @@ config CORESIGHT_SOURCE_ETM4X
- 	  data tracing may also be available.
+Changelog:
+
+v2: - Remove 'staging' prefix in subject.
+---
+ drivers/net/wireless/microchip/wilc1000/sdio.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/microchip/wilc1000/sdio.c b/drivers/net/wireless/microchip/wilc1000/sdio.c
+index 3ece7b0b0392..351ff909ab1c 100644
+--- a/drivers/net/wireless/microchip/wilc1000/sdio.c
++++ b/drivers/net/wireless/microchip/wilc1000/sdio.c
+@@ -149,9 +149,10 @@ static int wilc_sdio_probe(struct sdio_func *func,
+ 	wilc->dev = &func->dev;
  
- config CORESIGHT_STM
--	bool "CoreSight System Trace Macrocell driver"
-+	tristate "CoreSight System Trace Macrocell driver"
- 	depends on (ARM && !(CPU_32v3 || CPU_32v4 || CPU_32v4T)) || ARM64
- 	select CORESIGHT_LINKS_AND_SINKS
- 	select STM
-@@ -96,6 +96,9 @@ config CORESIGHT_STM
- 	  logging useful software events or data coming from various entities
- 	  in the system, possibly running different OSs
+ 	wilc->rtc_clk = devm_clk_get(&func->card->dev, "rtc");
+-	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER)
++	if (PTR_ERR_OR_ZERO(wilc->rtc_clk) == -EPROBE_DEFER) {
++		kfree(sdio_priv);
+ 		return -EPROBE_DEFER;
+-	else if (!IS_ERR(wilc->rtc_clk))
++	} else if (!IS_ERR(wilc->rtc_clk))
+ 		clk_prepare_enable(wilc->rtc_clk);
  
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called coresight-stm.
-+
- config CORESIGHT_CPU_DEBUG
- 	tristate "CoreSight CPU Debug driver"
- 	depends on ARM || ARM64
-diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-index 673d2f56ed1e..b74072e78436 100644
---- a/drivers/hwtracing/coresight/coresight-stm.c
-+++ b/drivers/hwtracing/coresight/coresight-stm.c
-@@ -948,6 +948,17 @@ static int stm_probe(struct amba_device *adev, const struct amba_id *id)
- 	return ret;
- }
- 
-+static int __exit stm_remove(struct amba_device *adev)
-+{
-+	struct stm_drvdata *drvdata = dev_get_drvdata(&adev->dev);
-+
-+	coresight_unregister(drvdata->csdev);
-+
-+	stm_unregister_device(&drvdata->stm);
-+
-+	return 0;
-+}
-+
- #ifdef CONFIG_PM
- static int stm_runtime_suspend(struct device *dev)
- {
-@@ -980,6 +991,8 @@ static const struct amba_id stm_ids[] = {
- 	{ 0, 0},
- };
- 
-+MODULE_DEVICE_TABLE(amba, stm_ids);
-+
- static struct amba_driver stm_driver = {
- 	.drv = {
- 		.name   = "coresight-stm",
-@@ -988,7 +1001,12 @@ static struct amba_driver stm_driver = {
- 		.suppress_bind_attrs = true,
- 	},
- 	.probe          = stm_probe,
-+	.remove         = stm_remove,
- 	.id_table	= stm_ids,
- };
- 
--builtin_amba_driver(stm_driver);
-+module_amba_driver(stm_driver);
-+
-+MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
-+MODULE_DESCRIPTION("Arm CoreSight System Trace Macrocell driver");
-+MODULE_LICENSE("GPL v2");
+ 	dev_info(&func->dev, "Driver Initializing success\n");
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
 
