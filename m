@@ -5,53 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F228C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63213C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E2A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375B5221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:03:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881800;
-	bh=WXvp02546LbDNcX171OiDWWC59ghuXzbW2bJ3O0fb3c=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=wmgPLMRkCwxjBzYIw7+iWVdeKF1lzL9XpuATLsK/3ws7/6CJN1TXyygCnuG6TIXBp
-	 EjDckmabtyGHBVhwt+HNLqOXO1v792H9Bs+IGJd1uCufcM6bEhXwfaGz+zPblUyeKr
-	 m8kxc1WlfvRpx5s1FdZtfGWW/HpOu2ndXumiVxDg=
+	s=default; t=1597881803;
+	bh=HQT20XGqQI8d/gf9N4iBNXI/s5dsOAil5OIsTKXIwtw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zcQSHwR0UjqzOMDqv8V3T6WFULRqifuwxkAbp+jn2ms3a1xSsEU8Iu+4yLC6yvxmz
+	 Rq8Mi6A2wyyKRp6f7yibdIwhbVInVfR9ICKoidRVTXFHX3ozkIS+9X5QOXckeroX8k
+	 f5fgCeBioTUGP7Hx9z1ke/nuEcjcvr8lOShliKzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgHTADT (ORCPT
+        id S1728259AbgHTADT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 19 Aug 2020 20:03:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:60970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728131AbgHTADE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:04 -0400
+        id S1728245AbgHTADS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AC4E208E4;
-        Thu, 20 Aug 2020 00:03:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 994AC208C7;
+        Thu, 20 Aug 2020 00:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881784;
-        bh=WXvp02546LbDNcX171OiDWWC59ghuXzbW2bJ3O0fb3c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=yxWpMRiWw1jgtV+J7U8e9ZdW2GvSzBiyJqnhN/rqayr67N14ZgxSzTVIYNnrv2NBL
-         I94QwMjvxrSruZHt9JP1zdupNNCPwV0qXj4HjuvaunmYKHjJmKWB/5jMIHb/T1/hXY
-         lhUYWRInYnTuewnpuvSTTUlPMnanbe78KCN1gyBg=
+        s=default; t=1597881794;
+        bh=HQT20XGqQI8d/gf9N4iBNXI/s5dsOAil5OIsTKXIwtw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uDjwvrInQjlcViKH2K2Ijkf7DoLPwRK19dvO2+cjZ0CniQTXO1VJoFqzjIMtXKo7A
+         q/g1AY3anecFZvj22qezfKQdaHT1kUGud9DKCnrhWStAUNh9awbRSp9WeYOOsfNXtf
+         EcQwUbsl7sIpWThn7mVxraRY6IZz0nUTayypvI6c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 01/18] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
-Date:   Wed, 19 Aug 2020 20:02:44 -0400
-Message-Id: <20200820000302.215560-1-sashal@kernel.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Allison Collins <allison.henderson@oracle.com>,
+        Chandan Babu R <chandanrlinux@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 09/18] xfs: fix inode quota reservation checks
+Date:   Wed, 19 Aug 2020 20:02:52 -0400
+Message-Id: <20200820000302.215560-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
+References: <20200820000302.215560-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,50 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: "Darrick J. Wong" <darrick.wong@oracle.com>
 
-[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
+[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
 
-It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
-delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
-Micron devices.
+xfs_trans_dqresv is the function that we use to make reservations
+against resource quotas.  Each resource contains two counters: the
+q_core counter, which tracks resources allocated on disk; and the dquot
+reservation counter, which tracks how much of that resource has either
+been allocated or reserved by threads that are working on metadata
+updates.
 
-Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+For disk blocks, we compare the proposed reservation counter against the
+hard and soft limits to decide if we're going to fail the operation.
+However, for inodes we inexplicably compare against the q_core counter,
+not the incore reservation count.
+
+Since the q_core counter is always lower than the reservation count and
+we unlock the dquot between reservation and transaction commit, this
+means that multiple threads can reserve the last inode count before we
+hit the hard limit, and when they commit, we'll be well over the hard
+limit.
+
+Fix this by checking against the incore inode reservation counter, since
+we would appear to maintain that correctly (and that's what we report in
+GETQUOTA).
+
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Allison Collins <allison.henderson@oracle.com>
+Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufs_quirks.h | 1 +
- drivers/scsi/ufs/ufshcd.c     | 2 ++
- 2 files changed, 3 insertions(+)
+ fs/xfs/xfs_trans_dquot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
-index 5d2dfdb41a6ff..758d3a67047df 100644
---- a/drivers/scsi/ufs/ufs_quirks.h
-+++ b/drivers/scsi/ufs/ufs_quirks.h
-@@ -21,6 +21,7 @@
- #define UFS_ANY_VENDOR 0xFFFF
- #define UFS_ANY_MODEL  "ANY_MODEL"
- 
-+#define UFS_VENDOR_MICRON      0x12C
- #define UFS_VENDOR_TOSHIBA     0x198
- #define UFS_VENDOR_SAMSUNG     0x1CE
- #define UFS_VENDOR_SKHYNIX     0x1AD
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index bd21c9cdf8183..ab628fd37e026 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -218,6 +218,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
- 
- static struct ufs_dev_fix ufs_fixups[] = {
- 	/* UFS cards deviations table */
-+	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
-+		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
- 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
- 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL, UFS_DEVICE_NO_VCCQ),
+diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
+index c23257a26c2b8..b8f05d5909b59 100644
+--- a/fs/xfs/xfs_trans_dquot.c
++++ b/fs/xfs/xfs_trans_dquot.c
+@@ -657,7 +657,7 @@ xfs_trans_dqresv(
+ 			}
+ 		}
+ 		if (ninos > 0) {
+-			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
++			total_count = dqp->q_res_icount + ninos;
+ 			timer = be32_to_cpu(dqp->q_core.d_itimer);
+ 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
+ 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
 -- 
 2.25.1
 
