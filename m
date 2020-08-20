@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3ECCC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C39EC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0CEF2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26EE92075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882331;
-	bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FfyYvNN0Qr6xkXGpRAu7TcZhjkrIwp9I7saslbKp9mEDVnyU4bwHODnebqposuSxr
-	 m7gOXM4vDrwRVHP8AHbNme2aOX0Do48bgoR8jsxbr9K/g3mY8/Rpse+JxRG2JutpPa
-	 TExNY7B2E1/tOFLqcBeUmNkRqOEhj9kvrBGw2Uno=
+	s=default; t=1597882336;
+	bh=o77i1BTdhg3uW3SiGZF7MwLyI/AyQJIQE+HUN78af4E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=yEewf4XTYlsepFZZnhWZZvedMmM6VScPpVl0wCtzezzlTlUxE52P1VvE6UdF/HkFu
+	 i548cwisgmNvjnl9U5CZt7RThAEhhND7rFr+GPG2mSixJgz9zOdQl6YZ7YVtMZq3e7
+	 ZbJ4/3CV0fZ9Db6/gLU/n6x+55WYeny2QFBgS3wg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbgHTAB6 (ORCPT
+        id S1728120AbgHTAMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58090 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58298 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727061AbgHTABu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:01:50 -0400
+        id S1727001AbgHTAB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:58 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EFE6207FB;
-        Thu, 20 Aug 2020 00:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6DC4208C7;
+        Thu, 20 Aug 2020 00:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881709;
-        bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RorQC4tK5pnF3Tpa7sEMfVl9+CvEwat5fTB8pD3sKg6I3kFLiTAzMdBg/3owAePXA
-         zpjtlqj8ClLwE/nKCD9GmNAJWcNotY9fVsr1KQx17VedFQhrV1Sc2HVWnb9Pxz4n88
-         6tWBwT01EY/Br0Su+79IdaqX4fSIgs7WVDTOSFYA=
+        s=default; t=1597881717;
+        bh=o77i1BTdhg3uW3SiGZF7MwLyI/AyQJIQE+HUN78af4E=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oHo4nC+PYVnMLiRbY3TUqijfrnF2qwqHxxe3Q0/vNDMWG8phDVREZ8KNgiAUMS7CD
+         YgslQ+62WpNp4leVPzwEGNxbVk6LjVzjTXFPnptlr5M6dMdzNEyLMWKiURkyfckGFG
+         Wccjit/acgDmkyDa9T/98/+YRZuyfQinO+v90lpQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 24/27] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-Date:   Wed, 19 Aug 2020 20:01:13 -0400
-Message-Id: <20200820000116.214821-24-sashal@kernel.org>
+Cc:     Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.7 01/24] scsi: ufs: Add DELAY_BEFORE_LPM quirk for Micron devices
+Date:   Wed, 19 Aug 2020 20:01:32 -0400
+Message-Id: <20200820000155.215089-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
-References: <20200820000116.214821-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,57 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
+[ Upstream commit c0a18ee0ce78d7957ec1a53be35b1b3beba80668 ]
 
-If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
-shows the following warning:
+It is confirmed that Micron device needs DELAY_BEFORE_LPM quirk to have a
+delay before VCC is powered off. Sdd Micron vendor ID and this quirk for
+Micron devices.
 
-  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-  member access within null pointer of type 'struct xfs_kobj'
-  Call Trace:
-   dump_stack+0x10e/0x195
-   ubsan_type_mismatch_common+0x241/0x280
-   __ubsan_handle_type_mismatch_v1+0x32/0x40
-   init_xfs_fs+0x12b/0x28f
-   do_one_initcall+0xdd/0x1d0
-   do_initcall_level+0x151/0x1b6
-   do_initcalls+0x50/0x8f
-   do_basic_setup+0x29/0x2b
-   kernel_init_freeable+0x19f/0x20b
-   kernel_init+0x11/0x1e0
-   ret_from_fork+0x22/0x30
-
-Fix it by checking parent_kobj before the code accesses its member.
-
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-[darrick: minor whitespace edits]
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Link: https://lore.kernel.org/r/20200612012625.6615-2-stanley.chu@mediatek.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_sysfs.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/scsi/ufs/ufs_quirks.h | 1 +
+ drivers/scsi/ufs/ufshcd.c     | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-index e9f810fc67317..43585850f1546 100644
---- a/fs/xfs/xfs_sysfs.h
-+++ b/fs/xfs/xfs_sysfs.h
-@@ -32,9 +32,11 @@ xfs_sysfs_init(
- 	struct xfs_kobj		*parent_kobj,
- 	const char		*name)
- {
-+	struct kobject		*parent;
-+
-+	parent = parent_kobj ? &parent_kobj->kobject : NULL;
- 	init_completion(&kobj->complete);
--	return kobject_init_and_add(&kobj->kobject, ktype,
--				    &parent_kobj->kobject, "%s", name);
-+	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
- }
+diff --git a/drivers/scsi/ufs/ufs_quirks.h b/drivers/scsi/ufs/ufs_quirks.h
+index df7a1e6805a3b..c3af72c58805d 100644
+--- a/drivers/scsi/ufs/ufs_quirks.h
++++ b/drivers/scsi/ufs/ufs_quirks.h
+@@ -12,6 +12,7 @@
+ #define UFS_ANY_VENDOR 0xFFFF
+ #define UFS_ANY_MODEL  "ANY_MODEL"
  
- static inline void
++#define UFS_VENDOR_MICRON      0x12C
+ #define UFS_VENDOR_TOSHIBA     0x198
+ #define UFS_VENDOR_SAMSUNG     0x1CE
+ #define UFS_VENDOR_SKHYNIX     0x1AD
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 7ca32ede5e172..610e3a0e98ff4 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -211,6 +211,8 @@ ufs_get_desired_pm_lvl_for_dev_link_state(enum ufs_dev_pwr_mode dev_state,
+ 
+ static struct ufs_dev_fix ufs_fixups[] = {
+ 	/* UFS cards deviations table */
++	UFS_FIX(UFS_VENDOR_MICRON, UFS_ANY_MODEL,
++		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
+ 		UFS_DEVICE_QUIRK_DELAY_BEFORE_LPM),
+ 	UFS_FIX(UFS_VENDOR_SAMSUNG, UFS_ANY_MODEL,
 -- 
 2.25.1
 
