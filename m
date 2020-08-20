@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8B2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDACC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D090D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D620A22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921626;
-	bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+	s=default; t=1597921630;
+	bh=3uGyPKpUG2CcoX4bW+WaQM1xcyC7Bitx/A8vr+uogCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ioFcL1tNCPUnp/St6vq258y+cPhp7Ss96cQb/iQK05znIaOoXb+E+ZMpVPNa52b4E
-	 mziH4FSHd4r+J0bujBNEY1IJOtL74azTvHyBQpxXSxuMsGUQktqU14isB5NrTz7rwJ
-	 47ojpQybLCKJ+7uigoA56xuuOhDu/RGtvc5tXFn8=
+	b=WoIW+xK23X3BOrh1NMI4jN1Ld1ZqcUBOU2yGpdg6qHLVaJKbl2WzkvINhU4AeBwBe
+	 RIPQF7741rsh0uuqA0wbfMkQb3KW80+fJ4+HietazgAZoPvUkOEU+nOlIbbHJpkE2a
+	 RCaXa7gPp7PE2dyd4MEocmu8JEFpiU9TVa4eBxSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730302AbgHTLHE (ORCPT
+        id S1730468AbgHTLHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:07:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730745AbgHTKLi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:11:38 -0400
+        id S1728437AbgHTKLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B71D20885;
-        Thu, 20 Aug 2020 10:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B081120738;
+        Thu, 20 Aug 2020 10:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918297;
-        bh=gTLRA3ulGVzYqjj0OJoYWPcDhF3IYNJ+AcMX/wCReJ8=;
+        s=default; t=1597918292;
+        bh=3uGyPKpUG2CcoX4bW+WaQM1xcyC7Bitx/A8vr+uogCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YDSfjh0ZQNEdVh/9uH6NlKJJV2eVvQkfJqLa6xNES+LOuQ3PbtRZ/gBx9DYO8B6QD
-         dG6xWNSP4MqQHnERKkDM+HoRVflwhnloxjbRac1/11/L3U/MIzddkHNHvnAgMKJVk0
-         vJctD38h8UgM6LwKbt45/F1iqOsqED6dBcV1CXbU=
+        b=dlqffwzJyLGcbE2Sj0nmmEvSCHPD1JcLB/z1saRB9uFSOydKAFQRdW/dho0n3iO7Q
+         2B2zLcoVqCjp2MYeQKXLRLPQ/n91HNTSoE4KGsDLLlk9q1bmEhj7DUFYSx1mWF6B7Y
+         ky9Ge71YotBFGzMTY0KgIc0ltuxnI2HkS6cIX36k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org,
+        syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 090/228] scsi: cumana_2: Fix different dev_id between request_irq() and free_irq()
-Date:   Thu, 20 Aug 2020 11:21:05 +0200
-Message-Id: <20200820091612.114821306@linuxfoundation.org>
+Subject: [PATCH 4.14 117/228] Smack: fix another vsscanf out of bounds
+Date:   Thu, 20 Aug 2020 11:21:32 +0200
+Message-Id: <20200820091613.443918739@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,36 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 040ab9c4fd0070cd5fa71ba3a7b95b8470db9b4d ]
+[ Upstream commit a6bd4f6d9b07452b0b19842044a6c3ea384b0b88 ]
 
-The dev_id used in request_irq() and free_irq() should match.  Use 'info'
-in both cases.
+This is similar to commit 84e99e58e8d1 ("Smack: slab-out-of-bounds in
+vsscanf") where we added a bounds check on "rule".
 
-Link: https://lore.kernel.org/r/20200625204730.943520-1-christophe.jaillet@wanadoo.fr
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: syzbot+a22c6092d003d6fe1122@syzkaller.appspotmail.com
+Fixes: f7112e6c9abf ("Smack: allow for significantly longer Smack labels v4")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/arm/cumana_2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ security/smack/smackfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/scsi/arm/cumana_2.c b/drivers/scsi/arm/cumana_2.c
-index edce5f3cfdba0..93ba83e3148eb 100644
---- a/drivers/scsi/arm/cumana_2.c
-+++ b/drivers/scsi/arm/cumana_2.c
-@@ -454,7 +454,7 @@ static int cumanascsi2_probe(struct expansion_card *ec,
+diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+index 10ee51d044926..981f582539acf 100644
+--- a/security/smack/smackfs.c
++++ b/security/smack/smackfs.c
+@@ -933,6 +933,10 @@ static ssize_t smk_set_cipso(struct file *file, const char __user *buf,
  
- 	if (info->info.scsi.dma != NO_DMA)
- 		free_dma(info->info.scsi.dma);
--	free_irq(ec->irq, host);
-+	free_irq(ec->irq, info);
- 
-  out_release:
- 	fas216_release(host);
+ 	for (i = 0; i < catlen; i++) {
+ 		rule += SMK_DIGITLEN;
++		if (rule > data + count) {
++			rc = -EOVERFLOW;
++			goto out;
++		}
+ 		ret = sscanf(rule, "%u", &cat);
+ 		if (ret != 1 || cat > SMACK_CIPSO_MAXCATNUM)
+ 			goto out;
 -- 
 2.25.1
 
