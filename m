@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC735C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B48C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933D2206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C216520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920973;
-	bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
+	s=default; t=1597920982;
+	bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vFtb9Kyojcu7C76NcleXttcdTQ+k2bAaTf+cEtOaBq6nsfJ3sgmukse+zE1Pv7Bph
-	 aM3GNfDuWKgSCmGBqRPzMZTcKEIGeHeyg0KD8UrRS2fMZd8rDn4sbfEtOyzL4X7TyF
-	 CzjNhkjzbFHi4P6sxwi3ITqys/TINobKdRv6CNzU=
+	b=cWpIvck6WODT9DJhjfLgqEA92xMSuBoXs9D39Hqnhwf1v7Qbo6pOBAkawJ4/KixFd
+	 duyXrxLjBDPpzdhn8eImb+9xs1c5V8TGCXLJXmugXZGFhysZm0n5sv8qYAdKJZlJlR
+	 hguLGi2uEuSgEscXdX5qzj9ByflsYeQrMnUmuXvk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbgHTK4L (ORCPT
+        id S1730365AbgHTK4V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:56:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:56:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730323AbgHTKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:01 -0400
+        id S1731156AbgHTKN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:13:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFBEC20724;
-        Thu, 20 Aug 2020 10:14:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4906C206DA;
+        Thu, 20 Aug 2020 10:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918441;
-        bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
+        s=default; t=1597918438;
+        bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tUIayVyxAW5mkD4rK098obgeEh5mZOXraFl2BFStvHeCDtx8oMSGUA27h4KLZaU0C
-         JM+U+BXiOwrhUifoCDqe0qMUl/6pNwJn5eCUMd1/VL2OoP/SagWDzWWRP+l55KB/Ch
-         Zvxl+0qlm+GZLlJ6WlErU461EQwIYZ7KYH7Z9T4U=
+        b=khuJ8vI3D1vtXNGL41XEvj8PeI4WkMbfAG6+JdfnQkl9mYhE4xfCV57p1sg26bZ2+
+         oIpSzObLr+gDwshToHCT4gPYJSrZQvrbX42fzjEjeyLF/lCcHHy2BipiQFgvszHn4N
+         udeTOkNf2uSNxz/InUIG9r18ItFHGRSq0JuBrtJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qiujun Huang <anenbupt@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 153/228] fs/minix: check return value of sb_getblk()
-Date:   Thu, 20 Aug 2020 11:22:08 +0200
-Message-Id: <20200820091615.228057563@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 170/228] btrfs: only search for left_info if there is no right_info in try_merge_free_space
+Date:   Thu, 20 Aug 2020 11:22:25 +0200
+Message-Id: <20200820091616.074540114@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -64,78 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
+commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
 
-Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
+In try_to_merge_free_space we attempt to find entries to the left and
+right of the entry we are adding to see if they can be merged.  We
+search for an entry past our current info (saved into right_info), and
+then if right_info exists and it has a rb_prev() we save the rb_prev()
+into left_info.
 
-This series fixes all syzbot bugs in the minix filesystem:
+However there's a slight problem in the case that we have a right_info,
+but no entry previous to that entry.  At that point we will search for
+an entry just before the info we're attempting to insert.  This will
+simply find right_info again, and assign it to left_info, making them
+both the same pointer.
 
-	KASAN: null-ptr-deref Write in get_block
-	KASAN: use-after-free Write in get_block
-	KASAN: use-after-free Read in get_block
-	WARNING in inc_nlink
-	KMSAN: uninit-value in get_block
-	WARNING in drop_nlink
+Now if right_info _can_ be merged with the range we're inserting, we'll
+add it to the info and free right_info.  However further down we'll
+access left_info, which was right_info, and thus get a use-after-free.
 
-It also fixes the minix filesystem to set s_maxbytes correctly, so that
-userspace sees the correct behavior when exceeding the max file size.
+Fix this by only searching for the left entry if we don't find a right
+entry at all.
 
-This patch (of 6):
+The CVE referenced had a specially crafted file system that could
+trigger this use-after-free. However with the tree checker improvements
+we no longer trigger the conditions for the UAF.  But the original
+conditions still apply, hence this fix.
 
-sb_getblk() can fail, so check its return value.
-
-This fixes a NULL pointer dereference.
-
-Originally from Qiujun Huang.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qiujun Huang <anenbupt@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
-Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reference: CVE-2019-19448
+Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/minix/itree_common.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/btrfs/free-space-cache.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/minix/itree_common.c
-+++ b/fs/minix/itree_common.c
-@@ -75,6 +75,7 @@ static int alloc_branch(struct inode *in
- 	int n = 0;
- 	int i;
- 	int parent = minix_new_block(inode);
-+	int err = -ENOSPC;
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -2169,7 +2169,7 @@ out:
+ static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
+ 			  struct btrfs_free_space *info, bool update_stat)
+ {
+-	struct btrfs_free_space *left_info;
++	struct btrfs_free_space *left_info = NULL;
+ 	struct btrfs_free_space *right_info;
+ 	bool merged = false;
+ 	u64 offset = info->offset;
+@@ -2184,7 +2184,7 @@ static bool try_merge_free_space(struct
+ 	if (right_info && rb_prev(&right_info->offset_index))
+ 		left_info = rb_entry(rb_prev(&right_info->offset_index),
+ 				     struct btrfs_free_space, offset_index);
+-	else
++	else if (!right_info)
+ 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
  
- 	branch[0].key = cpu_to_block(parent);
- 	if (parent) for (n = 1; n < num; n++) {
-@@ -85,6 +86,11 @@ static int alloc_branch(struct inode *in
- 			break;
- 		branch[n].key = cpu_to_block(nr);
- 		bh = sb_getblk(inode->i_sb, parent);
-+		if (!bh) {
-+			minix_free_block(inode, nr);
-+			err = -ENOMEM;
-+			break;
-+		}
- 		lock_buffer(bh);
- 		memset(bh->b_data, 0, bh->b_size);
- 		branch[n].bh = bh;
-@@ -103,7 +109,7 @@ static int alloc_branch(struct inode *in
- 		bforget(branch[i].bh);
- 	for (i = 0; i < n; i++)
- 		minix_free_block(inode, block_to_cpu(branch[i].key));
--	return -ENOSPC;
-+	return err;
- }
- 
- static inline int splice_branch(struct inode *inode,
+ 	if (right_info && !right_info->bitmap) {
 
 
