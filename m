@@ -2,134 +2,173 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8421EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87183C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5014E207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D956207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMZz2dIN"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HQg6EIev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgHTSUh (ORCPT
+        id S1727078AbgHTSVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:20:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726819AbgHTSUd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:20:33 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BAEDC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:20:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id y3so3011658wrl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zx2aiS5u/hckouAkg5PnRRNt9/H2zFBAnmQ4nJmER3I=;
-        b=gMZz2dINC8zpXVORxgXuG419lwuL2jppPFpi9E8y9ViJ5rFQVNH5ukaLokAx1UNnAk
-         LnFjj1ja6vrOsfCmyvCtvycL5UbeTjrswVf/fz474oCsgo7KR4DwDs8+9yME2QzSyP1t
-         btNlhjDwesjZHpPkIwvSAFxi/3ehi3qZZhRwoz1aMyqAsF+kD90DdJmoGoBYMl1yK/MX
-         1wieGOerjuYByQQswCybYzTMyJ+NRHx4ec4IWNJs8+7licRAvCwVBOLRJwCWxHFjcfS/
-         aJ+seiC59nGep1PKg4bc8wt71F4XQ/swv4ch3ygt87iK0ZLccKXrRsjnwDF9FQbmOMRP
-         lSQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zx2aiS5u/hckouAkg5PnRRNt9/H2zFBAnmQ4nJmER3I=;
-        b=NEezYlTZMNTFksimqJ/Xp3UOoaZa+68qdWwTJYmKEDn/E8EEP04Eky9uIVNuMUCOXJ
-         oSGp7xqt520Z1THcmJjxXvtowm5MaK0niiD0RvjyGr4VdU3FX3DPH0QN80YwnI6JlWi6
-         AfT2k+Zy8OG2kOWvEwr2AiKVTJLr6NmUTh1PKYipvcl+FHx4GWTwvvEgiCFhJ4T77UZ7
-         2zSjsibLIaMac7irQdcTknAQWRuFr6XVxv5gnV87RPMZ6ArRewQyNobw5NPScDWGN8oX
-         U7lZnrUQjp8oj7LdCrEtpuKsi5SATlEHMOgc2CWx0Q9r+OMHSn4YKHRSX8mdAJgwBYzD
-         Fdzw==
-X-Gm-Message-State: AOAM531grfWKX6AO3Oe/c/43LGLOzITTuEChxoNv3KFFwNl1kHolFbhh
-        Rz6YKIgJne1fjWdNyIKOrcGhzs34lqe+TxmKPvg=
-X-Google-Smtp-Source: ABdhPJyCgPFZTTFbee2LsSre9fQTTAa/kvTeNAYYXu+7XbLwA7kVTe9RGC+WZR3sqKRc/e35BaY8uJLdg3H4gsxzS/w=
-X-Received: by 2002:adf:a351:: with SMTP id d17mr4280713wrb.111.1597947629882;
- Thu, 20 Aug 2020 11:20:29 -0700 (PDT)
+        Thu, 20 Aug 2020 14:21:15 -0400
+Received: from mail-mw2nam10on2101.outbound.protection.outlook.com ([40.107.94.101]:6606
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726896AbgHTSVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:21:12 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=chogcpk9+5tGkcw8esbl9vzwc0o6plhRqyW9nJtZ+SqmINbGmJwsd4KhzEZ3dtAOgpxuGLefD0ogAV5utxcH/FpccjtE9nA++cHAZi+pHYgjczB0++rdH/hK/ZmT6LmqL96R4qH7NooSJlrzgsAv0YXyF0qipUeXa3JqxEeS1qy5yDhfef2rVDw6q1aEFij1rETanmutQYLF9IIU5IBLV+Xi/3Lp7SWJUcfvPKELjt8xavhf4EG1W0rgHtAnSjTEdapzAILvS21jQ2MNLjJOP3ZnhWCr8AeIFbxVlgqZAcWwJzLs7pCK/rMvMCa0JzJYpf3Ub/yNxa/YWMcyWd9G1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NYARoL8zinfS7sCQsz4sgkeIUC+qBjF8X39j9NfE1PI=;
+ b=iYEPxcaxPLFZ/ioP8vUQ5CA6gmdSywVGGzW5qmfSXYHMu1qESVdsxvWxKqqFEG8LjA8iwnhnIK9imM4wYAVvJDtimrrXoR5BA4qsjk1fU0yaAoxBPesCs1cmNhvmh1swtu4AU+PDs2CiOvjENqBGtFLFq/TiRJ+k6LTNnNd6vAS8waSqrDnkZg59c8yK7VXVahDqNbhrFpXL0hgf4BTN7h3KqZrs74/VRXwr+Ks5VtNSKPg+RZjlpF2JeN0S6Mz3R3V1p06SY9bLHytFQm71AvRNtkHejBqi5k30qp1vIYKk+N785Ijj+YW2D1PnZgIv80GmPg07fsev4bku/Gielg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NYARoL8zinfS7sCQsz4sgkeIUC+qBjF8X39j9NfE1PI=;
+ b=HQg6EIevbjK4QxWBQTGt4Y+8wNgNEErvKhuk2w0Dwv1cIGvoYDXXDJ14W21TjmvYcFdyH0TzKO9siGLnicVDYOMrFjeUj7YtxJAsRZ0mctsf40iwRoT57awOt8viYlSogvbp73P5oYRhEga/CRFeX40mEkatuh5VUajEJW++GRU=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1083.namprd21.prod.outlook.com (2603:10b6:302:a::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.0; Thu, 20 Aug
+ 2020 18:21:10 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%9]) with mapi id 15.20.3305.021; Thu, 20 Aug 2020
+ 18:21:10 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Vineeth Pillai <viremana@linux.microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] hv_utils: return error if host timesysnc update is stale
+Thread-Topic: [PATCH] hv_utils: return error if host timesysnc update is stale
+Thread-Index: AQHWdlCWqvSLfkbTjU6GfoCxQIcBRKlBTbGg
+Date:   Thu, 20 Aug 2020 18:21:09 +0000
+Message-ID: <MW2PR2101MB10527EAC115BF49715BF4722D75A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200819174527.47156-1-viremana@linux.microsoft.com>
+In-Reply-To: <20200819174527.47156-1-viremana@linux.microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-08-20T18:21:08Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=961e063f-9d00-4898-a833-4f6e975d4d4f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: linux.microsoft.com; dkim=none (message not signed)
+ header.d=none;linux.microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 92f36eea-874c-4998-b944-08d84535d047
+x-ms-traffictypediagnostic: MW2PR2101MB1083:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB10833E822723E3CA44382296D75A0@MW2PR2101MB1083.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fC2VMqv/07PBBls4mLwTQSSezcroZH7pLnpNuXOtSyPcQSyAMUVRap8HXKWovF7026E8ao92ecwuS1/Lo+0QXZ2A8GQVb0yc1O7rK9jvRxldvi3o55ZlhRSoMUcYuOZr3Qg2r1iDKXaRWi5js0T5wBxQEBsVPJXPssNjtktFhzB5Ba83tIaGocf5lQomsP2p2Hst9RadCDi6DNeZ4bX9C2FzugXdkfcGtw6ppdjA89/NTSm7hJZvlIW39SvNzaJaEjvWfY0I9BUFMJejnWOFIPW2QgG0a8sNs/e3ATM8G8wqiAYBeC/j4GapcX79AiDYeymDByI7GVOpB5m5J8Qc4g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(54906003)(186003)(8936002)(55016002)(5660300002)(316002)(8990500004)(15650500001)(52536014)(83380400001)(86362001)(33656002)(26005)(110136005)(9686003)(10290500003)(478600001)(6506007)(66476007)(66556008)(64756008)(66446008)(66946007)(7696005)(8676002)(82960400001)(4326008)(82950400001)(2906002)(76116006)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 5arYCJs+sBqlLDebq9TzrYGVWwh42TWWdIogerJOnPmC9LnOlqMZDz1Z9GvuVo9lo1saUjbRZlZQ+a1oN20vMV0EikPHbGkX8l7q/qg74gJg5xDP9SUnhd0wCe/bcFI0SNND0kEt8/D8EXed4uEQJdrLtUW+/VgB0/QXk+hpnatEAXAyoscfl8Jv2FVgkbz506FhQ2j0X6r1VjQhRLXtEn97SN4yLcga9MALwuFjgTCiOWJZJt1JmZsDNFjNEQEjmfCFJolR1BZD02N6ntWcO8Ss0PZ0lEgekMzs56fViWCYHtkaGUZsVr8o7F+EZ9mhWH08Ggr/VRw+r6vfhn1L8b2cXQmF/ZAtEZ4XfQo+y4cWpKq3AWjkF/jicq68+1O0uLr20ScM0b/+TFnCzPiJV5KpDZgd9qfEBybZeVDbcijwriY6AC/nBF6D3zTK0nJR6tOp/nVO4gyV84yGFCOfP4rEgenIiliu/JwnH7nFdIeXSpLumLCUt7psYPMX9KaOwy4xBrQkDMh+lEVb8u//hGVAn7zByf2s7m1sQxjqVOKGcgfRP4fETxpMEiz/2vVpMW5P6C1o5Qi1qnJeToGrIr3rUL2GWmZrch9nDmZTGb1kn6eTj+4xWj90yXKo9K6T8BlJpJHPo/HWFiL8GnTkHA==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200820052600.3069895-1-furquan@google.com> <20200820075241.3160534-1-furquan@google.com>
- <5c7dbcd6-b4c5-f7e5-40d5-b65d8ff58030@amd.com>
-In-Reply-To: <5c7dbcd6-b4c5-f7e5-40d5-b65d8ff58030@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 20 Aug 2020 14:20:18 -0400
-Message-ID: <CADnq5_NEoM1RGoLS=a0HDtN20rOvKndiYCFRnzrc3JQn5ePzpQ@mail.gmail.com>
-Subject: Re: [PATCH v2] drivers: gpu: amd: Initialize amdgpu_dm_backlight_caps
- object to 0 in amdgpu_dm_update_backlight_caps
-To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
-Cc:     Furquan Shaikh <furquan@google.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Stylon Wang <stylon.wang@amd.com>, deepak.sharma@amd.com,
-        David Airlie <airlied@linux.ie>, adurbin@google.com,
-        Roman Li <roman.li@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        Mikita Lipski <mikita.lipski@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92f36eea-874c-4998-b944-08d84535d047
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Aug 2020 18:21:09.9991
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sicxVhAZdyKopvsCgXDT6Owkq5SxGNPFk4irjtBwJgYDJ8gWdBIUj0vkqlqHRjC78i0CLbRvFmERzyL92CwFtR5cqyZOIALHjEX/NFFUuLw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  Thanks!
-
-Alex
-
-On Thu, Aug 20, 2020 at 5:01 AM Christian K=C3=B6nig
-<christian.koenig@amd.com> wrote:
->
-> Am 20.08.20 um 09:52 schrieb Furquan Shaikh:
-> > In `amdgpu_dm_update_backlight_caps()`, there is a local
-> > `amdgpu_dm_backlight_caps` object that is filled in by
-> > `amdgpu_acpi_get_backlight_caps()`. However, this object is
-> > uninitialized before the call and hence the subsequent check for
-> > aux_support can fail since it is not initialized by
-> > `amdgpu_acpi_get_backlight_caps()` as well. This change initializes
-> > this local `amdgpu_dm_backlight_caps` object to 0.
-> >
-> > Signed-off-by: Furquan Shaikh <furquan@google.com>
->
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
->
-> > ---
-> > v2: Switched to using memset for initialization of object.
-> >
-> > drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
-> >   1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/driver=
-s/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > index e4b33c67b634..da072998ce48 100644
-> > --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-> > @@ -2855,6 +2855,8 @@ static void amdgpu_dm_update_backlight_caps(struc=
-t amdgpu_display_manager *dm)
-> >   #if defined(CONFIG_ACPI)
-> >       struct amdgpu_dm_backlight_caps caps;
-> >
-> > +     memset(&caps, 0, sizeof(caps));
-> > +
-> >       if (dm->backlight_caps.caps_valid)
-> >               return;
-> >
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+RnJvbTogVmluZWV0aCBQaWxsYWkgPHZpcmVtYW5hQGxpbnV4Lm1pY3Jvc29mdC5jb20+IFNlbnQ6
+IFdlZG5lc2RheSwgQXVndXN0IDE5LCAyMDIwIDEwOjQ1IEFNDQo+IA0KPiBJZiBmb3IgYW55IHJl
+YXNvbiwgaG9zdCB0aW1lc3luYyBtZXNzYWdlcyB3ZXJlIG5vdCBwcm9jZXNzZWQgYnkNCj4gdGhl
+IGd1ZXN0LCBodl9wdHBfZ2V0dGltZSgpIHJldHVybnMgYSBzdGFsZSB2YWx1ZSBhbmQgdGhlDQo+
+IGNhbGxlciAoY2xvY2tfZ2V0dGltZSwgUFRQIGlvY3RsIGV0YykgaGFzIG5vIG1lYW5zIHRvIGtu
+b3cgdGhpcw0KPiBub3cuIFJldHVybiBhbiBlcnJvciBzbyB0aGF0IHRoZSBjYWxsZXIga25vd3Mg
+YWJvdXQgdGhpcy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFZpbmVldGggUGlsbGFpIDx2aXJlbWFu
+YUBsaW51eC5taWNyb3NvZnQuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvaHYvaHZfdXRpbC5jIHwg
+NDYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gIDEgZmls
+ZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2h2L2h2X3V0aWwuYyBiL2RyaXZlcnMvaHYvaHZfdXRpbC5jDQo+IGlu
+ZGV4IDkyZWUwZmU0YzkxOS4uMTM1Nzg2MWZkOGFlIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2h2
+L2h2X3V0aWwuYw0KPiArKysgYi9kcml2ZXJzL2h2L2h2X3V0aWwuYw0KPiBAQCAtMjgyLDI2ICsy
+ODIsNTIgQEAgc3RhdGljIHN0cnVjdCB7DQo+ICAJc3BpbmxvY2tfdAkJCWxvY2s7DQo+ICB9IGhv
+c3RfdHM7DQo+IA0KPiAtc3RhdGljIHN0cnVjdCB0aW1lc3BlYzY0IGh2X2dldF9hZGpfaG9zdF90
+aW1lKHZvaWQpDQo+ICtzdGF0aWMgaW5saW5lIHU2NCByZWZ0aW1lX3RvX25zKHU2NCByZWZ0aW1l
+KQ0KPiAgew0KPiAtCXN0cnVjdCB0aW1lc3BlYzY0IHRzOw0KPiAtCXU2NCBuZXd0aW1lLCByZWZ0
+aW1lOw0KPiArCXJldHVybiAocmVmdGltZSAtIFdMVElNRURFTFRBKSAqIDEwMDsNCj4gK30NCj4g
+Kw0KPiArLyoNCj4gKyAqIEhhcmQgY29kZWQgdGhyZXNob2xkIGZvciBob3N0IHRpbWVzeW5jIGRl
+bGF5OiA2MDAgc2Vjb25kcw0KPiArICovDQo+ICtjb25zdCB1NjQgSE9TVF9USU1FU1lOQ19ERUxB
+WV9USFJFU0ggPSA2MDAgKiBOU0VDX1BFUl9TRUM7DQoNCktlcm5lbCB0ZXN0IHJvYm90IGhhcyBh
+bHJlYWR5IGNvbXBsYWluZWQgdGhhdCB0aGlzIHNob3VsZCBiZSBzdGF0aWMsDQphbmQgYWJvdXQg
+dGhlIHBvdGVudGlhbCBvdmVyZmxvdyBiYXNlZCBvbiB0aGUgdHlwZXMgb2YgdGhlIGNvbnN0YW50
+cyBpbg0KdGhlIHJpZ2h0IHNpZGUgZXhwcmVzc2lvbi4gIEkgZGlkbid0IGNoZWNrIHRoZSBkZXRh
+aWxzLCBidXQgSSBzdXNwZWN0IHRoZQ0KY29tcGxhaW50IGlzIHdoZW4gYnVpbGRpbmcgaW4gMzIt
+Yml0IG1vZGUuICBUaGlzIGNvZGUgZG9lcyBnZXQgYnVpbHQgaW4NCjMyLWJpdCBtb2RlIGFuZCBp
+dCdzIHBvc3NpYmxlIGZvciBydW4gMzItYml0IExpbnV4IGd1ZXN0cyBvbiBIeXBlci1WLg0KDQo+
+ICsNCj4gK3N0YXRpYyBpbnQgaHZfZ2V0X2Fkal9ob3N0X3RpbWUoc3RydWN0IHRpbWVzcGVjNjQg
+KnRzKQ0KPiArew0KPiArCXU2NCBuZXd0aW1lLCByZWZ0aW1lLCB0aW1lZGlmZl9hZGo7DQo+ICAJ
+dW5zaWduZWQgbG9uZyBmbGFnczsNCj4gKwlpbnQgcmV0ID0gMDsNCj4gDQo+ICAJc3Bpbl9sb2Nr
+X2lycXNhdmUoJmhvc3RfdHMubG9jaywgZmxhZ3MpOw0KPiAgCXJlZnRpbWUgPSBodl9yZWFkX3Jl
+ZmVyZW5jZV9jb3VudGVyKCk7DQo+IC0JbmV3dGltZSA9IGhvc3RfdHMuaG9zdF90aW1lICsgKHJl
+ZnRpbWUgLSBob3N0X3RzLnJlZl90aW1lKTsNCj4gLQl0cyA9IG5zX3RvX3RpbWVzcGVjNjQoKG5l
+d3RpbWUgLSBXTFRJTUVERUxUQSkgKiAxMDApOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBXZSBuZWVk
+IHRvIGxldCB0aGUgY2FsbGVyIGtub3cgdGhhdCBsYXN0IHVwZGF0ZSBmcm9tIGhvc3QNCj4gKwkg
+KiBpcyBvbGRlciB0aGFuIHRoZSBtYXggYWxsb3dhYmxlIHRocmVzaG9sZC4gY2xvY2tfZ2V0dGlt
+ZSgpDQo+ICsJICogYW5kIFBUUCBpb2N0bCBkbyBub3QgaGF2ZSBhIGRvY3VtZW50ZWQgZXJyb3Ig
+dGhhdCB3ZSBjb3VsZA0KPiArCSAqIHJldHVybiBmb3IgdGhpcyBzcGVjaWZpYyBjYXNlLiBVc2Ug
+RVNUQUxFIHRvIHJlcG9ydCB0aGlzLg0KPiArCSAqLw0KPiArCXRpbWVkaWZmX2FkaiA9IHJlZnRp
+bWUgLSBob3N0X3RzLnJlZl90aW1lOw0KPiArCWlmICh0aW1lZGlmZl9hZGogKiAxMDAgPiBIT1NU
+X1RJTUVTWU5DX0RFTEFZX1RIUkVTSCkgew0KPiArCQlwcl93YXJuKCJUSU1FU1lOQyBJQzogU3Rh
+bGUgdGltZSBzdGFtcCwgJWxsdSBuc2VjcyBvbGRcbiIsDQo+ICsJCQlIT1NUX1RJTUVTWU5DX0RF
+TEFZX1RIUkVTSCk7DQoNCkxldCdzIHByb3ZpZGUgdGhlIHRpbWVkaWZmX2FkaiBpbiB0aGUgbWVz
+c2FnZSBpbnN0ZWFkIG9mIHRoZSBjb25zdGFudA0KdGhyZXNob2xkIHZhbHVlIHNvIHdlIGtub3cg
+dGhlIGRlZ3JlZSBvZiBzdGFsZW5lc3MuIDotKQ0KDQpBbHNvLCBJJ20gd29uZGVyaW5nIGlmIHRo
+aXMgc2hvdWxkIGJlIHByX3dhcm5fb25jZSgpLiAgUHJlc3VtYWJseQ0KY2hyb255ZCBvciB3aG9l
+dmVyIGlzIHJlYWRpbmcgL2Rldi9wdHAwIHdpbGwgZ2l2ZSB1cCBhZnRlciBnZXR0aW5nDQp0aGlz
+IGVycm9yLCBidXQgaWYgbm90LCBpdCB3b3VsZCBiZSBuaWNlIHRvIGF2b2lkIGZpbGxpbmcgdXAg
+dGhlIGNvbnNvbGUNCndpdGggdGhlc2UgZXJyb3IgbWVzc2FnZXMuDQoNCj4gKwkJcmV0ID0gLUVT
+VEFMRTsNCj4gKwl9DQo+ICsNCj4gKwluZXd0aW1lID0gaG9zdF90cy5ob3N0X3RpbWUgKyB0aW1l
+ZGlmZl9hZGo7DQo+ICsJKnRzID0gbnNfdG9fdGltZXNwZWM2NChyZWZ0aW1lX3RvX25zKG5ld3Rp
+bWUpKTsNCj4gIAlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZob3N0X3RzLmxvY2ssIGZsYWdzKTsN
+Cj4gDQo+IC0JcmV0dXJuIHRzOw0KPiArCXJldHVybiByZXQ7DQo+ICB9DQo+IA0KPiAgc3RhdGlj
+IHZvaWQgaHZfc2V0X2hvc3RfdGltZShzdHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspDQo+ICB7DQo+
+IC0Jc3RydWN0IHRpbWVzcGVjNjQgdHMgPSBodl9nZXRfYWRqX2hvc3RfdGltZSgpOw0KPiANCj4g
+LQlkb19zZXR0aW1lb2ZkYXk2NCgmdHMpOw0KPiArCXN0cnVjdCB0aW1lc3BlYzY0IHRzOw0KPiAr
+DQo+ICsJaWYgKCFodl9nZXRfYWRqX2hvc3RfdGltZSgmdHMpKQ0KPiArCQlkb19zZXR0aW1lb2Zk
+YXk2NCgmdHMpOw0KPiAgfQ0KPiANCj4gIC8qDQo+IEBAIC02MjIsOSArNjQ4LDcgQEAgc3RhdGlj
+IGludCBodl9wdHBfYWRqdGltZShzdHJ1Y3QgcHRwX2Nsb2NrX2luZm8gKnB0cCwgczY0IGRlbHRh
+KQ0KPiANCj4gIHN0YXRpYyBpbnQgaHZfcHRwX2dldHRpbWUoc3RydWN0IHB0cF9jbG9ja19pbmZv
+ICppbmZvLCBzdHJ1Y3QgdGltZXNwZWM2NCAqdHMpDQo+ICB7DQo+IC0JKnRzID0gaHZfZ2V0X2Fk
+al9ob3N0X3RpbWUoKTsNCj4gLQ0KPiAtCXJldHVybiAwOw0KPiArCXJldHVybiBodl9nZXRfYWRq
+X2hvc3RfdGltZSh0cyk7DQo+ICB9DQo+IA0KPiAgc3RhdGljIHN0cnVjdCBwdHBfY2xvY2tfaW5m
+byBwdHBfaHlwZXJ2X2luZm8gPSB7DQo+IC0tDQo+IDIuMTcuMQ0KDQo=
