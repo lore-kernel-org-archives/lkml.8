@@ -2,208 +2,175 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1212C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10061C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D43920758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B2720758
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="piEtm3Zt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="es3bYe0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbgHTSFU (ORCPT
+        id S1727012AbgHTSGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:05:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52084 "EHLO
+        Thu, 20 Aug 2020 14:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbgHTSFR (ORCPT
+        with ESMTP id S1726863AbgHTSGG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:05:17 -0400
+        Thu, 20 Aug 2020 14:06:06 -0400
 Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFDA3C061385;
-        Thu, 20 Aug 2020 11:05:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id c80so2524004wme.0;
-        Thu, 20 Aug 2020 11:05:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B785CC061385;
+        Thu, 20 Aug 2020 11:06:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id u18so2528059wmc.3;
+        Thu, 20 Aug 2020 11:06:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=rDyjt8LmK9g1U3SIovfRJA6j3jEtje8UHC8f6ZFLpu8=;
-        b=piEtm3ZtjTE90ohxVb1SRUInPjNp1S/nkKMYdMO+tb5evALD/rn6U5CnlBhnHbmMQL
-         EJgP8LC0FUb6DpJTvtttDB8gnmaE4Nb/b+6jtr5j480cbicmofCkRECNcMxaiAG/OHpm
-         1rc9iGiDKpZTbQ9CI2IJtcDcY+3L4JzVCJ/XOqEdWF/PIgogGvyV2da6VP/37Ib0SXNr
-         jugi0JELzoFq/fbvCBXiKk415CORKjFrBIFWPt0dNYDAVNhz1DI9dw4XI/xgRoK9yIIv
-         nOBrdUmqiVxKjluOXldIa1eWQCOe1DQOy9lZKpSgw87bsBgATMHJLBXymHoqOX6/TrhP
-         t6yQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UE8eTpJz5Fvat023BgaJXhjynGfzhEeYBnx8EpQ2OAU=;
+        b=es3bYe0HphdqUCL+9I1d1ALgqNpakWcvQviyZgkpOosoMsnTyYc8sbfdSnxN3ke+8Q
+         zodhNvqFav+IeGS/pSlakqo0BxFXC8fnFI2OnMEF8ablaNavw7Yl5v2JEB4yeLDQi1uo
+         sppEscZnUc5MU8C5R/zNdNgRKvTUWAR5l2xTyYZppzAPlp0OrapKXfU5kooi8IToy7Bv
+         QVYG0Iin/IuRuR1BTATjJH27XRsCX6KKR88LwAVyEgfI0caRIGE17Q2FLgyLsKxvGw0b
+         Ew9Ovr9K2mxABHCtBN3QPPeEwRaQPakVz5Wam9lBqrsy3jcwvA9Q/hJ5jOkTFPyJLREw
+         QJtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=rDyjt8LmK9g1U3SIovfRJA6j3jEtje8UHC8f6ZFLpu8=;
-        b=HyR56im8LWuz7QlMjGDQ9IWgkYqJlun7rNLdXGYmxTAOE0O+59ygtE6b8BnwP+BKaC
-         HH5EXOw1YOk3nfDcJnhmC8sv91xHI8zbRAS9FqM5nmWbXN1x04fzyEWjCp2jy4YfuXNF
-         tYZV6A8dvarnrSLouN2u6f3OFkm36vAdnWAV7fD+SFQ/zA5eED6yxvKoxUtUOBYu7pgF
-         RKFPCmkt3rsSvgFUcymfuSjwc5/3JDgXTwBuGQf4Rv7/LeXJdAF9kalQadDSk+wpNPdj
-         sq0S/3K36H+cAVwMvei55RQSypmUFiVjaPJ2751duaEl9mu9/d/tSYz3GFhn0mYMKJ9i
-         v5Gw==
-X-Gm-Message-State: AOAM531qzoHARg108xHACdro74/ubsU165ruHbWov3IBiUcAjRfZC44/
-        wfQGdrCewDbdhkYdVRKZcFI=
-X-Google-Smtp-Source: ABdhPJzgdVkKwakJu73w1ahFH5W8y91FfqbxFJ2rfSyvOq0GqVRxcaT+2QbYHjG53oR+5l+1QZdntg==
-X-Received: by 2002:a05:600c:224e:: with SMTP id a14mr39949wmm.80.1597946715343;
-        Thu, 20 Aug 2020 11:05:15 -0700 (PDT)
-Received: from [100.64.193.196] ([147.229.117.43])
-        by smtp.gmail.com with ESMTPSA id o125sm5753332wma.27.2020.08.20.11.05.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 11:05:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   =?utf-8?Q?D=C3=A1vid_Bolvansk=C3=BD?= <david.bolvansky@gmail.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-Date:   Thu, 20 Aug 2020 20:05:13 +0200
-Message-Id: <DEA79575-B84D-4AE4-A751-8D86E72B541F@gmail.com>
-References: <20200820175617.GA604994@rani.riverdale.lan>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-In-Reply-To: <20200820175617.GA604994@rani.riverdale.lan>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-X-Mailer: iPhone Mail (17F75)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UE8eTpJz5Fvat023BgaJXhjynGfzhEeYBnx8EpQ2OAU=;
+        b=bRa+I4oCjSIEi0m/wnAgsukalCuP+2ep+iGMRnCvIeX1X9f7sx49Tl2/deoZG4QVBM
+         T58Be2luxnEnegkCh+zPc9XVLuGahRkMSQwyaLrc2EdEClHQQGwHre4QmjI3KVrn2yRu
+         rJ3+9rHH3418mlI8o7C9QEnY6x06iIZ/eRENpLn230/DabNx7AMe/kHpjFmMBW3C/2hr
+         RH93G+xGbHk3kMswi1iBBzVNWjiCpnrvPUyrH9PeEw2GTkgaTHEX91vP0skYnk3Ffvct
+         VEZwKpARa7iIQ5KzWSmFg7BWAmXmbVTgdikYqD/28ih4nrQISxRNsOOHvGRCTXWxD+O/
+         D95g==
+X-Gm-Message-State: AOAM531RryLTIXnwGu20d9ru1XRO58hTymhhdCUJ16F3Hw0fdvXgiTj5
+        tID8J5BUQuvP+o54UuMTUtI=
+X-Google-Smtp-Source: ABdhPJxK/9AF8fMdEaGROWuYYTJXhO5IktHXn9xJSM11t5e971s7ZQEXtjTihTp3W8rNZ372Wo7tsw==
+X-Received: by 2002:a1c:f402:: with SMTP id z2mr8573wma.87.1597946764455;
+        Thu, 20 Aug 2020 11:06:04 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id l11sm5265778wme.11.2020.08.20.11.06.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 11:06:03 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Sathya Prakash <sathya.prakash@broadcom.com>,
+        Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+        Suganath Prabu Subramani 
+        <suganath-prabu.subramani@broadcom.com>,
+        MPT-FusionLinux.pdl@broadcom.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Alex Dewar <alex.dewar90@gmail.com>
+Subject: [PATCH] scsi: mptfusion: Remove unnecessarily casts
+Date:   Thu, 20 Aug 2020 19:05:51 +0100
+Message-Id: <20200820180552.853289-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yeah, gcc is doing weird things here : (
+In a number of places, the value returned from pci_alloc_consistent() is
+unnecessarily cast from void*. Remove these casts.
 
-It is kinda sad that same flag does different things with gcc and clang.
+Issue identified with Coccinelle.
 
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+---
+ drivers/message/fusion/mptbase.c | 6 +++---
+ drivers/message/fusion/mptctl.c  | 5 ++---
+ drivers/message/fusion/mptfc.c   | 8 ++++----
+ 3 files changed, 9 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/message/fusion/mptbase.c b/drivers/message/fusion/mptbase.c
+index 9903e9660a38..e61f46fbe7f4 100644
+--- a/drivers/message/fusion/mptbase.c
++++ b/drivers/message/fusion/mptbase.c
+@@ -4975,7 +4975,7 @@ GetLanConfigPages(MPT_ADAPTER *ioc)
+ 
+ 	if (hdr.PageLength > 0) {
+ 		data_sz = hdr.PageLength * 4;
+-		ppage0_alloc = (LANPage0_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
++		ppage0_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
+ 		rc = -ENOMEM;
+ 		if (ppage0_alloc) {
+ 			memset((u8 *)ppage0_alloc, 0, data_sz);
+@@ -5021,7 +5021,7 @@ GetLanConfigPages(MPT_ADAPTER *ioc)
+ 
+ 	data_sz = hdr.PageLength * 4;
+ 	rc = -ENOMEM;
+-	ppage1_alloc = (LANPage1_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page1_dma);
++	ppage1_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page1_dma);
+ 	if (ppage1_alloc) {
+ 		memset((u8 *)ppage1_alloc, 0, data_sz);
+ 		cfg.physAddr = page1_dma;
+@@ -5322,7 +5322,7 @@ GetIoUnitPage2(MPT_ADAPTER *ioc)
+ 	/* Read the config page */
+ 	data_sz = hdr.PageLength * 4;
+ 	rc = -ENOMEM;
+-	ppage_alloc = (IOUnitPage2_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page_dma);
++	ppage_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page_dma);
+ 	if (ppage_alloc) {
+ 		memset((u8 *)ppage_alloc, 0, data_sz);
+ 		cfg.physAddr = page_dma;
+diff --git a/drivers/message/fusion/mptctl.c b/drivers/message/fusion/mptctl.c
+index 1074b882c57c..24aebad60366 100644
+--- a/drivers/message/fusion/mptctl.c
++++ b/drivers/message/fusion/mptctl.c
+@@ -2593,7 +2593,7 @@ mptctl_hp_targetinfo(MPT_ADAPTER *ioc, unsigned long arg)
+        /* Get the data transfer speeds
+         */
+ 	data_sz = ioc->spi_data.sdp0length * 4;
+-	pg0_alloc = (SCSIDevicePage0_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page_dma);
++	pg0_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page_dma);
+ 	if (pg0_alloc) {
+ 		hdr.PageVersion = ioc->spi_data.sdp0version;
+ 		hdr.PageLength = data_sz;
+@@ -2657,8 +2657,7 @@ mptctl_hp_targetinfo(MPT_ADAPTER *ioc, unsigned long arg)
+ 		/* Issue the second config page request */
+ 		cfg.action = MPI_CONFIG_ACTION_PAGE_READ_CURRENT;
+ 		data_sz = (int) cfg.cfghdr.hdr->PageLength * 4;
+-		pg3_alloc = (SCSIDevicePage3_t *) pci_alloc_consistent(
+-							ioc->pcidev, data_sz, &page_dma);
++		pg3_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page_dma);
+ 		if (pg3_alloc) {
+ 			cfg.physAddr = page_dma;
+ 			cfg.pageAddr = (karg.hdr.channel << 8) | karg.hdr.id;
+diff --git a/drivers/message/fusion/mptfc.c b/drivers/message/fusion/mptfc.c
+index 4314a3352b96..5abaadc4fc38 100644
+--- a/drivers/message/fusion/mptfc.c
++++ b/drivers/message/fusion/mptfc.c
+@@ -763,7 +763,7 @@ mptfc_GetFcPortPage0(MPT_ADAPTER *ioc, int portnum)
+ 
+ 	data_sz = hdr.PageLength * 4;
+ 	rc = -ENOMEM;
+-	ppage0_alloc = (FCPortPage0_t *) pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
++	ppage0_alloc = pci_alloc_consistent(ioc->pcidev, data_sz, &page0_dma);
+ 	if (ppage0_alloc) {
+ 
+  try_again:
+@@ -904,9 +904,9 @@ mptfc_GetFcPortPage1(MPT_ADAPTER *ioc, int portnum)
+ 		if (data_sz < sizeof(FCPortPage1_t))
+ 			data_sz = sizeof(FCPortPage1_t);
+ 
+-		page1_alloc = (FCPortPage1_t *) pci_alloc_consistent(ioc->pcidev,
+-						data_sz,
+-						&page1_dma);
++		page1_alloc = pci_alloc_consistent(ioc->pcidev,
++						   data_sz,
++						   &page1_dma);
+ 		if (!page1_alloc)
+ 			return -ENOMEM;
+ 	}
+-- 
+2.28.0
 
-> D=C5=88a 20. 8. 2020 o 19:56 u=C5=BE=C3=ADvate=C4=BE Arvind Sankar <nivedi=
-ta@alum.mit.edu> nap=C3=ADsal:
->=20
-> =EF=BB=BFOn Thu, Aug 20, 2020 at 04:56:02PM +0200, Rasmus Villemoes wrote:=
-
->>> On 18/08/2020 23.41, Arvind Sankar wrote:
->>>=20
->>> Note that -fno-builtin-foo seems to mean slightly different things in
->>> clang and gcc. =46rom experimentation, clang will neither optimize a cal=
-l
->>> to foo, nor perform an optimization that introduces a call to foo. gcc
->>> will avoid optimizing calls to foo, but it can still generate new calls
->>> to foo while optimizing something else. Which means that
->>> -fno-builtin-{bcmp,stpcpy} only solves things for clang, not gcc. It's
->>> just that gcc doesn't seem to have implemented those optimizations.
->>>=20
->>=20
->> I think it's more than that. I've always read gcc's documentation
->>=20
->> '-fno-builtin'
->> '-fno-builtin-FUNCTION'
->>     Don't recognize built-in functions that do not begin with
->>     '__builtin_' as prefix. ...
->>=20
->>     GCC normally generates special code to handle certain built-in
->>     functions more efficiently; for instance, calls to 'alloca' may
->>     become single instructions which adjust the stack directly, and
->>     calls to 'memcpy' may become inline copy loops.
->>     ...
->>=20
->> to mean exactly that observed above and nothing more, i.e. that
->> -fno-builtin-foo merely means that gcc stops treating a call of a
->> function named foo to mean a call to a function implementing the
->> standard function by that name (and hence allows it to e.g. replace a
->> memcpy(d, s, 1) by byte load+store). It does not mean to prevent
->> emitting calls to foo, and I don't think it ever will - it's a bit sad
->> that clang has chosen to interpret these options differently.
->=20
-> That documentation is misleading, as it also goes on to say:
-> "...nor can you change the behavior of the functions by linking with a
-> different library"
-> which implies that you _can_ change the behavior if you use the option,
-> and which is what your "i.e." is saying as well.
->=20
-> My point is that this is not completely true: in gcc, foo by default is
-> defined to be __builtin_foo, and -fno-builtin-foo simply removes this
-> definition. So the effect is just that calls to foo in the original
-> source will be left alone.
->=20
-> But in order for an optimization that introduces a new call to foo to be
-> valid, foo _must_ have standard semantics: strchr(s,'\0') is not s +
-> strlen(s) unless strlen has standard semantics. This is an oversight in
-> gcc's optimizations: it converts to s + __builtin_strlen(s), which then
-> (normally) becomes s + strlen(s).
->=20
-> Check out this horror: https://godbolt.org/z/a1r9fK
->=20
-> Clang will disable this optimization if -fno-builtin-strlen is
-> specified.
->=20
-> Clang's interpretation is more useful for embedded, since you can use
-> -fno-builtin-foo and avoid calling __builtin_foo directly, and be
-> guaranteed that there will be no calls to foo that you didn't write
-> explicitly (outside of memcpy/memset/memcmp). In this case you are free
-> to implement foo with non-standard semantics, or avoid implementing it
-> altogether, and be reasonably confident that it will all work.
->=20
->>=20
->> Thinking out load, it would be useful if both compilers grew
->>=20
->>  -fassume-provided-std-foo
->>=20
->> and
->>=20
->>  -fno-assume-provided-std-foo
->>=20
->> options to tell the compiler that a function named foo with standard
->> semantics can be assumed (or not) to be provided by the execution
->> environment; i.e. one half of what -f(no-)builtin-foo apparently does
->> for clang currently.
->=20
-> Not following: -fno-assume-provided-std-foo sounds like it would have
-> exactly the same semantics as Clang's -fno-builtin-foo, except maybe in
-> addition it should cause the compiler to error on seeing __builtin_foo
-> if it can't implement that without calling foo.
->=20
->>=20
->> And yes, the positive -fbuiltin-foo would also be quite useful in order
->> to get the compiler to recognize a few important functions (memcpy,
->> memcmp) while using -ffreestanding (or just plain -fno-builtin) to tell
->> it to avoid assuming anything about most std functions - I've worked on
->> a VxWorks target where snprintf() didn't have the correct "return what
->> would be written" semantics but rather behaved like the kernel's
->> non-standard scnprintf(), and who knows what other odd quirks that libc h=
-ad.
->>=20
->> Rasmus
