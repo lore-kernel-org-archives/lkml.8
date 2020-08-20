@@ -2,89 +2,154 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263ECC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 361B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EABE220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IPBS35bR"
+	by mail.kernel.org (Postfix) with ESMTP id 03A2820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:32:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926773;
+	bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ACCr70f/gwaoGjjko/+OmyzOmv76X4QVjAQOxKstwX+bvOZhFfozE62yCrVAY5caG
+	 FYdznnDdcwKFO2FkL6UBC7L2Ux2TXaFS0BwTmvyZCgl7Or3NXpuU87II8WQHYHUowR
+	 l6t2eXkwZiozsddZRUNBf3kSwfZYRBhHsquYLmYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbgHTMcr (ORCPT
+        id S1730281AbgHTMca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:32:47 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:30612 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730002AbgHTMcb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 08:32:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1597926745;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=HiSYPKMGXm6jn1TcY+F4FDv3aSG6bNhGXRIYvbK5L3s=;
-        b=IPBS35bR14M/OsrQYLF1dvXVvVUNBmVYCHz2Zm06eq1JJB1IE0kO6+0gtTHQSrAQm3
-        p35bs1o0l0BYVtCwzTFUMTyZw2pG4jom/p3co/0pwgDsOLc7Bhx6ny8cjOt05SDn7e6k
-        WvOVMBAVexRbcN77MSOvpfY6gRwYljzpkob/9Gojc+ZblKzX5W7engsV4uUiCF0STZO/
-        GZ7o0voBW7njz5zlktzQwIWAIFZjGR2rrrdYYMgboYZ9qz46Hyl0p9J++Q/PAEJsWzGB
-        JGexzMriTV4BzvadwaC1cpHWwqia/RWAoirA/dnzdInkf6YkhAlpYdKi0tr2vexJLk2+
-        n3wQ==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xm0dNS3IdRAZAL+p6A=="
-X-RZG-CLASS-ID: mo00
-Received: from positron.chronox.de
-        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
-        with ESMTPSA id 002e9aw7KCVWDBa
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Thu, 20 Aug 2020 14:31:32 +0200 (CEST)
-From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
-To:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH v32 01/12] Linux Random Number Generator
-Date:   Thu, 20 Aug 2020 14:31:31 +0200
-Message-ID: <3318076.iIbC2pHGDl@positron.chronox.de>
-In-Reply-To: <202008201950.Peepx4LA%lkp@intel.com>
-References: <7836955.NyiUUSuA9g@positron.chronox.de> <202008201950.Peepx4LA%lkp@intel.com>
+        Thu, 20 Aug 2020 08:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728214AbgHTJt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A02932224D;
+        Thu, 20 Aug 2020 09:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916997;
+        bh=vxvjVRskRRfqYiS7lGjlXSeNqSaOj3GOptYFi73IQUI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kk26jEW1AzLhqVDG8nh/fV8G1trbkunO9OQPGrrLJQ9bfuJcbyXdQ1F1h9JgJnsvN
+         jfl2Nl0d3SQwApnexHJwGOkjs0I6FbhqFNwewFe2HC+Ys9gnn71TL0dTA9/QXOcek7
+         oh0+PnabKNyHIxxxuJPx0tdvvafYvaRcEbFDwvCw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stafford Horne <shorne@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 120/152] openrisc: Fix oops caused when dumping stack
+Date:   Thu, 20 Aug 2020 11:21:27 +0200
+Message-Id: <20200820091559.921362764@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
+References: <20200820091553.615456912@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 20. August 2020, 13:46:49 CEST schrieb kernel test robot:
+From: Stafford Horne <shorne@gmail.com>
 
-Hi,
+[ Upstream commit 57b8e277c33620e115633cdf700a260b55095460 ]
 
-> All warnings (new ones prefixed by >>):
-> >> drivers/char/lrng/lrng_interfaces.c:120:6: warning: no previous prototype
-> >> for 'add_hwgenerator_randomness' [-Wmissing-prototypes]
->      120 | void add_hwgenerator_randomness(const char *buffer, size_t count,
->          |      ^~~~~~~~~~~~~~~~~~~~~~~~~~
+When dumping a stack with 'cat /proc/#/stack' the kernel would oops.
+For example:
 
-Thank you, added <linux/hw_random.h>
-> >> 
-> >> drivers/char/lrng/lrng_interfaces.c:297:6: warning: no previous prototype
-> >> for 'get_random_bytes_full' [-Wmissing-prototypes]
->      297 | void get_random_bytes_full(void *buf, int nbytes)
-> 
->          |      ^~~~~~~~~~~~~~~~~~~~~
-> 
-Thanks, added prototype to header file.
+    # cat /proc/690/stack
+    Unable to handle kernel access
+     at virtual address 0x7fc60f58
 
-Ciao
-Stephan
+    Oops#: 0000
+    CPU #: 0
+       PC: c00097fc    SR: 0000807f    SP: d6f09b9c
+    GPR00: 00000000 GPR01: d6f09b9c GPR02: d6f09bb8 GPR03: d6f09bc4
+    GPR04: 7fc60f5c GPR05: c00099b4 GPR06: 00000000 GPR07: d6f09ba3
+    GPR08: ffffff00 GPR09: c0009804 GPR10: d6f08000 GPR11: 00000000
+    GPR12: ffffe000 GPR13: dbb86000 GPR14: 00000001 GPR15: dbb86250
+    GPR16: 7fc60f63 GPR17: 00000f5c GPR18: d6f09bc4 GPR19: 00000000
+    GPR20: c00099b4 GPR21: ffffffc0 GPR22: 00000000 GPR23: 00000000
+    GPR24: 00000001 GPR25: 000002c6 GPR26: d78b6850 GPR27: 00000001
+    GPR28: 00000000 GPR29: dbb86000 GPR30: ffffffff GPR31: dbb862fc
+      RES: 00000000 oGPR11: ffffffff
+    Process cat (pid: 702, stackpage=d79d6000)
+
+    Stack:
+    Call trace:
+    [<598977f2>] save_stack_trace_tsk+0x40/0x74
+    [<95063f0e>] stack_trace_save_tsk+0x44/0x58
+    [<b557bfdd>] proc_pid_stack+0xd0/0x13c
+    [<a2df8eda>] proc_single_show+0x6c/0xf0
+    [<e5a737b7>] seq_read+0x1b4/0x688
+    [<2d6c7480>] do_iter_read+0x208/0x248
+    [<2182a2fb>] vfs_readv+0x64/0x90
+
+This was caused by the stack trace code in save_stack_trace_tsk using
+the wrong stack pointer.  It was using the user stack pointer instead of
+the kernel stack pointer.  Fix this by using the right stack.
+
+Also for good measure we add try_get_task_stack/put_task_stack to ensure
+the task is not lost while we are walking it's stack.
+
+Fixes: eecac38b0423a ("openrisc: support framepointers and STACKTRACE_SUPPORT")
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/openrisc/kernel/stacktrace.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/arch/openrisc/kernel/stacktrace.c b/arch/openrisc/kernel/stacktrace.c
+index 43f140a28bc72..54d38809e22cb 100644
+--- a/arch/openrisc/kernel/stacktrace.c
++++ b/arch/openrisc/kernel/stacktrace.c
+@@ -13,6 +13,7 @@
+ #include <linux/export.h>
+ #include <linux/sched.h>
+ #include <linux/sched/debug.h>
++#include <linux/sched/task_stack.h>
+ #include <linux/stacktrace.h>
+ 
+ #include <asm/processor.h>
+@@ -68,12 +69,25 @@ void save_stack_trace_tsk(struct task_struct *tsk, struct stack_trace *trace)
+ {
+ 	unsigned long *sp = NULL;
+ 
++	if (!try_get_task_stack(tsk))
++		return;
++
+ 	if (tsk == current)
+ 		sp = (unsigned long *) &sp;
+-	else
+-		sp = (unsigned long *) KSTK_ESP(tsk);
++	else {
++		unsigned long ksp;
++
++		/* Locate stack from kernel context */
++		ksp = task_thread_info(tsk)->ksp;
++		ksp += STACK_FRAME_OVERHEAD;	/* redzone */
++		ksp += sizeof(struct pt_regs);
++
++		sp = (unsigned long *) ksp;
++	}
+ 
+ 	unwind_stack(trace, sp, save_stack_address_nosched);
++
++	put_task_stack(tsk);
+ }
+ EXPORT_SYMBOL_GPL(save_stack_trace_tsk);
+ 
+-- 
+2.25.1
+
 
 
