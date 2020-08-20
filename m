@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A328FC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3054DC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9A622D08
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AA5722D00
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929671;
-	bh=Y1i4DF6BcOshXWHpxWKBz010ViC4i7Ok0SjzYrZZI7Y=;
+	s=default; t=1597929677;
+	bh=fB0Emn9tdUFDUbLUQKwJWZ+0+bGZg3jjzr7SbIFLdkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uLzfrVzGBcRYbtURLOKEOEU0QBFogol7crkTZ38p90hOkJt6Nl2a5JCibKsb4MN2C
-	 PRlsUQEPOsfSeq30wrZRZiMTl1qEYj+nm9okoNRLgEQSOOG/vi2fyAJpN+I6yxl4Gx
-	 YoARv22kcCRqfK2iRt+R1wZlCnVeETwoR7Eov8ug=
+	b=0JZVt2GNQy9GlTE3Pkt550MSSZ5ppPZ53Ey4lbKAH8ou8k4PowbjWj3HvhJ21Prn5
+	 WeYxL4CYxYkMzT1Z6SDBRVsa8ZPrji7e5NJxX+ACotbk/nhxezom7el3jxth5qpxXt
+	 icun/Vl/wIklYQkLKbDsQzwit7jSRRUdyi86hEFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbgHTNVI (ORCPT
+        id S1730265AbgHTNVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:21:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45294 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:21:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728471AbgHTJee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:34 -0400
+        id S1728476AbgHTJel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F4022BEB;
-        Thu, 20 Aug 2020 09:34:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE3E20724;
+        Thu, 20 Aug 2020 09:34:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916073;
-        bh=Y1i4DF6BcOshXWHpxWKBz010ViC4i7Ok0SjzYrZZI7Y=;
+        s=default; t=1597916081;
+        bh=fB0Emn9tdUFDUbLUQKwJWZ+0+bGZg3jjzr7SbIFLdkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GWdCHs5iV3E+SpdR20KKxcdXPnti8UCH/5JxG8tDobZUY1tfA2qVMO60REN7aaPTY
-         PIAyZRrzNHYCWazJcrKxir1ZKbPxGc6FmeVXjsm1HSOB20/Yl/1OUXIl5QJJoIGFbK
-         Xm/x3/nv9iR7tbqhG0SgjQ/rnPiGH2nDfebusj98=
+        b=xIyxS1BkcdcDVeMxEiOTMagt6cA+lGVvTP3lxjpOZq9Eo9VdDeDoxDU7KUb4BbxIE
+         iCbMu1vJINJnYYBWbD14+K5YaSeTdFTmRdfIU/6n9Zri2EYqFyuxO3vryn4Y8VZYuJ
+         GSbBZDSRedTU93+8l7BvskrljjyduhsemYU4cfJY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Imre Deak <imre.deak@intel.com>,
-        Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>,
-        Lyude Paul <lyude@redhat.com>
-Subject: [PATCH 5.8 223/232] drm/dp_mst: Fix the DDC I2C device registration of an MST port
-Date:   Thu, 20 Aug 2020 11:21:14 +0200
-Message-Id: <20200820091623.582896325@linuxfoundation.org>
+        stable@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 5.8 226/232] drm/omap: force runtime PM suspend on system suspend
+Date:   Thu, 20 Aug 2020 11:21:17 +0200
+Message-Id: <20200820091623.729630080@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,112 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-commit d8bd15b37d328a935a4fc695fed8b19157503950 upstream.
+commit ecfdedd7da5d54416db5ca0f851264dca8736f59 upstream.
 
-During the initial MST probing an MST port's I2C device will be
-registered using the kdev of the DRM device as a parent. Later after MST
-Connection Status Notifications this I2C device will be re-registered
-with the kdev of the port's connector. This will also move
-inconsistently the I2C device's sysfs entry from the DRM device's sysfs
-dir to the connector's dir.
+Use SET_LATE_SYSTEM_SLEEP_PM_OPS in DSS submodules to force runtime PM
+suspend and resume.
 
-Fix the above by keeping the DRM kdev as the parent of the I2C device.
+We use suspend late version so that omapdrm's system suspend callback is
+called first, as that will disable all the display outputs after which
+it's safe to force DSS into suspend.
 
-Ideally the connector's kdev would be used as a parent, similarly to
-non-MST connectors, however that needs some more refactoring to ensure
-the connector's kdev is already available early enough. So keep the
-existing (initial) behavior for now.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Stanislav Lisovskiy <stanislav.lisovskiy@intel.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200607212522.16935-2-imre.deak@intel.com
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200618095153.611071-1-tomi.valkeinen@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Fixes: cef766300353 ("drm/omap: Prepare DSS for probing without legacy platform data")
+Cc: stable@vger.kernel.org # v5.7+
+Tested-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c |   28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/omapdrm/dss/dispc.c |    1 +
+ drivers/gpu/drm/omapdrm/dss/dsi.c   |    1 +
+ drivers/gpu/drm/omapdrm/dss/dss.c   |    1 +
+ drivers/gpu/drm/omapdrm/dss/venc.c  |    1 +
+ 4 files changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -88,8 +88,8 @@ static int drm_dp_send_enum_path_resourc
- static bool drm_dp_validate_guid(struct drm_dp_mst_topology_mgr *mgr,
- 				 u8 *guid);
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -4915,6 +4915,7 @@ static int dispc_runtime_resume(struct d
+ static const struct dev_pm_ops dispc_pm_ops = {
+ 	.runtime_suspend = dispc_runtime_suspend,
+ 	.runtime_resume = dispc_runtime_resume,
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+ };
  
--static int drm_dp_mst_register_i2c_bus(struct drm_dp_aux *aux);
--static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_aux *aux);
-+static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port);
-+static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port);
- static void drm_dp_mst_kick_tx(struct drm_dp_mst_topology_mgr *mgr);
+ struct platform_driver omap_dispchw_driver = {
+--- a/drivers/gpu/drm/omapdrm/dss/dsi.c
++++ b/drivers/gpu/drm/omapdrm/dss/dsi.c
+@@ -5467,6 +5467,7 @@ static int dsi_runtime_resume(struct dev
+ static const struct dev_pm_ops dsi_pm_ops = {
+ 	.runtime_suspend = dsi_runtime_suspend,
+ 	.runtime_resume = dsi_runtime_resume,
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+ };
  
- #define DBG_PREFIX "[dp_mst]"
-@@ -1966,7 +1966,7 @@ drm_dp_port_set_pdt(struct drm_dp_mst_po
- 			}
+ struct platform_driver omap_dsihw_driver = {
+--- a/drivers/gpu/drm/omapdrm/dss/dss.c
++++ b/drivers/gpu/drm/omapdrm/dss/dss.c
+@@ -1614,6 +1614,7 @@ static int dss_runtime_resume(struct dev
+ static const struct dev_pm_ops dss_pm_ops = {
+ 	.runtime_suspend = dss_runtime_suspend,
+ 	.runtime_resume = dss_runtime_resume,
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+ };
  
- 			/* remove i2c over sideband */
--			drm_dp_mst_unregister_i2c_bus(&port->aux);
-+			drm_dp_mst_unregister_i2c_bus(port);
- 		} else {
- 			mutex_lock(&mgr->lock);
- 			drm_dp_mst_topology_put_mstb(port->mstb);
-@@ -1981,7 +1981,7 @@ drm_dp_port_set_pdt(struct drm_dp_mst_po
- 	if (port->pdt != DP_PEER_DEVICE_NONE) {
- 		if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
- 			/* add i2c over sideband */
--			ret = drm_dp_mst_register_i2c_bus(&port->aux);
-+			ret = drm_dp_mst_register_i2c_bus(port);
- 		} else {
- 			lct = drm_dp_calculate_rad(port, rad);
- 			mstb = drm_dp_add_mst_branch_device(lct, rad);
-@@ -5346,22 +5346,26 @@ static const struct i2c_algorithm drm_dp
+ struct platform_driver omap_dsshw_driver = {
+--- a/drivers/gpu/drm/omapdrm/dss/venc.c
++++ b/drivers/gpu/drm/omapdrm/dss/venc.c
+@@ -902,6 +902,7 @@ static int venc_runtime_resume(struct de
+ static const struct dev_pm_ops venc_pm_ops = {
+ 	.runtime_suspend = venc_runtime_suspend,
+ 	.runtime_resume = venc_runtime_resume,
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+ };
  
- /**
-  * drm_dp_mst_register_i2c_bus() - register an I2C adapter for I2C-over-AUX
-- * @aux: DisplayPort AUX channel
-+ * @port: The port to add the I2C bus on
-  *
-  * Returns 0 on success or a negative error code on failure.
-  */
--static int drm_dp_mst_register_i2c_bus(struct drm_dp_aux *aux)
-+static int drm_dp_mst_register_i2c_bus(struct drm_dp_mst_port *port)
- {
-+	struct drm_dp_aux *aux = &port->aux;
-+	struct device *parent_dev = port->mgr->dev->dev;
-+
- 	aux->ddc.algo = &drm_dp_mst_i2c_algo;
- 	aux->ddc.algo_data = aux;
- 	aux->ddc.retries = 3;
- 
- 	aux->ddc.class = I2C_CLASS_DDC;
- 	aux->ddc.owner = THIS_MODULE;
--	aux->ddc.dev.parent = aux->dev;
--	aux->ddc.dev.of_node = aux->dev->of_node;
-+	/* FIXME: set the kdev of the port's connector as parent */
-+	aux->ddc.dev.parent = parent_dev;
-+	aux->ddc.dev.of_node = parent_dev->of_node;
- 
--	strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(aux->dev),
-+	strlcpy(aux->ddc.name, aux->name ? aux->name : dev_name(parent_dev),
- 		sizeof(aux->ddc.name));
- 
- 	return i2c_add_adapter(&aux->ddc);
-@@ -5369,11 +5373,11 @@ static int drm_dp_mst_register_i2c_bus(s
- 
- /**
-  * drm_dp_mst_unregister_i2c_bus() - unregister an I2C-over-AUX adapter
-- * @aux: DisplayPort AUX channel
-+ * @port: The port to remove the I2C bus from
-  */
--static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_aux *aux)
-+static void drm_dp_mst_unregister_i2c_bus(struct drm_dp_mst_port *port)
- {
--	i2c_del_adapter(&aux->ddc);
-+	i2c_del_adapter(&port->aux.ddc);
- }
- 
- /**
+ static const struct of_device_id venc_of_match[] = {
 
 
