@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4288BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C18C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11AED2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936312075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918280;
-	bh=tpC6nHZoH1PnEAHCP82qYae3GdmxlAsc2q+a/13Zj6M=;
+	s=default; t=1597918282;
+	bh=aeLfuVpLgVSSDjcYFpoynPBNATote49CgUOoOfMWA3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FxOv3BSE+ZjgSCduPxvnZmR24zELlbUBysQ3kqilCPeVH0K+QI7vb9+HrmBWE6645
-	 0anhmbkfZYtEIPbaOZa9eXZvsfuSk71fMf/hYD6v9q52m5ZlqtkrAQlw11+L2WXo1z
-	 IfOXr5kdO3WHYkDwItkvFKknx51DRW5M3Iji3SVM=
+	b=cQX+1YXz2qaOCvJSLqy2OAzypWwPEuaMrB6M+paSaZzVhmtnsXUPzBEKnyXEsSnWH
+	 jQK2KkXRausTbufwu3WW/9UU7FB4t7q+Sl/FTqAMENkSesMkQHihaiDK1MulujnFly
+	 U7VWahc1ig9h248aEXDbSGkTzKtkHAKDnBh32sgw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgHTKLO (ORCPT
+        id S1730962AbgHTKLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:11:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47954 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730174AbgHTKKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:45 -0400
+        id S1730291AbgHTKLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:11:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65C85206DA;
-        Thu, 20 Aug 2020 10:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87AB2067C;
+        Thu, 20 Aug 2020 10:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918244;
-        bh=tpC6nHZoH1PnEAHCP82qYae3GdmxlAsc2q+a/13Zj6M=;
+        s=default; t=1597918265;
+        bh=aeLfuVpLgVSSDjcYFpoynPBNATote49CgUOoOfMWA3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tPzBsBCaaWBV3KGlja92Emhx/ITCED1dg3MEnneMZw6UTodeAUiVzh52Mp61qRHmQ
-         xgoxkc93M7EY4t61TJ9q1T2/uoRnHmO0xhzJjuMVzcDe1gWORVMvNbB5v3mVbh4ajZ
-         R3N4dXZOM0Cd1fHc/VqcncaA3yiqzZL7jKVtsJ9s=
+        b=Sdj77wxHcZV5fOLHzzeDGZhHqZsTpq7R37nfOEa/f9ceIpjhU/Kt21pF7cITEJ1E3
+         LA87EYStRpl5H0jfVxMVt2Fd7F8n0Be8VXNrg7gg7l8aYBsdszw03Qyym1H3aV5tmW
+         fv3f8yriDAnzJAHXktE6R9JxtWxcYDWS8wd0FC70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 103/228] drm/bridge: sil_sii8620: initialize return of sii8620_readb
-Date:   Thu, 20 Aug 2020 11:21:18 +0200
-Message-Id: <20200820091612.761057152@linuxfoundation.org>
+Subject: [PATCH 4.14 109/228] drm/imx: tve: fix regulator_disable error path
+Date:   Thu, 20 Aug 2020 11:21:24 +0200
+Message-Id: <20200820091613.046756077@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,47 +60,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 02cd2d3144653e6e2a0c7ccaa73311e48e2dc686 ]
+[ Upstream commit 7bb58b987fee26da2a1665c01033022624986b7c ]
 
-clang static analysis flags this error
+Add missing regulator_disable() as devm_action to avoid dedicated
+unbind() callback and fix the missing error handling.
 
-sil-sii8620.c:184:2: warning: Undefined or garbage value
-  returned to caller [core.uninitialized.UndefReturn]
-        return ret;
-        ^~~~~~~~~~
-
-sii8620_readb calls sii8620_read_buf.
-sii8620_read_buf can return without setting its output
-pararmeter 'ret'.
-
-So initialize ret.
-
-Fixes: ce6e153f414a ("drm/bridge: add Silicon Image SiI8620 driver")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200712152453.27510-1-trix@redhat.com
+Fixes: fcbc51e54d2a ("staging: drm/imx: Add support for Television Encoder (TVEv2)")
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/bridge/sil-sii8620.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/imx/imx-tve.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c b/drivers/gpu/drm/bridge/sil-sii8620.c
-index 0cb69ee94ac16..b93486892f4ae 100644
---- a/drivers/gpu/drm/bridge/sil-sii8620.c
-+++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-@@ -167,7 +167,7 @@ static void sii8620_read_buf(struct sii8620 *ctx, u16 addr, u8 *buf, int len)
+diff --git a/drivers/gpu/drm/imx/imx-tve.c b/drivers/gpu/drm/imx/imx-tve.c
+index bc27c26994641..c22c3e6e9b7ac 100644
+--- a/drivers/gpu/drm/imx/imx-tve.c
++++ b/drivers/gpu/drm/imx/imx-tve.c
+@@ -498,6 +498,13 @@ static int imx_tve_register(struct drm_device *drm, struct imx_tve *tve)
+ 	return 0;
+ }
  
- static u8 sii8620_readb(struct sii8620 *ctx, u16 addr)
++static void imx_tve_disable_regulator(void *data)
++{
++	struct imx_tve *tve = data;
++
++	regulator_disable(tve->dac_reg);
++}
++
+ static bool imx_tve_readable_reg(struct device *dev, unsigned int reg)
  {
--	u8 ret;
-+	u8 ret = 0;
+ 	return (reg % 4 == 0) && (reg <= 0xdc);
+@@ -622,6 +629,9 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 		ret = regulator_enable(tve->dac_reg);
+ 		if (ret)
+ 			return ret;
++		ret = devm_add_action_or_reset(dev, imx_tve_disable_regulator, tve);
++		if (ret)
++			return ret;
+ 	}
  
- 	sii8620_read_buf(ctx, addr, &ret, 1);
- 	return ret;
+ 	tve->clk = devm_clk_get(dev, "tve");
+@@ -668,18 +678,8 @@ static int imx_tve_bind(struct device *dev, struct device *master, void *data)
+ 	return 0;
+ }
+ 
+-static void imx_tve_unbind(struct device *dev, struct device *master,
+-	void *data)
+-{
+-	struct imx_tve *tve = dev_get_drvdata(dev);
+-
+-	if (!IS_ERR(tve->dac_reg))
+-		regulator_disable(tve->dac_reg);
+-}
+-
+ static const struct component_ops imx_tve_ops = {
+ 	.bind	= imx_tve_bind,
+-	.unbind	= imx_tve_unbind,
+ };
+ 
+ static int imx_tve_probe(struct platform_device *pdev)
 -- 
 2.25.1
 
