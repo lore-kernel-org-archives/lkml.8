@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43540C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C57E12078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 208BF20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926488;
-	bh=Bgf8F92t/ZAyenynqhNM6Yf/xAbcyUQKG4+V7kmmPnQ=;
+	s=default; t=1597926489;
+	bh=2hTiHBj5GDxe6smlNZQ1HWaL2bz/g+aouyUMLlufD04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rV+YPd/9QeXl4t10vgq/PTwWg7Snjr6c8RbQjOGj0xEoCXW58i96fUooABEhenHfQ
-	 tamu/0HiyWTXB7xXq29IkxNiG+s070quCqqtyUoMHnzsUMyX9k0ti/4LrztI6wqIrw
-	 qmH9PeNzpKQPwrBc+F8C5rOHRIRPGhuG7HroaDeU=
+	b=Qpap9km5k7anwOWONCpK+87yMSDBR9/SWskPLV/iHSmDfre77g/ZOBf0VMME+IdVn
+	 5nWQmMkLddweFFDa/Lf0zuEqzaTOyxNhe4eIpRHWOQ653cmYgDqC9dUlhEptlhopGY
+	 8wnv4W4zKsUBKKiruEFyFtWKMiNlcKzl6rIVRxzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730657AbgHTM2E (ORCPT
+        id S1729225AbgHTM2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32882 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgHTJvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:49 -0400
+        id S1729865AbgHTJv5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:51:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB1352067C;
-        Thu, 20 Aug 2020 09:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7A9D2067C;
+        Thu, 20 Aug 2020 09:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917109;
-        bh=Bgf8F92t/ZAyenynqhNM6Yf/xAbcyUQKG4+V7kmmPnQ=;
+        s=default; t=1597917117;
+        bh=2hTiHBj5GDxe6smlNZQ1HWaL2bz/g+aouyUMLlufD04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eC5inylfmIF+I30VVLDRTG0h45kio9WdEQHw0uudK86fCefQ5KiCr93AgxEVMhmX7
-         /T/KtxrNrebkFnnKfHFgH4yeH7HntjVZrATnsOfYz9D1CSl5GcAvzxKUOOejW/Cp25
-         2h2tMJ3tkqs8D7adPOEQvpf7LwFPDPF44I9B/N1o=
+        b=BkTjfU75V2djz+o4wzDlL4xwahocRv9lQyPjukzVjzVwT702X/G7z9MLohuR3zLpl
+         bJOSFpULhojEO4D00DMAy0cBXDNYMoueSW0JSiMt1lCEnVSlwslbX/JAriE9XHjh+3
+         TKMCwCJkQVNkY87/4378ENdEacctYopi3Z8IqLBY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
-        Steven Price <steven.price@arm.com>
-Subject: [PATCH 5.4 148/152] drm/panfrost: Use kvfree() to free bo->sgts
-Date:   Thu, 20 Aug 2020 11:21:55 +0200
-Message-Id: <20200820091601.405432172@linuxfoundation.org>
+        stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 10/92] btrfs: dont allocate anonymous block device for user invisible roots
+Date:   Thu, 20 Aug 2020 11:20:55 +0200
+Message-Id: <20200820091538.048068141@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 114427b8927a4def2942b2b886f7e4aeae289ccb upstream.
+commit 851fd730a743e072badaf67caf39883e32439431 upstream.
 
-Use kvfree() to free bo->sgts, because the memory is allocated with
-kvmalloc_array() in panfrost_mmu_map_fault_addr().
+[BUG]
+When a lot of subvolumes are created, there is a user report about
+transaction aborted:
 
-Fixes: 187d2929206e ("drm/panfrost: Add support for GPU heap allocations")
-Cc: stable@vger.kernel.org
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Reviewed-by: Steven Price <steven.price@arm.com>
-Signed-off-by: Steven Price <steven.price@arm.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200608151728.234026-1-efremov@linux.com
+  BTRFS: Transaction aborted (error -24)
+  WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  RIP: 0010:create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  Call Trace:
+   create_pending_snapshots+0x82/0xa0 [btrfs]
+   btrfs_commit_transaction+0x275/0x8c0 [btrfs]
+   btrfs_mksubvol+0x4b9/0x500 [btrfs]
+   btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
+   btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
+   btrfs_ioctl+0x11a4/0x2da0 [btrfs]
+   do_vfs_ioctl+0xa9/0x640
+   ksys_ioctl+0x67/0x90
+   __x64_sys_ioctl+0x1a/0x20
+   do_syscall_64+0x5a/0x110
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ---[ end trace 33f2f83f3d5250e9 ]---
+  BTRFS: error (device sda1) in create_pending_snapshot:1576: errno=-24 unknown
+  BTRFS info (device sda1): forced readonly
+  BTRFS warning (device sda1): Skipping commit of aborted transaction.
+  BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
+
+[CAUSE]
+The error is EMFILE (Too many files open) and comes from the anonymous
+block device allocation. The ids are in a shared pool of size 1<<20.
+
+The ids are assigned to live subvolumes, ie. the root structure exists
+in memory (eg. after creation or after the root appears in some path).
+The pool could be exhausted if the numbers are not reclaimed fast
+enough, after subvolume deletion or if other system component uses the
+anon block devices.
+
+[WORKAROUND]
+Since it's not possible to completely solve the problem, we can only
+minimize the time the id is allocated to a subvolume root.
+
+Firstly, we can reduce the use of anon_dev by trees that are not
+subvolume roots, like data reloc tree.
+
+This patch will do extra check on root objectid, to skip roots that
+don't need anon_dev.  Currently it's only data reloc tree and orphan
+roots.
+
+Reported-by: Greed Rong <greedrong@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/panfrost/panfrost_gem.c |    2 +-
- drivers/gpu/drm/panfrost/panfrost_mmu.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/disk-io.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/panfrost/panfrost_gem.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_gem.c
-@@ -46,7 +46,7 @@ static void panfrost_gem_free_object(str
- 				sg_free_table(&bo->sgts[i]);
- 			}
- 		}
--		kfree(bo->sgts);
-+		kvfree(bo->sgts);
- 	}
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1500,9 +1500,16 @@ int btrfs_init_fs_root(struct btrfs_root
+ 	spin_lock_init(&root->ino_cache_lock);
+ 	init_waitqueue_head(&root->ino_cache_wait);
  
- 	drm_gem_shmem_free_object(obj);
---- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
-@@ -486,7 +486,7 @@ static int panfrost_mmu_map_fault_addr(s
- 		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
- 				       sizeof(struct page *), GFP_KERNEL | __GFP_ZERO);
- 		if (!pages) {
--			kfree(bo->sgts);
-+			kvfree(bo->sgts);
- 			bo->sgts = NULL;
- 			mutex_unlock(&bo->base.pages_lock);
- 			ret = -ENOMEM;
+-	ret = get_anon_bdev(&root->anon_dev);
+-	if (ret)
+-		goto fail;
++	/*
++	 * Don't assign anonymous block device to roots that are not exposed to
++	 * userspace, the id pool is limited to 1M
++	 */
++	if (is_fstree(root->root_key.objectid) &&
++	    btrfs_root_refs(&root->root_item) > 0) {
++		ret = get_anon_bdev(&root->anon_dev);
++		if (ret)
++			goto fail;
++	}
+ 
+ 	mutex_lock(&root->objectid_mutex);
+ 	ret = btrfs_find_highest_objectid(root,
 
 
