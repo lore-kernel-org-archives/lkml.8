@@ -2,49 +2,49 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A99C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE0EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C701A22B3F
+	by mail.kernel.org (Postfix) with ESMTP id EDDBE22CA0
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwXn0d/l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZvRtjb6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbgHTNec (ORCPT
+        id S1729206AbgHTNen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:34:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28286 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729545AbgHTNd7 (ORCPT
+        Thu, 20 Aug 2020 09:34:43 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24355 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729979AbgHTNeS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:33:59 -0400
+        Thu, 20 Aug 2020 09:34:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597930437;
+        s=mimecast20190719; t=1597930456;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5tbhuoH+F/XUvQIBkdLHlm/rrWGTVjd0gX2q0SKCOLw=;
-        b=cwXn0d/llRBeHFA9ZV12rXnBtfm3hfVTiVZ4vmgJ4Bg+B4dnwTSj7fw5kYsGPkwu9VMHNF
-        5SrVkIjuaHfK2GhdDdJ486bo0Cba4hwb+bsh3jyjrd9xgzp+65wlWsddJb+fdiwT1K8jbd
-        FI75wPxXTb6hyRxPyTfzxmiyi7rDw4I=
+        bh=8VU4qgZe11B9Uppa4qqmNI/wjTXLTZepIN/QKYu7cww=;
+        b=ZvRtjb6NA9NwtwatiVsg4MIxIiwwJoS1n9iHxI5ZZ1w9tpKapGckbNt+/sGjIjujOdAxrk
+        xDCJbr87MzF6H6GarnxOSFjqOwjjpsMXso0U4hMl46WXM4l1lW8Z6re3Wqk7G7ejCdqsjT
+        4pRutqlE2PSGE6sWoag7xeUnFg7iQKc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-449-tkYdtdCwNCu2YNU4M6-V7Q-1; Thu, 20 Aug 2020 09:33:53 -0400
-X-MC-Unique: tkYdtdCwNCu2YNU4M6-V7Q-1
+ us-mta-399-7pE37AvlOres1Y53hcCR_A-1; Thu, 20 Aug 2020 09:34:13 -0400
+X-MC-Unique: 7pE37AvlOres1Y53hcCR_A-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8519A801AE8;
-        Thu, 20 Aug 2020 13:33:51 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7021418BFEC1;
+        Thu, 20 Aug 2020 13:34:11 +0000 (UTC)
 Received: from localhost.localdomain (unknown [10.35.206.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 20BEB16E25;
-        Thu, 20 Aug 2020 13:33:47 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BDB816E21;
+        Thu, 20 Aug 2020 13:34:07 +0000 (UTC)
 From:   Maxim Levitsky <mlevitsk@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
@@ -60,9 +60,9 @@ Cc:     x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH v2 2/7] KVM: nSVM: rename nested 'vmcb' to vmcb12_gpa in few places
-Date:   Thu, 20 Aug 2020 16:33:34 +0300
-Message-Id: <20200820133339.372823-3-mlevitsk@redhat.com>
+Subject: [PATCH v2 7/7] KVM: nSVM: implement ondemand allocation of the nested state
+Date:   Thu, 20 Aug 2020 16:33:39 +0300
+Message-Id: <20200820133339.372823-8-mlevitsk@redhat.com>
 In-Reply-To: <20200820133339.372823-1-mlevitsk@redhat.com>
 References: <20200820133339.372823-1-mlevitsk@redhat.com>
 MIME-Version: 1.0
@@ -73,122 +73,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No functional changes.
+This way we don't waste memory on VMs which don't enable
+nesting virtualization
 
 Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
 ---
- arch/x86/kvm/svm/nested.c | 10 +++++-----
- arch/x86/kvm/svm/svm.c    | 13 +++++++------
- arch/x86/kvm/svm/svm.h    |  2 +-
- 3 files changed, 13 insertions(+), 12 deletions(-)
+ arch/x86/kvm/svm/nested.c | 43 ++++++++++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c    | 56 +++++++++++++++++++++------------------
+ arch/x86/kvm/svm/svm.h    |  6 +++++
+ 3 files changed, 79 insertions(+), 26 deletions(-)
 
 diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index fb68467e6049..f5b17920a2ca 100644
+index f5b17920a2ca..c7c7df58ef38 100644
 --- a/arch/x86/kvm/svm/nested.c
 +++ b/arch/x86/kvm/svm/nested.c
-@@ -431,7 +431,7 @@ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
- {
- 	int ret;
+@@ -473,6 +473,9 @@ int nested_svm_vmrun(struct vcpu_svm *svm)
  
--	svm->nested.vmcb = vmcb_gpa;
-+	svm->nested.vmcb12_gpa = vmcb_gpa;
- 	load_nested_vmcb_control(svm, &nested_vmcb->control);
- 	nested_prepare_vmcb_save(svm, nested_vmcb);
- 	nested_prepare_vmcb_control(svm);
-@@ -568,7 +568,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	struct vmcb *vmcb = svm->vmcb;
- 	struct kvm_host_map map;
+ 	nested_vmcb = map.hva;
  
--	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb), &map);
-+	rc = kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(svm->nested.vmcb12_gpa), &map);
- 	if (rc) {
- 		if (rc == -EINVAL)
- 			kvm_inject_gp(&svm->vcpu, 0);
-@@ -579,7 +579,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
++	if (WARN_ON(!svm->nested.initialized))
++		return 1;
++
+ 	if (!nested_vmcb_checks(svm, nested_vmcb)) {
+ 		nested_vmcb->control.exit_code    = SVM_EXIT_ERR;
+ 		nested_vmcb->control.exit_code_hi = 0;
+@@ -686,6 +689,46 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
+ 	return 0;
+ }
  
- 	/* Exit Guest-Mode */
- 	leave_guest_mode(&svm->vcpu);
--	svm->nested.vmcb = 0;
-+	svm->nested.vmcb12_gpa = 0;
- 	WARN_ON_ONCE(svm->nested.nested_run_pending);
- 
- 	/* in case we halted in L2 */
-@@ -1018,7 +1018,7 @@ static int svm_get_nested_state(struct kvm_vcpu *vcpu,
- 
- 	/* First fill in the header and copy it out.  */
- 	if (is_guest_mode(vcpu)) {
--		kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb;
-+		kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb12_gpa;
- 		kvm_state.size += KVM_STATE_NESTED_SVM_VMCB_SIZE;
- 		kvm_state.flags |= KVM_STATE_NESTED_GUEST_MODE;
- 
-@@ -1128,7 +1128,7 @@ static int svm_set_nested_state(struct kvm_vcpu *vcpu,
- 	copy_vmcb_control_area(&hsave->control, &svm->vmcb->control);
- 	hsave->save = save;
- 
--	svm->nested.vmcb = kvm_state->hdr.svm.vmcb_pa;
-+	svm->nested.vmcb12_gpa = kvm_state->hdr.svm.vmcb_pa;
- 	load_nested_vmcb_control(svm, &ctl);
- 	nested_prepare_vmcb_control(svm);
- 
++int svm_allocate_nested(struct vcpu_svm *svm)
++{
++	struct page *hsave_page;
++
++	if (svm->nested.initialized)
++		return 0;
++
++	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
++	if (!hsave_page)
++		goto free_page1;
++
++	svm->nested.hsave = page_address(hsave_page);
++	clear_page(svm->nested.hsave);
++
++	svm->nested.msrpm = svm_vcpu_alloc_msrpm();
++	if (!svm->nested.msrpm)
++		goto free_page2;
++
++	svm->nested.initialized = true;
++	return 0;
++free_page2:
++	__free_page(hsave_page);
++free_page1:
++	return 1;
++}
++
++void svm_free_nested(struct vcpu_svm *svm)
++{
++	if (!svm->nested.initialized)
++		return;
++
++	svm_vcpu_free_msrpm(svm->nested.msrpm);
++	svm->nested.msrpm = NULL;
++
++	__free_page(virt_to_page(svm->nested.hsave));
++	svm->nested.hsave = NULL;
++
++	svm->nested.initialized = false;
++}
++
+ /*
+  * Forcibly leave nested mode in order to be able to reset the VCPU later on.
+  */
 diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 562a79e3e63a..d33013b9b4d7 100644
+index 2ac13420055d..fdd41053c42b 100644
 --- a/arch/x86/kvm/svm/svm.c
 +++ b/arch/x86/kvm/svm/svm.c
-@@ -1102,7 +1102,7 @@ static void init_vmcb(struct vcpu_svm *svm)
+@@ -266,6 +266,7 @@ static int get_max_npt_level(void)
+ int svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
++	u64 old_efer = vcpu->arch.efer;
+ 	vcpu->arch.efer = efer;
+ 
+ 	if (!npt_enabled) {
+@@ -276,14 +277,31 @@ int svm_set_efer(struct kvm_vcpu *vcpu, u64 efer)
+ 			efer &= ~EFER_LME;
  	}
- 	svm->asid_generation = 0;
  
--	svm->nested.vmcb = 0;
-+	svm->nested.vmcb12_gpa = 0;
- 	svm->vcpu.arch.hflags = 0;
- 
- 	if (!kvm_pause_in_guest(svm->vcpu.kvm)) {
-@@ -3884,7 +3884,7 @@ static int svm_pre_enter_smm(struct kvm_vcpu *vcpu, char *smstate)
- 		/* FED8h - SVM Guest */
- 		put_smstate(u64, smstate, 0x7ed8, 1);
- 		/* FEE0h - SVM Guest VMCB Physical Address */
--		put_smstate(u64, smstate, 0x7ee0, svm->nested.vmcb);
-+		put_smstate(u64, smstate, 0x7ee0, svm->nested.vmcb12_gpa);
- 
- 		svm->vmcb->save.rax = vcpu->arch.regs[VCPU_REGS_RAX];
- 		svm->vmcb->save.rsp = vcpu->arch.regs[VCPU_REGS_RSP];
-@@ -3903,17 +3903,18 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
- 	struct vmcb *nested_vmcb;
- 	struct kvm_host_map map;
- 	u64 guest;
--	u64 vmcb;
-+	u64 vmcb12_gpa;
- 	int ret = 0;
- 
- 	guest = GET_SMSTATE(u64, smstate, 0x7ed8);
--	vmcb = GET_SMSTATE(u64, smstate, 0x7ee0);
-+	vmcb12_gpa = GET_SMSTATE(u64, smstate, 0x7ee0);
- 
- 	if (guest) {
--		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb), &map) == -EINVAL)
-+		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb12_gpa), &map) == -EINVAL)
- 			return 1;
+-	if (!(efer & EFER_SVME)) {
+-		svm_leave_nested(svm);
+-		svm_set_gif(svm, true);
++	if ((old_efer & EFER_SVME) != (efer & EFER_SVME)) {
++		if (!(efer & EFER_SVME)) {
++			svm_leave_nested(svm);
++			svm_set_gif(svm, true);
 +
- 		nested_vmcb = map.hva;
--		ret = enter_svm_guest_mode(svm, vmcb, nested_vmcb);
-+		ret = enter_svm_guest_mode(svm, vmcb12_gpa, nested_vmcb);
- 		kvm_vcpu_unmap(&svm->vcpu, &map, true);
++			/*
++			 * Free the nested state unless we are in SMM, in which
++			 * case the exit from SVM mode is only for duration of the SMI
++			 * handler
++			 */
++			if (!is_smm(&svm->vcpu))
++				svm_free_nested(svm);
++
++		} else {
++			if (svm_allocate_nested(svm))
++				goto error;
++		}
  	}
  
+ 	svm->vmcb->save.efer = efer | EFER_SVME;
+ 	vmcb_mark_dirty(svm->vmcb, VMCB_CR);
+ 	return 0;
++error:
++	vcpu->arch.efer = old_efer;
++	return 1;
+ }
+ 
+ static int is_external_interrupt(u32 info)
+@@ -610,7 +628,7 @@ static void set_msr_interception(u32 *msrpm, unsigned msr,
+ 	msrpm[offset] = tmp;
+ }
+ 
+-static u32 *svm_vcpu_alloc_msrpm(void)
++u32 *svm_vcpu_alloc_msrpm(void)
+ {
+ 	int i;
+ 	u32 *msrpm;
+@@ -630,7 +648,7 @@ static u32 *svm_vcpu_alloc_msrpm(void)
+ 	return msrpm;
+ }
+ 
+-static void svm_vcpu_free_msrpm(u32 *msrpm)
++void svm_vcpu_free_msrpm(u32 *msrpm)
+ {
+ 	__free_pages(virt_to_page(msrpm), MSRPM_ALLOC_ORDER);
+ }
+@@ -1184,7 +1202,6 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm;
+ 	struct page *vmcb_page;
+-	struct page *hsave_page;
+ 	int err;
+ 
+ 	BUILD_BUG_ON(offsetof(struct vcpu_svm, vcpu) != 0);
+@@ -1195,13 +1212,9 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	if (!vmcb_page)
+ 		goto out;
+ 
+-	hsave_page = alloc_page(GFP_KERNEL_ACCOUNT);
+-	if (!hsave_page)
+-		goto free_page1;
+-
+ 	err = avic_init_vcpu(svm);
+ 	if (err)
+-		goto free_page2;
++		goto out;
+ 
+ 	/* We initialize this flag to true to make sure that the is_running
+ 	 * bit would be set the first time the vcpu is loaded.
+@@ -1209,16 +1222,9 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 	if (irqchip_in_kernel(vcpu->kvm) && kvm_apicv_activated(vcpu->kvm))
+ 		svm->avic_is_running = true;
+ 
+-	svm->nested.hsave = page_address(hsave_page);
+-	clear_page(svm->nested.hsave);
+-
+ 	svm->msrpm = svm_vcpu_alloc_msrpm();
+ 	if (!svm->msrpm)
+-		goto free_page2;
+-
+-	svm->nested.msrpm = svm_vcpu_alloc_msrpm();
+-	if (!svm->nested.msrpm)
+-		goto free_page3;
++		goto free_page;
+ 
+ 	svm->vmcb = page_address(vmcb_page);
+ 	clear_page(svm->vmcb);
+@@ -1231,11 +1237,7 @@ static int svm_create_vcpu(struct kvm_vcpu *vcpu)
+ 
+ 	return 0;
+ 
+-free_page3:
+-	svm_vcpu_free_msrpm(svm->msrpm);
+-free_page2:
+-	__free_page(hsave_page);
+-free_page1:
++free_page:
+ 	__free_page(vmcb_page);
+ out:
+ 	return err;
+@@ -1260,10 +1262,10 @@ static void svm_free_vcpu(struct kvm_vcpu *vcpu)
+ 	 */
+ 	svm_clear_current_vmcb(svm->vmcb);
+ 
++	svm_free_nested(svm);
++
+ 	__free_page(pfn_to_page(__sme_clr(svm->vmcb_pa) >> PAGE_SHIFT));
+ 	__free_pages(virt_to_page(svm->msrpm), MSRPM_ALLOC_ORDER);
+-	__free_page(virt_to_page(svm->nested.hsave));
+-	__free_pages(virt_to_page(svm->nested.msrpm), MSRPM_ALLOC_ORDER);
+ }
+ 
+ static void svm_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
+@@ -3922,6 +3924,8 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
+ 					 gpa_to_gfn(vmcb12_gpa), &map) == -EINVAL)
+ 				return 1;
+ 
++			svm_allocate_nested(svm);
++
+ 			ret = enter_svm_guest_mode(svm, vmcb12_gpa, map.hva);
+ 			kvm_vcpu_unmap(&svm->vcpu, &map, true);
+ 		}
 diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index a798e1731709..ab913468f9cb 100644
+index 468c58a91534..eae7e3a8752f 100644
 --- a/arch/x86/kvm/svm/svm.h
 +++ b/arch/x86/kvm/svm/svm.h
-@@ -85,7 +85,7 @@ struct svm_nested_state {
- 	struct vmcb *hsave;
- 	u64 hsave_msr;
- 	u64 vm_cr_msr;
--	u64 vmcb;
-+	u64 vmcb12_gpa;
- 	u32 host_intercept_exceptions;
+@@ -97,6 +97,8 @@ struct svm_nested_state {
  
- 	/* These are the merged vectors */
+ 	/* cache for control fields of the guest */
+ 	struct vmcb_control_area ctl;
++
++	bool initialized;
+ };
+ 
+ struct vcpu_svm {
+@@ -349,6 +351,8 @@ static inline bool gif_set(struct vcpu_svm *svm)
+ #define MSR_INVALID				0xffffffffU
+ 
+ u32 svm_msrpm_offset(u32 msr);
++u32 *svm_vcpu_alloc_msrpm(void);
++void svm_vcpu_free_msrpm(u32 *msrpm);
+ int svm_set_efer(struct kvm_vcpu *vcpu, u64 efer);
+ void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
+ int svm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4);
+@@ -390,6 +394,8 @@ static inline bool nested_exit_on_nmi(struct vcpu_svm *svm)
+ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
+ 			 struct vmcb *nested_vmcb);
+ void svm_leave_nested(struct vcpu_svm *svm);
++void svm_free_nested(struct vcpu_svm *svm);
++int svm_allocate_nested(struct vcpu_svm *svm);
+ int nested_svm_vmrun(struct vcpu_svm *svm);
+ void nested_svm_vmloadsave(struct vmcb *from_vmcb, struct vmcb *to_vmcb);
+ int nested_svm_vmexit(struct vcpu_svm *svm);
 -- 
 2.26.2
 
