@@ -2,118 +2,88 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB173C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09860C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9371B207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCAE5207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925128;
-	bh=sB3O8RsK+WNH9GoiGeAlv0G4heZHl6LbPgI8bJi86mo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ALVda8qVbRmLLRQ3YP9/2fGOmRuGMJCFxLjpcnkkvpfskBkmWm/0YZ/tLw5FJk5cp
-	 XC2v9xMtzkWP2F9Q0zR89Q/uPuu0/yIkc32UU7kPPaNm2CqR7j76EstZ4PzJRi50l7
-	 Sbwi2i7vuzG5pd7CDaE/A9shNb2cmRFJQHU/As+8=
+	s=default; t=1597925134;
+	bh=NJ32BmIFgihAAZhAhjKEFu2hdvQMQjj1VvlRmUqjHBs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=utdAXtfYD3k+nEq4MIv+yS2TkqxYLOTEanJfA8R9ZOwK0ZMtwXI6swH9J06lKtMWV
+	 FsBwtgV5YD6igSt3CDIs471PuShHWICkwohyLDYdGFXgmHR+2Z3qxmlURI/cerj+dS
+	 vfmvmoLhSXBkugO9O4QXVdboFNz53EgpalA8ozdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbgHTJ7D (ORCPT
+        id S1730686AbgHTMFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43466 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:05:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729652AbgHTJ6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:58:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730654AbgHTMFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:05:04 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.216])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA442067C;
-        Thu, 20 Aug 2020 09:58:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0079C22B4D;
+        Thu, 20 Aug 2020 12:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917522;
-        bh=sB3O8RsK+WNH9GoiGeAlv0G4heZHl6LbPgI8bJi86mo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jor7D8PRGeoSPKj2dSEtfSLFDT4CkFCW+e9AgC0fv2YujPkeiNG9jt4ZnRQvShsDu
-         ogNfW4/zwAQqn3ejc43XoYhB0+TmbR3EB9LGSV2xAzEzTpAW3ZBLtWBOQo8TJS6914
-         t2FgRTVxtrnrxQlCzBDmgw2bFdrBWHxsPwuk6AE4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 4.9 060/212] leds: wm831x-status: fix use-after-free on unbind
-Date:   Thu, 20 Aug 2020 11:20:33 +0200
-Message-Id: <20200820091605.400259432@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        s=default; t=1597925103;
+        bh=NJ32BmIFgihAAZhAhjKEFu2hdvQMQjj1VvlRmUqjHBs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Q743CPKtujSGcC+4e2ik8LeVHUPU/2B1w5nONEeqilx5rCLH9MrAGiuYC6KT3q/gW
+         U0UytFKtLy+XiIA0XprDzUtuJuXNOKWGJWO8ncJkmeAZRYKf39YJS6rIdZ6NCJ9Pz2
+         WmI3VlaBYWKJckJa/OZqOumdEL8zActRq4YLXlyo=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     QCA ath9k Development <ath9k-devel@qca.qualcomm.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] ath9k_htc: Do not select MAC80211_LEDS by default
+Date:   Thu, 20 Aug 2020 14:04:44 +0200
+Message-Id: <20200820120444.8809-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+The ath9k_htc driver hides all LEDs related code behind
+CONFIG_MAC80211_LEDS ifdefs so it does not really require the
+MAC80211_LEDS.  The code builds and works just fine.  Convert the
+"select" into "imply" to allow disabling LED trigger when not needed.
 
-commit 47a459ecc800a17109d0c496a4e21e478806ee40 upstream.
-
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
-
-Fixes: 8d3b6a4001ce ("leds: wm831x-status: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/leds/leds-wm831x-status.c |   14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath9k/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/leds/leds-wm831x-status.c
-+++ b/drivers/leds/leds-wm831x-status.c
-@@ -283,12 +283,23 @@ static int wm831x_status_probe(struct pl
- 	drvdata->cdev.blink_set = wm831x_status_blink_set;
- 	drvdata->cdev.groups = wm831x_status_groups;
- 
--	ret = devm_led_classdev_register(wm831x->dev, &drvdata->cdev);
-+	ret = led_classdev_register(wm831x->dev, &drvdata->cdev);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Failed to register LED: %d\n", ret);
- 		return ret;
- 	}
- 
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	return 0;
-+}
-+
-+static int wm831x_status_remove(struct platform_device *pdev)
-+{
-+	struct wm831x_status *drvdata = platform_get_drvdata(pdev);
-+
-+	led_classdev_unregister(&drvdata->cdev);
-+
- 	return 0;
- }
- 
-@@ -297,6 +308,7 @@ static struct platform_driver wm831x_sta
- 		   .name = "wm831x-status",
- 		   },
- 	.probe = wm831x_status_probe,
-+	.remove = wm831x_status_remove,
- };
- 
- module_platform_driver(wm831x_status_driver);
-
+diff --git a/drivers/net/wireless/ath/ath9k/Kconfig b/drivers/net/wireless/ath/ath9k/Kconfig
+index d5e9af2dddd8..5effb3886631 100644
+--- a/drivers/net/wireless/ath/ath9k/Kconfig
++++ b/drivers/net/wireless/ath/ath9k/Kconfig
+@@ -177,10 +177,10 @@ config ATH9K_HTC
+ 	tristate "Atheros HTC based wireless cards support"
+ 	depends on USB && MAC80211
+ 	select ATH9K_HW
+-	select MAC80211_LEDS
+-	select LEDS_CLASS
+-	select NEW_LEDS
+ 	select ATH9K_COMMON
++	imply NEW_LEDS
++	imply LEDS_CLASS
++	imply MAC80211_LEDS
+ 	help
+ 	  Support for Atheros HTC based cards.
+ 	  Chipsets supported: AR9271
+-- 
+2.17.1
 
