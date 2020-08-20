@@ -2,247 +2,266 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74641C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EFBAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CFA20674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3821420738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="wWhqt2sg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lueoNtOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgHTWkB (ORCPT
+        id S1728508AbgHTWmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38080 "EHLO
+        Thu, 20 Aug 2020 18:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728139AbgHTWkA (ORCPT
+        with ESMTP id S1728139AbgHTWmW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:40:00 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAAB0C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:39:59 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id y11so1717390qvl.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:39:59 -0700 (PDT)
+        Thu, 20 Aug 2020 18:42:22 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11AFC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:42:21 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id f24so108149ejx.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:42:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=gDWGboVRg2Ifj9ershFBt4glX1e0Eb3i4ChaJKBdsLM=;
-        b=wWhqt2sgudht08dliBUhUGv0kBTCUy1Yi++SnCsK7fkORPRHeagnE031C4dLIQrj+g
-         8DpaYPMA+9er88sF99xgUPawGSSHG3CSiygdWUQ3ppYDIwdXpTuGfsAsEGqIlk7Z4xoj
-         g82nVppTOd/3El8ghQYQcvq4JSW86EoNIhkuk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8/kymetnv79xgx6DMRcXD17OGKR/RGTH2RjZ9GgB6T0=;
+        b=lueoNtOe7UWPxNGwY43gfs5vFhtUrP9esf/ytEsib2rAtvZhMRKUwLGcOEDNXZEa7l
+         wl38uriRZBxeiOkv9JjZzDbQ+JVJXoh/c3/5y+gYWLluBSz0nl177H25ml+bYXI5M62x
+         PQo70EgSMYfQUuBzOKROBshTJtvb9NtjMLmrS2Z0v7hIRsTxc2mBSRuSrbKLW89EFsYs
+         +U05ZX44SkOSo0/4cX4/Md3cr0qlmUQBpX3VsMSj4u21E5WA6ZNzQ1BqhH64v7E0IfuV
+         AQojeCoMsPaksTJ0PS+krcdl5V031K1DAkj9isyb13KdG+surmqU9CpAES4SzSiWyv3I
+         sIyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=gDWGboVRg2Ifj9ershFBt4glX1e0Eb3i4ChaJKBdsLM=;
-        b=LdRlo5u/5gH/PUxkNv2rU5m2iasmKef48ADoRtFJ0nsNSVw3TJdhQ/wIxO7MsH+CP1
-         MM48xu3KXW4nXBdGWhimkPxM3O9USYEas/EHPNpnR3PJHlx393gKcHLxb3CJqwTTnOGo
-         6mVJbcvUGMLXt6unQnWd2aQU3G8dy3C7aAcSHtShgLFS6ADCwXV6Ns+9BCcog15PQhM2
-         WWkIDhdolNzSDEQJKW707jbFeokXKOYjPfVcOpFvl+G0IGmv9Kl/MtWePmQEGl+i+DDO
-         eP2mH9iADp20mtEfIUCjxphUURoXOYx1QfF2Ehryl874+FuuAznk32LpRLNdRIi8ftWd
-         7SGA==
-X-Gm-Message-State: AOAM5327/9QP1gv90+DnCVMfI4JB/TRhFBmfKHRY7d5aeekDc9TWy/og
-        3pGg65zvgXAseLcyGxqFraYDIQ==
-X-Google-Smtp-Source: ABdhPJytaaGXINg9yeRHNHCC7PNFZV4y9D6ZAEYYPM4H16cO5KIairRplvfI4DBAfo1QMKRkgD+uxA==
-X-Received: by 2002:ad4:510b:: with SMTP id g11mr1910qvp.20.1597963198915;
-        Thu, 20 Aug 2020 15:39:58 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id f130sm3717122qke.99.2020.08.20.15.39.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 15:39:58 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 18:39:57 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Uladzislau Rezki <urezki@gmail.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        "Zhang, Qiang" <Qiang.Zhang@windriver.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        rcu <rcu@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?= [PATCH] rcu: shrink each
- possible cpu krcp
-Message-ID: <20200820223957.GB120898@google.com>
-References: <20200818171807.GI27891@paulmck-ThinkPad-P72>
- <CAEXW_YQu9MAV-3ym0EFB0NmomWkLsBtZCT9sShnzo+vv=8sLgg@mail.gmail.com>
- <20200818210355.GM27891@paulmck-ThinkPad-P72>
- <20200818215511.GA2538@pc636>
- <20200818220245.GO27891@paulmck-ThinkPad-P72>
- <CAEXW_YRZ6RM90+aYA0JQ1war0n-D0M4peXJZE2_Uqf07xvF+5g@mail.gmail.com>
- <BYAPR11MB26323E6D956BA22DFE610A13FF5D0@BYAPR11MB2632.namprd11.prod.outlook.com>
- <20200819135654.GB3875610@google.com>
- <20200819152159.GX27891@paulmck-ThinkPad-P72>
- <20200819155808.GA8817@pc636>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8/kymetnv79xgx6DMRcXD17OGKR/RGTH2RjZ9GgB6T0=;
+        b=ZDfCFsdBc1M2e4nR74+JPjURc6Q/Qe+5m3R39mvJ62aTrWqKf0mqWgQx1nsWrA43l9
+         J2o5jYlCm0z9E7MVECjxgN7mFpE7IUU076xXajkXsNfdX6C801InNxXrhpuJUWqRZfdW
+         WTCaGftYeVKSjHc6vF4uMTR3uVRGMzLCos7UGPIPFPLNZWgFSQrbAGD5/uFS8ZLYy5Uh
+         lgyf1fIhtqOEYP87wuaisM093vRCX6cjAGCpRZsOA2rWmVC82qLj9NkIVMASCl8IexaR
+         AWwKrFaTLSzwrAvivZsGERdw+ZyA5fpnumMPn8izn4k/XF0cCYqX0qgPolpbJx8j5aDc
+         IbPg==
+X-Gm-Message-State: AOAM531ouobZ1KrJG8tGjyGNkE7+8c5owuPrFs4iutfSeAnzcYb6cqqD
+        M8PkD0H1fZ/sna+cpCayzPu39Ctawc5wBvbyYWA=
+X-Google-Smtp-Source: ABdhPJyqrwc3cefbqkhA0ceuf8kh6KY1ic7/BGYchgOr5LbmbQ5qgeJs6EGdWFOWqs1lmvLiSTJv+zyiRvRGLXATr/0=
+X-Received: by 2002:a17:906:84e1:: with SMTP id zp1mr794136ejb.499.1597963340205;
+ Thu, 20 Aug 2020 15:42:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200819155808.GA8817@pc636>
+References: <20200818184122.29C415DF@viggo.jf.intel.com> <20200818184131.C972AFCC@viggo.jf.intel.com>
+In-Reply-To: <20200818184131.C972AFCC@viggo.jf.intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Thu, 20 Aug 2020 15:42:08 -0700
+Message-ID: <CAHbLzkqEtLEoMCkiLg8o4aGz2EPDmD_yiaxNrndy2wwcUs4DKA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 5/9] mm/migrate: demote pages during reclaim
+To:     Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 05:58:08PM +0200, Uladzislau Rezki wrote:
-> On Wed, Aug 19, 2020 at 08:21:59AM -0700, Paul E. McKenney wrote:
-> > On Wed, Aug 19, 2020 at 09:56:54AM -0400, Joel Fernandes wrote:
-> > > On Wed, Aug 19, 2020 at 03:00:55AM +0000, Zhang, Qiang wrote:
-> > > > 
-> > > > 
-> > > > ________________________________________
-> > > > 发件人: linux-kernel-owner@vger.kernel.org <linux-kernel-owner@vger.kernel.org> 代表 Joel Fernandes <joel@joelfernandes.org>
-> > > > 发送时间: 2020年8月19日 8:04
-> > > > 收件人: Paul E. McKenney
-> > > > 抄送: Uladzislau Rezki; Zhang, Qiang; Josh Triplett; Steven Rostedt; Mathieu Desnoyers; Lai Jiangshan; rcu; LKML
-> > > > 主题: Re: [PATCH] rcu: shrink each possible cpu krcp
-> > > > 
-> > > > On Tue, Aug 18, 2020 at 6:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > 
-> > > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > > index b8ccd7b5af82..6decb9ad2421 100644
-> > > > > > --- a/kernel/rcu/tree.c
-> > > > > > +++ b/kernel/rcu/tree.c
-> > > > > > @@ -2336,10 +2336,15 @@ int rcutree_dead_cpu(unsigned int cpu)
-> > > > > >  {
-> > > > > >         struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > > > >         struct rcu_node *rnp = rdp->mynode;  /* Outgoing CPU's rdp & rnp. */
-> > > > > > +       struct kfree_rcu_cpu *krcp;
-> > > > > >
-> > > > > >         if (!IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> > > > > >                 return 0;
-> > > > > >
-> > > > > > +       /* Drain the kcrp of this CPU. IRQs should be disabled? */
-> > > > > > +       krcp = this_cpu_ptr(&krc)
-> > > > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
-> > > > > > +
-> > > > > >
-> > > > > > A cpu can be offlined and its krp will be stuck until a shrinker is involved.
-> > > > > > Maybe be never.
-> > > > >
-> > > > > Does the same apply to its kmalloc() per-CPU caches?  If so, I have a
-> > > > > hard time getting too worried about it.  ;-)
-> > > > 
-> > > > >Looking at slab_offline_cpu() , that calls cancel_delayed_work_sync()
-> > > > >on the cache reaper who's job is to flush the per-cpu caches. So I
-> > > > >believe during CPU offlining, the per-cpu slab caches are flushed.
-> > > > >
-> > > > >thanks,
-> > > > >
-> > > >  >- Joel
-> > > > 
-> > > > When cpu going offline, the slub or slab only flush free objects in offline
-> > > > cpu cache,  put these free objects in node list  or return buddy system,
-> > > > for those who are still in use, they still stay offline cpu cache.
-> > > > 
-> > > > If we want clean per-cpu "krcp" objects when cpu going offline.  we should
-> > > > free "krcp" cache objects in "rcutree_offline_cpu", this func be called
-> > > > before other rcu cpu offline func. and then "rcutree_offline_cpu" will be
-> > > > called in "cpuhp/%u" per-cpu thread.
-> > > > 
-> > > 
-> > > Could you please wrap text properly when you post to mailing list, thanks. I
-> > > fixed it for you above.
-> > > 
-> > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > index 8ce77d9ac716..1812d4a1ac1b 100644
-> > > > --- a/kernel/rcu/tree.c
-> > > > +++ b/kernel/rcu/tree.c
-> > > > @@ -3959,6 +3959,7 @@ int rcutree_offline_cpu(unsigned int cpu)
-> > > >         unsigned long flags;
-> > > >         struct rcu_data *rdp;
-> > > >         struct rcu_node *rnp;
-> > > > +       struct kfree_rcu_cpu *krcp;
-> > > >  
-> > > >         rdp = per_cpu_ptr(&rcu_data, cpu);
-> > > >         rnp = rdp->mynode;
-> > > > @@ -3970,6 +3971,11 @@ int rcutree_offline_cpu(unsigned int cpu)
-> > > >  
-> > > >         // nohz_full CPUs need the tick for stop-machine to work quickly
-> > > >         tick_dep_set(TICK_DEP_BIT_RCU);
-> > > > +
-> > > > +       krcp = per_cpu_ptr(&krc, cpu);
-> > > > +       raw_spin_lock_irqsave(&krcp->lock, flags);
-> > > > +       schedule_delayed_work(&krcp->monitor_work, 0);
-> > > > +       raw_spin_unlock_irqrestore(&krcp->lock, flags);
-> > > >         return 0;
-> > > 
-> > > I realized the above is not good enough for what this is trying to do. Unlike
-> > > the slab, the new kfree_rcu objects cannot always be drained / submitted to
-> > > RCU because the previous batch may still be waiting for a grace period. So
-> > > the above code could very well return with the yet-to-be-submitted kfree_rcu
-> > > objects still in the cache.
-> > > 
-> > > One option is to spin-wait here for monitor_todo to be false and keep calling
-> > > kfree_rcu_drain_unlock() till then.
-> > > 
-> > > But then that's not good enough either, because if new objects are queued
-> > > when interrupts are enabled in the CPU offline path, then the cache will get
-> > > new objects after the previous set was drained. Further, spin waiting may
-> > > introduce deadlocks.
-> > > 
-> > > Another option is to switch the kfree_rcu() path to non-batching (so new
-> > > objects cannot be cached in the offline path and are submitted directly to
-> > > RCU), wait for a GP and then submit the work. But then not sure if 1-argument
-> > > kfree_rcu() will like that.
-> > 
-> > Or spawn a workqueue that does something like this:
-> > 
-> > 1.	Get any pending kvfree_rcu() requests sent off to RCU.
-> > 
-> > 2.	Do an rcu_barrier().
-> > 
-> > 3.	Do the cleanup actions.
-> > 
-> > > Probably Qian's original fix for for_each_possible_cpus() is good enough for
-> > > the shrinker case, and then we can tackle the hotplug one.
-> > 
-> > It might take some experimentation to find the best solution.
-> > 
-> 
-> <snip>
-> static void do_idle(void)
-> {
-> ...
->  while (!need_resched()) {
->   rmb();
-> 
->   local_irq_disable();
-> 
->   if (cpu_is_offline(cpu)) {
->    tick_nohz_idle_stop_tick();
->    cpuhp_report_idle_dead();
->        -> cpuhp_report_idle_dead(void)
->               -> rcu_report_dead(smp_processor_id());
->    arch_cpu_idle_dead();
->   }
-> ...
-> <snip>
-> 
-> We have the rcu_report_dead() callback. When it gets called IRQs are off
-> and CPU that is in question is offline.
-> 
->     krcp = per_cpu_ptr(&krc, cpu);
->     raw_spin_lock_irqsave(&krcp->lock, flags);
->     krcp->monotro_todo = true;
->     schedule_delayed_work(&krcp->monitor_work, 0);
->     raw_spin_unlock_irqrestore(&krcp->lock, flags);
-> 
-> If there is a batch that is in progress, the job will rearm itself.
-> But i agree, it requires more experiments.
+On Tue, Aug 18, 2020 at 11:51 AM Dave Hansen
+<dave.hansen@linux.intel.com> wrote:
+>
+>
+> From: Dave Hansen <dave.hansen@linux.intel.com>
+>
+> This is mostly derived from a patch from Yang Shi:
+>
+>         https://lore.kernel.org/linux-mm/1560468577-101178-10-git-send-email-yang.shi@linux.alibaba.com/
+>
+> Add code to the reclaim path (shrink_page_list()) to "demote" data
+> to another NUMA node instead of discarding the data.  This always
+> avoids the cost of I/O needed to read the page back in and sometimes
+> avoids the writeout cost when the pagee is dirty.
+>
+> Note: This just adds the start of infratructure for migration. It is
+> actually disabled next to the FIXME in migrate_demote_page_ok().
+>
+> Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Yang Shi <yang.shi@linux.alibaba.com>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Huang Ying <ying.huang@intel.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> ---
+>
+>  b/include/linux/migrate.h |    2
+>  b/mm/vmscan.c             |   93 ++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 95 insertions(+)
+>
+> diff -puN include/linux/migrate.h~demote-with-migrate_pages include/linux/migrate.h
+> --- a/include/linux/migrate.h~demote-with-migrate_pages 2020-08-18 11:36:52.916583179 -0700
+> +++ b/include/linux/migrate.h   2020-08-18 11:36:52.923583179 -0700
+> @@ -25,6 +25,7 @@ enum migrate_reason {
+>         MR_MEMPOLICY_MBIND,
+>         MR_NUMA_MISPLACED,
+>         MR_CONTIG_RANGE,
+> +       MR_DEMOTION,
+>         MR_TYPES
+>  };
+>
+> @@ -210,6 +211,7 @@ struct migrate_vma {
+>  int migrate_vma_setup(struct migrate_vma *args);
+>  void migrate_vma_pages(struct migrate_vma *migrate);
+>  void migrate_vma_finalize(struct migrate_vma *migrate);
+> +int next_demotion_node(int node);
+>
+>  #endif /* CONFIG_MIGRATION */
+>
+> diff -puN mm/vmscan.c~demote-with-migrate_pages mm/vmscan.c
+> --- a/mm/vmscan.c~demote-with-migrate_pages     2020-08-18 11:36:52.919583179 -0700
+> +++ b/mm/vmscan.c       2020-08-18 11:36:52.924583179 -0700
+> @@ -43,6 +43,7 @@
+>  #include <linux/kthread.h>
+>  #include <linux/freezer.h>
+>  #include <linux/memcontrol.h>
+> +#include <linux/migrate.h>
+>  #include <linux/delayacct.h>
+>  #include <linux/sysctl.h>
+>  #include <linux/oom.h>
+> @@ -1040,6 +1041,24 @@ static enum page_references page_check_r
+>         return PAGEREF_RECLAIM;
+>  }
+>
+> +bool migrate_demote_page_ok(struct page *page, struct scan_control *sc)
+> +{
+> +       int next_nid = next_demotion_node(page_to_nid(page));
+> +
+> +       VM_BUG_ON_PAGE(!PageLocked(page), page);
+> +       VM_BUG_ON_PAGE(PageHuge(page), page);
+> +       VM_BUG_ON_PAGE(PageLRU(page), page);
+> +
 
-I chatted with Ulad and we believe the timer and/or (delayed) workqueue will
-get migrated during the CPU offline path, so it is not an issue.
+I think we'd better rule out MADV_FREE pages since it doesn't make too
+much sense to migrate MADV_FREE pages, they can be just discarded.
 
-In this case, Qiang's initial patch suffices to fix the shrinker issue.
-
-thanks,
-
- - Joel
-
+> +       if (next_nid == NUMA_NO_NODE)
+> +               return false;
+> +       if (PageTransHuge(page) && !thp_migration_supported())
+> +               return false;
+> +
+> +       // FIXME: actually enable this later in the series
+> +       return false;
+> +}
+> +
+> +
+>  /* Check if a page is dirty or under writeback */
+>  static void page_check_dirty_writeback(struct page *page,
+>                                        bool *dirty, bool *writeback)
+> @@ -1070,6 +1089,66 @@ static void page_check_dirty_writeback(s
+>                 mapping->a_ops->is_dirty_writeback(page, dirty, writeback);
+>  }
+>
+> +static struct page *alloc_demote_page(struct page *page, unsigned long node)
+> +{
+> +       /*
+> +        * Try to fail quickly if memory on the target node is not
+> +        * available.  Leaving out __GFP_IO and __GFP_FS helps with
+> +        * this.  If the desintation node is full, we want kswapd to
+> +        * run there so that its pages will get reclaimed and future
+> +        * migration attempts may succeed.
+> +        */
+> +       gfp_t flags = (__GFP_HIGHMEM | __GFP_MOVABLE | __GFP_NORETRY |
+> +                      __GFP_NOMEMALLOC | __GFP_NOWARN | __GFP_THISNODE |
+> +                      __GFP_KSWAPD_RECLAIM);
+> +       /* HugeTLB pages should not be on the LRU */
+> +       WARN_ON_ONCE(PageHuge(page));
+> +
+> +       if (PageTransHuge(page)) {
+> +               struct page *thp;
+> +
+> +               flags |= __GFP_COMP;
+> +
+> +               thp = alloc_pages_node(node, flags, HPAGE_PMD_ORDER);
+> +               if (!thp)
+> +                       return NULL;
+> +               prep_transhuge_page(thp);
+> +               return thp;
+> +       }
+> +
+> +       return __alloc_pages_node(node, flags, 0);
+> +}
+> +
+> +/*
+> + * Take pages on @demote_list and attempt to demote them to
+> + * another node.  Pages which are not demoted are added to
+> + * @ret_pages.
+> + */
+> +static unsigned int demote_page_list(struct list_head *ret_list,
+> +                                    struct list_head *demote_pages,
+> +                                    struct pglist_data *pgdat,
+> +                                    struct scan_control *sc)
+> +{
+> +       int target_nid = next_demotion_node(pgdat->node_id);
+> +       unsigned int nr_succeeded = 0;
+> +       int err;
+> +
+> +       if (list_empty(demote_pages))
+> +               return 0;
+> +
+> +       /* Demotion ignores all cpuset and mempolicy settings */
+> +       err = migrate_pages(demote_pages, alloc_demote_page, NULL,
+> +                           target_nid, MIGRATE_ASYNC, MR_DEMOTION,
+> +                           &nr_succeeded);
+> +
+> +       if (err) {
+> +               putback_movable_pages(demote_pages);
+> +               list_splice(ret_list, demote_pages);
+> +       }
+> +
+> +       return nr_succeeded;
+> +}
+> +
+>  /*
+>   * shrink_page_list() returns the number of reclaimed pages
+>   */
+> @@ -1082,6 +1161,7 @@ static unsigned int shrink_page_list(str
+>  {
+>         LIST_HEAD(ret_pages);
+>         LIST_HEAD(free_pages);
+> +       LIST_HEAD(demote_pages);
+>         unsigned int nr_reclaimed = 0;
+>         unsigned int pgactivate = 0;
+>
+> @@ -1237,6 +1317,16 @@ static unsigned int shrink_page_list(str
+>                 }
+>
+>                 /*
+> +                * Before reclaiming the page, try to relocate
+> +                * its contents to another node.
+> +                */
+> +               if (migrate_demote_page_ok(page, sc)) {
+> +                       list_add(&page->lru, &demote_pages);
+> +                       unlock_page(page);
+> +                       continue;
+> +               }
+> +
+> +               /*
+>                  * Anonymous process memory has backing store?
+>                  * Try to allocate it some swap space here.
+>                  * Lazyfree page could be freed directly
+> @@ -1484,6 +1574,9 @@ keep:
+>                 VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page), page);
+>         }
+>
+> +       /* Migrate pages selected for demotion */
+> +       nr_reclaimed += demote_page_list(&ret_pages, &demote_pages, pgdat, sc);
+> +
+>         pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
+>
+>         mem_cgroup_uncharge_list(&free_pages);
+> _
