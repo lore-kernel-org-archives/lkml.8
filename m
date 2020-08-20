@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFF6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4BEC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8591320724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F96207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918501;
-	bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
+	s=default; t=1597918509;
+	bh=Vnlfd91f9jY6V0NUMDifoozT8NMnDbS+d6M8OKwcTcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P71h2B/NA9LFzBXiqtNKIuXc/+qYsodczy5NuZ3H8cdHHfbViq0AcLJizTsGgGur5
-	 QE21QTgjNfVb6jjqtX0kJdQa/ikVrhZA4fulS8hPWPUkbsmfGlXJrmg6fn3KdRkbOn
-	 qItT0UXjn51fUWoImMRYY8VPRwYjpDbqD6ve0P64=
+	b=zuCQ1hJlaI6JNzzgQx1q1ywidd5oiaJbrGNj8/+1QASWSKq6F2x14xFUBaCTgppTe
+	 LJsht10WC6OCYZnfSWShDDy318Jah7w7pXcgvdZeFO+O9HQcHc5HS3j1487lY/vHpq
+	 DnlHyi603M7OXFpnkjokJdbu9Xo7NwTG8m6ddgqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgHTKO6 (ORCPT
+        id S1728260AbgHTKPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:14:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33168 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:15:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731190AbgHTKOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:37 -0400
+        id S1731206AbgHTKOn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7026D206DA;
-        Thu, 20 Aug 2020 10:14:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F26720738;
+        Thu, 20 Aug 2020 10:14:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918476;
-        bh=N7hUzOKg89hfCvlCfJ0ZbjFa5U76+UBt9Hgv6aW9NgY=;
+        s=default; t=1597918482;
+        bh=Vnlfd91f9jY6V0NUMDifoozT8NMnDbS+d6M8OKwcTcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Cy5HuF/Cxk6BG2V61MAiGuCxnqai1iMNuI7DzOYchM4XWWCU7LIH/QFXC1uRLmnk
-         +1OUCU5/cXtdQDQBQXjVGAvqCcmN6OU07JLCXMtzGFDS70qwmb4X17No3QWmzrBn1g
-         bhVqgeo6KRMq+YDS2CWDlpK4BfTwAg7+KyxG/kh8=
+        b=RyVHFbs1Cc55RPjuRT4OkkSuol2glquX/E21C1DQwS0L5nOFAJJMk7jS5KoMWOQDP
+         MA/o3vmfL2lEl4IewunEhnKxl2EolpnK9lmnexPaLx0pEF9molgPfkETn7bfFJhoJz
+         TZUkJ9A3in+fbhYpRs9ok7+bkgGwtYpnnpV7gwhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 183/228] ext2: fix missing percpu_counter_inc
-Date:   Thu, 20 Aug 2020 11:22:38 +0200
-Message-Id: <20200820091616.719557334@linuxfoundation.org>
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 156/228] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
+Date:   Thu, 20 Aug 2020 11:22:11 +0200
+Message-Id: <20200820091615.374078967@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,46 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Hector Martin <marcan@marcan.st>
 
-commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
+commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
 
-sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
-increased. This patch fixes it.
+Further investigation of the L-R swap problem on the MS2109 reveals that
+the problem isn't that the channels are swapped, but rather that they
+are swapped and also out of phase by one sample. In other words, the
+issue is actually that the very first frame that comes from the hardware
+is a half-frame containing only the right channel, and after that
+everything becomes offset.
 
-Note that sbi->s_freeinodes_counter is only used in the algorithm that
-tries to find the group for new allocations, so this bug is not easily
-visible (the only visibility is that the group finding algorithm selects
-inoptinal result).
+So introduce a new quirk field to drop the very first 2 bytes that come
+in after the format is configured and a capture stream starts. This puts
+the channels in phase and in the correct order.
 
-Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/ialloc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/usb/card.h   |    1 +
+ sound/usb/pcm.c    |    6 ++++++
+ sound/usb/quirks.c |    3 +++
+ sound/usb/stream.c |    1 +
+ 4 files changed, 11 insertions(+)
 
---- a/fs/ext2/ialloc.c
-+++ b/fs/ext2/ialloc.c
-@@ -80,6 +80,7 @@ static void ext2_release_inode(struct su
- 	if (dir)
- 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
- 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
-+	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
- 	if (dir)
- 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
- 	mark_buffer_dirty(bh);
-@@ -531,7 +532,7 @@ got:
- 		goto fail;
- 	}
+--- a/sound/usb/card.h
++++ b/sound/usb/card.h
+@@ -126,6 +126,7 @@ struct snd_usb_substream {
+ 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
+ 	unsigned int fmt_type;		/* USB audio format type (1-3) */
+ 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
++	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
  
--	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
-+	percpu_counter_dec(&sbi->s_freeinodes_counter);
- 	if (S_ISDIR(mode))
- 		percpu_counter_inc(&sbi->s_dirs_counter);
+ 	unsigned int running: 1;	/* running status */
+ 
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -1313,6 +1313,12 @@ static void retire_capture_urb(struct sn
+ 			// continue;
+ 		}
+ 		bytes = urb->iso_frame_desc[i].actual_length;
++		if (subs->stream_offset_adj > 0) {
++			unsigned int adj = min(subs->stream_offset_adj, bytes);
++			cp += adj;
++			bytes -= adj;
++			subs->stream_offset_adj -= adj;
++		}
+ 		frames = bytes / stride;
+ 		if (!subs->txfr_quirk)
+ 			bytes = frames * stride;
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1120,6 +1120,9 @@ void snd_usb_set_format_quirk(struct snd
+ 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
+ 		set_format_emu_quirk(subs, fmt);
+ 		break;
++	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
++		subs->stream_offset_adj = 2;
++		break;
+ 	}
+ }
+ 
+--- a/sound/usb/stream.c
++++ b/sound/usb/stream.c
+@@ -95,6 +95,7 @@ static void snd_usb_init_substream(struc
+ 	subs->tx_length_quirk = as->chip->tx_length_quirk;
+ 	subs->speed = snd_usb_get_speed(subs->dev);
+ 	subs->pkt_offset_adj = 0;
++	subs->stream_offset_adj = 0;
+ 
+ 	snd_usb_set_pcm_ops(as->pcm, stream);
  
 
 
