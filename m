@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9153BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F8CF208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902FF20885
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:27:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922829;
-	bh=9iDkBjyNg4vVbg1GlSkhhNS5EoBVzfow7YBSe+QL4us=;
+	s=default; t=1597922843;
+	bh=Gtl2GUwVxg3GvtMHD2tUtCb4j/1WNS8hc/PhUv3xZy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kOeo7k90wmXkW4HdiKBGrLgDn/DfUz8GnG9Q1/Egb8pK6omeEmNuEJVNh8PNIa/lo
-	 U2GtSDE8YNbvObJZpcBWI9ZkN+vmD6oz6XNqfvQjib3kHKqIY6eQGQt6SZKzvRmIit
-	 BFGyF1tB8SHZhq7KyeVCWTeNukhZCt4uykuY6HzA=
+	b=kmNVkcRlXpaqGFXJ6qELJr0ZusdWUYPRoUSaxpnKOR9sC8L2rTjrfIfHav2a3IX0f
+	 sj5XRgxo/G1aKZtweFPwf1jr6dSJgjMREE6nxSxDj8aAa/IXzusAnN8U5ApD8ecPwE
+	 t+Z8K97U3dsWYB57+4SEA6FPLhKDXXbIevM0wu98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgHTL1G (ORCPT
+        id S1730146AbgHTL1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:27:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34788 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:27:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730657AbgHTKGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:13 -0400
+        id S1730653AbgHTKGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18FFF20855;
-        Thu, 20 Aug 2020 10:06:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D88FD2078D;
+        Thu, 20 Aug 2020 10:06:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917969;
-        bh=9iDkBjyNg4vVbg1GlSkhhNS5EoBVzfow7YBSe+QL4us=;
+        s=default; t=1597917964;
+        bh=Gtl2GUwVxg3GvtMHD2tUtCb4j/1WNS8hc/PhUv3xZy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SdH2F5Tvh2EJxFYRaoJ7GLXBvlFKzrvbblrvv/hF1rzraWfz7cYKgNUPXt5bHzRqm
-         zdg0MQdXmA+QGpwAsnLhnx0eQOi71e2N61zKaYgr8EBr5QGEN3JgM3kLaWMtb6o3tH
-         lRGczfRGxd1nW8f5h0tDIB8wYxRyKX2G3L6MwHBM=
+        b=yQ4QRAYWggwdLBuzX7BXy+hg/fdjHrtuqr5flXL0S5KVRjDRwHwGZoy2T2jfXpNmc
+         vibs9NloCYlW/MkpgypCWtig2ug9q6oEFtDln4WqgKzhTsnrzzS0tKNGjj03BB6Tji
+         MxQ/bAF/+QN6S3AMxvZQkI1lB2G3/tQKCZPQhUEc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Wang Hai <wanghai38@huawei.com>, Timur Tabi <timur@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 196/212] gpu: ipu-v3: image-convert: Combine rotate/no-rotate irq handlers
-Date:   Thu, 20 Aug 2020 11:22:49 +0200
-Message-Id: <20200820091612.258939813@linuxfoundation.org>
+Subject: [PATCH 4.9 204/212] net: qcom/emac: add missed clk_disable_unprepare in error path of emac_clks_phase1_init
+Date:   Thu, 20 Aug 2020 11:22:57 +0200
+Message-Id: <20200820091612.651354827@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,116 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
+[ Upstream commit 50caa777a3a24d7027748e96265728ce748b41ef ]
 
-Combine the rotate_irq() and norotate_irq() handlers into a single
-eof_irq() handler.
+Fix the missing clk_disable_unprepare() before return
+from emac_clks_phase1_init() in the error handling case.
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Fixes: b9b17debc69d ("net: emac: emac gigabit ethernet controller driver")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Timur Tabi <timur@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 58 +++++++++-----------------
- 1 file changed, 20 insertions(+), 38 deletions(-)
+ drivers/net/ethernet/qualcomm/emac/emac.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 50b73f3876fb7..098b86eb26d74 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -987,9 +987,10 @@ static irqreturn_t do_irq(struct ipu_image_convert_run *run)
- 	return IRQ_WAKE_THREAD;
+diff --git a/drivers/net/ethernet/qualcomm/emac/emac.c b/drivers/net/ethernet/qualcomm/emac/emac.c
+index 57b35aeac51a0..adc088033c15d 100644
+--- a/drivers/net/ethernet/qualcomm/emac/emac.c
++++ b/drivers/net/ethernet/qualcomm/emac/emac.c
+@@ -477,13 +477,24 @@ static int emac_clks_phase1_init(struct platform_device *pdev,
+ 
+ 	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_CFG_AHB]);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_axi;
+ 
+ 	ret = clk_set_rate(adpt->clk[EMAC_CLK_HIGH_SPEED], 19200000);
+ 	if (ret)
+-		return ret;
++		goto disable_clk_cfg_ahb;
++
++	ret = clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	if (ret)
++		goto disable_clk_cfg_ahb;
+ 
+-	return clk_prepare_enable(adpt->clk[EMAC_CLK_HIGH_SPEED]);
++	return 0;
++
++disable_clk_cfg_ahb:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_CFG_AHB]);
++disable_clk_axi:
++	clk_disable_unprepare(adpt->clk[EMAC_CLK_AXI]);
++
++	return ret;
  }
  
--static irqreturn_t norotate_irq(int irq, void *data)
-+static irqreturn_t eof_irq(int irq, void *data)
- {
- 	struct ipu_image_convert_chan *chan = data;
-+	struct ipu_image_convert_priv *priv = chan->priv;
- 	struct ipu_image_convert_ctx *ctx;
- 	struct ipu_image_convert_run *run;
- 	unsigned long flags;
-@@ -1006,45 +1007,26 @@ static irqreturn_t norotate_irq(int irq, void *data)
- 
- 	ctx = run->ctx;
- 
--	if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this is a rotation operation, just ignore */
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
--	ret = do_irq(run);
--out:
--	spin_unlock_irqrestore(&chan->irqlock, flags);
--	return ret;
--}
--
--static irqreturn_t rotate_irq(int irq, void *data)
--{
--	struct ipu_image_convert_chan *chan = data;
--	struct ipu_image_convert_priv *priv = chan->priv;
--	struct ipu_image_convert_ctx *ctx;
--	struct ipu_image_convert_run *run;
--	unsigned long flags;
--	irqreturn_t ret;
--
--	spin_lock_irqsave(&chan->irqlock, flags);
--
--	/* get current run and its context */
--	run = chan->current_run;
--	if (!run) {
-+	if (irq == chan->out_eof_irq) {
-+		if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this is a rotation op, just ignore */
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else if (irq == chan->rot_out_eof_irq) {
-+		if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this was NOT a rotation op, shouldn't happen */
-+			dev_err(priv->ipu->dev,
-+				"Unexpected rotation interrupt\n");
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else {
-+		dev_err(priv->ipu->dev, "Received unknown irq %d\n", irq);
- 		ret = IRQ_NONE;
- 		goto out;
- 	}
- 
--	ctx = run->ctx;
--
--	if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this was NOT a rotation operation, shouldn't happen */
--		dev_err(priv->ipu->dev, "Unexpected rotation interrupt\n");
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
- 	ret = do_irq(run);
- out:
- 	spin_unlock_irqrestore(&chan->irqlock, flags);
-@@ -1137,7 +1119,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						  chan->out_chan,
- 						  IPU_IRQ_EOF);
- 
--	ret = request_threaded_irq(chan->out_eof_irq, norotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
-@@ -1150,7 +1132,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						     chan->rotation_out_chan,
- 						     IPU_IRQ_EOF);
- 
--	ret = request_threaded_irq(chan->rot_out_eof_irq, rotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->rot_out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
+ /* Enable clocks; needs emac_clks_phase1_init to be called before */
 -- 
 2.25.1
 
