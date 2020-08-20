@@ -5,54 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25629C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55647C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0212E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251AC20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925914;
-	bh=WBgfNVb4k44s9KC7OFjmYwafkNkP4GWt5fO3r7F+LYI=;
+	s=default; t=1597925917;
+	bh=nJMVz16Z//JCjia4/16HUl7e5sIkoC/e/9LkHub4gic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yNvqYy8BkrS5X+O0tXoNPzTV+D3r07wFFF4CjK0uM2/OrIpurAvbHuwKVGnlu8kzy
-	 HIHYhWciGE+V2pB1mpWGdt1KTPcm2hRWSQzhKK46H08SPfNkBWBuMw+DrbMzUK8+lR
-	 RqtgE6/tm5RQlYvlPWoZEfENbXNhOFBapVVRJKNU=
+	b=gnrOATMGJ61GGftvkQUU2dRFFKh0GFucNbQlR64U78sr2v6qXfc4Tdn/gk9jk7sNV
+	 u0ohj3s9/soYB3AQBMyqKOikMPifLutrcljfLda+2XnQNjXvKInxnHCZhCGuMixKef
+	 BQEhqVyhA91/0/eJR9aCbo/Hv570r1MX/SPBKtjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbgHTMSK (ORCPT
+        id S1729372AbgHTJ4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39984 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:56:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726925AbgHTJ4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:56:33 -0400
+        id S1730230AbgHTJz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:55:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C38832067C;
-        Thu, 20 Aug 2020 09:56:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D8FD2078D;
+        Thu, 20 Aug 2020 09:55:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917393;
-        bh=WBgfNVb4k44s9KC7OFjmYwafkNkP4GWt5fO3r7F+LYI=;
+        s=default; t=1597917356;
+        bh=nJMVz16Z//JCjia4/16HUl7e5sIkoC/e/9LkHub4gic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dohGRD9tu4qYSUdsX/lHBQr3vkGpgRn/aSTQs+9BNJM2XZK7oPzGyiD1/593zN1d4
-         CpQTUfx56KapxdX/sK5C8mlXPKZqpVo8jgz/CBkdz5DjQM2JeAsPbFXR/l8kMIpQSK
-         VIW8UtJCqFqgczE1zo5uV7DJMl6BGIYtPrhmuqPk=
+        b=DKUahjyCM1bXgTWzuXKTuXhns3AiHZPD9XlQRPemFO9xQexHSN4UbHOigEsQ2LGwF
+         eQ28hUNob3m+QZjqnH3Clnh3vTSYr8h7dsfZvCjv4KsszpnxWV5ocIan1ydOBKnpg5
+         CUus+U9Ol2YCFdjtK0xfF27dk9QcAkY81hZxRe/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com,
-        Wang Hai <wanghai38@huawei.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 016/212] 9p/trans_fd: Fix concurrency del of req_list in p9_fd_cancelled/p9_read_work
-Date:   Thu, 20 Aug 2020 11:19:49 +0200
-Message-Id: <20200820091603.156368680@linuxfoundation.org>
+Subject: [PATCH 4.19 81/92] fs/ufs: avoid potential u32 multiplication overflow
+Date:   Thu, 20 Aug 2020 11:22:06 +0200
+Message-Id: <20200820091541.867416468@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,66 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 74d6a5d5662975aed7f25952f62efbb6f6dadd29 ]
+[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
 
-p9_read_work and p9_fd_cancelled may be called concurrently.
-In some cases, req->req_list may be deleted by both p9_read_work
-and p9_fd_cancelled.
+The 64 bit ino is being compared to the product of two u32 values,
+however, the multiplication is being performed using a 32 bit multiply so
+there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
+to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
+overflow.
 
-We can fix it by ignoring replies associated with a cancelled
-request and ignoring cancelled request if message has been received
-before lock.
-
-Link: http://lkml.kernel.org/r/20200612090833.36149-1-wanghai38@huawei.com
-Fixes: 60ff779c4abb ("9p: client: remove unused code and any reference to "cancelled" function")
-Cc: <stable@vger.kernel.org> # v3.12+
-Reported-by: syzbot+77a25acfa0382e06ab23@syzkaller.appspotmail.com
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+Fixes: f3e2a520f5fb ("ufs: NFS support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Evgeniy Dushistov <dushistov@mail.ru>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
+Addresses-Coverity: ("Unintentional integer overflow")
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/ufs/super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 91f71958c2e16..b0f47563f0bf3 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -377,6 +377,10 @@ static void p9_read_work(struct work_struct *work)
- 		if (m->req->status == REQ_STATUS_SENT) {
- 			list_del(&m->req->req_list);
- 			p9_client_cb(m->client, m->req, REQ_STATUS_RCVD);
-+		} else if (m->req->status == REQ_STATUS_FLSHD) {
-+			/* Ignore replies associated with a cancelled request. */
-+			p9_debug(P9_DEBUG_TRANS,
-+				 "Ignore replies associated with a cancelled request\n");
- 		} else {
- 			spin_unlock(&m->client->lock);
- 			p9_debug(P9_DEBUG_ERROR,
-@@ -717,11 +721,20 @@ static int p9_fd_cancelled(struct p9_client *client, struct p9_req_t *req)
- {
- 	p9_debug(P9_DEBUG_TRANS, "client %p req %p\n", client, req);
+diff --git a/fs/ufs/super.c b/fs/ufs/super.c
+index a4e07e910f1b4..6e59e45d7bfbd 100644
+--- a/fs/ufs/super.c
++++ b/fs/ufs/super.c
+@@ -100,7 +100,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
+ 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
+ 	struct inode *inode;
  
-+	spin_lock(&client->lock);
-+	/* Ignore cancelled request if message has been received
-+	 * before lock.
-+	 */
-+	if (req->status == REQ_STATUS_RCVD) {
-+		spin_unlock(&client->lock);
-+		return 0;
-+	}
-+
- 	/* we haven't received a response for oldreq,
- 	 * remove it from the list.
- 	 */
--	spin_lock(&client->lock);
- 	list_del(&req->req_list);
-+	req->status = REQ_STATUS_FLSHD;
- 	spin_unlock(&client->lock);
+-	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
++	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
+ 		return ERR_PTR(-ESTALE);
  
- 	return 0;
+ 	inode = ufs_iget(sb, ino);
 -- 
 2.25.1
 
