@@ -2,233 +2,127 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8649C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5060C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA0C20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF2B2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGh0Gy0B"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="etECKGb7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727070AbgHTJPN (ORCPT
+        id S1726664AbgHTJPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:15:13 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50179 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725823AbgHTJOX (ORCPT
+        Thu, 20 Aug 2020 05:15:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgHTJOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:14:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597914862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RKnLQhTu+aSzcK2uUxgPf7M4GOvsqYW4Ht9dOT+N7Rk=;
-        b=dGh0Gy0BI1SB4g9Xqzt3zLbMuug+akbb76kTyjkVpJ5k42XOz1BkJrk/ImB6ddIdfJt+/3
-        HG8DAd8VRGoaArnf0WhEKexQh875N/URG1bqL8HYeZ0TSK1YxSwUobLll8FYfI4yg8g4VT
-        4aU4YdDGM904SnzV87aobFhiFWH/S+Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-53-oCujtFq_PImT4NyE74UQAg-1; Thu, 20 Aug 2020 05:14:05 -0400
-X-MC-Unique: oCujtFq_PImT4NyE74UQAg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DE7C4425D5;
-        Thu, 20 Aug 2020 09:14:03 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.35.206.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B9C87E309;
-        Thu, 20 Aug 2020 09:14:00 +0000 (UTC)
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT)),
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        Ingo Molnar <mingo@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>
-Subject: [PATCH 8/8] KVM: nSVM: read only changed fields of the nested guest data area
-Date:   Thu, 20 Aug 2020 12:13:27 +0300
-Message-Id: <20200820091327.197807-9-mlevitsk@redhat.com>
-In-Reply-To: <20200820091327.197807-1-mlevitsk@redhat.com>
-References: <20200820091327.197807-1-mlevitsk@redhat.com>
+        Thu, 20 Aug 2020 05:14:19 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A00FC061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:14:19 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id f5so746679plr.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fteDDvG0lAwDUKEWhtTwY7pAZbLV3gpQe5mpBnV9oBQ=;
+        b=etECKGb7kbalwLBAoTrpPMX3ZW67xpLBEkM9fyGckTzOZQc9DC0gGPbOm/C35mHFUm
+         0SUiqk7LBNR7opllyTOPxqomZuk4ireVz+J8Ga3shwzH4euw0XT3cv65tWQwR+27OhjE
+         LtA3zSxIdezdqeHB0ICydm6cDZ3QF3utr7BKE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fteDDvG0lAwDUKEWhtTwY7pAZbLV3gpQe5mpBnV9oBQ=;
+        b=Gpz7dZXmS4j9Kd220NEG3IA28gFPpubVOOaf1k6s91HQW76Q4lYFF2bn68fZc7lUzR
+         waNOwTEZO6fqxK7Zzt3/JznJiFNQdAX3L+HjmPoRGuJ5mnWIgk+G4pYJTdIXifGaWkzF
+         qxQfOYsgbwlwNs6ATxC7acoPKyjRnwHJME6Kmi6JqjFg24+GacIMwyfJgc/yfRHWBNsU
+         iax1jCDfwZpMuEt7sC9ZkTcwEjKoB1tY23DP2zaij1HyRJ8IfnZbtkkbMjAtguCqn2NQ
+         j/215FDZtuF//kHldWVehb3nec7OQ7Lle+Aij1sNQBYagRfTTehZCI96iu3ucJgC08Ny
+         /Kqw==
+X-Gm-Message-State: AOAM530eq234S/ce+VgfU/sRBasbKJlAEUvcJYnf0MX0bYdnfVd6i8aS
+        6b3gITO3Lzg+QAZ221Irangfwg==
+X-Google-Smtp-Source: ABdhPJwipjFEnEYG5Qh0oqH5IY0sSRTeSp67cThk/5qNE520m8larxCy1jbleF0kZrX6bBQPlpO9VQ==
+X-Received: by 2002:a17:90a:7488:: with SMTP id p8mr1884427pjk.158.1597914858908;
+        Thu, 20 Aug 2020 02:14:18 -0700 (PDT)
+Received: from drinkcat2.tpe.corp.google.com ([2401:fa00:1:b:7220:84ff:fe09:41dc])
+        by smtp.gmail.com with ESMTPSA id o15sm1954448pfu.167.2020.08.20.02.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 02:14:17 -0700 (PDT)
+From:   Nicolas Boichat <drinkcat@chromium.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Nicolas Boichat <drinkcat@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Todor Tomov <todor.too@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: [PATCH v4 1/3, RESEND] media: camss: vfe: Use trace_printk for debugging only
+Date:   Thu, 20 Aug 2020 17:14:10 +0800
+Message-Id: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+X-Mailer: git-send-email 2.28.0.220.ged08abb693-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows us to only read fields that are marked as dirty by the nested
-guest on vmentry.
+trace_printk should not be used in production code. Since
+tracing interrupts is presumably latency sensitive, pr_dbg is
+not appropriate, so guard the call with a preprocessor symbol
+that can be defined for debugging purpose.
 
-I doubt that this has any perf impact but this way it is a bit closer
-to real hardware.
-
-Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 ---
- arch/x86/kvm/svm/nested.c | 58 +++++++++++++++++++++++++--------------
- arch/x86/kvm/svm/svm.c    |  2 +-
- arch/x86/kvm/svm/svm.h    |  5 ++++
- 3 files changed, 44 insertions(+), 21 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index acc4b26fcfcc..f3eef48caee6 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -266,40 +266,57 @@ static void load_nested_vmcb_control(struct vcpu_svm *svm,
- }
+(resending this patch as part of the whole series, since we need a new
+patch 3/3 now).
+
+ drivers/media/platform/qcom/camss/camss-vfe-4-1.c | 2 ++
+ drivers/media/platform/qcom/camss/camss-vfe-4-7.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
+index 174a36be6f5d866..0c57171fae4f9e9 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
++++ b/drivers/media/platform/qcom/camss/camss-vfe-4-1.c
+@@ -936,8 +936,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
  
- static void load_nested_vmcb_save(struct vcpu_svm *svm,
--				  struct vmcb_save_area *save)
-+				  struct vmcb_save_area *save,
-+				  u32 clean)
- {
- 	svm->nested.vmcb->save.rflags = save->rflags;
- 	svm->nested.vmcb->save.rax    = save->rax;
- 	svm->nested.vmcb->save.rsp    = save->rsp;
- 	svm->nested.vmcb->save.rip    = save->rip;
+ 	vfe->ops->isr_read(vfe, &value0, &value1);
  
--	svm->nested.vmcb->save.es  = save->es;
--	svm->nested.vmcb->save.cs  = save->cs;
--	svm->nested.vmcb->save.ss  = save->ss;
--	svm->nested.vmcb->save.ds  = save->ds;
--	svm->nested.vmcb->save.cpl = save->cpl;
-+	if (is_dirty(clean, VMCB_SEG)) {
-+		svm->nested.vmcb->save.es  = save->es;
-+		svm->nested.vmcb->save.cs  = save->cs;
-+		svm->nested.vmcb->save.ss  = save->ss;
-+		svm->nested.vmcb->save.ds  = save->ds;
-+		svm->nested.vmcb->save.cpl = save->cpl;
-+	}
++#ifdef CAMSS_VFE_TRACE_IRQ
+ 	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
+ 		     value0, value1);
++#endif
  
--	svm->nested.vmcb->save.gdtr = save->gdtr;
--	svm->nested.vmcb->save.idtr = save->idtr;
-+	if (is_dirty(clean, VMCB_DT)) {
-+		svm->nested.vmcb->save.gdtr = save->gdtr;
-+		svm->nested.vmcb->save.idtr = save->idtr;
-+	}
+ 	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
+ 		vfe->isr_ops.reset_ack(vfe);
+diff --git a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
+index 0dca8bf9281e774..307675925e5c779 100644
+--- a/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
++++ b/drivers/media/platform/qcom/camss/camss-vfe-4-7.c
+@@ -1058,8 +1058,10 @@ static irqreturn_t vfe_isr(int irq, void *dev)
  
--	svm->nested.vmcb->save.efer = save->efer;
--	svm->nested.vmcb->save.cr3 = save->cr3;
--	svm->nested.vmcb->save.cr4 = save->cr4;
--	svm->nested.vmcb->save.cr0 = save->cr0;
-+	if (is_dirty(clean, VMCB_CR)) {
-+		svm->nested.vmcb->save.efer = save->efer;
-+		svm->nested.vmcb->save.cr3 = save->cr3;
-+		svm->nested.vmcb->save.cr4 = save->cr4;
-+		svm->nested.vmcb->save.cr0 = save->cr0;
-+	}
+ 	vfe->ops->isr_read(vfe, &value0, &value1);
  
--	svm->nested.vmcb->save.cr2 = save->cr2;
-+	if (is_dirty(clean, VMCB_CR2))
-+		svm->nested.vmcb->save.cr2 = save->cr2;
++#ifdef CAMSS_VFE_TRACE_IRQ
+ 	trace_printk("VFE: status0 = 0x%08x, status1 = 0x%08x\n",
+ 		     value0, value1);
++#endif
  
--	svm->nested.vmcb->save.dr7 = save->dr7;
--	svm->nested.vmcb->save.dr6 = save->dr6;
-+	if (is_dirty(clean, VMCB_DR)) {
-+		svm->nested.vmcb->save.dr7 = save->dr7;
-+		svm->nested.vmcb->save.dr6 = save->dr6;
-+	}
- 
--	svm->nested.vmcb->save.g_pat = save->g_pat;
-+	if ((clean & VMCB_NPT) == 0)
-+		svm->nested.vmcb->save.g_pat = save->g_pat;
- }
- 
- void load_nested_vmcb(struct vcpu_svm *svm, struct vmcb *nested_vmcb, u64 vmcb_gpa)
- {
--	svm->nested.vmcb_gpa = vmcb_gpa;
-+	u32 clean = nested_vmcb->control.clean;
-+
-+	if (svm->nested.vmcb_gpa != vmcb_gpa) {
-+		svm->nested.vmcb_gpa = vmcb_gpa;
-+		clean = 0;
-+	}
-+
- 	load_nested_vmcb_control(svm, &nested_vmcb->control);
--	load_nested_vmcb_save(svm, &nested_vmcb->save);
-+	load_nested_vmcb_save(svm, &nested_vmcb->save, clean);
- }
- 
- /*
-@@ -619,7 +636,6 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 
- 	/* Exit Guest-Mode */
- 	leave_guest_mode(&svm->vcpu);
--	svm->nested.vmcb_gpa = 0;
- 	WARN_ON_ONCE(svm->nested.nested_run_pending);
- 
- 	/* in case we halted in L2 */
-@@ -676,7 +692,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
- 	 * Note: since CPU might have changed the values we can't
- 	 * trust clean bits
- 	 */
--	load_nested_vmcb_save(svm, &nested_vmcb->save);
-+	load_nested_vmcb_save(svm, &nested_vmcb->save, 0);
- 
- 	/* Restore the original control entries */
- 	copy_vmcb_control_area(&vmcb->control, &hsave->control);
-@@ -759,6 +775,7 @@ int svm_allocate_nested(struct vcpu_svm *svm)
- 		goto free_page3;
- 
- 	svm->nested.vmcb = page_address(vmcb_page);
-+	svm->nested.vmcb_gpa = U64_MAX;
- 	clear_page(svm->nested.vmcb);
- 
- 	svm->nested.initialized = true;
-@@ -785,6 +802,7 @@ void svm_free_nested(struct vcpu_svm *svm)
- 
- 	__free_page(virt_to_page(svm->nested.vmcb));
- 	svm->nested.vmcb = NULL;
-+	svm->nested.vmcb_gpa = U64_MAX;
- 
- 	svm->nested.initialized = false;
- }
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 06668e0f93e7..f0bb7f622dca 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -3924,7 +3924,7 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
- 		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map) == -EINVAL)
- 			return 1;
- 
--		load_nested_vmcb(svm, map.hva, vmcb);
-+		load_nested_vmcb(svm, map.hva, vmcb_gpa);
- 		ret = enter_svm_guest_mode(svm);
- 
- 		kvm_vcpu_unmap(&svm->vcpu, &map, true);
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 80231ef8de6f..4a383c519fdf 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -204,6 +204,11 @@ static inline void vmcb_mark_dirty(struct vmcb *vmcb, int bit)
- 	vmcb->control.clean &= ~(1 << bit);
- }
- 
-+static inline bool is_dirty(u32 clean, int bit)
-+{
-+	return (clean & (1 << bit)) == 0;
-+}
-+
- static inline struct vcpu_svm *to_svm(struct kvm_vcpu *vcpu)
- {
- 	return container_of(vcpu, struct vcpu_svm, vcpu);
+ 	if (value0 & VFE_0_IRQ_STATUS_0_RESET_ACK)
+ 		vfe->isr_ops.reset_ack(vfe);
 -- 
-2.26.2
+2.28.0.220.ged08abb693-goog
 
