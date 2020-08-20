@@ -2,65 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3780C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA6AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF61622BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA0020658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930022;
-	bh=jcRA3/dvIFzvzWTh9Top8KkbsVp7IEUSwTnsevvfODc=;
+	s=default; t=1597930035;
+	bh=G9O5B4bLDz3YgKLmYiE6G55P498/DsEZrzkcwiX6g2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=StoytKdqLOInxINa6/SJqHXEmKsjXsUcRJukFb3gVR3l9rdH7P4FVyxJ5wASZbB1U
-	 Ol0d6FWUf4E97q3TcHVll3zNVuZuNFhKFKN5XubvIb/qAQxH/rEtR6UVbLC9ck/X0M
-	 UOn2Osrb6NYPYxOM2cxIsbfvxmywpHVMsQy1KsCg=
+	b=wUWjRpIqexPIw0/l3DD6tmlwOcxg3l0VOpAyGQwZCza7zhTAMVbGRAjj190oK0+Gx
+	 V8QtJx0dlAz1ITcD2Hjcey0D75IoS2S1hGqMOvsS7asJB/5mUYFEhHhF2OIfVXzcyR
+	 dMbBNTZUZq70yXL9iIrC67FDTkurApsSJR3O4T7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgHTNZ3 (ORCPT
+        id S1728559AbgHTNZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:25:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728422AbgHTJeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:34:10 -0400
+        id S1728301AbgHTJeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6FA621775;
-        Thu, 20 Aug 2020 09:33:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2B9C20724;
+        Thu, 20 Aug 2020 09:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916022;
-        bh=jcRA3/dvIFzvzWTh9Top8KkbsVp7IEUSwTnsevvfODc=;
+        s=default; t=1597916057;
+        bh=G9O5B4bLDz3YgKLmYiE6G55P498/DsEZrzkcwiX6g2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=znFHq7HeiZsM/NTEtjo6Jed3iixH1yuoWxQ5LhyAVg61AMFth1Etjb4A9aCQUd3xR
-         2OLSGng7efJh0tIADNbi54k2tv/5QbLeANqbT/s1RIsbliOSbYY/ivMqL4rLxO/g9w
-         xTtKgd2pKcxcBFbLQtaSDzB5CK0InKpa2yyr4aWA=
+        b=VL2iHv3n4M9ta9iUQIUeiARi3PDU3+MkGFi2yuGvISOn/cL/NELl5V85J4ApWMTTb
+         F9gHl+nO8I5X7p8i63wD5XlwtboSRadPjTD5Asvk5Y7+nA0q3w4WZ0PvWiun6J69nK
+         qdySxZg1WZQa5D6f85aHZhL98hayIXjWZE40gJDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 216/232] tools build feature: Quote CC and CXX for their arguments
-Date:   Thu, 20 Aug 2020 11:21:07 +0200
-Message-Id: <20200820091623.258543906@linuxfoundation.org>
+        stable@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
+        Xin Tan <tanxin.ctf@gmail.com>,
+        Xin Xiong <xiongx18@fudan.edu.cn>,
+        Lyude Paul <lyude@redhat.com>
+Subject: [PATCH 5.8 229/232] drm: fix drm_dp_mst_port refcount leaks in drm_dp_mst_allocate_vcpi
+Date:   Thu, 20 Aug 2020 11:21:20 +0200
+Message-Id: <20200820091623.866683973@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -73,90 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Díaz <daniel.diaz@linaro.org>
+From: Xin Xiong <xiongx18@fudan.edu.cn>
 
-[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
+commit a34a0a632dd991a371fec56431d73279f9c54029 upstream.
 
-When using a cross-compilation environment, such as OpenEmbedded,
-the CC an CXX variables are set to something more than just a
-command: there are arguments (such as --sysroot) that need to be
-passed on to the compiler so that the right set of headers and
-libraries are used.
+drm_dp_mst_allocate_vcpi() invokes
+drm_dp_mst_topology_get_port_validated(), which increases the refcount
+of the "port".
 
-For the particular case that our systems detected, CC is set to
-the following:
+These reference counting issues take place in two exception handling
+paths separately. Either when “slots” is less than 0 or when
+drm_dp_init_vcpi() returns a negative value, the function forgets to
+reduce the refcnt increased drm_dp_mst_topology_get_port_validated(),
+which results in a refcount leak.
 
-  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
+Fix these issues by pulling up the error handling when "slots" is less
+than 0, and calling drm_dp_mst_topology_put_port() before termination
+when drm_dp_init_vcpi() returns a negative value.
 
-Without quotes, detection is as follows:
+Fixes: 1e797f556c61 ("drm/dp: Split drm_dp_mst_allocate_vcpi")
+Cc: <stable@vger.kernel.org> # v4.12+
+Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
+Signed-off-by: Xin Xiong <xiongx18@fudan.edu.cn>
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200719154545.GA41231@xin-virtual-machine
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  Auto-detecting system features:
-  ...                         dwarf: [ OFF ]
-  ...            dwarf_getlocations: [ OFF ]
-  ...                         glibc: [ OFF ]
-  ...                          gtk2: [ OFF ]
-  ...                        libbfd: [ OFF ]
-  ...                        libcap: [ OFF ]
-  ...                        libelf: [ OFF ]
-  ...                       libnuma: [ OFF ]
-  ...        numa_num_possible_cpus: [ OFF ]
-  ...                       libperl: [ OFF ]
-  ...                     libpython: [ OFF ]
-  ...                     libcrypto: [ OFF ]
-  ...                     libunwind: [ OFF ]
-  ...            libdw-dwarf-unwind: [ OFF ]
-  ...                          zlib: [ OFF ]
-  ...                          lzma: [ OFF ]
-  ...                     get_cpuid: [ OFF ]
-  ...                           bpf: [ OFF ]
-  ...                        libaio: [ OFF ]
-  ...                       libzstd: [ OFF ]
-  ...        disassembler-four-args: [ OFF ]
-
-  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-  Makefile.perf:230: recipe for target 'sub-make' failed
-  make[1]: *** [sub-make] Error 2
-  Makefile:69: recipe for target 'all' failed
-  make: *** [all] Error 2
-
-With CC and CXX quoted, some of those features are now detected.
-
-Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
-Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
-Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/build/Makefile.feature | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 774f0b0ca28ac..e7818b44b48ee 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -8,7 +8,7 @@ endif
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -4262,11 +4262,11 @@ bool drm_dp_mst_allocate_vcpi(struct drm
+ {
+ 	int ret;
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+-	port = drm_dp_mst_topology_get_port_validated(mgr, port);
+-	if (!port)
++	if (slots < 0)
+ 		return false;
  
- feature_set = $(eval $(feature_set_code))
--- 
-2.25.1
-
+-	if (slots < 0)
++	port = drm_dp_mst_topology_get_port_validated(mgr, port);
++	if (!port)
+ 		return false;
+ 
+ 	if (port->vcpi.vcpi > 0) {
+@@ -4282,6 +4282,7 @@ bool drm_dp_mst_allocate_vcpi(struct drm
+ 	if (ret) {
+ 		DRM_DEBUG_KMS("failed to init vcpi slots=%d max=63 ret=%d\n",
+ 			      DIV_ROUND_UP(pbn, mgr->pbn_div), ret);
++		drm_dp_mst_topology_put_port(port);
+ 		goto out;
+ 	}
+ 	DRM_DEBUG_KMS("initing vcpi for pbn=%d slots=%d\n",
 
 
