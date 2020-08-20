@@ -2,121 +2,149 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E9CC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 628A4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE6D622BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929066;
-	bh=CM46BmXPdDW6tBh7XRGOadz7jpwAdMOkde1efnHCtNw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMNYtyt5pHdTii2sx5hk7ltunX2cNyBVUuRhTx6dF6/NPTvo5cDewkGbuSTADmC1v
-	 a+w65X+E1YNtgK2dzDmmhqDq4E9eoCOoQAvi99Y39CGYZzSxNK9jMeutFT2LOxnZsI
-	 rqXfiVZUv0u4qcBYtaS31nnzS+eqZ7GHh4srxf+I=
+	by mail.kernel.org (Postfix) with ESMTP id 3807F22CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729561AbgHTNK6 (ORCPT
+        id S1728499AbgHTNLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:10:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbgHTJhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778C72075E;
-        Thu, 20 Aug 2020 09:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916243;
-        bh=CM46BmXPdDW6tBh7XRGOadz7jpwAdMOkde1efnHCtNw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TXI3QfVFgRKMYEP0RGaXoHXGYudD8hkpVu+j5HQxJxIoWgK8HYV9SNUW0ECobG9bF
-         4sRXvW+kT6pQX967Ubtna2eCA/8TipF0F2HyJq7X/jWH9GJRprHmog2s7Yf5ewl1Tr
-         mUBSJ8jX89lwnxIzsnLc5HYgoZfihlH1AtK/oOj8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 031/204] btrfs: only search for left_info if there is no right_info in try_merge_free_space
-Date:   Thu, 20 Aug 2020 11:18:48 +0200
-Message-Id: <20200820091607.813264267@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:11:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:9795 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727084AbgHTNLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 09:11:06 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id DE87FE644D56D59FBCBC;
+        Thu, 20 Aug 2020 21:10:58 +0800 (CST)
+Received: from DESKTOP-8N3QUD5.china.huawei.com (10.67.102.173) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 20 Aug 2020 21:10:49 +0800
+From:   Guohua Zhong <zhongguohua1@huawei.com>
+To:     <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <benh@kernel.crashing.org>, <gregkh@linuxfoundation.org>
+CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
+        <stable@vger.kernel.org>, <nixiaoming@huawei.com>,
+        <wangle6@huawei.com>
+Subject: [PATCH] powerpc: Fix a bug in __div64_32 if divisor is zero
+Date:   Thu, 20 Aug 2020 21:10:49 +0800
+Message-ID: <20200820131049.42940-1-zhongguohua1@huawei.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.102.173]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+When cat /proc/pid/stat, do_task_stat will call into cputime_adjust,
+which call stack is like this:
 
-commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
+[17179954.674326]BookE Watchdog detected hard LOCKUP on cpu 0
+[17179954.674331]dCPU: 0 PID: 1262 Comm: TICK Tainted: P        W  O    4.4.176 #1
+[17179954.674339]dtask: dc9d7040 task.stack: d3cb4000
+[17179954.674344]NIP: c001b1a8 LR: c006a7ac CTR: 00000000
+[17179954.674349]REGS: e6fe1f10 TRAP: 3202   Tainted: P        W  O     (4.4.176)
+[17179954.674355]MSR: 00021002 <CE,ME>  CR: 28002224  XER: 00000000
+[17179954.674364]
+GPR00: 00000016 d3cb5cb0 dc9d7040 d3cb5cc0 00000000 0000025d ffe15b24 ffffffff
+GPR08: de86aead 00000000 000003ff ffffffff 28002222 0084d1c0 00000000 ffffffff
+GPR16: b5929ca0 b4bb7a48 c0863c08 0000048d 00000062 00000062 00000000 0000000f
+GPR24: 00000000 d3cb5d08 d3cb5d60 d3cb5d64 00029002 d3e9c214 fffff30e d3e9c20c
+[17179954.674410]NIP [c001b1a8] __div64_32+0x60/0xa0
+[17179954.674422]LR [c006a7ac] cputime_adjust+0x124/0x138
+[17179954.674434]Call Trace:
+[17179961.832693]Call Trace:
+[17179961.832695][d3cb5cb0] [c006a6dc] cputime_adjust+0x54/0x138 (unreliable)
+[17179961.832705][d3cb5cf0] [c006a818] task_cputime_adjusted+0x58/0x80
+[17179961.832713][d3cb5d20] [c01dab44] do_task_stat+0x298/0x870
+[17179961.832720][d3cb5de0] [c01d4948] proc_single_show+0x60/0xa4
+[17179961.832728][d3cb5e10] [c01963d8] seq_read+0x2d8/0x52c
+[17179961.832736][d3cb5e80] [c01702fc] __vfs_read+0x40/0x114
+[17179961.832744][d3cb5ef0] [c0170b1c] vfs_read+0x9c/0x10c
+[17179961.832751][d3cb5f10] [c0171440] SyS_read+0x68/0xc4
+[17179961.832759][d3cb5f40] [c0010a40] ret_from_syscall+0x0/0x3c
 
-In try_to_merge_free_space we attempt to find entries to the left and
-right of the entry we are adding to see if they can be merged.  We
-search for an entry past our current info (saved into right_info), and
-then if right_info exists and it has a rb_prev() we save the rb_prev()
-into left_info.
+do_task_stat->task_cputime_adjusted->cputime_adjust->scale_stime->div_u64
+->div_u64_rem->do_div->__div64_32
 
-However there's a slight problem in the case that we have a right_info,
-but no entry previous to that entry.  At that point we will search for
-an entry just before the info we're attempting to insert.  This will
-simply find right_info again, and assign it to left_info, making them
-both the same pointer.
+In some corner case, stime + utime = 0 if overflow. Even in v5.8.2  kernel
+the cputime has changed from unsigned long to u64 data type. About 200
+days, the lowwer 32 bit will be 0x00000000. Because divisor for __div64_32
+is unsigned long data type,which is 32 bit for powepc 32, the bug still
+exists.
 
-Now if right_info _can_ be merged with the range we're inserting, we'll
-add it to the info and free right_info.  However further down we'll
-access left_info, which was right_info, and thus get a use-after-free.
+So it is also a bug in the cputime_adjust which does not check if
+stime + utime = 0
 
-Fix this by only searching for the left entry if we don't find a right
-entry at all.
+time = scale_stime((__force u64)stime, (__force u64)rtime,
+                (__force u64)(stime + utime));
 
-The CVE referenced had a specially crafted file system that could
-trigger this use-after-free. However with the tree checker improvements
-we no longer trigger the conditions for the UAF.  But the original
-conditions still apply, hence this fix.
+The commit 3dc167ba5729 ("sched/cputime: Improve cputime_adjust()") in
+mainline kernel may has fixed this case. But it is also better to check
+if divisor is 0 in __div64_32 for other situation.
 
-Reference: CVE-2019-19448
-Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Guohua Zhong <zhongguohua1@huawei.com>
+Fixes:14cf11af6cf6 "( powerpc: Merge enough to start building in arch/powerpc.)"
+Fixes:94b212c29f68 "( powerpc: Move ppc64 boot wrapper code over to arch/powerpc)"
+Cc: stable@vger.kernel.org # v2.6.15+
 ---
- fs/btrfs/free-space-cache.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/div64.S | 4 ++++
+ arch/powerpc/lib/div64.S  | 4 ++++
+ 2 files changed, 8 insertions(+)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2286,7 +2286,7 @@ out:
- static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
- 			  struct btrfs_free_space *info, bool update_stat)
- {
--	struct btrfs_free_space *left_info;
-+	struct btrfs_free_space *left_info = NULL;
- 	struct btrfs_free_space *right_info;
- 	bool merged = false;
- 	u64 offset = info->offset;
-@@ -2302,7 +2302,7 @@ static bool try_merge_free_space(struct
- 	if (right_info && rb_prev(&right_info->offset_index))
- 		left_info = rb_entry(rb_prev(&right_info->offset_index),
- 				     struct btrfs_free_space, offset_index);
--	else
-+	else if (!right_info)
- 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
+diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
+index 4354928ed62e..39a25b9712d1 100644
+--- a/arch/powerpc/boot/div64.S
++++ b/arch/powerpc/boot/div64.S
+@@ -13,6 +13,9 @@
  
- 	/* See try_merge_free_space() comment. */
+ 	.globl __div64_32
+ __div64_32:
++	li	r9,0
++	cmplw	r4,r9	# check if divisor r4 is zero
++	beq	5f			# jump to label 5 if r4(divisor) is zero
+ 	lwz	r5,0(r3)	# get the dividend into r5/r6
+ 	lwz	r6,4(r3)
+ 	cmplw	r5,r4
+@@ -52,6 +55,7 @@ __div64_32:
+ 4:	stw	r7,0(r3)	# return the quotient in *r3
+ 	stw	r8,4(r3)
+ 	mr	r3,r6		# return the remainder in r3
++5:					# return if divisor r4 is zero
+ 	blr
+ 
+ /*
+diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+index 3d5426e7dcc4..1cc9bcabf678 100644
+--- a/arch/powerpc/lib/div64.S
++++ b/arch/powerpc/lib/div64.S
+@@ -13,6 +13,9 @@
+ #include <asm/processor.h>
+ 
+ _GLOBAL(__div64_32)
++	li	r9,0
++	cmplw	r4,r9	# check if divisor r4 is zero
++	beq	5f			# jump to label 5 if r4(divisor) is zero
+ 	lwz	r5,0(r3)	# get the dividend into r5/r6
+ 	lwz	r6,4(r3)
+ 	cmplw	r5,r4
+@@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
+ 4:	stw	r7,0(r3)	# return the quotient in *r3
+ 	stw	r8,4(r3)
+ 	mr	r3,r6		# return the remainder in r3
++5:					# return if divisor r4 is zero
+ 	blr
+-- 
+2.12.3
 
 
