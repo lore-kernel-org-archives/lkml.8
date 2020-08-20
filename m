@@ -2,98 +2,88 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22C4C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AE7C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D5520738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="SlxKJFc7"
+	by mail.kernel.org (Postfix) with ESMTP id A0CCF20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:32:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919520;
+	bh=Gg+kEkswDRxTKOBGrIllN4zRgEO19H9gT8252jAy1aY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TNgSBZGOYDs5WW1ohS3bpJc6h5WBW0bhe6i15af69dcREulNjoAOPClBJkMUIJ1tD
+	 zRr126x/zURGTm7JbZN3iiyPoRs6QJmld7uOI58piikhwD+5Z5R0SuK4vai8OK4BAB
+	 BiqM95UJgLtEqPLffyKKNI4JDCsPjv44u0l6pgug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729134AbgHTKbv (ORCPT
+        id S1729404AbgHTKUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:31:51 -0400
-Received: from relayfre-01.paragon-software.com ([176.12.100.13]:33322 "EHLO
-        relayfre-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731471AbgHTKUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:32 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relayfre-01.paragon-software.com (Postfix) with ESMTPS id A05DE434;
-        Thu, 20 Aug 2020 13:20:26 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1597918826;
-        bh=zUeZ9txBd8CUV16UFvP7cKQBctMZ9i7FqExpSVprv0U=;
-        h=From:To:Subject:Date:References:In-Reply-To;
-        b=SlxKJFc7RTxAJr3+1nq6HBKiPgCtt/0/RImqgQN6Le5bCBF0FPkXlxp1TG8n8z650
-         HFpalwrq/efe9FT2/UBLsX8yHGLwhbtT9VVpw4imSF++7QLwaI9H92D4WJK1GnnWoD
-         KgGvh1DFigsWF0QGM5kPgxhD8O8/3UPeUKstvC+w=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Thu, 20 Aug 2020 13:20:26 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Thu, 20 Aug 2020 13:20:26 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     =?utf-8?B?QXVyw6lsaWVuIEFwdGVs?= <aaptel@suse.com>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
- Software.
-Thread-Topic: [PATCH] fs: NTFS read-write driver GPL implementation by Paragon
- Software.
-Thread-Index: AdZyNcmjSkpkGje7R9K6YobJrVDyZ///6wOA//ag0SA=
-Date:   Thu, 20 Aug 2020 10:20:26 +0000
-Message-ID: <7538540ab82e4b398a0203564a1f1b23@paragon-software.com>
-References: <2911ac5cd20b46e397be506268718d74@paragon-software.com>
- <87mu2x48wa.fsf@suse.com>
-In-Reply-To: <87mu2x48wa.fsf@suse.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 20 Aug 2020 06:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731348AbgHTKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36916206DA;
+        Thu, 20 Aug 2020 10:20:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918812;
+        bh=Gg+kEkswDRxTKOBGrIllN4zRgEO19H9gT8252jAy1aY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VRIQW/5wfyGfyi3Jg4qa9gKm1186ftY4RGGBqHFop82xp+WzzRcWgIQGR8CG8PVMw
+         nJ9SJrz456m23LxVy0o5B/3b4hO3aaPEeA5PE8QhSQ3GWy9bhOzb3zZVJmdJk7fYV7
+         jp/fotQS9R5sHPOkt6L2eOJTjarE+dTgIO4cJvH0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Peilin Ye <yepeilin.cs@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.4 036/149] Bluetooth: Prevent out-of-bounds read in hci_inquiry_result_evt()
+Date:   Thu, 20 Aug 2020 11:21:53 +0200
+Message-Id: <20200820092127.482844716@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogQXVyw6lsaWVuIEFwdGVsIDxhYXB0ZWxAc3VzZS5jb20+DQpTZW50OiBGcmlkYXksIEF1
-Z3VzdCAxNCwgMjAyMCA1OjA5IFBNDQo+IA0KPiBIaSBLb25zdGFudGluLA0KPiANCj4gVGhhdCdz
-IGNvb2wgOikgQXMgTmlrb2xheSBzYWlkIGl0IG5lZWRzIGEgbGl0dGxlIGNoYW5nZSB0byB0aGUg
-bWFrZWZpbGVzDQo+IHRvIGV2ZW4gYnVpbGQuDQo+IA0KPiBBcmUgeW91IGFsc28gZ29pbmcgdG8g
-cHVibGlzaCB5b3VyIG93biBta2ZzLm50ZnMzIHRvb2w/IEkgZG9udCB0aGluayB0aGUNCj4gZXhp
-c3Rpbmcgb25lIHdvdWxkIHN1cHBvcnQgNjRrIGNsdXN0ZXJzLg0KDQpIaSBBdXLDqWxpZW4uIFRo
-YW5rcyBmb3IgeW91ciBmZWVkYmFjay4gV2UgcGxhbiB0byBwdWJsaXNoIG91ciBta2ZzLm50ZnMg
-dXRpbGl0eSBhcyB0aGUgb3BlbiBzb3VyY2UgYXMgd2VsbCAoYW5kIHBvc3NpYmx5IGZzY2hrLm50
-ZnMgLSBhZnRlciBta2ZzKS4gDQoNCj4gDQo+IEkgd291bGQgcmVjb21tZW5kIHRvIHJ1biBjaGVj
-a3BhdGNoIChJIHNlZSBhbHJlYWR5IDg3IHdhcm5pbmdzLi4uIHNvbWUNCj4gb2YgaXQgaXMgbm9p
-c2UpOg0KPiANCj4gICAkIC4vc2NyaXB0cy9jaGVja3BhdGNoLnBsIDxwYXRjaD4NCj4gDQo+IEFu
-ZCBzcGFyc2UgKEkgZG9udCBzZWUgbXVjaCk6DQo+IA0KPiAgICQgdG91Y2ggZnMvbnRmczMvKi5b
-Y2hdICYmIG1ha2UgQz0xDQo+IA0KPiBZb3UgbmVlZCBhIHJlY2VudCBidWlsZCBvZiBzcGFyc2Ug
-dG8gZG8gdGhhdCBsYXN0IG9uZS4gWW91IGNhbiBwYXNzIHlvdXINCj4gb3duIHNwYXJzZSBiaW4g
-KG1ha2UgQ0hFQ0s9fi9wcm9nL3NwYXJzZS9zcGFyc2UgQz0xKQ0KPiANCj4gVGhpcyB3aWxsIGJl
-IGEgZ29vZCBmaXJzdCBzdGVwLg0KDQpUaGUgc3BhcnNlIHV0aWxpdHkgaXMgcnVubmluZyBhZ2Fp
-bnN0IHRoZSBjb2RlLCBhcyB3ZWxsIGFzIGNoZWNrcGF0Y2gucGwuIFNwcmFzZSBvdXRwdXQgaXMg
-Y2xlYW4gbm93LiBDaGVja3BhdGNoJ3Mgc29tZWhvdyBpbXBvcnRhbnQgd2FybmluZ3Mgd2lsbCBi
-ZSBmaXhlZCBpbiB2MiAoZXhjZXB0IG1heWJlIHR5cGVkZWZzKS4gDQoNCj4gDQo+IEhhdmUgeW91
-IHRyaWVkIHRvIHJ1biB0aGUgeGZzdGVzdHMgc3VpdGUgYWdhaW5zdCBpdD8NCj4NCnhmc3Rlc3Rz
-IGFyZSBiZWluZyBvbmUgb2Ygb3VyIHN0YW5kYXJkIHRlc3Qgc3VpdGVzIGFtb25nIG90aGVycy4g
-Q3VycmVudGx5IHdlIGhhdmUgdGhlICdnZW5lcmljLzMzOScgYW5kICdnZW5lcmljLzAxMycgdGVz
-dCBjYXNlcyBmYWlsaW5nLCB3b3JraW5nIG9uIGl0IG5vdy4gT3RoZXIgdGVzdHMgZWl0aGVyIHBh
-c3Mgb3IgYmVpbmcgc2tpcHBlZCAoZHVlIHRvIG1pc3NpbmcgZmVhdHVyZXMgZS5nLiByZWZsaW5r
-KS4gDQogDQo+IENoZWVycywNCj4gLS0NCj4gQXVyw6lsaWVuIEFwdGVsIC8gU1VTRSBMYWJzIFNh
-bWJhIFRlYW0NCj4gR1BHOiAxODM5IENCNUYgOUY1QiBGQjlCIEFBOTcgIDhDOTkgMDNDOCBBNDlC
-IDUyMUIgRDVEMw0KPiBTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55IEdtYkgsIE1heGZl
-bGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgREUNCj4gR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwg
-TWFyeSBIaWdnaW5zLCBTcmkgUmFzaWFoIEhSQiAyNDcxNjUgKEFHIE3DvG5jaGVuKQ0K
+From: Peilin Ye <yepeilin.cs@gmail.com>
+
+commit 75bbd2ea50ba1c5d9da878a17e92eac02fe0fd3a upstream.
+
+Check `num_rsp` before using it as for-loop counter.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ net/bluetooth/hci_event.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2094,7 +2094,7 @@ static void hci_inquiry_result_evt(struc
+ 
+ 	BT_DBG("%s num_rsp %d", hdev->name, num_rsp);
+ 
+-	if (!num_rsp)
++	if (!num_rsp || skb->len < num_rsp * sizeof(*info) + 1)
+ 		return;
+ 
+ 	if (hci_dev_test_flag(hdev, HCI_PERIODIC_INQ))
+
+
