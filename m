@@ -2,183 +2,140 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB64C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8186EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274EF207DE
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:34:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F124207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:37:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="okiHBEmA"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="bqapqgbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbgHTRe2 (ORCPT
+        id S1730614AbgHTRhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:34:28 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:2074 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730620AbgHTReJ (ORCPT
+        Thu, 20 Aug 2020 13:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729122AbgHTRhD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:34:09 -0400
+        Thu, 20 Aug 2020 13:37:03 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BFBC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:37:03 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id x12so1799273qtp.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:37:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1597944848; x=1629480848;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   mime-version;
-  bh=MEA3ZhuWPoS1IieuWPGBAER8PruyG5EIp2kQWXV3Uws=;
-  b=okiHBEmAad8HTbk2suf+KuvP1XdldNIUn0DWCyIR2xmdMG4/pi8ORw8T
-   nFAdoK2xDvvHyM6H65lCV9FlBgTepp2GQtMkYy+j/OqZnEdc6IKfrc/v2
-   CMnEbABqth65XKvmBpF/lBfy2+wCmHPYfQ0A80UFILGp4HpPwdtrtKblS
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.76,333,1592870400"; 
-   d="scan'208";a="50392757"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 20 Aug 2020 17:33:54 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-474bcd9f.us-east-1.amazon.com (Postfix) with ESMTPS id 21249A211A;
-        Thu, 20 Aug 2020 17:33:42 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 20 Aug 2020 17:33:42 +0000
-Received: from u3f2cd687b01c55.ant.amazon.com (10.43.161.34) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 20 Aug 2020 17:33:25 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <Jonathan.Cameron@huawei.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Qian Cai <cai@lca.pw>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "David Hildenbrand" <david@redhat.com>, <dwmw@amazon.com>,
-        "Du, Fan" <fan.du@intel.com>, <foersleo@amazon.de>,
-        Greg Thelen <gthelen@google.com>,
-        Ian Rogers <irogers@google.com>, <jolsa@redhat.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        <mark.rutland@arm.com>, Mel Gorman <mgorman@suse.de>,
-        Minchan Kim <minchan@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, <namhyung@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, <rppt@kernel.org>,
-        <sblbir@amazon.com>, <shuah@kernel.org>, <sj38.park@gmail.com>,
-        <snu@amazon.de>, Vlastimil Babka <vbabka@suse.cz>,
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LoboofYleSqsx6Po76z6KtFKykk6O4/M/law9ADONhQ=;
+        b=bqapqgbGxSqIpTZ9lqM1OdRQ4ld0i+GkD+9Nmxa1GUtaiBn/O9VbQypsMHolHj0z6R
+         O5BVPWUTxs1lPqRKqLIHUGDCBJLiJ4iTA7HIC6qB9jSaJjvKbm8SI/1kvGieeG0doLWJ
+         OCDi+LYKIfxOKRk0/y7qOPc8DpMwu+WU3vD+l8KIvb21LNwGFGLgzaQthypuZUWvs+rs
+         oJCpu+HfrIXROzi0WhrBWx4WpDDfRvE0lUwTcbI+9/X0czS0xt7v14LrRI0jg5MRRTp/
+         LBDfwgBeTz7UfF8zOvwgvyF3yu6ue4PzybmMEWhEHmy34YliUAVBRRucg//JTWS0mIdc
+         WDfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LoboofYleSqsx6Po76z6KtFKykk6O4/M/law9ADONhQ=;
+        b=Zr53uYGofj71/+DY5++AfU7O5nJaZ/l9E/yVa3H6bkPAFLbMNdlZvrEex+ocw5Jo67
+         Y1fyEX2a9DKv6ZWt1S7hVVJO4HXubfzZyL4cCqoyFZudjf7Da5Ac8oG609cTr7yCT3NQ
+         8mGHfzBsWX+MME58n1hqscdAEwL2bw/zoD1yrMIUzNKYow0bWto9IS+FEMvT80l2PSaV
+         gwJdpycizuOAgsK0e7cABR5Z8rOG5SdJnpQQpL4arZ9pCwEOSC8nOm7v4YahwzLkAcvZ
+         E+McRjrLqcHcrC7MDVXnkmAJ4o4b3Nt4q8i9CIOCImci2/anI7ZcqarcLo38SfhFrfRY
+         Fg2Q==
+X-Gm-Message-State: AOAM532ECipM38VZUlYK2E6bQgRyYoaDF9k8jowHhlZNre9Pt+u0QFxp
+        zfJ6J5Iq8Opj8/vQdv4ehVpLsw==
+X-Google-Smtp-Source: ABdhPJy0N3AzU+bC9wgIjMRXMwdsW3NNSoeyvr6MWRhCLnEfbQNcRW8bcmUt5YL0OIu+rlUywXSVzA==
+X-Received: by 2002:ac8:c0e:: with SMTP id k14mr3885478qti.364.1597945021939;
+        Thu, 20 Aug 2020 10:37:01 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:3cdd])
+        by smtp.gmail.com with ESMTPSA id k11sm2653665qkk.93.2020.08.20.10.37.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 10:37:01 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 13:35:46 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
         Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Huang Ying <ying.huang@intel.com>, <zgf574564920@gmail.com>,
-        <linux-damon@amazon.com>, Linux MM <linux-mm@kvack.org>,
-        <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC v7 00/10] DAMON: Support Physical Memory Address Space Monitoring
-Date:   Thu, 20 Aug 2020 19:33:10 +0200
-Message-ID: <20200820173310.18933-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <CALvZod7a=zr8VX3T2KOheUJ-THjGz=O+JBdcjw4iraN3m9jSJg@mail.gmail.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Roman Gushchin <guro@fb.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH 2/3] mm/memcg: Simplify mem_cgroup_get_max()
+Message-ID: <20200820173546.GB912520@cmpxchg.org>
+References: <20200820130350.3211-1-longman@redhat.com>
+ <20200820130350.3211-3-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D27UWA001.ant.amazon.com (10.43.160.19) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820130350.3211-3-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 08:44:33 -0700 Shakeel Butt <shakeelb@google.com> wrote:
-
-> On Thu, Aug 20, 2020 at 12:11 AM SeongJae Park <sjpark@amazon.com> wrote:
-> >
-> > On Wed, 19 Aug 2020 18:21:44 -0700 Shakeel Butt <shakeelb@google.com> wrote:
-> >
-> > > On Tue, Aug 18, 2020 at 12:25 AM SeongJae Park <sjpark@amazon.com> wrote:
-> > > >
-> > > > From: SeongJae Park <sjpark@amazon.de>
-> > > >
-> > > > Changes from Previous Version
-> > > > =============================
-> > > >
-> > > > - Use 42 as the fake target id for paddr instead of -1
-> > > > - Fix a typo
-> > > >
-> > > > Introduction
-> > > > ============
-> > > >
-> > > > DAMON[1] programming interface users can extend DAMON for any address space by
-> > > > configuring the address-space specific low level primitives with appropriate
-> > > > ones including their own implementations.  However, because the implementation
-> > > > for the virtual address space is only available now, the users should implement
-> > > > their own for other address spaces.  Worse yet, the user space users who rely
-> > > > on the debugfs interface and user space tool, cannot implement their own.
-> > > >
-> > > > This patchset implements another reference implementation of the low level
-> > > > primitives for the physical memory address space.  With this change, hence, the
-> > > > kernel space users can monitor both the virtual and the physical address spaces
-> > > > by simply changing the configuration in the runtime.  Further, this patchset
-> > > > links the implementation to the debugfs interface and the user space tool for
-> > > > the user space users.
-> > > >
-> > > > Note that the implementation supports only the user memory, as same to the idle
-> > > > page access tracking feature.
-> > > >
-> > > > [1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
-> > > >
-> > >
-> > > I am still struggling to find the benefit of this feature the way it
-> > > is implemented i.e. region based physical address space monitoring.
-> > > What exactly am I supposed to do for a given hot (or cold) physical
-> > > region? In a containerized world, that region can contain pages from
-> > > any cgroup. I can not really do anything about the accesses PHY-DAMON
-> > > provides me for a region.
-> >
-> > Technically speaking, this patchset introduces an implementation of DAMON's low
-> > level primitives for physical address space of LRU-listed pages.  In other
-> > words, it is not designed for cgroups case.
+On Thu, Aug 20, 2020 at 09:03:49AM -0400, Waiman Long wrote:
+> The mem_cgroup_get_max() function used to get memory+swap max from
+> both the v1 memsw and v2 memory+swap page counters & return the maximum
+> of these 2 values. This is redundant and it is more efficient to just
+> get either the v1 or the v2 values depending on which one is currently
+> in use.
 > 
-> So, this RFC is for a system running a single workload which comprises
-> multiple processes. Instead of registering each process with DAMON,
-> just monitor the whole physical memory, right?
-
-Right.  Also I assumed the kernel space DAMON users as the primary users of
-this feature.
-
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  mm/memcontrol.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
 > 
-> Though I am still not sure how the output from DAMON can be used in
-> this case. DAMON told me a physical region is cold, how do I find out
-> processes that have mapped the pages in that region to do
-> process_madvise(PAGEOUT) on them?
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 26b7a48d3afb..d219dca5239f 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1633,17 +1633,13 @@ void mem_cgroup_print_oom_meminfo(struct mem_cgroup *memcg)
+>   */
+>  unsigned long mem_cgroup_get_max(struct mem_cgroup *memcg)
+>  {
+> -	unsigned long max;
+> +	unsigned long max = READ_ONCE(memcg->memory.max);
+>  
+> -	max = READ_ONCE(memcg->memory.max);
+>  	if (mem_cgroup_swappiness(memcg)) {
+> -		unsigned long memsw_max;
+> -		unsigned long swap_max;
+> -
+> -		memsw_max = memcg->memsw.max;
+> -		swap_max = READ_ONCE(memcg->swap.max);
+> -		swap_max = min(swap_max, (unsigned long)total_swap_pages);
+> -		max = min(max + swap_max, memsw_max);
+> +		if (cgroup_subsys_on_dfl(memory_cgrp_subsys))
+> +			max += READ_ONCE(memcg->swap.max);
+> +		else
+> +			max = memcg->memsw.max;
 
-Seems you are saying about the user space DAMON use.  Indeed, it would be quite
-complicated.  For example, maybe the user space could read '/proc/pid/pagemap'
-of every process, but this really sounds awkward.  Thank you for pointing this
-:)  Even in the virtual address case, it could be complicated.
+I agree with the premise of the patch, but v1 and v2 have sufficiently
+different logic, and the way v1 overrides max from the innermost
+branch again also doesn't help in understanding what's going on.
 
-For this reason, I am developing DAMON-based Operation Schemes[1].  It is
-designed to do the monitoring and optimization of specific regions fit in
-special monitoring result by DAMON itself.  Nonetheless, current version of it
-supports only virtual address spaces.  A support of physical address space from
-the feature will be another future work.
+Can you please split out the v1 and v2 code?
 
-If the user space really need to do that by itself, we could provide the
-physical address to virtual address mapping info in addition to the monitoring
-result in future.
+	if (cgroup_subsys_on_dfl(memory_cgrp_subsys)) {
+		max = READ_ONCE(memcg->memory.max);
+		if (mem_cgroup_swappiness(memcg))
+			max += READ_ONCE(memcg->swap.max);
+	} else {
+		if (mem_cgroup_swappiness(memcg))
+			max = memcg->memsw.max;
+		else
+			max = READ_ONCE(memcg->memory.max);
+	}
 
-And, yes, we have so many TODO tasks that really necessary.  I will eventually
-do all of those, but also concerning about my limited time.  Nevertheless, I
-believe it would better to focus on the core of DAMON[2] for now and continue
-further TODO tasks after it is merged in the mainline, because maintainance of
-the code will be much easier and hopefully more developers could collaborate
-for the many TODO tasks.
-
-[1] https://lore.kernel.org/linux-mm/20200804142430.15384-1-sjpark@amazon.com/
-[2] https://lore.kernel.org/linux-mm/20200817105137.19296-1-sjpark@amazon.com/
-
-
-Thanks,
-SeongJae Park
+It's slightly repetitive, but IMO much more readable.
