@@ -2,94 +2,117 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C84C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797B6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4C1206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tYRgP1lx"
+	by mail.kernel.org (Postfix) with ESMTP id 5BA492078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 07:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbgHTHHD (ORCPT
+        id S1726387AbgHTHK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 03:07:03 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:47984 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725824AbgHTHHB (ORCPT
+        Thu, 20 Aug 2020 03:10:28 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:52821 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbgHTHK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 03:07:01 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07K76xpd071021;
-        Thu, 20 Aug 2020 02:06:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1597907219;
-        bh=tO+VmcwGzpBAIWcmRdVeBCzVCyQm0H4wa4UHvBG9D+Q=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tYRgP1lxTqSSsoBQmaZaLB3lby6SAxbEVI5POeoZVoBmdVfpDna5PbzzEhnRlW3c0
-         n//ew1gyeK57A4vXjFfDGTsRq7UADufcjWA7tFOpiivfLwkQbt/+IjOGpQkjSLi/cd
-         F23FF+zI7CxGA3+MdZt3Xnd7TxBbHAVUO0r+Py74=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07K76xSV114742
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Aug 2020 02:06:59 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Thu, 20
- Aug 2020 02:06:59 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Thu, 20 Aug 2020 02:06:59 -0500
-Received: from [10.250.232.88] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07K76tC2095200;
-        Thu, 20 Aug 2020 02:06:56 -0500
-Subject: Re: [PATCH] dt-bindings: mmc: sdhci-am654: Document bindings for the
- host controllers on TI's J7200 devices
-To:     Rob Herring <robh@kernel.org>
-CC:     <ulf.hansson@linaro.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20200802070114.9624-1-faiz_abbas@ti.com>
- <20200817211727.GA1578682@bogus>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <30d40498-847b-add7-d209-020d2ae00805@ti.com>
-Date:   Thu, 20 Aug 2020 12:36:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 03:10:26 -0400
+X-Greylist: delayed 1068 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 03:10:26 EDT
+Received: from [2001:67c:670:100:1d::c0] (helo=ptx.hi.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1k8eQz-0000f8-L0; Thu, 20 Aug 2020 08:52:25 +0200
+Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1k8eQv-0003ht-Hg; Thu, 20 Aug 2020 08:52:21 +0200
+Date:   Thu, 20 Aug 2020 08:52:21 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     Lars-Peter Clausen <lars@metafoo.de>
+Cc:     Benjamin Bara - SKIDATA <Benjamin.Bara@skidata.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Richard Leitner - SKIDATA <Richard.Leitner@skidata.com>
+Subject: Re: pcm|dmaengine|imx-sdma race condition on i.MX6
+Message-ID: <20200820065221.GF19745@pengutronix.de>
+References: <20200813112258.GA327172@pcleri>
+ <VE1PR04MB6638EE5BDBE2C65FF50B7DB889400@VE1PR04MB6638.eurprd04.prod.outlook.com>
+ <61498763c60e488a825e8dd270732b62@skidata.com>
+ <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
 MIME-Version: 1.0
-In-Reply-To: <20200817211727.GA1578682@bogus>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16942794-1e03-6da0-b8e5-c82332a217a5@metafoo.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 08:19:09 up 182 days, 13:49, 135 users,  load average: 0.10, 0.14,
+ 0.14
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
-
-On 18/08/20 2:47 am, Rob Herring wrote:
-> On Sun, 02 Aug 2020 12:31:14 +0530, Faiz Abbas wrote:
->> Add binding documentation for mmc host controllers present on
->> TI's J7200 SOC
->>
->> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/sdhci-am654.txt | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
+On Wed, Aug 19, 2020 at 01:08:29PM +0200, Lars-Peter Clausen wrote:
+> > For the first option, which is potentially more performant, we have to leave the atomic PCM context
+> > and we are not sure if we are allowed to.
+> > For the second option, we would have to divide the dma_device terminate_all into an atomic sync and
+> > an async one, which would align with the dmaengine API, giving it the option to ensure termination
+> > in an atomic context.
+> > Based on my understanding, most of them are synchronous anyways, for the currently async ones we
+> > would have to implement busy waits.
+> > However, with this approach, we reach the WARN_ON [6] inside of an atomic context,
+> > indicating we might not do the right thing.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+> I don't know how feasible this is to implement in the SDMA dmaengine driver.
+> But I think what is should do is to have some flag to indicate if a
+> terminate is in progress. If a new transfer is issued while terminate is in
+> progress the transfer should go on a list. Once terminate finishes it should
+> check the list and start the transfer if there are any on the list.
 
-Can you pick this up now or should I rebase to latest?
+The list is already there in form of the vchan helpers the driver uses.
 
-Thanks,
-Faiz
+I think the big mistake the driver makes is to configure fields in
+struct sdma_channel and also the hardware directly in
+sdma_prep_memcpy(), sdma_prep_slave_sg() and sdma_prep_dma_cyclic(). All
+information should be stored in the struct sdma_desc allocated in the
+prep functions and only be used when it's time to fire that specific
+descriptor.
+
+More specifically sdma_config_write() may not be called from
+sdma_prep_slave_sg() or sdma_prep_dma_cyclic(), but instead must be
+called from sdma_start_desc().  sdma_config_ownership() also must be
+called later in sdma_start_desc(). 'direction' must be a member of
+struct sdma_desc, not of struct sdma_channel.
+
+Overall this sounds like a fair amount of work to do, but should be
+feasible and IMO is a step in the right direction.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
