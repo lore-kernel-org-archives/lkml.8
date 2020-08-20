@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ED6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8982BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9DAE20758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4EE2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921550;
-	bh=OlvRdynhD5MxoW4Rkw37ENzyZiTNek9I+fsnj0/KSD8=;
+	s=default; t=1597921554;
+	bh=OhCnyEGNkDaKfgca2OXRG6T83JJkSQNLRIyv8z42H40=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hjli+w22tTJWO76rYn3XlIN/vjDIYUr3uvnzqbqGnHvEctpHs6SYtFhZIOOWAsmkG
-	 mT8hnFfD9wN0bR0sK9K5sLofAJTYnDOeLtCgBEoYTjPrcYQ94ZW1/cgVGhOGQEV7ye
-	 ULNHRJBG0myKsD6MydMFw3OUvtNeJ3wtBiUCQxoI=
+	b=1yFhzbUZrsFstbfaiXdn4IZNp44ydVTJPBlj6P6yipotXvd+UGBmlT5XdSGXhhbKV
+	 e5Zo1GGhcF53ecnrm3FU30N5R4riy3Xyjl5NFwVC0L/hXKzfTFkQtW6c9cjju/PXfL
+	 7unhJjapeRDFe4Mxg114FuL7LdeofQPrOLZoaKns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgHTLFr (ORCPT
+        id S1729232AbgHTLFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:05:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54080 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731052AbgHTKM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:28 -0400
+        id S1731049AbgHTKMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3835E20724;
-        Thu, 20 Aug 2020 10:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 924702067C;
+        Thu, 20 Aug 2020 10:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918347;
-        bh=OlvRdynhD5MxoW4Rkw37ENzyZiTNek9I+fsnj0/KSD8=;
+        s=default; t=1597918342;
+        bh=OhCnyEGNkDaKfgca2OXRG6T83JJkSQNLRIyv8z42H40=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g2dWc6qHt/hb3+IzxaXn2khCIfyrtxjD94c9Ojv0y9TskRQXavr0tHaPMSRQ4TQAe
-         qvyAjFzpo4zk7pmawAs9pf3iC+aoWQ++p66EgXU5DdnOFwPpxapsI2Oz4AQjGZ6asl
-         Dg1WpajRHXQTyVxPZ5baNX93mB/obcZQxyr5HKAg=
+        b=qCVAgVO2whUUT6YVkDxFWEBfkBNTpfR+DXmLutSZZX/4Odpn+H+ISWXaNAVOtjccC
+         OW5od4Z9Ot3O712IPooom3I/WvCisOsB8rJa/ZK93sfPbcrPl06KmDW9XlFb7eUR0g
+         OwG3fbzcGcQO0GsVwgwtGbmz4OjDmAiWXzgJM9kY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolas Boichat <drinkcat@chromium.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
+        stable@vger.kernel.org, Drew Fustini <drew@beagleboard.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 120/228] Bluetooth: hci_serdev: Only unregister device if it was registered
-Date:   Thu, 20 Aug 2020 11:21:35 +0200
-Message-Id: <20200820091613.588638899@linuxfoundation.org>
+Subject: [PATCH 4.14 136/228] pinctrl-single: fix pcs_parse_pinconf() return value
+Date:   Thu, 20 Aug 2020 11:21:51 +0200
+Message-Id: <20200820091614.384399253@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,35 +61,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Boichat <drinkcat@chromium.org>
+From: Drew Fustini <drew@beagleboard.org>
 
-[ Upstream commit 202798db9570104728dce8bb57dfeed47ce764bc ]
+[ Upstream commit f46fe79ff1b65692a65266a5bec6dbe2bf7fc70f ]
 
-We should not call hci_unregister_dev if the device was not
-successfully registered.
+This patch causes pcs_parse_pinconf() to return -ENOTSUPP when no
+pinctrl_map is added.  The current behavior is to return 0 when
+!PCS_HAS_PINCONF or !nconfs.  Thus pcs_parse_one_pinctrl_entry()
+incorrectly assumes that a map was added and sets num_maps = 2.
 
-Fixes: c34dc3bfa7642fd ("Bluetooth: hci_serdev: Introduce hci_uart_unregister_device()")
-Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Analysis:
+=========
+The function pcs_parse_one_pinctrl_entry() calls pcs_parse_pinconf()
+if PCS_HAS_PINCONF is enabled.  The function pcs_parse_pinconf()
+returns 0 to indicate there was no error and num_maps is then set to 2:
+
+ 980 static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 981                                                 struct device_node *np,
+ 982                                                 struct pinctrl_map **map,
+ 983                                                 unsigned *num_maps,
+ 984                                                 const char **pgnames)
+ 985 {
+<snip>
+1053         (*map)->type = PIN_MAP_TYPE_MUX_GROUP;
+1054         (*map)->data.mux.group = np->name;
+1055         (*map)->data.mux.function = np->name;
+1056
+1057         if (PCS_HAS_PINCONF && function) {
+1058                 res = pcs_parse_pinconf(pcs, np, function, map);
+1059                 if (res)
+1060                         goto free_pingroups;
+1061                 *num_maps = 2;
+1062         } else {
+1063                 *num_maps = 1;
+1064         }
+
+However, pcs_parse_pinconf() will also return 0 if !PCS_HAS_PINCONF or
+!nconfs.  I believe these conditions should indicate that no map was
+added by returning -ENOTSUPP. Otherwise pcs_parse_one_pinctrl_entry()
+will set num_maps = 2 even though no maps were successfully added, as
+it does not reach "m++" on line 940:
+
+ 895 static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 896                              struct pcs_function *func,
+ 897                              struct pinctrl_map **map)
+ 898
+ 899 {
+ 900         struct pinctrl_map *m = *map;
+<snip>
+ 917         /* If pinconf isn't supported, don't parse properties in below. */
+ 918         if (!PCS_HAS_PINCONF)
+ 919                 return 0;
+ 920
+ 921         /* cacluate how much properties are supported in current node */
+ 922         for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+ 923                 if (of_find_property(np, prop2[i].name, NULL))
+ 924                         nconfs++;
+ 925         }
+ 926         for (i = 0; i < ARRAY_SIZE(prop4); i++) {
+ 927                 if (of_find_property(np, prop4[i].name, NULL))
+ 928                         nconfs++;
+ 929         }
+ 930         if (!nconfs)
+ 919                 return 0;
+ 932
+ 933         func->conf = devm_kcalloc(pcs->dev,
+ 934                                   nconfs, sizeof(struct pcs_conf_vals),
+ 935                                   GFP_KERNEL);
+ 936         if (!func->conf)
+ 937                 return -ENOMEM;
+ 938         func->nconfs = nconfs;
+ 939         conf = &(func->conf[0]);
+ 940         m++;
+
+This situtation will cause a boot failure [0] on the BeagleBone Black
+(AM3358) when am33xx_pinmux node in arch/arm/boot/dts/am33xx-l4.dtsi
+has compatible = "pinconf-single" instead of "pinctrl-single".
+
+The patch fixes this issue by returning -ENOSUPP when !PCS_HAS_PINCONF
+or !nconfs, so that pcs_parse_one_pinctrl_entry() will know that no
+map was added.
+
+Logic is also added to pcs_parse_one_pinctrl_entry() to distinguish
+between -ENOSUPP and other errors.  In the case of -ENOSUPP, num_maps
+is set to 1 as it is valid for pinconf to be enabled and a given pin
+group to not any pinconf properties.
+
+[0] https://lore.kernel.org/linux-omap/20200529175544.GA3766151@x1/
+
+Fixes: 9dddb4df90d1 ("pinctrl: single: support generic pinconf")
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Link: https://lore.kernel.org/r/20200608125143.GA2789203@x1
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bluetooth/hci_serdev.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pinctrl/pinctrl-single.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index 69c00a3db5382..72cf2d97b682c 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -361,7 +361,8 @@ void hci_uart_unregister_device(struct hci_uart *hu)
- 	struct hci_dev *hdev = hu->hdev;
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index b8b3d932cd73a..f751b5c3bf7e8 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -888,7 +888,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
  
- 	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--	hci_unregister_dev(hdev);
-+	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
-+		hci_unregister_dev(hdev);
- 	hci_free_dev(hdev);
+ 	/* If pinconf isn't supported, don't parse properties in below. */
+ 	if (!PCS_HAS_PINCONF)
+-		return 0;
++		return -ENOTSUPP;
  
- 	cancel_work_sync(&hu->write_work);
+ 	/* cacluate how much properties are supported in current node */
+ 	for (i = 0; i < ARRAY_SIZE(prop2); i++) {
+@@ -900,7 +900,7 @@ static int pcs_parse_pinconf(struct pcs_device *pcs, struct device_node *np,
+ 			nconfs++;
+ 	}
+ 	if (!nconfs)
+-		return 0;
++		return -ENOTSUPP;
+ 
+ 	func->conf = devm_kzalloc(pcs->dev,
+ 				  sizeof(struct pcs_conf_vals) * nconfs,
+@@ -1024,9 +1024,12 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
+ 
+ 	if (PCS_HAS_PINCONF) {
+ 		res = pcs_parse_pinconf(pcs, np, function, map);
+-		if (res)
++		if (res == 0)
++			*num_maps = 2;
++		else if (res == -ENOTSUPP)
++			*num_maps = 1;
++		else
+ 			goto free_pingroups;
+-		*num_maps = 2;
+ 	} else {
+ 		*num_maps = 1;
+ 	}
 -- 
 2.25.1
 
