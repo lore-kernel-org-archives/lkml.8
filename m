@@ -2,123 +2,126 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C1FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A632CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C8F2054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923805;
-	bh=UQ9bBscGua1StUs2Lns9LflTuLYe5Z2moAJYhe5l1Wc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XerUJ0W1ec0KC8PL3estlAsm84CH+9F+q+Nt6XnxfgX9wKyjkpOEpwdiGUbTWxCX6
-	 rlgPpD/CQEybXO2hpCcrkdz3SeSs+7SZo+fR6rZ8dmjQmhZDqqcTxcYJJSnLUZ4UXm
-	 3NgV6X5ZcZvQpa+fkBzF+8MrQiBwscFg4TU8/6Pc=
+	by mail.kernel.org (Postfix) with ESMTP id 8D5402054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730866AbgHTLnX (ORCPT
+        id S1730476AbgHTLo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:44:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58460 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730612AbgHTKD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C08720724;
-        Thu, 20 Aug 2020 10:03:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917836;
-        bh=UQ9bBscGua1StUs2Lns9LflTuLYe5Z2moAJYhe5l1Wc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Az9YCqWUmE5IKDHiY3AP6zTdHi6P4LlnmumKVcM0rDHtwsCfbpR55zrAhooZAq4/e
-         /W4FS0YxdBQDdp+kXF9gnAQvKPtoJ86E95tLBOEb9YI9gkwmUOwgu7YhjGN9Yw9s0T
-         PuxWfPfp1YUdUSpv/KpU+jDrcAlIMYI06LsdK4mo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 176/212] powerpc: Fix circular dependency between percpu.h and mmu.h
-Date:   Thu, 20 Aug 2020 11:22:29 +0200
-Message-Id: <20200820091611.280265772@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
-References: <20200820091602.251285210@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729335AbgHTLm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 07:42:58 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 53FB8B18A;
+        Thu, 20 Aug 2020 11:43:23 +0000 (UTC)
+Date:   Thu, 20 Aug 2020 13:42:45 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>, mingo@kernel.org,
+        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
+        cyphar@cyphar.com, adobriyan@gmail.com, akpm@linux-foundation.org,
+        ebiederm@xmission.com, gladkov.alexey@gmail.com, walken@google.com,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
+        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
+        kernel-team@android.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200820114245.GH5033@dhcp22.suse.cz>
+References: <20200820002053.1424000-1-surenb@google.com>
+ <20200820105555.GA4546@redhat.com>
+ <20200820111349.GE5033@dhcp22.suse.cz>
+ <20200820113023.rjxque4jveo4nj5o@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820113023.rjxque4jveo4nj5o@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+On Thu 20-08-20 13:30:23, Christian Brauner wrote:
+> On Thu, Aug 20, 2020 at 01:13:49PM +0200, Michal Hocko wrote:
+> > On Thu 20-08-20 12:55:56, Oleg Nesterov wrote:
+> > > On 08/19, Suren Baghdasaryan wrote:
+> > > >
+> > > > Since the combination of CLONE_VM and !CLONE_SIGHAND is rarely
+> > > > used the additional mutex lock in that path of the clone() syscall should
+> > > > not affect its overall performance. Clearing the MMF_PROC_SHARED flag
+> > > > (when the last process sharing the mm exits) is left out of this patch to
+> > > > keep it simple and because it is believed that this threading model is
+> > > > rare.
+> > > 
+> > > vfork() ?
+> > 
+> > Could you be more specific?
+> 
+> vfork() implies CLONE_VM but !CLONE_THREAD. The way this patch is
+> written the mutex lock will be taken every time you do a vfork().
 
-commit 0c83b277ada72b585e6a3e52b067669df15bcedb upstream.
+OK, I see. We definietely do not want to impact vfork so we likely have
+to check for CLONE_VFORK as well. Ohh, well our clone flags are really
+clear as mud.
 
-Recently random.h started including percpu.h (see commit
-f227e3ec3b5c ("random32: update the net random state on interrupt and
-activity")), which broke corenet64_smp_defconfig:
+> (It's honestly also debatable whether it's that rare. For one, userspace
+> stuff I maintain uses it too (see [1]).
+> [1]: https://github.com/lxc/lxc/blob/9d3b7c97f0443adc9f0b0438437657ab42f5a1c3/src/lxc/start.c#L1676
+> )
+> 
+> > 
+> > > > --- a/kernel/fork.c
+> > > > +++ b/kernel/fork.c
+> > > > @@ -1403,6 +1403,15 @@ static int copy_mm(unsigned long clone_flags, struct task_struct *tsk)
+> > > >  	if (clone_flags & CLONE_VM) {
+> > > >  		mmget(oldmm);
+> > > >  		mm = oldmm;
+> > > > +		if (!(clone_flags & CLONE_SIGHAND)) {
+> > > 
+> > > I agree with Christian, you need CLONE_THREAD
+> > 
+> > This was my suggestion to Suren, likely because I've misrememberd which
+> > clone flag is responsible for the signal delivery. But now, after double
+> > checking we do explicitly disallow CLONE_SIGHAND && !CLONE_VM. So
+> > CLONE_THREAD is the right thing to check.
+> > 
+> > > > +			/* We need to synchronize with __set_oom_adj */
+> > > > +			mutex_lock(&oom_adj_lock);
+> > > > +			set_bit(MMF_PROC_SHARED, &mm->flags);
+> > > > +			/* Update the values in case they were changed after copy_signal */
+> > > > +			tsk->signal->oom_score_adj = current->signal->oom_score_adj;
+> > > > +			tsk->signal->oom_score_adj_min = current->signal->oom_score_adj_min;
+> > > > +			mutex_unlock(&oom_adj_lock);
+> > > 
+> > > I don't understand how this can close the race with __set_oom_adj...
+> > > 
+> > > What if __set_oom_adj() is called right after mutex_unlock() ? It will see
+> > > MMF_PROC_SHARED, but for_each_process() won't find the new child until
+> > > copy_process() does list_add_tail_rcu(&p->tasks, &init_task.tasks) ?
+> > 
+> > Good point. Then we will have to move this thing there.
+> 
+> I was toying with moving this into sm like:
+> 
+> static inline copy_oom_score(unsigned long flags, struct task_struct *tsk)
+> 
+> trying to rely on set_bit() and test_bit() in copy_mm() being atomic and
+> then calling it where Oleg said after the point of no return.
 
-  In file included from /linux/arch/powerpc/include/asm/paca.h:18,
-                   from /linux/arch/powerpc/include/asm/percpu.h:13,
-                   from /linux/include/linux/random.h:14,
-                   from /linux/lib/uuid.c:14:
-  /linux/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
-    139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
+No objections.
 
-This is due to a circular header dependency:
-  asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
-  includes asm/mmu.h
-
-Which means DECLARE_PER_CPU() isn't defined when mmu.h needs it.
-
-We can fix it by moving the include of paca.h below the include of
-asm-generic/percpu.h.
-
-This moves the include of paca.h out of the #ifdef __powerpc64__, but
-that is OK because paca.h is almost entirely inside #ifdef
-CONFIG_PPC64 anyway.
-
-It also moves the include of paca.h out of the #ifdef CONFIG_SMP,
-which could possibly break something, but seems to have no ill
-effects.
-
-Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
-Cc: stable@vger.kernel.org # v5.8
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200804130558.292328-1-mpe@ellerman.id.au
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/powerpc/include/asm/percpu.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
---- a/arch/powerpc/include/asm/percpu.h
-+++ b/arch/powerpc/include/asm/percpu.h
-@@ -9,8 +9,6 @@
- 
- #ifdef CONFIG_SMP
- 
--#include <asm/paca.h>
--
- #define __my_cpu_offset local_paca->data_offset
- 
- #endif /* CONFIG_SMP */
-@@ -18,4 +16,6 @@
- 
- #include <asm-generic/percpu.h>
- 
-+#include <asm/paca.h>
-+
- #endif /* _ASM_POWERPC_PERCPU_H_ */
-
-
+-- 
+Michal Hocko
+SUSE Labs
