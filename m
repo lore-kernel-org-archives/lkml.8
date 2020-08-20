@@ -2,52 +2,53 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88C0C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B6DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 923E2207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E9092078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924252;
-	bh=I1u7KrKmiRs+EAGchH0cOI6zub0hJe8cZx4vyEtoxF4=;
+	s=default; t=1597924256;
+	bh=Et7ls60VZjoaoIrfzW+kXQbNaDg2LPboBoHyqEgWOYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WOEMRoEnh5GrA+r8KCR4pc00Dub04FZOsErDzYJqwvg2EkbU30i6rdGisPzH0nhtJ
-	 6qTMo+LO/cRCtf9varlVCkbZBFIyx7yHwY0As/kSb2fsXa9ayXoLgG54Sb3Zrh1ubo
-	 klQARU0+lOxjp3KOmF2WuvphGpp/+gBytpyNt1nk=
+	b=gvKEbslSIEC9FKoJm6Qpnbbu1FrK+6g0SLzvanbbsBgQiSNbqefEomLRarYASUsrE
+	 NRSZFAbhdd4j0SxWLinFfuEQb4bGrdF+fzOLwoQo2HCdNYay3FPexfJFvi6dPB490P
+	 N4WIv78Uled1CbI4thds3BIrEjxLB8eFtEaYpCSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731025AbgHTLuv (ORCPT
+        id S1731030AbgHTLux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:50:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:50:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgHTKDM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:03:12 -0400
+        id S1729784AbgHTKDO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:03:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13B662075E;
-        Thu, 20 Aug 2020 10:03:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D02A520855;
+        Thu, 20 Aug 2020 10:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917791;
-        bh=I1u7KrKmiRs+EAGchH0cOI6zub0hJe8cZx4vyEtoxF4=;
+        s=default; t=1597917794;
+        bh=Et7ls60VZjoaoIrfzW+kXQbNaDg2LPboBoHyqEgWOYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uYCeHANSHz+5bT/bBDUY295+5TxqLDLUlPhjcz9tzfWaorUTj66xD/7jD6uos634N
-         Qm5FShtily4xjlUWFR5ilZ1K4+cIIYL+6p+lI0vEDEe+ONT8gYW8SOnzxQIdvPWYy7
-         1TiJflIly4ifYEVVOzFDXswgXLheq+v21/GfR3iA=
+        b=uqMO02Jd0QuvH/l5owDO1Pd+y3r0hiN8RtBndAoaDrZs5E6A953fUgId90Vl6/qW2
+         JU2G7+5EvYF80DtjzXY4jwbTjyDF1gZxPlTpOC7DdYsT2QMzJ/dZQtjdkdPqiMd+uD
+         G8X06zkzXC1oS12sMNGNUAp9X1LRLJD+mDTPTBRw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.9 159/212] crypto: ccp - Fix use of merged scatterlists
-Date:   Thu, 20 Aug 2020 11:22:12 +0200
-Message-Id: <20200820091610.431104506@linuxfoundation.org>
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 133/212] usb: dwc2: Fix error path in gadget registration
+Date:   Thu, 20 Aug 2020 11:21:46 +0200
+Message-Id: <20200820091609.066997808@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,176 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Allen <john.allen@amd.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit 8a302808c60d441d9884cb00ea7f2b534f2e3ca5 upstream.
+[ Upstream commit 33a06f1300a79cfd461cea0268f05e969d4f34ec ]
 
-Running the crypto manager self tests with
-CONFIG_CRYPTO_MANAGER_EXTRA_TESTS may result in several types of errors
-when using the ccp-crypto driver:
+When gadget registration fails, one should not call usb_del_gadget_udc().
+Ensure this by setting gadget->udc to NULL. Also in case of a failure
+there is no need to disable low-level hardware, so return immiedetly
+instead of jumping to error_init label.
 
-alg: skcipher: cbc-des3-ccp encryption failed on test vector 0; expected_error=0, actual_error=-5 ...
+This fixes the following kernel NULL ptr dereference on gadget failure
+(can be easily triggered with g_mass_storage without any module
+parameters):
 
-alg: skcipher: ctr-aes-ccp decryption overran dst buffer on test vector 0 ...
+dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter besl=1
+dwc2 12480000.hsotg: dwc2_check_params: Invalid parameter g_np_tx_fifo_size=1024
+dwc2 12480000.hsotg: EPs: 16, dedicated fifos, 7808 entries in SPRAM
+Mass Storage Function, version: 2009/09/11
+LUN: removable file: (no medium)
+no file given for LUN0
+g_mass_storage 12480000.hsotg: failed to start g_mass_storage: -22
+8<--- cut here ---
+Unable to handle kernel NULL pointer dereference at virtual address 00000104
+pgd = (ptrval)
+[00000104] *pgd=00000000
+Internal error: Oops: 805 [#1] PREEMPT SMP ARM
+Modules linked in:
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.8.0-rc5 #3133
+Hardware name: Samsung Exynos (Flattened Device Tree)
+Workqueue: events deferred_probe_work_func
+PC is at usb_del_gadget_udc+0x38/0xc4
+LR is at __mutex_lock+0x31c/0xb18
+...
+Process kworker/0:1 (pid: 12, stack limit = 0x(ptrval))
+Stack: (0xef121db0 to 0xef122000)
+...
+[<c076bf3c>] (usb_del_gadget_udc) from [<c0726bec>] (dwc2_hsotg_remove+0x10/0x20)
+[<c0726bec>] (dwc2_hsotg_remove) from [<c0711208>] (dwc2_driver_probe+0x57c/0x69c)
+[<c0711208>] (dwc2_driver_probe) from [<c06247c0>] (platform_drv_probe+0x6c/0xa4)
+[<c06247c0>] (platform_drv_probe) from [<c0621df4>] (really_probe+0x200/0x48c)
+[<c0621df4>] (really_probe) from [<c06221e8>] (driver_probe_device+0x78/0x1fc)
+[<c06221e8>] (driver_probe_device) from [<c061fcd4>] (bus_for_each_drv+0x74/0xb8)
+[<c061fcd4>] (bus_for_each_drv) from [<c0621b54>] (__device_attach+0xd4/0x16c)
+[<c0621b54>] (__device_attach) from [<c0620c98>] (bus_probe_device+0x88/0x90)
+[<c0620c98>] (bus_probe_device) from [<c06211b0>] (deferred_probe_work_func+0x3c/0xd0)
+[<c06211b0>] (deferred_probe_work_func) from [<c0149280>] (process_one_work+0x234/0x7dc)
+[<c0149280>] (process_one_work) from [<c014986c>] (worker_thread+0x44/0x51c)
+[<c014986c>] (worker_thread) from [<c0150b1c>] (kthread+0x158/0x1a0)
+[<c0150b1c>] (kthread) from [<c0100114>] (ret_from_fork+0x14/0x20)
+Exception stack(0xef121fb0 to 0xef121ff8)
+...
+---[ end trace 9724c2fc7cc9c982 ]---
 
-alg: ahash: sha224-ccp test failed (wrong result) on test vector ...
+While fixing this also fix the double call to dwc2_lowlevel_hw_disable()
+if dr_mode is set to USB_DR_MODE_PERIPHERAL. In such case low-level
+hardware is already disabled before calling usb_add_gadget_udc(). That
+function correctly preserves low-level hardware state, there is no need
+for the second unconditional dwc2_lowlevel_hw_disable() call.
 
-These errors are the result of improper processing of scatterlists mapped
-for DMA.
-
-Given a scatterlist in which entries are merged as part of mapping the
-scatterlist for DMA, the DMA length of a merged entry will reflect the
-combined length of the entries that were merged. The subsequent
-scatterlist entry will contain DMA information for the scatterlist entry
-after the last merged entry, but the non-DMA information will be that of
-the first merged entry.
-
-The ccp driver does not take this scatterlist merging into account. To
-address this, add a second scatterlist pointer to track the current
-position in the DMA mapped representation of the scatterlist. Both the DMA
-representation and the original representation of the scatterlist must be
-tracked as while most of the driver can use just the DMA representation,
-scatterlist_map_and_copy() must use the original representation and
-expects the scatterlist pointer to be accurate to the original
-representation.
-
-In order to properly walk the original scatterlist, the scatterlist must
-be walked until the combined lengths of the entries seen is equal to the
-DMA length of the current entry being processed in the DMA mapped
-representation.
-
-Fixes: 63b945091a070 ("crypto: ccp - CCP device driver and interface support")
-Signed-off-by: John Allen <john.allen@amd.com>
-Cc: stable@vger.kernel.org
-Acked-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 207324a321a8 ("usb: dwc2: Postponed gadget registration to the udc class driver")
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/ccp/ccp-dev.h |    1 +
- drivers/crypto/ccp/ccp-ops.c |   37 ++++++++++++++++++++++++++-----------
- 2 files changed, 27 insertions(+), 11 deletions(-)
+ drivers/usb/dwc2/platform.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/crypto/ccp/ccp-dev.h
-+++ b/drivers/crypto/ccp/ccp-dev.h
-@@ -444,6 +444,7 @@ struct ccp_sg_workarea {
- 	int nents;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 38926495c751d..f985315ebd3bd 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -668,6 +668,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	if (hsotg->gadget_enabled) {
+ 		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
+ 		if (retval) {
++			hsotg->gadget.udc = NULL;
+ 			dwc2_hsotg_remove(hsotg);
+ 			goto error;
+ 		}
+@@ -676,7 +677,8 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	return 0;
  
- 	struct scatterlist *dma_sg;
-+	struct scatterlist *dma_sg_head;
- 	struct device *dma_dev;
- 	unsigned int dma_count;
- 	enum dma_data_direction dma_dir;
---- a/drivers/crypto/ccp/ccp-ops.c
-+++ b/drivers/crypto/ccp/ccp-ops.c
-@@ -52,7 +52,7 @@ static u32 ccp_gen_jobid(struct ccp_devi
- static void ccp_sg_free(struct ccp_sg_workarea *wa)
- {
- 	if (wa->dma_count)
--		dma_unmap_sg(wa->dma_dev, wa->dma_sg, wa->nents, wa->dma_dir);
-+		dma_unmap_sg(wa->dma_dev, wa->dma_sg_head, wa->nents, wa->dma_dir);
- 
- 	wa->dma_count = 0;
+ error:
+-	dwc2_lowlevel_hw_disable(hsotg);
++	if (hsotg->dr_mode != USB_DR_MODE_PERIPHERAL)
++		dwc2_lowlevel_hw_disable(hsotg);
+ 	return retval;
  }
-@@ -81,6 +81,7 @@ static int ccp_init_sg_workarea(struct c
- 		return 0;
  
- 	wa->dma_sg = sg;
-+	wa->dma_sg_head = sg;
- 	wa->dma_dev = dev;
- 	wa->dma_dir = dma_dir;
- 	wa->dma_count = dma_map_sg(dev, sg, wa->nents, dma_dir);
-@@ -93,14 +94,28 @@ static int ccp_init_sg_workarea(struct c
- static void ccp_update_sg_workarea(struct ccp_sg_workarea *wa, unsigned int len)
- {
- 	unsigned int nbytes = min_t(u64, len, wa->bytes_left);
-+	unsigned int sg_combined_len = 0;
- 
- 	if (!wa->sg)
- 		return;
- 
- 	wa->sg_used += nbytes;
- 	wa->bytes_left -= nbytes;
--	if (wa->sg_used == wa->sg->length) {
--		wa->sg = sg_next(wa->sg);
-+	if (wa->sg_used == sg_dma_len(wa->dma_sg)) {
-+		/* Advance to the next DMA scatterlist entry */
-+		wa->dma_sg = sg_next(wa->dma_sg);
-+
-+		/* In the case that the DMA mapped scatterlist has entries
-+		 * that have been merged, the non-DMA mapped scatterlist
-+		 * must be advanced multiple times for each merged entry.
-+		 * This ensures that the current non-DMA mapped entry
-+		 * corresponds to the current DMA mapped entry.
-+		 */
-+		do {
-+			sg_combined_len += wa->sg->length;
-+			wa->sg = sg_next(wa->sg);
-+		} while (wa->sg_used > sg_combined_len);
-+
- 		wa->sg_used = 0;
- 	}
- }
-@@ -298,7 +313,7 @@ static unsigned int ccp_queue_buf(struct
- 	/* Update the structures and generate the count */
- 	buf_count = 0;
- 	while (sg_wa->bytes_left && (buf_count < dm_wa->length)) {
--		nbytes = min(sg_wa->sg->length - sg_wa->sg_used,
-+		nbytes = min(sg_dma_len(sg_wa->dma_sg) - sg_wa->sg_used,
- 			     dm_wa->length - buf_count);
- 		nbytes = min_t(u64, sg_wa->bytes_left, nbytes);
- 
-@@ -330,11 +345,11 @@ static void ccp_prepare_data(struct ccp_
- 	 * and destination. The resulting len values will always be <= UINT_MAX
- 	 * because the dma length is an unsigned int.
- 	 */
--	sg_src_len = sg_dma_len(src->sg_wa.sg) - src->sg_wa.sg_used;
-+	sg_src_len = sg_dma_len(src->sg_wa.dma_sg) - src->sg_wa.sg_used;
- 	sg_src_len = min_t(u64, src->sg_wa.bytes_left, sg_src_len);
- 
- 	if (dst) {
--		sg_dst_len = sg_dma_len(dst->sg_wa.sg) - dst->sg_wa.sg_used;
-+		sg_dst_len = sg_dma_len(dst->sg_wa.dma_sg) - dst->sg_wa.sg_used;
- 		sg_dst_len = min_t(u64, src->sg_wa.bytes_left, sg_dst_len);
- 		op_len = min(sg_src_len, sg_dst_len);
- 	} else {
-@@ -364,7 +379,7 @@ static void ccp_prepare_data(struct ccp_
- 		/* Enough data in the sg element, but we need to
- 		 * adjust for any previously copied data
- 		 */
--		op->src.u.dma.address = sg_dma_address(src->sg_wa.sg);
-+		op->src.u.dma.address = sg_dma_address(src->sg_wa.dma_sg);
- 		op->src.u.dma.offset = src->sg_wa.sg_used;
- 		op->src.u.dma.length = op_len & ~(block_size - 1);
- 
-@@ -385,7 +400,7 @@ static void ccp_prepare_data(struct ccp_
- 			/* Enough room in the sg element, but we need to
- 			 * adjust for any previously used area
- 			 */
--			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.sg);
-+			op->dst.u.dma.address = sg_dma_address(dst->sg_wa.dma_sg);
- 			op->dst.u.dma.offset = dst->sg_wa.sg_used;
- 			op->dst.u.dma.length = op->src.u.dma.length;
- 		}
-@@ -1447,7 +1462,7 @@ static int ccp_run_passthru_cmd(struct c
- 	dst.sg_wa.sg_used = 0;
- 	for (i = 1; i <= src.sg_wa.dma_count; i++) {
- 		if (!dst.sg_wa.sg ||
--		    (dst.sg_wa.sg->length < src.sg_wa.sg->length)) {
-+		    (sg_dma_len(dst.sg_wa.sg) < sg_dma_len(src.sg_wa.sg))) {
- 			ret = -EINVAL;
- 			goto e_dst;
- 		}
-@@ -1473,8 +1488,8 @@ static int ccp_run_passthru_cmd(struct c
- 			goto e_dst;
- 		}
- 
--		dst.sg_wa.sg_used += src.sg_wa.sg->length;
--		if (dst.sg_wa.sg_used == dst.sg_wa.sg->length) {
-+		dst.sg_wa.sg_used += sg_dma_len(src.sg_wa.sg);
-+		if (dst.sg_wa.sg_used == sg_dma_len(dst.sg_wa.sg)) {
- 			dst.sg_wa.sg = sg_next(dst.sg_wa.sg);
- 			dst.sg_wa.sg_used = 0;
- 		}
+-- 
+2.25.1
+
 
 
