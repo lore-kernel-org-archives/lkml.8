@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36946C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6269C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A5922B4D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9063C22D3E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597925066;
-	bh=r5tYPb2/P9cu4nmK8gdU2u2qMPpDu0/KjO0T5C9pjQ0=;
+	s=default; t=1597925067;
+	bh=3DbTosbn/9M8AZwshGP3ITLMyCZ5UHRUtgMC2+pda8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGWvBCGjRaJriNGNbJD9NCcs5M7Syho24emBaAkYMvvTuOJfuh9XioBe+co6Rp1A3
-	 t20CSsXQMGp8hPuG19KcC7WvgxTDRx0f4FxpPoZxplGmabCQWmmcx74kqhYliq++2P
-	 UFJinoDhOpDqCz3EK1rBSU2gkBlJkUGt1ayBvea4=
+	b=pnPHQu1ow404sKrxK5xq7/35WMHRMcuzytEuM1J5/b7F5bZFP1NZjZMMb4Lt1vM5Z
+	 ukwaCeCLvD1kFj3BDo9ct4C+uGSbvOGjFQkw7e/y2bdVgc3jJMsQsqz8bI2BFUY03q
+	 GBgAaaztW2QfNZC6LPCMopn5bMNpZ3bx7rPRPVfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbgHTMET (ORCPT
+        id S1730121AbgHTMEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45444 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:04:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729622AbgHTJ7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:59:22 -0400
+        id S1730395AbgHTJ7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:59:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3A28207FB;
-        Thu, 20 Aug 2020 09:59:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 769ED2067C;
+        Thu, 20 Aug 2020 09:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917561;
-        bh=r5tYPb2/P9cu4nmK8gdU2u2qMPpDu0/KjO0T5C9pjQ0=;
+        s=default; t=1597917559;
+        bh=3DbTosbn/9M8AZwshGP3ITLMyCZ5UHRUtgMC2+pda8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Juw6hGDOsphmPE4t8kUM/okUPKz6YUJl8GctULc8gWkrBTlWqTtl8IuJo/I1SB04l
-         UcoWpaEHxpZ8AVZUrL+IoKuiApjoJxTmeuYnba6oxnTU3f3SH8Cv692B34mv0O5Uue
-         5Ze9P1krZ/9WhsaGiRN+h/52kWJhFNyou2Ord1Qc=
+        b=pf2u4d1HuEkpOKXtr7K+kc9sTx3qnNe2RFQVD5Sr3uNM3l18IohqKS+efQktlmlY9
+         8PXLWaA097VP0bMHIXLh/MxoJeEaWpzbkuI9k58JvgfZ6Sgz5g63Z+yO0vxKF6w5SZ
+         qK7xnDDqzzFLg57ZMmdpXl1WZX6yKe4gJbJORgV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 075/212] net: lan78xx: replace bogus endpoint lookup
-Date:   Thu, 20 Aug 2020 11:20:48 +0200
-Message-Id: <20200820091606.158157750@linuxfoundation.org>
+Subject: [PATCH 4.9 074/212] vxlan: Ensure FDB dump is performed under RCU
+Date:   Thu, 20 Aug 2020 11:20:47 +0200
+Message-Id: <20200820091606.102963626@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,191 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit ea060b352654a8de1e070140d25fe1b7e4d50310 ]
+[ Upstream commit b5141915b5aec3b29a63db869229e3741ebce258 ]
 
-Drop the bogus endpoint-lookup helper which could end up accepting
-interfaces based on endpoints belonging to unrelated altsettings.
+The commit cited below removed the RCU read-side critical section from
+rtnl_fdb_dump() which means that the ndo_fdb_dump() callback is invoked
+without RCU protection.
 
-Note that the returned bulk pipes and interrupt endpoint descriptor
-were never actually used. Instead the bulk-endpoint numbers are
-hardcoded to 1 and 2 (matching the specification), while the interrupt-
-endpoint descriptor was assumed to be the third descriptor created by
-USB core.
+This results in the following warning [1] in the VXLAN driver, which
+relied on the callback being invoked from an RCU read-side critical
+section.
 
-Try to bring some order to this by dropping the bogus lookup helper and
-adding the missing endpoint sanity checks while keeping the interrupt-
-descriptor assumption for now.
+Fix this by calling rcu_read_lock() in the VXLAN driver, as already done
+in the bridge driver.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
+[1]
+WARNING: suspicious RCU usage
+5.8.0-rc4-custom-01521-g481007553ce6 #29 Not tainted
+-----------------------------
+drivers/net/vxlan.c:1379 RCU-list traversed in non-reader section!!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by bridge/166:
+ #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: netlink_dump+0xea/0x1090
+
+stack backtrace:
+CPU: 1 PID: 166 Comm: bridge Not tainted 5.8.0-rc4-custom-01521-g481007553ce6 #29
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
+Call Trace:
+ dump_stack+0x100/0x184
+ lockdep_rcu_suspicious+0x153/0x15d
+ vxlan_fdb_dump+0x51e/0x6d0
+ rtnl_fdb_dump+0x4dc/0xad0
+ netlink_dump+0x540/0x1090
+ __netlink_dump_start+0x695/0x950
+ rtnetlink_rcv_msg+0x802/0xbd0
+ netlink_rcv_skb+0x17a/0x480
+ rtnetlink_rcv+0x22/0x30
+ netlink_unicast+0x5ae/0x890
+ netlink_sendmsg+0x98a/0xf40
+ __sys_sendto+0x279/0x3b0
+ __x64_sys_sendto+0xe6/0x1a0
+ do_syscall_64+0x54/0xa0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fe14fa2ade0
+Code: Bad RIP value.
+RSP: 002b:00007fff75bb5b88 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00005614b1ba0020 RCX: 00007fe14fa2ade0
+RDX: 000000000000011c RSI: 00007fff75bb5b90 RDI: 0000000000000003
+RBP: 00007fff75bb5b90 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00005614b1b89160
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Fixes: 5e6d24358799 ("bridge: netlink dump interface at par with brctl")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/lan78xx.c |  117 +++++++++++-----------------------------------
- 1 file changed, 30 insertions(+), 87 deletions(-)
+ drivers/net/vxlan.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -315,10 +315,6 @@ struct lan78xx_net {
- 	struct tasklet_struct	bh;
- 	struct delayed_work	wq;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -889,6 +889,7 @@ static int vxlan_fdb_dump(struct sk_buff
+ 	for (h = 0; h < FDB_HASH_SIZE; ++h) {
+ 		struct vxlan_fdb *f;
  
--	struct usb_host_endpoint *ep_blkin;
--	struct usb_host_endpoint *ep_blkout;
--	struct usb_host_endpoint *ep_intr;
--
- 	int			msg_enable;
++		rcu_read_lock();
+ 		hlist_for_each_entry_rcu(f, &vxlan->fdb_head[h], hlist) {
+ 			struct vxlan_rdst *rd;
  
- 	struct urb		*urb_intr;
-@@ -2554,78 +2550,12 @@ lan78xx_start_xmit(struct sk_buff *skb,
- 	return NETDEV_TX_OK;
- }
- 
--static int
--lan78xx_get_endpoints(struct lan78xx_net *dev, struct usb_interface *intf)
--{
--	int tmp;
--	struct usb_host_interface *alt = NULL;
--	struct usb_host_endpoint *in = NULL, *out = NULL;
--	struct usb_host_endpoint *status = NULL;
--
--	for (tmp = 0; tmp < intf->num_altsetting; tmp++) {
--		unsigned ep;
--
--		in = NULL;
--		out = NULL;
--		status = NULL;
--		alt = intf->altsetting + tmp;
--
--		for (ep = 0; ep < alt->desc.bNumEndpoints; ep++) {
--			struct usb_host_endpoint *e;
--			int intr = 0;
--
--			e = alt->endpoint + ep;
--			switch (e->desc.bmAttributes) {
--			case USB_ENDPOINT_XFER_INT:
--				if (!usb_endpoint_dir_in(&e->desc))
--					continue;
--				intr = 1;
--				/* FALLTHROUGH */
--			case USB_ENDPOINT_XFER_BULK:
--				break;
--			default:
--				continue;
--			}
--			if (usb_endpoint_dir_in(&e->desc)) {
--				if (!intr && !in)
--					in = e;
--				else if (intr && !status)
--					status = e;
--			} else {
--				if (!out)
--					out = e;
--			}
--		}
--		if (in && out)
--			break;
--	}
--	if (!alt || !in || !out)
--		return -EINVAL;
--
--	dev->pipe_in = usb_rcvbulkpipe(dev->udev,
--				       in->desc.bEndpointAddress &
--				       USB_ENDPOINT_NUMBER_MASK);
--	dev->pipe_out = usb_sndbulkpipe(dev->udev,
--					out->desc.bEndpointAddress &
--					USB_ENDPOINT_NUMBER_MASK);
--	dev->ep_intr = status;
--
--	return 0;
--}
--
- static int lan78xx_bind(struct lan78xx_net *dev, struct usb_interface *intf)
- {
- 	struct lan78xx_priv *pdata = NULL;
- 	int ret;
- 	int i;
- 
--	ret = lan78xx_get_endpoints(dev, intf);
--	if (ret) {
--		netdev_warn(dev->net, "lan78xx_get_endpoints failed: %d\n",
--			    ret);
--		return ret;
--	}
--
- 	dev->data[0] = (unsigned long)kzalloc(sizeof(*pdata), GFP_KERNEL);
- 
- 	pdata = (struct lan78xx_priv *)(dev->data[0]);
-@@ -3333,6 +3263,7 @@ static void lan78xx_stat_monitor(unsigne
- static int lan78xx_probe(struct usb_interface *intf,
- 			 const struct usb_device_id *id)
- {
-+	struct usb_host_endpoint *ep_blkin, *ep_blkout, *ep_intr;
- 	struct lan78xx_net *dev;
- 	struct net_device *netdev;
- 	struct usb_device *udev;
-@@ -3383,32 +3314,44 @@ static int lan78xx_probe(struct usb_inte
- 
- 	mutex_init(&dev->stats.access_lock);
- 
--	ret = lan78xx_bind(dev, intf);
--	if (ret < 0)
--		goto out2;
--	strcpy(netdev->name, "eth%d");
--
--	if (netdev->mtu > (dev->hard_mtu - netdev->hard_header_len))
--		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
--	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
--
- 	if (intf->cur_altsetting->desc.bNumEndpoints < 3) {
- 		ret = -ENODEV;
--		goto out3;
-+		goto out2;
+@@ -901,12 +902,15 @@ static int vxlan_fdb_dump(struct sk_buff
+ 						     cb->nlh->nlmsg_seq,
+ 						     RTM_NEWNEIGH,
+ 						     NLM_F_MULTI, rd);
+-				if (err < 0)
++				if (err < 0) {
++					rcu_read_unlock();
+ 					goto out;
++				}
+ skip:
+ 				*idx += 1;
+ 			}
+ 		}
++		rcu_read_unlock();
  	}
- 
--	dev->ep_blkin = (intf->cur_altsetting)->endpoint + 0;
--	dev->ep_blkout = (intf->cur_altsetting)->endpoint + 1;
--	dev->ep_intr = (intf->cur_altsetting)->endpoint + 2;
--
- 	dev->pipe_in = usb_rcvbulkpipe(udev, BULK_IN_PIPE);
-+	ep_blkin = usb_pipe_endpoint(udev, dev->pipe_in);
-+	if (!ep_blkin || !usb_endpoint_is_bulk_in(&ep_blkin->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
- 	dev->pipe_out = usb_sndbulkpipe(udev, BULK_OUT_PIPE);
-+	ep_blkout = usb_pipe_endpoint(udev, dev->pipe_out);
-+	if (!ep_blkout || !usb_endpoint_is_bulk_out(&ep_blkout->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
-+
-+	ep_intr = &intf->cur_altsetting->endpoint[2];
-+	if (!usb_endpoint_is_int_in(&ep_intr->desc)) {
-+		ret = -ENODEV;
-+		goto out2;
-+	}
- 
- 	dev->pipe_intr = usb_rcvintpipe(dev->udev,
--					dev->ep_intr->desc.bEndpointAddress &
--					USB_ENDPOINT_NUMBER_MASK);
--	period = dev->ep_intr->desc.bInterval;
-+					usb_endpoint_num(&ep_intr->desc));
-+
-+	ret = lan78xx_bind(dev, intf);
-+	if (ret < 0)
-+		goto out2;
-+	strcpy(netdev->name, "eth%d");
-+
-+	if (netdev->mtu > (dev->hard_mtu - netdev->hard_header_len))
-+		netdev->mtu = dev->hard_mtu - netdev->hard_header_len;
-+	netif_set_gso_max_size(netdev, MAX_SINGLE_PACKET_SIZE - MAX_HEADER);
- 
-+	period = ep_intr->desc.bInterval;
- 	maxp = usb_maxpacket(dev->udev, dev->pipe_intr, 0);
- 	buf = kmalloc(maxp, GFP_KERNEL);
- 	if (buf) {
+ out:
+ 	return err;
 
 
