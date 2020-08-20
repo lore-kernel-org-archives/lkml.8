@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D8C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7848320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45FE20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:58:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928300;
-	bh=d/jGMt1oCsLc4aGnO5K2JI8v956XOiQWLDA7FUVXzRI=;
+	s=default; t=1597928301;
+	bh=nfgCGoTCSYZV/HWOTSgdJtuoqoTvoAl+MUxVncVuKnI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2X8EVa9VLKYOM0ycIVntYJ81a9vl+BK6mx0yxJm3mdTcr0IYqoySbq+910uybqjk
-	 +4A7NmL4qh+z236pFSZvPM2sVFHV2BI+5P2iT6c6UpC0gopEbpFxR37lJEbH1aFWpl
-	 /YNJcEZLCGHYrhGTBnXa9c2qaEFCOkJQoJyedXlI=
+	b=W98cb8BS3knGnexO76sj92tTjToC/oW0Bb57F6j9VCWwCJ3nrFxFyy3FZLtN4CRet
+	 KxNrm2XS2DC7nFSW7TtyXnsniZYfUSm5jKdeyw0bF8a8Uer1bO/QCLZeT3awiqOLif
+	 PSruiHy0Y+ia+rw968KLDGgEeBMxDJELReclk6pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgHTM6Q (ORCPT
+        id S1728651AbgHTJkq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:58:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33426 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbgHTJkt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:49 -0400
+        id S1729034AbgHTJk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1912320855;
-        Thu, 20 Aug 2020 09:40:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 606B3207DE;
+        Thu, 20 Aug 2020 09:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916448;
-        bh=d/jGMt1oCsLc4aGnO5K2JI8v956XOiQWLDA7FUVXzRI=;
+        s=default; t=1597916429;
+        bh=nfgCGoTCSYZV/HWOTSgdJtuoqoTvoAl+MUxVncVuKnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d7RNM4jB2icLYVOPnBWayqmihC+2iN/DX5bs6kKY1T3pvSNsdTG0rSxUgBK4DBlXh
-         Yf0Dy/vYCGwR2iZo71e8l4NY37kBlaHv/VuErWFbTz9t2aef9+rLYzJQ72i99WfZ6d
-         oqVJ9UbLUsGY9YPFd6uiL0jceu1r4CRpoTHrCaMI=
+        b=CKMRaZghwTOJJLuV/dYPiJ3tE7EE286Ce5os5vM+QkslNm6B5CPo5UbDPl6zbFBg2
+         6ft0XsNtGX8705bXpguTMnUtHzIZTN3SJ3KsAOYQZUAwsO/wEOeth+wki8MGD4aiVf
+         KCtyqfXPpiPafnRslyEEqSnN87Ebhn6FAZ6Btcsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 132/204] f2fs: compress: fix to avoid memory leak on cc->cpages
-Date:   Thu, 20 Aug 2020 11:20:29 +0200
-Message-Id: <20200820091612.871866317@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.7 094/204] remoteproc: qcom: q6v5: Update running state before requesting stop
+Date:   Thu, 20 Aug 2020 11:19:51 +0200
+Message-Id: <20200820091611.029928743@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,37 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-[ Upstream commit 02772fbfcba8597eef9d5c5f7f94087132d0c1d4 ]
+commit 5b7be880074c73540948f8fc597e0407b98fabfa upstream.
 
-Memory allocated for storing compressed pages' poitner should be
-released after f2fs_write_compressed_pages(), otherwise it will
-cause memory leak issue.
+Sometimes the stop triggers a watchdog rather than a stop-ack. Update
+the running state to false on requesting stop to skip the watchdog
+instead.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Fixes: 4c8ff7095bef ("f2fs: support data compression")
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Error Logs:
+$ echo stop > /sys/class/remoteproc/remoteproc0/state
+ipa 1e40000.ipa: received modem stopping event
+remoteproc-modem: watchdog received: sys_m_smsm_mpss.c:291:APPS force stop
+qcom-q6v5-mss 4080000.remoteproc-modem: port failed halt
+ipa 1e40000.ipa: received modem offline event
+remoteproc0: stopped remote processor 4080000.remoteproc-modem
+
+Reviewed-by: Evan Green <evgreen@chromium.org>
+Fixes: 3b415c8fb263 ("remoteproc: q6v5: Extract common resource handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200602163257.26978-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/compress.c | 2 ++
+ drivers/remoteproc/qcom_q6v5.c |    2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-index a5b2e72174bb1..527d50edcb956 100644
---- a/fs/f2fs/compress.c
-+++ b/fs/f2fs/compress.c
-@@ -1250,6 +1250,8 @@ int f2fs_write_multi_pages(struct compress_ctx *cc,
- 		err = f2fs_write_compressed_pages(cc, submitted,
- 							wbc, io_type);
- 		cops->destroy_compress_ctx(cc);
-+		kfree(cc->cpages);
-+		cc->cpages = NULL;
- 		if (!err)
- 			return 0;
- 		f2fs_bug_on(F2FS_I_SB(cc->inode), err != -EAGAIN);
--- 
-2.25.1
-
+--- a/drivers/remoteproc/qcom_q6v5.c
++++ b/drivers/remoteproc/qcom_q6v5.c
+@@ -153,6 +153,8 @@ int qcom_q6v5_request_stop(struct qcom_q
+ {
+ 	int ret;
+ 
++	q6v5->running = false;
++
+ 	qcom_smem_state_update_bits(q6v5->state,
+ 				    BIT(q6v5->stop_bit), BIT(q6v5->stop_bit));
+ 
 
 
