@@ -2,108 +2,145 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9D5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DACE8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332102078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B370D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lXFKb9OH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fSa5QNiI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jRSU7EbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgHTJFP (ORCPT
+        id S1726788AbgHTJGi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:05:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53038 "EHLO
+        Thu, 20 Aug 2020 05:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbgHTJFP (ORCPT
+        with ESMTP id S1725866AbgHTJGg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:05:15 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3558C061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:05:14 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 11:05:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597914313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BY1/xe/W0Y+FdQUFvwqmNldvnhuLkfAT2vY3hzSmrP8=;
-        b=lXFKb9OHDKQqEf+67ZO1kFvvmi0vohKIO5L3mG0fPdTWjm/MPHZtNTJz0d9TNJRIk8AeuO
-        K8PZOKYFWxnCspweD/H0akoSic2XHSIGYrYqZNalRi1BO9OCe99J/n0VmzHZ7rJ2iH2OF3
-        K3So+rwweUVVLeJg0wcZKcjUsiQtFN+Rdb3Abc7oL782vKdKyyLSYxc8i/2hZjGM27rqCR
-        2MhVx3UaTrANSte1jP1qkAtf/qO27ssz4he6AaU5BTSDH1cW92WDpi3No3noKvyxUbSPNU
-        kGQnQGKvVy6mSA27pfeGrH8puFH3R8ZnlfsexiAmKkK4edLDppDVkYP0Qjnu9A==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597914313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BY1/xe/W0Y+FdQUFvwqmNldvnhuLkfAT2vY3hzSmrP8=;
-        b=fSa5QNiIU0KSMTXI+TV0iAlN7J79hsJjN7pO5UQm2+hK36BsIa2OmYnIeawOdKzbcaFcyT
-        qxOWxX//3R9KGQBQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        tglx@linutronix.de
-Subject: Re: [PATCH] lockdep: Do no validate wait context for novalidate class
-Message-ID: <20200820090511.umk4x7xmdylnxcen@linutronix.de>
-References: <20200629201529.1017485-1-bigeasy@linutronix.de>
+        Thu, 20 Aug 2020 05:06:36 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F53C061757;
+        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id v15so546933lfg.6;
+        Thu, 20 Aug 2020 02:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
+        b=jRSU7EbPYuaZa+y1ww5c1uQFbyH05AS+4/y9F7u0zfd9hNB2tnzBPNp8je59myQNMQ
+         jHPH6tBd1Wwn7BdCa00KVXc60BSdX0Ndq10P7ka8NPFWg1ZJ3LsSZv0w8HBp6uQ3NiAh
+         dj5XA0KHwLfCp0cjSlMmH6bx+JfVFMeQqSseCHBBmtyfNIM9YIojgpQJL8XUFhtSBjsW
+         EUKBfwxwlk5cLYa8WcK31DAuysfcZ2hLaBPSEULzoNNVE+3ShAUapOTgWe+4CkfB57ZP
+         mL01BWILpPiVjIBecOCA99KxCmG02TPxV3cr0jcgUSZ2kUozu8reoSXmgLtmVOjnXzBX
+         ScIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ZB4PCuqp8Bl2dkJy5Fm6Sj2/MRT/e7zYVg69/U7Iw3A=;
+        b=Lsh2CwfShDBkNd0QHhxQpJ5PFwQ1O8F9BGOG7/khoezcFf5LJAMoZGtHtZ+OGM4S1t
+         W0/XsySxQa++blbuW0C9ETdM8ZGWeMkPl38hwiELgHemG4gCp9ih2UGuzNe/GujRc+FC
+         54yc/StFO5BdUEj0vM0vKtS4C/Pg/3Gk28AvEaCqo98kxuQmVHyUJkd27LPGY6zFkm7t
+         njkNlXJVXwKYs4NuSCpDj1AnYMCIuS0R51n+YLWEkE/Qh4YFMYuYsS2EpGf36FnRaT5Q
+         6eca+EpWPxIo1Wz2rxy7H44u1N+LWAtrsRqZKkahr2MAkeNdt4uxFPLnMqXWJ4fL12lV
+         JS8w==
+X-Gm-Message-State: AOAM530BxC/WcGbim/ATHLCysKAIaCi3aeOFZKnI9gM7PGg/7HvA9a6O
+        Iv8QqWBaYwqN/6Vs1jhuHPI/GMgpAa/Iwgub
+X-Google-Smtp-Source: ABdhPJx586OB1ZFNi8bmTijB1iKrXx0pOQq+0PCvDWVugFZLEr8cnAEYNYIu9kBNKKo6DTiGbe/wQw==
+X-Received: by 2002:a05:6512:3185:: with SMTP id i5mr1144189lfe.205.1597914394167;
+        Thu, 20 Aug 2020 02:06:34 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b? ([2a00:1fa0:42ab:a165:4cb2:5f04:a1e8:63b])
+        by smtp.gmail.com with ESMTPSA id j2sm322988ljb.98.2020.08.20.02.06.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Aug 2020 02:06:33 -0700 (PDT)
+Subject: Re: [PATCH v8 4/4] arm64: boot: dts: qcom: pm8150b: Add DTS node for
+ PMIC VBUS booster
+To:     Wesley Cheng <wcheng@codeaurora.org>, sboyd@kernel.org,
+        heikki.krogerus@linux.intel.com, agross@kernel.org,
+        robh+dt@kernel.org, gregkh@linuxfoundation.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+References: <20200812071925.315-1-wcheng@codeaurora.org>
+ <20200812071925.315-5-wcheng@codeaurora.org>
+ <1ed0a34c-6219-fe3d-7d9c-13a74ce2d4d0@gmail.com>
+ <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+From:   Sergei Shtylyov <sergei.shtylyov@gmail.com>
+Organization: Brain-dead Software
+Message-ID: <eaf4618c-54da-c522-52c6-1edec7744872@gmail.com>
+Date:   Thu, 20 Aug 2020 12:06:23 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629201529.1017485-1-bigeasy@linutronix.de>
+In-Reply-To: <02111c69-73fd-5e8c-5594-27393865d458@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-29 22:15:29 [+0200], To linux-kernel@vger.kernel.org wrote:
-> The novalidate class is ignored in the lockchain validation but is
-> considered in the wait context validation.
-> If a mutex and a spinlock_t is ignored by using
-> lockdep_set_novalidate_class() then both locks will share the same lock
-> class. From the wait validation point of view the mutex will then appear
-> like a spinlock_t and the validator will complain if another mutex will
-> be acquired.
+On 20.08.2020 10:47, Wesley Cheng wrote:
+
+[...]
+>>> Add the required DTS node for the USB VBUS output regulator, which is
+>>> available on PM8150B.  This will provide the VBUS source to connected
+>>> peripherals.
+>>>
+>>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>>> ---
+>>>    arch/arm64/boot/dts/qcom/pm8150b.dtsi   | 6 ++++++
+>>>    arch/arm64/boot/dts/qcom/sm8150-mtp.dts | 4 ++++
+>>>    2 files changed, 10 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> index 053c659734a7..9e560c1ca30d 100644
+>>> --- a/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> +++ b/arch/arm64/boot/dts/qcom/pm8150b.dtsi
+>>> @@ -53,6 +53,12 @@ power-on@800 {
+>>>                status = "disabled";
+>>>            };
+>>>    +        pm8150b_vbus: dcdc@1100 {
+>>
+>>     s/dcdc/regulator/? What is "dcdc", anyway?
+>>     The device nodes must have the generic names, according to the DT spec.
+>>
 > 
-> Ignore the nonvalidate locks from wait context checking.
-
-ping :)
-
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  kernel/locking/lockdep.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Hi Sergei,
 > 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 29a8de4c50b90..fb9a642d8ebef 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -4067,7 +4067,7 @@ static int check_wait_context(struct task_struct *curr, struct held_lock *next)
->  	 */
->  	for (depth = curr->lockdep_depth - 1; depth >= 0; depth--) {
->  		struct held_lock *prev = curr->held_locks + depth;
-> -		if (prev->irq_context != next->irq_context)
-> +		if (prev->check && prev->irq_context != next->irq_context)
->  			break;
->  	}
->  	depth++;
-> @@ -4078,6 +4078,9 @@ static int check_wait_context(struct task_struct *curr, struct held_lock *next)
->  		struct held_lock *prev = curr->held_locks + depth;
->  		short prev_inner = hlock_class(prev)->wait_type_inner;
->  
-> +		if (!prev->check)
-> +			continue;
-> +
->  		if (prev_inner) {
->  			/*
->  			 * We can have a bigger inner than a previous one
+> Thanks for the comment!
 
-Sebastian
+     You're welcome.
+
+> DCDC is the label that we use for the DC to DC converter block, since
+> the VBUS booster will output 5V to the connected devices.  Would it make
+> more sense to have "dc-dc?"
+
+    Better use s/th like "regulator-dcdc". As I said, the names should be 
+generic, reflecting the device class.
+
+> Thanks
+> Wesley
+> 
+>>> +            compatible = "qcom,pm8150b-vbus-reg";
+>>> +            status = "disabled";
+>>> +            reg = <0x1100>;
+>>> +        };
+>>> +
+>>>            pm8150b_typec: typec@1500 {
+>>>                compatible = "qcom,pm8150b-usb-typec";
+>>>                status = "disabled";
+>> [...]
+
+MBR, Sergei
