@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176C5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A909C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6E9720855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364112078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922192;
-	bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
+	s=default; t=1597922207;
+	bh=drCnvPZzinWqadusPb6S7VHLDe/iVp0ejK+ac/FIrf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pL9korezoRG8TTQAqBGY2ApKf7z57eCaS+auHqY7VFdbCxT7FtkB9xmT3qXhuhnuy
-	 oPlwM46dBxxieUPHa5M3tcRCw0Q9MFt36KZcwKp2fXZdLOW5FgtlPhOHML9k7xnWhq
-	 hytGv8acvTxPY0sPWpwuZ9KpKsIRY1gpDgcSR2Ik=
+	b=O7Ki744ebduz/vPNvjREuVmadO9Qd2awZUybiQcnNEoXiEEIGkMxCFkp5VX05mESp
+	 Yl05qN0YcuYqRxQ/BzHAPKryOuKShPFLjdWzU2kul047t+wfR1f89ijBODR7ihclRJ
+	 lH/kxLg6aA4i9d/mEfziEY1EQZWV5+gWwyr3E3hE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730225AbgHTLQG (ORCPT
+        id S1728622AbgHTLQo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:16:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41648 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:16:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730735AbgHTKIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:48 -0400
+        id S1730670AbgHTKIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C4FF2075E;
-        Thu, 20 Aug 2020 10:08:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 609742075E;
+        Thu, 20 Aug 2020 10:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918127;
-        bh=o4l7/CzR2RC+FJbDc3/jPbOByK3INs3SyymKtf/GbjQ=;
+        s=default; t=1597918120;
+        bh=drCnvPZzinWqadusPb6S7VHLDe/iVp0ejK+ac/FIrf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rQtjgoeqmGvcfNLxEeTcvYSe8oYdDZKR80I+4mdtGYbMrLxYCjkRGbqf43dslk5Ud
-         /fsyRu7jexKBOmMGgJmaXpng5Y7ifcQvXrgjC8KrEdKMo0ZDs4zWmjiA9UPpNfHfUV
-         KQZnPlFGoblA7qpaFLDdwgw6JICpxsysIX5dTLA4=
+        b=ah8jsIgWYTg/LxS+FJRsSfIIITqM2v66C1WPh3kXvBOOq4Qn8CYo4oGJVux0Unwca
+         b6LXyIlu7OkaMKgWT8z9LVOwEFYTPci3L2k7/zTzVI8mKYpFA3W2AKRYfe/hvuUH+v
+         D2a5opjCVtA24uTyKbHbjBZA4NzX7b4eCLAKwz6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
+        Christoph Hellwig <hch@lst.de>,
+        Dominique Martinet <asmadeus@codewreck.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 063/228] drm/radeon: Fix reference count leaks caused by pm_runtime_get_sync
-Date:   Thu, 20 Aug 2020 11:20:38 +0200
-Message-Id: <20200820091610.755420696@linuxfoundation.org>
+Subject: [PATCH 4.14 019/228] net/9p: validate fds in p9_fd_open
+Date:   Thu, 20 Aug 2020 11:19:54 +0200
+Message-Id: <20200820091608.492354438@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,72 +62,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 9fb10671011143d15b6b40d6d5fa9c52c57e9d63 ]
+[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+p9_fd_open just fgets file descriptors passed in from userspace, but
+doesn't verify that they are valid for read or writing.  This gets
+cought down in the VFS when actually attempting a read or write, but
+a new warning added in linux-next upsets syzcaller.
 
-Acked-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix this by just verifying the fds early on.
+
+Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
+Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+[Dominique: amend goto as per Doug Nazar's review]
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/radeon/radeon_display.c | 4 +++-
- drivers/gpu/drm/radeon/radeon_drv.c     | 4 +++-
- drivers/gpu/drm/radeon/radeon_kms.c     | 4 +++-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ net/9p/trans_fd.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index d86110cdf0852..b2334349799d1 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -627,8 +627,10 @@ radeon_crtc_set_config(struct drm_mode_set *set,
- 	dev = set->crtc->dev;
+diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
+index 32de8afbfbf8e..9f020559c1928 100644
+--- a/net/9p/trans_fd.c
++++ b/net/9p/trans_fd.c
+@@ -829,20 +829,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
+ 		return -ENOMEM;
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
+ 	ts->rd = fget(rfd);
++	if (!ts->rd)
++		goto out_free_ts;
++	if (!(ts->rd->f_mode & FMODE_READ))
++		goto out_put_rd;
+ 	ts->wr = fget(wfd);
+-	if (!ts->rd || !ts->wr) {
+-		if (ts->rd)
+-			fput(ts->rd);
+-		if (ts->wr)
+-			fput(ts->wr);
+-		kfree(ts);
+-		return -EIO;
+-	}
++	if (!ts->wr)
++		goto out_put_rd;
++	if (!(ts->wr->f_mode & FMODE_WRITE))
++		goto out_put_wr;
  
- 	ret = drm_crtc_helper_set_config(set, ctx);
+ 	client->trans = ts;
+ 	client->status = Connected;
  
-diff --git a/drivers/gpu/drm/radeon/radeon_drv.c b/drivers/gpu/drm/radeon/radeon_drv.c
-index f6908e2f9e55a..41e8abd099784 100644
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -496,8 +496,10 @@ long radeon_drm_ioctl(struct file *filp,
- 	long ret;
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
+ 	return 0;
++
++out_put_wr:
++	fput(ts->wr);
++out_put_rd:
++	fput(ts->rd);
++out_free_ts:
++	kfree(ts);
++	return -EIO;
+ }
  
- 	ret = drm_ioctl(filp, cmd, arg);
- 	
-diff --git a/drivers/gpu/drm/radeon/radeon_kms.c b/drivers/gpu/drm/radeon/radeon_kms.c
-index dfee8f7d94ae5..2e28cf8118404 100644
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -659,8 +659,10 @@ int radeon_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 	file_priv->driver_priv = NULL;
- 
- 	r = pm_runtime_get_sync(dev->dev);
--	if (r < 0)
-+	if (r < 0) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return r;
-+	}
- 
- 	/* new gpu have virtual address space support */
- 	if (rdev->family >= CHIP_CAYMAN) {
+ static int p9_socket_open(struct p9_client *client, struct socket *csocket)
 -- 
 2.25.1
 
