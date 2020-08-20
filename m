@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6320BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AB0C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAC9208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DACD21775
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916117;
-	bh=eevjQnw9rouQmoVAWrlOyJAU3VncyMN6KmHNuM6x0uY=;
+	s=default; t=1597916120;
+	bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QLUfvy922VForl/YFAbIh1JF0gHV40q3+G4SzLmRNRW/zunojaKr9MNke7mQjpEIa
-	 2Craf9ES5NyqJGhOUx79hCgB1jAByzAAvuh9H9SedNfyM4ti9LD9jDtru1gkuBZU1p
-	 UYhLhXgB7JyTNJpzHm9O6k83Ke++zuk0Ps+KAR+U=
+	b=zK3TpIL6/899VB3PYQcILuZGQtYtqfvJi5m8ux11tyvZnn3iawpTS4419ogVx+Bnt
+	 ouPXj4AaKTaCQy/RDd0B8GnXc3WHewEjsB701AK+/cRBtbq+TGto0K1fgdelMhnBjO
+	 7Qfeb+oLjYop6kiSfunh8jjJ1v6rftaYkXHPkvNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgHTJfO (ORCPT
+        id S1728509AbgHTJfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:35:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42980 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:35:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgHTJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:31:16 -0400
+        id S1728415AbgHTJd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:33:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5DDD21775;
-        Thu, 20 Aug 2020 09:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7283B22B3F;
+        Thu, 20 Aug 2020 09:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915876;
-        bh=eevjQnw9rouQmoVAWrlOyJAU3VncyMN6KmHNuM6x0uY=;
+        s=default; t=1597915999;
+        bh=eZkObATRnty0e7Ot5i/YiemRbDKHfPtcLirUorAG2kc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1k6/eG/g3LaOi6gF2rj9BHegFRSTz+8RIGDQtkabR84vt48NCjzcXYrZC/kPslAg0
-         gkB0SkfNrrbKE2FM5z4buyphRXc12Sflcc8fmY0kOLgiJw1+NQradPXNkn44BbcCI1
-         SMQxVYgqt/zreX/k7+viY7c4d47f0W+WDKem1iiA=
+        b=ftSsdOrGVaAql5wYJ/vG3H684I531j8GSkHl0qa+az35vpgUadsoyi89eudtoAiIV
+         eeSbkv5c4D56MUKDcwHbP75axX+pQAlAAT1YBn3gTbraTqYONB+6ZNQwMGZPiouZRf
+         C8PLZEf28w7mHp77IoCcxLycAbe+in4SQpAqolKk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>,
-        Barry Song <baohua@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 166/232] clk: clk-atlas6: fix return value check in atlas6_clk_init()
-Date:   Thu, 20 Aug 2020 11:20:17 +0200
-Message-Id: <20200820091620.854473044@linuxfoundation.org>
+Subject: [PATCH 5.8 208/232] fs/minix: remove expected error message in block_to_path()
+Date:   Thu, 20 Aug 2020 11:20:59 +0200
+Message-Id: <20200820091622.885457754@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,37 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xu Wang <vulab@iscas.ac.cn>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit 12b90b40854a8461a02ef19f6f4474cc88d64b66 ]
+[ Upstream commit f666f9fb9a36f1c833b9d18923572f0e4d304754 ]
 
-In case of error, the function clk_register() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value check
-should be replaced with IS_ERR().
+When truncating a file to a size within the last allowed logical block,
+block_to_path() is called with the *next* block.  This exceeds the limit,
+causing the "block %ld too big" error message to be printed.
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
-Link: https://lore.kernel.org/r/20200713032143.21362-1-vulab@iscas.ac.cn
-Acked-by: Barry Song <baohua@kernel.org>
-Fixes: 7bf21bc81f28 ("clk: sirf: re-arch to make the codes support both prima2 and atlas6")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+This case isn't actually an error; there are just no more blocks past that
+point.  So, remove this error message.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Link: http://lkml.kernel.org/r/20200628060846.682158-7-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sirf/clk-atlas6.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/minix/itree_v1.c | 12 ++++++------
+ fs/minix/itree_v2.c | 12 ++++++------
+ 2 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/sirf/clk-atlas6.c b/drivers/clk/sirf/clk-atlas6.c
-index c84d5bab7ac28..b95483bb6a5ec 100644
---- a/drivers/clk/sirf/clk-atlas6.c
-+++ b/drivers/clk/sirf/clk-atlas6.c
-@@ -135,7 +135,7 @@ static void __init atlas6_clk_init(struct device_node *np)
- 
- 	for (i = pll1; i < maxclk; i++) {
- 		atlas6_clks[i] = clk_register(NULL, atlas6_clk_hw_array[i]);
--		BUG_ON(!atlas6_clks[i]);
-+		BUG_ON(IS_ERR(atlas6_clks[i]));
- 	}
- 	clk_register_clkdev(atlas6_clks[cpu], NULL, "cpu");
- 	clk_register_clkdev(atlas6_clks[io],  NULL, "io");
+diff --git a/fs/minix/itree_v1.c b/fs/minix/itree_v1.c
+index 405573a79aab4..1fed906042aa8 100644
+--- a/fs/minix/itree_v1.c
++++ b/fs/minix/itree_v1.c
+@@ -29,12 +29,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, inode->i_sb->s_bdev);
+-	} else if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, inode->i_sb->s_bdev);
+-	} else if (block < 7) {
++		return 0;
++	}
++	if ((u64)block * BLOCK_SIZE >= inode->i_sb->s_maxbytes)
++		return 0;
++
++	if (block < 7) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= 7) < 512) {
+ 		offsets[n++] = 7;
+diff --git a/fs/minix/itree_v2.c b/fs/minix/itree_v2.c
+index ee8af2f9e2828..9d00f31a2d9d1 100644
+--- a/fs/minix/itree_v2.c
++++ b/fs/minix/itree_v2.c
+@@ -32,12 +32,12 @@ static int block_to_path(struct inode * inode, long block, int offsets[DEPTH])
+ 	if (block < 0) {
+ 		printk("MINIX-fs: block_to_path: block %ld < 0 on dev %pg\n",
+ 			block, sb->s_bdev);
+-	} else if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes) {
+-		if (printk_ratelimit())
+-			printk("MINIX-fs: block_to_path: "
+-			       "block %ld too big on dev %pg\n",
+-				block, sb->s_bdev);
+-	} else if (block < DIRCOUNT) {
++		return 0;
++	}
++	if ((u64)block * (u64)sb->s_blocksize >= sb->s_maxbytes)
++		return 0;
++
++	if (block < DIRCOUNT) {
+ 		offsets[n++] = block;
+ 	} else if ((block -= DIRCOUNT) < INDIRCOUNT(sb)) {
+ 		offsets[n++] = DIRCOUNT;
 -- 
 2.25.1
 
