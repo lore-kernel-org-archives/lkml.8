@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AB1C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2323FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6F6E20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EADED20658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919237;
-	bh=pPVcXf/aBgvM1oGI0qVpK319Q+boiR2vN4KW4yK3AMM=;
+	s=default; t=1597919250;
+	bh=mtp6d66p2I3R3obgM+Jhh+mnbb27xVJ81nUwr8awmjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kibM3YPYWsNqTaeygetYK2kXfl18WJGvxSZxkBsWL6gPyD0c6q3GIZqG2fsDLbRX+
-	 JmmZn6DL6ECrrin/HvPNDatSweykwWDuHGY+NeK9ed6RiR1/4C1W5O9Km1Dlxg7IOB
-	 eUMpGI8fhjiqnVGtSInU9aqPHdgdlk6hgWd9Neh4=
+	b=KIYNaa5AQHzc44v33bjLY42bOP5Yc4tDQSCfOB6iqz3dc4v4kJy6wtAUszjVWtSzM
+	 6++xNi0ISFbxS3pImaJ6I30XZu/ZfDmQqkzTj5g/339AEygObN6ixTz72rYTvxx/zB
+	 YuFE0IHfliZ6RklhyC0r89ra4X3t2wziK6w0WJPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgHTKWe (ORCPT
+        id S1731219AbgHTK13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49920 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:27:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731611AbgHTKWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:17 -0400
+        id S1731629AbgHTKWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B54E620658;
-        Thu, 20 Aug 2020 10:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D582072D;
+        Thu, 20 Aug 2020 10:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918937;
-        bh=pPVcXf/aBgvM1oGI0qVpK319Q+boiR2vN4KW4yK3AMM=;
+        s=default; t=1597918950;
+        bh=mtp6d66p2I3R3obgM+Jhh+mnbb27xVJ81nUwr8awmjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RK19ZZBdFW2xEHbkDu4ih6lE5RCF4XLhH/7DXOq8YRsUPXKf/RohORFQgwqK5AfEq
-         +IlMzAD1AIOkQtPUdF9YuSFDdSn56YD2zO4e6q7ILVTVW4vJXlH9GdJhK4pfn9Xm3m
-         tsM0qA3GSiXRjVTK4qYQUdQw+0+UerQjmj3WHu68=
+        b=kZ3nLOWPZIO95xweml+E8E+Yl0/zu49M0Z/0utONxWXbTbDajlHzRq+46cknNFgkN
+         iG7GTDPFk6wYNMwa3tX7GUEuyIMEtZeUPVKNdDHT2vPWue8PVXSSmFhXIQYFWMJXBJ
+         cwX2hqFdHbR+sperXdp1pkqLdcldLi4gYjgkdX5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 121/149] btrfs: only search for left_info if there is no right_info in try_merge_free_space
-Date:   Thu, 20 Aug 2020 11:23:18 +0200
-Message-Id: <20200820092131.560846881@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
+        BingJing Chang <bingjingc@synology.com>,
+        Danny Shih <dannyshih@synology.com>,
+        ChangSyun Peng <allenpeng@synology.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 4.4 126/149] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
+Date:   Thu, 20 Aug 2020 11:23:23 +0200
+Message-Id: <20200820092131.806741655@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -59,64 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: ChangSyun Peng <allenpeng@synology.com>
 
-commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
+commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
 
-In try_to_merge_free_space we attempt to find entries to the left and
-right of the entry we are adding to see if they can be merged.  We
-search for an entry past our current info (saved into right_info), and
-then if right_info exists and it has a rb_prev() we save the rb_prev()
-into left_info.
+In degraded raid5, we need to read parity to do reconstruct-write when
+data disks fail. However, we can not read parity from
+handle_stripe_dirtying() in force reconstruct-write mode.
 
-However there's a slight problem in the case that we have a right_info,
-but no entry previous to that entry.  At that point we will search for
-an entry just before the info we're attempting to insert.  This will
-simply find right_info again, and assign it to left_info, making them
-both the same pointer.
+Reproducible Steps:
 
-Now if right_info _can_ be merged with the range we're inserting, we'll
-add it to the info and free right_info.  However further down we'll
-access left_info, which was right_info, and thus get a use-after-free.
+1. Create degraded raid5
+mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
+2. Set rmw_level to 0
+echo 0 > /sys/block/md2/md/rmw_level
+3. IO to raid5
 
-Fix this by only searching for the left entry if we don't find a right
-entry at all.
+Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
+the parity in this situation.
 
-The CVE referenced had a specially crafted file system that could
-trigger this use-after-free. However with the tree checker improvements
-we no longer trigger the conditions for the UAF.  But the original
-conditions still apply, hence this fix.
-
-Reference: CVE-2019-19448
-Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: <stable@vger.kernel.org> # v4.4+
+Reviewed-by: Alex Wu <alexwu@synology.com>
+Reviewed-by: BingJing Chang <bingjingc@synology.com>
+Reviewed-by: Danny Shih <dannyshih@synology.com>
+Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/free-space-cache.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/md/raid5.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2158,7 +2158,7 @@ out:
- static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
- 			  struct btrfs_free_space *info, bool update_stat)
- {
--	struct btrfs_free_space *left_info;
-+	struct btrfs_free_space *left_info = NULL;
- 	struct btrfs_free_space *right_info;
- 	bool merged = false;
- 	u64 offset = info->offset;
-@@ -2173,7 +2173,7 @@ static bool try_merge_free_space(struct
- 	if (right_info && rb_prev(&right_info->offset_index))
- 		left_info = rb_entry(rb_prev(&right_info->offset_index),
- 				     struct btrfs_free_space, offset_index);
--	else
-+	else if (!right_info)
- 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
- 
- 	if (right_info && !right_info->bitmap) {
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3345,6 +3345,7 @@ static int need_this_block(struct stripe
+ 	 * is missing/faulty, then we need to read everything we can.
+ 	 */
+ 	if (sh->raid_conf->level != 6 &&
++	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
+ 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
+ 		/* reconstruct-write isn't being forced */
+ 		return 0;
+@@ -4479,7 +4480,7 @@ static void handle_stripe(struct stripe_
+ 	 * or to load a block that is being partially written.
+ 	 */
+ 	if (s.to_read || s.non_overwrite
+-	    || (conf->level == 6 && s.to_write && s.failed)
++	    || (s.to_write && s.failed)
+ 	    || (s.syncing && (s.uptodate + s.compute < disks))
+ 	    || s.replacing
+ 	    || s.expanding)
 
 
