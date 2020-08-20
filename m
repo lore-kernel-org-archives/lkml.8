@@ -2,51 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F08C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F9CC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E70F20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2505C20FC3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928260;
-	bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
+	s=default; t=1597928266;
+	bh=xIWhDWnMtprZ575A1uCdjon2U3PFJGPff7fZSyx6LAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+EL+H8R97inYyCVRZHiz9tRlAczcnglixPEdbNxVna0nWwVK3nlvb9j8V4QdgQPn
-	 hYpksZIR5rOXCZZV5HWE1DOEJwYv3gdOqzCC9WO6ix20n2lHolSVVQJXb9jfOHsVUp
-	 JGeRLbLQknMWb9Hy+8aOp1ZO/g5tHHHtzyaycTIM=
+	b=B7bFtD9LJ6j43KERhB//ujSmNgboeL2Nr3xZf0DTZUZgPaaQRJCAzrTb8Fu5KGD2h
+	 yQQiv5XCJqQ1KqwnPVaDJHaiQObq69ryi3tWDw0EPew/Ua5n4aQlPW1QUeSZ1vOU7l
+	 eorcpa5dqH+hi7UMxlZ8Kw5Z+eJem5Kcw0OxwQyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgHTM5h (ORCPT
+        id S1729073AbgHTJk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:57:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33902 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgHTJlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:41:02 -0400
+        id S1728626AbgHTJki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 773C720724;
-        Thu, 20 Aug 2020 09:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B93E20724;
+        Thu, 20 Aug 2020 09:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916462;
-        bh=usJB+l/bgRxFMU7RdfbA4FT6nQW4eTysKwPja/RlPHM=;
+        s=default; t=1597916437;
+        bh=xIWhDWnMtprZ575A1uCdjon2U3PFJGPff7fZSyx6LAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nY//QjhNfvrPYvQeaBTXJeM9r8ugYdVNwiN15TZ6carYL1y9T1inbyzW9Qtbh9qbi
-         Afd6bJ9dj84lSrkXf2Ukb0SoNOHAiCOx5YeF2xV3qjF93k1/z+lqyX7kmVxemWsDJb
-         2HzZnlPZc3woDnCR6Saw1VGcUWnObbL7iS3WP2ys=
+        b=wbhPSJ0xBS08HlKkKTqX2/jBx1y34ZFEMfjgSbJwyxnTCNAp6GfusEX/IaEksJcEB
+         Mq34mpX9Maeyhmtu2IvgH6ix2V/tAnhjarVHK6I7iTkwU9Xe7oCEoZJ3ngbDqbnOoV
+         gjCzHLE8lhZoVnttd6vH7WGD47DSIswJOFPX/01w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 137/204] iommu/omap: Check for failure of a call to omap_iommu_dump_ctx
-Date:   Thu, 20 Aug 2020 11:20:34 +0200
-Message-Id: <20200820091613.093509816@linuxfoundation.org>
+        stable@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Liu Ying <victor.liu@nxp.com>
+Subject: [PATCH 5.7 097/204] drm/imx: imx-ldb: Disable both channels for split mode in enc->disable()
+Date:   Thu, 20 Aug 2020 11:19:54 +0200
+Message-Id: <20200820091611.171356635@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,43 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Liu Ying <victor.liu@nxp.com>
 
-[ Upstream commit dee9d154f40c58d02f69acdaa5cfd1eae6ebc28b ]
+commit 3b2a999582c467d1883716b37ffcc00178a13713 upstream.
 
-It is possible for the call to omap_iommu_dump_ctx to return
-a negative error number, so check for the failure and return
-the error number rather than pass the negative value to
-simple_read_from_buffer.
+Both of the two LVDS channels should be disabled for split mode
+in the encoder's ->disable() callback, because they are enabled
+in the encoder's ->enable() callback.
 
-Fixes: 14e0e6796a0d ("OMAP: iommu: add initial debugfs support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20200714192211.744776-1-colin.king@canonical.com
-Addresses-Coverity: ("Improper use of negative value")
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 6556f7f82b9c ("drm: imx: Move imx-drm driver out of staging")
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: NXP Linux Team <linux-imx@nxp.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Liu Ying <victor.liu@nxp.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iommu/omap-iommu-debug.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/imx/imx-ldb.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iommu/omap-iommu-debug.c b/drivers/iommu/omap-iommu-debug.c
-index 8e19bfa94121e..a99afb5d9011c 100644
---- a/drivers/iommu/omap-iommu-debug.c
-+++ b/drivers/iommu/omap-iommu-debug.c
-@@ -98,8 +98,11 @@ static ssize_t debug_read_regs(struct file *file, char __user *userbuf,
- 	mutex_lock(&iommu_debug_lock);
+--- a/drivers/gpu/drm/imx/imx-ldb.c
++++ b/drivers/gpu/drm/imx/imx-ldb.c
+@@ -303,18 +303,19 @@ static void imx_ldb_encoder_disable(stru
+ {
+ 	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+ 	struct imx_ldb *ldb = imx_ldb_ch->ldb;
++	int dual = ldb->ldb_ctrl & LDB_SPLIT_MODE_EN;
+ 	int mux, ret;
  
- 	bytes = omap_iommu_dump_ctx(obj, p, count);
-+	if (bytes < 0)
-+		goto err;
- 	bytes = simple_read_from_buffer(userbuf, count, ppos, buf, bytes);
+ 	drm_panel_disable(imx_ldb_ch->panel);
  
-+err:
- 	mutex_unlock(&iommu_debug_lock);
- 	kfree(buf);
+-	if (imx_ldb_ch == &ldb->channel[0])
++	if (imx_ldb_ch == &ldb->channel[0] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH0_MODE_EN_MASK;
+-	else if (imx_ldb_ch == &ldb->channel[1])
++	if (imx_ldb_ch == &ldb->channel[1] || dual)
+ 		ldb->ldb_ctrl &= ~LDB_CH1_MODE_EN_MASK;
  
--- 
-2.25.1
-
+ 	regmap_write(ldb->regmap, IOMUXC_GPR2, ldb->ldb_ctrl);
+ 
+-	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
++	if (dual) {
+ 		clk_disable_unprepare(ldb->clk[0]);
+ 		clk_disable_unprepare(ldb->clk[1]);
+ 	}
 
 
