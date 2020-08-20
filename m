@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F629C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BAFC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB80620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E36122B4B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926314;
-	bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
+	s=default; t=1597926322;
+	bh=Ppm1C6MX9zQmNg+5iS5ogBkLzVjwjFP12u3V1FrqDlU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FRqvIYrXVafjLgSuHkPnofy+44Zm4gxS9KMT89am6W9uxrkaEEagllfmZqfZycSi
-	 f5LdCXqA+OpZrg+63JERFjdfwJugvK8Y5EhnGvz5Y8d5pfmTmpze2qtq/9PO14Iikp
-	 AIpXVsyGLmwAwXgWcm+rb1fcJYabfkOTmpAQi4uQ=
+	b=ntnnSIiLtTokiv9US5AGgnUb8bk3N4zNcaw53gvfmz7VhQoGwL/OBwoytMsxs+d3t
+	 fxpZduFXtjigAsx4A6p4Mir2H5PqYi5zmTOXwP5bKy74ufT2EJVe+dfRhIp7qs3Glh
+	 3b3dZerLCHkUeq9pxpLN21UUNT2HUxHyIA3jtsAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730366AbgHTMZN (ORCPT
+        id S1730054AbgHTJxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:25:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35664 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:53:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729960AbgHTJxi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:38 -0400
+        id S1729942AbgHTJx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9BE32078D;
-        Thu, 20 Aug 2020 09:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAD45207FB;
+        Thu, 20 Aug 2020 09:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917218;
-        bh=vSitispOIH9uthRDNZAz+wOCPCaFL10vqRce8X+JzYc=;
+        s=default; t=1597917205;
+        bh=Ppm1C6MX9zQmNg+5iS5ogBkLzVjwjFP12u3V1FrqDlU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ao+vz7PFjMoaydpvj+Kk6FzltgAVjY9WWdF+GcltdemKae6FAPXpkI6Ydb7eg+b1C
-         qORLUTZkbtT7zNJsyGzU2sQ88Zg94Jkh5sJ6i+WlGACb/hGmejMGLBUkOqnahx6WnR
-         DFjlg1LD/XfOJ8fMbcJ9+rC4+ARtUI3/Xxq+AhhA=
+        b=pmOr/mx7hR+w7Y43dei+8YBo/qwz+FcYhJAhO8ZJrRzaILq5Vx43tzX/b6Q8RULmN
+         yEkEs0k2okRbbo24GnVnR9hFF6JWEhcfBgG9LPyKTIuqogbF8wBh7Nt5Lh5ahe28X2
+         hh7ynUxITXFKqr2CHDKdKJwHaUNzk7Ty/u/6u93M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 15/92] btrfs: only search for left_info if there is no right_info in try_merge_free_space
-Date:   Thu, 20 Aug 2020 11:21:00 +0200
-Message-Id: <20200820091538.337979619@linuxfoundation.org>
+        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 40/92] tracing: Use trace_sched_process_free() instead of exit() for pid tracing
+Date:   Thu, 20 Aug 2020 11:21:25 +0200
+Message-Id: <20200820091539.716867117@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,64 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
+commit afcab636657421f7ebfa0783a91f90256bba0091 upstream.
 
-In try_to_merge_free_space we attempt to find entries to the left and
-right of the entry we are adding to see if they can be merged.  We
-search for an entry past our current info (saved into right_info), and
-then if right_info exists and it has a rb_prev() we save the rb_prev()
-into left_info.
+On exit, if a process is preempted after the trace_sched_process_exit()
+tracepoint but before the process is done exiting, then when it gets
+scheduled in, the function tracers will not filter it properly against the
+function tracing pid filters.
 
-However there's a slight problem in the case that we have a right_info,
-but no entry previous to that entry.  At that point we will search for
-an entry just before the info we're attempting to insert.  This will
-simply find right_info again, and assign it to left_info, making them
-both the same pointer.
+That is because the function tracing pid filters hooks to the
+sched_process_exit() tracepoint to remove the exiting task's pid from the
+filter list. Because the filtering happens at the sched_switch tracepoint,
+when the exiting task schedules back in to finish up the exit, it will no
+longer be in the function pid filtering tables.
 
-Now if right_info _can_ be merged with the range we're inserting, we'll
-add it to the info and free right_info.  However further down we'll
-access left_info, which was right_info, and thus get a use-after-free.
+This was noticeable in the notrace self tests on a preemptable kernel, as
+the tests would fail as it exits and preempted after being taken off the
+notrace filter table and on scheduling back in it would not be in the
+notrace list, and then the ending of the exit function would trace. The test
+detected this and would fail.
 
-Fix this by only searching for the left entry if we don't find a right
-entry at all.
-
-The CVE referenced had a specially crafted file system that could
-trigger this use-after-free. However with the tree checker improvements
-we no longer trigger the conditions for the UAF.  But the original
-conditions still apply, hence this fix.
-
-Reference: CVE-2019-19448
-Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
-CC: stable@vger.kernel.org # 4.4+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 1e10486ffee0a ("ftrace: Add 'function-fork' trace option")
+Fixes: c37775d57830a ("tracing: Add infrastructure to allow set_event_pid to follow children"
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/free-space-cache.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/ftrace.c       |    4 ++--
+ kernel/trace/trace_events.c |    4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -2169,7 +2169,7 @@ out:
- static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
- 			  struct btrfs_free_space *info, bool update_stat)
- {
--	struct btrfs_free_space *left_info;
-+	struct btrfs_free_space *left_info = NULL;
- 	struct btrfs_free_space *right_info;
- 	bool merged = false;
- 	u64 offset = info->offset;
-@@ -2184,7 +2184,7 @@ static bool try_merge_free_space(struct
- 	if (right_info && rb_prev(&right_info->offset_index))
- 		left_info = rb_entry(rb_prev(&right_info->offset_index),
- 				     struct btrfs_free_space, offset_index);
--	else
-+	else if (!right_info)
- 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
- 
- 	if (right_info && !right_info->bitmap) {
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6450,12 +6450,12 @@ void ftrace_pid_follow_fork(struct trace
+ 	if (enable) {
+ 		register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						  tr);
+-		register_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						  tr);
+ 	} else {
+ 		unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
++		unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
+ 						    tr);
+ 	}
+ }
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -534,12 +534,12 @@ void trace_event_follow_fork(struct trac
+ 	if (enable) {
+ 		register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						       tr, INT_MIN);
+-		register_trace_prio_sched_process_exit(event_filter_pid_sched_process_exit,
++		register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
+ 						       tr, INT_MAX);
+ 	} else {
+ 		unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
+ 						    tr);
+-		unregister_trace_sched_process_exit(event_filter_pid_sched_process_exit,
++		unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
+ 						    tr);
+ 	}
+ }
 
 
