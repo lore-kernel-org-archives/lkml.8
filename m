@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C6EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1F37208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C50FF20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:32:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930346;
-	bh=Mlo04NAwqU0Kk+zWv/II0kvQJ5NJbELIWe+SPqU84EM=;
+	s=default; t=1597930352;
+	bh=Ot+IlbwWoYcMtGQlRqjPHSZwBDd0x0OKpAG8nmv7J4g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b6l2HNeMInKmjPhD4xbEMxPywfia5IuHj4ERWDFbUZhSqSW6+VQXFAPEBknOQTEUJ
-	 Ec0+1nGN/fsB612SPdgh5LJ6wybJ2VxhocITRDiq2Gcf/7nHpHYc4iHrp+f/oABJG+
-	 w1CMPSRgD7LZVsJQ0zbhW2dih3HQjQslg4v6K6gM=
+	b=k/sCH7cHA5RtNX5IwUOOZN3Vv8Ux46zm0fowbFQ8b3dYmrg5y0n1IXTnUv6oRhZZ8
+	 jMHzhC6dsE1emm6TeRB+8b+X2VgMBn7SQzgjEXRVo0WWeqLjimgyqR75Y0YfW8jSmw
+	 OmGj5P4jg+GXbuDBjYkYWrhqpU893hYxGUDJ2rXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHTNcW (ORCPT
+        id S1729512AbgHTNc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:32:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44738 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:32:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgHTJcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:32:19 -0400
+        id S1727859AbgHTJbO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0CF3121775;
-        Thu, 20 Aug 2020 09:32:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1511F208E4;
+        Thu, 20 Aug 2020 09:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915939;
-        bh=Mlo04NAwqU0Kk+zWv/II0kvQJ5NJbELIWe+SPqU84EM=;
+        s=default; t=1597915873;
+        bh=Ot+IlbwWoYcMtGQlRqjPHSZwBDd0x0OKpAG8nmv7J4g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W3KRChmaiW8lSFSiAtZV2Oo5UR2RACic9l18Y8Rnby25R+bHv/LOUwD8eLHqNskyk
-         0+7DR9v5XpJYUdU+Ro9CzrUY+ePwD/dSFaGOzgBC+0l8nO/rur9AZj0avRqZV5pqZD
-         gzikuMOy4Us2gKoIsPgCBAF8cLGc/XaUcsQKzPks=
+        b=m+Fj59qV2nZXhUcTxywvpke6sa+YEyLANVuz+vTkKKJf7WgO+QLTf2V8pxXRBn4+S
+         kL0P/SP6H8/MLuSz3igxD4ad4oYANMr/vJMtrKinOai4UE/fY3p2vJZpnzbIg7/MQE
+         Q+Ean9MFg/509RrvUpGJHnJP7Hs345xhz23HJjCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tero Kristo <t-kristo@ti.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        stable@vger.kernel.org, Konrad Dybcio <konradybcio@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 186/232] watchdog: rti-wdt: balance pm runtime enable calls
-Date:   Thu, 20 Aug 2020 11:20:37 +0200
-Message-Id: <20200820091621.805011507@linuxfoundation.org>
+Subject: [PATCH 5.8 165/232] clk: qcom: gcc-sdm660: Fix up gcc_mss_mnoc_bimc_axi_clk
+Date:   Thu, 20 Aug 2020 11:20:16 +0200
+Message-Id: <20200820091620.802984528@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,44 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Konrad Dybcio <konradybcio@gmail.com>
 
-[ Upstream commit d5b29c2c5ba2bd5bbdb5b744659984185d17d079 ]
+[ Upstream commit 3386af51d3bcebcba3f7becdb1ef2e384abe90cf ]
 
-PM runtime should be disabled in the fail path of probe and when
-the driver is removed.
+Add missing halt_check, hwcg_reg and hwcg_bit properties.
+These were likely omitted when porting the driver upstream.
 
-Fixes: 2d63908bdbfb ("watchdog: Add K3 RTI watchdog support")
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200717132958.14304-5-t-kristo@ti.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
+Link: https://lore.kernel.org/r/20200726111215.22361-9-konradybcio@gmail.com
+Fixes: f2a76a2955c0 ("clk: qcom: Add Global Clock controller (GCC) driver for SDM660")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/rti_wdt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/qcom/gcc-sdm660.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-index d456dd72d99a0..c904496fff65e 100644
---- a/drivers/watchdog/rti_wdt.c
-+++ b/drivers/watchdog/rti_wdt.c
-@@ -211,6 +211,7 @@ static int rti_wdt_probe(struct platform_device *pdev)
+diff --git a/drivers/clk/qcom/gcc-sdm660.c b/drivers/clk/qcom/gcc-sdm660.c
+index bf5730832ef3d..c6fb57cd576f5 100644
+--- a/drivers/clk/qcom/gcc-sdm660.c
++++ b/drivers/clk/qcom/gcc-sdm660.c
+@@ -1715,6 +1715,9 @@ static struct clk_branch gcc_mss_cfg_ahb_clk = {
  
- err_iomap:
- 	pm_runtime_put_sync(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return ret;
- }
-@@ -221,6 +222,7 @@ static int rti_wdt_remove(struct platform_device *pdev)
- 
- 	watchdog_unregister_device(&wdt->wdd);
- 	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
- 
- 	return 0;
- }
+ static struct clk_branch gcc_mss_mnoc_bimc_axi_clk = {
+ 	.halt_reg = 0x8a004,
++	.halt_check = BRANCH_HALT,
++	.hwcg_reg = 0x8a004,
++	.hwcg_bit = 1,
+ 	.clkr = {
+ 		.enable_reg = 0x8a004,
+ 		.enable_mask = BIT(0),
 -- 
 2.25.1
 
