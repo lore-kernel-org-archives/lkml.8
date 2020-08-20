@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DA2C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC735C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73F0A206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 933D2206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:56:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920958;
-	bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
+	s=default; t=1597920973;
+	bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RI5UQW9QjoCujgUBkW8oG32028CyVtsHxjlOUn56XMAo6aNFUaga/+2Bh4wbFkxyg
-	 xurUSywoyb4XhdQXjpJWhwBgmgJYLZTeKwaJ1o8tRtVT7RQB/lBhYERzdYmMLfAfyU
-	 /zdAms3LniuL2S/AyTCwqE3jGBd/wfzp1ADmldrY=
+	b=vFtb9Kyojcu7C76NcleXttcdTQ+k2bAaTf+cEtOaBq6nsfJ3sgmukse+zE1Pv7Bph
+	 aM3GNfDuWKgSCmGBqRPzMZTcKEIGeHeyg0KD8UrRS2fMZd8rDn4sbfEtOyzL4X7TyF
+	 CzjNhkjzbFHi4P6sxwi3ITqys/TINobKdRv6CNzU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731272AbgHTKz4 (ORCPT
+        id S1731443AbgHTK4L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:55:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60414 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:56:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731078AbgHTKOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:09 -0400
+        id S1730323AbgHTKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74FF42075E;
-        Thu, 20 Aug 2020 10:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFBEC20724;
+        Thu, 20 Aug 2020 10:14:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918448;
-        bh=2xhDejPCoJNUZGSpbwq/HA5M4V1OMaAxiLC57IJTps8=;
+        s=default; t=1597918441;
+        bh=Vz1IWgRRXlQKFbJAubLEj5+gx2dz54XngUGfMWWbNtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RgEWXxK8oUcmg1asa7azEpIZFR07oN7trGSpgoPhM45CRzsThtDVI4qz/SUbhZvl/
-         HlC5eliYFyHdpENCOyfalhmdssS/Sf7n+8vOVgn8fhO6vzEVNkMlbWlJzNzd8p1QT5
-         dxB+EDzHpYdzsqCLuScbhpD++spvrFgq3Mkr9h5o=
+        b=tUIayVyxAW5mkD4rK098obgeEh5mZOXraFl2BFStvHeCDtx8oMSGUA27h4KLZaU0C
+         JM+U+BXiOwrhUifoCDqe0qMUl/6pNwJn5eCUMd1/VL2OoP/SagWDzWWRP+l55KB/Ch
+         Zvxl+0qlm+GZLlJ6WlErU461EQwIYZ7KYH7Z9T4U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Charles Stanhope <charles.stanhope@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 4.14 173/228] iio: dac: ad5592r: fix unbalanced mutex unlocks in ad5592r_read_raw()
-Date:   Thu, 20 Aug 2020 11:22:28 +0200
-Message-Id: <20200820091616.233864627@linuxfoundation.org>
+        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 153/228] fs/minix: check return value of sb_getblk()
+Date:   Thu, 20 Aug 2020 11:22:08 +0200
+Message-Id: <20200820091615.228057563@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,47 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 65afb0932a81c1de719ceee0db0b276094b10ac8 upstream.
+commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
 
-There are 2 exit paths where the lock isn't held, but try to unlock the
-mutex when exiting. In these places we should just return from the
-function.
+Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
 
-A neater approach would be to cleanup the ad5592r_read_raw(), but that
-would make this patch more difficult to backport to stable versions.
+This series fixes all syzbot bugs in the minix filesystem:
 
-Fixes 56ca9db862bf3: ("iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs")
-Reported-by: Charles Stanhope <charles.stanhope@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+	KASAN: null-ptr-deref Write in get_block
+	KASAN: use-after-free Write in get_block
+	KASAN: use-after-free Read in get_block
+	WARNING in inc_nlink
+	KMSAN: uninit-value in get_block
+	WARNING in drop_nlink
+
+It also fixes the minix filesystem to set s_maxbytes correctly, so that
+userspace sees the correct behavior when exceeding the max file size.
+
+This patch (of 6):
+
+sb_getblk() can fail, so check its return value.
+
+This fixes a NULL pointer dereference.
+
+Originally from Qiujun Huang.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
+Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/dac/ad5592r-base.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/minix/itree_common.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -417,7 +417,7 @@ static int ad5592r_read_raw(struct iio_d
- 			s64 tmp = *val * (3767897513LL / 25LL);
- 			*val = div_s64_rem(tmp, 1000000000LL, val2);
+--- a/fs/minix/itree_common.c
++++ b/fs/minix/itree_common.c
+@@ -75,6 +75,7 @@ static int alloc_branch(struct inode *in
+ 	int n = 0;
+ 	int i;
+ 	int parent = minix_new_block(inode);
++	int err = -ENOSPC;
  
--			ret = IIO_VAL_INT_PLUS_MICRO;
-+			return IIO_VAL_INT_PLUS_MICRO;
- 		} else {
- 			int mult;
+ 	branch[0].key = cpu_to_block(parent);
+ 	if (parent) for (n = 1; n < num; n++) {
+@@ -85,6 +86,11 @@ static int alloc_branch(struct inode *in
+ 			break;
+ 		branch[n].key = cpu_to_block(nr);
+ 		bh = sb_getblk(inode->i_sb, parent);
++		if (!bh) {
++			minix_free_block(inode, nr);
++			err = -ENOMEM;
++			break;
++		}
+ 		lock_buffer(bh);
+ 		memset(bh->b_data, 0, bh->b_size);
+ 		branch[n].bh = bh;
+@@ -103,7 +109,7 @@ static int alloc_branch(struct inode *in
+ 		bforget(branch[i].bh);
+ 	for (i = 0; i < n; i++)
+ 		minix_free_block(inode, block_to_cpu(branch[i].key));
+-	return -ENOSPC;
++	return err;
+ }
  
-@@ -448,7 +448,7 @@ static int ad5592r_read_raw(struct iio_d
- 		ret =  IIO_VAL_INT;
- 		break;
- 	default:
--		ret = -EINVAL;
-+		return -EINVAL;
- 	}
- 
- unlock:
+ static inline int splice_branch(struct inode *inode,
 
 
