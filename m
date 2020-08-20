@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECE6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEA72078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6922054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922725;
-	bh=JviOPlayrNp5TUqYGsqdv/rzayIkoShqBQoDfszUVDA=;
+	s=default; t=1597922731;
+	bh=vMGy+V5Zfyl5g0UcIxMTLd91UpIRZ9UdAsZAKGQVYX0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g9I2i8b6O3MhqNYKP8QdEO1IWphZJozEc+sV+VlDJ4Yua2BS3u8j8tRc5EGy3bLaQ
-	 D7XiWnWVSt7IChkGBNhni1uuLs8gUu64HwxrtZDVOj+q47cvLi2kj7pXuWIxXmAsbx
-	 cb//idV7V73Ju4DTCSmHfEocuH/tQ24zLo8dyemk=
+	b=ksyjUTfymaZJyxYwoF4dORWRIi7DLYbzAtIzAPyizMpcxh563hX5En5h0MVY7mFaz
+	 rsJKsxQT0XSAVc6NgD4HtZ/QCknUf6wljBUU1/Ah55fMf1DlX426/6zS4h26WqvFeb
+	 9BC2VW5FgmvrfLLfzvXAHLeJTIjES9hfOqhfFBfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbgHTLZY (ORCPT
+        id S1728250AbgHTLZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36308 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:25:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730501AbgHTKGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:53 -0400
+        id S1730502AbgHTKGs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6AC12067C;
-        Thu, 20 Aug 2020 10:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72BA4206DA;
+        Thu, 20 Aug 2020 10:06:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918013;
-        bh=JviOPlayrNp5TUqYGsqdv/rzayIkoShqBQoDfszUVDA=;
+        s=default; t=1597918008;
+        bh=vMGy+V5Zfyl5g0UcIxMTLd91UpIRZ9UdAsZAKGQVYX0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z1LicdltTKjVqr4e7/5fQ9jo2/G7+hqn2J+6NPKciG3hqCoTfAHC02MpnA+QN8sss
-         YKLPiCVc95tnmUrcxnYP5PKUXQppk7+acpxCCxSc38ny5qLNxBvm83Gy0fbVzYpdG3
-         GIsxyMDCuPHtK9dZHymo0AMkbZZHvuULeL4yDY5s=
+        b=XJ+X00q8Dk775SjZunRYfR4ett89SFHea4btq3oSIMLOXwPjFoHXARqMKUg7E0fHw
+         z1dy7NkRILW5pae40f7m7UOZ40fzv4afKH14Cw0SMmbs1GO8bQwa3kfnlnj6TMe2zh
+         TCsRI8rj/kNDRM40YDLYb6mI8gzzHAIlzGJY20ws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com,
-        syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com,
-        Hillf Danton <hdanton@sina.com>, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 006/228] ALSA: seq: oss: Serialize ioctls
-Date:   Thu, 20 Aug 2020 11:19:41 +0200
-Message-Id: <20200820091607.848935183@linuxfoundation.org>
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Forest Crossman <cyrozap@gmail.com>
+Subject: [PATCH 4.14 004/228] usb: xhci: define IDs for various ASMedia host controllers
+Date:   Thu, 20 Aug 2020 11:19:39 +0200
+Message-Id: <20200820091607.746148065@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,51 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Forest Crossman <cyrozap@gmail.com>
 
-commit 80982c7e834e5d4e325b6ce33757012ecafdf0bb upstream.
+commit 1841cb255da41e87bed9573915891d056f80e2e7 upstream.
 
-Some ioctls via OSS sequencer API may race and lead to UAF when the
-port create and delete are performed concurrently, as spotted by a
-couple of syzkaller cases.  This patch is an attempt to address it by
-serializing the ioctls with the existing register_mutex.
+Not all ASMedia host controllers have a device ID that matches its part
+number. #define some of these IDs to make it clearer at a glance which
+chips require what quirks.
 
-Basically OSS sequencer API is an obsoleted interface and was designed
-without much consideration of the concurrency.  There are very few
-applications with it, and the concurrent performance isn't asked,
-hence this "big hammer" approach should be good enough.
-
-Reported-by: syzbot+1a54a94bd32716796edd@syzkaller.appspotmail.com
-Reported-by: syzbot+9d2abfef257f3e2d4713@syzkaller.appspotmail.com
-Suggested-by: Hillf Danton <hdanton@sina.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200804185815.2453-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Forest Crossman <cyrozap@gmail.com>
+Link: https://lore.kernel.org/r/20200728042408.180529-2-cyrozap@gmail.com
+Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/oss/seq_oss.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci-pci.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/sound/core/seq/oss/seq_oss.c
-+++ b/sound/core/seq/oss/seq_oss.c
-@@ -181,10 +181,16 @@ static long
- odev_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct seq_oss_devinfo *dp;
-+	long rc;
-+
- 	dp = file->private_data;
- 	if (snd_BUG_ON(!dp))
- 		return -ENXIO;
--	return snd_seq_oss_ioctl(dp, cmd, arg);
-+
-+	mutex_lock(&register_mutex);
-+	rc = snd_seq_oss_ioctl(dp, cmd, arg);
-+	mutex_unlock(&register_mutex);
-+	return rc;
- }
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -59,7 +59,9 @@
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_3			0x43ba
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_2			0x43bb
+ #define PCI_DEVICE_ID_AMD_PROMONTORYA_1			0x43bc
++#define PCI_DEVICE_ID_ASMEDIA_1042_XHCI			0x1042
+ #define PCI_DEVICE_ID_ASMEDIA_1042A_XHCI		0x1142
++#define PCI_DEVICE_ID_ASMEDIA_2142_XHCI			0x2142
  
- #ifdef CONFIG_COMPAT
+ static const char hcd_name[] = "xhci_hcd";
+ 
+@@ -230,13 +232,13 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1042)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042_XHCI)
+ 		xhci->quirks |= XHCI_BROKEN_STREAMS;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x1142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_1042A_XHCI)
+ 		xhci->quirks |= XHCI_TRUST_TX_LENGTH;
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
+-			pdev->device == 0x2142)
++		pdev->device == PCI_DEVICE_ID_ASMEDIA_2142_XHCI)
+ 		xhci->quirks |= XHCI_NO_64BIT_SUPPORT;
+ 
+ 	if (pdev->vendor == PCI_VENDOR_ID_ASMEDIA &&
 
 
