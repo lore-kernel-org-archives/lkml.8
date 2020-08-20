@@ -2,54 +2,56 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38414C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A9EC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05947207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A82207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922954;
-	bh=vrOyQnGK/t2OkbAq8wY4LopWCiFIowqmS7MRxb2aC70=;
+	s=default; t=1597922976;
+	bh=gXQKUixbcqk1akb5Ehd3N74M/WishC/eje2yI7weVVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CK0jV43I4SxsBeqjETAzxLws4Sb+frJexudyQ3eGvWZFzwrOo4TdWXhUJWsb2MgEL
-	 IGIjWlBAoop94ChfNm0hsvRKl0cY1AnmDBn3BniuX77e2mQmb7g34tRUCWjre751Tr
-	 sLxsjv8wShrzHJU8XSClnurWU4Q0kXqLPNfqRrZY=
+	b=u/G3S9D6E1/wpC3arfz7hMAR2Olm4P4ydBFgc3T3XuvP/M3kMAVPbNRqd6nGqzJ80
+	 rjvpHOvpHz/V7AM+atTwP8uDkROjI0xZE9S92pYaOAJvFna9y4jL5VXM8IrrN/Q6MT
+	 B2o8J0C5yvy/8DQTciwHhW+BV5rzmywRk8fV1WNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgHTKFd (ORCPT
+        id S1728715AbgHTL3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51414 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730409AbgHTKBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:34 -0400
+        id S1728227AbgHTKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A83F12173E;
-        Thu, 20 Aug 2020 10:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC53120738;
+        Thu, 20 Aug 2020 10:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917694;
-        bh=vrOyQnGK/t2OkbAq8wY4LopWCiFIowqmS7MRxb2aC70=;
+        s=default; t=1597917937;
+        bh=gXQKUixbcqk1akb5Ehd3N74M/WishC/eje2yI7weVVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYwdm+0a1+FINRkLMMSjpLWQy0z7rov726L1GAkLiyYX2dUvsvvcEE7ev8A7GfkAz
-         A01FTMp0Pa0GKN/a0lLxpWy0QLh4Kv/tqHL9qSMQshRLxp2hk71+OCqkLUrPFbg6YD
-         Q/Aw5lAhWSJhDqooNIvT6Iy9wrYZjaMeFmLXSSTs=
+        b=COYcmwVEv78o0jS99oaikSs9kvvIk22gYBfQvuoo5r5r08vI0O9YXKm2Is3HhKVe1
+         zO5bXKXDvxv/XQUteZBnt0oeLlQm8ZidyMobMT2IX8qWGgclIecnBXNLfk0Ha8zRT8
+         j3a7njy5WMT12bjrckgHpKdzT4P+5TmQhTbLHydk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Xiang Zheng <zhengxiang9@huawei.com>,
-        Heyi Guo <guoheyi@huawei.com>,
-        Biaoxiang Ye <yebiaoxiang@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 123/212] PCI: Fix pci_cfg_wait queue locking problem
-Date:   Thu, 20 Aug 2020 11:21:36 +0200
-Message-Id: <20200820091608.566213752@linuxfoundation.org>
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 210/212] khugepaged: retract_page_tables() remember to test exit
+Date:   Thu, 20 Aug 2020 11:23:03 +0200
+Message-Id: <20200820091612.950775980@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -62,72 +64,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 2a7e32d0547f41c5ce244f84cf5d6ca7fccee7eb ]
+commit 18e77600f7a1ed69f8ce46c9e11cad0985712dfa upstream.
 
-The pci_cfg_wait queue is used to prevent user-space config accesses to
-devices while they are recovering from reset.
+Only once have I seen this scenario (and forgot even to notice what forced
+the eventual crash): a sequence of "BUG: Bad page map" alerts from
+vm_normal_page(), from zap_pte_range() servicing exit_mmap();
+pmd:00000000, pte values corresponding to data in physical page 0.
 
-Previously we used these operations on pci_cfg_wait:
+The pte mappings being zapped in this case were supposed to be from a huge
+page of ext4 text (but could as well have been shmem): my belief is that
+it was racing with collapse_file()'s retract_page_tables(), found *pmd
+pointing to a page table, locked it, but *pmd had become 0 by the time
+start_pte was decided.
 
-  __add_wait_queue(&pci_cfg_wait, ...)
-  __remove_wait_queue(&pci_cfg_wait, ...)
-  wake_up_all(&pci_cfg_wait)
+In most cases, that possibility is excluded by holding mmap lock; but
+exit_mmap() proceeds without mmap lock.  Most of what's run by khugepaged
+checks khugepaged_test_exit() after acquiring mmap lock:
+khugepaged_collapse_pte_mapped_thps() and hugepage_vma_revalidate() do so,
+for example.  But retract_page_tables() did not: fix that.
 
-The wake_up acquires the wait queue lock, but the add and remove do not.
+The fix is for retract_page_tables() to check khugepaged_test_exit(),
+after acquiring mmap lock, before doing anything to the page table.
+Getting the mmap lock serializes with __mmput(), which briefly takes and
+drops it in __khugepaged_exit(); then the khugepaged_test_exit() check on
+mm_users makes sure we don't touch the page table once exit_mmap() might
+reach it, since exit_mmap() will be proceeding without mmap lock, not
+expecting anyone to be racing with it.
 
-Originally these were all protected by the pci_lock, but cdcb33f98244
-("PCI: Avoid possible deadlock on pci_lock and p->pi_lock"), moved
-wake_up_all() outside pci_lock, so it could race with add/remove
-operations, which caused occasional kernel panics, e.g., during vfio-pci
-hotplug/unplug testing:
+Fixes: f3f0e1d2150b ("khugepaged: add support of collapse for tmpfs/shmem pages")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021215400.27773@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
 
-Resolve this by using wait_event() instead of __add_wait_queue() and
-__remove_wait_queue().  The wait queue lock is held by both wait_event()
-and wake_up_all(), so it provides mutual exclusion.
 
-Fixes: cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and p->pi_lock")
-Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/T/#u
-Based-on: https://lore.kernel.org/linux-pci/20191210031527.40136-1-zhengxiang9@huawei.com/
-Based-on-patch-by: Xiang Zheng <zhengxiang9@huawei.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
-Cc: Heyi Guo <guoheyi@huawei.com>
-Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/access.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ mm/khugepaged.c |   22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-index 7b5cf6d1181a9..6f2a07567532d 100644
---- a/drivers/pci/access.c
-+++ b/drivers/pci/access.c
-@@ -185,17 +185,13 @@ EXPORT_SYMBOL(pci_bus_set_ops);
- static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
- 
- static noinline void pci_wait_cfg(struct pci_dev *dev)
-+	__must_hold(&pci_lock)
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1250,6 +1250,7 @@ static void collect_mm_slot(struct mm_sl
+ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
  {
--	DECLARE_WAITQUEUE(wait, current);
--
--	__add_wait_queue(&pci_cfg_wait, &wait);
- 	do {
--		set_current_state(TASK_UNINTERRUPTIBLE);
- 		raw_spin_unlock_irq(&pci_lock);
--		schedule();
-+		wait_event(pci_cfg_wait, !dev->block_cfg_access);
- 		raw_spin_lock_irq(&pci_lock);
- 	} while (dev->block_cfg_access);
--	__remove_wait_queue(&pci_cfg_wait, &wait);
- }
+ 	struct vm_area_struct *vma;
++	struct mm_struct *mm;
+ 	unsigned long addr;
+ 	pmd_t *pmd, _pmd;
  
- /* Returns 0 on success, negative values indicate error. */
--- 
-2.25.1
-
+@@ -1263,7 +1264,8 @@ static void retract_page_tables(struct a
+ 			continue;
+ 		if (vma->vm_end < addr + HPAGE_PMD_SIZE)
+ 			continue;
+-		pmd = mm_find_pmd(vma->vm_mm, addr);
++		mm = vma->vm_mm;
++		pmd = mm_find_pmd(mm, addr);
+ 		if (!pmd)
+ 			continue;
+ 		/*
+@@ -1272,14 +1274,16 @@ static void retract_page_tables(struct a
+ 		 * re-fault. Not ideal, but it's more important to not disturb
+ 		 * the system too much.
+ 		 */
+-		if (down_write_trylock(&vma->vm_mm->mmap_sem)) {
+-			spinlock_t *ptl = pmd_lock(vma->vm_mm, pmd);
+-			/* assume page table is clear */
+-			_pmd = pmdp_collapse_flush(vma, addr, pmd);
+-			spin_unlock(ptl);
+-			up_write(&vma->vm_mm->mmap_sem);
+-			atomic_long_dec(&vma->vm_mm->nr_ptes);
+-			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
++		if (down_write_trylock(&mm->mmap_sem)) {
++			if (!khugepaged_test_exit(mm)) {
++				spinlock_t *ptl = pmd_lock(mm, pmd);
++				/* assume page table is clear */
++				_pmd = pmdp_collapse_flush(vma, addr, pmd);
++				spin_unlock(ptl);
++				atomic_long_dec(&mm->nr_ptes);
++				pte_free(mm, pmd_pgtable(_pmd));
++			}
++			up_write(&mm->mmap_sem);
+ 		}
+ 	}
+ 	i_mmap_unlock_write(mapping);
 
 
