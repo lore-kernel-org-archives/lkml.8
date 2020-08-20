@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 455BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD3062076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1DB2076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931240;
-	bh=6udAPmdYQ4kMuQFcAZHbE7RJt81G0dlqHFJZY8safgs=;
+	s=default; t=1597931254;
+	bh=KDpAiWjt9PyK7QuzfiSbWuUz/G+w+2qmU0TYOWkztIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHHQmY0cYTX5wVUfZ6YTiujndqmWOGKJR1Rzb3x3KoQ94Ocrr/o4A3QITmefjyz2a
-	 K20gOLLzHfmaCgqxS4RsySzkrGySxa++pmlog/xKBZCo2+fbD65KHwaVCna4L4aLb6
-	 2ve1vXFLeFpgvKMJ7Zczz3dVWlNPrLNPIivhIHws=
+	b=biBEH5JQ8wu/4xCB6ZOAooMh63dT+evz/878CyNZhP1jwsp/6bRLRGK9ONdfKFc4x
+	 0TeBW+6qAjVt32BwQIUCL1/GZ3GzYBIsXVDtVXWv8SzWXIZWf4iKXGAQG06KLMdHME
+	 DNeS+CwOn/0NA1jWag8AALFnwHbIIEhk089JFL8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgHTNpE (ORCPT
+        id S1730848AbgHTNmz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35052 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:42:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbgHTJ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:28:50 -0400
+        id S1727068AbgHTJ3T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD82322D00;
-        Thu, 20 Aug 2020 09:28:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DB1622B4B;
+        Thu, 20 Aug 2020 09:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915730;
-        bh=6udAPmdYQ4kMuQFcAZHbE7RJt81G0dlqHFJZY8safgs=;
+        s=default; t=1597915759;
+        bh=KDpAiWjt9PyK7QuzfiSbWuUz/G+w+2qmU0TYOWkztIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EHO8hiigFomFuyn1J31yj/6QfPWh/tDhk4Ba7o3vTcz0wL5lhayIBRzatYtd4vMu3
-         X9tLybViDKdBtoClUiCJg+OFgKEpV4Pmhro3w0H0WP691VL9iax1zmxBxCwWZSJ/AG
-         r7jM02cCEQ3TLs8z4HWhIf4HDYuJKTzw0Ym1loXU=
+        b=oNKBTJSJU4PSrlfMVVZTWTt+CS0ed2nZZSF4KQpoFygWUCmYIQEd9t2Xo/d/lHvQq
+         FiKVF58+3jbg3poXPtAJipIGMDasCBy3MiONUMOT/l2IuoaZSZzHxjBFglBOIWTv/A
+         xXZcOWBTTfKM2RQHs4JuHPTTh5Ojw44YbrADALBw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 114/232] crypto: algif_aead - Only wake up when ctx->more is zero
-Date:   Thu, 20 Aug 2020 11:19:25 +0200
-Message-Id: <20200820091618.342010929@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>
+Subject: [PATCH 5.8 095/232] ceph: set sec_context xattr on symlink creation
+Date:   Thu, 20 Aug 2020 11:19:06 +0200
+Message-Id: <20200820091617.438788458@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,141 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit f3c802a1f30013f8f723b62d7fa49eb9e991da23 ]
+commit b748fc7a8763a5b3f8149f12c45711cd73ef8176 upstream.
 
-AEAD does not support partial requests so we must not wake up
-while ctx->more is set.  In order to distinguish between the
-case of no data sent yet and a zero-length request, a new init
-flag has been added to ctx.
+Symlink inodes should have the security context set in their xattrs on
+creation. We already set the context on creation, but we don't attach
+the pagelist. The effect is that symlink inodes don't get an SELinux
+context set on them at creation, so they end up unlabeled instead of
+inheriting the proper context. Make it do so.
 
-SKCIPHER has also been modified to ensure that at least a block
-of data is available if there is more data to come.
+Cc: stable@vger.kernel.org
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 2d97591ef43d ("crypto: af_alg - consolidation of...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/af_alg.c         | 11 ++++++++---
- crypto/algif_aead.c     |  4 ++--
- crypto/algif_skcipher.c |  4 ++--
- include/crypto/if_alg.h |  4 +++-
- 4 files changed, 15 insertions(+), 8 deletions(-)
+ fs/ceph/dir.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/crypto/af_alg.c b/crypto/af_alg.c
-index 28fc323e3fe30..9fcb91ea10c41 100644
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -635,6 +635,7 @@ void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
- 
- 	if (!ctx->used)
- 		ctx->merge = 0;
-+	ctx->init = ctx->more;
- }
- EXPORT_SYMBOL_GPL(af_alg_pull_tsgl);
- 
-@@ -734,9 +735,10 @@ EXPORT_SYMBOL_GPL(af_alg_wmem_wakeup);
-  *
-  * @sk socket of connection to user space
-  * @flags If MSG_DONTWAIT is set, then only report if function would sleep
-+ * @min Set to minimum request size if partial requests are allowed.
-  * @return 0 when writable memory is available, < 0 upon error
-  */
--int af_alg_wait_for_data(struct sock *sk, unsigned flags)
-+int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min)
- {
- 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
- 	struct alg_sock *ask = alg_sk(sk);
-@@ -754,7 +756,9 @@ int af_alg_wait_for_data(struct sock *sk, unsigned flags)
- 		if (signal_pending(current))
- 			break;
- 		timeout = MAX_SCHEDULE_TIMEOUT;
--		if (sk_wait_event(sk, &timeout, (ctx->used || !ctx->more),
-+		if (sk_wait_event(sk, &timeout,
-+				  ctx->init && (!ctx->more ||
-+						(min && ctx->used >= min)),
- 				  &wait)) {
- 			err = 0;
- 			break;
-@@ -843,7 +847,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 	}
- 
- 	lock_sock(sk);
--	if (!ctx->more && ctx->used) {
-+	if (ctx->init && (init || !ctx->more)) {
- 		err = -EINVAL;
- 		goto unlock;
- 	}
-@@ -854,6 +858,7 @@ int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 			memcpy(ctx->iv, con.iv->iv, ivsize);
- 
- 		ctx->aead_assoclen = con.aead_assoclen;
-+		ctx->init = true;
- 	}
- 
- 	while (size) {
-diff --git a/crypto/algif_aead.c b/crypto/algif_aead.c
-index 0ae000a61c7f5..d48d2156e6210 100644
---- a/crypto/algif_aead.c
-+++ b/crypto/algif_aead.c
-@@ -106,8 +106,8 @@ static int _aead_recvmsg(struct socket *sock, struct msghdr *msg,
- 	size_t usedpages = 0;		/* [in]  RX bufs to be used from user */
- 	size_t processed = 0;		/* [in]  TX bufs to be consumed */
- 
--	if (!ctx->used) {
--		err = af_alg_wait_for_data(sk, flags);
-+	if (!ctx->init || ctx->more) {
-+		err = af_alg_wait_for_data(sk, flags, 0);
- 		if (err)
- 			return err;
- 	}
-diff --git a/crypto/algif_skcipher.c b/crypto/algif_skcipher.c
-index ec5567c87a6df..a51ba22fef58f 100644
---- a/crypto/algif_skcipher.c
-+++ b/crypto/algif_skcipher.c
-@@ -61,8 +61,8 @@ static int _skcipher_recvmsg(struct socket *sock, struct msghdr *msg,
- 	int err = 0;
- 	size_t len = 0;
- 
--	if (!ctx->used) {
--		err = af_alg_wait_for_data(sk, flags);
-+	if (!ctx->init || (ctx->more && ctx->used < bs)) {
-+		err = af_alg_wait_for_data(sk, flags, bs);
- 		if (err)
- 			return err;
- 	}
-diff --git a/include/crypto/if_alg.h b/include/crypto/if_alg.h
-index 088c1ded27148..ee6412314f8f3 100644
---- a/include/crypto/if_alg.h
-+++ b/include/crypto/if_alg.h
-@@ -135,6 +135,7 @@ struct af_alg_async_req {
-  *			SG?
-  * @enc:		Cryptographic operation to be performed when
-  *			recvmsg is invoked.
-+ * @init:		True if metadata has been sent.
-  * @len:		Length of memory allocated for this data structure.
-  */
- struct af_alg_ctx {
-@@ -151,6 +152,7 @@ struct af_alg_ctx {
- 	bool more;
- 	bool merge;
- 	bool enc;
-+	bool init;
- 
- 	unsigned int len;
- };
-@@ -226,7 +228,7 @@ unsigned int af_alg_count_tsgl(struct sock *sk, size_t bytes, size_t offset);
- void af_alg_pull_tsgl(struct sock *sk, size_t used, struct scatterlist *dst,
- 		      size_t dst_offset);
- void af_alg_wmem_wakeup(struct sock *sk);
--int af_alg_wait_for_data(struct sock *sk, unsigned flags);
-+int af_alg_wait_for_data(struct sock *sk, unsigned flags, unsigned min);
- int af_alg_sendmsg(struct socket *sock, struct msghdr *msg, size_t size,
- 		   unsigned int ivsize);
- ssize_t af_alg_sendpage(struct socket *sock, struct page *page,
--- 
-2.25.1
-
+--- a/fs/ceph/dir.c
++++ b/fs/ceph/dir.c
+@@ -930,6 +930,10 @@ static int ceph_symlink(struct inode *di
+ 	req->r_num_caps = 2;
+ 	req->r_dentry_drop = CEPH_CAP_FILE_SHARED | CEPH_CAP_AUTH_EXCL;
+ 	req->r_dentry_unless = CEPH_CAP_FILE_EXCL;
++	if (as_ctx.pagelist) {
++		req->r_pagelist = as_ctx.pagelist;
++		as_ctx.pagelist = NULL;
++	}
+ 	err = ceph_mdsc_do_request(mdsc, dir, req);
+ 	if (!err && !req->r_reply_info.head->is_dentry)
+ 		err = ceph_handle_notrace_create(dir, dentry);
 
 
