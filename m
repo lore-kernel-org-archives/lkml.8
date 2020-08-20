@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CF31C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4773C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2F992075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF152072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931101;
-	bh=SYXWTX+v+/mNoU0TfcdBFAmNqqh497XAu3ylOhZeT2A=;
+	s=default; t=1597931118;
+	bh=4PcJebeh/Ll0u6T2COoRTK6XyspIHlBi+EwMv6Zg/BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p+JG/XKcRX8O4X2v2bPkVxhjBurLfE9feYx25HL2D0SIUqLAaQ5AQLAHQHBhGB0S7
-	 CJL0e4DxUCaQdYKhcudJkTI6dyQmP4yhuZk4nS3bfXD8Z4eHAncsQq5L2PVkSPbfnU
-	 XKzrqYHB5DEFDnAeNTctL+VGW9dFuiBxNRbG68YU=
+	b=C/tpEr1TB+o2EUgLyJQhMy18nF9+hdoOYr73kMP9+ZOblZyPp8pVDyMVkUwMVabx4
+	 BIzTCcZNl4HvhK3xyiox6JuWGWqGNcShhvE3cg2svNwOjPn1jdb4LHKmDL8B08dHu6
+	 zbgiVHofEdshwfRHD9RJkzqu4ELXk2i8NWa+sJ+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgHTNo7 (ORCPT
+        id S1728034AbgHTNpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:44:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728020AbgHTJ2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:28:48 -0400
+        id S1727943AbgHTJ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0123D22CF7;
-        Thu, 20 Aug 2020 09:28:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 732EC22D3E;
+        Thu, 20 Aug 2020 09:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915727;
-        bh=SYXWTX+v+/mNoU0TfcdBFAmNqqh497XAu3ylOhZeT2A=;
+        s=default; t=1597915692;
+        bh=4PcJebeh/Ll0u6T2COoRTK6XyspIHlBi+EwMv6Zg/BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fPcggc106yEw3Wv/tfDBtnx14Zk5rOpU2aXY84v3MqwsHn9MtXPj780igS+/3wtkf
-         6O90dtCfOvI9B1a1MI0GDI1Tra3bxzxZO0tCNjfVpzw1WPc6Y1MSGNt3oZsqxTLf8O
-         zqiY50NZyqdY30rhcK8kwSuKHAUlHneTSbo+XI2w=
+        b=HScMFZLuucr8SU/DyhCfHwhReS++DCj6EXuunKXVyjuKMKburRKl1wzjwxRFfHEdE
+         un6lwtvEDvt16r+1KMtSHaAhHB88I9WUgOukOhext0781D1aYHuTR8PrbHFVE557uf
+         CK+Dqj1c0kygeNJlCKw4qBNaXi1Sjzktst/JC6P8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH 5.8 113/232] drm/ingenic: Fix incorrect assumption about plane->index
-Date:   Thu, 20 Aug 2020 11:19:24 +0200
-Message-Id: <20200820091618.291489646@linuxfoundation.org>
+        stable@vger.kernel.org, Andi Kleen <andi@firstfloor.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.8 102/232] perf probe: Fix wrong variable warning when the probe point is not found
+Date:   Thu, 20 Aug 2020 11:19:13 +0200
+Message-Id: <20200820091617.773551777@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,37 +63,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit ca43f274e03f91c533643299ae4984965ce03205 upstream.
+commit 11fd3eb874e73ee8069bcfd54e3c16fa7ce56fe6 upstream.
 
-plane->index is NOT the index of the color plane in a YUV frame.
-Actually, a YUV frame is represented by a single drm_plane, even though
-it contains three Y, U, V planes.
+Fix a wrong "variable not found" warning when the probe point is not
+found in the debuginfo.
 
-v2-v3: No change
+Since the debuginfo__find_probes() can return 0 even if it does not find
+given probe point in the debuginfo, fill_empty_trace_arg() can be called
+with tf.ntevs == 0 and it can emit a wrong warning.  To fix this, reject
+ntevs == 0 in fill_empty_trace_arg().
 
-Cc: stable@vger.kernel.org # v5.3
-Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200716163846.174790-1-paul@crapouillou.net
+E.g. without this patch;
+
+  # perf probe -x /lib64/libc-2.30.so -a "memcpy arg1=%di"
+  Failed to find the location of the '%di' variable at this address.
+   Perhaps it has been optimized out.
+   Use -V with the --range option to show '%di' location range.
+  Added new events:
+    probe_libc:memcpy    (on memcpy in /usr/lib64/libc-2.30.so with arg1=%di)
+    probe_libc:memcpy    (on memcpy in /usr/lib64/libc-2.30.so with arg1=%di)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe_libc:memcpy -aR sleep 1
+
+With this;
+
+  # perf probe -x /lib64/libc-2.30.so -a "memcpy arg1=%di"
+  Added new events:
+    probe_libc:memcpy    (on memcpy in /usr/lib64/libc-2.30.so with arg1=%di)
+    probe_libc:memcpy    (on memcpy in /usr/lib64/libc-2.30.so with arg1=%di)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe_libc:memcpy -aR sleep 1
+
+Fixes: cb4027308570 ("perf probe: Trace a magic number if variable is not found")
+Reported-by: Andi Kleen <andi@firstfloor.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Tested-by: Andi Kleen <ak@linux.intel.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/159438667364.62703.2200642186798763202.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/probe-finder.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -386,7 +386,7 @@ static void ingenic_drm_plane_atomic_upd
- 		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
- 		width = state->src_w >> 16;
- 		height = state->src_h >> 16;
--		cpp = state->fb->format->cpp[plane->index];
-+		cpp = state->fb->format->cpp[0];
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1408,6 +1408,9 @@ static int fill_empty_trace_arg(struct p
+ 	char *type;
+ 	int i, j, ret;
  
- 		priv->dma_hwdesc->addr = addr;
- 		priv->dma_hwdesc->cmd = width * height * cpp / 4;
++	if (!ntevs)
++		return -ENOENT;
++
+ 	for (i = 0; i < pev->nargs; i++) {
+ 		type = NULL;
+ 		for (j = 0; j < ntevs; j++) {
 
 
