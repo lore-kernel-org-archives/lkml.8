@@ -2,161 +2,156 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F01A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 988AAC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0A3220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A26D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:17:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597918624;
+	bh=Hd40zi0sjEG2G4IkJdLndfiz9EaeeSZKlOrkOWs/EHY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Qv2yFTS2Zc98SbFANwjgkjUP01BPWx6t2JZ5vdcfw84UV5hz9y7/zzveTjNbI44Bx
+	 4xuqSRnBS0YPvlkn5O/nb66PlAa5dc9REJHt+0sZ500MjnT5AWgzx29pNK+eaxHzG3
+	 +Ig7HCrrnpoetqqfPScaHB/6pIGNxEF0Jr8sslaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgHTKQz (ORCPT
+        id S1726666AbgHTKRD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:16:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36728 "EHLO mx2.suse.de"
+        Thu, 20 Aug 2020 06:17:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730374AbgHTKQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 0BCDCAD19;
-        Thu, 20 Aug 2020 10:16:53 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 12:16:25 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/5] printk: implement pr_cont_t
-Message-ID: <20200820101625.GE4353@alley>
-References: <20200819232632.13418-1-john.ogness@linutronix.de>
- <20200819232632.13418-2-john.ogness@linutronix.de>
+        id S1728951AbgHTKQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2862C2067C;
+        Thu, 20 Aug 2020 10:16:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918609;
+        bh=Hd40zi0sjEG2G4IkJdLndfiz9EaeeSZKlOrkOWs/EHY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Feck+m/SptDZzZhG0vB888lzRIisPdgJnfqRPvAGJlzdpUKXxtJ56oSEvRle7GZXP
+         oiWWYvc8ifOPXeGBEuzdHwgv1V26Y2Mw9yFQl6zf2/axyanuHgOYLMq8qEJJRbGjDq
+         Z3SFgq4S6i0sW3py1ugjLq+OdiHU6O+2L1787CWo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Song Liu <songliubraving@fb.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 221/228] khugepaged: retract_page_tables() remember to test exit
+Date:   Thu, 20 Aug 2020 11:23:16 +0200
+Message-Id: <20200820091618.557261406@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
+References: <20200820091607.532711107@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819232632.13418-2-john.ogness@linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2020-08-20 01:32:28, John Ogness wrote:
-> Implement a new buffering mechanism for pr_cont messages.
-> 
-> Old mechanism syntax:
-> 
->     printk(KERN_INFO "text");
->     printk(KERN_CONT " continued");
->     printk(KERN_CONT "\n");
-> 
-> New mechanism syntax:
-> 
->     pr_cont_t c;
-> 
->     pr_cont_begin(&c, KERN_INFO "text");
->     pr_cont_append(&c, " continued");
->     pr_cont_end(&c);
-> 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> ---
->  include/linux/printk.h |  19 ++++++
->  kernel/printk/printk.c | 137 +++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 156 insertions(+)
-> 
-> diff --git a/include/linux/printk.h b/include/linux/printk.h
-> index 34c1a7be3e01..4d9ce18e4afa 100644
-> --- a/include/linux/printk.h
-> +++ b/include/linux/printk.h
-> @@ -380,6 +380,25 @@ extern int kptr_restrict;
->  #define pr_cont(fmt, ...) \
->  	printk(KERN_CONT fmt, ##__VA_ARGS__)
->  
-> +/* opaque handle for continuous printk messages */
-> +typedef struct {
-> +	u8	index;
-> +	u8	loglevel;
-> +	u16	text_len;
-> +} pr_cont_t;
-> +
-> +/* initialize handle, provide loglevel and initial message text */
-> +int pr_cont_begin(pr_cont_t *c, const char *fmt, ...);
-> +
-> +/* append message text */
-> +int pr_cont_append(pr_cont_t *c, const char *fmt, ...);
-> +
-> +/* flush message to kernel buffer */
-> +void pr_cont_flush(pr_cont_t *c);
-> +
-> +/* flush message to kernel buffer, cleanup handle */
-> +void pr_cont_end(pr_cont_t *c);
-> +
->  /**
->   * pr_devel - Print a debug-level message conditionally
->   * @fmt: format string
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index ad8d1dfe5fbe..10113e7ea350 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -3495,3 +3495,140 @@ void kmsg_dump_rewind(struct kmsg_dumper *dumper)
->  EXPORT_SYMBOL_GPL(kmsg_dump_rewind);
->  
->  #endif
-> +
-> +#define CONT_LINE_MAX LOG_LINE_MAX
-> +#define CONT_BUF_COUNT 10
-> +static char cont_buf[CONT_BUF_COUNT][CONT_LINE_MAX];
-> +static DECLARE_BITMAP(cont_buf_map, CONT_BUF_COUNT);
-> +
-> +static int get_cont_buf(void)
-> +{
-> +	int bit;
-> +
-> +	do {
-> +		bit = find_first_zero_bit(cont_buf_map, CONT_BUF_COUNT);
-> +		if (bit == CONT_BUF_COUNT)
-> +			break;
-> +	} while (test_and_set_bit(bit, cont_buf_map));
-> +
-> +	return bit;
-> +}
+From: Hugh Dickins <hughd@google.com>
 
-My big problem with this solution is a forgotten pr_cont_end(). It
-will cause:
+commit 18e77600f7a1ed69f8ce46c9e11cad0985712dfa upstream.
 
-   + the message will never get printed
+Only once have I seen this scenario (and forgot even to notice what forced
+the eventual crash): a sequence of "BUG: Bad page map" alerts from
+vm_normal_page(), from zap_pte_range() servicing exit_mmap();
+pmd:00000000, pte values corresponding to data in physical page 0.
 
-   + several calls into such a broken code will exhaust the pool of
-     cont buffers and it will stop working for the entire system
+The pte mappings being zapped in this case were supposed to be from a huge
+page of ext4 text (but could as well have been shmem): my belief is that
+it was racing with collapse_file()'s retract_page_tables(), found *pmd
+pointing to a page table, locked it, but *pmd had become 0 by the time
+start_pte was decided.
 
-The above might be solved with some fallback mechanism (timer,
-watchdog) but then it needs some synchronization.
+In most cases, that possibility is excluded by holding mmap lock; but
+exit_mmap() proceeds without mmap lock.  Most of what's run by khugepaged
+checks khugepaged_test_exit() after acquiring mmap lock:
+khugepaged_collapse_pte_mapped_thps() and hugepage_vma_revalidate() do so,
+for example.  But retract_page_tables() did not: fix that.
 
-Why is it so bad?
+The fix is for retract_page_tables() to check khugepaged_test_exit(),
+after acquiring mmap lock, before doing anything to the page table.
+Getting the mmap lock serializes with __mmput(), which briefly takes and
+drops it in __khugepaged_exit(); then the khugepaged_test_exit() check on
+mm_users makes sure we don't touch the page table once exit_mmap() might
+reach it, since exit_mmap() will be proceeding without mmap lock, not
+expecting anyone to be racing with it.
 
-   + it will happen like other bugs
+Fixes: f3f0e1d2150b ("khugepaged: add support of collapse for tmpfs/shmem pages")
+Signed-off-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: <stable@vger.kernel.org>	[4.8+]
+Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021215400.27773@eggly.anvils
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ mm/khugepaged.c |   22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-   + it is hard to notice; it is easier to notice hard-lockup than
-     a missing message
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1252,6 +1252,7 @@ static void collect_mm_slot(struct mm_sl
+ static void retract_page_tables(struct address_space *mapping, pgoff_t pgoff)
+ {
+ 	struct vm_area_struct *vma;
++	struct mm_struct *mm;
+ 	unsigned long addr;
+ 	pmd_t *pmd, _pmd;
+ 
+@@ -1265,7 +1266,8 @@ static void retract_page_tables(struct a
+ 			continue;
+ 		if (vma->vm_end < addr + HPAGE_PMD_SIZE)
+ 			continue;
+-		pmd = mm_find_pmd(vma->vm_mm, addr);
++		mm = vma->vm_mm;
++		pmd = mm_find_pmd(mm, addr);
+ 		if (!pmd)
+ 			continue;
+ 		/*
+@@ -1274,14 +1276,16 @@ static void retract_page_tables(struct a
+ 		 * re-fault. Not ideal, but it's more important to not disturb
+ 		 * the system too much.
+ 		 */
+-		if (down_write_trylock(&vma->vm_mm->mmap_sem)) {
+-			spinlock_t *ptl = pmd_lock(vma->vm_mm, pmd);
+-			/* assume page table is clear */
+-			_pmd = pmdp_collapse_flush(vma, addr, pmd);
+-			spin_unlock(ptl);
+-			up_write(&vma->vm_mm->mmap_sem);
+-			atomic_long_dec(&vma->vm_mm->nr_ptes);
+-			pte_free(vma->vm_mm, pmd_pgtable(_pmd));
++		if (down_write_trylock(&mm->mmap_sem)) {
++			if (!khugepaged_test_exit(mm)) {
++				spinlock_t *ptl = pmd_lock(mm, pmd);
++				/* assume page table is clear */
++				_pmd = pmdp_collapse_flush(vma, addr, pmd);
++				spin_unlock(ptl);
++				atomic_long_dec(&mm->nr_ptes);
++				pte_free(mm, pmd_pgtable(_pmd));
++			}
++			up_write(&mm->mmap_sem);
+ 		}
+ 	}
+ 	i_mmap_unlock_write(mapping);
 
 
-Now that I think about it. This is the biggest problem with any temporary buffer
-for pr_cont() lines. I am more and more convinced that we should just
-_keep the current behavior_. It is not ideal. But sometimes mixed
-messages are always better than lost ones.
-
-
-That said, some printk() API using local buffer would be still
-valuable for pieces of code where people really want to avoid
-mixed lines. But it should be optional and people should be
-aware of the risks.
-
-Best Regards,
-Petr
