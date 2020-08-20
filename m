@@ -2,405 +2,227 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CFBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69738C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4B72075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B3C2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:38:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgHTPhN (ORCPT
+        id S1729330AbgHTPiP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:37:13 -0400
-Received: from asavdk3.altibox.net ([109.247.116.14]:34992 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726852AbgHTPhH (ORCPT
+        Thu, 20 Aug 2020 11:38:15 -0400
+Received: from skedge03.snt-world.com ([91.208.41.68]:55874 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728622AbgHTPiM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:37:07 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 11:38:12 -0400
+Received: from sntmail12r.snt-is.com (unknown [10.203.32.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 2E3E72001E;
-        Thu, 20 Aug 2020 17:36:56 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 17:36:54 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200820153654.GA190547@ravnborg.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
- <20200819152120.GA106437@ravnborg.org>
- <20200819174027.70b39ee9@coco.lan>
- <20200819173558.GA3733@ravnborg.org>
- <20200820160649.54741194@coco.lan>
- <20200820144808.GA186324@ravnborg.org>
- <20200820171322.3b2e94fd@coco.lan>
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 90ED367A6F4;
+        Thu, 20 Aug 2020 17:38:09 +0200 (CEST)
+Received: from sntmail10s.snt-is.com (10.203.32.183) by sntmail12r.snt-is.com
+ (10.203.32.182) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Thu, 20 Aug
+ 2020 17:38:09 +0200
+Received: from sntmail10s.snt-is.com ([fe80::ad9b:dbfd:621d:166f]) by
+ sntmail10s.snt-is.com ([fe80::ad9b:dbfd:621d:166f%6]) with mapi id
+ 15.01.1913.007; Thu, 20 Aug 2020 17:38:09 +0200
+From:   Michael Brunner <Michael.Brunner@kontron.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "linux@roeck-us.net" <linux@roeck-us.net>,
+        "sameo@linux.intel.com" <sameo@linux.intel.com>,
+        "mibru@gmx.de" <mibru@gmx.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mfd: Add ACPI support to Kontron PLD driver
+Thread-Topic: [PATCH] mfd: Add ACPI support to Kontron PLD driver
+Thread-Index: AQHWcLfnyQQDC2IYfEqK/svjxogCEak/IGiAgAHsbAA=
+Date:   Thu, 20 Aug 2020 15:38:09 +0000
+Message-ID: <b327cf1abd283e0e4f0a7332e1e4cc164d053023.camel@kontron.com>
+References: <1e5ff295eacd5cb9eb2d888e1b0175fea62cf2ae.camel@kontron.com>
+         <20200819101539.GE4354@dell>
+In-Reply-To: <20200819101539.GE4354@dell>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.36.4-0ubuntu1 
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-15"
+Content-ID: <8593C5076A328C41A2A0AB801C44E9DF@snt-world.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820171322.3b2e94fd@coco.lan>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=f+hm+t6M c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8 a=VwQbUJbxAAAA:8
-        a=laJNNbqgfG9yBzy7lO0A:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
-        a=AjGcO6oz07-iQ99wixmX:22
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 90ED367A6F4.AE3F8
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: michael.brunner@kontron.com
+X-SnT-MailScanner-To: lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux@roeck-us.net, mibru@gmx.de, sameo@linux.intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mauro.
+Thank you for taking the time to review the patch!
+Additional comments below, patch v2 will follow.
 
-Quick feedback below.
-
-	Sam
-
-On Thu, Aug 20, 2020 at 05:13:22PM +0200, Mauro Carvalho Chehab wrote:
-> Em Thu, 20 Aug 2020 16:48:08 +0200
-> Sam Ravnborg <sam@ravnborg.org> escreveu:
+On Wed, 2020-08-19 at 11:15 +0100, Lee Jones wrote:
+> On Wed, 12 Aug 2020, Michael Brunner wrote:
+... 
+> > +#ifdef CONFIG_ACPI
 > 
-> > Hi Mauro.
-> > 
-> > On Thu, Aug 20, 2020 at 04:06:49PM +0200, Mauro Carvalho Chehab wrote:
-> > > Em Wed, 19 Aug 2020 19:35:58 +0200
-> > > Sam Ravnborg <sam@ravnborg.org> escreveu:
-> > > 
-> > > I'm already handling the other comments from your review (I'll send a
-> > > more complete comment about them after finishing),  
-> > If you get back only on things you do not understand or do not agree on
-> > that would be fine. The rest should be visible in the changelog on the
-> > updated patch - no need to do extra work here.
-> > 
-> > > but I have a doubt what you meant about this:
-> > >   
-> > > > +static int kirin_drm_bind(struct device *dev)  
-> > > > > +{
-> > > > > +	struct drm_driver *driver = &kirin_drm_driver;
-> > > > > +	struct drm_device *drm_dev;
-> > > > > +	struct kirin_drm_private *priv;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	drm_dev = drm_dev_alloc(driver, dev);
-> > > > > +	if (!drm_dev)
-> > > > > +		return -ENOMEM;
-> > > > > +
-> > > > > +	ret = kirin_drm_kms_init(drm_dev);
-> > > > > +	if (ret)
-> > > > > +		goto err_drm_dev_unref;
-> > > > > +
-> > > > > +	ret = drm_dev_register(drm_dev, 0);    
-> > > > There is better ways to do this. See drm_drv.c for the code example.  
-> > > 
-> > > Not sure if I understood your comment here. The drm_drv.c example also calls 
-> > > drm_dev_register().  
-> > 
-> > This is indeed not obvious from my comments but what I wnated to say is
-> > that the driver should embed drm_device in some struct,
-> > maybe in "struct kirin_drm_private".
-> > 
-> > This should also be part of the referenced example.
-> > 
-> > I hope this clarifies it.
+> Not keen on #ifdefery if at all avoidable.
 > 
-> Yeah. I was already doing those changes ;-) 
+> Can you use if (IS_ENABLED(CONFIG_ACPI)) at the call-site instead?
 > 
-> Something like the enclosed patch, right?
+> The compiler should take care of the rest, no?
+
+Unfortunately acpi_dev_get_resources is not defined when compiling with
+CONFIG_ACPI disabled, therefore #ifdef seems to be the only choice.
+
+> > +static const struct acpi_device_id kempld_acpi_table[] = {
+> > +	{ "KEM0001", (kernel_ulong_t)&kempld_platform_data_generic },
+> > +	{}
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, kempld_acpi_table);
+>
+> I'd prefer if this was moved down to just above where it's used
+> i.e. where we usually place the of_device_id tables.
+
+No problem, will update this.
+
+...
+> > +	INIT_LIST_HEAD(&resource_list);
+> > +	ret = acpi_dev_get_resources(acpi_dev, &resource_list, NULL,
+> > NULL);
+> > +	if (ret < 0)
+> > +		goto out;
+> > +
+> > +	count = ret;
 > 
-> Btw, I'm not sure if the error handling part is ok, as I didn't check
-> what the devm stuff does at the subsystem. 
+>   	if (count == 0) {
+> 		ret = platform_device_add_resources(pdev, pdata-
+> >ioresource, 1);
+> 		goto out;
+> 	}
 > 
-> -
+> Then drop the next check and pull the indented code back:
+
+Agreed, looks better.
+
+> > +	if (count > 0) {
+> > +		resources = devm_kcalloc(&acpi_dev->dev, count,
+> > +					  sizeof(struct resource),
+> > GFP_KERNEL);
 > 
-> On a separate question, I was unable to use the helper macros,
-> as it sounds that there's no macro with this:
+> sizeof(*resources) is preferred.
+
+Ok
+
+...
+> >  static int kempld_probe(struct platform_device *pdev)
+> >  {
+> > -	const struct kempld_platform_data *pdata =
+> > -		dev_get_platdata(&pdev->dev);
+> > +	const struct kempld_platform_data *pdata;
+> >  	struct device *dev = &pdev->dev;
+> >  	struct kempld_device_data *pld;
+> >  	struct resource *ioport;
+> > +	int ret;
+> > +
+> > +	if (kempld_pdev == NULL) {
 > 
-> 	.dumb_create		= drm_gem_cma_dumb_create_internal,
+> Comment please.  What does !kempld_pdev actually imply?
+
+If kempld_pdev is not defined, this means no platform device has been
+created using the DMI id table and we are currently probing the ACPI
+based platform device.
+Will add a comment to the code.
+
+> > +		ret = kempld_get_acpi_data(pdev);
+> > +		if (ret < 0)
+> > +			return ret;
 > 
-> The existing DRM_GEM_CMA_VMAP_DRIVER_OPS uses, instead
-> drm_gem_cma_dumb_create(). I'm not sure if this driver can use
-> such function instead.
-
-From the documentation of drm_gem_cma_dumb_create_internal:
-* It should not be used directly
-* as their &drm_driver.dumb_create callback.
-
-I would expect drm_gem_cma_dumb_create() to be the right choice.
-So you can go ahead with DRM_GEM_CMA_VMAP_DRIVER_OPS
-
-(I hope I am right, not the are	i know much about)
-
-
-> staging: hikey9xx/gpu: use drm_managed interface
->     
-> Use a more modern design for the driver binding logic by
-> using drm_managed and getting rid of drm->dev_private.
->     
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Is 'ret > 0' valid?
 > 
-> diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-> index c7736f4d74b7..600c89605cc0 100644
-> --- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-> +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-> @@ -29,12 +29,13 @@
->  #include <drm/drm_of.h>
->  #include <drm/drm_probe_helper.h>
->  #include <drm/drm_vblank.h>
-> +#include <drm/drm_managed.h>
->  
->  #include "kirin9xx_drm_drv.h"
->  
->  static int kirin_drm_kms_cleanup(struct drm_device *dev)
->  {
-> -	struct kirin_drm_private *priv = dev->dev_private;
-> +	struct kirin_drm_private *priv = to_drm_private(dev);
->  	static struct kirin_dc_ops const *dc_ops;
->  
->  	if (priv->fbdev)
-> @@ -45,15 +46,13 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
->  	drm_kms_helper_poll_fini(dev);
->  	dc_ops->cleanup(dev);
+> If not, then just 'if (ret)'.
 
->  	drm_mode_config_cleanup(dev);
-This should also be gone when you are using
-drmm_mode_config_init()
+Ok
 
-> -	devm_kfree(dev->dev, priv);
-> -	dev->dev_private = NULL;
->  
->  	return 0;
->  }
->  
->  static void kirin_fbdev_output_poll_changed(struct drm_device *dev)
->  {
-> -	struct kirin_drm_private *priv = dev->dev_private;
-> +	struct kirin_drm_private *priv = to_drm_private(dev);
->  
->  	dsi_set_output_client(dev);
->  
-> @@ -69,18 +68,20 @@ static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
->  
->  static int kirin_drm_kms_init(struct drm_device *dev)
->  {
-> -	struct kirin_drm_private *priv = dev->dev_private;
-> +	struct kirin_drm_private *priv = to_drm_private(dev);
-It is assigned a few lines later.
+> > +		kempld_acpi_mode = true;
+> > +	} else if (kempld_pdev != pdev) {
+> > +		dev_notice(dev, "platform device exists - not using
+> > ACPI\n");
+> 
+> Why dev_notice() and not dev_err()?
+> 
+> Is that what 'kempld_pdev != pdev' means?
+> 
+> Could you explain this to me in more depth please?
 
->  	static struct kirin_dc_ops const *dc_ops;
->  	int ret;
->  
-> -	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-> +	priv = drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->  	if (!priv)
->  		return -ENOMEM;
+kempld_pdev is the DMI based platform device created in kempld_init
+(through force_device_id or dmi_check_system). pdev is the one passed
+by the probe function. (kempdl_pdev != pdev) means pdev is the device
+created using the ACPI table. As there is only one physical device and
+the DMI based version should have priority, the probe is aborted at
+this point. As it is not an error condition, only a notice is created
+to indicate that ACPI is not used for probing the device.
 
-OK, I am confused here.
-This code allocates a struct kirin_drm_private.
-But the calling function does the same.
-What am I missing here? Coffee?
+> > ...
+> > @@ -809,12 +887,19 @@ static int __init kempld_init(void)
+> >  					break;
+> >  		if (id->matches[0].slot == DMI_NONE)
+> >  			return -ENODEV;
+> > -	} else {
+> > -		if (!dmi_check_system(kempld_dmi_table))
+> > -			return -ENODEV;
+> >  	}
+> >  
+> > -	return platform_driver_register(&kempld_driver);
+> > +	ret = platform_driver_register(&kempld_driver);
+> > +	if (ret)
+> > +		return ret;
+>
+> Is it guaranteed that the child device has probed at this point?
 
->  
->  	dev->dev_private = priv;
->  	dev_set_drvdata(dev->dev, dev);
->  
-> -	drm_mode_config_init(dev);
-> +	ret = drmm_mode_config_init(dev);
-> +	if (ret)
-> +		return ret;
->  
->  	dev->mode_config.min_width = 0;
->  	dev->mode_config.min_height = 0;
-> @@ -94,20 +95,20 @@ static int kirin_drm_kms_init(struct drm_device *dev)
->  	dc_ops = of_device_get_match_data(dev->dev);
->  	ret = dc_ops->init(dev);
->  	if (ret)
-> -		goto err_mode_config_cleanup;
-> +		return ret;
->  
->  	/* bind and init sub drivers */
->  	ret = component_bind_all(dev->dev, dev);
->  	if (ret) {
->  		DRM_ERROR("failed to bind all component.\n");
-> -		goto err_dc_cleanup;
-> +		return ret;
->  	}
->  
->  	/* vblank init */
->  	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
->  	if (ret) {
->  		DRM_ERROR("failed to initialize vblank.\n");
-> -		goto err_unbind_all;
-> +		return ret;
->  	}
->  	/* with irq_enabled = true, we can use the vblank feature. */
->  	dev->irq_enabled = true;
-> @@ -119,28 +120,10 @@ static int kirin_drm_kms_init(struct drm_device *dev)
->  	drm_kms_helper_poll_init(dev);
->  
->  	return 0;
-> -
-> -err_unbind_all:
-> -	component_unbind_all(dev->dev, dev);
-> -err_dc_cleanup:
-> -	dc_ops->cleanup(dev);
-> -err_mode_config_cleanup:
-> -	drm_mode_config_cleanup(dev);
-> -	devm_kfree(dev->dev, priv);
-> -	dev->dev_private = NULL;
-> -
-> -	return ret;
->  }
->  
->  DEFINE_DRM_GEM_CMA_FOPS(kirin_drm_fops);
->  
-> -static int kirin_gem_cma_dumb_create(struct drm_file *file,
-> -				     struct drm_device *dev,
-> -				     struct drm_mode_create_dumb *args)
-> -{
-> -	return drm_gem_cma_dumb_create_internal(file, dev, args);
-> -}
-> -
->  static int kirin_drm_connectors_register(struct drm_device *dev)
->  {
->  	struct drm_connector_list_iter conn_iter;
-> @@ -176,11 +159,11 @@ static int kirin_drm_connectors_register(struct drm_device *dev)
->  static struct drm_driver kirin_drm_driver = {
->  	.driver_features	= DRIVER_GEM | DRIVER_MODESET |
->  				  DRIVER_ATOMIC | DRIVER_RENDER,
-> -	.fops				= &kirin_drm_fops,
-> +	.fops			= &kirin_drm_fops,
->  
->  	.gem_free_object	= drm_gem_cma_free_object,
->  	.gem_vm_ops		= &drm_gem_cma_vm_ops,
-> -	.dumb_create		= kirin_gem_cma_dumb_create,
-> +	.dumb_create		= drm_gem_cma_dumb_create_internal,
->  
->  	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
->  	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-> @@ -207,42 +190,48 @@ static int compare_of(struct device *dev, void *data)
->  static int kirin_drm_bind(struct device *dev)
->  {
->  	struct drm_driver *driver = &kirin_drm_driver;
-> -	struct drm_device *drm_dev;
->  	struct kirin_drm_private *priv;
-> +	struct drm_device *drm;
->  	int ret;
->  
-> -	drm_dev = drm_dev_alloc(driver, dev);
-> -	if (!drm_dev)
-> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
->  		return -ENOMEM;
->  
-> -	ret = kirin_drm_kms_init(drm_dev);
-> +	drm = &priv->drm;
-> +
-> +	ret = devm_drm_dev_init(dev, drm, driver);
-> +	if (ret) {
-> +		kfree(priv);
-> +		return ret;
-> +	}
-> +	drmm_add_final_kfree(drm, priv);
-> +
-> +	ret = kirin_drm_kms_init(drm);
->  	if (ret)
-> -		goto err_drm_dev_unref;
-> +		return ret;
->  
-> -	ret = drm_dev_register(drm_dev, 0);
-> +	ret = drm_dev_register(drm, 0);
->  	if (ret)
-> -		goto err_kms_cleanup;
-> +		return ret;
->  
-> -	drm_fbdev_generic_setup(drm_dev, 0);
-> -	priv = drm_dev->dev_private;
-> +	drm_fbdev_generic_setup(drm, 0);
->  
->  	/* connectors should be registered after drm device register */
-> -	ret = kirin_drm_connectors_register(drm_dev);
-> +	ret = kirin_drm_connectors_register(drm);
->  	if (ret)
->  		goto err_drm_dev_unregister;
->  
->  	DRM_INFO("Initialized %s %d.%d.%d %s on minor %d\n",
->  		 driver->name, driver->major, driver->minor, driver->patchlevel,
-> -		 driver->date, drm_dev->primary->index);
-> +		 driver->date, drm->primary->index);
->  
->  	return 0;
->  
->  err_drm_dev_unregister:
-> -	drm_dev_unregister(drm_dev);
-> -err_kms_cleanup:
-> -	kirin_drm_kms_cleanup(drm_dev);
-> -err_drm_dev_unref:
-> -	drm_dev_put(drm_dev);
-> +	drm_dev_unregister(drm);
-> +	kirin_drm_kms_cleanup(drm);
-> +	drm_dev_put(drm);
->  
->  	return ret;
->  }
-> @@ -252,6 +241,7 @@ static void kirin_drm_unbind(struct device *dev)
->  	struct drm_device *drm_dev = dev_get_drvdata(dev);
->  
->  	drm_dev_unregister(drm_dev);
-I think this is not needed. But the component framework confuses me.
+To my understanding, with synchronous probing it should. According to
+the definition of the probe_type enum this is still the default for all
+drivers.
+I guess it would make sense to enforce this for the case the default is
+changed in the future.
+Added this to v2:
+	.probe_type = PROBE_FORCE_SYNCHRONOUS,
 
-> +	drm_atomic_helper_shutdown(drm_dev);
->  	kirin_drm_kms_cleanup(drm_dev);
->  	drm_dev_put(drm_dev);
-This should likewise go I think.
+Only exception, to my knowledge, is if drivers_autoprobe is disabled
+for platform drivers during kempld_init. As DMI has priority, the
+driver will later only allow to manually bind the DMI platform device,
+if ACPI and DMI are both supported on a platform.
 
->  }
-> diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-> index 58f6fc7be347..09255d136c54 100644
-> --- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-> +++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-> @@ -31,6 +31,7 @@ struct kirin_dc_ops {
->  };
->  
->  struct kirin_drm_private {
-> +	struct drm_device drm;
->  	struct drm_fb_helper *fbdev;
->  	struct drm_crtc *crtc[MAX_CRTC];
->  };
-> @@ -44,4 +45,6 @@ extern const struct kirin_dc_ops kirin960_dss_dc_ops;
->  extern const struct kirin_dc_ops kirin970_dss_dc_ops;
->  void dsi_set_output_client(struct drm_device *dev);
->  
-> +#define to_drm_private(d) container_of(d, struct kirin_drm_private, drm)
-> +
->  #endif /* __KIRIN_DRM_DRV_H__ */
+> > +	if (!kempld_pdev && !kempld_acpi_mode)
+> 
+> Again, comment please.  What has gone on to get to this point?
+
+At this point it is checked if the kempld_pdev has been already created
+(force_device_id parameter) and if the ACPI based probe has been
+already successfull. If not, the DMI table is searched for a matching
+device ID. Doing this at this point should prevent unnecessarily
+checking the DMI table.
+
+> > +		if (!dmi_check_system(kempld_dmi_table)) {
+> > +			platform_driver_unregister(&kempld_driver);
+> > +			return -ENODEV;
+> > +		}
+
+While writing the above comments I noticed that unregistering the
+driver at this point prevents manually binding the driver to a device
+if drivers_autoprobe is set to 0. This only made sense as long as DMI
+based detection was the only method supported. Therefore I removed it
+in v2.
+
+  Michael
