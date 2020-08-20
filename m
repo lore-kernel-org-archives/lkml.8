@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DC4C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF85C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC84320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA26720658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919485;
-	bh=RYKXhrn6ZF+MK1Oo2SpdcneoS8H8JLGPx3YQJ8SZw50=;
+	s=default; t=1597919505;
+	bh=ZzqLaqW48l/4hRln/x8+EwmEHc5lQTyYnJO4GEmknOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lw61bv7jVaeg4NL7P2n+EQvr7vU3QKG+mGwQGfjyQxHn0rhdcmZ+nByzy9Dw58A6Z
-	 rToyv64g1NCMKkvhOe///dRr9PcQX0DWlVoQ8z1CYT+p2btGiimbsKQgcwGpCw0vz/
-	 oLaJzHgrbSDZEZYn/KTcJTNsuhi2zpg633zpipYc=
+	b=kNcq1LL2XdY67X/SPCoM+6NJl0lQFFRK0PRueYLSExahtv7sAipDdkk6f8lUx8vYI
+	 J3uxA130IpuRMQzlwbpCf230XaL0xA76nmG+shQ4Va+CGHkMjs60mt1KJp40kqfnfr
+	 WWge5T4ydQzf6LJypi6ZFCNJCS5HvWvQ2MF6+o94=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbgHTKbY (ORCPT
+        id S1730468AbgHTKbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46332 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:31:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731479AbgHTKUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:20:46 -0400
+        id S1731477AbgHTKUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2279206DA;
-        Thu, 20 Aug 2020 10:20:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6149D20658;
+        Thu, 20 Aug 2020 10:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918846;
-        bh=RYKXhrn6ZF+MK1Oo2SpdcneoS8H8JLGPx3YQJ8SZw50=;
+        s=default; t=1597918836;
+        bh=ZzqLaqW48l/4hRln/x8+EwmEHc5lQTyYnJO4GEmknOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EU38jvIxJc35pqIXcTqvZauuVtD5zb2ywym+9EqBG2Hk8eCBOoQviuiKJvzwoKwf7
-         BBYBDDxCSCSXkVz34dRgOWx0dG+MrkOAixybfm37Fd99uCsDeuETrXhfVH/1od6F7u
-         zb+D8M3Gnw3/dIOJ+fuiFnRgxRcmZBwFEkPuQfG8=
+        b=wm68BIVhLc/3cGgfVaNYxB0O8Rm1vi5bkPNrvuCV/Nm0B9KAwF1I/EIVqFEhnt2Cq
+         WWph0RLntRbNE0fJPHvhvKBGL6EsLmIZiQVnMuFFB/uJB947jKPV0WirLEMt+Ndv6q
+         oRKgc3HIoNn93+OQzQFSFkAms+r8OMZNktxR3Wf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
-        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
-        Wright Feng <wright.feng@cypress.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 070/149] brcmfmac: To fix Bss Info flag definition Bug
-Date:   Thu, 20 Aug 2020 11:22:27 +0200
-Message-Id: <20200820092129.126314256@linuxfoundation.org>
+Subject: [PATCH 4.4 085/149] drm/radeon: fix array out-of-bounds read and write issues
+Date:   Thu, 20 Aug 2020 11:22:42 +0200
+Message-Id: <20200820092129.840801643@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -63,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
+[ Upstream commit 7ee78aff9de13d5dccba133f4a0de5367194b243 ]
 
-Bss info flag definition need to be fixed from 0x2 to 0x4
-This flag is for rssi info received on channel.
-All Firmware branches defined as 0x4 and this is bug in brcmfmac.
+There is an off-by-one bounds check on the index into arrays
+table->mc_reg_address and table->mc_reg_table_entry[k].mc_data[j] that
+can lead to reads and writes outside of arrays. Fix the bound checking
+off-by-one error.
 
-Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
-Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
-Signed-off-by: Wright Feng <wright.feng@cypress.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
+Addresses-Coverity: ("Out-of-bounds read/write")
+Fixes: cc8dbbb4f62a ("drm/radeon: add dpm support for CI dGPUs (v2)")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/fwil_types.h | 2 +-
+ drivers/gpu/drm/radeon/ci_dpm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/brcm80211/brcmfmac/fwil_types.h
-index 4320c4cae53e1..7eb9f31dde1a2 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/fwil_types.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/fwil_types.h
-@@ -30,7 +30,7 @@
- #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
+diff --git a/drivers/gpu/drm/radeon/ci_dpm.c b/drivers/gpu/drm/radeon/ci_dpm.c
+index e7a245d7bdbcb..8e1bf9ed8efff 100644
+--- a/drivers/gpu/drm/radeon/ci_dpm.c
++++ b/drivers/gpu/drm/radeon/ci_dpm.c
+@@ -4345,7 +4345,7 @@ static int ci_set_mc_special_registers(struct radeon_device *rdev,
+ 					table->mc_reg_table_entry[k].mc_data[j] |= 0x100;
+ 			}
+ 			j++;
+-			if (j > SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
++			if (j >= SMU7_DISCRETE_MC_REGISTER_ARRAY_SIZE)
+ 				return -EINVAL;
  
- #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
--#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
-+#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
- 
- #define BRCMF_STA_WME              0x00000002      /* WMM association */
- #define BRCMF_STA_AUTHE            0x00000008      /* Authenticated */
+ 			if (!pi->mem_gddr5) {
 -- 
 2.25.1
 
