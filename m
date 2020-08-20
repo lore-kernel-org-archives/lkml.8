@@ -5,48 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D30C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2588EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0BF20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB0B22B40
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930941;
-	bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
+	s=default; t=1597930978;
+	bh=Y0LaJzD78yThkPHO2YaMYQsTd79EshsAnEPGAAGauYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=APxiszhfb3UgNergH4Fka56IDoq18Q9YmUJ9mPV1CbBZNl/pxJFxPmkLzNO1Zorqa
-	 xwdW7R48wjLO6W/xHs6JSQQAfB1nb8StF88yqzLoWo7tnAHJL8HqHCdJ9ixjFaDlsj
-	 ZbydxDxIqPRDzNkvHNBvxXoQLmDKCHVWe7euwMmg=
+	b=tfGeHzOzkEoiTvTWZfXKGoDDpMunPuTROVGiYNWT6mrEyJTdVrV4lV3j1DoAqgJ+j
+	 LdelRCtV9paKRx7woOyHZB8/SdKqMYv5jAHdqnNojvf1HC5U+qUEpwyz+D4Bt1UqhI
+	 sj4Czzz4rgdkMxHyI4X3i0lTGtfo7TxbN/96ndSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgHTNmT (ORCPT
+        id S1730761AbgHTNmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:42:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40486 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:42:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgHTJ3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:49 -0400
+        id S1728088AbgHTJ3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 858CB21744;
-        Thu, 20 Aug 2020 09:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDCD822CF7;
+        Thu, 20 Aug 2020 09:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915789;
-        bh=kDSAgY3T2N8pzGL+AufxB3nLV2xVHcmx/Br5SerSUBE=;
+        s=default; t=1597915780;
+        bh=Y0LaJzD78yThkPHO2YaMYQsTd79EshsAnEPGAAGauYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jWi5qC9N5s9pdRwUlb+r7YCgLyzzrn9+ujvCd5kWxv8yw0h6W80+FYuDOYAcxHCXJ
-         vsUPiEo4VUblaPSEGpM5uo60y27xlx9CpQho8tdjFUdMyCSTdIn0+PSYtQVLTMYEFs
-         H7NgUF6zC47L6mM+o9NaTHX1S3yZLeGucItGg3Ps=
+        b=T8KcrO7AzPobVuKFWc04syIipk6MnFte+l15mteJ+4DfIjI0HEdwgIZZpTEewkvEJ
+         acSLceoypJy9BEdEu3sLCdQ2T3ZflCdAURHIm4B53Pwa+iAEZIZJWgFi94hcIUZZLp
+         g0qDHVXNA7bZcWga4wMV5hxNJzUMNKRPks8uqXw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 135/232] USB: serial: ftdi_sio: make process-packet buffer unsigned
-Date:   Thu, 20 Aug 2020 11:19:46 +0200
-Message-Id: <20200820091619.361947211@linuxfoundation.org>
+Subject: [PATCH 5.8 124/232] media: staging: rkisp1: remove macro RKISP1_DIR_SINK_SRC
+Date:   Thu, 20 Aug 2020 11:19:35 +0200
+Message-Id: <20200820091618.823136893@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,94 +64,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit ab4cc4ef6724ea588e835fc1e764c4b4407a70b7 ]
+[ Upstream commit b861d139a36a4593498932bfec957bdcc7d98eb3 ]
 
-Use an unsigned type for the process-packet buffer argument and give it
-a more apt name.
+The macro RKISP1_DIR_SINK_SRC is a mask of two flags.
+The macro hides the fact that it's a mask and the code
+is actually more clear if we replace it the with bitwise-or explicitly.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/ftdi_sio.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/staging/media/rkisp1/rkisp1-isp.c | 25 +++++++++++------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/serial/ftdi_sio.c b/drivers/usb/serial/ftdi_sio.c
-index 9ad44a96dfe3a..96b9e2768ac5c 100644
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -2480,12 +2480,12 @@ static int ftdi_prepare_write_buffer(struct usb_serial_port *port,
- #define FTDI_RS_ERR_MASK (FTDI_RS_BI | FTDI_RS_PE | FTDI_RS_FE | FTDI_RS_OE)
+diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
+index dc2b59a0160a8..93ba2dd2fcda0 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-isp.c
++++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
+@@ -25,7 +25,6 @@
  
- static int ftdi_process_packet(struct usb_serial_port *port,
--		struct ftdi_private *priv, char *packet, int len)
-+		struct ftdi_private *priv, unsigned char *buf, int len)
- {
-+	unsigned char status;
-+	unsigned char *ch;
- 	int i;
--	char status;
- 	char flag;
--	char *ch;
+ #define RKISP1_DIR_SRC BIT(0)
+ #define RKISP1_DIR_SINK BIT(1)
+-#define RKISP1_DIR_SINK_SRC (RKISP1_DIR_SINK | RKISP1_DIR_SRC)
  
- 	if (len < 2) {
- 		dev_dbg(&port->dev, "malformed packet\n");
-@@ -2495,7 +2495,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	/* Compare new line status to the old one, signal if different/
- 	   N.B. packet may be processed more than once, but differences
- 	   are only processed once.  */
--	status = packet[0] & FTDI_STATUS_B0_MASK;
-+	status = buf[0] & FTDI_STATUS_B0_MASK;
- 	if (status != priv->prev_status) {
- 		char diff_status = status ^ priv->prev_status;
- 
-@@ -2521,7 +2521,7 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	}
- 
- 	/* save if the transmitter is empty or not */
--	if (packet[1] & FTDI_RS_TEMT)
-+	if (buf[1] & FTDI_RS_TEMT)
- 		priv->transmit_empty = 1;
- 	else
- 		priv->transmit_empty = 0;
-@@ -2535,29 +2535,29 @@ static int ftdi_process_packet(struct usb_serial_port *port,
- 	 * data payload to avoid over-reporting.
- 	 */
- 	flag = TTY_NORMAL;
--	if (packet[1] & FTDI_RS_ERR_MASK) {
-+	if (buf[1] & FTDI_RS_ERR_MASK) {
- 		/* Break takes precedence over parity, which takes precedence
- 		 * over framing errors */
--		if (packet[1] & FTDI_RS_BI) {
-+		if (buf[1] & FTDI_RS_BI) {
- 			flag = TTY_BREAK;
- 			port->icount.brk++;
- 			usb_serial_handle_break(port);
--		} else if (packet[1] & FTDI_RS_PE) {
-+		} else if (buf[1] & FTDI_RS_PE) {
- 			flag = TTY_PARITY;
- 			port->icount.parity++;
--		} else if (packet[1] & FTDI_RS_FE) {
-+		} else if (buf[1] & FTDI_RS_FE) {
- 			flag = TTY_FRAME;
- 			port->icount.frame++;
- 		}
- 		/* Overrun is special, not associated with a char */
--		if (packet[1] & FTDI_RS_OE) {
-+		if (buf[1] & FTDI_RS_OE) {
- 			port->icount.overrun++;
- 			tty_insert_flip_char(&port->port, 0, TTY_OVERRUN);
- 		}
- 	}
- 
- 	port->icount.rx += len;
--	ch = packet + 2;
-+	ch = buf + 2;
- 
- 	if (port->port.console && port->sysrq) {
- 		for (i = 0; i < len; i++, ch++) {
+ /*
+  * NOTE: MIPI controller and input MUX are also configured in this file.
+@@ -69,84 +68,84 @@ static const struct rkisp1_isp_mbus_info rkisp1_isp_formats[] = {
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SRGGB12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SRGGB8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK_SRC,
++		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_YUYV8_1X16,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
 -- 
 2.25.1
 
