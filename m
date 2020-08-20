@@ -2,55 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4609BC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15D5320724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27A720738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920432;
-	bh=Bt7c5TGqRJziU9ufFBb7RsyRYImgQZh/N1jIsM529KI=;
+	s=default; t=1597920438;
+	bh=trfi2AxVJ0AEF8nUbeu26hKgCxUGkF/1dh/F7XujWuw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnkBX3AEXfKnFrkns1C9m+fF6dtKWYo2N3FfiPVlfyVN6LWcBK62JZ1kHimgx/A9F
-	 lmVyOh8aNVsleAi0Oh7pUAzj8AfNtAscA3QSO7BMzk3AjUiVIRWCn/wCesbuBhbUFH
-	 GgC3n7G6cxi2+K76mtxkDXFWnQuCFnHhnh2OHcXc=
+	b=TF5vJ2QvHjKsrhriHb0VVBfvHwXy2lStQ9cFzWbsEdr1ZT7tfkWCmRijgJNfNzS35
+	 LH8eBLeoH0Cu9NnorMEY6oJRwvCGcAkt3cKI97mkqx606uoBgBZnnoGVrK9OCV16mc
+	 yVhPV2Wfk5wxRxVy8ah1nRrVuM6A60+nduia1/qA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbgHTKrL (ORCPT
+        id S1730420AbgHTKrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:47:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36058 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:47:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730380AbgHTKQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:09 -0400
+        id S1731271AbgHTKQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:16:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2068420885;
-        Thu, 20 Aug 2020 10:16:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 564A920738;
+        Thu, 20 Aug 2020 10:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918565;
-        bh=Bt7c5TGqRJziU9ufFBb7RsyRYImgQZh/N1jIsM529KI=;
+        s=default; t=1597918562;
+        bh=trfi2AxVJ0AEF8nUbeu26hKgCxUGkF/1dh/F7XujWuw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F5evsh2Z0NkI1nj8AHYUcJH6gKB2+ffS/o1WoC62CQLCWQFpRuK/1WPofj5rneIXf
-         OkO2rTHXdeAVyr4ncuZm8lAcN0MhklNuDrJdRjYS6Ap6nC4Ir2VWnMYCzulU706DDD
-         cVA/BghOBFCz2l0GxWG+sv90WEMwMAV79W4wLUt4=
+        b=UFKwP91UJXIUZWe56ldopWqgQU45tq286eXlruXHfEhNKldtPQGZo9KN+igYYZixa
+         tZeGYkm7lM1xDTvP7FfJoapylrJGNKW2zWM+jfnWBcU/2vQY3J3lbCJityBOogDsbf
+         +fY0NfqrRKppo+KJNTDkN+LTc8/JnfbxYD5lqDO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 214/228] fs/ufs: avoid potential u32 multiplication overflow
-Date:   Thu, 20 Aug 2020 11:23:09 +0200
-Message-Id: <20200820091618.215017235@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kevin Hao <haokexin@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.14 187/228] tracing/hwlat: Honor the tracing_cpumask
+Date:   Thu, 20 Aug 2020 11:22:42 +0200
+Message-Id: <20200820091616.921582889@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -63,44 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-[ Upstream commit 88b2e9b06381551b707d980627ad0591191f7a2d ]
+commit 96b4833b6827a62c295b149213c68b559514c929 upstream.
 
-The 64 bit ino is being compared to the product of two u32 values,
-however, the multiplication is being performed using a 32 bit multiply so
-there is a potential of an overflow.  To be fully safe, cast uspi->s_ncg
-to a u64 to ensure a 64 bit multiplication occurs to avoid any chance of
-overflow.
+In calculation of the cpu mask for the hwlat kernel thread, the wrong
+cpu mask is used instead of the tracing_cpumask, this causes the
+tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
 
-Fixes: f3e2a520f5fb ("ufs: NFS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Evgeniy Dushistov <dushistov@mail.ru>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Link: http://lkml.kernel.org/r/20200715170355.1081713-1-colin.king@canonical.com
-Addresses-Coverity: ("Unintentional integer overflow")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
+
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ufs/super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_hwlat.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ufs/super.c b/fs/ufs/super.c
-index 6440003f8ddc6..e3f3a0df60276 100644
---- a/fs/ufs/super.c
-+++ b/fs/ufs/super.c
-@@ -99,7 +99,7 @@ static struct inode *ufs_nfs_get_inode(struct super_block *sb, u64 ino, u32 gene
- 	struct ufs_sb_private_info *uspi = UFS_SB(sb)->s_uspi;
- 	struct inode *inode;
+--- a/kernel/trace/trace_hwlat.c
++++ b/kernel/trace/trace_hwlat.c
+@@ -272,6 +272,7 @@ static bool disable_migrate;
+ static void move_to_next_cpu(void)
+ {
+ 	struct cpumask *current_mask = &save_cpumask;
++	struct trace_array *tr = hwlat_trace;
+ 	int next_cpu;
  
--	if (ino < UFS_ROOTINO || ino > uspi->s_ncg * uspi->s_ipg)
-+	if (ino < UFS_ROOTINO || ino > (u64)uspi->s_ncg * uspi->s_ipg)
- 		return ERR_PTR(-ESTALE);
+ 	if (disable_migrate)
+@@ -285,7 +286,7 @@ static void move_to_next_cpu(void)
+ 		goto disable;
  
- 	inode = ufs_iget(sb, ino);
--- 
-2.25.1
-
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
+ 	put_online_cpus();
+ 
+@@ -359,7 +360,7 @@ static int start_kthread(struct trace_ar
+ 	/* Just pick the first CPU on first iteration */
+ 	current_mask = &save_cpumask;
+ 	get_online_cpus();
+-	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
++	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
+ 	put_online_cpus();
+ 	next_cpu = cpumask_first(current_mask);
+ 
 
 
