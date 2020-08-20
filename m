@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF24DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1789C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9703D207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5A0207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926805;
-	bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
+	s=default; t=1597926811;
+	bh=X1qMVao/5KKJV39PIjzU6kC2W0LVzuByCFI84PxYJEU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSex54yL6MuZYeLt5C/lrSj1D4a9SAPVehiAnSDSf2xG0Fcwf3ilJnrlqHuVYBQHu
-	 H7kgRotfPZxww4/GYq/oLtY41pXFYskKFpc+b1AeSVsu9uWAzucLlexyvtuIwZw7LL
-	 k7flLYFXY2D2DECmFav8fhj26gmTfZN/bEmn43MY=
+	b=acQdEdYN24ouYTgvfTkXkWOxiQykBSMdkJMYt1TTx6f1k+/6BZKfLtsxruw5Z1URn
+	 VEP3kg6evya585wdc8NCgNw5o9hzcmlefRxf0WoLQ3UdlSBzc5N4ucSAn6cvSniqyM
+	 s/dFoo8+L828tvKJOahUi0K4jA/GF0Ge0OYmgHO8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729657AbgHTJtc (ORCPT
+        id S1729664AbgHTMda (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54950 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:33:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728912AbgHTJtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:13 -0400
+        id S1729647AbgHTJtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62CC12078D;
-        Thu, 20 Aug 2020 09:49:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5EA92173E;
+        Thu, 20 Aug 2020 09:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916953;
-        bh=FIf245zXysx06zrfB4Thg/nzHVS7fWcttgKSzi+mJQg=;
+        s=default; t=1597916964;
+        bh=X1qMVao/5KKJV39PIjzU6kC2W0LVzuByCFI84PxYJEU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wN4qv487K7vr/eTS6ozJ8XKsXMJjftvwQf7LsKKGw38rZpmcAM90HsLFs3cKdtYEd
-         oRKM3sHjDDbE2w8l3Tm/ALJeiKrKK2j8LSmWFFiejXilX3EFD4D7lxWsOjN8Am5wRX
-         EUa956zev2I7hZBxOysqhc2oKjTIYWU8c2gI1IRY=
+        b=Fm9RddmTGFryI3+k4JvxqYilZgyE9O9k3wtTxhvAuI9E6qdB7394P78q00usuNJM4
+         uUKWpkThr9LUE3NVByxGa2jnbLZ4G6yDPS9IBwv3r6sser8SV0CxEX/LRdRAysQ0Xs
+         +96hzYvJhU/3tFTL8vlGRYE81j3wgftLgcQ7eyuE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 103/152] selftests/powerpc: ptrace-pkey: Update the test to mark an invalid pkey correctly
-Date:   Thu, 20 Aug 2020 11:21:10 +0200
-Message-Id: <20200820091559.034720681@linuxfoundation.org>
+Subject: [PATCH 5.4 106/152] clk: qcom: gcc: fix sm8150 GPU and NPU clocks
+Date:   Thu, 20 Aug 2020 11:21:13 +0200
+Message-Id: <20200820091559.195226911@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,82 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Jonathan Marek <jonathan@marek.ca>
 
-[ Upstream commit 0eaa3b5ca7b5a76e3783639c828498343be66a01 ]
+[ Upstream commit 667f39b59b494d96ae70f4217637db2ebbee3df0 ]
 
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200709032946.881753-22-aneesh.kumar@linux.ibm.com
+Fix the parents and set BRANCH_HALT_SKIP. From the downstream driver it
+should be a 500us delay and not skip, however this matches what was done
+for other clocks that had 500us delay in downstream.
+
+Fixes: f73a4230d5bb ("clk: qcom: gcc: Add GPU and NPU clocks for SM8150")
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Link: https://lore.kernel.org/r/20200709135251.643-2-jonathan@marek.ca
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/powerpc/ptrace/ptrace-pkey.c    | 30 ++++++++-----------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-index f9216c7a1829e..bc33d748d95b4 100644
---- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-+++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
-@@ -66,11 +66,6 @@ static int sys_pkey_alloc(unsigned long flags, unsigned long init_access_rights)
- 	return syscall(__NR_pkey_alloc, flags, init_access_rights);
- }
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index fad42897a7a7f..ee908fbfeab17 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -1616,6 +1616,7 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
+ };
  
--static int sys_pkey_free(int pkey)
--{
--	return syscall(__NR_pkey_free, pkey);
--}
--
- static int child(struct shared_info *info)
- {
- 	unsigned long reg;
-@@ -100,7 +95,11 @@ static int child(struct shared_info *info)
+ static struct clk_branch gcc_gpu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(15),
+@@ -1631,13 +1632,14 @@ static struct clk_branch gcc_gpu_gpll0_clk_src = {
+ };
  
- 	info->amr1 |= 3ul << pkeyshift(pkey1);
- 	info->amr2 |= 3ul << pkeyshift(pkey2);
--	info->invalid_amr |= info->amr2 | 3ul << pkeyshift(pkey3);
-+	/*
-+	 * invalid amr value where we try to force write
-+	 * things which are deined by a uamor setting.
-+	 */
-+	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
+ static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(16),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_gpu_gpll0_div_clk_src",
+ 			.parent_hws = (const struct clk_hw *[]){
+-				&gcc_gpu_gpll0_clk_src.clkr.hw },
++				&gpll0_out_even.clkr.hw },
+ 			.num_parents = 1,
+ 			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+@@ -1728,6 +1730,7 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
+ };
  
- 	if (disable_execute)
- 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
-@@ -111,17 +110,12 @@ static int child(struct shared_info *info)
+ static struct clk_branch gcc_npu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(18),
+@@ -1743,13 +1746,14 @@ static struct clk_branch gcc_npu_gpll0_clk_src = {
+ };
  
- 	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
- 				3ul << pkeyshift(pkey2);
--	info->invalid_iamr |= 1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2);
--	info->invalid_uamor |= 3ul << pkeyshift(pkey1);
--
- 	/*
--	 * We won't use pkey3. We just want a plausible but invalid key to test
--	 * whether ptrace will let us write to AMR bits we are not supposed to.
--	 *
--	 * This also tests whether the kernel restores the UAMOR permissions
--	 * after a key is freed.
-+	 * Create an IAMR value different from expected value.
-+	 * Kernel will reject an IAMR and UAMOR change.
- 	 */
--	sys_pkey_free(pkey3);
-+	info->invalid_iamr = info->expected_iamr | (1ul << pkeyshift(pkey1) | 1ul << pkeyshift(pkey2));
-+	info->invalid_uamor = info->expected_uamor & ~(0x3ul << pkeyshift(pkey1));
- 
- 	printf("%-30s AMR: %016lx pkey1: %d pkey2: %d pkey3: %d\n",
- 	       user_write, info->amr1, pkey1, pkey2, pkey3);
-@@ -196,9 +190,9 @@ static int parent(struct shared_info *info, pid_t pid)
- 	PARENT_SKIP_IF_UNSUPPORTED(ret, &info->child_sync);
- 	PARENT_FAIL_IF(ret, &info->child_sync);
- 
--	info->amr1 = info->amr2 = info->invalid_amr = regs[0];
--	info->expected_iamr = info->invalid_iamr = regs[1];
--	info->expected_uamor = info->invalid_uamor = regs[2];
-+	info->amr1 = info->amr2 = regs[0];
-+	info->expected_iamr = regs[1];
-+	info->expected_uamor = regs[2];
- 
- 	/* Wake up child so that it can set itself up. */
- 	ret = prod_child(&info->child_sync);
+ static struct clk_branch gcc_npu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
+ 	.clkr = {
+ 		.enable_reg = 0x52004,
+ 		.enable_mask = BIT(19),
+ 		.hw.init = &(struct clk_init_data){
+ 			.name = "gcc_npu_gpll0_div_clk_src",
+ 			.parent_hws = (const struct clk_hw *[]){
+-				&gcc_npu_gpll0_clk_src.clkr.hw },
++				&gpll0_out_even.clkr.hw },
+ 			.num_parents = 1,
+ 			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
 -- 
 2.25.1
 
