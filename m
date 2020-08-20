@@ -4,87 +4,80 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB397C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71623C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE71622B43
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49E442072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbgHTQxp (ORCPT
+        id S1730395AbgHTQy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:53:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 12:54:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:43094 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729881AbgHTQxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:53:43 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13C3D2072D;
-        Thu, 20 Aug 2020 16:53:40 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 12:53:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     peterz@infradead.org
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org, will@kernel.org,
-        npiggin@gmail.com, elver@google.com, jgross@suse.com,
-        paulmck@kernel.org, rjw@rjwysocki.net, joel@joelfernandes.org,
-        svens@linux.ibm.com, tglx@linutronix.de
-Subject: Re: [PATCH 0/9] TRACE_IRQFLAGS wreckage
-Message-ID: <20200820125337.01440a50@oasis.local.home>
-In-Reply-To: <20200820145821.GA1362448@hirez.programming.kicks-ass.net>
-References: <20200820073031.886217423@infradead.org>
-        <20200820103643.1b9abe88@oasis.local.home>
-        <20200820145821.GA1362448@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1730001AbgHTQyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 12:54:14 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CF00868AFE; Thu, 20 Aug 2020 18:54:07 +0200 (CEST)
+Date:   Thu, 20 Aug 2020 18:54:07 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
+        linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        linux-mips@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH 05/28] media/v4l2: remove
+ V4L2-FLAG-MEMORY-NON-CONSISTENT
+Message-ID: <20200820165407.GD12693@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de> <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com> <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com> <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de> <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 16:58:21 +0200
-peterz@infradead.org wrote:
+On Thu, Aug 20, 2020 at 12:05:29PM +0200, Tomasz Figa wrote:
+> The UAPI and V4L2/videobuf2 changes are in good shape and the only
+> wrong part is the use of DMA API, which was based on an earlier email
+> guidance anyway, and a change to the synchronization part . I find
+> conclusions like the above insulting for people who put many hours
+> into designing and implementing the related functionality, given the
+> complexity of the videobuf2 framework and how ill-defined the DMA API
+> was, and would feel better if such could be avoided in future
+> communication.
 
-> @@ -91,11 +91,11 @@ void __cpuidle default_idle_call(void)
->  	if (current_clr_polling_and_test()) {
->  		local_irq_enable();
->  	} else {
-> -		rcu_idle_enter();
->  		stop_critical_timings();
-> +		rcu_idle_enter();
->  		arch_cpu_idle();
-> -		start_critical_timings();
->  		rcu_idle_exit();
-> +		start_critical_timings();
->  	}
->  }
->  
+It wasn't meant to be too insulting, but I found this out when trying
+to figure out how to just disable it.  But it also ends up using
+the actual dma attr flags for it's own consistency checks, so just
+not setting the flag did not turn out to work that easily.
 
-tip/master didn't have the above function and instead I had this:
-
-@@ -93,11 +93,11 @@ void __cpuidle default_idle_call(void)
-        } else {
- 
-                trace_cpu_idle(1, smp_processor_id());
--               rcu_idle_enter();
-                stop_critical_timings();
-+               rcu_idle_enter();
-                arch_cpu_idle();
--               start_critical_timings();
-                rcu_idle_exit();
-+               start_critical_timings();
-                trace_cpu_idle(PWR_EVENT_EXIT, smp_processor_id());
-        }
- }
-
-But it booted to completion without warning with this patch applied.
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
-For the entire series, with this update.
-
--- Steve
+But in general it helps to add a few more people to the Cc list for
+such things that do stranger things.  Especially if you think you did
+it based on the advice of those people.
