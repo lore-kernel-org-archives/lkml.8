@@ -5,55 +5,55 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01597C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC07C433DF
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9A62206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8181206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jT9+bUrF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gy93rDTj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgHTSb6 (ORCPT
+        id S1727973AbgHTSby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:31:58 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41013 "EHLO
+        Thu, 20 Aug 2020 14:31:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60584 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727900AbgHTSbX (ORCPT
+        with ESMTP id S1727871AbgHTSbE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:31:23 -0400
+        Thu, 20 Aug 2020 14:31:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597948280;
+        s=mimecast20190719; t=1597948263;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=QCjr+uByIBfL0haFw4aKDUBmX5sSqlZyqM7i/4LR6I4=;
-        b=jT9+bUrFgP46aW8ix1jI0orIJ9RDCE436SZq/RCiKHcsAWzqY32495VrBEm9TKAnunLpEZ
-        5AUGiCK8rQbcQFZVLW6wir0wmpxYma/jXWs9lyenc55uOv5bE6L9EqA3WvNO7dWhz1XpB1
-        DfJTjNsK053CraUYC2DRSo1s5P1fGFc=
+        bh=9gTAM7TDlgZMdWHt2r6XU0KzwhLUE1MvpqOoSpb17cM=;
+        b=gy93rDTjYY0QvpQ2W31eElMg6ZenMck9ru1YXlr/4fQupWV3Pyb2qCk1ZIvmT1erLuUDDr
+        kORU8ERExUlnm85FotoQD/gznWwvpdot3NozUvRc+4AzMmTHNdMjcfNZcdL3Few3+Q0LYF
+        OL30cPEi2lw+aS92HrCUKptYbsN4v2I=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-jlEEUfpsNTacsHSO2Vj1pA-1; Thu, 20 Aug 2020 14:31:17 -0400
-X-MC-Unique: jlEEUfpsNTacsHSO2Vj1pA-1
+ us-mta-235-Zq5vuNvlMlyhYgZvgwfddQ-1; Thu, 20 Aug 2020 14:30:57 -0400
+X-MC-Unique: Zq5vuNvlMlyhYgZvgwfddQ-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E5A8518686FA;
-        Thu, 20 Aug 2020 18:31:15 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4241B801AE8;
+        Thu, 20 Aug 2020 18:30:56 +0000 (UTC)
 Received: from Whitewolf.redhat.com (ovpn-120-42.rdu2.redhat.com [10.10.120.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 35C475DA78;
-        Thu, 20 Aug 2020 18:31:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 85B4E5DA78;
+        Thu, 20 Aug 2020 18:30:55 +0000 (UTC)
 From:   Lyude Paul <lyude@redhat.com>
 To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
         nouveau@lists.freedesktop.org
 Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
         linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v2 17/20] drm/nouveau/kms/nv50-: Add support for DP_SINK_COUNT
-Date:   Thu, 20 Aug 2020 14:30:09 -0400
-Message-Id: <20200820183012.288794-18-lyude@redhat.com>
+Subject: [RFC v2 10/20] drm/nouveau/kms: Use new drm_dp_has_mst() helper for checking MST caps
+Date:   Thu, 20 Aug 2020 14:30:02 -0400
+Message-Id: <20200820183012.288794-11-lyude@redhat.com>
 In-Reply-To: <20200820183012.288794-1-lyude@redhat.com>
 References: <20200820183012.288794-1-lyude@redhat.com>
 MIME-Version: 1.0
@@ -64,153 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is another bit that we never implemented for nouveau: dongle
-detection. When a "dongle", e.g. an active display adaptor, is hooked up
-to the system and causes an HPD to be fired, we don't actually know
-whether or not there's anything plugged into the dongle without checking
-the sink count. As a result, plugging in a dongle without anything
-plugged into it currently results in a bogus EDID retrieval error in the kernel log.
-
-Additionally, most dongles won't send another long HPD signal if the
-user suddenly plugs something in, they'll only send a short HPD IRQ with
-the expectation that the source will check the sink count and reprobe
-the connector if it's changed - something we don't actually do. As a
-result, nothing will happen if the user plugs the dongle in before
-plugging something into the dongle.
-
-So, let's fix this by checking the sink count in both
-nouveau_dp_probe_dpcd() and nouveau_dp_irq(), and reprobing the
-connector if things change.
-
 Signed-off-by: Lyude Paul <lyude@redhat.com>
 Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_dp.c      | 54 ++++++++++++++++++++---
- drivers/gpu/drm/nouveau/nouveau_encoder.h |  2 +
- 2 files changed, 51 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dp.c | 16 +++-------------
+ 1 file changed, 3 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpu/drm/nouveau/nouveau_dp.c b/drivers/gpu/drm/nouveau/nouveau_dp.c
-index c200f197083f9..89afc97ee2591 100644
+index 032afc73e2a33..201c0b4335563 100644
 --- a/drivers/gpu/drm/nouveau/nouveau_dp.c
 +++ b/drivers/gpu/drm/nouveau/nouveau_dp.c
-@@ -36,12 +36,22 @@ MODULE_PARM_DESC(mst, "Enable DisplayPort multi-stream (default: enabled)");
- static int nouveau_mst = 1;
- module_param_named(mst, nouveau_mst, int, 0400);
- 
-+static bool
-+nouveau_dp_has_sink_count(struct drm_connector *connector,
-+			  struct nouveau_encoder *outp)
-+{
-+	return drm_dp_has_sink_count(connector, outp->dp.dpcd,
-+				     &outp->dp.desc);
-+}
-+
- static enum drm_connector_status
- nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 		      struct nouveau_encoder *outp)
- {
-+	struct drm_connector *connector = &nv_connector->base;
- 	struct drm_dp_aux *aux = &nv_connector->aux;
+@@ -44,7 +44,6 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
  	struct nv50_mstm *mstm = NULL;
-+	enum drm_connector_status status = connector_status_disconnected;
  	int ret;
  	u8 *dpcd = outp->dp.dpcd;
+-	u8 tmp;
  
-@@ -50,9 +60,9 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 		ret = drm_dp_read_desc(aux, &outp->dp.desc,
- 				       drm_dp_is_branch(dpcd));
- 		if (ret < 0)
--			return connector_status_disconnected;
-+			goto out;
- 	} else {
--		return connector_status_disconnected;
-+		goto out;
+ 	ret = drm_dp_dpcd_read(aux, DP_DPCD_REV, dpcd, DP_RECEIVER_CAP_SIZE);
+ 	if (ret == DP_RECEIVER_CAP_SIZE && dpcd[DP_DPCD_REV]) {
+@@ -56,19 +55,10 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
+ 		return connector_status_disconnected;
  	}
  
- 	if (nouveau_mst) {
-@@ -61,12 +71,33 @@ nouveau_dp_probe_dpcd(struct nouveau_connector *nv_connector,
- 			mstm->can_mst = drm_dp_has_mst(aux, dpcd);
+-	if (nouveau_mst)
++	if (nouveau_mst) {
+ 		mstm = outp->dp.mstm;
+-
+-	if (mstm) {
+-		if (dpcd[DP_DPCD_REV] >= DP_DPCD_REV_12) {
+-			ret = drm_dp_dpcd_readb(aux, DP_MSTM_CAP, &tmp);
+-			if (ret < 0)
+-				return connector_status_disconnected;
+-
+-			mstm->can_mst = !!(tmp & DP_MST_CAP);
+-		} else {
+-			mstm->can_mst = false;
+-		}
++		if (mstm)
++			mstm->can_mst = drm_dp_has_mst(aux, dpcd);
  	}
  
-+	if (nouveau_dp_has_sink_count(connector, outp)) {
-+		ret = drm_dp_get_sink_count(aux);
-+		if (ret < 0)
-+			goto out;
-+
-+		outp->dp.sink_count = ret;
-+
-+		/*
-+		 * Dongle connected, but no display. Don't bother reading
-+		 * downstream port info
-+		 */
-+		if (!outp->dp.sink_count)
-+			return connector_status_disconnected;
-+	}
-+
- 	ret = drm_dp_downstream_read_info(aux, dpcd,
- 					  outp->dp.downstream_ports);
- 	if (ret < 0)
--		return connector_status_disconnected;
-+		goto out;
- 
--	return connector_status_connected;
-+	status = connector_status_connected;
-+out:
-+	if (status != connector_status_connected) {
-+		/* Clear any cached info */
-+		outp->dp.sink_count = 0;
-+	}
-+	return status;
- }
- 
- int
-@@ -159,6 +190,8 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 	struct drm_connector *connector = &nv_connector->base;
- 	struct nouveau_encoder *outp = find_encoder(connector, DCB_OUTPUT_DP);
- 	struct nv50_mstm *mstm;
-+	int ret;
-+	bool send_hpd = false;
- 
- 	if (!outp)
- 		return;
-@@ -170,12 +203,23 @@ void nouveau_dp_irq(struct nouveau_drm *drm,
- 
- 	if (mstm && mstm->is_mst) {
- 		if (!nv50_mstm_service(drm, nv_connector, mstm))
--			nouveau_connector_hpd(connector);
-+			send_hpd = true;
- 	} else {
- 		drm_dp_cec_irq(&nv_connector->aux);
-+
-+		if (nouveau_dp_has_sink_count(connector, outp)) {
-+			ret = drm_dp_get_sink_count(&nv_connector->aux);
-+			if (ret != outp->dp.sink_count)
-+				send_hpd = true;
-+			if (ret >= 0)
-+				outp->dp.sink_count = ret;
-+		}
- 	}
- 
- 	mutex_unlock(&outp->dp.hpd_irq_lock);
-+
-+	if (send_hpd)
-+		nouveau_connector_hpd(connector);
- }
- 
- /* TODO:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_encoder.h b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-index c1924a4529a7b..21937f1c7dd90 100644
---- a/drivers/gpu/drm/nouveau/nouveau_encoder.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_encoder.h
-@@ -74,6 +74,8 @@ struct nouveau_encoder {
- 			u8 dpcd[DP_RECEIVER_CAP_SIZE];
- 			u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS];
- 			struct drm_dp_desc desc;
-+
-+			u8 sink_count;
- 		} dp;
- 	};
- 
+ 	return connector_status_connected;
 -- 
 2.26.2
 
