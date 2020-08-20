@@ -2,226 +2,96 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8341C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BCBC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C408620738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ezdoZ9Kw"
+	by mail.kernel.org (Postfix) with ESMTP id 6868820738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919467;
+	bh=H4lOMUjgYZwWlmf4jRSv9cJKqKrsfE2ELDh2LqDv/nc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hjTdyAEASqaVVYaYbE007E2UBOXvsnMvV6QM0HmcgrmZP92tFSZAhnMjtpyM8YgIG
+	 w9AJ80PsHG1CAAUzfRWhPt6uzlNXnxxnhgdVirM2spiRgnzLCvYvGimTkLxVvdDGm3
+	 Gd2noKnfpNYolY8v0nZ9QvQ44X4wUEi4qEcxgAhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbgHTKbA (ORCPT
+        id S1731499AbgHTKUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:31:00 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22603 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729137AbgHTKaw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:30:52 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1597919451; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=ql6arR92ZpN3KaOepeFprHVy/tHtOfo4QUNFyLkpyYg=;
- b=ezdoZ9Kw9GVpjNQTdyVEE7f7lwV0mAuQWc57ROWeYYVlEb9VtOSJLEBAnq3TBw6FVjPIYKoh
- v+iUTluF1zSWIvbddl0cNEV9UpPTHiDRlXS1AYLzmU+xUce1NJ/URkbefr/21o7+G11KzgOb
- xtHjzLO9/pENgw86cxXlt2bJt+8=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f3e50ca949572eafbcdf089 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 10:30:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id BF527C43391; Thu, 20 Aug 2020 10:30:33 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 06:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731303AbgHTKUk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:20:40 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rojay)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D61CC433C6;
-        Thu, 20 Aug 2020 10:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6BF206DA;
+        Thu, 20 Aug 2020 10:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918839;
+        bh=H4lOMUjgYZwWlmf4jRSv9cJKqKrsfE2ELDh2LqDv/nc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=npE9sif+4P3radQrHkqF8x13LslwnOMNNHdM9z9C7ELBmaTRMxoyvge4Dwivi0zCd
+         wa69/Wpi4XE4i6qrDBL9yvezdc1zluJ8xkPIA169P2/NkIsbs9UJcjL0znKEfiJ91+
+         f0kT4diLO+p8yqciEyiNW4eTFRDWOLZq+U/0Fr1E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 086/149] scsi: powertec: Fix different dev_id between request_irq() and free_irq()
+Date:   Thu, 20 Aug 2020 11:22:43 +0200
+Message-Id: <20200820092129.892016356@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Aug 2020 16:00:33 +0530
-From:   rojay@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     wsa@kernel.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
-        mka@chromium.org, akashast@codeaurora.org,
-        msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
-        rnayak@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
-Subject: Re: [PATCH 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
-In-Reply-To: <159780863669.334488.18038785498966010175@swboyd.mtv.corp.google.com>
-References: <20200814095540.32115-1-rojay@codeaurora.org>
- <20200814095540.32115-3-rojay@codeaurora.org>
- <159780863669.334488.18038785498966010175@swboyd.mtv.corp.google.com>
-Message-ID: <d4c78c0cfde0f9276c524124ca18893f@codeaurora.org>
-X-Sender: rojay@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-19 09:13, Stephen Boyd wrote:
-> Quoting Roja Rani Yarubandi (2020-08-14 02:55:40)
->> If the hardware is still accessing memory after SMMU translation
->> is disabled(as part of smmu shutdown callback), then the
-> 
-> Put a space before (
-> 
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-Ok.
+[ Upstream commit d179f7c763241c1dc5077fca88ddc3c47d21b763 ]
 
->> IOVAs(I/O virtual address) which it was using will go on the bus
-> 
-> Put a space before (
-> 
->> as the physical addresses which will result in unknown crashes
->> like NoC/interconnect errors.
->> 
->> So, adding shutdown callback to i2c driver to unmap DMA mappings
->> during system "reboot" or "shutdown".
->> 
-> 
-> Deserves a Fixes: tag if it's fixing a problem, which it looks like it
-> is.
-> 
+The dev_id used in request_irq() and free_irq() should match. Use 'info' in
+both cases.
 
-It is not fixing a problem. We are anticipating a problem and 
-implementing
-Shutdown callback.
+Link: https://lore.kernel.org/r/20200626035948.944148-1-christophe.jaillet@wanadoo.fr
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/arm/powertec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
->> ---
->>  drivers/i2c/busses/i2c-qcom-geni.c | 36 
->> ++++++++++++++++++++++++++++++
->>  include/linux/qcom-geni-se.h       |  5 +++++
-> 
-> I'd prefer this is squashed with the previous patch. The first patch
-> doesn't really stand on its own anyway.
-> 
+diff --git a/drivers/scsi/arm/powertec.c b/drivers/scsi/arm/powertec.c
+index 5e1b73e1b743e..b6724ba9b36e7 100644
+--- a/drivers/scsi/arm/powertec.c
++++ b/drivers/scsi/arm/powertec.c
+@@ -382,7 +382,7 @@ static int powertecscsi_probe(struct expansion_card *ec,
+ 
+ 	if (info->info.scsi.dma != NO_DMA)
+ 		free_dma(info->info.scsi.dma);
+-	free_irq(ec->irq, host);
++	free_irq(ec->irq, info);
+ 
+  out_release:
+ 	fas216_release(host);
+-- 
+2.25.1
 
-Sorry, I did not understand.
-First patch can be compiled independently.
 
->>  2 files changed, 41 insertions(+)
->> 
->> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c 
->> b/drivers/i2c/busses/i2c-qcom-geni.c
->> index 53ca41f76080..749c225f95c4 100644
->> --- a/drivers/i2c/busses/i2c-qcom-geni.c
->> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
->> @@ -613,6 +613,41 @@ static int geni_i2c_remove(struct platform_device 
->> *pdev)
->>         return 0;
->>  }
->> 
->> +static void geni_i2c_shutdown(struct platform_device *pdev)
->> +{
->> +       int ret;
->> +       struct geni_i2c_dev *gi2c = platform_get_drvdata(pdev);
->> +       struct geni_se *se = &gi2c->se;
->> +       u32 dma;
->> +       u32 dma_dbg_reg;
-> 
-> Typically this is just called 'val'.
-> 
 
-Ok.
-
->> +
->> +       ret = pm_runtime_get_sync(gi2c->se.dev);
->> +       if (ret < 0) {
->> +               dev_err(gi2c->se.dev, "Failed to resume device:%d\n", 
->> ret);
-> 
-> Maybe just write: "Failed to resume device\n"? Not sure anyone cares
-> what the error code is. And if they did, it would be connected to the
-> colon so it will be hard to read. Add a space after colon if you want 
-> to
-> keep the return value please.
-> 
-
-Ok, will add space after colon.
-
->> +               return;
->> +       }
->> +
->> +       dma = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
->> +       if (dma) {
->> +               dma_dbg_reg = readl_relaxed(gi2c->se.base + 
->> SE_DMA_DEBUG_REG0);
->> +               if (dma_dbg_reg & DMA_TX_ACTIVE) {
->> +                       geni_i2c_abort_xfer(gi2c);
->> +                       gi2c->cur_wr = 0;
->> +                       if (gi2c->err)
->> +                               geni_i2c_tx_fsm_rst(gi2c);
->> +                       geni_se_tx_dma_unprep(se, gi2c->tx_dma, 
->> gi2c->xfer_len);
->> +               }
->> +               if (dma_dbg_reg & DMA_RX_ACTIVE) {
->> +                       geni_i2c_abort_xfer(gi2c);
->> +                       gi2c->cur_rd = 0;
->> +                       if (gi2c->err)
->> +                               geni_i2c_rx_fsm_rst(gi2c);
->> +                       geni_se_rx_dma_unprep(se, gi2c->rx_dma, 
->> gi2c->xfer_len);
->> +               }
-> 
-> Can this be a function? It sort of seems like we should be doing the
-> same sort of stuff if we're canceling a DMA transaction in flight.
-> 
-
-Ok. Will make the changes.
-
->> +       }
->> +       pm_runtime_put_sync_suspend(gi2c->se.dev);
->> +}
->> +
->>  static int __maybe_unused geni_i2c_runtime_suspend(struct device 
->> *dev)
->>  {
->>         int ret;
->> diff --git a/include/linux/qcom-geni-se.h 
->> b/include/linux/qcom-geni-se.h
->> index dd464943f717..acad69be747d 100644
->> --- a/include/linux/qcom-geni-se.h
->> +++ b/include/linux/qcom-geni-se.h
->> @@ -77,6 +77,7 @@ struct geni_se {
->>  #define SE_DMA_RX_FSM_RST              0xd58
->>  #define SE_HW_PARAM_0                  0xe24
->>  #define SE_HW_PARAM_1                  0xe28
->> +#define SE_DMA_DEBUG_REG0              0xe40
->> 
->>  /* GENI_FORCE_DEFAULT_REG fields */
->>  #define FORCE_DEFAULT  BIT(0)
->> @@ -207,6 +208,10 @@ struct geni_se {
->>  #define RX_GENI_CANCEL_IRQ             BIT(11)
->>  #define RX_GENI_GP_IRQ_EXT             GENMASK(13, 12)
->> 
->> +/* DMA DEBUG Register fields */
-> 
-> Please follow other style, ie. SE_DMA_DEBUG_REG0 fields
-> 
-
-Ok.
-
->> +#define DMA_TX_ACTIVE                  BIT(0)
->> +#define DMA_RX_ACTIVE                  BIT(1)
->> +
->>  /* SE_HW_PARAM_0 fields */
->>  #define TX_FIFO_WIDTH_MSK              GENMASK(29, 24)
->>  #define TX_FIFO_WIDTH_SHFT             24
