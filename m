@@ -2,247 +2,126 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0857A20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB8520724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TCJZNgYl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgHTOMs (ORCPT
+        id S1726887AbgHTONp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:12:48 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39992 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726949AbgHTOMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 10:12:32 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 112F0ABD2;
-        Thu, 20 Aug 2020 14:12:50 +0000 (UTC)
-Date:   Thu, 20 Aug 2020 16:12:22 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        christian.brauner@ubuntu.com, mingo@kernel.org,
-        peterz@infradead.org, tglx@linutronix.de, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com, shakeelb@google.com,
-        cyphar@cyphar.com, oleg@redhat.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, gladkov.alexey@gmail.com,
-        walken@google.com, daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de, john.johansen@canonical.com,
-        laoar.shao@gmail.com, timmurray@google.com, minchan@kernel.org,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200820141222.GL5033@dhcp22.suse.cz>
-References: <20200820002053.1424000-1-surenb@google.com>
- <87zh6pxzq6.fsf@x220.int.ebiederm.org>
- <20200820124241.GJ5033@dhcp22.suse.cz>
- <87lfi9xz7y.fsf@x220.int.ebiederm.org>
- <87d03lxysr.fsf@x220.int.ebiederm.org>
- <20200820132631.GK5033@dhcp22.suse.cz>
- <874koxxwn5.fsf@x220.int.ebiederm.org>
+        Thu, 20 Aug 2020 10:13:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44466 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbgHTONm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 10:13:42 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B829C061385;
+        Thu, 20 Aug 2020 07:13:42 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id q75so2344610iod.1;
+        Thu, 20 Aug 2020 07:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7KUqD0NVyRg3Zo03GZrFVQegwrcexF2aJREuag4UjIs=;
+        b=TCJZNgYlFkolAtKYDIaSQN1FZqYOp0XkIPkHM5WH42LWR6/yUHnPUjst8eHDeJmbVI
+         j5LsQXv6294iLVbd3J87FiCydVMOuBJ0fa9oex0OUM92w/tFyJmNbRU8b1a1MM1c5uyN
+         785YJ3lAM9LVM2OjK3bnrI51rakDkVrQRnhg68McF4HsFIfOb7naUtnS8WgGlVCen2uL
+         DQ6HuaO1AY/+oE+9Y09w9SJnDdZjAfNT0twocg+yXtnzrQxMVmNyS9CdKBKqTpezXNHM
+         gAvy5RnVll4PadjCJ/Vi3pdvgimSd0fUCj+odJhmONiUJCgifJsi+1UkihKXhBJ/4T/1
+         IKaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7KUqD0NVyRg3Zo03GZrFVQegwrcexF2aJREuag4UjIs=;
+        b=tju0bxxQIFZ2qSGJsi9HTczWEyn7DuGoOig/LOyA3L11AkCBijYdNWjmXGx4jTbIhf
+         8YlFwYomKWRRb8qKXQ2HXzBNJYmGuPJqARFDlKxMXKUY7ba3DohrqCmfd3bHDq2mfQH8
+         VVOVrbAxvErADNQm3Uze4kE4Hk+tlNo+uVIV1hRMOfpsjpEwMJNxr1GwnD2EHfztcSe6
+         x6QbR+JfRUxKEEaEtkrqFplt/6Rxqa3MB+C5FWf8ox5kmJR0uWajvUFXLVAajhK/am1X
+         xShvbUMECwI/tcrFzkXyIoSUdrwPhQliyZ+TY7TKJ9+Qz+rotcHRXE4Lz2cMUc0UA16S
+         /r9w==
+X-Gm-Message-State: AOAM532mqBSZSak9mHdIwSUZejoZui2DtZnqQ6ADPABZQcfFMx3ag/yI
+        fIe1iAfM5nRcLGPs9BB8E6xcbVYCNQ8TTWUeuLY=
+X-Google-Smtp-Source: ABdhPJwbWC38Bz5MDaAGOI9NDW7tN+sr5sluyUNIxyH9tFJgxZZ0l6sSTtfBdLeGoYx1fATjeKxgHnjjjN1eF7MNVBw=
+X-Received: by 2002:a05:6638:1508:: with SMTP id b8mr3408874jat.96.1597932821221;
+ Thu, 20 Aug 2020 07:13:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874koxxwn5.fsf@x220.int.ebiederm.org>
+References: <20200819041852.23414.95939.stgit@localhost.localdomain>
+ <20200819042730.23414.41309.stgit@localhost.localdomain> <15edf807-ce03-83f7-407d-5929341b2b4e@linux.alibaba.com>
+ <CAKgT0UepdfjXn=j8e4xEBFmsNJdzJyN57em8dscr-Er4OBZCOg@mail.gmail.com> <a88eef1b-242d-78c6-fecb-35ea00cd739b@linux.alibaba.com>
+In-Reply-To: <a88eef1b-242d-78c6-fecb-35ea00cd739b@linux.alibaba.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 20 Aug 2020 07:13:30 -0700
+Message-ID: <CAKgT0UdmKpn3x_=F4E-u+mCf75hu4Bu0O0dyds4mHq93G6wJVA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 4/5] mm: Split release_pages work into 3 passes
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>,
+        kbuild test robot <lkp@intel.com>,
+        Rong Chen <rong.a.chen@intel.com>,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Hugh Dickins <hughd@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-mm <linux-mm@kvack.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 08:41:18, Eric W. Biederman wrote:
-[...]
-> I expect something like this completley untested patch will work.
+On Thu, Aug 20, 2020 at 2:51 AM Alex Shi <alex.shi@linux.alibaba.com> wrote=
+:
+>
+>
+>
+> =E5=9C=A8 2020/8/19 =E4=B8=8B=E5=8D=8810:57, Alexander Duyck =E5=86=99=E9=
+=81=93:
+> >>>       lruvec =3D relock_page_lruvec_irqsave(page, lruvec, &flags);
+> >> the lock bounce is better with the patch, would you like to do further
+> >> like using add_lruvecs to reduce bounce more?
+> >>
+> >> Thanks
+> >> Alex
+> > I'm not sure how much doing something like that would add. In my case
+> > I had a very specific issue that this is addressing which is the fact
+> > that every compound page was taking the LRU lock and zone lock
+> > separately. With this patch that is reduced to one LRU lock per 15
+> > pages and then the zone lock per page. By adding or sorting pages by
+> > lruvec I am not sure there will be much benefit as I am not certain
+> > how often we will end up with pages being interleaved between multiple
+> > lruvecs. In addition as I am limiting the quantity to a pagevec which
+> > limits the pages to 15 I am not sure there will be much benefit to be
+> > seen for sorting the pages beforehand.
+> >
+>
+> the relock will unlock and get another lock again, the cost in that, the =
+2nd
+> lock need to wait for fairness for concurrency lruvec locking.
+> If we can do sort before, we should remove the fairness waiting here. Of =
+course,
+> perf result depends on scenarios.
 
-Neat. I think you will need to duplicate oom_score_adj_min as well.
-I am not familiar with vfork specifics to review this in depth but if
-this is correct then it is much more effective than the existing
-implementation which has focused more on not spreading the oom specifics
-to the core code. So if the state duplication is deemed ok then no
-objections from me.
-
-Thanks!
-
-> 
-> Eric
-> 
-> 
->  fs/exec.c                    |    4 ++++
->  fs/proc/base.c               |   30 ++++++------------------------
->  include/linux/mm_types.h     |    4 ++++
->  include/linux/sched/signal.h |    4 +---
->  kernel/fork.c                |    3 +--
->  mm/oom_kill.c                |   12 ++++++------
->  6 files changed, 22 insertions(+), 35 deletions(-)
-> 
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 9b723d2560d1..e7eed5212c6c 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -1139,6 +1139,10 @@ static int exec_mmap(struct mm_struct *mm)
->  	vmacache_flush(tsk);
->  	task_unlock(tsk);
->  	if (old_mm) {
-> +		mm->oom_score_adj = old_mm->oom_score_adj;
-> +		mm->oom_score_adj_min = old_mm->oom_score_adj_min;
-> +		if (tsk->vfork_done)
-> +			mm->oom_score_adj = tsk->vfork_oom_score_adj;
->  		mmap_read_unlock(old_mm);
->  		BUG_ON(active_mm != old_mm);
->  		setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 617db4e0faa0..795fa0a8db52 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -1103,33 +1103,15 @@ static int __set_oom_adj(struct file *file, int oom_adj, bool legacy)
->  		}
->  	}
->  
-> -	task->signal->oom_score_adj = oom_adj;
-> -	if (!legacy && has_capability_noaudit(current, CAP_SYS_RESOURCE))
-> -		task->signal->oom_score_adj_min = (short)oom_adj;
-> -	trace_oom_score_adj_update(task);
-> -
->  	if (mm) {
->  		struct task_struct *p;
->  
-> -		rcu_read_lock();
-> -		for_each_process(p) {
-> -			if (same_thread_group(task, p))
-> -				continue;
-> -
-> -			/* do not touch kernel threads or the global init */
-> -			if (p->flags & PF_KTHREAD || is_global_init(p))
-> -				continue;
-> -
-> -			task_lock(p);
-> -			if (!p->vfork_done && process_shares_mm(p, mm)) {
-> -				p->signal->oom_score_adj = oom_adj;
-> -				if (!legacy && has_capability_noaudit(current, CAP_SYS_RESOURCE))
-> -					p->signal->oom_score_adj_min = (short)oom_adj;
-> -			}
-> -			task_unlock(p);
-> -		}
-> -		rcu_read_unlock();
-> -		mmdrop(mm);
-> +		mm->oom_score_adj = oom_adj;
-> +		if (!legacy && has_capability_noaudit(current, CAP_SYS_RESOURCE))
-> +			mm->oom_score_adj_min = (short)oom_adj;
-> +		trace_oom_score_adj_update(task);
-> +	} else {
-> +		task->signal->vfork_oom_score_adj = oom_adj;
->  	}
->  err_unlock:
->  	mutex_unlock(&oom_adj_mutex);
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 496c3ff97cce..b865048ab25a 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -542,6 +542,10 @@ struct mm_struct {
->  		atomic_long_t hugetlb_usage;
->  #endif
->  		struct work_struct async_put_work;
-> +
-> +		short oom_score_adj;		/* OOM kill score adjustment */
-> +		short oom_score_adj_min;	/* OOM kill score adjustment min value.
-> +					 * Only settable by CAP_SYS_RESOURCE. */
->  	} __randomize_layout;
->  
->  	/*
-> diff --git a/include/linux/sched/signal.h b/include/linux/sched/signal.h
-> index 1bad18a1d8ba..a69eb9e0d247 100644
-> --- a/include/linux/sched/signal.h
-> +++ b/include/linux/sched/signal.h
-> @@ -218,9 +218,7 @@ struct signal_struct {
->  	 * oom
->  	 */
->  	bool oom_flag_origin;
-> -	short oom_score_adj;		/* OOM kill score adjustment */
-> -	short oom_score_adj_min;	/* OOM kill score adjustment min value.
-> -					 * Only settable by CAP_SYS_RESOURCE. */
-> +	short vfork_oom_score_adj;		/* OOM kill score adjustment */
->  	struct mm_struct *oom_mm;	/* recorded mm when the thread group got
->  					 * killed by the oom killer */
->  
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 3049a41076f3..1ba4deaa2f98 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1584,8 +1584,7 @@ static int copy_signal(unsigned long clone_flags, struct task_struct *tsk)
->  	tty_audit_fork(sig);
->  	sched_autogroup_fork(sig);
->  
-> -	sig->oom_score_adj = current->signal->oom_score_adj;
-> -	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
-> +	sig->vfork_oom_score_adj = current->mm->oom_score_adj;
->  
->  	mutex_init(&sig->cred_guard_mutex);
->  	mutex_init(&sig->exec_update_mutex);
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index e90f25d6385d..0412f64e74c1 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -213,7 +213,7 @@ long oom_badness(struct task_struct *p, unsigned long totalpages)
->  	 * unkillable or have been already oom reaped or the are in
->  	 * the middle of vfork
->  	 */
-> -	adj = (long)p->signal->oom_score_adj;
-> +	adj = (long)p->mm->oom_score_adj;
->  	if (adj == OOM_SCORE_ADJ_MIN ||
->  			test_bit(MMF_OOM_SKIP, &p->mm->flags) ||
->  			in_vfork(p)) {
-> @@ -403,7 +403,7 @@ static int dump_task(struct task_struct *p, void *arg)
->  		task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
->  		mm_pgtables_bytes(task->mm),
->  		get_mm_counter(task->mm, MM_SWAPENTS),
-> -		task->signal->oom_score_adj, task->comm);
-> +		task->mm->oom_score_adj, task->comm);
->  	task_unlock(task);
->  
->  	return 0;
-> @@ -452,7 +452,7 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
->  {
->  	pr_warn("%s invoked oom-killer: gfp_mask=%#x(%pGg), order=%d, oom_score_adj=%hd\n",
->  		current->comm, oc->gfp_mask, &oc->gfp_mask, oc->order,
-> -			current->signal->oom_score_adj);
-> +			current->mm->oom_score_adj);
->  	if (!IS_ENABLED(CONFIG_COMPACTION) && oc->order)
->  		pr_warn("COMPACTION is disabled!!!\n");
->  
-> @@ -892,7 +892,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
->  		K(get_mm_counter(mm, MM_FILEPAGES)),
->  		K(get_mm_counter(mm, MM_SHMEMPAGES)),
->  		from_kuid(&init_user_ns, task_uid(victim)),
-> -		mm_pgtables_bytes(mm) >> 10, victim->signal->oom_score_adj);
-> +		mm_pgtables_bytes(mm) >> 10, victim->mm->oom_score_adj);
->  	task_unlock(victim);
->  
->  	/*
-> @@ -942,7 +942,7 @@ static void __oom_kill_process(struct task_struct *victim, const char *message)
->   */
->  static int oom_kill_memcg_member(struct task_struct *task, void *message)
->  {
-> -	if (task->signal->oom_score_adj != OOM_SCORE_ADJ_MIN &&
-> +	if (task->mm->oom_score_adj != OOM_SCORE_ADJ_MIN &&
->  	    !is_global_init(task)) {
->  		get_task_struct(task);
->  		__oom_kill_process(task, message);
-> @@ -1089,7 +1089,7 @@ bool out_of_memory(struct oom_control *oc)
->  	if (!is_memcg_oom(oc) && sysctl_oom_kill_allocating_task &&
->  	    current->mm && !oom_unkillable_task(current) &&
->  	    oom_cpuset_eligible(current, oc) &&
-> -	    current->signal->oom_score_adj != OOM_SCORE_ADJ_MIN) {
-> +	    current->mm->oom_score_adj != OOM_SCORE_ADJ_MIN) {
->  		get_task_struct(current);
->  		oc->chosen = current;
->  		oom_kill_process(oc, "Out of memory (oom_kill_allocating_task)");
-
--- 
-Michal Hocko
-SUSE Labs
+Agreed. The question is in how many scenarios are you going to have
+pages interleaved between more than one lruvec? I suspect in most
+cases you should only have one lruvec for all the pages being
+processed in a single pagevec.
