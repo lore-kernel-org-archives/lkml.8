@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A909C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7E2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 364112078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734702078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922207;
-	bh=drCnvPZzinWqadusPb6S7VHLDe/iVp0ejK+ac/FIrf8=;
+	s=default; t=1597922235;
+	bh=+zDpPbsEofBM6hOQiy5RXX2FSkEn+jD+Km0gej71kOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O7Ki744ebduz/vPNvjREuVmadO9Qd2awZUybiQcnNEoXiEEIGkMxCFkp5VX05mESp
-	 Yl05qN0YcuYqRxQ/BzHAPKryOuKShPFLjdWzU2kul047t+wfR1f89ijBODR7ihclRJ
-	 lH/kxLg6aA4i9d/mEfziEY1EQZWV5+gWwyr3E3hE=
+	b=Sz0Fhqy+tk3lr9dqtJ5AT++7hJi7RnBteuax15DvfYiM2Kx//yV3rb8Mq468fPkYP
+	 taw/KkNUxs4u6O/8iCpbIXwRoQLciUI9P0hVLvZubHvFfKrJ8j13lDfRmYHcJDoC6S
+	 kZTJBBcqVAr3vrmUVWduJgqx9M3yQJKoTVydRbJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgHTLQo (ORCPT
+        id S1730178AbgHTLRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41280 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:17:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730670AbgHTKIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:08:41 -0400
+        id S1729223AbgHTKI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:08:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 609742075E;
-        Thu, 20 Aug 2020 10:08:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3B3C2067C;
+        Thu, 20 Aug 2020 10:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918120;
-        bh=drCnvPZzinWqadusPb6S7VHLDe/iVp0ejK+ac/FIrf8=;
+        s=default; t=1597918109;
+        bh=+zDpPbsEofBM6hOQiy5RXX2FSkEn+jD+Km0gej71kOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ah8jsIgWYTg/LxS+FJRsSfIIITqM2v66C1WPh3kXvBOOq4Qn8CYo4oGJVux0Unwca
-         b6LXyIlu7OkaMKgWT8z9LVOwEFYTPci3L2k7/zTzVI8mKYpFA3W2AKRYfe/hvuUH+v
-         D2a5opjCVtA24uTyKbHbjBZA4NzX7b4eCLAKwz6c=
+        b=gLw+TjB+e8YDNxr+fJRGd505gR8udcNg2hrCSptwbqKIy481gfzldo7SXLE5kPoEI
+         nhxwG5yqkzVzqaGzpfIJh5XOjuOGOw3YEXPAgjoXjZgD3lm8eiJy1TWW57ua5W3i60
+         61cnBxr4hGVJkgPZY6L3Wl4xqgZ7nM46ejskbD6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com,
-        Christoph Hellwig <hch@lst.de>,
-        Dominique Martinet <asmadeus@codewreck.org>,
+        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
+        Aaron Brown <aaron.f.brown@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 019/228] net/9p: validate fds in p9_fd_open
-Date:   Thu, 20 Aug 2020 11:19:54 +0200
-Message-Id: <20200820091608.492354438@linuxfoundation.org>
+Subject: [PATCH 4.14 025/228] igb: reinit_locked() should be called with rtnl_lock
+Date:   Thu, 20 Aug 2020 11:20:00 +0200
+Message-Id: <20200820091608.791747381@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -62,68 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Francesco Ruggeri <fruggeri@arista.com>
 
-[ Upstream commit a39c46067c845a8a2d7144836e9468b7f072343e ]
+[ Upstream commit 024a8168b749db7a4aa40a5fbdfa04bf7e77c1c0 ]
 
-p9_fd_open just fgets file descriptors passed in from userspace, but
-doesn't verify that they are valid for read or writing.  This gets
-cought down in the VFS when actually attempting a read or write, but
-a new warning added in linux-next upsets syzcaller.
+We observed two panics involving races with igb_reset_task.
+The first panic is caused by this race condition:
 
-Fix this by just verifying the fds early on.
+	kworker			reboot -f
 
-Link: http://lkml.kernel.org/r/20200710085722.435850-1-hch@lst.de
-Reported-by: syzbot+e6f77e16ff68b2434a2c@syzkaller.appspotmail.com
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[Dominique: amend goto as per Doug Nazar's review]
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+	igb_reset_task
+	igb_reinit_locked
+	igb_down
+	napi_synchronize
+				__igb_shutdown
+				igb_clear_interrupt_scheme
+				igb_free_q_vectors
+				igb_free_q_vector
+				adapter->q_vector[v_idx] = NULL;
+	napi_disable
+	Panics trying to access
+	adapter->q_vector[v_idx].napi_state
+
+The second panic (a divide error) is caused by this race:
+
+kworker		reboot -f	tx packet
+
+igb_reset_task
+		__igb_shutdown
+		rtnl_lock()
+		...
+		igb_clear_interrupt_scheme
+		igb_free_q_vectors
+		adapter->num_tx_queues = 0
+		...
+		rtnl_unlock()
+rtnl_lock()
+igb_reinit_locked
+igb_down
+igb_up
+netif_tx_start_all_queues
+				dev_hard_start_xmit
+				igb_xmit_frame
+				igb_tx_queue_mapping
+				Panics on
+				r_idx % adapter->num_tx_queues
+
+This commit applies to igb_reset_task the same changes that
+were applied to ixgbe in commit 2f90b8657ec9 ("ixgbe: this patch
+adds support for DCB to the kernel and ixgbe driver"),
+commit 8f4c5c9fb87a ("ixgbe: reinit_locked() should be called with
+rtnl_lock") and commit 88adce4ea8f9 ("ixgbe: fix possible race in
+reset subtask").
+
+Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/9p/trans_fd.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/intel/igb/igb_main.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/9p/trans_fd.c b/net/9p/trans_fd.c
-index 32de8afbfbf8e..9f020559c1928 100644
---- a/net/9p/trans_fd.c
-+++ b/net/9p/trans_fd.c
-@@ -829,20 +829,28 @@ static int p9_fd_open(struct p9_client *client, int rfd, int wfd)
- 		return -ENOMEM;
+diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+index 9c7e75b3b6c7a..50fa0401c7014 100644
+--- a/drivers/net/ethernet/intel/igb/igb_main.c
++++ b/drivers/net/ethernet/intel/igb/igb_main.c
+@@ -5487,9 +5487,18 @@ static void igb_reset_task(struct work_struct *work)
+ 	struct igb_adapter *adapter;
+ 	adapter = container_of(work, struct igb_adapter, reset_task);
  
- 	ts->rd = fget(rfd);
-+	if (!ts->rd)
-+		goto out_free_ts;
-+	if (!(ts->rd->f_mode & FMODE_READ))
-+		goto out_put_rd;
- 	ts->wr = fget(wfd);
--	if (!ts->rd || !ts->wr) {
--		if (ts->rd)
--			fput(ts->rd);
--		if (ts->wr)
--			fput(ts->wr);
--		kfree(ts);
--		return -EIO;
--	}
-+	if (!ts->wr)
-+		goto out_put_rd;
-+	if (!(ts->wr->f_mode & FMODE_WRITE))
-+		goto out_put_wr;
- 
- 	client->trans = ts;
- 	client->status = Connected;
- 
- 	return 0;
++	rtnl_lock();
++	/* If we're already down or resetting, just bail */
++	if (test_bit(__IGB_DOWN, &adapter->state) ||
++	    test_bit(__IGB_RESETTING, &adapter->state)) {
++		rtnl_unlock();
++		return;
++	}
 +
-+out_put_wr:
-+	fput(ts->wr);
-+out_put_rd:
-+	fput(ts->rd);
-+out_free_ts:
-+	kfree(ts);
-+	return -EIO;
+ 	igb_dump(adapter);
+ 	netdev_err(adapter->netdev, "Reset adapter\n");
+ 	igb_reinit_locked(adapter);
++	rtnl_unlock();
  }
  
- static int p9_socket_open(struct p9_client *client, struct socket *csocket)
+ /**
 -- 
 2.25.1
 
