@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CFEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63543C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73932054F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1922054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923732;
-	bh=puWvOMlmgi4jua7udip/zrZ8awzz7XWq4lc8Kq/DmDo=;
+	s=default; t=1597923739;
+	bh=QUoNohSZzZE+A+fmQFXcvxAZINKoPwBfvLRlvwP++60=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QURLKsGcUaA5+Jjr2AbwwDMiTqrx7VAURUB6FBvHz5hIB1oYcJIJ72nJD6VwHQfqp
-	 jhNE8KxGV+20L/jmb6/JYJYNTCirJc4/5yT/pzPTFWTkyQy9WmIB+ejq+RiOxsSz9M
-	 JVGbxWAwG6Pb6PgiQQ9YOsYGYjYsI7h/fw3+0M7Q=
+	b=x9eFbjaCu9v41Wz1mujjlHhPumUVci0cMcEAMc+WseqWIEQc5tPQQTwJsbHnUNBby
+	 ScgljZ7Izo8NuqdheYjs5VH1Jy+UxunJvWge0Q23aGpoQgWtwxwQCtHpKoGvIQf585
+	 tdgDbqjunSxWYvzc5xezf9EvLGiwJnv0VVRgp3xo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbgHTLmL (ORCPT
+        id S1730804AbgHTLmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:42:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729719AbgHTKEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:23 -0400
+        id S1729145AbgHTKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFBEE2173E;
-        Thu, 20 Aug 2020 10:04:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2231E22BF5;
+        Thu, 20 Aug 2020 10:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917863;
-        bh=puWvOMlmgi4jua7udip/zrZ8awzz7XWq4lc8Kq/DmDo=;
+        s=default; t=1597917860;
+        bh=QUoNohSZzZE+A+fmQFXcvxAZINKoPwBfvLRlvwP++60=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=By7I/AgSzfS8xsAR6UqZs9juDv60uBg5Q1YXDoECgWkrK6nWIJ+oKikFdF89E9ADH
-         4HGGIqvZgH1GTe5NDOetpqawafnG5Z/bb/mMswkAlpARHVSIVYnGpIr05T81k9PSIo
-         KKDtPIO//nzO+fv87xoNB3lTpd+D2kAIlnS+xxuI=
+        b=ksKvGaoaOjc3tqjUVDQUGgVWsNPMKale4FceFaJJtm4TZMVBst97NKwcJJnXiwJyU
+         Ku+ELH30DC8ocT6oFTwu69Tf0i/KxZUJp7Tk5gAnuOaFjiZvRqFrgquG5zOWLMVYUL
+         RF6EVSNwzUsjHuR+kEkbP0a/zV2Zt2zgGRd0Hl3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.9 184/212] ext2: fix missing percpu_counter_inc
-Date:   Thu, 20 Aug 2020 11:22:37 +0200
-Message-Id: <20200820091611.683238943@linuxfoundation.org>
+        stable@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: [PATCH 4.9 183/212] MIPS: CPU#0 is not hotpluggable
+Date:   Thu, 20 Aug 2020 11:22:36 +0200
+Message-Id: <20200820091611.632147505@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,46 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Huacai Chen <chenhc@lemote.com>
 
-commit bc2fbaa4d3808aef82dd1064a8e61c16549fe956 upstream.
+commit 9cce844abf07b683cff5f0273977d5f8d0af94c7 upstream.
 
-sbi->s_freeinodes_counter is only decreased by the ext2 code, it is never
-increased. This patch fixes it.
+Now CPU#0 is not hotpluggable on MIPS, so prevent to create /sys/devices
+/system/cpu/cpu0/online which confuses some user-space tools.
 
-Note that sbi->s_freeinodes_counter is only used in the algorithm that
-tries to find the group for new allocations, so this bug is not easily
-visible (the only visibility is that the group finding algorithm selects
-inoptinal result).
-
-Link: https://lore.kernel.org/r/alpine.LRH.2.02.2004201538300.19436@file01.intranet.prod.int.rdu2.redhat.com
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/ialloc.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/kernel/topology.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext2/ialloc.c
-+++ b/fs/ext2/ialloc.c
-@@ -79,6 +79,7 @@ static void ext2_release_inode(struct su
- 	if (dir)
- 		le16_add_cpu(&desc->bg_used_dirs_count, -1);
- 	spin_unlock(sb_bgl_lock(EXT2_SB(sb), group));
-+	percpu_counter_inc(&EXT2_SB(sb)->s_freeinodes_counter);
- 	if (dir)
- 		percpu_counter_dec(&EXT2_SB(sb)->s_dirs_counter);
- 	mark_buffer_dirty(bh);
-@@ -530,7 +531,7 @@ got:
- 		goto fail;
- 	}
+--- a/arch/mips/kernel/topology.c
++++ b/arch/mips/kernel/topology.c
+@@ -19,7 +19,7 @@ static int __init topology_init(void)
+ 	for_each_present_cpu(i) {
+ 		struct cpu *c = &per_cpu(cpu_devices, i);
  
--	percpu_counter_add(&sbi->s_freeinodes_counter, -1);
-+	percpu_counter_dec(&sbi->s_freeinodes_counter);
- 	if (S_ISDIR(mode))
- 		percpu_counter_inc(&sbi->s_dirs_counter);
- 
+-		c->hotpluggable = 1;
++		c->hotpluggable = !!i;
+ 		ret = register_cpu(c, i);
+ 		if (ret)
+ 			printk(KERN_WARNING "topology_init: register_cpu %d "
 
 
