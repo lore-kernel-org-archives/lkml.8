@@ -2,122 +2,99 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A3FC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D76A72076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VhClpoNa"
+	by mail.kernel.org (Postfix) with ESMTP id D2D522177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597896675;
+	bh=vOB4v3tUS4GTw7PrtGAh0UXA93UNSuyOFQfzu6w0RH8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rh0bGzQLIa466NQQZx9NUYJyqZvbpay8HfHDQeoOxrMlbEO1pZdyQljbuPYEUFlzn
+	 0WptnEt1L9bFMZ8gU4fgpc4ivz4Rau8bdVL1aqRV9xM2jH9I2AGhp4DeFV1976POXX
+	 Q6UyV/0YMb4f0Wocti9HpgwaNf2podCC6CbmSx/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725866AbgHTEII (ORCPT
+        id S1725925AbgHTELO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:08:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725290AbgHTEIG (ORCPT
+        Thu, 20 Aug 2020 00:11:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34754 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725793AbgHTELM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:08:06 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FF1C061757;
-        Wed, 19 Aug 2020 21:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=WmtpAyrOA4FNl/DzMNF6BC2DOQ6KxPXZ7lYWa9s+4RI=; b=VhClpoNayNggIskH4KYA/2gjpq
-        8CRQIlSfkOcazgLZzjoaXLal48fioUKxGp4HTIn/7cR0HJTGaDDN3oG7UR+oL3/aQzqps4yG4gMpT
-        v4Ku7BjMjtle8IQmv63/UFe7dTKg5M97APX2X3oZIH5qyXEGng2Imymm24OkHZMjDOGfpbDwZk4vF
-        TNM/yV4ipesWvORZLWFfxYQ29gxADn17KBppzv/FxOAGDWDiU8E1y7VxbG5raUpGJ6qRSyN5CYH40
-        ftBCnAtnhsgoa46/XOzHxTVTSvAVDiV8v/jbqJLhNIcGYRQhyNygSeuWPVPrpvDzGBQ6m89s9K0rd
-        T/MR/Fyw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8brp-0006ak-Gn; Thu, 20 Aug 2020 04:07:58 +0000
-Subject: Re: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not
- enabled
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arjan van de Ven <arjan@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
- <810f1b0e-0adf-c316-f23c-172338f9ef0a@linux.intel.com>
- <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-Date:   Wed, 19 Aug 2020 21:07:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Thu, 20 Aug 2020 00:11:12 -0400
+Received: by mail-pl1-f193.google.com with SMTP id v16so451923plo.1;
+        Wed, 19 Aug 2020 21:11:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3jelrt2iE0YOKS7d/Ac3pVBTbS/TCz2oa2R5iJqNekE=;
+        b=ixwB9b0NlW8aX7EGMzYVJ2eFuaG8/Wu/M5R9pPbV8p6Ri3vyKg4sf4VoKcnppB1F0C
+         M9w8eXxdEpqsG0yArI6KnOBus756/B19UISXc6RMd622B+ZW7JQd2UxBgiR6YRFb5j8c
+         CKfiuA4HHXpUHOdEGM/sjZaVIVfcBMWDz8LlZxqgDBFPJnP/Ak27NYPc2BdZ4J7C3BoI
+         hZLvm+D5AguKiK0LvhrkxQHN+WTcn+nctjvPlxGfcXupmHxxKUpg+o7CpU/M0F5dXNOW
+         HsoTfIB0+ZEDfP5fWZR5QKRXHRtUHpoQ3VuTpuWsoBF15Y2HREPJtFtu0SmbDmr4tgLq
+         +Bzg==
+X-Gm-Message-State: AOAM532ay9DVTPQOYe7AN2iRr3VUXfAttC1Vj4seGLs2ZpUT6rVKHLo4
+        FNJdwvx8g2N6TcZwcvp4bu8=
+X-Google-Smtp-Source: ABdhPJwndfVpHf63YhpLbuaU+SdHRPI1cyxMdBW0xoO6xFHpnlYZ8N8PtDWP2p55t/WXQe+yNCGfRA==
+X-Received: by 2002:a17:90a:e551:: with SMTP id ei17mr909773pjb.224.1597896672013;
+        Wed, 19 Aug 2020 21:11:12 -0700 (PDT)
+Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
+        by smtp.gmail.com with ESMTPSA id 196sm847592pfc.178.2020.08.19.21.11.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2020 21:11:11 -0700 (PDT)
+Date:   Wed, 19 Aug 2020 21:11:10 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Luca Ceresoli <luca@lucaceresoli.net>
+Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
+        Tom Rix <trix@redhat.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Anatolij Gustschin <agust@denx.de>
+Subject: Re: [PATCH 1/3] fpga manager: xilinx-spi: remove stray comment
+Message-ID: <20200820041110.GA4022@epycbox.lan>
+References: <20200817165911.32589-1-luca@lucaceresoli.net>
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200817165911.32589-1-luca@lucaceresoli.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 1:55 PM, Andy Shevchenko wrote:
-> On Thu, Aug 13, 2020 at 11:31 PM Arjan van de Ven <arjan@linux.intel.com> wrote:
->> On 8/13/2020 12:58 PM, Randy Dunlap wrote:
->>> From: Randy Dunlap <rdunlap@infradead.org>
->>>
->>> Fix build error when CONFIG_ACPI is not set/enabled by adding
->>> the header file <asm/acpi.h> which contains a stub for the function
->>> in the build error.
->>>
->>> ../arch/x86/pci/intel_mid_pci.c: In function ‘intel_mid_pci_init’:
->>> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of function ‘acpi_noirq_set’; did you mean ‘acpi_irq_get’? [-Werror=implicit-function-declaration]
->>>    acpi_noirq_set();
+On Mon, Aug 17, 2020 at 06:59:09PM +0200, Luca Ceresoli wrote:
+> Remove comment committed by mistake.
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Thanks!
-
-also:
-Reviewed-by: Jesse Barnes <jsbarnes@google.com>
-
+> Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  drivers/fpga/xilinx-spi.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
->>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
->>> Cc: Len Brown <lenb@kernel.org>
->>> Cc: Bjorn Helgaas <bhelgaas@google.com>
->>> Cc: Jesse Barnes <jsbarnes@google.com>
->>> Cc: Arjan van de Ven <arjan@linux.intel.com>
->>> Cc: linux-pci@vger.kernel.org
->>> ---
->>> Found in linux-next, but applies to/exists in mainline also.
->>>
->>> Alternative.1: X86_INTEL_MID depends on ACPI
->>> Alternative.2: drop X86_INTEL_MID support
->>
->> at this point I'd suggest Alternative 2; the products that needed that (past tense, that technology
->> is no longer need for any newer products) never shipped in any form where a 4.x or 5.x kernel could
->> work, and they are also all locked down...
+> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+> index 2967aa2a74e2..502fae0d1d85 100644
+> --- a/drivers/fpga/xilinx-spi.c
+> +++ b/drivers/fpga/xilinx-spi.c
+> @@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
+>  
+>  	if (conf->init_b) {
+>  		while (time_before(jiffies, timeout)) {
+> -			/* dump_state(conf, "wait for init_d .."); */
+>  			if (gpiod_get_value(conf->init_b) == value)
+>  				return 0;
+>  			usleep_range(100, 400);
+> -- 
+> 2.28.0
 > 
-> This is not true. We have Intel Edison which runs nicely on vanilla
-> (not everything, some is still requiring a couple of patches, but most
-> of it works out-of-the-box).
-> 
-> And for the record, I have been working on removing quite a pile of
-> code (~13kLOCs to the date IIRC) in MID area. Just need some time to
-> fix Edison watchdog for that.
 
+Applied to for-next,
 
-I didn't see a consensus on this patch, although Andy says it's still needed,
-so it shouldn't be removed (yet). Maybe his big removal patch can remove it
-later. For now can we just fix the build error?
-
-
--- 
-~Randy
-
+Thanks
