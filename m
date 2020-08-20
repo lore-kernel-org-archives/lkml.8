@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0032BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A88C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE51E2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913CB2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597921664;
-	bh=9QFl/43fNCHem9vZtnvO/6abc/DSg1vJcDNJzCUteRk=;
+	s=default; t=1597921705;
+	bh=HfxG2oJOF2N3otT0Tun/uTBzWDG0TJySRyf3ktZi1zE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjLWf3x82qh2ecnmAKJfRo0HqZDCfziCR2vHsckF/omslLiYGj+NDbI0Nf3euIvaw
-	 SUArhVxOfO2+dODtD2waAXDewqvbi/CPZoBJBgp3gL5KbQqknECk7DIYKlFpBynlty
-	 99Ch/aj24LrYPwbP3jG/z6fYDC8AH3lAuEULHOwM=
+	b=fREsjnqLoSRStVN7OXwnlzLYSFpqNviESioNV0YYDtjZlBABCekzlI1IMfSQEmmvj
+	 UvFcNMzaiPTRQ0XlWmqvBzkFV7nj1I30XlspM0Y1FquZSUvO4lWzeMDAuA1rydxKOf
+	 UEOvI8pAZB4MfR42KTjDFf+7gO0zMasR+RfHkvE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgHTLHn (ORCPT
+        id S1728936AbgHTLIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48588 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730919AbgHTKK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:57 -0400
+        id S1729769AbgHTKKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA552067C;
-        Thu, 20 Aug 2020 10:10:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 316732067C;
+        Thu, 20 Aug 2020 10:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918256;
-        bh=9QFl/43fNCHem9vZtnvO/6abc/DSg1vJcDNJzCUteRk=;
+        s=default; t=1597918235;
+        bh=HfxG2oJOF2N3otT0Tun/uTBzWDG0TJySRyf3ktZi1zE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FWudGep2+CnDCiCPneQEXQ+J0InGXg3YIh23LktxPsTAgYfjKb5x2DOxcRqG576L/
-         n1nnuEq34KSBoqCjxxVD1xkSMIpClWH0wX1dRitjrvqZuwigIlGHSVSQIXsDzRjK92
-         BdisamfY+xvTHtMY+fAxOr6yzjFygASuriHjaWok=
+        b=bngWP2ikkGEjOSWMcJ6C+VTIQFEX4nvr8cSM+NP4tRNg8a+C8J7pJRa9Np+7U14du
+         72DcdETzRzc085z9IiH/cybAgoJK4Gy99tEymTCsymECg44IkfUhAAekGpuPVOGaHT
+         J6veAjxpHG6HsitmMtFa/vrloTZ+b2XQ6TzS0xOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
-        Anton Blanchard <anton@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Xiang Zheng <zhengxiang9@huawei.com>,
+        Heyi Guo <guoheyi@huawei.com>,
+        Biaoxiang Ye <yebiaoxiang@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 106/228] powerpc/vdso: Fix vdso cpu truncation
-Date:   Thu, 20 Aug 2020 11:21:21 +0200
-Message-Id: <20200820091612.897934041@linuxfoundation.org>
+Subject: [PATCH 4.14 100/228] PCI: Fix pci_cfg_wait queue locking problem
+Date:   Thu, 20 Aug 2020 11:21:15 +0200
+Message-Id: <20200820091612.622549899@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,43 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milton Miller <miltonm@us.ibm.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
+[ Upstream commit 2a7e32d0547f41c5ce244f84cf5d6ca7fccee7eb ]
 
-The code in vdso_cpu_init that exposes the cpu and numa node to
-userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
-that any kernel running on a box with more than 4096 threads (NR_CPUS
-advertises a limit of of 8192 cpus) would expose userspace to two cpu
-contexts running at the same time with the same cpu number.
+The pci_cfg_wait queue is used to prevent user-space config accesses to
+devices while they are recovering from reset.
 
-Note: I'm not aware of any distro shipping a kernel with support for more
-than 4096 threads today, nor of any system image that currently exceeds
-4096 threads. Found via code browsing.
+Previously we used these operations on pci_cfg_wait:
 
-Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
-Signed-off-by: Milton Miller <miltonm@us.ibm.com>
-Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
+  __add_wait_queue(&pci_cfg_wait, ...)
+  __remove_wait_queue(&pci_cfg_wait, ...)
+  wake_up_all(&pci_cfg_wait)
+
+The wake_up acquires the wait queue lock, but the add and remove do not.
+
+Originally these were all protected by the pci_lock, but cdcb33f98244
+("PCI: Avoid possible deadlock on pci_lock and p->pi_lock"), moved
+wake_up_all() outside pci_lock, so it could race with add/remove
+operations, which caused occasional kernel panics, e.g., during vfio-pci
+hotplug/unplug testing:
+
+  Unable to handle kernel read from unreadable memory at virtual address ffff802dac469000
+
+Resolve this by using wait_event() instead of __add_wait_queue() and
+__remove_wait_queue().  The wait queue lock is held by both wait_event()
+and wake_up_all(), so it provides mutual exclusion.
+
+Fixes: cdcb33f98244 ("PCI: Avoid possible deadlock on pci_lock and p->pi_lock")
+Link: https://lore.kernel.org/linux-pci/79827f2f-9b43-4411-1376-b9063b67aee3@huawei.com/T/#u
+Based-on: https://lore.kernel.org/linux-pci/20191210031527.40136-1-zhengxiang9@huawei.com/
+Based-on-patch-by: Xiang Zheng <zhengxiang9@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Tested-by: Xiang Zheng <zhengxiang9@huawei.com>
+Cc: Heyi Guo <guoheyi@huawei.com>
+Cc: Biaoxiang Ye <yebiaoxiang@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/access.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index 22b01a3962f06..3edaee28b6383 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -704,7 +704,7 @@ int vdso_getcpu_init(void)
- 	node = cpu_to_node(cpu);
- 	WARN_ON_ONCE(node > 0xffff);
+diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+index 913d6722ece98..8c585e7ca5209 100644
+--- a/drivers/pci/access.c
++++ b/drivers/pci/access.c
+@@ -205,17 +205,13 @@ EXPORT_SYMBOL(pci_bus_set_ops);
+ static DECLARE_WAIT_QUEUE_HEAD(pci_cfg_wait);
  
--	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
-+	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
- 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
- 	get_paca()->sprg_vdso = val;
+ static noinline void pci_wait_cfg(struct pci_dev *dev)
++	__must_hold(&pci_lock)
+ {
+-	DECLARE_WAITQUEUE(wait, current);
+-
+-	__add_wait_queue(&pci_cfg_wait, &wait);
+ 	do {
+-		set_current_state(TASK_UNINTERRUPTIBLE);
+ 		raw_spin_unlock_irq(&pci_lock);
+-		schedule();
++		wait_event(pci_cfg_wait, !dev->block_cfg_access);
+ 		raw_spin_lock_irq(&pci_lock);
+ 	} while (dev->block_cfg_access);
+-	__remove_wait_queue(&pci_cfg_wait, &wait);
+ }
  
+ /* Returns 0 on success, negative values indicate error. */
 -- 
 2.25.1
 
