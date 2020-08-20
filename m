@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E142BC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43A1C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C089422B40
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7468520658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929924;
-	bh=HZ8n1v18IYPmsqxlP9MdsQM6TcwUypHENjI4SX7XlMg=;
+	s=default; t=1597929950;
+	bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MR/VpqXLPuiFElNY5/ay9lE7qbddDhsgsWpj/r4pI0mv0eERxyfoIzVj355OMasyh
-	 v9ZYkdktbIZeWSb/lk7lmd7AC8QXFt8P/faKTqX2pjDMJIYqTU2SBsYMmFsa+jrC2h
-	 Yi0v244xT3UHQA5nipQ144VXcsqMcSvM6scnqYmU=
+	b=Tpotw0TAJjPShsML/nWU73zRO6xVjnUGYfxXhPCfItpMsawUjCjeyGLWgxlaA22fF
+	 fdK7rOLAJthykjughvT8HMfJRn7kzeQhe2t+B5IByOdgz8FIfWhRxJnOqDkAWriHL/
+	 GgBJqNTJuVGMPps8u5zUF62ifaYIKU3FBIj6uA8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbgHTNZX (ORCPT
+        id S1730659AbgHTNZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45704 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:25:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728440AbgHTJeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:34:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD13F22B43;
-        Thu, 20 Aug 2020 09:33:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D26922B3F;
+        Thu, 20 Aug 2020 09:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916028;
-        bh=HZ8n1v18IYPmsqxlP9MdsQM6TcwUypHENjI4SX7XlMg=;
+        s=default; t=1597916037;
+        bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CCWNHf/3v/Zq6l5kMPE/2YzOpTuW/Q9yvadwzDkZ+0aPJqY0oxgTBb12fCVfQKINH
-         Q20ayMnPFDsJ0HB/zlYLAspRPQWB4eZLOzsqKE2VWDT9WtmSaqu49ufl5yap/gcFbd
-         A6x0ulmXApuv49BCi689CMl94VBJapNfG1KekpHM=
+        b=gwSmllaSurz63P91rKIUXa0DQzxtcNbHGxINOR29Nep8/AeNuIr0RwsQQ7HPqS4NR
+         9ZE1hmrX/6oceRJjZMgpdSKZCLvKVFVG97kCzaJhAIsn0O8YeLFaq0ggl5BwHWivkB
+         dfPAyRecDz0LzJLGDLUxy14kiFBlP20GIYuH3tc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Len Brown <len.brown@intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 217/232] perf/x86/rapl: Fix missing psys sysfs attributes
-Date:   Thu, 20 Aug 2020 11:21:08 +0200
-Message-Id: <20200820091623.308974872@linuxfoundation.org>
+Subject: [PATCH 5.8 192/232] Input: sentelic - fix error return when fsp_reg_write fails
+Date:   Thu, 20 Aug 2020 11:20:43 +0200
+Message-Id: <20200820091622.091569929@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,41 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Rui <rui.zhang@intel.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 4bb5fcb97a5df0bbc0a27e0252b1e7ce140a8431 ]
+[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
 
-This fixes a problem introduced by commit:
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
 
-  5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
-
-that perf event sysfs attributes for psys RAPL domain are missing.
-
-Fixes: 5fb5273a905c ("perf/x86/rapl: Use new MSR detection interface")
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Reviewed-by: Len Brown <len.brown@intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Link: https://lore.kernel.org/r/20200811153149.12242-2-rui.zhang@intel.com
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/rapl.c | 2 +-
+ drivers/input/mouse/sentelic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 0f2bf59f43541..51ff9a3618c95 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -665,7 +665,7 @@ static const struct attribute_group *rapl_attr_update[] = {
- 	&rapl_events_pkg_group,
- 	&rapl_events_ram_group,
- 	&rapl_events_gpu_group,
--	&rapl_events_gpu_group,
-+	&rapl_events_psys_group,
- 	NULL,
- };
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index e99d9bf1a267d..e78c4c7eda34d 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
  
+ 	fsp_reg_write_enable(psmouse, false);
+ 
+-	return count;
++	return retval;
+ }
+ 
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
 -- 
 2.25.1
 
