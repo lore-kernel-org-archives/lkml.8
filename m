@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D07C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC70AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1BB4208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D8C207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881864;
-	bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+	s=default; t=1597881869;
+	bh=zS1P8t9Wnw9TYrZUY4555coXnHbQY28UejCWY2f+zUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qozWXiZbGIr2rmasZ4h3Uik+RB3Apn7w6JOEMf7tEwFnOCd+fY8S2bVBrxcdvCsz5
-	 vbYMQ6srB+7aGo9d+UmG1bPhAlZeHK/l8R0KuQO8QDmSU6DxIH/YjV2iVWWbgdcA8U
-	 fsYtubQL3NqKXaIbvklkLIR+ZjNn/VmXT2sfmnnA=
+	b=v4enkWZMKiAKIMhCosLHMKwAXugsJoTNNJL9E1sp8ClvEUi7n3jJ3Z40bAov8iWjo
+	 bB+kIzh0yFyb2CnjyUKzqwWASTGpKDE/R8Dfmgn7RDd7ZU/DQFQSpk3F6haSl223Px
+	 SJ3mXrUKiX174BwHuqSNYGSgMwPFAv/DWMVykm5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728468AbgHTAEW (ORCPT
+        id S1728478AbgHTAE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:04:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34610 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:04:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728432AbgHTAER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:04:17 -0400
+        id S1727033AbgHTAET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:04:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB0522B40;
-        Thu, 20 Aug 2020 00:04:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731CC208C7;
+        Thu, 20 Aug 2020 00:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881856;
-        bh=5nk3NJXNopBSzjnj7Lpg8MhVeJiX9H+Pd26H61xczsw=;
+        s=default; t=1597881859;
+        bh=zS1P8t9Wnw9TYrZUY4555coXnHbQY28UejCWY2f+zUc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yxDLCV7nduGMllaRZiPXda5fTOcYEeb525dF1bpAq4GMiZMNYbK15eHxcfHX8Q5QN
-         7/2D7QL4Ebq56Ybwno5Vxh9iGmd9RupcblSI8iZc+EX+YhfZXBELuFzloiFuCzkDPX
-         S+GD5qa6GE8aGI5SzWCjElsRSdWKS9hk0IROjSSI=
+        b=vh7doDaTHBohsmkvIv+MScznllsWl4P3xGPt7BYfrTYO3y2M8HusidZwr7LoaEios
+         A0wXo/L20ITry0f2LTKuV1B05J5ooq/5bIftU2MBE2iSRuVCj5DB635n3BBUaBZZ96
+         rIQvbVRVHcYnNxpbt0DJXZ5a+gAwocpR/5LW1pws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javed Hasan <jhasan@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 07/10] scsi: libfc: Free skb in fc_disc_gpn_id_resp() for valid cases
-Date:   Wed, 19 Aug 2020 20:04:03 -0400
-Message-Id: <20200820000406.216050-7-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 09/10] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Wed, 19 Aug 2020 20:04:05 -0400
+Message-Id: <20200820000406.216050-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000406.216050-1-sashal@kernel.org>
 References: <20200820000406.216050-1-sashal@kernel.org>
@@ -63,64 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit ec007ef40abb6a164d148b0dc19789a7a2de2cc8 ]
+[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
 
-In fc_disc_gpn_id_resp(), skb is supposed to get freed in all cases except
-for PTR_ERR. However, in some cases it didn't.
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
-This fix is to call fc_frame_free(fp) before function returns.
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
 
-Link: https://lore.kernel.org/r/20200729081824.30996-2-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix it by checking parent_kobj before the code accesses its member.
+
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: minor whitespace edits]
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libfc/fc_disc.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_sysfs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/libfc/fc_disc.c b/drivers/scsi/libfc/fc_disc.c
-index 880a9068ca126..ef06af4e3611d 100644
---- a/drivers/scsi/libfc/fc_disc.c
-+++ b/drivers/scsi/libfc/fc_disc.c
-@@ -595,8 +595,12 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 	mutex_lock(&disc->disc_mutex);
- 	if (PTR_ERR(fp) == -FC_EX_CLOSED)
- 		goto out;
--	if (IS_ERR(fp))
--		goto redisc;
-+	if (IS_ERR(fp)) {
-+		mutex_lock(&disc->disc_mutex);
-+		fc_disc_restart(disc);
-+		mutex_unlock(&disc->disc_mutex);
-+		goto out;
-+	}
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index be692e59938db..c457b010c623d 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -44,9 +44,11 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject		*parent;
++
++	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
+ }
  
- 	cp = fc_frame_payload_get(fp, sizeof(*cp));
- 	if (!cp)
-@@ -621,7 +625,7 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- 				new_rdata->disc_id = disc->disc_id;
- 				lport->tt.rport_login(new_rdata);
- 			}
--			goto out;
-+			goto free_fp;
- 		}
- 		rdata->disc_id = disc->disc_id;
- 		lport->tt.rport_login(rdata);
-@@ -635,6 +639,8 @@ static void fc_disc_gpn_id_resp(struct fc_seq *sp, struct fc_frame *fp,
- redisc:
- 		fc_disc_restart(disc);
- 	}
-+free_fp:
-+	fc_frame_free(fp);
- out:
- 	mutex_unlock(&disc->disc_mutex);
- 	kref_put(&rdata->kref, lport->tt.rport_destroy);
+ static inline void
 -- 
 2.25.1
 
