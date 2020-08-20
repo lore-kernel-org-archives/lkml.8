@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3732CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1D8C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 02A5D22CB1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1419622D03
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915717;
-	bh=7INpsne5XqqcM9dgEgvMScCRO9DTUSEYmf2NWPPV3P4=;
+	s=default; t=1597915730;
+	bh=Qy65o2ElQbFg2VmWsr+VjaMnkiwLKwRjolVO9ke96v8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ybu5Tx/dLs7y/u1/nF94JR4FHFYdALF4dEM4Hv13DBLOHSQ0RnQH8H71blS3P4vSI
-	 SKCmZmz+TcSaOmA1aFUX1Jxw85vZcb1ILGGs68zrHRuUkRafvUpvDQlzdEWls/vf7y
-	 DUlJr/BQvfpijrjjGdf/lfHo+YbEr49fMB6b/EEo=
+	b=YddC6mbDoAYc31of2Nwu00WM6RnBqTWP+yI3JFo9Gvm0kUP2Th76CHJdBSrPzP+9q
+	 qklGNyxNbaqZ5RxM/IcGqIoOBpV4dHOSofxV9WEr3G6qpWSlYD7xD7SZuWEk5Jx5wP
+	 /2CP5mwxFhfxPP+Rty1NIP2G57rmTPFAqU3+s6Io=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgHTJ15 (ORCPT
+        id S1727829AbgHTJ2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:27:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:28:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727949AbgHTJ1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:00 -0400
+        id S1727997AbgHTJ1v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:27:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B759122D08;
-        Thu, 20 Aug 2020 09:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C29222D02;
+        Thu, 20 Aug 2020 09:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915618;
-        bh=7INpsne5XqqcM9dgEgvMScCRO9DTUSEYmf2NWPPV3P4=;
+        s=default; t=1597915670;
+        bh=Qy65o2ElQbFg2VmWsr+VjaMnkiwLKwRjolVO9ke96v8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HY3fnobaP9xShBvvdAxyVoP5IYHKfjG6dwndLcQByu1mQq6zrzwPSqswB30lxJJ4f
-         prFvRv+kY0xuqVmmXOXWh0I9KcjWbFuDZJEp6Pa1k0FTt7k8ktC2kUdw2cyxOwMaUt
-         9aZ3Ua3wnBb4FN8lpXN3lt8K6wGGi1+X6rV5fFpk=
+        b=sAF7nfHdbFQ5SPSMQ8AcVvG8eFEGPVjUmYGxaUSIGKsy0hpUASDZ4+1NbrbrIhaiR
+         7mtKEdf75zwnUqKTg/mvHANkUrzIUbdYf3TF0qCTbb1gFHEU1LwPjJUlV0onbfql84
+         YutKzOwIIRAHQgReZgcoVnFYgceXQMkE5lKiNtcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Song Liu <songliubraving@fb.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 077/232] khugepaged: collapse_pte_mapped_thp() flush the right range
-Date:   Thu, 20 Aug 2020 11:18:48 +0200
-Message-Id: <20200820091616.540850550@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 065/232] bcache: allocate meta data pages as compound pages
+Date:   Thu, 20 Aug 2020 11:18:36 +0200
+Message-Id: <20200820091615.947140901@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -64,50 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hugh Dickins <hughd@google.com>
+From: Coly Li <colyli@suse.de>
 
-commit 723a80dafed5c95889d48baab9aa433a6ffa0b4e upstream.
+commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
 
-pmdp_collapse_flush() should be given the start address at which the huge
-page is mapped, haddr: it was given addr, which at that point has been
-used as a local variable, incremented to the end address of the extent.
+There are some meta data of bcache are allocated by multiple pages,
+and they are used as bio bv_page for I/Os to the cache device. for
+example cache_set->uuids, cache->disk_buckets, journal_write->data,
+bset_tree->data.
 
-Found by source inspection while chasing a hugepage locking bug, which I
-then could not explain by this.  At first I thought this was very bad;
-then saw that all of the page translations that were not flushed would
-actually still point to the right pages afterwards, so harmless; then
-realized that I know nothing of how different architectures and models
-cache intermediate paging structures, so maybe it matters after all -
-particularly since the page table concerned is immediately freed.
+For such meta data memory, all the allocated pages should be treated
+as a single memory block. Then the memory management and underlying I/O
+code can treat them more clearly.
 
-Much easier to fix than to think about.
+This patch adds __GFP_COMP flag to all the location allocating >0 order
+pages for the above mentioned meta data. Then their pages are treated
+as compound pages now.
 
-Fixes: 27e1f8273113 ("khugepaged: enable collapse pmd for pte-mapped THP")
-Signed-off-by: Hugh Dickins <hughd@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: <stable@vger.kernel.org>	[5.4+]
-Link: http://lkml.kernel.org/r/alpine.LSU.2.11.2008021204390.27773@eggly.anvils
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/khugepaged.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/bcache/bset.c    |    2 +-
+ drivers/md/bcache/btree.c   |    2 +-
+ drivers/md/bcache/journal.c |    4 ++--
+ drivers/md/bcache/super.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1502,7 +1502,7 @@ void collapse_pte_mapped_thp(struct mm_s
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -322,7 +322,7 @@ int bch_btree_keys_alloc(struct btree_ke
  
- 	/* step 4: collapse pmd */
- 	ptl = pmd_lock(vma->vm_mm, pmd);
--	_pmd = pmdp_collapse_flush(vma, addr, pmd);
-+	_pmd = pmdp_collapse_flush(vma, haddr, pmd);
- 	spin_unlock(ptl);
- 	mm_dec_nr_ptes(mm);
- 	pte_free(mm, pmd_pgtable(_pmd));
+ 	b->page_order = page_order;
+ 
+-	t->data = (void *) __get_free_pages(gfp, b->page_order);
++	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
+ 	if (!t->data)
+ 		goto err;
+ 
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -785,7 +785,7 @@ int bch_btree_cache_alloc(struct cache_s
+ 	mutex_init(&c->verify_lock);
+ 
+ 	c->verify_ondisk = (void *)
+-		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
++		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
+ 
+ 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
+ 
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -999,8 +999,8 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[1].c = c;
+ 
+ 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+-	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+-	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
++	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
++	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1776,7 +1776,7 @@ void bch_cache_set_unregister(struct cac
+ }
+ 
+ #define alloc_bucket_pages(gfp, c)			\
+-	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
++	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
+ 
+ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ {
 
 
