@@ -2,176 +2,108 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02341C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D86C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B608520674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597930868;
-	bh=sL0968/HFFbREq/hgGicNt4OaxmzlMEkH2rS4F4Lc48=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TKmhHJwkE/6AWSMzisTgNadPBUl8lR67wjjml8D1LU6mNps9kn4aRgaZ9WkJxCERr
-	 Fl9lMLUoJ8PbHUANL9o7DnblhYXhJoPIDOlwjS8H0jE6Gk1eH+HwpH4hMKiYKCbk0R
-	 DEJ1dfXpsBuLamurUCt5VI9Ugfq3Bz5HxOd4TC70=
+	by mail.kernel.org (Postfix) with ESMTP id BC67D20674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:41:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eETmXHMW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgHTNlA (ORCPT
+        id S1729580AbgHTNlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:41:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbgHTJaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE61D21744;
-        Thu, 20 Aug 2020 09:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915824;
-        bh=sL0968/HFFbREq/hgGicNt4OaxmzlMEkH2rS4F4Lc48=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B68X85c53kI6vDcJF5qCf4K1E9GEK6YQkBYUSgdegq0aoMhQKQDAF2Iv4mdLPFAF6
-         twdNNNk0Mod6Rn7rpXViQFrBUNvjrw2SmUSlNE+Xuk3jZCsKq3kp6XGB0jm7czSfT5
-         JUeGTPq6Z8X7vIErGOSV7xg2Te8YagZXrTO0sp74=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 146/232] gpu: ipu-v3: image-convert: Combine rotate/no-rotate irq handlers
-Date:   Thu, 20 Aug 2020 11:19:57 +0200
-Message-Id: <20200820091619.893382114@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56854 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbgHTJaF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:05 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE79C061757
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:30:04 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id r7so715594vsq.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:30:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=6apwous/HgYA9e9mDqfrOOmq5wxR8eDdobsnINeJ2Ak=;
+        b=eETmXHMWgfN31+kZjG7CG3fcmrCL+QERYJYc7EZzYmZ/iyBm5vlKvOgbCCqNZxA+XN
+         10DkxJfP4eEu/UlvRJDammSXb+HlcfLo/fsFf2aSFcRcqIBQ+7RjdJr38r2T4P+8cYKO
+         8d/CnJ8R9svj2hUovuPzmNxBKfCNxtu6eLdBKKXWJVho4oL/RoLTArsoGOYd0BIX4/qh
+         +UqJMgXb82l+X/lNn+LZEZ6OyBAE3uKibnk1yh8wKFDHh+ShOt7pHuNUpHZjMK/Qj8+B
+         5xpyiCvymikyE0YC0aGlESFBcdypcqQY4fBWYVaeZr3tCYVHbpKA/DJkxajl5oNxBOLv
+         96Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=6apwous/HgYA9e9mDqfrOOmq5wxR8eDdobsnINeJ2Ak=;
+        b=BZ8aPMGDXURP4X/M1jM7BlzgTkb1is0eVpQfFLPzgn/E4ZFE6pSVsA2otGcslOjtsm
+         11CUTIUAt0pVgaS+8efxEWCWajV6CQUGrtxHkb0wgkFGnoX1vpuopD4tYqfZbGQ6n39M
+         nWYyE84+cXlMR2pwk7u9PDECbF5ocnFNeKyu0pRYeSZTJzczQYhphY8ZV8KUAdjJU5C3
+         xz8IN3XBlDsyO95rmf4eKeniVsYyu1gDC8nYUmGhWJ8KAyZ1No1zTJilkShMcnNyo4Lg
+         fh4pPSmBkdXuHMjnyRpg/1ELiUaQWPfQmoayunQJRNsT478/d8dBxIH84QJ4rpIIbtEM
+         kniA==
+X-Gm-Message-State: AOAM531+2jQeyja3/qzLW9rgTrDt8f0xtyJGTbFk62nqc3KlZQSIDayU
+        pIpbFi/uyfdhXY4dQs4icYqox5aDrvssMw3zVS+phr5Bx1NOtm06
+X-Google-Smtp-Source: ABdhPJxnX/aP9f1YYTlY9xogXia5cP6a2JVmyDFGvwr+8ZISnTbDnkGzsLz43KbFCYTyN0PDQwvWxV+jgNeZmbRKM00=
+X-Received: by 2002:a67:e45:: with SMTP id 66mr1205335vso.191.1597915803707;
+ Thu, 20 Aug 2020 02:30:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 20 Aug 2020 14:59:52 +0530
+Message-ID: <CA+G9fYuNS3k0DVT62twfV746pfNhCSrk5sVMcOcQ1PGGnEseyw@mail.gmail.com>
+Subject: =?UTF-8?B?bW0vZ3VwLmM6MTkyMjo3OiBlcnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuYw==?=
+        =?UTF-8?B?dGlvbiDigJhpc192YWxpZF9ndXBfZmxhZ3PigJk=?=
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linuxarm@huawei.com, Barry Song <song.bao.hua@hisilicon.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Longerbeam <slongerbeam@gmail.com>
+arm and riscv architecture build failed on linux next 20200820 tag.
 
-[ Upstream commit 0f6245f42ce9b7e4d20f2cda8d5f12b55a44d7d1 ]
+make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm
+CROSS_COMPILE=3Darm-linux-gnueabihf- HOSTCC=3Dgcc CC=3D"sccache
+arm-linux-gnueabihf-gcc" O=3Dbuild zImage
 
-Combine the rotate_irq() and norotate_irq() handlers into a single
-eof_irq() handler.
+348#
+349../mm/gup.c: In function =E2=80=98get_user_pages=E2=80=99:
+350../mm/gup.c:1922:7: error: implicit declaration of function
+=E2=80=98is_valid_gup_flags=E2=80=99 [-Werror=3Dimplicit-function-declarati=
+on]
+351 1922 | if (!is_valid_gup_flags(gup_flags))
+352 | ^~~~~~~~~~~~~~~~~~
+353cc1: some warnings being treated as errors
 
-Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/ipu-v3/ipu-image-convert.c | 58 +++++++++-----------------
- 1 file changed, 20 insertions(+), 38 deletions(-)
+Full build log,
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/695005038
+https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/695005042
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index eeca50d9a1ee4..f8b031ded3cf2 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -1709,9 +1709,10 @@ static irqreturn_t do_irq(struct ipu_image_convert_run *run)
- 	return IRQ_WAKE_THREAD;
- }
- 
--static irqreturn_t norotate_irq(int irq, void *data)
-+static irqreturn_t eof_irq(int irq, void *data)
- {
- 	struct ipu_image_convert_chan *chan = data;
-+	struct ipu_image_convert_priv *priv = chan->priv;
- 	struct ipu_image_convert_ctx *ctx;
- 	struct ipu_image_convert_run *run;
- 	unsigned long flags;
-@@ -1728,45 +1729,26 @@ static irqreturn_t norotate_irq(int irq, void *data)
- 
- 	ctx = run->ctx;
- 
--	if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this is a rotation operation, just ignore */
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
--	ret = do_irq(run);
--out:
--	spin_unlock_irqrestore(&chan->irqlock, flags);
--	return ret;
--}
--
--static irqreturn_t rotate_irq(int irq, void *data)
--{
--	struct ipu_image_convert_chan *chan = data;
--	struct ipu_image_convert_priv *priv = chan->priv;
--	struct ipu_image_convert_ctx *ctx;
--	struct ipu_image_convert_run *run;
--	unsigned long flags;
--	irqreturn_t ret;
--
--	spin_lock_irqsave(&chan->irqlock, flags);
--
--	/* get current run and its context */
--	run = chan->current_run;
--	if (!run) {
-+	if (irq == chan->out_eof_irq) {
-+		if (ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this is a rotation op, just ignore */
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else if (irq == chan->rot_out_eof_irq) {
-+		if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
-+			/* this was NOT a rotation op, shouldn't happen */
-+			dev_err(priv->ipu->dev,
-+				"Unexpected rotation interrupt\n");
-+			ret = IRQ_HANDLED;
-+			goto out;
-+		}
-+	} else {
-+		dev_err(priv->ipu->dev, "Received unknown irq %d\n", irq);
- 		ret = IRQ_NONE;
- 		goto out;
- 	}
- 
--	ctx = run->ctx;
--
--	if (!ipu_rot_mode_is_irt(ctx->rot_mode)) {
--		/* this was NOT a rotation operation, shouldn't happen */
--		dev_err(priv->ipu->dev, "Unexpected rotation interrupt\n");
--		spin_unlock_irqrestore(&chan->irqlock, flags);
--		return IRQ_HANDLED;
--	}
--
- 	ret = do_irq(run);
- out:
- 	spin_unlock_irqrestore(&chan->irqlock, flags);
-@@ -1859,7 +1841,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						  chan->out_chan,
- 						  IPU_IRQ_EOF);
- 
--	ret = request_threaded_irq(chan->out_eof_irq, norotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
-@@ -1872,7 +1854,7 @@ static int get_ipu_resources(struct ipu_image_convert_chan *chan)
- 						     chan->rotation_out_chan,
- 						     IPU_IRQ_EOF);
- 
--	ret = request_threaded_irq(chan->rot_out_eof_irq, rotate_irq, do_bh,
-+	ret = request_threaded_irq(chan->rot_out_eof_irq, eof_irq, do_bh,
- 				   0, "ipu-ic", chan);
- 	if (ret < 0) {
- 		dev_err(priv->ipu->dev, "could not acquire irq %d\n",
--- 
-2.25.1
-
-
-
+--=20
+Linaro LKFT
+https://lkft.linaro.org
