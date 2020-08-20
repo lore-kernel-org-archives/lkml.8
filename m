@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAB7C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F76C433E3
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1FA20738
+	by mail.kernel.org (Postfix) with ESMTP id 9573F22CA0
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597918076;
-	bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
+	bh=AmTZtyZUnDO5InHBHtS78KWfPouKRkGH35AeeRiiGuM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Scw7OMt9OgrU0LmgQDw4v0w+VZZ+u2uOBUZMiYH5wviW5I8TInIEP8g8KHp3ytabW
-	 qs06x8nNrqrUxp65Ique21+JqCDCrY5MCmIktDRQL2/MrBEZOiiSCGW+14D0r/LPzX
-	 DZRSrLsEHsfL+yabKJiK0GEwJfmI/jtUn1mGRZS4=
+	b=Do8sxePyFmLDLTPVj58CFt2W+UjlEpHi52eF9tFRkkc2utPGN9URhpODUwtF4MLZ+
+	 Tuj1rmRhRrbiOBzOL9wBxypoSARV/1W1A7V9FpfAUGDr0NusbEi43HymikCFexE/vS
+	 q/HRuFKAPLtocE6hZOf9TQBksLq0TpbN7HVFmQ8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbgHTKHu (ORCPT
+        id S1730727AbgHTKHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:07:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730302AbgHTKGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:37 -0400
+        id S1730487AbgHTKGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7B1206DA;
-        Thu, 20 Aug 2020 10:06:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B08B1206DA;
+        Thu, 20 Aug 2020 10:06:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917996;
-        bh=KaxY1NvNPtD69tQs/t0IdTuYAOTR+KNMEfLbGZkbrm4=;
+        s=default; t=1597918002;
+        bh=AmTZtyZUnDO5InHBHtS78KWfPouKRkGH35AeeRiiGuM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GBPXLT6YYZt7OSUjl9NVYl0SGwqTnK9eYOhZHb41JWx0wXJ/RoYEktYzqoIZlHS+O
-         Uq5yOAGCihILiovSonjMtlnCCycvE+lhJOneYk+AqLImDuIj8iz9+TvT9IDQx258JH
-         YIF/QGZIvK97obyjSAGxCrk1W1taQg873bfp3Egw=
+        b=NSTtuxV+Lqx2IOUHnokU7XutmNkSQ5uwy2u4PBbIeMZEEeAyqSlJC9GRdSg7Mk8hL
+         9WfNe2BqElz5phC9u2sI0/Jg3M6da1xYOtihapElnfV8Nd7ITZGnMjVtU2XXCmFP8z
+         kOmsHqjc4LugJa0M4D7ijp0ve3EKxewuHOX2WRx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amitoj Kaur Chawla <amitoj1606@gmail.com>,
-        Johan Hovold <johan@kernel.org>, Pavel Machek <pavel@ucw.cz>
-Subject: [PATCH 4.14 017/228] leds: lm3533: fix use-after-free on unbind
-Date:   Thu, 20 Aug 2020 11:19:52 +0200
-Message-Id: <20200820091608.394794294@linuxfoundation.org>
+        stable@vger.kernel.org, Roi Dayan <roid@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 4.14 002/228] net/mlx5e: Dont support phys switch id if not in switchdev mode
+Date:   Thu, 20 Aug 2020 11:19:37 +0200
+Message-Id: <20200820091607.648150053@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,66 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
 
-commit d584221e683bbd173738603b83a315f27d27d043 upstream.
+From: Roi Dayan <roid@mellanox.com>
 
-Several MFD child drivers register their class devices directly under
-the parent device. This means you cannot blindly do devres conversions
-so that deregistration ends up being tied to the parent device,
-something which leads to use-after-free on driver unbind when the class
-device is released while still being registered.
+Support for phys switch id ndo added for representors and if
+we do not have representors there is no need to support it.
+Since each port return different switch id supporting this
+block support for creating bond over PFs and attaching to bridge
+in legacy mode.
 
-Fixes: 50154e29e5cc ("leds: lm3533: Use devm_led_classdev_register")
-Cc: stable <stable@vger.kernel.org>     # 4.6
-Cc: Amitoj Kaur Chawla <amitoj1606@gmail.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Pavel Machek <pavel@ucw.cz>
+This bug doesn't exist upstream as the code got refactored and the
+netdev api is totally different.
+
+Fixes: cb67b832921c ("net/mlx5e: Introduce SRIOV VF representors")
+Signed-off-by: Roi Dayan <roid@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/leds/leds-lm3533.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/leds/leds-lm3533.c
-+++ b/drivers/leds/leds-lm3533.c
-@@ -698,7 +698,7 @@ static int lm3533_led_probe(struct platf
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
+@@ -180,7 +180,7 @@ int mlx5e_attr_get(struct net_device *de
+ 	struct mlx5_eswitch_rep *rep = rpriv->rep;
+ 	struct mlx5_eswitch *esw = priv->mdev->priv.eswitch;
  
- 	platform_set_drvdata(pdev, led);
+-	if (esw->mode == SRIOV_NONE)
++	if (esw->mode != SRIOV_OFFLOADS)
+ 		return -EOPNOTSUPP;
  
--	ret = devm_led_classdev_register(pdev->dev.parent, &led->cdev);
-+	ret = led_classdev_register(pdev->dev.parent, &led->cdev);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register LED %d\n", pdev->id);
- 		return ret;
-@@ -708,13 +708,18 @@ static int lm3533_led_probe(struct platf
- 
- 	ret = lm3533_led_setup(led, pdata);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	ret = lm3533_ctrlbank_enable(&led->cb);
- 	if (ret)
--		return ret;
-+		goto err_deregister;
- 
- 	return 0;
-+
-+err_deregister:
-+	led_classdev_unregister(&led->cdev);
-+
-+	return ret;
- }
- 
- static int lm3533_led_remove(struct platform_device *pdev)
-@@ -724,6 +729,7 @@ static int lm3533_led_remove(struct plat
- 	dev_dbg(&pdev->dev, "%s\n", __func__);
- 
- 	lm3533_ctrlbank_disable(&led->cb);
-+	led_classdev_unregister(&led->cdev);
- 
- 	return 0;
- }
+ 	switch (attr->id) {
 
 
