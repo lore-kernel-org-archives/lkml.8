@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B61A5C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9408C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 91F00206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A8F720724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917976;
-	bh=sWjWwfjD7flakOy6N68TgJl+qcKvm9h/87QBngaZ2ic=;
+	s=default; t=1597917989;
+	bh=uD8BoJVFMMTmXhc0uvkBTZwrcwMK5/4DLUXVP/JoR4Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rXud8VE/t+NUK9xQrnarTV1NDtEg6ZML4Hq0UCC7RdMvLQzvZ1xN4r7g9yAtVgYUE
-	 yL9QIOn463/XIzpe2xphdMb4zqEW8vYcBcTkdz1nKBX4N+9U64kB9Zo++evyYDdWL7
-	 D1mzVLpKjQuhiEQp+Ha73hHRLW7bzXNLRtLQQfY0=
+	b=Ntl7f8fnT5+nkU7uzd7OpIE7TS+o8rYl0qn7s6w4avCykaCn329qfdn+pLRYbXMth
+	 M/szSTVTjYOFuvRdUt8nnt7eXaQ+nNWYMxkzy0iTBTXg2u4F7m9BIRbNTedgRAq/+R
+	 6zk2Wg58FtAGarmz7xc/zv5H5GOLkOLYlK+OUFpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgHTKF6 (ORCPT
+        id S1730495AbgHTKGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:05:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52690 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:06:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730495AbgHTKCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:02:07 -0400
+        id S1730369AbgHTKBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88EC520724;
-        Thu, 20 Aug 2020 10:02:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 291372075E;
+        Thu, 20 Aug 2020 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917727;
-        bh=sWjWwfjD7flakOy6N68TgJl+qcKvm9h/87QBngaZ2ic=;
+        s=default; t=1597917691;
+        bh=uD8BoJVFMMTmXhc0uvkBTZwrcwMK5/4DLUXVP/JoR4Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=glfF/Eb3suI7xKjWkQGvYSEC9ZqgSICYlhvofV3QXbeRCRH1mtL/JjQHL4bnM/r2D
-         P4mVSzzqwR0R995sp1Kx0D0pVljUBGgTUrXzjNYalK26QArKuJkc7TG8Lz8UqAeQJ0
-         Gw2MkKmIx+xJPiE09nSrDCelGsv7e5+OzPaLNCwI=
+        b=kWX7YMitLFFvfdEQYgZYIF2Zr/zGmyC+05QdYwdgPqDFPNfRwMFNhja3Jtd1V///0
+         Eg1TShwW7v+IZjLfNenCXbiv6C0oNLVxutjDPiOOOCQ5AlRtKKbvPb9DqiJYRitf/0
+         X3Lb9sov7YZJkgObGT7XJkfYoQ+PwkB2kNrqAgDM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.de>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Brian Foster <bfoster@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 105/212] bcache: fix super block seq numbers comparision in register_cache_set()
-Date:   Thu, 20 Aug 2020 11:21:18 +0200
-Message-Id: <20200820091607.655461070@linuxfoundation.org>
+Subject: [PATCH 4.9 122/212] xfs: fix reflink quota reservation accounting error
+Date:   Thu, 20 Aug 2020 11:21:35 +0200
+Message-Id: <20200820091608.517390750@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,76 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Darrick J. Wong <darrick.wong@oracle.com>
 
-[ Upstream commit 117f636ea695270fe492d0c0c9dfadc7a662af47 ]
+[ Upstream commit 83895227aba1ade33e81f586aa7b6b1e143096a5 ]
 
-In register_cache_set(), c is pointer to struct cache_set, and ca is
-pointer to struct cache, if ca->sb.seq > c->sb.seq, it means this
-registering cache has up to date version and other members, the in-
-memory version and other members should be updated to the newer value.
+Quota reservations are supposed to account for the blocks that might be
+allocated due to a bmap btree split.  Reflink doesn't do this, so fix
+this to make the quota accounting more accurate before we start
+rearranging things.
 
-But current implementation makes a cache set only has a single cache
-device, so the above assumption works well except for a special case.
-The execption is when a cache device new created and both ca->sb.seq and
-c->sb.seq are 0, because the super block is never flushed out yet. In
-the location for the following if() check,
-2156         if (ca->sb.seq > c->sb.seq) {
-2157                 c->sb.version           = ca->sb.version;
-2158                 memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
-2159                 c->sb.flags             = ca->sb.flags;
-2160                 c->sb.seq               = ca->sb.seq;
-2161                 pr_debug("set version = %llu\n", c->sb.version);
-2162         }
-c->sb.version is not initialized yet and valued 0. When ca->sb.seq is 0,
-the if() check will fail (because both values are 0), and the cache set
-version, set_uuid, flags and seq won't be updated.
-
-The above problem is hiden for current code, because the bucket size is
-compatible among different super block version. And the next time when
-running cache set again, ca->sb.seq will be larger than 0 and cache set
-super block version will be updated properly.
-
-But if the large bucket feature is enabled,  sb->bucket_size is the low
-16bits of the bucket size. For a power of 2 value, when the actual
-bucket size exceeds 16bit width, sb->bucket_size will always be 0. Then
-read_super_common() will fail because the if() check to
-is_power_of_2(sb->bucket_size) is false. This is how the long time
-hidden bug is triggered.
-
-This patch modifies the if() check to the following way,
-2156         if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
-Then cache set's version, set_uuid, flags and seq will always be updated
-corectly including for a new created cache device.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 862bb360ef56 ("xfs: reflink extents from one file to another")
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/super.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_reflink.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 526e9d5a4fb16..2c976cf361984 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -1778,7 +1778,14 @@ static const char *register_cache_set(struct cache *ca)
- 	    sysfs_create_link(&c->kobj, &ca->kobj, buf))
- 		goto err;
+diff --git a/fs/xfs/xfs_reflink.c b/fs/xfs/xfs_reflink.c
+index 6b753b969f7b8..aa99711a8ff96 100644
+--- a/fs/xfs/xfs_reflink.c
++++ b/fs/xfs/xfs_reflink.c
+@@ -1108,6 +1108,7 @@ xfs_reflink_remap_extent(
+ 	xfs_filblks_t		rlen;
+ 	xfs_filblks_t		unmap_len;
+ 	xfs_off_t		newlen;
++	int64_t			qres;
+ 	int			error;
  
--	if (ca->sb.seq > c->sb.seq) {
+ 	unmap_len = irec->br_startoff + irec->br_blockcount - destoff;
+@@ -1135,13 +1136,19 @@ xfs_reflink_remap_extent(
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 	xfs_trans_ijoin(tp, ip, 0);
+ 
+-	/* If we're not just clearing space, then do we have enough quota? */
+-	if (real_extent) {
+-		error = xfs_trans_reserve_quota_nblks(tp, ip,
+-				irec->br_blockcount, 0, XFS_QMOPT_RES_REGBLKS);
+-		if (error)
+-			goto out_cancel;
+-	}
 +	/*
-+	 * A special case is both ca->sb.seq and c->sb.seq are 0,
-+	 * such condition happens on a new created cache device whose
-+	 * super block is never flushed yet. In this case c->sb.version
-+	 * and other members should be updated too, otherwise we will
-+	 * have a mistaken super block version in cache set.
++	 * Reserve quota for this operation.  We don't know if the first unmap
++	 * in the dest file will cause a bmap btree split, so we always reserve
++	 * at least enough blocks for that split.  If the extent being mapped
++	 * in is written, we need to reserve quota for that too.
 +	 */
-+	if (ca->sb.seq > c->sb.seq || c->sb.seq == 0) {
- 		c->sb.version		= ca->sb.version;
- 		memcpy(c->sb.set_uuid, ca->sb.set_uuid, 16);
- 		c->sb.flags             = ca->sb.flags;
++	qres = XFS_EXTENTADD_SPACE_RES(mp, XFS_DATA_FORK);
++	if (real_extent)
++		qres += irec->br_blockcount;
++	error = xfs_trans_reserve_quota_nblks(tp, ip, qres, 0,
++			XFS_QMOPT_RES_REGBLKS);
++	if (error)
++		goto out_cancel;
+ 
+ 	trace_xfs_reflink_remap(ip, irec->br_startoff,
+ 				irec->br_blockcount, irec->br_startblock);
 -- 
 2.25.1
 
