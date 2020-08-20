@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D10BFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AF4C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0D5320738
+	by mail.kernel.org (Postfix) with ESMTP id CC4D3206DA
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597931957;
-	bh=6TE7FFTve3v8uF7YgQQfnuQC/0K3ZNMVPhrYhtJvlkc=;
+	bh=v0dwlY5SBRqPHG9bP2zvvxz+zgQcDfU5lnL0b2EymNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNQkliTnRFGZjSUlnprfUntcpi7NnRWbDER+A4pz9L/J1p8jE8QM1d/7S3ep8yY98
-	 hXPCL/r6JIgKNAzHeRSmrJipKqfxHJoD7eXecz/46c3NcX46sM2bG/+cVai/4WbhhD
-	 D9Tjczq0NqXasXriEgoe9EFHPRSBlhckRNeV3WUU=
+	b=JfyCs+fPInSOzpnvGTmv9mYhQ6uaCZU/YleoxHkVsPE6mCE7Yn0uSGTyRqFn2Y6A4
+	 NYWw5HPVomq/cFD7tHkQHy/Eixq98bqJcQshVHLYG5o6ALrM4Ot0a6PVfKsZalEgr/
+	 5M4Khbpni6pxSMZEQusxbx1qBc5Zik+lzXbZqpwc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbgHTN5v (ORCPT
+        id S1731147AbgHTN6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:57:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33620 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727093AbgHTJZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:25:15 -0400
+        id S1726905AbgHTJZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:25:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53D3022CB2;
-        Thu, 20 Aug 2020 09:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EE722CA1;
+        Thu, 20 Aug 2020 09:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915514;
-        bh=6TE7FFTve3v8uF7YgQQfnuQC/0K3ZNMVPhrYhtJvlkc=;
+        s=default; t=1597915517;
+        bh=v0dwlY5SBRqPHG9bP2zvvxz+zgQcDfU5lnL0b2EymNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GxMBba+irKEAzfm67wa0hjX6luxwCRIyKREZ4cRkTYDpTTrsL6JVPi0NDGJ3XSRaO
-         jOgaU3lMCYubC8IhnMb7agmFQ3iR8NAVTP2VMtPisssjJsaae6CV0t9LhC9T+lbUnc
-         1X1anDG6Kdr0f+VyRaspaGIOzfvqtRrEJltzwhSU=
+        b=FOw8DsafumJwOZScOs7ez460REee9hzAdxESB+A/5zFeLCKv3r68iDHBZdycRAUlU
+         xRg//4oRa0GpCQIdHkG3r8HEzoMbQ3Dn6DvdUvJ0/Af4ecjLBc+q3orXvM2Xdseev3
+         ZNQHvW/FlGucKUtMgkAC25AkmE2hzuBbLLbgM+T4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Qu Wenruo <wqu@suse.com>, Boleyn Su <boleynsu@google.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 041/232] btrfs: check correct variable after allocation in btrfs_backref_iter_alloc
-Date:   Thu, 20 Aug 2020 11:18:12 +0200
-Message-Id: <20200820091614.771086747@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 5.8 042/232] arm64: dts: qcom: sc7180: Drop the unused non-MSA SID
+Date:   Thu, 20 Aug 2020 11:18:13 +0200
+Message-Id: <20200820091614.821682067@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,36 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boleyn Su <boleynsu@google.com>
+From: Sibi Sankar <sibis@codeaurora.org>
 
-commit c15c2ec07a26b251040943a1a9f90d3037f041e5 upstream.
+commit 08257610302159e08fd4f5d33787807374ea63c7 upstream.
 
-The `if (!ret)` check will always be false and it may result in
-ret->path being dereferenced while it is a NULL pointer.
+Having a non-MSA (Modem Self-Authentication) SID bypassed breaks modem
+sandboxing i.e if a transaction were to originate from it, the hardware
+memory protections units (XPUs) would fail to flag them (any transaction
+originating from modem are historically termed as an MSA transaction).
+Drop the unused non-MSA modem SID on SC7180 SoCs and cheza so that SMMU
+continues to block them.
 
-Fixes: a37f232b7b65 ("btrfs: backref: introduce the skeleton of btrfs_backref_iter")
-CC: stable@vger.kernel.org # 5.8+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Boleyn Su <boleynsu@google.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Tested-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Fixes: bec71ba243e95 ("arm64: dts: qcom: sc7180: Update Q6V5 MSS node")
+Fixes: 68aee4af5f620 ("arm64: dts: qcom: sdm845-cheza: Add iommus property")
+Cc: stable@vger.kernel.org
+Reported-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Link: https://lore.kernel.org/r/20200630081938.8131-1-sibis@codeaurora.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/backref.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts    |    2 +-
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/backref.c
-+++ b/fs/btrfs/backref.c
-@@ -2303,7 +2303,7 @@ struct btrfs_backref_iter *btrfs_backref
- 		return NULL;
+--- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
++++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+@@ -312,7 +312,7 @@
+ &remoteproc_mpss {
+ 	status = "okay";
+ 	compatible = "qcom,sc7180-mss-pil";
+-	iommus = <&apps_smmu 0x460 0x1>, <&apps_smmu 0x444 0x3>;
++	iommus = <&apps_smmu 0x461 0x0>, <&apps_smmu 0x444 0x3>;
+ 	memory-region = <&mba_mem &mpss_mem>;
+ };
  
- 	ret->path = btrfs_alloc_path();
--	if (!ret) {
-+	if (!ret->path) {
- 		kfree(ret);
- 		return NULL;
- 	}
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -634,7 +634,7 @@ ap_ts_i2c: &i2c14 {
+ };
+ 
+ &mss_pil {
+-	iommus = <&apps_smmu 0x780 0x1>,
++	iommus = <&apps_smmu 0x781 0x0>,
+ 		 <&apps_smmu 0x724 0x3>;
+ };
+ 
 
 
