@@ -2,52 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B45B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA52E214F1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4C920855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924756;
-	bh=ZGfKLK7QDF6UKIB9ZK1taXhdAkb39nAqHSWRWISVJDI=;
+	s=default; t=1597924766;
+	bh=Ufv5Fx44hDnuVdzftqL2oVkVK3AeNeJDQaw3U2xVTXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MrFOWcyGTpkIPtUvcZcWt5WFBPsXneJfML9TFARHpjc6nxcG3FjR0mKzhF0b5qsjQ
-	 2NE833T/Geny+naV1KCSLACYqGKkpa4HRXLg+m+p4WHhlo+GHw8lE6j3mwAifoEeTF
-	 h32xU2CwTnZNjQCIvhwWk68JMLm47Xu4ut6NGnsM=
+	b=Dybyfn4DjxGfxQB6ayxESPF11g4uLnpT7TlOF7Hsw8V+JhKXJCiWqDyMXabAlZctt
+	 Tznu7ttaz+jSYi8D0edptcHZVChYSdoySNxhQ8RFbulp52LD25yW58ILh4t4Toh5wt
+	 lYqWiCDlrg9erQdzGDYMwNK6RFe0yr/9/nihT2/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbgHTL7P (ORCPT
+        id S1728655AbgHTL7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:59:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730191AbgHTKAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:38 -0400
+        id S1730470AbgHTKAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A10C9207FB;
-        Thu, 20 Aug 2020 10:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA85D2067C;
+        Thu, 20 Aug 2020 10:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917637;
-        bh=ZGfKLK7QDF6UKIB9ZK1taXhdAkb39nAqHSWRWISVJDI=;
+        s=default; t=1597917629;
+        bh=Ufv5Fx44hDnuVdzftqL2oVkVK3AeNeJDQaw3U2xVTXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sPKxxlGeiKgz3oMq2pCZv/ndhJkdWXH2vOrvUFsTkvP93mYpLAzndPOlk5+/t3nsw
-         s5CrAwrbuj8XdMX/X528NUP8kMi3i0is11QwfoQHRV4dkfAwFl8/vBMXAfTN2CDrfJ
-         Gopzw76fFp2iV2/+4IlNr7Ai2LYzSoUReuwQYICo=
+        b=jfYye3vZGXJHVqY3VizcsjylHwwsVnulwtORk0JfYiWYLTl4DSYVuSXZhzpL3kvC1
+         Tw0ibp6qJNZqYl71bx4nHv0P21vSsp/A1aw/QlfYfOgn3GYJ/KEtHfUEgQCKs/i0oH
+         RbPXqY9YWE52V96fBekNgOzeafewZZKiW0+vqnWQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 072/212] ipv4: Silence suspicious RCU usage warning
-Date:   Thu, 20 Aug 2020 11:20:45 +0200
-Message-Id: <20200820091605.997432275@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Philippe Duplessis-Guindon <pduplessis@efficios.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 069/212] tools lib traceevent: Fix memory leak in process_dynamic_array_len
+Date:   Thu, 20 Aug 2020 11:20:42 +0200
+Message-Id: <20200820091605.848342296@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,80 +62,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Philippe Duplessis-Guindon <pduplessis@efficios.com>
 
-[ Upstream commit 83f3522860f702748143e022f1a546547314c715 ]
+[ Upstream commit e24c6447ccb7b1a01f9bf0aec94939e6450c0b4d ]
 
-fib_trie_unmerge() is called with RTNL held, but not from an RCU
-read-side critical section. This leads to the following warning [1] when
-the FIB alias list in a leaf is traversed with
-hlist_for_each_entry_rcu().
+I compiled with AddressSanitizer and I had these memory leaks while I
+was using the tep_parse_format function:
 
-Since the function is always called with RTNL held and since
-modification of the list is protected by RTNL, simply use
-hlist_for_each_entry() and silence the warning.
+    Direct leak of 28 byte(s) in 4 object(s) allocated from:
+        #0 0x7fb07db49ffe in __interceptor_realloc (/lib/x86_64-linux-gnu/libasan.so.5+0x10dffe)
+        #1 0x7fb07a724228 in extend_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:985
+        #2 0x7fb07a724c21 in __read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1140
+        #3 0x7fb07a724f78 in read_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1206
+        #4 0x7fb07a725191 in __read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1291
+        #5 0x7fb07a7251df in read_expect_type /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1299
+        #6 0x7fb07a72e6c8 in process_dynamic_array_len /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:2849
+        #7 0x7fb07a7304b8 in process_function /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3161
+        #8 0x7fb07a730900 in process_arg_token /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3207
+        #9 0x7fb07a727c0b in process_arg /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:1786
+        #10 0x7fb07a731080 in event_read_print_args /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3285
+        #11 0x7fb07a731722 in event_read_print /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:3369
+        #12 0x7fb07a740054 in __tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6335
+        #13 0x7fb07a74047a in __parse_event /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6389
+        #14 0x7fb07a740536 in tep_parse_format /home/pduplessis/repo/linux/tools/lib/traceevent/event-parse.c:6431
+        #15 0x7fb07a785acf in parse_event ../../../src/fs-src/fs.c:251
+        #16 0x7fb07a785ccd in parse_systems ../../../src/fs-src/fs.c:284
+        #17 0x7fb07a786fb3 in read_metadata ../../../src/fs-src/fs.c:593
+        #18 0x7fb07a78760e in ftrace_fs_source_init ../../../src/fs-src/fs.c:727
+        #19 0x7fb07d90c19c in add_component_with_init_method_data ../../../../src/lib/graph/graph.c:1048
+        #20 0x7fb07d90c87b in add_source_component_with_initialize_method_data ../../../../src/lib/graph/graph.c:1127
+        #21 0x7fb07d90c92a in bt_graph_add_source_component ../../../../src/lib/graph/graph.c:1152
+        #22 0x55db11aa632e in cmd_run_ctx_create_components_from_config_components ../../../src/cli/babeltrace2.c:2252
+        #23 0x55db11aa6fda in cmd_run_ctx_create_components ../../../src/cli/babeltrace2.c:2347
+        #24 0x55db11aa780c in cmd_run ../../../src/cli/babeltrace2.c:2461
+        #25 0x55db11aa8a7d in main ../../../src/cli/babeltrace2.c:2673
+        #26 0x7fb07d5460b2 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x270b2)
 
-[1]
-WARNING: suspicious RCU usage
-5.8.0-rc4-custom-01520-gc1f937f3f83b #30 Not tainted
------------------------------
-net/ipv4/fib_trie.c:1867 RCU-list traversed in non-reader section!!
+The token variable in the process_dynamic_array_len function is
+allocated in the read_expect_type function, but is not freed before
+calling the read_token function.
 
-other info that might help us debug this:
+Free the token variable before calling read_token in order to plug the
+leak.
 
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by ip/164:
- #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: rtnetlink_rcv_msg+0x49a/0xbd0
-
-stack backtrace:
-CPU: 0 PID: 164 Comm: ip Not tainted 5.8.0-rc4-custom-01520-gc1f937f3f83b #30
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
-Call Trace:
- dump_stack+0x100/0x184
- lockdep_rcu_suspicious+0x153/0x15d
- fib_trie_unmerge+0x608/0xdb0
- fib_unmerge+0x44/0x360
- fib4_rule_configure+0xc8/0xad0
- fib_nl_newrule+0x37a/0x1dd0
- rtnetlink_rcv_msg+0x4f7/0xbd0
- netlink_rcv_skb+0x17a/0x480
- rtnetlink_rcv+0x22/0x30
- netlink_unicast+0x5ae/0x890
- netlink_sendmsg+0x98a/0xf40
- ____sys_sendmsg+0x879/0xa00
- ___sys_sendmsg+0x122/0x190
- __sys_sendmsg+0x103/0x1d0
- __x64_sys_sendmsg+0x7d/0xb0
- do_syscall_64+0x54/0xa0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fc80a234e97
-Code: Bad RIP value.
-RSP: 002b:00007ffef8b66798 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fc80a234e97
-RDX: 0000000000000000 RSI: 00007ffef8b66800 RDI: 0000000000000003
-RBP: 000000005f141b1c R08: 0000000000000001 R09: 0000000000000000
-R10: 00007fc80a2a8ac0 R11: 0000000000000246 R12: 0000000000000001
-R13: 0000000000000000 R14: 00007ffef8b67008 R15: 0000556fccb10020
-
-Fixes: 0ddcf43d5d4a ("ipv4: FIB Local/MAIN table collapse")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Philippe Duplessis-Guindon <pduplessis@efficios.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/linux-trace-devel/20200730150236.5392-1-pduplessis@efficios.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_trie.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/traceevent/event-parse.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -1719,7 +1719,7 @@ struct fib_table *fib_trie_unmerge(struc
- 	while ((l = leaf_walk_rcu(&tp, key)) != NULL) {
- 		struct key_vector *local_l = NULL, *local_tp;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 62f4cacf253ab..b9db8739487dc 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2764,6 +2764,7 @@ process_dynamic_array_len(struct event_format *event, struct print_arg *arg,
+ 	if (read_expected(EVENT_DELIM, ")") < 0)
+ 		goto out_err;
  
--		hlist_for_each_entry_rcu(fa, &l->leaf, fa_list) {
-+		hlist_for_each_entry(fa, &l->leaf, fa_list) {
- 			struct fib_alias *new_fa;
++	free_token(token);
+ 	type = read_token(&token);
+ 	*tok = token;
  
- 			if (local_tb->tb_id != fa->tb_id)
+-- 
+2.25.1
+
 
 
