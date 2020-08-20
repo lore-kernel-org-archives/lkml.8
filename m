@@ -2,227 +2,128 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15876C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93120C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5DB420855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920181;
-	bh=TY8/cOOwKH06Y/se8nJzoffgbJQ37ddRZX3ahYPV7pk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tOrkRnhA0NvpQOVmM5XLtVZl/Oda6l8bG8UPcDifaMAFB1RFqr6nkkB/NwrCQOQDC
-	 tLdTWR90Cyy1QAomone64xnYhT13KEPgMnnYrll2RdcuaaVVZMBe8kqPQC3nowv6sr
-	 CaEEdUZUTmpVur/yhs6MuJlBwc7GOcgb4VbJtg20=
+	by mail.kernel.org (Postfix) with ESMTP id 5C89B20639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:43:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="MGBJxQrw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgHTKm7 (ORCPT
+        id S1731132AbgHTKnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:42:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731177AbgHTKQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:16:35 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B2272075E;
-        Thu, 20 Aug 2020 10:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918594;
-        bh=TY8/cOOwKH06Y/se8nJzoffgbJQ37ddRZX3ahYPV7pk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nq1R0gJT/2IiVV85gZBhE/0o+83IFkTGPQMBiwUe5hWE9q76te2IeHzuhsyvJvBmJ
-         ROecg69+xt54gTmKkEn95FxoawzzDDNZYojfk+l3IqLHKxWcPRCAt/jDJdzBgfXe3r
-         bYAkJ556SUUTVOKPG4/8+XahpBa0JqoYB2Y6xyKY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.14 227/228] dm cache: remove all obsolete writethrough-specific code
-Date:   Thu, 20 Aug 2020 11:23:22 +0200
-Message-Id: <20200820091618.849761692@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
-References: <20200820091607.532711107@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 06:43:09 -0400
+Received: from mail-dm6nam12on2048.outbound.protection.outlook.com ([40.107.243.48]:49920
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730529AbgHTKmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:42:01 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e0bmwsyz4nfyUmQA2TfbwAfX2rik6glK//YzBFBDLARyMpcxsJ8+oUzMzmm8EsjhjajzW0wzL/JRTvoMM1HK+BCShbmQcqxvRtuHmJuwcoL7cgQ9Cvfi+jae8vwiKJVn+Fjpgkje+OxtcNBfGohOyDl/vZoJO/tNqp3aWJsR5PYXAypXxfhLRYo9g4/lXAxIVCFgyBgBLYEj6NOTTth3Su+Ub0qhBsVkMN/x4boERQdGjIfKnA2VLS3yE8KU2QENUdqI++a6OqzTYEJz5Q4CGVzJLrbB8fxGLZfg1ZOjlEfo6m6++epZsADTts7/IgxUoSuz2hqmb+yE0DirmNRbCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mdKiAnYJW8L8KkLp9TiPFMyxO7xhVBO6cPWzC87JmTY=;
+ b=Mzm+nDmI1f49JV2byRIpJlnbo2nvVrqBblTTN2e4IzEcDY1I3poHJtEBopVxmWd6gB446JUMX5IT2OLIli4Mfjcm0RmmaIVZTgIBXnbmyDePRWmUnVDWjunRFO5Gx88N2zVg36xddxLb8ko/iiV7K2fmDbPWd6w9PhJrIpfdYYJM8YnSzsOYtLghaSE4ZywBdw8N0payuYaTkDTPcIyJ1wpioUAvGIgwW1UjLDdgtXTVvU8JZFwLlWBCcyUS1yc7X8vQsJBhzGRWd65W2LU9+xUCYOcWxTRaoFyu23+AQuEUtEOMZktZbVbwCAcqT4x+OsZ70DRrzGU1mLA4NFR7Kw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=windriversystems.onmicrosoft.com;
+ s=selector2-windriversystems-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mdKiAnYJW8L8KkLp9TiPFMyxO7xhVBO6cPWzC87JmTY=;
+ b=MGBJxQrwyT1oXi2U18EQaWqewwVNigFHdgWT6/YbHEYuFnwW8yyBO2Yd7F2dzYRmc3CQ1yS0YdNpInvXOVKUYdb5gVnwsvoqVk1jY/r3KwjrSSO4bvQxyG+/IHakHvG08UR6mM5vJctB1gS6oCFUlTSySgcEfPxEQbLKj/9aIA4=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=windriver.com;
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
+ by SN6PR11MB2894.namprd11.prod.outlook.com (2603:10b6:805:d7::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Thu, 20 Aug
+ 2020 10:41:52 +0000
+Received: from SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::4497:4639:274:54d6]) by SN6PR11MB3360.namprd11.prod.outlook.com
+ ([fe80::4497:4639:274:54d6%6]) with mapi id 15.20.3305.025; Thu, 20 Aug 2020
+ 10:41:52 +0000
+Subject: Re: [PATCH] eventfd: Enlarge recursion limit to allow vhost to work
+To:     Juri Lelli <juri.lelli@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, axboe@kernel.dk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200410114720.24838-1-zhe.he@windriver.com>
+ <20200703081209.GN9670@localhost.localdomain>
+ <cbecaad6-48fc-3c52-d764-747ea91dc3fa@windriver.com>
+ <20200706064557.GA26135@localhost.localdomain>
+ <20200713132211.GB5564@localhost.localdomain>
+ <20200722090132.GB14912@localhost.localdomain>
+From:   He Zhe <zhe.he@windriver.com>
+Message-ID: <2af418ff-6859-3d42-4ab3-16464e1d98bf@windriver.com>
+Date:   Thu, 20 Aug 2020 18:41:46 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200722090132.GB14912@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: BY5PR17CA0053.namprd17.prod.outlook.com
+ (2603:10b6:a03:167::30) To SN6PR11MB3360.namprd11.prod.outlook.com
+ (2603:10b6:805:c8::30)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BY5PR17CA0053.namprd17.prod.outlook.com (2603:10b6:a03:167::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24 via Frontend Transport; Thu, 20 Aug 2020 10:41:50 +0000
+X-Originating-IP: [60.247.85.82]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1cc595a2-0d88-4f34-3374-08d844f5a659
+X-MS-TrafficTypeDiagnostic: SN6PR11MB2894:
+X-Microsoft-Antispam-PRVS: <SN6PR11MB28947D0B017878A1CD4325988F5A0@SN6PR11MB2894.namprd11.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uaJt8WUemrKMQXPtQ8irYrQqqD0R713ItkbDx18v+3Yvu8rX7r4GtLuTNhLvmNTKSuOwRSiDwSqnmuf+9gRF2Ejg7XLuvoE6r/bREYvD72jDuhA3Z5ApVVNW2cnm1R7v9DPBSFui/+cCokoy9TTSf3ormritItIYi5lkZIRh6g4FoHsTPCPCicC18JedKacKwprYxNzsZ2/+a5kiSI/AWuOmdP37mgbcUlHycWVuRvvuGms0J8wz/t6wbyfhL/wRtUZCwKfu19ubPdUO7E7TJi0yst87TXBCxIyKrYC0nL6F4E5zlVyJRj5yrnac3LOrXcU1dViDFS0+CD2SM+sLE6CJhi4n/T6ywCttQXWfIzLdVDx0sXTbo5hMwBLzBXqITpGdFspHKOGTwV4yHArNha7KUq7zxJBZVnxi2Sjv13ZdaPFnX+43AFowueL2vy3HgRFmq70GdM0gFJ3LLJQCzA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3360.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(39850400004)(366004)(346002)(376002)(66946007)(52116002)(8936002)(53546011)(478600001)(31696002)(66476007)(2616005)(6486002)(31686004)(110011004)(66556008)(36756003)(4326008)(2906002)(6916009)(5660300002)(956004)(86362001)(16576012)(4744005)(186003)(26005)(6666004)(316002)(8676002)(161623001)(147533002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: wHnlbSeTRsU1hZT3mxFRhO2PydN1tHemOJUH4kOgsQFGCCfTdriZORzAmssUh40NDSVaPJi2PiLJjcbpUkNXVATPBuVgbsq6rE73RQU5bqKuhCq9bImKvNVXtaAZoU9uhze8iL9wsAnk7v6F7khCNOAXPhu0UbeMZ3VnZxbyauDSUrep4Xpz4EZoVjS5P9MzmthG9Fo0zN/+6KJEYYni0frvXUWEbAB2uUJtzEg/v/KhVI8iZyNnZpb8+O9l399ExIQyfV2n2bJ82Tv5qKuC5IeaQG9DkJLd3/k3E+M6MGaKOowJZpDfa5K1qDo5iiHqvp7NeECItykgyCsLNwZtZoFHKy2ewf0sSN/vNZZFXOWNWkgo9IyLcQEQu0zexHCLcDmqBsGFlhSDvQCN6qODR+VQU6L2Xh0BNEhpopQxf2pPky+Lc4awhK8s9XATGZa+F3FCqlIPGp9+pbOkHsxS1l48M/NWnc3yWLG8w3XDpxF6y98+oRcfKaNjmzK5iRmQQJMN6j6X6FlvAY9RVCgjWDz3khd+3fdVZxSPE+dbFgCMH6xvsYqzFGkjSEx2ezvrJ9YxgDtdhMxKhIxR7mhi9bazk01TozlOuzlV42M2G4A5THbH3Yk2OzIgg4ucO8J8ypVboCHH9mecIq9eHQ5LZQ==
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1cc595a2-0d88-4f34-3374-08d844f5a659
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3360.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2020 10:41:52.3424
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LNt6unRpiqn7CiMcB9L7GeP/NAGGJwNU0EtXWOTpn48Kf8Yer5oOFEPklthCZk9HPjoUBd0mMlCSiHlNURrXgA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2894
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
 
-commit 9958f1d9a04efb3db19134482b3f4c6897e0e7b8 upstream.
 
-Now that the writethrough code is much simpler there is no need to track
-so much state or cascade bio submission (as was done, via
-writethrough_endio(), to issue origin then cache IO in series).
+On 7/22/20 5:01 PM, Juri Lelli wrote:
+> On 13/07/20 15:22, Juri Lelli wrote:
+>
+> [...]
+>
+>> Gentle ping about this issue (mainly addressing relevant maintainers and
+>> potential reviewers). It's easily reproducible with PREEMPT_RT.
+> Ping. Any comment at all? :-)
 
-As such the obsolete writethrough list and workqueue is also removed.
+Hi Maintainer(s),
 
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's been 4 months. Can this be considered this round?
 
----
- drivers/md/dm-cache-target.c |   82 -------------------------------------------
- 1 file changed, 1 insertion(+), 81 deletions(-)
+Thanks,
+Zhe
 
---- a/drivers/md/dm-cache-target.c
-+++ b/drivers/md/dm-cache-target.c
-@@ -410,7 +410,6 @@ struct cache {
- 	spinlock_t lock;
- 	struct list_head deferred_cells;
- 	struct bio_list deferred_bios;
--	struct bio_list deferred_writethrough_bios;
- 	sector_t migration_threshold;
- 	wait_queue_head_t migration_wait;
- 	atomic_t nr_allocated_migrations;
-@@ -446,7 +445,6 @@ struct cache {
- 	struct dm_kcopyd_client *copier;
- 	struct workqueue_struct *wq;
- 	struct work_struct deferred_bio_worker;
--	struct work_struct deferred_writethrough_worker;
- 	struct work_struct migration_worker;
- 	struct delayed_work waker;
- 	struct dm_bio_prison_v2 *prison;
-@@ -491,15 +489,6 @@ struct per_bio_data {
- 	struct dm_bio_prison_cell_v2 *cell;
- 	struct dm_hook_info hook_info;
- 	sector_t len;
--
--	/*
--	 * writethrough fields.  These MUST remain at the end of this
--	 * structure and the 'cache' member must be the first as it
--	 * is used to determine the offset of the writethrough fields.
--	 */
--	struct cache *cache;
--	dm_cblock_t cblock;
--	struct dm_bio_details bio_details;
- };
- 
- struct dm_cache_migration {
-@@ -538,11 +527,6 @@ static void wake_deferred_bio_worker(str
- 	queue_work(cache->wq, &cache->deferred_bio_worker);
- }
- 
--static void wake_deferred_writethrough_worker(struct cache *cache)
--{
--	queue_work(cache->wq, &cache->deferred_writethrough_worker);
--}
--
- static void wake_migration_worker(struct cache *cache)
- {
- 	if (passthrough_mode(cache))
-@@ -619,15 +603,9 @@ static unsigned lock_level(struct bio *b
-  * Per bio data
-  *--------------------------------------------------------------*/
- 
--/*
-- * If using writeback, leave out struct per_bio_data's writethrough fields.
-- */
--#define PB_DATA_SIZE_WB (offsetof(struct per_bio_data, cache))
--#define PB_DATA_SIZE_WT (sizeof(struct per_bio_data))
--
- static size_t get_per_bio_data_size(struct cache *cache)
- {
--	return writethrough_mode(cache) ? PB_DATA_SIZE_WT : PB_DATA_SIZE_WB;
-+	return sizeof(struct per_bio_data);
- }
- 
- static struct per_bio_data *get_per_bio_data(struct bio *bio, size_t data_size)
-@@ -945,39 +923,6 @@ static void issue_op(struct bio *bio, vo
- 	accounted_request(cache, bio);
- }
- 
--static void defer_writethrough_bio(struct cache *cache, struct bio *bio)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&cache->lock, flags);
--	bio_list_add(&cache->deferred_writethrough_bios, bio);
--	spin_unlock_irqrestore(&cache->lock, flags);
--
--	wake_deferred_writethrough_worker(cache);
--}
--
--static void writethrough_endio(struct bio *bio)
--{
--	struct per_bio_data *pb = get_per_bio_data(bio, PB_DATA_SIZE_WT);
--
--	dm_unhook_bio(&pb->hook_info, bio);
--
--	if (bio->bi_status) {
--		bio_endio(bio);
--		return;
--	}
--
--	dm_bio_restore(&pb->bio_details, bio);
--	remap_to_cache(pb->cache, bio, pb->cblock);
--
--	/*
--	 * We can't issue this bio directly, since we're in interrupt
--	 * context.  So it gets put on a bio list for processing by the
--	 * worker thread.
--	 */
--	defer_writethrough_bio(pb->cache, bio);
--}
--
- /*
-  * When running in writethrough mode we need to send writes to clean blocks
-  * to both the cache and origin devices.  Clone the bio and send them in parallel.
-@@ -2013,28 +1958,6 @@ static void process_deferred_bios(struct
- 		schedule_commit(&cache->committer);
- }
- 
--static void process_deferred_writethrough_bios(struct work_struct *ws)
--{
--	struct cache *cache = container_of(ws, struct cache, deferred_writethrough_worker);
--
--	unsigned long flags;
--	struct bio_list bios;
--	struct bio *bio;
--
--	bio_list_init(&bios);
--
--	spin_lock_irqsave(&cache->lock, flags);
--	bio_list_merge(&bios, &cache->deferred_writethrough_bios);
--	bio_list_init(&cache->deferred_writethrough_bios);
--	spin_unlock_irqrestore(&cache->lock, flags);
--
--	/*
--	 * These bios have already been through accounted_begin()
--	 */
--	while ((bio = bio_list_pop(&bios)))
--		generic_make_request(bio);
--}
--
- /*----------------------------------------------------------------
-  * Main worker loop
-  *--------------------------------------------------------------*/
-@@ -2690,7 +2613,6 @@ static int cache_create(struct cache_arg
- 	spin_lock_init(&cache->lock);
- 	INIT_LIST_HEAD(&cache->deferred_cells);
- 	bio_list_init(&cache->deferred_bios);
--	bio_list_init(&cache->deferred_writethrough_bios);
- 	atomic_set(&cache->nr_allocated_migrations, 0);
- 	atomic_set(&cache->nr_io_migrations, 0);
- 	init_waitqueue_head(&cache->migration_wait);
-@@ -2729,8 +2651,6 @@ static int cache_create(struct cache_arg
- 		goto bad;
- 	}
- 	INIT_WORK(&cache->deferred_bio_worker, process_deferred_bios);
--	INIT_WORK(&cache->deferred_writethrough_worker,
--		  process_deferred_writethrough_bios);
- 	INIT_WORK(&cache->migration_worker, check_migrations);
- 	INIT_DELAYED_WORK(&cache->waker, do_waker);
- 
-
+>
+> Thanks,
+>
+> Juri
+>
 
