@@ -2,89 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE17C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B348C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA83A22CAD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA6D2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597926165;
+	bh=yyE+nWCDLiFzg8TXH1V6lIX1NecfxIOE1OLjTtT2LvM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=V/BAkE5vxRbKeAHmENLF2Uj4Q9y+GNbSSByXJ2H7E/xs72+vNFwt77AeyuFG0hlRx
+	 5SaZUlGxnKVLoDJvIZ9o0/dYtbaIrm7gLPTjb9EWBUTaScWALStmi1WmTM+eAixQJz
+	 vgF7cOc/FeVBhr9Gr5sRyip7nH+1DPlIwU7XB89U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgHTMWb (ORCPT
+        id S1730181AbgHTJzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:22:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60752 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgHTJzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:15 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA50C061757;
-        Thu, 20 Aug 2020 02:55:12 -0700 (PDT)
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1k8hHZ-007L1T-Cn; Thu, 20 Aug 2020 11:54:53 +0200
-Message-ID: <8d35f1aa44b4f228e104275a824adaacf0b36674.camel@sipsolutions.net>
-Subject: Re: WARNING in __cfg80211_connect_result
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        syzbot <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, kvalo@codeaurora.org,
-        leon@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Date:   Thu, 20 Aug 2020 11:54:51 +0200
-In-Reply-To: <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-References: <000000000000a7e38a05a997edb2@google.com>
-         <0000000000005c13f505ad3f5c42@google.com>
-         <CAHmME9rd+54EOO-b=wmVxtzbvckET2WSMm-3q8LJmfp38A9ceg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
+        Thu, 20 Aug 2020 05:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37832 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730178AbgHTJy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:54:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98CED2067C;
+        Thu, 20 Aug 2020 09:54:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917298;
+        bh=yyE+nWCDLiFzg8TXH1V6lIX1NecfxIOE1OLjTtT2LvM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vAiD96o9i+qGerl6vfacZ5LV+BcZhGFO5LmGoJ/TOHH2XQcz3teMGB3/Oo2lAx8jw
+         e/maAU4iw9SYlD5dvgTTiuU4/q0uNWHVY4ZNjSrxntS7k2cOOFkNzSl6aeoPcBK9PW
+         XB7OjNqAzHYfGDUXxhrjezTKZ12k7JKrFghhpZ9c=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 73/92] Input: sentelic - fix error return when fsp_reg_write fails
+Date:   Thu, 20 Aug 2020 11:21:58 +0200
+Message-Id: <20200820091541.476797643@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+References: <20200820091537.490965042@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-20 at 11:47 +0200, Jason A. Donenfeld wrote:
-> On Wed, Aug 19, 2020 at 8:42 PM syzbot
-> <syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com> wrote:
-> > syzbot has bisected this issue to:
-> > 
-> > commit e7096c131e5161fa3b8e52a650d7719d2857adfd
-> > Author: Jason A. Donenfeld <Jason@zx2c4.com>
-> > Date:   Sun Dec 8 23:27:34 2019 +0000
-> > 
-> >     net: WireGuard secure network tunnel
-> > 
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175ad8b1900000
-> > start commit:   e3ec1e8c net: eliminate meaningless memcpy to data in pskb..
-> > git tree:       net-next
-> > final oops:     https://syzkaller.appspot.com/x/report.txt?x=14dad8b1900000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10dad8b1900000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3d400a47d1416652
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cc4c0f394e2611edba66
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15d9de91900000
-> > 
-> > Reported-by: syzbot+cc4c0f394e2611edba66@syzkaller.appspotmail.com
-> > Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
-> 
-> Having trouble linking this back to wireguard... Those oopses don't
-> have anything to do with it either. Bisection error?
+From: Colin Ian King <colin.king@canonical.com>
 
-Probably the typical generic netlink issue - syzbot often hits the
-generic netlink family by ID, rather than by name. So when it has a
-kernel without WG a generic netlink family disappears, the later ones
-get different IDs, and the issue no longer happens since the ID is now
-no longer valid or hitting some completely different code path ...
+[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
 
-johannes
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
+
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/input/mouse/sentelic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index 1d6010d463e2c..022a8cb58a066 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -454,7 +454,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
+ 
+ 	fsp_reg_write_enable(psmouse, false);
+ 
+-	return count;
++	return retval;
+ }
+ 
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
+-- 
+2.25.1
+
+
 
