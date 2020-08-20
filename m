@@ -2,116 +2,136 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2567C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961C5C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8192080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:03:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="KwsteLEU"
+	by mail.kernel.org (Postfix) with ESMTP id 6D1EB2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 08:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597910705;
+	bh=OWWu+MjMbXHrGQztQRN2ylfscy+5B8mChqzjsAWtscU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=zGG0tcr7klCOPvwFfWKyZJtQ//xVjX6Xy4XZ/sa+glP/YR1w/bzSi8bG9G5FcWW0R
+	 8mi6BVkmaXBEvhnQCHTp0ooLFf5mlUIM/l8C+88lmbr/cuHGA/vGsmSr8WarRbU9H0
+	 w+zg7DeSO7MQQlUI4VkSc7+O1z7+GipyXdWTqJtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725916AbgHTIDd (ORCPT
+        id S1726749AbgHTIFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 04:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgHTIDQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 04:03:16 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 656BAC061757
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:03:15 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id c16so1375098ejx.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 01:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=javigon-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=R8fk87r2NB5AfCq6Eih8WnPcjOrj6NaIDnoUfvFvZuc=;
-        b=KwsteLEUTu5af/PUU3LB9WbBpqWYT9Or3Fm6fZFPCrqnKu2VPmUx8Ie6wDvdE0pNKe
-         Z7/viAz840rUFRXrziTkhOYiQej7+UDJYB9rMBcFujtp5Ywv2qEV9GaenWvdfxqmNn8x
-         yIU84VtWVRR3mCdtC4Yg8RHo2YRwCt+piymIaJ/+DQwDUUNSsqhOv1HuBYBlOGZuV4hs
-         22fnLpHR+SeeUPOp4QAJbjIqRm8zw9W06+KE/I0bkc4JI9HDwi3zGWitpfVL4g3r1XMk
-         C5vKm72BxyaM6Hk/goLK8oNZtuyPkRR0gDmvuae0WmpW0WynR5oCjBiAe2l4SlqdavQr
-         kcLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R8fk87r2NB5AfCq6Eih8WnPcjOrj6NaIDnoUfvFvZuc=;
-        b=jdzfqQTzsZz2ZV4JbOq/oxUozq0phILBKd4xzZMo2BNkzSznvjYTeDIJ+qOw3EBzHM
-         XZbwvkbl3G/fDjVs4gLKWy6CEU8J+xiudAQohuWT8KToD1WtpYvKnWaWzAS+lDvxE42y
-         LZn12GjIhBJhbKJ/LRjZc2NKa0sqee6jJDBKo6TTiZxqNRUMEwZ9zm5TcJ64d3lFlMTO
-         D91BF3cqHLkUbcCXomygVzCoonLI1TCGY71r+kM2ohnuN6AjNubUige6LthaUiW5w5vA
-         7PTu2sSC8aebsjXeIfixu9OwMwQUUazq5OQYirlWJVY8V7WaF4SHZd36KF/UK4v2psCi
-         8X0w==
-X-Gm-Message-State: AOAM530Wh6VK1hLt7qN/2sH3tqU9Yk9w0IzI1YpleZIoy0hY73LlgJ0j
-        CXC92683cPUTZDqlvOsrLpcROg==
-X-Google-Smtp-Source: ABdhPJxaazq3f/bU/Ux+ct20z483SNcc8H8VttXDhliGkBkB3jKQqOtusyU3lgxf80JjEr9OoII+bA==
-X-Received: by 2002:a17:906:9592:: with SMTP id r18mr1989603ejx.464.1597910593863;
-        Thu, 20 Aug 2020 01:03:13 -0700 (PDT)
-Received: from localhost ([194.62.217.57])
-        by smtp.gmail.com with ESMTPSA id v7sm890198edd.48.2020.08.20.01.03.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 01:03:13 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 10:03:12 +0200
-From:   Javier Gonzalez <javier@javigon.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, david.fugate@linux.intel.com,
-        Kanchan Joshi <joshi.k@samsung.com>,
-        "kbusch@kernel.org" <kbusch@kernel.org>,
-        "Damien.LeMoal@wdc.com" <Damien.LeMoal@wdc.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "johannes.thumshirn@wdc.com" <johannes.thumshirn@wdc.com>,
-        Nitesh Shetty <nj.shetty@samsung.com>,
-        SelvaKumar S <selvakuma.s1@samsung.com>
-Subject: Re: [PATCH 2/2] nvme: add emulation for zone-append
-Message-ID: <20200820080312.oxsnsedn6rqf3rcx@mpHalley.local>
-References: <20200818052936.10995-1-joshi.k@samsung.com>
- <CGME20200818053256epcas5p46d0b66b3702192eb6617c8bba334c15f@epcas5p4.samsung.com>
- <20200818052936.10995-3-joshi.k@samsung.com>
- <20200818071249.GB2544@lst.de>
- <b52854fe11640a5a5f54e08b1d3c7a556f97aad5.camel@linux.intel.com>
- <9fa64efe-8477-5d33-20ed-9619a9fe8d70@kernel.dk>
- <20200820063719.q6wftb23op45wigk@MacBook-Pro.localdomain>
- <20200820065250.GA6885@lst.de>
+        Thu, 20 Aug 2020 04:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbgHTIEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 04:04:52 -0400
+Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 494C22080C;
+        Thu, 20 Aug 2020 08:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597910691;
+        bh=OWWu+MjMbXHrGQztQRN2ylfscy+5B8mChqzjsAWtscU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=h5b1/133ACDgHCMmw6/rHv5Gql/4zGLxnABbEKYeU9N378GO55Fy4cGxpFyfiCyTc
+         WwVI3HJOWwe4FuMDjQEAsUTVpHVI5X8qscPaThxTdaYlForCPtCHOG8P/p6r+Lu+8p
+         CMIQRH9B5IFg3ngYjdu3Dyp2r35gyzgNbeRNFh+w=
+Date:   Thu, 20 Aug 2020 10:04:40 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxarm@huawei.com, mauro.chehab@huawei.com,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bogdan Togorean <bogdan.togorean@analog.com>,
+        Liwei Cai <cailiwei@hisilicon.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinliang Liu <xinliang.liu@linaro.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Wanchun Zheng <zhengwanchun@hisilicon.com>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        BPF Mailing List <bpf@vger.kernel.org>,
+        Xiubin Zhang <zhangxiubin1@huawei.com>,
+        linux-media <linux-media@vger.kernel.org>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Rob Clark <robdclark@chromium.org>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Liuyao An <anliuyao@huawei.com>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>, Wei Xu <xuwei5@hisilicon.com>,
+        Rongrong Zou <zourongrong@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Network Development <netdev@vger.kernel.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Chen Feng <puck.chen@hisilicon.com>
+Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
+Message-ID: <20200820100440.2d30dc02@coco.lan>
+In-Reply-To: <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+References: <cover.1597833138.git.mchehab+huawei@kernel.org>
+        <CALAqxLU3bt6fT4nGHZFSnzyQq4xJo2On=c_Oa9ONED9-jhaFgw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200820065250.GA6885@lst.de>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.08.2020 08:52, Christoph Hellwig wrote:
->On Thu, Aug 20, 2020 at 08:37:19AM +0200, Javier Gonzalez wrote:
->> We will stop pushing for this emulation. We have a couple of SSDs where
->> we disabled Append, we implemented support for them, and we wanted to
->> push the changes upstream. That's it. This is no politics not a
->> conspiracy against the current ZNS spec. We spent a lot of time working
->> on this spec and are actually doing a fair amount of work to support
->> Append other places in the stack. In any case, the fuzz stops here.
->
->FYI, from knowing your personally I'm pretty confident you are not
->part of a conspiracy and you are just doing your best given the context,
->and I appreciate all your work!
+Em Wed, 19 Aug 2020 14:36:52 -0700
+John Stultz <john.stultz@linaro.org> escreveu:
 
-Thanks Christoph.
+> On Wed, Aug 19, 2020 at 4:46 AM Mauro Carvalho Chehab
+> <mchehab+huawei@kernel.org> wrote:
+> > So, IMO, the best is to keep it on staging for a while, until those
+> > remaining bugs gets solved.
+> >
+> > I added this series, together with the regulator driver and
+> > a few other patches (including a hack to fix a Kernel 5.8
+> > regression at WiFi ) at:
+> >
+> >         https://gitlab.freedesktop.org/mchehab_kernel/hikey-970/-/commi=
+ts/master =20
+>=20
+> Sorry, one more small request: Could you create a branch that only has
+> the DRM driver changes in it?
+>=20
+> The reason I ask, is that since the HiKey960 isn't affected by the
+> majority of the problems you listed as motivation for going through
+> staging. So if we can validate that your tree works fine on HiKey960,
+> the series can be cleaned up and submitted properly upstream to enable
+> that SoC, and the outstanding 970 issues can be worked out afterwards
+> against mainline.
 
->
->I'm a lot less happy about thinks that happen in other groups not
->involving you directly, and I'm still pretty mad at how the games were
->played there, and especially other actors the seem to be reading the
->list here, and instead of taking part in the discussion are causing fuzz
->in completely unrelated venues.
+Well, if support for HiKey 960 is OK, I guess what we can do is to not=20
+push the patch with DT bindings for hikey970. We should probably fix
+the color swap thing at the driver first.
 
-Yes. Hopefully, we will start keeping things separated and using this
-list for Linux, technical conversations only.
+=46rom my side, provided that the history is preserved, I don't mind
+if this is merged:
 
+- via staging tree;
+- at dri-devel tree;
+- or having a the historic patchsets merged at /staging, with
+  a follow up patch moving it from staging/ into /gpu/drm/.
+
+Thanks,
+Mauro
