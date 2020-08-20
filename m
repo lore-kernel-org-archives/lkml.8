@@ -2,145 +2,82 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B288DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F39C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89ED8206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:24:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QT6mSW+J"
+	by mail.kernel.org (Postfix) with ESMTP id 41F42206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597937115;
+	bh=Rr8BadVQmc+yhuxW6996EN9N6bisFQ+xqkh4fdqJ/nI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JJ+Yct6SteSX3Bkr7IQ0DoTXKO66vVp/v41nHnHOQ0iQwatC3WTnA1m1zLSHto3fa
+	 voMt3oW6IXyjep1eYm7lL9y/mqXEZhvAHZ56zz5mh+gn+8CLqQI3QPRJA9HsGpmOLE
+	 GASbUTRqpQjuYHQYZwBAXu0iA+9EHK/y/9764Km4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgHTPYs (ORCPT
+        id S1729070AbgHTPZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:24:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728433AbgHTPYm (ORCPT
+        Thu, 20 Aug 2020 11:25:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39337 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728433AbgHTPZC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:24:42 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31810C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:24:42 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id q9so1756330oth.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:24:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/gFfZIvWRZ4wg4R/uBBAuZhKNYjvYxxfxHZSYVxIT+Q=;
-        b=QT6mSW+Jn8IOX6L4osdroRSC5BZInGyhbEx/g8kE7d9yyhODCp+9Q2hmSjS47By6XX
-         KQVwtChOySNvSJCdQ/o6Dj+2NPYS2WmSLGsHnIfgA5TYlPFL+zYXJc31maYK/uiz+soR
-         tnLx2iR5RsQBpnrzAzpIHMUY5iWHi849WT3NQfM63n4BYFdJCuj0OpjlSwLxfyzcsLNu
-         ZuGqZIZ75TTpoQvBSbPbCMt3ldbA6Kq3UZfZCTVcdhG3+D3KOdX3LrtdZM5ELN+4uRV0
-         oMQ56H35xZoXUDPWMRPms/prbldwAQEA5hgmAG0n5wZg41Re6bMqd2eLJxh2dErw6/ka
-         2vnQ==
+        Thu, 20 Aug 2020 11:25:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g75so1939695wme.4;
+        Thu, 20 Aug 2020 08:25:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/gFfZIvWRZ4wg4R/uBBAuZhKNYjvYxxfxHZSYVxIT+Q=;
-        b=K9pj9/y7sMLDri8hRrFheeye9pXjGL5IdApwQLsUOvTRVXCb/qsDSWYX2pFcjob8eI
-         Zn74db19scHwJKzI32S0UTw+do5H3t2IkHVVfLyAAkauDFkkeM2cJvN9vOGnl6/YoH8L
-         oSCH9QFD2yzLd4KMs7M+6NQksq/URgQ5YPn/ZwIANbEnxeVd8XTj/kjHmCs04x0uElB9
-         eF7G4lPNGnqk87f5saw13j3iGSfrze73ltTV1vqmEEQ5/L0M5J7a8gy19HsFZ9AhzBAp
-         tN9GlSwEAoVM/nevZzCj+nDpwP+cwnVRIZcIqH/bXnw+GINP9pAU4M8s2J3qKzH18AuF
-         ZBFg==
-X-Gm-Message-State: AOAM531vT0K8WKxGeZQn2h45/cNq6YK3B0yA4StNQ9Ur52mtvmqNb3uN
-        TAV/RI2eVtK4QTkemZo1uJQjhjjuoXGEaU43QWQznQ==
-X-Google-Smtp-Source: ABdhPJwh8kb5Z50Vf5lSdANxMDzBzkJTMkmz+R8SwNsqzMM0RY19OYAksQesFFwBCai3OIQWl/QOmwdqcrz0afkW7pM=
-X-Received: by 2002:a9d:7f8e:: with SMTP id t14mr2620491otp.63.1597937081310;
- Thu, 20 Aug 2020 08:24:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jna++P8ibJUzY4rXBqsDRJ76r2GrW9IXjOzwbfnLiaU=;
+        b=Tm7kRo+C19QeR8Pm6PpIzqDyoFxnVhjN7Hz63D6e6lKwZnr6k9sNoGtzJractJh4ad
+         D2PNJbi/fV7HsMwal0VwsS60PYzgk/dLpwRZb9A8bQ19xKphk436S5G5H5klkz5zYUHJ
+         rAkPLZNcR6zcBnG6T8QDbn4i6tacVQi4fTRYq2A0eDOY5u3D6b2+YyR/hj0cyXTTmVbh
+         ApwTZIIr1AjlG7XNtC84/LbHirwzEll84X+SRmokjqXWrOLVzNkacXUejMxun6LeIkuL
+         y5sq1W+Bgl9hZ1yU44H7TWPtNsK4I5dVg6xjZwukEQDnRJJkTS/N0d9mFVJMqKtz57WX
+         QRHQ==
+X-Gm-Message-State: AOAM531U6ASPnOvJpWrSiNpXw1BZ9F7SXGpOBmyiajaWee3w4/XRPXqZ
+        NG7V6jVpjMKEG16WJjhqpDM=
+X-Google-Smtp-Source: ABdhPJxHoozIQKOovfpdgjFEUuF8vXf4rcux9Gapm/Z8yZh3pdQKppbCBoVdTwT2wswiFa0z+kTx5g==
+X-Received: by 2002:a1c:ed0e:: with SMTP id l14mr3915978wmh.140.1597937100925;
+        Thu, 20 Aug 2020 08:25:00 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id k204sm5178775wma.21.2020.08.20.08.24.59
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 08:25:00 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 17:24:58 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH] memory: tegra: Correct shift value of apew
+Message-ID: <20200820152458.GA17144@kozik-lap>
+References: <20200818095121.13645-1-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-References: <20952e3e-6b06-11e4-aff7-07dfbdc5ee18@infradead.org>
- <810f1b0e-0adf-c316-f23c-172338f9ef0a@linux.intel.com> <CAHp75VcJCjJJvbkSiGHC+3_shWRwoqeZHE2KNDLQBjneW=02dg@mail.gmail.com>
- <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-In-Reply-To: <2b14b6be-a031-a28b-6585-8307d2fdae21@infradead.org>
-From:   Jesse Barnes <jsbarnes@google.com>
-Date:   Thu, 20 Aug 2020 08:24:30 -0700
-Message-ID: <CAJmaN=khV6By1e8LnkbK+mgFweqnmXcu6hhjDzyD1uiFASC2Rg@mail.gmail.com>
-Subject: Re: [PATCH] x86/pci: fix intel_mid_pci.c build error when ACPI is not enabled
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Len Brown <lenb@kernel.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200818095121.13645-1-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 9:08 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> On 8/13/20 1:55 PM, Andy Shevchenko wrote:
-> > On Thu, Aug 13, 2020 at 11:31 PM Arjan van de Ven <arjan@linux.intel.co=
-m> wrote:
-> >> On 8/13/2020 12:58 PM, Randy Dunlap wrote:
-> >>> From: Randy Dunlap <rdunlap@infradead.org>
-> >>>
-> >>> Fix build error when CONFIG_ACPI is not set/enabled by adding
-> >>> the header file <asm/acpi.h> which contains a stub for the function
-> >>> in the build error.
-> >>>
-> >>> ../arch/x86/pci/intel_mid_pci.c: In function =E2=80=98intel_mid_pci_i=
-nit=E2=80=99:
-> >>> ../arch/x86/pci/intel_mid_pci.c:303:2: error: implicit declaration of=
- function =E2=80=98acpi_noirq_set=E2=80=99; did you mean =E2=80=98acpi_irq_=
-get=E2=80=99? [-Werror=3Dimplicit-function-declaration]
-> >>>    acpi_noirq_set();
-> >
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > Thanks!
->
-> also:
-> Reviewed-by: Jesse Barnes <jsbarnes@google.com>
->
-> >
-> >>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> >>> Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >>> Cc: Len Brown <lenb@kernel.org>
-> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>> Cc: Jesse Barnes <jsbarnes@google.com>
-> >>> Cc: Arjan van de Ven <arjan@linux.intel.com>
-> >>> Cc: linux-pci@vger.kernel.org
-> >>> ---
-> >>> Found in linux-next, but applies to/exists in mainline also.
-> >>>
-> >>> Alternative.1: X86_INTEL_MID depends on ACPI
-> >>> Alternative.2: drop X86_INTEL_MID support
-> >>
-> >> at this point I'd suggest Alternative 2; the products that needed that=
- (past tense, that technology
-> >> is no longer need for any newer products) never shipped in any form wh=
-ere a 4.x or 5.x kernel could
-> >> work, and they are also all locked down...
-> >
-> > This is not true. We have Intel Edison which runs nicely on vanilla
-> > (not everything, some is still requiring a couple of patches, but most
-> > of it works out-of-the-box).
-> >
-> > And for the record, I have been working on removing quite a pile of
-> > code (~13kLOCs to the date IIRC) in MID area. Just need some time to
-> > fix Edison watchdog for that.
->
->
-> I didn't see a consensus on this patch, although Andy says it's still nee=
-ded,
-> so it shouldn't be removed (yet). Maybe his big removal patch can remove =
-it
-> later. For now can we just fix the build error?
+On Tue, Aug 18, 2020 at 02:51:21AM -0700, Nicolin Chen wrote:
+> According to Tegra X1 (Tegra210) TRM, the APEW field is between
+> [23:16] so the shift bit for apew should be 16 accordingly.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  drivers/memory/tegra/tegra210.c | 2 +-
 
+Thanks, applied to drivers/memory.
 
-Yeah I think it makes sense to land it.  Doesn't get in the way of a
-future removal and fixes a build error in the meantime.
+Best regards,
+Krzysztof
 
-Jesse
