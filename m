@@ -2,51 +2,51 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96553C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 305B0207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FCB20855
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916441;
-	bh=qIeXM+NKCoFlMSstjLORdhuyqn+uoFkSc/8KPoObLQc=;
+	s=default; t=1597916445;
+	bh=kWnBaufKUqvCtbG/HZ7TugvbLVyRRBhbOYdabkB1sKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FGWCYMJSFMEJIcQ8GgG3jy91T9R2B2HangqSFoA5ysehwo/JXsWr44/7FBKHoTYPT
-	 yTdlE8RhEM9vTPTWvhUz96xGnCuCWk+uiyFXpOWdDy0Oz+8loW1hcsjgKKEvJzs1sz
-	 W6u/SV3N1OIy9XSYmZ9eRSV85YFR81FKYe9avsyU=
+	b=ymG1mqhYB1i78UlB/Uxw7eoBqPCCTVpAtekDPn/HxX9Q/gDXzkjLurXrSvVglwdKx
+	 KeTMiaZfi8R7YyKTOcRnOom9r49uDRcosU6Z5HUtXX/zfDRF8tMlJaWkTkHExifWkv
+	 iCwX5OVcRaecIZc/A0W9FN5sLLbam/3fOCOjwGXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgHTJkg (ORCPT
+        id S1728562AbgHTJkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:40:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60724 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729025AbgHTJkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:40:23 -0400
+        id S1728092AbgHTJk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:40:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C3572075E;
-        Thu, 20 Aug 2020 09:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B516207DE;
+        Thu, 20 Aug 2020 09:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916423;
-        bh=qIeXM+NKCoFlMSstjLORdhuyqn+uoFkSc/8KPoObLQc=;
+        s=default; t=1597916425;
+        bh=kWnBaufKUqvCtbG/HZ7TugvbLVyRRBhbOYdabkB1sKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RrGy5rCZWtPM3zQj0nzFIocV5C8Oox4coEzF+9VUGDwo23YUYCAxwgsdkHjxJOqbn
-         kEm1G6r3tfoaH5ZtuChnbeYHk9jh3H6w+gmkF8j+cWiG99HSWhuRq50m3eZdklMXry
-         F6NE6Hh+LkRR0GNJwAaCNb4HlXrioxy7t9gzdLY0=
+        b=sJFmLOTczel5mXZp09kp30eN0IeRjIKeutUylYvc/Y67UCsSZoxSdM3o4BENSvjgm
+         UAYYbCpzBBG8BFcDhlzroue2JTXbuWeFuZJLihLdVbAOVr+tzrvAiOXulVD4RuEqxo
+         YSBR4pqcdVpRxHy7q4x9gU8vsX2yh9PoCjQ1vL50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 121/204] devres: keep both device name and resource name in pretty name
-Date:   Thu, 20 Aug 2020 11:20:18 +0200
-Message-Id: <20200820091612.339749742@linuxfoundation.org>
+        stable@vger.kernel.org, Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.7 093/204] gfs2: Never call gfs2_block_zero_range with an open transaction
+Date:   Thu, 20 Aug 2020 11:19:50 +0200
+Message-Id: <20200820091610.978944493@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,114 +59,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 35bd8c07db2ce8fd2834ef866240613a4ef982e7 ]
+commit 70499cdfeb3625c87eebe4f7a7ea06fa7447e5df upstream.
 
-Sometimes debugging a device is easiest using devmem on its register
-map, and that can be seen with /proc/iomem. But some device drivers have
-many memory regions. Take for example a networking switch. Its memory
-map used to look like this in /proc/iomem:
+Before this patch, some functions started transactions then they called
+gfs2_block_zero_range. However, gfs2_block_zero_range, like writes, can
+start transactions, which results in a recursive transaction error.
+For example:
 
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : sys
-    1fc030000-1fc03ffff : rew
-    1fc060000-1fc0603ff : s2
-    1fc070000-1fc0701ff : devcpu_gcb
-    1fc080000-1fc0800ff : qs
-    1fc090000-1fc0900cb : ptp
-    1fc100000-1fc10ffff : port0
-    1fc110000-1fc11ffff : port1
-    1fc120000-1fc12ffff : port2
-    1fc130000-1fc13ffff : port3
-    1fc140000-1fc14ffff : port4
-    1fc150000-1fc15ffff : port5
-    1fc200000-1fc21ffff : qsys
-    1fc280000-1fc28ffff : ana
+do_shrink
+   trunc_start
+      gfs2_trans_begin <------------------------------------------------
+         gfs2_block_zero_range
+            iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
+               iomap_apply ... iomap_zero_range_actor
+                  iomap_begin
+                     gfs2_iomap_begin
+                        gfs2_iomap_begin_write
+                  actor (iomap_zero_range_actor)
+		     iomap_zero
+			iomap_write_begin
+			   gfs2_iomap_page_prepare
+			      gfs2_trans_begin <------------------------
 
-But after the patch in Fixes: was applied, the information is now
-presented in a much more opaque way:
+This patch reorders the callers of gfs2_block_zero_range so that they
+only start their transactions after the call. It also adds a BUG_ON to
+ensure this doesn't happen again.
 
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5
-    1fc030000-1fc03ffff : 0000:00:00.5
-    1fc060000-1fc0603ff : 0000:00:00.5
-    1fc070000-1fc0701ff : 0000:00:00.5
-    1fc080000-1fc0800ff : 0000:00:00.5
-    1fc090000-1fc0900cb : 0000:00:00.5
-    1fc100000-1fc10ffff : 0000:00:00.5
-    1fc110000-1fc11ffff : 0000:00:00.5
-    1fc120000-1fc12ffff : 0000:00:00.5
-    1fc130000-1fc13ffff : 0000:00:00.5
-    1fc140000-1fc14ffff : 0000:00:00.5
-    1fc150000-1fc15ffff : 0000:00:00.5
-    1fc200000-1fc21ffff : 0000:00:00.5
-    1fc280000-1fc28ffff : 0000:00:00.5
-
-That patch made a fair comment that /proc/iomem might be confusing when
-it shows resources without an associated device, but we can do better
-than just hide the resource name altogether. Namely, we can print the
-device name _and_ the resource name. Like this:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5 sys
-    1fc030000-1fc03ffff : 0000:00:00.5 rew
-    1fc060000-1fc0603ff : 0000:00:00.5 s2
-    1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-    1fc080000-1fc0800ff : 0000:00:00.5 qs
-    1fc090000-1fc0900cb : 0000:00:00.5 ptp
-    1fc100000-1fc10ffff : 0000:00:00.5 port0
-    1fc110000-1fc11ffff : 0000:00:00.5 port1
-    1fc120000-1fc12ffff : 0000:00:00.5 port2
-    1fc130000-1fc13ffff : 0000:00:00.5 port3
-    1fc140000-1fc14ffff : 0000:00:00.5 port4
-    1fc150000-1fc15ffff : 0000:00:00.5 port5
-    1fc200000-1fc21ffff : 0000:00:00.5 qsys
-    1fc280000-1fc28ffff : 0000:00:00.5 ana
-
-Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20200601095826.1757621-1-olteanv@gmail.com
+Fixes: 2257e468a63b ("gfs2: implement gfs2_block_zero_range using iomap_zero_range")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- lib/devres.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ fs/gfs2/bmap.c |   69 ++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 39 insertions(+), 30 deletions(-)
 
-diff --git a/lib/devres.c b/lib/devres.c
-index 6ef51f159c54b..ca0d28727ccef 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
+--- a/fs/gfs2/bmap.c
++++ b/fs/gfs2/bmap.c
+@@ -1351,9 +1351,15 @@ int gfs2_extent_map(struct inode *inode,
+ 	return ret;
+ }
+ 
++/*
++ * NOTE: Never call gfs2_block_zero_range with an open transaction because it
++ * uses iomap write to perform its actions, which begin their own transactions
++ * (iomap_begin, page_prepare, etc.)
++ */
+ static int gfs2_block_zero_range(struct inode *inode, loff_t from,
+ 				 unsigned int length)
  {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
-+	char *pretty_name;
++	BUG_ON(current->journal_info);
+ 	return iomap_zero_range(inode, from, length, NULL, &gfs2_iomap_ops);
+ }
  
- 	BUG_ON(!dev);
+@@ -1414,6 +1420,16 @@ static int trunc_start(struct inode *ino
+ 	u64 oldsize = inode->i_size;
+ 	int error;
  
-@@ -129,7 +130,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
++	if (!gfs2_is_stuffed(ip)) {
++		unsigned int blocksize = i_blocksize(inode);
++		unsigned int offs = newsize & (blocksize - 1);
++		if (offs) {
++			error = gfs2_block_zero_range(inode, newsize,
++						      blocksize - offs);
++			if (error)
++				return error;
++		}
++	}
+ 	if (journaled)
+ 		error = gfs2_trans_begin(sdp, RES_DINODE + RES_JDATA, GFS2_JTRUNC_REVOKES);
+ 	else
+@@ -1427,19 +1443,10 @@ static int trunc_start(struct inode *ino
  
- 	size = resource_size(res);
+ 	gfs2_trans_add_meta(ip->i_gl, dibh);
  
--	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-+	if (res->name)
-+		pretty_name = devm_kasprintf(dev, GFP_KERNEL, "%s %s",
-+					     dev_name(dev), res->name);
+-	if (gfs2_is_stuffed(ip)) {
++	if (gfs2_is_stuffed(ip))
+ 		gfs2_buffer_clear_tail(dibh, sizeof(struct gfs2_dinode) + newsize);
+-	} else {
+-		unsigned int blocksize = i_blocksize(inode);
+-		unsigned int offs = newsize & (blocksize - 1);
+-		if (offs) {
+-			error = gfs2_block_zero_range(inode, newsize,
+-						      blocksize - offs);
+-			if (error)
+-				goto out;
+-		}
 +	else
-+		pretty_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-+	if (!pretty_name)
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+
-+	if (!devm_request_mem_region(dev, res->start, size, pretty_name)) {
- 		dev_err(dev, "can't request region for resource %pR\n", res);
- 		return IOMEM_ERR_PTR(-EBUSY);
+ 		ip->i_diskflags |= GFS2_DIF_TRUNC_IN_PROG;
+-	}
+ 
+ 	i_size_write(inode, newsize);
+ 	ip->i_inode.i_mtime = ip->i_inode.i_ctime = current_time(&ip->i_inode);
+@@ -2448,25 +2455,7 @@ int __gfs2_punch_hole(struct file *file,
+ 	loff_t start, end;
+ 	int error;
+ 
+-	start = round_down(offset, blocksize);
+-	end = round_up(offset + length, blocksize) - 1;
+-	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
+-	if (error)
+-		return error;
+-
+-	if (gfs2_is_jdata(ip))
+-		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
+-					 GFS2_JTRUNC_REVOKES);
+-	else
+-		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
+-	if (error)
+-		return error;
+-
+-	if (gfs2_is_stuffed(ip)) {
+-		error = stuffed_zero_range(inode, offset, length);
+-		if (error)
+-			goto out;
+-	} else {
++	if (!gfs2_is_stuffed(ip)) {
+ 		unsigned int start_off, end_len;
+ 
+ 		start_off = offset & (blocksize - 1);
+@@ -2489,6 +2478,26 @@ int __gfs2_punch_hole(struct file *file,
+ 		}
  	}
--- 
-2.25.1
-
+ 
++	start = round_down(offset, blocksize);
++	end = round_up(offset + length, blocksize) - 1;
++	error = filemap_write_and_wait_range(inode->i_mapping, start, end);
++	if (error)
++		return error;
++
++	if (gfs2_is_jdata(ip))
++		error = gfs2_trans_begin(sdp, RES_DINODE + 2 * RES_JDATA,
++					 GFS2_JTRUNC_REVOKES);
++	else
++		error = gfs2_trans_begin(sdp, RES_DINODE, 0);
++	if (error)
++		return error;
++
++	if (gfs2_is_stuffed(ip)) {
++		error = stuffed_zero_range(inode, offset, length);
++		if (error)
++			goto out;
++	}
++
+ 	if (gfs2_is_jdata(ip)) {
+ 		BUG_ON(!current->journal_info);
+ 		gfs2_journaled_truncate_range(inode, offset, length);
 
 
