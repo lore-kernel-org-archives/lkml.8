@@ -1,67 +1,54 @@
 Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=BAYES_20,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DCFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB61C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0605D206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D039C207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:10:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgHTWKw (ORCPT
+        id S1728417AbgHTWK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:10:52 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:58227 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgHTWKv (ORCPT
+        Thu, 20 Aug 2020 18:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727090AbgHTWK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:10:51 -0400
-X-Originating-IP: 90.66.108.79
-Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F1BF1240003;
-        Thu, 20 Aug 2020 22:10:48 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Victor Ding <victording@google.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, Alessandro Zummo <a.zummo@towertech.it>
-Subject: Re: [PATCH v2] rtc: cmos: zero-init wkalrm when reading from CMOS
-Date:   Fri, 21 Aug 2020 00:10:48 +0200
-Message-Id: <159796143347.2239022.2687430267906057170.b4-ty@bootlin.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200814191654.v2.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
-References: <20200814191654.v2.1.Iaf7638a2f2a87ff68d85fcb8dec615e41340c97f@changeid>
+        Thu, 20 Aug 2020 18:10:57 -0400
+X-Greylist: delayed 21934 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 20 Aug 2020 15:10:57 PDT
+Received: from hwsrv-765588.hostwindsdns.com (zxv.publicvm.com [IPv6:2607:5500:3000:3de::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A0A7C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:10:57 -0700 (PDT)
+Received: from WIN-UFVMAPBRAME (localhost [IPv6:::1])
+        by hwsrv-765588.hostwindsdns.com (Postfix) with ESMTP id E864B56BCE0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 15:12:41 +0000 (UTC)
+Message-ID: <039769f4-44063-b3946754760185@win-ufvmapbrame>
+Reply-To: "Michael Abert" <michael.abert@pfl-kredit.com>
+From:   "Michael Abert" <info@zxv.publicvm.com>
+To:     linux-kernel@vger.kernel.org
+Subject: Hallo 8/20/2020  4:12:41 PM
+Date:   Thu, 20 Aug 2020 16:11:41 +0100
 MIME-Version: 1.0
+Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
+X-Priority: 3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Aug 2020 19:17:30 +1000, Victor Ding wrote:
-> cmos_read_alarm() may leave certain fields of a struct rtc_wkalrm
-> untouched; therefore, these fields contain garbage if not properly
-> initialized, leading to inconsistent values when converting into
-> time64_t. This patch to zero initialize the struct before calling
-> cmos_read_alarm().
-> 
-> Note that this patch is not intended to produce a correct time64_t, it
-> is only to produce a consistent value. In the case of suspend/resume, a
-> correct time64_t is not necessary; a consistent value is sufficient to
-> correctly perform an equality test for t_current_expires and
-> t_saved_expires. Logic to deduce a correct time64_t is expensive and
-> hence should be avoided.
+Hallo linux-kernel@vger.kernel.org
 
-Applied, thanks!
+Sehr geehrte Damen und Herren
 
-[1/1] rtc: cmos: zero-init wkalrm when reading from CMOS
-      commit: c254bcd7231a3eeafc453f6ee3a483a2e7ff486e
+Wir gewähren Darlehen in Höhe von 10.000,00 € bis 5 Mio. € mit einem Zinssatz von 2%
 
-Best regards,
--- 
-Alexandre Belloni <alexandre.belloni@bootlin.com>
+Die Zinsen und die Laufzeiten sind sehr attraktiv (2%) und in punkto Sicherheit beschränken wir uns auf das absolute Minimum. Interessiert? Dann kontaktieren Sie uns doch für weitere Informationen per e-mail
+
+Michael Abert.
+
