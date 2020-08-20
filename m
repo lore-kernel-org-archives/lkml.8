@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0C71C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69B0F2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D652207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882372;
-	bh=Y+kpkmPLL8WjooRROXARVVZ8iA84IVdF6B0u8hywCAQ=;
+	s=default; t=1597882376;
+	bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0K8xaEFlrFaTXhbnzEkYhp7j5bYfvwv0BafWbrx+azdpSHOtUytD713kqW7ULqQD
-	 CD4IRwZieSfvzGRZ6czJ6/OuMiwc99xYdadvnHhkxNnMkTI/OZzmNKXV6NwimXWgGV
-	 mPy+p084oV8i33bL96kvMA0TWIYEqE9kFb8cS1wQ=
+	b=x3nr+OqrngJ1EVHalov/QAt15OTHeEPXoDVt9H8dluSbA/sde/NNObp06K5cTXoae
+	 jSYJQk9t/nuNu3JgumVlsczvkVMEhxzp/JMRTt0OT2CoLl4KifJN8qMFb5i41ahwsb
+	 KzgKBQMxFPU0bY4ziYaLrwE+dq1E6ZnefEMZu3SU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgHTABm (ORCPT
+        id S1726939AbgHTABl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:01:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726863AbgHTAB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:01:28 -0400
+        id S1726854AbgHTAB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:01:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62190207FB;
-        Thu, 20 Aug 2020 00:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A8A62075E;
+        Thu, 20 Aug 2020 00:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881688;
-        bh=Y+kpkmPLL8WjooRROXARVVZ8iA84IVdF6B0u8hywCAQ=;
+        s=default; t=1597881686;
+        bh=Sg+HY/SjwdFSUsZ8B4+SllnIJRTPqzEqXtxp20azwPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gZqPtsZYJlwjziUt8SDt7GU27LTo68VY2dgYLGQnEIONFmzkzwoAdIrhUDfstGXYa
-         SXjVs5jU9p0wkI5HCECm0mWyqJkjVcBXlWfnCCLR5RDdT73kK1STLf97zpG772Q2BY
-         RnrMjv4tEoBzWO2ZQK3rdetabOVcK3bbR9Zp5iA0=
+        b=Lg46KyNhg2LJow8xoGHNE6qd2fHXfN9OP/JLHb2oeh8EYVrgSZMdjLxAStS0N2El5
+         KJqppDjldLMQ6IYySFLQKTtxbjssGBrh93o+1Cc1+yyCR0/25mLCnYWRppJ5cGOwdA
+         phTQn5UZNn4aayGiBE82zA/L/oO1Z1jAg0pHChhs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Zhiguo Niu <Zhiguo.Niu@unisoc.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: [PATCH AUTOSEL 5.8 08/27] f2fs: should avoid inode eviction in synchronous path
-Date:   Wed, 19 Aug 2020 20:00:57 -0400
-Message-Id: <20200820000116.214821-8-sashal@kernel.org>
+Cc:     Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 07/27] media: vpss: clean up resources in init
+Date:   Wed, 19 Aug 2020 20:00:56 -0400
+Message-Id: <20200820000116.214821-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000116.214821-1-sashal@kernel.org>
 References: <20200820000116.214821-1-sashal@kernel.org>
@@ -60,69 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit b0f3b87fb3abc42c81d76c6c5795f26dbdb2f04b ]
+[ Upstream commit 9c487b0b0ea7ff22127fe99a7f67657d8730ff94 ]
 
-https://bugzilla.kernel.org/show_bug.cgi?id=208565
+If platform_driver_register() fails within vpss_init() resources are not
+cleaned up. The patch fixes this issue by introducing the corresponding
+error handling.
 
-PID: 257    TASK: ecdd0000  CPU: 0   COMMAND: "init"
-  #0 [<c0b420ec>] (__schedule) from [<c0b423c8>]
-  #1 [<c0b423c8>] (schedule) from [<c0b459d4>]
-  #2 [<c0b459d4>] (rwsem_down_read_failed) from [<c0b44fa0>]
-  #3 [<c0b44fa0>] (down_read) from [<c044233c>]
-  #4 [<c044233c>] (f2fs_truncate_blocks) from [<c0442890>]
-  #5 [<c0442890>] (f2fs_truncate) from [<c044d408>]
-  #6 [<c044d408>] (f2fs_evict_inode) from [<c030be18>]
-  #7 [<c030be18>] (evict) from [<c030a558>]
-  #8 [<c030a558>] (iput) from [<c047c600>]
-  #9 [<c047c600>] (f2fs_sync_node_pages) from [<c0465414>]
- #10 [<c0465414>] (f2fs_write_checkpoint) from [<c04575f4>]
- #11 [<c04575f4>] (f2fs_sync_fs) from [<c0441918>]
- #12 [<c0441918>] (f2fs_do_sync_file) from [<c0441098>]
- #13 [<c0441098>] (f2fs_sync_file) from [<c0323fa0>]
- #14 [<c0323fa0>] (vfs_fsync_range) from [<c0324294>]
- #15 [<c0324294>] (do_fsync) from [<c0324014>]
- #16 [<c0324014>] (sys_fsync) from [<c0108bc0>]
+Found by Linux Driver Verification project (linuxtesting.org).
 
-This can be caused by flush_dirty_inode() in f2fs_sync_node_pages() where
-iput() requires f2fs_lock_op() again resulting in livelock.
-
-Reported-by: Zhiguo Niu <Zhiguo.Niu@unisoc.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/node.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/media/platform/davinci/vpss.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index 03e24df1c84f5..e61ce7fb0958b 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -1924,8 +1924,12 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
- 				goto continue_unlock;
- 			}
+diff --git a/drivers/media/platform/davinci/vpss.c b/drivers/media/platform/davinci/vpss.c
+index d38d2bbb6f0f8..7000f0bf0b353 100644
+--- a/drivers/media/platform/davinci/vpss.c
++++ b/drivers/media/platform/davinci/vpss.c
+@@ -505,19 +505,31 @@ static void vpss_exit(void)
  
--			/* flush inline_data, if it's async context. */
--			if (do_balance && is_inline_node(page)) {
-+			/* flush inline_data/inode, if it's async context. */
-+			if (!do_balance)
-+				goto write_node;
+ static int __init vpss_init(void)
+ {
++	int ret;
 +
-+			/* flush inline_data */
-+			if (is_inline_node(page)) {
- 				clear_inline_node(page);
- 				unlock_page(page);
- 				flush_inline_data(sbi, ino_of_node(page));
-@@ -1938,7 +1942,7 @@ int f2fs_sync_node_pages(struct f2fs_sb_info *sbi,
- 				if (flush_dirty_inode(page))
- 					goto lock_node;
- 			}
--
-+write_node:
- 			f2fs_wait_on_page_writeback(page, NODE, true, true);
+ 	if (!request_mem_region(VPSS_CLK_CTRL, 4, "vpss_clock_control"))
+ 		return -EBUSY;
  
- 			if (!clear_page_dirty_for_io(page))
+ 	oper_cfg.vpss_regs_base2 = ioremap(VPSS_CLK_CTRL, 4);
+ 	if (unlikely(!oper_cfg.vpss_regs_base2)) {
+-		release_mem_region(VPSS_CLK_CTRL, 4);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_ioremap;
+ 	}
+ 
+ 	writel(VPSS_CLK_CTRL_VENCCLKEN |
+-		     VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++	       VPSS_CLK_CTRL_DACCLKEN, oper_cfg.vpss_regs_base2);
++
++	ret = platform_driver_register(&vpss_driver);
++	if (ret)
++		goto err_pd_register;
++
++	return 0;
+ 
+-	return platform_driver_register(&vpss_driver);
++err_pd_register:
++	iounmap(oper_cfg.vpss_regs_base2);
++err_ioremap:
++	release_mem_region(VPSS_CLK_CTRL, 4);
++	return ret;
+ }
+ subsys_initcall(vpss_init);
+ module_exit(vpss_exit);
 -- 
 2.25.1
 
