@@ -2,55 +2,57 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCD3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF6220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0C5022CB3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929458;
-	bh=hXW5C5tg9bIADkGE/iPp51ZKHJBMTdAvYzZ8FvK89oc=;
+	s=default; t=1597929464;
+	bh=v07Xbj/HWPbOQkiZOboDC1XwxejTbPaUZpj8iwaDbXk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zq71T/+cKDUDoZBONE4KOMK7ZY+3cw2GEyO9+LKuRWjUoJI1I5cNtPn3CTL8RI7G2
-	 LHU72kh2U6hN3T95eRYHwQeUcbSHb9ANh7ebouWYlyKZZ7aVfqGMS4G/n+Fdoj7Yd/
-	 p7rptVt9ppzsd0kCPDvmObEiN80XT1OPmUOBNEtQ=
+	b=h87Gx+/+mYavZaIQdk5MRsRNKcw/Lrkk6lp9vayZK9CMfeB2QkmMUxM3lLoxx6iL9
+	 vQfu5uRD/fnckRskLdZI5hikRFUdare6g71iOdFaWGM1KaB6O9BM2NEaK283RCfOl+
+	 CTm1WJWwfSYb80BvSzMwy/0S7OFFc2+jjJEHuupc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgHTNRG (ORCPT
+        id S1728358AbgHTJep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:17:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:34:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728468AbgHTJfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:11 -0400
+        id S1727034AbgHTJbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE43421775;
-        Thu, 20 Aug 2020 09:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE22A22B49;
+        Thu, 20 Aug 2020 09:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916110;
-        bh=hXW5C5tg9bIADkGE/iPp51ZKHJBMTdAvYzZ8FvK89oc=;
+        s=default; t=1597915892;
+        bh=v07Xbj/HWPbOQkiZOboDC1XwxejTbPaUZpj8iwaDbXk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GAnxio2RzbgvwL/CzWeq7cnayDrV5yFLOBiYbry7JP5lOdZedDWvz95aI4hg++5VA
-         7i0Q5VxM72/aeiwntp88P2p5LvuKH7Mx8EYZhs0GFIi6Ov9FnHmiMMZTPcr/s8bYP/
-         s17v9YBIBhXtnj9oXDabwSOqQnwWx95IcwvUvyho=
+        b=P2vTAywdSM+SObblT6u8PDDFO/sVIYOEGSZ2AUeLrToXZjmd3T52yfmNptKt+wNNL
+         uPBTdLmQWCw5Cuk5ChfQg20hxitb/BNb8hGPYlx1Am9t0hGgnYRkgTLr7VTd2HbH61
+         e+7v9vuiswdV7uB4KHD2HoezHnuMPWb6Y2fIEmvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 015/204] btrfs: stop incremening log_batch for the log root tree when syncing log
-Date:   Thu, 20 Aug 2020 11:18:32 +0200
-Message-Id: <20200820091606.978695084@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 172/232] i2c: rcar: avoid race when unregistering slave
+Date:   Thu, 20 Aug 2020 11:20:23 +0200
+Message-Id: <20200820091621.150029215@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
-References: <20200820091606.194320503@linuxfoundation.org>
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,68 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-commit 28a9579561bcb9082715e720eac93012e708ab94 upstream.
+[ Upstream commit c7c9e914f9a0478fba4dc6f227cfd69cf84a4063 ]
 
-We are incrementing the log_batch atomic counter of the root log tree but
-we never use that counter, it's used only for the log trees of subvolume
-roots. We started doing it when we moved the log_batch and log_write
-counters from the global, per fs, btrfs_fs_info structure, into the
-btrfs_root structure in commit 7237f1833601dc ("Btrfs: fix tree logs
-parallel sync").
+Due to the lockless design of the driver, it is theoretically possible
+to access a NULL pointer, if a slave interrupt was running while we were
+unregistering the slave. To make this rock solid, disable the interrupt
+for a short time while we are clearing the interrupt_enable register.
+This patch is purely based on code inspection. The OOPS is super-hard to
+trigger because clearing SAR (the address) makes interrupts even more
+unlikely to happen as well. While here, reinit SCR to SDBS because this
+bit should always be set according to documentation. There is no effect,
+though, because the interface is disabled.
 
-So just stop doing it for the log root tree and add a comment over the
-field declaration so inform it's used only for log trees of subvolume
-roots.
-
-This patch is part of a series that has the following patches:
-
-1/4 btrfs: only commit the delayed inode when doing a full fsync
-2/4 btrfs: only commit delayed items at fsync if we are logging a directory
-3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
-4/4 btrfs: remove no longer needed use of log_writers for the log root tree
-
-After the entire patchset applied I saw about 12% decrease on max latency
-reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
-ram, using kvm and using a raw NVMe device directly (no intermediary fs on
-the host). The test was invoked like the following:
-
-  mkfs.btrfs -f /dev/sdk
-  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
-  dbench -D /mnt/sdk -t 300 8
-  umount /mnt/dsk
-
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 7b814d852af6 ("i2c: rcar: avoid race when unregistering slave client")
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h    |    1 +
- fs/btrfs/tree-log.c |    1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-rcar.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -1040,6 +1040,7 @@ struct btrfs_root {
- 	struct list_head log_ctxs[2];
- 	atomic_t log_writers;
- 	atomic_t log_commit[2];
-+	/* Used only for log trees of subvolumes, not for the log root tree */
- 	atomic_t log_batch;
- 	int log_transid;
- 	/* No matter the commit succeeds or not*/
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3125,7 +3125,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
- 	btrfs_init_log_ctx(&root_log_ctx, NULL);
+diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
+index 76c615be5acae..9e883474db8ce 100644
+--- a/drivers/i2c/busses/i2c-rcar.c
++++ b/drivers/i2c/busses/i2c-rcar.c
+@@ -866,12 +866,14 @@ static int rcar_unreg_slave(struct i2c_client *slave)
  
- 	mutex_lock(&log_root_tree->log_mutex);
--	atomic_inc(&log_root_tree->log_batch);
- 	atomic_inc(&log_root_tree->log_writers);
+ 	WARN_ON(!priv->slave);
  
- 	index2 = log_root_tree->log_transid % 2;
+-	/* disable irqs and ensure none is running before clearing ptr */
++	/* ensure no irq is running before clearing ptr */
++	disable_irq(priv->irq);
+ 	rcar_i2c_write(priv, ICSIER, 0);
+-	rcar_i2c_write(priv, ICSCR, 0);
++	rcar_i2c_write(priv, ICSSR, 0);
++	enable_irq(priv->irq);
++	rcar_i2c_write(priv, ICSCR, SDBS);
+ 	rcar_i2c_write(priv, ICSAR, 0); /* Gen2: must be 0 if not using slave */
+ 
+-	synchronize_irq(priv->irq);
+ 	priv->slave = NULL;
+ 
+ 	pm_runtime_put(rcar_i2c_priv_to_dev(priv));
+-- 
+2.25.1
+
 
 
