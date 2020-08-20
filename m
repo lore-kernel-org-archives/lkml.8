@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690A1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499F9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43CF4208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D322054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923793;
-	bh=4OyUkUq0Yh9CrZVM8PSEZCcsieoLIBoIWas0+E+tPIU=;
+	s=default; t=1597923802;
+	bh=NF9kcntLa0PLq0NPePJuMziGeFLz7qScJquirh2Md/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xmqDItdGRJR44I3RNknpZ8Dkucj/urEPa31o8S7pakz4ddB6sI2JxTEMdp+Ip0Abj
-	 XU9Aylx5Z0OMAwoomEpFQrlHR37gEjd6lHwvZ88KTSMGSltDyzSZU4tWMDabod/pET
-	 MvcWRMrLdM2DvAxBqYBnRfNLWldKDHnEE+qe8mig=
+	b=xVM0gYnmVdfFr/i6VMPhVpSti87Aofeg+dMTuRjTkiF6GS0f49qLGAGNkESo4Po3N
+	 EZcl4m17U88vpXoPidqaZ6KEfh+CUxjjecf6FWX4cOYXwpdEKLjMLE43Rb8VkJZpC3
+	 Swh+tnh0PV2JYj9AuzZsXs5CngIDoohbPUNRqQz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbgHTLnJ (ORCPT
+        id S1730368AbgHTLnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:43:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57462 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:43:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbgHTKED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:04:03 -0400
+        id S1727952AbgHTKEA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:04:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92C172075E;
-        Thu, 20 Aug 2020 10:04:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217C520738;
+        Thu, 20 Aug 2020 10:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917843;
-        bh=4OyUkUq0Yh9CrZVM8PSEZCcsieoLIBoIWas0+E+tPIU=;
+        s=default; t=1597917839;
+        bh=NF9kcntLa0PLq0NPePJuMziGeFLz7qScJquirh2Md/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EN228vdV+JACKSNqznYq5vYUjSi9N7HSP6l6zuYXgaFbfiJLqOp0hIpEbEhMzSReQ
-         s/m+VOcKSWn8y+GaoV42Y9RXjT/xxtEeBDgL52BHbBGwsNTkeRr2bWCCJnbu1iZEpz
-         E7uc3lzNSRbPfiIV2Ro9K3plWT0EaKF8xW5uswW8=
+        b=uJG8A0/Kvf6joVB2q6fSAb/I1GeCagk5xvJ9WAhEHP4E6lsSkVxua5gGUI4/TEDF8
+         M2C41MSle7Vl3+lWGz4XVLHXUbJrY3X/nhpaE0vrzKTwAtX1mIATo87dB2akGGuEjV
+         cIRjUu3HMAK1hd7uVLmO766/4Nr1TXpYMzmQYoaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 178/212] net: stmmac: dwmac1000: provide multicast filter fallback
-Date:   Thu, 20 Aug 2020 11:22:31 +0200
-Message-Id: <20200820091611.380234529@linuxfoundation.org>
+Subject: [PATCH 4.9 177/212] net: ethernet: stmmac: Disable hardware multicast filter
+Date:   Thu, 20 Aug 2020 11:22:30 +0200
+Message-Id: <20200820091611.330998100@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,12 +61,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jonathan McDowell <noodles@earth.li>
 
-commit 592d751c1e174df5ff219946908b005eb48934b3 upstream.
+commit df43dd526e6609769ae513a81443c7aa727c8ca3 upstream.
 
-If we don't have a hardware multicast filter available then instead of
-silently failing to listen for the requested ethernet broadcast
-addresses fall back to receiving all multicast packets, in a similar
-fashion to other drivers with no multicast filter.
+The IPQ806x does not appear to have a functional multicast ethernet
+address filter. This was observed as a failure to correctly receive IPv6
+packets on a LAN to the all stations address. Checking the vendor driver
+shows that it does not attempt to enable the multicast filter and
+instead falls back to receiving all multicast packets, internally
+setting ALLMULTI.
+
+Use the new fallback support in the dwmac1000 driver to correctly
+achieve the same with the mainline IPQ806x driver. Confirmed to fix IPv6
+functionality on an RB3011 router.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Jonathan McDowell <noodles@earth.li>
@@ -74,20 +80,18 @@ Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_core.c
-@@ -172,6 +172,9 @@ static void dwmac1000_set_filter(struct
- 		value = GMAC_FRAME_FILTER_PR;
- 	} else if (dev->flags & IFF_ALLMULTI) {
- 		value = GMAC_FRAME_FILTER_PM;	/* pass all multi */
-+	} else if (!netdev_mc_empty(dev) && (mcbitslog2 == 0)) {
-+		/* Fall back to all multicast if we've no filter */
-+		value = GMAC_FRAME_FILTER_PM;
- 	} else if (!netdev_mc_empty(dev)) {
- 		struct netdev_hw_addr *ha;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
+@@ -362,6 +362,7 @@ static int ipq806x_gmac_probe(struct pla
+ 	plat_dat->has_gmac = true;
+ 	plat_dat->bsp_priv = gmac;
+ 	plat_dat->fix_mac_speed = ipq806x_gmac_fix_mac_speed;
++	plat_dat->multicast_filter_bins = 0;
  
+ 	err = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
+ 	if (err)
 
 
