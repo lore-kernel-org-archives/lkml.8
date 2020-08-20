@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4080C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22DBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5CA208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D669208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882079;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1597882094;
+	bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWTTkagbU9BZtEJVAbpMQZ3zsHjLUu/5obT+E3JDjG8mrvlqL02zTiFs/rFPkl9NU
-	 VeQLLobKOHiD3QA+I+mrbyPscLBjYK+YHsCSkEXqMxLmCiYTABcSUUsGscCJjaI/23
-	 qteNrakPR+ixcvQw0EBGh3IkzlZPIEX3k0nsOR8w=
+	b=v3aesCQpqyqV/NpUXEtGfLCdshrRFaiqshJrE1H0KUMgBWxTkHQ/MQg/0PT7udb6+
+	 a8xvaK890KVWRaGwE20hOlJiHNGEiuSjSVzSOZUnu+OLvUeAQbWiQQAwQq2Wribu1F
+	 qwjv+1RL0UCmhRGGdU87+rgpLd72a5wFvFbv/WKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgHTAH5 (ORCPT
+        id S1728648AbgHTAIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:07:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728238AbgHTADN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:13 -0400
+        id S1728173AbgHTADL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D8E92245C;
-        Thu, 20 Aug 2020 00:03:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF0D2224D;
+        Thu, 20 Aug 2020 00:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881792;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1597881791;
+        bh=G5jUKukagXKkOLJ4BybzKWHms8rDfx8sUQRQ+hdxnbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vK2Pxv/Bsp7bDax0XxBzAA1Yniu5W0+LsewCM25BKIvVtCPXoRc/Sy1xYl5SHgNUx
-         5hGRvMcof/vu35CLTFHuFyK9+Pgkrs9V5OXwEhVcCK9SwErfYoTf5aCX+rqyArGcIj
-         i0w5akYlsfk/l1fJgWuoIXeYX/KrJ7FAjXW6VUOE=
+        b=y0JcY0nI6BXwhrpMDI7aXOKex5CIJc+dHGQYawgvp8NF+H4KZydJAo4N8PPRA4F9M
+         Dod1Yq3nDJ22CKczb9IzLOOsJ63snIPd06okzvaGAbn4Tfl9+zuDW46RxTYMCM1LRb
+         OhLSyPXTwpl9/e67xZeU4qPgc3kzczImKyGPq0LI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 4.19 07/18] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Wed, 19 Aug 2020 20:02:50 -0400
-Message-Id: <20200820000302.215560-7-sashal@kernel.org>
+Cc:     Xiongfeng Wang <wangxiongfeng2@huawei.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/18] Input: psmouse - add a newline when printing 'proto' by sysfs
+Date:   Wed, 19 Aug 2020 20:02:49 -0400
+Message-Id: <20200820000302.215560-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -59,50 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 4aec14de3a15cf9789a0e19c847f164776f49473 ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+When I cat parameter 'proto' by sysfs, it displays as follows. It's
+better to add a newline for easy reading.
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+root@syzkaller:~# cat /sys/module/psmouse/parameters/proto
+autoroot@syzkaller:~#
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
-
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
+Link: https://lore.kernel.org/r/20200720073846.120724-1-wangxiongfeng2@huawei.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/input/mouse/psmouse-base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/drivers/input/mouse/psmouse-base.c b/drivers/input/mouse/psmouse-base.c
+index d3ff1fc09af71..a9040c0fb4c3f 100644
+--- a/drivers/input/mouse/psmouse-base.c
++++ b/drivers/input/mouse/psmouse-base.c
+@@ -2044,7 +2044,7 @@ static int psmouse_get_maxproto(char *buffer, const struct kernel_param *kp)
+ {
+ 	int type = *((unsigned int *)kp->arg);
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
+-	return sprintf(buffer, "%s", psmouse_protocol_by_type(type)->name);
++	return sprintf(buffer, "%s\n", psmouse_protocol_by_type(type)->name);
+ }
+ 
+ static int __init psmouse_init(void)
 -- 
 2.25.1
 
