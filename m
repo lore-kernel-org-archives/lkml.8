@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A198DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75A6C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77AE7206DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D0D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931717;
-	bh=VS46scwFVsaKDkyhE6NIl1+c/wDesdKoeConpx7g6ag=;
+	s=default; t=1597931737;
+	bh=oG7drFKVpZT0RAyA0Uv8sAuQrakfpwD8Vf9tsuizcKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BW7jAgijw6NDxqw8lC8EdU4XAcjG7dYBgPSTCyL83TKY7vMVr/gR8QNdr3h/nGCGI
-	 MLxkSNq/8F8kq+nT+Gx4IgW4iv8W7U0D6qH5bWW0if6Yib7GRsou/ES7fSQqbdQozl
-	 ilDxeXGole6BBCcIoJDpi5+EV6wrKBVn4/43r1JA=
+	b=MUPk8N6tCNanEjbnOlQ4WRDVC9kGX7u29PDsaExEgoTtrs5c+EKJE0EIozXN7qjLm
+	 zrEWhsdCIz0uz9riP1vCnZm+4r6phv1bbSvS6xsVjZyAM7Rt63Ob5EiDxWzZg1hS40
+	 Gxcqx3/l8znb3gezES2xMV7uoVctla7UtSNuM8TY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgHTNzP (ORCPT
+        id S1731044AbgHTNzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:55:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35924 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:55:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727921AbgHTJ0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:26:45 -0400
+        id S1727878AbgHTJ0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:26:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04C8B22CF7;
-        Thu, 20 Aug 2020 09:26:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C0521744;
+        Thu, 20 Aug 2020 09:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915604;
-        bh=VS46scwFVsaKDkyhE6NIl1+c/wDesdKoeConpx7g6ag=;
+        s=default; t=1597915583;
+        bh=oG7drFKVpZT0RAyA0Uv8sAuQrakfpwD8Vf9tsuizcKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GU47jW7zuMGxGWo81YQLZo4GKviW4DmZfyU9F45d5pqaNXPpkwJT54PLlqgPbmtEi
-         EKRkWXphUgQIbL0SwVVvZm2bOwsNwSsl/89tOwJPQ+HcwWTciHiQDDVPNXyIplAu2Y
-         2xP9GfO/X1dcGRxWiCfjI86uUaMy/+Wp/e47yTnY=
+        b=ZoZILDm53iR/Vorq9fQXXgOgXTAzUhnCNKajd/gXnp/KLkVoA73upJzxWopff8TVf
+         Vx5XbXXB6k+/hk8TFq+v+sgWBU5HdfieYoDJizVcBIlIDGzspxiUNKrS/wZdrX+Kkz
+         kDTrBIRj3Ka4AD0WB6y1wkkHVBMRQgNF7zjN4OAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: [PATCH 5.8 072/232] driver core: Avoid binding drivers to dead devices
-Date:   Thu, 20 Aug 2020 11:18:43 +0200
-Message-Id: <20200820091616.290353265@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 035/232] btrfs: only search for left_info if there is no right_info in try_merge_free_space
+Date:   Thu, 20 Aug 2020 11:18:06 +0200
+Message-Id: <20200820091614.468076323@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -59,57 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 654888327e9f655a9d55ad477a9583e90e8c9b5c upstream.
+commit bf53d4687b8f3f6b752f091eb85f62369a515dfd upstream.
 
-Commit 3451a495ef24 ("driver core: Establish order of operations for
-device_add and device_del via bitflag") sought to prevent asynchronous
-driver binding to a device which is being removed.  It added a
-per-device "dead" flag which is checked in the following code paths:
+In try_to_merge_free_space we attempt to find entries to the left and
+right of the entry we are adding to see if they can be merged.  We
+search for an entry past our current info (saved into right_info), and
+then if right_info exists and it has a rb_prev() we save the rb_prev()
+into left_info.
 
-* asynchronous binding in __driver_attach_async_helper()
-*  synchronous binding in device_driver_attach()
-* asynchronous binding in __device_attach_async_helper()
+However there's a slight problem in the case that we have a right_info,
+but no entry previous to that entry.  At that point we will search for
+an entry just before the info we're attempting to insert.  This will
+simply find right_info again, and assign it to left_info, making them
+both the same pointer.
 
-It did *not* check the flag upon:
+Now if right_info _can_ be merged with the range we're inserting, we'll
+add it to the info and free right_info.  However further down we'll
+access left_info, which was right_info, and thus get a use-after-free.
 
-*  synchronous binding in __device_attach()
+Fix this by only searching for the left entry if we don't find a right
+entry at all.
 
-However __device_attach() may also be called asynchronously from:
+The CVE referenced had a specially crafted file system that could
+trigger this use-after-free. However with the tree checker improvements
+we no longer trigger the conditions for the UAF.  But the original
+conditions still apply, hence this fix.
 
-deferred_probe_work_func()
-  bus_probe_device()
-    device_initial_probe()
-      __device_attach()
-
-So if the commit's intention was to check the "dead" flag in all
-asynchronous code paths, then a check is also necessary in
-__device_attach().  Add the missing check.
-
-Fixes: 3451a495ef24 ("driver core: Establish order of operations for device_add and device_del via bitflag")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v5.1+
-Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Link: https://lore.kernel.org/r/de88a23a6fe0ef70f7cfd13c8aea9ab51b4edab6.1594214103.git.lukas@wunner.de
+Reference: CVE-2019-19448
+Fixes: 963030817060 ("Btrfs: use hybrid extents+bitmap rb tree for free space")
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/dd.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/btrfs/free-space-cache.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -844,7 +844,9 @@ static int __device_attach(struct device
- 	int ret = 0;
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -2281,7 +2281,7 @@ out:
+ static bool try_merge_free_space(struct btrfs_free_space_ctl *ctl,
+ 			  struct btrfs_free_space *info, bool update_stat)
+ {
+-	struct btrfs_free_space *left_info;
++	struct btrfs_free_space *left_info = NULL;
+ 	struct btrfs_free_space *right_info;
+ 	bool merged = false;
+ 	u64 offset = info->offset;
+@@ -2297,7 +2297,7 @@ static bool try_merge_free_space(struct
+ 	if (right_info && rb_prev(&right_info->offset_index))
+ 		left_info = rb_entry(rb_prev(&right_info->offset_index),
+ 				     struct btrfs_free_space, offset_index);
+-	else
++	else if (!right_info)
+ 		left_info = tree_search_offset(ctl, offset - 1, 0, 0);
  
- 	device_lock(dev);
--	if (dev->driver) {
-+	if (dev->p->dead) {
-+		goto out_unlock;
-+	} else if (dev->driver) {
- 		if (device_is_bound(dev)) {
- 			ret = 1;
- 			goto out_unlock;
+ 	/* See try_merge_free_space() comment. */
 
 
