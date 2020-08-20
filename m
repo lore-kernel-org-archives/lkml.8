@@ -2,169 +2,109 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2AEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 276CCC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1164F20855
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F1420639
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:36:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597919817;
+	bh=yagczh+iHj1VfsCNXZk3FCq2susSWJzKubnXov3ZVQE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DaQkDGf5oxApfl5vmxk2QAhLodZOE9B33dNFkaipoXHwD/U9tqUGTunBvUeDsElnj
+	 D5H7NeYJVj8GIa99l6q3K7fckfFVCJ1rnBb3qEw68ra4JJjOYAjZhO86Ypma5pn1F1
+	 LaDK1QuhIgzJYqfKz6zV6Kskh5+dsf7jKSotuO3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgHTKgd (ORCPT
+        id S1727781AbgHTKgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:36:33 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:62150 "EHLO
-        alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731420AbgHTKgL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:36:11 -0400
-Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 20 Aug 2020 03:36:10 -0700
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 20 Aug 2020 03:36:08 -0700
-Received: from c-rojay-linux.qualcomm.com ([10.206.21.80])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 20 Aug 2020 16:05:36 +0530
-Received: by c-rojay-linux.qualcomm.com (Postfix, from userid 88981)
-        id 937791F44; Thu, 20 Aug 2020 16:05:35 +0530 (IST)
-From:   Roja Rani Yarubandi <rojay@codeaurora.org>
-To:     wsa@kernel.org
-Cc:     swboyd@chromium.org, dianders@chromium.org,
-        saiprakash.ranjan@codeaurora.org, gregkh@linuxfoundation.org,
-        mka@chromium.org, akashast@codeaurora.org,
-        msavaliy@qti.qualcomm.com, skakit@codeaurora.org,
-        rnayak@codeaurora.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        Roja Rani Yarubandi <rojay@codeaurora.org>
-Subject: [PATCH V2 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
-Date:   Thu, 20 Aug 2020 16:05:22 +0530
-Message-Id: <20200820103522.26242-3-rojay@codeaurora.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200820103522.26242-1-rojay@codeaurora.org>
-References: <20200820103522.26242-1-rojay@codeaurora.org>
+        Thu, 20 Aug 2020 06:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731386AbgHTKSl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:18:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC842067C;
+        Thu, 20 Aug 2020 10:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597918714;
+        bh=yagczh+iHj1VfsCNXZk3FCq2susSWJzKubnXov3ZVQE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=slubSfLaUdS+IzwDA09iBQbBPk4nxkKojr2FCBQ7HpUu6xoMAEmxe6u7EAnQ9xyut
+         z0YplaiggEfnzVbUvjNk1CHXetkxtzclvhRn3HxCTDRiXRzfoK7vpM+9PSuHSDUac8
+         qIyBAti4PXdy5NkV9EB7polOiwdT2Q71FpWnLr5I=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 010/149] f2fs: check memory boundary by insane namelen
+Date:   Thu, 20 Aug 2020 11:21:27 +0200
+Message-Id: <20200820092126.196020416@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
+References: <20200820092125.688850368@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the hardware is still accessing memory after SMMU translation
-is disabled (as part of smmu shutdown callback), then the
-IOVAs (I/O virtual address) which it was using will go on the bus
-as the physical addresses which will result in unknown crashes
-like NoC/interconnect errors.
+From: Jaegeuk Kim <jaegeuk@kernel.org>
 
-So, implement shutdown callback to i2c driver to unmap DMA mappings
-during system "reboot" or "shutdown".
+[ Upstream commit 4e240d1bab1ead280ddf5eb05058dba6bbd57d10 ]
 
-Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+If namelen is corrupted to have very long value, fill_dentries can copy
+wrong memory area.
+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in V2:
- - As per Stephen's comments added seperate function for stop transfer,
-   fixed minor nitpicks.
+ fs/f2fs/dir.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
- drivers/i2c/busses/i2c-qcom-geni.c | 43 ++++++++++++++++++++++++++++++
- include/linux/qcom-geni-se.h       |  5 ++++
- 2 files changed, 48 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-qcom-geni.c
-index 1fda5c7c2cfc..d07f2f33bb75 100644
---- a/drivers/i2c/busses/i2c-qcom-geni.c
-+++ b/drivers/i2c/busses/i2c-qcom-geni.c
-@@ -486,6 +486,28 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
- 	return ret;
- }
+diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+index 92a240616f520..5411d6667781f 100644
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -805,6 +805,16 @@ bool f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
+ 		de_name.name = d->filename[bit_pos];
+ 		de_name.len = le16_to_cpu(de->name_len);
  
-+static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
-+{
-+	u32 val;
-+	struct geni_se *se = &gi2c->se;
++		/* check memory boundary before moving forward */
++		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
++		if (unlikely(bit_pos > d->max)) {
++			f2fs_msg(F2FS_I_SB(d->inode)->sb, KERN_WARNING,
++				"%s: corrupted namelen=%d, run fsck to fix.",
++				__func__, le16_to_cpu(de->name_len));
++			set_sbi_flag(F2FS_I_SB(d->inode)->sb->s_fs_info, SBI_NEED_FSCK);
++			return -EINVAL;
++		}
 +
-+	val = readl_relaxed(gi2c->se.base + SE_DMA_DEBUG_REG0);
-+	if (val & DMA_TX_ACTIVE) {
-+		geni_i2c_abort_xfer(gi2c);
-+		gi2c->cur_wr = 0;
-+		if (gi2c->err)
-+			geni_i2c_tx_fsm_rst(gi2c);
-+		geni_se_tx_dma_unprep(se, gi2c->tx_dma, gi2c->xfer_len);
-+	}
-+	if (val & DMA_RX_ACTIVE) {
-+		geni_i2c_abort_xfer(gi2c);
-+		gi2c->cur_rd = 0;
-+		if (gi2c->err)
-+			geni_i2c_rx_fsm_rst(gi2c);
-+		geni_se_rx_dma_unprep(se, gi2c->rx_dma, gi2c->xfer_len);
-+	}
-+}
-+
- static u32 geni_i2c_func(struct i2c_adapter *adap)
- {
- 	return I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUICK);
-@@ -617,6 +639,26 @@ static int geni_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
+ 		if (f2fs_encrypted_inode(d->inode)) {
+ 			int save_len = fstr->len;
+ 			int ret;
+@@ -829,7 +839,6 @@ bool f2fs_fill_dentries(struct dir_context *ctx, struct f2fs_dentry_ptr *d,
+ 					le32_to_cpu(de->ino), d_type))
+ 			return true;
  
-+static void geni_i2c_shutdown(struct platform_device *pdev)
-+{
-+	int ret;
-+	u32 dma;
-+	struct geni_i2c_dev *gi2c = platform_get_drvdata(pdev);
-+	struct geni_se *se = &gi2c->se;
-+
-+	ret = pm_runtime_get_sync(gi2c->se.dev);
-+	if (ret < 0) {
-+		dev_err(gi2c->se.dev, "Failed to resume device: %d\n", ret);
-+		return;
-+	}
-+
-+	dma = readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
-+	if (dma)
-+		geni_i2c_stop_xfer(gi2c);
-+
-+	pm_runtime_put_sync_suspend(gi2c->se.dev);
-+}
-+
- static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
- {
- 	int ret;
-@@ -677,6 +719,7 @@ MODULE_DEVICE_TABLE(of, geni_i2c_dt_match);
- static struct platform_driver geni_i2c_driver = {
- 	.probe  = geni_i2c_probe,
- 	.remove = geni_i2c_remove,
-+	.shutdown = geni_i2c_shutdown,
- 	.driver = {
- 		.name = "geni_i2c",
- 		.pm = &geni_i2c_pm_ops,
-diff --git a/include/linux/qcom-geni-se.h b/include/linux/qcom-geni-se.h
-index dd464943f717..c3c016496d98 100644
---- a/include/linux/qcom-geni-se.h
-+++ b/include/linux/qcom-geni-se.h
-@@ -77,6 +77,7 @@ struct geni_se {
- #define SE_DMA_RX_FSM_RST		0xd58
- #define SE_HW_PARAM_0			0xe24
- #define SE_HW_PARAM_1			0xe28
-+#define SE_DMA_DEBUG_REG0		0xe40
- 
- /* GENI_FORCE_DEFAULT_REG fields */
- #define FORCE_DEFAULT	BIT(0)
-@@ -207,6 +208,10 @@ struct geni_se {
- #define RX_GENI_CANCEL_IRQ		BIT(11)
- #define RX_GENI_GP_IRQ_EXT		GENMASK(13, 12)
- 
-+/* SE_DMA_DEBUG_REG0 Register fields */
-+#define DMA_TX_ACTIVE			BIT(0)
-+#define DMA_RX_ACTIVE			BIT(1)
-+
- /* SE_HW_PARAM_0 fields */
- #define TX_FIFO_WIDTH_MSK		GENMASK(29, 24)
- #define TX_FIFO_WIDTH_SHFT		24
+-		bit_pos += GET_DENTRY_SLOTS(le16_to_cpu(de->name_len));
+ 		ctx->pos = start_pos + bit_pos;
+ 	}
+ 	return false;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
+2.25.1
+
+
 
