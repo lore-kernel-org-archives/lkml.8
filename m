@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC061C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:45:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D7DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 979CF2076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:45:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E732076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 20:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="W94gZcQe"
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="yoTD1RCV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgHTUo7 (ORCPT
+        id S1728477AbgHTUpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 16:44:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
+        Thu, 20 Aug 2020 16:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728451AbgHTUo5 (ORCPT
+        with ESMTP id S1728451AbgHTUpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 16:44:57 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4F7C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:44:57 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id g15so1578230plj.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:44:57 -0700 (PDT)
+        Thu, 20 Aug 2020 16:45:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB47FC061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:44:58 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id q93so1649454pjq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 13:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
         h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=54ABhVyW2hfQecEnwMQxuYRtT1ryW088E7woHqdZaXY=;
-        b=W94gZcQeRoABCsOVtsMwPlJecPyyC9T29k5GLRV7ZJlrnVuSzmQqnfd96ZLHu18XD7
-         TpdOUZuNjFfS+knX1eRiy2ZbFNQu3bn584apOPv5PiGDgCmqUXaRiGvyHy15cUsjxuoO
-         nT9MAnh/2CcmfNqvYh6a364pYdH/RwbjYTux3pW7cUOgfH9feUnCem0tjPyEW2S62oeh
-         DGiB4d1HNWa/3KpuMk+I9AuwoL3MMAReZhNH57d2RF+d1uQMFdFbIXgG3PcGFrmNq/o5
-         pRnBXa9E184SV9KgLOWXA2KgJdl4hPhyd9fLkig7NZd28AQ4VjXCMrsSf4OshVtiZYUg
-         hGGg==
+        bh=iJ1OwKtfZUiEaD/By8wQCQJ5w4e+/SuoDaxAh4xoYIg=;
+        b=yoTD1RCV1vQ+E9mi6aZ3W407bzZWfiFsU7FTJ4JPtTnONQn4f9iOFZ8bK7ZnPq/5Bu
+         /Pus5dwVh2RwQ6mMY8VSw79RTxgfzkNYEmSmPDfl9MTZb+HSAij+Y7mzpix8E9V1Fcjo
+         rXAH27XS+u+JMlv48olZhaWJWoIzqChgv7iEI1SMDYfHpsLWJwtitCloXQYdRaugj9t5
+         7K1Bp45M1URaVAn0tKzthyVMtybdaFJH2ajjBMdMKICJBxrmmgnUWp1Q8qowvTjO0mc4
+         BipR9JGXVwndjolDCmb03ySdE084egC9UCfKafA+0+PdSHHYK22LpzPdqukEMw0A2aY+
+         Pq7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=54ABhVyW2hfQecEnwMQxuYRtT1ryW088E7woHqdZaXY=;
-        b=PIr78LvbdQlPKykTyyN6kV2DQFZKyqyUd4eOY7Qhe1s3Cz/HKrBnXA161TOzuNUhzW
-         tZL8VBjAjt4RAVTagD+XbX+uwVdvZ/C4ur8iuh4qNOo2BIw+d+2G9q63E8GygIgN5NfJ
-         59UT2U8opcPcP06H2A8NFTmjETg7yJzEjrFgGMTw0RxJWCpv7a/sb2LKvvMoyEuJ8rKk
-         s15Umu0/Ol9x2ThIFk+lGqcfMNQ1iQb3WSEMzUth1tlxUrRp9nFc9WP6SjcJ1Wuq+j5E
-         tREWAptdVMtpj0D8XQ1L6BV9438PjP8CayX/vOpjJLEQPF1GCPeI5kLD2XneNXZdUpx8
-         1QEQ==
-X-Gm-Message-State: AOAM531loMWgJmCLoMLD/8iX23kF0MrArY9e8gSTHMMY4PBvH3jur6Uj
-        A9Dhl8XZ1z4bqF6CIoqiokK2Zw==
-X-Google-Smtp-Source: ABdhPJwqU+99F74bSw1tb/ADlJjEt4yJRkSqYxno9vow94VLDSADcJF13NgH0u6R+z2QFvSFGv2aMw==
-X-Received: by 2002:a17:90a:7348:: with SMTP id j8mr51736pjs.137.1597956296618;
-        Thu, 20 Aug 2020 13:44:56 -0700 (PDT)
+        bh=iJ1OwKtfZUiEaD/By8wQCQJ5w4e+/SuoDaxAh4xoYIg=;
+        b=aD+lnTXOe67Wo21X35TgRWDh77p+l1XIzh2Uo3HSuOmzGnJNGm+4dZ7QmgF28eSTr+
+         IVkR9U8VgVed6rrcO+7BbbPkfBVeWHDiwb1MTB4WUVvwJpVG8FyLQ2HoO8lJPSQvLdao
+         Seuu+ldWxrJl8RwdszrLXv4nhB3yjqY6Qb/7arOyIqrDG+7Mvdk6Pl8dUCpwUH6IQ6kY
+         8VcuWxnI0z/OTLknEjC1F85Ik6pMsxNDJrYwfnuNtTD7M5CjeMjsdfT1zfSwr9dmfSNH
+         lUPRQ4OTkV7IY8+f/7b6d1wrGp4BpJ8pr7vVmThQlAxY/DZ88waE90yZoFKC4FGI+1W8
+         ftyw==
+X-Gm-Message-State: AOAM532V/fBAynA5ZHp1ATRaYb/ibpYXtNywIU6nttTdrYbHP2J6jUWN
+        dQ68BcIzabY7U3gkOLr4QLX1YeoMSc9tAQ==
+X-Google-Smtp-Source: ABdhPJy7KEtP70xiQ5oHihQRcs/deZzjjA98uzS2A3WICdeD6f4n9pYW0wwgjgjxgzlGT0SgVH1HJA==
+X-Received: by 2002:a17:902:7d94:: with SMTP id a20mr135796plm.174.1597956298185;
+        Thu, 20 Aug 2020 13:44:58 -0700 (PDT)
 Received: from localhost (76-210-143-223.lightspeed.sntcca.sbcglobal.net. [76.210.143.223])
-        by smtp.gmail.com with ESMTPSA id q2sm3590625pgs.90.2020.08.20.13.44.55
+        by smtp.gmail.com with ESMTPSA id u15sm3011247pju.42.2020.08.20.13.44.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 13:44:56 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 13:44:56 -0700 (PDT)
-X-Google-Original-Date: Thu, 20 Aug 2020 13:35:06 PDT (-0700)
-Subject:     Re: [PATCH 1/3] riscv: Set more data to cacheinfo
-In-Reply-To: <3ca47cfde607516e51f78f1645357ca739e775d0.1593766028.git.zong.li@sifive.com>
+        Thu, 20 Aug 2020 13:44:57 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 13:44:57 -0700 (PDT)
+X-Google-Original-Date: Thu, 20 Aug 2020 13:35:38 PDT (-0700)
+Subject:     Re: [PATCH 2/3] riscv: Define AT_VECTOR_SIZE_ARCH for ARCH_DLINFO
+In-Reply-To: <25223adbad5badb3cd0000df078b407bafc129fd.1593766028.git.zong.li@sifive.com>
 CC:     Paul Walmsley <paul.walmsley@sifive.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         zong.li@sifive.com
 From:   Palmer Dabbelt <palmer@dabbelt.com>
 To:     zong.li@sifive.com
-Message-ID: <mhng-cb490336-f234-42e9-b799-c429284963ea@palmerdabbelt-glaptop1>
+Message-ID: <mhng-81da4508-59e4-4b55-855a-f7d9c31ced50@palmerdabbelt-glaptop1>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -77,107 +77,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 03 Jul 2020 01:57:53 PDT (-0700), zong.li@sifive.com wrote:
-> Set cacheinfo.{size,sets,line_size} for each cache node, then we can
-> get these information from userland through auxiliary vector.
+On Fri, 03 Jul 2020 01:57:54 PDT (-0700), zong.li@sifive.com wrote:
+> AT_VECTOR_SIZE_ARCH should be defined with the maximum number of
+> NEW_AUX_ENT entries that ARCH_DLINFO can contain, but it wasn't defined
+> for RISC-V at all even though ARCH_DLINFO will contain one NEW_AUX_ENT
+> for the VDSO address.
 >
 > Signed-off-by: Zong Li <zong.li@sifive.com>
 > ---
->  arch/riscv/kernel/cacheinfo.c | 59 ++++++++++++++++++++++++++---------
->  1 file changed, 44 insertions(+), 15 deletions(-)
+>  arch/riscv/include/uapi/asm/auxvec.h | 3 +++
+>  1 file changed, 3 insertions(+)
 >
-> diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-> index 4c90c07d8c39..cdd35e53fd98 100644
-> --- a/arch/riscv/kernel/cacheinfo.c
-> +++ b/arch/riscv/kernel/cacheinfo.c
-> @@ -8,12 +8,46 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
+> diff --git a/arch/riscv/include/uapi/asm/auxvec.h b/arch/riscv/include/uapi/asm/auxvec.h
+> index d86cb17bbabe..22e0ae888406 100644
+> --- a/arch/riscv/include/uapi/asm/auxvec.h
+> +++ b/arch/riscv/include/uapi/asm/auxvec.h
+> @@ -10,4 +10,7 @@
+>  /* vDSO location */
+>  #define AT_SYSINFO_EHDR 33
 >
-> -static void ci_leaf_init(struct cacheinfo *this_leaf,
-> -			 struct device_node *node,
-> -			 enum cache_type type, unsigned int level)
-> +static void ci_leaf_init(struct cacheinfo *this_leaf, enum cache_type type,
-> +			 unsigned int level, unsigned int size,
-> +			 unsigned int sets, unsigned int line_size)
->  {
->  	this_leaf->level = level;
->  	this_leaf->type = type;
-> +	this_leaf->size = size;
-> +	this_leaf->number_of_sets = sets;
-> +	this_leaf->coherency_line_size = line_size;
+> +/* entries in ARCH_DLINFO */
+> +#define AT_VECTOR_SIZE_ARCH	1
 > +
-> +	/*
-> +	 * If the cache is fully associative, there is no need to
-> +	 * check the other properties.
-> +	 */
-> +	if (!(sets == 1) && (sets > 0 && size > 0 && line_size > 0))
-> +		this_leaf->ways_of_associativity = (size / sets) / line_size;
-> +}
-> +
-> +static void fill_cacheinfo(struct cacheinfo **this_leaf,
-> +			   struct device_node *node, unsigned int level)
-> +{
-> +	unsigned int size, sets, line_size;
-> +
-> +	if (!of_property_read_u32(node, "cache-size", &size)) {
-> +		of_property_read_u32(node, "cache-block-size", &line_size);
-> +		of_property_read_u32(node, "cache-sets", &sets);
+>  #endif /* _UAPI_ASM_RISCV_AUXVEC_H */
 
-Presumably we should be checking for errors here as well, rather than just
-passing arbitrary values to userspace?
-
-> +		ci_leaf_init((*this_leaf)++, CACHE_TYPE_UNIFIED, level, size, sets, line_size);
-> +	}
-> +
-> +	if (!of_property_read_u32(node, "i-cache-size", &size)) {
-> +		of_property_read_u32(node, "i-cache-sets", &sets);
-> +		of_property_read_u32(node, "i-cache-block-size", &line_size);
-> +		ci_leaf_init((*this_leaf)++, CACHE_TYPE_INST, level, size, sets, line_size);
-> +	}
-> +
-> +	if (!of_property_read_u32(node, "d-cache-size", &size)) {
-> +		of_property_read_u32(node, "d-cache-sets", &sets);
-> +		of_property_read_u32(node, "d-cache-block-size", &line_size);
-> +		ci_leaf_init((*this_leaf)++, CACHE_TYPE_DATA, level, size, sets, line_size);
-> +	}
->  }
->
->  static int __init_cache_level(unsigned int cpu)
-> @@ -66,29 +100,24 @@ static int __populate_cache_leaves(unsigned int cpu)
->  	struct device_node *prev = NULL;
->  	int levels = 1, level = 1;
->
-> -	if (of_property_read_bool(np, "cache-size"))
-> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
-> -	if (of_property_read_bool(np, "i-cache-size"))
-> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
-> -	if (of_property_read_bool(np, "d-cache-size"))
-> -		ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
-> +	/* Level 1 caches in cpu node */
-> +	fill_cacheinfo(&this_leaf, np, level);
->
-> +	/* Next level caches in cache nodes */
->  	prev = np;
->  	while ((np = of_find_next_cache_node(np))) {
->  		of_node_put(prev);
->  		prev = np;
-> +
->  		if (!of_device_is_compatible(np, "cache"))
->  			break;
->  		if (of_property_read_u32(np, "cache-level", &level))
->  			break;
->  		if (level <= levels)
->  			break;
-> -		if (of_property_read_bool(np, "cache-size"))
-> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
-> -		if (of_property_read_bool(np, "i-cache-size"))
-> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
-> -		if (of_property_read_bool(np, "d-cache-size"))
-> -			ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
-> +
-> +		fill_cacheinfo(&this_leaf, np, level);
-> +
->  		levels = level;
->  	}
->  	of_node_put(np);
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
