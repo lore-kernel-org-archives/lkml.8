@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B972C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B5FC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD7A208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B462B208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:40:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916396;
-	bh=ffdK+kkecl1OQb9W/5JFKuO9NO+PSRETHtdMz7xayp8=;
+	s=default; t=1597916402;
+	bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnGArxGW0FYHKVKDoDtoVxTswLaGJpDttCaR+MIXX2kl4j+mdfClK7tD1LIi8l7kc
-	 aWtL/bTUHWnAFzvXT2H6wozS3FoZHOouhjEjYS204FiWJSfOIcgbm8lL372/dumvxP
-	 ZV5r7qLJkzCY16VPvUODOQx/zAtS2mcIGRt/QmeY=
+	b=LfaKkeocrSArs4Y/TZwIGzjOxlIljMWbawo/+SlS3Oq2w3MkLnbO8uekIgUdwPeuo
+	 OYtv94fSXM2fIbjcNDlpHsPLHtHKtqweb0R+ZNQHmWFHfhGA68QL1okEUC26ANgxPb
+	 2tdI+lWqjct/cWatexQ8x+meUBqb7JTxJmOlUMQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgHTJjt (ORCPT
+        id S1729001AbgHTJkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58836 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:40:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgHTJjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:39:33 -0400
+        id S1726923AbgHTJjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:39:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1B782173E;
-        Thu, 20 Aug 2020 09:39:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C07C20724;
+        Thu, 20 Aug 2020 09:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916372;
-        bh=ffdK+kkecl1OQb9W/5JFKuO9NO+PSRETHtdMz7xayp8=;
+        s=default; t=1597916381;
+        bh=kCwqB6Ovaix4fstCjpwfhLC6Ms9iQESqD6AeWDno2wU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=olxiDgys1+lYxkUFvsGrIgb2VNVgotYBIxWd2OlbPEruSvFZ1AyOAvw7L/LYsSqXP
-         8czy4um4/KijJH6h95GMah8M+SYuvUXA3fdupaBNW0HwcZl1KAyvoYvRA8+IvtfA/C
-         aF7P0+lJFJpcDuJyGyZPT99XDZgGAsSvplX4ziAY=
+        b=tDm63S0ciSxkmJaGmjdoClPR6GZJo/2ILuVCujIjHQqBq3IrrAQ2R28l+00JmKzCe
+         mOcj5yed24Ep5+iAyLDKEkbKKEBluumBimUlT0HxqnaysK3VyTQyiCwbcHJhwPGGO2
+         wxDUaIDD6+2Y7LShRGjqwqQ5cBVKbv7ZZZmW47Q8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kamal Heib <kheib@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 106/204] RDMA/ipoib: Fix ABBA deadlock with ipoib_reap_ah()
-Date:   Thu, 20 Aug 2020 11:20:03 +0200
-Message-Id: <20200820091611.619507476@linuxfoundation.org>
+        stable@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.7 091/204] perf intel-pt: Fix FUP packet state
+Date:   Thu, 20 Aug 2020 11:19:48 +0200
+Message-Id: <20200820091610.879027405@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -60,216 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@nvidia.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 65936bf25f90fe440bb2d11624c7d10fab266639 ]
+commit 401136bb084fd021acd9f8c51b52fe0a25e326b2 upstream.
 
-ipoib_mcast_carrier_on_task() insanely open codes a rtnl_lock() such that
-the only time flush_workqueue() can be called is if it also clears
-IPOIB_FLAG_OPER_UP.
+While walking code towards a FUP ip, the packet state is
+INTEL_PT_STATE_FUP or INTEL_PT_STATE_FUP_NO_TIP. That was mishandled
+resulting in the state becoming INTEL_PT_STATE_IN_SYNC prematurely.  The
+result was an occasional lost EXSTOP event.
 
-Thus the flush inside ipoib_flush_ah() will deadlock if it gets unlucky
-enough, and lockdep doesn't help us to find it early:
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: stable@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20200710151104.15137-2-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-          CPU0               CPU1          CPU2
-   __ipoib_ib_dev_flush()
-      down_read(vlan_rwsem)
-
-                         ipoib_vlan_add()
-                           rtnl_trylock()
-                           down_write(vlan_rwsem)
-
-				      ipoib_mcast_carrier_on_task()
-					 while (!rtnl_trylock())
-					      msleep(20);
-
-      ipoib_flush_ah()
-	flush_workqueue(priv->wq)
-
-Clean up the ah_reaper related functions and lifecycle to make sense:
-
- - Start/Stop of the reaper should only be done in open/stop NDOs, not in
-   any other places
-
- - cancel and flush of the reaper should only happen in the stop NDO.
-   cancel is only functional when combined with IPOIB_STOP_REAPER.
-
- - Non-stop places were flushing the AH's just need to flush out dead AH's
-   synchronously and ignore the background task completely. It is fully
-   locked and harmless to leave running.
-
-Which ultimately fixes the ABBA deadlock by removing the unnecessary
-flush_workqueue() from the problematic place under the vlan_rwsem.
-
-Fixes: efc82eeeae4e ("IB/ipoib: No longer use flush as a parameter")
-Link: https://lore.kernel.org/r/20200625174219.290842-1-kamalheib1@gmail.com
-Reported-by: Kamal Heib <kheib@redhat.com>
-Tested-by: Kamal Heib <kheib@redhat.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/ulp/ipoib/ipoib_ib.c   | 65 ++++++++++-------------
- drivers/infiniband/ulp/ipoib/ipoib_main.c |  2 +
- 2 files changed, 31 insertions(+), 36 deletions(-)
+ tools/perf/util/intel-pt-decoder/intel-pt-decoder.c |   21 ++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_ib.c b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-index 6ee64c25aaff4..494f413dc3c6c 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_ib.c
-@@ -670,13 +670,12 @@ int ipoib_send(struct net_device *dev, struct sk_buff *skb,
- 	return rc;
- }
- 
--static void __ipoib_reap_ah(struct net_device *dev)
-+static void ipoib_reap_dead_ahs(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
- 	struct ipoib_ah *ah, *tah;
- 	unsigned long flags;
- 
--	netif_tx_lock_bh(dev);
-+	netif_tx_lock_bh(priv->dev);
- 	spin_lock_irqsave(&priv->lock, flags);
- 
- 	list_for_each_entry_safe(ah, tah, &priv->dead_ahs, list)
-@@ -687,37 +686,37 @@ static void __ipoib_reap_ah(struct net_device *dev)
- 		}
- 
- 	spin_unlock_irqrestore(&priv->lock, flags);
--	netif_tx_unlock_bh(dev);
-+	netif_tx_unlock_bh(priv->dev);
- }
- 
- void ipoib_reap_ah(struct work_struct *work)
- {
- 	struct ipoib_dev_priv *priv =
- 		container_of(work, struct ipoib_dev_priv, ah_reap_task.work);
--	struct net_device *dev = priv->dev;
- 
--	__ipoib_reap_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
- 
- 	if (!test_bit(IPOIB_STOP_REAPER, &priv->flags))
- 		queue_delayed_work(priv->wq, &priv->ah_reap_task,
- 				   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_flush_ah(struct net_device *dev)
-+static void ipoib_start_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	cancel_delayed_work(&priv->ah_reap_task);
--	flush_workqueue(priv->wq);
--	ipoib_reap_ah(&priv->ah_reap_task.work);
-+	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
-+	queue_delayed_work(priv->wq, &priv->ah_reap_task,
-+			   round_jiffies_relative(HZ));
- }
- 
--static void ipoib_stop_ah(struct net_device *dev)
-+static void ipoib_stop_ah_reaper(struct ipoib_dev_priv *priv)
- {
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
- 	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	ipoib_flush_ah(dev);
-+	cancel_delayed_work(&priv->ah_reap_task);
-+	/*
-+	 * After ipoib_stop_ah_reaper() we always go through
-+	 * ipoib_reap_dead_ahs() which ensures the work is really stopped and
-+	 * does a final flush out of the dead_ah's list
-+	 */
- }
- 
- static int recvs_pending(struct net_device *dev)
-@@ -846,16 +845,6 @@ int ipoib_ib_dev_stop_default(struct net_device *dev)
- 	return 0;
- }
- 
--void ipoib_ib_dev_stop(struct net_device *dev)
--{
--	struct ipoib_dev_priv *priv = ipoib_priv(dev);
--
--	priv->rn_ops->ndo_stop(dev);
--
--	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_flush_ah(dev);
--}
--
- int ipoib_ib_dev_open_default(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -899,10 +888,7 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 		return -1;
- 	}
- 
--	clear_bit(IPOIB_STOP_REAPER, &priv->flags);
--	queue_delayed_work(priv->wq, &priv->ah_reap_task,
--			   round_jiffies_relative(HZ));
--
-+	ipoib_start_ah_reaper(priv);
- 	if (priv->rn_ops->ndo_open(dev)) {
- 		pr_warn("%s: Failed to open dev\n", dev->name);
- 		goto dev_stop;
-@@ -913,13 +899,20 @@ int ipoib_ib_dev_open(struct net_device *dev)
- 	return 0;
- 
- dev_stop:
--	set_bit(IPOIB_STOP_REAPER, &priv->flags);
--	cancel_delayed_work(&priv->ah_reap_task);
--	set_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
--	ipoib_ib_dev_stop(dev);
-+	ipoib_stop_ah_reaper(priv);
- 	return -1;
- }
- 
-+void ipoib_ib_dev_stop(struct net_device *dev)
-+{
-+	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-+
-+	priv->rn_ops->ndo_stop(dev);
-+
-+	clear_bit(IPOIB_FLAG_INITIALIZED, &priv->flags);
-+	ipoib_stop_ah_reaper(priv);
-+}
-+
- void ipoib_pkey_dev_check_presence(struct net_device *dev)
- {
- 	struct ipoib_dev_priv *priv = ipoib_priv(dev);
-@@ -1230,7 +1223,7 @@ static void __ipoib_ib_dev_flush(struct ipoib_dev_priv *priv,
- 		ipoib_mcast_dev_flush(dev);
- 		if (oper_up)
- 			set_bit(IPOIB_FLAG_OPER_UP, &priv->flags);
--		ipoib_flush_ah(dev);
-+		ipoib_reap_dead_ahs(priv);
- 	}
- 
- 	if (level >= IPOIB_FLUSH_NORMAL)
-@@ -1305,7 +1298,7 @@ void ipoib_ib_dev_cleanup(struct net_device *dev)
- 	 * the neighbor garbage collection is stopped and reaped.
- 	 * That should all be done now, so make a final ah flush.
- 	 */
--	ipoib_stop_ah(dev);
-+	ipoib_reap_dead_ahs(priv);
- 
- 	clear_bit(IPOIB_PKEY_ASSIGNED, &priv->flags);
- 
-diff --git a/drivers/infiniband/ulp/ipoib/ipoib_main.c b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-index ceec24d451858..29ad4129d2f48 100644
---- a/drivers/infiniband/ulp/ipoib/ipoib_main.c
-+++ b/drivers/infiniband/ulp/ipoib/ipoib_main.c
-@@ -1975,6 +1975,8 @@ static void ipoib_ndo_uninit(struct net_device *dev)
- 
- 	/* no more works over the priv->wq */
- 	if (priv->wq) {
-+		/* See ipoib_mcast_carrier_on_task() */
-+		WARN_ON(test_bit(IPOIB_FLAG_OPER_UP, &priv->flags));
- 		flush_workqueue(priv->wq);
- 		destroy_workqueue(priv->wq);
- 		priv->wq = NULL;
--- 
-2.25.1
-
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -1164,6 +1164,7 @@ static int intel_pt_walk_fup(struct inte
+ 			return 0;
+ 		if (err == -EAGAIN ||
+ 		    intel_pt_fup_with_nlip(decoder, &intel_pt_insn, ip, err)) {
++			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			if (intel_pt_fup_event(decoder))
+ 				return 0;
+ 			return -EAGAIN;
+@@ -1942,17 +1943,13 @@ next:
+ 			}
+ 			if (decoder->set_fup_mwait)
+ 				no_tip = true;
++			if (no_tip)
++				decoder->pkt_state = INTEL_PT_STATE_FUP_NO_TIP;
++			else
++				decoder->pkt_state = INTEL_PT_STATE_FUP;
+ 			err = intel_pt_walk_fup(decoder);
+-			if (err != -EAGAIN) {
+-				if (err)
+-					return err;
+-				if (no_tip)
+-					decoder->pkt_state =
+-						INTEL_PT_STATE_FUP_NO_TIP;
+-				else
+-					decoder->pkt_state = INTEL_PT_STATE_FUP;
+-				return 0;
+-			}
++			if (err != -EAGAIN)
++				return err;
+ 			if (no_tip) {
+ 				no_tip = false;
+ 				break;
+@@ -2599,15 +2596,11 @@ const struct intel_pt_state *intel_pt_de
+ 			err = intel_pt_walk_tip(decoder);
+ 			break;
+ 		case INTEL_PT_STATE_FUP:
+-			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			err = intel_pt_walk_fup(decoder);
+ 			if (err == -EAGAIN)
+ 				err = intel_pt_walk_fup_tip(decoder);
+-			else if (!err)
+-				decoder->pkt_state = INTEL_PT_STATE_FUP;
+ 			break;
+ 		case INTEL_PT_STATE_FUP_NO_TIP:
+-			decoder->pkt_state = INTEL_PT_STATE_IN_SYNC;
+ 			err = intel_pt_walk_fup(decoder);
+ 			if (err == -EAGAIN)
+ 				err = intel_pt_walk_trace(decoder);
 
 
