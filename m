@@ -2,52 +2,54 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157FAC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 673CC20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC4D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919707;
-	bh=vMxXImEUfOzC6fgLLpSf1H64g4l+btfQn1trTpT1spM=;
+	s=default; t=1597919709;
+	bh=5lM8KCwnYSYrdF78ZiUyZHdioymTZ03frSXpaWniM2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOab+cpL00e30UKpnxzTU9IZsFPes3jLPNEA2u5+iJTl8Rsjg8mwMxTolu0XxE7LT
-	 Gd/tW6vlvzIo3fjlKnRRPuQ1GztdNcRCsgfxT0UVr82pvT8WjldEtUJCBBG0f4MMpf
-	 fTJsMF1DfybSs0jPqYT0gCsDOYvkbeWCUfsWd/Ew=
+	b=mQpFNx89nQL7GjFDiwMxC6RSU0e+DU0vdIsVhXysS6ylujS+UB2ES1U6T0h6gIDyE
+	 F+SoeGgUm3uCxVJMd79EWA5znW1ZlnDbfLQdQzj0DgtCa9KYwLmn3tizEP7hjKVwHu
+	 7GRSKVzPknoXiNPcsp1OdoBk5gM/z7XpDt5RJvgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731112AbgHTKfF (ORCPT
+        id S1731340AbgHTKTE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:35:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42264 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:19:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731353AbgHTKTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:19:08 -0400
+        id S1731371AbgHTKRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:17:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6203C2067C;
-        Thu, 20 Aug 2020 10:19:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B63D2067C;
+        Thu, 20 Aug 2020 10:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918747;
-        bh=vMxXImEUfOzC6fgLLpSf1H64g4l+btfQn1trTpT1spM=;
+        s=default; t=1597918669;
+        bh=5lM8KCwnYSYrdF78ZiUyZHdioymTZ03frSXpaWniM2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uAulq1Kszci6X8E6AcNHhn1gEWRLkVWG/aWtw1Uf845zfBfT6qKw5BI4tjI8viaSa
-         PtMoZXPfcayWa8XG5CdmTJoIQtR+zQgpz/x9xCWwaSQ7b/G4OkqDL7LLDZF+K5o9ZJ
-         SaH0RtfnkeB5AXEQgtp3J+K4ggZUMP179kdE+95I=
+        b=RSY4gi1OQlnngH8lih67CN8AHM4v2bVqripqhjzxI2c0wc3ZNnWkm9Dr/f7C+wOGc
+         VpwrK2BQMoU2xGeFC2NJAvZITZL8v+hd7Trc8AQolwXHb8BXrDm9/uIy958E5WObUQ
+         FXhOke88PPV03Szih8VRJ/yzUVcY1sLdvFdOmj5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 052/149] vxlan: Ensure FDB dump is performed under RCU
-Date:   Thu, 20 Aug 2020 11:22:09 +0200
-Message-Id: <20200820092128.250378756@linuxfoundation.org>
+        stable@vger.kernel.org, Dirk Behme <dirk.behme@de.bosch.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Sergei Shtylyov <sergei.shtylyov@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 023/149] net: ethernet: ravb: exit if re-initialization fails in tx timeout
+Date:   Thu, 20 Aug 2020 11:21:40 +0200
+Message-Id: <20200820092126.839451261@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -60,96 +62,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-[ Upstream commit b5141915b5aec3b29a63db869229e3741ebce258 ]
+[ Upstream commit 015c5d5e6aa3523c758a70eb87b291cece2dbbb4 ]
 
-The commit cited below removed the RCU read-side critical section from
-rtnl_fdb_dump() which means that the ndo_fdb_dump() callback is invoked
-without RCU protection.
+According to the report of [1], this driver is possible to cause
+the following error in ravb_tx_timeout_work().
 
-This results in the following warning [1] in the VXLAN driver, which
-relied on the callback being invoked from an RCU read-side critical
-section.
+ravb e6800000.ethernet ethernet: failed to switch device to config mode
 
-Fix this by calling rcu_read_lock() in the VXLAN driver, as already done
-in the bridge driver.
+This error means that the hardware could not change the state
+from "Operation" to "Configuration" while some tx and/or rx queue
+are operating. After that, ravb_config() in ravb_dmac_init() will fail,
+and then any descriptors will be not allocaled anymore so that NULL
+pointer dereference happens after that on ravb_start_xmit().
+
+To fix the issue, the ravb_tx_timeout_work() should check
+the return values of ravb_stop_dma() and ravb_dmac_init().
+If ravb_stop_dma() fails, ravb_tx_timeout_work() re-enables TX and RX
+and just exits. If ravb_dmac_init() fails, just exits.
 
 [1]
-WARNING: suspicious RCU usage
-5.8.0-rc4-custom-01521-g481007553ce6 #29 Not tainted
------------------------------
-drivers/net/vxlan.c:1379 RCU-list traversed in non-reader section!!
+https://lore.kernel.org/linux-renesas-soc/20200518045452.2390-1-dirk.behme@de.bosch.com/
 
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by bridge/166:
- #0: ffffffff85a27850 (rtnl_mutex){+.+.}-{3:3}, at: netlink_dump+0xea/0x1090
-
-stack backtrace:
-CPU: 1 PID: 166 Comm: bridge Not tainted 5.8.0-rc4-custom-01521-g481007553ce6 #29
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-2.fc32 04/01/2014
-Call Trace:
- dump_stack+0x100/0x184
- lockdep_rcu_suspicious+0x153/0x15d
- vxlan_fdb_dump+0x51e/0x6d0
- rtnl_fdb_dump+0x4dc/0xad0
- netlink_dump+0x540/0x1090
- __netlink_dump_start+0x695/0x950
- rtnetlink_rcv_msg+0x802/0xbd0
- netlink_rcv_skb+0x17a/0x480
- rtnetlink_rcv+0x22/0x30
- netlink_unicast+0x5ae/0x890
- netlink_sendmsg+0x98a/0xf40
- __sys_sendto+0x279/0x3b0
- __x64_sys_sendto+0xe6/0x1a0
- do_syscall_64+0x54/0xa0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fe14fa2ade0
-Code: Bad RIP value.
-RSP: 002b:00007fff75bb5b88 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00005614b1ba0020 RCX: 00007fe14fa2ade0
-RDX: 000000000000011c RSI: 00007fff75bb5b90 RDI: 0000000000000003
-RBP: 00007fff75bb5b90 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00005614b1b89160
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-
-Fixes: 5e6d24358799 ("bridge: netlink dump interface at par with brctl")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Reported-by: Dirk Behme <dirk.behme@de.bosch.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/vxlan.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/renesas/ravb_main.c | 26 ++++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
---- a/drivers/net/vxlan.c
-+++ b/drivers/net/vxlan.c
-@@ -921,6 +921,7 @@ static int vxlan_fdb_dump(struct sk_buff
- 		struct vxlan_fdb *f;
- 		int err;
+diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+index 5b6320f9c935f..460b29ac5fd86 100644
+--- a/drivers/net/ethernet/renesas/ravb_main.c
++++ b/drivers/net/ethernet/renesas/ravb_main.c
+@@ -1291,6 +1291,7 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 	struct ravb_private *priv = container_of(work, struct ravb_private,
+ 						 work);
+ 	struct net_device *ndev = priv->ndev;
++	int error;
  
-+		rcu_read_lock();
- 		hlist_for_each_entry_rcu(f, &vxlan->fdb_head[h], hlist) {
- 			struct vxlan_rdst *rd;
+ 	netif_tx_stop_all_queues(ndev);
  
-@@ -933,12 +934,15 @@ static int vxlan_fdb_dump(struct sk_buff
- 						     cb->nlh->nlmsg_seq,
- 						     RTM_NEWNEIGH,
- 						     NLM_F_MULTI, rd);
--				if (err < 0)
-+				if (err < 0) {
-+					rcu_read_unlock();
- 					goto out;
-+				}
- skip:
- 				++idx;
- 			}
- 		}
-+		rcu_read_unlock();
- 	}
- out:
- 	return idx;
+@@ -1298,15 +1299,36 @@ static void ravb_tx_timeout_work(struct work_struct *work)
+ 	ravb_ptp_stop(ndev);
+ 
+ 	/* Wait for DMA stopping */
+-	ravb_stop_dma(ndev);
++	if (ravb_stop_dma(ndev)) {
++		/* If ravb_stop_dma() fails, the hardware is still operating
++		 * for TX and/or RX. So, this should not call the following
++		 * functions because ravb_dmac_init() is possible to fail too.
++		 * Also, this should not retry ravb_stop_dma() again and again
++		 * here because it's possible to wait forever. So, this just
++		 * re-enables the TX and RX and skip the following
++		 * re-initialization procedure.
++		 */
++		ravb_rcv_snd_enable(ndev);
++		goto out;
++	}
+ 
+ 	ravb_ring_free(ndev, RAVB_BE);
+ 	ravb_ring_free(ndev, RAVB_NC);
+ 
+ 	/* Device init */
+-	ravb_dmac_init(ndev);
++	error = ravb_dmac_init(ndev);
++	if (error) {
++		/* If ravb_dmac_init() fails, descriptors are freed. So, this
++		 * should return here to avoid re-enabling the TX and RX in
++		 * ravb_emac_init().
++		 */
++		netdev_err(ndev, "%s: ravb_dmac_init() failed, error %d\n",
++			   __func__, error);
++		return;
++	}
+ 	ravb_emac_init(ndev);
+ 
++out:
+ 	/* Initialise PTP Clock driver */
+ 	ravb_ptp_init(ndev, priv->pdev);
+ 
+-- 
+2.25.1
+
 
 
