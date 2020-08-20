@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F105C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A06D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C240207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E242207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881916;
-	bh=Bj3DVBVlYSQg01Azg3GPbjL/vH1bmbuoq0bMb+Oz7H4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=RBfJl/F2i6PV/2jnkfqboVMr2ymbNLWTi9piAiLaQetdb2h/RdAns9YrwlJHMxwAt
-	 a8Pm0cjzHzo7SZXjKmjRI54TQdz+EcNuvBuZ+lrots2Of7aJlRCw8QXWtn14Sx3J+u
-	 nWhux5HRiodeAfhW4+JWRG/ofbIlU1tm5J4UicJE=
+	s=default; t=1597881926;
+	bh=YpO6n/hx+XryrWAOxjzu0xvCNugcUj0aDwhi0NSNc6w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mndiSJg9kZVkFi1ptT1ANTb58Kew45SKVTX/DwQL98ibdQ6Zajon+IQPyzRNULo4d
+	 eZDg3/yaVauXKTmz4XVOjXNPUxGm7hF4XdxZjMHzUHDvOgdvALB51v7TVG0RRCq+D9
+	 qQltpaLe8KelSaCeQTdBzsrv5cGA8GA1B4/sB0Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgHTAFL (ORCPT
+        id S1728544AbgHTAFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34382 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728417AbgHTAEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:04:09 -0400
+        id S1728404AbgHTAED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:04:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDDB6207FB;
-        Thu, 20 Aug 2020 00:04:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6D81207FB;
+        Thu, 20 Aug 2020 00:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881848;
-        bh=Bj3DVBVlYSQg01Azg3GPbjL/vH1bmbuoq0bMb+Oz7H4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ggkCsRXIl0kz2RtU7lpZfiflddfs83beidKR5avRitHj9FsXoSIGpAFwjXZO9Gavg
-         tWAV76nNcDQqL+5dR/Y6Finpt9C95xBf3yCcWC4flNcEzNyJyqTVbFz1Wk9Mw+RLQ/
-         /E3wo6kOecm1l96jD5SiwapxRhtA7/DAYqgEhE6g=
+        s=default; t=1597881843;
+        bh=YpO6n/hx+XryrWAOxjzu0xvCNugcUj0aDwhi0NSNc6w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ElgjYdxrDVOyOEzTk7h1/PiRWiotOYONwqa1D9c7GnnsvqYWi/2f+FDjubq8A62Eg
+         jc1WZ2clCNNweYj7pg6qEczvx0PNPkNUmjMbLLhsTrax2YbVYC/V+RUbZv9PZpn/MI
+         Lze5Q0DIy7JruB4gasS/Oj+Ag5p8QJdRqEH7MwUE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/10] media: budget-core: Improve exception handling in budget_register()
-Date:   Wed, 19 Aug 2020 20:03:57 -0400
-Message-Id: <20200820000406.216050-1-sashal@kernel.org>
+Cc:     Eiichi Tsukata <devel@etsukata.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/11] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
+Date:   Wed, 19 Aug 2020 20:03:47 -0400
+Message-Id: <20200820000348.215911-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200820000348.215911-1-sashal@kernel.org>
+References: <20200820000348.215911-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,54 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Eiichi Tsukata <devel@etsukata.com>
 
-[ Upstream commit fc0456458df8b3421dba2a5508cd817fbc20ea71 ]
+[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
 
-budget_register() has no error handling after its failure.
-Add the missed undo functions for error handling to fix it.
+If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
+shows the following warning:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
+  member access within null pointer of type 'struct xfs_kobj'
+  Call Trace:
+   dump_stack+0x10e/0x195
+   ubsan_type_mismatch_common+0x241/0x280
+   __ubsan_handle_type_mismatch_v1+0x32/0x40
+   init_xfs_fs+0x12b/0x28f
+   do_one_initcall+0xdd/0x1d0
+   do_initcall_level+0x151/0x1b6
+   do_initcalls+0x50/0x8f
+   do_basic_setup+0x29/0x2b
+   kernel_init_freeable+0x19f/0x20b
+   kernel_init+0x11/0x1e0
+   ret_from_fork+0x22/0x30
+
+Fix it by checking parent_kobj before the code accesses its member.
+
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[darrick: minor whitespace edits]
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/budget-core.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/xfs/xfs_sysfs.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/ttpci/budget-core.c b/drivers/media/pci/ttpci/budget-core.c
-index e9674b40007c1..6107c469efa07 100644
---- a/drivers/media/pci/ttpci/budget-core.c
-+++ b/drivers/media/pci/ttpci/budget-core.c
-@@ -386,20 +386,25 @@ static int budget_register(struct budget *budget)
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	budget->mem_frontend.source = DMX_MEMORY_FE;
- 	ret = dvbdemux->dmx.add_frontend(&dvbdemux->dmx, &budget->mem_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	ret = dvbdemux->dmx.connect_frontend(&dvbdemux->dmx, &budget->hw_frontend);
- 	if (ret < 0)
--		return ret;
-+		goto err_release_dmx;
- 
- 	dvb_net_init(&budget->dvb_adapter, &budget->dvb_net, &dvbdemux->dmx);
- 
- 	return 0;
+diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
+index d04637181ef21..980c9429abec5 100644
+--- a/fs/xfs/xfs_sysfs.h
++++ b/fs/xfs/xfs_sysfs.h
+@@ -44,9 +44,11 @@ xfs_sysfs_init(
+ 	struct xfs_kobj		*parent_kobj,
+ 	const char		*name)
+ {
++	struct kobject		*parent;
 +
-+err_release_dmx:
-+	dvb_dmxdev_release(&budget->dmxdev);
-+	dvb_dmx_release(&budget->demux);
-+	return ret;
++	parent = parent_kobj ? &parent_kobj->kobject : NULL;
+ 	init_completion(&kobj->complete);
+-	return kobject_init_and_add(&kobj->kobject, ktype,
+-				    &parent_kobj->kobject, "%s", name);
++	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
  }
  
- static void budget_unregister(struct budget *budget)
+ static inline void
 -- 
 2.25.1
 
