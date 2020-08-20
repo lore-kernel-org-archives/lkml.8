@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFBFC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D41C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72EBC2067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF0620724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918416;
-	bh=qrdaKOIVavS/UpsqEh0jTdT1tTtGvj0c6xdHIGU2Kmw=;
+	s=default; t=1597918417;
+	bh=A0T3gi1GP6TniScFs7IGQjKPJyxA4pj4/xcIpUMTwiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IDv9bT7DztQdLQeRQjPLzDlWwrGKjkBHvxL6OCjhf7OoKroOf2PcYsotiyq+0Ev8o
-	 8IlkQwSDgWkcUoTUA/x7bV7bTvBrAIEtU6EHNEpLB+s48Dr4SBusngZLfPZ8BzyrSx
-	 rRAo33uQH7AsM8B/fLe9PkEJtGFHhI8Z/uR/g4p8=
+	b=e1tXP9Z8YQFuynwaZs4QtvNUwCelKuvYm+6E4CJb/YmCmS+YIRFhBck58H3K3ykKS
+	 9EPUZXRkq3zYF8OR35oGgoeiwX6SuJRg29H/yZJKVMl3ErPLfQncxCLvH0TGPkVYAo
+	 0IBK5MjduOixZmZN6S5aHUvT0GVrNM1j8cwh0Gqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731145AbgHTKNe (ORCPT
+        id S1731082AbgHTKNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:13:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731059AbgHTKMk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:12:40 -0400
+        id S1731099AbgHTKMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:12:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C314C2078D;
-        Thu, 20 Aug 2020 10:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C3D2067C;
+        Thu, 20 Aug 2020 10:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918359;
-        bh=qrdaKOIVavS/UpsqEh0jTdT1tTtGvj0c6xdHIGU2Kmw=;
+        s=default; t=1597918374;
+        bh=A0T3gi1GP6TniScFs7IGQjKPJyxA4pj4/xcIpUMTwiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=afCviD8tB8kazQR5DyfVfdSD5406+b7pl7Pqn62o4no9OeSql+dDGoQd283UFfPoa
-         IJsklz9iAdKKWcDtlpWBK5CPougPYVNB6qfqdjAnx78Uyza4jTcqq5W77hA1Fe5l6M
-         MURRG0KwIKy61GsakRPJZXMKRp1IoDl+YIGtqZ8s=
+        b=RPB1PTbdFUrIKadOwQ1qExXmpe0Rd/FXqYCqZtpcIaRVSg433ImGyVgL0aVYsVxXc
+         pyHvGjKbMcXXg4x5e1a3qpsPMZ03QQdseznj97oq/QWk6UbtM3o1O9LhsLgt91U374
+         +Ws8ZssFoE9PNIrHvBSsv+UWVThWPwXXnOHZgmqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qingyu Li <ieatmuttonchuan@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 141/228] net/nfc/rawsock.c: add CAP_NET_RAW check.
-Date:   Thu, 20 Aug 2020 11:21:56 +0200
-Message-Id: <20200820091614.634392402@linuxfoundation.org>
+        stable@vger.kernel.org, Mirko Dietrich <buzz@l4m1.de>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 146/228] ALSA: usb-audio: Creative USB X-Fi Pro SB1095 volume knob support
+Date:   Thu, 20 Aug 2020 11:22:01 +0200
+Message-Id: <20200820091614.874079709@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,36 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qingyu Li <ieatmuttonchuan@gmail.com>
+From: Mirko Dietrich <buzz@l4m1.de>
 
-[ Upstream commit 26896f01467a28651f7a536143fe5ac8449d4041 ]
+commit fec9008828cde0076aae595ac031bfcf49d335a4 upstream.
 
-When creating a raw AF_NFC socket, CAP_NET_RAW needs to be checked first.
+Adds an entry for Creative USB X-Fi to the rc_config array in
+mixer_quirks.c to allow use of volume knob on the device.
+Adds support for newer X-Fi Pro card, known as "Model No. SB1095"
+with USB ID "041e:3263"
 
-Signed-off-by: Qingyu Li <ieatmuttonchuan@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Mirko Dietrich <buzz@l4m1.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200806124850.20334-1-buzz@l4m1.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/nfc/rawsock.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/nfc/rawsock.c
-+++ b/net/nfc/rawsock.c
-@@ -344,10 +344,13 @@ static int rawsock_create(struct net *ne
- 	if ((sock->type != SOCK_SEQPACKET) && (sock->type != SOCK_RAW))
- 		return -ESOCKTNOSUPPORT;
+---
+ sound/usb/mixer_quirks.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -196,6 +196,7 @@ static const struct rc_config {
+ 	{ USB_ID(0x041e, 0x3042), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 */
+ 	{ USB_ID(0x041e, 0x30df), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
+ 	{ USB_ID(0x041e, 0x3237), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
++	{ USB_ID(0x041e, 0x3263), 0, 1, 1, 1,  1,  0x000d }, /* Usb X-Fi S51 Pro */
+ 	{ USB_ID(0x041e, 0x3048), 2, 2, 6, 6,  2,  0x6e91 }, /* Toshiba SB0500 */
+ };
  
--	if (sock->type == SOCK_RAW)
-+	if (sock->type == SOCK_RAW) {
-+		if (!capable(CAP_NET_RAW))
-+			return -EPERM;
- 		sock->ops = &rawsock_raw_ops;
--	else
-+	} else {
- 		sock->ops = &rawsock_ops;
-+	}
- 
- 	sk = sk_alloc(net, PF_NFC, GFP_ATOMIC, nfc_proto->proto, kern);
- 	if (!sk)
 
 
