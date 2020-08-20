@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEE1C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1736C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C6D204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE66B2054F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:40:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923619;
-	bh=tcGqj/7/ZofFfawDGf6YWAYDXchoGbIZXO0mDruMJEw=;
+	s=default; t=1597923623;
+	bh=US4a1uBbzbI+EnCRU5gop6P4sCc4kVOsBmWBsMilkvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BNg+RigMIYr6pyHPXzwC2dsz947Rzdu17K6PtQCXQJTmtUFg8oIn1ZPrwMw9E2FNg
-	 +FpD67IbU9BgApmDvh2AfagvvVAGT5GBvkMPvm3qa/61UcZiKWYEJcncz1xQMdSsJE
-	 SLGsw7OCA0t9FEz/8klO2r+5LtcTpLduslAXF1Bc=
+	b=nh8SHR6luyyuoDEiIrB98/RCA/4F9jY/jVto8uSEBuTdBB4uMouMWwPqOifbPkIC7
+	 DKJFVMNV+qxH1TO+0pN3ryRYNT2KP6rNoakbaZuFoTJtdB68VLG6uPOmREF3Dql+iX
+	 lyKP02buKQ7C+udh1d5URxZ1TUeMby1E9Autn/VM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729742AbgHTLkS (ORCPT
+        id S1730282AbgHTLkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:40:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58536 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:40:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729429AbgHTKFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:20 -0400
+        id S1730504AbgHTKFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DD5D22B40;
-        Thu, 20 Aug 2020 10:05:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5817622BF5;
+        Thu, 20 Aug 2020 10:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917919;
-        bh=tcGqj/7/ZofFfawDGf6YWAYDXchoGbIZXO0mDruMJEw=;
+        s=default; t=1597917913;
+        bh=US4a1uBbzbI+EnCRU5gop6P4sCc4kVOsBmWBsMilkvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/zpOTUcLBPc/ZAzKh8iZt+mcexzVdZUDb+74AAB0BxwR36l2Oab5lRXp059yKMyq
-         YuRzgo5nHNSPyKotSNB+TbHgpwYVw89JPZH/TpkcMEOFNjF1mM1tZR2HzWjakHXYiR
-         oikZrsTNevfqu3ICDI1P8AvzgMtYhOdMS5lSlzo0=
+        b=Gd360XPL6FN7jT4pw6NCp12SFtARpugIoQ80kU0L3H+FCAfYC8oiGfcmPgSd6PTjj
+         /XHmDfj8PlEnrE/u1obCfYZm9xvqUSuBAAAtcSEDQ/Jt+UGBB2yMzsIWPSHn9B81AI
+         hMrXDNUUXIJZobbklNqHT9Xl72IUJSpaSokL8mwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 163/212] ALSA: usb-audio: work around streaming quirk for MacroSilicon MS2109
-Date:   Thu, 20 Aug 2020 11:22:16 +0200
-Message-Id: <20200820091610.636812289@linuxfoundation.org>
+        stable@vger.kernel.org, Greed Rong <greedrong@gmail.com>,
+        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 171/212] btrfs: dont allocate anonymous block device for user invisible roots
+Date:   Thu, 20 Aug 2020 11:22:24 +0200
+Message-Id: <20200820091611.024483645@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -59,80 +60,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+From: Qu Wenruo <wqu@suse.com>
 
-commit 1b7ecc241a67ad6b584e071bd791a54e0cd5f097 upstream.
+commit 851fd730a743e072badaf67caf39883e32439431 upstream.
 
-Further investigation of the L-R swap problem on the MS2109 reveals that
-the problem isn't that the channels are swapped, but rather that they
-are swapped and also out of phase by one sample. In other words, the
-issue is actually that the very first frame that comes from the hardware
-is a half-frame containing only the right channel, and after that
-everything becomes offset.
+[BUG]
+When a lot of subvolumes are created, there is a user report about
+transaction aborted:
 
-So introduce a new quirk field to drop the very first 2 bytes that come
-in after the format is configured and a capture stream starts. This puts
-the channels in phase and in the correct order.
+  BTRFS: Transaction aborted (error -24)
+  WARNING: CPU: 17 PID: 17041 at fs/btrfs/transaction.c:1576 create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  RIP: 0010:create_pending_snapshot+0xbc4/0xd10 [btrfs]
+  Call Trace:
+   create_pending_snapshots+0x82/0xa0 [btrfs]
+   btrfs_commit_transaction+0x275/0x8c0 [btrfs]
+   btrfs_mksubvol+0x4b9/0x500 [btrfs]
+   btrfs_ioctl_snap_create_transid+0x174/0x180 [btrfs]
+   btrfs_ioctl_snap_create_v2+0x11c/0x180 [btrfs]
+   btrfs_ioctl+0x11a4/0x2da0 [btrfs]
+   do_vfs_ioctl+0xa9/0x640
+   ksys_ioctl+0x67/0x90
+   __x64_sys_ioctl+0x1a/0x20
+   do_syscall_64+0x5a/0x110
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  ---[ end trace 33f2f83f3d5250e9 ]---
+  BTRFS: error (device sda1) in create_pending_snapshot:1576: errno=-24 unknown
+  BTRFS info (device sda1): forced readonly
+  BTRFS warning (device sda1): Skipping commit of aborted transaction.
+  BTRFS: error (device sda1) in cleanup_transaction:1831: errno=-24 unknown
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Link: https://lore.kernel.org/r/20200810082400.225858-1-marcan@marcan.st
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[CAUSE]
+The error is EMFILE (Too many files open) and comes from the anonymous
+block device allocation. The ids are in a shared pool of size 1<<20.
+
+The ids are assigned to live subvolumes, ie. the root structure exists
+in memory (eg. after creation or after the root appears in some path).
+The pool could be exhausted if the numbers are not reclaimed fast
+enough, after subvolume deletion or if other system component uses the
+anon block devices.
+
+[WORKAROUND]
+Since it's not possible to completely solve the problem, we can only
+minimize the time the id is allocated to a subvolume root.
+
+Firstly, we can reduce the use of anon_dev by trees that are not
+subvolume roots, like data reloc tree.
+
+This patch will do extra check on root objectid, to skip roots that
+don't need anon_dev.  Currently it's only data reloc tree and orphan
+roots.
+
+Reported-by: Greed Rong <greedrong@gmail.com>
+Link: https://lore.kernel.org/linux-btrfs/CA+UqX+NTrZ6boGnWHhSeZmEY5J76CTqmYjO2S+=tHJX7nb9DPw@mail.gmail.com/
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/card.h   |    1 +
- sound/usb/pcm.c    |    6 ++++++
- sound/usb/quirks.c |    3 +++
- sound/usb/stream.c |    1 +
- 4 files changed, 11 insertions(+)
+ fs/btrfs/disk-io.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/sound/usb/card.h
-+++ b/sound/usb/card.h
-@@ -125,6 +125,7 @@ struct snd_usb_substream {
- 	unsigned int tx_length_quirk:1;	/* add length specifier to transfers */
- 	unsigned int fmt_type;		/* USB audio format type (1-3) */
- 	unsigned int pkt_offset_adj;	/* Bytes to drop from beginning of packets (for non-compliant devices) */
-+	unsigned int stream_offset_adj;	/* Bytes to drop from beginning of stream (for non-compliant devices) */
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1527,9 +1527,16 @@ int btrfs_init_fs_root(struct btrfs_root
+ 	spin_lock_init(&root->ino_cache_lock);
+ 	init_waitqueue_head(&root->ino_cache_wait);
  
- 	unsigned int running: 1;	/* running status */
+-	ret = get_anon_bdev(&root->anon_dev);
+-	if (ret)
+-		goto fail;
++	/*
++	 * Don't assign anonymous block device to roots that are not exposed to
++	 * userspace, the id pool is limited to 1M
++	 */
++	if (is_fstree(root->root_key.objectid) &&
++	    btrfs_root_refs(&root->root_item) > 0) {
++		ret = get_anon_bdev(&root->anon_dev);
++		if (ret)
++			goto fail;
++	}
  
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -1312,6 +1312,12 @@ static void retire_capture_urb(struct sn
- 			// continue;
- 		}
- 		bytes = urb->iso_frame_desc[i].actual_length;
-+		if (subs->stream_offset_adj > 0) {
-+			unsigned int adj = min(subs->stream_offset_adj, bytes);
-+			cp += adj;
-+			bytes -= adj;
-+			subs->stream_offset_adj -= adj;
-+		}
- 		frames = bytes / stride;
- 		if (!subs->txfr_quirk)
- 			bytes = frames * stride;
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1121,6 +1121,9 @@ void snd_usb_set_format_quirk(struct snd
- 	case USB_ID(0x041e, 0x3f19): /* E-Mu 0204 USB */
- 		set_format_emu_quirk(subs, fmt);
- 		break;
-+	case USB_ID(0x534d, 0x2109): /* MacroSilicon MS2109 */
-+		subs->stream_offset_adj = 2;
-+		break;
- 	}
- }
- 
---- a/sound/usb/stream.c
-+++ b/sound/usb/stream.c
-@@ -95,6 +95,7 @@ static void snd_usb_init_substream(struc
- 	subs->tx_length_quirk = as->chip->tx_length_quirk;
- 	subs->speed = snd_usb_get_speed(subs->dev);
- 	subs->pkt_offset_adj = 0;
-+	subs->stream_offset_adj = 0;
- 
- 	snd_usb_set_pcm_ops(as->pcm, stream);
- 
+ 	mutex_lock(&root->objectid_mutex);
+ 	ret = btrfs_find_highest_objectid(root,
 
 
