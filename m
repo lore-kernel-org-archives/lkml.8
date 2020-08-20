@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63773C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EE4C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC8422BF3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC9322BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929223;
-	bh=kyZ4OQTGL/UNsZkgR+TRXjK66fbqkC2ATajEKr+L0Y8=;
+	s=default; t=1597929239;
+	bh=A5/9brDvRPF70ERveEC5pLTQSGpg8dEFelBfyXyhmX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqwuB4pcwgKq9sXz4Fuyz1sLuTE8oeyTuMkbUWDwFfBFD3wiaJQTlGRkKt02mMB+C
-	 lKg106IgTQHAsn56OOxWoFqLDbMUcCPMpLFWPIQkRO7OFnX4+xMjcz7y0/THocG573
-	 w9yDpcau3/s/swczHFCD8wipTB0XkyE33V/K/vpc=
+	b=OMe84L5U8HibiqUwGZFsAkZAiZaJ9jKB3I03g700ZDxQtyhfatl6SVM0LfT7wmBlV
+	 ZZA3HuVWgKA/7tGKr6se9hfnV8zKZyPOj63ZBX4Q+Ey48WqIhn8ix33/Tip8nAlEeg
+	 oLHSVy8pPHlegFqNQpoV78263cg5xDZKjiq5PHCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbgHTNNj (ORCPT
+        id S1728607AbgHTJgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:13:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52550 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:36:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727090AbgHTJg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:36:56 -0400
+        id S1728135AbgHTJgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:36:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D4C20724;
-        Thu, 20 Aug 2020 09:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0389F207DE;
+        Thu, 20 Aug 2020 09:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916216;
-        bh=kyZ4OQTGL/UNsZkgR+TRXjK66fbqkC2ATajEKr+L0Y8=;
+        s=default; t=1597916175;
+        bh=A5/9brDvRPF70ERveEC5pLTQSGpg8dEFelBfyXyhmX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NSYoAMXeSoM6WJi1eF4t056Od2NU2tRJ+U+JJCcTYapkvZkp19hxlNCzHYf/+sOA/
-         R4vFGiwfJdexmTRHgzTrCuC+3hovbcjRc/CNJvXpRpl3tCpLb0jgEG93Ja1cJyFVSp
-         TKBHFNxs8EpbRaY3F5oqRW/MaGAlcMgX0K/vpMjM=
+        b=BZbahDrovj1TARmE3l48Xp2FBXEvoy7tXPsEZpYhmU5tzQAWRq3oXHxeKFt0zAins
+         x66jH+WcQQde00wb/ZBUaHoXgAyfhcn7DY50bumPFvKIDDEDfadrDoGdN5d9D+Wule
+         emJy/jf9/7yt8mhNXdMpCpWIE/fZZe3DTafgZ4jM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.7 050/204] media: vsp1: dl: Fix NULL pointer dereference on unbind
-Date:   Thu, 20 Aug 2020 11:19:07 +0200
-Message-Id: <20200820091608.779775895@linuxfoundation.org>
+        stable@vger.kernel.org, Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH 5.7 037/204] arm64: perf: Correct the event index in sysfs
+Date:   Thu, 20 Aug 2020 11:18:54 +0200
+Message-Id: <20200820091608.123251565@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,102 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniu Rosca <erosca@de.adit-jv.com>
+From: Shaokun Zhang <zhangshaokun@hisilicon.com>
 
-commit c92d30e4b78dc331909f8c6056c2792aa14e2166 upstream.
+commit 539707caa1a89ee4efc57b4e4231c20c46575ccc upstream.
 
-In commit f3b98e3c4d2e16 ("media: vsp1: Provide support for extended
-command pools"), the vsp pointer used for referencing the VSP1 device
-structure from a command pool during vsp1_dl_ext_cmd_pool_destroy() was
-not populated.
+When PMU event ID is equal or greater than 0x4000, it will be reduced
+by 0x4000 and it is not the raw number in the sysfs. Let's correct it
+and obtain the raw event ID.
 
-Correctly assign the pointer to prevent the following
-null-pointer-dereference when removing the device:
+Before this patch:
+cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
+event=0x001
+After this patch:
+cat /sys/bus/event_source/devices/armv8_pmuv3_0/events/sample_feed
+event=0x4001
 
-[*] h3ulcb-kf #>
-echo fea28000.vsp > /sys/bus/platform/devices/fea28000.vsp/driver/unbind
- Unable to handle kernel NULL pointer dereference at virtual address 0000000000000028
- Mem abort info:
-   ESR = 0x96000006
-   EC = 0x25: DABT (current EL), IL = 32 bits
-   SET = 0, FnV = 0
-   EA = 0, S1PTW = 0
- Data abort info:
-   ISV = 0, ISS = 0x00000006
-   CM = 0, WnR = 0
- user pgtable: 4k pages, 48-bit VAs, pgdp=00000007318be000
- [0000000000000028] pgd=00000007333a1003, pud=00000007333a6003, pmd=0000000000000000
- Internal error: Oops: 96000006 [#1] PREEMPT SMP
- Modules linked in:
- CPU: 1 PID: 486 Comm: sh Not tainted 5.7.0-rc6-arm64-renesas-00118-ge644645abf47 #185
- Hardware name: Renesas H3ULCB Kingfisher board based on r8a77951 (DT)
- pstate: 40000005 (nZcv daif -PAN -UAO)
- pc : vsp1_dlm_destroy+0xe4/0x11c
- lr : vsp1_dlm_destroy+0xc8/0x11c
- sp : ffff800012963b60
- x29: ffff800012963b60 x28: ffff0006f83fc440
- x27: 0000000000000000 x26: ffff0006f5e13e80
- x25: ffff0006f5e13ed0 x24: ffff0006f5e13ed0
- x23: ffff0006f5e13ed0 x22: dead000000000122
- x21: ffff0006f5e3a080 x20: ffff0006f5df2938
- x19: ffff0006f5df2980 x18: 0000000000000003
- x17: 0000000000000000 x16: 0000000000000016
- x15: 0000000000000003 x14: 00000000000393c0
- x13: ffff800011a5ec18 x12: ffff800011d8d000
- x11: ffff0006f83fcc68 x10: ffff800011a53d70
- x9 : ffff8000111f3000 x8 : 0000000000000000
- x7 : 0000000000210d00 x6 : 0000000000000000
- x5 : ffff800010872e60 x4 : 0000000000000004
- x3 : 0000000078068000 x2 : ffff800012781000
- x1 : 0000000000002c00 x0 : 0000000000000000
- Call trace:
-  vsp1_dlm_destroy+0xe4/0x11c
-  vsp1_wpf_destroy+0x10/0x20
-  vsp1_entity_destroy+0x24/0x4c
-  vsp1_destroy_entities+0x54/0x130
-  vsp1_remove+0x1c/0x40
-  platform_drv_remove+0x28/0x50
-  __device_release_driver+0x178/0x220
-  device_driver_detach+0x44/0xc0
-  unbind_store+0xe0/0x104
-  drv_attr_store+0x20/0x30
-  sysfs_kf_write+0x48/0x70
-  kernfs_fop_write+0x148/0x230
-  __vfs_write+0x18/0x40
-  vfs_write+0xdc/0x1c4
-  ksys_write+0x68/0xf0
-  __arm64_sys_write+0x18/0x20
-  el0_svc_common.constprop.0+0x70/0x170
-  do_el0_svc+0x20/0x80
-  el0_sync_handler+0x134/0x1b0
-  el0_sync+0x140/0x180
- Code: b40000c2 f9403a60 d2800084 a9400663 (f9401400)
- ---[ end trace 3875369841fb288a ]---
-
-Fixes: f3b98e3c4d2e16 ("media: vsp1: Provide support for extended command pools")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Tested-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1592487344-30555-3-git-send-email-zhangshaokun@hisilicon.com
+[will: fixed formatting of 'if' condition]
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/platform/vsp1/vsp1_dl.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/kernel/perf_event.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
---- a/drivers/media/platform/vsp1/vsp1_dl.c
-+++ b/drivers/media/platform/vsp1/vsp1_dl.c
-@@ -431,6 +431,8 @@ vsp1_dl_cmd_pool_create(struct vsp1_devi
- 	if (!pool)
- 		return NULL;
+--- a/arch/arm64/kernel/perf_event.c
++++ b/arch/arm64/kernel/perf_event.c
+@@ -155,7 +155,7 @@ armv8pmu_events_sysfs_show(struct device
  
-+	pool->vsp1 = vsp1;
+ 	pmu_attr = container_of(attr, struct perf_pmu_events_attr, attr);
+ 
+-	return sprintf(page, "event=0x%03llx\n", pmu_attr->id);
++	return sprintf(page, "event=0x%04llx\n", pmu_attr->id);
+ }
+ 
+ #define ARMV8_EVENT_ATTR(name, config)						\
+@@ -244,10 +244,13 @@ armv8pmu_event_attr_is_visible(struct ko
+ 	    test_bit(pmu_attr->id, cpu_pmu->pmceid_bitmap))
+ 		return attr->mode;
+ 
+-	pmu_attr->id -= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
+-	if (pmu_attr->id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
+-	    test_bit(pmu_attr->id, cpu_pmu->pmceid_ext_bitmap))
+-		return attr->mode;
++	if (pmu_attr->id >= ARMV8_PMUV3_EXT_COMMON_EVENT_BASE) {
++		u64 id = pmu_attr->id - ARMV8_PMUV3_EXT_COMMON_EVENT_BASE;
 +
- 	spin_lock_init(&pool->lock);
- 	INIT_LIST_HEAD(&pool->free);
++		if (id < ARMV8_PMUV3_MAX_COMMON_EVENTS &&
++		    test_bit(id, cpu_pmu->pmceid_ext_bitmap))
++			return attr->mode;
++	}
  
+ 	return 0;
+ }
 
 
