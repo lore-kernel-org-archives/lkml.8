@@ -2,382 +2,292 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF26C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C78182086A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597936430;
-	bh=/zCmwwU3sNcC0M45eP2ex87GldoS8TY7gBwIB4VYX1k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=QE8gLFJKrGx77z/1dCYXBpg2TPhQ+Zi4qZYImyaVKcdtuLDZHf2cKt+LGYtlk/uKA
-	 d8bhMDRuskZFPAqnVpwayOXJtdJrZvAmLA4qIi6T1lurzTPXYQ66277zsuXqPx4RMT
-	 x9MgXBZ3NIqprvW4Ch1a8Waw90OE4pFuPSalKL7o=
+	by mail.kernel.org (Postfix) with ESMTP id C5960206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:15:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QkzPGfG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgHTPNt (ORCPT
+        id S1728754AbgHTPPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58218 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728433AbgHTPNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:13:33 -0400
-Received: from coco.lan (ip5f5ad5a3.dynamic.kabel-deutschland.de [95.90.213.163])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17F3204EA;
-        Thu, 20 Aug 2020 15:13:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597936412;
-        bh=/zCmwwU3sNcC0M45eP2ex87GldoS8TY7gBwIB4VYX1k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=O4GFm5ixVVaWyhs64lYh5h2H5C06AZWeb4JaJGGG5ZefL9OEBdKDduar/r8aXYNZv
-         gaeKj0O1fvqmxIlIbL11aPqsnRDDqFgSm3pzk8aIty8/L9QYDWAWbrKGhUyD6AdDnm
-         ciVVz9EXHGXzvMby02yPYXLJsmDwRsrYhh+Zr3rQ=
-Date:   Thu, 20 Aug 2020 17:13:22 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Wanchun Zheng <zhengwanchun@hisilicon.com>,
-        linuxarm@huawei.com, dri-devel <dri-devel@lists.freedesktop.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        devel@driverdev.osuosl.org, Daniel Borkmann <daniel@iogearbox.net>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Xiubin Zhang <zhangxiubin1@huawei.com>,
-        Wei Xu <xuwei5@hisilicon.com>, David Airlie <airlied@linux.ie>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Bogdan Togorean <bogdan.togorean@analog.com>,
-        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        Liwei Cai <cailiwei@hisilicon.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linaro-mm-sig@lists.linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Jakub Kicinski <kuba@kernel.org>, mauro.chehab@huawei.com,
-        Rob Clark <robdclark@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liuyao An <anliuyao@huawei.com>,
-        Rongrong Zou <zourongrong@gmail.com>, bpf@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 00/49] DRM driver for Hikey 970
-Message-ID: <20200820171322.3b2e94fd@coco.lan>
-In-Reply-To: <20200820144808.GA186324@ravnborg.org>
-References: <cover.1597833138.git.mchehab+huawei@kernel.org>
-        <20200819152120.GA106437@ravnborg.org>
-        <20200819174027.70b39ee9@coco.lan>
-        <20200819173558.GA3733@ravnborg.org>
-        <20200820160649.54741194@coco.lan>
-        <20200820144808.GA186324@ravnborg.org>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 20 Aug 2020 11:15:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728584AbgHTPPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:15:40 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1781AC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:15:40 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id i10so1295107pgk.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=+i2rLOLDfJQgKqdiOBngyPNxtVIJB7Ri9t9x2ddN/V4=;
+        b=QkzPGfG5kJOuLTCBb4R2ScqS7WUTbzqAfh6mZ4RGT+dW3ng9pOOWxwWoeb0D0JhK4X
+         W9kYOa5M49eSpO2o2Elzzgm0rJX7As5HkDgfeXNZ5PahEsD5qO3SdD/ByyaK+/SqTvB1
+         4bnocO4K/ufgUJ4DVAvJAWBmmZSVoz/REYhFTaNJY6L3Zv5WhKVbJBYJyql3vNxnQUHw
+         0Bu/bUIk7LS8Jq6mEQVinG/oEezDkQ2dwU+3SAuLP8aCE1HA8FxzyzzMxAyUI9JNBMKQ
+         ZnfB1RKN+asnBdKbNY/L+mIGKaPb6M9KPO3ka4CokUpcjcfq2bNJLQBe9fBVzMuTsukI
+         3hFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=+i2rLOLDfJQgKqdiOBngyPNxtVIJB7Ri9t9x2ddN/V4=;
+        b=UGFVvggewF0vLNbp+1szbOjd9wEsvmGKphgGyS4BXAO84Uue8VGhQq671/vCa3jHFv
+         Ngvv74JC1p7yKdfqa9zCQp12h1QWSitIy4oiAaa/9deKhDyDtfeKfw9jY9UNe99e2epJ
+         RQsC93be6g+7NHkqUpO67WfUkOkJ6Kq9zcnudy92f0KpyWyH7KR7C9mW6wStrzfTxwHp
+         RrW9ckowUKHqllPbb97FUTRTPviLg8+kN2d+wSr9fB8Ntspk+3P/MhsFkrrcgw4TCaeP
+         pBJ5R+nA1slD3nbrDDcBmRy/rRgSXKsU3XLAGa1zR8zVcH22j+GtPJd+1BQAaJXK0wGi
+         ATSA==
+X-Gm-Message-State: AOAM530iUli+UycE76rbayR9fZoVMOD7TkOy8szu7tJ6Jk7Y/wBG4l5C
+        vbu7t3WpPa19TyksGJLV7xHL53THUXpBIw==
+X-Google-Smtp-Source: ABdhPJxUbNzmvqrp8wqPrNT8Ww/CtNMCLFipkHXr7nYEKxGIdwsURqD0AqBi8i9ZC8lldqlytjlWEQ==
+X-Received: by 2002:a62:e405:: with SMTP id r5mr2593488pfh.61.1597936539478;
+        Thu, 20 Aug 2020 08:15:39 -0700 (PDT)
+Received: from mail.google.com ([141.164.41.4])
+        by smtp.gmail.com with ESMTPSA id y1sm3235176pfl.136.2020.08.20.08.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 08:15:38 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 23:15:28 +0800
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Changbin Du <changbin.du@gmail.com>, Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 08/18] perf ftrace: add support for tracing option
+ 'func_stack_trace'
+Message-ID: <20200820151528.yedul64eb24cjo7l@mail.google.com>
+References: <20200808023141.14227-1-changbin.du@gmail.com>
+ <20200808023141.14227-9-changbin.du@gmail.com>
+ <20200814122440.GY13995@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814122440.GY13995@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 20 Aug 2020 16:48:08 +0200
-Sam Ravnborg <sam@ravnborg.org> escreveu:
-
-> Hi Mauro.
+On Fri, Aug 14, 2020 at 09:24:40AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Aug 08, 2020 at 10:31:31AM +0800, Changbin Du escreveu:
+> > This adds support to display call trace for function tracer. To do this,
+> > just specify a '--func-opts call-graph' option.
 > 
-> On Thu, Aug 20, 2020 at 04:06:49PM +0200, Mauro Carvalho Chehab wrote:
-> > Em Wed, 19 Aug 2020 19:35:58 +0200
-> > Sam Ravnborg <sam@ravnborg.org> escreveu:
+> Applied, thanks for providing the usage example and the output of the
+> tool, please consider making this more compact and similar to the other
+> perf tools as:
+> 
+>    # perf ftrace -g -T vfs_read
+> 
+>   # perf report -h -g
+>   
+>    Usage: perf report [<options>]
+>   
+>       -g, --call-graph <print_type,threshold[,print_limit],order,sort_key[,branch],value>
+>                             Display call graph (stack chain/backtrace):
+>   
+>                                   print_type:     call graph printing style (graph|flat|fractal|folded|none)
+>                                   threshold:      minimum call graph inclusion threshold (<percent>)
+>                                   print_limit:    maximum number of call graph entry (<number>)
+>                                   order:          call graph order (caller|callee)
+>                                   sort_key:       call graph sort key (function|address)
+>                                   branch:         include last branch info to call graph (branch)
+>                                   value:          call graph value (percent|period|count)
+>   
+>                                   Default: graph,0.5,caller,function,percent
+>   
+>   # 
+> 
+> Is there a way to ask for a limit in the number of levels? That is
+> similar to /proc/sys/kernel/perf_event_max_stack (system wide) and
+> perf_event_attr.sample_max_stack (per event)?
+> 
+No, there is no such limit for function tracer yet (kernel doesn't support it).
+It just backtraces from current to top.
+
+For graph tracer, the option is --graph-opts depth=<n>.
+
+> One can ask for that per event:
+> 
+>   # perf trace -e sched:*_wakeup/max-stack=2/ -e sched:*switch/max-stack=5/ --max-events=4
+>      0.000 migration/0/12 sched:sched_switch(prev_comm: "migration/0", prev_pid: 12 (migration/0), prev_prio: 0, prev_state: 1, next_comm: "swapper/0", next_pid: 0, next_prio: 120)
+>                                        __schedule ([kernel.kallsyms])
+>                                        __schedule ([kernel.kallsyms])
+>                                        schedule ([kernel.kallsyms])
+>                                        smpboot_thread_fn ([kernel.kallsyms])
+>                                        kthread ([kernel.kallsyms])
+>      2.381 :0/0 sched:sched_wakeup(comm: "PacerThread", pid: 111637 (PacerThread), prio: 120, success: 1, target_cpu: 0)
+>                                        ttwu_do_wakeup ([kernel.kallsyms])
+>                                        ttwu_do_wakeup ([kernel.kallsyms])
+>      2.387 :0/0 sched:sched_switch(prev_comm: "swapper/0", prev_pid: 0, prev_prio: 120, prev_state: 0, next_comm: "PacerThread", next_pid: 111637 (PacerThread), next_prio: 120)
+>                                        __schedule ([kernel.kallsyms])
+>                                        __schedule ([kernel.kallsyms])
+>                                        schedule_idle ([kernel.kallsyms])
+>                                        do_idle ([kernel.kallsyms])
+>                                        cpu_startup_entry ([kernel.kallsyms])
+>      2.410 PacerThread/111637 sched:sched_switch(prev_comm: "PacerThread", prev_pid: 111637 (PacerThread), prev_prio: 120, prev_state: 1, next_comm: "swapper/0", next_pid: 0, next_prio: 120)
+>                                        __schedule ([kernel.kallsyms])
+>                                        __schedule ([kernel.kallsyms])
+>                                        schedule ([kernel.kallsyms])
+>                                        futex_wait_queue_me ([kernel.kallsyms])
+>                                        futex_wait ([kernel.kallsyms])
+>   #
+> 
+> - Arnaldo
+>  
+> > $ sudo perf ftrace -T vfs_read --func-opts call-graph
+> >  iio-sensor-prox-855   [003]   6168.369657: vfs_read <-ksys_read
+> >  iio-sensor-prox-855   [003]   6168.369677: <stack trace>
+> >  => vfs_read
+> >  => ksys_read
+> >  => __x64_sys_read
+> >  => do_syscall_64
+> >  => entry_SYSCALL_64_after_hwframe
+> >  ...
 > > 
-> > I'm already handling the other comments from your review (I'll send a
-> > more complete comment about them after finishing),  
-> If you get back only on things you do not understand or do not agree on
-> that would be fine. The rest should be visible in the changelog on the
-> updated patch - no need to do extra work here.
-> 
-> > but I have a doubt what you meant about this:
-> >   
-> > > +static int kirin_drm_bind(struct device *dev)  
-> > > > +{
-> > > > +	struct drm_driver *driver = &kirin_drm_driver;
-> > > > +	struct drm_device *drm_dev;
-> > > > +	struct kirin_drm_private *priv;
-> > > > +	int ret;
-> > > > +
-> > > > +	drm_dev = drm_dev_alloc(driver, dev);
-> > > > +	if (!drm_dev)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	ret = kirin_drm_kms_init(drm_dev);
-> > > > +	if (ret)
-> > > > +		goto err_drm_dev_unref;
-> > > > +
-> > > > +	ret = drm_dev_register(drm_dev, 0);    
-> > > There is better ways to do this. See drm_drv.c for the code example.  
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
 > > 
-> > Not sure if I understood your comment here. The drm_drv.c example also calls 
-> > drm_dev_register().  
+> > ---
+> > v3: switch to uniform option --func-opts.
+> > v2: option name '-s' -> '--func-call-graph'
+> > ---
+> >  tools/perf/Documentation/perf-ftrace.txt |  4 +++
+> >  tools/perf/builtin-ftrace.c              | 42 ++++++++++++++++++++++++
+> >  2 files changed, 46 insertions(+)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+> > index c46d0a09b38c..8f08ad0992c2 100644
+> > --- a/tools/perf/Documentation/perf-ftrace.txt
+> > +++ b/tools/perf/Documentation/perf-ftrace.txt
+> > @@ -76,6 +76,10 @@ OPTIONS
+> >  	specify multiple functions (or glob patterns).  It will be
+> >  	passed to 'set_ftrace_notrace' in tracefs.
+> >  
+> > +--func-opts::
+> > +	List of options allowed to set:
+> > +	  call-graph - Display kernel stack trace for function tracer.
+> > +
+> >  -G::
+> >  --graph-funcs=::
+> >  	Select function_graph tracer and set graph filter on the given
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 07b81d0c1658..469b89748c42 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -27,6 +27,7 @@
+> >  #include "util/cap.h"
+> >  #include "util/config.h"
+> >  #include "util/units.h"
+> > +#include "util/parse-sublevel-options.h"
+> >  
+> >  #define DEFAULT_TRACER  "function_graph"
+> >  
+> > @@ -42,6 +43,7 @@ struct perf_ftrace {
+> >  	int			graph_depth;
+> >  	unsigned long		percpu_buffer_size;
+> >  	bool			inherit;
+> > +	int			func_stack_trace;
+> >  };
+> >  
+> >  struct filter_entry {
+> > @@ -202,6 +204,7 @@ static void reset_tracing_filters(void);
+> >  static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+> >  {
+> >  	write_tracing_option_file("function-fork", "0");
+> > +	write_tracing_option_file("func_stack_trace", "0");
+> >  }
+> >  
+> >  static int reset_tracing_files(struct perf_ftrace *ftrace __maybe_unused)
+> > @@ -278,6 +281,17 @@ static int set_tracing_cpu(struct perf_ftrace *ftrace)
+> >  	return set_tracing_cpumask(cpumap);
+> >  }
+> >  
+> > +static int set_tracing_func_stack_trace(struct perf_ftrace *ftrace)
+> > +{
+> > +	if (!ftrace->func_stack_trace)
+> > +		return 0;
+> > +
+> > +	if (write_tracing_option_file("func_stack_trace", "1") < 0)
+> > +		return -1;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int reset_tracing_cpu(void)
+> >  {
+> >  	struct perf_cpu_map *cpumap = perf_cpu_map__new(NULL);
+> > @@ -426,6 +440,11 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace, int argc, const char **argv)
+> >  		goto out_reset;
+> >  	}
+> >  
+> > +	if (set_tracing_func_stack_trace(ftrace) < 0) {
+> > +		pr_err("failed to set tracing option func_stack_trace\n");
+> > +		goto out_reset;
+> > +	}
+> > +
+> >  	if (set_tracing_filters(ftrace) < 0) {
+> >  		pr_err("failed to set tracing filters\n");
+> >  		goto out_reset;
+> > @@ -598,6 +617,26 @@ static int parse_buffer_size(const struct option *opt,
+> >  	return -1;
+> >  }
+> >  
+> > +static int parse_func_tracer_opts(const struct option *opt,
+> > +				  const char *str, int unset)
+> > +{
+> > +	int ret;
+> > +	struct perf_ftrace *ftrace = (struct perf_ftrace *) opt->value;
+> > +	struct sublevel_option func_tracer_opts[] = {
+> > +		{ .name = "call-graph",	.value_ptr = &ftrace->func_stack_trace },
+> > +		{ .name = NULL, }
+> > +	};
+> > +
+> > +	if (unset)
+> > +		return 0;
+> > +
+> > +	ret = perf_parse_sublevel_options(str, func_tracer_opts);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static void select_tracer(struct perf_ftrace *ftrace)
+> >  {
+> >  	bool graph = !list_empty(&ftrace->graph_funcs) ||
+> > @@ -645,6 +684,9 @@ int cmd_ftrace(int argc, const char **argv)
+> >  		     parse_filter_func),
+> >  	OPT_CALLBACK('N', "notrace-funcs", &ftrace.notrace, "func",
+> >  		     "do not trace given functions", parse_filter_func),
+> > +	OPT_CALLBACK(0, "func-opts", &ftrace, "options",
+> > +		     "function tracer options, available options: call-graph",
+> > +		     parse_func_tracer_opts),
+> >  	OPT_CALLBACK('G', "graph-funcs", &ftrace.graph_funcs, "func",
+> >  		     "trace given functions using function_graph tracer",
+> >  		     parse_filter_func),
+> > -- 
+> > 2.25.1
+> > 
 > 
-> This is indeed not obvious from my comments but what I wnated to say is
-> that the driver should embed drm_device in some struct,
-> maybe in "struct kirin_drm_private".
+> -- 
 > 
-> This should also be part of the referenced example.
-> 
-> I hope this clarifies it.
+> - Arnaldo
 
-Yeah. I was already doing those changes ;-) 
-
-Something like the enclosed patch, right?
-
-Btw, I'm not sure if the error handling part is ok, as I didn't check
-what the devm stuff does at the subsystem. 
-
--
-
-On a separate question, I was unable to use the helper macros,
-as it sounds that there's no macro with this:
-
-	.dumb_create		= drm_gem_cma_dumb_create_internal,
-
-The existing DRM_GEM_CMA_VMAP_DRIVER_OPS uses, instead
-drm_gem_cma_dumb_create(). I'm not sure if this driver can use
-such function instead.
-
-Thanks,
-Mauro
-
-staging: hikey9xx/gpu: use drm_managed interface
-    
-Use a more modern design for the driver binding logic by
-using drm_managed and getting rid of drm->dev_private.
-    
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-index c7736f4d74b7..600c89605cc0 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.c
-@@ -29,12 +29,13 @@
- #include <drm/drm_of.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_vblank.h>
-+#include <drm/drm_managed.h>
- 
- #include "kirin9xx_drm_drv.h"
- 
- static int kirin_drm_kms_cleanup(struct drm_device *dev)
- {
--	struct kirin_drm_private *priv = dev->dev_private;
-+	struct kirin_drm_private *priv = to_drm_private(dev);
- 	static struct kirin_dc_ops const *dc_ops;
- 
- 	if (priv->fbdev)
-@@ -45,15 +46,13 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
- 	drm_kms_helper_poll_fini(dev);
- 	dc_ops->cleanup(dev);
- 	drm_mode_config_cleanup(dev);
--	devm_kfree(dev->dev, priv);
--	dev->dev_private = NULL;
- 
- 	return 0;
- }
- 
- static void kirin_fbdev_output_poll_changed(struct drm_device *dev)
- {
--	struct kirin_drm_private *priv = dev->dev_private;
-+	struct kirin_drm_private *priv = to_drm_private(dev);
- 
- 	dsi_set_output_client(dev);
- 
-@@ -69,18 +68,20 @@ static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
- 
- static int kirin_drm_kms_init(struct drm_device *dev)
- {
--	struct kirin_drm_private *priv = dev->dev_private;
-+	struct kirin_drm_private *priv = to_drm_private(dev);
- 	static struct kirin_dc_ops const *dc_ops;
- 	int ret;
- 
--	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-+	priv = drmm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
- 	if (!priv)
- 		return -ENOMEM;
- 
- 	dev->dev_private = priv;
- 	dev_set_drvdata(dev->dev, dev);
- 
--	drm_mode_config_init(dev);
-+	ret = drmm_mode_config_init(dev);
-+	if (ret)
-+		return ret;
- 
- 	dev->mode_config.min_width = 0;
- 	dev->mode_config.min_height = 0;
-@@ -94,20 +95,20 @@ static int kirin_drm_kms_init(struct drm_device *dev)
- 	dc_ops = of_device_get_match_data(dev->dev);
- 	ret = dc_ops->init(dev);
- 	if (ret)
--		goto err_mode_config_cleanup;
-+		return ret;
- 
- 	/* bind and init sub drivers */
- 	ret = component_bind_all(dev->dev, dev);
- 	if (ret) {
- 		DRM_ERROR("failed to bind all component.\n");
--		goto err_dc_cleanup;
-+		return ret;
- 	}
- 
- 	/* vblank init */
- 	ret = drm_vblank_init(dev, dev->mode_config.num_crtc);
- 	if (ret) {
- 		DRM_ERROR("failed to initialize vblank.\n");
--		goto err_unbind_all;
-+		return ret;
- 	}
- 	/* with irq_enabled = true, we can use the vblank feature. */
- 	dev->irq_enabled = true;
-@@ -119,28 +120,10 @@ static int kirin_drm_kms_init(struct drm_device *dev)
- 	drm_kms_helper_poll_init(dev);
- 
- 	return 0;
--
--err_unbind_all:
--	component_unbind_all(dev->dev, dev);
--err_dc_cleanup:
--	dc_ops->cleanup(dev);
--err_mode_config_cleanup:
--	drm_mode_config_cleanup(dev);
--	devm_kfree(dev->dev, priv);
--	dev->dev_private = NULL;
--
--	return ret;
- }
- 
- DEFINE_DRM_GEM_CMA_FOPS(kirin_drm_fops);
- 
--static int kirin_gem_cma_dumb_create(struct drm_file *file,
--				     struct drm_device *dev,
--				     struct drm_mode_create_dumb *args)
--{
--	return drm_gem_cma_dumb_create_internal(file, dev, args);
--}
--
- static int kirin_drm_connectors_register(struct drm_device *dev)
- {
- 	struct drm_connector_list_iter conn_iter;
-@@ -176,11 +159,11 @@ static int kirin_drm_connectors_register(struct drm_device *dev)
- static struct drm_driver kirin_drm_driver = {
- 	.driver_features	= DRIVER_GEM | DRIVER_MODESET |
- 				  DRIVER_ATOMIC | DRIVER_RENDER,
--	.fops				= &kirin_drm_fops,
-+	.fops			= &kirin_drm_fops,
- 
- 	.gem_free_object	= drm_gem_cma_free_object,
- 	.gem_vm_ops		= &drm_gem_cma_vm_ops,
--	.dumb_create		= kirin_gem_cma_dumb_create,
-+	.dumb_create		= drm_gem_cma_dumb_create_internal,
- 
- 	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
- 	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
-@@ -207,42 +190,48 @@ static int compare_of(struct device *dev, void *data)
- static int kirin_drm_bind(struct device *dev)
- {
- 	struct drm_driver *driver = &kirin_drm_driver;
--	struct drm_device *drm_dev;
- 	struct kirin_drm_private *priv;
-+	struct drm_device *drm;
- 	int ret;
- 
--	drm_dev = drm_dev_alloc(driver, dev);
--	if (!drm_dev)
-+	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
- 		return -ENOMEM;
- 
--	ret = kirin_drm_kms_init(drm_dev);
-+	drm = &priv->drm;
-+
-+	ret = devm_drm_dev_init(dev, drm, driver);
-+	if (ret) {
-+		kfree(priv);
-+		return ret;
-+	}
-+	drmm_add_final_kfree(drm, priv);
-+
-+	ret = kirin_drm_kms_init(drm);
- 	if (ret)
--		goto err_drm_dev_unref;
-+		return ret;
- 
--	ret = drm_dev_register(drm_dev, 0);
-+	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto err_kms_cleanup;
-+		return ret;
- 
--	drm_fbdev_generic_setup(drm_dev, 0);
--	priv = drm_dev->dev_private;
-+	drm_fbdev_generic_setup(drm, 0);
- 
- 	/* connectors should be registered after drm device register */
--	ret = kirin_drm_connectors_register(drm_dev);
-+	ret = kirin_drm_connectors_register(drm);
- 	if (ret)
- 		goto err_drm_dev_unregister;
- 
- 	DRM_INFO("Initialized %s %d.%d.%d %s on minor %d\n",
- 		 driver->name, driver->major, driver->minor, driver->patchlevel,
--		 driver->date, drm_dev->primary->index);
-+		 driver->date, drm->primary->index);
- 
- 	return 0;
- 
- err_drm_dev_unregister:
--	drm_dev_unregister(drm_dev);
--err_kms_cleanup:
--	kirin_drm_kms_cleanup(drm_dev);
--err_drm_dev_unref:
--	drm_dev_put(drm_dev);
-+	drm_dev_unregister(drm);
-+	kirin_drm_kms_cleanup(drm);
-+	drm_dev_put(drm);
- 
- 	return ret;
- }
-@@ -252,6 +241,7 @@ static void kirin_drm_unbind(struct device *dev)
- 	struct drm_device *drm_dev = dev_get_drvdata(dev);
- 
- 	drm_dev_unregister(drm_dev);
-+	drm_atomic_helper_shutdown(drm_dev);
- 	kirin_drm_kms_cleanup(drm_dev);
- 	drm_dev_put(drm_dev);
- }
-diff --git a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-index 58f6fc7be347..09255d136c54 100644
---- a/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-+++ b/drivers/staging/hikey9xx/gpu/kirin9xx_drm_drv.h
-@@ -31,6 +31,7 @@ struct kirin_dc_ops {
- };
- 
- struct kirin_drm_private {
-+	struct drm_device drm;
- 	struct drm_fb_helper *fbdev;
- 	struct drm_crtc *crtc[MAX_CRTC];
- };
-@@ -44,4 +45,6 @@ extern const struct kirin_dc_ops kirin960_dss_dc_ops;
- extern const struct kirin_dc_ops kirin970_dss_dc_ops;
- void dsi_set_output_client(struct drm_device *dev);
- 
-+#define to_drm_private(d) container_of(d, struct kirin_drm_private, drm)
-+
- #endif /* __KIRIN_DRM_DRV_H__ */
+-- 
+Cheers,
+Changbin Du
