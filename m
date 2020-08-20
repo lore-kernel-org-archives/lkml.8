@@ -2,177 +2,124 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7A91C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91396C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCD722072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA1F2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:13:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="OG8nWb3x"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tAmRLfwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgHTQM6 (ORCPT
+        id S1729686AbgHTQNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729772AbgHTQMa (ORCPT
+        Thu, 20 Aug 2020 12:13:12 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37698 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728047AbgHTQMK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:12:30 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7FD8C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:12:30 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id a24so2337740oia.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ud0t0O/A9Zxe4AUQrrfIW1bhDjfdc8SKj1ooJkDSnEc=;
-        b=OG8nWb3xyhE1WjhqnLw+bu8z2arHxNdpvBUUxE713nK5l/9FVUUvdMaxu0aiJ/QJkp
-         v0eEF8Y9nrBafzmEg7AiAQzgIMA32FhyYPWEc7o7zz0NRivisQeRFNKh+4x+rgETdweS
-         Ar6aVVMzVPpzpMQYvX3xQg1HRbjItfwGiGDM0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ud0t0O/A9Zxe4AUQrrfIW1bhDjfdc8SKj1ooJkDSnEc=;
-        b=kC9W1MDRtZWbvAzxMyl9DXnAHqZ5EzDnubZ0uV5JTJd3n1GCR6SbjmMKv07pZAnoN3
-         dFQK5y4k4i+zvsJW0/hxUbRc5RtkrP6Hv9r2ZSATGz0qql6QNefaylEresJj05iO6FQN
-         z6P5CNbK0nTPdB+5Gy3Ss+LaPYCeEO/zSE3CRrMZrPl04qNVzPgNAJ3VHf3Zx4/CDtEu
-         UK+/DyW5gG5TM0CE3H35rqgQGBSNCLhn17NiFq358crfZ10rpynLEB5n4X15KNx5N7jw
-         wS0EvtY29LqhCosp+owDPv6zDARqwsoYLKw4XdXC/TR+tSbZCNRowmo7JMKjQncAvFOH
-         epbQ==
-X-Gm-Message-State: AOAM530XmGf0uLpHaq/JgYEeXJ3EfRqeluvAXt/tFPUnK3eao8CgOYRe
-        W5oQ1r0ZWU3SkzilNP4Qqp7xk8xAtQ71/u3K9KiwcQ==
-X-Google-Smtp-Source: ABdhPJyOjtYelp22Uu3YGbeY+hgPk19hR7Mb45ss3oGk4BF19/Wv9MbETzwWzjM5dduq31TsR0O7FMA/xPtxyFMHsZM=
-X-Received: by 2002:aca:cfd0:: with SMTP id f199mr2098445oig.102.1597939950149;
- Thu, 20 Aug 2020 09:12:30 -0700 (PDT)
+        Thu, 20 Aug 2020 12:12:10 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG1f0l183742;
+        Thu, 20 Aug 2020 12:12:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=AEDHEnEMFCq6WcLhJaRCU/vTIJcXf+PF8oNl/WaRVNg=;
+ b=tAmRLfwIVK6RKgCy1QrvQ1r47Y8r7QTXxSPVbeimlS5gCcTujN/yJyxT49ka1jRUJteQ
+ 4ghP9wOjaG+jLNy4QSXWHLaY5bErcc1kMWyga0Qg+PJ5/9L9/yWf8EeFz41HLbAhC8Em
+ lDf8WKAGzTI/fSGqTUwKdADHOog586M5E6IZYIlb3aTxIL+jCfgwS49//cB8n7PFOt5I
+ CVSxqu9QoNJBrNZ4wa6v+wwQq+NPj8VCome4TAEmeIHJR+JkNwUNIBgw9XkAYqHq0Se7
+ XULeuf5McMikDZBGFzpaoaeuYlI0g7Yqp3+T9L46c3V/KqsZsKqAiywToYPhk1z+RxwC vg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304rveygn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 12:12:02 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG1rYt184413;
+        Thu, 20 Aug 2020 12:12:02 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3304rveyg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 12:12:02 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KGAIbv008332;
+        Thu, 20 Aug 2020 16:12:00 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma03wdc.us.ibm.com with ESMTP id 3304cedj9q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Aug 2020 16:12:00 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGC0r746072308
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 16:12:00 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 639C3112063;
+        Thu, 20 Aug 2020 16:12:00 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24EF7112061;
+        Thu, 20 Aug 2020 16:11:59 +0000 (GMT)
+Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Aug 2020 16:11:59 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-input@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-i2c@vger.kernel.org,
+        joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org,
+        brendanhiggins@google.com, dmitry.torokhov@gmail.com,
+        robh+dt@kernel.org, eajames@linux.ibm.com
+Subject: [PATCH 4/5] ARM: dts: Aspeed: Tacoma: Add IBM Operation Panel I2C device
+Date:   Thu, 20 Aug 2020 11:11:51 -0500
+Message-Id: <20200820161152.22751-5-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200820161152.22751-1-eajames@linux.ibm.com>
+References: <20200820161152.22751-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200819092436.58232-1-lmb@cloudflare.com> <20200819092436.58232-7-lmb@cloudflare.com>
- <1ad29823-1925-01ee-f042-20b422a62a73@fb.com> <CACAyw9-ORs29Gt0c02qsco9ah_h88OqQh5cq36SpDCD19x89uw@mail.gmail.com>
- <582e57e2-58e6-8a37-7dbc-67a2a1db7ecb@fb.com>
-In-Reply-To: <582e57e2-58e6-8a37-7dbc-67a2a1db7ecb@fb.com>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Thu, 20 Aug 2020 17:12:18 +0100
-Message-ID: <CACAyw98oAK2Ds1DShkNHq6AYKNF0sL_LOAji3rriuxRa35brAA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 6/6] selftests: bpf: test sockmap update from BPF
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Jakub Sitnicki <jakub@cloudflare.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        kernel-team <kernel-team@cloudflare.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=971 priorityscore=1501 suspectscore=1 phishscore=0 spamscore=0
+ impostorscore=0 adultscore=0 mlxscore=0 clxscore=1015 bulkscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 15:49, Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 8/20/20 4:58 AM, Lorenz Bauer wrote:
-> > On Wed, 19 Aug 2020 at 21:46, Yonghong Song <yhs@fb.com> wrote:
-> >>
-> >>
-> >>
-> >> On 8/19/20 2:24 AM, Lorenz Bauer wrote:
-> >>> Add a test which copies a socket from a sockmap into another sockmap
-> >>> or sockhash. This excercises bpf_map_update_elem support from BPF
-> >>> context. Compare the socket cookies from source and destination to
-> >>> ensure that the copy succeeded.
-> >>>
-> >>> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-> >>> ---
-> >>>    .../selftests/bpf/prog_tests/sockmap_basic.c  | 76 +++++++++++++++++++
-> >>>    .../selftests/bpf/progs/test_sockmap_copy.c   | 48 ++++++++++++
-> >>>    2 files changed, 124 insertions(+)
-> >>>    create mode 100644 tools/testing/selftests/bpf/progs/test_sockmap_copy.c
-> >>>
-> >>> diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-> >>> index 96e7b7f84c65..d30cabc00e9e 100644
-> >>> --- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-> >>> +++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
-> >>> @@ -4,6 +4,7 @@
-> >>>
-> >>>    #include "test_progs.h"
-> >>>    #include "test_skmsg_load_helpers.skel.h"
-> >>> +#include "test_sockmap_copy.skel.h"
-> >>>
-> >>>    #define TCP_REPAIR          19      /* TCP sock is under repair right now */
-> >>>
-> >>> @@ -101,6 +102,77 @@ static void test_skmsg_helpers(enum bpf_map_type map_type)
-> >>>        test_skmsg_load_helpers__destroy(skel);
-> >>>    }
-> >>>
-> >>> +static void test_sockmap_copy(enum bpf_map_type map_type)
-> >>> +{
-> >>> +     struct bpf_prog_test_run_attr attr;
-> >>> +     struct test_sockmap_copy *skel;
-> >>> +     __u64 src_cookie, dst_cookie;
-> >>> +     int err, prog, s, src, dst;
-> >>> +     const __u32 zero = 0;
-> >>> +     char dummy[14] = {0};
-> >>> +
-> >>> +     s = connected_socket_v4();
-> >>
-> >> Maybe change variable name to "sk" for better clarity?
-> >
-> > Yup!
-> >
-> >>
-> >>> +     if (CHECK_FAIL(s == -1))
-> >>> +             return;
-> >>> +
-> >>> +     skel = test_sockmap_copy__open_and_load();
-> >>> +     if (CHECK_FAIL(!skel)) {
-> >>> +             close(s);
-> >>> +             perror("test_sockmap_copy__open_and_load");
-> >>> +             return;
-> >>> +     }
-> >>
-> >> Could you use CHECK instead of CHECK_FAIL?
-> >> With CHECK, you can print additional information without perror.
-> >
-> > I avoid CHECK because it requires `duration`, which doesn't make sense
-> > for most things that I call CHECK_FAIL on here. So either it outputs 0
-> > nsec (which is bogus) or it outputs the value from the last
-> > bpf_prog_test_run call (which is also bogus). How do other tests
-> > handle this? Just ignore it?
->
-> Just ignore it. You can define a static variable duration in the
-> beginning of file and then use CHECK in the rest of file.
+Set I2C bus 0 to multi-master mode and add the panel device that will
+register as a slave.
 
-Ok, will do in v3!
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
->
-> >
-> >>
-> >>
-> >>> +
-> >>> +     prog = bpf_program__fd(skel->progs.copy_sock_map);
-> >>> +     src = bpf_map__fd(skel->maps.src);
-> >>> +     if (map_type == BPF_MAP_TYPE_SOCKMAP)
-> >>> +             dst = bpf_map__fd(skel->maps.dst_sock_map);
-> >>> +     else
-> >>> +             dst = bpf_map__fd(skel->maps.dst_sock_hash);
-> >>> +
-> [...]
-
-
-
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+index 5f4ee67ac787..9cf2e02ae9e2 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-tacoma.dts
+@@ -438,7 +438,13 @@ aliases {
+ };
+ 
+ &i2c0 {
++	multi-master;
+ 	status = "okay";
++
++	ibm-panel@62 {
++		compatible = "ibm,op-panel";
++		reg = <0x40000062>; /* I2C_OWN_SLAVE_ADDRESS */
++	};
+ };
+ 
+ &i2c1 {
 -- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+2.26.2
 
-www.cloudflare.com
