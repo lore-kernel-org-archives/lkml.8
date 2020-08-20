@@ -2,96 +2,151 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88457C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206ADC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61BBC207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P8x86hz0"
+	by mail.kernel.org (Postfix) with ESMTP id F3667207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597928922;
+	bh=PKNpThjb7+fkLR/AL7zx/sviArJdzkpLNMjlFLtKWsE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Bkzw4Zv51xC6QTXLcKZ5JdTF9VPKGz0Tx7SXIYOhw7JnE6RJUvJaI5Nby/pflgSNp
+	 yXIy4UDhWhPuS3XikhA0G09a0ZIiy6uxHk4rSQGWVeUApfkLL3nHM99zlEXtYJPyYp
+	 Zurk1z87B5sOx0JhDEbT3LDL+iY+E5XhUmqsqVxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgHTNIh (ORCPT
+        id S1728961AbgHTNIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728848AbgHTNIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:08:32 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358D1C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 06:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=E3zojqPhdk7VSZAujguQkn+IVWrkry8akdjcjCF1GMY=; b=P8x86hz0Jfe9ms3orxSszObeD+
-        ypy4aFu7xOCkhBcWo5N9X2PZAeROH+GK/+MdXh9NR9rGxoFBETN4/d8RZcVBZ8rOLd3OAV2zQKdtT
-        uCCbZ16bpdOJFjYq6dww6ynDe4tzVX7z/2AzDqiVFLbHE3GPTVoey/faxfrBQp36uHmg6DQ3BXhwL
-        uY9LAxIoSB0ptToc+Csmgh/E6ZbzvrhXNlUvY6WTR1c97mJRvfTC3tv6FtOq+SH8fqT6HGwbkeYsG
-        doMHDJ/5oVxwRtE3wu8YFlb2QE8ooVWcmtPo+L60Ge96U+LMDExnyPHKIkgOc47SX6JuuKoVFUegK
-        zx01TIRQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8kIi-0000zQ-Pp; Thu, 20 Aug 2020 13:08:17 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 20 Aug 2020 09:08:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54900 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgHTJhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:55 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8D75B305E21;
-        Thu, 20 Aug 2020 15:08:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 417CD28B7E840; Thu, 20 Aug 2020 15:08:12 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 15:08:12 +0200
-From:   peterz@infradead.org
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Ingo Molnar <mingo@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [RFC][PATCH v2 08/10] smp,irq_work: Use the new irq_work API
-Message-ID: <20200820130812.GU2674@hirez.programming.kicks-ass.net>
-References: <20200818105102.926463950@infradead.org>
- <20200818112418.460474861@infradead.org>
- <20200818162542.GB27196@lst.de>
- <20200819072209.GU2674@hirez.programming.kicks-ass.net>
- <CAHk-=wgMATDQQxLSsgmxCoCqApVXVeRnGOf6iWjnYdTJY_R3aw@mail.gmail.com>
- <20200819194116.GJ2674@hirez.programming.kicks-ass.net>
- <CAHk-=wh2_pAFxa8FN95KoOseqMYPD0iX-d6ORbXxX22ixVZwBQ@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D86922B3F;
+        Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597916275;
+        bh=PKNpThjb7+fkLR/AL7zx/sviArJdzkpLNMjlFLtKWsE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AeXYXV8WlPvaJvlj+Dz+qnOuSyNnYOQaSp7TdhIZKunxqnbJZ8+EUkChLlhywbMfl
+         r4Z4Q+LvVEHJ3jNkjI5z208UpFQORuID5CnzwwBY/HDwpO14itHuglj/3WsbFT1MoV
+         Oj+sleqllHhyerj0WGnujjv1nhVXlZAcxa+AwYDs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Gang He <ghe@suse.com>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Changwei Ge <gechangwei@live.cn>,
+        Jun Piao <piaojun@huawei.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.7 072/204] ocfs2: change slot number type s16 to u16
+Date:   Thu, 20 Aug 2020 11:19:29 +0200
+Message-Id: <20200820091609.948580322@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
+References: <20200820091606.194320503@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh2_pAFxa8FN95KoOseqMYPD0iX-d6ORbXxX22ixVZwBQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 03:04:56PM -0700, Linus Torvalds wrote:
-> On Wed, Aug 19, 2020 at 12:41 PM <peterz@infradead.org> wrote:
-> >
-> > I'm not sure I get the "expensive irq_work queues" argument, I fully
-> > agree with you that adding the atomic op is fairly crap.
-> 
-> There's an atomic op on the actual runing side too, because of the
-> whole IRQ_WORK_PENDING thing.
-> 
-> So you get that double hit.
-> 
-> Maybe it doesn't matter. I just remember us being very careful to
-> avoid any unnecessary atomics in the smp_call_function area, but
-> admittedly I haven't worked on that code for a few years, so ..
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-Patch #3 trades that atomic for a full barrier. Not a massive win on
-x86, but still.
+commit 38d51b2dd171ad973afc1f5faab825ed05a2d5e9 upstream.
+
+Dan Carpenter reported the following static checker warning.
+
+	fs/ocfs2/super.c:1269 ocfs2_parse_options() warn: '(-1)' 65535 can't fit into 32767 'mopt->slot'
+	fs/ocfs2/suballoc.c:859 ocfs2_init_inode_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_inode_steal_slot'
+	fs/ocfs2/suballoc.c:867 ocfs2_init_meta_steal_slot() warn: '(-1)' 65535 can't fit into 32767 'osb->s_meta_steal_slot'
+
+That's because OCFS2_INVALID_SLOT is (u16)-1. Slot number in ocfs2 can be
+never negative, so change s16 to u16.
+
+Fixes: 9277f8334ffc ("ocfs2: fix value of OCFS2_INVALID_SLOT")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reviewed-by: Gang He <ghe@suse.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200627001259.19757-1-junxiao.bi@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ fs/ocfs2/ocfs2.h    |    4 ++--
+ fs/ocfs2/suballoc.c |    4 ++--
+ fs/ocfs2/super.c    |    4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -326,8 +326,8 @@ struct ocfs2_super
+ 	spinlock_t osb_lock;
+ 	u32 s_next_generation;
+ 	unsigned long osb_flags;
+-	s16 s_inode_steal_slot;
+-	s16 s_meta_steal_slot;
++	u16 s_inode_steal_slot;
++	u16 s_meta_steal_slot;
+ 	atomic_t s_num_inodes_stolen;
+ 	atomic_t s_num_meta_stolen;
+ 
+--- a/fs/ocfs2/suballoc.c
++++ b/fs/ocfs2/suballoc.c
+@@ -879,9 +879,9 @@ static void __ocfs2_set_steal_slot(struc
+ {
+ 	spin_lock(&osb->osb_lock);
+ 	if (type == INODE_ALLOC_SYSTEM_INODE)
+-		osb->s_inode_steal_slot = slot;
++		osb->s_inode_steal_slot = (u16)slot;
+ 	else if (type == EXTENT_ALLOC_SYSTEM_INODE)
+-		osb->s_meta_steal_slot = slot;
++		osb->s_meta_steal_slot = (u16)slot;
+ 	spin_unlock(&osb->osb_lock);
+ }
+ 
+--- a/fs/ocfs2/super.c
++++ b/fs/ocfs2/super.c
+@@ -78,7 +78,7 @@ struct mount_options
+ 	unsigned long	commit_interval;
+ 	unsigned long	mount_opt;
+ 	unsigned int	atime_quantum;
+-	signed short	slot;
++	unsigned short	slot;
+ 	int		localalloc_opt;
+ 	unsigned int	resv_level;
+ 	int		dir_resv_level;
+@@ -1334,7 +1334,7 @@ static int ocfs2_parse_options(struct su
+ 				goto bail;
+ 			}
+ 			if (option)
+-				mopt->slot = (s16)option;
++				mopt->slot = (u16)option;
+ 			break;
+ 		case Opt_commit:
+ 			if (match_int(&args[0], &option)) {
+
 
