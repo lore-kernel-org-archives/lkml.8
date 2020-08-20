@@ -2,70 +2,70 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2DFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF29D2072D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443012072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:12:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="neeziy8I"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SY9kvCjp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgHTQMa (ORCPT
+        id S1729612AbgHTQMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:12:30 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61620 "EHLO
+        Thu, 20 Aug 2020 12:12:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57674 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729513AbgHTQMI (ORCPT
+        by vger.kernel.org with ESMTP id S1729686AbgHTQMM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:12:08 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG3gcx106903;
-        Thu, 20 Aug 2020 12:11:58 -0400
+        Thu, 20 Aug 2020 12:12:12 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KG20n8143921;
+        Thu, 20 Aug 2020 12:12:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=p4zPpqWUijmECTtxSBrlDcEiyLdOJEP1sRcpTvKaaYQ=;
- b=neeziy8Inkoi8duXwtfdAFoS4/raQ/C/R/83hO3co8xGg3KBfUGBd9Wm+SNggmLlnlIL
- O6UTN2ufn8+p4/80UlHNYpPpXXgz2pRrJES3rv2P8MAA70MfTB3sdBE8au8UB3w5vxlC
- CQH5X6ksWdDjlapM2ZC9WUFwC+QuSKMOv9U5ai628Q55Wx+ETlkFGdugcH/ulNbQgMnW
- 9vTVib3QIIw4w9C4PMsggYjh6J3APOnT5ZAOZSsdvPpKhcWCmIhwZPJTxeOCI9rXSXel
- WSm/eW2p3PG/FJUvtKrE3rUF9M6TU0thdtYF+LUq/jUIZLtDModWx5kIm6F4ad3nXw/O QA== 
+ bh=XmtgQdWKjYonczcloJW7pdHZMFXOrV+2fMSw/aDGw/k=;
+ b=SY9kvCjp1DGYFbwJ4P5XSK+8mIrEPRfso7t1rQ988xus+AqVse7ysxZNmT6bJ0+GjA3G
+ qVQjKXYNZDRTkOac4dRbyl1I9o+3EHVfAoI7FYF8XEbCXgwd8HxUy7C8sHbO99pwEIYz
+ DGc/uT1TWAVMTNK3zGQrJ72/ydSPcSsqLL63DJ3NZRFmkoe7+QWW3JyVjxvjiX5pZnkk
+ rKrb7Ryd5JVT7JqRPlD8+mW+NFePfAdP2xUTgwaXnijOmQmgzhJQJWjG1b3OblS0mgB5
+ bmMnd7YVnlu7C2h1Kc2r5Zv0OHsrs37eepOJyU2FpiFMYtzXjeuJqSvUOV3lIsRTDiqq PQ== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3317abb9bs-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3313kyu8ax-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:58 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG4ERY109718;
-        Thu, 20 Aug 2020 12:11:58 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3317abb9b2-1
+        Thu, 20 Aug 2020 12:12:04 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07KG23RR144382;
+        Thu, 20 Aug 2020 12:12:03 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3313kyu8a5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 12:11:57 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KG9atp016038;
-        Thu, 20 Aug 2020 16:11:56 GMT
+        Thu, 20 Aug 2020 12:12:03 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KGAmlX011453;
+        Thu, 20 Aug 2020 16:12:02 GMT
 Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma02dal.us.ibm.com with ESMTP id 3304cd2wqy-1
+        by ppma01wdc.us.ibm.com with ESMTP id 3304tkwdvh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 16:11:56 +0000
+        Thu, 20 Aug 2020 16:12:02 +0000
 Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGBtEU37159196
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KGC2ps52166940
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 16:11:55 GMT
+        Thu, 20 Aug 2020 16:12:02 GMT
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE505112062;
-        Thu, 20 Aug 2020 16:11:55 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 201CF112061;
+        Thu, 20 Aug 2020 16:12:02 +0000 (GMT)
 Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2854E112061;
-        Thu, 20 Aug 2020 16:11:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8B0FC112062;
+        Thu, 20 Aug 2020 16:12:00 +0000 (GMT)
 Received: from SHADE6A.ibmuc.com (unknown [9.163.70.74])
         by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 16:11:54 +0000 (GMT)
+        Thu, 20 Aug 2020 16:12:00 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-input@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -73,9 +73,9 @@ Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         joel@jms.id.au, andrew@aj.id.au, benh@kernel.crashing.org,
         brendanhiggins@google.com, dmitry.torokhov@gmail.com,
         robh+dt@kernel.org, eajames@linux.ibm.com
-Subject: [PATCH 1/5] dt-bindings: input: Add documentation for IBM Operation Panel
-Date:   Thu, 20 Aug 2020 11:11:48 -0500
-Message-Id: <20200820161152.22751-2-eajames@linux.ibm.com>
+Subject: [PATCH 5/5] ARM: dts: Aspeed: Rainier: Add IBM Operation Panel I2C device
+Date:   Thu, 20 Aug 2020 11:11:52 -0500
+Message-Id: <20200820161152.22751-6-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200820161152.22751-1-eajames@linux.ibm.com>
 References: <20200820161152.22751-1-eajames@linux.ibm.com>
@@ -84,89 +84,48 @@ Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-08-20_03:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- malwarescore=0 suspectscore=1 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 mlxlogscore=999 phishscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008200130
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0 clxscore=1015
+ mlxlogscore=991 malwarescore=0 suspectscore=1 phishscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008200127
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the bindings for the IBM Operation Panel, which provides
-a simple interface to control a server. It has a display and three
-buttons.
-Also update MAINTAINERS for the new file.
+Set I2C bus 7 to multi-master mode and add the panel device that will
+register as a slave.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- .../bindings/input/ibm,op-panel.yaml          | 38 +++++++++++++++++++
- MAINTAINERS                                   |  6 +++
- 2 files changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+ arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/ibm,op-panel.yaml b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
-new file mode 100644
-index 000000000000..86a32e8f3ef0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ibm,op-panel.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/ibm,op-panel.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: IBM Operation Panel
-+
-+maintainers:
-+  - Eddie James <eajames@linux.ibm.com>
-+
-+description: |
-+  The IBM Operation Panel provides a simple interface to control the connected
-+  server. It has a display and three buttons: two directional arrows and one
-+  'Enter' button.
-+
-+properties:
-+  compatible:
-+    const: ibm,op-panel
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        ibm-op-panel@62 {
-+            compatible = "ibm,op-panel";
-+            reg = <0x40000062>; /* I2C_OWN_SLAVE_ADDRESS */
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ac79fdbdf8d0..a9fd08e9cd54 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8278,6 +8278,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/aegl/linux.git
- F:	Documentation/ia64/
- F:	arch/ia64/
+diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+index b94421f6cbd5..f121f3c26a3a 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
+@@ -698,6 +698,7 @@ eeprom@53 {
+ };
  
-+IBM Operation Panel Input Driver
-+M:	Eddie James <eajames@linux.ibm.com>
-+L:	linux-input@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+ &i2c7 {
++	multi-master;
+ 	status = "okay";
+ 
+ 	si7021-a20@20 {
+@@ -831,6 +832,11 @@ gpio@15 {
+ 		};
+ 	};
+ 
++	ibm-panel@62 {
++		compatible = "ibm,op-panel";
++		reg = <0x40000062>;	/* I2C_OWN_SLAVE_ADDRESS */
++	};
 +
- IBM Power 842 compression accelerator
- M:	Haren Myneni <haren@us.ibm.com>
- S:	Supported
+ 	dps: dps310@76 {
+ 		compatible = "infineon,dps310";
+ 		reg = <0x76>;
 -- 
 2.26.2
 
