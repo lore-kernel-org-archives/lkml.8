@@ -2,184 +2,177 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5073C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AB5C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70FBD204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:22:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MS1ngaMH"
+	by mail.kernel.org (Postfix) with ESMTP id 4AA29204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgHTSWI (ORCPT
+        id S1727110AbgHTSXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727000AbgHTSWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:22:05 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1A1C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:22:05 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v4so3187708ljd.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6bpH/rDSoFxQjF9Z+G+y55sWHGzEFzdoVgsBQvNI7v4=;
-        b=MS1ngaMH/qq1mDlfneEQX0J3/fOBeD1iB0e+t4YZKZ9mgCOjLIUkL6iCaoR9YMDwAB
-         clFSxGt92ljoPzFGrNPh11R1a5/cRMzoNd9Kd6lSAIz/jO3LxlrSWTBy4+sLcIgBVMhj
-         rDdmzdByP/J58lYF2ajvQH1ClC/RglRFgs7Hw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6bpH/rDSoFxQjF9Z+G+y55sWHGzEFzdoVgsBQvNI7v4=;
-        b=rYECGnI5MVPQt+igc/F+pzFpJNSQbAEZ9Gy81d2Tkw9RbCmwztBDT/TfG3odYeUXTi
-         zaiEH84E3K6twxIzlTLktd2XN+gMcvn3tz1T6MFgA2ryJGABq2wE1gN5Os+HwRuTeCUm
-         aTGLmr/jjPzIzYhE0NTDWPc/hiTESUiyKseUl010U28sekZ29Qh6XpuAox1E/UoEM8iu
-         /I/zzBTupBlVXDJXNfbG2OallqDTqHO46eMGt63EkQz2+Bu+KQ0dQI+rCbF7psrzTVZn
-         mYOFm40D3aIb6GT0R049Bt3Su309xoSuQ67giRcdFdIn7mTq4PWIJj4GTa3HCpbBhcaL
-         M14g==
-X-Gm-Message-State: AOAM531hCLvJpAh7fYKMuTlOM2JxJbIi044Mf9cS1nBUK1D6IgGnQR0v
-        /dhz0IZ3nAZVfX8WR+TwyO1rGgYvG7cf0Q==
-X-Google-Smtp-Source: ABdhPJwKIQgh7KokP91xjtOXAA4Yj14TilY5ULBToQVLuWGfahS/5yKLDN7und6VJWMhjCdEgKoWsg==
-X-Received: by 2002:a2e:9557:: with SMTP id t23mr2111719ljh.85.1597947722943;
-        Thu, 20 Aug 2020 11:22:02 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id 185sm585198ljf.82.2020.08.20.11.22.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 11:22:02 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id w25so3131620ljo.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 11:22:02 -0700 (PDT)
-X-Received: by 2002:a05:651c:1b4:: with SMTP id c20mr2064657ljn.432.1597947721521;
- Thu, 20 Aug 2020 11:22:01 -0700 (PDT)
+        Thu, 20 Aug 2020 14:23:38 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:2403 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbgHTSXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 14:23:37 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4BXY1f2ynwz9v1R9;
+        Thu, 20 Aug 2020 20:23:34 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id NXZNIUL1tC2R; Thu, 20 Aug 2020 20:23:34 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4BXY1f1S9Dz9v0xQ;
+        Thu, 20 Aug 2020 20:23:34 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1C2A08B863;
+        Thu, 20 Aug 2020 20:23:34 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id vk2POjKl9U-w; Thu, 20 Aug 2020 20:23:34 +0200 (CEST)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BF0858B764;
+        Thu, 20 Aug 2020 20:23:32 +0200 (CEST)
+Subject: Re: [PATCH] powerpc: Fix a bug in __div64_32 if divisor is zero
+To:     Guohua Zhong <zhongguohua1@huawei.com>, paulus@samba.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org,
+        gregkh@linuxfoundation.org
+Cc:     nixiaoming@huawei.com, wangle6@huawei.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20200820131049.42940-1-zhongguohua1@huawei.com>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <8dedfcce-04e0-ec7d-6af5-ec1d6d8602b0@csgroup.eu>
+Date:   Thu, 20 Aug 2020 20:23:30 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200814213842.31151-1-ashok.raj@intel.com> <CAE=gft6fQ7cLQO025TDYNF-d6xxMeGkOHVieMZDq6wAZ84NsGQ@mail.gmail.com>
- <20200817183322.GA11486@araj-mobl1.jf.intel.com>
-In-Reply-To: <20200817183322.GA11486@araj-mobl1.jf.intel.com>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Thu, 20 Aug 2020 11:21:24 -0700
-X-Gmail-Original-Message-ID: <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
-Message-ID: <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
-Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are migrated
-To:     "Raj, Ashok" <ashok.raj@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sukumar Ghorai <sukumar.ghorai@intel.com>,
-        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200820131049.42940-1-zhongguohua1@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 11:33 AM Raj, Ashok <ashok.raj@intel.com> wrote:
->
-> Hi Evan
->
-> Some details below,
->
-> On Mon, Aug 17, 2020 at 11:12:17AM -0700, Evan Green wrote:
-> > Hi Ashok,
-> > Thank you, Srikanth, and Sukumar for some very impressive debugging here.
-> >
-> > On Fri, Aug 14, 2020 at 2:38 PM Ashok Raj <ashok.raj@intel.com> wrote:
-> > >
-> > > When offlining CPU's, fixup_irqs() migrates all interrupts away from the
-> > > outgoing CPU to an online CPU. Its always possible the device sent an
-> > > interrupt to the previous CPU destination. Pending interrupt bit in IRR in
-> > > lapic identifies such interrupts. apic_soft_disable() will not capture any
-> > > new interrupts in IRR. This causes interrupts from device to be lost during
-> > > cpu offline. The issue was found when explicitly setting MSI affinity to a
-> > > CPU and immediately offlining it. It was simple to recreate with a USB
-> > > ethernet device and doing I/O to it while the CPU is offlined. Lost
-> > > interrupts happen even when Interrupt Remapping is enabled.
-> > >
-> > > Current code does apic_soft_disable() before migrating interrupts.
-> > >
-> > > native_cpu_disable()
-> > > {
-> > >         ...
-> > >         apic_soft_disable();
-> > >         cpu_disable_common();
-> > >           --> fixup_irqs(); // Too late to capture anything in IRR.
-> > > }
-> > >
-> > > Just fliping the above call sequence seems to hit the IRR checks
-> > > and the lost interrupt is fixed for both legacy MSI and when
-> > > interrupt remapping is enabled.
-> > >
-> > >
-> > > Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-> > > Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-> > > Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-> > >
-> > > To: linux-kernel@vger.kernel.org
-> > > To: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
-> > > Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
-> > > Cc: Evan Green <evgreen@chromium.org>
-> > > Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > >  arch/x86/kernel/smpboot.c | 11 +++++++++--
-> > >  1 file changed, 9 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> > > index ffbd9a3d78d8..278cc9f92f2f 100644
-> > > --- a/arch/x86/kernel/smpboot.c
-> > > +++ b/arch/x86/kernel/smpboot.c
-> > > @@ -1603,13 +1603,20 @@ int native_cpu_disable(void)
-> > >         if (ret)
-> > >                 return ret;
-> > >
-> > > +       cpu_disable_common();
-> > >         /*
-> > >          * Disable the local APIC. Otherwise IPI broadcasts will reach
-> > >          * it. It still responds normally to INIT, NMI, SMI, and SIPI
-> > > -        * messages.
-> >
-> > I'm slightly unclear about whether interrupts are disabled at the core
-> > by this point or not. I followed native_cpu_disable() up to
-> > __cpu_disable(), up to take_cpu_down(). This is passed into a call to
-> > stop_machine_cpuslocked(), where interrupts get disabled at the core.
-> > So unless there's another path, it seems like interrupts are always
-> > disabled at the core by this point.
->
-> local_irq_disable() just does cli() which allows interrupts to trickle
-> in to the IRR bits, and once you do sti() things would flow back for
-> normal interrupt processing.
->
->
-> >
-> > If interrupts are always disabled, then the comment above is a little
->
-> Disable interrupts is different from disabling LAPIC. Once you do the
-> apic_soft_disable(), there is nothing flowing into the LAPIC except
-> for INIT, NMI, SMI and SIPI messages.
->
-> This turns off the pipe for all other interrupts to enter LAPIC. Which
-> is different from doing a cli().
 
-I understand the distinction. I was mostly musing on the difference in
-behavior your change causes if this function is entered with
-interrupts enabled at the core (ie sti()). But I think it never is, so
-that thought is moot.
 
-I could never repro the issue reliably on comet lake after Thomas'
-original fix. But I can still repro it easily on jasper lake. And this
-patch fixes the issue for me on that platform. Thanks for the fix.
+Le 20/08/2020 à 15:10, Guohua Zhong a écrit :
+> When cat /proc/pid/stat, do_task_stat will call into cputime_adjust,
+> which call stack is like this:
+> 
+> [17179954.674326]BookE Watchdog detected hard LOCKUP on cpu 0
+> [17179954.674331]dCPU: 0 PID: 1262 Comm: TICK Tainted: P        W  O    4.4.176 #1
+> [17179954.674339]dtask: dc9d7040 task.stack: d3cb4000
+> [17179954.674344]NIP: c001b1a8 LR: c006a7ac CTR: 00000000
+> [17179954.674349]REGS: e6fe1f10 TRAP: 3202   Tainted: P        W  O     (4.4.176)
+> [17179954.674355]MSR: 00021002 <CE,ME>  CR: 28002224  XER: 00000000
+> [17179954.674364]
+> GPR00: 00000016 d3cb5cb0 dc9d7040 d3cb5cc0 00000000 0000025d ffe15b24 ffffffff
+> GPR08: de86aead 00000000 000003ff ffffffff 28002222 0084d1c0 00000000 ffffffff
+> GPR16: b5929ca0 b4bb7a48 c0863c08 0000048d 00000062 00000062 00000000 0000000f
+> GPR24: 00000000 d3cb5d08 d3cb5d60 d3cb5d64 00029002 d3e9c214 fffff30e d3e9c20c
+> [17179954.674410]NIP [c001b1a8] __div64_32+0x60/0xa0
+> [17179954.674422]LR [c006a7ac] cputime_adjust+0x124/0x138
+> [17179954.674434]Call Trace:
+> [17179961.832693]Call Trace:
+> [17179961.832695][d3cb5cb0] [c006a6dc] cputime_adjust+0x54/0x138 (unreliable)
+> [17179961.832705][d3cb5cf0] [c006a818] task_cputime_adjusted+0x58/0x80
+> [17179961.832713][d3cb5d20] [c01dab44] do_task_stat+0x298/0x870
+> [17179961.832720][d3cb5de0] [c01d4948] proc_single_show+0x60/0xa4
+> [17179961.832728][d3cb5e10] [c01963d8] seq_read+0x2d8/0x52c
+> [17179961.832736][d3cb5e80] [c01702fc] __vfs_read+0x40/0x114
+> [17179961.832744][d3cb5ef0] [c0170b1c] vfs_read+0x9c/0x10c
+> [17179961.832751][d3cb5f10] [c0171440] SyS_read+0x68/0xc4
+> [17179961.832759][d3cb5f40] [c0010a40] ret_from_syscall+0x0/0x3c
+> 
+> do_task_stat->task_cputime_adjusted->cputime_adjust->scale_stime->div_u64
+> ->div_u64_rem->do_div->__div64_32
+> 
+> In some corner case, stime + utime = 0 if overflow. Even in v5.8.2  kernel
+> the cputime has changed from unsigned long to u64 data type. About 200
+> days, the lowwer 32 bit will be 0x00000000. Because divisor for __div64_32
+> is unsigned long data type,which is 32 bit for powepc 32, the bug still
+> exists.
+> 
+> So it is also a bug in the cputime_adjust which does not check if
+> stime + utime = 0
+> 
+> time = scale_stime((__force u64)stime, (__force u64)rtime,
+>                  (__force u64)(stime + utime));
+> 
+> The commit 3dc167ba5729 ("sched/cputime: Improve cputime_adjust()") in
+> mainline kernel may has fixed this case. But it is also better to check
+> if divisor is 0 in __div64_32 for other situation.
+> 
+> Signed-off-by: Guohua Zhong <zhongguohua1@huawei.com>
+> Fixes:14cf11af6cf6 "( powerpc: Merge enough to start building in arch/powerpc.)"
+> Fixes:94b212c29f68 "( powerpc: Move ppc64 boot wrapper code over to arch/powerpc)"
+> Cc: stable@vger.kernel.org # v2.6.15+
+> ---
+>   arch/powerpc/boot/div64.S | 4 ++++
+>   arch/powerpc/lib/div64.S  | 4 ++++
+>   2 files changed, 8 insertions(+)
+> 
+> diff --git a/arch/powerpc/boot/div64.S b/arch/powerpc/boot/div64.S
+> index 4354928ed62e..39a25b9712d1 100644
+> --- a/arch/powerpc/boot/div64.S
+> +++ b/arch/powerpc/boot/div64.S
+> @@ -13,6 +13,9 @@
+>   
+>   	.globl __div64_32
+>   __div64_32:
+> +	li	r9,0
+> +	cmplw	r4,r9	# check if divisor r4 is zero
+> +	beq	5f			# jump to label 5 if r4(divisor) is zero
 
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Tested-by: Evan Green <evgreen@chromium.org>
+In generic version in lib/math/div64.c, there is no checking of 'base' 
+either.
+Do we really want to add this check in the powerpc version only ?
+
+The only user of __div64_32() is do_div() in 
+include/asm-generic/div64.h. Wouldn't it be better to do the check there ?
+
+Christophe
+
+
+>   	lwz	r5,0(r3)	# get the dividend into r5/r6
+>   	lwz	r6,4(r3)
+>   	cmplw	r5,r4
+> @@ -52,6 +55,7 @@ __div64_32:
+>   4:	stw	r7,0(r3)	# return the quotient in *r3
+>   	stw	r8,4(r3)
+>   	mr	r3,r6		# return the remainder in r3
+> +5:					# return if divisor r4 is zero
+>   	blr
+>   
+>   /*
+> diff --git a/arch/powerpc/lib/div64.S b/arch/powerpc/lib/div64.S
+> index 3d5426e7dcc4..1cc9bcabf678 100644
+> --- a/arch/powerpc/lib/div64.S
+> +++ b/arch/powerpc/lib/div64.S
+> @@ -13,6 +13,9 @@
+>   #include <asm/processor.h>
+>   
+>   _GLOBAL(__div64_32)
+> +	li	r9,0
+> +	cmplw	r4,r9	# check if divisor r4 is zero
+> +	beq	5f			# jump to label 5 if r4(divisor) is zero
+>   	lwz	r5,0(r3)	# get the dividend into r5/r6
+>   	lwz	r6,4(r3)
+>   	cmplw	r5,r4
+> @@ -52,4 +55,5 @@ _GLOBAL(__div64_32)
+>   4:	stw	r7,0(r3)	# return the quotient in *r3
+>   	stw	r8,4(r3)
+>   	mr	r3,r6		# return the remainder in r3
+> +5:					# return if divisor r4 is zero
+>   	blr
+> 
