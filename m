@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DE2C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD070C433E3
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC83208E4
+	by mail.kernel.org (Postfix) with ESMTP id 7E635207DE
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1597916274;
-	bh=9cx+gI22gM4prklQ9V//XRScuzMZd24HfTQfs0e1vVc=;
+	bh=48wIedm+vXTcv1jx/nKkpxIEJmP65C2seVmGkC8H3eY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CVNDkluGM++FyI51u1KZRttis1ER8fg7iDUf6LcvRD6Z4oeg82kJz9dvDZIgXlccA
-	 9G/F8lIDh9naFD6QDWY092MwwuFX4qgMAzXkZXfDcQbfZX9qu42bjXiZ9yvIdlQAWE
-	 RqHKfPcn+WJNJATg6+MKGS+b8V/vLONnSu2STEGM=
+	b=tAY9tB7FicBjHbdUDDejHIRYPjuqkLyG045Rk9VE+VGpfHa7hRBZHuG8mBYVo6lEw
+	 49vb+iuUqNUXq8n/jv5zqrsLqnngRLnXVXgW2YmKnWaJ/Yk5zBznetKc889Ehd9qZr
+	 DHCjDWRxa5UYcpm5fRHHgBv9HxkLZmIVS6d2Vubk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728747AbgHTJhi (ORCPT
+        id S1728776AbgHTJhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:37:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53036 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728690AbgHTJhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:37:09 -0400
+        id S1728688AbgHTJhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 638BB20724;
-        Thu, 20 Aug 2020 09:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9CB92173E;
+        Thu, 20 Aug 2020 09:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916229;
-        bh=9cx+gI22gM4prklQ9V//XRScuzMZd24HfTQfs0e1vVc=;
+        s=default; t=1597916226;
+        bh=48wIedm+vXTcv1jx/nKkpxIEJmP65C2seVmGkC8H3eY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qriireeNKFSZV8jw+JXX0HF9SO8k5oy1d81RMjkQvx483INu79o/m134IPs+O26gv
-         a52cUIQ1Rl6qA0b3u7qkgt2jRR6b+tMaC8Fi05V8Xdk5iJvzTUfHNL7LLC1UOKeKp8
-         9GSvLetGegxQVqDkyhV2Jul0+ERDrfmuVGBNXeVs=
+        b=fEOohxqKMZtq6o+A52RjP5RdcDDUdwWb0XMu1Anxk2X0KGfVqN4L5GDvFLtH5B9k2
+         Sj8iWL8k05HlHzMt61gJ5hUGx4tpxdtuRFAHOnooAGGIP7+qW+TZWj8JS1FpK/lrN4
+         Uhnb3ceohrjBnI/kViZBhGRhGalkHMxJvLuC+Dfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 028/204] btrfs: fix race between page release and a fast fsync
-Date:   Thu, 20 Aug 2020 11:18:45 +0200
-Message-Id: <20200820091607.673607784@linuxfoundation.org>
+        stable@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.7 054/204] irqchip/gic-v4.1: Ensure accessing the correct RD when writing INVALLR
+Date:   Thu, 20 Aug 2020 11:19:11 +0200
+Message-Id: <20200820091608.968078042@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,92 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Zenghui Yu <yuzenghui@huawei.com>
 
-commit 3d6448e631591756da36efb3ea6355ff6f383c3a upstream.
+commit 3af9571cd585efafc2facbd8dbd407317ff898cf upstream.
 
-When releasing an extent map, done through the page release callback, we
-can race with an ongoing fast fsync and cause the fsync to miss a new
-extent and not log it. The steps for this to happen are the following:
+The GICv4.1 spec tells us that it's CONSTRAINED UNPREDICTABLE to issue a
+register-based invalidation operation for a vPEID not mapped to that RD,
+or another RD within the same CommonLPIAff group.
 
-1) A page is dirtied for some inode I;
+To follow this rule, commit f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual
+exclusion between vPE affinity change and RD access") tried to address the
+race between the RD accesses and the vPE affinity change, but somehow
+forgot to take GICR_INVALLR into account. Let's take the vpe_lock before
+evaluating vpe->col_idx to fix it.
 
-2) Writeback for that page is triggered by a path other than fsync, for
-   example by the system due to memory pressure;
-
-3) When the ordered extent for the extent (a single 4K page) finishes,
-   we unpin the corresponding extent map and set its generation to N,
-   the current transaction's generation;
-
-4) The btrfs_releasepage() callback is invoked by the system due to
-   memory pressure for that no longer dirty page of inode I;
-
-5) At the same time, some task calls fsync on inode I, joins transaction
-   N, and at btrfs_log_inode() it sees that the inode does not have the
-   full sync flag set, so we proceed with a fast fsync. But before we get
-   into btrfs_log_changed_extents() and lock the inode's extent map tree:
-
-6) Through btrfs_releasepage() we end up at try_release_extent_mapping()
-   and we remove the extent map for the new 4Kb extent, because it is
-   neither pinned anymore nor locked. By calling remove_extent_mapping(),
-   we remove the extent map from the list of modified extents, since the
-   extent map does not have the logging flag set. We unlock the inode's
-   extent map tree;
-
-7) The task doing the fast fsync now enters btrfs_log_changed_extents(),
-   locks the inode's extent map tree and iterates its list of modified
-   extents, which no longer has the 4Kb extent in it, so it does not log
-   the extent;
-
-8) The fsync finishes;
-
-9) Before transaction N is committed, a power failure happens. After
-   replaying the log, the 4K extent of inode I will be missing, since
-   it was not logged due to the race with try_release_extent_mapping().
-
-So fix this by teaching try_release_extent_mapping() to not remove an
-extent map if it's still in the list of modified extents.
-
-Fixes: ff44c6e36dc9dc ("Btrfs: do not hold the write_lock on the extent tree while logging")
-CC: stable@vger.kernel.org # 5.4+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: f3a059219bc7 ("irqchip/gic-v4.1: Ensure mutual exclusion between vPE affinity change and RD access")
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200720092328.708-1-yuzenghui@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c |   16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4504,15 +4504,25 @@ int try_release_extent_mapping(struct pa
- 				free_extent_map(em);
- 				break;
- 			}
--			if (!test_range_bit(tree, em->start,
--					    extent_map_end(em) - 1,
--					    EXTENT_LOCKED, 0, NULL)) {
-+			if (test_range_bit(tree, em->start,
-+					   extent_map_end(em) - 1,
-+					   EXTENT_LOCKED, 0, NULL))
-+				goto next;
-+			/*
-+			 * If it's not in the list of modified extents, used
-+			 * by a fast fsync, we can remove it. If it's being
-+			 * logged we can safely remove it since fsync took an
-+			 * extra reference on the em.
-+			 */
-+			if (list_empty(&em->list) ||
-+			    test_bit(EXTENT_FLAG_LOGGING, &em->flags)) {
- 				set_bit(BTRFS_INODE_NEEDS_FULL_SYNC,
- 					&btrfs_inode->runtime_flags);
- 				remove_extent_mapping(map, em);
- 				/* once for the rb tree */
- 				free_extent_map(em);
- 			}
-+next:
- 			start = extent_map_end(em);
- 			write_unlock(&map->lock);
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -3974,18 +3974,22 @@ static void its_vpe_4_1_deschedule(struc
+ static void its_vpe_4_1_invall(struct its_vpe *vpe)
+ {
+ 	void __iomem *rdbase;
++	unsigned long flags;
+ 	u64 val;
++	int cpu;
  
+ 	val  = GICR_INVALLR_V;
+ 	val |= FIELD_PREP(GICR_INVALLR_VPEID, vpe->vpe_id);
+ 
+ 	/* Target the redistributor this vPE is currently known on */
+-	raw_spin_lock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
+-	rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
++	cpu = vpe_to_cpuid_lock(vpe, &flags);
++	raw_spin_lock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
+ 	gic_write_lpir(val, rdbase + GICR_INVALLR);
+ 
+ 	wait_for_syncr(rdbase);
+-	raw_spin_unlock(&gic_data_rdist_cpu(vpe->col_idx)->rd_lock);
++	raw_spin_unlock(&gic_data_rdist_cpu(cpu)->rd_lock);
++	vpe_to_cpuid_unlock(vpe, flags);
+ }
+ 
+ static int its_vpe_4_1_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
 
 
