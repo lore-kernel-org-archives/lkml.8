@@ -2,171 +2,111 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60697C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98BBC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D74E208DB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C41E8208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931214;
-	bh=qIeXM+NKCoFlMSstjLORdhuyqn+uoFkSc/8KPoObLQc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lcvliaHnfkqN84SZhEGdqLRmI4/qrcvQg8IPf9uqPuKJxevzdoykCcf/sT6m9X03J
-	 znptoUuOOGKXWutlgbPqjK7rx6HMCP9TU81PUbbVwgt7s4ww/QULj9vacUihfjHA5e
-	 IQ3PlDIEpjZre9RfZ5lwoZsvVG9k8OqK2+ZdHMO8=
+	s=default; t=1597931215;
+	bh=DdzytfS0sYS9PAdc783Qb9uZwlhhAQv9K11zCUSSmlA=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=WCAYrWQsPPKv+78EssvoUOB6Pv8MVZLt3NWU4DejJq5hhC9nneNWMdmUv39H7+pMr
+	 mSzph31FIOm5s8o/UlZZr7/YTjRAF/pmI7E2vk2lA2SPfQ5+V/xCnil8/LEfu4+2bc
+	 HJQWrR+qqsK5SBjUI6bxTHsmimGddqlGoHwRXO8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbgHTNqH (ORCPT
+        id S1730383AbgHTNqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgHTJaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:30:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3599422BEB;
-        Thu, 20 Aug 2020 09:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915800;
-        bh=qIeXM+NKCoFlMSstjLORdhuyqn+uoFkSc/8KPoObLQc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQ/Y6iYqAL1IQeYffaGRyZ1WI1Krew42A5zwYLjwNJ87CxxEXXpTJM+AfXQ6Per7W
-         YYvjAeBMRoHfqsArC2HxvSnoIdZJbD3XsaNksscONwvmNFXkYKZ+c0RM6G3TqnmJYi
-         HFRxt9Ciyl3TN5tG5u12lvJHDIvPuwLL4ly2Nb8Y=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 139/232] devres: keep both device name and resource name in pretty name
-Date:   Thu, 20 Aug 2020 11:19:50 +0200
-Message-Id: <20200820091619.557998492@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 09:46:02 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53019 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728139AbgHTJaP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:15 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x5so976710wmi.2;
+        Thu, 20 Aug 2020 02:30:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tUnRntDeM2Z0wZOlftJYnlbiTXDqBXyNsySaCh9zCmY=;
+        b=SvJm8/wDP+0NcFQQ6EcJiW2c1pBJodLfRnSCUH214i0B5bACBo/O0iTE+g6fMmP8xk
+         Pf9wsIVGgID6O8tuWskHpwHk8mkIhVIZrbF1yK00ZDNlP/QDshVMiBaHQrM+YjwLv2X7
+         U0xDcXE1ywTYcuu4qt1EdB5HJGdEfkK7CQbVs23P6lZmtlI4XNqKexGPthkqDA4hPcJc
+         IhPBcRS2Xz8vNoFtrNXsB0TnqzLvka+lthDfV0tOZLSOFOrIJ7Osfc+oVjPA290S3jF2
+         p8bJ8XriUzi8vDx9d1pe4ipOluGshbj1omGRrVb/C4vZWPKaBOenM/vsW2N2ljP5TCtV
+         hS5A==
+X-Gm-Message-State: AOAM533mZhB3cZ8YRh5T1ZgqMYGEYrJyQyvRg7/+2sYukQZMTzyaKYDq
+        l1/IrY5OgxO0SDTIW7dLYUI=
+X-Google-Smtp-Source: ABdhPJyodhIy3b6biA58amHmZjnvQq4nyDVjNDGAvrKAsLjjKYeZihDIwmPPHhe2+ewpkCAnODpbww==
+X-Received: by 2002:a1c:2808:: with SMTP id o8mr2510138wmo.108.1597915813392;
+        Thu, 20 Aug 2020 02:30:13 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id z8sm3045868wmf.10.2020.08.20.02.30.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 02:30:12 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 11:30:10 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RESEND PATCH 5/5] ARM: dts: zx: Align L2 cache-controller
+ nodename with dtschema
+Message-ID: <20200820093010.GA15884@kozik-lap>
+References: <20200819175853.21492-1-krzk@kernel.org>
+ <20200819175853.21492-5-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200819175853.21492-5-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Oltean <vladimir.oltean@nxp.com>
+On Wed, Aug 19, 2020 at 07:58:53PM +0200, Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache-controller@c00000: $nodename:0:
+>         'l2-cache-controller@c00000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-[ Upstream commit 35bd8c07db2ce8fd2834ef866240613a4ef982e7 ]
+I forgot to add the tag from Jun provided on previous submission:
+Reviewed-by: Jun Nie <jun.nie@linaro.org>
 
-Sometimes debugging a device is easiest using devmem on its register
-map, and that can be seen with /proc/iomem. But some device drivers have
-many memory regions. Take for example a networking switch. Its memory
-map used to look like this in /proc/iomem:
+Best regards,
+Krzysztof
 
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : sys
-    1fc030000-1fc03ffff : rew
-    1fc060000-1fc0603ff : s2
-    1fc070000-1fc0701ff : devcpu_gcb
-    1fc080000-1fc0800ff : qs
-    1fc090000-1fc0900cb : ptp
-    1fc100000-1fc10ffff : port0
-    1fc110000-1fc11ffff : port1
-    1fc120000-1fc12ffff : port2
-    1fc130000-1fc13ffff : port3
-    1fc140000-1fc14ffff : port4
-    1fc150000-1fc15ffff : port5
-    1fc200000-1fc21ffff : qsys
-    1fc280000-1fc28ffff : ana
-
-But after the patch in Fixes: was applied, the information is now
-presented in a much more opaque way:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5
-    1fc030000-1fc03ffff : 0000:00:00.5
-    1fc060000-1fc0603ff : 0000:00:00.5
-    1fc070000-1fc0701ff : 0000:00:00.5
-    1fc080000-1fc0800ff : 0000:00:00.5
-    1fc090000-1fc0900cb : 0000:00:00.5
-    1fc100000-1fc10ffff : 0000:00:00.5
-    1fc110000-1fc11ffff : 0000:00:00.5
-    1fc120000-1fc12ffff : 0000:00:00.5
-    1fc130000-1fc13ffff : 0000:00:00.5
-    1fc140000-1fc14ffff : 0000:00:00.5
-    1fc150000-1fc15ffff : 0000:00:00.5
-    1fc200000-1fc21ffff : 0000:00:00.5
-    1fc280000-1fc28ffff : 0000:00:00.5
-
-That patch made a fair comment that /proc/iomem might be confusing when
-it shows resources without an associated device, but we can do better
-than just hide the resource name altogether. Namely, we can print the
-device name _and_ the resource name. Like this:
-
-1fc000000-1fc3fffff : pcie@1f0000000
-  1fc000000-1fc3fffff : 0000:00:00.5
-    1fc010000-1fc01ffff : 0000:00:00.5 sys
-    1fc030000-1fc03ffff : 0000:00:00.5 rew
-    1fc060000-1fc0603ff : 0000:00:00.5 s2
-    1fc070000-1fc0701ff : 0000:00:00.5 devcpu_gcb
-    1fc080000-1fc0800ff : 0000:00:00.5 qs
-    1fc090000-1fc0900cb : 0000:00:00.5 ptp
-    1fc100000-1fc10ffff : 0000:00:00.5 port0
-    1fc110000-1fc11ffff : 0000:00:00.5 port1
-    1fc120000-1fc12ffff : 0000:00:00.5 port2
-    1fc130000-1fc13ffff : 0000:00:00.5 port3
-    1fc140000-1fc14ffff : 0000:00:00.5 port4
-    1fc150000-1fc15ffff : 0000:00:00.5 port5
-    1fc200000-1fc21ffff : 0000:00:00.5 qsys
-    1fc280000-1fc28ffff : 0000:00:00.5 ana
-
-Fixes: 8d84b18f5678 ("devres: always use dev_name() in devm_ioremap_resource()")
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Link: https://lore.kernel.org/r/20200601095826.1757621-1-olteanv@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- lib/devres.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/lib/devres.c b/lib/devres.c
-index 6ef51f159c54b..ca0d28727ccef 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -119,6 +119,7 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
-+	char *pretty_name;
- 
- 	BUG_ON(!dev);
- 
-@@ -129,7 +130,15 @@ __devm_ioremap_resource(struct device *dev, const struct resource *res,
- 
- 	size = resource_size(res);
- 
--	if (!devm_request_mem_region(dev, res->start, size, dev_name(dev))) {
-+	if (res->name)
-+		pretty_name = devm_kasprintf(dev, GFP_KERNEL, "%s %s",
-+					     dev_name(dev), res->name);
-+	else
-+		pretty_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
-+	if (!pretty_name)
-+		return IOMEM_ERR_PTR(-ENOMEM);
-+
-+	if (!devm_request_mem_region(dev, res->start, size, pretty_name)) {
- 		dev_err(dev, "can't request region for resource %pR\n", res);
- 		return IOMEM_ERR_PTR(-EBUSY);
- 	}
--- 
-2.25.1
-
-
-
+> ---
+>  arch/arm/boot/dts/zx296702.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/zx296702.dtsi b/arch/arm/boot/dts/zx296702.dtsi
+> index afd98de029be..f378c661b3bf 100644
+> --- a/arch/arm/boot/dts/zx296702.dtsi
+> +++ b/arch/arm/boot/dts/zx296702.dtsi
+> @@ -58,7 +58,7 @@
+>  			clocks = <&topclk ZX296702_A9_PERIPHCLK>;
+>  		};
+>  
+> -		l2cc: l2-cache-controller@c00000 {
+> +		l2cc: cache-controller@c00000 {
+>  			compatible = "arm,pl310-cache";
+>  			reg = <0x00c00000 0x1000>;
+>  			cache-unified;
+> -- 
+> 2.17.1
+> 
