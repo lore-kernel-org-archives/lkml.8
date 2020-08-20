@@ -2,124 +2,166 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BDFC433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8703822D2C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 961DB22D2C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:55:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ebljxtw8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgHTPyD (ORCPT
+        id S1728983AbgHTPzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:54:03 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48522 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728549AbgHTPyB (ORCPT
+        Thu, 20 Aug 2020 11:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbgHTPzQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:54:01 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id CEB0C8050D;
-        Thu, 20 Aug 2020 17:53:58 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 17:53:57 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drm/panel: novatek,nt39016: Remove 'dev' field in
- priv struct
-Message-ID: <20200820155357.GB194134@ravnborg.org>
-References: <20200820121256.32037-1-paul@crapouillou.net>
- <20200820121256.32037-3-paul@crapouillou.net>
+        Thu, 20 Aug 2020 11:55:16 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F250C061385;
+        Thu, 20 Aug 2020 08:55:15 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id f18so4058327wmc.0;
+        Thu, 20 Aug 2020 08:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4gsAD01Lu/a6HHuOZz2Js+H3gnol7gh8tJ3zMDutdDc=;
+        b=ebljxtw8UtQQ032VUUuCGK812jroSyyHZHtTYoOMrud/UydGhZ3UMgBUN9qe9aAvk4
+         EHygzdAvntJ9+R/Y3KA0p2V8fSCNXm6RFtsp3+CZNKezVJQ8X2aAKOeBHvVnuXgBzp1O
+         Z4mdnxldoQFQbYRJYgGPkdtLHKlnlIzkaDXqkqTa3laBrCC8GM7uy1HvEv9ndhSWNfl7
+         gtrl6II21EVeL5x1fdWpBOS2x6s/Ea7ce8pWBuPej62eiBTIeFwATx0cPhjPkPFtdmbp
+         cpVIJwigFocq1ZQgZzWrnaG3CAmE48jwTnhO+RO8Uw3CBwiyc46QOxMJqP5MrYAE3v9X
+         TZPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4gsAD01Lu/a6HHuOZz2Js+H3gnol7gh8tJ3zMDutdDc=;
+        b=M2YK8C25wXwiSlREDrwaje+Pc+ecbq1cXWwfA8Fk0e9DOJid8OOBnn1mdwH3HLoous
+         spe0JTBTU3BNH/1lUxcQP12SqaQP8TYy2nFQR2zIJ3JzMtU+1MdVXEvzUuz+ynyXOHiF
+         NNTrAesVGO/237I03JgLbMlQPOIN5jPIWKW4dzmQMu3ka0K3Syc1BFhzgpSjAKYmIIUS
+         Ro13v0tmcQNrOn33wGG5SB10T/CLuBTvcn77p1DsTRl0j6dZ9dv/YDzJlp/D+ELCDXbC
+         G7VxZ0V+V37l9EphncDzikuoaGxD/q+oXognZs/fniQ6Xkup3rk+ZulWtNICnYb73WzT
+         76mQ==
+X-Gm-Message-State: AOAM530phEGQ7c76G/posaBLJMHDsZTTmg628O0OV4MvnhllB/svZFvP
+        zyvsTVBmsgak4Hyt5yvUQEi8fi8A0NvkmP5s33Q=
+X-Google-Smtp-Source: ABdhPJymrLvmSo2mjxf1P+WzawgnYC5TC99FhFkAg2iJ/mZCttmTx/9BBIkjwyymKsU721sVZprDLyZXm16x0EfQzm0=
+X-Received: by 2002:a7b:c257:: with SMTP id b23mr3974646wmj.164.1597938913876;
+ Thu, 20 Aug 2020 08:55:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820121256.32037-3-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
-        a=uqUkV8MoBaGHgs4G9lkA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22
+References: <cover.1597931875.git.robin.murphy@arm.com> <93d7de3533cfd952aecd6198b9221d7a58c0e521.1597931876.git.robin.murphy@arm.com>
+In-Reply-To: <93d7de3533cfd952aecd6198b9221d7a58c0e521.1597931876.git.robin.murphy@arm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Thu, 20 Aug 2020 08:55:02 -0700
+Message-ID: <CAF6AEGuKa4P=gfus08CdfT2H5pG6a2PBumGb=Pw3qvD=NWueig@mail.gmail.com>
+Subject: Re: [PATCH 10/18] iommu/msm: Add IOMMU_DOMAIN_DMA support
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <joro@8bytes.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        digetx@gmail.com, Suman Anna <s-anna@ti.com>,
+        Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "moderated list:ARM/S5P EXYNOS AR..." 
+        <linux-samsung-soc@vger.kernel.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Andy Gross <agross@kernel.org>, Yong Wu <yong.wu@mediatek.com>,
+        linux-media@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        "moderated list:ARM/Mediatek SoC..." 
+        <linux-mediatek@lists.infradead.org>, linux-tegra@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        t-kristo@ti.com,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 02:12:56PM +0200, Paul Cercueil wrote:
-> There is already a 'struct device' pointer in the drm_panel structure,
-> that we can access easily from our priv structure, so there's no need
-> for a separate 'dev' field there.
-> 
-> v2: Don't initialize drm_panel->dev manually, it is done by
-> drm_panel_init().
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+Side note, I suspect we'll end up needing something like
+0e764a01015dfebff8a8ffd297d74663772e248a .. if someone can dig a 32b
+device out of the closet and dust it off, the fix is easy enough.
+Just wanted to mention that here so anyone with a 32b device could
+find what is needed.
+
+BR,
+-R
+
+On Thu, Aug 20, 2020 at 8:09 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> Now that arch/arm is wired up for default domains and iommu-dma,
+> implement the corresponding driver-side support for DMA domains.
+>
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 > ---
->  drivers/gpu/drm/panel/panel-novatek-nt39016.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-novatek-nt39016.c b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> index daa583030246..f8151fe3ac9a 100644
-> --- a/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> +++ b/drivers/gpu/drm/panel/panel-novatek-nt39016.c
-> @@ -56,7 +56,6 @@ struct nt39016_panel_info {
->  
->  struct nt39016 {
->  	struct drm_panel drm_panel;
-> -	struct device *dev;
->  	struct regmap *map;
->  	struct regulator *supply;
->  	const struct nt39016_panel_info *panel_info;
-> @@ -124,7 +123,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
->  
->  	err = regulator_enable(panel->supply);
->  	if (err) {
-> -		dev_err(panel->dev, "Failed to enable power supply: %d\n", err);
-> +		dev_err(drm_panel->dev, "Failed to enable power supply: %d\n", err);
->  		return err;
->  	}
->  
-> @@ -143,7 +142,7 @@ static int nt39016_prepare(struct drm_panel *drm_panel)
->  	err = regmap_multi_reg_write(panel->map, nt39016_panel_regs,
->  				     ARRAY_SIZE(nt39016_panel_regs));
->  	if (err) {
-> -		dev_err(panel->dev, "Failed to init registers: %d\n", err);
-> +		dev_err(drm_panel->dev, "Failed to init registers: %d\n", err);
->  		goto err_disable_regulator;
->  	}
->  
-> @@ -173,7 +172,7 @@ static int nt39016_enable(struct drm_panel *drm_panel)
->  	ret = regmap_write(panel->map, NT39016_REG_SYSTEM,
->  			   NT39016_SYSTEM_RESET_N | NT39016_SYSTEM_STANDBY);
->  	if (ret) {
-> -		dev_err(panel->dev, "Unable to enable panel: %d\n", ret);
-> +		dev_err(drm_panel->dev, "Unable to enable panel: %d\n", ret);
->  		return ret;
->  	}
->  
-> @@ -193,7 +192,7 @@ static int nt39016_disable(struct drm_panel *drm_panel)
->  	err = regmap_write(panel->map, NT39016_REG_SYSTEM,
->  			   NT39016_SYSTEM_RESET_N);
->  	if (err) {
-> -		dev_err(panel->dev, "Unable to disable panel: %d\n", err);
-> +		dev_err(drm_panel->dev, "Unable to disable panel: %d\n", err);
->  		return err;
->  	}
->  
-> @@ -252,7 +251,6 @@ static int nt39016_probe(struct spi_device *spi)
->  	if (!panel)
->  		return -ENOMEM;
->  
-> -	panel->dev = dev;
->  	spi_set_drvdata(spi, panel);
->  
->  	panel->panel_info = of_device_get_match_data(dev);
-> -- 
-> 2.28.0
+>  drivers/iommu/msm_iommu.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+> index 3615cd6241c4..f34efcbb0b2b 100644
+> --- a/drivers/iommu/msm_iommu.c
+> +++ b/drivers/iommu/msm_iommu.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/dma-iommu.h>
+>  #include <linux/errno.h>
+>  #include <linux/io.h>
+>  #include <linux/io-pgtable.h>
+> @@ -314,13 +315,16 @@ static struct iommu_domain *msm_iommu_domain_alloc(unsigned type)
+>  {
+>         struct msm_priv *priv;
+>
+> -       if (type != IOMMU_DOMAIN_UNMANAGED)
+> +       if (type != IOMMU_DOMAIN_UNMANAGED && type != IOMMU_DOMAIN_DMA)
+>                 return NULL;
+>
+>         priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+>                 goto fail_nomem;
+>
+> +       if (type == IOMMU_DOMAIN_DMA && iommu_get_dma_cookie(&priv->domain))
+> +               goto fail_nomem;
+> +
+>         INIT_LIST_HEAD(&priv->list_attached);
+>
+>         priv->domain.geometry.aperture_start = 0;
+> @@ -339,6 +343,7 @@ static void msm_iommu_domain_free(struct iommu_domain *domain)
+>         struct msm_priv *priv;
+>         unsigned long flags;
+>
+> +       iommu_put_dma_cookie(domain);
+>         spin_lock_irqsave(&msm_iommu_lock, flags);
+>         priv = to_msm_priv(domain);
+>         kfree(priv);
+> --
+> 2.28.0.dirty
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
