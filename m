@@ -8,63 +8,64 @@ X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9F7C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:20:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29F75C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5320E206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:20:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE2E0206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3bStRN6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hoOgqZhG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728791AbgHTXUg (ORCPT
+        id S1728805AbgHTXUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:20:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44452 "EHLO
+        Thu, 20 Aug 2020 19:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728600AbgHTXUe (ORCPT
+        with ESMTP id S1728600AbgHTXUr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:20:34 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA82C061385;
-        Thu, 20 Aug 2020 16:20:33 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id i10so103936pgk.1;
-        Thu, 20 Aug 2020 16:20:33 -0700 (PDT)
+        Thu, 20 Aug 2020 19:20:47 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62031C061385;
+        Thu, 20 Aug 2020 16:20:47 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id g15so26313plj.6;
+        Thu, 20 Aug 2020 16:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=WWik1+r7ug1ahh3ihIBeIV7cbQz02Md5UqkfuQNEKrg=;
-        b=j3bStRN6cq4EnGVkRLbJ0DBfDu6LXUlS406Tt1neeHJf2aiffRbt7IfalTBpgwKqLM
-         1/5LqBV9rB3OaXKop4Yg02vdXp5rHu/EVXLujWfT+zOM02acIub/4P7hcqwXoe6Gvjhx
-         0ushBhWUyEA3MHPI8aTwLdGG5Hfxf1MOUcljxKHEeuuUnJiJgDKzFHQiFUB1jdP98oZ2
-         QaJa9MtJCMaXYF3vIkkewbYKf7WRrQiBOTkuAZ0/NP/3RZBobaO4jJ+yab+2CnbHz19i
-         XQCUWvleF2t8ULjSuXoDhlnVgAWIolfnExuzH4htYK4v0fQ3lQv5ZMQykP4KQA1nd2gE
-         YeOA==
+        bh=UkH8Mq/WpiesfkXrapLTRLCROpdsRyoJty+98OOSpss=;
+        b=hoOgqZhGHiVLpZeCypo4yuc1a8zxVmMSd4yoH7tyVhF3yOb7NtMj1zSNv5XfOuI8DT
+         AlWGPfC0Tt9WPeOHXgkAJrJ/ujCTJum25ZaPdnCViQhCDmL0ejq62ZpTP2MGf4xcxoG8
+         //dWA4yoVM2FcKhy57jS98tWjNVY/WXBREVn+qyRrzr0dNU9BFecxR1XvgAZn8URED5w
+         +wPjTvUxEMZMZxwJorp0FAVs6Dzx3oks+bUOWlOL32lAOOxtFLtLFbeFQ7+BB6ZrSXwE
+         1dNhIXaStLdULE8UgwJGkL+NBxfVbloj5Xsb4QHOV2z6TzlIER2wWcUh9flW3IGobrpm
+         XDxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WWik1+r7ug1ahh3ihIBeIV7cbQz02Md5UqkfuQNEKrg=;
-        b=ce2yGB7HqWujfrTu18OojX99yY8eN+3qE8WCwvZv5nD49xPYGXCKPwW0jKuMo2OHdW
-         8yQLWKODim01mQqHCJhDbDgDMWKSVYqqAYvvUEyLFqrZ3K4fWpRoTI7VHSJkt5rnAKqX
-         V4KjoSaADnIeqDQy2tHIqAbO9ylMda7ipAC1Y+k3f8nbTVPLfWwiVyT+GpOixen9wk3A
-         ih7kKzJBeNPW80PRX6sQhK8lvzm/Bn88w55FIFyBpLRSHwyxmm8Zp3ehCSEbMfkUoSRy
-         xmlKkHNf2vfw/fLgGXuI71LE86x0AA+lXm0bBhxSFqqgp07Nfx1Po1yn9qqo4btNdR3c
-         gvIg==
-X-Gm-Message-State: AOAM532eNH8kt+kUCTpNimo/efVIgx21qs/CgNJ1wwnn926axTpQ8eH/
-        iGH6t+X8gtrtMmwHH9EEmidzpuh/4uiMmg==
-X-Google-Smtp-Source: ABdhPJxM1unyOaRiyWvnEnvKBgovRBg8W51tYqmCbq9vSLYxp2j4wXdLbbhHwPp/ekUOOAwTpb0GDQ==
-X-Received: by 2002:a63:ef07:: with SMTP id u7mr314855pgh.69.1597965633487;
-        Thu, 20 Aug 2020 16:20:33 -0700 (PDT)
+        bh=UkH8Mq/WpiesfkXrapLTRLCROpdsRyoJty+98OOSpss=;
+        b=VfzOpAUGCub3lAiIZ5YKZdKAWNV05Y2N8OuKnUgfP4btaJT8iEFY3dt8shIlSz03ft
+         R1fCGpsckPZ/UwyPl1gzsEWCoafKa3uJCBaMQh0/5BOZNRn1WyNiHkBgdByRYImAJvix
+         G9WI5evU/FVLx/FsECZz77aS+pXka9SwqdU0yqiHHQv4mwsNwjYHA3si5GOSFKobhXvd
+         H3AG5CDCAXJJeVufKNgJ64W52HxzznVSVQraC+6+hb2Xx+mL3aYkbNaIfoumWjQHlAax
+         zRO1LXG/hM8Uw/VSdha2itdajHCqNyDWZyHlMqmtITk6vHPOsuvvTdL1KYPXVp5f5Cr0
+         L4Wg==
+X-Gm-Message-State: AOAM530DznaMRkTOLg1iCszwYwNjc/g/S4Nb84TSf3Ee0yCGHluCHO7U
+        w9zNk5kr2vSPsznoHXrPm+rp94TNC3sQ3Q==
+X-Google-Smtp-Source: ABdhPJy6feg2kk7nTvSUH+AHBQAq+ZwdrDgcKqcb43pyrkAEQJqGzIlQH6xWUZuZ1neelwbWE1oCvA==
+X-Received: by 2002:a17:90b:255:: with SMTP id fz21mr202213pjb.50.1597965646928;
+        Thu, 20 Aug 2020 16:20:46 -0700 (PDT)
 Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id e3sm109419pgu.40.2020.08.20.16.20.32
+        by smtp.gmail.com with ESMTPSA id b15sm112786pgk.14.2020.08.20.16.20.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 16:20:33 -0700 (PDT)
+        Thu, 20 Aug 2020 16:20:46 -0700 (PDT)
 From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     tony.luck@intel.com, fenghua.yu@intel.com
-Cc:     hch@lst.de, linux-ia64@vger.kernel.org,
+To:     schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com
+Cc:     hch@lst.de, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [RFT][PATCH 3/7] ia64/sba_iommu: Avoid overflow at boundary_size
-Date:   Thu, 20 Aug 2020 16:20:18 -0700
-Message-Id: <20200820232018.23803-1-nicoleotsuka@gmail.com>
+Subject: [RFT][PATCH 4/7] s390/pci_dma: Avoid overflow at boundary_size
+Date:   Thu, 20 Aug 2020 16:20:32 -0700
+Message-Id: <20200820232032.23846-1-nicoleotsuka@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -92,24 +93,24 @@ So fixing a potential overflow with the safer shortcut.
 Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 Cc: Christoph Hellwig <hch@lst.de>
 ---
- arch/ia64/hp/common/sba_iommu.c | 4 ++--
+ arch/s390/pci/pci_dma.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 656a4888c300..945954903bb0 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -485,8 +485,8 @@ sba_search_bitmap(struct ioc *ioc, struct device *dev,
- 	ASSERT(((unsigned long) ioc->res_hint & (sizeof(unsigned long) - 1UL)) == 0);
- 	ASSERT(res_ptr < res_end);
+diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
+index 64b1399a73f0..ecb067acc6d5 100644
+--- a/arch/s390/pci/pci_dma.c
++++ b/arch/s390/pci/pci_dma.c
+@@ -263,8 +263,8 @@ static unsigned long __dma_alloc_iommu(struct device *dev,
+ 	struct zpci_dev *zdev = to_zpci(to_pci_dev(dev));
+ 	unsigned long boundary_size;
  
--	boundary_size = (unsigned long long)dma_get_seg_boundary(dev) + 1;
--	boundary_size = ALIGN(boundary_size, 1ULL << iovp_shift) >> iovp_shift;
+-	boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+-			      PAGE_SIZE) >> PAGE_SHIFT;
 +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> iovp_shift) + 1;
- 
- 	BUG_ON(ioc->ibase & ~iovp_mask);
- 	shift = ioc->ibase >> iovp_shift;
++	boundary_size = (dma_get_seg_boundary(dev) >> PAGE_SHIFT) + 1;
+ 	return iommu_area_alloc(zdev->iommu_bitmap, zdev->iommu_pages,
+ 				start, size, zdev->start_dma >> PAGE_SHIFT,
+ 				boundary_size, 0);
 -- 
 2.17.1
 
