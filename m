@@ -2,135 +2,72 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ABBC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27E9C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312FF207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0BA20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RnXKPDEs"
+	dkim=pass (1024-bit key) header.d=fieldses.org header.i=@fieldses.org header.b="nOEpqeCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728605AbgHTVBM (ORCPT
+        id S1728502AbgHTVDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50934 "EHLO
+        Thu, 20 Aug 2020 17:03:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728255AbgHTVBI (ORCPT
+        with ESMTP id S1726716AbgHTVDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:01:08 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F14CC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:01:07 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id n128so3135448oif.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b+3Ln31i8a6+ZKWFc7O5Q805fFIpbqFGnXfp+JT2jZE=;
-        b=RnXKPDEsmDEN0w2peAI9EVJvs5JicwgJffVB9D6emIEnf/GxYS0JafKwbnr/a8rkNK
-         Xhb1nVn7Wu1ID8MmHaZZoRlPORlWzyIiBkFUS9TxUtVoZ/o1ejNfC0476MwKOfTQ0Qvt
-         NY/WaA+n6TXdpwi/+6Z28qqa6l4eaDqOwI0cgKsW/KVExRCBt7NCYBdZzkF31hf3qDhr
-         zc3M1jaXh/oOwAO4nu5M+QTJorLN621yUm8d8sLvCAkf0pEyPaCPhFnrjorGbps29npy
-         jUugX7QA2QA3SQL1TUKAMlk46Jbsta2ee5mW8BkaTwEkMzuw9+tavYqsW2wLjNdqWpdr
-         5WIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b+3Ln31i8a6+ZKWFc7O5Q805fFIpbqFGnXfp+JT2jZE=;
-        b=MG/C/B6a7vezuEL6cBu0EUU9O+ZWmjjZvcsLNAx+VudU9VK1RHUGbd9EPgI6/U67X2
-         hWc5BjKOUUC1/JoMjio0Di/HeS+/lA9/ZcTDhzAQ2acXUJeG30vkmLHMU1kDxs9VCENP
-         V41KEGh+whpIdO0zaXRqk0ScLpyyCPPEFnVH+i4XNoKN6LB9SQ5le1bmJPHnoV+4jk52
-         MLcqX9vcbUsV69aE8P5zleVxkEEC83Eku65RF4M2yLXG3RklhKnPbzS9wBPK2rOe2imr
-         xuIO2QJFPQwNvuE7yyk3HQYD1IaeWTI3jz/FQYNjP9PDTtg4atzmJSJT1Uh0zmK0iZn8
-         ecAQ==
-X-Gm-Message-State: AOAM5301HMHbXoG6oc0jrxqREUYZSIosRIm/ibRTvtAkOATKVx6s3Qum
-        7Lits9isT0JxnpEpSkci0m/mPspApDJtFghmFp3LpeyRSfc=
-X-Google-Smtp-Source: ABdhPJzXe+KtJ7t8KrxIrZ9FUoQpuTEo5DCEz/sbYRPxsLdQJEIX2u1oeMuogZzFNt5m05MuMJt6l9wY8b7zWQu+EQI=
-X-Received: by 2002:aca:b942:: with SMTP id j63mr180088oif.28.1597957266525;
- Thu, 20 Aug 2020 14:01:06 -0700 (PDT)
+        Thu, 20 Aug 2020 17:03:01 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC14C061385;
+        Thu, 20 Aug 2020 14:03:00 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 21B2EC53; Thu, 20 Aug 2020 17:02:59 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 21B2EC53
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1597957379;
+        bh=9IfJeCRsn0Fic0IFS7i92deP6xA0a3e2TxsHEo8mN2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nOEpqeCkNU92jEH2kgozmY3ZQEtmVED0Awkf7JcxhDpLYbDMuDCssIHI3TOWbmm14
+         i8WmYfg/LBRLXU/al9VuxawT8HBAbk4FOjuiK3oK4Nlc4S6lHzNf/3b1WqF/MzWlT6
+         Dvvwmp3XXmMrHa8u+j2dI+IJwSU3iq6TeO1zrzkE=
+Date:   Thu, 20 Aug 2020 17:02:59 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Miaohe Lin <linmiaohe@huawei.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: Convert to use the preferred fallthrough macro
+Message-ID: <20200820210259.GE28555@fieldses.org>
+References: <20200820025718.51244-1-linmiaohe@huawei.com>
+ <01498CCA-B21A-4E8D-9761-41610C54CB9A@oracle.com>
 MIME-Version: 1.0
-References: <20200820133339.372823-1-mlevitsk@redhat.com> <20200820133339.372823-3-mlevitsk@redhat.com>
-In-Reply-To: <20200820133339.372823-3-mlevitsk@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 20 Aug 2020 14:00:55 -0700
-Message-ID: <CALMp9eQycCn-wTUfFkqH3M7vzsRsYphO=GU8EwHt3tomnp=mng@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] KVM: nSVM: rename nested 'vmcb' to vmcb12_gpa in
- few places
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01498CCA-B21A-4E8D-9761-41610C54CB9A@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 6:33 AM Maxim Levitsky <mlevitsk@redhat.com> wrote:
->
-> No functional changes.
->
-> Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> ---
->  arch/x86/kvm/svm/nested.c | 10 +++++-----
->  arch/x86/kvm/svm/svm.c    | 13 +++++++------
->  arch/x86/kvm/svm/svm.h    |  2 +-
->  3 files changed, 13 insertions(+), 12 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-> index fb68467e6049..f5b17920a2ca 100644
-> --- a/arch/x86/kvm/svm/nested.c
-> +++ b/arch/x86/kvm/svm/nested.c
-> @@ -431,7 +431,7 @@ int enter_svm_guest_mode(struct vcpu_svm *svm, u64 vmcb_gpa,
-For consistency, should the vmcb_gpa argument be renamed to vmcb12_gpa as well?
+On Thu, Aug 20, 2020 at 08:49:12AM -0400, Chuck Lever wrote:
+> Hi-
+> 
+> > On Aug 19, 2020, at 10:57 PM, Miaohe Lin <linmiaohe@huawei.com> wrote:
+> > 
+> > Convert the uses of fallthrough comments to fallthrough macro. Please see
+> > commit 294f69e662d1 ("compiler_attributes.h: Add 'fallthrough' pseudo
+> > keyword for switch/case use") for detail.
+> > 
+> > Signed-off-by: Hongxiang Lou <louhongxiang@huawei.com>
+> > Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> 
+> LGTM. If he also approves, I assume Bruce is taking this one for v5.10.
 
-
-> @@ -579,7 +579,7 @@ int nested_svm_vmexit(struct vcpu_svm *svm)
->
->         /* Exit Guest-Mode */
->         leave_guest_mode(&svm->vcpu);
-> -       svm->nested.vmcb = 0;
-> +       svm->nested.vmcb12_gpa = 0;
-Perhaps in a follow-up change, this could be set to an illegal value
-rather than 0?
-
-
-> @@ -1018,7 +1018,7 @@ static int svm_get_nested_state(struct kvm_vcpu *vcpu,
->
->         /* First fill in the header and copy it out.  */
->         if (is_guest_mode(vcpu)) {
-> -               kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb;
-> +               kvm_state.hdr.svm.vmcb_pa = svm->nested.vmcb12_gpa;
-It's unfortunate that we have "_pa" on the LHS on "_gpa" on the RHS. Oh, well.
-
-
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 562a79e3e63a..d33013b9b4d7 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -1102,7 +1102,7 @@ static void init_vmcb(struct vcpu_svm *svm)
->         }
->         svm->asid_generation = 0;
->
-> -       svm->nested.vmcb = 0;
-> +       svm->nested.vmcb12_gpa = 0;
-Here, too, perhaps this could be changed from 0 to an illegal value in
-a follow-up change.
-
-Reviewed-by: Jim Mattson <jmattson@google.com>
+Yep, applying, thanks.--b.
