@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65291C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD0E820658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3369920658
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919217;
-	bh=cbIUHUAy15ZMG23ss4Ojdz/v2oaFYsFFVeJlaOtQSGg=;
+	s=default; t=1597919221;
+	bh=eSuaLEycDt/TmbELdr/7tA34qeKIfGtLC3IoZFjSsNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gA32utOqdamn170ihTkOeva/Q02HphabXgfpLiEmGOqoEkUCcGG9Y3n6g99rcEfmv
-	 raSBkH25jJA2VwkfKbgD0htgEFkygGJwFCy7dhekKPt6f425fTbm8w/LOuM6hf9K3Q
-	 a+XYMPxXOa9eKJKxC8Z7MKwXHEpLh7doLPAoxUkw=
+	b=TGRpF0n6TbsrqZPcGCiez3Sai/iZXlG2d9ElJjS8Go+D7dgVb8xvwvehTmKChKK7Y
+	 Fow6MOfb2LplBmIezxG+/HbCyCYDFRkk2Y42cXczlB5NqWYW5orbivJzdgt/kkUVT3
+	 wbBtsES5WcmlE2vPG3rUCyQqZlBvvE/yFpNbmvLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731691AbgHTKWg (ORCPT
+        id S1731688AbgHTK07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50038 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731598AbgHTKWV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:21 -0400
+        id S1731713AbgHTKWm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:22:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB6992072D;
-        Thu, 20 Aug 2020 10:22:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A028B20658;
+        Thu, 20 Aug 2020 10:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918940;
-        bh=cbIUHUAy15ZMG23ss4Ojdz/v2oaFYsFFVeJlaOtQSGg=;
+        s=default; t=1597918962;
+        bh=eSuaLEycDt/TmbELdr/7tA34qeKIfGtLC3IoZFjSsNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bx6veKjCM2pANBb4ocDbeUyxXaCj0imCwXUauvjHamTjJh3Ersw0aXDfC0WzVp8Tz
-         VXzaL1zpnm9zgrlfzeOCP1N2/9BZZNGTfEGL/L5Ggc+JuZREUFNX48Oi4UmbxnhG7Y
-         /0GYIOyk98s7VCnMP6I3LW1WnA9jEW8Pop2stodg=
+        b=gt7KSkx6znudPHP7s4YdvNuY2DgR6PucFREM1aLBM/SWonIelXEYdaEzntcZED54g
+         uVftKl4E11y0QwfF/K6C4PQtNTpL5wsniJmT94abn+HK8wrqM7EUgTPhtWtOxM/0OQ
+         LBO8Ed7tUz144mRrY6oOJH/qmMIKm2tLqqORP7XI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.4 122/149] btrfs: fix memory leaks after failure to lookup checksums during inode logging
-Date:   Thu, 20 Aug 2020 11:23:19 +0200
-Message-Id: <20200820092131.610169547@linuxfoundation.org>
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Martin Schiller <ms@dev.tdt.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Xie He <xie.he.0141@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 104/149] drivers/net/wan/lapbether: Added needed_headroom and a skb->len check
+Date:   Thu, 20 Aug 2020 11:23:01 +0200
+Message-Id: <20200820092130.743148558@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -61,54 +64,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Xie He <xie.he.0141@gmail.com>
 
-commit 4f26433e9b3eb7a55ed70d8f882ae9cd48ba448b upstream.
+[ Upstream commit c7ca03c216acb14466a713fedf1b9f2c24994ef2 ]
 
-While logging an inode, at copy_items(), if we fail to lookup the checksums
-for an extent we release the destination path, free the ins_data array and
-then return immediately. However a previous iteration of the for loop may
-have added checksums to the ordered_sums list, in which case we leak the
-memory used by them.
+1. Added a skb->len check
 
-So fix this by making sure we iterate the ordered_sums list and free all
-its checksums before returning.
+This driver expects upper layers to include a pseudo header of 1 byte
+when passing down a skb for transmission. This driver will read this
+1-byte header. This patch added a skb->len check before reading the
+header to make sure the header exists.
 
-Fixes: 3650860b90cc2a ("Btrfs: remove almost all of the BUG()'s from tree-log.c")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+2. Changed to use needed_headroom instead of hard_header_len to request
+necessary headroom to be allocated
+
+In net/packet/af_packet.c, the function packet_snd first reserves a
+headroom of length (dev->hard_header_len + dev->needed_headroom).
+Then if the socket is a SOCK_DGRAM socket, it calls dev_hard_header,
+which calls dev->header_ops->create, to create the link layer header.
+If the socket is a SOCK_RAW socket, it "un-reserves" a headroom of
+length (dev->hard_header_len), and assumes the user to provide the
+appropriate link layer header.
+
+So according to the logic of af_packet.c, dev->hard_header_len should
+be the length of the header that would be created by
+dev->header_ops->create.
+
+However, this driver doesn't provide dev->header_ops, so logically
+dev->hard_header_len should be 0.
+
+So we should use dev->needed_headroom instead of dev->hard_header_len
+to request necessary headroom to be allocated.
+
+This change fixes kernel panic when this driver is used with AF_PACKET
+SOCK_RAW sockets.
+
+Call stack when panic:
+
+[  168.399197] skbuff: skb_under_panic: text:ffffffff819d95fb len:20
+put:14 head:ffff8882704c0a00 data:ffff8882704c09fd tail:0x11 end:0xc0
+dev:veth0
+...
+[  168.399255] Call Trace:
+[  168.399259]  skb_push.cold+0x14/0x24
+[  168.399262]  eth_header+0x2b/0xc0
+[  168.399267]  lapbeth_data_transmit+0x9a/0xb0 [lapbether]
+[  168.399275]  lapb_data_transmit+0x22/0x2c [lapb]
+[  168.399277]  lapb_transmit_buffer+0x71/0xb0 [lapb]
+[  168.399279]  lapb_kick+0xe3/0x1c0 [lapb]
+[  168.399281]  lapb_data_request+0x76/0xc0 [lapb]
+[  168.399283]  lapbeth_xmit+0x56/0x90 [lapbether]
+[  168.399286]  dev_hard_start_xmit+0x91/0x1f0
+[  168.399289]  ? irq_init_percpu_irqstack+0xc0/0x100
+[  168.399291]  __dev_queue_xmit+0x721/0x8e0
+[  168.399295]  ? packet_parse_headers.isra.0+0xd2/0x110
+[  168.399297]  dev_queue_xmit+0x10/0x20
+[  168.399298]  packet_sendmsg+0xbf0/0x19b0
+......
+
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: Martin Schiller <ms@dev.tdt.de>
+Cc: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Xie He <xie.he.0141@gmail.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/tree-log.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ drivers/net/wan/lapbether.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3733,11 +3733,8 @@ static noinline int copy_items(struct bt
- 						log->fs_info->csum_root,
- 						ds + cs, ds + cs + cl - 1,
- 						&ordered_sums, 0);
--				if (ret) {
--					btrfs_release_path(dst_path);
--					kfree(ins_data);
--					return ret;
--				}
-+				if (ret)
-+					break;
- 			}
- 		}
- 	}
-@@ -3750,7 +3747,6 @@ static noinline int copy_items(struct bt
- 	 * we have to do this after the loop above to avoid changing the
- 	 * log tree while trying to change the log tree.
+--- a/drivers/net/wan/lapbether.c
++++ b/drivers/net/wan/lapbether.c
+@@ -160,6 +160,12 @@ static netdev_tx_t lapbeth_xmit(struct s
+ 	if (!netif_running(dev))
+ 		goto drop;
+ 
++	/* There should be a pseudo header of 1 byte added by upper layers.
++	 * Check to make sure it is there before reading it.
++	 */
++	if (skb->len < 1)
++		goto drop;
++
+ 	switch (skb->data[0]) {
+ 	case X25_IFACE_DATA:
+ 		break;
+@@ -308,6 +314,7 @@ static void lapbeth_setup(struct net_dev
+ 	dev->netdev_ops	     = &lapbeth_netdev_ops;
+ 	dev->destructor	     = free_netdev;
+ 	dev->type            = ARPHRD_X25;
++	dev->hard_header_len = 0;
+ 	dev->mtu             = 1000;
+ 	dev->addr_len        = 0;
+ }
+@@ -334,7 +341,8 @@ static int lapbeth_new_device(struct net
+ 	 * then this driver prepends a length field of 2 bytes,
+ 	 * then the underlying Ethernet device prepends its own header.
  	 */
--	ret = 0;
- 	while (!list_empty(&ordered_sums)) {
- 		struct btrfs_ordered_sum *sums = list_entry(ordered_sums.next,
- 						   struct btrfs_ordered_sum,
+-	ndev->hard_header_len = -1 + 3 + 2 + dev->hard_header_len;
++	ndev->needed_headroom = -1 + 3 + 2 + dev->hard_header_len
++					   + dev->needed_headroom;
+ 
+ 	lapbeth = netdev_priv(ndev);
+ 	lapbeth->axdev = ndev;
 
 
