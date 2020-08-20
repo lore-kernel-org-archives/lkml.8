@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF3DC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B632620658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CF6220674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597929441;
-	bh=Td9RkfrIsHF2byBHdEUoYltcoXv/ZlGRTo56IMl7h+0=;
+	s=default; t=1597929458;
+	bh=hXW5C5tg9bIADkGE/iPp51ZKHJBMTdAvYzZ8FvK89oc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XGaw0PqcdFmOH4qW+hjBzWfOYYCgFo04a5hAzO5yOPoQUr1+gy6vdS+9KPYVqnlsW
-	 hrlNryFxjnqZ4TmBHFLCCbeS8Snnmy+x13pC52aHbGpq8K5UiKObcbg6QQNweFDeHJ
-	 IDdWL12QLmMNa3/abldS2KeBkHf+ZKzEk6HDFhO4=
+	b=Zq71T/+cKDUDoZBONE4KOMK7ZY+3cw2GEyO9+LKuRWjUoJI1I5cNtPn3CTL8RI7G2
+	 LHU72kh2U6hN3T95eRYHwQeUcbSHb9ANh7ebouWYlyKZZ7aVfqGMS4G/n+Fdoj7Yd/
+	 p7rptVt9ppzsd0kCPDvmObEiN80XT1OPmUOBNEtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgHTNRT (ORCPT
+        id S1729320AbgHTNRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48070 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:17:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728382AbgHTJfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:35:07 -0400
+        id S1728468AbgHTJfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:35:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE95920724;
-        Thu, 20 Aug 2020 09:35:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE43421775;
+        Thu, 20 Aug 2020 09:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916107;
-        bh=Td9RkfrIsHF2byBHdEUoYltcoXv/ZlGRTo56IMl7h+0=;
+        s=default; t=1597916110;
+        bh=hXW5C5tg9bIADkGE/iPp51ZKHJBMTdAvYzZ8FvK89oc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I5CeannIEbrmMDjPNp8sOiG0OlpavNL1rarPQz3btw0Ctlk2ccDA1UZPF18aOM55Z
-         GAsk1OSUEs6uF3ifuGeAW05qaSfBqUWLXa0saibOkYicjSfyalYJeEnWFbxtukwqQX
-         fFwBJGrMyzq3oSKqOD9zcVjmAieon/4oxPXasqSk=
+        b=GAnxio2RzbgvwL/CzWeq7cnayDrV5yFLOBiYbry7JP5lOdZedDWvz95aI4hg++5VA
+         7i0Q5VxM72/aeiwntp88P2p5LvuKH7Mx8EYZhs0GFIi6Ov9FnHmiMMZTPcr/s8bYP/
+         s17v9YBIBhXtnj9oXDabwSOqQnwWx95IcwvUvyho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
         Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.7 014/204] btrfs: only commit the delayed inode when doing a full fsync
-Date:   Thu, 20 Aug 2020 11:18:31 +0200
-Message-Id: <20200820091606.929702327@linuxfoundation.org>
+Subject: [PATCH 5.7 015/204] btrfs: stop incremening log_batch for the log root tree when syncing log
+Date:   Thu, 20 Aug 2020 11:18:32 +0200
+Message-Id: <20200820091606.978695084@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -62,27 +62,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Filipe Manana <fdmanana@suse.com>
 
-commit 8c8648dd1f6d62aeb912deeb788b6ac33cb782e7 upstream.
+commit 28a9579561bcb9082715e720eac93012e708ab94 upstream.
 
-Commit 2c2c452b0cafdc ("Btrfs: fix fsync when extend references are added
-to an inode") forced a commit of the delayed inode when logging an inode
-in order to ensure we would end up logging the inode item during a full
-fsync. By committing the delayed inode, we updated the inode item in the
-fs/subvolume tree and then later when copying items from leafs modified in
-the current transaction into the log tree (with copy_inode_items_to_log())
-we ended up copying the inode item from the fs/subvolume tree into the log
-tree. Logging an up to date version of the inode item is required to make
-sure at log replay time we get the link count fixup triggered among other
-things (replay xattr deletes, etc). The test case generic/040 from fstests
-exercises the bug which that commit fixed.
+We are incrementing the log_batch atomic counter of the root log tree but
+we never use that counter, it's used only for the log trees of subvolume
+roots. We started doing it when we moved the log_batch and log_write
+counters from the global, per fs, btrfs_fs_info structure, into the
+btrfs_root structure in commit 7237f1833601dc ("Btrfs: fix tree logs
+parallel sync").
 
-However for a fast fsync we don't need to commit the delayed inode because
-we always log an up to date version of the inode item based on the struct
-btrfs_inode we have in-memory. We started doing this for fast fsyncs since
-commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
-
-So just stop committing the delayed inode if we are doing a fast fsync,
-we are only wasting time and adding contention on fs/subvolume tree.
+So just stop doing it for the log root tree and add a comment over the
+field declaration so inform it's used only for log trees of subvolume
+roots.
 
 This patch is part of a series that has the following patches:
 
@@ -108,40 +99,29 @@ Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/tree-log.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ fs/btrfs/ctree.h    |    1 +
+ fs/btrfs/tree-log.c |    1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -1040,6 +1040,7 @@ struct btrfs_root {
+ 	struct list_head log_ctxs[2];
+ 	atomic_t log_writers;
+ 	atomic_t log_commit[2];
++	/* Used only for log trees of subvolumes, not for the log root tree */
+ 	atomic_t log_batch;
+ 	int log_transid;
+ 	/* No matter the commit succeeds or not*/
 --- a/fs/btrfs/tree-log.c
 +++ b/fs/btrfs/tree-log.c
-@@ -5158,7 +5158,7 @@ static int btrfs_log_inode(struct btrfs_
- 	struct btrfs_key max_key;
- 	struct btrfs_root *log = root->log_root;
- 	int err = 0;
--	int ret;
-+	int ret = 0;
- 	bool fast_search = false;
- 	u64 ino = btrfs_ino(inode);
- 	struct extent_map_tree *em_tree = &inode->extent_tree;
-@@ -5195,14 +5195,16 @@ static int btrfs_log_inode(struct btrfs_
+@@ -3125,7 +3125,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	btrfs_init_log_ctx(&root_log_ctx, NULL);
  
- 	/*
- 	 * Only run delayed items if we are a dir or a new file.
--	 * Otherwise commit the delayed inode only, which is needed in
--	 * order for the log replay code to mark inodes for link count
--	 * fixup (create temporary BTRFS_TREE_LOG_FIXUP_OBJECTID items).
-+	 * Otherwise commit the delayed inode only if the full sync flag is set,
-+	 * as we want to make sure an up to date version is in the subvolume
-+	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
-+	 * it to the log tree. For a non full sync, we always log the inode item
-+	 * based on the in-memory struct btrfs_inode which is always up to date.
- 	 */
- 	if (S_ISDIR(inode->vfs_inode.i_mode) ||
- 	    inode->generation > fs_info->last_trans_committed)
- 		ret = btrfs_commit_inode_delayed_items(trans, inode);
--	else
-+	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
- 		ret = btrfs_commit_inode_delayed_inode(inode);
+ 	mutex_lock(&log_root_tree->log_mutex);
+-	atomic_inc(&log_root_tree->log_batch);
+ 	atomic_inc(&log_root_tree->log_writers);
  
- 	if (ret) {
+ 	index2 = log_root_tree->log_transid % 2;
 
 
