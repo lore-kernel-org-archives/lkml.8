@@ -2,88 +2,60 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7964C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADB3C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88BCE2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44397206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 06:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726701AbgHTGsT (ORCPT
+        id S1726795AbgHTGuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 02:48:19 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:40570 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbgHTGsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 02:48:18 -0400
-Received: from bogon.localdomain (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxOMSbHD5fEWoLAA--.36S2;
-        Thu, 20 Aug 2020 14:47:55 +0800 (CST)
-From:   Kaige Li <likaige@loongson.cn>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: phy: mscc: Fix a couple of spelling mistakes "spcified" -> "specified"
-Date:   Thu, 20 Aug 2020 14:47:55 +0800
-Message-Id: <1597906075-12787-1-git-send-email-likaige@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf9DxOMSbHD5fEWoLAA--.36S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrKw47uF18ur13tr4rtF17Awb_yoWDAwb_K3
-        93Ar47W3WDKrs2yFnrJw45ZryrKa1qqFn2gFnrt3s8t3y3t3yfCFySvFn8J34Uuw4UuFZY
-        q3ZrZr1SyasFvjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb2xYjsxI4VWkKwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
-        vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r4j6F
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_GF1l42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-        z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUy9XoDUUUU
-X-CM-SenderInfo: 5olntxtjh6z05rqj20fqof0/
+        Thu, 20 Aug 2020 02:50:44 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:48892 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbgHTGum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 02:50:42 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
+        id 1k8eP2-0005jN-Hc; Thu, 20 Aug 2020 16:50:25 +1000
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 20 Aug 2020 16:50:24 +1000
+Date:   Thu, 20 Aug 2020 16:50:24 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Huang Guobin <huangguobin4@huawei.com>
+Cc:     haren@us.ibm.com, ddstreet@ieee.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] lib: Verify array index is correct before using it
+Message-ID: <20200820065024.GA21086@gondor.apana.org.au>
+References: <20200728122157.23120-1-huangguobin4@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200728122157.23120-1-huangguobin4@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are a couple of spelling mistakes in comment text. Fix these.
+On Tue, Jul 28, 2020 at 08:21:57AM -0400, Huang Guobin wrote:
+> This code reads from the array before verifying that "c" is a valid
+> index. Move test array offset code before use to fix it.
+> 
+> Fixes: 2da572c959dd ("lib: add software 842 compression/decompression")
+> Signed-off-by: Huang Guobin <huangguobin4@huawei.com>
+> ---
+>  lib/842/842_compress.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
-Signed-off-by: Kaige Li <likaige@loongson.cn>
----
- drivers/net/phy/mscc/mscc_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Did you check whether the out-of-bounds condition is even possible?
 
-diff --git a/drivers/net/phy/mscc/mscc_main.c b/drivers/net/phy/mscc/mscc_main.c
-index a4fbf3a..6bc7406 100644
---- a/drivers/net/phy/mscc/mscc_main.c
-+++ b/drivers/net/phy/mscc/mscc_main.c
-@@ -1738,13 +1738,13 @@ static int __phy_write_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb,
- 	return 0;
- }
- 
--/* Trigger a read to the spcified MCB */
-+/* Trigger a read to the specified MCB */
- static int phy_update_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb)
- {
- 	return __phy_write_mcb_s6g(phydev, reg, mcb, PHY_MCB_S6G_READ);
- }
- 
--/* Trigger a write to the spcified MCB */
-+/* Trigger a write to the specified MCB */
- static int phy_commit_mcb_s6g(struct phy_device *phydev, u32 reg, u8 mcb)
- {
- 	return __phy_write_mcb_s6g(phydev, reg, mcb, PHY_MCB_S6G_WRITE);
+Cheers,
 -- 
-2.1.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
