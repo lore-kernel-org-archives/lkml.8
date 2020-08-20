@@ -2,111 +2,134 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B41EC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B2AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315782075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE472075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 21:09:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fcz7mZN/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KFYniuhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgHTVHw (ORCPT
+        id S1726806AbgHTVJe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 17:07:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48000 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726854AbgHTVHv (ORCPT
+        Thu, 20 Aug 2020 17:09:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbgHTVJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 17:07:51 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07KL6muY076923;
-        Thu, 20 Aug 2020 17:07:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=cNPydKepE6JGZ2gi/JZvKIkzQLLKoYhIjxEY34n3Hrw=;
- b=Fcz7mZN/K299CuV9hss1RPft0Af543u7z/mVz1zmJtGcr8lOpLo8kCjALnxqptDV3vNp
- UlgABjT4jjhxhW7sbGBFvkDbu8ilCaOs0m2923BMmM1XBrrl1pYV4k8FC5adXJinUDmQ
- 5FTn85ilU6ham9h68IiiFa+M5aTa7zhsUF3VBdfAjivhwi9ufI8wLlgaPXnb4rsyLsVB
- uHSEAPXA/2/PVZqI1elHJmBdjhnB89lQZlLADuCZYE052TKlC7PQ/hu2LkvM+gEMSOlG
- wW8o24leLm3LfaZsS9lFigU2LszhAXze1WNTQUMLkILZwG4pEZ240KqO+tBUIMTjkYov 0A== 
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3314mx2hej-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 17:07:44 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07KL6IgC023472;
-        Thu, 20 Aug 2020 21:07:43 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma02wdc.us.ibm.com with ESMTP id 3304sd75p3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Aug 2020 21:07:43 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07KL7cwE61604256
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Aug 2020 21:07:38 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C4F3C605B;
-        Thu, 20 Aug 2020 21:07:42 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A3CAC605A;
-        Thu, 20 Aug 2020 21:07:42 +0000 (GMT)
-Received: from [9.163.70.74] (unknown [9.163.70.74])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Aug 2020 21:07:41 +0000 (GMT)
-Subject: Re: [PATCH 4/7] dt-bindings: fsi: fsi2spi: Document new restricted
- property
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, joel@jms.id.au,
-        bradleyb@fuzziesquirrel.com, robh+dt@kernel.org, arnd@arndb.de
-References: <20200820170228.42053-1-eajames@linux.ibm.com>
- <20200820170228.42053-5-eajames@linux.ibm.com>
- <20200820171430.GH5854@sirena.org.uk>
-From:   Eddie James <eajames@linux.ibm.com>
-Message-ID: <b9fbd669-3573-a0c9-18d8-6c0c7926625a@linux.ibm.com>
-Date:   Thu, 20 Aug 2020 16:07:41 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Thu, 20 Aug 2020 17:09:30 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42845C061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:09:30 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 128so1729904pgd.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 14:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UjiSaglQ75jI6j88glVf44Uda/sc/Nr405Wx3MU9i90=;
+        b=KFYniuhUyJt0GJ/A5NuqlGTAZAU0+V6ncRNsqE69SnlvmWq3pPM1dcbNXIRc0yOFfS
+         ntNdLnM8VpRXyXQP28VGNro2B+sblcS3igMaecVpFUisMoLpkoaihi/0QtfLnd9fSxle
+         qS3nnwfCInkPpXuf33rVOZB3rs20oebdgTRl4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UjiSaglQ75jI6j88glVf44Uda/sc/Nr405Wx3MU9i90=;
+        b=fQ+pEJiBuk7jt5txedvEOi3Df1GiWsQyaf/tP68H1pjWxXwWLI5ZgG/eYoOFbK+C4O
+         xp5xyBBdYtW/ytHZYDaRmsxyvM0H7Ua0vpi8yQyGOO2oGMyeHH/vibDEK2g5zcHB+wcp
+         68rors/TmN20vGeGOAaKtS51qBlhbHsxLdjLDujmdiEsdAEq2Sgd/Hxun8eQ1v4Prbg/
+         Pk2YwX71LeeMb5t66xqyGUz5/1anx+c3G1cvQbGRi2duP/kmBqpm/CnMXeAShcpR4172
+         ouPue4xUQaOoXXF8a30HJy1PtzJQc8EdkBepJ8LH3ZyHn69pBjfPJ7vZDHqBLcFmVfLm
+         87uA==
+X-Gm-Message-State: AOAM531/RvKmfCYXKc+Com5dHOYEk4U4V4zx1b1vO/hFhkcbAT4hBKhx
+        1n9t6rGjbJ6HH8bzURsrSarfgw==
+X-Google-Smtp-Source: ABdhPJzOdlZPLpvYzaIPGI9VzyzZNO0QSe5HCusBzEZ5k6gseQIYvoR42UFn1kWQeXXeIPfqkQAIZw==
+X-Received: by 2002:a63:b51a:: with SMTP id y26mr456024pge.376.1597957769546;
+        Thu, 20 Aug 2020 14:09:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g5sm3824348pfh.168.2020.08.20.14.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 14:09:16 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 14:09:15 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Kyle Huey <me@kylehuey.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        linux-arch@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Keno Fischer <keno@juliacomputing.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        kvm list <kvm@vger.kernel.org>,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [REGRESSION] x86/entry: Tracer no longer has opportunity to
+ change the syscall number at entry via orig_ax
+Message-ID: <202008201404.6A0D5736@keescook>
+References: <CAP045Arc1Vdh+n2j2ELE3q7XfagLjyqXji9ZD0jqwVB-yuzq-g@mail.gmail.com>
+ <87blj6ifo8.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200820171430.GH5854@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-20_07:2020-08-19,2020-08-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- priorityscore=1501 adultscore=0 impostorscore=0 phishscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 suspectscore=0 mlxlogscore=786 clxscore=1015
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008200170
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87blj6ifo8.fsf@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Aug 19, 2020 at 09:44:39PM +0200, Thomas Gleixner wrote:
+> On Wed, Aug 19 2020 at 10:14, Kyle Huey wrote:
+> > tl;dr: after 27d6b4d14f5c3ab21c4aef87dd04055a2d7adf14 ptracer
+> > modifications to orig_ax in a syscall entry trace stop are not honored
+> > and this breaks our code.
+> 
+> My fault and I have no idead why none of the silly test cases
+> noticed. Fix below.
 
-On 8/20/20 12:14 PM, Mark Brown wrote:
-> On Thu, Aug 20, 2020 at 12:02:25PM -0500, Eddie James wrote:
->> Add documentation for the "fsi2spi,restricted" property which indicates
->> a controller shouldn't sequence loops and therefore has a smaller
->> transfer size.
-> In what situation might someone set this?  It sounds like a
-> configuration option rather than a description of the hardware.
+Hmm, which were you trying? Looking just now, I see that the seccomp
+selftests were failing for all their syscall-changing tests.
+
+Regardless, I can confirm both the failure and the fix.
+
+Reported-by: Kyle Huey <me@kylehuey.com>
+Tested-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kees Cook <keescook@chromium.org>
 
 
-It is a description of the configuration of the hardware. For 
-controllers that are configured to be restricted for security purposes, 
-this property will be set.
+kernelci.org is *so* close to having the kernel selftests actually
+running with their builds. :)
 
-Thanks,
+https://github.com/kernelci/kernelci-core/issues/331
 
-Eddie
+-Kees
 
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+> index 9852e0d62d95..fcae019158ca 100644
+> --- a/kernel/entry/common.c
+> +++ b/kernel/entry/common.c
+> @@ -65,7 +65,8 @@ static long syscall_trace_enter(struct pt_regs *regs, long syscall,
+>  
+>  	syscall_enter_audit(regs, syscall);
+>  
+> -	return ret ? : syscall;
+> +	/* The above might have changed the syscall number */
+> +	return ret ? : syscall_get_nr(current, regs);
+>  }
+>  
+>  noinstr long syscall_enter_from_user_mode(struct pt_regs *regs, long syscall)
 
+-- 
+Kees Cook
