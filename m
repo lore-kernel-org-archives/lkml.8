@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5594CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC890C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B96C2078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EA042173E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916968;
-	bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
+	s=default; t=1597916976;
+	bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dF8pLLKnZ67ZGYGZtNAELk/583tFIBMKuoYy2cgLELv8aRvgiWE65d9+GNJmVwDto
-	 PXlBgH7IZzPURs5QjLfM0UPThd1SsUzlv0tWWUAK1/jzZdqsFiSxXzcXUtgM1rcBP2
-	 sD2WSUI7tz4WlBOBg+Z5XcJYu8VKkCFNzYOTHUPg=
+	b=M2nOoEZPjaLvrAVWKpJE3LELVERcFhlNaJHIxD3cdh+9jlCxe+g4deD+YmZkMCg0S
+	 k3ALHBskgB/58nPb5tDyYfzux9eQ2gr0YojsAjm1Adz1gAyl0+SWif9qLalDk+Ftgr
+	 4MqbkaxgGjeBmBKfi7GPtO3N031ViH2Mp8ruJszM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbgHTJt0 (ORCPT
+        id S1729374AbgHTJtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:49:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54722 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:49:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbgHTJtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:07 -0400
+        id S1729635AbgHTJtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:49:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6059F2078D;
-        Thu, 20 Aug 2020 09:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11CDA20724;
+        Thu, 20 Aug 2020 09:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916946;
-        bh=4ECfkLhEYHdEtCnhAdduHmkM3iWQ8LHlr8d9E3NNG1g=;
+        s=default; t=1597916958;
+        bh=kJJouGqpk7y9KGYIB/qSQlzNKFugPURJbr0dDf5g/yA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jElTXVTIDfMJHKaxmC5IgXAvzk1sMojrzxVUf5RsKZPBjIcI8OcjpuELlO2fjeIwA
-         oK8ruopuRjyS5ZHEP5ZQz90Gan4kb8aImO4tpZcR97duZOXycneeLAsJCe6C9PFU3C
-         bCMMVLsFkvebZpLScwKXgJNQgPlCFr5nNdwgBdw8=
+        b=az+WDyqsGYPuFsrJDR0yxqIkl4o2oXK5s5OncRgCc+x8VjNlwRrRmA+PhOriNNoqf
+         L2Nj4cIL27heq75RUzBbPubbSK2CTDizy+VGPvth1tFko82OOqpKi4XwW8k/+IdoE8
+         4mW+3rrZX6Dewo1y3R5tqgxFNnKzC8y50vLw4kW8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Cristian Ciocaltea <cristian.ciocaltea@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 101/152] clk: actions: Fix h_clk for Actions S500 SoC
-Date:   Thu, 20 Aug 2020 11:21:08 +0200
-Message-Id: <20200820091558.930540741@linuxfoundation.org>
+Subject: [PATCH 5.4 104/152] selftests/powerpc: ptrace-pkey: Dont update expected UAMOR value
+Date:   Thu, 20 Aug 2020 11:21:11 +0200
+Message-Id: <20200820091559.091775062@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -62,36 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-[ Upstream commit f47ee279d25fb0e010cae5d6e758e39b40eb6378 ]
+[ Upstream commit 3563b9bea0ca7f53e4218b5e268550341a49f333 ]
 
-The h_clk clock in the Actions Semi S500 SoC clock driver has an
-invalid parent. Replace with the correct one.
+With commit 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation
+must not change pkey registers") we are not updating UAMOR on key
+allocation. So don't update the expected uamor value in the test.
 
-Fixes: ed6b4795ece4 ("clk: actions: Add clock driver for S500 SoC")
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/c57e7ebabfa970014f073b92fe95b47d3e5a70b1.1593788312.git.cristian.ciocaltea@gmail.com
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Fixes: 4a4a5e5d2aad ("powerpc/pkeys: key allocation/deallocation must not change pkey registers")
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200709032946.881753-23-aneesh.kumar@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/actions/owl-s500.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/actions/owl-s500.c b/drivers/clk/actions/owl-s500.c
-index e2007ac4d235d..0eb83a0b70bcc 100644
---- a/drivers/clk/actions/owl-s500.c
-+++ b/drivers/clk/actions/owl-s500.c
-@@ -183,7 +183,7 @@ static OWL_GATE(timer_clk, "timer_clk", "hosc", CMU_DEVCLKEN1, 27, 0, 0);
- static OWL_GATE(hdmi_clk, "hdmi_clk", "hosc", CMU_DEVCLKEN1, 3, 0, 0);
+diff --git a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+index bc33d748d95b4..3694613f418f6 100644
+--- a/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
++++ b/tools/testing/selftests/powerpc/ptrace/ptrace-pkey.c
+@@ -101,15 +101,20 @@ static int child(struct shared_info *info)
+ 	 */
+ 	info->invalid_amr = info->amr2 | (~0x0UL & ~info->expected_uamor);
  
- /* divider clocks */
--static OWL_DIVIDER(h_clk, "h_clk", "ahbprevdiv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
-+static OWL_DIVIDER(h_clk, "h_clk", "ahbprediv_clk", CMU_BUSCLK1, 12, 2, NULL, 0, 0);
- static OWL_DIVIDER(rmii_ref_clk, "rmii_ref_clk", "ethernet_pll_clk", CMU_ETHERNETPLL, 1, 1, rmii_ref_div_table, 0, 0);
++	/*
++	 * if PKEY_DISABLE_EXECUTE succeeded we should update the expected_iamr
++	 */
+ 	if (disable_execute)
+ 		info->expected_iamr |= 1ul << pkeyshift(pkey1);
+ 	else
+ 		info->expected_iamr &= ~(1ul << pkeyshift(pkey1));
  
- /* factor clocks */
+-	info->expected_iamr &= ~(1ul << pkeyshift(pkey2) | 1ul << pkeyshift(pkey3));
++	/*
++	 * We allocated pkey2 and pkey 3 above. Clear the IAMR bits.
++	 */
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey2));
++	info->expected_iamr &= ~(1ul << pkeyshift(pkey3));
+ 
+-	info->expected_uamor |= 3ul << pkeyshift(pkey1) |
+-				3ul << pkeyshift(pkey2);
+ 	/*
+ 	 * Create an IAMR value different from expected value.
+ 	 * Kernel will reject an IAMR and UAMOR change.
 -- 
 2.25.1
 
