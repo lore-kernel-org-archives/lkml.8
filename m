@@ -2,110 +2,139 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DEAC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C51C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7E720738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA4B72075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:46:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZP0QD+50"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/zVjsh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730310AbgHTKqB (ORCPT
+        id S1729797AbgHTKqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40446 "EHLO
+        Thu, 20 Aug 2020 06:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbgHTKpn (ORCPT
+        with ESMTP id S1731910AbgHTKov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:45:43 -0400
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93EE9C061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:45:43 -0700 (PDT)
-Received: by mail-pg1-x542.google.com with SMTP id d19so928050pgl.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:45:43 -0700 (PDT)
+        Thu, 20 Aug 2020 06:44:51 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C1EDC06135B
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:44:34 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d19so926833pgl.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 03:44:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e8inUcZeC1EMvDkcDtQU8bF16fiEKmHQKTdE6UvD9Ao=;
-        b=ZP0QD+506tNSnZWgxhklM3ACdIxHLDAKs7Y13NpvZb2lV6r7xBuNUnDBfXq2jvNYt5
-         7/lQtWJa3Cu4CfERXUOwODKWYU+mc5q5qYgKK8atZQD/l3Z7Zcqfa36O+ah8JEkloJ7/
-         4QI/MwpTcOG0VE1ecRxhrUQkH0pIEadmkkaLn0VK5zuxbvSE/NDTjXl7TAQDuoYLIrg7
-         lZTOkJP3RN5mhSYnn8+JpyUvQtmpkgc0Oenv7D/7CoFEV7ycyqokUoEQRnSzpdLZ3gXr
-         77bL4G/C9sDbJETUHN0n73YPe+3B9OdykJGXhLF73vdoXwUpld0sK/DvCVXPwvGnU8BH
-         JPOA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uOWJI5P/ZjP6zythnGegEhVJsfmWoLZo0o+x47AYS0E=;
+        b=E/zVjsh1o8if8+7pFUUiz4ZhecMs1/LIs7ui21OGEwUDDEWN5BncjVTkD2/mxtNAaS
+         dcQBq6eMhvG3yCAs8AcgOvhwgYedg2Z6i8XzR0irtMGD70fqS6EJdJDlc9dVQfeKV/hz
+         5DFDXnQdSZqG2BexgfHV7DCg49HINy8/IpHTYlDc5U9WHW3v/LArJaYTquRMEYrbQOFc
+         Y5ZJ8PiOqHnOyREyUI0MI/KnHsjQAseurJS7FnldTzKFRUwL7OqYLNowieBRkhbz6W+E
+         5v6fRtyff1yeAGbnzSV2ZFchTeTi0d9aOJzWYoZbOcXC/1VvkNfAf/7lE0XPElrau2QO
+         8Ecw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e8inUcZeC1EMvDkcDtQU8bF16fiEKmHQKTdE6UvD9Ao=;
-        b=SLqyviLra+CnMUXWLnJt3cB1FvrXNijzcAdvYO6BZLi0NkWBmzhKJAmRzJf/8dJolK
-         VjoAAZ7N2ORpMRts9sd/+30etFssFXIcQNlKwmK7dJZ0c2hEYPTX1b5Z5nnVDuOlbxUO
-         t8iRJuJGaNVYQGe/3Y8p+Km+1e+KLfyJ45KtTp4xK7d/58wQZu9BFjuByGwnbGRssxuU
-         a2vwlZZ86M0CsHtU25olSXxm1+724xsYNWdTsv3EL1jaPHhAOLwr431K0RUu5UJJ4lpZ
-         LtAhrcxbmbfZ7KyNX0Cd1l30j43ume4sjS88DwfondkXNhHof013Lj+zVbzQjlHwMtyg
-         mqkA==
-X-Gm-Message-State: AOAM530xafUPV9atp6TelBiVlbxkbXPTEzyeRs2IXndd6TZVZ1eeEsgU
-        NnpM1zPb2333lZr+UzIC3A90qg==
-X-Google-Smtp-Source: ABdhPJxOJujoHIwJeXRT5jnwcXre+SjocPhd74ZRzEkHGK2rTIfJshGRbE/6smUIR6n+rpoJPe8BDw==
-X-Received: by 2002:aa7:83cf:: with SMTP id j15mr1682989pfn.251.1597920342783;
-        Thu, 20 Aug 2020 03:45:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=uOWJI5P/ZjP6zythnGegEhVJsfmWoLZo0o+x47AYS0E=;
+        b=tCx6sev6t6BAB1GCzUKty6Dv4+YmsGiKFxYhTQ5vZWgUtzEllj6ciDc501TgIWsYxZ
+         WSCJZeLHT/wpen4XfHByphzXC7D5Ne7gZyf8CXIZb7rjqr9C5B9vXv1UG1ZFDr/DfIBf
+         zT/ISkjE+iWeZGaTCR4ZLQ0wB1rtrO4Ig9Jw6JRiy3Hro8yNrUjWSO/d/B3dntGNHQpQ
+         K+4caXtG/H9+zmW8N6T/caaUE+gHKPhUPFf0GfbPbHMajZzPnjuNYZ+A3QTJqBx7dNza
+         /1AW5c0eamK9jDRIysGKNjwI701GKnnCE7Dlq9POSbcktXNji1IOFoonCqfQCIPLu4sP
+         9a+Q==
+X-Gm-Message-State: AOAM532pQw0HKOjXJNKChwg4Z+IoLoghOQLDJzyhNJ7cJgO7ozO/eQYK
+        yaJvLZI2EZjBd1TBuLr3YFfcgQ==
+X-Google-Smtp-Source: ABdhPJxeiVFtZ3ZkXtc4xAAHs9AvuJP9Q4J3dfZRuwjHdWNJYgaSoR+ZA2Bw6/XqrvFbTwFJYKFuRQ==
+X-Received: by 2002:aa7:9569:: with SMTP id x9mr1955507pfq.16.1597920273884;
+        Thu, 20 Aug 2020 03:44:33 -0700 (PDT)
 Received: from localhost ([122.172.43.13])
-        by smtp.gmail.com with ESMTPSA id s125sm2589935pfc.63.2020.08.20.03.45.41
+        by smtp.gmail.com with ESMTPSA id i14sm2492512pfu.50.2020.08.20.03.44.33
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Aug 2020 03:45:42 -0700 (PDT)
-Date:   Thu, 20 Aug 2020 16:15:40 +0530
+        Thu, 20 Aug 2020 03:44:33 -0700 (PDT)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>, agross@kernel.org,
-        bjorn.andersson@linaro.org, robdclark@chromium.org,
-        robdclark@gmail.com, stanimir.varbanov@linaro.org,
-        mka@chromium.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Akash Asthana <akashast@codeaurora.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v6 1/6] tty: serial: qcom_geni_serial: Use OPP API to set
- clk/perf state
-Message-ID: <20200820104540.4c4cg4rn4oa4rh6t@vireshk-i7>
-References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
- <1592222564-13556-2-git-send-email-rnayak@codeaurora.org>
- <159347264530.1987609.11350620235820019545@swboyd.mtv.corp.google.com>
- <a3d53f82-b29d-97ef-3ba1-ca9bd650d354@codeaurora.org>
- <20200630030552.cfp5oh33qde6nlnf@vireshk-i7>
- <159532101373.3847286.9695594340556014384@swboyd.mtv.corp.google.com>
- <20200722052444.updchi2yfjgbf3hb@vireshk-mac-ubuntu>
+To:     rnayak@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 6/8] spi: spi-qcom-qspi: Unconditionally call dev_pm_opp_of_remove_table()
+Date:   Thu, 20 Aug 2020 16:13:55 +0530
+Message-Id: <4d255332a28db9d79e0bae2cb73786df9c22efd6.1597919647.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+In-Reply-To: <cover.1597919647.git.viresh.kumar@linaro.org>
+References: <cover.1597919647.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200722052444.updchi2yfjgbf3hb@vireshk-mac-ubuntu>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22-07-20, 10:54, Viresh Kumar wrote:
-> On 21-07-20, 01:43, Stephen Boyd wrote:
-> > It seems that dev_pm_opp_set_rate() calls _find_opp_table() and finds
-> > something that isn't an error pointer but then dev_pm_opp_of_add_table()
-> > returns an error value because there isn't an operating-points property
-> > in DT. We're getting saved because this driver also happens to call
-> > dev_pm_opp_set_clkname() which allocates the OPP table a second time
-> > (because the first time it got freed when dev_pm_opp_of_add_table()
-> > return -ENODEV because the property was missing).
-> > 
-> > Why do we need 'has_opp_table' logic? It seems that we have to keep
-> > track of the fact that dev_pm_opp_of_add_table() failed so that we don't
-> > put the table again, but then dev_pm_opp_set_clkname() can be called
-> > to allocate the table regardless.
+dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
+find the OPP table with error -ENODEV (i.e. OPP table not present for
+the device). And we can call dev_pm_opp_of_remove_table()
+unconditionally here.
 
-I have sent a patchset to clean this stuff up a bit now.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/spi/spi-qcom-qspi.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
+index b8857a97f40a..7fd6f631dc17 100644
+--- a/drivers/spi/spi-qcom-qspi.c
++++ b/drivers/spi/spi-qcom-qspi.c
+@@ -143,7 +143,6 @@ struct qcom_qspi {
+ 	struct qspi_xfer xfer;
+ 	struct icc_path *icc_path_cpu_to_qspi;
+ 	struct opp_table *opp_table;
+-	bool has_opp_table;
+ 	unsigned long last_speed;
+ 	/* Lock to protect data accessed by IRQs */
+ 	spinlock_t lock;
+@@ -546,9 +545,7 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+ 	}
+ 	/* OPP table is optional */
+ 	ret = dev_pm_opp_of_add_table(&pdev->dev);
+-	if (!ret) {
+-		ctrl->has_opp_table = true;
+-	} else if (ret != -ENODEV) {
++	if (ret != -ENODEV) {
+ 		dev_err(&pdev->dev, "invalid OPP table in device tree\n");
+ 		goto exit_probe_master_put;
+ 	}
+@@ -562,8 +559,7 @@ static int qcom_qspi_probe(struct platform_device *pdev)
+ 		return 0;
+ 
+ 	pm_runtime_disable(dev);
+-	if (ctrl->has_opp_table)
+-		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_of_remove_table(&pdev->dev);
+ 	dev_pm_opp_put_clkname(ctrl->opp_table);
+ 
+ exit_probe_master_put:
+@@ -581,8 +577,7 @@ static int qcom_qspi_remove(struct platform_device *pdev)
+ 	spi_unregister_master(master);
+ 
+ 	pm_runtime_disable(&pdev->dev);
+-	if (ctrl->has_opp_table)
+-		dev_pm_opp_of_remove_table(&pdev->dev);
++	dev_pm_opp_of_remove_table(&pdev->dev);
+ 	dev_pm_opp_put_clkname(ctrl->opp_table);
+ 
+ 	return 0;
 -- 
-viresh
+2.25.0.rc1.19.g042ed3e048af
+
