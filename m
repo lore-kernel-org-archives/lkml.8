@@ -2,144 +2,210 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C558C433E5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA1C433E1
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39B1820724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70C7206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 14:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597932276;
+	bh=BJZ3khMHnakcxXd+d87ppc6iMeGURSC9HUcleIi3LsA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=K2VA2bKtdofTso1UTzLs4HDJjredVDut+KYmQKMUqChIm0sXBhKI0hdHDua2Ehy/H
+	 762MvvkeuqcL2el0gtQ/wUNqT2YVuIYLRW/evtYwxdsxukL/L/XgU1DVmTlJhI+3xg
+	 RHAGK7xdpoCola5hfhHdXC8idG3+jcufbUpQwD2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgHTODx (ORCPT
+        id S1728259AbgHTODG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 10:03:53 -0400
-Received: from raptor.unsafe.ru ([5.9.43.93]:41986 "EHLO raptor.unsafe.ru"
+        Thu, 20 Aug 2020 10:03:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729930AbgHTN4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 09:56:04 -0400
-Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        id S1727793AbgHTJZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:25:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by raptor.unsafe.ru (Postfix) with ESMTPSA id 8FCFB20A09;
-        Thu, 20 Aug 2020 13:55:55 +0000 (UTC)
-From:   Alexey Gladkov <gladkov.alexey@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>
-Cc:     Alexey Gladkov <legion@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 2/2] Show /proc/self/net only for CAP_NET_ADMIN
-Date:   Thu, 20 Aug 2020 15:53:34 +0200
-Message-Id: <2f6b3a1da70907eef5c29131d44acc10f477cc79.1597931457.git.gladkov.alexey@gmail.com>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <cover.1597931457.git.gladkov.alexey@gmail.com>
-References: <cover.1597931457.git.gladkov.alexey@gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 85E4E2173E;
+        Thu, 20 Aug 2020 09:25:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597915531;
+        bh=BJZ3khMHnakcxXd+d87ppc6iMeGURSC9HUcleIi3LsA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Xeiw4zc/LeppE7ITtWlQ1UvCTKd6KxzmZxm91UpH3FekebMrfRzIMKgOJ5F6Jo0Ah
+         OOHq4Yf9Ul5jF+5l7jYM4di/Ke8pnCCAZpP5PPadi41lvISAZikGCfbvp7AKcE050J
+         f6u/vi53Orkj6RrOIaEkNhRfd60WsJoDqmrQbZII=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Eric Sandeen <esandeen@redhat.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 029/232] btrfs: return EROFS for BTRFS_FS_STATE_ERROR cases
+Date:   Thu, 20 Aug 2020 11:18:00 +0200
+Message-Id: <20200820091614.166494761@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091612.692383444@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.1 (raptor.unsafe.ru [5.9.43.93]); Thu, 20 Aug 2020 13:55:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cache the mounters credentials and make access to the net directories
-contingent of the permissions of the mounter of proc.
+From: Josef Bacik <josef@toxicpanda.com>
 
-Show /proc/self/net only if mounter has CAP_NET_ADMIN and if proc is
-mounted with subset=pid option.
+commit fbabd4a36faaf74c83142d0b3d950c11ec14fda1 upstream.
 
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
+Eric reported seeing this message while running generic/475
+
+  BTRFS: error (device dm-3) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+
+Full stack trace:
+
+  BTRFS: error (device dm-0) in btrfs_commit_transaction:2323: errno=-5 IO failure (Error while writing out transaction)
+  BTRFS info (device dm-0): forced readonly
+  BTRFS warning (device dm-0): Skipping commit of aborted transaction.
+  ------------[ cut here ]------------
+  BTRFS: error (device dm-0) in cleanup_transaction:1894: errno=-5 IO failure
+  BTRFS: Transaction aborted (error -117)
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6480 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6488 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6490 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c6498 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3555 rw 0,0 sector 0x1c64c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85e8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3572 rw 0,0 sector 0x1b85f0 len 4096 err no 10
+  WARNING: CPU: 3 PID: 23985 at fs/btrfs/tree-log.c:3084 btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4288 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4290 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d4298 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42a8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42b8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c0 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42c8 len 4096 err no 10
+  BTRFS warning (device dm-0): direct IO failed ino 3548 rw 0,0 sector 0x1d42d0 len 4096 err no 10
+  CPU: 3 PID: 23985 Comm: fsstress Tainted: G        W    L    5.8.0-rc4-default+ #1181
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba527-rebuilt.opensuse.org 04/01/2014
+  RIP: 0010:btrfs_sync_log+0xbc8/0xd60 [btrfs]
+  RSP: 0018:ffff909a44d17bd0 EFLAGS: 00010286
+  RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000001
+  RDX: ffff8f3be41cb940 RSI: ffffffffb0108d2b RDI: ffffffffb0108ff7
+  RBP: ffff909a44d17e70 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000037988 R12: ffff8f3bd20e4000
+  R13: ffff8f3bd20e4428 R14: 00000000ffffff8b R15: ffff909a44d17c70
+  FS:  00007f6a6ed3fb80(0000) GS:ffff8f3c3dc00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f6a6ed3e000 CR3: 00000000525c0003 CR4: 0000000000160ee0
+  Call Trace:
+   ? finish_wait+0x90/0x90
+   ? __mutex_unlock_slowpath+0x45/0x2a0
+   ? lock_acquire+0xa3/0x440
+   ? lockref_put_or_lock+0x9/0x30
+   ? dput+0x20/0x4a0
+   ? dput+0x20/0x4a0
+   ? do_raw_spin_unlock+0x4b/0xc0
+   ? _raw_spin_unlock+0x1f/0x30
+   btrfs_sync_file+0x335/0x490 [btrfs]
+   do_fsync+0x38/0x70
+   __x64_sys_fsync+0x10/0x20
+   do_syscall_64+0x50/0xe0
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7f6a6ef1b6e3
+  Code: Bad RIP value.
+  RSP: 002b:00007ffd01e20038 EFLAGS: 00000246 ORIG_RAX: 000000000000004a
+  RAX: ffffffffffffffda RBX: 000000000007a120 RCX: 00007f6a6ef1b6e3
+  RDX: 00007ffd01e1ffa0 RSI: 00007ffd01e1ffa0 RDI: 0000000000000003
+  RBP: 0000000000000003 R08: 0000000000000001 R09: 00007ffd01e2004c
+  R10: 0000000000000000 R11: 0000000000000246 R12: 000000000000009f
+  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  irq event stamp: 0
+  hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+  hardirqs last disabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last  enabled at (0): [<ffffffffb007fe0b>] copy_process+0x67b/0x1b00
+  softirqs last disabled at (0): [<0000000000000000>] 0x0
+  ---[ end trace af146e0e38433456 ]---
+  BTRFS: error (device dm-0) in btrfs_sync_log:3084: errno=-117 Filesystem corrupted
+
+This ret came from btrfs_write_marked_extents().  If we get an aborted
+transaction via EIO before, we'll see it in btree_write_cache_pages()
+and return EUCLEAN, which gets printed as "Filesystem corrupted".
+
+Except we shouldn't be returning EUCLEAN here, we need to be returning
+EROFS because EUCLEAN is reserved for actual corruption, not IO errors.
+
+We are inconsistent about our handling of BTRFS_FS_STATE_ERROR
+elsewhere, but we want to use EROFS for this particular case.  The
+original transaction abort has the real error code for why we ended up
+with an aborted transaction, all subsequent actions just need to return
+EROFS because they may not have a trans handle and have no idea about
+the original cause of the abort.
+
+After patch "btrfs: don't WARN if we abort a transaction with EROFS" the
+stacktrace will not be dumped either.
+
+Reported-by: Eric Sandeen <esandeen@redhat.com>
+CC: stable@vger.kernel.org # 5.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add full test stacktrace ]
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/proc/proc_net.c      | 8 ++++++++
- fs/proc/root.c          | 7 +++++++
- include/linux/proc_fs.h | 1 +
- 3 files changed, 16 insertions(+)
+ fs/btrfs/extent_io.c   |    2 +-
+ fs/btrfs/scrub.c       |    2 +-
+ fs/btrfs/transaction.c |    5 ++++-
+ 3 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/proc/proc_net.c b/fs/proc/proc_net.c
-index dba63b2429f0..c43fc5c907db 100644
---- a/fs/proc/proc_net.c
-+++ b/fs/proc/proc_net.c
-@@ -26,6 +26,7 @@
- #include <linux/uidgid.h>
- #include <net/net_namespace.h>
- #include <linux/seq_file.h>
-+#include <linux/security.h>
- 
- #include "internal.h"
- 
-@@ -275,6 +276,7 @@ static struct net *get_proc_task_net(struct inode *dir)
- 	struct task_struct *task;
- 	struct nsproxy *ns;
- 	struct net *net = NULL;
-+	struct proc_fs_info *fs_info = proc_sb_info(dir->i_sb);
- 
- 	rcu_read_lock();
- 	task = pid_task(proc_pid(dir), PIDTYPE_PID);
-@@ -287,6 +289,12 @@ static struct net *get_proc_task_net(struct inode *dir)
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -4127,7 +4127,7 @@ retry:
+ 	if (!test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state)) {
+ 		ret = flush_write_bio(&epd);
+ 	} else {
+-		ret = -EUCLEAN;
++		ret = -EROFS;
+ 		end_write_bio(&epd, ret);
  	}
- 	rcu_read_unlock();
+ 	return ret;
+--- a/fs/btrfs/scrub.c
++++ b/fs/btrfs/scrub.c
+@@ -3758,7 +3758,7 @@ static noinline_for_stack int scrub_supe
+ 	struct btrfs_fs_info *fs_info = sctx->fs_info;
  
-+	if (net && (fs_info->pidonly == PROC_PIDONLY_ON) &&
-+	    security_capable(fs_info->mounter_cred, net->user_ns, CAP_NET_ADMIN, CAP_OPT_NONE) < 0) {
-+		put_net(net);
-+		net = NULL;
-+	}
-+
- 	return net;
- }
+ 	if (test_bit(BTRFS_FS_STATE_ERROR, &fs_info->fs_state))
+-		return -EIO;
++		return -EROFS;
  
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index c6bf74de1906..eeeda375cf85 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -184,6 +184,8 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- 	s->s_fs_info = fs_info;
+ 	/* Seed devices of a new filesystem has their own generation. */
+ 	if (scrub_dev->fs_devices != fs_info->fs_devices)
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -937,7 +937,10 @@ static int __btrfs_end_transaction(struc
+ 	if (TRANS_ABORTED(trans) ||
+ 	    test_bit(BTRFS_FS_STATE_ERROR, &info->fs_state)) {
+ 		wake_up_process(info->transaction_kthread);
+-		err = -EIO;
++		if (TRANS_ABORTED(trans))
++			err = trans->aborted;
++		else
++			err = -EROFS;
+ 	}
  
- 	fs_info->pid_ns = get_pid_ns(ctx->pid_ns);
-+	fs_info->mounter_cred = get_cred(fc->cred);
-+
- 	proc_apply_options(s, fc, current_user_ns());
- 
- 	/*
-@@ -219,9 +221,13 @@ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
- static int proc_reconfigure(struct fs_context *fc)
- {
- 	struct super_block *sb = fc->root->d_sb;
-+	struct proc_fs_info *fs_info = proc_sb_info(sb);
- 
- 	sync_filesystem(sb);
- 
-+	put_cred(fs_info->mounter_cred);
-+	fs_info->mounter_cred = get_cred(fc->cred);
-+
- 	proc_apply_options(sb, fc, current_user_ns());
- 	return 0;
- }
-@@ -276,6 +282,7 @@ static void proc_kill_sb(struct super_block *sb)
- 
- 	kill_anon_super(sb);
- 	put_pid_ns(fs_info->pid_ns);
-+	put_cred(fs_info->mounter_cred);
- 	kfree(fs_info);
- }
- 
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index d1eed1b43651..ce00560789f6 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -63,6 +63,7 @@ struct proc_fs_info {
- 	kgid_t pid_gid;
- 	enum proc_hidepid hide_pid;
- 	enum proc_pidonly pidonly;
-+	const struct cred *mounter_cred;
- };
- 
- static inline struct proc_fs_info *proc_sb_info(struct super_block *sb)
--- 
-2.25.4
+ 	kmem_cache_free(btrfs_trans_handle_cachep, trans);
+
 
