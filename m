@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 779E0C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D72C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E166208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896B82075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597916340;
-	bh=VppUcPlONVni2nQ4Jyvp0d8kh+BKibzpQqi+FzoPaU4=;
+	s=default; t=1597916352;
+	bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vLrYgiOACpvAp8aI4riIaFcju/wOp/F4Qp566x2y6TiSW+YNxpRmFKYGT3s8mft0N
-	 D5qvNKTO4fKG6/X5w2/yKZAW75D0SYqjHOVzCGAVyVIHQMlvOgD2Z7cbLMOFrZvnG3
-	 +7i5XuYKh53xDmkgy9myBlPTgbWuKTY+HOaYiSDo=
+	b=nVBFQ+eOow/szA5rLNK2rF5CO6kUZUxYBrgGPF8/o5vS9sGXFaVDxcVhp8fpr5cIx
+	 aC40xcX+FkJg+nb0zIhljGzf8LdappdryZQJuoCaGaR2LZjkK61H87lBUl+6rbNQna
+	 50N82lAcOeNW+U9nVbITQkixTe5EHdInBXghWTDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgHTJi6 (ORCPT
+        id S1728647AbgHTJjH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:38:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:39:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgHTJin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:43 -0400
+        id S1728788AbgHTJit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:38:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7367620724;
-        Thu, 20 Aug 2020 09:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489FD2075E;
+        Thu, 20 Aug 2020 09:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916323;
-        bh=VppUcPlONVni2nQ4Jyvp0d8kh+BKibzpQqi+FzoPaU4=;
+        s=default; t=1597916328;
+        bh=fEdiXVCUATGjxgpl36gAhW7CNegS9vb79xmy4lwUylo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S4dtkgnzQMluFf2reMpF3o2fr+bInYtuzxKveEiKIR8JBp1AVcdA0kacW7sD6VM+a
-         q1cHGBr8uav4qYEylgrg/qQbXtlkcYdTzfNNatg3UfP2z0rK3CBDposPJyXpfOUNPo
-         kNh1pw3xdWGwHZVsaMPioso3jMqutQKmyFLo3LT0=
+        b=EQt2ZS5EScbTZ6avA+/A3EPSdm2jGSkDP09l5Vxpua72US+BEN2G5n5EHXZJpLXIY
+         P8j6bF/VSUHzYnW+9e2lNqP32KN8JThz1m5LjRunCbL0edKxqDRWHPyp+ThfNqCdkp
+         /yDF9rzVqwqOQb4IsX7o/y1RiVZqynrUGF6pKsIo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Jessica Yu <jeyu@kernel.org>, Kees Cook <keescook@chromium.org>
-Subject: [PATCH 5.7 087/204] module: Correctly truncate sysfs sections output
-Date:   Thu, 20 Aug 2020 11:19:44 +0200
-Message-Id: <20200820091610.686783667@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Greear <greearb@candelatech.com>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 5.7 061/204] mac80211: fix misplaced while instead of if
+Date:   Thu, 20 Aug 2020 11:19:18 +0200
+Message-Id: <20200820091609.315336854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -59,77 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 11990a5bd7e558e9203c1070fc52fb6f0488e75b upstream.
+commit 5981fe5b0529ba25d95f37d7faa434183ad618c5 upstream.
 
-The only-root-readable /sys/module/$module/sections/$section files
-did not truncate their output to the available buffer size. While most
-paths into the kernfs read handlers end up using PAGE_SIZE buffers,
-it's possible to get there through other paths (e.g. splice, sendfile).
-Actually limit the output to the "count" passed into the read function,
-and report it back correctly. *sigh*
+This never was intended to be a 'while' loop, it should've
+just been an 'if' instead of 'while'. Fix this.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Link: https://lore.kernel.org/lkml/20200805002015.GE23458@shao2-debian
-Fixes: ed66f991bb19 ("module: Refactor section attr into bin attribute")
+I noticed this while applying another patch from Ben that
+intended to fix a busy loop at this spot.
+
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Jessica Yu <jeyu@kernel.org>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Fixes: b16798f5b907 ("mac80211: mark station unauthorized before key removal")
+Reported-by: Ben Greear <greearb@candelatech.com>
+Link: https://lore.kernel.org/r/20200803110209.253009ae41ff.I3522aad099392b31d5cf2dcca34cbac7e5832dde@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ net/mac80211/sta_info.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1517,18 +1517,34 @@ struct module_sect_attrs {
- 	struct module_sect_attr attrs[];
- };
+--- a/net/mac80211/sta_info.c
++++ b/net/mac80211/sta_info.c
+@@ -1050,7 +1050,7 @@ static void __sta_info_destroy_part2(str
+ 	might_sleep();
+ 	lockdep_assert_held(&local->sta_mtx);
  
-+#define MODULE_SECT_READ_SIZE (3 /* "0x", "\n" */ + (BITS_PER_LONG / 4))
- static ssize_t module_sect_read(struct file *file, struct kobject *kobj,
- 				struct bin_attribute *battr,
- 				char *buf, loff_t pos, size_t count)
- {
- 	struct module_sect_attr *sattr =
- 		container_of(battr, struct module_sect_attr, battr);
-+	char bounce[MODULE_SECT_READ_SIZE + 1];
-+	size_t wrote;
- 
- 	if (pos != 0)
- 		return -EINVAL;
- 
--	return sprintf(buf, "0x%px\n",
--		       kallsyms_show_value(file->f_cred) ? (void *)sattr->address : NULL);
-+	/*
-+	 * Since we're a binary read handler, we must account for the
-+	 * trailing NUL byte that sprintf will write: if "buf" is
-+	 * too small to hold the NUL, or the NUL is exactly the last
-+	 * byte, the read will look like it got truncated by one byte.
-+	 * Since there is no way to ask sprintf nicely to not write
-+	 * the NUL, we have to use a bounce buffer.
-+	 */
-+	wrote = scnprintf(bounce, sizeof(bounce), "0x%px\n",
-+			 kallsyms_show_value(file->f_cred)
-+				? (void *)sattr->address : NULL);
-+	count = min(count, wrote);
-+	memcpy(buf, bounce, count);
-+
-+	return count;
- }
- 
- static void free_sect_attrs(struct module_sect_attrs *sect_attrs)
-@@ -1577,7 +1593,7 @@ static void add_sect_attrs(struct module
- 			goto out;
- 		sect_attrs->nsections++;
- 		sattr->battr.read = module_sect_read;
--		sattr->battr.size = 3 /* "0x", "\n" */ + (BITS_PER_LONG / 4);
-+		sattr->battr.size = MODULE_SECT_READ_SIZE;
- 		sattr->battr.attr.mode = 0400;
- 		*(gattr++) = &(sattr++)->battr;
+-	while (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
++	if (sta->sta_state == IEEE80211_STA_AUTHORIZED) {
+ 		ret = sta_info_move_state(sta, IEEE80211_STA_ASSOC);
+ 		WARN_ON_ONCE(ret);
  	}
 
 
