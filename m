@@ -2,164 +2,92 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEEBC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2099C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17A8A207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79230204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:38:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="JJ6R5nT+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Vah+zRC1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbgHTLe6 (ORCPT
+        id S1729814AbgHTLiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:34:58 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:38207 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730646AbgHTLcz (ORCPT
+        Thu, 20 Aug 2020 07:38:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730849AbgHTLfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:32:55 -0400
-X-UUID: eb612c2d69074348b962c3ebf894ee40-20200820
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=drhq8ynCbXVhWs8r6yh8nKpt9bGbhMWwhKCx82Pwiqk=;
-        b=JJ6R5nT+5Xr60au9o3UV1sGbcDJDsS8+Lzcca8WvMReYqDMmkAxumRt49jMfvJiK+rhZv5Vcc3U77rY9Uy2JNQh0vWGR6eOhDoM6AifNLQCchB8+A+eUuRstV05NhFNPpcBLQ6lKzibhjDB1ca/5oHh4qAGVxBtraT2DKwYYvgk=;
-X-UUID: eb612c2d69074348b962c3ebf894ee40-20200820
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1962004783; Thu, 20 Aug 2020 19:32:31 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Thu, 20 Aug 2020 19:32:31 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Thu, 20 Aug 2020 19:32:28 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        Sasi Kumar <sasi.kumar@broadcom.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v2 08/11] usb: gadget: bdc: use the BIT macro to define bit filed
-Date:   Thu, 20 Aug 2020 19:30:43 +0800
-Message-ID: <1597923046-12535-8-git-send-email-chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
-References: <1597923046-12535-1-git-send-email-chunfeng.yun@mediatek.com>
+        Thu, 20 Aug 2020 07:35:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E88C061385;
+        Thu, 20 Aug 2020 04:35:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=t84+Z949JCHOIrLVWyab10y1aUar8zezYlYXe5c2wbk=; b=Vah+zRC10NBMvc8xBtg+tjZiTo
+        FG7tUUZHI4+gor8Ux3uZza/5rQmRIf34CLhjWtUc4glJBovY5Zt8tMIGwnOKg026bwsrH9lojI7bL
+        E2pXK2kM1ZFDkhxnJx44Kyexr0FfrbS+K7Ic7AF3qsysKTCBWa9tiIRJMbzNOvApL0RROg2bxNoiN
+        6l383zlJUyuwUumLjB0w/Xi3RreLD+9ipEDkwtIPtksBVSBgUyyKSjP/UK9C5QsuGrs9rETzxjkXA
+        bQzIO195RJBmwBnXAb4ZRT4fRC0sG82WYMpiMOZx0aoZqJ1SqMeFV4vEG9SCc8Nl39JQVEhWdA03e
+        DTE5yHTQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8iqG-0002He-GO; Thu, 20 Aug 2020 11:34:48 +0000
+Date:   Thu, 20 Aug 2020 12:34:48 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Gao Xiang <hsiangkao@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Carlos Maiolino <cmaiolino@redhat.com>,
+        Eric Sandeen <esandeen@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
+ mistake
+Message-ID: <20200820113448.GM17456@casper.infradead.org>
+References: <20200820045323.7809-1-hsiangkao@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: EA14887C2B3D21C29D691B0CE71B29C3719D003B1B6A56953F59595A0225AB102000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820045323.7809-1-hsiangkao@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UHJlZmVyIHVzaW5nIHRoZSBCSVQgbWFjcm8gdG8gZGVmaW5lIGJpdCBmaWxlZHMNCg0KQ2M6IEZs
-b3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPg0KU2lnbmVkLW9mZi1ieTogQ2h1
-bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0ZWsuY29tPg0KLS0tDQp2MjogYWRkIENjIEZs
-b3JpYW4NCi0tLQ0KIGRyaXZlcnMvdXNiL2dhZGdldC91ZGMvYmRjL2JkYy5oIHwgODQgKysrKysr
-KysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0MiBp
-bnNlcnRpb25zKCspLCA0MiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvdXNi
-L2dhZGdldC91ZGMvYmRjL2JkYy5oIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmgN
-CmluZGV4IGY4ZDU5NTguLjhkMDBiMTIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3VzYi9nYWRnZXQv
-dWRjL2JkYy9iZGMuaA0KKysrIGIvZHJpdmVycy91c2IvZ2FkZ2V0L3VkYy9iZGMvYmRjLmgNCkBA
-IC0xMDIsNyArMTAyLDcgQEANCiAjZGVmaW5lIEJEQ19TUEIocCkJKChwKSAmIDB4NykNCiANCiAv
-KiBCREMgQ2FwYWJpbGl0eTEgKi8NCi0jZGVmaW5lIEJEQ19QNjQJCSgxIDw8IDApDQorI2RlZmlu
-ZSBCRENfUDY0CQlCSVQoMCkNCiANCiAvKiBCREMgQ29tbWFuZCByZWdpc3RlciAqLw0KICNkZWZp
-bmUgQkRDX0NNRF9GSAkweGUNCkBAIC0xMTEsNyArMTExLDcgQEANCiAjZGVmaW5lIEJEQ19DTURf
-QkxBCTB4Mw0KICNkZWZpbmUgQkRDX0NNRF9FUEMJMHgyDQogI2RlZmluZSBCRENfQ01EX0RWQwkw
-eDENCi0jZGVmaW5lIEJEQ19DTURfQ1dTCQkoMHgxIDw8IDUpDQorI2RlZmluZSBCRENfQ01EX0NX
-UwkJQklUKDUpDQogI2RlZmluZSBCRENfQ01EX0NTVChwKQkJKCgocCkgJiAoMHhmIDw8IDYpKT4+
-NikNCiAjZGVmaW5lIEJEQ19DTURfRVBOKHApCQkoKChwKSAmIDB4MWYpIDw8IDEwKQ0KICNkZWZp
-bmUgQkRDX1NVQl9DTURfQURECQkoMHgxIDw8IDE3KQ0KQEAgLTEyNCw3ICsxMjQsNyBAQA0KICNk
-ZWZpbmUgQkRDX1NVQl9DTURfRVBfU1RQCSgweDIgPDwgMTcpDQogI2RlZmluZSBCRENfU1VCX0NN
-RF9FUF9TVEwJKDB4NCA8PCAxNykNCiAjZGVmaW5lIEJEQ19TVUJfQ01EX0VQX1JTVAkoMHgxIDw8
-IDE3KQ0KLSNkZWZpbmUgQkRDX0NNRF9TUkQJCSgxIDw8IDI3KQ0KKyNkZWZpbmUgQkRDX0NNRF9T
-UkQJCUJJVCgyNykNCiANCiAvKiBDTUQgY29tcGxldGlvbiBzdGF0dXMgKi8NCiAjZGVmaW5lIEJE
-Q19DTURTX1NVQ0MJMHgxDQpAQCAtMTQxLDE5ICsxNDEsMTkgQEANCiAjZGVmaW5lIEVQTV9TSElG
-VAk0DQogDQogLyogQkRDIFVTUFNDICovDQotI2RlZmluZSBCRENfVkJDCQkoMSA8PCAzMSkNCi0j
-ZGVmaW5lIEJEQ19QUkMJCSgxIDw8IDMwKQ0KLSNkZWZpbmUgQkRDX1BDRQkJKDEgPDwgMjkpDQot
-I2RlZmluZSBCRENfQ0ZDCQkoMSA8PCAyOCkNCi0jZGVmaW5lIEJEQ19QQ0MJCSgxIDw8IDI3KQ0K
-LSNkZWZpbmUgQkRDX1BTQwkJKDEgPDwgMjYpDQotI2RlZmluZSBCRENfVkJTCQkoMSA8PCAyNSkN
-Ci0jZGVmaW5lIEJEQ19QUlMJCSgxIDw8IDI0KQ0KLSNkZWZpbmUgQkRDX1BDUwkJKDEgPDwgMjMp
-DQorI2RlZmluZSBCRENfVkJDCQlCSVQoMzEpDQorI2RlZmluZSBCRENfUFJDCQlCSVQoMzApDQor
-I2RlZmluZSBCRENfUENFCQlCSVQoMjkpDQorI2RlZmluZSBCRENfQ0ZDCQlCSVQoMjgpDQorI2Rl
-ZmluZSBCRENfUENDCQlCSVQoMjcpDQorI2RlZmluZSBCRENfUFNDCQlCSVQoMjYpDQorI2RlZmlu
-ZSBCRENfVkJTCQlCSVQoMjUpDQorI2RlZmluZSBCRENfUFJTCQlCSVQoMjQpDQorI2RlZmluZSBC
-RENfUENTCQlCSVQoMjMpDQogI2RlZmluZSBCRENfUFNQKHApCSgoKHApICYgKDB4NyA8PCAyMCkp
-Pj4yMCkNCi0jZGVmaW5lIEJEQ19TQ04JCSgxIDw8IDgpDQotI2RlZmluZSBCRENfU0RDCQkoMSA8
-PCA3KQ0KLSNkZWZpbmUgQkRDX1NXUwkJKDEgPDwgNCkNCisjZGVmaW5lIEJEQ19TQ04JCUJJVCg4
-KQ0KKyNkZWZpbmUgQkRDX1NEQwkJQklUKDcpDQorI2RlZmluZSBCRENfU1dTCQlCSVQoNCkNCiAN
-CiAjZGVmaW5lIEJEQ19VU1BTQ19SVwkoQkRDX1NDTnxCRENfU0RDfEJEQ19TV1N8MHhmKQ0KICNk
-ZWZpbmUgQkRDX1BTUChwKQkoKChwKSAmICgweDcgPDwgMjApKT4+MjApDQpAQCAtMTY3LDE3ICsx
-NjcsMTcgQEANCiAjZGVmaW5lIEJEQ19QU1RfTUFTSwkweGYNCiANCiAvKiBVU1BQTVMgKi8NCi0j
-ZGVmaW5lIEJEQ19VMkUJCSgweDEgPDwgMzEpDQotI2RlZmluZSBCRENfVTFFCQkoMHgxIDw8IDMw
-KQ0KLSNkZWZpbmUgQkRDX1UyQQkJKDB4MSA8PCAyOSkNCi0jZGVmaW5lIEJEQ19QT1JUX1cxUwko
-MHgxIDw8IDE3KQ0KKyNkZWZpbmUgQkRDX1UyRQkJQklUKDMxKQ0KKyNkZWZpbmUgQkRDX1UxRQkJ
-QklUKDMwKQ0KKyNkZWZpbmUgQkRDX1UyQQkJQklUKDI5KQ0KKyNkZWZpbmUgQkRDX1BPUlRfVzFT
-CUJJVCgxNykNCiAjZGVmaW5lIEJEQ19VMVQocCkJKChwKSAmIDB4ZmYpDQogI2RlZmluZSBCRENf
-VTJUKHApCSgoKHApICYgMHhmZikgPDwgOCkNCiAjZGVmaW5lIEJEQ19VMVRfTUFTSwkweGZmDQog
-DQogLyogVVNCUE0yICovDQogLyogSGFyZHdhcmUgTFBNIEVuYWJsZSAqLw0KLSNkZWZpbmUgQkRD
-X0hMRQkJKDEgPDwgMTYpDQorI2RlZmluZSBCRENfSExFCQlCSVQoMTYpDQogDQogLyogQkRDIFN0
-YXR1cyBhbmQgQ29udHJvbCAqLw0KICNkZWZpbmUgQkRDX0NPUF9SU1QJKDEgPDwgMjkpDQpAQCAt
-MTg2LDExICsxODYsMTEgQEANCiANCiAjZGVmaW5lIEJEQ19DT1BfTUFTSyAoQkRDX0NPUF9SU1R8
-QkRDX0NPUF9SVU58QkRDX0NPUF9TVFApDQogDQotI2RlZmluZSBCRENfQ09TCQkoMSA8PCAyOCkN
-CisjZGVmaW5lIEJEQ19DT1MJCUJJVCgyOCkNCiAjZGVmaW5lIEJEQ19DU1RTKHApCSgoKHApICYg
-KDB4NyA8PCAyMCkpID4+IDIwKQ0KLSNkZWZpbmUgQkRDX01BU0tfTUNXCSgxIDw8IDcpDQotI2Rl
-ZmluZSBCRENfR0lFCQkoMSA8PCAxKQ0KLSNkZWZpbmUgQkRDX0dJUAkJKDEgPDwgMCkNCisjZGVm
-aW5lIEJEQ19NQVNLX01DVwlCSVQoNykNCisjZGVmaW5lIEJEQ19HSUUJCUJJVCgxKQ0KKyNkZWZp
-bmUgQkRDX0dJUAkJQklUKDApDQogDQogI2RlZmluZSBCRENfSExUCTENCiAjZGVmaW5lIEJEQ19O
-T1IJMg0KQEAgLTIwMSwxOSArMjAxLDE5IEBADQogI2RlZmluZSBCRF9DSEFJTgkweGYNCiANCiAj
-ZGVmaW5lIEJEX1RGU19TSElGVAk0DQotI2RlZmluZSBCRF9TT1QJCSgxIDw8IDI2KQ0KLSNkZWZp
-bmUgQkRfRU9UCQkoMSA8PCAyNykNCi0jZGVmaW5lIEJEX0lTUAkJKDEgPDwgMjkpDQotI2RlZmlu
-ZSBCRF9JT0MJCSgxIDw8IDMwKQ0KLSNkZWZpbmUgQkRfU0JGCQkoMSA8PCAzMSkNCisjZGVmaW5l
-IEJEX1NPVAkJQklUKDI2KQ0KKyNkZWZpbmUgQkRfRU9UCQlCSVQoMjcpDQorI2RlZmluZSBCRF9J
-U1AJCUJJVCgyOSkNCisjZGVmaW5lIEJEX0lPQwkJQklUKDMwKQ0KKyNkZWZpbmUgQkRfU0JGCQlC
-SVQoMzEpDQogDQogI2RlZmluZSBCRF9JTlRSX1RBUkdFVChwKQkoKChwKSAmIDB4MWYpIDw8IDI3
-KQ0KIA0KLSNkZWZpbmUgQkRDX1NSUl9SV1MJCSgxIDw8IDQpDQotI2RlZmluZSBCRENfU1JSX1JT
-VAkJKDEgPDwgMykNCi0jZGVmaW5lIEJEQ19TUlJfSVNSCQkoMSA8PCAyKQ0KLSNkZWZpbmUgQkRD
-X1NSUl9JRQkJKDEgPDwgMSkNCi0jZGVmaW5lIEJEQ19TUlJfSVAJCSgxIDw8IDApDQorI2RlZmlu
-ZSBCRENfU1JSX1JXUwkJQklUKDQpDQorI2RlZmluZSBCRENfU1JSX1JTVAkJQklUKDMpDQorI2Rl
-ZmluZSBCRENfU1JSX0lTUgkJQklUKDIpDQorI2RlZmluZSBCRENfU1JSX0lFCQlCSVQoMSkNCisj
-ZGVmaW5lIEJEQ19TUlJfSVAJCUJJVCgwKQ0KICNkZWZpbmUgQkRDX1NSUl9FUEkocCkJKCgocCkg
-JiAoMHhmZiA8PCAyNCkpID4+IDI0KQ0KICNkZWZpbmUgQkRDX1NSUl9EUEkocCkgKCgocCkgJiAo
-MHhmZiA8PCAxNikpID4+IDE2KQ0KICNkZWZpbmUgQkRDX1NSUl9EUElfTUFTSwkweDAwZmYwMDAw
-DQpAQCAtMjIxLDcgKzIyMSw3IEBADQogI2RlZmluZSBNQVJLX0NIQUlOX0JECShCRF9DSEFJTnxC
-RF9FT1R8QkRfU09UKQ0KIA0KIC8qIENvbnRyb2wgdHJhbnNmZXIgQkQgc3BlY2lmaWMgZmllbGRz
-ICovDQotI2RlZmluZSBCRF9ESVJfSU4JCSgxIDw8IDI1KQ0KKyNkZWZpbmUgQkRfRElSX0lOCQlC
-SVQoMjUpDQogDQogI2RlZmluZSBCRENfUFRDX01BU0sJMHhmMDAwMDAwMA0KIA0KQEAgLTI0MSwx
-MyArMjQxLDEzIEBADQogDQogLyogVHJhbnNmZXIgQkQgZmllbGRzICovDQogI2RlZmluZSBCRF9M
-RU4ocCkgKChwKSAmIDB4MWZmZmYpDQotI2RlZmluZSBCRF9MVEYJCSgxIDw8IDI1KQ0KKyNkZWZp
-bmUgQkRfTFRGCQlCSVQoMjUpDQogI2RlZmluZSBCRF9UWVBFX0RTCTB4MQ0KICNkZWZpbmUgQkRf
-VFlQRV9TUwkweDINCiANCi0jZGVmaW5lIEJEQ19FUF9FTkFCTEVEICAgICAoMSA8PCAwKQ0KLSNk
-ZWZpbmUgQkRDX0VQX1NUQUxMICAgICAgICgxIDw8IDEpDQotI2RlZmluZSBCRENfRVBfU1RPUCAg
-ICAgICAgKDEgPDwgMikNCisjZGVmaW5lIEJEQ19FUF9FTkFCTEVEICAgICBCSVQoMCkNCisjZGVm
-aW5lIEJEQ19FUF9TVEFMTCAgICAgICBCSVQoMSkNCisjZGVmaW5lIEJEQ19FUF9TVE9QICAgICAg
-ICBCSVQoMikNCiANCiAvKiBPbmUgQkQgY2FuIHRyYW5zZmVyIG1heCA2NTUzNiBieXRlcyAqLw0K
-ICNkZWZpbmUgQkRfTUFYX0JVRkZfU0laRQkoMSA8PCAxNikNCkBAIC0yNjYsOSArMjY2LDkgQEAN
-CiAvKiBGVU5DVElPTiBXQUtFIERFViBOT1RJRklDQVRJT04gaW50ZXJ2YWwsIFVTQjMgc3BlYyB0
-YWJsZSA4LjEzICovDQogI2RlZmluZSBCRENfVE5PVElGWSAyNTAwIC8qaW4gbXMqLw0KIC8qIERl
-dnN0YXR1cyBiaXRmaWVsZHMgKi8NCi0jZGVmaW5lIFJFTU9URV9XQUtFVVBfSVNTVUVECSgxIDw8
-IDE2KQ0KLSNkZWZpbmUgREVWSUNFX1NVU1BFTkRFRAkoMSA8PCAxNykNCi0jZGVmaW5lIEZVTkNf
-V0FLRV9JU1NVRUQJKDEgPDwgMTgpDQorI2RlZmluZSBSRU1PVEVfV0FLRVVQX0lTU1VFRAlCSVQo
-MTYpDQorI2RlZmluZSBERVZJQ0VfU1VTUEVOREVECUJJVCgxNykNCisjZGVmaW5lIEZVTkNfV0FL
-RV9JU1NVRUQJQklUKDE4KQ0KICNkZWZpbmUgUkVNT1RFX1dBS0VfRU5BQkxFCSgxIDw8IFVTQl9E
-RVZJQ0VfUkVNT1RFX1dBS0VVUCkNCiANCiAvKiBPbiBkaXNjb25uZWN0LCBwcmVzZXJ2ZSB0aGVz
-ZSBiaXRzIGFuZCBjbGVhciByZXN0ICovDQotLSANCjEuOS4xDQo=
+On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
+> SWP_FS is used to make swap_{read,write}page() go through
+> the filesystem, and it's only used for swap files over
+> NFS. So, !SWP_FS means non NFS for now, it could be either
+> file backed or device backed. Something similar goes with
+> legacy SWP_FILE.
+> 
+> So in order to achieve the goal of the original patch,
+> SWP_BLKDEV should be used instead.
 
+This is clearly confusing.  I think we need to rename SWP_FS to SWP_FS_OPS.
+
+More generally, the swap code seems insane.  I appreciate that it's an
+inherited design from over twenty-five years ago, and nobody wants to
+touch it, but it's crazy that it cares about how the filesystem has
+mapped file blocks to disk blocks.  I understand that the filesystem
+has to know not to allocate memory in order to free memory, but this
+is already something filesystems have to understand.  It's also useful
+for filesystems to know that this is data which has no meaning after a
+power cycle (so it doesn't need to be journalled or snapshotted or ...),
+but again, that's useful functionality which we could stand to present
+to userspace anyway.
+
+I suppose the tricky thing about it is that working on the swap code is
+not as sexy as working on a filesystem, and doing the swap code right
+is essentially writing a filesystem, so everybody who's capable already
+has something better to do.
+
+Anyway, Gao, please can you submit a follow-on patch to rename SWP_FS?
