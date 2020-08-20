@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AF7C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752C8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3B220738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379A5207DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926714;
-	bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
+	s=default; t=1597926718;
+	bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dKLMdokw9CluH/HLsadoi32lingfAqbgb4+ZblAwElLWUIKXR7naru08z4uNv8rwT
-	 7ByGQptseqFxDwzxe/Q9/V+fsQ88aShoLIW+2T+Z9cOti02GQF1lsB69IudJvQsP3K
-	 a2hG/QTPWvJ3gpkcyb12x5J/LCrwxLkJqHHuUPUc=
+	b=aQcYQYEToff4rfFWuZ3gfQumxZ3NxmXKz6h6FbAR6cOpX9Q9qW6nL9X2ZVX7ZMvAh
+	 NYRJiyvWCvEQR4p4A92c+nf0OK2nkqZdhV+l6L7aWSzvD+fIqp5ZafO8P4NBA0YcwI
+	 4a8JoER/OFrIOXk5cRhKBB++6cP0nrdDJaS/OpW0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730160AbgHTMbx (ORCPT
+        id S1730234AbgHTMb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:31:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57788 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:31:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729722AbgHTJuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:50:21 -0400
+        id S1729712AbgHTJuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:50:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 368A12173E;
-        Thu, 20 Aug 2020 09:50:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE7A72224D;
+        Thu, 20 Aug 2020 09:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917020;
-        bh=vlgI/GcQFDEuwsf31liFVaSoA4yqFdptOoUDqNhNW0E=;
+        s=default; t=1597917014;
+        bh=ujjmrEC6yLqifjsXw+51ksnycUu8RYHEvep7NS0yCZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EOVV68XIU1E2L4s5qVbPzT1/+iWFdPsEtSg1c7NDqLL7nl4czlbhbosap3TBaJc3q
-         EkpgIzNHKvwE4O+Qpy0oli0oolPqyCEgHKEGDy2dEe/ljPwCLpLDWk20tY+AxlTQfd
-         G7g+3AzKHjymPlfBM1OofhsfRlRSPejKpfAnCQGg=
+        b=GMr30xdqLj5SJO5/1y5rXTqZ4+0bCkGcsSQKPUFSL1zFEORWQuJsPMAREEcihyLKj
+         Z4YVeRSihGoGqHjTrXxLXqVbZG0kj98pX0e6Tz+MhyzHBfzpeHYjBTtxd96nmdLLF3
+         zpTKIVW9FlMGT6uSCmiLzwKus4i+eo2OqVqy5xs4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Gregory Herrero <gregory.herrero@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 127/152] recordmcount: Fix build failure on non arm64
-Date:   Thu, 20 Aug 2020 11:21:34 +0200
-Message-Id: <20200820091600.309833017@linuxfoundation.org>
+Subject: [PATCH 5.4 126/152] Input: sentelic - fix error return when fsp_reg_write fails
+Date:   Thu, 20 Aug 2020 11:21:33 +0200
+Message-Id: <20200820091600.256616070@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -63,46 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 3df14264ad9930733a8166e5bd0eccc1727564bb ]
+[ Upstream commit ea38f06e0291986eb93beb6d61fd413607a30ca4 ]
 
-Commit ea0eada45632 leads to the following build failure on powerpc:
+Currently when the call to fsp_reg_write fails -EIO is not being returned
+because the count is being returned instead of the return value in retval.
+Fix this by returning the value in retval instead of count.
 
-  HOSTCC  scripts/recordmcount
-scripts/recordmcount.c: In function 'arm64_is_fake_mcount':
-scripts/recordmcount.c:440: error: 'R_AARCH64_CALL26' undeclared (first use in this function)
-scripts/recordmcount.c:440: error: (Each undeclared identifier is reported only once
-scripts/recordmcount.c:440: error: for each function it appears in.)
-make[2]: *** [scripts/recordmcount] Error 1
-
-Make sure R_AARCH64_CALL26 is always defined.
-
-Fixes: ea0eada45632 ("recordmcount: only record relocation of type R_AARCH64_CALL26 on arm64.")
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Acked-by: Gregory Herrero <gregory.herrero@oracle.com>
-Cc: Gregory Herrero <gregory.herrero@oracle.com>
-Link: https://lore.kernel.org/r/5ca1be21fa6ebf73203b45fd9aadd2bafb5e6b15.1597049145.git.christophe.leroy@csgroup.eu
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Addresses-Coverity: ("Unused value")
+Fixes: fc69f4a6af49 ("Input: add new driver for Sentelic Finger Sensing Pad")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20200603141218.131663-1-colin.king@canonical.com
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/recordmcount.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/input/mouse/sentelic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index e59022b3f1254..b9c2ee7ab43fa 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -42,6 +42,8 @@
- #define R_ARM_THM_CALL		10
- #define R_ARM_CALL		28
+diff --git a/drivers/input/mouse/sentelic.c b/drivers/input/mouse/sentelic.c
+index e99d9bf1a267d..e78c4c7eda34d 100644
+--- a/drivers/input/mouse/sentelic.c
++++ b/drivers/input/mouse/sentelic.c
+@@ -441,7 +441,7 @@ static ssize_t fsp_attr_set_setreg(struct psmouse *psmouse, void *data,
  
-+#define R_AARCH64_CALL26	283
-+
- static int fd_map;	/* File descriptor for file being modified. */
- static int mmap_failed; /* Boolean flag. */
- static char gpfx;	/* prefix for global symbol name (sometimes '_') */
+ 	fsp_reg_write_enable(psmouse, false);
+ 
+-	return count;
++	return retval;
+ }
+ 
+ PSMOUSE_DEFINE_WO_ATTR(setreg, S_IWUSR, NULL, fsp_attr_set_setreg);
 -- 
 2.25.1
 
