@@ -2,137 +2,99 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1789C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3153AC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5A0207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926811;
-	bh=X1qMVao/5KKJV39PIjzU6kC2W0LVzuByCFI84PxYJEU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=acQdEdYN24ouYTgvfTkXkWOxiQykBSMdkJMYt1TTx6f1k+/6BZKfLtsxruw5Z1URn
-	 VEP3kg6evya585wdc8NCgNw5o9hzcmlefRxf0WoLQ3UdlSBzc5N4ucSAn6cvSniqyM
-	 s/dFoo8+L828tvKJOahUi0K4jA/GF0Ge0OYmgHO8=
+	by mail.kernel.org (Postfix) with ESMTP id 0780E20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbgHTMda (ORCPT
+        id S1729800AbgHTMdd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55390 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729647AbgHTJtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:49:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5EA92173E;
-        Thu, 20 Aug 2020 09:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916964;
-        bh=X1qMVao/5KKJV39PIjzU6kC2W0LVzuByCFI84PxYJEU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fm9RddmTGFryI3+k4JvxqYilZgyE9O9k3wtTxhvAuI9E6qdB7394P78q00usuNJM4
-         uUKWpkThr9LUE3NVByxGa2jnbLZ4G6yDPS9IBwv3r6sser8SV0CxEX/LRdRAysQ0Xs
-         +96hzYvJhU/3tFTL8vlGRYE81j3wgftLgcQ7eyuE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Marek <jonathan@marek.ca>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 106/152] clk: qcom: gcc: fix sm8150 GPU and NPU clocks
-Date:   Thu, 20 Aug 2020 11:21:13 +0200
-Message-Id: <20200820091559.195226911@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 08:33:33 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:27665 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729745AbgHTMd2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:33:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-193-nhtq2MljN_maCPHdjtnu_A-1; Thu, 20 Aug 2020 13:33:23 +0100
+X-MC-Unique: nhtq2MljN_maCPHdjtnu_A-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 20 Aug 2020 13:33:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 20 Aug 2020 13:33:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Petr Mladek' <pmladek@suse.com>,
+        John Ogness <john.ogness@linutronix.de>
+CC:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH 1/5] printk: implement pr_cont_t
+Thread-Topic: [RFC PATCH 1/5] printk: implement pr_cont_t
+Thread-Index: AQHWdtr1XzVvufyPxEOt+PNltcCbQKlA7OUQ
+Date:   Thu, 20 Aug 2020 12:33:23 +0000
+Message-ID: <fb47baa77ff940e99224feac85a2f2d7@AcuMS.aculab.com>
+References: <20200819232632.13418-1-john.ogness@linutronix.de>
+ <20200819232632.13418-2-john.ogness@linutronix.de>
+ <20200820101625.GE4353@alley>
+In-Reply-To: <20200820101625.GE4353@alley>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Marek <jonathan@marek.ca>
+From: Petr Mladek
+> Sent: 20 August 2020 11:16
+...
+> Now that I think about it. This is the biggest problem with any temporary buffer
+> for pr_cont() lines. I am more and more convinced that we should just
+> _keep the current behavior_. It is not ideal. But sometimes mixed
+> messages are always better than lost ones.
 
-[ Upstream commit 667f39b59b494d96ae70f4217637db2ebbee3df0 ]
+Maybe a marker to say 'more expected' might be useful.
+OTOH lack of a trailing '\n' probably signifies that a
+pr_cont() is likely to be next.
 
-Fix the parents and set BRANCH_HALT_SKIP. From the downstream driver it
-should be a 500us delay and not skip, however this matches what was done
-for other clocks that had 500us delay in downstream.
+Unexpected pr_cont() could be output with a leading "... "
+to help indicate the message is a continuation.
 
-Fixes: f73a4230d5bb ("clk: qcom: gcc: Add GPU and NPU clocks for SM8150")
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
-Tested-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Link: https://lore.kernel.org/r/20200709135251.643-2-jonathan@marek.ca
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/clk/qcom/gcc-sm8150.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> That said, some printk() API using local buffer would be still
+> valuable for pieces of code where people really want to avoid
+> mixed lines. But it should be optional and people should be
+> aware of the risks.
 
-diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-index fad42897a7a7f..ee908fbfeab17 100644
---- a/drivers/clk/qcom/gcc-sm8150.c
-+++ b/drivers/clk/qcom/gcc-sm8150.c
-@@ -1616,6 +1616,7 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
- };
- 
- static struct clk_branch gcc_gpu_gpll0_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(15),
-@@ -1631,13 +1632,14 @@ static struct clk_branch gcc_gpu_gpll0_clk_src = {
- };
- 
- static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(16),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_gpu_gpll0_div_clk_src",
- 			.parent_hws = (const struct clk_hw *[]){
--				&gcc_gpu_gpll0_clk_src.clkr.hw },
-+				&gpll0_out_even.clkr.hw },
- 			.num_parents = 1,
- 			.flags = CLK_SET_RATE_PARENT,
- 			.ops = &clk_branch2_ops,
-@@ -1728,6 +1730,7 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
- };
- 
- static struct clk_branch gcc_npu_gpll0_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(18),
-@@ -1743,13 +1746,14 @@ static struct clk_branch gcc_npu_gpll0_clk_src = {
- };
- 
- static struct clk_branch gcc_npu_gpll0_div_clk_src = {
-+	.halt_check = BRANCH_HALT_SKIP,
- 	.clkr = {
- 		.enable_reg = 0x52004,
- 		.enable_mask = BIT(19),
- 		.hw.init = &(struct clk_init_data){
- 			.name = "gcc_npu_gpll0_div_clk_src",
- 			.parent_hws = (const struct clk_hw *[]){
--				&gcc_npu_gpll0_clk_src.clkr.hw },
-+				&gpll0_out_even.clkr.hw },
- 			.num_parents = 1,
- 			.flags = CLK_SET_RATE_PARENT,
- 			.ops = &clk_branch2_ops,
--- 
-2.25.1
+That could be very useful if it supported multi-line output.
+Thing like the stack backtrace code could use it avoid
+the mess that happens when multiple processes generate
+tracebacks at the same time.
 
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
