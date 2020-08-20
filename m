@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3371C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D991FC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB4C52075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54C0206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597918212;
-	bh=ty18EZHzNNsdgv8w9u5VplsWbIv4nX7VRyU0h2WE+W4=;
+	s=default; t=1597918216;
+	bh=WpV52KAFDM0xr311bUeYlAhrwM/hcvWw2VepPjQWodA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vYlyclE7HPe6I3khXFKbBeACXbhChjwJp6V1oe151pCFuO/YbbQ/tuIyQUh3RJJWs
-	 fuyhvXOCSLLai/5V0nqnWGLn0xIuCKrGZ+8PMaqbV+M9vd+Vk0Cup8x46DxXokWpEs
-	 lvj58ph5ZDXMf3yBnSxOOulp4rdBHihS5tJ5/IMo=
+	b=cH3MZpWYfAzDfN5Z2C4O4l4BCjuY8TX5aNAW1Wyd4QhMMohMQrNhYxQ/Rw1Nt6aU9
+	 bCiMPKmIi8wtlPCbMB/w0gsE3yjXNgkVxK0MdyN0kL3gbawnyL1RkrjaU7QVhTDUZB
+	 zTXdkyXTg+QDfYgYEMN2tLHDhky+Mxxn3Im7rIdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730869AbgHTKKK (ORCPT
+        id S1730888AbgHTKKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:10:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45826 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbgHTKKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:10:07 -0400
+        id S1730874AbgHTKKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:10:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEA5206DA;
-        Thu, 20 Aug 2020 10:10:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3641206DA;
+        Thu, 20 Aug 2020 10:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918206;
-        bh=ty18EZHzNNsdgv8w9u5VplsWbIv4nX7VRyU0h2WE+W4=;
+        s=default; t=1597918212;
+        bh=WpV52KAFDM0xr311bUeYlAhrwM/hcvWw2VepPjQWodA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tvZOkW3G8SUCgvx43RUT0G3AGDeYRIzA/xSDv+EpJ0FVOyP5TU4J3yNBa2ZTzSPgG
-         Ko8Mdy2LqiuofukFXhqaICtAsloo5QBxoGcJqUkuhdCYvtpL04pGQgUrMHLowtNO5X
-         vBjkePJ1Wxex7YwVjWKjWQ0udZ4GPejQ9C2s5iek=
+        b=Ecjj+JCNOwR6b6EkyB7ieK+iz2YbkD7lSPVcRIe42FL87BFc5zLzHdXcBo/gF48Ac
+         8z8dVoLX02Lbh9C1CM1C/E8yblMEEMTUTLLwmPxP1Z0Cjc+n1LxRGaP7quX3sU84sZ
+         HfJWoEu0yfWG97Ce/KgjJ+7kCmeWiaFAM5q9ei+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yu Kuai <yukuai3@huawei.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
+        stable@vger.kernel.org,
+        syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com,
+        Lihong Kou <koulihong@huawei.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 059/228] ARM: socfpga: PM: add missing put_device() call in socfpga_setup_ocram_self_refresh()
-Date:   Thu, 20 Aug 2020 11:20:34 +0200
-Message-Id: <20200820091610.556262041@linuxfoundation.org>
+Subject: [PATCH 4.14 061/228] Bluetooth: add a mutex lock to avoid UAF in do_enale_set
+Date:   Thu, 20 Aug 2020 11:20:36 +0200
+Message-Id: <20200820091610.655548317@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,61 +62,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yu Kuai <yukuai3@huawei.com>
+From: Lihong Kou <koulihong@huawei.com>
 
-[ Upstream commit 3ad7b4e8f89d6bcc9887ca701cf2745a6aedb1a0 ]
+[ Upstream commit f9c70bdc279b191da8d60777c627702c06e4a37d ]
 
-if of_find_device_by_node() succeed, socfpga_setup_ocram_self_refresh
-doesn't have a corresponding put_device(). Thus add a jump target to
-fix the exception handling for this function implementation.
+In the case we set or free the global value listen_chan in
+different threads, we can encounter the UAF problems because
+the method is not protected by any lock, add one to avoid
+this bug.
 
-Fixes: 44fd8c7d4005 ("ARM: socfpga: support suspend to ram")
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
-Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990
+net/bluetooth/l2cap_core.c:730
+Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
+
+CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine,
+BIOS Google 01/01/2011
+Workqueue: events do_enable_set
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+ do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
+ chan_create net/bluetooth/6lowpan.c:640 [inline]
+ bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
+ do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
+ do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096950000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 0 bytes inside of
+ 2048-byte region [ffff888096950000, ffff888096950800)
+The buggy address belongs to the page:
+page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
+raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
+Signed-off-by: Lihong Kou <koulihong@huawei.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-socfpga/pm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/bluetooth/6lowpan.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/mach-socfpga/pm.c b/arch/arm/mach-socfpga/pm.c
-index c378ab0c24317..93f2245c97750 100644
---- a/arch/arm/mach-socfpga/pm.c
-+++ b/arch/arm/mach-socfpga/pm.c
-@@ -60,14 +60,14 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
+diff --git a/net/bluetooth/6lowpan.c b/net/bluetooth/6lowpan.c
+index 357475cceec61..9a75f9b00b512 100644
+--- a/net/bluetooth/6lowpan.c
++++ b/net/bluetooth/6lowpan.c
+@@ -57,6 +57,7 @@ static bool enable_6lowpan;
+ /* We are listening incoming connections via this channel
+  */
+ static struct l2cap_chan *listen_chan;
++static DEFINE_MUTEX(set_lock);
+ 
+ struct lowpan_peer {
+ 	struct list_head list;
+@@ -1082,12 +1083,14 @@ static void do_enable_set(struct work_struct *work)
+ 
+ 	enable_6lowpan = set_enable->flag;
+ 
++	mutex_lock(&set_lock);
+ 	if (listen_chan) {
+ 		l2cap_chan_close(listen_chan, 0);
+ 		l2cap_chan_put(listen_chan);
  	}
  
- 	ocram_base = gen_pool_alloc(ocram_pool, socfpga_sdram_self_refresh_sz);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ 	listen_chan = bt_6lowpan_listen();
++	mutex_unlock(&set_lock);
  
- 	ocram_pbase = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -78,7 +78,7 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!suspend_ocram_base) {
- 		pr_warn("%s: __arm_ioremap_exec failed!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+ 	kfree(set_enable);
+ }
+@@ -1139,11 +1142,13 @@ static ssize_t lowpan_control_write(struct file *fp,
+ 		if (ret == -EINVAL)
+ 			return ret;
  
- 	/* Copy the code that puts DDR in self refresh to ocram */
-@@ -92,6 +92,8 @@ static int socfpga_setup_ocram_self_refresh(void)
- 	if (!socfpga_sdram_self_refresh_in_ocram)
- 		ret = -EFAULT;
++		mutex_lock(&set_lock);
+ 		if (listen_chan) {
+ 			l2cap_chan_close(listen_chan, 0);
+ 			l2cap_chan_put(listen_chan);
+ 			listen_chan = NULL;
+ 		}
++		mutex_unlock(&set_lock);
  
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(np);
- 
+ 		if (conn) {
+ 			struct lowpan_peer *peer;
 -- 
 2.25.1
 
