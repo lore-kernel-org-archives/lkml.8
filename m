@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BAFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 802CDC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E36122B4B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D1320738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926322;
-	bh=Ppm1C6MX9zQmNg+5iS5ogBkLzVjwjFP12u3V1FrqDlU=;
+	s=default; t=1597926326;
+	bh=Ag2nkX0rnzdWjqNI4P5G0TpqkCwkq9XPJjh8v2fs1mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntnnSIiLtTokiv9US5AGgnUb8bk3N4zNcaw53gvfmz7VhQoGwL/OBwoytMsxs+d3t
-	 fxpZduFXtjigAsx4A6p4Mir2H5PqYi5zmTOXwP5bKy74ufT2EJVe+dfRhIp7qs3Glh
-	 3b3dZerLCHkUeq9pxpLN21UUNT2HUxHyIA3jtsAE=
+	b=T8iyf1PHvwBsa+bAsb88mqvxU1vQSUVlRS7rsG38Baku3TUyccQgBqhpYDa0d3cUk
+	 Zc1ehlAV9oYHZJ+y3KB+4Ng0TOO/Yd4vfHocGdPmLZVgY0bf1JWVB7u7gbrkOmtdg5
+	 mGVeo+l+ZCflE+kBCQYa9V7cSI9kA4qKUShxXrQg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbgHTJxc (ORCPT
+        id S1730045AbgHTMZZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:53:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35248 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:25:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgHTJx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:53:27 -0400
+        id S1729703AbgHTJx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:53:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAD45207FB;
-        Thu, 20 Aug 2020 09:53:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7940120885;
+        Thu, 20 Aug 2020 09:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917205;
-        bh=Ppm1C6MX9zQmNg+5iS5ogBkLzVjwjFP12u3V1FrqDlU=;
+        s=default; t=1597917208;
+        bh=Ag2nkX0rnzdWjqNI4P5G0TpqkCwkq9XPJjh8v2fs1mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmOr/mx7hR+w7Y43dei+8YBo/qwz+FcYhJAhO8ZJrRzaILq5Vx43tzX/b6Q8RULmN
-         yEkEs0k2okRbbo24GnVnR9hFF6JWEhcfBgG9LPyKTIuqogbF8wBh7Nt5Lh5ahe28X2
-         hh7ynUxITXFKqr2CHDKdKJwHaUNzk7Ty/u/6u93M=
+        b=d/IRHzKycNTX829/wJA/X0ZCAyy41jkn32Ww4SobAfJ3JLbJDi3vbN9wMwi33PZvh
+         L8002qe+trPDQ58BBqCt/Q35URBAcXgCUbQD57YcccIpjoWHdrkCyN25tX2THSh06t
+         LcxjFoKC81DRe5sf2bBmIIo5D/STSl/1DAltnmAY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Namhyung Kim <namhyung@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 40/92] tracing: Use trace_sched_process_free() instead of exit() for pid tracing
-Date:   Thu, 20 Aug 2020 11:21:25 +0200
-Message-Id: <20200820091539.716867117@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 14/92] btrfs: fix messages after changing compression level by remount
+Date:   Thu, 20 Aug 2020 11:20:59 +0200
+Message-Id: <20200820091538.287147044@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -59,72 +58,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: David Sterba <dsterba@suse.com>
 
-commit afcab636657421f7ebfa0783a91f90256bba0091 upstream.
+commit 27942c9971cc405c60432eca9395e514a2ae9f5e upstream.
 
-On exit, if a process is preempted after the trace_sched_process_exit()
-tracepoint but before the process is done exiting, then when it gets
-scheduled in, the function tracers will not filter it properly against the
-function tracing pid filters.
+Reported by Forza on IRC that remounting with compression options does
+not reflect the change in level, or at least it does not appear to do so
+according to the messages:
 
-That is because the function tracing pid filters hooks to the
-sched_process_exit() tracepoint to remove the exiting task's pid from the
-filter list. Because the filtering happens at the sched_switch tracepoint,
-when the exiting task schedules back in to finish up the exit, it will no
-longer be in the function pid filtering tables.
+  mount -o compress=zstd:1 /dev/sda /mnt
+  mount -o remount,compress=zstd:15 /mnt
 
-This was noticeable in the notrace self tests on a preemptable kernel, as
-the tests would fail as it exits and preempted after being taken off the
-notrace filter table and on scheduling back in it would not be in the
-notrace list, and then the ending of the exit function would trace. The test
-detected this and would fail.
+does not print the change to the level to syslog:
 
-Cc: stable@vger.kernel.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 1e10486ffee0a ("ftrace: Add 'function-fork' trace option")
-Fixes: c37775d57830a ("tracing: Add infrastructure to allow set_event_pid to follow children"
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+  [   41.366060] BTRFS info (device vda): use zstd compression, level 1
+  [   41.368254] BTRFS info (device vda): disk space caching is enabled
+  [   41.390429] BTRFS info (device vda): disk space caching is enabled
+
+What really happens is that the message is lost but the level is actualy
+changed.
+
+There's another weird output, if compression is reset to 'no':
+
+  [   45.413776] BTRFS info (device vda): use no compression, level 4
+
+To fix that, save the previous compression level and print the message
+in that case too and use separate message for 'no' compression.
+
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/ftrace.c       |    4 ++--
- kernel/trace/trace_events.c |    4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ fs/btrfs/super.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6450,12 +6450,12 @@ void ftrace_pid_follow_fork(struct trace
- 	if (enable) {
- 		register_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
- 						  tr);
--		register_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
-+		register_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
- 						  tr);
- 	} else {
- 		unregister_trace_sched_process_fork(ftrace_pid_follow_sched_process_fork,
- 						    tr);
--		unregister_trace_sched_process_exit(ftrace_pid_follow_sched_process_exit,
-+		unregister_trace_sched_process_free(ftrace_pid_follow_sched_process_exit,
- 						    tr);
- 	}
- }
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -534,12 +534,12 @@ void trace_event_follow_fork(struct trac
- 	if (enable) {
- 		register_trace_prio_sched_process_fork(event_filter_pid_sched_process_fork,
- 						       tr, INT_MIN);
--		register_trace_prio_sched_process_exit(event_filter_pid_sched_process_exit,
-+		register_trace_prio_sched_process_free(event_filter_pid_sched_process_exit,
- 						       tr, INT_MAX);
- 	} else {
- 		unregister_trace_sched_process_fork(event_filter_pid_sched_process_fork,
- 						    tr);
--		unregister_trace_sched_process_exit(event_filter_pid_sched_process_exit,
-+		unregister_trace_sched_process_free(event_filter_pid_sched_process_exit,
- 						    tr);
- 	}
- }
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -432,6 +432,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 	char *compress_type;
+ 	bool compress_force = false;
+ 	enum btrfs_compression_type saved_compress_type;
++	int saved_compress_level;
+ 	bool saved_compress_force;
+ 	int no_compress = 0;
+ 
+@@ -514,6 +515,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				info->compress_type : BTRFS_COMPRESS_NONE;
+ 			saved_compress_force =
+ 				btrfs_test_opt(info, FORCE_COMPRESS);
++			saved_compress_level = info->compress_level;
+ 			if (token == Opt_compress ||
+ 			    token == Opt_compress_force ||
+ 			    strncmp(args[0].from, "zlib", 4) == 0) {
+@@ -552,6 +554,8 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				no_compress = 0;
+ 			} else if (strncmp(args[0].from, "no", 2) == 0) {
+ 				compress_type = "no";
++				info->compress_level = 0;
++				info->compress_type = 0;
+ 				btrfs_clear_opt(info->mount_opt, COMPRESS);
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
+ 				compress_force = false;
+@@ -572,11 +576,11 @@ int btrfs_parse_options(struct btrfs_fs_
+ 				 */
+ 				btrfs_clear_opt(info->mount_opt, FORCE_COMPRESS);
+ 			}
+-			if ((btrfs_test_opt(info, COMPRESS) &&
+-			     (info->compress_type != saved_compress_type ||
+-			      compress_force != saved_compress_force)) ||
+-			    (!btrfs_test_opt(info, COMPRESS) &&
+-			     no_compress == 1)) {
++			if (no_compress == 1) {
++				btrfs_info(info, "use no compression");
++			} else if ((info->compress_type != saved_compress_type) ||
++				   (compress_force != saved_compress_force) ||
++				   (info->compress_level != saved_compress_level)) {
+ 				btrfs_info(info, "%s %s compression, level %d",
+ 					   (compress_force) ? "force" : "use",
+ 					   compress_type, info->compress_level);
 
 
