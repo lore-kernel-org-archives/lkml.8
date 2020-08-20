@@ -2,103 +2,97 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325EFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E360EC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 086332078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:53:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AmUXcJvB"
+	by mail.kernel.org (Postfix) with ESMTP id AFDCD207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597924407;
+	bh=mWsxCKDF2jQl76QZS+o3janKb4+GWIAq68VFC1YnKXw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Dlx8Ubprfh5CunsYf7aEZu9SBwa0XPR4URddfyFGc1VmtAoJqF+bIX/wejsegJwry
+	 Mxpzd49chWgsAa5vXtOoU83xIpntpTPoX+teV07+Qi2rbJcG4NHsr0FgqZlsql0Vv6
+	 ruJrThOS0+38M/gXhKZqLAO+pmjC5NuL+euQPTc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbgHTLxL (ORCPT
+        id S1728606AbgHTLvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:53:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:29356 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728469AbgHTLw6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 07:52:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597924377;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sl1A0GJYyx/PpdeVM1m/fCfkzRMyvSRC51l7PfeNxkY=;
-        b=AmUXcJvBXqFfFdl4vkih78OTpfyMXSd2na1rWfCd+kbgg+r8eHE3Gr756JiVzm49eGOcmx
-        b8GSsNWnvjAQtdR4nlDiXpW37q+9wUcIxsm060bzK3a1ukR2e8RzbAgCcgtyyUDXLJ8gLw
-        2T9tkGtCOjdcjaIaG1WtiJ2YzE16qbs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-439-OVb8DL8xOeOkVLLilJhpGw-1; Thu, 20 Aug 2020 07:52:55 -0400
-X-MC-Unique: OVb8DL8xOeOkVLLilJhpGw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Aug 2020 07:51:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730589AbgHTKDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:03:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22407801AE5;
-        Thu, 20 Aug 2020 11:52:54 +0000 (UTC)
-Received: from starship (unknown [10.35.206.173])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F36167A40D;
-        Thu, 20 Aug 2020 11:52:46 +0000 (UTC)
-Message-ID: <36a13760db3cb439eb47057c763845f61449cbcc.camel@redhat.com>
-Subject: Re: [PATCH 2/8] KVM: nSVM: rename nested 'vmcb' to vmcb_gpa in few
- places
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Date:   Thu, 20 Aug 2020 14:52:45 +0300
-In-Reply-To: <3effc656-20e8-40c9-d0e3-5c700d9b5572@redhat.com>
-References: <20200820091327.197807-1-mlevitsk@redhat.com>
-         <20200820091327.197807-3-mlevitsk@redhat.com>
-         <f6bf9494-f337-2e53-6e6c-e0b8a847ec8d@redhat.com>
-         <608fe03082dc5e4db142afe3c0eb5f7c165f342b.camel@redhat.com>
-         <2e8185af-08fc-18c3-c1ca-fa1f7d4665dd@redhat.com>
-         <2b8faaead6f7744dc10b4701bd1583a2b494d4f4.camel@redhat.com>
-         <3effc656-20e8-40c9-d0e3-5c700d9b5572@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
+        by mail.kernel.org (Postfix) with ESMTPSA id B70AA22BEA;
+        Thu, 20 Aug 2020 10:03:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597917783;
+        bh=mWsxCKDF2jQl76QZS+o3janKb4+GWIAq68VFC1YnKXw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=NlVaKbLv6J79XiNf2AEaaXnYl99TTPU1cSn1VLsMSpYTPO3AOheYlwCKwE9vUdBi3
+         cyWF0VVLnKucCkKq2rPpvXCojHnNWbp1NOtgtjMKprhWreSdmXF+PQkYz5+S1lrD4+
+         pxPvAJ1haYi+U0uWqKD/WMCEviFDdAuWXiVO0vgM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hector Martin <marcan@marcan.st>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 156/212] ALSA: usb-audio: fix overeager device match for MacroSilicon MS2109
+Date:   Thu, 20 Aug 2020 11:22:09 +0200
+Message-Id: <20200820091610.280373483@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-20 at 12:56 +0200, Paolo Bonzini wrote:
-> On 20/08/20 12:23, Maxim Levitsky wrote:
-> > I fully agree that adding local variable is a good idea anyway.
-> > 
-> > I was just noting that svm->nested.vmcb is already about the nested
-> > (e.g vmcb12) thus I was thinking that naming this field vmcb12 would be
-> > redundant and not accepted this way.
-> 
-> We want to have both svm->nested.vmcb12 and svm->nested.vmcb02 in there,
-> and hsave is also a VMCB of sort (somewhat like a vmcb01 that is only
-> used while running a nested guest).  So it is clearer to write _which_
-> vmcb it is, and it also helps by making terminology consistent between
-> VMX and SVM.
-This makes sense.
-Best regards,
-	Maxim Levitsky
+From: Hector Martin <marcan@marcan.st>
 
-> 
-> Paolo
-> 
+commit 14a720dc1f5332f3bdf30a23a3bc549e81be974c upstream.
+
+Matching by device matches all interfaces, which breaks the video/HID
+portions of the device depending on module load order.
+
+Fixes: e337bf19f6af ("ALSA: usb-audio: add quirk for MacroSilicon MS2109")
+Cc: stable@vger.kernel.org
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Link: https://lore.kernel.org/r/20200810045319.128745-1-marcan@marcan.st
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/usb/quirks-table.h |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+--- a/sound/usb/quirks-table.h
++++ b/sound/usb/quirks-table.h
+@@ -3335,7 +3335,13 @@ AU0828_DEVICE(0x2040, 0x7270, "Hauppauge
+  * with.
+  */
+ {
+-	USB_DEVICE(0x534d, 0x2109),
++	.match_flags = USB_DEVICE_ID_MATCH_DEVICE |
++		       USB_DEVICE_ID_MATCH_INT_CLASS |
++		       USB_DEVICE_ID_MATCH_INT_SUBCLASS,
++	.idVendor = 0x534d,
++	.idProduct = 0x2109,
++	.bInterfaceClass = USB_CLASS_AUDIO,
++	.bInterfaceSubClass = USB_SUBCLASS_AUDIOCONTROL,
+ 	.driver_info = (unsigned long) &(const struct snd_usb_audio_quirk) {
+ 		.vendor_name = "MacroSilicon",
+ 		.product_name = "MS2109",
 
 
