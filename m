@@ -2,99 +2,105 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54393C433E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E793BC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 356A92076E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F222076E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 19:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgHTT4v (ORCPT
+        id S1726911AbgHTT6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 15:56:51 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:40364 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726841AbgHTT4u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 15:56:50 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 914F6634C87;
-        Thu, 20 Aug 2020 22:55:36 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1k8qeu-0002rH-B7; Thu, 20 Aug 2020 22:55:36 +0300
-Date:   Thu, 20 Aug 2020 22:55:36 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     hch@lst.de, joro@8bytes.org, linux@armlinux.org.uk,
-        will@kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, vdumpa@nvidia.com,
-        digetx@gmail.com, matthias.bgg@gmail.com, yong.wu@mediatek.com,
-        geert+renesas@glider.be, magnus.damm@gmail.com, t-kristo@ti.com,
-        s-anna@ti.com, laurent.pinchart@ideasonboard.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 17/18] media/omap3isp: Clean up IOMMU workaround
-Message-ID: <20200820195536.GL7145@valkosipuli.retiisi.org.uk>
-References: <cover.1597931875.git.robin.murphy@arm.com>
- <11d8419744e4e744a9448180801b0c4683328afd.1597931876.git.robin.murphy@arm.com>
- <20200820165339.GK7145@valkosipuli.retiisi.org.uk>
- <be010209-4abc-ba48-4e31-185427776a13@arm.com>
+        Thu, 20 Aug 2020 15:58:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59267 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725819AbgHTT6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 15:58:12 -0400
+IronPort-SDR: FsrGtP93efUMa9jhdiFWhFrUVwLTzFpCy7rFlGZ5Y6p2ECj/P6uSoLGFSnHZX0llEalwooJGbk
+ pDiMjTC8Sn5A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9718"; a="152810177"
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="152810177"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2020 12:58:12 -0700
+IronPort-SDR: 7ff5AW1OqJFyIq9w0Y0w/6okfpx2Z6o8s+b+Kgv9kt9JBCuS0bhUtg2F5m17yH+1gocNNLuzQ4
+ me8rXcGpPHGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,334,1592895600"; 
+   d="scan'208";a="497741219"
+Received: from otc-nc-03.jf.intel.com (HELO otc-nc-03) ([10.54.39.36])
+  by fmsmga006.fm.intel.com with ESMTP; 20 Aug 2020 12:58:11 -0700
+Date:   Thu, 20 Aug 2020 12:58:11 -0700
+From:   "Raj, Ashok" <ashok.raj@intel.com>
+To:     Evan Green <evgreen@chromium.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org,
+        Ashok Raj <ashok.raj@intel.com>
+Subject: Re: [PATCH] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+Message-ID: <20200820195811.GA22799@otc-nc-03>
+References: <20200814213842.31151-1-ashok.raj@intel.com>
+ <CAE=gft6fQ7cLQO025TDYNF-d6xxMeGkOHVieMZDq6wAZ84NsGQ@mail.gmail.com>
+ <20200817183322.GA11486@araj-mobl1.jf.intel.com>
+ <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be010209-4abc-ba48-4e31-185427776a13@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAE=gft6D_1NWVczfO3JFhwCGeYBKsUUtt03TrtgWVViOVgP=4w@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 06:25:19PM +0100, Robin Murphy wrote:
-> On 2020-08-20 17:53, Sakari Ailus wrote:
-> > Hi Robin,
-> > 
-> > On Thu, Aug 20, 2020 at 04:08:36PM +0100, Robin Murphy wrote:
-> > > Now that arch/arm is wired up for default domains and iommu-dma, devices
-> > > behind IOMMUs will get mappings set up automatically as appropriate, so
-> > > there is no need for drivers to do so manually.
-> > > 
-> > > Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> > 
-> > Thanks for the patch.
+On Thu, Aug 20, 2020 at 11:21:24AM -0700, Evan Green wrote:
+> > >
+> > > I'm slightly unclear about whether interrupts are disabled at the core
+> > > by this point or not. I followed native_cpu_disable() up to
+> > > __cpu_disable(), up to take_cpu_down(). This is passed into a call to
+> > > stop_machine_cpuslocked(), where interrupts get disabled at the core.
+> > > So unless there's another path, it seems like interrupts are always
+> > > disabled at the core by this point.
+> >
+> > local_irq_disable() just does cli() which allows interrupts to trickle
+> > in to the IRR bits, and once you do sti() things would flow back for
+> > normal interrupt processing.
+> >
+> >
+> > >
+> > > If interrupts are always disabled, then the comment above is a little
+> >
+> > Disable interrupts is different from disabling LAPIC. Once you do the
+> > apic_soft_disable(), there is nothing flowing into the LAPIC except
+> > for INIT, NMI, SMI and SIPI messages.
+> >
+> > This turns off the pipe for all other interrupts to enter LAPIC. Which
+> > is different from doing a cli().
 > 
-> Many thanks for testing so quickly!
+> I understand the distinction. I was mostly musing on the difference in
+> behavior your change causes if this function is entered with
+> interrupts enabled at the core (ie sti()). But I think it never is, so
+> that thought is moot.
 > 
-> > I haven't looked at the details but it seems that this causes the buffer
-> > memory allocation to be physically contiguous, which causes a failure to
-> > allocate video buffers of entirely normal size. I guess that was not
-> > intentional?
+> I could never repro the issue reliably on comet lake after Thomas'
+> original fix. But I can still repro it easily on jasper lake. And this
+> patch fixes the issue for me on that platform. Thanks for the fix.
 > 
-> Hmm, it looks like the device ends up with the wrong DMA ops, which implies
-> something didn't go as expected with the earlier IOMMU setup and default
-> domain creation. Chances are that either I missed some subtlety in the
-> omap_iommu change, or I've fundamentally misjudged how the ISP probing works
-> and it never actually goes down the of_iommu_configure() path in the first
-> place. Do you get any messages from the IOMMU layer earlier on during boot?
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> Tested-by: Evan Green <evgreen@chromium.org>
 
-I do get these:
+Thanks Evan for testing. I'll wait for thomas if he finds anything else
+that needs to be fixed and send a final v2 after fixing the typos and
+others identified by Randy. 
 
-[    2.934936] iommu: Default domain type: Translated 
-[    2.940917] omap-iommu 480bd400.mmu: 480bd400.mmu registered
-[    2.946899] platform 480bc000.isp: Adding to iommu group 0
-
--- 
-Sakari Ailus
+Cheers,
+Ashok
