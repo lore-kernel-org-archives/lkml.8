@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D04E8C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F88DC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A349021741
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB867208E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597881770;
-	bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+	s=default; t=1597881774;
+	bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eBdHvhPJmnZu3oEkfEzwaiRvCvid/FG9uAk8MKQtWyT5MAWeKyEBIF8V95QwOkL0q
-	 Z66kdEti5quAhCJqLNOk6gJPHt2AIf+XgpIdivEVNsw+zxhx74fT7IJRwtfVf984rO
-	 yNIi6Gx9ZHhkBLitmi1YGH7xVdNTg0RegHPcDPYM=
+	b=iXq6xh8yJljhgTonaf3768z9uHbbntZ+cxILucUZ/3N5VLID3j9dAb1XLx5Kf/z8M
+	 XdbgBm1PulSGNmw7qqmF75yoYGdxn6Tni04NPXyz7lYXT+/d0rvbfUL9qf7nKFmG9/
+	 uXng/58gK8lRBrEo9bgOD8+WNyc8KcDDnK+ukelI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728106AbgHTACt (ORCPT
+        id S1728130AbgHTACw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:02:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59726 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:02:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727971AbgHTACl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:02:41 -0400
+        id S1728104AbgHTACr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCE0420FC3;
-        Thu, 20 Aug 2020 00:02:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C62120FC3;
+        Thu, 20 Aug 2020 00:02:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881761;
-        bh=cBWRrPXAZq+OpXD8QP6SeV0mkgjHFxpB8eaf/FyXlsA=;
+        s=default; t=1597881766;
+        bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5B1hwz+RaotMcosuH5f4v7r4q3sdjd6PDm1glPS8dq1lxZxvW/VwzesnmJ9/O0R7
-         5M8IGKFg9qRYcpXUOQFuQRP9y7SHCpveVF08VhwXH5qjZI1zP18uV+b3i+phHIPrWR
-         Jp90i10L0ZOuWtFjA/qKcHDRkEMkRJ5+dWFNcBW8=
+        b=U06G1hwIq5Lj3872/1wkBIB8ol9jwuIU7yl1TK3Fl3+jhQxFDaqJ7d24nwgJcEreq
+         8vtsTrGvnULNZuTNNZX6KMofSbIW/dv9BsYaypcFUsDEuDI5Bpdjj0fu+Odycu9ven
+         wigF0EGQWbLMc9SgOYO+Zz+iqNWNSnn380qMK56Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-m68k@lists.linux-m68k.org
-Subject: [PATCH AUTOSEL 5.4 08/22] m68knommu: fix overwriting of bits in ColdFire V3 cache control
-Date:   Wed, 19 Aug 2020 20:02:15 -0400
-Message-Id: <20200820000229.215333-8-sashal@kernel.org>
+Cc:     Zhe Li <lizhe67@huawei.com>, Hou Tao <houtao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 12/22] jffs2: fix UAF problem
+Date:   Wed, 19 Aug 2020 20:02:19 -0400
+Message-Id: <20200820000229.215333-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
@@ -59,50 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Ungerer <gerg@linux-m68k.org>
+From: Zhe Li <lizhe67@huawei.com>
 
-[ Upstream commit bdee0e793cea10c516ff48bf3ebb4ef1820a116b ]
+[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
 
-The Cache Control Register (CACR) of the ColdFire V3 has bits that
-control high level caching functions, and also enable/disable the use
-of the alternate stack pointer register (the EUSP bit) to provide
-separate supervisor and user stack pointer registers. The code as
-it is today will blindly clear the EUSP bit on cache actions like
-invalidation. So it is broken for this case - and that will result
-in failed booting (interrupt entry and exit processing will be
-completely hosed).
+The log of UAF problem is listed below.
+BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
+Read of size 4 by task rm/8283
+=============================================================================
+BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
+-----------------------------------------------------------------------------
 
-This only affects ColdFire V3 parts that support the alternate stack
-register (like the 5329 for example) - generally speaking new parts do,
-older parts don't. It has no impact on ColdFire V3 parts with the single
-stack pointer, like the 5307 for example.
+INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
+        0xb0bba6ef
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        __slab_alloc.isra.21.constprop.25+0x2c/0x44
+        __kmalloc+0x1dc/0x370
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        jffs2_do_unlink+0x328/0x5fc [jffs2]
+        jffs2_rmdir+0x110/0x1cc [jffs2]
+        vfs_rmdir+0x180/0x268
+        do_rmdir+0x2cc/0x300
+        ret_from_syscall+0x0/0x3c
+INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
+        0x2e9173
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
+        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
+        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
+        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
+        kthread+0x1a8/0x1b0
+        ret_from_kernel_thread+0x5c/0x64
+Call Trace:
+[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
+[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
+[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
+[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
+[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
 
-Fix the cache bit defines used, so they maintain the EUSP bit when
-carrying out cache actions through the CACR register.
+The root cause is that we don't get "jffs2_inode_info.sem" before
+we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
+This patch add codes to get "jffs2_inode_info.sem" before we scan
+"jffs2_inode_info.dents" to slove the UAF problem.
 
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Zhe Li <lizhe67@huawei.com>
+Reviewed-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/m68k/include/asm/m53xxacr.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/jffs2/dir.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/m68k/include/asm/m53xxacr.h b/arch/m68k/include/asm/m53xxacr.h
-index 9138a624c5c81..692f90e7fecc1 100644
---- a/arch/m68k/include/asm/m53xxacr.h
-+++ b/arch/m68k/include/asm/m53xxacr.h
-@@ -89,9 +89,9 @@
-  * coherency though in all cases. And for copyback caches we will need
-  * to push cached data as well.
-  */
--#define CACHE_INIT	  CACR_CINVA
--#define CACHE_INVALIDATE  CACR_CINVA
--#define CACHE_INVALIDATED CACR_CINVA
-+#define CACHE_INIT        (CACHE_MODE + CACR_CINVA - CACR_EC)
-+#define CACHE_INVALIDATE  (CACHE_MODE + CACR_CINVA)
-+#define CACHE_INVALIDATED (CACHE_MODE + CACR_CINVA)
+diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
+index f20cff1194bb6..776493713153f 100644
+--- a/fs/jffs2/dir.c
++++ b/fs/jffs2/dir.c
+@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
+ 	int ret;
+ 	uint32_t now = JFFS2_NOW();
  
- #define ACR0_MODE	((CONFIG_RAMBASE & 0xff000000) + \
- 			 (0x000f0000) + \
++	mutex_lock(&f->sem);
+ 	for (fd = f->dents ; fd; fd = fd->next) {
+-		if (fd->ino)
++		if (fd->ino) {
++			mutex_unlock(&f->sem);
+ 			return -ENOTEMPTY;
++		}
+ 	}
++	mutex_unlock(&f->sem);
+ 
+ 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
+ 			      dentry->d_name.len, f, now);
 -- 
 2.25.1
 
