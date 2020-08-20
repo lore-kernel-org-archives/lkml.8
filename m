@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B60C433E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C3C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377AE20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78122206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931958;
-	bh=YSUFFkzo1IRc9kLJKQO0QnOVSFTbls6wjcq3y8rqPiY=;
+	s=default; t=1597931974;
+	bh=2zNQvTpp5k7RZuk30s8XlS+dyW8wMKyqVTDGMrdR33E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AMm7eMzr9ZrTr2GAlwQrMKbmAfi3AwKb16FPMkcVlf3TbLlnI0HBcjr3OFampOZgn
-	 r7ZhKCzDB50poSR8kUqFW2n02WRqjckzrnYQvkVkOXfA+2FK5lUQJozNtqh5vRFHoh
-	 jAwVuXK7G0CJ4KdnxMoC81by9aq9ecDDD9cg/qyY=
+	b=JkE5E7+Rnc40BL/t0/ocM4ynGYUXXZyOIxy6/eDwmzelGIL0BeAwEjNySBpW2iEmS
+	 dD49/jtzJtWk2YSRnm21pP8O9jFtOvL5JXmeeXlEsJBwCEConnK0Iu/0UKPdUR4eqM
+	 UKNnmPOB4upI2kIpc/R8CRdAsGZ5QsX8g0IKwmZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731244AbgHTN6s (ORCPT
+        id S1728453AbgHTN73 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:58:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60820 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:59:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbgHTJYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:24:33 -0400
+        id S1726948AbgHTJYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:24:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC26522CB1;
-        Thu, 20 Aug 2020 09:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4CA22CA1;
+        Thu, 20 Aug 2020 09:24:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915473;
-        bh=YSUFFkzo1IRc9kLJKQO0QnOVSFTbls6wjcq3y8rqPiY=;
+        s=default; t=1597915461;
+        bh=2zNQvTpp5k7RZuk30s8XlS+dyW8wMKyqVTDGMrdR33E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7sBqxX53TmUdnPbapPWNFlmmVzw9vvS/3Z703aB2c1fmyP1iSuT0m8Nee27GjX7n
-         MzvEDSVZgKGwo4Wk4ktlZnpznWBmqZC2yXQ4+r+fO1QM5x/Z3iuDR/CjyarHxBXjUU
-         SNsvyn0KhSW7M6nVbTVDGi5Ve3t3/oGagW4WseUA=
+        b=FBaNdzMt0QgXEbuZRvOVck65hi1qjXYMfHcVPRBia/GBPSWx82XnNOlQX7c9rYqeJ
+         N2F4lTb8E4Y+O/naDc5YVYYZOb6ZacQk7T1auKHJoG9LPnL270b0uCHsVXDwESFxHu
+         SMc6O26YAX/YR799jd/V6n5l6hYC6wqUhCMFydRY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anand Jain <anand.jain@oracle.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 025/232] btrfs: move the chunk_mutex in btrfs_read_chunk_tree
-Date:   Thu, 20 Aug 2020 11:17:56 +0200
-Message-Id: <20200820091613.969994621@linuxfoundation.org>
+Subject: [PATCH 5.8 021/232] btrfs: remove no longer needed use of log_writers for the log root tree
+Date:   Thu, 20 Aug 2020 11:17:52 +0200
+Message-Id: <20200820091613.767414822@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,166 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 01d01caf19ff7c537527d352d169c4368375c0a1 upstream.
+commit a93e01682e283f6de09d6ce8f805dc52a2e942fb upstream.
 
-We are currently getting this lockdep splat in btrfs/161:
+When syncing the log, we used to update the log root tree without holding
+neither the log_mutex of the subvolume root nor the log_mutex of log root
+tree.
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.8.0-rc5+ #20 Tainted: G            E
-  ------------------------------------------------------
-  mount/678048 is trying to acquire lock:
-  ffff9b769f15b6e0 (&fs_devs->device_list_mutex){+.+.}-{3:3}, at: clone_fs_devices+0x4d/0x170 [btrfs]
+We used to have two critical sections delimited by the log_mutex of the
+log root tree, so in the first one we incremented the log_writers of the
+log root tree and on the second one we decremented it and waited for the
+log_writers counter to go down to zero. This was because the update of
+the log root tree happened between the two critical sections.
 
-  but task is already holding lock:
-  ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
+The use of two critical sections allowed a little bit more of parallelism
+and required the use of the log_writers counter, necessary to make sure
+we didn't miss any log root tree update when we have multiple tasks trying
+to sync the log in parallel.
 
-  which lock already depends on the new lock.
+However after commit 06989c799f0481 ("Btrfs: fix race updating log root
+item during fsync") the log root tree update was moved into a critical
+section delimited by the subvolume's log_mutex. Later another commit
+moved the log tree update from that critical section into the second
+critical section delimited by the log_mutex of the log root tree. Both
+commits addressed different bugs.
 
-  the existing dependency chain (in reverse order) is:
+The end result is that the first critical section delimited by the
+log_mutex of the log root tree became pointless, since there's nothing
+done between it and the second critical section, we just have an unlock
+of the log_mutex followed by a lock operation. This means we can merge
+both critical sections, as the first one does almost nothing now, and we
+can stop using the log_writers counter of the log root tree, which was
+incremented in the first critical section and decremented in the second
+criticial section, used to make sure no one in the second critical section
+started writeback of the log root tree before some other task updated it.
 
-  -> #1 (&fs_info->chunk_mutex){+.+.}-{3:3}:
-	 __mutex_lock+0x8b/0x8f0
-	 btrfs_init_new_device+0x2d2/0x1240 [btrfs]
-	 btrfs_ioctl+0x1de/0x2d20 [btrfs]
-	 ksys_ioctl+0x87/0xc0
-	 __x64_sys_ioctl+0x16/0x20
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+So just remove the mutex_unlock() followed by mutex_lock() of the log root
+tree, as well as the use of the log_writers counter for the log root tree.
 
-  -> #0 (&fs_devs->device_list_mutex){+.+.}-{3:3}:
-	 __lock_acquire+0x1240/0x2460
-	 lock_acquire+0xab/0x360
-	 __mutex_lock+0x8b/0x8f0
-	 clone_fs_devices+0x4d/0x170 [btrfs]
-	 btrfs_read_chunk_tree+0x330/0x800 [btrfs]
-	 open_ctree+0xb7c/0x18ce [btrfs]
-	 btrfs_mount_root.cold+0x13/0xfa [btrfs]
-	 legacy_get_tree+0x30/0x50
-	 vfs_get_tree+0x28/0xc0
-	 fc_mount+0xe/0x40
-	 vfs_kern_mount.part.0+0x71/0x90
-	 btrfs_mount+0x13b/0x3e0 [btrfs]
-	 legacy_get_tree+0x30/0x50
-	 vfs_get_tree+0x28/0xc0
-	 do_mount+0x7de/0xb30
-	 __x64_sys_mount+0x8e/0xd0
-	 do_syscall_64+0x52/0xb0
-	 entry_SYSCALL_64_after_hwframe+0x44/0xa9
+This patch is part of a series that has the following patches:
 
-  other info that might help us debug this:
+1/4 btrfs: only commit the delayed inode when doing a full fsync
+2/4 btrfs: only commit delayed items at fsync if we are logging a directory
+3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
+4/4 btrfs: remove no longer needed use of log_writers for the log root tree
 
-   Possible unsafe locking scenario:
+After the entire patchset applied I saw about 12% decrease on max latency
+reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
+ram, using kvm and using a raw NVMe device directly (no intermediary fs on
+the host). The test was invoked like the following:
 
-	 CPU0                    CPU1
-	 ----                    ----
-    lock(&fs_info->chunk_mutex);
-				 lock(&fs_devs->device_list_mutex);
-				 lock(&fs_info->chunk_mutex);
-    lock(&fs_devs->device_list_mutex);
+  mkfs.btrfs -f /dev/sdk
+  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
+  dbench -D /mnt/sdk -t 300 8
+  umount /mnt/dsk
 
-   *** DEADLOCK ***
-
-  3 locks held by mount/678048:
-   #0: ffff9b75ff5fb0e0 (&type->s_umount_key#63/1){+.+.}-{3:3}, at: alloc_super+0xb5/0x380
-   #1: ffffffffc0c2fbc8 (uuid_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x54/0x800 [btrfs]
-   #2: ffff9b76abdb08d0 (&fs_info->chunk_mutex){+.+.}-{3:3}, at: btrfs_read_chunk_tree+0x6a/0x800 [btrfs]
-
-  stack backtrace:
-  CPU: 2 PID: 678048 Comm: mount Tainted: G            E     5.8.0-rc5+ #20
-  Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./890FX Deluxe5, BIOS P1.40 05/03/2011
-  Call Trace:
-   dump_stack+0x96/0xd0
-   check_noncircular+0x162/0x180
-   __lock_acquire+0x1240/0x2460
-   ? asm_sysvec_apic_timer_interrupt+0x12/0x20
-   lock_acquire+0xab/0x360
-   ? clone_fs_devices+0x4d/0x170 [btrfs]
-   __mutex_lock+0x8b/0x8f0
-   ? clone_fs_devices+0x4d/0x170 [btrfs]
-   ? rcu_read_lock_sched_held+0x52/0x60
-   ? cpumask_next+0x16/0x20
-   ? module_assert_mutex_or_preempt+0x14/0x40
-   ? __module_address+0x28/0xf0
-   ? clone_fs_devices+0x4d/0x170 [btrfs]
-   ? static_obj+0x4f/0x60
-   ? lockdep_init_map_waits+0x43/0x200
-   ? clone_fs_devices+0x4d/0x170 [btrfs]
-   clone_fs_devices+0x4d/0x170 [btrfs]
-   btrfs_read_chunk_tree+0x330/0x800 [btrfs]
-   open_ctree+0xb7c/0x18ce [btrfs]
-   ? super_setup_bdi_name+0x79/0xd0
-   btrfs_mount_root.cold+0x13/0xfa [btrfs]
-   ? vfs_parse_fs_string+0x84/0xb0
-   ? rcu_read_lock_sched_held+0x52/0x60
-   ? kfree+0x2b5/0x310
-   legacy_get_tree+0x30/0x50
-   vfs_get_tree+0x28/0xc0
-   fc_mount+0xe/0x40
-   vfs_kern_mount.part.0+0x71/0x90
-   btrfs_mount+0x13b/0x3e0 [btrfs]
-   ? cred_has_capability+0x7c/0x120
-   ? rcu_read_lock_sched_held+0x52/0x60
-   ? legacy_get_tree+0x30/0x50
-   legacy_get_tree+0x30/0x50
-   vfs_get_tree+0x28/0xc0
-   do_mount+0x7de/0xb30
-   ? memdup_user+0x4e/0x90
-   __x64_sys_mount+0x8e/0xd0
-   do_syscall_64+0x52/0xb0
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-This is because btrfs_read_chunk_tree() can come upon DEV_EXTENT's and
-then read the device, which takes the device_list_mutex.  The
-device_list_mutex needs to be taken before the chunk_mutex, so this is a
-problem.  We only really need the chunk mutex around adding the chunk,
-so move the mutex around read_one_chunk.
-
-An argument could be made that we don't even need the chunk_mutex here
-as it's during mount, and we are protected by various other locks.
-However we already have special rules for ->device_list_mutex, and I'd
-rather not have another special case for ->chunk_mutex.
-
-CC: stable@vger.kernel.org # 4.19+
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/btrfs/ctree.h    |    1 +
+ fs/btrfs/tree-log.c |   13 -------------
+ 2 files changed, 1 insertion(+), 13 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -7064,7 +7064,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
- 	 * otherwise we don't need it.
- 	 */
- 	mutex_lock(&uuid_mutex);
--	mutex_lock(&fs_info->chunk_mutex);
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -1059,6 +1059,7 @@ struct btrfs_root {
+ 	wait_queue_head_t log_writer_wait;
+ 	wait_queue_head_t log_commit_wait[2];
+ 	struct list_head log_ctxs[2];
++	/* Used only for log trees of subvolumes, not for the log root tree */
+ 	atomic_t log_writers;
+ 	atomic_t log_commit[2];
+ 	/* Used only for log trees of subvolumes, not for the log root tree */
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3116,28 +3116,17 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 	btrfs_init_log_ctx(&root_log_ctx, NULL);
  
+ 	mutex_lock(&log_root_tree->log_mutex);
+-	atomic_inc(&log_root_tree->log_writers);
+ 
+ 	index2 = log_root_tree->log_transid % 2;
+ 	list_add_tail(&root_log_ctx.list, &log_root_tree->log_ctxs[index2]);
+ 	root_log_ctx.log_transid = log_root_tree->log_transid;
+ 
+-	mutex_unlock(&log_root_tree->log_mutex);
+-
+-	mutex_lock(&log_root_tree->log_mutex);
+-
  	/*
- 	 * It is possible for mount and umount to race in such a way that
-@@ -7109,7 +7108,9 @@ int btrfs_read_chunk_tree(struct btrfs_f
- 		} else if (found_key.type == BTRFS_CHUNK_ITEM_KEY) {
- 			struct btrfs_chunk *chunk;
- 			chunk = btrfs_item_ptr(leaf, slot, struct btrfs_chunk);
-+			mutex_lock(&fs_info->chunk_mutex);
- 			ret = read_one_chunk(&found_key, leaf, chunk);
-+			mutex_unlock(&fs_info->chunk_mutex);
- 			if (ret)
- 				goto error;
- 		}
-@@ -7139,7 +7140,6 @@ int btrfs_read_chunk_tree(struct btrfs_f
+ 	 * Now we are safe to update the log_root_tree because we're under the
+ 	 * log_mutex, and we're a current writer so we're holding the commit
+ 	 * open until we drop the log_mutex.
+ 	 */
+ 	ret = update_log_root(trans, log, &new_root_item);
+-
+-	if (atomic_dec_and_test(&log_root_tree->log_writers)) {
+-		/* atomic_dec_and_test implies a barrier */
+-		cond_wake_up_nomb(&log_root_tree->log_writer_wait);
+-	}
+-
+ 	if (ret) {
+ 		if (!list_empty(&root_log_ctx.list))
+ 			list_del_init(&root_log_ctx.list);
+@@ -3183,8 +3172,6 @@ int btrfs_sync_log(struct btrfs_trans_ha
+ 				root_log_ctx.log_transid - 1);
  	}
- 	ret = 0;
- error:
--	mutex_unlock(&fs_info->chunk_mutex);
- 	mutex_unlock(&uuid_mutex);
  
- 	btrfs_free_path(path);
+-	wait_for_writer(log_root_tree);
+-
+ 	/*
+ 	 * now that we've moved on to the tree of log tree roots,
+ 	 * check the full commit flag again
 
 
