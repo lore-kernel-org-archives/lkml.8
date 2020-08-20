@@ -2,131 +2,150 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B25C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C409AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0D3C207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F593207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 16:27:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gkGLCi0T"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="es8IcqaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgHTQ1N (ORCPT
+        id S1729760AbgHTQ13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 12:27:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36892 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729669AbgHTQ1L (ORCPT
+        Thu, 20 Aug 2020 12:27:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46150 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgHTQ1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 12:27:11 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463ADC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:27:11 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id m22so3201421eje.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 09:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eM1zOn+FR2yFJ0AIl1j1XjtlYy3Z0GppqAmGTNPlYdw=;
-        b=gkGLCi0TAZy8OtR7kqtCVPj9RrcD2K6WpI6S3OnyUKOo53ddYAKRUuT1ExoiMt6FW/
-         V93Tvta7cuDpo/0Q5i3Tj8AprcriwlmeUdtk0fEu1dYQgD/em/zC+zvWv2NbPjg37sY+
-         rbkPfhHThJOy8UEiUar8Sfm6nzBjwoilAk4uaEa8nKuYKxrB5YtLsnQvulVim1Qk5Upu
-         L8bxSxqtIcNyGJLFbv3fd6JmcgMUFiaTDImhYaYjCKmK6BlwxNerQmyLQ3/mw8Ry2D15
-         mF0nSZ66EbDkAsbauTX4Aw5m4OGSZAlxKThn3DBNVzcBzLEFXBOBTipVNcm+Lmb2CVCz
-         WXwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eM1zOn+FR2yFJ0AIl1j1XjtlYy3Z0GppqAmGTNPlYdw=;
-        b=iFP9CKA58td/5sKYq1wAw/TRoxdOHrNRaxjPduKe9YU5hvM+YUmjwOcVP2R2S3HPvq
-         1qC2GyELI0FycoJT31G1RlIRIjeh3VnEQOq5drD2TdsnFkairOrCIYyri8GTHl0oe0Rh
-         uLx6TRDqaXpeAvwHONBIDLIo7nUQrtyPvALEU8XHAU7wFR2dpM7yQuhyq9eQFhuIV+NH
-         r7mTlVeStPknXVA6YgSJMb9fI1miTZqu5Tb7MoNnagLNs0XMngugxNmHM1rwXbidfKBs
-         pb5FyYa5YWURGrojRviGAX9vt3zXhQ6+RNmqDIgsMkRzz5Gqnhek0AYCaHD95pAc0O2R
-         TBGQ==
-X-Gm-Message-State: AOAM53184M1by5mXIaeM0tzOEKVRd7KNM7/vz79yZR5qI/4pkIySbZgR
-        tScjVnlE1q1w3TcQjEm9dc+aWYfr/ey+ISw/OvQhX+BQ3GINBg==
-X-Google-Smtp-Source: ABdhPJzIt71V2sZLGyr1YL/5rldNRwaxAE5Ib2Ga+VF9Px2vVt8VjP861EQXb+xUXh1yEWcxOzliynbXtKA2VdL404o=
-X-Received: by 2002:a17:906:3b8d:: with SMTP id u13mr3924409ejf.383.1597940829251;
- Thu, 20 Aug 2020 09:27:09 -0700 (PDT)
+        Thu, 20 Aug 2020 12:27:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN5Ng185569;
+        Thu, 20 Aug 2020 16:27:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=EhcIkdT5kS+atUJAy+/F2IziSwuZSev4/FziC9JMbe8=;
+ b=es8IcqaQFxFBi8AOBf0kA9WnVstw9kZSFc/PyFOtBz+UWkIi7+UaU0ap4DkgJb91usSv
+ H8seDxM3PiHpvM98191tO72kGt2d62EQYQ4B3Tbrl73uxugsOJhTTxasnZ7k4wqngt6p
+ hBuCG1G+Rx0CGFvcj4/2GPoLjaoH6KUD/1+nfnc+OMRZvdMmnKn+F+wsiuFLt7y0Mfqj
+ O95wqHhFLezeBP6BbwNNDjPIpgrgryE5Xlfs1DWjzoTr/4T5kkdbhYY+YHbKwJzlzF2e
+ AGmv1p2TdlyaU3lIXloP2Q6BOE/oFOIeJ6EEEe/ap6VRhIkEAoh/x0RWSwk1VYW79TJk 1Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 32x8bnheph-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Aug 2020 16:27:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07KGN2tT109476;
+        Thu, 20 Aug 2020 16:27:12 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 32xsn1k4gv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Aug 2020 16:27:12 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07KGRAig010695;
+        Thu, 20 Aug 2020 16:27:10 GMT
+Received: from [10.74.106.11] (/10.74.106.11)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Aug 2020 09:27:10 -0700
+Subject: Re: [PATCH 0/6] Add TI PRUSS platform driver
+To:     Suman Anna <s-anna@ti.com>,
+        Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>,
+        ssantosh@kernel.org, Tony Lindgren <tony@atomide.com>
+Cc:     robh+dt@kernel.org, lee.jones@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        praneeth@ti.com
+References: <1596020528-19510-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+ <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <2a64dcb7-d79e-7ef8-b3e6-4c2533a19c38@oracle.com>
+Date:   Thu, 20 Aug 2020 09:27:08 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200818184122.29C415DF@viggo.jf.intel.com> <20200818184131.C972AFCC@viggo.jf.intel.com>
- <87lfi9wxk9.fsf@yhuang-dev.intel.com> <6a378a57-a453-0318-924b-05dfa0a10c1f@intel.com>
-In-Reply-To: <6a378a57-a453-0318-924b-05dfa0a10c1f@intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 20 Aug 2020 09:26:57 -0700
-Message-ID: <CAHbLzkrjxm38VV+ibQxoQkC4nW7F13aJcL5RypUchX30rqUstA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/9] mm/migrate: demote pages during reclaim
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     "Huang, Ying" <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <12a7fc2a-4c48-655f-daa1-880fd1866fd1@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200133
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9718 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 lowpriorityscore=0
+ impostorscore=0 suspectscore=0 adultscore=0 spamscore=0 malwarescore=0
+ mlxlogscore=999 priorityscore=1501 bulkscore=0 clxscore=1011 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008200133
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 8:22 AM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 8/20/20 1:06 AM, Huang, Ying wrote:
-> >> +    /* Migrate pages selected for demotion */
-> >> +    nr_reclaimed += demote_page_list(&ret_pages, &demote_pages, pgdat, sc);
-> >> +
-> >>      pgactivate = stat->nr_activate[0] + stat->nr_activate[1];
-> >>
-> >>      mem_cgroup_uncharge_list(&free_pages);
-> >> _
-> > Generally, it's good to batch the page migration.  But one side effect
-> > is that, if the pages are failed to be migrated, they will be placed
-> > back to the LRU list instead of falling back to be reclaimed really.
-> > This may cause some issue in some situation.  For example, if there's no
-> > enough space in the PMEM (slow) node, so the page migration fails, OOM
-> > may be triggered, because the direct reclaiming on the DRAM (fast) node
-> > may make no progress, while it can reclaim some pages really before.
->
-> Yes, agreed.
+On 8/20/20 7:43 AM, Suman Anna wrote:
+> Hi Santosh, Tony,
+> 
+> On 7/29/20 6:02 AM, Grzegorz Jaszczyk wrote:
+>> Hi,
+>>
+>> The Programmable Real-Time Unit and Industrial Communication Subsystem
+>> (PRU-ICSS) is present on various TI SoCs. The IP is present on multiple TI SoC
+>> architecture families including the OMAP architecture SoCs such as AM33xx,
+>> AM437x and AM57xx; and on a Keystone 2 architecture based 66AK2G SoC. It is also
+>> present on the Davinci based OMAPL138 SoCs and K3 architecture based AM65x and
+>> J721E SoCs as well.
+>>
+>> A PRUSS consists of dual 32-bit RISC cores (Programmable Real-Time Units, or
+>> PRUs), shared RAM, data and instruction RAMs, some internal peripheral modules
+>> to facilitate industrial communication, and an interrupt controller.
+>>
+>> The programmable nature of the PRUs provide flexibility to implement custom
+>> peripheral interfaces, fast real-time responses, or specialized data handling.
+>> The common peripheral modules include the following,
+>>    - an Ethernet MII_RT module with two MII ports
+>>    - an MDIO port to control external Ethernet PHYs
+>>    - an Industrial Ethernet Peripheral (IEP) to manage/generate Industrial
+>>      Ethernet functions
+>>    - an Enhanced Capture Module (eCAP)
+>>    - an Industrial Ethernet Timer with 7/9 capture and 16 compare events
+>>    - a 16550-compatible UART to support PROFIBUS
+>>    - Enhanced GPIO with async capture and serial support
+>>
+>>
+>> A typical usage scenario would be to load the application firmware into one or
+>> more of the PRU cores, initialize one or more of the peripherals and perform I/O
+>> through shared RAM from either a kernel driver or directly from userspace.
+>>
+>> This series contains the PRUSS platform driver. This is the parent driver for
+>> the entire PRUSS and is used for managing the subsystem level resources like
+>> various memories and the CFG module.  It is responsible for the creation and
+>> deletion of the platform devices for the child PRU devices and other child
+>> devices (like Interrupt Controller, MDIO node and some syscon nodes) so that
+>> they can be managed by specific platform drivers.
+>>
+>> Grzegorz Jaszczyk (1):
+>>    dt-bindings: soc: ti: Add TI PRUSS bindings
+>>
+>> Suman Anna (5):
+>>    soc: ti: pruss: Add a platform driver for PRUSS in TI SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSSs on AM437x SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSS subsystems on AM57xx SoCs
+>>    soc: ti: pruss: Add support for PRU-ICSS subsystems on 66AK2G SoC
+>>    soc: ti: pruss: enable support for ICSSG subsystems on K3 AM65x SoCs
+> 
+> Do you have any comments on the driver portions of this series before Greg posts
+> a v2 addressing the binding comments. This is one of the foundation series
+> towards enabling PRUSS, and is a dependency for the PRU remoteproc driver.
+> 
+No just post V2 addressing Rob's comment. I will line it up once
+rob acks it.
 
-Kind of. But I think that should be transient and very rare. The
-kswapd on pmem nodes will be waken up to drop pages when we try to
-allocate migration target pages. It should be very rare that there is
-not reclaimable page on pmem nodes.
-
->
-> There are a couple of ways we could fix this.  Instead of splicing
-> 'demote_pages' back into 'ret_pages', we could try to get them back on
-> 'page_list' and goto the beginning on shrink_page_list().  This will
-> probably yield the best behavior, but might be a bit ugly.
->
-> We could also add a field to 'struct scan_control' and just stop trying
-> to migrate after it has failed one or more times.  The trick will be
-> picking a threshold that doesn't mess with either the normal reclaim
-> rate or the migration rate.
-
-In my patchset I implemented a fallback mechanism via adding a new
-PGDAT_CONTENDED node flag. Please check this out:
-https://patchwork.kernel.org/patch/10993839/.
-
-Basically the PGDAT_CONTENDED flag will be set once migrate_pages()
-return -ENOMEM which indicates the target pmem node is under memory
-pressure, then it would fallback to regular reclaim path. The flag
-would be cleared by clear_pgdat_congested() once the pmem node memory
-pressure is gone.
-
-We already use node flags to indicate the state of node in reclaim
-code, i.e. PGDAT_WRITEBACK, PGDAT_DIRTY, etc. So, adding a new flag
-sounds more straightforward to me IMHO.
-
->
-> This is on my list to fix up next.
->
+Regards,
+Santosh
