@@ -2,111 +2,102 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B62C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE43C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54BA7206B5
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:32:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD769206B5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 18:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G8iW4Dh1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dd3jcquf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgHTSct (ORCPT
+        id S1728080AbgHTSdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 14:32:49 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48191 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727794AbgHTSav (ORCPT
+        Thu, 20 Aug 2020 14:33:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56376 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727066AbgHTSdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 14:30:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597948250;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aRjvqDDaphx4X4eWRUclQ6/debsZpIwfJIK259KyQTs=;
-        b=G8iW4Dh13q1k4Pa/IPrtZhyTvvwddaCOwo/Epe3TK6KtxPDc2Muf9s2XA+tdJjESWp4xQX
-        hsDy2KI+Obi8R3momgZ3V0WRnMMdmmaBAEuik0N0v0iUcHtCPNaDqWHW73fwtIyBQzzKkW
-        /BGCbYlj93HZ4KknLRqPA9o6BJl9s10=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-JMu0nbKwP6-H8zgHX5fGFg-1; Thu, 20 Aug 2020 14:30:48 -0400
-X-MC-Unique: JMu0nbKwP6-H8zgHX5fGFg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 973521005E73;
-        Thu, 20 Aug 2020 18:30:46 +0000 (UTC)
-Received: from Whitewolf.redhat.com (ovpn-120-42.rdu2.redhat.com [10.10.120.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 872905DA78;
-        Thu, 20 Aug 2020 18:30:45 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Airlie <airlied@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
-        Takashi Iwai <tiwai@suse.de>, James Jones <jajones@nvidia.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [RFC v2 07/20] drm/nouveau/kms/nv50-: Use drm_dp_dpcd_(readb|writeb)() in nv50_sor_disable()
-Date:   Thu, 20 Aug 2020 14:29:59 -0400
-Message-Id: <20200820183012.288794-8-lyude@redhat.com>
-In-Reply-To: <20200820183012.288794-1-lyude@redhat.com>
-References: <20200820183012.288794-1-lyude@redhat.com>
+        Thu, 20 Aug 2020 14:33:09 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6CAC061385;
+        Thu, 20 Aug 2020 11:33:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f7so3087202wrw.1;
+        Thu, 20 Aug 2020 11:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XdLts6rvq2H0YVcIjGx4AO/NpE2Y7Q5mTkuY6ixaYlw=;
+        b=dd3jcqufhs9QvMtTE8VBXBAaIsSjdXUN3iygiPJWGYBr4IqsQzKDX105bYva3z5Q5H
+         nQgUkyCaPt1rgTVr3nK85K07MDfxciiKqh/KeVQT6YP4mAw0W2Rrfhhwz2zLplbT0GIk
+         mOJCLkkpmGSVGInfQkHBlAA1Fo+dcLiC3O+OTsdmke5kvxE0au/vTcIuUIEutKWM+Bwa
+         E7xSkNiylgV36nIARD/g36d3iFymiT6gpTjlQ0LKLISt9jFggZ34xc4XRRrMXEdzJXCx
+         wu/K7dgL3DRMNcasm61KXwyLYu4ljOBwh2/MrCwkClMfaSn/+XhGb+RBcw9cFDuc2KLM
+         GsRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XdLts6rvq2H0YVcIjGx4AO/NpE2Y7Q5mTkuY6ixaYlw=;
+        b=o3KTNSY8fLkBkToylNWUFOqENsJ0RH1pp78nugnSxtpZ4CQpeadla7wZ5OQr6O+oBY
+         V8p8LhPWAHqu4oD8OCDM3MKtN4VoSZqrCLQO1iuyMpNQ3DbKo9szgrsuuV0XmQm45KQQ
+         peRAoT4Yvs4GEUy8U32jP7RUonUqNPnIMWJ5lSeR/ClZvns5ZKpWa7Pil78qGnpJnlhm
+         yei+Q+qOPMos7GScRB+sEnTAAz4BllWq5tUqU93lGWQtk3+qZ9xxWaZzr50pOmSn0eaw
+         7QkjKrTWvPGm5KGfYLi6ivC+uPBuFwPVU2M0ZPHSVlDAPOCjxRkSdacXhkXia05TLj7s
+         LJRg==
+X-Gm-Message-State: AOAM530YokpuNc0MbxKKG5BsXsZeX9AMvaH/S76+NNM8f3OHpcm8gDGm
+        /KDFP3cc2QMLAFUOssxKTEM=
+X-Google-Smtp-Source: ABdhPJxTnvW3t/djwmitUnLC0YRx3lssSMdCd4S8WWUe32lIQpvrIFKMAILk/P7MPJwb5C8XwoOdBg==
+X-Received: by 2002:a5d:6910:: with SMTP id t16mr54379wru.178.1597948387108;
+        Thu, 20 Aug 2020 11:33:07 -0700 (PDT)
+Received: from localhost.localdomain (cpc83661-brig20-2-0-cust443.3-3.cable.virginm.net. [82.28.105.188])
+        by smtp.gmail.com with ESMTPSA id y142sm6176344wmd.3.2020.08.20.11.33.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2020 11:33:06 -0700 (PDT)
+From:   Alex Dewar <alex.dewar90@gmail.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nfc: st-nci: Remove unnecessary cast
+Date:   Thu, 20 Aug 2020 19:32:58 +0100
+Message-Id: <20200820183301.902460-1-alex.dewar90@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just use drm_dp_dpcd_(readb|writeb)() so we get automatic DPCD logging
+In st_nci_hci_connectivity_event_received(), the return value of
+devm_kzalloc() is unnecessarily cast from void*. Remove cast.
 
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Reviewed-by: Ben Skeggs <bskeggs@redhat.com>
+Issue identified with Coccinelle.
+
+Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/nfc/st-nci/se.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index 57102e1a173bc..75005268941b9 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -1629,19 +1629,22 @@ nv50_sor_disable(struct drm_encoder *encoder,
- {
- 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
- 	struct nouveau_crtc *nv_crtc = nouveau_crtc(nv_encoder->crtc);
-+	struct nouveau_connector *nv_connector =
-+		nv50_outp_get_old_connector(nv_encoder, state);
+diff --git a/drivers/nfc/st-nci/se.c b/drivers/nfc/st-nci/se.c
+index f25f1ec5f9e9..807eae04c1e3 100644
+--- a/drivers/nfc/st-nci/se.c
++++ b/drivers/nfc/st-nci/se.c
+@@ -331,8 +331,7 @@ static int st_nci_hci_connectivity_event_received(struct nci_dev *ndev,
+ 		    skb->data[0] != NFC_EVT_TRANSACTION_AID_TAG)
+ 			return -EPROTO;
  
- 	nv_encoder->crtc = NULL;
- 
- 	if (nv_crtc) {
--		struct nvkm_i2c_aux *aux = nv_encoder->aux;
-+		struct drm_dp_aux *aux = &nv_connector->aux;
- 		u8 pwr;
- 
--		if (aux) {
--			int ret = nvkm_rdaux(aux, DP_SET_POWER, &pwr, 1);
-+		if (nv_encoder->dcb->type == DCB_OUTPUT_DP) {
-+			int ret = drm_dp_dpcd_readb(aux, DP_SET_POWER, &pwr);
-+
- 			if (ret == 0) {
- 				pwr &= ~DP_SET_POWER_MASK;
- 				pwr |=  DP_SET_POWER_D3;
--				nvkm_wraux(aux, DP_SET_POWER, &pwr, 1);
-+				drm_dp_dpcd_writeb(aux, DP_SET_POWER, pwr);
- 			}
- 		}
+-		transaction = (struct nfc_evt_transaction *)devm_kzalloc(dev,
+-					    skb->len - 2, GFP_KERNEL);
++		transaction = devm_kzalloc(dev, skb->len - 2, GFP_KERNEL);
+ 		if (!transaction)
+ 			return -ENOMEM;
  
 -- 
-2.26.2
+2.28.0
 
