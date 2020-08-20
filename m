@@ -2,99 +2,111 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F27D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7047C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2D522177B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597896675;
-	bh=vOB4v3tUS4GTw7PrtGAh0UXA93UNSuyOFQfzu6w0RH8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rh0bGzQLIa466NQQZx9NUYJyqZvbpay8HfHDQeoOxrMlbEO1pZdyQljbuPYEUFlzn
-	 0WptnEt1L9bFMZ8gU4fgpc4ivz4Rau8bdVL1aqRV9xM2jH9I2AGhp4DeFV1976POXX
-	 Q6UyV/0YMb4f0Wocti9HpgwaNf2podCC6CbmSx/k=
+	by mail.kernel.org (Postfix) with ESMTP id 9628422BEA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiPpQdou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725925AbgHTELO (ORCPT
+        id S1726376AbgHTELR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:11:14 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34754 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbgHTELM (ORCPT
+        Thu, 20 Aug 2020 00:11:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725852AbgHTELP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:11:12 -0400
-Received: by mail-pl1-f193.google.com with SMTP id v16so451923plo.1;
-        Wed, 19 Aug 2020 21:11:12 -0700 (PDT)
+        Thu, 20 Aug 2020 00:11:15 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A6C061757;
+        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id r11so396541pfl.11;
+        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
+        b=FiPpQdouEXK6VeEe9kXvQd6AlUhoKIUnly9H8vEzYRX6dpw/kifEXBclWcuhASodGk
+         5pBBDbsDsUJUdyysZgSEfsEayRBghrrTSoQYGTCL2jmt3Kbx22oErUozmlqRTgQ9LMyQ
+         UJwtlr0U9aa9iLYV6Lzpz6LXVdomWWE3i0eK5oEeTefzDVbp2MvqUV/6fMvwOA1YRz1p
+         KhtacN0Sq+j1vuOYydpn6dkczCjENlCgZtHnrHHJ/973hRw92EcUTFZUpBHKWAw/JTBy
+         O7hszoyEG9Qc9mQtO/qjK/B4uP8xc6XHcueCNF4jitZ+a+eNYpay8Sa+JfOvEh6jDNEe
+         c8WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=3jelrt2iE0YOKS7d/Ac3pVBTbS/TCz2oa2R5iJqNekE=;
-        b=ixwB9b0NlW8aX7EGMzYVJ2eFuaG8/Wu/M5R9pPbV8p6Ri3vyKg4sf4VoKcnppB1F0C
-         M9w8eXxdEpqsG0yArI6KnOBus756/B19UISXc6RMd622B+ZW7JQd2UxBgiR6YRFb5j8c
-         CKfiuA4HHXpUHOdEGM/sjZaVIVfcBMWDz8LlZxqgDBFPJnP/Ak27NYPc2BdZ4J7C3BoI
-         hZLvm+D5AguKiK0LvhrkxQHN+WTcn+nctjvPlxGfcXupmHxxKUpg+o7CpU/M0F5dXNOW
-         HsoTfIB0+ZEDfP5fWZR5QKRXHRtUHpoQ3VuTpuWsoBF15Y2HREPJtFtu0SmbDmr4tgLq
-         +Bzg==
-X-Gm-Message-State: AOAM532ay9DVTPQOYe7AN2iRr3VUXfAttC1Vj4seGLs2ZpUT6rVKHLo4
-        FNJdwvx8g2N6TcZwcvp4bu8=
-X-Google-Smtp-Source: ABdhPJwndfVpHf63YhpLbuaU+SdHRPI1cyxMdBW0xoO6xFHpnlYZ8N8PtDWP2p55t/WXQe+yNCGfRA==
-X-Received: by 2002:a17:90a:e551:: with SMTP id ei17mr909773pjb.224.1597896672013;
-        Wed, 19 Aug 2020 21:11:12 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id 196sm847592pfc.178.2020.08.19.21.11.11
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
+        b=Akb5mvOblD/aAQp5LgY6cq1BMG4bLR2wTHRxvMgW8bxC3gXZpIroBsLHnfek2pMXVb
+         9z9N5wp4ITT6/PcSMO9v4U2pz5tLH9bmzl/LCDEVQCxrV1wNkWGVLZFFUcgGMKWc3LI3
+         gxR+4VXf88WZu1rX01z5S+ts3ixaW4gOlxOYt5QJ2s6y9EKYEQPFqNUd6BrnsDCfLDwh
+         GITa7K+A6auG74hSZu4O8A+/UnzDZ74DsFDYOKLD896JNDcLJeT3M5zax2I3lhsY8TT/
+         FAhN6uhdoCvH9q/qbMxYFd+x2EoWS8ot3LPRporAcd/6YvLkUToY6eWY/N5JqXUUJ/TT
+         Uzig==
+X-Gm-Message-State: AOAM533vC5tzwe4xadXkEySQWhtZUzwKvVt4F5puaaJv4iiFaYs6AZIO
+        mNPSQngE1dWdbeNMVpRLqBg=
+X-Google-Smtp-Source: ABdhPJyEObQUFNlfFMiPl9DoKI9qG80cCF2W6A1Y0MZ7u6rMFknZKroy8E3vCjH3dZFgCJS8rRKIGA==
+X-Received: by 2002:a62:ea01:: with SMTP id t1mr868193pfh.125.1597896674617;
+        Wed, 19 Aug 2020 21:11:14 -0700 (PDT)
+Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
+        by smtp.gmail.com with ESMTPSA id b20sm847811pfp.140.2020.08.19.21.11.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 21:11:11 -0700 (PDT)
-Date:   Wed, 19 Aug 2020 21:11:10 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 1/3] fpga manager: xilinx-spi: remove stray comment
-Message-ID: <20200820041110.GA4022@epycbox.lan>
-References: <20200817165911.32589-1-luca@lucaceresoli.net>
+        Wed, 19 Aug 2020 21:11:13 -0700 (PDT)
+From:   Chris Healy <cphealy@gmail.com>
+X-Google-Original-From: Chris Healy <cphealy@gmail.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        stefan@agner.ch, robh+dt@kernel.org, andrew.smirnov@gmail.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, festevam@gmail.com,
+        stable@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>
+Subject: [PATCH v2] ARM: dts: vfxxx: Add syscon compatible with ocotp
+Date:   Wed, 19 Aug 2020 21:10:55 -0700
+Message-Id: <20200820041055.75848-1-cphealy@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200817165911.32589-1-luca@lucaceresoli.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 17, 2020 at 06:59:09PM +0200, Luca Ceresoli wrote:
-> Remove comment committed by mistake.
-> 
-> Fixes: dd2784c01d93 ("fpga manager: xilinx-spi: check INIT_B pin during write_init")
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> ---
->  drivers/fpga/xilinx-spi.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 2967aa2a74e2..502fae0d1d85 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -57,7 +57,6 @@ static int wait_for_init_b(struct fpga_manager *mgr, int value,
->  
->  	if (conf->init_b) {
->  		while (time_before(jiffies, timeout)) {
-> -			/* dump_state(conf, "wait for init_d .."); */
->  			if (gpiod_get_value(conf->init_b) == value)
->  				return 0;
->  			usleep_range(100, 400);
-> -- 
-> 2.28.0
-> 
+From: Chris Healy <cphealy@gmail.com>
 
-Applied to for-next,
+Add syscon compatibility with Vybrid ocotp node. This is required to
+access the UID.
 
-Thanks
+Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
+Cc: stable@vger.kernel.org
+Signed-off-by: Chris Healy <cphealy@gmail.com>
+---
+Changes in v2:
+ - Add Fixes line to commit message
+
+ arch/arm/boot/dts/vfxxx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index 0fe03aa0367f..2259d11af721 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -495,7 +495,7 @@ edma1: dma-controller@40098000 {
+ 			};
+ 
+ 			ocotp: ocotp@400a5000 {
+-				compatible = "fsl,vf610-ocotp";
++				compatible = "fsl,vf610-ocotp", "syscon";
+ 				reg = <0x400a5000 0x1000>;
+ 				clocks = <&clks VF610_CLK_OCOTP>;
+ 			};
+-- 
+2.26.2
+
