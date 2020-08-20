@@ -2,113 +2,173 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC8EC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F5FC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D5520758
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8258E2072D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:20:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UB4G3768"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UJH6ED2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730491AbgHTMUf (ORCPT
+        id S1730427AbgHTMUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:20:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47938 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729921AbgHTJzh (ORCPT
+        Thu, 20 Aug 2020 08:20:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:60844 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730356AbgHTMUJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:55:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597917335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jf8gbz8LQopQe0J21yTGM4+cDZmGtIYLJCcRhjeOrR4=;
-        b=UB4G3768jo311kVvi91ndf8WfkCNMZI0tbXGq94FtxVsP8v2k57IQdp9rXawNzfXycdsrR
-        Ky9khbVd45mCsiJU8FeR5vbqQJY0WD/Aw5AUYNUs7400yyDhEDClZV1kjysdWmPkV4qAfS
-        IIbp6yYYv0FFw1YxUEY+k8tnypVF118=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-53-GRfa2RLmNqiSiRzBIxstPA-1; Thu, 20 Aug 2020 05:55:34 -0400
-X-MC-Unique: GRfa2RLmNqiSiRzBIxstPA-1
-Received: by mail-wr1-f72.google.com with SMTP id r14so471704wrq.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 02:55:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jf8gbz8LQopQe0J21yTGM4+cDZmGtIYLJCcRhjeOrR4=;
-        b=DnEa6edBYyAwScKT9fwjz2drP9CzWJGc8CUlIxp6Eu4TfsEZaapL+SvY/ME+lcBTWE
-         N3FFAfX0jPDg6hZNrg+pnBmxo9JK/4qtWgw+exv1P6GidHnmV5+du6bRELB+xZkexZd4
-         nHl1q21r31s/lUGcXBbjqScxBC557pMK0xXpTRjgoaPt51BbLTs4oekJhaeeYJ7NchQW
-         Q7ZorjvXghWVKQX3v35CR/o/ajC4DEMp4Ccis2HUtniEt5ux8r/AybXdPeDkTzRpOptW
-         JhK77Kw2HlRkwiVutf1msVuK3YWp3YMhE6bJcDGwcYPAJP6u3iZrv8FMiczPeT3vZ5Lk
-         VugQ==
-X-Gm-Message-State: AOAM5302I+DsiYhe9CC1y/hmpD8/S9RMtk+dDztshWrJZkYV9Cci+/8k
-        jZzTZpQaLZ5N4SrpG4EyOTvcmMYhkykpwGhD9nwSkL8HqoUHnGQXqbeXQZFCw2IYiivg3vKVgSK
-        /9HEa9viqk4r+dh+B0NBAEuT9
-X-Received: by 2002:a1c:e244:: with SMTP id z65mr2712572wmg.34.1597917332842;
-        Thu, 20 Aug 2020 02:55:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz7+uOoYVXeIwgWOAsbxvSNBUeYTbpN+9/M9HQCIj4IkWFjHWhPfBPnCwQmglmYgMwvO0mang==
-X-Received: by 2002:a1c:e244:: with SMTP id z65mr2712561wmg.34.1597917332571;
-        Thu, 20 Aug 2020 02:55:32 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:1cc0:4e4e:f1a9:1745? ([2001:b07:6468:f312:1cc0:4e4e:f1a9:1745])
-        by smtp.gmail.com with ESMTPSA id g145sm4323729wmg.23.2020.08.20.02.55.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 02:55:32 -0700 (PDT)
-Subject: Re: [PATCH 8/8] KVM: nSVM: read only changed fields of the nested
- guest data area
-To:     Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org
-Cc:     Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20200820091327.197807-1-mlevitsk@redhat.com>
- <20200820091327.197807-9-mlevitsk@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <766e669d-9b0b-aad6-b1d2-19ef77cbb791@redhat.com>
-Date:   Thu, 20 Aug 2020 11:55:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Thu, 20 Aug 2020 08:20:09 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597926008; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=yHVAvexqEWvuHwpqCiJJpqti28GNOsRReJIvgdeT+YM=;
+ b=UJH6ED2QZ1Pz2NXTWAreyKLWW5oaCTzZ6SVqFl/GvrhN2NY0V2F38ceiLQ4NBYf1r/DHc0he
+ Il+UcZvZclqQ9nV8WxrNVZ88atoxE9P+tY/0J65t35H4fxkCGz+9/Q64MyMrJrT+92SvKQH3
+ ObfWUfMl9/JIV4778yQRmK/GM/0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f3e6a6bc3a55812b159c544 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 Aug 2020 12:19:55
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 126D9C433AD; Thu, 20 Aug 2020 12:19:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: skakit)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB6EAC433C6;
+        Thu, 20 Aug 2020 12:19:53 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200820091327.197807-9-mlevitsk@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Aug 2020 17:49:53 +0530
+From:   skakit@codeaurora.org
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
+        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
+Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
+ BT uart
+In-Reply-To: <20200819161311.GF2995789@google.com>
+References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
+ <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
+ <20200817180158.GD2995789@google.com>
+ <1cbbc8cf5c918c6a9eee5ef349707fc6@codeaurora.org>
+ <20200819161311.GF2995789@google.com>
+Message-ID: <29d523f4a46ecce8e4a62a5310528969@codeaurora.org>
+X-Sender: skakit@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/08/20 11:13, Maxim Levitsky wrote:
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index 06668e0f93e7..f0bb7f622dca 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -3924,7 +3924,7 @@ static int svm_pre_leave_smm(struct kvm_vcpu *vcpu, const char *smstate)
->  		if (kvm_vcpu_map(&svm->vcpu, gpa_to_gfn(vmcb_gpa), &map) == -EINVAL)
->  			return 1;
->  
-> -		load_nested_vmcb(svm, map.hva, vmcb);
-> +		load_nested_vmcb(svm, map.hva, vmcb_gpa);
->  		ret = enter_svm_guest_mode(svm);
->  
+Hi Matthias,
 
-Wrong patch?
+On 2020-08-19 21:43, Matthias Kaehlcke wrote:
+> On Wed, Aug 19, 2020 at 07:19:25PM +0530, skakit@codeaurora.org wrote:
+>> On 2020-08-17 23:31, Matthias Kaehlcke wrote:
+>> > On Fri, Jul 24, 2020 at 09:28:01AM +0530, satya priya wrote:
+>> > > Add sleep pin ctrl for BT uart, and also change the bias
+>> > > configuration to match Bluetooth module.
+>> > >
+>> > > Signed-off-by: satya priya <skakit@codeaurora.org>
+>> > > ---
+>> > > Changes in V2:
+>> > >  - This patch adds sleep state for BT UART. Newly added in V2.
+>> > >
+>> > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42
+>> > > ++++++++++++++++++++++++++++-----
+>> > >  1 file changed, 36 insertions(+), 6 deletions(-)
+>> > >
+>> > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > index 26cc491..bc919f2 100644
+>> > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+>> > > @@ -469,20 +469,50 @@
+>> > >
+>> > >  &qup_uart3_default {
+>> > >  	pinconf-cts {
+>> > > -		/*
+>> > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
+>> > > -		 * the Bluetooth module.
+>> > > -		 */
+>> > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
+>> >
+>> > Has the pull from the Bluetooth module been removed or did the previous
+>> > config
+>> > incorrectly claim that the Bluetooth module has a pull-down?
+>> >
+>> 
+>> The previous config was incorrect, so we corrected it to match the 
+>> pull of
+>> BT.
+> 
+> The pull config of the BT controller varies depending on its state, 
+> could
+> you clarify which state you intend to match?
+> 
 
-Paolo
+Since this line is driven by BT SoC, they could change their 
+pull(although it's less likely). Recently on cherokee we worked with BT 
+team and came to an agreement to keep no-pull from our side in order to 
+not conflict with their pull in any state.
 
+>> 
+>> > >  		pins = "gpio38";
+>> > > +		bias-disable;
+>> > > +	};
+>> > > +
+>> > > +	pinconf-rts {
+>> > > +		/* We'll drive 39 (RTS), so configure pull-down */
+>> > > +		pins = "gpio39";
+>> > > +		drive-strength = <2>;
+>> > >  		bias-pull-down;
+>> > > +	};
+>> > > +
+>> > > +	pinconf-tx {
+>> > > +		/* We'll drive 40 (TX), so no pull */
+>> >
+>> > The rationales for RTS and TX contradict each other. According to the
+>> > comment
+>> > the reason to configure a pull-down on RTS is that it is driven by the
+>> > host.
+>> > Then for TX the reason to configure no pull is that it is driven by the
+>> > host.
+>> >
+>> > Please make sure the comments *really* describe the rationale, otherwise
+>> > they
+>> > are just confusing.
+>> 
+>> The rationale for RTS is that we don't want it to be floating and want 
+>> to
+>> make sure that it is pulled down, to receive bytes. Will modify the 
+>> comment
+>> mentioning the same.
+> 
+> Could you clarify what you mean with "to receive bytes"?
+> 
+
+When we keep no-pull(floating), sometimes it may be pulled high and UART 
+flow will be turned off(RFR_NOT_READY), due to this BT SoC wont be able 
+to send data even though host is ready.
+
+> Thanks
+> 
+> Matthias
+
+Thanks,
+Satya Priya
