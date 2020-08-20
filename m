@@ -2,110 +2,122 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=BAYES_00,
-	BUG6152_INVALID_DATE_TZ_ABSURD,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF35C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B274C433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B482C207DA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="15AVGYQZ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jq+AXIL+"
+	by mail.kernel.org (Postfix) with ESMTP id 58DAA207DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 22:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597961509;
+	bh=hQLn8f05VaasNn8PdcyJKXuA9IhbW747RfOgp0dwy1A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=eGgq9qBd12Ez94aJfnhjqv8vLKh6ktbVk4af2IZrOUMDnyZXg3cXz3IjlYZs4RIdO
+	 hoKveS2wlflJd820+wQi2PMBXW7pKHNPqjHSqKotZDeiUjx4ItbR4bNyr/nG8LjBUB
+	 OqGVUfKZpLCJUeQPPRVFrZUW4rDkYPj4AJCPYxLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgHTWLW (ORCPT
+        id S1728435AbgHTWLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 18:11:22 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:51056 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgHTWLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 18:11:21 -0400
-From:   John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1597961478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zglLHRJDp8t8DRRuLZuvKBensI8bwuAzUgeKOh3U1e4=;
-        b=15AVGYQZJK+HhXN5oPTjvA+2c5fu3tHTcu632JtlVChloFRhnfxQbor+5vbwQrkcLjgUL9
-        EcbHAunL/6BeAwdywBTJtUJwYs6thXYcTknSH34AeCSemujFEKm2XcqORiZTky+nPtfCxg
-        ar1RRhdb052acTQEsET9NUz1WPHDa6oAi3NkeztiptF1cw1VEQQNMTn1+zJPxQGcGykmsc
-        hp9Ah1HM7A0aC2qBgpXkT2WPm5awF9T5YmHOTvApQdpuieokpqCFGsR6WoOf9VgUvfdmMm
-        dLLtQiyizER+0Ns30CcMd1CWIzyPi0+sIS4t9RtYtHNBPe2vmdBtE9Smh0xReg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1597961478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zglLHRJDp8t8DRRuLZuvKBensI8bwuAzUgeKOh3U1e4=;
-        b=jq+AXIL+qmrkdoE5qBqzZ9r1zdvalMOfBI4nJbi6uDhWIDn2fUZgoZpmpa2wtzEjmTZSBf
-        7cq48yOgpJV57SBQ==
-To:     Joe Perches <joe@perches.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 2/5] sysrq: use pr_cont_t for cont messages
-In-Reply-To: <472f2e553805b52d9834d64e4056db965edee329.camel@perches.com>
-References: <20200819232632.13418-1-john.ogness@linutronix.de> <20200819232632.13418-3-john.ogness@linutronix.de> <CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com> <472f2e553805b52d9834d64e4056db965edee329.camel@perches.com>
-Date:   Fri, 21 Aug 2020 00:17:18 +0206
-Message-ID: <87364hge7t.fsf@jogness.linutronix.de>
+        Thu, 20 Aug 2020 18:11:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbgHTWLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 18:11:45 -0400
+Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0922E207DA;
+        Thu, 20 Aug 2020 22:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597961504;
+        bh=hQLn8f05VaasNn8PdcyJKXuA9IhbW747RfOgp0dwy1A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=JisBUDGzywd0EU23tAc0zxOcZggfK7/Yd5/DGGteUVJ0i+5IAoF2IZ2egdnOYRgma
+         dUi3XDECWHRabaC0FReJ92JAeL9UPMku0wh2iJ86Z5uPar0R9NH+NaFnTq7SHDsUGH
+         ukorNBEAIcX5CE4gLT0W0pStS0c2rDhhfZZiFa0Y=
+Date:   Thu, 20 Aug 2020 17:11:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Cc:     ray.jui@broadcom.com, sbranden@broadcom.com, f.fainelli@gmail.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: Reduce warnings on possible RW1C corruption
+Message-ID: <20200820221142.GA1571008@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200806041455.11070-1-mark.tomlinson@alliedtelesis.co.nz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-20, Joe Perches <joe@perches.com> wrote:
-> And here it seems like the 'for (j =...)' loop is superfluous.
+On Thu, Aug 06, 2020 at 04:14:55PM +1200, Mark Tomlinson wrote:
+> For hardware that only supports 32-bit writes to PCI there is the
+> possibility of clearing RW1C (write-one-to-clear) bits. A rate-limited
+> messages was introduced by fb2659230120, but rate-limiting is not the
+> best choice here. Some devices may not show the warnings they should if
+> another device has just produced a bunch of warnings. Also, the number
+> of messages can be a nuisance on devices which are otherwise working
+> fine.
+> 
+> This patch changes the ratelimit to a single warning per bus. This
+> ensures no bus is 'starved' of emitting a warning and also that there
+> isn't a continuous stream of warnings. It would be preferable to have a
+> warning per device, but the pci_dev structure is not available here, and
+> a lookup from devfn would be far too slow.
+> 
+> Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
+> Fixes: fb2659230120 ("PCI: Warn on possible RW1C corruption for sub-32 bit config writes")
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 
-AFAICT it is skipping duplicate entries. In the case of a duplicate,
-only the first one is printed.
+Applied with collected reviews/acks to pci/enumeration for v5.10,
+thanks!
 
-> Maybe something like this would be reasonable:
 > ---
->  drivers/tty/sysrq.c | 19 ++++++-------------
->  1 file changed, 6 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index a8e39b2cdd55..a145e4fc1a2a 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -572,21 +572,14 @@ void __handle_sysrq(int key, bool check_mask)
->  			console_loglevel = orig_log_level;
->  		}
->  	} else {
-> -		pr_info("HELP : ");
-> -		/* Only print the help msg once per handler */
-> +		pr_context c;
-> +		pr_info_start(&c, "HELP :");
->  		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
-> -			if (sysrq_key_table[i]) {
-> -				int j;
-> -
-> -				for (j = 0; sysrq_key_table[i] !=
-> -						sysrq_key_table[j]; j++)
-> -					;
-> -				if (j != i)
-> -					continue;
-> -				pr_cont("%s ", sysrq_key_table[i]->help_msg);
-> -			}
-> +			if (!sysrq_key_table[i])
-> +				continue;
-> +			pr_next(&c, " %s", sysrq_key_table[i]->help_msg);
->  		}
-> -		pr_cont("\n");
-> +		pr_end(&c, "\n");
->  		console_loglevel = orig_log_level;
->  	}
->  	rcu_read_unlock();
+> changes in v4:
+>  - Use bitfield rather than bool to save memory (was meant to be in v3).
+> 
+>  drivers/pci/access.c | 9 ++++++---
+>  include/linux/pci.h  | 1 +
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 79c4a2ef269a..b452467fd133 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -160,9 +160,12 @@ int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+>  	 * write happen to have any RW1C (write-one-to-clear) bits set, we
+>  	 * just inadvertently cleared something we shouldn't have.
+>  	 */
+> -	dev_warn_ratelimited(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> -			     size, pci_domain_nr(bus), bus->number,
+> -			     PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +	if (!bus->unsafe_warn) {
+> +		dev_warn(&bus->dev, "%d-byte config write to %04x:%02x:%02x.%d offset %#x may corrupt adjacent RW1C bits\n",
+> +			 size, pci_domain_nr(bus), bus->number,
+> +			 PCI_SLOT(devfn), PCI_FUNC(devfn), where);
+> +		bus->unsafe_warn = 1;
+> +	}
+>  
+>  	mask = ~(((1 << (size * 8)) - 1) << ((where & 0x3) * 8));
+>  	tmp = readl(addr) & mask;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 34c1c4f45288..85211a787f8b 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -626,6 +626,7 @@ struct pci_bus {
+>  	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+>  	struct bin_attribute	*legacy_mem;	/* Legacy mem */
+>  	unsigned int		is_added:1;
+> +	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
+>  };
+>  
+>  #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+> -- 
+> 2.28.0
+> 
