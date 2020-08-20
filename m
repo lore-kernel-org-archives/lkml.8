@@ -2,129 +2,141 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B07C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F579C433E4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0C932078D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57BD62078D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 01:22:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XxgsNqxM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QecQW2KN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbgHTBVn (ORCPT
+        id S1726732AbgHTBWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 21:21:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38496 "EHLO
+        Wed, 19 Aug 2020 21:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbgHTBVm (ORCPT
+        with ESMTP id S1726700AbgHTBV7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 21:21:42 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C92C061383
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:41 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id kq25so687532ejb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:41 -0700 (PDT)
+        Wed, 19 Aug 2020 21:21:59 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA79C061383
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:58 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id 185so373994ljj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 18:21:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=clSRpeeAhBeOa1Z/EGoW+BCJ0W1c3rpm/3iMv3CQBEg=;
-        b=XxgsNqxMJXLMCQt0hvVtovYPMv5lUeVtNbekV18RPRgTSr0lhWryi6qkLfR94gGEFA
-         PztV185NnjB+IYrEZe/xikgYrOfWzJcB4lRxCVUsGayaD7bm8YHeNDsf/DamWw8BVs2k
-         +C5RLMsYP77t9xELeLr7BZ8TE9RPDTxUtbOCnIfrcwrBw8y3WSH+0ZHY3lxyoFNYInmd
-         TDJMfUOKVrH8E2/fkwXZ0LCI2QSnPDsF872t5RLF6bYhssrqv69dNmVY8+Eghelm3/l9
-         teR8GTfWk0l6Uls7pTmAylPqw9UetBvz7mVqC+Lfnnr+ldA5FBptPQ9RJUdzYhBT78hX
-         yNTA==
+        bh=f2YYW8edHeX1XU5Hyd3BTnCfsz4e6RGc2J6WqCLqZNs=;
+        b=QecQW2KN7UqoOPEbPzIa1X6BNdwEoPIK3Zx/Cz1cbaaaWzq0I96Bg2sxEjLXoWhVuK
+         PbvXHn2Uii0TYpGDnCXfHmmE5XrHtrf1FGFTrn8xLggR1p7SiGD9AVvWs4E17GLlQa7i
+         +9RrO2pb+ivo2qh5kdDdamSMyool04JXjvdTpV/WTFdoqvC3TWaq+DcnVBQyRrWAkEpv
+         zXGfccmBw8kfZ3Bt8Ot5yOjSVYSdr5sTrBrHT/1eU3R2BLyb/87hGhY7iwc/z+zSRxBS
+         oAePzBtUQ7cH/w548Cl4Y81xeBa3/xsK+VsEs77pv6y3y7buQY14LPj6t2wYozvtscQN
+         x5vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=clSRpeeAhBeOa1Z/EGoW+BCJ0W1c3rpm/3iMv3CQBEg=;
-        b=r4GfIik/+6zkqaiwSSrRN177qKhOHjvZxkARFhdA3xZmYC4pJt1p5dOpGGDoF/bWIX
-         KhXxUmEJiaWoU8FmdUD0zNRZq3w9TmKELoOjEs7SDjpDQNUs3heuwSf9FPwYSenpmzTk
-         smd8qPyYcYVKyYN9ZgFdRGPL6bpVCzZqQpYA22/i0nqtkSyHI4Llm/VUZAUYhtgBo1tW
-         0tBIYCmwe65ljcwcUlnLMlOcFxvgtxcVHMt5xohkGNyI6d7B2tvRoxyrCV4aDaGx+QQP
-         HwBEuuFX2TtEQXJLW4tOGFJGgbRVsk+DQTYjMrTuuVVRSDCdKyUheth4Zef+VO3xrCcf
-         XjmQ==
-X-Gm-Message-State: AOAM5309JWXdnkq+EEEbk+17YyqyzG+BVHuN+czLH++C6QAXOVcZlG87
-        fXLPh6UtCRxjms66s6/HpXuz62x+GlGYQBdOFdTA
-X-Google-Smtp-Source: ABdhPJy5YCNpJnv1Y/CpvGqmyFX6PcYJ+U9KLCqrkT4JqKRby0aWCLgHjSuUt8brRGEdtFouaOnueCCnkewqCmUMGeo=
-X-Received: by 2002:a17:906:c1d8:: with SMTP id bw24mr998580ejb.91.1597886500276;
- Wed, 19 Aug 2020 18:21:40 -0700 (PDT)
+        bh=f2YYW8edHeX1XU5Hyd3BTnCfsz4e6RGc2J6WqCLqZNs=;
+        b=baNQNqPiIwmml+8lmy/3caRg4IA4ZupdBElmk/o1e5k4K5NNGiALolw4qH9hV7kTpq
+         6imIN0NUDJ2/7heWzfpsqWmTnS81qFz/oqgGUVqswKbPHL+V5vYlVlGgBMPeexqNLyE6
+         Vv2r3SAmFoKwr6U9DGR6y0XORwRPlXsRiKpqtPgVPsKHGb/jYIu1ikzViQjuDW4Hzf/e
+         sKR9h6h+57zjC5blJBSR89nT8fyKTJA/vX7l/hQPaBYgGyTtiU4BkAEx4OlP225U7pUk
+         7pLmoohMci2p931YyJkFHqNQQcmzZtDcnp/wT48iQCIypE7HSur5n4lI9XjyoE1ZVB9a
+         cVJA==
+X-Gm-Message-State: AOAM530jr6Xz682622LCQ2CCOa0KLNOO5fIwpa2fbPw3r7rrihuFKhoQ
+        ar9Ci4s0vIQe1n8D3ut2EUSALcDeFYB52mhnk6cnug==
+X-Google-Smtp-Source: ABdhPJw37D5+GBoWe31O7oE4FkKmrNPnt4yXn6gWy6RLRKh0JBcxDx/XhFlwEmWfYkIVaYDsUe1DzfQA3e5OU0nIeHk=
+X-Received: by 2002:a2e:9396:: with SMTP id g22mr442161ljh.446.1597886516487;
+ Wed, 19 Aug 2020 18:21:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
- <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com> <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
- <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com> <20200820083111.46e81b4c@canb.auug.org.au>
-In-Reply-To: <20200820083111.46e81b4c@canb.auug.org.au>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 19 Aug 2020 21:21:29 -0400
-Message-ID: <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
-Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
- interrupt - RIP: 0010:security_port_sid
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
-        Kent Overstreet <kent.overstreet@gmail.com>
+References: <20200818072501.30396-1-sjpark@amazon.com>
+In-Reply-To: <20200818072501.30396-1-sjpark@amazon.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 19 Aug 2020 18:21:44 -0700
+Message-ID: <CALvZod6RS66aSFjWHvpbjuinz2mwbGDnz+gh5L7dp+c3D_Zy1w@mail.gmail.com>
+Subject: Re: [RFC v7 00/10] DAMON: Support Physical Memory Address Space Monitoring
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        SeongJae Park <sjpark@amazon.de>, Jonathan.Cameron@huawei.com,
+        Andrea Arcangeli <aarcange@redhat.com>, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Qian Cai <cai@lca.pw>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        David Hildenbrand <david@redhat.com>, dwmw@amazon.com,
+        "Du, Fan" <fan.du@intel.com>, foersleo@amazon.de,
+        Greg Thelen <gthelen@google.com>,
+        Ian Rogers <irogers@google.com>, jolsa@redhat.com,
+        "Kirill A. Shutemov" <kirill@shutemov.name>, mark.rutland@arm.com,
+        Mel Gorman <mgorman@suse.de>, Minchan Kim <minchan@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, namhyung@kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, rppt@kernel.org,
+        sblbir@amazon.com, shuah@kernel.org, sj38.park@gmail.com,
+        snu@amazon.de, Vlastimil Babka <vbabka@suse.cz>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Huang Ying <ying.huang@intel.com>, zgf574564920@gmail.com,
+        linux-damon@amazon.com, Linux MM <linux-mm@kvack.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 6:31 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Hi all,
+On Tue, Aug 18, 2020 at 12:25 AM SeongJae Park <sjpark@amazon.com> wrote:
 >
-> On Wed, 19 Aug 2020 11:12:44 -0400 Stephen Smalley <stephen.smalley.work@gmail.com> wrote:
-> >
-> > Fix can be found at:https://patchwork.kernel.org/patch/11724203/
-> > <https://patchwork.kernel.org/patch/11724203/>
+> From: SeongJae Park <sjpark@amazon.de>
 >
-> Thanks.
+> Changes from Previous Version
+> =============================
 >
-> I will add that to the selinux tree merge in linux-next until it turns
-> up in the tree.
+> - Use 42 as the fake target id for paddr instead of -1
+> - Fix a typo
+>
+> Introduction
+> ============
+>
+> DAMON[1] programming interface users can extend DAMON for any address space by
+> configuring the address-space specific low level primitives with appropriate
+> ones including their own implementations.  However, because the implementation
+> for the virtual address space is only available now, the users should implement
+> their own for other address spaces.  Worse yet, the user space users who rely
+> on the debugfs interface and user space tool, cannot implement their own.
+>
+> This patchset implements another reference implementation of the low level
+> primitives for the physical memory address space.  With this change, hence, the
+> kernel space users can monitor both the virtual and the physical address spaces
+> by simply changing the configuration in the runtime.  Further, this patchset
+> links the implementation to the debugfs interface and the user space tool for
+> the user space users.
+>
+> Note that the implementation supports only the user memory, as same to the idle
+> page access tracking feature.
+>
+> [1] https://lore.kernel.org/linux-mm/20200706115322.29598-1-sjpark@amazon.com/
+>
 
-FYI, I just merged that patch into the selinux/next tree.
+I am still struggling to find the benefit of this feature the way it
+is implemented i.e. region based physical address space monitoring.
+What exactly am I supposed to do for a given hot (or cold) physical
+region? In a containerized world, that region can contain pages from
+any cgroup. I can not really do anything about the accesses PHY-DAMON
+provides me for a region.
 
-  commit 37ea433c66070fcef09c6d118492c36299eb72ba
-  Author: Stephen Smalley <stephen.smalley.work@gmail.com>
-  Date:   Wed Aug 19 09:45:41 2020 -0400
-
-   selinux: avoid dereferencing the policy prior to initialization
-
-   Certain SELinux security server functions (e.g. security_port_sid,
-   called during bind) were not explicitly testing to see if SELinux
-   has been initialized (i.e. initial policy loaded) and handling
-   the no-policy-loaded case.  In the past this happened to work
-   because the policydb was statically allocated and could always
-   be accessed, but with the recent encapsulation of policy state
-   and conversion to dynamic allocation, we can no longer access
-   the policy state prior to initialization.  Add a test of
-   !selinux_initialized(state) to all of the exported functions that
-   were missing them and handle appropriately.
-
-   Fixes: 461698026ffa ("selinux: encapsulate policy state, refactor ...")
-   Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-   Tested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-   Signed-off-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-   Signed-off-by: Paul Moore <paul@paul-moore.com>
-
--- 
-paul moore
-www.paul-moore.com
+Now if you give me per-page information that would be useful as I can
+at least get per-cgroup accesses (idle or re-use data) but that would
+be as costly as Page Idle Tracking.
