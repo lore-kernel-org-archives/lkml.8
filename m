@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEE2C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B07CC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83F8E204EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42058204EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597923096;
-	bh=/tn2C9sMZ3N8al5pyHXYeWvuudYtqcDjzQ1Yqw5bKyw=;
+	s=default; t=1597923256;
+	bh=Bnhybgps70jCzF8JjGbVuzfSU5kD4eHDHTpa2CI03wY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJYVsMPfRkpo2o+8gQMkSBR6/lVvj66Z+3T1zfw1TVXC/i24FIlTdOtLUuroACr3K
-	 naak8+oniqhcN5L1WPJsyKzDKWd32K8IAzWD4UJW3yYHlV5vL+IjCvHScpHq36y48B
-	 4zCSsfMSUsv9aakd2+sDE5MZzQsxQmzhUcgZMPhE=
+	b=yuvxrIqqBcuMUbcWrtpXBeGCGYAMKXuvPIg+ob9eT8HCb1mULZ6O8k47Go+8+HBx8
+	 G9moRuXckB1xrbfY0OqdL378aM+x2wcM/b9/s+ztGdMUgij7kGXinCA+CjGjBE3lWE
+	 IzBMX1xwRd/LSVbw1pOV8q2p6adW45sMsauJbxLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbgHTLbc (ORCPT
+        id S1730435AbgHTLcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:31:32 -0400
+        Thu, 20 Aug 2020 07:32:12 -0400
 Received: from mail.kernel.org ([198.145.29.99]:60688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbgHTKFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:05:49 -0400
+        id S1730579AbgHTKFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:05:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B4F520738;
-        Thu, 20 Aug 2020 10:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B7C720724;
+        Thu, 20 Aug 2020 10:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917948;
-        bh=/tn2C9sMZ3N8al5pyHXYeWvuudYtqcDjzQ1Yqw5bKyw=;
+        s=default; t=1597917940;
+        bh=Bnhybgps70jCzF8JjGbVuzfSU5kD4eHDHTpa2CI03wY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XPZ5RPdPz4ANqauT3XwjLln/eDjgjUYQ3AUfxOFZ/PRQQpER4txQ/eFHyxViIX6i3
-         U4253cD9amA2hyEY9Fj1xMk2wdYcNtcV3uV1IGM+Wm9vRiplVvm7+bViNknMcAUl6r
-         qTcJHJ/jejBszMYtxUo9rwVVN6WC5mG3ERPIOXI0=
+        b=mrv82OfNLdfVvCBIQLR6p7u6J7KvPUMZ+3WDYeht5b1RSRlq4Si5sjVySu1/wDRuz
+         uBylqH/2AhgdM3BTaucbo4iQQzvUSBjylcK4/4HHWUyLq1jAoxPw+6YKhLb90LZbH6
+         RN0yqnlk9K4pzZkd4FMOcTNTAD3EijpLoOxh7EUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 199/212] i2c: rcar: slave: only send STOP event when we have been addressed
-Date:   Thu, 20 Aug 2020 11:22:52 +0200
-Message-Id: <20200820091612.407762309@linuxfoundation.org>
+        Oscar Salvador <osalvador@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>
+Subject: [PATCH 4.9 211/212] mm: Avoid calling build_all_zonelists_init under hotplug context
+Date:   Thu, 20 Aug 2020 11:23:04 +0200
+Message-Id: <20200820091612.997125429@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -60,55 +60,161 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Oscar Salvador <osalvador@suse.de>
 
-[ Upstream commit 314139f9f0abdba61ed9a8463bbcb0bf900ac5a2 ]
+Recently a customer of ours experienced a crash when booting the
+system while enabling memory-hotplug.
 
-When the SSR interrupt is activated, it will detect every STOP condition
-on the bus, not only the ones after we have been addressed. So, enable
-this interrupt only after we have been addressed, and disable it
-otherwise.
+The problem is that Normal zones on different nodes don't get their private
+zone->pageset allocated, and keep sharing the initial boot_pageset.
+The sharing between zones is normally safe as explained by the comment for
+boot_pageset - it's a percpu structure, and manipulations are done with
+disabled interrupts, and boot_pageset is set up in a way that any page placed
+on its pcplist is immediately flushed to shared zone's freelist, because
+pcp->high == 1.
+However, the hotplug operation updates pcp->high to a higher value as it
+expects to be operating on a private pageset.
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The problem is in build_all_zonelists(), which is called when the first range
+of pages is onlined for the Normal zone of node X or Y:
+
+	if (system_state == SYSTEM_BOOTING) {
+		build_all_zonelists_init();
+	} else {
+	#ifdef CONFIG_MEMORY_HOTPLUG
+		if (zone)
+			setup_zone_pageset(zone);
+	#endif
+		/* we have to stop all cpus to guarantee there is no user
+		of zonelist */
+		stop_machine(__build_all_zonelists, pgdat, NULL);
+		/* cpuset refresh routine should be here */
+	}
+
+When called during hotplug, it should execute the setup_zone_pageset(zone)
+which allocates the private pageset.
+However, with memhp_default_state=online, this happens early while
+system_state == SYSTEM_BOOTING is still true, hence this step is skipped.
+(and build_all_zonelists_init() is probably unsafe anyway at this point).
+
+Another hotplug operation on the same zone then leads to zone_pcp_update(zone)
+called from online_pages(), which updates the pcp->high for the shared
+boot_pageset to a value higher than 1.
+At that point, pages freed from Node X and Y Normal zones can end up on the same
+pcplist and from there they can be freed to the wrong zone's freelist,
+leading to the corruption and crashes.
+
+Please, note that upstream has fixed that differently (and unintentionally) by
+adding another boot state (SYSTEM_SCHEDULING), which is set before smp_init().
+That should happen before memory hotplug events even with memhp_default_state=online.
+Backporting that would be too intrusive.
+
+Signed-off-by: Oscar Salvador <osalvador@suse.de>
+Debugged-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Michal Hocko <mhocko@suse.com> # for stable trees
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ include/linux/mmzone.h |    3 ++-
+ init/main.c            |    2 +-
+ mm/memory_hotplug.c    |   10 +++++-----
+ mm/page_alloc.c        |    7 ++++---
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 93b8069041bb1..4231673435e7b 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -527,13 +527,14 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
- 			rcar_i2c_write(priv, ICSIER, SDR | SSR | SAR);
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -756,7 +756,8 @@ static inline bool is_dev_zone(const str
+ #include <linux/memory_hotplug.h>
+ 
+ extern struct mutex zonelists_mutex;
+-void build_all_zonelists(pg_data_t *pgdat, struct zone *zone);
++void build_all_zonelists(pg_data_t *pgdat, struct zone *zone,
++			 bool hotplug_context);
+ void wakeup_kswapd(struct zone *zone, int order, enum zone_type classzone_idx);
+ bool __zone_watermark_ok(struct zone *z, unsigned int order, unsigned long mark,
+ 			 int classzone_idx, unsigned int alloc_flags,
+--- a/init/main.c
++++ b/init/main.c
+@@ -512,7 +512,7 @@ asmlinkage __visible void __init start_k
+ 	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
+ 	boot_cpu_hotplug_init();
+ 
+-	build_all_zonelists(NULL, NULL);
++	build_all_zonelists(NULL, NULL, false);
+ 	page_alloc_init();
+ 
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1125,7 +1125,7 @@ int __ref online_pages(unsigned long pfn
+ 	mutex_lock(&zonelists_mutex);
+ 	if (!populated_zone(zone)) {
+ 		need_zonelists_rebuild = 1;
+-		build_all_zonelists(NULL, zone);
++		build_all_zonelists(NULL, zone, true);
+ 	}
+ 
+ 	ret = walk_system_ram_range(pfn, nr_pages, &onlined_pages,
+@@ -1146,7 +1146,7 @@ int __ref online_pages(unsigned long pfn
+ 	if (onlined_pages) {
+ 		node_states_set_node(nid, &arg);
+ 		if (need_zonelists_rebuild)
+-			build_all_zonelists(NULL, NULL);
++			build_all_zonelists(NULL, NULL, true);
+ 		else
+ 			zone_pcp_update(zone);
+ 	}
+@@ -1220,7 +1220,7 @@ static pg_data_t __ref *hotadd_new_pgdat
+ 	 * to access not-initialized zonelist, build here.
+ 	 */
+ 	mutex_lock(&zonelists_mutex);
+-	build_all_zonelists(pgdat, NULL);
++	build_all_zonelists(pgdat, NULL, true);
+ 	mutex_unlock(&zonelists_mutex);
+ 
+ 	/*
+@@ -1276,7 +1276,7 @@ int try_online_node(int nid)
+ 
+ 	if (pgdat->node_zonelists->_zonerefs->zone == NULL) {
+ 		mutex_lock(&zonelists_mutex);
+-		build_all_zonelists(NULL, NULL);
++		build_all_zonelists(NULL, NULL, true);
+ 		mutex_unlock(&zonelists_mutex);
+ 	}
+ 
+@@ -2016,7 +2016,7 @@ repeat:
+ 	if (!populated_zone(zone)) {
+ 		zone_pcp_reset(zone);
+ 		mutex_lock(&zonelists_mutex);
+-		build_all_zonelists(NULL, NULL);
++		build_all_zonelists(NULL, NULL, true);
+ 		mutex_unlock(&zonelists_mutex);
+ 	} else
+ 		zone_pcp_update(zone);
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4608,7 +4608,7 @@ int numa_zonelist_order_handler(struct c
+ 			user_zonelist_order = oldval;
+ 		} else if (oldval != user_zonelist_order) {
+ 			mutex_lock(&zonelists_mutex);
+-			build_all_zonelists(NULL, NULL);
++			build_all_zonelists(NULL, NULL, false);
+ 			mutex_unlock(&zonelists_mutex);
  		}
- 
--		rcar_i2c_write(priv, ICSSR, ~SAR & 0xff);
-+		/* Clear SSR, too, because of old STOPs to other clients than us */
-+		rcar_i2c_write(priv, ICSSR, ~(SAR | SSR) & 0xff);
  	}
+@@ -4988,11 +4988,12 @@ build_all_zonelists_init(void)
+  * (2) call of __init annotated helper build_all_zonelists_init
+  * [protected by SYSTEM_BOOTING].
+  */
+-void __ref build_all_zonelists(pg_data_t *pgdat, struct zone *zone)
++void __ref build_all_zonelists(pg_data_t *pgdat, struct zone *zone,
++			       bool hotplug_context)
+ {
+ 	set_zonelist_order();
  
- 	/* master sent stop */
- 	if (ssr_filtered & SSR) {
- 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
--		rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+		rcar_i2c_write(priv, ICSIER, SAR);
- 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
- 	}
- 
-@@ -762,7 +763,7 @@ static int rcar_reg_slave(struct i2c_client *slave)
- 	priv->slave = slave;
- 	rcar_i2c_write(priv, ICSAR, slave->addr);
- 	rcar_i2c_write(priv, ICSSR, 0);
--	rcar_i2c_write(priv, ICSIER, SAR | SSR);
-+	rcar_i2c_write(priv, ICSIER, SAR);
- 	rcar_i2c_write(priv, ICSCR, SIE | SDBS);
- 
- 	return 0;
--- 
-2.25.1
-
+-	if (system_state == SYSTEM_BOOTING) {
++	if (system_state == SYSTEM_BOOTING && !hotplug_context) {
+ 		build_all_zonelists_init();
+ 	} else {
+ #ifdef CONFIG_MEMORY_HOTPLUG
 
 
