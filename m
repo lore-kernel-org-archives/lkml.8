@@ -2,134 +2,93 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C4CC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26974C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9500D208E4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C0A22CB2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915886;
-	bh=RNUcBcNTkD1GFy4fHwktE1gUYbc2wxtI+X1AHVFZdjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F8jY+96lg9moDSopg8WD7VJDW40FnBLxZUk45exyAOHhjF2m9KY392e7/v9sTd3O8
-	 CI8LUd4IZQxnkZ0qGlBZaAnfxt9xWUm3MRmJf9pRVRezgIValfO381e1qf1s6h12OR
-	 jjjQ4iZXjuiIY4MzcHPqFcFhrWWL8XGsXChIcO30=
+	s=default; t=1597915895;
+	bh=/zLRCStyhmJwJVkJgpnaOzUtTQF6qgqz6lJqCLgWIws=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=sOJNPf3teSVTr2cSenDCAQAvEKg43p1MkV7cPxO9bGmzilO9KrnqVlYLWFSPSvLyr
+	 VhxkzhN+enjGBaPqNMah//WRX6mKgWlEtIHPV3ikjB1IDcUS0gvn/u1ie8Ak5iwR5g
+	 CTl8FbJUHpcbjGO6gB0tYDw645JHsGLhzLMmCIVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgHTJbY (ORCPT
+        id S1727972AbgHTJbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbgHTJa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:31:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33543 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727034AbgHTJa6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:30:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57B4420724;
-        Thu, 20 Aug 2020 09:30:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915857;
-        bh=RNUcBcNTkD1GFy4fHwktE1gUYbc2wxtI+X1AHVFZdjk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gC8Zicp+S/EiipPYosB3tPN48yidcc/BY6qSibYHG1bsf2gk7oCROiYAEpqeVpJtV
-         ipT0Ge8cJbqAQXLArX9lg86LYDY2czI51GgrKApuByiJU74MwHfQlpDt6PfZB8zL71
-         40Qf+RWoRn4f472U7pCVw8FW3dl2Umviszu7vX40=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 129/232] IB/uverbs: Set IOVA on IB MR in uverbs layer
-Date:   Thu, 20 Aug 2020 11:19:40 +0200
-Message-Id: <20200820091619.064879283@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-wm1-f66.google.com with SMTP id f18so3370707wmc.0;
+        Thu, 20 Aug 2020 02:30:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Hma56AddZUeGIsGjGqDeo/64eZyNigdifLybdInzONE=;
+        b=aXG8m8gjj/HQ7d5ZXshy23qFDkdPBCx0tb1dI6169BpbZdl5cSU0yy4ycEQgK/ZpEq
+         NkJwIg+GIlJTC22rYoEHoAHqzwWhNrZ8t8LFoXgusyaxBASEJHp6L742USCRYu7S8UGY
+         fVYFjdbhPML2eq8aYF4cYBSPpgb8qUM6oOQKs/wRmlpSQdVFZicpw5E2FzcWB1LdBG5d
+         ckEyEwro8MkuqkbyMOetahTHjFoaewHPDsh42+rXQPuOCKqYEQF/Oj43SYN1PhlPL4lM
+         pjvyEZxvxDe3Y7TZlJ22SeiRZlaaC78fIUbagdLAsojHb9jqQhDg8XD6WvBU7fc1a7wJ
+         tjTg==
+X-Gm-Message-State: AOAM533CbU/uuw3EI7tJeCnhHELKuFx/cQZ5fGjdp5EUNbDWIRbFizue
+        7mzvg5d2OuRR/+fTDuUhNik=
+X-Google-Smtp-Source: ABdhPJyiElaHdN2+8uTn/ho88gakS51vNHVG2yKIz9lnSP1m0ZXbYQwctmo3vc2ZlQAAm6cuIn5Lnw==
+X-Received: by 2002:a7b:c35a:: with SMTP id l26mr2680443wmj.42.1597915856718;
+        Thu, 20 Aug 2020 02:30:56 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id g145sm4136444wmg.23.2020.08.20.02.30.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Aug 2020 02:30:56 -0700 (PDT)
+Date:   Thu, 20 Aug 2020 11:30:53 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Barry Song <baohua@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Mans Rullgard <mans@mansr.com>, Jun Nie <jun.nie@linaro.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [RESEND PATCH 1/5] ARM: dts: prima: Align L2 cache-controller
+ nodename with dtschema
+Message-ID: <20200820093053.GB15884@kozik-lap>
+References: <20200819175853.21492-1-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200819175853.21492-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+On Wed, Aug 19, 2020 at 07:58:49PM +0200, Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache-controller@80040000: $nodename:0:
+>         'l2-cache-controller@80040000' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/prima2.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-[ Upstream commit 04c0a5fcfcf65aade2fb238b6336445f1a99b646 ]
+I forgot to add the tag provided on previous submission:
+Acked-by: Barry Song <baohua@kernel.org>
 
-Set IOVA on IB MR in uverbs layer to let all drivers have it, this
-includes both reg/rereg MR flows.
-As part of this change cleaned-up this setting from the drivers that
-already did it by themselves in their user flows.
-
-Fixes: e6f0330106f4 ("mlx4_ib: set user mr attributes in struct ib_mr")
-Link: https://lore.kernel.org/r/20200630093916.332097-3-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/core/uverbs_cmd.c | 4 ++++
- drivers/infiniband/hw/cxgb4/mem.c    | 1 -
- drivers/infiniband/hw/mlx4/mr.c      | 1 -
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/infiniband/core/uverbs_cmd.c b/drivers/infiniband/core/uverbs_cmd.c
-index b48b3f6e632d4..557644dcc9237 100644
---- a/drivers/infiniband/core/uverbs_cmd.c
-+++ b/drivers/infiniband/core/uverbs_cmd.c
-@@ -770,6 +770,7 @@ static int ib_uverbs_reg_mr(struct uverbs_attr_bundle *attrs)
- 	mr->uobject = uobj;
- 	atomic_inc(&pd->usecnt);
- 	mr->res.type = RDMA_RESTRACK_MR;
-+	mr->iova = cmd.hca_va;
- 	rdma_restrack_uadd(&mr->res);
- 
- 	uobj->object = mr;
-@@ -861,6 +862,9 @@ static int ib_uverbs_rereg_mr(struct uverbs_attr_bundle *attrs)
- 		atomic_dec(&old_pd->usecnt);
- 	}
- 
-+	if (cmd.flags & IB_MR_REREG_TRANS)
-+		mr->iova = cmd.hca_va;
-+
- 	memset(&resp, 0, sizeof(resp));
- 	resp.lkey      = mr->lkey;
- 	resp.rkey      = mr->rkey;
-diff --git a/drivers/infiniband/hw/cxgb4/mem.c b/drivers/infiniband/hw/cxgb4/mem.c
-index 962dc97a8ff2b..1e4f4e5255980 100644
---- a/drivers/infiniband/hw/cxgb4/mem.c
-+++ b/drivers/infiniband/hw/cxgb4/mem.c
-@@ -399,7 +399,6 @@ static int finish_mem_reg(struct c4iw_mr *mhp, u32 stag)
- 	mmid = stag >> 8;
- 	mhp->ibmr.rkey = mhp->ibmr.lkey = stag;
- 	mhp->ibmr.length = mhp->attr.len;
--	mhp->ibmr.iova = mhp->attr.va_fbo;
- 	mhp->ibmr.page_size = 1U << (mhp->attr.page_size + 12);
- 	pr_debug("mmid 0x%x mhp %p\n", mmid, mhp);
- 	return xa_insert_irq(&mhp->rhp->mrs, mmid, mhp, GFP_KERNEL);
-diff --git a/drivers/infiniband/hw/mlx4/mr.c b/drivers/infiniband/hw/mlx4/mr.c
-index 7e0b205c05eb3..d7c78f841d2f5 100644
---- a/drivers/infiniband/hw/mlx4/mr.c
-+++ b/drivers/infiniband/hw/mlx4/mr.c
-@@ -439,7 +439,6 @@ struct ib_mr *mlx4_ib_reg_user_mr(struct ib_pd *pd, u64 start, u64 length,
- 
- 	mr->ibmr.rkey = mr->ibmr.lkey = mr->mmr.key;
- 	mr->ibmr.length = length;
--	mr->ibmr.iova = virt_addr;
- 	mr->ibmr.page_size = 1U << shift;
- 
- 	return &mr->ibmr;
--- 
-2.25.1
-
-
-
+Best regards,
+Krzysztof
