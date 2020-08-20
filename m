@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00F2F2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30EA22D02
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597927592;
-	bh=+jlW5mBM0KX/G8DIWN/J/SV8dzYCZkFhr/5qSTloDdQ=;
+	s=default; t=1597927604;
+	bh=T2ekYwKMcI9We4WiQ3R5yX/we3RWSUTHfzAp2i/HlHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DiByAlJfCr6nzLpdNmn09wxqXSZa249IPiqRNa67rxVMuLF0rsb4txY6JzwnerQdG
-	 dFQPkeTL/lmWRLDq13RTkN+brmX/w5OgguHuRpJZemSyYTPxDkqwcn5dqj9bHhlJzp
-	 hjUlukhecPlvSd1ER7Bxm1PesCeI9teWO0ZccKug=
+	b=AWVSOBN5M+ezF0Id1Sdh0XW2EnYyI481wkWril9MWKnCk9zNTPquJdAA6n52oTflh
+	 1+XKMVCN7CkdxizvOpPwTUeM/ZS5vwwpk/n+8vOS9N8ogvkEerRHZGY4ZFmwokVYGq
+	 7uGvyICQ/nbewDA6X9KqoTlKrkGb9/iXfM2TRvuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbgHTMqW (ORCPT
+        id S1730221AbgHTMqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:46:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45720 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 08:46:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgHTJpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:45:34 -0400
+        id S1729300AbgHTJph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:45:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9321222D6E;
-        Thu, 20 Aug 2020 09:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18C2B22DA7;
+        Thu, 20 Aug 2020 09:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916700;
-        bh=+jlW5mBM0KX/G8DIWN/J/SV8dzYCZkFhr/5qSTloDdQ=;
+        s=default; t=1597916708;
+        bh=T2ekYwKMcI9We4WiQ3R5yX/we3RWSUTHfzAp2i/HlHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1pF1n7kHFUx/IM0GX2+TPNlxjP394ZY7SUVcZZcBeENsHi4Zbo3MFg7lEvwZSlo1w
-         sm5Bylsi516gZ2mH9anJizy0UlRXov99ay8YPJJOP8q7wdW9A0Y0K2t8jwinLmSpND
-         av8jaPzEsHq9EQtyX7BA2PqQZ8WeHfaukTQB8nJ4=
+        b=bZKqTwClYBrdMTx709v+83qcT6Y278SQCgeof4tZ4G4jWBqHJpiS1cTwMW9bmqPrP
+         LeYzBtXghk0tmUH94SxXabDFTJFhsWFkFkRx8IvJrUo+0Oh6MNk2vcuU/CG92gsjcR
+         wo6X82mpdzOER9SV1SAhp/74br3YXwb1y6fAXL74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [PATCH 5.4 008/152] PCI: qcom: Add support for tx term offset for rev 2.1.0
-Date:   Thu, 20 Aug 2020 11:19:35 +0200
-Message-Id: <20200820091554.056807863@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 019/152] btrfs: add missing check for nocow and compression inode flags
+Date:   Thu, 20 Aug 2020 11:19:46 +0200
+Message-Id: <20200820091554.630806711@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
 References: <20200820091553.615456912@linuxfoundation.org>
@@ -61,61 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ansuel Smith <ansuelsmth@gmail.com>
+From: David Sterba <dsterba@suse.com>
 
-commit de3c4bf648975ea0b1d344d811e9b0748907b47c upstream.
+commit f37c563bab4297024c300b05c8f48430e323809d upstream.
 
-Add tx term offset support to pcie qcom driver need in some revision of
-the ipq806x SoC. Ipq8064 needs tx term offset set to 7.
+User Forza reported on IRC that some invalid combinations of file
+attributes are accepted by chattr.
 
-Link: https://lore.kernel.org/r/20200615210608.21469-9-ansuelsmth@gmail.com
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: stable@vger.kernel.org # v4.5+
+The NODATACOW and compression file flags/attributes are mutually
+exclusive, but they could be set by 'chattr +c +C' on an empty file. The
+nodatacow will be in effect because it's checked first in
+btrfs_run_delalloc_range.
+
+Extend the flag validation to catch the following cases:
+
+  - input flags are conflicting
+  - old and new flags are conflicting
+  - initialize the local variable with inode flags after inode ls locked
+
+Inode attributes take precedence over mount options and are an
+independent setting.
+
+Nocompress would be a no-op with nodatacow, but we don't want to mix
+any compression-related options with nodatacow.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/dwc/pcie-qcom.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ fs/btrfs/ioctl.c |   30 ++++++++++++++++++++++--------
+ 1 file changed, 22 insertions(+), 8 deletions(-)
 
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -45,7 +45,13 @@
- #define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -167,8 +167,11 @@ static int btrfs_ioctl_getflags(struct f
+ 	return 0;
+ }
  
- #define PCIE20_PARF_PHY_CTRL			0x40
-+#define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
-+#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-+
- #define PCIE20_PARF_PHY_REFCLK			0x4C
-+#define PHY_REFCLK_SSP_EN			BIT(16)
-+#define PHY_REFCLK_USE_PAD			BIT(12)
-+
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
- #define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
- #define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
-@@ -343,9 +349,18 @@ static int qcom_pcie_init_2_1_0(struct q
- 		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
- 	}
+-/* Check if @flags are a supported and valid set of FS_*_FL flags */
+-static int check_fsflags(unsigned int flags)
++/*
++ * Check if @flags are a supported and valid set of FS_*_FL flags and that
++ * the old and new flags are not conflicting
++ */
++static int check_fsflags(unsigned int old_flags, unsigned int flags)
+ {
+ 	if (flags & ~(FS_IMMUTABLE_FL | FS_APPEND_FL | \
+ 		      FS_NOATIME_FL | FS_NODUMP_FL | \
+@@ -177,9 +180,19 @@ static int check_fsflags(unsigned int fl
+ 		      FS_NOCOW_FL))
+ 		return -EOPNOTSUPP;
  
-+	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
-+		/* set TX termination offset */
-+		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
-+		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
-+		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	}
-+
- 	/* enable external reference clock */
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
--	val |= BIT(16);
-+	val &= ~PHY_REFCLK_USE_PAD;
-+	val |= PHY_REFCLK_SSP_EN;
- 	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
++	/* COMPR and NOCOMP on new/old are valid */
+ 	if ((flags & FS_NOCOMP_FL) && (flags & FS_COMPR_FL))
+ 		return -EINVAL;
  
- 	ret = reset_control_deassert(res->phy_reset);
++	if ((flags & FS_COMPR_FL) && (flags & FS_NOCOW_FL))
++		return -EINVAL;
++
++	/* NOCOW and compression options are mutually exclusive */
++	if ((old_flags & FS_NOCOW_FL) && (flags & (FS_COMPR_FL | FS_NOCOMP_FL)))
++		return -EINVAL;
++	if ((flags & FS_NOCOW_FL) && (old_flags & (FS_COMPR_FL | FS_NOCOMP_FL)))
++		return -EINVAL;
++
+ 	return 0;
+ }
+ 
+@@ -193,7 +206,7 @@ static int btrfs_ioctl_setflags(struct f
+ 	unsigned int fsflags, old_fsflags;
+ 	int ret;
+ 	const char *comp = NULL;
+-	u32 binode_flags = binode->flags;
++	u32 binode_flags;
+ 
+ 	if (!inode_owner_or_capable(inode))
+ 		return -EPERM;
+@@ -204,22 +217,23 @@ static int btrfs_ioctl_setflags(struct f
+ 	if (copy_from_user(&fsflags, arg, sizeof(fsflags)))
+ 		return -EFAULT;
+ 
+-	ret = check_fsflags(fsflags);
+-	if (ret)
+-		return ret;
+-
+ 	ret = mnt_want_write_file(file);
+ 	if (ret)
+ 		return ret;
+ 
+ 	inode_lock(inode);
+-
+ 	fsflags = btrfs_mask_fsflags_for_type(inode, fsflags);
+ 	old_fsflags = btrfs_inode_flags_to_fsflags(binode->flags);
++
+ 	ret = vfs_ioc_setflags_prepare(inode, old_fsflags, fsflags);
+ 	if (ret)
+ 		goto out_unlock;
+ 
++	ret = check_fsflags(old_fsflags, fsflags);
++	if (ret)
++		goto out_unlock;
++
++	binode_flags = binode->flags;
+ 	if (fsflags & FS_SYNC_FL)
+ 		binode_flags |= BTRFS_INODE_SYNC;
+ 	else
 
 
