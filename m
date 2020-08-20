@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C170DC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF9CC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99C1420724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9F1206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920919;
-	bh=NF9kcntLa0PLq0NPePJuMziGeFLz7qScJquirh2Md/Y=;
+	s=default; t=1597920921;
+	bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwGziiKsY6WAjAA1Ucbhdg9svtqH7X/gztNDJcWse3XKdcibe1jkPJnVbp5qhiuuy
-	 5hlvt5joDsitggVaw6FGScTJJw9jIUxvSXQkpCVHpzhbb3krMkE0Xsa2GB4+o6tlF2
-	 2+Kbx1DrjENR9aSdIvRy81sXrFwPOFfGVFGnNW0k=
+	b=Yy9s66z3ngq0ELXUbr35hdgI+EexYrR/2jilSIKijCb7+rGVkbCDo/YO6+MT6Lau+
+	 Uh8Ix5BRX5hTFUNKj3JXv2wmbV2qxHVMJcYJSVzeGk29PLXEFbyGzaU66y3X78LW+X
+	 2sY4n3dOEaKab3+W7RpAtPOJ3iT5lOfWQY9ZdUUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730173AbgHTKzM (ORCPT
+        id S1726215AbgHTKzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:55:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60748 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:55:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730345AbgHTKOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:16 -0400
+        id S1731157AbgHTKOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248B2206DA;
-        Thu, 20 Aug 2020 10:14:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B23A20724;
+        Thu, 20 Aug 2020 10:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918456;
-        bh=NF9kcntLa0PLq0NPePJuMziGeFLz7qScJquirh2Md/Y=;
+        s=default; t=1597918454;
+        bh=80d02pedfTpF3cSJbY6um8Fk5bv/JNoyRNqEAFcDkBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DXVwbBYQWH8GlCoiJyiyzMRYovkOKnkspmkGy2WlgS4xI1aXR4NUDyt9Lm1DszTe5
-         TAHa2KQJKruOCQzRiyJy+61ulyBfCk02ha8wL/1rNgOeuRz/3DrGBLzL9Vu8G8QlUW
-         KHZ8vY5/u9sxBLVKlOKNwb6Wqe2F02yx6J93jsig=
+        b=N3wMT0kw8qHm/ksn4r+AFdozLRNzMO88B2kHNxL51ortA4PX+9D13NMVvPjaKSZnZ
+         a1HyzHA2dXa2OXPZRp55z95O2leurhuLYfemDHMMsd9KhpHNg40V4xIlOc8+42UxCz
+         OapqHvo3aVcgXP+P+gQKnXaWv+tjaYGw60RbIdSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan McDowell <noodles@earth.li>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 176/228] net: ethernet: stmmac: Disable hardware multicast filter
-Date:   Thu, 20 Aug 2020 11:22:31 +0200
-Message-Id: <20200820091616.374517482@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 175/228] powerpc: Fix circular dependency between percpu.h and mmu.h
+Date:   Thu, 20 Aug 2020 11:22:30 +0200
+Message-Id: <20200820091616.323325226@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -59,39 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan McDowell <noodles@earth.li>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit df43dd526e6609769ae513a81443c7aa727c8ca3 upstream.
+commit 0c83b277ada72b585e6a3e52b067669df15bcedb upstream.
 
-The IPQ806x does not appear to have a functional multicast ethernet
-address filter. This was observed as a failure to correctly receive IPv6
-packets on a LAN to the all stations address. Checking the vendor driver
-shows that it does not attempt to enable the multicast filter and
-instead falls back to receiving all multicast packets, internally
-setting ALLMULTI.
+Recently random.h started including percpu.h (see commit
+f227e3ec3b5c ("random32: update the net random state on interrupt and
+activity")), which broke corenet64_smp_defconfig:
 
-Use the new fallback support in the dwmac1000 driver to correctly
-achieve the same with the mainline IPQ806x driver. Confirmed to fix IPv6
-functionality on an RB3011 router.
+  In file included from /linux/arch/powerpc/include/asm/paca.h:18,
+                   from /linux/arch/powerpc/include/asm/percpu.h:13,
+                   from /linux/include/linux/random.h:14,
+                   from /linux/lib/uuid.c:14:
+  /linux/arch/powerpc/include/asm/mmu.h:139:22: error: unknown type name 'next_tlbcam_idx'
+    139 | DECLARE_PER_CPU(int, next_tlbcam_idx);
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Jonathan McDowell <noodles@earth.li>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is due to a circular header dependency:
+  asm/mmu.h includes asm/percpu.h, which includes asm/paca.h, which
+  includes asm/mmu.h
+
+Which means DECLARE_PER_CPU() isn't defined when mmu.h needs it.
+
+We can fix it by moving the include of paca.h below the include of
+asm-generic/percpu.h.
+
+This moves the include of paca.h out of the #ifdef __powerpc64__, but
+that is OK because paca.h is almost entirely inside #ifdef
+CONFIG_PPC64 anyway.
+
+It also moves the include of paca.h out of the #ifdef CONFIG_SMP,
+which could possibly break something, but seems to have no ill
+effects.
+
+Fixes: f227e3ec3b5c ("random32: update the net random state on interrupt and activity")
+Cc: stable@vger.kernel.org # v5.8
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200804130558.292328-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/powerpc/include/asm/percpu.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-@@ -362,6 +362,7 @@ static int ipq806x_gmac_probe(struct pla
- 	plat_dat->has_gmac = true;
- 	plat_dat->bsp_priv = gmac;
- 	plat_dat->fix_mac_speed = ipq806x_gmac_fix_mac_speed;
-+	plat_dat->multicast_filter_bins = 0;
+--- a/arch/powerpc/include/asm/percpu.h
++++ b/arch/powerpc/include/asm/percpu.h
+@@ -10,8 +10,6 @@
  
- 	err = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
- 	if (err)
+ #ifdef CONFIG_SMP
+ 
+-#include <asm/paca.h>
+-
+ #define __my_cpu_offset local_paca->data_offset
+ 
+ #endif /* CONFIG_SMP */
+@@ -19,4 +17,6 @@
+ 
+ #include <asm-generic/percpu.h>
+ 
++#include <asm/paca.h>
++
+ #endif /* _ASM_POWERPC_PERCPU_H_ */
 
 
