@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F10C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DCDC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5525C207BB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CBA207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597928896;
-	bh=3rhEvQdtaZVkjicRvpomqlnahjTQxYkIgWBGzz3QM9k=;
+	s=default; t=1597928898;
+	bh=EqcsjBxJ0kSJGRNSqRm07UoiqBAOeV5Df6CJ64YjXug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9bqlzyXmFq0yMsxIrniReHYkxVJu8rah4dvyklbOEtqTeeVxGF8pzihDWxndm0sn
-	 +BnncZCqG9AKiP5tIlPDuqkbkNLrjLMPl7ogJ9c8duHDFmw5QD9aJnW8Y3iWGwJnbH
-	 ecKy0Dy//K94N3R8zHpIreHLXdVfSv8cNTF/Gie0=
+	b=L3ARTQ1ujPIidVAsLvnV6EuXqab+oxXpJcR0snMRBealygFTYGHbiB+zjPeiB6e3r
+	 KwNN0q1C9nwMeRxCh6lCp3U3Fb8yNyDwUtj8OfKBsAQdUNEsfUraFLCeACYDE1JYce
+	 PzksV1hBdiqg2mD+xnYJgB5u59fbh8zTlwVqzPSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgHTNIO (ORCPT
+        id S1730133AbgHTNIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55088 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728858AbgHTJiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:38:00 -0400
+        id S1728690AbgHTJh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:37:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95D9D207DE;
-        Thu, 20 Aug 2020 09:37:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1838620724;
+        Thu, 20 Aug 2020 09:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597916280;
-        bh=3rhEvQdtaZVkjicRvpomqlnahjTQxYkIgWBGzz3QM9k=;
+        s=default; t=1597916277;
+        bh=EqcsjBxJ0kSJGRNSqRm07UoiqBAOeV5Df6CJ64YjXug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HdrEckhWphq+cGowOWprNU5O1RpOqWGRV0KFz1loVAVxDyRXIvu3mGJll3iAf+xv4
-         Rxhc7HaI+eIP7si5ThwIf/ezkArm1SDnQIt8djGf4s3dutVBkWBjX9FwSCd5vDy3pe
-         fACHo0MUeu9WSX+ppC5sWgkemDmUjemDyF2MEzWk=
+        b=yOwG7ncRjRAWe6ElogXV3Cu0F4N/y2UTepvvafj9by8yJFS2j4CSrtIxxVcR3Zrgv
+         Vus+asupz932m63otCbnaFMKGGnkyPXiuQF3/6yATI+S+EvICb+aDCEBm+Jks9mxe+
+         R3+JHlGUe+ziDujWH94/QujhOkHh9rLYTLzbH/kc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Roman Gushchin <guro@fb.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tejun Heo <tj@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.7 074/204] cma: dont quit at first error when activating reserved areas
-Date:   Thu, 20 Aug 2020 11:19:31 +0200
-Message-Id: <20200820091610.049019725@linuxfoundation.org>
+Subject: [PATCH 5.7 073/204] mm/page_counter.c: fix protection usage propagation
+Date:   Thu, 20 Aug 2020 11:19:30 +0200
+Message-Id: <20200820091609.996686612@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091606.194320503@linuxfoundation.org>
 References: <20200820091606.194320503@linuxfoundation.org>
@@ -66,130 +65,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Kravetz <mike.kravetz@oracle.com>
+From: Michal Koutný <mkoutny@suse.com>
 
-commit 3a5139f1c5bb76d69756fb8f13fffa173e261153 upstream.
+commit a6f23d14ec7d7d02220ad8bb2774be3322b9aeec upstream.
 
-The routine cma_init_reserved_areas is designed to activate all
-reserved cma areas.  It quits when it first encounters an error.
-This can leave some areas in a state where they are reserved but
-not activated.  There is no feedback to code which performed the
-reservation.  Attempting to allocate memory from areas in such a
-state will result in a BUG.
+When workload runs in cgroups that aren't directly below root cgroup and
+their parent specifies reclaim protection, it may end up ineffective.
 
-Modify cma_init_reserved_areas to always attempt to activate all
-areas.  The called routine, cma_activate_area is responsible for
-leaving the area in a valid state.  No one is making active use
-of returned error codes, so change the routine to void.
+The reason is that propagate_protected_usage() is not called in all
+hierarchy up.  All the protected usage is incorrectly accumulated in the
+workload's parent.  This means that siblings_low_usage is overestimated
+and effective protection underestimated.  Even though it is transitional
+phenomenon (uncharge path does correct propagation and fixes the wrong
+children_low_usage), it can undermine the intended protection
+unexpectedly.
 
-How to reproduce:  This example uses kernelcore, hugetlb and cma
-as an easy way to reproduce.  However, this is a more general cma
-issue.
+We have noticed this problem while seeing a swap out in a descendant of a
+protected memcg (intermediate node) while the parent was conveniently
+under its protection limit and the memory pressure was external to that
+hierarchy.  Michal has pinpointed this down to the wrong
+siblings_low_usage which led to the unwanted reclaim.
 
-Two node x86 VM 16GB total, 8GB per node
-Kernel command line parameters, kernelcore=4G hugetlb_cma=8G
-Related boot time messages,
-  hugetlb_cma: reserve 8192 MiB, up to 4096 MiB per node
-  cma: Reserved 4096 MiB at 0x0000000100000000
-  hugetlb_cma: reserved 4096 MiB on node 0
-  cma: Reserved 4096 MiB at 0x0000000300000000
-  hugetlb_cma: reserved 4096 MiB on node 1
-  cma: CMA area hugetlb could not be activated
+The fix is simply updating children_low_usage in respective ancestors also
+in the charging path.
 
- # echo 8 > /sys/kernel/mm/hugepages/hugepages-1048576kB/nr_hugepages
-
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 0 P4D 0
-  Oops: 0000 [#1] SMP PTI
-  ...
-  Call Trace:
-    bitmap_find_next_zero_area_off+0x51/0x90
-    cma_alloc+0x1a5/0x310
-    alloc_fresh_huge_page+0x78/0x1a0
-    alloc_pool_huge_page+0x6f/0xf0
-    set_max_huge_pages+0x10c/0x250
-    nr_hugepages_store_common+0x92/0x120
-    ? __kmalloc+0x171/0x270
-    kernfs_fop_write+0xc1/0x1a0
-    vfs_write+0xc7/0x1f0
-    ksys_write+0x5f/0xe0
-    do_syscall_64+0x4d/0x90
-    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fixes: c64be2bb1c6e ("drivers: add Contiguous Memory Allocator")
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Fixes: 230671533d64 ("mm: memory.low hierarchical behavior")
+Signed-off-by: Michal Koutný <mkoutny@suse.com>
+Signed-off-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Barry Song <song.bao.hua@hisilicon.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Michal Nazarewicz <mina86@mina86.com>
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200730163123.6451-1-mike.kravetz@oracle.com
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.18+]
+Link: http://lkml.kernel.org/r/20200803153231.15477-1-mhocko@kernel.org
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/cma.c |   23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
+ mm/page_counter.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -93,17 +93,15 @@ static void cma_clear_bitmap(struct cma
- 	mutex_unlock(&cma->lock);
- }
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -72,7 +72,7 @@ void page_counter_charge(struct page_cou
+ 		long new;
  
--static int __init cma_activate_area(struct cma *cma)
-+static void __init cma_activate_area(struct cma *cma)
- {
- 	unsigned long base_pfn = cma->base_pfn, pfn = base_pfn;
- 	unsigned i = cma->count >> pageblock_order;
- 	struct zone *zone;
- 
- 	cma->bitmap = bitmap_zalloc(cma_bitmap_maxno(cma), GFP_KERNEL);
--	if (!cma->bitmap) {
--		cma->count = 0;
--		return -ENOMEM;
--	}
-+	if (!cma->bitmap)
-+		goto out_error;
- 
- 	WARN_ON_ONCE(!pfn_valid(pfn));
- 	zone = page_zone(pfn_to_page(pfn));
-@@ -133,25 +131,22 @@ static int __init cma_activate_area(stru
- 	spin_lock_init(&cma->mem_head_lock);
- #endif
- 
--	return 0;
-+	return;
- 
- not_in_zone:
--	pr_err("CMA area %s could not be activated\n", cma->name);
- 	bitmap_free(cma->bitmap);
-+out_error:
- 	cma->count = 0;
--	return -EINVAL;
-+	pr_err("CMA area %s could not be activated\n", cma->name);
-+	return;
- }
- 
- static int __init cma_init_reserved_areas(void)
- {
- 	int i;
- 
--	for (i = 0; i < cma_area_count; i++) {
--		int ret = cma_activate_area(&cma_areas[i]);
--
--		if (ret)
--			return ret;
--	}
-+	for (i = 0; i < cma_area_count; i++)
-+		cma_activate_area(&cma_areas[i]);
- 
- 	return 0;
- }
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * This is indeed racy, but we can live with some
+ 		 * inaccuracy in the watermark.
+@@ -116,7 +116,7 @@ bool page_counter_try_charge(struct page
+ 		new = atomic_long_add_return(nr_pages, &c->usage);
+ 		if (new > c->max) {
+ 			atomic_long_sub(nr_pages, &c->usage);
+-			propagate_protected_usage(counter, new);
++			propagate_protected_usage(c, new);
+ 			/*
+ 			 * This is racy, but we can live with some
+ 			 * inaccuracy in the failcnt.
+@@ -125,7 +125,7 @@ bool page_counter_try_charge(struct page
+ 			*fail = c;
+ 			goto failed;
+ 		}
+-		propagate_protected_usage(counter, new);
++		propagate_protected_usage(c, new);
+ 		/*
+ 		 * Just like with failcnt, we can live with some
+ 		 * inaccuracy in the watermark.
 
 
