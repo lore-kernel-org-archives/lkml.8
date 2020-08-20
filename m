@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2323FC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CAF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EADED20658
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE9D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597919250;
-	bh=mtp6d66p2I3R3obgM+Jhh+mnbb27xVJ81nUwr8awmjE=;
+	s=default; t=1597919271;
+	bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIYNaa5AQHzc44v33bjLY42bOP5Yc4tDQSCfOB6iqz3dc4v4kJy6wtAUszjVWtSzM
-	 6++xNi0ISFbxS3pImaJ6I30XZu/ZfDmQqkzTj5g/339AEygObN6ixTz72rYTvxx/zB
-	 YuFE0IHfliZ6RklhyC0r89ra4X3t2wziK6w0WJPk=
+	b=qCdcQDGQMwKhAF4uW+PLEPcOieV65cU2PwJcyLaoIO2Fky4TvGanyscRDQx4zXgpb
+	 YZerciSGG9/Pd14qjMysl06VRIVB9tTxicReGnroAt4zsYL7WRlP332YNycS8/eVj6
+	 ZCh0p5JUOQrjd88vstyYPRU72VMuMf4RPOaxre24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbgHTK13 (ORCPT
+        id S1731597AbgHTKWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:27:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50440 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:22:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731629AbgHTKWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:22:30 -0400
+        id S1731569AbgHTKVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:21:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75D582072D;
-        Thu, 20 Aug 2020 10:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D908920658;
+        Thu, 20 Aug 2020 10:21:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918950;
-        bh=mtp6d66p2I3R3obgM+Jhh+mnbb27xVJ81nUwr8awmjE=;
+        s=default; t=1597918909;
+        bh=biRqXmOebpO0pjYFSWAZMT/eOE9edb5Rb+V4jgapiJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZ3nLOWPZIO95xweml+E8E+Yl0/zu49M0Z/0utONxWXbTbDajlHzRq+46cknNFgkN
-         iG7GTDPFk6wYNMwa3tX7GUEuyIMEtZeUPVKNdDHT2vPWue8PVXSSmFhXIQYFWMJXBJ
-         cwX2hqFdHbR+sperXdp1pkqLdcldLi4gYjgkdX5I=
+        b=p2WY2XQRa9f5fcYllscB2s+85apvuBaMnxibSPvySLTtJbDr2N2yLR9rV8nde+MD/
+         8bP/7LR6BXGCUSEhbejk4NboxdNrkOmWPEmx4LBT0ZK2xzlO7qQtWF+4lFWb9zVxNI
+         ZO6TTId+wjjijFm9elFGGOkVyy70EWkpusjyON9E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Wu <alexwu@synology.com>,
-        BingJing Chang <bingjingc@synology.com>,
-        Danny Shih <dannyshih@synology.com>,
-        ChangSyun Peng <allenpeng@synology.com>,
-        Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4.4 126/149] md/raid5: Fix Force reconstruct-write io stuck in degraded raid5
-Date:   Thu, 20 Aug 2020 11:23:23 +0200
-Message-Id: <20200820092131.806741655@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qiujun Huang <anenbupt@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 111/149] fs/minix: check return value of sb_getblk()
+Date:   Thu, 20 Aug 2020 11:23:08 +0200
+Message-Id: <20200820092131.077639425@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820092125.688850368@linuxfoundation.org>
 References: <20200820092125.688850368@linuxfoundation.org>
@@ -62,55 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ChangSyun Peng <allenpeng@synology.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit a1c6ae3d9f3dd6aa5981a332a6f700cf1c25edef upstream.
+commit da27e0a0e5f655f0d58d4e153c3182bb2b290f64 upstream.
 
-In degraded raid5, we need to read parity to do reconstruct-write when
-data disks fail. However, we can not read parity from
-handle_stripe_dirtying() in force reconstruct-write mode.
+Patch series "fs/minix: fix syzbot bugs and set s_maxbytes".
 
-Reproducible Steps:
+This series fixes all syzbot bugs in the minix filesystem:
 
-1. Create degraded raid5
-mdadm -C /dev/md2 --assume-clean -l5 -n3 /dev/sda2 /dev/sdb2 missing
-2. Set rmw_level to 0
-echo 0 > /sys/block/md2/md/rmw_level
-3. IO to raid5
+	KASAN: null-ptr-deref Write in get_block
+	KASAN: use-after-free Write in get_block
+	KASAN: use-after-free Read in get_block
+	WARNING in inc_nlink
+	KMSAN: uninit-value in get_block
+	WARNING in drop_nlink
 
-Now some io may be stuck in raid5. We can use handle_stripe_fill() to read
-the parity in this situation.
+It also fixes the minix filesystem to set s_maxbytes correctly, so that
+userspace sees the correct behavior when exceeding the max file size.
 
-Cc: <stable@vger.kernel.org> # v4.4+
-Reviewed-by: Alex Wu <alexwu@synology.com>
-Reviewed-by: BingJing Chang <bingjingc@synology.com>
-Reviewed-by: Danny Shih <dannyshih@synology.com>
-Signed-off-by: ChangSyun Peng <allenpeng@synology.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
+This patch (of 6):
+
+sb_getblk() can fail, so check its return value.
+
+This fixes a NULL pointer dereference.
+
+Originally from Qiujun Huang.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: syzbot+4a88b2b9dc280f47baf4@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Qiujun Huang <anenbupt@gmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200628060846.682158-1-ebiggers@kernel.org
+Link: http://lkml.kernel.org/r/20200628060846.682158-2-ebiggers@kernel.org
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/raid5.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/minix/itree_common.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3345,6 +3345,7 @@ static int need_this_block(struct stripe
- 	 * is missing/faulty, then we need to read everything we can.
- 	 */
- 	if (sh->raid_conf->level != 6 &&
-+	    sh->raid_conf->rmw_level != PARITY_DISABLE_RMW &&
- 	    sh->sector < sh->raid_conf->mddev->recovery_cp)
- 		/* reconstruct-write isn't being forced */
- 		return 0;
-@@ -4479,7 +4480,7 @@ static void handle_stripe(struct stripe_
- 	 * or to load a block that is being partially written.
- 	 */
- 	if (s.to_read || s.non_overwrite
--	    || (conf->level == 6 && s.to_write && s.failed)
-+	    || (s.to_write && s.failed)
- 	    || (s.syncing && (s.uptodate + s.compute < disks))
- 	    || s.replacing
- 	    || s.expanding)
+--- a/fs/minix/itree_common.c
++++ b/fs/minix/itree_common.c
+@@ -74,6 +74,7 @@ static int alloc_branch(struct inode *in
+ 	int n = 0;
+ 	int i;
+ 	int parent = minix_new_block(inode);
++	int err = -ENOSPC;
+ 
+ 	branch[0].key = cpu_to_block(parent);
+ 	if (parent) for (n = 1; n < num; n++) {
+@@ -84,6 +85,11 @@ static int alloc_branch(struct inode *in
+ 			break;
+ 		branch[n].key = cpu_to_block(nr);
+ 		bh = sb_getblk(inode->i_sb, parent);
++		if (!bh) {
++			minix_free_block(inode, nr);
++			err = -ENOMEM;
++			break;
++		}
+ 		lock_buffer(bh);
+ 		memset(bh->b_data, 0, bh->b_size);
+ 		branch[n].bh = bh;
+@@ -102,7 +108,7 @@ static int alloc_branch(struct inode *in
+ 		bforget(branch[i].bh);
+ 	for (i = 0; i < n; i++)
+ 		minix_free_block(inode, block_to_cpu(branch[i].key));
+-	return -ENOSPC;
++	return err;
+ }
+ 
+ static inline int splice_branch(struct inode *inode,
 
 
