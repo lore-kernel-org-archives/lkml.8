@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6896BC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F01C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43071206FA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C0A2206FA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597920677;
-	bh=AtdGlwL7vg/j74ZPpozMBmbt3wy/gmT0jNcyv529M80=;
+	s=default; t=1597920681;
+	bh=3Czak8bPUCZao9NNlpaoGRY3AsajzzCfeE7PISYGTSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dPgTotRGwS3VN2Pqioa95bplVEQNMEoW/eM3pq3cXx/VR5gPloqz1mwjQwE2kFl1p
-	 fCebNi3qtnhKxxU8Swiz94veVhO/9rXcb4L8IddDI61VLY6gbghc9VwUM1LZfEBop2
-	 mSo7e2gzd8Zre1FARtZpmMNce0DpJGRDQ6H5SjIk=
+	b=FeT6boor5rSSCuvagvH6WoTsEQb3x8TE2DP9xzFpT490yqKjsZ02S6eNp+nyXtZhQ
+	 ryDuInW2Xc6KEP9rTxw2tH8rpsXJ8quf278BTX5imQLxo4boWs/iQqvEObSeqH9MWP
+	 dEfaC/6Ax8/13g0RXa2h2rvOVJ++ZjxzcVuJ/kF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbgHTKvP (ORCPT
+        id S1731437AbgHTKvS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:51:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33644 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:51:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731214AbgHTKOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:14:51 -0400
+        id S1730831AbgHTKOq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:14:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D60920724;
-        Thu, 20 Aug 2020 10:14:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2720A20885;
+        Thu, 20 Aug 2020 10:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597918490;
-        bh=AtdGlwL7vg/j74ZPpozMBmbt3wy/gmT0jNcyv529M80=;
+        s=default; t=1597918485;
+        bh=3Czak8bPUCZao9NNlpaoGRY3AsajzzCfeE7PISYGTSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nWi+V0arH9tm4r2C0MtPqDNCcDWV/AUOdKzEhLn7PcgI7HZAckN9pcd+YYhtYY5pI
-         Bgef0rK0eQzjS0tYtSPXgKpf2SNtVA/0mlJQJMGOwGiBi2xXHAvq3VGCFIrDKtw5Tg
-         xKfi/cjjYboN3HQxbSLnn1RHj+3KnD14revRgK5Y=
+        b=jSC3Ji8DLVBCpe3tdJYcCF+wkeJ7BqTQbGy9WL7FPhiGN0qK/DVAzRB/UA/0LFDzO
+         Akr52AtaTqolNykV4MgSUedbpgm6pP94C9QqNsXGW4IHveDX9dbkrEMfLLPB6yU/tc
+         W8ik9Ai270X5Idm97FJreD0AHvJ7Lal5H9VNowGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.14 159/228] mtd: rawnand: qcom: avoid write to unavailable register
-Date:   Thu, 20 Aug 2020 11:22:14 +0200
-Message-Id: <20200820091615.523775789@linuxfoundation.org>
+        stable@vger.kernel.org, Zheng Bin <zhengbin13@huawei.com>,
+        Dominique Martinet <asmadeus@codewreck.org>
+Subject: [PATCH 4.14 157/228] 9p: Fix memory leak in v9fs_mount
+Date:   Thu, 20 Aug 2020 11:22:12 +0200
+Message-Id: <20200820091615.421632593@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -60,68 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+From: Zheng Bin <zhengbin13@huawei.com>
 
-commit 443440cc4a901af462239d286cd10721aa1c7dfc upstream.
+commit cb0aae0e31c632c407a2cab4307be85a001d4d98 upstream.
 
-SFLASHC_BURST_CFG is only available on older ipq NAND platforms, this
-register has been removed when the NAND controller got implemented in
-the qpic controller.
+v9fs_mount
+  v9fs_session_init
+    v9fs_cache_session_get_cookie
+      v9fs_random_cachetag                     -->alloc cachetag
+      v9ses->fscache = fscache_acquire_cookie  -->maybe NULL
+  sb = sget                                    -->fail, goto clunk
+clunk_fid:
+  v9fs_session_close
+    if (v9ses->fscache)                        -->NULL
+      kfree(v9ses->cachetag)
 
-Avoid writing this register on devices which are based on qpic NAND
-controller.
+Thus memleak happens.
 
-Fixes: dce84760b09f ("mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Link: https://lore.kernel.org/linux-mtd/1591948696-16015-2-git-send-email-sivaprak@codeaurora.org
+Link: http://lkml.kernel.org/r/20200615012153.89538-1-zhengbin13@huawei.com
+Fixes: 60e78d2c993e ("9p: Add fscache support to 9p")
+Cc: <stable@vger.kernel.org> # v2.6.32+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/qcom_nandc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ fs/9p/v9fs.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/mtd/nand/qcom_nandc.c
-+++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -435,11 +435,13 @@ struct qcom_nand_host {
-  * among different NAND controllers.
-  * @ecc_modes - ecc mode for NAND
-  * @is_bam - whether NAND controller is using BAM
-+ * @is_qpic - whether NAND CTRL is part of qpic IP
-  * @dev_cmd_reg_start - NAND_DEV_CMD_* registers starting offset
-  */
- struct qcom_nandc_props {
- 	u32 ecc_modes;
- 	bool is_bam;
-+	bool is_qpic;
- 	u32 dev_cmd_reg_start;
- };
+--- a/fs/9p/v9fs.c
++++ b/fs/9p/v9fs.c
+@@ -513,10 +513,9 @@ void v9fs_session_close(struct v9fs_sess
+ 	}
  
-@@ -2508,7 +2510,8 @@ static int qcom_nandc_setup(struct qcom_
- 	u32 nand_ctrl;
- 
- 	/* kill onenand */
--	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-+	if (!nandc->props->is_qpic)
-+		nandc_write(nandc, SFLASHC_BURST_CFG, 0);
- 	nandc_write(nandc, dev_cmd_reg_addr(nandc, NAND_DEV_CMD_VLD),
- 		    NAND_DEV_CMD_VLD_VAL);
- 
-@@ -2779,12 +2782,14 @@ static const struct qcom_nandc_props ipq
- static const struct qcom_nandc_props ipq4019_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x0,
- };
- 
- static const struct qcom_nandc_props ipq8074_nandc_props = {
- 	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
- 	.is_bam = true,
-+	.is_qpic = true,
- 	.dev_cmd_reg_start = 0x7000,
- };
- 
+ #ifdef CONFIG_9P_FSCACHE
+-	if (v9ses->fscache) {
++	if (v9ses->fscache)
+ 		v9fs_cache_session_put_cookie(v9ses);
+-		kfree(v9ses->cachetag);
+-	}
++	kfree(v9ses->cachetag);
+ #endif
+ 	kfree(v9ses->uname);
+ 	kfree(v9ses->aname);
 
 
