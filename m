@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6108AC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4F2C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACFD21741
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEF4F207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882048;
-	bh=APaZWR8dp4pm9OJV+km8jzu4nmbPaHhaC0PDHDJ+Elc=;
+	s=default; t=1597882056;
+	bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWd1HzeVbSNNzt5IZaGtTbkfi1XY/V7aG8kiktHZKxFmd3y94mg2bYx7TBq1ZhsbX
-	 WIZo8P3gVCdoSNJtm51yIah8rrlnUCcLkjWgqR7YruIAKBDjAGRR/xDvTLmQ6uWjgX
-	 N8Kwv8H9PAppNpx95Q7cZEH7vHHJoWIAs/OywO8c=
+	b=r2hiYYloBNRY2ZxN9rxbAYs8JfespV+p6tevdu9jHoEImCOZ6bj80POMPH8efh85K
+	 KUpbFV9gDj1ND0QoitebtR2a+6j6FJZdJZjlemATgQ5WfO6TECu06iZCzztAliNmm6
+	 Sv0+5UnLyW2ECRRuLS7mWxk9XDDFkxDR+WyxNKJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgHTAHX (ORCPT
+        id S1728678AbgHTAHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32962 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:07:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728265AbgHTADX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:23 -0400
+        id S1728246AbgHTADS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF9D8214F1;
-        Thu, 20 Aug 2020 00:03:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01FC322B3F;
+        Thu, 20 Aug 2020 00:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881803;
-        bh=APaZWR8dp4pm9OJV+km8jzu4nmbPaHhaC0PDHDJ+Elc=;
+        s=default; t=1597881795;
+        bh=Nsx1/QnVpUDV33+SrioDmlhfg5tkM9R+Pa91bvw0w0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1IjlvELnjThGp5az8W5xG7akMmO3OnSCa5ZJu6UDbXhRpjtG9Z6Rn0uQkh9iF5Ck1
-         c/ug898svZ4kRV+D5NJiLjngukIVUl6u7OQ8LzApdQ0wPpCYJcO8SEiL9Gxut6FZDp
-         PLxJTNNL3pZadUffELgrpBaF3m/3WHf7VgXyP5X8=
+        b=tCPLjMi6ZcbhUX7Q64akbXZSeUg/RRefPxUX+sx0N3bCEznUfY2iWmhujHxQs7V/n
+         0Suk4HYb1X9YNVB8+7KWc87g8O1z/uj7fOCr/N1yZ1Pgy3uyTMwmONSRmG52pVWsoG
+         6PAIJIu50C40Cwall9J4zTQuc5KssdgPlM+qy8ek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gaurav Singh <gaurav1086@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Michal Koutn <mkoutny@suse.com>, Roman Gushchin <guro@fb.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Chris Down <chris@chrisdown.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/18]  tools/testing/selftests/cgroup/cgroup_util.c: cg_read_strcmp: fix null pointer dereference
-Date:   Wed, 19 Aug 2020 20:02:58 -0400
-Message-Id: <20200820000302.215560-15-sashal@kernel.org>
+Cc:     Zhe Li <lizhe67@huawei.com>, Hou Tao <houtao1@huawei.com>,
+        Richard Weinberger <richard@nod.at>,
+        Sasha Levin <sashal@kernel.org>, linux-mtd@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 10/18] jffs2: fix UAF problem
+Date:   Wed, 19 Aug 2020 20:02:53 -0400
+Message-Id: <20200820000302.215560-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -65,41 +59,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Zhe Li <lizhe67@huawei.com>
 
-[ Upstream commit d830020656c5b68ced962ed3cb51a90e0a89d4c4 ]
+[ Upstream commit 798b7347e4f29553db4b996393caf12f5b233daf ]
 
-Haven't reproduced this issue. This PR is does a minor code cleanup.
+The log of UAF problem is listed below.
+BUG: KASAN: use-after-free in jffs2_rmdir+0xa4/0x1cc [jffs2] at addr c1f165fc
+Read of size 4 by task rm/8283
+=============================================================================
+BUG kmalloc-32 (Tainted: P    B      O   ): kasan: bad access detected
+-----------------------------------------------------------------------------
 
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Michal Koutn <mkoutny@suse.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Chris Down <chris@chrisdown.name>
-Link: http://lkml.kernel.org/r/20200726013808.22242-1-gaurav1086@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+INFO: Allocated in 0xbbbbbbbb age=3054364 cpu=0 pid=0
+        0xb0bba6ef
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        __slab_alloc.isra.21.constprop.25+0x2c/0x44
+        __kmalloc+0x1dc/0x370
+        jffs2_write_dirent+0x11c/0x9c8 [jffs2]
+        jffs2_do_unlink+0x328/0x5fc [jffs2]
+        jffs2_rmdir+0x110/0x1cc [jffs2]
+        vfs_rmdir+0x180/0x268
+        do_rmdir+0x2cc/0x300
+        ret_from_syscall+0x0/0x3c
+INFO: Freed in 0x205b age=3054364 cpu=0 pid=0
+        0x2e9173
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_add_fd_to_list+0x138/0x1dc [jffs2]
+        jffs2_garbage_collect_dirent.isra.3+0x21c/0x288 [jffs2]
+        jffs2_garbage_collect_live+0x16bc/0x1800 [jffs2]
+        jffs2_garbage_collect_pass+0x678/0x11d4 [jffs2]
+        jffs2_garbage_collect_thread+0x1e8/0x3b0 [jffs2]
+        kthread+0x1a8/0x1b0
+        ret_from_kernel_thread+0x5c/0x64
+Call Trace:
+[c17ddd20] [c02452d4] kasan_report.part.0+0x298/0x72c (unreliable)
+[c17ddda0] [d2509680] jffs2_rmdir+0xa4/0x1cc [jffs2]
+[c17dddd0] [c026da04] vfs_rmdir+0x180/0x268
+[c17dde00] [c026f4e4] do_rmdir+0x2cc/0x300
+[c17ddf40] [c001a658] ret_from_syscall+0x0/0x3c
+
+The root cause is that we don't get "jffs2_inode_info.sem" before
+we scan list "jffs2_inode_info.dents" in function jffs2_rmdir.
+This patch add codes to get "jffs2_inode_info.sem" before we scan
+"jffs2_inode_info.dents" to slove the UAF problem.
+
+Signed-off-by: Zhe Li <lizhe67@huawei.com>
+Reviewed-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/cgroup/cgroup_util.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jffs2/dir.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/cgroup/cgroup_util.c b/tools/testing/selftests/cgroup/cgroup_util.c
-index 075cb0c730149..90418d79ef676 100644
---- a/tools/testing/selftests/cgroup/cgroup_util.c
-+++ b/tools/testing/selftests/cgroup/cgroup_util.c
-@@ -95,7 +95,7 @@ int cg_read_strcmp(const char *cgroup, const char *control,
+diff --git a/fs/jffs2/dir.c b/fs/jffs2/dir.c
+index f20cff1194bb6..776493713153f 100644
+--- a/fs/jffs2/dir.c
++++ b/fs/jffs2/dir.c
+@@ -590,10 +590,14 @@ static int jffs2_rmdir (struct inode *dir_i, struct dentry *dentry)
+ 	int ret;
+ 	uint32_t now = JFFS2_NOW();
  
- 	/* Handle the case of comparing against empty string */
- 	if (!expected)
--		size = 32;
-+		return -1;
- 	else
- 		size = strlen(expected) + 1;
++	mutex_lock(&f->sem);
+ 	for (fd = f->dents ; fd; fd = fd->next) {
+-		if (fd->ino)
++		if (fd->ino) {
++			mutex_unlock(&f->sem);
+ 			return -ENOTEMPTY;
++		}
+ 	}
++	mutex_unlock(&f->sem);
  
+ 	ret = jffs2_do_unlink(c, dir_f, dentry->d_name.name,
+ 			      dentry->d_name.len, f, now);
 -- 
 2.25.1
 
