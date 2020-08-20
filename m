@@ -2,90 +2,110 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BB6C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D885C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3103E2078B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D237207BB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 02:36:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i+CG0sAj"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="q9GkWeLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbgHTCaJ (ORCPT
+        id S1726759AbgHTCgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 22:30:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48958 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726362AbgHTCaI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 22:30:08 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A289C061757
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 19:30:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g15so339830plj.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Aug 2020 19:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fHJ7HRBHswVMUg6am7ER5uoMDi3Cn/npsWlI6SwAOCY=;
-        b=i+CG0sAj4sWouxSJJlWvdKSPgQQwgRZiGfPJ4a+GF42DjElbTdznbu/i70bZanQY+Z
-         ZHUHJs6VCYi+PvdDocMpJ5Rf58m6j1xKkSZ6aR0KIqy7B/qa9rx3HRWwJb2cJif8yW5q
-         GaIuy4cHG2RRh7GB7dM/HbjuiurKYYEuvVcy+Q8hBpYByiaIa/V3UQwnRQm1f+LWiicB
-         ObOhRKs+nmLsBitoqLT0BYj+6dkR1E9j1X+UiiSDlMmknppoxIlQe9Wx5uLAN/1709Se
-         /g0POXsGiVmg/K8MxmdNPPBj+7EbdCfr0FzF1NbL1bgxmdPCJSenVF/7jkItiXcjlo8G
-         /8mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fHJ7HRBHswVMUg6am7ER5uoMDi3Cn/npsWlI6SwAOCY=;
-        b=iYg6Sg7+5ol9djOp5F7P69adVeZD5imDozYYCTJXtfQeh5jKpmGAniw5b99yrMmcd+
-         qASBWtCOZB3WRw8X2z0AEmJVer/dcxrJkMJLrfYppseM5v22Qo5RqxyC7yYrdlvj3J8X
-         TOj4Omml9NIBS/qIOAx1EWQ5BRJlEUq9Yu1+u1hDy5710HvMHrXEwRmvc3vdu0hFGtZ7
-         bPZTElabGlZ7R3zXuxliXtwIlRlFROzqutTHlf2O5DhB0yNArHty5ImqBG+2XmmY0A78
-         ofHjwkyMluGriCRpacm6IYPRRbb42i4B7y6UD9MZ/khQlrTKK6vIK1IK6fB9DLBolOyF
-         r1zg==
-X-Gm-Message-State: AOAM533GtTYY0AUcXSVTRv5eN9fGsHfR5S4Ku2CpdVBAnV3IfS04wxRW
-        4dQTahNUm1kAwyQCnYPUFwtHLqDKOVVXZaP+m+jmzQ==
-X-Google-Smtp-Source: ABdhPJy5FscZgZYiZn+++MzCBh2DDEb1I4sWufP3av3+bx3VwbyufGgotvToqPFA8XIgeFy5GBObv5SHhlZcsvHVfyQ=
-X-Received: by 2002:a17:902:b485:: with SMTP id y5mr875957plr.119.1597890607308;
- Wed, 19 Aug 2020 19:30:07 -0700 (PDT)
+        Wed, 19 Aug 2020 22:36:16 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36327 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726362AbgHTCgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 22:36:13 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BX80R5lnrz9sRN;
+        Thu, 20 Aug 2020 12:36:07 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1597890971;
+        bh=vULF1V6e0f1yAmziZlk663aZWqAbdESm0QzRgsSJSXg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=q9GkWeLnxRMya8G/Fbwsb/rU3kXcaVyIudfMZ/PFBaH5yRw/Mg1mQMb3XfPlkRK3x
+         VvLmQ+0DYOAFyoGgN7H6qMBumPcO2J7ZjonRaq3FuGs/B6G7rVMCQOn0/a6M9cFKL+
+         1qtjLnXKLu7XOx1pHG5+Y/tUXvYpaTiHILM5Fa5wFVCbKKbYFgl2Wtd3Fcoac+OPe0
+         wy0m/sOHRKlQd5eLgequXO5ndbzg9562Svw8wqqWFKL+3JdVj3Fd7JroqRSNnUMuT2
+         U1m+g67y1b3y9C3g3fKjZt4nS/LdsiXf2PoGPM8Sb0JZ5iS1DrjPiwILLU18kmRffg
+         VqWDLhKtz8j8Q==
+Date:   Thu, 20 Aug 2020 12:36:06 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        X86 ML <x86@kernel.org>, selinux@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        Ondrej Mosnacek <omosnace@redhat.com>, rgb@redhat.com,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        YueHaibing <yuehaibing@huawei.com>, jeffv@google.com,
+        Kent Overstreet <kent.overstreet@gmail.com>
+Subject: Re: Linux-next: Kernel panic - not syncing: Fatal exception in
+ interrupt - RIP: 0010:security_port_sid
+Message-ID: <20200820123606.772691e0@canb.auug.org.au>
+In-Reply-To: <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
+References: <CA+G9fYvdAUWHw7SUF6Da1bgDJ2Q=59nJLovrxz8Ke74DSFnG1g@mail.gmail.com>
+        <543834b1-9e7e-187d-4f98-e8484362105b@gmail.com>
+        <CAHp75Vf_3cb51UPXqiPspo4pa5AhU7xTvwAk6Z2+FtzNfmogDA@mail.gmail.com>
+        <fdffd8f2-ea67-4bfd-f75b-9ffd56dfbbde@gmail.com>
+        <20200820083111.46e81b4c@canb.auug.org.au>
+        <CAHC9VhTR7b_p3rdiQ8q07OMoY3fXgU4kH=bH5URVgVS6kH5r5g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200812173958.2307251-1-masahiroy@kernel.org>
- <20200812173958.2307251-3-masahiroy@kernel.org> <CAKwvOdkL=667+cw_Rxq_5zaOKeTTptsMaxkkSXBic9QxozOWVg@mail.gmail.com>
- <CAK7LNAS4EjGchNzqhEcTPTU0mOUqAk8nF9QYW3qwfOp572uCHA@mail.gmail.com> <CAK7LNARPAB+UBcYJTauPRksOb1zVbicUt7z39szaO3o70vD1RQ@mail.gmail.com>
-In-Reply-To: <CAK7LNARPAB+UBcYJTauPRksOb1zVbicUt7z39szaO3o70vD1RQ@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Wed, 19 Aug 2020 19:29:56 -0700
-Message-ID: <CAKwvOdkQTFEGaSXj5kHpuqTQ9hFYPWkCAyegQ4jienLaH5x9Ng@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gen_compile_commands: wire up build rule to Makefile
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Nathan Huckleberry <nhuck@google.com>,
-        Tom Roeder <tmroeder@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/hvV3_WwiiS1IDDfSXsR+NWi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 18, 2020 at 9:30 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Do you have any idea to cope with
-> the 3% loss problem?
->
-> If it is a problem, maybe I should try Idea 2).
+--Sig_/hvV3_WwiiS1IDDfSXsR+NWi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I think it will be ok.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
--- 
-Thanks,
-~Nick Desaulniers
+Hi Paul,
+
+On Wed, 19 Aug 2020 21:21:29 -0400 Paul Moore <paul@paul-moore.com> wrote:
+>
+> On Wed, Aug 19, 2020 at 6:31 PM Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+> FYI, I just merged that patch into the selinux/next tree.
+
+Thanks, I will drop my copy from my tree tomorrow.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/hvV3_WwiiS1IDDfSXsR+NWi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl894ZYACgkQAVBC80lX
+0Gz5GAf8DJ3zLB6L2nDSdO6q6Dthrh1QZ3leXhW3V6v5RczxX/z/1zakE14IfcfK
+U7vftIP+pQ/CNhnuMzeiWvVWI5flz6ZoZyr1cq+5qfqJ/8LaYXPqLIYUNjqpzn/y
+lSdBgJxlnfqk91HRB1fnRY7/7CaOMH6UZB409OsFte03QAqBGjOnsvgDObtCCbz9
+9+HWRiJjXGbzi+d/76CUUyzQdWI0V85dLbyuNZwqMg3rHR0eWmuj/ndBv0+Yk3XV
+wsjp9NkjqULzaCdtK/PJpnLWzNsO0TXin28W3M2y31XMa+MrWgkjY5HwemmiDtaJ
+5DRF7usTn/0O1ZYJKj1ZM8f1sGeT/w==
+=frR/
+-----END PGP SIGNATURE-----
+
+--Sig_/hvV3_WwiiS1IDDfSXsR+NWi--
