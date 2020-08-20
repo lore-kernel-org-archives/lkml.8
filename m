@@ -2,153 +2,134 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB83AC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35F1C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7813208B3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8CEF207DE
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 17:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=posk.io header.i=@posk.io header.b="R84jP9dg"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QwF4Uq6J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgHTRmv (ORCPT
+        id S1727783AbgHTRob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 13:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48524 "EHLO
+        Thu, 20 Aug 2020 13:44:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728009AbgHTRmU (ORCPT
+        with ESMTP id S1725977AbgHTRo2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 13:42:20 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5F2C061386
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:19 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id d20so812593ual.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:42:19 -0700 (PDT)
+        Thu, 20 Aug 2020 13:44:28 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57CEC061385
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:44:27 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id qc22so3525472ejb.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 10:44:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=posk.io; s=google;
+        d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AgLB407bKm54/IrZ6UCuTIQNo2tX1E4LKdmKF7McOxA=;
-        b=R84jP9dgvDeMoE2uEu+DF3AzBT5JNaKMCWQ4uCwEUKPxuNmwM7AXtxgRmH9vE+TQeE
-         Oah0ew6Va5dDXIcJ0Sjl3icIyEVfYvHNPq8+dsWbA5eS34smi/yPvhdLGCumnolaqKui
-         1iy5tM5Uhau+Nia85uAx+l7BXvdZETkn6m3ZEH1nuhX3Tj0SqLsa/xSeSX0gHVdhqOiH
-         KRH4n7yk+2B6HP3lvzpEoCHT43c6QW0Diq65ONkUD+NF8moo5oSe4bnh39RVq09Zxt3o
-         gie0sMhFlgaUUUx4EWO/KhD2g5nwgrshfLBAmIYzxWT1sn90RWDl4ymlzJ9sUDtv3cT4
-         iLqA==
+        bh=FU6En4qmUD/ctr2fUy1I8lCvKwxV26SbLYN3IPmoL2U=;
+        b=QwF4Uq6J4cmVOnKjgQDO/Gh3pml1zUPeAoraxo2RNrIbPPRDvep+UY2dX7pO441H1D
+         btJSyb48CH82FjuGDC9p1aH5Cm7BK5CZY+W1kkP9RlBPQgkeC/WgxLlD6gWHDZvQPW2j
+         ovQO4XQ2YXedgC/iD4BZsVdsZ33tDEwygryjg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AgLB407bKm54/IrZ6UCuTIQNo2tX1E4LKdmKF7McOxA=;
-        b=aVaj+XLEn/Chr+LDlWlh3X2dviu7E62F3DCotzhsarKMsjb/qZdQ1wSSaQZ4SKR1a9
-         PmIIelI22pV4yh2yXbNDm7FVXPXCvMi+EWftd4kEz7+pz9O90EmNztAEhxBLa2w4SE5J
-         uGR2c+J5/q4n6ieoC2b2KKcBWuMS9+gC6RGFEjKia7ElKrWEufQ7YprP+SS57o5PQxGN
-         Dy805NGv11sL8bfBxRimBHMVRRImb+D5Z2cWctHKkJpLpzeeyA0/+X3K86Y+36UunHaw
-         r3TL2jmTfWgA585FZmdovmYf1kG2V/HZMdhMfzooAC5dx3Fuc5mcdxX1KX9ahcLaMBAr
-         Qn6w==
-X-Gm-Message-State: AOAM531ImgEiBpZJk+K5KxLinZkTxScPsyTJUo249M/uoa8AXuTy70kw
-        OXjXyngoURTGAte9eKYXEsDGSQFweEpjpb6BwP6pQg==
-X-Google-Smtp-Source: ABdhPJzordxKYzj0nMYhDbICoBQiPfB/Pg2v8UB5v7axF5xFZh2v9ZTA7zbfzsT9wsEFZZcAPTL0/FOaQB/ZTm+f+Bg=
-X-Received: by 2002:ab0:7183:: with SMTP id l3mr2519103uao.139.1597945336910;
- Thu, 20 Aug 2020 10:42:16 -0700 (PDT)
+        bh=FU6En4qmUD/ctr2fUy1I8lCvKwxV26SbLYN3IPmoL2U=;
+        b=Y1bzAy2PajojbZobnXjWU5WzJmOPrlGK5BCBMbbO+W3JvTvnkPmJPHFu8Zs2d83s+X
+         HG4kfBcq64nPQdoyZznqNyPZGTrvAhUbRlvp1zP+So0XX0b8EQRiEblubdvspmBX7xuC
+         ZhI2l+fzBSWN72cqgAQ/DzxpdzUV9rHHh4sJaRLj67CCLFmkia0/9rMIdcc7SiPzLje8
+         qkcVbiKRt7ZLVQrSqK4UjV1HSrFEWwJPq0BmafMfMLYQZtVT4k4QsON3O9ah8DJErfyD
+         /AeO9qyQneRj5uTwCOEK/1ymWtQjt6+Q0u20afz6a5wUDyw19Ldf72nCpkq9OBv5xHtm
+         JtYg==
+X-Gm-Message-State: AOAM532KAJENnf//wvTBVPh2sZkEOORbW4Dn4W5YKlXlCoBfB5VqPXbw
+        jeY0+NZZ4ikj1MawFYtwRSF7ZJnIYj5tdc/P6qR66g==
+X-Google-Smtp-Source: ABdhPJw5nNWB5ZG8Fw9y4cBwRus7mZTqyj52PsGl0eJZhC0hG3MDp3dg8ri3m89nH3J9gHXDGPwkf/uRd0hYUKxXIRY=
+X-Received: by 2002:a17:906:8748:: with SMTP id hj8mr4482012ejb.477.1597945466273;
+ Thu, 20 Aug 2020 10:44:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200811000959.2486636-1-posk@google.com> <20200811062733.GP3982@worktop.programming.kicks-ass.net>
- <CAFTs51XK0HLwCCvXCcfE5P7a4ExANPNPw7UvNigwHZ8sZVP+nQ@mail.gmail.com>
- <1003774683.6088.1597257002027.JavaMail.zimbra@efficios.com>
- <CAFTs51XJhKXn7M2U2dZpFRsTrog4juy=UQfbtcdJfOj5TUSbqQ@mail.gmail.com> <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1477195446.6156.1597261492255.JavaMail.zimbra@efficios.com>
-From:   Peter Oskolkov <posk@posk.io>
-Date:   Thu, 20 Aug 2020 10:42:05 -0700
-Message-ID: <CAFTs51Uwf7+Vs+Mbf=LZxoytFA+3WEtRB5zUanatxgk272MP7Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v3] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Peter Oskolkov <posk@google.com>, paulmck <paulmck@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>
+References: <20200820172118.781324-1-alex.dewar90@gmail.com>
+In-Reply-To: <20200820172118.781324-1-alex.dewar90@gmail.com>
+From:   Markus Mayer <markus.mayer@broadcom.com>
+Date:   Thu, 20 Aug 2020 10:44:15 -0700
+Message-ID: <CAGt4E5uTUnC+QQBWe_VV0keNYNjBDtPpzneq+nfRJncGauzECg@mail.gmail.com>
+Subject: Re: [PATCH v2] memory: brcmstb_dpfe: Fix memory leak
+To:     Alex Dewar <alex.dewar90@gmail.com>
+Cc:     BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 12, 2020 at 12:44 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
+On Thu, 20 Aug 2020 at 10:21, Alex Dewar <alex.dewar90@gmail.com> wrote:
 >
-[...]
->
-> > One way of doing what you suggest is to allow some commands to be bitwise-ORed.
-> >
-> > So, for example, the user could call
-> >
-> > membarrier(CMD_PRIVATE_EXPEDITED_SYNC_CORE | CMD_PRIVATE_EXPEDITED_RSEQ, cpu_id)
-> >
-> > Is this what you have in mind?
->
-> Not really. This would not take care of the fact that we would end up multiplying
-> the number of commands as we allow combinations. E.g. if we ever want to have RSEQ
-> work in private and global, and in non-expedited and expedited, we end up needing:
->
-> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ
-> - CMD_PRIVATE_EXPEDITED_RSEQ
-> - CMD_PRIVATE_RSEQ
-> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ
-> - CMD_GLOBAL_EXPEDITED_RSEQ
-> - CMD_GLOBAL_RSEQ
->
-> The only thing we would save by OR'ing it with the SYNC_CORE command is the additional
-> list:
->
-> - CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
-> - CMD_PRIVATE_EXPEDITED_RSEQ_SYNC_CORE
-> - CMD_PRIVATE_RSEQ_SYNC_CORE
-> - CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
-> - CMD_GLOBAL_EXPEDITED_RSEQ_SYNC_CORE
-> - CMD_GLOBAL_RSEQ_SYNC_CORE
->
-> But unless we receive feedback that doing a membarrier with RSEQ+sync_core all in
-> one go is a significant use-case, I am tempted to leave out that scenario for now.
-> If we go for new commands, this means we could add (for private-expedited-rseq):
->
-> - MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ,
-> - MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
->
-> I do however have use-cases for using RSEQ across shared memory (between
-> processes). Not currently for a rseq-fence, but for rseq acting as per-cpu
-> atomic operations. If I ever end up needing rseq-fence across shared memory,
-> that would result in the following new commands:
->
-> - MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED_RSEQ,
-> - MEMBARRIER_CMD_GLOBAL_EXPEDITED_RSEQ,
->
-> The remaining open question is whether it would be OK to define a new
-> membarrier flag=MEMBARRIER_FLAG_CPU, which would expect an additional
-> @cpu parameter.
+> In brcmstb_dpfe_download_firmware(), memory is allocated to variable fw by
+> firmware_request_nowarn(), but never released. Fix up to release fw on
+> all return paths.
 
-Hi  Mathieu,
+Thanks for the fix!
 
-I do not think there is any reason to wait for additional feedback, so I believe
-we should finalize the API/ABI.
+Acked-by: Markus Mayer <mmayer@broadcom.com>
 
-I see two issues to resolve:
-1: how to combine commands:
-  - you do not like adding new commands that are combinations of existing ones;
-  - you do not like ORing.
-=> I'm not sure what other options we have here?
-
-2: should @flags be repurposed for cpu_id, or MEMBARRIER_FLAG_CPU
-   added with a new syscall parameter.
-=> I'm still not sure a new parameter can be cleanly added, but I can try
-   it in the next patchset if you prefer it this way.
-
-Please let me know your thoughts.
-
-Thanks,
-Peter
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> ---
+> v2: Don't assign ret unnecessarily (Krzysztof)
+> ---
+>  drivers/memory/brcmstb_dpfe.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/memory/brcmstb_dpfe.c b/drivers/memory/brcmstb_dpfe.c
+> index 60e8633b1175..e08528b12cbd 100644
+> --- a/drivers/memory/brcmstb_dpfe.c
+> +++ b/drivers/memory/brcmstb_dpfe.c
+> @@ -647,8 +647,10 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+>                 return (ret == -ENOENT) ? -EPROBE_DEFER : ret;
+>
+>         ret = __verify_firmware(&init, fw);
+> -       if (ret)
+> -               return -EFAULT;
+> +       if (ret) {
+> +               ret = -EFAULT;
+> +               goto release_fw;
+> +       }
+>
+>         __disable_dcpu(priv);
+>
+> @@ -667,18 +669,20 @@ static int brcmstb_dpfe_download_firmware(struct brcmstb_dpfe_priv *priv)
+>
+>         ret = __write_firmware(priv->dmem, dmem, dmem_size, is_big_endian);
+>         if (ret)
+> -               return ret;
+> +               goto release_fw;
+>         ret = __write_firmware(priv->imem, imem, imem_size, is_big_endian);
+>         if (ret)
+> -               return ret;
+> +               goto release_fw;
+>
+>         ret = __verify_fw_checksum(&init, priv, header, init.chksum);
+>         if (ret)
+> -               return ret;
+> +               goto release_fw;
+>
+>         __enable_dcpu(priv);
+>
+> -       return 0;
+> +release_fw:
+> +       release_firmware(fw);
+> +       return ret;
+>  }
+>
+>  static ssize_t generic_show(unsigned int command, u32 response[],
+> --
+> 2.28.0
+>
