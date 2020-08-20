@@ -2,52 +2,52 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52922C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0479C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B5CE22BEF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08C022CA0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931152;
-	bh=L0c2TyP0QmAn666VFjlvTxbnwnAQCCcLSbvt6gQ+sfg=;
+	s=default; t=1597931156;
+	bh=B6T1WnONVu3nGNV9d/4qR06ceS4AT9zZ5Pds7b1uD8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TBVRs2WUwZgBEg9ltgWR0W/D+mbuIPSZofiE3VqlCrH0u0E1WohThahswdTavNOCR
-	 BiaBGcUvT1CgjjRqpe8Iy+lVg2uRnuBW9qJKj/iNY4KeXTQVTSYAqhE0esKvwTu78y
-	 Mu9HNJoxr/bPk3JUGxoNSjXzw6fZvhgs5pl4ofXM=
+	b=vfMbfl0VaBWNmKjLcu1p8CyyL3YlXLP63uS0kUNHBO2IaxiF2xWS9f5mfrY7Gpf/J
+	 /WkiZSgrDF+6UoA7PDpqBGWW6akaSgz+iyR/bvHI631onZ2Dye7703frgzN+FVcIx2
+	 SxAu1rvNwAZsOyTRnCqUzp98UfVNUtOl73DHz2wE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgHTNpu (ORCPT
+        id S1730599AbgHTNpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:45:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37404 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:45:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726899AbgHTJ1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:27:43 -0400
+        id S1728138AbgHTJaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED9DF22D04;
-        Thu, 20 Aug 2020 09:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B48822B4B;
+        Thu, 20 Aug 2020 09:30:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915662;
-        bh=L0c2TyP0QmAn666VFjlvTxbnwnAQCCcLSbvt6gQ+sfg=;
+        s=default; t=1597915816;
+        bh=B6T1WnONVu3nGNV9d/4qR06ceS4AT9zZ5Pds7b1uD8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Afn2QTCdiO1xLZWlY/K/G/0k96rzd+H/gJzp/UO8j5b0LZ38Kn5uPYcDH38RYk9NB
-         4zY/FDRmS2gbCZTAjym8QzoQ2dKnaHCDUcMZfwHKqOcRJ+DvKme5e102FHWvfOsry/
-         JFn9yVNJz9VwWBBvUH60fGa5eSxN8TBL4B/pyQZk=
+        b=mt+Vir9EdBrqL8pBYFcKS7QouVak/cZgQQuuvZBdTVxy0JEjIiF9H9GjpG1FWmIYU
+         xVEKP7AqDeLjhYT9m7mgA2ZbsyXzoZCd6yST7w9To0uYrJ4CZs274TRJux2ff+ERdj
+         C3FzjtTIuODXk7zYi+O6SvzGbnFKwBE3BIq56LOs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Kevin Hao <haokexin@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.8 090/232] tracing/hwlat: Honor the tracing_cpumask
-Date:   Thu, 20 Aug 2020 11:19:01 +0200
-Message-Id: <20200820091617.192793137@linuxfoundation.org>
+        stable@vger.kernel.org, Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 143/232] rtw88: pci: disable aspm for platform inter-op with module parameter
+Date:   Thu, 20 Aug 2020 11:19:54 +0200
+Message-Id: <20200820091619.749346624@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -60,54 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Yan-Hsuan Chuang <yhchuang@realtek.com>
 
-commit 96b4833b6827a62c295b149213c68b559514c929 upstream.
+[ Upstream commit 68aa716b7dd36f55e080da9e27bc594346334c41 ]
 
-In calculation of the cpu mask for the hwlat kernel thread, the wrong
-cpu mask is used instead of the tracing_cpumask, this causes the
-tracing/tracing_cpumask useless for hwlat tracer. Fixes it.
+Some platforms cannot read the DBI register successfully for the
+ASPM settings. After the read failed, the bus could be unstable,
+and the device just became unavailable [1]. For those platforms,
+the ASPM should be disabled. But as the ASPM can help the driver
+to save the power consumption in power save mode, the ASPM is still
+needed. So, add a module parameter for them to disable it, then
+the device can still work, while others can benefit from the less
+power consumption that brings by ASPM enabled.
 
-Link: https://lkml.kernel.org/r/20200730082318.42584-2-haokexin@gmail.com
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=206411
+[2] Note that my lenovo T430 is the same.
 
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 0330f7aa8ee6 ("tracing: Have hwlat trace migrate across tracing_cpumask CPUs")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 3dff7c6e3749 ("rtw88: allows to enable/disable HCI link PS mechanism")
+Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200605074703.32726-1-yhchuang@realtek.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_hwlat.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/wireless/realtek/rtw88/pci.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---- a/kernel/trace/trace_hwlat.c
-+++ b/kernel/trace/trace_hwlat.c
-@@ -283,6 +283,7 @@ static bool disable_migrate;
- static void move_to_next_cpu(void)
- {
- 	struct cpumask *current_mask = &save_cpumask;
-+	struct trace_array *tr = hwlat_trace;
- 	int next_cpu;
+diff --git a/drivers/net/wireless/realtek/rtw88/pci.c b/drivers/net/wireless/realtek/rtw88/pci.c
+index 8228db9a5fc86..3413973bc4750 100644
+--- a/drivers/net/wireless/realtek/rtw88/pci.c
++++ b/drivers/net/wireless/realtek/rtw88/pci.c
+@@ -14,8 +14,11 @@
+ #include "debug.h"
  
- 	if (disable_migrate)
-@@ -296,7 +297,7 @@ static void move_to_next_cpu(void)
- 		goto disable;
+ static bool rtw_disable_msi;
++static bool rtw_pci_disable_aspm;
+ module_param_named(disable_msi, rtw_disable_msi, bool, 0644);
++module_param_named(disable_aspm, rtw_pci_disable_aspm, bool, 0644);
+ MODULE_PARM_DESC(disable_msi, "Set Y to disable MSI interrupt support");
++MODULE_PARM_DESC(disable_aspm, "Set Y to disable PCI ASPM support");
  
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	next_cpu = cpumask_next(smp_processor_id(), current_mask);
- 	put_online_cpus();
+ static u32 rtw_pci_tx_queue_idx_addr[] = {
+ 	[RTW_TX_QUEUE_BK]	= RTK_PCI_TXBD_IDX_BKQ,
+@@ -1200,6 +1203,9 @@ static void rtw_pci_clkreq_set(struct rtw_dev *rtwdev, bool enable)
+ 	u8 value;
+ 	int ret;
  
-@@ -373,7 +374,7 @@ static int start_kthread(struct trace_ar
- 	/* Just pick the first CPU on first iteration */
- 	current_mask = &save_cpumask;
- 	get_online_cpus();
--	cpumask_and(current_mask, cpu_online_mask, tracing_buffer_mask);
-+	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
- 	put_online_cpus();
- 	next_cpu = cpumask_first(current_mask);
++	if (rtw_pci_disable_aspm)
++		return;
++
+ 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to read CLKREQ_L1, ret=%d", ret);
+@@ -1219,6 +1225,9 @@ static void rtw_pci_aspm_set(struct rtw_dev *rtwdev, bool enable)
+ 	u8 value;
+ 	int ret;
  
++	if (rtw_pci_disable_aspm)
++		return;
++
+ 	ret = rtw_dbi_read8(rtwdev, RTK_PCIE_LINK_CFG, &value);
+ 	if (ret) {
+ 		rtw_err(rtwdev, "failed to read ASPM, ret=%d", ret);
+-- 
+2.25.1
+
 
 
