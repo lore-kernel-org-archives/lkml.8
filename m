@@ -2,111 +2,135 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7047C433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862D9C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9628422BEA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660BD221E2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 04:11:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiPpQdou"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AA+KBoks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726376AbgHTELR (ORCPT
+        id S1726729AbgHTELn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 00:11:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
+        Thu, 20 Aug 2020 00:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbgHTELP (ORCPT
+        with ESMTP id S1726132AbgHTELm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 00:11:15 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667A6C061757;
-        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id r11so396541pfl.11;
-        Wed, 19 Aug 2020 21:11:15 -0700 (PDT)
+        Thu, 20 Aug 2020 00:11:42 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F08C061757;
+        Wed, 19 Aug 2020 21:11:41 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id r25so274653lfe.5;
+        Wed, 19 Aug 2020 21:11:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
-        b=FiPpQdouEXK6VeEe9kXvQd6AlUhoKIUnly9H8vEzYRX6dpw/kifEXBclWcuhASodGk
-         5pBBDbsDsUJUdyysZgSEfsEayRBghrrTSoQYGTCL2jmt3Kbx22oErUozmlqRTgQ9LMyQ
-         UJwtlr0U9aa9iLYV6Lzpz6LXVdomWWE3i0eK5oEeTefzDVbp2MvqUV/6fMvwOA1YRz1p
-         KhtacN0Sq+j1vuOYydpn6dkczCjENlCgZtHnrHHJ/973hRw92EcUTFZUpBHKWAw/JTBy
-         O7hszoyEG9Qc9mQtO/qjK/B4uP8xc6XHcueCNF4jitZ+a+eNYpay8Sa+JfOvEh6jDNEe
-         c8WA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=0nvDXpUHYyrFXqiJEgVmctUAZQeXchyr8nPgGxgcWW4=;
+        b=AA+KBoksk+3bdhNPirXE5NVQMpFgmxwgFd1rIFteGs//isYAsnnmOKhahi1tt1cW3w
+         oImLAOdfjZfYOAvm70WmD9pg1aOWsk/uAdv0ZsdE34CyFMnYb5LLA/ku4Zijgw1iYZfs
+         2V3uCqSZ5/lpshylygLh2WpLZ6myiVHqjbf+/zjERcKKZQDAPfA4/S0Qi7aJjFuAy3NF
+         BBMz6BN+1AxsPgzSbWgRALE5DED7UYYXzm/FyLJ4kx7fSympj0XjiCIDdspg95Ps9zck
+         4MeVwi9a1yTMZ5t6I/E7qUM+XF7t5H/h5G9FPYnBQBDpxu078ibwtJnDPeuIeLf9+69f
+         7eGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cDJDuKtqbHnC796AeNDtkydt/+nMCLENJLcgWPgKcQA=;
-        b=Akb5mvOblD/aAQp5LgY6cq1BMG4bLR2wTHRxvMgW8bxC3gXZpIroBsLHnfek2pMXVb
-         9z9N5wp4ITT6/PcSMO9v4U2pz5tLH9bmzl/LCDEVQCxrV1wNkWGVLZFFUcgGMKWc3LI3
-         gxR+4VXf88WZu1rX01z5S+ts3ixaW4gOlxOYt5QJ2s6y9EKYEQPFqNUd6BrnsDCfLDwh
-         GITa7K+A6auG74hSZu4O8A+/UnzDZ74DsFDYOKLD896JNDcLJeT3M5zax2I3lhsY8TT/
-         FAhN6uhdoCvH9q/qbMxYFd+x2EoWS8ot3LPRporAcd/6YvLkUToY6eWY/N5JqXUUJ/TT
-         Uzig==
-X-Gm-Message-State: AOAM533vC5tzwe4xadXkEySQWhtZUzwKvVt4F5puaaJv4iiFaYs6AZIO
-        mNPSQngE1dWdbeNMVpRLqBg=
-X-Google-Smtp-Source: ABdhPJyEObQUFNlfFMiPl9DoKI9qG80cCF2W6A1Y0MZ7u6rMFknZKroy8E3vCjH3dZFgCJS8rRKIGA==
-X-Received: by 2002:a62:ea01:: with SMTP id t1mr868193pfh.125.1597896674617;
-        Wed, 19 Aug 2020 21:11:14 -0700 (PDT)
-Received: from localhost.localdomain.com ([2605:e000:160b:911f:722f:a74:437d:fd3c])
-        by smtp.gmail.com with ESMTPSA id b20sm847811pfp.140.2020.08.19.21.11.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 21:11:13 -0700 (PDT)
-From:   Chris Healy <cphealy@gmail.com>
-X-Google-Original-From: Chris Healy <cphealy@gmail.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        stefan@agner.ch, robh+dt@kernel.org, andrew.smirnov@gmail.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, festevam@gmail.com,
-        stable@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>
-Subject: [PATCH v2] ARM: dts: vfxxx: Add syscon compatible with ocotp
-Date:   Wed, 19 Aug 2020 21:10:55 -0700
-Message-Id: <20200820041055.75848-1-cphealy@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=0nvDXpUHYyrFXqiJEgVmctUAZQeXchyr8nPgGxgcWW4=;
+        b=MmH3rDllL3zSRYPCUerE8neSjFrhMz0ydU9G+i+TfWudH2WyFXQmLWlzgzU62Fn/MX
+         SND9JGFxhDt+81O0BUcSEfgk1N4yYMx88olrn76kZvwet5k4fXILHRtegZ2RWm4GZL/c
+         iA1hvVLgveMWc6hH0dsMi0XjHrmVBHN6ie67pvakp40/FQRI9c4zty6JdGPgGMLOoaZ8
+         grifKH3PJJuMuw2clSkPmXT/jLBJYiXMwPt9SUVoIIcIkgekmECkS1561o+z/1hv8FdU
+         nGnOBU4qq/pdH4TiGEIQokqmUGkSm3QZ4U08v8+cicPsdzoJK3eiqvQI2AKpbnNi6N6Q
+         tBng==
+X-Gm-Message-State: AOAM531Q08Wx9GTCJEb/WeWd3OIZuhlaM27FMbKytNa68Cwr9/XRi0eX
+        xymUtK8DYhM0zoJCo9/fgyTgv/56FGfb1PedJWQ=
+X-Google-Smtp-Source: ABdhPJy2/GeHjbpEQW5WLqhwV8Q1aByRAXrNwdzw3GOo2jSoOuRHDsnzsIVlpgW45YpR851BOuVbIVgaLv4O/9whFRY=
+X-Received: by 2002:a05:6512:3156:: with SMTP id s22mr642666lfi.140.1597896700160;
+ Wed, 19 Aug 2020 21:11:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1596025057.git.agx@sigxcpu.org> <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
+In-Reply-To: <a98acb7a0ed2ee6af78ba08354740d69b63b8c53.1596025057.git.agx@sigxcpu.org>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Thu, 20 Aug 2020 01:11:28 -0300
+Message-ID: <CAOMZO5Dg5NGpJ0SQkYny04Kv3ky0619J7YwT-0eE1dsK19o1-w@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] arm64: defconfig: Enable imx8mq-librem5-devkit
+ display stack
+To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Martin Kepplinger <martink@posteo.de>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Anson Huang <Anson.Huang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Li Jun <jun.li@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Li Yang <leoyang.li@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Michael Walle <michael@walle.cc>,
+        Olof Johansson <olof@lixom.net>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Healy <cphealy@gmail.com>
+Hi Guido,
 
-Add syscon compatibility with Vybrid ocotp node. This is required to
-access the UID.
+On Wed, Jul 29, 2020 at 9:19 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+>
+> Enable the panel, NWL DSI host controller and dphy. This
+> also needs the reset controller.
+>
+> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
+> ---
+>  arch/arm64/configs/defconfig | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index e0f33826819f..608019f6408d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -640,10 +640,12 @@ CONFIG_DRM_MSM=3Dm
+>  CONFIG_DRM_TEGRA=3Dm
+>  CONFIG_DRM_PANEL_LVDS=3Dm
+>  CONFIG_DRM_PANEL_SIMPLE=3Dm
+> -CONFIG_DRM_SIMPLE_BRIDGE=3Dm
+> +CONFIG_DRM_PANEL_SITRONIX_ST7703=3Dm
+>  CONFIG_DRM_PANEL_TRULY_NT35597_WQXGA=3Dm
+>  CONFIG_DRM_DISPLAY_CONNECTOR=3Dm
+> +CONFIG_DRM_NWL_MIPI_DSI=3Dm
+>  CONFIG_DRM_SII902X=3Dm
+> +CONFIG_DRM_SIMPLE_BRIDGE=3Dm
 
-Fixes: fa8d20c8dbb77 ("ARM: dts: vfxxx: Add node corresponding to OCOTP")
-Cc: stable@vger.kernel.org
-Signed-off-by: Chris Healy <cphealy@gmail.com>
----
-Changes in v2:
- - Add Fixes line to commit message
+One nit: I suppose the CONFIG_DRM_SIMPLE_BRIDGE=3Dm move comes from a
+defconfig re-sync.
 
- arch/arm/boot/dts/vfxxx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Maybe this re-sync could be part of a separate patch?
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 0fe03aa0367f..2259d11af721 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -495,7 +495,7 @@ edma1: dma-controller@40098000 {
- 			};
- 
- 			ocotp: ocotp@400a5000 {
--				compatible = "fsl,vf610-ocotp";
-+				compatible = "fsl,vf610-ocotp", "syscon";
- 				reg = <0x400a5000 0x1000>;
- 				clocks = <&clks VF610_CLK_OCOTP>;
- 			};
--- 
-2.26.2
+Thanks for adding these options to the defconfig so that we could have
+MIPI DSI working by default on i.MX8M:
 
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
