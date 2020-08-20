@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322DBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F97820885
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:25:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A3B208DB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:26:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597922759;
-	bh=HJjCP81rywixE/GLZjXGg0JY6wNzwcv1jdYMv2+9i1s=;
+	s=default; t=1597922763;
+	bh=e8gQ3zOfaVjuisO0HzCcBCFCp+DfNDcdB5sf0MndGTU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=trbeqPW3Dsx7HBp6vZqmRgYiQCtk0dOU/IKTKhqYbpUHv9DRmQM25sFZjLIz8zbyT
-	 dm0tfn2W4d67OcP5qn2nwG1wUDVK5xVrmwq7+zSf+ZBkzg8tQ52W3JXWd+1a5dEM6r
-	 Aqcujbc7GY5eF7fapR7447FaSAxnQUK92NWFsasw=
+	b=Qk1nmoI5nkj62ydKL1GuNSGnptRQNTK9INP5EeUqzHtwFF338LXJ1JeGrwo+w4bZT
+	 ZmwkVFdA03IY16pI4OmTCXZ9o2zNNMYV2w9FSpIq6M2QUjYgzfi1YtkAQdR2ZvV5wA
+	 u3DDkwmATBYaUZK31pCP2Smd9EJX7J0gOeb1SM5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727963AbgHTLZ6 (ORCPT
+        id S1728265AbgHTL0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:25:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35186 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730330AbgHTKG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:06:28 -0400
+        id S1730285AbgHTKGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:06:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 066F920738;
-        Thu, 20 Aug 2020 10:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 236B820724;
+        Thu, 20 Aug 2020 10:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917987;
-        bh=HJjCP81rywixE/GLZjXGg0JY6wNzwcv1jdYMv2+9i1s=;
+        s=default; t=1597917981;
+        bh=e8gQ3zOfaVjuisO0HzCcBCFCp+DfNDcdB5sf0MndGTU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmxpLf/BUgKprFx5AAaB+Qy9AdCqozqlGBoB4zHiy8AAEIoGZuHsQHdLzZJFKEpSR
-         /3sJOKTjqWkyLc/LlV4+vQAxHZf7uzaB1RF1AyzmtBvtKs0LreAXZegy0hF4RcKZ9+
-         9eUwcoVra51stjAYDeis9GfspuK4up9wu57qE7rw=
+        b=jBGHr0ULv8jVtnZ5b38agZomtgk/nzQ5WEaCNENgf+YAnrCp3Rrt9AyPhzTYa5h7X
+         5pUMH+KEj8pGMkZEZQes4i7bozOQSorJAxCc1H71VxNZJVh0IPf+g++31yJTYFPH4L
+         wTY/lzkfZ2XET0DpjHMn/FmkuwbLqcX4hrfR0e5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        stable <stable@kernel.org>
-Subject: [PATCH 4.14 014/228] mtd: properly check all write ioctls for permissions
-Date:   Thu, 20 Aug 2020 11:19:49 +0200
-Message-Id: <20200820091608.243525016@linuxfoundation.org>
+        stable@vger.kernel.org, Todd Kjos <tkjos@google.com>,
+        Jann Horn <jannh@google.com>, Martijn Coenen <maco@android.com>
+Subject: [PATCH 4.14 012/228] binder: Prevent context manager from incrementing ref 0
+Date:   Thu, 20 Aug 2020 11:19:47 +0200
+Message-Id: <20200820091608.142323214@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091607.532711107@linuxfoundation.org>
 References: <20200820091607.532711107@linuxfoundation.org>
@@ -61,120 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Jann Horn <jannh@google.com>
 
-commit f7e6b19bc76471ba03725fe58e0c218a3d6266c3 upstream.
+commit 4b836a1426cb0f1ef2a6e211d7e553221594f8fc upstream.
 
-When doing a "write" ioctl call, properly check that we have permissions
-to do so before copying anything from userspace or anything else so we
-can "fail fast".  This includes also covering the MEMWRITE ioctl which
-previously missed checking for this.
+Binder is designed such that a binder_proc never has references to
+itself. If this rule is violated, memory corruption can occur when a
+process sends a transaction to itself; see e.g.
+<https://syzkaller.appspot.com/bug?extid=09e05aba06723a94d43d>.
 
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>
-Cc: stable <stable@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[rw: Fixed locking issue]
-Signed-off-by: Richard Weinberger <richard@nod.at>
+There is a remaining edgecase through which such a transaction-to-self
+can still occur from the context of a task with BINDER_SET_CONTEXT_MGR
+access:
+
+ - task A opens /dev/binder twice, creating binder_proc instances P1
+   and P2
+ - P1 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 0 in its
+   handle table
+ - P1 dies (by closing the /dev/binder fd and waiting a bit)
+ - P2 becomes context manager
+ - P2 calls ACQUIRE on the magic handle 0, allocating index 1 in its
+   handle table
+   [this triggers a warning: "binder: 1974:1974 tried to acquire
+   reference to desc 0, got 1 instead"]
+ - task B opens /dev/binder once, creating binder_proc instance P3
+ - P3 calls P2 (via magic handle 0) with (void*)1 as argument (two-way
+   transaction)
+ - P2 receives the handle and uses it to call P3 (two-way transaction)
+ - P3 calls P2 (via magic handle 0) (two-way transaction)
+ - P2 calls P2 (via handle 1) (two-way transaction)
+
+And then, if P2 does *NOT* accept the incoming transaction work, but
+instead closes the binder fd, we get a crash.
+
+Solve it by preventing the context manager from using ACQUIRE on ref 0.
+There shouldn't be any legitimate reason for the context manager to do
+that.
+
+Additionally, print a warning if someone manages to find another way to
+trigger a transaction-to-self bug in the future.
+
+Cc: stable@vger.kernel.org
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Acked-by: Todd Kjos <tkjos@google.com>
+Signed-off-by: Jann Horn <jannh@google.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Link: https://lore.kernel.org/r/20200727120424.1627555-1-jannh@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/mtdchar.c |   56 +++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 47 insertions(+), 9 deletions(-)
+ drivers/android/binder.c |   15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/mtdchar.c
-+++ b/drivers/mtd/mtdchar.c
-@@ -372,9 +372,6 @@ static int mtdchar_writeoob(struct file
- 	uint32_t retlen;
- 	int ret = 0;
- 
--	if (!(file->f_mode & FMODE_WRITE))
--		return -EPERM;
--
- 	if (length > 4096)
- 		return -EINVAL;
- 
-@@ -681,6 +678,48 @@ static int mtdchar_ioctl(struct file *fi
- 			return -EFAULT;
- 	}
- 
-+	/*
-+	 * Check the file mode to require "dangerous" commands to have write
-+	 * permissions.
-+	 */
-+	switch (cmd) {
-+	/* "safe" commands */
-+	case MEMGETREGIONCOUNT:
-+	case MEMGETREGIONINFO:
-+	case MEMGETINFO:
-+	case MEMREADOOB:
-+	case MEMREADOOB64:
-+	case MEMLOCK:
-+	case MEMUNLOCK:
-+	case MEMISLOCKED:
-+	case MEMGETOOBSEL:
-+	case MEMGETBADBLOCK:
-+	case MEMSETBADBLOCK:
-+	case OTPSELECT:
-+	case OTPGETREGIONCOUNT:
-+	case OTPGETREGIONINFO:
-+	case OTPLOCK:
-+	case ECCGETLAYOUT:
-+	case ECCGETSTATS:
-+	case MTDFILEMODE:
-+	case BLKPG:
-+	case BLKRRPART:
-+		break;
-+
-+	/* "dangerous" commands */
-+	case MEMERASE:
-+	case MEMERASE64:
-+	case MEMWRITEOOB:
-+	case MEMWRITEOOB64:
-+	case MEMWRITE:
-+		if (!(file->f_mode & FMODE_WRITE))
-+			return -EPERM;
-+		break;
-+
-+	default:
-+		return -ENOTTY;
-+	}
-+
- 	switch (cmd) {
- 	case MEMGETREGIONCOUNT:
- 		if (copy_to_user(argp, &(mtd->numeraseregions), sizeof(int)))
-@@ -728,9 +767,6 @@ static int mtdchar_ioctl(struct file *fi
- 	{
- 		struct erase_info *erase;
- 
--		if(!(file->f_mode & FMODE_WRITE))
--			return -EPERM;
--
- 		erase=kzalloc(sizeof(struct erase_info),GFP_KERNEL);
- 		if (!erase)
- 			ret = -ENOMEM;
-@@ -1051,9 +1087,6 @@ static int mtdchar_ioctl(struct file *fi
- 		ret = 0;
- 		break;
- 	}
--
--	default:
--		ret = -ENOTTY;
- 	}
- 
- 	return ret;
-@@ -1097,6 +1130,11 @@ static long mtdchar_compat_ioctl(struct
- 		struct mtd_oob_buf32 buf;
- 		struct mtd_oob_buf32 __user *buf_user = argp;
- 
-+		if (!(file->f_mode & FMODE_WRITE)) {
-+			ret = -EPERM;
-+			break;
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2813,6 +2813,12 @@ static void binder_transaction(struct bi
+ 			goto err_dead_binder;
+ 		}
+ 		e->to_node = target_node->debug_id;
++		if (WARN_ON(proc == target_proc)) {
++			return_error = BR_FAILED_REPLY;
++			return_error_param = -EINVAL;
++			return_error_line = __LINE__;
++			goto err_invalid_target_handle;
 +		}
-+
- 		if (copy_from_user(&buf, argp, sizeof(buf)))
- 			ret = -EFAULT;
- 		else
+ 		if (security_binder_transaction(proc->tsk,
+ 						target_proc->tsk) < 0) {
+ 			return_error = BR_FAILED_REPLY;
+@@ -3288,10 +3294,17 @@ static int binder_thread_write(struct bi
+ 				struct binder_node *ctx_mgr_node;
+ 				mutex_lock(&context->context_mgr_node_lock);
+ 				ctx_mgr_node = context->binder_context_mgr_node;
+-				if (ctx_mgr_node)
++				if (ctx_mgr_node) {
++					if (ctx_mgr_node->proc == proc) {
++						binder_user_error("%d:%d context manager tried to acquire desc 0\n",
++								  proc->pid, thread->pid);
++						mutex_unlock(&context->context_mgr_node_lock);
++						return -EINVAL;
++					}
+ 					ret = binder_inc_ref_for_node(
+ 							proc, ctx_mgr_node,
+ 							strong, NULL, &rdata);
++				}
+ 				mutex_unlock(&context->context_mgr_node_lock);
+ 			}
+ 			if (ret)
 
 
