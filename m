@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47909C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D741F20724
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17C4620724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 10:04:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917888;
-	bh=y6wwBtn+KP9Yd5tnD9YVIntDuu6JPXyHFIUPNYMgO3k=;
+	s=default; t=1597917892;
+	bh=an2qDyvexFxr4rBh8yzEGHY2b5T586DGONdlqCE5QIM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uJ7fHEW6B1C7nih8KlViXOjvQaRuO9xjjDdpQG79jXsm4tld61zavOEFgEQ9nHT3u
-	 aXmeg1MGaVWx9GasYnaZc+PfFcYeaazsAuSj/Dbei7h6EGGKEMEOXyOlvhChzTNCqk
-	 KbgQFXQfaKVUrs4jwrfCw7DD6arcmIBEL2bdiz3E=
+	b=TxRlt/ghqH4V1uPrq/KjFdHNOTMe30Vr5CAya3YqIT7sl1lZ0u7ND+0YsokpII6Sg
+	 XZNRwwEfNLMKWgVbtN1Hq/rINCjauV4FtkQCiM0DB+PV7mNNKJkX7vNR5ztQTGIQf6
+	 mlST1J3gW6oILhvyzUcmLlzlSYdy2ruQnZj+pp3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgHTKE3 (ORCPT
+        id S1730519AbgHTKEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 06:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52070 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 06:04:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730492AbgHTKBu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:01:50 -0400
+        id S1730404AbgHTKBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:01:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CAA622BEF;
-        Thu, 20 Aug 2020 10:01:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2505622B4D;
+        Thu, 20 Aug 2020 10:01:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917710;
-        bh=y6wwBtn+KP9Yd5tnD9YVIntDuu6JPXyHFIUPNYMgO3k=;
+        s=default; t=1597917704;
+        bh=an2qDyvexFxr4rBh8yzEGHY2b5T586DGONdlqCE5QIM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L0kXG+5Dke4M5rAmkqfDkz0pmbNb6LWG8nJuqIsl+QcHR7mzeZvTJdtKbfjUZPum8
-         zHDBpqQDe4sR11jAKolCx6JFnteWqNrMa37euvGx/zGbwN5zwuwPkmusosJ+vUw2SG
-         4GbpvZkaghc6jKbMEOJVqce4C9PayGNw/Ea5k1jo=
+        b=iC9+d6ypjKU2uxnRF7JwOrZHJx4gQOBieU7opyEg9+lkGmr18dH9xckxxaAhajMG9
+         9Z5wU8MRCNIT91Dd/LGpSOjLEiXmt4LTfyB4RCE/Sn8z+FhxZB7PFEnEmMdSOWIMhx
+         mVQlNudyfqQ4YsWi/t1Yb9x1fdKu1o4AFSGvndNo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Milton Miller <miltonm@us.ibm.com>,
-        Anton Blanchard <anton@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>,
+        Chi-hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 128/212] powerpc/vdso: Fix vdso cpu truncation
-Date:   Thu, 20 Aug 2020 11:21:41 +0200
-Message-Id: <20200820091608.814277295@linuxfoundation.org>
+Subject: [PATCH 4.9 100/212] brcmfmac: To fix Bss Info flag definition Bug
+Date:   Thu, 20 Aug 2020 11:21:13 +0200
+Message-Id: <20200820091607.395740461@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -61,43 +63,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milton Miller <miltonm@us.ibm.com>
+From: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
 
-[ Upstream commit a9f675f950a07d5c1dbcbb97aabac56f5ed085e3 ]
+[ Upstream commit fa3266541b13f390eb35bdbc38ff4a03368be004 ]
 
-The code in vdso_cpu_init that exposes the cpu and numa node to
-userspace via SPRG_VDSO incorrctly masks the cpu to 12 bits. This means
-that any kernel running on a box with more than 4096 threads (NR_CPUS
-advertises a limit of of 8192 cpus) would expose userspace to two cpu
-contexts running at the same time with the same cpu number.
+Bss info flag definition need to be fixed from 0x2 to 0x4
+This flag is for rssi info received on channel.
+All Firmware branches defined as 0x4 and this is bug in brcmfmac.
 
-Note: I'm not aware of any distro shipping a kernel with support for more
-than 4096 threads today, nor of any system image that currently exceeds
-4096 threads. Found via code browsing.
-
-Fixes: 18ad51dd342a7eb09dbcd059d0b451b616d4dafc ("powerpc: Add VDSO version of getcpu")
-Signed-off-by: Milton Miller <miltonm@us.ibm.com>
-Signed-off-by: Anton Blanchard <anton@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200715233704.1352257-1-anton@ozlabs.org
+Signed-off-by: Prasanna Kerekoppa <prasanna.kerekoppa@cypress.com>
+Signed-off-by: Chi-hsien Lin <chi-hsien.lin@cypress.com>
+Signed-off-by: Wright Feng <wright.feng@cypress.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200604071835.3842-6-wright.feng@cypress.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vdso.c | 2 +-
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/vdso.c b/arch/powerpc/kernel/vdso.c
-index 4111d30badfad..d24aea160352b 100644
---- a/arch/powerpc/kernel/vdso.c
-+++ b/arch/powerpc/kernel/vdso.c
-@@ -704,7 +704,7 @@ int vdso_getcpu_init(void)
- 	node = cpu_to_node(cpu);
- 	WARN_ON_ONCE(node > 0xffff);
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+index 59013572fbe3f..d6a4a08fd3c44 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/fwil_types.h
+@@ -30,7 +30,7 @@
+ #define BRCMF_ARP_OL_PEER_AUTO_REPLY	0x00000008
  
--	val = (cpu & 0xfff) | ((node & 0xffff) << 16);
-+	val = (cpu & 0xffff) | ((node & 0xffff) << 16);
- 	mtspr(SPRN_SPRG_VDSO_WRITE, val);
- 	get_paca()->sprg_vdso = val;
+ #define	BRCMF_BSS_INFO_VERSION	109 /* curr ver of brcmf_bss_info_le struct */
+-#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0002
++#define BRCMF_BSS_RSSI_ON_CHANNEL	0x0004
  
+ #define BRCMF_STA_WME              0x00000002      /* WMM association */
+ #define BRCMF_STA_AUTHE            0x00000008      /* Authenticated */
 -- 
 2.25.1
 
