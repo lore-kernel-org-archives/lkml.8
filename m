@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDBEC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A908AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E93502067C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 828BB2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597917162;
-	bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
+	s=default; t=1597917175;
+	bh=MLUYmEQIpQQ0tKxgI28mt6VzfhC6majPmLwjwORvujM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWWH7mZxpPFH+/0SJie/CoHIyI/CEeN6eYQvcdkEB/3XVBxDMLvX6OXVdzBAwp7ck
-	 oOk4oGV/m3ZMWDEq5H/rDUD7XA8Xp7lzY6Aj1oaUg4DKdS9g0SUbdvrcPRUTXxrWL0
-	 pNeDS1RM3E4KcY08+cKF9VM6RBmoUCGp+Oojyvkw=
+	b=t9T1poSmd4d8YMMkaouRpYjtZExwqYMEDfF1en8dm/qErGioaZdJcwKmqcpIOX3Ea
+	 bnOPICtaEYQv6lbinix78q2F248cMGOZ/UczPFlbYqEKGe4TmU5NNrkpC7d8XToL2F
+	 wJDSuFvCw8k4OuzwVKowSxefa4xhLkQmw7+svvaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgHTJwj (ORCPT
+        id S1729934AbgHTJwy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33774 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:52:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729623AbgHTJw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:52:28 -0400
+        id S1730031AbgHTJwv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:52:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F75E20855;
-        Thu, 20 Aug 2020 09:52:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A5E152078D;
+        Thu, 20 Aug 2020 09:52:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917147;
-        bh=Bmg10UqZE2OfqzUwO5/985U5PYWvxAjDL4ixoSb1H2c=;
+        s=default; t=1597917171;
+        bh=MLUYmEQIpQQ0tKxgI28mt6VzfhC6majPmLwjwORvujM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iBDt00H9lnaKcS3kpfTFnO/GZk2Pds8gxU60cZ6zw0Deai819VpHV2XKdqj8F3OXm
-         S9Z0YawjbDra0/VPjODs/2TOXdL9GzdW9LnV94Yg03EkTpQwVmuCQ0NXv/LJRlI4g5
-         PbI8exx8YGOWIw99FDjllk2BW9lLw8nCgWd/do8I=
+        b=c9IvIX8BHCjIDiTnItLprIrLd5A7DeQydHPArC4yiGLQ/Q6dIymSpqnZ3bOM+eLQs
+         k/n4P7Zketwn78L4fMVQVtbJOvsAbQ1RCGDXNz0KH+mR1fC/3MwBImPiYofo+07G94
+         QUmN1Pegdm5iQnfsLqbisXSaWQp5HAkwD1/Hhhck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Aurich <paul@darkrain42.org>,
-        Aurelien Aptel <aaptel@suse.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 21/92] cifs: Fix leak when handling lease break for cached root fid
-Date:   Thu, 20 Aug 2020 11:21:06 +0200
-Message-Id: <20200820091538.665967126@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 29/92] bcache: allocate meta data pages as compound pages
+Date:   Thu, 20 Aug 2020 11:21:14 +0200
+Message-Id: <20200820091539.069604338@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
 References: <20200820091537.490965042@linuxfoundation.org>
@@ -60,164 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Aurich <paul@darkrain42.org>
+From: Coly Li <colyli@suse.de>
 
-commit baf57b56d3604880ccb3956ec6c62ea894f5de99 upstream.
+commit 5fe48867856367142d91a82f2cbf7a57a24cbb70 upstream.
 
-Handling a lease break for the cached root didn't free the
-smb2_lease_break_work allocation, resulting in a leak:
+There are some meta data of bcache are allocated by multiple pages,
+and they are used as bio bv_page for I/Os to the cache device. for
+example cache_set->uuids, cache->disk_buckets, journal_write->data,
+bset_tree->data.
 
-    unreferenced object 0xffff98383a5af480 (size 128):
-      comm "cifsd", pid 684, jiffies 4294936606 (age 534.868s)
-      hex dump (first 32 bytes):
-        c0 ff ff ff 1f 00 00 00 88 f4 5a 3a 38 98 ff ff  ..........Z:8...
-        88 f4 5a 3a 38 98 ff ff 80 88 d6 8a ff ff ff ff  ..Z:8...........
-      backtrace:
-        [<0000000068957336>] smb2_is_valid_oplock_break+0x1fa/0x8c0
-        [<0000000073b70b9e>] cifs_demultiplex_thread+0x73d/0xcc0
-        [<00000000905fa372>] kthread+0x11c/0x150
-        [<0000000079378e4e>] ret_from_fork+0x22/0x30
+For such meta data memory, all the allocated pages should be treated
+as a single memory block. Then the memory management and underlying I/O
+code can treat them more clearly.
 
-Avoid this leak by only allocating when necessary.
+This patch adds __GFP_COMP flag to all the location allocating >0 order
+pages for the above mentioned meta data. Then their pages are treated
+as compound pages now.
 
-Fixes: a93864d93977 ("cifs: add lease tracking to the cached root fid")
-Signed-off-by: Paul Aurich <paul@darkrain42.org>
-CC: Stable <stable@vger.kernel.org> # v4.18+
-Reviewed-by: Aurelien Aptel <aaptel@suse.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2misc.c |   73 +++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 52 insertions(+), 21 deletions(-)
+ drivers/md/bcache/bset.c    |    2 +-
+ drivers/md/bcache/btree.c   |    2 +-
+ drivers/md/bcache/journal.c |    4 ++--
+ drivers/md/bcache/super.c   |    2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/fs/cifs/smb2misc.c
-+++ b/fs/cifs/smb2misc.c
-@@ -509,15 +509,31 @@ cifs_ses_oplock_break(struct work_struct
- 	kfree(lw);
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -321,7 +321,7 @@ int bch_btree_keys_alloc(struct btree_ke
+ 
+ 	b->page_order = page_order;
+ 
+-	t->data = (void *) __get_free_pages(gfp, b->page_order);
++	t->data = (void *) __get_free_pages(__GFP_COMP|gfp, b->page_order);
+ 	if (!t->data)
+ 		goto err;
+ 
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -830,7 +830,7 @@ int bch_btree_cache_alloc(struct cache_s
+ 	mutex_init(&c->verify_lock);
+ 
+ 	c->verify_ondisk = (void *)
+-		__get_free_pages(GFP_KERNEL, ilog2(bucket_pages(c)));
++		__get_free_pages(GFP_KERNEL|__GFP_COMP, ilog2(bucket_pages(c)));
+ 
+ 	c->verify_data = mca_bucket_alloc(c, &ZERO_KEY, GFP_KERNEL);
+ 
+--- a/drivers/md/bcache/journal.c
++++ b/drivers/md/bcache/journal.c
+@@ -864,8 +864,8 @@ int bch_journal_alloc(struct cache_set *
+ 	j->w[1].c = c;
+ 
+ 	if (!(init_fifo(&j->pin, JOURNAL_PIN, GFP_KERNEL)) ||
+-	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)) ||
+-	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL, JSET_BITS)))
++	    !(j->w[0].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)) ||
++	    !(j->w[1].data = (void *) __get_free_pages(GFP_KERNEL|__GFP_COMP, JSET_BITS)))
+ 		return -ENOMEM;
+ 
+ 	return 0;
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1693,7 +1693,7 @@ void bch_cache_set_unregister(struct cac
  }
  
-+static void
-+smb2_queue_pending_open_break(struct tcon_link *tlink, __u8 *lease_key,
-+			      __le32 new_lease_state)
-+{
-+	struct smb2_lease_break_work *lw;
-+
-+	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
-+	if (!lw) {
-+		cifs_put_tlink(tlink);
-+		return;
-+	}
-+
-+	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
-+	lw->tlink = tlink;
-+	lw->lease_state = new_lease_state;
-+	memcpy(lw->lease_key, lease_key, SMB2_LEASE_KEY_SIZE);
-+	queue_work(cifsiod_wq, &lw->lease_break);
-+}
-+
- static bool
--smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp,
--		    struct smb2_lease_break_work *lw)
-+smb2_tcon_has_lease(struct cifs_tcon *tcon, struct smb2_lease_break *rsp)
+ #define alloc_bucket_pages(gfp, c)			\
+-	((void *) __get_free_pages(__GFP_ZERO|gfp, ilog2(bucket_pages(c))))
++	((void *) __get_free_pages(__GFP_ZERO|__GFP_COMP|gfp, ilog2(bucket_pages(c))))
+ 
+ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
  {
--	bool found;
- 	__u8 lease_state;
- 	struct list_head *tmp;
- 	struct cifsFileInfo *cfile;
--	struct cifs_pending_open *open;
- 	struct cifsInodeInfo *cinode;
- 	int ack_req = le32_to_cpu(rsp->Flags &
- 				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
-@@ -556,22 +572,29 @@ smb2_tcon_has_lease(struct cifs_tcon *tc
- 				  &cinode->flags);
- 
- 		cifs_queue_oplock_break(cfile);
--		kfree(lw);
- 		return true;
- 	}
- 
--	found = false;
-+	return false;
-+}
-+
-+static struct cifs_pending_open *
-+smb2_tcon_find_pending_open_lease(struct cifs_tcon *tcon,
-+				  struct smb2_lease_break *rsp)
-+{
-+	__u8 lease_state = le32_to_cpu(rsp->NewLeaseState);
-+	int ack_req = le32_to_cpu(rsp->Flags &
-+				  SMB2_NOTIFY_BREAK_LEASE_FLAG_ACK_REQUIRED);
-+	struct cifs_pending_open *open;
-+	struct cifs_pending_open *found = NULL;
-+
- 	list_for_each_entry(open, &tcon->pending_opens, olist) {
- 		if (memcmp(open->lease_key, rsp->LeaseKey,
- 			   SMB2_LEASE_KEY_SIZE))
- 			continue;
- 
- 		if (!found && ack_req) {
--			found = true;
--			memcpy(lw->lease_key, open->lease_key,
--			       SMB2_LEASE_KEY_SIZE);
--			lw->tlink = cifs_get_tlink(open->tlink);
--			queue_work(cifsiod_wq, &lw->lease_break);
-+			found = open;
- 		}
- 
- 		cifs_dbg(FYI, "found in the pending open list\n");
-@@ -592,14 +615,7 @@ smb2_is_valid_lease_break(char *buffer)
- 	struct TCP_Server_Info *server;
- 	struct cifs_ses *ses;
- 	struct cifs_tcon *tcon;
--	struct smb2_lease_break_work *lw;
--
--	lw = kmalloc(sizeof(struct smb2_lease_break_work), GFP_KERNEL);
--	if (!lw)
--		return false;
--
--	INIT_WORK(&lw->lease_break, cifs_ses_oplock_break);
--	lw->lease_state = rsp->NewLeaseState;
-+	struct cifs_pending_open *open;
- 
- 	cifs_dbg(FYI, "Checking for lease break\n");
- 
-@@ -617,11 +633,27 @@ smb2_is_valid_lease_break(char *buffer)
- 				spin_lock(&tcon->open_file_lock);
- 				cifs_stats_inc(
- 				    &tcon->stats.cifs_stats.num_oplock_brks);
--				if (smb2_tcon_has_lease(tcon, rsp, lw)) {
-+				if (smb2_tcon_has_lease(tcon, rsp)) {
- 					spin_unlock(&tcon->open_file_lock);
- 					spin_unlock(&cifs_tcp_ses_lock);
- 					return true;
- 				}
-+				open = smb2_tcon_find_pending_open_lease(tcon,
-+									 rsp);
-+				if (open) {
-+					__u8 lease_key[SMB2_LEASE_KEY_SIZE];
-+					struct tcon_link *tlink;
-+
-+					tlink = cifs_get_tlink(open->tlink);
-+					memcpy(lease_key, open->lease_key,
-+					       SMB2_LEASE_KEY_SIZE);
-+					spin_unlock(&tcon->open_file_lock);
-+					spin_unlock(&cifs_tcp_ses_lock);
-+					smb2_queue_pending_open_break(tlink,
-+								      lease_key,
-+								      rsp->NewLeaseState);
-+					return true;
-+				}
- 				spin_unlock(&tcon->open_file_lock);
- 
- 				if (tcon->crfid.is_valid &&
-@@ -639,7 +671,6 @@ smb2_is_valid_lease_break(char *buffer)
- 		}
- 	}
- 	spin_unlock(&cifs_tcp_ses_lock);
--	kfree(lw);
- 	cifs_dbg(FYI, "Can not process lease break - no lease matched\n");
- 	return false;
- }
 
 
