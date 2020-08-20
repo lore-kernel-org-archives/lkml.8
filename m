@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B340DC433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 362B4C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9075C21744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1E320724
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 09:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597915821;
-	bh=mfUn4xnhBLZ9RvlH0Kfu2AhP1HgYT78e9KdsuDfoqo8=;
+	s=default; t=1597915837;
+	bh=35Y1yK73NzvRtzpwyUtT0/Z20fJ7kT4w3A82Zq3Gq6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bz9XAboeXGuf9ekFMkmraXap15xuWY9h/y697Ew70uHfhWohRCHDdRgklj4B/Uzok
-	 B3vF/v1G2FpWY3xzDorkG8lLe9zB1yF4dot/ISojL2RCrRrE/2lbqr0d357dFieTQ5
-	 2njE4Jk6K80OJawqcYCj7Q7zI8vN+SwBZkQJ3cb4=
+	b=K/zzoCbSb6Wo40TCa57Vf38Qo9u4OSuoN/hV/6loFBfms+jO4TgQ8D92Rd/VeHDdP
+	 Llfa5CDVWgGydLmTXhxwSbslYFTNeKk8f7wT1NZWBkNKRqwDZIDGABXAWqf5UhRNFB
+	 y9LmrJ3WeEzD7de9dtWLGiAMOmRCblMIqPo4n6ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgHTJaN (ORCPT
+        id S1727937AbgHTJac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 05:30:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 05:30:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727106AbgHTJ3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:29:46 -0400
+        id S1726884AbgHTJaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 05:30:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC3E2173E;
-        Thu, 20 Aug 2020 09:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2363C206FA;
+        Thu, 20 Aug 2020 09:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915786;
-        bh=mfUn4xnhBLZ9RvlH0Kfu2AhP1HgYT78e9KdsuDfoqo8=;
+        s=default; t=1597915812;
+        bh=35Y1yK73NzvRtzpwyUtT0/Z20fJ7kT4w3A82Zq3Gq6M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ba/vKsWcIslne23Fpmv3HoSwL1yptu0I5YnUuniJzgo/Bzy8r+QjJx3PZLo3Vub93
-         hyUA+2EBHYNaQIBJ19n9AVIu4xWMFzOdHIE6FFsNpiAOmyahfkympObjXWSzbS8iyC
-         SvJDoYj44bwsmPhl66YfZZnFNMAvWg6dxJTitIEE=
+        b=C6fsCNLoHW7WUifMz5cbcYsbrmHltMszz0miZ/EKzx278rrnmDWk+JYBGRaIttPjv
+         s0centa/srt5DYTUoyiAyVD3nDquSor+19KnLwpIIHpql0XjhsojoMOXvqIlqdzPwl
+         G5cpqAaEz8m+hMzprA40iDd5aWr691zffzVyWXCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andriin@fb.com>,
+        stable@vger.kernel.org,
+        Dafna Hirschfeld <dafna.hirschfeld@collabora.com>,
+        Helen Koike <helen.koike@collabora.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 134/232] selftests/bpf: test_progs avoid minus shell exit codes
-Date:   Thu, 20 Aug 2020 11:19:45 +0200
-Message-Id: <20200820091619.311576283@linuxfoundation.org>
+Subject: [PATCH 5.8 125/232] media: staging: rkisp1: rename macros RKISP1_DIR_* to RKISP1_ISP_SD_*
+Date:   Thu, 20 Aug 2020 11:19:36 +0200
+Message-Id: <20200820091618.871297853@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -61,75 +64,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
 
-[ Upstream commit b8c50df0cb3eb9008f8372e4ff0317eee993b8d1 ]
+[ Upstream commit c247818a873adcb8488021eed38c330ea8b288a3 ]
 
-There are a number of places in test_progs that use minus-1 as the argument
-to exit(). This is confusing as a process exit status is masked to be a
-number between 0 and 255 as defined in man exit(3). Thus, users will see
-status 255 instead of minus-1.
+The macros 'RKISP1_DIR_*' are flags that indicate on which
+pads of the isp subdevice the media bus code is supported. So the
+prefix RKISP1_ISP_SD_ is better.
 
-This patch use positive exit code 3 instead of minus-1. These cases are put
-in the same group of infrastructure setup errors.
-
-Fixes: fd27b1835e70 ("selftests/bpf: Reset process and thread affinity after each test/sub-test")
-Fixes: 811d7e375d08 ("bpf: selftests: Restore netns after each test")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/159410594499.1093222.11080787853132708654.stgit@firesoul
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Acked-by: Helen Koike <helen.koike@collabora.com>
+Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/bpf/test_progs.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/staging/media/rkisp1/rkisp1-isp.c | 46 +++++++++++------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-index 0849735ebda8a..d498b6aa63a42 100644
---- a/tools/testing/selftests/bpf/test_progs.c
-+++ b/tools/testing/selftests/bpf/test_progs.c
-@@ -13,6 +13,7 @@
- #include <execinfo.h> /* backtrace */
+diff --git a/drivers/staging/media/rkisp1/rkisp1-isp.c b/drivers/staging/media/rkisp1/rkisp1-isp.c
+index 93ba2dd2fcda0..abfedb604303f 100644
+--- a/drivers/staging/media/rkisp1/rkisp1-isp.c
++++ b/drivers/staging/media/rkisp1/rkisp1-isp.c
+@@ -23,8 +23,8 @@
  
- #define EXIT_NO_TEST		2
-+#define EXIT_ERR_SETUP_INFRA	3
+ #define RKISP1_ISP_DEV_NAME	RKISP1_DRIVER_NAME "_isp"
  
- /* defined in test_progs.h */
- struct test_env env = {};
-@@ -113,13 +114,13 @@ static void reset_affinity() {
- 	if (err < 0) {
- 		stdio_restore();
- 		fprintf(stderr, "Failed to reset process affinity: %d!\n", err);
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
+-#define RKISP1_DIR_SRC BIT(0)
+-#define RKISP1_DIR_SINK BIT(1)
++#define RKISP1_ISP_SD_SRC BIT(0)
++#define RKISP1_ISP_SD_SINK BIT(1)
+ 
+ /*
+  * NOTE: MIPI controller and input MUX are also configured in this file.
+@@ -61,119 +61,119 @@ static const struct rkisp1_isp_mbus_info rkisp1_isp_formats[] = {
+ 	{
+ 		.mbus_code	= MEDIA_BUS_FMT_YUYV8_2X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
+-		.direction	= RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SRGGB10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG10_1X10,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW10,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 10,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SRGGB12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG12_1X12,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW12,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 12,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SRGGB8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_RGGB,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SBGGR8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_BGGR,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGBRG8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_GBRG,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_SGRBG8_1X8,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_BAYER,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_RAW8,
+ 		.bayer_pat	= RKISP1_RAW_GRBG,
+ 		.bus_width	= 8,
+-		.direction	= RKISP1_DIR_SINK | RKISP1_DIR_SRC,
++		.direction	= RKISP1_ISP_SD_SINK | RKISP1_ISP_SD_SRC,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_YUYV8_1X16,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
+ 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_YCBYCR,
+ 		.bus_width	= 16,
+-		.direction	= RKISP1_DIR_SINK,
++		.direction	= RKISP1_ISP_SD_SINK,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_YVYU8_1X16,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
+ 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_YCRYCB,
+ 		.bus_width	= 16,
+-		.direction	= RKISP1_DIR_SINK,
++		.direction	= RKISP1_ISP_SD_SINK,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_UYVY8_1X16,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
+ 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_CBYCRY,
+ 		.bus_width	= 16,
+-		.direction	= RKISP1_DIR_SINK,
++		.direction	= RKISP1_ISP_SD_SINK,
+ 	}, {
+ 		.mbus_code	= MEDIA_BUS_FMT_VYUY8_1X16,
+ 		.pixel_enc	= V4L2_PIXEL_ENC_YUV,
+ 		.mipi_dt	= RKISP1_CIF_CSI2_DT_YUV422_8b,
+ 		.yuv_seq	= RKISP1_CIF_ISP_ACQ_PROP_CRYCBY,
+ 		.bus_width	= 16,
+-		.direction	= RKISP1_DIR_SINK,
++		.direction	= RKISP1_ISP_SD_SINK,
+ 	},
+ };
+ 
+@@ -573,9 +573,9 @@ static int rkisp1_isp_enum_mbus_code(struct v4l2_subdev *sd,
+ 	int pos = 0;
+ 
+ 	if (code->pad == RKISP1_ISP_PAD_SINK_VIDEO) {
+-		dir = RKISP1_DIR_SINK;
++		dir = RKISP1_ISP_SD_SINK;
+ 	} else if (code->pad == RKISP1_ISP_PAD_SOURCE_VIDEO) {
+-		dir = RKISP1_DIR_SRC;
++		dir = RKISP1_ISP_SD_SRC;
+ 	} else {
+ 		if (code->index > 0)
+ 			return -EINVAL;
+@@ -660,7 +660,7 @@ static void rkisp1_isp_set_src_fmt(struct rkisp1_isp *isp,
+ 
+ 	src_fmt->code = format->code;
+ 	mbus_info = rkisp1_isp_mbus_info_get(src_fmt->code);
+-	if (!mbus_info || !(mbus_info->direction & RKISP1_DIR_SRC)) {
++	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SRC)) {
+ 		src_fmt->code = RKISP1_DEF_SRC_PAD_FMT;
+ 		mbus_info = rkisp1_isp_mbus_info_get(src_fmt->code);
  	}
- 	err = pthread_setaffinity_np(pthread_self(), sizeof(cpuset), &cpuset);
- 	if (err < 0) {
- 		stdio_restore();
- 		fprintf(stderr, "Failed to reset thread affinity: %d!\n", err);
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
+@@ -744,7 +744,7 @@ static void rkisp1_isp_set_sink_fmt(struct rkisp1_isp *isp,
+ 					  which);
+ 	sink_fmt->code = format->code;
+ 	mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
+-	if (!mbus_info || !(mbus_info->direction & RKISP1_DIR_SINK)) {
++	if (!mbus_info || !(mbus_info->direction & RKISP1_ISP_SD_SINK)) {
+ 		sink_fmt->code = RKISP1_DEF_SINK_PAD_FMT;
+ 		mbus_info = rkisp1_isp_mbus_info_get(sink_fmt->code);
  	}
- }
- 
-@@ -128,7 +129,7 @@ static void save_netns(void)
- 	env.saved_netns_fd = open("/proc/self/ns/net", O_RDONLY);
- 	if (env.saved_netns_fd == -1) {
- 		perror("open(/proc/self/ns/net)");
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- }
- 
-@@ -137,7 +138,7 @@ static void restore_netns(void)
- 	if (setns(env.saved_netns_fd, CLONE_NEWNET) == -1) {
- 		stdio_restore();
- 		perror("setns(CLONE_NEWNS)");
--		exit(-1);
-+		exit(EXIT_ERR_SETUP_INFRA);
- 	}
- }
- 
 -- 
 2.25.1
 
