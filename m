@@ -8,76 +8,76 @@ X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B87C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88DABC433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E3220674
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DBE420674
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 23:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597967869;
-	bh=0Eo0EUl3YvOxf7AYuTaPTC7ya/gdvVbIs7YGSUyJ1xY=;
+	s=default; t=1597967872;
+	bh=EUoMlSP1/zwIA7CbJKjrdhZSPu05SUlrK0BiwieEvGM=;
 	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=K0QjAt6OJ5X7qSD2jnZM3aLPUfT4bZULSkrV9nEaIpM1Yro8BFyM7pLHhw0+2yoke
-	 B0H4BPr4HKKtn5cYE7jTdsvDPGj3DwGdp/GISeO/kxa/cR7oKOltJ/TGSqEjhL4vCc
-	 tk8wls7bbKitV4jddQAo4q2GumUsN3RlVA+CMKKg=
+	b=Uw0WooOQ5195y+1mCbFtP8gcFdkUYyx4LD4vDhKgjgDW3uTThr1hu3BTtKIL/KV5n
+	 8K6LNHLumaq15HfngUmgHGGiTEzfkDTuEjgmECxwDvsBRaqhY2ZDSbwcAjOOBXTeCj
+	 h3SltyHpn+qpSegBvkWmNsCKk+aqRtv8Jzw8OE88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgHTX5p (ORCPT
+        id S1727924AbgHTX5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 19:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
+        Thu, 20 Aug 2020 19:57:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726766AbgHTX4K (ORCPT
+        with ESMTP id S1726702AbgHTX4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 19:56:10 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8F4C061388
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:47:49 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id z22so112805oid.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:47:49 -0700 (PDT)
+        Thu, 20 Aug 2020 19:56:09 -0400
+Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3C0C06134E
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:50:46 -0700 (PDT)
+Received: by mail-oi1-x241.google.com with SMTP id b22so91100oic.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 16:50:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bIbtWEcH1THnymq0KZNRDlHBeYydc02vXBW8/wH0kWg=;
-        b=ATfsMrtag0zq6+bSazuR6YxvkK0VIIJmLTRwNenQGZ7nWfsLndfXAb7DGJUPS+OOVD
-         pCvKnatMOPLKOrM1wwkJuJDRd5Zk3bdCVk8TFFq1B7tiCp9lTSsoTh0PO/ccv83DmQQG
-         8uX4CHL68BBeK6wpry52tL55Vmql5VhuIpU3Y=
+        bh=vTURMoPYRKEhRabwzbby4L0vZjRVRN5hzWu4YQjs3QQ=;
+        b=co7VQZAt/z6lz3q9qMAU9jN4pgo/0qnIxC1u5TjcCzWwOdKDEl1uhRvC/3Uar501Jm
+         lbLXThUTTvoeAwTGomftu1/kMB0SLkfevuBrTVCVrWfPKvN0iNi0YITtGoJpETSxtbkU
+         Gw28H/6UORkqKy5OLVKy2wTreoQOmWQroqBxI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=bIbtWEcH1THnymq0KZNRDlHBeYydc02vXBW8/wH0kWg=;
-        b=mZEZkHIoGyjjlTzOurVTGLeOr1R43npNTMbX/9ZeavLfYK6CPB+gcEDZGO/KxIKuh1
-         syC3Ccs1eGiBwAN94hzPwN374hUg//B0aTuCf0okbJYzroxRoDgV2kRNJHofhqs0BuTm
-         tStA0ngcdSbOnAe9Z/4KC1Z4yZ51AEuTllhAEKLU3CjkCYgtGIcr654rU+MIjP7G26zk
-         bA/YXc6GrO0a+hh2EieJEuu8JUoO/uOZ2SiSpewJcwb8+GI0si6oatYUv1XijVquvXNv
-         sTaDIybvSTn+/nOSC5LRoKann16X7PCBmHHh4G8+A+LtgxSmaU2RySUxauH6luesI9UR
-         Yo+Q==
-X-Gm-Message-State: AOAM533+WsDnBIRxxXxnykYSLJTKltwIdqQZl1nYr5Jb+VYBCw/KL/7Y
-        r0DKlHYgqevuUl7W+tdYuQctTev7vyG2iA==
-X-Google-Smtp-Source: ABdhPJyARvgODqqfFMWZu23Qu8qq6RYTeefXOse0RFoa+7GY+pGejGf0R/6EHLsRapoPqcyJk4wCbQ==
-X-Received: by 2002:aca:f504:: with SMTP id t4mr155326oih.137.1597967268547;
-        Thu, 20 Aug 2020 16:47:48 -0700 (PDT)
+        bh=vTURMoPYRKEhRabwzbby4L0vZjRVRN5hzWu4YQjs3QQ=;
+        b=UcCLeZqx2y/EIuOBSUrQu01D1cMzIZrYYf6TwKER0uSPulHWFpv9jdzcpiSOyhT6iC
+         AzPlDL7m/ptfvp7tIPwWj6txSkOCL3m8IQRY7IAb1TO/mWl39/YWCcfSCyu/Hf0bObnc
+         Ly9Xdz2x3eKHhFCdypRDObbXdkT/dRFEztgZpZueK2bIeu3k0JMRHZhZpiQRWd7PQ9oi
+         IsBLuV5C2KUznalPpCxbiYH8obypg1fUJyQjXYKaEUv8jGQ2RxLN1du+H3BkViX5XGPL
+         7OyWy3Pu7dYUoVzrlR+pq62j3zqgm4J6LomcdILjJpJzr1rcQiyVNbM/3HIxgxC+VyPu
+         8OHw==
+X-Gm-Message-State: AOAM532zEM5d5Iy7fOoGo1ZXK2nLXUHcOswTD3k+UqJ8GIMS1aXnM4U3
+        E+H2O/B5s20kwADz+oTyC+IsPg==
+X-Google-Smtp-Source: ABdhPJzKdM35MbRce3CRCIbSdBC1voTjsnxHyYkR0m71G0GhjGjKgbw3NNmnIf8Fh1ImXs+BxAcQMQ==
+X-Received: by 2002:a54:4f1a:: with SMTP id e26mr238535oiy.171.1597967446073;
+        Thu, 20 Aug 2020 16:50:46 -0700 (PDT)
 Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id w22sm42494ooq.37.2020.08.20.16.47.47
+        by smtp.gmail.com with ESMTPSA id k4sm36477otr.14.2020.08.20.16.50.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Aug 2020 16:47:47 -0700 (PDT)
-Subject: Re: [PATCH 5.8 000/232] 5.8.3-rc1 review
+        Thu, 20 Aug 2020 16:50:45 -0700 (PDT)
+Subject: Re: [PATCH 4.9 000/212] 4.9.233-rc1 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <20200820091612.692383444@linuxfoundation.org>
+References: <20200820091602.251285210@linuxfoundation.org>
 From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <5de67ee5-20aa-a8f5-103c-f770d5711fba@linuxfoundation.org>
-Date:   Thu, 20 Aug 2020 17:47:46 -0600
+Message-ID: <96e6b82a-1711-d963-d382-5dc816b4b4ab@linuxfoundation.org>
+Date:   Thu, 20 Aug 2020 17:50:44 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
+In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -86,9 +86,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/20/20 3:17 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.8.3 release.
-> There are 232 patches in this series, all will be posted as a response
+On 8/20/20 3:19 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.233 release.
+> There are 212 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -96,9 +96,9 @@ On 8/20/20 3:17 AM, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.3-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.233-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
 > and the diffstat can be found below.
 > 
 > thanks,
