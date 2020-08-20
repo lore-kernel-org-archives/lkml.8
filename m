@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ABDC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D628C433E1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC78A207FB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDC8D207FB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882042;
-	bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
+	s=default; t=1597882046;
+	bh=fcu9tkV638RyO4qXm29ePKUITiCHaZxHndRULWlEA/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bg5UYoIpfWQM90E2bC07TTqjiw/Y/bT1FkVv5X5JXZblLMZmfooTcOP0TLF/K7OoH
-	 0Q5K3UbUx1v/2xuEm3ipYrKPdGU8YDTjuBusKycsPHVa65bs2twpSvz8ZosOJw46j5
-	 0jBvE6U6a9SDZiOqXMLdEbDrrrblrn3C2LbYYE/U=
+	b=D52P1le0uPoqPj/+26pWpXUHW8n2uHn8X4BqXt7NAbXtmO9Vhzuh3nGgDbZv9/q30
+	 448KSiDUqD66UJyMWc/puhQkPNHkoQHjo9GIggbtVJXRSbHhsXWDx7Z9dxeDlHGbHw
+	 qBHhTT3LvitSf+E14afSJOGJ0APnpoK2LV7P+m+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgHTAHV (ORCPT
+        id S1728675AbgHTAHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33020 "EHLO mail.kernel.org"
+        Wed, 19 Aug 2020 20:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgHTADY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Aug 2020 20:03:24 -0400
+        id S1728245AbgHTADV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:03:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F6F221744;
-        Thu, 20 Aug 2020 00:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C4B4208E4;
+        Thu, 20 Aug 2020 00:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881804;
-        bh=ObB8scPObpqBxHgYAz3uByh5AW7ZXQnLWcvr0snphRw=;
+        s=default; t=1597881801;
+        bh=fcu9tkV638RyO4qXm29ePKUITiCHaZxHndRULWlEA/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uqm0mfw+5Q5D8TGM+ZBOdFnlHaWifAFpwMCu6878jFd/1PuX4CuccVkQpoK/zA367
-         XScB1B7tN3fhzEhKED4MWxjbrUOWTxHt7XVHwNcLefEnTTo251Qo4oDfp8sG5CmFsb
-         D197oi9EYQrhhon7oZE55lQxvOPb8I9sIt85/Qow=
+        b=QUvWTJVzqCiADdPaQUQqYl6NG99ikyIJUIksseoSCj1D8Vm7PzT1AH+z3DaaqrNrg
+         864Plq6VYJNLhKwX+EhBdzfvRmnJbElR5BXg6qk23/QOVAZsXp+VKPxSuxlpqOgZ3t
+         zRrCzVTxNPog4rs3/2x64lLh0dktHNfcK9FGMdiA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 16/18] xfs: Fix UBSAN null-ptr-deref in xfs_sysfs_init
-Date:   Wed, 19 Aug 2020 20:02:59 -0400
-Message-Id: <20200820000302.215560-16-sashal@kernel.org>
+Cc:     Mao Wenan <wenan.mao@linux.alibaba.com>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH AUTOSEL 4.19 14/18] virtio_ring: Avoid loop when vq is broken in virtqueue_poll
+Date:   Wed, 19 Aug 2020 20:02:57 -0400
+Message-Id: <20200820000302.215560-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000302.215560-1-sashal@kernel.org>
 References: <20200820000302.215560-1-sashal@kernel.org>
@@ -59,57 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Mao Wenan <wenan.mao@linux.alibaba.com>
 
-[ Upstream commit 96cf2a2c75567ff56195fe3126d497a2e7e4379f ]
+[ Upstream commit 481a0d7422db26fb63e2d64f0652667a5c6d0f3e ]
 
-If xfs_sysfs_init is called with parent_kobj == NULL, UBSAN
-shows the following warning:
+The loop may exist if vq->broken is true,
+virtqueue_get_buf_ctx_packed or virtqueue_get_buf_ctx_split
+will return NULL, so virtnet_poll will reschedule napi to
+receive packet, it will lead cpu usage(si) to 100%.
 
-  UBSAN: null-ptr-deref in ./fs/xfs/xfs_sysfs.h:37:23
-  member access within null pointer of type 'struct xfs_kobj'
-  Call Trace:
-   dump_stack+0x10e/0x195
-   ubsan_type_mismatch_common+0x241/0x280
-   __ubsan_handle_type_mismatch_v1+0x32/0x40
-   init_xfs_fs+0x12b/0x28f
-   do_one_initcall+0xdd/0x1d0
-   do_initcall_level+0x151/0x1b6
-   do_initcalls+0x50/0x8f
-   do_basic_setup+0x29/0x2b
-   kernel_init_freeable+0x19f/0x20b
-   kernel_init+0x11/0x1e0
-   ret_from_fork+0x22/0x30
+call trace as below:
+virtnet_poll
+	virtnet_receive
+		virtqueue_get_buf_ctx
+			virtqueue_get_buf_ctx_packed
+			virtqueue_get_buf_ctx_split
+	virtqueue_napi_complete
+		virtqueue_poll           //return true
+		virtqueue_napi_schedule //it will reschedule napi
 
-Fix it by checking parent_kobj before the code accesses its member.
+to fix this, return false if vq is broken in virtqueue_poll.
 
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-[darrick: minor whitespace edits]
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Mao Wenan <wenan.mao@linux.alibaba.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Link: https://lore.kernel.org/r/1596354249-96204-1-git-send-email-wenan.mao@linux.alibaba.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_sysfs.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/virtio/virtio_ring.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/xfs/xfs_sysfs.h b/fs/xfs/xfs_sysfs.h
-index e9f810fc67317..43585850f1546 100644
---- a/fs/xfs/xfs_sysfs.h
-+++ b/fs/xfs/xfs_sysfs.h
-@@ -32,9 +32,11 @@ xfs_sysfs_init(
- 	struct xfs_kobj		*parent_kobj,
- 	const char		*name)
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 6228b48d1e127..df7980aef927a 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -828,6 +828,9 @@ bool virtqueue_poll(struct virtqueue *_vq, unsigned last_used_idx)
  {
-+	struct kobject		*parent;
-+
-+	parent = parent_kobj ? &parent_kobj->kobject : NULL;
- 	init_completion(&kobj->complete);
--	return kobject_init_and_add(&kobj->kobject, ktype,
--				    &parent_kobj->kobject, "%s", name);
-+	return kobject_init_and_add(&kobj->kobject, ktype, parent, "%s", name);
- }
+ 	struct vring_virtqueue *vq = to_vvq(_vq);
  
- static inline void
++	if (unlikely(vq->broken))
++		return false;
++
+ 	virtio_mb(vq->weak_barriers);
+ 	return (u16)last_used_idx != virtio16_to_cpu(_vq->vdev, vq->vring.used->idx);
+ }
 -- 
 2.25.1
 
