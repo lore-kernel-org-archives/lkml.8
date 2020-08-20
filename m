@@ -2,180 +2,168 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD98C433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C08DC433E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE5ED22D02
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PhnkoGYs"
+	by mail.kernel.org (Postfix) with ESMTP id 57F6222D2C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 15:52:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597938764;
+	bh=olFkF8WbsFuHtZd9ChmwDnMhq4dAB75kWwSK+0maCo0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jZv9S1Wowo1KSJ0W5UlQlkTfyjmtzIHpawlbI6KuDTDimKVxVnClVnhk2LGhKWuqm
+	 zh94Lsim58Xh6k63qK6r7WL1YK1nP9HkqotkG0nzvICbPDy05ahWYDyEoe7GxVjtM7
+	 wpleki2wlhHKSbY3+7dz2RmOOlDk/pTmiMrY5jG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgHTPwE (ORCPT
+        id S1729453AbgHTPwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 11:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728209AbgHTPwC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 11:52:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E7CC061385
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 08:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=SjTmJ9XwsS/HKzjcdQ/ubxMW0x/y/rl3M8LO4B6tTQE=; b=PhnkoGYstN9oYVI933xixhJIxY
-        rDByQzHQRIeoMFGefAk7eV2VUp+/ICyHHU1lpO6louXO57rw8wO/Cj6rS1QWnDfIVrM9jAELM6sEh
-        A0F4/Z9o4HZgHYagJGUoqFP4hXRU6Bl6tHm6a2PjVpqsNsrSKYjO0oJUb/fvh0F5G6bGS1w73Thie
-        aycn78pa3168nMPTZ+FI3nnj/w+xBQvXujzreRyAUfjehOKdMPLHKS+RVIEHtKjXRXEQRY1iLqXJK
-        pc+lGt3ccVMC2LdkNATSrWLMvfq4RNRUSBOU6pr3gSh4+ddZsjGuKSNe6mUNwvcoHURhDEY1Dp1Mj
-        VdtHegkA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k8mqm-0007uF-1g; Thu, 20 Aug 2020 15:51:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 20 Aug 2020 11:52:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728809AbgHTPwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 11:52:40 -0400
+Received: from kernel.org (unknown [87.70.91.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 11F2B303271;
-        Thu, 20 Aug 2020 17:51:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F0E6E2C37D878; Thu, 20 Aug 2020 17:51:34 +0200 (CEST)
-Date:   Thu, 20 Aug 2020 17:51:34 +0200
-From:   peterz@infradead.org
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Kyle Huey <me@kylehuey.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Robert O'Callahan <rocallahan@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Brian Gerst <brgerst@gmail.com>,
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50D6F22D02;
+        Thu, 20 Aug 2020 15:52:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597938759;
+        bh=olFkF8WbsFuHtZd9ChmwDnMhq4dAB75kWwSK+0maCo0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rXdI/2i+uTIyui9Dqky2lOsnOB5jHumUoz9vyCWVksi+jCX/cin2X0NAhZkvzzrrA
+         kwB1mQk9tmImk5FV5Ln6HbAMWznc6VF7fXJ8iI6/UHeReZUV1SP7agq0ae+f8/MDDg
+         S/yXBOXnLzIrn/7Y0W5T1dTvbgWrpaeScrKjGVKk=
+Date:   Thu, 20 Aug 2020 18:52:28 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [RFC][PATCH 4/7] x86/debug: Move historical SYSENTER junk into
- exc_debug_kernel()
-Message-ID: <20200820155134.GD1362448@hirez.programming.kicks-ass.net>
-References: <20200820103832.486877479@infradead.org>
- <20200820104905.294802764@infradead.org>
- <20200820152828.tvluka3lvmzof5xt@holly.lan>
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christopher Lameter <cl@linux.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Idan Yaniv <idan.yaniv@ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, Will Deacon <will@kernel.org>,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH v4 6/6] mm: secretmem: add ability to reserve memory at
+ boot
+Message-ID: <20200820155228.GZ752365@kernel.org>
+References: <20200818141554.13945-1-rppt@kernel.org>
+ <20200818141554.13945-7-rppt@kernel.org>
+ <03ec586d-c00c-c57e-3118-7186acb7b823@redhat.com>
+ <20200819115335.GU752365@kernel.org>
+ <10bf57a9-c3c2-e13c-ca50-e872b7a2db0c@redhat.com>
+ <20200819173347.GW752365@kernel.org>
+ <6c8b30fb-1b6c-d446-0b09-255b79468f7c@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200820152828.tvluka3lvmzof5xt@holly.lan>
+In-Reply-To: <6c8b30fb-1b6c-d446-0b09-255b79468f7c@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 04:28:28PM +0100, Daniel Thompson wrote:
-> On Thu, Aug 20, 2020 at 12:38:36PM +0200, Peter Zijlstra wrote:
+On Wed, Aug 19, 2020 at 07:45:29PM +0200, David Hildenbrand wrote:
+> On 19.08.20 19:33, Mike Rapoport wrote:
+> > On Wed, Aug 19, 2020 at 02:10:43PM +0200, David Hildenbrand wrote:
+> >> On 19.08.20 13:53, Mike Rapoport wrote:
+> >>> On Wed, Aug 19, 2020 at 12:49:05PM +0200, David Hildenbrand wrote:
+> >>>> On 18.08.20 16:15, Mike Rapoport wrote:
+> >>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+> >>>>>
+> >>>>> Taking pages out from the direct map and bringing them back may create
+> >>>>> undesired fragmentation and usage of the smaller pages in the direct
+> >>>>> mapping of the physical memory.
+> >>>>>
+> >>>>> This can be avoided if a significantly large area of the physical memory
+> >>>>> would be reserved for secretmem purposes at boot time.
+> >>>>>
+> >>>>> Add ability to reserve physical memory for secretmem at boot time using
+> >>>>> "secretmem" kernel parameter and then use that reserved memory as a global
+> >>>>> pool for secret memory needs.
+> >>>>
+> >>>> Wouldn't something like CMA be the better fit? Just wondering. Then, the
+> >>>> memory can actually be reused for something else while not needed.
+> >>>
+> >>> The memory allocated as secret is removed from the direct map and the
+> >>> boot time reservation is intended to reduce direct map fragmentatioan
+> >>> and to avoid splitting 1G pages there. So with CMA I'd still need to
+> >>> allocate 1G chunks for this and once 1G page is dropped from the direct
+> >>> map it still cannot be reused for anything else until it is freed.
+> >>>
+> >>> I could use CMA to do the boot time reservation, but doing the
+> >>> reservesion directly seemed simpler and more explicit to me.
+> >>
+> >> Well, using CMA would give you the possibility to let the memory be used
+> >> for other purposes until you decide it's the right time to take it +
+> >> remove the direct mapping etc.
 > > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >  arch/x86/kernel/traps.c |   24 ++++++++++++------------
-> >  1 file changed, 12 insertions(+), 12 deletions(-)
-> > 
-> > --- a/arch/x86/kernel/traps.c
-> > +++ b/arch/x86/kernel/traps.c
-> > @@ -820,18 +820,6 @@ static void handle_debug(struct pt_regs
-> >  		goto out;
-> >  	}
-> >  
-> > -	if (WARN_ON_ONCE((dr6 & DR_STEP) && !user_mode(regs))) {
-> > -		/*
-> > -		 * Historical junk that used to handle SYSENTER single-stepping.
-> > -		 * This should be unreachable now.  If we survive for a while
-> > -		 * without anyone hitting this warning, we'll turn this into
-> > -		 * an oops.
-> > -		 */
-> > -		tsk->thread.debugreg6 &= ~DR_STEP;
-> > -		set_tsk_thread_flag(tsk, TIF_SINGLESTEP);
-> > -		regs->flags &= ~X86_EFLAGS_TF;
-> > -	}
-> > -
-> >  	si_code = get_si_code(tsk->thread.debugreg6);
-> >  	if (tsk->thread.debugreg6 & (DR_STEP | DR_TRAP_BITS) || user_icebp)
-> >  		send_sigtrap(regs, 0, si_code);
-> > @@ -874,6 +862,18 @@ static __always_inline void exc_debug_ke
-> >  	if (kprobe_debug_handler(regs))
-> >  		goto out;
-> >  
-> > +	if (WARN_ON_ONCE(dr6 & DR_STEP)) {
-> > +		/*
-> > +		 * Historical junk that used to handle SYSENTER single-stepping.
-> > +		 * This should be unreachable now.  If we survive for a while
-> > +		 * without anyone hitting this warning, we'll turn this into
-> > +		 * an oops.
-> > +		 */
-> > +		dr6 &= ~DR_STEP;
-> > +		set_thread_flag(TIF_SINGLESTEP);
-> > +		regs->flags &= ~X86_EFLAGS_TF;
-> > +	}
-> > +
+> > I still can't say I follow you here. If I reseve a CMA area as a pool
+> > for secret memory 1G pages, it is still reserved and it still cannot be
+> > used for other purposes, right?
 > 
-> I was hoping just to share a Tested-by: on the patchset but
-> unfortunately it wasn't to be. After a quick bisect this patch comes
-> back as causing kdb single stepping to fail.
+> So, AFAIK, if you create a CMA pool it can be used for any MOVABLE
+> allocations (similar to ZONE_MOVABLE) until you actually allocate CMA
+> memory from that region. Other allocations on that are will then be
+> migrated away (using alloc_contig_range()).
+> 
+> For example, if you have a 1~GiB CMA area, you could allocate 4~MB pages
+> from that CMA area on demand (removing the direct mapping, etc ..), and
+> free when no longer needed (instantiating the direct mapping). The free
+> memory in that area could used for MOVABLE allocations.
 
-Yeah, Josh just asked me about this:
+The boot time resrvation is intended to avoid splitting 1G pages in the
+direct map. Without the boot time reservation, we maintain a pool of 2M
+pages so the 1G pages are split and 2M pages remain unsplit.
 
-  https://lkml.kernel.org/r/20200820152111.GC1362448@hirez.programming.kicks-ass.net
+If I scale your example to match the requirement to avoid splitting 1G
+pages in the direct map, that would mean creating a CMA area of several
+tens of gigabytes and then doing cma_alloc() of 1G each time we need to
+refill the secretmem pool. 
 
-How's this on top of the lot?
+It is quite probable that we won't be able to get 1G from CMA after the
+system worked for some time.
 
----
+With boot time reservation we won't need physcally contiguous 1G to
+satisfy smaller allocation requests for secretmem because we don't need
+to maintain 1G mappings in the secretmem pool.
 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -828,25 +828,24 @@ static __always_inline void exc_debug_ke
- 	if (kprobe_debug_handler(regs))
- 		goto out;
- 
--	if (WARN_ON_ONCE(dr6 & DR_STEP)) {
--		/*
--		 * Historical junk that used to handle SYSENTER single-stepping.
--		 * This should be unreachable now.  If we survive for a while
--		 * without anyone hitting this warning, we'll turn this into
--		 * an oops.
--		 */
--		dr6 &= ~DR_STEP;
--		set_thread_flag(TIF_SINGLESTEP);
--		regs->flags &= ~X86_EFLAGS_TF;
--	}
--
- 	/*
- 	 * The kernel doesn't use INT1
- 	 */
- 	if (!dr6)
- 		goto out;
- 
--	notify_debug(regs, dr6);
-+	if (notify_debug(regs, dr6))
-+		goto out;
-+
-+	/*
-+	 * The kernel doesn't use TF single-step outside of:
-+	 *
-+	 *  - Kprobes, consumed through kprobe_debug_handler()
-+	 *  - KGDB, consumed through notify_debug()
-+	 *
-+	 * So if we get here with DR_STEP set, something is wonky.
-+	 */
-+	BUG_ON(current->thread.debugreg6 & DR_STEP);
- 
- out:
- 	instrumentation_end();
+That said, I believe the addition of the boot time reservation, either
+direct or with CMA, can be added as an incrememntal patch after the
+"core" functionality is merged.
+
+> Please let me know if I am missing something important.
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+> 
+
+-- 
+Sincerely yours,
+Mike.
