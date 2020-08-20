@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D335AC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC4D920738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DFE0206DA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 13:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597931844;
-	bh=Ee5Xl4plfpnoG2TwGxHJePFJ8XV8d4vHdO5DuBTacYg=;
+	s=default; t=1597931851;
+	bh=eoztplTus6nq3nSYjpveHlTWmwLp66x9zB5eAk6dUkA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5rh2JzriF4WY14hy2dsjRK714HRAalsNA51Hd5tvdP9XGlE6Mk26vzZNUjGjYIom
-	 DI5KdqRranhz06k1v4stL9etPt5N+HsGmlcKysTfntXx05TZs481K/y0TGl1GWH0I+
-	 ZcWOG1FVfpthIlWrMEMUETX1bSy9DdV5GEb9/vlg=
+	b=iLJWYHBJhozxPFcEaT+TlKkdQl3BOP9mfXmOYf+8rR5LKbDNGqIGA0JCHIPd/7XhB
+	 l4+Z6EJU7W0zCnQkLd6EXp+qZJowq6MjUuGIxZcFMAusbL5zkqnHm/7kOKijl/zL97
+	 0tGtcvq5cU2htN78KM5VhtPsRZNoHulWK4FpN8lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgHTN5T (ORCPT
+        id S1729872AbgHTN5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 09:57:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 09:57:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727769AbgHTJZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727786AbgHTJZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Aug 2020 05:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D1C222D00;
-        Thu, 20 Aug 2020 09:25:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 023312075E;
+        Thu, 20 Aug 2020 09:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597915525;
-        bh=Ee5Xl4plfpnoG2TwGxHJePFJ8XV8d4vHdO5DuBTacYg=;
+        s=default; t=1597915528;
+        bh=eoztplTus6nq3nSYjpveHlTWmwLp66x9zB5eAk6dUkA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fzElbNTPo4zP/LrxWmFOp1KToLrLShjgNuS1dwBA8Msv60Kn54waW8VPvEMGjTi7B
-         S4gYum3D9XZYjEHoCOu5SQSs9RssYBjnlh021P70gDb+NmKwyLu4C0AAPcAl/X69ib
-         WP2eSc16ahf1UycqSDxmKid8rNa1405Bjn7461Kg=
+        b=HJGmxLDP8PmdO7AZM9E/rS/TYSBRglWqtEl3tmtBoBUO2QWhwmumgK1ELnV1JMm1Q
+         w/6vn6bR0XHWXnTqkz3z2l7+0X3iIJLei+2BNoZPfx3jbxPIsMppyHnR7r8KBIzbRw
+         MW5/u2gz2GWpJyQXs/Dzvs5vZf68PnYzZ6bZT4vw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Charles Stanhope <charles.stanhope@gmail.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Stable@vger.kernel.org,
+        stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>, Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.8 045/232] iio: dac: ad5592r: fix unbalanced mutex unlocks in ad5592r_read_raw()
-Date:   Thu, 20 Aug 2020 11:18:16 +0200
-Message-Id: <20200820091614.962747060@linuxfoundation.org>
+Subject: [PATCH 5.8 046/232] iio: imu: st_lsm6dsx: reset hw ts after resume
+Date:   Thu, 20 Aug 2020 11:18:17 +0200
+Message-Id: <20200820091615.011803854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091612.692383444@linuxfoundation.org>
 References: <20200820091612.692383444@linuxfoundation.org>
@@ -62,47 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-commit 65afb0932a81c1de719ceee0db0b276094b10ac8 upstream.
+commit a1bab9396c2d98c601ce81c27567159dfbc10c19 upstream.
 
-There are 2 exit paths where the lock isn't held, but try to unlock the
-mutex when exiting. In these places we should just return from the
-function.
+Reset hw time samples generator after system resume in order to avoid
+disalignment between system and device time reference since FIFO
+batching and time samples generator are disabled during suspend.
 
-A neater approach would be to cleanup the ad5592r_read_raw(), but that
-would make this patch more difficult to backport to stable versions.
-
-Fixes 56ca9db862bf3: ("iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs")
-Reported-by: Charles Stanhope <charles.stanhope@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Fixes: 213451076bd3 ("iio: imu: st_lsm6dsx: add hw timestamp support")
+Tested-by: Sean Nyekjaer <sean@geanix.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/dac/ad5592r-base.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        |    3 +--
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c |   23 +++++++++++++++--------
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   |    2 +-
+ 3 files changed, 17 insertions(+), 11 deletions(-)
 
---- a/drivers/iio/dac/ad5592r-base.c
-+++ b/drivers/iio/dac/ad5592r-base.c
-@@ -413,7 +413,7 @@ static int ad5592r_read_raw(struct iio_d
- 			s64 tmp = *val * (3767897513LL / 25LL);
- 			*val = div_s64_rem(tmp, 1000000000LL, val2);
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+@@ -436,8 +436,7 @@ int st_lsm6dsx_update_watermark(struct s
+ 				u16 watermark);
+ int st_lsm6dsx_update_fifo(struct st_lsm6dsx_sensor *sensor, bool enable);
+ int st_lsm6dsx_flush_fifo(struct st_lsm6dsx_hw *hw);
+-int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+-			     enum st_lsm6dsx_fifo_mode fifo_mode);
++int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_read_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_read_tagged_fifo(struct st_lsm6dsx_hw *hw);
+ int st_lsm6dsx_check_odr(struct st_lsm6dsx_sensor *sensor, u32 odr, u8 *val);
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+@@ -184,8 +184,8 @@ static int st_lsm6dsx_update_decimators(
+ 	return err;
+ }
  
--			ret = IIO_VAL_INT_PLUS_MICRO;
-+			return IIO_VAL_INT_PLUS_MICRO;
- 		} else {
- 			int mult;
+-int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
+-			     enum st_lsm6dsx_fifo_mode fifo_mode)
++static int st_lsm6dsx_set_fifo_mode(struct st_lsm6dsx_hw *hw,
++				    enum st_lsm6dsx_fifo_mode fifo_mode)
+ {
+ 	unsigned int data;
  
-@@ -444,7 +444,7 @@ static int ad5592r_read_raw(struct iio_d
- 		ret =  IIO_VAL_INT;
- 		break;
- 	default:
--		ret = -EINVAL;
-+		return -EINVAL;
+@@ -302,6 +302,18 @@ static int st_lsm6dsx_reset_hw_ts(struct
+ 	return 0;
+ }
+ 
++int st_lsm6dsx_resume_fifo(struct st_lsm6dsx_hw *hw)
++{
++	int err;
++
++	/* reset hw ts counter */
++	err = st_lsm6dsx_reset_hw_ts(hw);
++	if (err < 0)
++		return err;
++
++	return st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++}
++
+ /*
+  * Set max bulk read to ST_LSM6DSX_MAX_WORD_LEN/ST_LSM6DSX_MAX_TAGGED_WORD_LEN
+  * in order to avoid a kmalloc for each bus access
+@@ -675,12 +687,7 @@ int st_lsm6dsx_update_fifo(struct st_lsm
+ 		goto out;
+ 
+ 	if (fifo_mask) {
+-		/* reset hw ts counter */
+-		err = st_lsm6dsx_reset_hw_ts(hw);
+-		if (err < 0)
+-			goto out;
+-
+-		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++		err = st_lsm6dsx_resume_fifo(hw);
+ 		if (err < 0)
+ 			goto out;
+ 	}
+--- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
++++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+@@ -2458,7 +2458,7 @@ static int __maybe_unused st_lsm6dsx_res
  	}
  
- unlock:
+ 	if (hw->fifo_mask)
+-		err = st_lsm6dsx_set_fifo_mode(hw, ST_LSM6DSX_FIFO_CONT);
++		err = st_lsm6dsx_resume_fifo(hw);
+ 
+ 	return err;
+ }
 
 
