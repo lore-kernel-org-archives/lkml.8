@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01AEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D5AC433E3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2E7021775
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4E1214F1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 11:57:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597924655;
-	bh=cOt4CRmaLjXzgRgBPBXt59IgiOXy8Y3w7CEiPYGBdfE=;
+	s=default; t=1597924670;
+	bh=lvI2uMSfZCmRpwD/L/vfVRFoRh3LmS1tUAkvVUgkxbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a8ZQKIfg9cTlFYdYprUj0oej3RbCn82kgiKIQ5QFn2hzwmY/BdW8QJHVW5YmuBCPj
-	 dYBRC2a4djhon3c0OGUlTBWedQrfo5KBs1TQpUPOgFXv3mqX6pT8ylT8ln5EUn5jVA
-	 5/LTip3WVu2eZBUUgQcK0HPV1X1KQHUe2SqN0gE8=
+	b=gzR51/DetPOR9idVn7sk9vU5fBxMC/h6K/A0djD7pJrQVtKxAKZKwMVh2ogplZVzk
+	 U719CKhSLDigQEZOCWcyXHywJW6pSH40KUhDuRLAk4glWcmI/GXqrs8H0Y2v2tqd3q
+	 EOhkFrcNSE9qeZfYWIzk1Q9xHe+xlp+ptGh/rx24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730450AbgHTL5d (ORCPT
+        id S1728834AbgHTL5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 07:57:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48998 "EHLO mail.kernel.org"
+        Thu, 20 Aug 2020 07:57:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730415AbgHTKAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 06:00:54 -0400
+        id S1729725AbgHTKAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 06:00:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E86F420738;
-        Thu, 20 Aug 2020 10:00:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 813EC2067C;
+        Thu, 20 Aug 2020 10:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917653;
-        bh=cOt4CRmaLjXzgRgBPBXt59IgiOXy8Y3w7CEiPYGBdfE=;
+        s=default; t=1597917648;
+        bh=lvI2uMSfZCmRpwD/L/vfVRFoRh3LmS1tUAkvVUgkxbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t+sylJ8EuZGJIoG/ZjVzVqJxQtsEahfbW0HlsPsVkeEaJlEGLwSzVbYuxY5+aln44
-         qL4r3/fCEL69PoydJnN4qG9bQWE1csoSzL9VPisVlGGeZDa/VQnsmOz5KlyZjoiMpb
-         KRQcx/tiqSe20FlBrI9DiuGcBeQqpOn0/d3HSfS4=
+        b=1dr5kljkLBoFVxe+j7ExiMcFL63hNW31S8QJtgag0inIWs5HrN/ZpfbKlXxfoJi05
+         lVhZJrjLvZXc06ZBKBxsCyYiwLXXz3I7noLnxULxniPo+W+E5b/gvnt5eiivlEjban
+         qCUAeTaumEqP0+use5dRKKKbzJOQgHDciPkA0zwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dejin Zheng <zhengdejin5@gmail.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@osdl.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 109/212] console: newport_con: fix an issue about leak related system resources
-Date:   Thu, 20 Aug 2020 11:21:22 +0200
-Message-Id: <20200820091607.851822412@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 107/212] agp/intel: Fix a memory leak on module initialisation failure
+Date:   Thu, 20 Aug 2020 11:21:20 +0200
+Message-Id: <20200820091607.751278531@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200820091602.251285210@linuxfoundation.org>
 References: <20200820091602.251285210@linuxfoundation.org>
@@ -63,88 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit fd4b8243877250c05bb24af7fea5567110c9720b ]
+[ Upstream commit b975abbd382fe442713a4c233549abb90e57c22b ]
 
-A call of the function do_take_over_console() can fail here.
-The corresponding system resources were not released then.
-Thus add a call of iounmap() and release_mem_region()
-together with the check of a failure predicate. and also
-add release_mem_region() on device removal.
+In intel_gtt_setup_scratch_page(), pointer "page" is not released if
+pci_dma_mapping_error() return an error, leading to a memory leak on
+module initialisation failure.  Simply fix this issue by freeing "page"
+before return.
 
-Fixes: e86bb8acc0fdc ("[PATCH] VT binding: Make newport_con support binding")
-Suggested-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@osdl.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200423164251.3349-1-zhengdejin5@gmail.com
+Fixes: 0e87d2b06cb46 ("intel-gtt: initialize our own scratch page")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200522083451.7448-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/console/newport_con.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/char/agp/intel-gtt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/console/newport_con.c b/drivers/video/console/newport_con.c
-index e3b9521e4ec3e..33bddf3f30406 100644
---- a/drivers/video/console/newport_con.c
-+++ b/drivers/video/console/newport_con.c
-@@ -31,6 +31,8 @@
- #include <linux/linux_logo.h>
- #include <linux/font.h>
+diff --git a/drivers/char/agp/intel-gtt.c b/drivers/char/agp/intel-gtt.c
+index 871e7f4994e8c..667882e996ecc 100644
+--- a/drivers/char/agp/intel-gtt.c
++++ b/drivers/char/agp/intel-gtt.c
+@@ -303,8 +303,10 @@ static int intel_gtt_setup_scratch_page(void)
+ 	if (intel_private.needs_dmar) {
+ 		dma_addr = pci_map_page(intel_private.pcidev, page, 0,
+ 				    PAGE_SIZE, PCI_DMA_BIDIRECTIONAL);
+-		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr))
++		if (pci_dma_mapping_error(intel_private.pcidev, dma_addr)) {
++			__free_page(page);
+ 			return -EINVAL;
++		}
  
-+#define NEWPORT_LEN	0x10000
-+
- #define FONT_DATA ((unsigned char *)font_vga_8x16.data)
- 
- /* borrowed from fbcon.c */
-@@ -42,6 +44,7 @@
- static unsigned char *font_data[MAX_NR_CONSOLES];
- 
- static struct newport_regs *npregs;
-+static unsigned long newport_addr;
- 
- static int logo_active;
- static int topscan;
-@@ -701,7 +704,6 @@ const struct consw newport_con = {
- static int newport_probe(struct gio_device *dev,
- 			 const struct gio_device_id *id)
- {
--	unsigned long newport_addr;
- 	int err;
- 
- 	if (!dev->resource.start)
-@@ -711,7 +713,7 @@ static int newport_probe(struct gio_device *dev,
- 		return -EBUSY; /* we only support one Newport as console */
- 
- 	newport_addr = dev->resource.start + 0xF0000;
--	if (!request_mem_region(newport_addr, 0x10000, "Newport"))
-+	if (!request_mem_region(newport_addr, NEWPORT_LEN, "Newport"))
- 		return -ENODEV;
- 
- 	npregs = (struct newport_regs *)/* ioremap cannot fail */
-@@ -719,6 +721,11 @@ static int newport_probe(struct gio_device *dev,
- 	console_lock();
- 	err = do_take_over_console(&newport_con, 0, MAX_NR_CONSOLES - 1, 1);
- 	console_unlock();
-+
-+	if (err) {
-+		iounmap((void *)npregs);
-+		release_mem_region(newport_addr, NEWPORT_LEN);
-+	}
- 	return err;
- }
- 
-@@ -726,6 +733,7 @@ static void newport_remove(struct gio_device *dev)
- {
- 	give_up_console(&newport_con);
- 	iounmap((void *)npregs);
-+	release_mem_region(newport_addr, NEWPORT_LEN);
- }
- 
- static struct gio_device_id newport_ids[] = {
+ 		intel_private.scratch_page_dma = dma_addr;
+ 	} else
 -- 
 2.25.1
 
