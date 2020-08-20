@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE86C433E3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22B88208C7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 602E6208C7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 00:09:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597882177;
-	bh=TIVuwaQyK/Sb4zzBekFsN4y6S1fBcl4ygnmfF7pKC5I=;
+	s=default; t=1597882182;
+	bh=IgiPxDi5wXjrLJkZg1ANTnEff/PCYXX1uHumPBMZeRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QEn60aGeYcxmAhK2YQoqewfLWhiYZVfKOMvdEYdSGU5dsXyQcoD3rmUtr5IpXvyYg
-	 1KQan7E9rupkEmvtZrl0Raq2af6i4TfX4Meitubn/+nehdV88RNuE3ExRJyj8zTZTK
-	 vqZgBytsEMBOGLSeBe2zVMn+vF1nxsVqrNiMi8XA=
+	b=l4qKwj+aZNCBvQXUXWGF1r/5cCxhWoenmrAiYj2TRGcNT6NQ1wUIH1KcBMXGr/XpJ
+	 /ld+6lNZDmbd2CtAuIg0CmdkqDyLdBwGB7annOxiEBLjJnyJZRYHeeUfJMtGQMX9Ef
+	 nRNpNFobUDmwEMnrF2WbMW3pIW9qy3Dv9ONSz3iU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgHTAJf (ORCPT
+        id S1727970AbgHTACo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Aug 2020 20:09:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59812 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728061AbgHTACo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Aug 2020 20:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728027AbgHTACe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Aug 2020 20:02:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E01CA207FB;
-        Thu, 20 Aug 2020 00:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D94420FC3;
+        Thu, 20 Aug 2020 00:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597881763;
-        bh=TIVuwaQyK/Sb4zzBekFsN4y6S1fBcl4ygnmfF7pKC5I=;
+        s=default; t=1597881753;
+        bh=IgiPxDi5wXjrLJkZg1ANTnEff/PCYXX1uHumPBMZeRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R9frZhQNz3fiWYRsadE2ltVIzFR9hVsPLtVtttQeKJdf0etpvfEmM2P4R/WLzys7E
-         NawE3oW27qZPN13s3+wLBkPhBwiX5UfzIsKdSObxBv0B3K/LmKTMFTBBpoU5N7pq3P
-         obr1++ShQ89CigF9D89tV0A4ED1FtgdWkcL68Qpg=
+        b=yExa6F3VQ2lBPyqDFgtYiIBub7z10Q7qTEx7nfT0pxCZ54OIc3mmsVt8BN1qvY7Zs
+         5CaBOMRvZlAT4hSaMFkPXtLA5ILyQHJ/T92fbddCQPZsvqoqr6xA/xnDJ8XJwl68+Y
+         oLDmflsHk7YECfomhDlXFpNLMpTnnQ1T496B+ojQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Allison Collins <allison.henderson@oracle.com>,
-        Chandan Babu R <chandanrlinux@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sasha Levin <sashal@kernel.org>, linux-xfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 10/22] xfs: fix inode quota reservation checks
-Date:   Wed, 19 Aug 2020 20:02:17 -0400
-Message-Id: <20200820000229.215333-10-sashal@kernel.org>
+Cc:     Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        JiangYu <lnsyyj@hotmail.com>,
+        Daniel Meyerholt <dxm523@gmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/22] scsi: target: tcmu: Fix crash in tcmu_flush_dcache_range on ARM
+Date:   Wed, 19 Aug 2020 20:02:09 -0400
+Message-Id: <20200820000229.215333-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200820000229.215333-1-sashal@kernel.org>
 References: <20200820000229.215333-1-sashal@kernel.org>
@@ -61,54 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Darrick J. Wong" <darrick.wong@oracle.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit f959b5d037e71a4d69b5bf71faffa065d9269b4a ]
+[ Upstream commit 3145550a7f8b08356c8ff29feaa6c56aca12901d ]
 
-xfs_trans_dqresv is the function that we use to make reservations
-against resource quotas.  Each resource contains two counters: the
-q_core counter, which tracks resources allocated on disk; and the dquot
-reservation counter, which tracks how much of that resource has either
-been allocated or reserved by threads that are working on metadata
-updates.
+This patch fixes the following crash (see
+https://bugzilla.kernel.org/show_bug.cgi?id=208045)
 
-For disk blocks, we compare the proposed reservation counter against the
-hard and soft limits to decide if we're going to fail the operation.
-However, for inodes we inexplicably compare against the q_core counter,
-not the incore reservation count.
+ Process iscsi_trx (pid: 7496, stack limit = 0x0000000010dd111a)
+ CPU: 0 PID: 7496 Comm: iscsi_trx Not tainted 4.19.118-0419118-generic
+        #202004230533
+ Hardware name: Greatwall QingTian DF720/F601, BIOS 601FBE20 Sep 26 2019
+ pstate: 80400005 (Nzcv daif +PAN -UAO)
+ pc : flush_dcache_page+0x18/0x40
+ lr : is_ring_space_avail+0x68/0x2f8 [target_core_user]
+ sp : ffff000015123a80
+ x29: ffff000015123a80 x28: 0000000000000000
+ x27: 0000000000001000 x26: ffff000023ea5000
+ x25: ffffcfa25bbe08b8 x24: 0000000000000078
+ x23: ffff7e0000000000 x22: ffff000023ea5001
+ x21: ffffcfa24b79c000 x20: 0000000000000fff
+ x19: ffff7e00008fa940 x18: 0000000000000000
+ x17: 0000000000000000 x16: ffff2d047e709138
+ x15: 0000000000000000 x14: 0000000000000000
+ x13: 0000000000000000 x12: ffff2d047fbd0a40
+ x11: 0000000000000000 x10: 0000000000000030
+ x9 : 0000000000000000 x8 : ffffc9a254820a00
+ x7 : 00000000000013b0 x6 : 000000000000003f
+ x5 : 0000000000000040 x4 : ffffcfa25bbe08e8
+ x3 : 0000000000001000 x2 : 0000000000000078
+ x1 : ffffcfa25bbe08b8 x0 : ffff2d040bc88a18
+ Call trace:
+  flush_dcache_page+0x18/0x40
+  is_ring_space_avail+0x68/0x2f8 [target_core_user]
+  queue_cmd_ring+0x1f8/0x680 [target_core_user]
+  tcmu_queue_cmd+0xe4/0x158 [target_core_user]
+  __target_execute_cmd+0x30/0xf0 [target_core_mod]
+  target_execute_cmd+0x294/0x390 [target_core_mod]
+  transport_generic_new_cmd+0x1e8/0x358 [target_core_mod]
+  transport_handle_cdb_direct+0x50/0xb0 [target_core_mod]
+  iscsit_execute_cmd+0x2b4/0x350 [iscsi_target_mod]
+  iscsit_sequence_cmd+0xd8/0x1d8 [iscsi_target_mod]
+  iscsit_process_scsi_cmd+0xac/0xf8 [iscsi_target_mod]
+  iscsit_get_rx_pdu+0x404/0xd00 [iscsi_target_mod]
+  iscsi_target_rx_thread+0xb8/0x130 [iscsi_target_mod]
+  kthread+0x130/0x138
+  ret_from_fork+0x10/0x18
+ Code: f9000bf3 aa0003f3 aa1e03e0 d503201f (f9400260)
+ ---[ end trace 1e451c73f4266776 ]---
 
-Since the q_core counter is always lower than the reservation count and
-we unlock the dquot between reservation and transaction commit, this
-means that multiple threads can reserve the last inode count before we
-hit the hard limit, and when they commit, we'll be well over the hard
-limit.
+The solution is based on patch:
 
-Fix this by checking against the incore inode reservation counter, since
-we would appear to maintain that correctly (and that's what we report in
-GETQUOTA).
+  "scsi: target: tcmu: Optimize use of flush_dcache_page"
 
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Reviewed-by: Allison Collins <allison.henderson@oracle.com>
-Reviewed-by: Chandan Babu R <chandanrlinux@gmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+which restricts the use of tcmu_flush_dcache_range() to addresses from
+vmalloc'ed areas only.
+
+This patch now replaces the virt_to_page() call in
+tcmu_flush_dcache_range() - which is wrong for vmalloced addrs - by
+vmalloc_to_page().
+
+The patch was tested on ARM with kernel 4.19.118 and 5.7.2
+
+Link: https://lore.kernel.org/r/20200618131632.32748-3-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Tested-by: Daniel Meyerholt <dxm523@gmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/xfs_trans_dquot.c | 2 +-
+ drivers/target/target_core_user.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/xfs/xfs_trans_dquot.c b/fs/xfs/xfs_trans_dquot.c
-index 16457465833ba..904780dd74aa3 100644
---- a/fs/xfs/xfs_trans_dquot.c
-+++ b/fs/xfs/xfs_trans_dquot.c
-@@ -646,7 +646,7 @@ xfs_trans_dqresv(
- 			}
- 		}
- 		if (ninos > 0) {
--			total_count = be64_to_cpu(dqp->q_core.d_icount) + ninos;
-+			total_count = dqp->q_res_icount + ninos;
- 			timer = be32_to_cpu(dqp->q_core.d_itimer);
- 			warns = be16_to_cpu(dqp->q_core.d_iwarns);
- 			warnlimit = dqp->q_mount->m_quotainfo->qi_iwarnlimit;
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index a497e7c1f4fcc..d766fb14942b3 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -601,7 +601,7 @@ static inline void tcmu_flush_dcache_range(void *vaddr, size_t size)
+ 	size = round_up(size+offset, PAGE_SIZE);
+ 
+ 	while (size) {
+-		flush_dcache_page(virt_to_page(start));
++		flush_dcache_page(vmalloc_to_page(start));
+ 		start += PAGE_SIZE;
+ 		size -= PAGE_SIZE;
+ 	}
 -- 
 2.25.1
 
