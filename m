@@ -2,161 +2,98 @@ Return-Path: <SRS0=YvwE=B6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D0EC433E1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89ADBC433DF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63B9D20738
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597926576;
-	bh=lpx7Jg3abwMhOx8OANGz+OZFCZejRU8WyDKbjrjb6uY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXZJvHnUcb/kbvspbqcUb/3MRWNx7IOmcbsDl347CDNPPl1bOGJX0/NwhMjRuTHJF
-	 bWgjdzittH6I0nkWL8Bw9u/j64yobOSjS95mq59BkqhqO4/cUGIftd/tpomYxUjFol
-	 RiS4MD8GGeYE4YMaOzM+tR5zNC4Pput0ow6DQSDs=
+	by mail.kernel.org (Postfix) with ESMTP id 5E08D20738
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Aug 2020 12:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbgHTM3e (ORCPT
+        id S1729881AbgHTM3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 08:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgHTJvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 05:51:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 228E42078D;
-        Thu, 20 Aug 2020 09:51:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597917091;
-        bh=lpx7Jg3abwMhOx8OANGz+OZFCZejRU8WyDKbjrjb6uY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JofTzQGGTy5asQa159EUoxr6aXXJJFMw/G5yIBQO+hzkFpu3XHvK3d1cwyvm0pxlQ
-         ynyyqn5VdoYtlLjuhcRJkSfRnxElSfWhFJ0qU/JyFvpHeFQTwZf7f/pTWsARsfDsTz
-         5wuyQYkBNP1Q8zuEGNUIrbHjNKL18kyGvMCYY8yQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
-        Thomas Hebb <tommyhebb@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Stephane Eranian <eranian@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 142/152] tools build feature: Quote CC and CXX for their arguments
-Date:   Thu, 20 Aug 2020 11:21:49 +0200
-Message-Id: <20200820091601.084347912@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200820091553.615456912@linuxfoundation.org>
-References: <20200820091553.615456912@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Aug 2020 08:29:48 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34814 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729347AbgHTM3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 08:29:37 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7A43D86F04766B046245;
+        Thu, 20 Aug 2020 20:29:34 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Thu, 20 Aug 2020
+ 20:29:28 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>,
+        <martin.varghese@nokia.com>, <pshelar@ovn.org>, <fw@strlen.de>,
+        <dcaratti@redhat.com>, <edumazet@google.com>,
+        <steffen.klassert@secunet.com>, <pabeni@redhat.com>,
+        <shmulik@metanetworks.com>, <kyk.segfault@gmail.com>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linmiaohe@huawei.com>
+Subject: [PATCH] net: Check the expect of skb->data at mac header
+Date:   Thu, 20 Aug 2020 08:28:22 -0400
+Message-ID: <20200820122822.46608-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Díaz <daniel.diaz@linaro.org>
+skb_mpls_push() and skb_mpls_pop() expect skb->data at mac header. Check
+this assumption or we would get wrong mac_header and network_header.
 
-[ Upstream commit fa5c893181ed2ca2f96552f50073786d2cfce6c0 ]
-
-When using a cross-compilation environment, such as OpenEmbedded,
-the CC an CXX variables are set to something more than just a
-command: there are arguments (such as --sysroot) that need to be
-passed on to the compiler so that the right set of headers and
-libraries are used.
-
-For the particular case that our systems detected, CC is set to
-the following:
-
-  export CC="aarch64-linaro-linux-gcc  --sysroot=/oe/build/tmp/work/machine/perf/1.0-r9/recipe-sysroot"
-
-Without quotes, detection is as follows:
-
-  Auto-detecting system features:
-  ...                         dwarf: [ OFF ]
-  ...            dwarf_getlocations: [ OFF ]
-  ...                         glibc: [ OFF ]
-  ...                          gtk2: [ OFF ]
-  ...                        libbfd: [ OFF ]
-  ...                        libcap: [ OFF ]
-  ...                        libelf: [ OFF ]
-  ...                       libnuma: [ OFF ]
-  ...        numa_num_possible_cpus: [ OFF ]
-  ...                       libperl: [ OFF ]
-  ...                     libpython: [ OFF ]
-  ...                     libcrypto: [ OFF ]
-  ...                     libunwind: [ OFF ]
-  ...            libdw-dwarf-unwind: [ OFF ]
-  ...                          zlib: [ OFF ]
-  ...                          lzma: [ OFF ]
-  ...                     get_cpuid: [ OFF ]
-  ...                           bpf: [ OFF ]
-  ...                        libaio: [ OFF ]
-  ...                       libzstd: [ OFF ]
-  ...        disassembler-four-args: [ OFF ]
-
-  Makefile.config:414: *** No gnu/libc-version.h found, please install glibc-dev[el].  Stop.
-  Makefile.perf:230: recipe for target 'sub-make' failed
-  make[1]: *** [sub-make] Error 2
-  Makefile:69: recipe for target 'all' failed
-  make: *** [all] Error 2
-
-With CC and CXX quoted, some of those features are now detected.
-
-Fixes: e3232c2f39ac ("tools build feature: Use CC and CXX from parent")
-Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
-Reviewed-by: Thomas Hebb <tommyhebb@gmail.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: http://lore.kernel.org/lkml/20200812221518.2869003-1-daniel.diaz@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 ---
- tools/build/Makefile.feature | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/core/skbuff.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index e80a1a8e287f8..8c6e1ea67f213 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -8,7 +8,7 @@ endif
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index e18184ffa9c3..52d2ad54aa97 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5590,6 +5590,7 @@ static void skb_mod_eth_type(struct sk_buff *skb, struct ethhdr *hdr,
+ int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
+ 		  int mac_len, bool ethernet)
+ {
++	int offset = skb->data - skb_mac_header(skb);
+ 	struct mpls_shim_hdr *lse;
+ 	int err;
  
- feature_check = $(eval $(feature_check_code))
- define feature_check_code
--  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC=$(CC) CXX=$(CXX) CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
-+  feature-$(1) := $(shell $(MAKE) OUTPUT=$(OUTPUT_FEATURES) CC="$(CC)" CXX="$(CXX)" CFLAGS="$(EXTRA_CFLAGS) $(FEATURE_CHECK_CFLAGS-$(1))" CXXFLAGS="$(EXTRA_CXXFLAGS) $(FEATURE_CHECK_CXXFLAGS-$(1))" LDFLAGS="$(LDFLAGS) $(FEATURE_CHECK_LDFLAGS-$(1))" -C $(feature_dir) $(OUTPUT_FEATURES)test-$1.bin >/dev/null 2>/dev/null && echo 1 || echo 0)
- endef
+@@ -5600,6 +5601,9 @@ int skb_mpls_push(struct sk_buff *skb, __be32 mpls_lse, __be16 mpls_proto,
+ 	if (skb->encapsulation)
+ 		return -EINVAL;
  
- feature_set = $(eval $(feature_set_code))
++	if (WARN_ONCE(offset, "We got skb with skb->data not at mac header (offset %d)\n", offset))
++		return -EINVAL;
++
+ 	err = skb_cow_head(skb, MPLS_HLEN);
+ 	if (unlikely(err))
+ 		return err;
+@@ -5643,11 +5647,15 @@ EXPORT_SYMBOL_GPL(skb_mpls_push);
+ int skb_mpls_pop(struct sk_buff *skb, __be16 next_proto, int mac_len,
+ 		 bool ethernet)
+ {
++	int offset = skb->data - skb_mac_header(skb);
+ 	int err;
+ 
+ 	if (unlikely(!eth_p_mpls(skb->protocol)))
+ 		return 0;
+ 
++	if (WARN_ONCE(offset, "We got skb with skb->data not at mac header (offset %d)\n", offset))
++		return -EINVAL;
++
+ 	err = skb_ensure_writable(skb, mac_len + MPLS_HLEN);
+ 	if (unlikely(err))
+ 		return err;
 -- 
-2.25.1
-
-
+2.19.1
 
