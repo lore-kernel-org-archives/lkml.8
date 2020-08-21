@@ -7,60 +7,59 @@ X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ECFC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCEAC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D05A214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2FA214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:12:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Trkh8tzC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="Vt4Sqwe3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgHUHMR (ORCPT
+        id S1728017AbgHUHMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:12:17 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:3043 "EHLO mx1.tq-group.com"
+        Fri, 21 Aug 2020 03:12:16 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:14048 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbgHUHMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:12:15 -0400
-IronPort-SDR: 2VXbvpM0wpDsnADs9ZVhZ6cgKIUMtgcaRhqz8Za8c/9zSkU7Y8y82HAThi5mMhwd9UfzZwvbeR
- 7+ZQUzg8imTnmgzC3qV5dSItklz9GSCFruWyH+cxTarqseYt7T1wTgZKCnVuh8pFnRKNipf1Xn
- gHE68kwhcWKCOKHPWHeZHVelcbyfbTXK4T2OvAi7gPxF5gyZY6OmyqkdgjmtlQURxe+c6CnVdI
- b3qIimilR4NIZInlI9Akj2z2WU1unZT4LJqNSgTEfNSeqJ2fDnOd1cxAvImeCv2PKiwjiy+YQH
- 5F4=
+        id S1726548AbgHUHMO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:12:14 -0400
+IronPort-SDR: 2D1en2nIaqpQD5WHCwkl5keNUKSx1Yg7WLkFEX+Jp+IudMxGs1H/g5cCp/jxcMacHgXvy977qn
+ 5g3ld4Rv8sGPCt/inLic2BkOVLqH70LdODaB2ptDpGVg13T61EzidU9QW3C6DvmrFHbpX2Zngh
+ wSVeYWIXGeol0ckTAlkUHDCjLHhVEeQNW8peWblzM86/UMCaKAFTTJ3j1iwbl+kjsFJRNfSETg
+ N4lh8O5r9BBLFmbAv+ZzOUyWz2Ya6kArXVgIQ2LdjiAiE5PTUGVhAM1FZUaEtYeQwUHYw7+fs7
+ jJo=
 X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
-   d="scan'208";a="13549139"
+   d="scan'208";a="13549137"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 21 Aug 2020 09:12:14 +0200
+  by mx1-pgp.tq-group.com with ESMTP; 21 Aug 2020 09:12:11 +0200
 Received: from mx1.tq-group.com ([192.168.6.7])
   by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Fri, 21 Aug 2020 09:12:14 +0200
+  Fri, 21 Aug 2020 09:12:11 +0200
 X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Fri, 21 Aug 2020 09:12:14 +0200
+        by tq-pgp-pr1.tq-net.de on Fri, 21 Aug 2020 09:12:11 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1597993934; x=1629529934;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=hsFilC0q1ryGsIIF62waCvhPyJEvTFWfBLAV0i0JgVU=;
-  b=Trkh8tzC0ZhbKNS8pOevh3GZ/JkMriQfhfMOXHBeUHAABSmiycfY/WWY
-   Bo8YaUF/Bo+5JSXNhP812g5tzKyp+JdUsq75gdqnnRN1U2cnZUFCw59Mr
-   lJgigQpzfGsx2SOZsrzLSGdUEpXEs8Q8B0/y2ghKhe9fz1o1SWNuuwYCz
-   xh4tKFfSQKyZhQ8s2SFRzNLM1PnpaLWjDFAMWmhM8yQ6yzo2WpI63knF7
-   aSCC7v6/f87wtTxX353JcFVCfbbvZFfeFGY0EgU4SEiDtClIZs4Cz5+0a
-   h5nDohwYTUotZ4GBWQLqjY7yGLyFw7fDMkbwH9tC1u2vjjXtI5JDi780A
+  t=1597993931; x=1629529931;
+  h=from:to:cc:subject:date:message-id;
+  bh=4C93rfTkYYAe6YpLxR8PaC5qgCxICWsqnPda3XOTLVU=;
+  b=Vt4Sqwe3i0b2cyC3lAhzp2Yi+sqoXtYFC2sCdrTVy8gwY9CyEiL+Um5k
+   uQAh5tqzqvc/VIz7efzO02RYLgv/rQ9LqIRcZqU9yvWwFIGGE0Y0uVjqe
+   eeHAp8F3vAQXI/MAoYBmLuf7Jc4NG6Sv12voaIF7Adwd5q67FOE5zqyHJ
+   c1wt0HK9Q+PnRxOJlrVn6I2EDnsnNv7boPbh/ENCzhYSp84Bdnovc+fU+
+   lNGOPSuyQT7bAY5zTVU2MNVPv/7XM5OsmhxxP6QqbXtfAQcE3E8voGhDd
+   Ah9qmNvgxe0PM7YWxrdT2pjcXpM7L456B/LhM67awZEsKtNRssxlEaur4
    Q==;
-IronPort-SDR: Zj2sok/VJ8Obs+mdkHurW+yviq9k9jfjO7VIKm2gnpRJvhaL3GvGHbVAPZCs6QBxmJ/RYzm1mh
- uvDTbhcWH595M9l3PTHxggtzHeGm0iQEwx0xo86ar9FggiH0NrkTa5mqi9Ib3+fEFtCO4tPIkM
- Uwsvt2p4sxGS5EN+dCmhcBfZmHMa4hV6TvWJzEF1ojUYJwg6aos0hWRTvgcyPHBdTdY7hRXRw1
- 2Nppve+eskuJnLsaMRoRsOjNAu8alPc570Wy3mpHmcA54VU0WrMAOKfaGEPR5o1rM7FXMt0v98
- MXQ=
+IronPort-SDR: 6LGTt+7iBWNLGsTYozLX6NjYOiV2bCMlsFeIRF2xdffJ9B+qK9CoDa1hEyGqnxS5Q7XWWYVf1P
+ v7KRfyhftrSqG/neIJL821FYZLfCDPzGD9wpbq873juzofSBUp76oxRK3bssXI8m2fTfNJLt3i
+ OOlRIXO5npr+Vfpsn5wWPnRzD9fwe+kxzQLDPS8f5KiKSFwvyRUdY7MAPMsWo5WtRMynRW3E7A
+ 0ySil2zYA546DRPRdhaamIo+uQJLKfLV474xZ2T1g5AJ5ZbssgzE4BdXP0f9nLfNRBi+ZZtDkI
+ WlU=
 X-IronPort-AV: E=Sophos;i="5.76,335,1592863200"; 
-   d="scan'208";a="13549138"
+   d="scan'208";a="13549136"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 21 Aug 2020 09:12:14 +0200
+  by mx1.tq-group.com with ESMTP; 21 Aug 2020 09:12:11 +0200
 Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id D9150280065;
-        Fri, 21 Aug 2020 09:12:13 +0200 (CEST)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id 90C36280065;
+        Fri, 21 Aug 2020 09:12:11 +0200 (CEST)
 From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 To:     Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
@@ -74,12 +73,10 @@ To:     Liam Girdwood <lgirdwood@gmail.com>,
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-Subject: [PATCH 2/2] ASoC: fsl-asoc-card: add support for TLV320AIC32x4 codec
-Date:   Fri, 21 Aug 2020 09:11:53 +0200
-Message-Id: <20200821071153.7317-2-matthias.schiffer@ew.tq-group.com>
+Subject: [PATCH 1/2] ASoC: bindings: fsl-asoc-card: add compatible string for TLV320AIC32x4 codec
+Date:   Fri, 21 Aug 2020 09:11:52 +0200
+Message-Id: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
-References: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,45 +87,22 @@ for i.MX-based SoMs (i.MX6Q/DL, i.MX6UL, i.MX7) and LS1021A.
 
 Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
 ---
- sound/soc/fsl/Kconfig         | 2 +-
- sound/soc/fsl/fsl-asoc-card.c | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/sound/fsl-asoc-card.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 1c4ca5ec8caf..3f76ff71ea47 100644
---- a/sound/soc/fsl/Kconfig
-+++ b/sound/soc/fsl/Kconfig
-@@ -324,7 +324,7 @@ config SND_SOC_FSL_ASOC_CARD
- 	help
- 	 ALSA SoC Audio support with ASRC feature for Freescale SoCs that have
- 	 ESAI/SAI/SSI and connect with external CODECs such as WM8962, CS42888,
--	 CS4271, CS4272 and SGTL5000.
-+	 CS4271, CS4272, SGTL5000 and TLV320AIC32x4.
- 	 Say Y if you want to add support for Freescale Generic ASoC Sound Card.
+diff --git a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
+index 63ebf52b43e8..f339be62e7e4 100644
+--- a/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
++++ b/Documentation/devicetree/bindings/sound/fsl-asoc-card.txt
+@@ -38,6 +38,8 @@ The compatible list for this generic sound card currently:
  
- config SND_SOC_IMX_AUDMIX
-diff --git a/sound/soc/fsl/fsl-asoc-card.c b/sound/soc/fsl/fsl-asoc-card.c
-index 32f8f756e6bb..a2dd3b6b7fec 100644
---- a/sound/soc/fsl/fsl-asoc-card.c
-+++ b/sound/soc/fsl/fsl-asoc-card.c
-@@ -617,6 +617,9 @@ static int fsl_asoc_card_probe(struct platform_device *pdev)
- 		codec_dai_name = "sgtl5000";
- 		priv->codec_priv.mclk_id = SGTL5000_SYSCLK;
- 		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
-+	} else if (of_device_is_compatible(np, "fsl,imx-audio-tlv320aic32x4")) {
-+		codec_dai_name = "tlv320aic32x4-hifi";
-+		priv->dai_fmt |= SND_SOC_DAIFMT_CBM_CFM;
- 	} else if (of_device_is_compatible(np, "fsl,imx-audio-wm8962")) {
- 		codec_dai_name = "wm8962";
- 		priv->codec_priv.mclk_id = WM8962_SYSCLK_MCLK;
-@@ -860,6 +863,7 @@ static const struct of_device_id fsl_asoc_card_dt_ids[] = {
- 	{ .compatible = "fsl,imx-audio-ac97", },
- 	{ .compatible = "fsl,imx-audio-cs42888", },
- 	{ .compatible = "fsl,imx-audio-cs427x", },
-+	{ .compatible = "fsl,imx-audio-tlv320aic32x4", },
- 	{ .compatible = "fsl,imx-audio-sgtl5000", },
- 	{ .compatible = "fsl,imx-audio-wm8962", },
- 	{ .compatible = "fsl,imx-audio-wm8960", },
+  "fsl,imx-audio-wm8524"
+ 
++ "fsl,imx-audio-tlv320aic32x4"
++
+ Required properties:
+ 
+   - compatible		: Contains one of entries in the compatible list.
 -- 
 2.17.1
 
