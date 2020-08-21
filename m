@@ -2,81 +2,187 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D99C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F649C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F71A207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E25207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:08:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EMRP2UcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgHUNHr (ORCPT
+        id S1727966AbgHUNIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:07:47 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36227 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726975AbgHUNHq (ORCPT
+        Fri, 21 Aug 2020 09:08:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726345AbgHUNIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:07:46 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l204so1448802oib.3;
-        Fri, 21 Aug 2020 06:07:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YzKd0UZ9F2/mk3D23hrvAicDaWPFtbfK/0mNbmP9U+0=;
-        b=E5277tRuoX9hAf8pob3VeHPWiQvgWnxCXdJL5AIYNESqHc4dkJccx7AgAdPD4ocXzW
-         RN5uGHABMbvG2u+VwzUM4eJKjWadYEpkmNqAGUWKp99YGevj5XlHuogdKU72ddqwqmlE
-         dazav9/hDsvZT9EgN/j14DaImW71mYSJtbvzey6yC/+mBMNp0Ye5efsWILgVEB1LaSMo
-         UUzPK455QwmuV9X8UQAE69hLC1VitR9nSOBvl2IugRDdfE+QrK8CbvOj7Je2bBO90qOO
-         m/q7TYZFcWGrEPHnT32sRNnVJDy9K6AvNNh73nb73EfwreqKb3UqdqCclh6PETArJJRh
-         jjbw==
-X-Gm-Message-State: AOAM533LCyeBQY8WkYJT28adqur5txUSi5BUk7HBjciiUV7pqKR7TloR
-        lFqGp7nescdG+B/uYyG2celUBdusjFmx78FlgNQ=
-X-Google-Smtp-Source: ABdhPJxlsf7XMYNRt7xfUACTd/ytge4ufWIvywA38RNX061Tl56msuHCXbpd+mz/3Yi0/VlhtU8eWctC6R/t7S/R+/8=
-X-Received: by 2002:aca:4b54:: with SMTP id y81mr1667023oia.54.1598015265301;
- Fri, 21 Aug 2020 06:07:45 -0700 (PDT)
+        Fri, 21 Aug 2020 09:08:49 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LD3lYP105348;
+        Fri, 21 Aug 2020 09:08:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=XHpFRlBvLhzPbNUy/WcR7Iba8tVUXqJsA+kYx9ImcwQ=;
+ b=EMRP2UcRsr3sZwUzXHOWWexcYGjU2w0YVHsaQkP68KAgzlTSDrRFQB5khT8JiiaQIrAS
+ pEQwHETzP1EQvf2nmoNReYSShT4NJEjjD00afwBF7hv9e9SQ+NFxBT50uH0NZUnfD6E6
+ 5N0m8RJGkhESMM5KwK0nMsJlLJk8lSWCNC6/GhhCShzJlWIu4R8FdjIeHAYYSGx/GXRs
+ KICBhHfeSx6Z1CklvxIMMbpCNo/yPbQD7yz6bGrWv8IWFPaV3xXYNGQYqQu64rlIbW4j
+ EHMJqEL5sD3gC5RpSjTjpAt9BAQ3XJi95JcG5TToHEiyEbNwMbMGdb+IqKfOMtbBenZB sg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9ay0d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 09:08:44 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LD40OG106366;
+        Fri, 21 Aug 2020 09:08:43 -0400
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9axxh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 09:08:43 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LD4U0d020685;
+        Fri, 21 Aug 2020 13:08:41 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03fra.de.ibm.com with ESMTP id 3304c92pmj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 13:08:40 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LD8bGS61604294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 13:08:37 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7057A405D;
+        Fri, 21 Aug 2020 13:08:37 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BFC6A4055;
+        Fri, 21 Aug 2020 13:08:37 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.168.20])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 13:08:36 +0000 (GMT)
+Subject: Re: [PATCH v9 1/2] virtio: let arch advertise guest's memory access
+ restrictions
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
+ <1597854198-2871-2-git-send-email-pmorel@linux.ibm.com>
+ <20200821135906.1c6bede3.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <91c83bba-9a75-4ed4-b682-fcdce26edd54@linux.ibm.com>
+Date:   Fri, 21 Aug 2020 15:08:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200816193316.7641-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200816193316.7641-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200816193316.7641-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 15:07:34 +0200
-Message-ID: <CAMuHMdVT_rO=83SB7c4BP8-VoFwryTUj8Y7MEJv3iQrjsbYa8Q@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: r8a7742-iwg21m: Add RTC support
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200821135906.1c6bede3.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 9:33 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Enable BQ32000 RTC which is connected to I2C0 on the iWave RainboW-G21M-q7
-> SOM.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
 
-Gr{oetje,eeting}s,
+On 2020-08-21 13:59, Cornelia Huck wrote:
+> On Wed, 19 Aug 2020 18:23:17 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> An architecture may restrict host access to guest memory.
+> 
+> "e.g. IBM s390 Secure Execution or AMD SEV"
+> 
+> Just to make clearer what you are referring to?
 
-                        Geert
+yes, thanks
+
+> 
+>>
+>> Provide a new Kconfig entry the architecture can select,
+>> CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, when it provides
+>> the arch_has_restricted_virtio_memory_access callback to advertise
+> 
+> s/advertise/advertise to/
+
+OK
+
+> 
+>> VIRTIO common code when the architecture restricts memory access
+>> from the host.
+> 
+> "The common code can then fail the probe for any device where
+> VIRTIO_F_IOMMU_PLATFORM is required, but not set."
+> 
+> ?
+
+Yes, better thanks
+
+> 
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   drivers/virtio/Kconfig        |  6 ++++++
+>>   drivers/virtio/virtio.c       | 15 +++++++++++++++
+>>   include/linux/virtio_config.h |  9 +++++++++
+>>   3 files changed, 30 insertions(+)
+>>
+>> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+>> index 5809e5f5b157..509f3b4d8ba1 100644
+>> --- a/drivers/virtio/Kconfig
+>> +++ b/drivers/virtio/Kconfig
+>> @@ -6,6 +6,12 @@ config VIRTIO
+>>   	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
+>>   	  or CONFIG_S390_GUEST.
+>>   
+>> +config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
+>> +	bool
+>> +	help
+>> +	  This option is selected by any architecture enforcing
+>> +	  VIRTIO_F_IOMMU_PLATFORM
+> 
+> "This option is selected if the architecture may need to enforce
+> VIRTIO_F_IOMMU_PLATFORM."
+> 
+> ?
+
+yes, better thanks
+
+> 
+>> +
+>>   menuconfig VIRTIO_MENU
+>>   	bool "Virtio drivers"
+>>   	default y
+> 
+> (...)
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
+
+I will make the rewordings.
+
+Thanks,
+Pierre
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pierre Morel
+IBM Lab Boeblingen
