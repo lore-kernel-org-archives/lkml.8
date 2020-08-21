@@ -2,162 +2,137 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1BFC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9464420656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:52:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VVysEcMM"
+	by mail.kernel.org (Postfix) with ESMTP id 1BF6B2078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598018052;
+	bh=FGCImzVS8BYfUE5Ql01UJaje4kzcrgIcdano02J+HHs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Y9MXCJCGK1NsZs7ig0ODEz0KbCQ8sKNlIAQFctjNWs8Qa6GKZWXXiVjJOT2QrVh8b
+	 whzQiwZzKKLI4dQsFt08OM3hGouBobHMK0ZmGwsYvOLE24GUs5crNcLsTFe5WJGHT+
+	 o4nwf5cjGRXF9+oYS1TuzbiW5hTOPcZzJGHE1K1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbgHUNwK (ORCPT
+        id S1728678AbgHUNyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:52:10 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:56006 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727870AbgHUNwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:52:04 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200821135202euoutp01db592a7b9ce6d2598bb0c445107763c2~tTNWTDbmt0787707877euoutp01s
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 13:52:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200821135202euoutp01db592a7b9ce6d2598bb0c445107763c2~tTNWTDbmt0787707877euoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598017923;
-        bh=xSyw6j8uhqFc0rId8dLokmjX37Nhx2OesuMasUQmfDY=;
-        h=From:Subject:To:Cc:Date:In-Reply-To:References:From;
-        b=VVysEcMMbV84aTuyJBkW9uSwbawqUU1AgB/zL8tt2hwYKwzWNewpQe83l6iiVvuRN
-         1mCEogQeN+4lHwbDs0dKRMb8JbDhqAg0YQkWqmM1CHXLpwaX2KshRCdD86yY47K7s2
-         ldu5bVjOuR6piskmZMkq9Dgp+9kDKTrJL2RoElrg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200821135202eucas1p149727e705b4925a47a08bdc8b9ca3a13~tTNWHo1P31675816758eucas1p1s;
-        Fri, 21 Aug 2020 13:52:02 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 4D.74.06318.281DF3F5; Fri, 21
-        Aug 2020 14:52:02 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200821135202eucas1p1dc2de0fb3e687899859e41787357e199~tTNV2G6as0667006670eucas1p1a;
-        Fri, 21 Aug 2020 13:52:02 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200821135202eusmtrp2d3a7cde28c105c020cf66d27e5556562~tTNV1a6xY0859608596eusmtrp2I;
-        Fri, 21 Aug 2020 13:52:02 +0000 (GMT)
-X-AuditID: cbfec7f5-371ff700000018ae-59-5f3fd182afa8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id C6.D9.06314.281DF3F5; Fri, 21
-        Aug 2020 14:52:02 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200821135202eusmtip167e50593caedc04e8f3336c6ec977351~tTNVdBehL2857328573eusmtip1d;
-        Fri, 21 Aug 2020 13:52:02 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v2 00/41] spi / fbdev / cpufreq / usb / mmc / hwmon /
- ARM: Prepare for multiplatform S3C
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>
-Message-ID: <7caa287e-5e02-95d1-0397-5ae74e3138a1@samsung.com>
-Date:   Fri, 21 Aug 2020 15:52:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200820155913.GA21395@kozik-lap>
-Content-Language: en-US
+        Fri, 21 Aug 2020 09:54:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727123AbgHUNyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 09:54:06 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B005220656;
+        Fri, 21 Aug 2020 13:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598018045;
+        bh=FGCImzVS8BYfUE5Ql01UJaje4kzcrgIcdano02J+HHs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qkoGouAnq9wjDK5INw19keiqv1p5eywSuzaF3ANLg2llxI+xYmYoRszOj5B02H+RI
+         kREYxzqz2gYW8SrytMd2fnSDunai7Ou0ggGak8SREtgntzF2At41fc0tjvFanzacQm
+         q4EdrfBF1/JyRKthElI/NuHoItrL/kgUWVnnwcV0=
+Date:   Fri, 21 Aug 2020 22:54:01 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Kyle Huey <me@kylehuey.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Robert O'Callahan <rocallahan@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RFC][PATCH 3/7] x86/debug: Move kprobe_debug_handler() into
+ exc_debug_kernel()
+Message-Id: <20200821225401.5f5c05a502a1fd4a7f5e059b@kernel.org>
+In-Reply-To: <20200820104905.236173163@infradead.org>
+References: <20200820103832.486877479@infradead.org>
+        <20200820104905.236173163@infradead.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrGKsWRmVeSWpSXmKPExsWy7djPc7pNF+3jDRZ/07b4O+kYu8WVr+/Z
-        LM6f38BusenxNVaLE30fWC0u75rDZjHj/D4mi0NT9zI6cHhcvnaR2eP3r0mMHptWdbJ53O8+
-        zuSxeUm9x+dNcgFsUVw2Kak5mWWpRfp2CVwZ7e/WMRbs4qz4eXo1awPjIfYuRk4OCQETiQ17
-        XgHZXBxCAisYJS42z2eFcL4wSpzdtxQq85lRYtrmY3AtT86cZ4FILGeUmLXhPyOE85ZRou/r
-        BkaQKjYBK4mJ7avAbGGBPImbjYvAbBEBTYnrf7+D7WAW+MQocWJpExNIglfATuL0/qesIDaL
-        gKrE5MMHwNaJCkRIfHpwmBWiRlDi5MwnLCA2p4C+xLrOuWC9zALiEreezIey5SW2v53DDLJA
-        QuAYu8TB3bNZIe52kZjc1wJlC0u8Or4F6h8Zif87QZpBGtYxSvzteAHVvZ1RYvnkf2wQVdYS
-        d879ArI5gFZoSqzfpQ8RdpRo23aUESQsIcAnceOtIMQRfBKTtk1nhgjzSnS0CUFUq0lsWLaB
-        DWZt186VzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3
-        MQJT0+l/x7/uYNz3J+kQowAHoxIP749D9vFCrIllxZW5hxglOJiVRHidzp6OE+JNSaysSi3K
-        jy8qzUktPsQozcGiJM5rvOhlrJBAemJJanZqakFqEUyWiYNTqoFRN8zvu4b4wXf+BUsUWXtT
-        LE+mpZ0+GazOMPeJ+6Pzf6OUOicw/Ga69zr2xo+NzN6v+w2Cfc0eGCVJXVJ5u1V2zkJBB5+a
-        lVbP385u/M89a+OzyI/rg7fdnTXLVDJq+Tszl/Uv98XHP9Dw4/tVxeX+4rTo5G1qrXMuVc5J
-        PleUElHh6Hxieme4EktxRqKhFnNRcSIAybJdhEkDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrOIsWRmVeSWpSXmKPExsVy+t/xu7pNF+3jDX6ckrL4O+kYu8WVr+/Z
-        LM6f38BusenxNVaLE30fWC0u75rDZjHj/D4mi0NT9zI6cHhcvnaR2eP3r0mMHptWdbJ53O8+
-        zuSxeUm9x+dNcgFsUXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6RiaWeobG5rFWRqZK+nY2Kak5
-        mWWpRfp2CXoZ7e/WMRbs4qz4eXo1awPjIfYuRk4OCQETiSdnzrN0MXJxCAksZZRY9/E8axcj
-        B1BCRuL4+jKIGmGJP9e62CBqXjNKdF85wQaSYBOwkpjYvooRxBYWyJOY1NnDBGKLCGhKXP/7
-        nRWkgVngE6PEt7ZPjBDdaxgldjUfAuvgFbCTOL3/KSuIzSKgKjH58AGwk0QFIiQO75gFVSMo
-        cXLmExYQm1NAX2Jd51ywDcwC6hJ/5l1ihrDFJW49mQ8Vl5fY/nYO8wRGoVlI2mchaZmFpGUW
-        kpYFjCyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAiNx27Gfm3cwXtoYfIhRgINRiYf3xyH7
-        eCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFem4is5Rocj4wSeSVxBua
-        GppbWBqaG5sbm1koifN2CByMERJITyxJzU5NLUgtgulj4uCUamCs/Cn8a3JwpJPFu+ruFaps
-        Av+qbI0v/DjyTP3tm0fs377NzZnco/9i9bOJd7a1Zt4Tal2/kEFv1tcaf7+I+GOqKeX6h9c+
-        0og50ya9qezmPJcH+luqVvOZCYu06Fu8P+moKh+wJsyZhamHQ/7S4gePrG5avDb2mt3l/4/f
-        oMb72THmcrWdt5cpsRRnJBpqMRcVJwIAyy0cYNoCAAA=
-X-CMS-MailID: 20200821135202eucas1p1dc2de0fb3e687899859e41787357e199
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200820155923eucas1p2f73e16e6321e3592bd702ea657ff0709
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200820155923eucas1p2f73e16e6321e3592bd702ea657ff0709
-References: <20200806181932.2253-1-krzk@kernel.org>
-        <CGME20200820155923eucas1p2f73e16e6321e3592bd702ea657ff0709@eucas1p2.samsung.com>
-        <20200820155913.GA21395@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 20 Aug 2020 12:38:35 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-[ trimmed Cc: list ]
+Looks good to me.
 
-On 8/20/20 5:59 PM, Krzysztof Kozlowski wrote:
-> On Thu, Aug 06, 2020 at 08:19:32PM +0200, Krzysztof Kozlowski wrote:
->> Hi All,
->>
->> Shortly
->> =======
->> This is a continuation of Arnd's work from 2019 [1].  The goal is to
->> cleanup, merge and finally make the Samsung S3C24xx and S3C64xx
->> architectures multiplatform.  The multiplatform did not happen yet
->> here... just cleaning up and merging into one mach-s3c.
->>
->> I intend to take it through Samsung SoC tree so all Acks are welcomed.
->>
->> Changes since v1
->> ================
->> 1. Rebased,
->> 2. Addressed comments (including mine),
->> 3. Few new patches.
->>
->> Please see individual changelogs (per patch).
->>
->> [1] https://patchwork.kernel.org/project/linux-samsung-soc/list/?series=185855&state=*
->>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks,
+
 > 
-> Hi All,
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/include/asm/kprobes.h |    4 ++++
+>  arch/x86/kernel/traps.c        |   10 ++++------
+>  2 files changed, 8 insertions(+), 6 deletions(-)
+> 
+> --- a/arch/x86/include/asm/kprobes.h
+> +++ b/arch/x86/include/asm/kprobes.h
+> @@ -106,5 +106,9 @@ extern int kprobe_exceptions_notify(stru
+>  extern int kprobe_int3_handler(struct pt_regs *regs);
+>  extern int kprobe_debug_handler(struct pt_regs *regs);
+>  
+> +#else
+> +
+> +static inline int kprobe_debug_handler(struct pt_regs *regs) { return 0; }
+> +
+>  #endif /* CONFIG_KPROBES */
+>  #endif /* _ASM_X86_KPROBES_H */
+> --- a/arch/x86/kernel/traps.c
+> +++ b/arch/x86/kernel/traps.c
+> @@ -806,12 +806,6 @@ static void handle_debug(struct pt_regs
+>  	/* Store the virtualized DR6 value */
+>  	tsk->thread.debugreg6 = dr6;
+>  
+> -#ifdef CONFIG_KPROBES
+> -	if (kprobe_debug_handler(regs)) {
+> -		return;
+> -	}
+> -#endif
+> -
+>  	if (notify_die(DIE_DEBUG, "debug", regs, (long)&dr6, 0,
+>  		       SIGTRAP) == NOTIFY_STOP) {
+>  		return;
+> @@ -877,8 +871,12 @@ static __always_inline void exc_debug_ke
+>  	if ((dr6 & DR_STEP) && is_sysenter_singlestep(regs))
+>  		dr6 &= ~DR_STEP;
+>  
+> +	if (kprobe_debug_handler(regs))
+> +		goto out;
+> +
+>  	handle_debug(regs, dr6, false);
+>  
+> +out:
+>  	instrumentation_end();
+>  	idtentry_exit_nmi(regs, irq_state);
+>  
+> 
+> 
 
-Hi Krzysztof,
 
-> I applied second part of the set which finishes this step of S3C
-> cleanup. Thanks to Arnd for the work!
-
-Thank you (& Arnd) for working on this!
-
-PS I've checked fbdev related changes now and they all look good to me.
-
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
-> Best regards,
-> Krzysztof
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
