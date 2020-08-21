@@ -2,139 +2,119 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB0AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94752C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5884420732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BEF20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:16:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MO/bFuRi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u4QxWI9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgHUDQY (ORCPT
+        id S1727826AbgHUDQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52696 "EHLO
+        Thu, 20 Aug 2020 23:16:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727040AbgHUDQX (ORCPT
+        with ESMTP id S1727040AbgHUDQh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:16:23 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0339C061385;
-        Thu, 20 Aug 2020 20:16:22 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id x6so323097pgx.12;
-        Thu, 20 Aug 2020 20:16:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=zuSfrbRroXjdvycDvIKeih7mu1rrI15reoeLUG4u7xg=;
-        b=MO/bFuRiKH6hf5dJApCZCir/8evOymPRRUSN+uJy3KDAIjWRhxKu+ebYmc2P2q+bCr
-         daLgzJQPaQQZWr2W95guKOrpFvLaQE6scTY00kbhjNVKJKfvHAqxait9qGYLNFbbAmxg
-         utGtWnrOBuYtGQPMb2y6lCDdg1tO308bit4SPmgYxef+gvKzslF5m1H+zRbGNFKi1t0F
-         yU2I4dEntx+5GQjyu/UiaB7Ya8XLBkTV+HoCCQKowT0wRbtVmSAX05olaPYOH0H3doJ8
-         /gnkbBJ5N16n5PWkthfMHcQSasfkFE5s8b4p2I+DVo7Mx6jWeC6Z5/9bZbYpoSwX36ej
-         MXyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=zuSfrbRroXjdvycDvIKeih7mu1rrI15reoeLUG4u7xg=;
-        b=NExE8Qm3lKKHdAI7pc2cFFNGq2XxiAJoWOpgwKJ+bTC7Zvyx1X9FmxrqqVHV8Mksnj
-         2jAwaB9x4amlBVjjefX48zgx/qA9fxyuO+SePMHFIO9eMOi+1lNCPV/ztwMz2hIuwVkC
-         wTds58a4S02qYRjWGV5mBtkXvaQMcoGAhQuhFCzK0ACIPr0A8bZLHfHhsO1KAQBLpB1H
-         VeLMYcIN8cmBMut6chJ+P3dTfOyZXoXqx3ZEikmmumVE9aP3WvwFC8KR97hIElMKv2R3
-         S5w5q3V0iPBRMM6ZtULfBNmANUdbgBkzMjM1QdtT6cwIRbDVgULeUlzoJdkjnWiNN1Vm
-         0KFA==
-X-Gm-Message-State: AOAM530fjA3SPQV1SrVrCsVjuIRBaVizuLO7V8cMz3YTh7k8lLZoarNP
-        r6gcHS0n+hxTfyYph/uc9A==
-X-Google-Smtp-Source: ABdhPJyLLFifq2ZsJQXiLNv6WVOo8gqDR4lttb0FPvu3Js2UMJbg2rwIgy8M5GxbRUDMfeDFF1SMHQ==
-X-Received: by 2002:a63:e747:: with SMTP id j7mr846297pgk.107.1597979782380;
-        Thu, 20 Aug 2020 20:16:22 -0700 (PDT)
-Received: from madhuparna-HP-Notebook ([2402:3a80:cfa:ca54:b051:6744:d734:a674])
-        by smtp.gmail.com with ESMTPSA id y1sm568390pfr.207.2020.08.20.20.16.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Aug 2020 20:16:21 -0700 (PDT)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Fri, 21 Aug 2020 08:46:16 +0530
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        madhuparnabhowmik10@gmail.com, dan.j.williams@intel.com,
-        vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, andrianov@ispras.ru,
-        ldv-project@linuxtesting.org
-Subject: Re: [PATCH] drivers/dma/dma-jz4780: Fix race condition between probe
- and irq handler
-Message-ID: <20200821031616.GA7874@madhuparna-HP-Notebook>
-References: <20200816072253.13817-1-madhuparnabhowmik10@gmail.com>
- <ZM2DFQ.KQQJYLJ02WTD3@crapouillou.net>
- <e1961c04-e2aa-fe3a-fb84-bb3b33fae5dc@metafoo.de>
- <VHLDFQ.HR10VPMY1GHD3@crapouillou.net>
+        Thu, 20 Aug 2020 23:16:37 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D181C061385;
+        Thu, 20 Aug 2020 20:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=oAY+ROTTJJQR3iPt2JQ1lkA+1apv58uojBryWs9cKTI=; b=u4QxWI9+OygIHweKPZ0qOgSPo+
+        /2ZTVwnRxGyCx6Os/OuTPgCurrTCIxVxEIIk+PbtpqSGDofOzC0du6gg3H8F3SGsuZaz73irPEBwc
+        rjqOvVdED9O6+UflvW2ZkYQNK+GjE9wWHAkUXLzqajIB9PslSJpt7ibnt47hLlPGogrDVqh5vXdtv
+        bICjSZU346tdrMEz/YTVtLlrAdZUU7eM6MBEaJirkRmiqAGmp4hRtcP+xkEjPhBHEVdmRqzFCZo4n
+        oHuPbS2VSelA/DwU3edOk8+xJaFPgadZyhfGdB4BUG/rS/mNFhEk6zKPxUYvOJ1O/GVLsVZrYirSC
+        u0jjYsMg==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k8xXd-0007pr-2E; Fri, 21 Aug 2020 03:16:33 +0000
+Subject: Re: [PATCH v2] x86/hotplug: Silence APIC only after all irq's are
+ migrated
+To:     Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Srikanth Nandamuri <srikanth.nandamuri@intel.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, stable@vger.kernel.org
+References: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <595d331e-59f3-309c-a25d-f92c8aafb812@infradead.org>
+Date:   Thu, 20 Aug 2020 20:16:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <VHLDFQ.HR10VPMY1GHD3@crapouillou.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1597970523-24797-1-git-send-email-ashok.raj@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 08:46:43PM +0200, Paul Cercueil wrote:
->=20
->=20
-> Le jeu. 20 ao=FBt 2020 =E0 20:23, Lars-Peter Clausen <lars@metafoo.de> a =
-=E9crit :
-> > On 8/20/20 1:59 PM, Paul Cercueil wrote:
-> > > Hi,
-> > >=20
-> > > Le dim. 16 ao=FBt 2020 =E0 12:52, madhuparnabhowmik10@gmail.com a =E9=
-crit
-> > > :
-> > > > From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > > >=20
-> > > > In probe IRQ is requested before zchan->id is initialized which
-> > > > can be
-> > > > read in the irq handler. Hence, shift request irq and enable
-> > > > clock after
-> > > > other initializations complete. Here, enable clock part is not
-> > > > part of
-> > > > the race, it is just shifted down after request_irq to keep the
-> > > > error
-> > > > path same as before.
-> > > >=20
-> > > > Found by Linux Driver Verification project (linuxtesting.org).
-> > > >=20
-> > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> > >=20
-> > > I don't think there is a race at all, the interrupt handler won't be
-> > > =7Fcalled before the DMA is registered.
-> > >=20
-> > From a purely formal verification perspective there is a bug. The
-> > interrupt could fire if i.e. the hardware is buggy or something. In
-> > general it is a good idea to not request the IRQ until all the resources
-> > that are used in the interrupt handler are properly set up. Even if you
-> > know that in practice the interrupt will never fire this early.
-> >=20
->
-> Fair enough, I'm fine with that, but the patch should be reworked so that
-> the clk_prepare_enable() call is not moved.
->
+On 8/20/20 5:42 PM, Ashok Raj wrote:
+> When offlining CPUs, fixup_irqs() migrates all interrupts away from the
+> outgoing CPU to an online CPU. It's always possible the device sent an
+> interrupt to the previous CPU destination. Pending interrupt bit in IRR in
+> LAPIC identifies such interrupts. apic_soft_disable() will not capture any
+> new interrupts in IRR. This causes interrupts from device to be lost during
+> CPU offline. The issue was found when explicitly setting MSI affinity to a
+> CPU and immediately offlining it. It was simple to recreate with a USB
+> ethernet device and doing I/O to it while the CPU is offlined. Lost
+> interrupts happen even when Interrupt Remapping is enabled.
+> 
+> Current code does apic_soft_disable() before migrating interrupts.
+> 
+> native_cpu_disable()
+> {
+> 	...
+> 	apic_soft_disable();
+> 	cpu_disable_common();
+> 	  --> fixup_irqs(); // Too late to capture anything in IRR.
+> }
+> 
+> Just flipping the above call sequence seems to hit the IRR checks
+> and the lost interrupt is fixed for both legacy MSI and when
+> interrupt remapping is enabled.
+> 
+> Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
+> Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
+> Reported-by: Evan Green <evgreen@chromium.org>
+> Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Tested-by: Evan Green <evgreen@chromium.org>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> ---
+> v2:
+> - Typos and fixes suggested by Randy Dunlap
 
-Sure, I will send the v2 of the patch with this change soon.
+Those all look good now.  Thanks for the update.
 
-Thanks,
-Madhuparna
-> Cheers,
-> -Paul
->=20
->=20
+> To: linux-kernel@vger.kernel.org
+> To: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Sukumar Ghorai <sukumar.ghorai@intel.com>
+> Cc: Srikanth Nandamuri <srikanth.nandamuri@intel.com>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/kernel/smpboot.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+
+
+-- 
+~Randy
+
