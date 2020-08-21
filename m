@@ -2,193 +2,130 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A1BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D839521741
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A482078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:00:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QRaFm871"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="jDClVLEK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHUQAC (ORCPT
+        id S1727993AbgHUQAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58394 "EHLO
+        Fri, 21 Aug 2020 12:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbgHUP74 (ORCPT
+        with ESMTP id S1726542AbgHUQAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:59:56 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3976C061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so1280796pfh.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
+        Fri, 21 Aug 2020 12:00:15 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF704C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:00:14 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id u126so2175703iod.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:00:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=PHpiChL5JGq/LZstNZ28HM8fDTmJE8/7UUfCPtEQhGQ=;
-        b=QRaFm8718FJefFz/ypkWhug9/DCf/520wNooIeoa6t5O4C45AC95WUTi1ttLZiYLRn
-         jr7dWao9AJB1UbBIpKv95dwEGAH0dnhLIpO7Y4ni6VA9BaBNQVe0hU3PiXIfSUwTllE+
-         X2hydUevanG1SL0jAjD59jjfs0PY0SWj0tsrM=
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LWjzEcPwT/6hwotRNTIY9NaBUTyN7quweFTkYLEKd40=;
+        b=jDClVLEKJWhVolsUnITnsSQo1HZzq0iWZfsy/liv4zabUX+ksQm7q238ZH77pv1pww
+         IE2xpVnuJb0uUGalHSvWp5hGTYvxUx0+HkDPoxchFCTb86f4kJvl+QgU/xdEwcfd12or
+         N0oR8zb3+O+MdVq+R3wLWUjrLcP38QTN/0dRYdDDE3yysc+3hHqQz4J+GexYsxP1PLHE
+         AowSSCByJw/nNarcPN/7VDb3U/wCv5B3QN6KbccLZuljorjIguGphz9/a/CGgn3oG543
+         6yAp00g7o29yBR/8IX02hwpwdvpe2OV+yxIF42nETH+66Ebc2yEb3h5XPuCtnhZoBK6c
+         mvwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=PHpiChL5JGq/LZstNZ28HM8fDTmJE8/7UUfCPtEQhGQ=;
-        b=ix1D5dzvYrqbE/pbFvFZU2PQvhxjO+pMZUs/DX+CKMiQW1SKsMqFMxGGL/sk/goLe5
-         lEcaTCvIoxAnCxUMnrZXZm1p6RaOySQHBQg+ZqdmnYxOH9hmmtM4X9PhX70Ttvfp70Y+
-         eR/MzoLtFEzQcqoXmKn/w2o+qYSkb8E81cr0u+IEWwqXH2CE5Ct9yr9gFpqvUGeiEXAu
-         wi4PsfHyFicPkyhKzOxPAAn2VAEvyIod8+PL0XJn7smQbqxXJeSiUSEGMcf+ZqRRCs0+
-         2yia9hN1lsCMb8BkX4CIO4aTAQ/+EMQXsalKjawRoRxKnigieAcAJaWt7rPrcdEoCpU1
-         t4JQ==
-X-Gm-Message-State: AOAM5317zxUoIYa+KzpcGoxncchV5GHSAgjVQxPX9EnckZZR+PDPnFxj
-        sQ+sNIXnNwg/kpDGBrdBH96R8+5VBQUiAg==
-X-Google-Smtp-Source: ABdhPJxu94S4fcnRQU+u1dFIIXVlfyW3pAeruNuWAjh/VFOzFXlkhNvwvKybp1t2lQ+XH5CYv1OZUg==
-X-Received: by 2002:a62:7f0e:: with SMTP id a14mr3083836pfd.320.1598025595418;
-        Fri, 21 Aug 2020 08:59:55 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id f13sm2885733pfd.215.2020.08.21.08.59.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 08:59:54 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 08:59:53 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     skakit@codeaurora.org
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        gregkh@linuxfoundation.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, akashast@codeaurora.org,
-        rojay@codeaurora.org, msavaliy@qti.qualcomm.com
-Subject: Re: [PATCH V2 2/3] arm64: dts: qcom: sc7180: Add sleep pin ctrl for
- BT uart
-Message-ID: <20200821155953.GG2995789@google.com>
-References: <1595563082-2353-1-git-send-email-skakit@codeaurora.org>
- <1595563082-2353-3-git-send-email-skakit@codeaurora.org>
- <20200817180158.GD2995789@google.com>
- <1cbbc8cf5c918c6a9eee5ef349707fc6@codeaurora.org>
- <20200819161311.GF2995789@google.com>
- <29d523f4a46ecce8e4a62a5310528969@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LWjzEcPwT/6hwotRNTIY9NaBUTyN7quweFTkYLEKd40=;
+        b=Gwvr+fl/H02CtBP/QbuJQdO1SYOMQH8ieg4UQpP6EPbhv3X/YY7sYLjb2fQ5yLpbfJ
+         mur4YYGYNDPQVt7AEpI/ry7xeiq6/Dl++qfCBnLiYaHdXKQHwlkmmYSg2d+segXREqQd
+         N0eGqkwBO9CV7iq3StfRbqClnHr3/PCyurImrW59a41LTAY4s8x/4Cls+KjZ4FiP8fX5
+         sTD2rI+3wTMI3oSDtBF4+4hlLwatHErQ0iZcWj2RxyqpW8LGD8i0k5iuk08+Zze1hn93
+         sy/CSAiWZNUbMyDnXdz4U89K+hDl6GdWEPfElVdTFIiiI1UqAvgPYqLuVRVPaN4l1k2B
+         Wu1g==
+X-Gm-Message-State: AOAM533WJr4od0yjm9s0o53GzoAxsePmY4qQ+M+4J8XoJS2sHIn5IlUr
+        Z27cgI7HeyEPmToZ2m0t5jblpYZpASH1UWngR9m+LA==
+X-Google-Smtp-Source: ABdhPJwBm13KEUhNRpo7vk4oIVXm7ASv7AuOGK/3nYoePGcCxW34adTWVSkCHauITkFQuVHyKmTrX4EY/gRMqEK65h4=
+X-Received: by 2002:a5d:8cce:: with SMTP id k14mr2831399iot.13.1598025613850;
+ Fri, 21 Aug 2020 09:00:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <29d523f4a46ecce8e4a62a5310528969@codeaurora.org>
+References: <20200820185110.17828-1-brgl@bgdev.pl> <20200820185110.17828-2-brgl@bgdev.pl>
+ <20200821081555.GG1891694@smile.fi.intel.com> <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
+ <20200821105119.GL1891694@smile.fi.intel.com> <20200821110403.GP1891694@smile.fi.intel.com>
+In-Reply-To: <20200821110403.GP1891694@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 21 Aug 2020 18:00:02 +0200
+Message-ID: <CAMRc=MfLkBRKu9ofSUGH=k3hxiJk-g=MMvab2awcsmeyF4RAKg@mail.gmail.com>
+Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 05:49:53PM +0530, skakit@codeaurora.org wrote:
-> Hi Matthias,
-> 
-> On 2020-08-19 21:43, Matthias Kaehlcke wrote:
-> > On Wed, Aug 19, 2020 at 07:19:25PM +0530, skakit@codeaurora.org wrote:
-> > > On 2020-08-17 23:31, Matthias Kaehlcke wrote:
-> > > > On Fri, Jul 24, 2020 at 09:28:01AM +0530, satya priya wrote:
-> > > > > Add sleep pin ctrl for BT uart, and also change the bias
-> > > > > configuration to match Bluetooth module.
-> > > > >
-> > > > > Signed-off-by: satya priya <skakit@codeaurora.org>
-> > > > > ---
-> > > > > Changes in V2:
-> > > > >  - This patch adds sleep state for BT UART. Newly added in V2.
-> > > > >
-> > > > >  arch/arm64/boot/dts/qcom/sc7180-idp.dts | 42
-> > > > > ++++++++++++++++++++++++++++-----
-> > > > >  1 file changed, 36 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > index 26cc491..bc919f2 100644
-> > > > > --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> > > > > @@ -469,20 +469,50 @@
-> > > > >
-> > > > >  &qup_uart3_default {
-> > > > >  	pinconf-cts {
-> > > > > -		/*
-> > > > > -		 * Configure a pull-down on 38 (CTS) to match the pull of
-> > > > > -		 * the Bluetooth module.
-> > > > > -		 */
-> > > > > +		/* Configure no pull on 38 (CTS) to match Bluetooth module */
-> > > >
-> > > > Has the pull from the Bluetooth module been removed or did the previous
-> > > > config
-> > > > incorrectly claim that the Bluetooth module has a pull-down?
-> > > >
-> > > 
-> > > The previous config was incorrect, so we corrected it to match the
-> > > pull of
-> > > BT.
-> > 
-> > The pull config of the BT controller varies depending on its state,
-> > could
-> > you clarify which state you intend to match?
-> > 
-> 
-> Since this line is driven by BT SoC, they could change their pull(although
-> it's less likely). Recently on cherokee we worked with BT team and came to
-> an agreement to keep no-pull from our side in order to not conflict with
-> their pull in any state.
-> 
-> > > 
-> > > > >  		pins = "gpio38";
-> > > > > +		bias-disable;
-> > > > > +	};
+On Fri, Aug 21, 2020 at 1:04 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Aug 21, 2020 at 01:51:19PM +0300, Andy Shevchenko wrote:
+> > On Fri, Aug 21, 2020 at 10:59:19AM +0200, Bartosz Golaszewski wrote:
+> > > On Fri, Aug 21, 2020 at 10:35 AM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
+>
+> ...
+>
+> > > > > +static struct devres *to_devres(void *data)
+> > > > > +{
+> > > > > +     return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > > > > +}
 > > > > > +
-> > > > > +	pinconf-rts {
-> > > > > +		/* We'll drive 39 (RTS), so configure pull-down */
-> > > > > +		pins = "gpio39";
-> > > > > +		drive-strength = <2>;
-> > > > >  		bias-pull-down;
-> > > > > +	};
-> > > > > +
-> > > > > +	pinconf-tx {
-> > > > > +		/* We'll drive 40 (TX), so no pull */
-> > > >
-> > > > The rationales for RTS and TX contradict each other. According to the
-> > > > comment
-> > > > the reason to configure a pull-down on RTS is that it is driven by the
-> > > > host.
-> > > > Then for TX the reason to configure no pull is that it is driven by the
-> > > > host.
-> > > >
-> > > > Please make sure the comments *really* describe the rationale, otherwise
-> > > > they
-> > > > are just confusing.
-> > > 
-> > > The rationale for RTS is that we don't want it to be floating and
-> > > want to
-> > > make sure that it is pulled down, to receive bytes. Will modify the
-> > > comment
-> > > mentioning the same.
-> > 
-> > Could you clarify what you mean with "to receive bytes"?
-> > 
-> 
-> When we keep no-pull(floating), sometimes it may be pulled high and UART
-> flow will be turned off(RFR_NOT_READY), due to this BT SoC wont be able to
-> send data even though host is ready.
+> > > > > +static size_t devres_data_size(size_t total_size)
+> > > > > +{
+> > > > > +     return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
+> > > > > +}
+>
+> > > The data pointer in struct devres is defined as:
+> > >
+> > >     u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
+> > >
+> > > And this value (assigned the value of ARCH_DMA_MINALIGN) varies from
+> > > one arch to another. I wasn't really sure if offsetof() would work for
+> > > every case so I went with something very explicit.
+> >
+> > I have checked with a small program simulating to_devres() with your variant,
+> > offsetof() and container_of().
+> >
+> > The result is this: if MINALIGN < sizeof(long) and since struct is unpacked the
+> > offsetof(), and thus container_of(), gives correct result, while ALIGN()
+> > approach mistakenly moves pointer too back.
+>
+> ...
+>
+> > I think you need to change this to use container_of() and offsetof().
+>
+> To be clear, there is probably no real problem, except unlikely possible
+> MINALIGN=4 on 64-bit arch, but for sake of the correctness.
+>
 
-I'm a bit at a loss here, about two things:
+Thanks for taking the time to check it. I'll switch to container_of()
+for (hopefully) the last iteration.
 
-RTS is an output pin controlled by the UART. IIUC if the UART port is active
-and hardware flow control is enabled the RTS signal is either driven to high
-or low, but not floating.
-
-Now lets assume I'm wrong with the above and RTS can be floating. We only want
-the BT SoC to send data when the host UART is ready to receive them, right?
-RTS is an active low signal, hence by configuring it as a pull-down the BT
-SoC can send data regardless of whether the host UART actually asserts RTS,
-so the host UART may not be ready to receive it. I would argue that if there
-is really such a thing as a floating RTS signal then it should have a pull-up,
-to prevent the BT SoC from sending data at any time.
-
-I'm not an expert in UART communication and pinconf, so it could be that I
-got something wrong, but as of now it seems to me that no pull is the correct
-config for RTS.
+Bart
