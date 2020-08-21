@@ -2,68 +2,84 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8725AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3571C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64550207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597997417;
-	bh=qX/evmdyLK0MMeOBByOd+vTc2QcFXtXoIG/jEVYRUAA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PObHJKDxzL2fay8h84qmCKqYmvi0YQSxCZFmpUd/TZt3cgdXaYd2NIahRymNmHG+Z
-	 jiD4Fp72CulCC1plYaz7Gd7+ByVjVVww+NmshBrlLu/vOu1Iw2YvaUIP1f9PP+pFZH
-	 ZgXqSV6ZRTTvuoWWUPo89Ttt8HX0kMeoh68bh9is=
+	by mail.kernel.org (Postfix) with ESMTP id 87B5E204EA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgHUIKP (ORCPT
+        id S1728059AbgHUIKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726216AbgHUIKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:10:13 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E92C02078D;
-        Fri, 21 Aug 2020 08:10:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597997412;
-        bh=qX/evmdyLK0MMeOBByOd+vTc2QcFXtXoIG/jEVYRUAA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NcxlmvsALJcFwVcLYljKXG0X+KQdeuK59GzNX0woZipVxIidrTWl+2SPNxT0Rr3d/
-         WAWhKDJXUDEQdE3ufBnv/tD3xaE62x+myh3d++Y+M7etdiDzZ8fz3EyTYAevqZZxxG
-         jpwJcsBBPDtuEV/rNGfhYxI0ZGiuXnlN25Otx1LQ=
-Date:   Fri, 21 Aug 2020 09:10:08 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Barry Song <song.bao.hua@hisilicon.com>, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, ganapatrao.kulkarni@cavium.com,
-        catalin.marinas@arm.com, iommu@lists.linux-foundation.org,
-        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, huangdaode@huawei.com
-Subject: Re: [PATCH v6 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-Message-ID: <20200821081007.GB20060@willie-the-truck>
-References: <20200821022615.28596-1-song.bao.hua@hisilicon.com>
- <20200821061918.GA28559@lst.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821061918.GA28559@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 21 Aug 2020 04:10:51 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:16964 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727772AbgHUIKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:10:49 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app4 (Coremail) with SMTP id cS_KCgBHj_9vgT9f51UsAQ--.16912S4;
+        Fri, 21 Aug 2020 16:10:27 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Michel Lespinasse <walken@google.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/uverbs: Fix memleak in ib_uverbs_add_one
+Date:   Fri, 21 Aug 2020 16:10:11 +0800
+Message-Id: <20200821081013.4762-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cS_KCgBHj_9vgT9f51UsAQ--.16912S4
+X-Coremail-Antispam: 1UD129KBjvdXoWruFykJr1fZFy3KF1fZr47urg_yoW3CFc_Gr
+        1jqrs7uFn8CFWqkr1UArs3XrW2gFsI9a4rWa9ay34rJ347W343G392vr98Xr45Wr4jkFyD
+        JFWDJ348Krs5CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbVkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1l84ACjcxK6I8E
+        87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c
+        8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_
+        Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
+        c2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VW8uw4UJr1UMxC20s026xCaFVCjc4AY6r1j6r
+        4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+        67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+        x0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAI
+        cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
+        nxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAls6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 08:19:18AM +0200, Christoph Hellwig wrote:
-> FYI, as of the last one I'm fine now, bit I really need an ACK from
-> the arm64 maintainers.
+When ida_alloc_max() fails, uverbs_dev should be freed
+just like when init_srcu_struct() fails. It's the same
+for the error paths after this call.
 
-Going through the dreaded backlog this morning...
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
+ drivers/infiniband/core/uverbs_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Will
+diff --git a/drivers/infiniband/core/uverbs_main.c b/drivers/infiniband/core/uverbs_main.c
+index 37794d88b1f3..c6b4e3e2aff6 100644
+--- a/drivers/infiniband/core/uverbs_main.c
++++ b/drivers/infiniband/core/uverbs_main.c
+@@ -1170,6 +1170,7 @@ static int ib_uverbs_add_one(struct ib_device *device)
+ 		ib_uverbs_comp_dev(uverbs_dev);
+ 	wait_for_completion(&uverbs_dev->comp);
+ 	put_device(&uverbs_dev->dev);
++	kfree(uverbs_dev);
+ 	return ret;
+ }
+ 
+-- 
+2.17.1
+
