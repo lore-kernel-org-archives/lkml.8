@@ -2,124 +2,143 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EC8C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3717C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBC2C20720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:17:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U1RMeYpO"
+	by mail.kernel.org (Postfix) with ESMTP id 7344620720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:18:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598033896;
+	bh=7ZMnxBinhbuxuu76uI4BQcNGRdzuzbPEh3ZWwy0a3vQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zwLtLiwEdKkRrdqeZqyeg/LlXQoX3z734+ejKWi2IGcfTimZkil6pH9cG4e8S8hJO
+	 2ZUwitUsHJ8Gfmp1t3cl1F30Yhedx4vZfV+CG/2bfhXDFcs3jSSO4/8J67oxldQKVT
+	 EkOyDCII3joUVrPzUzEPLZ04SHR4R/CUog5Ivi5k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgHUSRj (ORCPT
+        id S1727982AbgHUSSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726358AbgHUSRh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:17:37 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08ACC061573;
-        Fri, 21 Aug 2020 11:17:36 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id g75so2690035wme.4;
-        Fri, 21 Aug 2020 11:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e9mgWK2XGSNejzbIShlVyw9cGX/rfpxZBl6ecAIWVy4=;
-        b=U1RMeYpO/R3D0KkHNbNBvdec2Ilv4X2DVT6cg7YWvJBJyr7LQEvHzb3ckqKq68DVFm
-         RsRUGzqv/WxLZK3Ra8Ltsx0VpS9Nm2U4v36uz5Gdko+Ri25kYHv6U+um7ZdElR8K7Dw/
-         HqzkCnPlQFRcCC7em/+xF+0lYKLncg4wtSXcbZGaf0FE8WPeaOt8vibrr629BbJmM61p
-         qp7WtPK/yZNGKGnX1L1ZQioE7kTt0gsJkEepvSHdZdvSk0mvV1xNIoPESorbzRozFGbJ
-         zX+7EPIlzni4Zo4T2cqRKpKyhby7lUTu0H6BRCyDJNUG4yxYqwlHdyDfKKFEQu+JnDUw
-         Esjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=e9mgWK2XGSNejzbIShlVyw9cGX/rfpxZBl6ecAIWVy4=;
-        b=FDHa/djZHZggBv5Sabbt5yPS/n+y3PNHq3CQVnV2RQEXRsf2aJ8onFMCUtB15iF804
-         Fsocqc4TvvMJefKDwyX+TDjsCKnyo294OhgI2nLE42foPvcF6CC88cTNesPbC1Czl4pI
-         ZsdV75siEMKZ/gMmZcwaUY4XRAeHbNT1sn3AuKLu1dEdw3LJJkplTzH8auQpLNB86d/C
-         ZGxzPDVlKIoowexfpjGflrUPwd6lMTzLU0idshYpA0VhZ3xkG7U6CfzuzzNmTIgkSgTS
-         6d0G1Rih/vKgYdjSvQ6E7JDf9Eeo/vqPWFfC3uoSfXPxG7AfrkddxvlSFj5zrEzqqIrc
-         Rqrg==
-X-Gm-Message-State: AOAM5312hcp404QyiozW6oZJev94jmGboPCArK8aAfM8ZO+SH5tYltH0
-        3ePFOjgtQtOKYQsMaAd5raiAp/l9zz3u2w==
-X-Google-Smtp-Source: ABdhPJx02d4XOG7VYqgRyJ3CXMYtjC4XDFgkKLRpCBjewDqHRTpYWKRwPvdZEbGLgWlAXvNJ0sGNnQ==
-X-Received: by 2002:a1c:a9ce:: with SMTP id s197mr4753684wme.45.1598033855273;
-        Fri, 21 Aug 2020 11:17:35 -0700 (PDT)
-Received: from localhost.localdomain ([62.178.82.229])
-        by smtp.gmail.com with ESMTPSA id 69sm7859719wmb.8.2020.08.21.11.17.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 11:17:34 -0700 (PDT)
-From:   Christian Gmeiner <christian.gmeiner@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     josua.mayer@jm0.eu,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH] drm/etnaviv: fix external abort seen on GC600 rev 0x19
-Date:   Fri, 21 Aug 2020 20:17:27 +0200
-Message-Id: <20200821181731.94852-1-christian.gmeiner@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 21 Aug 2020 14:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726851AbgHUSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 14:18:10 -0400
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8DD620735
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 18:18:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598033889;
+        bh=7ZMnxBinhbuxuu76uI4BQcNGRdzuzbPEh3ZWwy0a3vQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=maIWyNWPrBmOGTbebI0zVei53p07oW05BnWwKebNLH6x9g5wSBT47me3h0dMkZRzZ
+         EifSicaXbM+ifLGGs7PFENF09GI4WoHDvywJMZKp1V44q+C+nD9b6B/pq8MHD8AMGQ
+         vM/EW4vOndvpQ0WUl77PeHw3XbFllYbPNTuKiNgI=
+Received: by mail-ot1-f50.google.com with SMTP id k12so2305081otr.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:18:09 -0700 (PDT)
+X-Gm-Message-State: AOAM533nZdTDt9MPziszf0ftobxAZvLOL4mx2lQz4vAkyOApgxwP9vUz
+        K5In24630l1R0DepzC3sOO5q2KBLOCE0EhpGlQ==
+X-Google-Smtp-Source: ABdhPJy/o46mSao/iyigXFdlBssYsaaeBIUKzIltnUK6LL8LLeaAnrN+ySSRUiPbmI1h6pQn62RtTu8MK6E5r1dJE4U=
+X-Received: by 2002:a05:6830:1d8e:: with SMTP id y14mr2864009oti.129.1598033889071;
+ Fri, 21 Aug 2020 11:18:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200821154848.GI7871@localhost.localdomain> <CAL_JsqLBfwXamvCB0C9ujhy-BS6P4BpU-MWPuZX+_+sYPVsUSg@mail.gmail.com>
+ <8213206d4764375f32cbea36ea214573248094dc.camel@perches.com>
+In-Reply-To: <8213206d4764375f32cbea36ea214573248094dc.camel@perches.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 21 Aug 2020 12:17:57 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
+Message-ID: <CAL_JsqL0v6PXgMLVZzqZwjpZ4KTUGmutg6Z0YuvTccdAUa-=mw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for HPE Superdome Flex (UV) maintainers
+To:     Joe Perches <joe@perches.com>
+Cc:     Steve Wahl <steve.wahl@hpe.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Russ Anderson <russ.anderson@hpe.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like that this GPU core triggers an abort when
-reading VIVS_HI_CHIP_PRODUCT_ID and/or VIVS_HI_CHIP_CUSTOMER_ID.
+On Fri, Aug 21, 2020 at 11:05 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Fri, 2020-08-21 at 10:45 -0600, Rob Herring wrote:
+> > +Joe Perches
+> >
+> > On Fri, Aug 21, 2020 at 9:48 AM Steve Wahl <steve.wahl@hpe.com> wrote:
+> > >
+> > > Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+> >
+> > get_maintainers.pl doesn't work on MAINTAINERS. You need to send this
+> > to the maintainers of the files listed in the entry below. Looks like
+> > that would be the x86 maintainers.
+> >
+> >
+> > What did Mauro, David and I do to become MAINTAINERS maintainers?
+> >
+> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > (commit_signer:127/806=16%,authored:80/806=10%)
+> > Rob Herring <robh@kernel.org> (commit_signer:103/806=13%)
+> > "David S. Miller" <davem@davemloft.net> (commit_signer:99/806=12%)
+> > linux-kernel@vger.kernel.org (open list)
+> >
+> >
+> > Can we make --no-git-fallback the default? It's useful for
+> > informational purposes, but never for who to email patches to. Having
+> > no output would be better, then submitters have to think about where
+> > to send patches.
+>
+> Doubtful that improves things.  At least the --git-fallback option
+> shows who modified or got patches accepted to files that are
+> nominally unmaintained.  It also shows the upstream path for those
+> files via Signed-off-by: lines so I think --git-fallback is generally
+> a good mechanism and control flag for directly unmaintained files.
+>
+> > What ever happened to splitting up MAINTAINERS to subdirectories? That
+> > would help routing MAINTAINERS changes to the right maintainers.
+>
+> Splitting MAINTAINERS into subdirectories would do nothing
+> to route patches.  It would just be convenience to reduce
+> the total number of changes to a single file.
 
-I looked at different versions of Vivante's kernel driver and did
-not found anything about this issue or what feature flag can be
-used. So go the simplest route and do not read these two registers
-on the affected GPU core.
+In general no, but for MAINTAINERS changes it would. Let's say I add
+an entry for Documentation/devicetree/foo-bar.txt. With a per
+subsystem/path MAINTAINERS file in
+Documentation/devicetree/MAINTAINERS, you'd add an entry there and run
+get_maintainer.pl:
 
-Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-Reported-by: Josua Mayer <josua.mayer@jm0.eu>
-Fixes: 815e45bbd4d3 ("drm/etnaviv: determine product, customer and eco id")
-Cc: stable@vger.kernel.org
----
- drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+$ touch Documentation/devicetree/MAINTAINERS
+$ scripts/get_maintainer.pl -f Documentation/devicetree/MAINTAINERS
+Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND
+FLATTENED DEVICE TREE BINDINGS)
+devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+DEVICE TREE BINDINGS)
+linux-kernel@vger.kernel.org (open list)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-index d5a4cd85a0f6..d3906688c2b3 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
-@@ -337,10 +337,17 @@ static void etnaviv_hw_identify(struct etnaviv_gpu *gpu)
- 
- 		gpu->identity.model = gpu_read(gpu, VIVS_HI_CHIP_MODEL);
- 		gpu->identity.revision = gpu_read(gpu, VIVS_HI_CHIP_REV);
--		gpu->identity.product_id = gpu_read(gpu, VIVS_HI_CHIP_PRODUCT_ID);
--		gpu->identity.customer_id = gpu_read(gpu, VIVS_HI_CHIP_CUSTOMER_ID);
- 		gpu->identity.eco_id = gpu_read(gpu, VIVS_HI_CHIP_ECO_ID);
- 
-+		/*
-+		 * Reading these two registers on GC600 rev 0x19 result in a
-+		 * unhandled fault: external abort on non-linefetch
-+		 */
-+		if (!etnaviv_is_model_rev(gpu, GC600, 0x19)) {
-+			gpu->identity.product_id = gpu_read(gpu, VIVS_HI_CHIP_PRODUCT_ID);
-+			gpu->identity.customer_id = gpu_read(gpu, VIVS_HI_CHIP_CUSTOMER_ID);
-+		}
-+
- 		/*
- 		 * !!!! HACK ALERT !!!!
- 		 * Because people change device IDs without letting software
--- 
-2.26.2
+> Those large number of changes to the single MAINTAINERS file
+> very rarely have any conflicts either, so it wouldn't really
+> change the overall number of changes to MAINTAINERS entries
+> spread around the tree.
+>
+> You are be welcome to try to split the file and get Linus to
+> accept it.  I gave it a go.  Try yourself.
+>
+> https://lore.kernel.org/patchwork/patch/817857/
 
+Yes, I remember that. He didn't seem totally opposed to it which is why I asked.
+
+I have another reason for wanting the split. I want to generate a
+MAINTAINERS file from the DT schema files. We have the data there and
+it's checked automatically. I don't care to either continually tell
+folks to add a MAINTAINERS entry or tell them to run checkpatch.pl to
+tell them that. But if the infrastructure got merged, would that
+already work?
+
+Rob
