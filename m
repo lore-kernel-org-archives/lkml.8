@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97B3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88ACBC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97C33206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F9220738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028490;
-	bh=Gtz/RmK+vN597YxQslboCRgSw2E0RPm7+U08Qg2SdzE=;
+	s=default; t=1598028502;
+	bh=eoVwXSopgf/xZvR3o8MeKW7Gm09apVd6vtGLYyLUfC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dp2g/ql5Zp2qg+qDHVsftrlhin1GH5D1rrUKfU84f27G/dw+XwR/txJ3df7tRVSom
-	 hgPD5z0awLMqfjdmkLkmyPVDYjVmuRF93ATMlQ6b28tY7/dOmrGlf2jeMoeSZFhkCR
-	 OpGEcu4IonFncBVUHj/zh594rEWrRlJg9GoVedK0=
+	b=prR63NQqMoI5JivAaKtx90DBhkrKj6tlUize9PWVMSXeGllvAF1iCSwKXxrmBicWL
+	 P/gke19SOu6b4rgYYkeYH/Ukx0OiLMh8YoVRtS4cTd4LrdMrXBwMbJqZPmB8L8NpgM
+	 cX3rEi4cJdGhSHhQRkjKsI4JUGHcbh8szr4upENg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726971AbgHUQsI (ORCPT
+        id S1728401AbgHUQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:48:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727792AbgHUQUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727954AbgHUQUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:20:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D2FE22CF7;
-        Fri, 21 Aug 2020 16:19:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 938A122EBF;
+        Fri, 21 Aug 2020 16:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026766;
-        bh=Gtz/RmK+vN597YxQslboCRgSw2E0RPm7+U08Qg2SdzE=;
+        s=default; t=1598026769;
+        bh=eoVwXSopgf/xZvR3o8MeKW7Gm09apVd6vtGLYyLUfC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LucAGsD7Re55woyM0BeVXmvE8kDGSrlEMl51T/gnWryMAjba21uDf5g13OlNAAuvL
-         G9kTHpn7Lmo2wtFWChzSIsiuVKpd3baFpocDUsZXaDltjmWEtyGTv15ibMu0bevxTo
-         2Sg25vIcAAlb79p09nSBQJrQfafY7VOa+0aq1NWg=
+        b=yYBK4OeTNi2Te6AlBSJy5MaFuH//E47zqQnqe5L+lch97MJZ25odyf3cygPeVMcfs
+         jvHBbUhAzOXo8VEGAPK3ERbVhiXeVi4UP/H9weG//4fUUeRi+J7VgALG22DM5lg+fr
+         DWW23OuxkpnFXyc9fxXTeKoOlg2pVZQks+Vh5Ge4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 22/30] cec-api: prevent leaking memory through hole in structure
-Date:   Fri, 21 Aug 2020 12:18:49 -0400
-Message-Id: <20200821161857.348955-22-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 24/30] drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
+Date:   Fri, 21 Aug 2020 12:18:51 -0400
+Message-Id: <20200821161857.348955-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
 References: <20200821161857.348955-1-sashal@kernel.org>
@@ -59,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 6c42227c3467549ddc65efe99c869021d2f4a570 ]
+[ Upstream commit bfad51c7633325b5d4b32444efe04329d53297b2 ]
 
-Fix this smatch warning:
+nouveau_fbcon_open() calls calls pm_runtime_get_sync() that
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-drivers/media/cec/core/cec-api.c:156 cec_adap_g_log_addrs() warn: check that 'log_addrs' doesn't leak information (struct has a hole after
-'features')
-
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/cec/cec-api.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_fbcon.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
-index 21a5f45e0259e..66ef06f4670c8 100644
---- a/drivers/media/cec/cec-api.c
-+++ b/drivers/media/cec/cec-api.c
-@@ -159,7 +159,13 @@ static long cec_adap_g_log_addrs(struct cec_adapter *adap,
- 	struct cec_log_addrs log_addrs;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+index 2b12d82aac150..0e23284fa1a3a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
++++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
+@@ -184,8 +184,10 @@ nouveau_fbcon_open(struct fb_info *info, int user)
+ 	struct nouveau_fbdev *fbcon = info->par;
+ 	struct nouveau_drm *drm = nouveau_drm(fbcon->helper.dev);
+ 	int ret = pm_runtime_get_sync(drm->dev->dev);
+-	if (ret < 0 && ret != -EACCES)
++	if (ret < 0 && ret != -EACCES) {
++		pm_runtime_put(drm->dev->dev);
+ 		return ret;
++	}
+ 	return 0;
+ }
  
- 	mutex_lock(&adap->lock);
--	log_addrs = adap->log_addrs;
-+	/*
-+	 * We use memcpy here instead of assignment since there is a
-+	 * hole at the end of struct cec_log_addrs that an assignment
-+	 * might ignore. So when we do copy_to_user() we could leak
-+	 * one byte of memory.
-+	 */
-+	memcpy(&log_addrs, &adap->log_addrs, sizeof(log_addrs));
- 	if (!adap->is_configured)
- 		memset(log_addrs.log_addr, CEC_LOG_ADDR_INVALID,
- 		       sizeof(log_addrs.log_addr));
 -- 
 2.25.1
 
