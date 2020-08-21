@@ -2,128 +2,163 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26867C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3230C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 043592067C
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmYlBWlq"
+	by mail.kernel.org (Postfix) with ESMTP id DA05C2076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 23:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726886AbgHUW57 (ORCPT
+        id S1726753AbgHUXCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbgHUW56 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:57:58 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60E9EC061573;
-        Fri, 21 Aug 2020 15:57:57 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w14so2411228eds.0;
-        Fri, 21 Aug 2020 15:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=6Y3HAkrVgYNsW26WADT1OAHIAmh+irSetkJetEKSBLc=;
-        b=LmYlBWlqAaYlLTQciRn3s+WD9MIprS0TReEVpc+Z7k5nC/Y9lKDewhsJ5SPjBKZTHp
-         fAaXY21tnl1gT2vIqJDHE0um3m5jtvyiFgQj8j+OE0C1MHq7ufuDNktX7eKcr/wO4/Ax
-         ksVjJtpmqtwqdVFeWvivOrBHE7DZQfOS/2/zyxu0tlgCCxNAkkVS3ifbVLRBbNdt9iVw
-         b4T61UaWEp7wGexWNcLH0Tlid4kfULD7VqYpfsu2/J4q3ZMcysARnaBWiyqfWJaGALZN
-         gZj0iri+5bEtsg7p+jzTxbOaFgJTIlIuR9HbPHLTSmmTV2HxX/hEy+QCQtH6z1KQOYOI
-         XWRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6Y3HAkrVgYNsW26WADT1OAHIAmh+irSetkJetEKSBLc=;
-        b=cPMD97LBCTzp0sufpKadCWAFTMRIKjp17cYUdjny1DJlR4ScS+CAIApn6SYtJfnl/t
-         7mY822Ti/8jZwpxYdRYUSMQyn2kQEmPv8/L7CasBPJSD3AwhgFpuS66tdT1xo5tgO9MC
-         PjdssnIRCugHAqXLeVmCbqRr6HN4wxnDqBnAJBD4KT2tNpBi1MFuhGOUOfgYJOafOZaf
-         8wCIUJkTiIvq35Qpgd25TnCiu/jfSJnSICg4YFilOkxjrqUHEAzcdDsFUlpMpuIuhhjm
-         44g3osJqerMRHp3MCk5b+GFI6GKcDRFJRz8iTrsuNDh5Sf1Tn83rj3gd+weJ9obSTmvh
-         nw2w==
-X-Gm-Message-State: AOAM532hmnL3yfLZgW85r//W24Nlxx3vOKzo7xf0OPJVZR2emzpDggqM
-        J0g9i7xJ8bBIP57EXd1h6GYS1lA7xiM=
-X-Google-Smtp-Source: ABdhPJwhHp67Go/OlpD5NAZYr8YW4SUI6BBSZAVRj7AR7dXUeoByYRDRzf456SX/p5xgAiEGesWZvg==
-X-Received: by 2002:aa7:da04:: with SMTP id r4mr5032282eds.265.1598050675861;
-        Fri, 21 Aug 2020 15:57:55 -0700 (PDT)
-Received: from skbuf ([86.126.22.216])
-        by smtp.gmail.com with ESMTPSA id d9sm1839906edt.20.2020.08.21.15.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:57:55 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 01:57:53 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] net: dsa: sja1105: Do not use address of compatible
- member in sja1105_check_device_id
-Message-ID: <20200821225753.cfaclxay6zhq6swg@skbuf>
-References: <20200821222515.414167-1-natechancellor@gmail.com>
+        Fri, 21 Aug 2020 19:02:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:30336 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726688AbgHUXCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 19:02:41 -0400
+IronPort-SDR: StPZFGGBcdKmY04Xv+y/pNhI75rPIq2ARYNw52mEqZk9915od8EypXsExsxQWjk3XdpUVmZn4V
+ fymAAMZGxOEA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="153248926"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="153248926"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 16:02:40 -0700
+IronPort-SDR: ToGmx6dS8MqJfWdeMn8gS85sydet1IIwHZhopRPEpLlrhZIQI12Cn7bDwDzvyQqiuYnCbfRP41
+ Vaio4ho7wJqA==
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="473214632"
+Received: from jlpaulk-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.252.133.148])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 16:02:37 -0700
+Message-ID: <46c49dec078cb8625a9c3a3cd1310a4de7ec760b.camel@linux.intel.com>
+Subject: Re: [PATCH v4 00/10] Function Granular KASLR
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Kees Cook <keescook@chromium.org>, Miroslav Benes <mbenes@suse.cz>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        arjan@linux.intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        rick.p.edgecombe@intel.com, live-patching@vger.kernel.org,
+        Hongjiu Lu <hongjiu.lu@intel.com>, joe.lawrence@redhat.com
+Date:   Fri, 21 Aug 2020 16:02:24 -0700
+In-Reply-To: <20200722213313.aetl3h5rkub6ktmw@treble>
+References: <20200717170008.5949-1-kristen@linux.intel.com>
+         <alpine.LSU.2.21.2007221122110.10163@pobox.suse.cz>
+         <202007220738.72F26D2480@keescook> <20200722160730.cfhcj4eisglnzolr@treble>
+         <202007221241.EBC2215A@keescook>
+         <301c7fb7d22ad6ef97856b421873e32c2239d412.camel@linux.intel.com>
+         <20200722213313.aetl3h5rkub6ktmw@treble>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821222515.414167-1-natechancellor@gmail.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:25:16PM -0700, Nathan Chancellor wrote:
-> Clang warns:
+On Wed, 2020-07-22 at 16:33 -0500, Josh Poimboeuf wrote:
+> On Wed, Jul 22, 2020 at 12:56:10PM -0700, Kristen Carlson Accardi
+> wrote:
+> > On Wed, 2020-07-22 at 12:42 -0700, Kees Cook wrote:
+> > > On Wed, Jul 22, 2020 at 11:07:30AM -0500, Josh Poimboeuf wrote:
+> > > > On Wed, Jul 22, 2020 at 07:39:55AM -0700, Kees Cook wrote:
+> > > > > On Wed, Jul 22, 2020 at 11:27:30AM +0200, Miroslav Benes
+> > > > > wrote:
+> > > > > > Let me CC live-patching ML, because from a quick glance
+> > > > > > this is
+> > > > > > something 
+> > > > > > which could impact live patching code. At least it
+> > > > > > invalidates
+> > > > > > assumptions 
+> > > > > > which "sympos" is based on.
+> > > > > 
+> > > > > In a quick skim, it looks like the symbol resolution is using
+> > > > > kallsyms_on_each_symbol(), so I think this is safe? What's a
+> > > > > good
+> > > > > selftest for live-patching?
+> > > > 
+> > > > The problem is duplicate symbols.  If there are two static
+> > > > functions
+> > > > named 'foo' then livepatch needs a way to distinguish them.
+> > > > 
+> > > > Our current approach to that problem is "sympos".  We rely on
+> > > > the
+> > > > fact
+> > > > that the second foo() always comes after the first one in the
+> > > > symbol
+> > > > list and kallsyms.  So they're referred to as foo,1 and foo,2.
+> > > 
+> > > Ah. Fun. In that case, perhaps the LTO series has some solutions.
+> > > I
+> > > think builds with LTO end up renaming duplicate symbols like
+> > > that, so
+> > > it'll be back to being unique.
+> > > 
+> > 
+> > Well, glad to hear there might be some precendence for how to solve
+> > this, as I wasn't able to think of something reasonable off the top
+> > of
+> > my head. Are you speaking of the Clang LTO series? 
+> > https://lore.kernel.org/lkml/20200624203200.78870-1-samitolvanen@google.com/
 > 
-> drivers/net/dsa/sja1105/sja1105_main.c:3418:38: warning: address of
-> array 'match->compatible' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         for (match = sja1105_dt_ids; match->compatible; match++) {
->         ~~~                          ~~~~~~~^~~~~~~~~~
-> 1 warning generated.
+> I'm not sure how LTO does it, but a few more (half-brained) ideas
+> that
+> could work:
 > 
-> We should check the value of the first character in compatible to see if
-> it is empty or not. This matches how the rest of the tree iterates over
-> IDs.
+> 1) Add a field in kallsyms to keep track of a symbol's original
+> offset
+>    before randomization/re-sorting.  Livepatch could use that field
+> to
+>    determine the original sympos.
 > 
-> Fixes: 0b0e299720bb ("net: dsa: sja1105: use detected device id instead of DT one on mismatch")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1139
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/net/dsa/sja1105/sja1105_main.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 2) In fgkaslr code, go through all the sections and mark the ones
+> which
+>    have duplicates (i.e. same name).  Then when shuffling the
+> sections,
+>    skip a shuffle if it involves a duplicate section.  That way all
+> the
+>    duplicates would retain their original sympos.
 > 
-> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-> index c3f6f124e5f0..5a28dfb36ec3 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_main.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-> @@ -3415,7 +3415,7 @@ static int sja1105_check_device_id(struct sja1105_private *priv)
->  
->  	sja1105_unpack(prod_id, &part_no, 19, 4, SJA1105_SIZE_DEVICE_ID);
->  
-> -	for (match = sja1105_dt_ids; match->compatible; match++) {
-> +	for (match = sja1105_dt_ids; match->compatible[0]; match++) {
->  		const struct sja1105_info *info = match->data;
->  
->  		/* Is what's been probed in our match table at all? */
+> 3) Livepatch could uniquely identify symbols by some feature other
+> than
+>    sympos.  For example:
 > 
-> base-commit: 4af7b32f84aa4cd60e39b355bc8a1eab6cd8d8a4
-> -- 
-> 2.28.0
+>    Symbol/function size - obviously this would only work if
+> duplicately
+>    named symbols have different sizes.
+> 
+>    Checksum - as part of a separate feature we're also looking at
+> giving
+>    each function its own checksum, calculated based on its
+> instruction
+>    opcodes.  Though calculating checksums at runtime could be
+>    complicated by IP-relative addressing.
+> 
+> I'm thinking #1 or #2 wouldn't be too bad.  #3 might be harder.
 > 
 
-Thanks, Nathan.
+Hi there! I was trying to find a super easy way to address this, so I
+thought the best thing would be if there were a compiler or linker
+switch to just eliminate any duplicate symbols at compile time for
+vmlinux. I filed this question on the binutils bugzilla looking to see
+if there were existing flags that might do this, but H.J. Lu went ahead
+and created a new one "-z unique", that seems to do what we would need
+it to do. 
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+https://sourceware.org/bugzilla/show_bug.cgi?id=26391
 
--Vladimir
+When I use this option, it renames any duplicate symbols with an
+extension - for example duplicatefunc.1 or duplicatefunc.2. You could
+either match on the full unique name of the specific binary you are
+trying to patch, or you match the base name and use the extension to
+determine original position. Do you think this solution would work? If
+so, I can modify livepatch to refuse to patch on duplicated symbols if
+CONFIG_FG_KASLR and when this option is merged into the tool chain I
+can add it to KBUILD_LDFLAGS when CONFIG_FG_KASLR and livepatching
+should work in all cases. 
+
