@@ -2,102 +2,158 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE56C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F740C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C222207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E745207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qQAt4ncN"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rEWUNxN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgHUNFj (ORCPT
+        id S1728253AbgHUNHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:05:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59496 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgHUNFg (ORCPT
+        Fri, 21 Aug 2020 09:07:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19412 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726975AbgHUNHR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:05:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09365C061385;
-        Fri, 21 Aug 2020 06:05:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/frFlWk/DH7UmMNwwzKlH5Kh+sKeUOmfANQte5CZqRw=; b=qQAt4ncNWg2XdtrVsuzWeJNF5E
-        R3ocFyZH0LZFQvn2d1ZM0b6OQpWbxO8rKqfkeyFbrDG8AT8Zd0rgqetjCzRMK3ikDiWviFiN4g6K6
-        3vk+xTo/vrN5jTwQ5AniTfQisHA7dKEWc4FFhSlxjEA5/dHIInmA0fknQwBW1cn870uq9DU//1KeT
-        SmGICfk/UDZ40Nc1NlSmeU+w9YprzKKDecp5eoyDo6M5HczQOHG9IgMHEqLiiStPkf1tosTleslTS
-        pp/BefGKDT6dKzH7Jc5mNuIrbAWU8pVODLdCBcxLyrHdvw2gzrAO0GUJhXjA4xso0mnnGb4JMfYN5
-        hLdH9MvQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k96jS-0004Fr-Ef; Fri, 21 Aug 2020 13:05:23 +0000
-Date:   Fri, 21 Aug 2020 14:05:22 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Yu Kuai <yukuai3@huawei.com>, david@fromorbit.com,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
-Subject: Re: [RFC PATCH V2] iomap: add support to track dirty state of sub
- pages
-Message-ID: <20200821130522.GS17456@casper.infradead.org>
-References: <20200818134618.2345884-1-yukuai3@huawei.com>
- <20200818155305.GR17456@casper.infradead.org>
- <20200818161229.GK6107@magnolia>
- <20200818165019.GT17456@casper.infradead.org>
- <20200821061019.GD31091@infradead.org>
+        Fri, 21 Aug 2020 09:07:17 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LD3cod085946;
+        Fri, 21 Aug 2020 09:07:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=rCX53BW9XWck10T5IMGv9OVxfYJ84h/kfh43uFw0aFQ=;
+ b=rEWUNxN4NrA6aHediaUELPUNMJvgvQiDvTC6KTeQIJxnuOb6Va8ZFE0kC9/mhfm+KO1i
+ nyNI81g3sdX2xXyVa9iBJG1dRGClBHzr3pGsKl5E57DRFGQWIVZJTsQjuK7CSsRlGuot
+ NXh6VJJCbKVkmBpkx6TVffhpNBZ9r0Qp86f6mqW6wR893ZYxi9yfZzMD2L5zpSIsylxW
+ GFDDdEwJw1HG7Zp3JB1+UnXdrhcB1vfX5mBseE0cGjctQaTXdQK2jiBKJNz99vPG6xRj
+ Z3e0V6BPM6NMJML3mjFrC9i8VbEimpkRlpkUHtrnMOJkGUiKg9PtfJbYkJ4I8wP4iVoM RQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331yc8qbt6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 09:07:07 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LD4TUx089473;
+        Fri, 21 Aug 2020 09:07:07 -0400
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 331yc8qbrd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 09:07:07 -0400
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LD59oq008635;
+        Fri, 21 Aug 2020 13:07:04 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma05fra.de.ibm.com with ESMTP id 3304bujpcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 13:07:03 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LD5VHw459264
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 13:05:31 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 845A9A404D;
+        Fri, 21 Aug 2020 13:07:00 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAC77A4051;
+        Fri, 21 Aug 2020 13:06:59 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.168.20])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 13:06:59 +0000 (GMT)
+Subject: Re: [PATCH v9 2/2] s390: virtio: PV needs VIRTIO I/O device
+ protection
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
+        jasowang@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com
+References: <1597854198-2871-1-git-send-email-pmorel@linux.ibm.com>
+ <1597854198-2871-3-git-send-email-pmorel@linux.ibm.com>
+ <20200821140510.3849410c.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <19f742f8-8cc2-8f5a-90b0-c33e7b6a45b9@linux.ibm.com>
+Date:   Fri, 21 Aug 2020 15:06:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821061019.GD31091@infradead.org>
+In-Reply-To: <20200821140510.3849410c.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_06:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ bulkscore=0 adultscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ lowpriorityscore=0 suspectscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210115
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 07:10:19AM +0100, Christoph Hellwig wrote:
-> On Tue, Aug 18, 2020 at 05:50:19PM +0100, Matthew Wilcox wrote:
-> > Looks like Christoph changed his mind sometime between that message
-> > and the first commit: 9dc55f1389f9569acf9659e58dd836a9c70df217
+
+
+On 2020-08-21 14:05, Cornelia Huck wrote:
+> On Wed, 19 Aug 2020 18:23:18 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
-> No, as Darrick pointed out it was all about the header dependency.
+>> If protected virtualization is active on s390, VIRTIO has retricted
 > 
-> > My THP patches convert the bit array to be per-block rather than
-> > per-sector, so this is all going to go away soon ;-)
+> s/retricted/only restricted/
 > 
-> I've asked a while ago, but let me repeat:  Can you split out all the
-> useful iomap bits that are not directly dependent on the new THP
-> infrastructure and send them out ASAP?  I'd like to pre-load this
-> work at least a merge window before the actual THP bits.
+>> access to the guest memory.
+>> Define CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS and export
+>> arch_has_restricted_virtio_memory_access to advertize VIRTIO if that's
+>> the case, preventing a host error on access attempt.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   arch/s390/Kconfig   |  1 +
+>>   arch/s390/mm/init.c | 11 +++++++++++
+>>   2 files changed, 12 insertions(+)
+> 
+> (...)
+> 
+>> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+>> index 6dc7c3b60ef6..8febd73ed6ca 100644
+>> --- a/arch/s390/mm/init.c
+>> +++ b/arch/s390/mm/init.c
+>> @@ -45,6 +45,7 @@
+>>   #include <asm/kasan.h>
+>>   #include <asm/dma-mapping.h>
+>>   #include <asm/uv.h>
+>> +#include <linux/virtio_config.h>
+> 
+> I don't think you need this include anymore.
 
-I've been working on that the past couple of days.  As always when
-reviewing a patch series, I find things that need to be done differently.
-And spot bugs (one pre-existing, one that I introduced).
+right,
+> 
+>>   
+>>   pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>>   
+> 
+> (...)
+> 
+> With the nit fixed,
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
 
-You may not have noticed; I've sent out a couple of patch series to
-linux-mm already this week:
+Thanks,
 
-https://lore.kernel.org/linux-mm/20200819150555.31669-1-willy@infradead.org/
-https://lore.kernel.org/linux-mm/20200819184850.24779-1-willy@infradead.org/
+Pierre
 
-plus this to linux-block:
-https://lore.kernel.org/linux-block/20200817195206.15172-1-willy@infradead.org/
-
-this patch series inadvertently breaks DAX and I need to debug that:
-https://lore.kernel.org/linux-mm/20200804161755.10100-1-willy@infradead.org/
-
-i also need to figure out what breaks for Hugh here (I may already have
-fixed it, but I need to do more testing):
-https://lore.kernel.org/linux-mm/20200629152033.16175-1-willy@infradead.org/
-
-So the iomap chunks are next, and then I have another mm series in mind.
-After all that is done, I'll have almost all the prep work merged for
-5.10 and we can do the actual THP patchset in 5.11.  I'm sitting on
-around 80 patches at this point although it varies from day to day
-depending how I resplit things.
+-- 
+Pierre Morel
+IBM Lab Boeblingen
