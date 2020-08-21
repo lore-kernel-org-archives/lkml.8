@@ -2,143 +2,89 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A34C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FA9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2EB320738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:28:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mpdesouza.com header.i=@mpdesouza.com header.b="pRlD8xLC"
+	by mail.kernel.org (Postfix) with ESMTP id BD21820855
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbgHUD2c (ORCPT
+        id S1727770AbgHUDey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:28:32 -0400
-Received: from gateway36.websitewelcome.com ([192.185.198.13]:28800 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726844AbgHUD2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:28:32 -0400
-X-Greylist: delayed 1500 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Aug 2020 23:28:32 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id E9799401CA004
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 21:07:45 -0500 (CDT)
-Received: from br540.hostgator.com.br ([108.179.252.180])
-        by cmsmtp with SMTP
-        id 8x1FkZr92CjCV8x1FkOOzI; Thu, 20 Aug 2020 21:43:05 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=mpdesouza.com; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mqMipfFxAhFP9IXccuiRfTgI9EhL9JTdB+RkoJtnolI=; b=pRlD8xLCWlfRtNoWKbKm+7SWzN
-        iJdeAd1OKKgY4WWHVAqK4rmS9SUIDjWkp6Uaes41S3M20eXWgL+Pqr1jYtaYzJPo+LUNOLYNSBMVK
-        bBnKQqdrjT1Bld3fFZgKz4yiiJpwAkpYwKfy8f430GKSJNeeqop5USxIjIv8UAQXjeBCajHwtby2b
-        STPO7ClblZIYHrhv5U06XYRVu1xcVe2wTEqlpm+EkuzPd0AztPXa4FdpJBoLRJ77jbmZe+jQrIKs5
-        jt/RcsFHAbAmd8Oao/RFRtZ5IAgW6PXH/+YqrTpcCeKueukU0REzAeOhFbhwgm6EhuEpIg132AWHG
-        SpGwJnxw==;
-Received: from [191.248.104.145] (port=44546 helo=hephaestus.suse.de)
-        by br540.hostgator.com.br with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-        (Exim 4.93)
-        (envelope-from <marcos@mpdesouza.com>)
-        id 1k8x1E-000UJv-Uo; Thu, 20 Aug 2020 23:43:05 -0300
-From:   Marcos Paulo de Souza <marcos@mpdesouza.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     dsterba@suse.com, wqu@suse.com, linux-btrfs@vger.kernel.org,
-        Marcos Paulo de Souza <mpdesouza@suse.com>,
-        stable@vger.kernel.org
-Subject: [PATCH] btrfs: block-group: Fix free-space bitmap threshould
-Date:   Thu, 20 Aug 2020 23:42:31 -0300
-Message-Id: <20200821024231.16256-1-marcos@mpdesouza.com>
-X-Mailer: git-send-email 2.28.0
+        Thu, 20 Aug 2020 23:34:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:45678 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726975AbgHUDex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:34:53 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 8061D558E3DE7BEE5F2A;
+        Fri, 21 Aug 2020 11:28:36 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.202.191) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 21 Aug 2020 11:28:25 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kselftest@vger.kernel.org>
+CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH] mm/gup_benchmark: update the documentation in Kconfig
+Date:   Fri, 21 Aug 2020 15:25:46 +1200
+Message-ID: <20200821032546.19992-1-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br540.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - mpdesouza.com
-X-BWhitelist: no
-X-Source-IP: 191.248.104.145
-X-Source-L: No
-X-Exim-ID: 1k8x1E-000UJv-Uo
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (hephaestus.suse.de) [191.248.104.145]:44546
-X-Source-Auth: marcos@mpdesouza.com
-X-Email-Count: 6
-X-Source-Cap: bXBkZXNvNTM7bXBkZXNvNTM7YnI1NDAuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.202.191]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcos Paulo de Souza <mpdesouza@suse.com>
+In the beginning, mm/gup_benchmark.c supported get_user_pages_fast()
+only, but right now, it supports the benchmarking of a couple of
+get_user_pages() related calls like:
+* get_user_pages_fast()
+* get_user_pages()
+* pin_user_pages_fast()
+* pin_user_pages()
+The documentation is confusing and needs update.
 
-[BUG]
-After commit 9afc66498a0b ("btrfs: block-group: refactor how we read one
-block group item"), cache->length is being assigned after calling
-btrfs_create_block_group_cache. This causes a problem since
-set_free_space_tree_thresholds is calculate the free-space threshould to
-decide is the free-space tree should convert from extents to bitmaps.
-
-The current code calls set_free_space_tree_thresholds with cache->length
-being 0, which then makes cache->bitmap_high_thresh being zero. This
-implies the system will always use bitmap instead of extents, which is
-not desired if the block group is not fragmented.
-
-This behavior can be seen by a test that expects to repair systems
-with FREE_SPACE_EXTENT and FREE_SPACE_BITMAP, but the current code only
-created FREE_SPACE_BITMAP.
-
-[FIX]
-Call set_free_space_tree_thresholds after setting cache->length.
-
-Link: https://github.com/kdave/btrfs-progs/issues/251
-Fixes: 9afc66498a0b ("btrfs: block-group: refactor how we read one block group item")
-CC: stable@vger.kernel.org # 5.8+
-Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
 ---
- fs/btrfs/block-group.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ mm/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 44fdfa2eeb2e..01e8ba1da1d3 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -1798,7 +1798,6 @@ static struct btrfs_block_group *btrfs_create_block_group_cache(
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 6c974888f86f..f7c9374da7b3 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -831,10 +831,10 @@ config PERCPU_STATS
+ 	  be used to help understand percpu memory usage.
  
- 	cache->fs_info = fs_info;
- 	cache->full_stripe_len = btrfs_full_stripe_len(fs_info, start);
--	set_free_space_tree_thresholds(cache);
+ config GUP_BENCHMARK
+-	bool "Enable infrastructure for get_user_pages_fast() benchmarking"
++	bool "Enable infrastructure for get_user_pages() and related calls benchmarking"
+ 	help
+ 	  Provides /sys/kernel/debug/gup_benchmark that helps with testing
+-	  performance of get_user_pages_fast().
++	  performance of get_user_pages() and related calls.
  
- 	cache->discard_index = BTRFS_DISCARD_INDEX_UNUSED;
+ 	  See tools/testing/selftests/vm/gup_benchmark.c
  
-@@ -1908,6 +1907,8 @@ static int read_one_block_group(struct btrfs_fs_info *info,
- 
- 	read_block_group_item(cache, path, key);
- 
-+	set_free_space_tree_thresholds(cache);
-+
- 	if (need_clear) {
- 		/*
- 		 * When we mount with old space cache, we need to
-@@ -2128,6 +2129,7 @@ int btrfs_make_block_group(struct btrfs_trans_handle *trans, u64 bytes_used,
- 		return -ENOMEM;
- 
- 	cache->length = size;
-+	set_free_space_tree_thresholds(cache);
- 	cache->used = bytes_used;
- 	cache->flags = type;
- 	cache->last_byte_to_unpin = (u64)-1;
 -- 
-2.28.0
+2.27.0
+
 
