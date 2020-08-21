@@ -2,153 +2,108 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47E1C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BEEC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBE8A20791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0253B20791
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:26:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AHpmjfdL"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1J4ZCEzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbgHUV0P (ORCPT
+        id S1726757AbgHUV0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52628 "EHLO
+        Fri, 21 Aug 2020 17:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbgHUV0N (ORCPT
+        with ESMTP id S1726599AbgHUV0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:26:13 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29E2C061573
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:12 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id m12so731797vko.5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:12 -0700 (PDT)
+        Fri, 21 Aug 2020 17:26:38 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27B5FC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:37 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id u126so3098931iod.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=078+CiH7lVt29oWJpgwXIBkmUDbeJffsaSjW+OIcOZA=;
-        b=AHpmjfdLdmfBLldw9lQ0tRe+lGasQ3Wz8M5iSX7ICT4hyybMHrjbo14GoGAXCLge29
-         aPxUpd++RRLoFxUzIY78Eusp1qdRdl2Se5TWUd+g1AN0pnChMXZnr4l+HTAVpXkoFRJQ
-         TZ2wFZ04ad9De40QwE3vqDUkVLDJrHFPIrSAc=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jPqxc4OgKI9Opavzdh3uvDImVIna5oiu3wI1Ldz2iFA=;
+        b=1J4ZCEzpws6MSvmSIYNmOl9EqXEPcmOnwafmyG+kOO9ex9UTRKycw/6xVqQzxDRhC9
+         h3n5iJFbcdJQrMqI6vGFrBxW5e2WSgMTVlDwU+9pTBwr+Oijnro6yvOMEINT8JXfeyZz
+         AujmHREjdOrfoYhnwn1PdDvEZPc/WvWNe6T5R/BdxtA3yMbR5WJ81VI2DuuoeP3ECXQf
+         Qh65RGtzCTzYfTXPbLpwAvndmlFbxCCr4MNULvRrRoUjrFjBc729y6zISEoa1Kx2DlFH
+         r5dkUDloddOMRfIy9IMkJOhwllKz50K/riJHm9kfxZ4Qqf9M5E+Snhvhk4errJyF1H68
+         o4rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=078+CiH7lVt29oWJpgwXIBkmUDbeJffsaSjW+OIcOZA=;
-        b=j/lon+4vhQbNsd0xLxEEVjx+BGoQn5Mprat1T6VOlVJoOUb78frVXvx7y20B+jg5Tt
-         vm0lOEshWAaDXwaOO2GlVnPxbdqFZd3BQEvgxnPmVa3nKLZJHwVCakMLm9cjz5r+7GG8
-         QVC6ptKIElesjfGPB/YsyisFIgnBmqIVxdFj9fy5C3fG74+78I+7zOFFhLu7Rm64WV38
-         VLzNfj1YT0iT31eWpcgIwxr7v+4OyBos5jqV5597EXGyS7qeCX/6vnX7DpaBEiiA/Jtq
-         6keeF4Xxa1RbmQIFG55+kde+6qngSImRERBoMri74Ce4nv/bEh77JT8T/u3X4I3vIxbx
-         gU5g==
-X-Gm-Message-State: AOAM532ayME9qUX0lJEulnZGzeilxVzURG2PeVtoHFB5tGu4PsmuPKPP
-        SkHYXRGXn8dnXFDEIBupQ9pg/XexeZOlfg==
-X-Google-Smtp-Source: ABdhPJz6yGhGJRNdcO1n6UuW5sREYREq+wOIspJO+CAJ2Dwun/rwg16vGn09umrHOXk/Fqqbhws3RQ==
-X-Received: by 2002:a1f:20d8:: with SMTP id g207mr3436274vkg.31.1598045171840;
-        Fri, 21 Aug 2020 14:26:11 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id u3sm428788vkb.0.2020.08.21.14.26.10
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jPqxc4OgKI9Opavzdh3uvDImVIna5oiu3wI1Ldz2iFA=;
+        b=qa84QaYFBvB0dSp4EA7OHBdeWU7um16vbJK5yRIwqnX74Lcp5lJc2e286csvENxyqS
+         Kz6RXY3Jjip4Y1sRroyTVjBw4YtwbKjkAQ02GQlHlb0qe90hD0D1OQTZLIePSZBRx/nG
+         OSJ7Ts/63ok/VOoAZ0VTENa6zX9qVMgv4qzASha9targVu5jE9vNPINhonAnyxJ1LYSG
+         0FJNxMPJRorsgcbdsSBIn61z+CYTx0YDHkenQMJiFkDyOrVQ6l293DIuPLA0ozS4jTuX
+         qAP5+TFF/DUnDmtxjUtUZ334ji9I37zPRymEi2dpfedcTstaayt/KhPOby/60Vi84C9e
+         T3Lw==
+X-Gm-Message-State: AOAM531iwXDfoqpg9MjUngfH35NYoZ4J8GkC7OIDezFf9zbZFxEOvGWc
+        TPccb8M+pVks362BT3Jf4f4w/MhZDx0Iw/N3
+X-Google-Smtp-Source: ABdhPJwILXvN/gcpaBDfJHt6cEhQT7gl/roFCqi9AyYjVW7g0sdtZbLU7yC+5fBIf2BrmzyKYaYQjg==
+X-Received: by 2002:a05:6638:2493:: with SMTP id x19mr4391343jat.53.1598045196675;
+        Fri, 21 Aug 2020 14:26:36 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id 202sm1949505ila.59.2020.08.21.14.26.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 14:26:11 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id d20so931327ual.13
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:26:10 -0700 (PDT)
-X-Received: by 2002:a9f:2b89:: with SMTP id y9mr3066484uai.0.1598045170522;
- Fri, 21 Aug 2020 14:26:10 -0700 (PDT)
+        Fri, 21 Aug 2020 14:26:36 -0700 (PDT)
+Subject: Re: [PATCH] ext4: flag as supporting buffered async reads
+From:   Jens Axboe <axboe@kernel.dk>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     linux-ext4@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <fb90cc2d-b12c-738f-21a4-dd7a8ae0556a@kernel.dk>
+ <20200818181117.GA34125@mit.edu>
+ <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
+Message-ID: <20c844c8-b649-3250-ff5b-b7420f72ff38@kernel.dk>
+Date:   Fri, 21 Aug 2020 15:26:35 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200709082024.v2.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
-In-Reply-To: <20200709082024.v2.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 21 Aug 2020 14:25:59 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U1WGrDDspTLJJk1jTSY-Raizm55+8szVADNLTa+tvekw@mail.gmail.com>
-Message-ID: <CAD=FV=U1WGrDDspTLJJk1jTSY-Raizm55+8szVADNLTa+tvekw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ath10k: Keep track of which interrupts fired,
- don't poll them
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        ath10k <ath10k@lists.infradead.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Rakesh Pillai <pillair@codeaurora.org>,
-        Abhishek Kumar <kuabhs@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <990cc101-d4a1-f346-fe78-0fb5b963b406@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kalle,
+On 8/18/20 12:12 PM, Jens Axboe wrote:
+> On 8/18/20 11:11 AM, Theodore Y. Ts'o wrote:
+>> On Mon, Aug 03, 2020 at 05:02:11PM -0600, Jens Axboe wrote:
+>>> ext4 uses generic_file_read_iter(), which already supports this.
+>>>
+>>> Cc: Theodore Ts'o <tytso@mit.edu>
+>>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+>>>
+>>> ---
+>>>
+>>> Resending this one, as I've been carrying it privately since May. The
+>>> necessary bits are now upstream (and XFS/btrfs equiv changes as well),
+>>> please consider this one for 5.9. Thanks!
+>>
+>> The necessary commit only hit upstream as of 5.9-rc1, unless I'm
+>> missing something?  It's on my queue to send to Linus once I get my
+>> (late) ext4 primary pull request for 5.9.
+> 
+> Right, it went in at the start of the merge window for 5.9. Thanks Ted!
 
-On Thu, Jul 9, 2020 at 8:22 AM Douglas Anderson <dianders@chromium.org> wrote:
->
-> If we have a per CE (Copy Engine) IRQ then we have no summary
-> register.  Right now the code generates a summary register by
-> iterating over all copy engines and seeing if they have an interrupt
-> pending.
->
-> This has a problem.  Specifically if _none_ if the Copy Engines have
-> an interrupt pending then they might go into low power mode and
-> reading from their address space will cause a full system crash.  This
-> was seen to happen when two interrupts went off at nearly the same
-> time.  Both were handled by a single call of ath10k_snoc_napi_poll()
-> but, because there were two interrupts handled and thus two calls to
-> napi_schedule() there was still a second call to
-> ath10k_snoc_napi_poll() which ran with no interrupts pending.
->
-> Instead of iterating over all the copy engines, let's just keep track
-> of the IRQs that fire.  Then we can effectively generate our own
-> summary without ever needing to read the Copy Engines.
->
-> Tested-on: WCN3990 SNOC WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
-> ---
-> This patch continues work to try to squash all instances of the crash
-> we've been seeing while reading CE registers and hopefully this patch
-> addresses the true root of the issue.
->
-> The first patch that attempted to address these problems landed as
-> commit 8f9ed93d09a9 ("ath10k: Wait until copy complete is actually
-> done before completing").  After that Rakesh Pillai posted ("ath10k:
-> Add interrupt summary based CE processing") [1] and this patch is
-> based atop that one.  Both of those patches significantly reduced the
-> instances of problems but didn't fully eliminate them.  Crossing my
-> fingers that they're all gone now.
->
-> [1] https://lore.kernel.org/r/1593193967-29897-1-git-send-email-pillair@codeaurora.org
->
-> Changes in v2:
-> - Add bitmap_clear() in ath10k_snoc_hif_start().
->
->  drivers/net/wireless/ath/ath10k/ce.c   | 84 ++++++++++----------------
->  drivers/net/wireless/ath/ath10k/ce.h   | 14 ++---
->  drivers/net/wireless/ath/ath10k/snoc.c | 19 ++++--
->  drivers/net/wireless/ath/ath10k/snoc.h |  1 +
->  4 files changed, 52 insertions(+), 66 deletions(-)
+Didn't see it in the queue that just sent in, is it still queued up?
 
-I'm wondering if there's anything else you're looking for here.  If I
-just need to sit tight that's fine, but I want to make sure this patch
-isn't lost and you're not waiting for any actions on my part.  The
-patch it depends on from Rakesh (see above or patchwork ID 11628289)
-is also still marked as "Under Review".
+-- 
+Jens Axboe
 
-We have been using this patch for the last few months and we haven't
-hit a single crash like we were getting before.  At the same time, we
-haven't found any regressions that have been attributed to this patch.
-
-Anyway, just figured I'd check in.  Thanks!
-
--Doug
