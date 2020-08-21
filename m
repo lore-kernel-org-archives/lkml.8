@@ -2,465 +2,156 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41DF8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1601D20748
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0320D20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IFdfuuJi"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NK/EUI8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbgHUSyl (ORCPT
+        id S1726829AbgHUSzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 14:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbgHUSx5 (ORCPT
+        Fri, 21 Aug 2020 14:55:10 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:33131 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726885AbgHUSye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 14:53:57 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0297AC061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:57 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id b14so2276281qkn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 11:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+n5xbyce09VRJj0JvWKv/VRFU9SDNCSH8tjWfdDtKPQ=;
-        b=IFdfuuJiba4ZxHVlxSlRTIOf6LScyXwDK+wZ1zIYYDM6yrCXgZWTiymHnI8tP9zr+J
-         7CVrW6P7T49QyQDxXec2swWhLj6+3z0XiOxjSPQJzeR3KWfHCK3RJ4aTpSzKcZYsslFK
-         lJvj+FVcYVzBQW0O1TvFDNCjLiPX/0rWaA5Sa4YftrJrGWUmcITkuNcRc9f17LfYZerB
-         wYLB/M1uko1JIMguDMZaO4wBBMh+uqAZyqlEyT9ngoY4PfXEEPp7V8l5WHvV5Q/w8FZ+
-         vkDnlBXhKlTNP5/6oN6Fr7KdGWY8oUC21RFh4HGw8eNa6G9v2s9XJd+3STeWOEOA4pMk
-         icow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+n5xbyce09VRJj0JvWKv/VRFU9SDNCSH8tjWfdDtKPQ=;
-        b=SrzwgyHjKmIbNM5GieFGdJH2AerPwMRrsl7lwYbrbPky0E2cRw6vjXIrZxVD4cf6Li
-         p10zNcf6ICYek85PzLKCOEWXxKP2K6VW/IPz8SH8ybHTOivKHU/sbNkJxToaEoNZMYO6
-         8r0nQFvwhuxSW0AypbHkv+79um/M56TIuYmoTLc11iyZMHpJHWU8U0B/uYxHAZ3/x2eh
-         MUNyGj10R/qjNrH2mYrEjc+iKcm1arhoRxRCLOsj+aWHQP6+LZYYEc5MfmjH6juYHdIX
-         sQ7oUO22wmDVYTeKWAeF/trRKwdyHUEFK9MeJakkhOGgGSChh4rVIusw4ltI5S++aLag
-         0JVQ==
-X-Gm-Message-State: AOAM530OtJcct/hsMzOEsgBggIrojnVkiaYpfwIiUncO8KwYMrVv3/UA
-        qn/uHqwHrc4NE5UhT42t6QI=
-X-Google-Smtp-Source: ABdhPJzX+6OuuPck8XoQr4Wv0G17haZHR1Bc7nx81WvUmtcMrvxqNNvSFerE4pR/U43BVA43sna4Uw==
-X-Received: by 2002:ae9:e30f:: with SMTP id v15mr4133057qkf.331.1598036036062;
-        Fri, 21 Aug 2020 11:53:56 -0700 (PDT)
-Received: from localhost.localdomain (cpe-71-65-111-223.cinci.res.rr.com. [71.65.111.223])
-        by smtp.googlemail.com with ESMTPSA id o72sm2468426qka.113.2020.08.21.11.53.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 11:53:55 -0700 (PDT)
-From:   Connor McAdams <conmanx360@gmail.com>
-Cc:     conmanx360@gmail.com, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Fri, 21 Aug 2020 14:54:34 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598036074; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=ZBEo8ZeEHfGtM2pRpX9PkSiYXraZn21iFGcK2Njnv+c=; b=NK/EUI8KAIKqC2P1MXm61AKwSJz4LLAvNKBejoXBZZNfaof2WjmOnCly49BYT6ZghE1UOkhC
+ MNxGmcniGckJtdsXSBjBCKfv/97ySS7YZaoYEJDo/tFEfgUHTuX6Z2+eNhalx4wq3Uxj5Rag
+ 9BP4veqHteASiQP9bd+BFAi/Ba8=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f401836c1ce10a051f4e151 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 18:53:42
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D035BC433A1; Fri, 21 Aug 2020 18:53:42 +0000 (UTC)
+Received: from jordan-laptop.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F09FC433C6;
+        Fri, 21 Aug 2020 18:53:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F09FC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Wambui Karuga <wambui.karugax@gmail.com>,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 08/20] ALSA: hda/ca0132 - Add quirk output selection structures.
-Date:   Fri, 21 Aug 2020 14:52:25 -0400
-Message-Id: <20200821185239.26133-9-conmanx360@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200821185239.26133-1-conmanx360@gmail.com>
-References: <20200821185239.26133-1-conmanx360@gmail.com>
+Subject: [PATCH 1/2] drm/msm: Split the a5xx preemption record
+Date:   Fri, 21 Aug 2020 12:53:35 -0600
+Message-Id: <20200821185336.2196780-1-jcrouse@codeaurora.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add structures containing the changes that need to happen on output
-selection for each quirk. This should streamline the addition of new
-quirks.
+The main a5xx preemption record can be marked as privileged to
+protect it from user access but the counters storage needs to be
+remain unprivileged. Split the buffers mark the critical memory
+privileged.
 
-Signed-off-by: Connor McAdams <conmanx360@gmail.com>
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 ---
- sound/pci/hda/patch_ca0132.c | 336 +++++++++++++++++++++++++----------
- 1 file changed, 241 insertions(+), 95 deletions(-)
 
-diff --git a/sound/pci/hda/patch_ca0132.c b/sound/pci/hda/patch_ca0132.c
-index ee25265ab600..ac9dcaf69a2e 100644
---- a/sound/pci/hda/patch_ca0132.c
-+++ b/sound/pci/hda/patch_ca0132.c
-@@ -1256,6 +1256,164 @@ static const struct snd_pci_quirk ca0132_quirks[] = {
- 	{}
- };
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.h     |  1 +
+ drivers/gpu/drm/msm/adreno/a5xx_preempt.c | 25 ++++++++++++++++++-----
+ 2 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
+index 54868d4e3958..1e5b1a15a70f 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
++++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.h
+@@ -31,6 +31,7 @@ struct a5xx_gpu {
+ 	struct msm_ringbuffer *next_ring;
  
-+/* Output selection quirk info structures. */
-+#define MAX_QUIRK_MMIO_GPIO_SET_VALS 3
-+#define MAX_QUIRK_SCP_SET_VALS 2
-+struct ca0132_alt_out_set_info {
-+	unsigned int dac2port; /* ParamID 0x0d value. */
-+
-+	bool has_hda_gpio;
-+	char hda_gpio_pin;
-+	char hda_gpio_set;
-+
-+	unsigned int mmio_gpio_count;
-+	char mmio_gpio_pin[MAX_QUIRK_MMIO_GPIO_SET_VALS];
-+	char mmio_gpio_set[MAX_QUIRK_MMIO_GPIO_SET_VALS];
-+
-+	unsigned int scp_cmds_count;
-+	unsigned int scp_cmd_mid[MAX_QUIRK_SCP_SET_VALS];
-+	unsigned int scp_cmd_req[MAX_QUIRK_SCP_SET_VALS];
-+	unsigned int scp_cmd_val[MAX_QUIRK_SCP_SET_VALS];
-+
-+	bool has_chipio_write;
-+	unsigned int chipio_write_addr;
-+	unsigned int chipio_write_data;
-+};
-+
-+struct ca0132_alt_out_set_quirk_data {
-+	int quirk_id;
-+
-+	bool has_headphone_gain;
-+	bool is_ae_series;
-+
-+	struct ca0132_alt_out_set_info out_set_info[NUM_OF_OUTPUTS];
-+};
-+
-+static const struct ca0132_alt_out_set_quirk_data quirk_out_set_data[] = {
-+	{ .quirk_id = QUIRK_R3DI,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = true,
-+		  .hda_gpio_pin     = 2,
-+		  .hda_gpio_set     = 1,
-+		  .mmio_gpio_count  = 0,
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = true,
-+		  .hda_gpio_pin     = 2,
-+		  .hda_gpio_set     = 0,
-+		  .mmio_gpio_count  = 0,
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_R3D,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 1,
-+		  .mmio_gpio_pin    = { 1 },
-+		  .mmio_gpio_set    = { 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 1,
-+		  .mmio_gpio_pin    = { 1 },
-+		  .mmio_gpio_set    = { 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_SBZ,
-+	  .has_headphone_gain = false,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x18,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 7, 4, 1 },
-+		  .mmio_gpio_set    = { 0, 1, 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false, },
-+		/* Headphones. */
-+		{ .dac2port         = 0x12,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 7, 4, 1 },
-+		  .mmio_gpio_set    = { 1, 1, 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_ZXR,
-+	  .has_headphone_gain = true,
-+	  .is_ae_series       = false,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port         = 0x24,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 2, 3, 5 },
-+		  .mmio_gpio_set    = { 1, 1, 0 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		},
-+		/* Headphones. */
-+		{ .dac2port         = 0x21,
-+		  .has_hda_gpio     = false,
-+		  .mmio_gpio_count  = 3,
-+		  .mmio_gpio_pin    = { 2, 3, 5 },
-+		  .mmio_gpio_set    = { 0, 1, 1 },
-+		  .scp_cmds_count   = 0,
-+		  .has_chipio_write = false,
-+		} },
-+	},
-+	{ .quirk_id = QUIRK_AE5,
-+	  .has_headphone_gain = true,
-+	  .is_ae_series       = true,
-+	  .out_set_info = {
-+		/* Speakers. */
-+		{ .dac2port          = 0xa4,
-+		  .has_hda_gpio      = false,
-+		  .mmio_gpio_count   = 0,
-+		  .scp_cmds_count    = 2,
-+		  .scp_cmd_mid       = { 0x96, 0x96 },
-+		  .scp_cmd_req       = { SPEAKER_TUNING_FRONT_LEFT_INVERT,
-+					 SPEAKER_TUNING_FRONT_RIGHT_INVERT },
-+		  .scp_cmd_val       = { FLOAT_ZERO, FLOAT_ZERO },
-+		  .has_chipio_write  = true,
-+		  .chipio_write_addr = 0x0018b03c,
-+		  .chipio_write_data = 0x00000012
-+		},
-+		/* Headphones. */
-+		{ .dac2port          = 0xa1,
-+		  .has_hda_gpio      = false,
-+		  .mmio_gpio_count   = 0,
-+		  .scp_cmds_count    = 2,
-+		  .scp_cmd_mid       = { 0x96, 0x96 },
-+		  .scp_cmd_req       = { SPEAKER_TUNING_FRONT_LEFT_INVERT,
-+					 SPEAKER_TUNING_FRONT_RIGHT_INVERT },
-+		  .scp_cmd_val       = { FLOAT_ONE, FLOAT_ONE },
-+		  .has_chipio_write  = true,
-+		  .chipio_write_addr = 0x0018b03c,
-+		  .chipio_write_data = 0x00000012
-+		} },
+ 	struct drm_gem_object *preempt_bo[MSM_GPU_MAX_RINGS];
++	struct drm_gem_object *preempt_counters_bo[MSM_GPU_MAX_RINGS];
+ 	struct a5xx_preempt_record *preempt[MSM_GPU_MAX_RINGS];
+ 	uint64_t preempt_iova[MSM_GPU_MAX_RINGS];
+ 
+diff --git a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+index 9cf9353a7ff1..9f3fe177b00e 100644
+--- a/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
++++ b/drivers/gpu/drm/msm/adreno/a5xx_preempt.c
+@@ -226,19 +226,31 @@ static int preempt_init_ring(struct a5xx_gpu *a5xx_gpu,
+ 	struct adreno_gpu *adreno_gpu = &a5xx_gpu->base;
+ 	struct msm_gpu *gpu = &adreno_gpu->base;
+ 	struct a5xx_preempt_record *ptr;
+-	struct drm_gem_object *bo = NULL;
+-	u64 iova = 0;
++	void *counters;
++	struct drm_gem_object *bo = NULL, *counters_bo = NULL;
++	u64 iova = 0, counters_iova = 0;
+ 
+ 	ptr = msm_gem_kernel_new(gpu->dev,
+ 		A5XX_PREEMPT_RECORD_SIZE + A5XX_PREEMPT_COUNTER_SIZE,
+-		MSM_BO_UNCACHED, gpu->aspace, &bo, &iova);
++		MSM_BO_UNCACHED | MSM_BO_MAP_PRIV, gpu->aspace, &bo, &iova);
+ 
+ 	if (IS_ERR(ptr))
+ 		return PTR_ERR(ptr);
+ 
++	/* The buffer to store counters needs to be unprivileged */
++	counters = msm_gem_kernel_new(gpu->dev,
++		A5XX_PREEMPT_COUNTER_SIZE,
++		MSM_BO_UNCACHED, gpu->aspace, &counters_bo, &counters_iova);
++	if (IS_ERR(counters)) {
++		msm_gem_kernel_put(bo, gpu->aspace, true);
++		return PTR_ERR(counters);
 +	}
-+};
 +
- /*
-  * CA0132 codec access
-  */
-@@ -3513,26 +3671,6 @@ static void r3di_gpio_mic_set(struct hda_codec *codec,
- 			    AC_VERB_SET_GPIO_DATA, cur_gpio);
+ 	msm_gem_object_set_name(bo, "preempt");
++	msm_gem_object_set_name(counters_bo, "preempt_counters");
+ 
+ 	a5xx_gpu->preempt_bo[ring->id] = bo;
++	a5xx_gpu->preempt_counters_bo[ring->id] = counters_bo;
+ 	a5xx_gpu->preempt_iova[ring->id] = iova;
+ 	a5xx_gpu->preempt[ring->id] = ptr;
+ 
+@@ -249,7 +261,7 @@ static int preempt_init_ring(struct a5xx_gpu *a5xx_gpu,
+ 	ptr->data = 0;
+ 	ptr->cntl = MSM_GPU_RB_CNTL_DEFAULT;
+ 	ptr->rptr_addr = rbmemptr(ring, rptr);
+-	ptr->counter = iova + A5XX_PREEMPT_RECORD_SIZE;
++	ptr->counter = counters_iova;
+ 
+ 	return 0;
+ }
+@@ -260,8 +272,11 @@ void a5xx_preempt_fini(struct msm_gpu *gpu)
+ 	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
+ 	int i;
+ 
+-	for (i = 0; i < gpu->nr_rings; i++)
++	for (i = 0; i < gpu->nr_rings; i++) {
+ 		msm_gem_kernel_put(a5xx_gpu->preempt_bo[i], gpu->aspace, true);
++		msm_gem_kernel_put(a5xx_gpu->preempt_counters_bo[i],
++			gpu->aspace, true);
++	}
  }
  
--static void r3di_gpio_out_set(struct hda_codec *codec,
--		enum r3di_out_select cur_out)
--{
--	unsigned int cur_gpio;
--
--	/* Get the current GPIO Data setup */
--	cur_gpio = snd_hda_codec_read(codec, 0x01, 0, AC_VERB_GET_GPIO_DATA, 0);
--
--	switch (cur_out) {
--	case R3DI_HEADPHONE_OUT:
--		cur_gpio &= ~(1 << R3DI_OUT_SELECT_BIT);
--		break;
--	case R3DI_LINE_OUT:
--		cur_gpio |= (1 << R3DI_OUT_SELECT_BIT);
--		break;
--	}
--	snd_hda_codec_write(codec, codec->core.afg, 0,
--			    AC_VERB_SET_GPIO_DATA, cur_gpio);
--}
--
- static void r3di_gpio_dsp_status_set(struct hda_codec *codec,
- 		enum r3di_dsp_status dsp_status)
- {
-@@ -4314,86 +4452,93 @@ static int ca0132_alt_surround_set_bass_redirection(struct hda_codec *codec,
-  * These are the commands needed to setup output on each of the different card
-  * types.
-  */
--static void ca0132_alt_select_out_quirk_handler(struct hda_codec *codec)
-+static void ca0132_alt_select_out_get_quirk_data(struct hda_codec *codec,
-+		const struct ca0132_alt_out_set_quirk_data **quirk_data)
- {
- 	struct ca0132_spec *spec = codec->spec;
--	unsigned int tmp;
-+	int quirk = ca0132_quirk(spec);
-+	unsigned int i;
- 
--	switch (spec->cur_out_type) {
--	case SPEAKER_OUT:
--		switch (ca0132_quirk(spec)) {
--		case QUIRK_SBZ:
--			ca0113_mmio_gpio_set(codec, 7, false);
--			ca0113_mmio_gpio_set(codec, 4, true);
--			ca0113_mmio_gpio_set(codec, 1, true);
--			chipio_set_control_param(codec, 0x0d, 0x18);
--			break;
--		case QUIRK_ZXR:
--			ca0113_mmio_gpio_set(codec, 2, true);
--			ca0113_mmio_gpio_set(codec, 3, true);
--			ca0113_mmio_gpio_set(codec, 5, false);
--			zxr_headphone_gain_set(codec, 0);
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			break;
--		case QUIRK_R3DI:
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			r3di_gpio_out_set(codec, R3DI_LINE_OUT);
--			break;
--		case QUIRK_R3D:
--			chipio_set_control_param(codec, 0x0d, 0x24);
--			ca0113_mmio_gpio_set(codec, 1, true);
--			break;
--		case QUIRK_AE5:
--			ae5_mmio_select_out(codec);
--			ae5_headphone_gain_set(codec, 2);
--			tmp = FLOAT_ZERO;
--			dspio_set_uint_param(codec, 0x96, 0x29, tmp);
--			dspio_set_uint_param(codec, 0x96, 0x2a, tmp);
--			chipio_set_control_param(codec, 0x0d, 0xa4);
--			chipio_write(codec, 0x18b03c, 0x00000012);
--			break;
--		default:
--			break;
-+	*quirk_data = NULL;
-+	for (i = 0; i < ARRAY_SIZE(quirk_out_set_data); i++) {
-+		if (quirk_out_set_data[i].quirk_id == quirk) {
-+			*quirk_data = &quirk_out_set_data[i];
-+			return;
- 		}
--		break;
--	case HEADPHONE_OUT:
--		switch (ca0132_quirk(spec)) {
--		case QUIRK_SBZ:
--			ca0113_mmio_gpio_set(codec, 7, true);
--			ca0113_mmio_gpio_set(codec, 4, true);
--			ca0113_mmio_gpio_set(codec, 1, false);
--			chipio_set_control_param(codec, 0x0d, 0x12);
--			break;
--		case QUIRK_ZXR:
--			ca0113_mmio_gpio_set(codec, 2, false);
--			ca0113_mmio_gpio_set(codec, 3, false);
--			ca0113_mmio_gpio_set(codec, 5, true);
--			zxr_headphone_gain_set(codec, spec->zxr_gain_set);
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			break;
--		case QUIRK_R3DI:
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			r3di_gpio_out_set(codec, R3DI_HEADPHONE_OUT);
--			break;
--		case QUIRK_R3D:
--			chipio_set_control_param(codec, 0x0d, 0x21);
--			ca0113_mmio_gpio_set(codec, 0x1, false);
--			break;
--		case QUIRK_AE5:
--			ae5_mmio_select_out(codec);
--			ae5_headphone_gain_set(codec,
--					spec->ae5_headphone_gain_val);
--			tmp = FLOAT_ONE;
--			dspio_set_uint_param(codec, 0x96, 0x29, tmp);
--			dspio_set_uint_param(codec, 0x96, 0x2a, tmp);
--			chipio_set_control_param(codec, 0x0d, 0xa1);
--			chipio_write(codec, 0x18b03c, 0x00000012);
--			break;
--		default:
--			break;
-+	}
-+}
-+
-+static int ca0132_alt_select_out_quirk_set(struct hda_codec *codec)
-+{
-+	const struct ca0132_alt_out_set_quirk_data *quirk_data;
-+	const struct ca0132_alt_out_set_info *out_info;
-+	struct ca0132_spec *spec = codec->spec;
-+	unsigned int i, gpio_data;
-+	int err;
-+
-+	ca0132_alt_select_out_get_quirk_data(codec, &quirk_data);
-+	if (!quirk_data)
-+		return 0;
-+
-+	out_info = &quirk_data->out_set_info[spec->cur_out_type];
-+	if (quirk_data->is_ae_series)
-+		ae5_mmio_select_out(codec);
-+
-+	if (out_info->has_hda_gpio) {
-+		gpio_data = snd_hda_codec_read(codec, codec->core.afg, 0,
-+				AC_VERB_GET_GPIO_DATA, 0);
-+
-+		if (out_info->hda_gpio_set)
-+			gpio_data |= (1 << out_info->hda_gpio_pin);
-+		else
-+			gpio_data &= ~(1 << out_info->hda_gpio_pin);
-+
-+		snd_hda_codec_write(codec, codec->core.afg, 0,
-+				    AC_VERB_SET_GPIO_DATA, gpio_data);
-+	}
-+
-+	if (out_info->mmio_gpio_count) {
-+		for (i = 0; i < out_info->mmio_gpio_count; i++) {
-+			ca0113_mmio_gpio_set(codec, out_info->mmio_gpio_pin[i],
-+					out_info->mmio_gpio_set[i]);
- 		}
--		break;
- 	}
-+
-+	if (out_info->scp_cmds_count) {
-+		for (i = 0; i < out_info->scp_cmds_count; i++) {
-+			err = dspio_set_uint_param(codec,
-+					out_info->scp_cmd_mid[i],
-+					out_info->scp_cmd_req[i],
-+					out_info->scp_cmd_val[i]);
-+			if (err < 0)
-+				return err;
-+		}
-+	}
-+
-+	chipio_set_control_param(codec, 0x0d, out_info->dac2port);
-+
-+	if (out_info->has_chipio_write) {
-+		chipio_write(codec, out_info->chipio_write_addr,
-+				out_info->chipio_write_data);
-+	}
-+
-+	if (quirk_data->has_headphone_gain) {
-+		if (spec->cur_out_type != HEADPHONE_OUT) {
-+			if (quirk_data->is_ae_series)
-+				ae5_headphone_gain_set(codec, 2);
-+			else
-+				zxr_headphone_gain_set(codec, 0);
-+		} else {
-+			if (quirk_data->is_ae_series)
-+				ae5_headphone_gain_set(codec,
-+						spec->ae5_headphone_gain_val);
-+			else
-+				zxr_headphone_gain_set(codec,
-+						spec->zxr_gain_set);
-+		}
-+	}
-+
-+	return 0;
- }
- 
- static void ca0132_set_out_node_pincfg(struct hda_codec *codec, hda_nid_t nid,
-@@ -4456,7 +4601,8 @@ static int ca0132_alt_select_out(struct hda_codec *codec)
- 	if (err < 0)
- 		goto exit;
- 
--	ca0132_alt_select_out_quirk_handler(codec);
-+	if (ca0132_alt_select_out_quirk_set(codec) < 0)
-+		goto exit;
- 
- 	switch (spec->cur_out_type) {
- 	case SPEAKER_OUT:
+ void a5xx_preempt_init(struct msm_gpu *gpu)
 -- 
-2.20.1
+2.25.1
 
