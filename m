@@ -2,89 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3276FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:58:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2A3C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0879D20639
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:58:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 443EB20639
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:58:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hWycvsSS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VbU9dYV8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHUL6F (ORCPT
+        id S1728298AbgHUL6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:58:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
+        Fri, 21 Aug 2020 07:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727106AbgHUL6E (ORCPT
+        with ESMTP id S1727106AbgHUL6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:58:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53587C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=3FksEgmPr7vqNMfiZSMm66QbIR2tGNR9y3WIbd3p5w0=; b=hWycvsSSENpNlsX6AfzbZx5Cej
-        LUs8aJdAspH6c6AdiyqHpmzxRWT8fUx3a6uIeN5hNWToWZqjGprV/3ZR8rVx9lnuK17szKiwSqdzQ
-        ou+kYQ76LnUlNgFICJr1LHqF4a6YD2xLO2zHJmcF8STK5f0Ox2/yzSkrrEKTDdSg6WA7QFH21pjYK
-        rUUIVYykNHzc1IQxBzEiB2SAeudothLRy/Bj/SjdonMqzDiXZMWO9OkUqXqUYMePG/6WibYToCrhV
-        KUogg6lRjBlkaeQGavjN0q+N0Qfsmjquy+RT1uRfB0uUP+5o6WsRZunV+3/QVy97WuQKufPhyA0DV
-        xTgCpUVA==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k95g0-00086n-Rm; Fri, 21 Aug 2020 11:57:44 +0000
-Date:   Fri, 21 Aug 2020 12:57:44 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Zhaoyang Huang <huangzhaoyang@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, chunyan.zhang@unisoc.com,
-        Baolin Wang <baolin.wang7@gmail.com>
-Subject: Re: [PATCH v2] mm : sync ra->ra_pages with bdi->ra_pages
-Message-ID: <20200821115744.GP17456@casper.infradead.org>
-References: <1598001864-6123-1-git-send-email-zhaoyang.huang@unisoc.com>
- <CAGWkznGfc8g3SRd5vBq7sQGFLuc__98c7t21-3j4T1oAViHvgg@mail.gmail.com>
+        Fri, 21 Aug 2020 07:58:43 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD5AC061385
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:58:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x25so964951pff.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 04:58:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8wwALmJf2yOUBlAVphfdDCbFhBIoI3I+yyAPjEYKwGY=;
+        b=VbU9dYV8zGQ9ErKd5Kv3BJ2dMtJwWGBOJ5p4wtBlKuXxEPr+H4CPr4Ts6dJGxLZvcW
+         9jQEwIUIYOANdBnc3VddeQpwnHHrTdUAssdLV1oJlz2ESEBSIyEIZqiL6rjzQacC4vpw
+         pFU8zMI0dtOlMhZy7tZBv0Qwb32Lr+61z1Msk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8wwALmJf2yOUBlAVphfdDCbFhBIoI3I+yyAPjEYKwGY=;
+        b=jNIMxLrQOGjjQ/vQ6Xflg/AvHdjtvAbojUNQPQDUttGgzIehFDDKGWatPCWZZv2J6w
+         v1TW6A55vROvIzLOQRUumfoMMslFDUH12Lk1NdIsc1x9ErrzmrLJv2X7voz2azDP/muJ
+         N5tpmk+TdkUIxyBIIt/gBYvqiwyy9GcQcI4zwyyq61asqo6pWki71J4vxL1ofB0hsQgv
+         CboRTbgRJf6mnIg7eXp03sGP0MiD64xJ6AkWYMid1mukCzxgNbyQtovGn1FR2A2bnXJH
+         xK9S/alrJbVSK6zqu6gJVLsYkT+0KsM1RQ9GEmtHIHqtJd5qO1KvsRM0tz2tdYk5YKBk
+         +/ZQ==
+X-Gm-Message-State: AOAM533WSycSQcZePlniz1CNszVXqkKiXBdEWPuZv1NIpaHcRxcEZfNo
+        oEaCaZ6vPrPm9AXwtWMafaPi1A==
+X-Google-Smtp-Source: ABdhPJxj2/IcGvXyrpUTqH4K0va20IlRXBrvav0Bn9aTrp30J/em6/ykXs1DoBMcjImd/TliTgC5WA==
+X-Received: by 2002:a63:1417:: with SMTP id u23mr2093891pgl.289.1598011122524;
+        Fri, 21 Aug 2020 04:58:42 -0700 (PDT)
+Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:eeb1:d7ff:fe57:b7e5])
+        by smtp.gmail.com with ESMTPSA id k21sm2054422pgl.0.2020.08.21.04.58.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 04:58:41 -0700 (PDT)
+From:   Alexandre Courbot <acourbot@chromium.org>
+To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH] remoteproc: scp: add COMPILE_TEST dependency
+Date:   Fri, 21 Aug 2020 20:58:32 +0900
+Message-Id: <20200821115832.2893484-1-acourbot@chromium.org>
+X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGWkznGfc8g3SRd5vBq7sQGFLuc__98c7t21-3j4T1oAViHvgg@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:31:52PM +0800, Zhaoyang Huang wrote:
-> This patch has been verified on an android system and reduces 15% of
-> UNITERRUPTIBLE_SLEEP_BLOCKIO which was used to be caused by wrong
-> ra->ra_pages.
+This will improve this driver's build coverage.
 
-Wait, what?  Readahead doesn't sleep on the pages it's requesting.
-Unless ... your file access pattern is random, so you end up submitting
-a readahead I/O that's bigger than needed, so takes longer for the page
-you actually wanted to be returned.  I know we have the LOTSAMISS
-logic, but that's not really enough.
+Reported-by: Ezequiel Garcia <ezequiel@collabora.com>
+Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
+---
+ drivers/remoteproc/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-OK, assuming this problem is really about sync mmap (ie executables),
-this makes a bit more sense.  I think the real problem is here:
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index c6659dfea7c7..d1fcada71017 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -43,7 +43,7 @@ config INGENIC_VPU_RPROC
+ 
+ config MTK_SCP
+ 	tristate "Mediatek SCP support"
+-	depends on ARCH_MEDIATEK
++	depends on ARCH_MEDIATEK || COMPILE_TEST
+ 	select RPMSG_MTK_SCP
+ 	help
+ 	  Say y here to support Mediatek's System Companion Processor (SCP) via
+-- 
+2.28.0.297.g1956fa8f8d-goog
 
-        ra->start = max_t(long, 0, offset - ra->ra_pages / 2);
-        ra->size = ra->ra_pages;
-        ra->async_size = ra->ra_pages / 4;
-        ra_submit(ra, mapping, file);
-
-which actually skips all the logic we have in ondemand_readahead()
-for adjusting the readahead size.  Ugh, this is a mess.
-
-I think a quick fix to your problem will be just replacing ra->ra_pages
-with bdi->ra_pages in do_sync_mmap_readahead() and leaving ra->ra_pages
-alone everywhere else.
-
-We need a smarter readahead algorithm for mmap'ed files, and I don't have
-time to work on it right now.  So let's stick to the same dumb algorithm,
-but make it responsive to bdi ra_pages being reset.
