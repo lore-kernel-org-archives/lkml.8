@@ -7,69 +7,67 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F33F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71696C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC84E20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F15420732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:23:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DW/Phlyh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e0hXyqDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgHUHXG (ORCPT
+        id S1728676AbgHUHXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
+        Fri, 21 Aug 2020 03:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgHUHQ7 (ORCPT
+        with ESMTP id S1728037AbgHUHQ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:16:59 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B32DDC061386
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id u18so829131wmc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:58 -0700 (PDT)
+        Fri, 21 Aug 2020 03:16:58 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344ADC061349
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:57 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id r2so995074wrs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XEuMBeNYRk5zJO3oK7+mBcMmVKwq5vw1RsgSJVTkf20=;
-        b=DW/Phlyh+obGNUw4ueWjW09DI2bFN0XqZQ17caLwo4M+AdomYyyhlVByH8rGyHrLtn
-         co9NN9ONnNCGbNVBnL8SdFh1crPr6lAC6TaxCrc04aq+M/Ly13/A6wpK2IXQpv13T9/6
-         QoG+RKq3yqtKw/NsyM8hrWsveQQ18tLTi/R7ei8FB3Cai0eVKOEIFZWmtGUE9+6Ac5uI
-         uZa+A7mcx2O61LOkpNf4Q/a1F6FlY1cl7tiGY3Np2UKv9gJBbLHozqeCHj9+NLNcFGwa
-         wfrCxzM7nAh0g2jkWr09e3TnMGs4G3hkyc82fts7FG20H/jJ3Km/pYreoWksVN44EpQu
-         spTg==
+        bh=FczcR0ercDVomHQV+kYc66obKABVvqRvMsKpTYbOb2Y=;
+        b=e0hXyqDlAAZ9jrSp0+sgcKZDbu6p3FBSXUaKZ6W+P9XOdw2nqYDzx952fChZnmGG91
+         5+4qSQjtdLEMnOGgBECLn3s4SgE6TSGzzOBzw/bpfavLGVuTKKn+0jz8o2m7/Irjr/sx
+         eYVjc3yKv9lWL99bA4znqsAheZKVhHJjZBZVMBJ9Sj1N3lfpSZMYPpINV+iJsgwnmVXS
+         i3y8uVNt+iW7Akx5GXHpu4Tu4KnPCGYzlTyhkxVXEs6kLGaTwQEv9ZXz3/2F7P2OHwvy
+         QimHNTb44nMbCeIyswq1Z7MXUPsBumZmemzb5Hae9i2zwh2dUzbIbhmxAtO5dUPwDnRt
+         UAbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XEuMBeNYRk5zJO3oK7+mBcMmVKwq5vw1RsgSJVTkf20=;
-        b=H1ppp+/HzN23R2tuFGZb5FP4pO5bMqwPvJqMgmJvUkZwUj5YmvhK0gljDU+t0YOp53
-         VjJNxsCIMkvxHfiav6UBZxPWk1Hyxg0gvkaCklvKYUBLBmem55KOdcQUpXrusJOD1JGd
-         g2hEj2HEtc4wPnC0vLIZASzP5Pqlb8+X8EA93ePt/rcWHDqFR/xOwvS27dghEKh4F1Qr
-         l0KqyZK6zTjtgxaKU3GFDouQW4GZ5al+MR1ExQrI08Zq9sj0di66Y3fNsPUc8hsucWv+
-         VI23fwrwZ+nvm+thDwO/koS2vE55LBwL4CY3cctUSHNiDPO6J7idD1x9PmhXhU7ov4wt
-         mF1Q==
-X-Gm-Message-State: AOAM530yb7N2jYtOulMbyKb6s4V04LbEDd++ONs54vzfDXYM40wNPFKT
-        n3kwJ3gDgerNMZfPtpTOrOxYvA==
-X-Google-Smtp-Source: ABdhPJxKn/3N6VpBa20RtxaeEKSSfLRS9ZrkKA5GIeXUlsBd3G0Q3GNDUuSyv5SNp1nk0oR0j+QcuA==
-X-Received: by 2002:a1c:720d:: with SMTP id n13mr1650662wmc.103.1597994217415;
-        Fri, 21 Aug 2020 00:16:57 -0700 (PDT)
+        bh=FczcR0ercDVomHQV+kYc66obKABVvqRvMsKpTYbOb2Y=;
+        b=Fz9rxNk/rSPSvlWRfDmAdQUmBe7mUMc477y5HBf/KhYphCHxeJfO+bKUdZmRBdgG8U
+         kWaDRZz0berISbp5GbTxvlmoQWIZaCZaExKcYxRYVl9uUnr7G5cwlBe/+p7yPB/y+k+n
+         u7eEMV9Hneys9k59IkB+ZaiscbFA2rzCv5nMtEECoy7wVifFb/vcLpq+T1c5HnTR4qGu
+         bE3asIx2gUM2pLtkOvjuGDttNFF+5sX+TTNN0sx+25zmvGJghPXXCSEKIW2lQo3N6M3U
+         vR3kNoYtSxUx3YnGN2xBXYPvrcqsB4DHwsRO65fWH7Be+DOftctazLlEaxqS1qity+og
+         tWPA==
+X-Gm-Message-State: AOAM531i0xtbMB+ZOxDQnoeawUBIA6nPD5Wa5bBdXmHf/WeMHoMXG12T
+        DpcVpO/Cs/xm3WX5FA0lY9wyh9yM57roZw==
+X-Google-Smtp-Source: ABdhPJy3djGQTGa6RdmcN+ZodCOU6sEYPtl+YXW+C/GDR/ex5sdGuOEKhjfrWHWRXtavynqHSdfFpw==
+X-Received: by 2002:adf:de8d:: with SMTP id w13mr1359898wrl.129.1597994215916;
+        Fri, 21 Aug 2020 00:16:55 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.16.56
+        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.16.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:16:56 -0700 (PDT)
+        Fri, 21 Aug 2020 00:16:55 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>
-Subject: [PATCH 07/32] wireless: intel: iwlwifi: dvm: rx: Demote a couple of nonconformant kernel-doc headers
-Date:   Fri, 21 Aug 2020 08:16:19 +0100
-Message-Id: <20200821071644.109970-8-lee.jones@linaro.org>
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Siva Rebbagondla <siva8118@gmail.com>
+Subject: [PATCH 06/32] wireless: rsi: rsi_91x_mgmt: Add descriptions for rsi_set_vap_capabilities()'s parameters
+Date:   Fri, 21 Aug 2020 08:16:18 +0100
+Message-Id: <20200821071644.109970-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
 References: <20200821071644.109970-1-lee.jones@linaro.org>
@@ -82,16 +80,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c:145: warning: Function parameter or member 'priv' not described in 'iwlagn_good_plcp_health'
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c:145: warning: Function parameter or member 'cur_ofdm' not described in 'iwlagn_good_plcp_health'
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c:145: warning: Function parameter or member 'cur_ofdm_ht' not described in 'iwlagn_good_plcp_health'
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c:145: warning: Function parameter or member 'msecs' not described in 'iwlagn_good_plcp_health'
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c:939: warning: Function parameter or member 'priv' not described in 'iwl_setup_rx_handlers'
+ drivers/net/wireless/rsi/rsi_91x_mgmt.c:713: warning: Function parameter or member 'mac_addr' not described in 'rsi_set_vap_capabilities'
+ drivers/net/wireless/rsi/rsi_91x_mgmt.c:713: warning: Function parameter or member 'vap_id' not described in 'rsi_set_vap_capabilities'
+ drivers/net/wireless/rsi/rsi_91x_mgmt.c:713: warning: Function parameter or member 'vap_status' not described in 'rsi_set_vap_capabilities'
 
-Cc: Johannes Berg <johannes.berg@intel.com>
-Cc: Emmanuel Grumbach <emmanuel.grumbach@intel.com>
-Cc: Luca Coelho <luciano.coelho@intel.com>
-Cc: Intel Linux Wireless <linuxwifi@intel.com>
+Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+Cc: Siva Rebbagondla <siva8118@gmail.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
@@ -99,31 +93,23 @@ Cc: linux-wireless@vger.kernel.org
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/net/wireless/intel/iwlwifi/dvm/rx.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/wireless/rsi/rsi_91x_mgmt.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/dvm/rx.c b/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
-index 673d60784bfad..9d55ece050200 100644
---- a/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/dvm/rx.c
-@@ -132,7 +132,7 @@ static void iwlagn_rx_beacon_notif(struct iwl_priv *priv,
- 	priv->ibss_manager = le32_to_cpu(beacon->ibss_mgr_status);
- }
- 
--/**
-+/*
-  * iwl_good_plcp_health - checks for plcp error.
+diff --git a/drivers/net/wireless/rsi/rsi_91x_mgmt.c b/drivers/net/wireless/rsi/rsi_91x_mgmt.c
+index c331084bdc170..33c76d39a8e96 100644
+--- a/drivers/net/wireless/rsi/rsi_91x_mgmt.c
++++ b/drivers/net/wireless/rsi/rsi_91x_mgmt.c
+@@ -702,6 +702,9 @@ static int rsi_program_bb_rf(struct rsi_common *common)
+  * rsi_set_vap_capabilities() - This function send vap capability to firmware.
+  * @common: Pointer to the driver private structure.
+  * @mode: Operating mode of device.
++ * @mac_addr: MAC address
++ * @vap_id: Rate information - offset and mask
++ * @vap_status: VAP status - ADD, DELETE or UPDATE
   *
-  * When the plcp error is exceeding the thresholds, reset the radio
-@@ -929,7 +929,7 @@ static void iwlagn_rx_noa_notification(struct iwl_priv *priv,
- 		kfree_rcu(old_data, rcu_head);
- }
- 
--/**
-+/*
-  * iwl_setup_rx_handlers - Initialize Rx handler callbacks
-  *
-  * Setup the RX handlers for each of the reply types sent from the uCode
+  * Return: 0 on success, corresponding negative error code on failure.
+  */
 -- 
 2.25.1
 
