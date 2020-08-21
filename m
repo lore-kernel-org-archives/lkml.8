@@ -2,106 +2,81 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F0CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC60C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DEBA207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CB3207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 22:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p7LCpJWh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZLLicUE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgHUWmr (ORCPT
+        id S1726784AbgHUWpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 18:42:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        Fri, 21 Aug 2020 18:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbgHUWmq (ORCPT
+        with ESMTP id S1726358AbgHUWpY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 18:42:46 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82F6BC061573;
-        Fri, 21 Aug 2020 15:42:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id t6so1430724pjr.0;
-        Fri, 21 Aug 2020 15:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=4UWlKWRwFhMMQv4f/JDXmRT+IPsV6O51XHRajg1UNPE=;
-        b=p7LCpJWhWXdAx14JgK9TDLJJ3BCvufZbmghRyHVQLMM0vpPRzQq3iDkxgW+5B2M8Fr
-         TZjTY1SBBZ5eRzY2WIrfka7rQfiLpRXq/DXb2rpBQ+pfzVWBHZx50fKSz9oVqrlsclkk
-         DfcOtMu4MHaLkKhfCyYyrR/ZqL+GKNv8V5ESRlW++QX72hA8d7MOA5UxxSbDEMvckjm2
-         oJAwLvOw7f6jQF9dr5YdN0vs8KCf5DkGkL1irNYBf3a0WocvL+APIsazA5tedsv8U3WK
-         JHV9yWGMZVp5FTd+wR4YZHJfGjbC5amLwRi0zjCmvUkC6Y4hPphjuXzaTdTDm9MKbST7
-         WhxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=4UWlKWRwFhMMQv4f/JDXmRT+IPsV6O51XHRajg1UNPE=;
-        b=TrPhX5kO6vzGfPOa2FpoHQZ9Z6jlozkdxnTvh71KQRGR+Bpy20/MuoyYj0jH7cen+r
-         vl2dFGOvTCkEPDI9382YhPPU9Q69GxAgMqpHfpcExdZB4c+86Wp5LxZiqJUPmQN3+T/U
-         DTbud/FpXHOzfnTpeHvC92p9ieCXep/8dRKIISVlreHHNTbhUnZwjHr7eCkJiP1zGb+a
-         A3c342K59VD94u7w5746pTiV/WtJFSB7KZh1QDHhp+E1zWttc2H+7GKvtSA2Ql/TsUfQ
-         sZ1SE7Wui9zGLouSg8IqcfV3eG2s2p1vWsYyq+H4NBzuSZwob26ljMmjvPzujH2I/KUC
-         hyrA==
-X-Gm-Message-State: AOAM533eW/9T37zmrkzbyAO4+QwuWiKFHloRb4qHrRXUgmX9NJEbldK5
-        orSfPJzXbGVzL8ySWySsLJs=
-X-Google-Smtp-Source: ABdhPJzyk5gtyaEQvYqdChTxy/Co2Lk+Pe4/qWzCnpygMz9yMFZCgfiZ1vuBUvB8wjDn5B/HdIgtuA==
-X-Received: by 2002:a17:902:b081:: with SMTP id p1mr4122273plr.195.1598049766139;
-        Fri, 21 Aug 2020 15:42:46 -0700 (PDT)
-Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
-        by smtp.gmail.com with ESMTPSA id z126sm3602084pfc.94.2020.08.21.15.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 15:42:45 -0700 (PDT)
-Date:   Sat, 22 Aug 2020 08:42:40 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v6 01/12] mm/vmalloc: fix vmalloc_to_page for huge vmap
- mappings
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        Zefan Li <lizefan@huawei.com>
-References: <20200821151216.1005117-1-npiggin@gmail.com>
-        <20200821151216.1005117-2-npiggin@gmail.com>
-        <20200821130757.289570e4bb491672087d3396@linux-foundation.org>
-In-Reply-To: <20200821130757.289570e4bb491672087d3396@linux-foundation.org>
+        Fri, 21 Aug 2020 18:45:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9341FC061573;
+        Fri, 21 Aug 2020 15:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=LfI/OrzE1eBdqL3okL2YqXp0meafLH7tI15of/K2lE0=; b=ZLLicUE0LXy5ygDPQ600jwapxE
+        ntnYFz9WnnkqfIwwuEhmTF+f9vh9UMaifQSEswH6deeDHwu5k7fNlyhAIUHDuGcsr6FZ5N9pWFyWJ
+        jacc3CKKFXCfV17LDEzxdAGXz7lRoaHNX77thOOT2xZiTwY7iX6jY33McKUcEKA+3WBu23uDc7nql
+        utKtmIMlPcYxxWRBqAhHEFn+WDuyski6M19v+7lJdkYlYgSEh+KeMR+YlbTQq4K7IBmPlFlMdbboe
+        VHiYKMJ13v1jkicupFxmvKxEouwtnklxTgVLVmwRc/1up5RKS8tsLWiOXB/OkRxZUm9spH4SkCvgE
+        M9dODXFg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9Fmk-0008SE-Rj; Fri, 21 Aug 2020 22:45:22 +0000
+Date:   Fri, 21 Aug 2020 23:45:22 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/78] Transparent Huge Pages for XFS
+Message-ID: <20200821224522.GX17456@casper.infradead.org>
 MIME-Version: 1.0
-Message-Id: <1598049375.u9pf1rciw6.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Andrew Morton's message of August 22, 2020 6:07 am:
-> On Sat, 22 Aug 2020 01:12:05 +1000 Nicholas Piggin <npiggin@gmail.com> wr=
-ote:
->=20
->> vmalloc_to_page returns NULL for addresses mapped by larger pages[*].
->> Whether or not a vmap is huge depends on the architecture details,
->> alignments, boot options, etc., which the caller can not be expected
->> to know. Therefore HUGE_VMAP is a regression for vmalloc_to_page.
->=20
-> I assume this doesn't matter in current mainline?
-> If wrong, then what are the user-visible effects and why no cc:stable?
+... just kidding.  Nobody's going to review 78 patches.  Here's a git
+tree instead:
 
-I haven't heard any reports, but in theory it could cause a prolem. The
-commit 029c54b095995 from the changelog was made to paper over it. But
-that was fixed properly afterward I think by 737326aa510b.
+http://git.infradead.org/users/willy/pagecache.git
 
-Not sure of the user visible problems currently. I think generally you
-wouldn't do vmalloc_to_page() on ioremap() memory, so maybe callilng it
-a regression is a bit strong. _Technically_ a regression, maybe.
+I do want people to know that the THP patchset now passes xfstests.
+I'm sending out portions of the patchset as individual series and trying
+to get at least some of these patches merged for 5.10.
 
-Thanks,
-Nick
+https://lore.kernel.org/linux-mm/20200819150555.31669-1-willy@infradead.org/
+https://lore.kernel.org/linux-mm/20200819184850.24779-1-willy@infradead.org/
+https://lore.kernel.org/linux-block/20200817195206.15172-1-willy@infradead.org/
+https://lore.kernel.org/linux-mm/20200804161755.10100-1-willy@infradead.org/
+https://lore.kernel.org/linux-mm/20200629152033.16175-1-willy@infradead.org/
+
+I would like people to run their workloads against the git tree and
+provide some performance numbers.
+
+The biggest part of this patchset is supporting variable-sized THPs.
+So far, all THPs have been PMD sized, and filesystems would prefer a page
+size somewhere between PAGE_SIZE and PMD_SIZE.  Using the readahead code,
+we increase the page size as we increase the size of readaheads.
+
+This patch set does not attempt to allocate larger pages on writes.
+That's a future enhancement.  There is also no support for larger pages
+on filesystems other than XFS.  I have plans to add support for NFS, but I
+don't plan to add support for buffer heads.  Think of this as an incentive
+to convert to using the iomap infrastructure for buffered I/O ;-)
