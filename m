@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C22C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4ACC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBA120738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B979B20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027863;
-	bh=NCCYA7XQpOw6FN4ph4PoCowNIPY7z9H4bCxnvQuB82E=;
+	s=default; t=1598027880;
+	bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yrjadHZhEnYcN+Akp81I3VuuAFehUgMYzT873qa+4VhMUk2hc1llQVdn8pl3IscxJ
-	 hB71qTzI4LpG2mGNsry8ykavjq8Uyo8wd1Fs38G9g3p8DcDm+LLU6zNrklkIL/ZBpY
-	 ykrmdLWIRz9ftDX70tC9gJVeqTiiGOLiJ2n8F4CY=
+	b=CeK4LT/m50rGZwFlO3VTS5dEOQwes9cN4sWV42+qsfoDktqJ76SYUWAqFuyiikBvO
+	 2/ClTFG/ZEQAwnccy95PQQqsG4vjLMkJGAqSQYhWQdSKQB7CK2B45jGaG78hytb3lS
+	 m9Y3Erj/s5A6hd1pDedmBmGaqUwzY02BXkdYun3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728553AbgHUQhm (ORCPT
+        id S1727913AbgHUQhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:37:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728427AbgHUQVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:21:07 -0400
+        id S1728426AbgHUQVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:21:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE18622D6F;
-        Fri, 21 Aug 2020 16:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A09C522D06;
+        Fri, 21 Aug 2020 16:20:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026811;
-        bh=NCCYA7XQpOw6FN4ph4PoCowNIPY7z9H4bCxnvQuB82E=;
+        s=default; t=1598026810;
+        bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRI5RI8+qGpWPoJzc4IxraVRld4p7Il20Uz0XolNjESCC4SmJ0arodOAVsLIwFreU
-         eFRyM2LxmM4zXkquXkEFJMtHUbb4CJ7UDhWthJNDpkdDvFeDRt7PQvowoiMsJy3d6i
-         rQNWqUs8O7axTGM4phx5KRCgjvIeZeW1Fpu/q6DY=
+        b=uqywY+NoN9y2drFitNEVE+Aq9jvkX4b2m3nwvlNWHanrY+qn54LH28WQfVlELi0pd
+         13Vrq78KoA321phyEEEtHBPXViIok2VfaHsZnb1w7ix4edKKH7D/8nuuMwiH/X3PSw
+         WH4SPKnCiqoEdvxTEj3/XsqlRGXnm9jNnqFNQVJE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Javed Hasan <jhasan@marvell.com>,
-        Girish Basrur <gbasrur@marvell.com>,
-        Santosh Vernekar <svernekar@marvell.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        Shyam Sundar <ssundar@marvell.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 25/26] scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
-Date:   Fri, 21 Aug 2020 12:19:36 -0400
-Message-Id: <20200821161938.349246-25-sashal@kernel.org>
+Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 24/26] ceph: fix potential mdsc use-after-free crash
+Date:   Fri, 21 Aug 2020 12:19:35 -0400
+Message-Id: <20200821161938.349246-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
 References: <20200821161938.349246-1-sashal@kernel.org>
@@ -63,42 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Javed Hasan <jhasan@marvell.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit e95b4789ff4380733006836d28e554dc296b2298 ]
+[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
 
-In fcoe_sysfs_fcf_del(), we first deleted the fcf from the list and then
-freed it if ctlr_dev was not NULL. This was causing a memory leak.
+Make sure the delayed work stopped before releasing the resources.
 
-Free the fcf even if ctlr_dev is NULL.
+cancel_delayed_work_sync() will only guarantee that the work finishes
+executing if the work is already in the ->worklist.  That means after
+the cancel_delayed_work_sync() returns, it will leave the work requeued
+if it was rearmed at the end. That can lead to a use after free once the
+work struct is freed.
 
-Link: https://lore.kernel.org/r/20200729081824.30996-3-jhasan@marvell.com
-Reviewed-by: Girish Basrur <gbasrur@marvell.com>
-Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
-Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
-Reviewed-by: Shyam Sundar <ssundar@marvell.com>
-Signed-off-by: Javed Hasan <jhasan@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fix it by flushing the delayed work instead of trying to cancel it, and
+ensure that the work doesn't rearm if the mdsc is stopping.
+
+URL: https://tracker.ceph.com/issues/46293
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/mds_client.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
-index 3c2f34db937b6..f5f3a8113bc55 100644
---- a/drivers/scsi/fcoe/fcoe_ctlr.c
-+++ b/drivers/scsi/fcoe/fcoe_ctlr.c
-@@ -267,9 +267,9 @@ static void fcoe_sysfs_fcf_del(struct fcoe_fcf *new)
- 		WARN_ON(!fcf_dev);
- 		new->fcf_dev = NULL;
- 		fcoe_fcf_device_delete(fcf_dev);
--		kfree(new);
- 		mutex_unlock(&cdev->lock);
- 	}
-+	kfree(new);
- }
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 3139fbd4c34e3..4ec5a109df82b 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3386,6 +3386,9 @@ static void delayed_work(struct work_struct *work)
+ 	dout("mdsc delayed_work\n");
+ 	ceph_check_delayed_caps(mdsc);
  
- /**
++	if (mdsc->stopping)
++		return;
++
+ 	mutex_lock(&mdsc->mutex);
+ 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
+ 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
+@@ -3717,7 +3720,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
+ static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
+ {
+ 	dout("stop\n");
+-	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
++	/*
++	 * Make sure the delayed work stopped before releasing
++	 * the resources.
++	 *
++	 * Because the cancel_delayed_work_sync() will only
++	 * guarantee that the work finishes executing. But the
++	 * delayed work will re-arm itself again after that.
++	 */
++	flush_delayed_work(&mdsc->delayed_work);
++
+ 	if (mdsc->mdsmap)
+ 		ceph_mdsmap_destroy(mdsc->mdsmap);
+ 	kfree(mdsc->sessions);
 -- 
 2.25.1
 
