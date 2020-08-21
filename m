@@ -2,101 +2,125 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2C5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF76C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35861207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996212078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:36:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K4xOshzv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VeDmOiCo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgHUPfw (ORCPT
+        id S1727892AbgHUPgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:35:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54654 "EHLO
+        Fri, 21 Aug 2020 11:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727882AbgHUPfi (ORCPT
+        with ESMTP id S1727887AbgHUPfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:35:38 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF58CC061575
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:37 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so1021844plb.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:35:37 -0700 (PDT)
+        Fri, 21 Aug 2020 11:35:39 -0400
+Received: from mail-oo1-xc41.google.com (mail-oo1-xc41.google.com [IPv6:2607:f8b0:4864:20::c41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86C36C061755;
+        Fri, 21 Aug 2020 08:35:38 -0700 (PDT)
+Received: by mail-oo1-xc41.google.com with SMTP id z10so426725ooi.10;
+        Fri, 21 Aug 2020 08:35:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KlcOztWWQPRGdO3GJ4i5K8dX5Ri0O0Yjm2p6XeAjX5c=;
-        b=K4xOshzvJr7aCXXwH4DAQRpEXUsdEQHd4W+925408O95RPmPvEx9o1Qfb37SCB1Gho
-         oJJeNwvIk992gMb+wjm4aBzLv0AwDdFpQqg6Sx9dh4vQgCXUjAupJMC3PN+v7fFX+V4c
-         9ww3RJgSeDEiwb0n5vIcXlfAHk3l6xWnlYojk=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=SvUQuk+rHgKISg+6rb+6W/mr4lYNsMnpLOa6G9AwJ1k=;
+        b=VeDmOiCow0mnT8FwybNdZNdmwHM2Nu0d+jxGDzRFEBreEuwDNzBsHYMi3OGjADf/WL
+         YjvK83iGfIihAMZU577sHMRfCZIHvObAEnmuAhL9UlEJDAPMFaWfko9cXASi+SrK+D1I
+         THcCYYk007Lily9BKDaRpdZcPj1YhDyCEXZo0OJmgtA2FSeEt/G+5IPEDmK7mv/SyLvx
+         SvqmzjPRMgslq1aPelOa36DYtxKO1Eq9coXEbMtEGZn2wj3Wxj4WIpNRsJPWlkSldgvE
+         g+I0QKt8GmyTcCrjTaBUkVcrJRjPT9PiNsNL5gp1DdiQk5BApdo9V25Ik4FjNfhkB8UK
+         tgTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KlcOztWWQPRGdO3GJ4i5K8dX5Ri0O0Yjm2p6XeAjX5c=;
-        b=UhlOr2KH7sJeqTwdwS/E75/FCCqpIYRq2btfcmWmxYLb1/A8toEl5arfVCDVTUL09p
-         WHNFlLu1Q2ox1RInK0ST9TDcMMWlc17lFcloRqq/hTMp6MycX6JZx0GLFatBv17C2KOm
-         ZHZ7aBkHUmzO3cBTQ/zta2PvZkOT3gDrdbQSdBgEhJJ77zg1av9R4cSQTE2abQJaRECd
-         +uzrPQ0NsZiLZsOLVgaSp4h34qP/aM3lgsWzMRlkZ3Pro+NTNPjjpE/swOB+5NpTM1gg
-         bb2VNxep3VgzSEdtFJkJfP9ZfOy7b6u17YFELtv6r4xtGf8bT+kKGeQoeQNxF87WNS+2
-         AC0w==
-X-Gm-Message-State: AOAM531GZRHv2vrHx+cpd4Uarrt+wvWMSn3Ddx559CEG9XPSA6zFTxX+
-        7Zj319Bvdi/qo7jser8PwiMCbQ==
-X-Google-Smtp-Source: ABdhPJwZXxjhNDGxHTeRfEsG36o7sm8xNgtpV6HgMuiEo8kAPWL1TyuKck2o9/PPo4gkANxrXbSxMQ==
-X-Received: by 2002:a17:90a:5b:: with SMTP id 27mr2784374pjb.188.1598024135637;
-        Fri, 21 Aug 2020 08:35:35 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
-        by smtp.gmail.com with ESMTPSA id u8sm2200720pjy.35.2020.08.21.08.35.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 08:35:35 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, robdclark@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: display: simple: Add KD116N21-30NV-A010 compatible
-Date:   Fri, 21 Aug 2020 08:35:14 -0700
-Message-Id: <20200821083454.1.I61e6248813d797c9eeebfbb7019c713aa71c4419@changeid>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=SvUQuk+rHgKISg+6rb+6W/mr4lYNsMnpLOa6G9AwJ1k=;
+        b=MrrUxhn1+djYQUidM+JG7fJcFL5zNKWQ4hJd0xlLUTT8E16ACAytJkPm0HmzpZn98f
+         /TpPlImRC4sctBeBJiZNY0dhnBslaDrejW1aSs+PQeLA5gDs7OvJdlpHByRNCJrgsEnX
+         JY0uA73Hyw20Dfgw8YH99xWbNmWv+fSXphO3O5b0iRvemyNAy9vFjRwgAP4rEcxtjMa+
+         7DcKnIhOoPtZu1JMo9qctnSdnPtCjG9DZ5DpmzCAMY8B5n1jRqnN6P44/Dq4xiRG+oIK
+         HvBPuC3mE80si4Se0PGPwR7bCg2510E7f2Vyvtn/SRZuXN8yPtwUcSTzKxX4E5ztmNoA
+         dF3w==
+X-Gm-Message-State: AOAM531MhJCmrj0KitQp+hf+8g4dKm3VQXlZ7fvWPkjtrAOtT7k3uBso
+        WVDpG24O9sBagAbSxlVktT80b//1WgQUb2P+OzU=
+X-Google-Smtp-Source: ABdhPJyov7PitoQCwzWl7xrkZh9OAU4RlTH38R5BCXsvGrRreeAMvQAD9kuLnTlUJ8EEEvouO3cz6v1UEghxWwmN76g=
+X-Received: by 2002:a4a:9f93:: with SMTP id z19mr2563687ool.58.1598024135515;
+ Fri, 21 Aug 2020 08:35:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200821140836.3707282-1-tweek@google.com> <20200821140836.3707282-3-tweek@google.com>
+In-Reply-To: <20200821140836.3707282-3-tweek@google.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Fri, 21 Aug 2020 11:35:24 -0400
+Message-ID: <CAEjxPJ7TP7mvKFDBfP51n8hNzdGFuME8YJ-yT1_VngDufajQKw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] selinux: add basic filtering for audit trace events
+To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Cc:     Paul Moore <paul@paul-moore.com>, Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The KD116N21-30NV-A010 is a pretty standard eDP panel.  Add it to the
-list of compatible strings.
+On Fri, Aug 21, 2020 at 10:09 AM Thi=C3=A9baud Weksteen <tweek@google.com> =
+wrote:
+>
+> From: Peter Enderborg <peter.enderborg@sony.com>
+>
+> This patch adds further attributes to the event. These attributes are
+> helpful to understand the context of the message and can be used
+> to filter the events.
+>
+> There are three common items. Source context, target context and tclass.
+> There are also items from the outcome of operation performed.
+>
+> An event is similar to:
+>            <...>-1309  [002] ....  6346.691689: selinux_audited:
+>        requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
+>        result=3D-13
+>        scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
+>        tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
+>
+> With systems where many denials are occurring, it is useful to apply a
+> filter. The filtering is a set of logic that is inserted with
+> the filter file. Example:
+>  echo "tclass=3D=3D\"file\" " > events/avc/selinux_audited/filter
+>
+> This adds that we only get tclass=3Dfile.
+>
+> The trace can also have extra properties. Adding the user stack
+> can be done with
+>    echo 1 > options/userstacktrace
+>
+> Now the output will be
+>          runcon-1365  [003] ....  6960.955530: selinux_audited:
+>      requested=3D0x4000000 denied=3D0x4000000 audited=3D0x4000000
+>      result=3D-13
+>      scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.c1023
+>      tcontext=3Dsystem_u:object_r:bin_t:s0 tclass=3Dfile
+>           runcon-1365  [003] ....  6960.955560: <user stack trace>
+>  =3D>  <00007f325b4ce45b>
+>  =3D>  <00005607093efa57>
+>
+> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> Reviewed-by: Thi=C3=A9baud Weksteen <tweek@google.com>
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- .../devicetree/bindings/display/panel/panel-simple.yaml         | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-index 47247ace86ac..f2204f17a9dc 100644
---- a/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-+++ b/Documentation/devicetree/bindings/display/panel/panel-simple.yaml
-@@ -161,6 +161,8 @@ properties:
-       - innolux,n156bge-l21
-         # Innolux Corporation 7.0" WSVGA (1024x600) TFT LCD panel
-       - innolux,zj070na-01p
-+        # King & Display KD116N21-30NV-A010 eDP TFT LCD panel
-+      - kingdisplay,kd116n21-30nv-a010
-         # Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
-       - koe,tx14d24vm1bpa
-         # Kaohsiung Opto-Electronics Inc. 10.1" WUXGA (1920 x 1200) LVDS TFT LCD panel
--- 
-2.28.0.297.g1956fa8f8d-goog
-
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
