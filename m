@@ -2,123 +2,125 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A78C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E01C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38D8F207C3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F8E207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ExF9oePk"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="kIvzzuiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgHUPPq (ORCPT
+        id S1727802AbgHUPRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:15:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51552 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726189AbgHUPPk (ORCPT
+        Fri, 21 Aug 2020 11:17:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:8382 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726189AbgHUPQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:15:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0A5C061573;
-        Fri, 21 Aug 2020 08:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=Ahg5nela1JUC9KKhjqVH9llbBwk/SBHjRly3x+0Iphs=; b=ExF9oePk725V3Fkj0cDJnMOL29
-        fRGLS/wZGNIy8iKl6MYajnMRsjNpX14e78K4xXUyBRfLvSm22SPfN9WA0jxJ3W+GXb3CXb1xps5ME
-        MRreSSGlboy+cQ3W9cryCB49lfytJEK/O568Hc+KXtvEgmmtBMSzj5j+BHXPRLV/ZwqzOaX3p9jci
-        njbH6fgXL8Z3IjBIo6h98RVM5elwbjZP5n4pjj/TL1bwAzd7xatpSLHUa6MhKp4oZ2YNhNhIYle4l
-        XM8c7RmwQp9Dk2+wOi4qbBhh+pcTkDtZl2qIBqDhJKea8RlVQIlPxVbZfGa7QijyV/AeN/SCpLjdh
-        cgPg0tAw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1k98lK-0003zK-K7; Fri, 21 Aug 2020 15:15:26 +0000
-Subject: Re: [PATCH 2/2] PCI: sprd: Add support for Unisoc SoCs' PCIe
- controller
-To:     Hongtao Wu <wuht06@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Billows Wu <billows.wu@unisoc.com>
-References: <1598003509-27896-1-git-send-email-wuht06@gmail.com>
- <1598003509-27896-3-git-send-email-wuht06@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a9e4caef-08b5-51c7-848d-1f360c9f3ea2@infradead.org>
-Date:   Fri, 21 Aug 2020 08:15:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 11:16:48 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFBAMT019570
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:16:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=facebook;
+ bh=/tVjpn6IPA6wCA2n7HvN76zLeswT56pQAbaOuZUCx9E=;
+ b=kIvzzuiSCHcf8PjIvlfF1bfRpLX0KyVvweaFlVdUOvQz9SMenN2Jgw2uNDJ345XpycFC
+ VQkD23GM3AMVX4KkkTUjyaW6Ifaon3vjMmvGgpbftrJ+LxcR9Uynudzv9gi2FEIUbKB7
+ wobXL8orssV7yppZwSUQhAn0/DxNTNGDQsQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 3304p3w6nr-5
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:16:48 -0700
+Received: from intmgw002.06.prn3.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:16:47 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id 626D5344105D; Fri, 21 Aug 2020 08:01:35 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     <bpf@vger.kernel.org>
+CC:     <netdev@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, <kernel-team@fb.com>,
+        <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>, <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Song Liu <songliubraving@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH bpf-next v4 12/30] bpf: refine memcg-based memory accounting for sockmap and sockhash maps
+Date:   Fri, 21 Aug 2020 08:01:16 -0700
+Message-ID: <20200821150134.2581465-13-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200821150134.2581465-1-guro@fb.com>
+References: <20200821150134.2581465-1-guro@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <1598003509-27896-3-git-send-email-wuht06@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ spamscore=0 mlxscore=0 clxscore=1015 suspectscore=13 adultscore=0
+ bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210143
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 2:51 AM, Hongtao Wu wrote:
-> From: Billows Wu <billows.wu@unisoc.com>
-> 
-> This series adds PCIe controller driver for Unisoc SoCs.
-> This controller is based on DesignWare PCIe IP.
-> 
-> Signed-off-by: Billows Wu <billows.wu@unisoc.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig     |  12 ++
->  drivers/pci/controller/dwc/Makefile    |   1 +
->  drivers/pci/controller/dwc/pcie-sprd.c | 256 +++++++++++++++++++++++++++++++++
->  3 files changed, 269 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-sprd.c
+Include internal metadata into the memcg-based memory accounting.
+Also include the memory allocated on updating an element.
 
-Hi,
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+---
+ net/core/sock_map.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 044a376..d26ce94 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -311,4 +311,16 @@ config PCIE_AL
->  	  required only for DT-based platforms. ACPI platforms with the
->  	  Annapurna Labs PCIe controller don't need to enable this.
-> 
-> +config PCIE_SPRD
-> +       tristate "Unisoc PCIe controller - RC mode"
-> +       depends on ARCH_SPRD
-> +       depends on PCI_MSI_IRQ_DOMAIN
-> +       select PCIE_DW_HOST
-> +       help
-> +         Some Uisoc SoCs contain two PCIe controllers as RC: One is gen2,
-
-	         Unisoc
-
-> +         and the other is gen3. While other Unisoc SoCs may have only one
-> +         PCIe controller which can be configured as an Endpoint(EP) or a Root
-> +         complex(RC). In order to enable host-specific features PCIE_SPRD must
-
-	    complex (RC).
-
-> +         be selected, which uses the Designware core.
-> +
->  endmenu
-
-Also, please follow Documentation/process/coding-style.rst for
-Kconfig entries:
-
-  For all of the Kconfig* configuration files throughout the source tree,
-  the indentation is somewhat different.  Lines under a ``config`` definition
-  are indented with one tab, while help text is indented an additional two
-  spaces.
-
-
--- 
-~Randy
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 119f52a99dc1..bc797adca44c 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -38,7 +38,7 @@ static struct bpf_map *sock_map_alloc(union bpf_attr *a=
+ttr)
+ 	    attr->map_flags & ~SOCK_CREATE_FLAG_MASK)
+ 		return ERR_PTR(-EINVAL);
+=20
+-	stab =3D kzalloc(sizeof(*stab), GFP_USER);
++	stab =3D kzalloc(sizeof(*stab), GFP_USER | __GFP_ACCOUNT);
+ 	if (!stab)
+ 		return ERR_PTR(-ENOMEM);
+=20
+@@ -829,7 +829,8 @@ static struct bpf_shtab_elem *sock_hash_alloc_elem(st=
+ruct bpf_shtab *htab,
+ 		}
+ 	}
+=20
+-	new =3D kmalloc_node(htab->elem_size, GFP_ATOMIC | __GFP_NOWARN,
++	new =3D kmalloc_node(htab->elem_size,
++			   GFP_ATOMIC | __GFP_NOWARN | __GFP_ACCOUNT,
+ 			   htab->map.numa_node);
+ 	if (!new) {
+ 		atomic_dec(&htab->count);
+@@ -1011,7 +1012,7 @@ static struct bpf_map *sock_hash_alloc(union bpf_at=
+tr *attr)
+ 	if (attr->key_size > MAX_BPF_STACK)
+ 		return ERR_PTR(-E2BIG);
+=20
+-	htab =3D kzalloc(sizeof(*htab), GFP_USER);
++	htab =3D kzalloc(sizeof(*htab), GFP_USER | __GFP_ACCOUNT);
+ 	if (!htab)
+ 		return ERR_PTR(-ENOMEM);
+=20
+--=20
+2.26.2
 
