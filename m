@@ -2,75 +2,198 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C706AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3469EC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9771C21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB7E21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597986346;
-	bh=OkGTwS+5MFi778OHquSeUV36MA1aTTvT0HvnmUzJ2dY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZLY45vt2CIFilk//ry3wSk1gG5b7qIrzcwHGNkBxkGV7KzCsmsVDFxoz5eRCTCUGs
-	 NnafVRX6E1uqZ8962EovOvK3O4MhbAJYHJqFfu6Y8UYIS2APUHTJvRdvILDXyjAqwQ
-	 TrxRwQ5EOmdAOEqgZbLI1PPfFs/5Ep8ILtzaW1H4=
+	s=default; t=1597986485;
+	bh=x660jxZ8Q6Aeqmpmtz11Rp0YUyTn70giXVYHYASZhWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bh9ROo7lfNL1mTrixrgH/NgM2pjOneiveVB8G3gyZO/pv6MRtObHXOHsSWOBYSURG
+	 Su4XezFoYY+SBFnOUT6Vhl7LBo0pKxx0UqQvn/Pjds7idluxqwgEo8oz5UHd9KNEMX
+	 J+wsHQ5ohq/AH44ib/nGz/q/SBXogsXxw8QrI79w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbgHUFFp (ORCPT
+        id S1726872AbgHUFID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:05:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38704 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 01:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgHUFFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:05:45 -0400
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725908AbgHUFID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 01:08:03 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA6E21734;
-        Fri, 21 Aug 2020 05:05:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71AA821734;
+        Fri, 21 Aug 2020 05:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597986344;
-        bh=OkGTwS+5MFi778OHquSeUV36MA1aTTvT0HvnmUzJ2dY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WsRxtWOAYOsUXAzft6SE9ZDQ+7vRLil3O4EWp2Qz7oYTzNEoSfrvJFXVzqetney+2
-         /lebxuD5Zgxqo63618/7fvKemgTTq0e3aArpstK4uzwuHJUUktlI1FagnTpHI0XX3C
-         2hHjX1rGITheYlBlj2GE0yHdKYRBkEKGzr3DxDV8=
-Received: by mail-lf1-f41.google.com with SMTP id v12so100014lfo.13;
-        Thu, 20 Aug 2020 22:05:44 -0700 (PDT)
-X-Gm-Message-State: AOAM530Uajwu7amLtbWAjXdQ25nAaOaOPcSuk3iQZVpTTsTZj10vJ6UL
-        CnlfMFCSs26sdGVzNYgX11W6N4lkDXYTkofJDwE=
-X-Google-Smtp-Source: ABdhPJxRQxWybbj5cxma0N8Adp5v9aDvEwGun5CN++U9h8yRuQeVraqULexBLUbc7BE9XskRmCcRcFz7saUu+4nW7w4=
-X-Received: by 2002:a05:6512:6c1:: with SMTP id u1mr611890lff.28.1597986342462;
- Thu, 20 Aug 2020 22:05:42 -0700 (PDT)
+        s=default; t=1597986482;
+        bh=x660jxZ8Q6Aeqmpmtz11Rp0YUyTn70giXVYHYASZhWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yn0S7FATqpr2d7IIzpuGTeXzWCXoVbxSu3+kSA40RnYCT8/gci802hDKQj8e8Prkp
+         RLyrpNYw3v1QwHQkQB+N3Ud2806wTQtt+2tb+n/s63Bu/zEPofPywruBj28hiUQGUb
+         9FIyiUOHRCTDnJV8QjyRhkKLRaq/Gvab3gHq6NI4=
+Date:   Fri, 21 Aug 2020 10:37:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+Subject: Re: [PATCH] soundwire: cadence: fix race condition between suspend
+ and Slave device alerts
+Message-ID: <20200821050758.GI2639@vkoul-mobl>
+References: <20200817222340.18042-1-yung-chuan.liao@linux.intel.com>
+ <20200819090637.GE2639@vkoul-mobl>
+ <8d60fa6f-bb7f-daa8-5ae2-51386b87ccad@linux.intel.com>
 MIME-Version: 1.0
-References: <20200821012918.3302-1-thunder.leizhen@huawei.com>
-In-Reply-To: <20200821012918.3302-1-thunder.leizhen@huawei.com>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 20 Aug 2020 22:05:31 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5Gc8PA=1mAyTZ6qUxRF=pq+01JRO_9NKcsvV_Wr2d+=Q@mail.gmail.com>
-Message-ID: <CAPhsuW5Gc8PA=1mAyTZ6qUxRF=pq+01JRO_9NKcsvV_Wr2d+=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] md: Simplify code with existing definition
- RESYNC_SECTORS in raid10.c
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     linux-raid <linux-raid@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8d60fa6f-bb7f-daa8-5ae2-51386b87ccad@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 6:29 PM Zhen Lei <thunder.leizhen@huawei.com> wrote:
->
-> #define RESYNC_SECTORS (RESYNC_BLOCK_SIZE >> 9)
->
-> "RESYNC_BLOCK_SIZE/512" is equal to "RESYNC_BLOCK_SIZE >> 9", replace it
-> with RESYNC_SECTORS.
->
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On 19-08-20, 07:51, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 8/19/20 4:06 AM, Vinod Koul wrote:
+> > On 18-08-20, 06:23, Bard Liao wrote:
+> > > From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > 
+> > > In system suspend stress cases, the SOF CI reports timeouts. The root
+> > > cause is that an alert is generated while the system suspends. The
+> > > interrupt handling generates transactions on the bus that will never
+> > > be handled because the interrupts are disabled in parallel.
+> > > 
+> > > As a result, the transaction never completes and times out on resume.
+> > > This error doesn't seem too problematic since it happens in a work
+> > > queue, and the system recovers without issues.
+> > > 
+> > > Nevertheless, this race condition should not happen. When doing a
+> > > system suspend, or when disabling interrupts, we should make sure the
+> > > current transaction can complete, and prevent new work from being
+> > > queued.
+> > > 
+> > > BugLink: https://github.com/thesofproject/linux/issues/2344
+> > > Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> > > Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+> > > Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+> > > Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> > > ---
+> > >   drivers/soundwire/cadence_master.c | 24 +++++++++++++++++++++++-
+> > >   drivers/soundwire/cadence_master.h |  1 +
+> > >   2 files changed, 24 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> > > index 24eafe0aa1c3..1330ffc47596 100644
+> > > --- a/drivers/soundwire/cadence_master.c
+> > > +++ b/drivers/soundwire/cadence_master.c
+> > > @@ -791,7 +791,16 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+> > >   			     CDNS_MCP_INT_SLAVE_MASK, 0);
+> > >   		int_status &= ~CDNS_MCP_INT_SLAVE_MASK;
+> > > -		schedule_work(&cdns->work);
+> > > +
+> > > +		/*
+> > > +		 * Deal with possible race condition between interrupt
+> > > +		 * handling and disabling interrupts on suspend.
+> > > +		 *
+> > > +		 * If the master is in the process of disabling
+> > > +		 * interrupts, don't schedule a workqueue
+> > > +		 */
+> > > +		if (cdns->interrupt_enabled)
+> > > +			schedule_work(&cdns->work);
+> > 
+> > would it not make sense to mask the interrupts first and then cancel the
+> > work? that way you are guaranteed that after this call you dont have
+> > interrupts and work scheduled?
+> 
+> cancel_work_sync() will either
+> a) wait until the current work completes, or
+> b) prevent a new one from starting.
+> 
+> there's no way to really 'abort' a workqueue, 'cancel' means either complete
+> or don't start.
 
-Applied to md-next. Thanks!
+Quite right, as that is how everyone deals with it. Stop the irq from
+firing first and then wait until work is cancelled or completed, hence
+cancel_work_sync()
+
+> if you disable the interrupts then cancel the work, you have a risk of not
+> letting the work complete if it already started (case a).
+> 
+> The race is
+> a) the interrupt thread (this function) starts
+> b) the work is scheduled and starts
+> c) the suspend handler starts and disables interrupts in [1] below.
+> d) the work initiates transactions which will never complete since Cadence
+> interrupts have been disabled.
+
+Would it not be better to let work handle the case of interrupts
+disabled and not initiates transactions which wont complete here? That
+sounds more reasonable to do rather than complete the work which anyone
+doesn't matter as you are suspending
+
+> So the idea was that before disabling interrupts, the suspend handler
+> changes the status, and then calls cancel_work_sync(). the status is also
+> used to prevent a new work from being scheduled if you already know the
+> suspend is on-going. The test on the status above is not strictly necessary,
+> I believe the sequence is safe without it but it avoid starting a useless
+> work.
+> 
+> If you want to follow the flow it's better to start with what the suspend
+> handler does below first, then look at how the interrupt thread might
+> interfere. The diff format does not help, might be also easier to apply the
+> patch and look at the rest of the code, e.g the 3 mask updates mentioned
+> below are not included in the diff.
+> 
+> > 
+> > >   	}
+> > >   	cdns_writel(cdns, CDNS_MCP_INTSTAT, int_status);
+> > > @@ -924,6 +933,19 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
+> > >   		slave_state = cdns_readl(cdns, CDNS_MCP_SLAVE_INTSTAT1);
+> > >   		cdns_writel(cdns, CDNS_MCP_SLAVE_INTSTAT1, slave_state);
+> > >   	}
+> 
+> [1]
+> 
+> > > +	cdns->interrupt_enabled = state;
+> > > +
+> > > +	/*
+> > > +	 * Complete any on-going status updates before updating masks,
+> > > +	 * and cancel queued status updates.
+> > > +	 *
+> > > +	 * There could be a race with a new interrupt thrown before
+> > > +	 * the 3 mask updates below are complete, so in the interrupt
+> > > +	 * we use the 'interrupt_enabled' status to prevent new work
+> > > +	 * from being queued.
+> > > +	 */
+> > > +	if (!state)
+> > > +		cancel_work_sync(&cdns->work);
+> > >   	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK0, slave_intmask0);
+> > >   	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1, slave_intmask1);
+> > > diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+> > > index fdec62b912d3..4d1aab5b5ec2 100644
+> > > --- a/drivers/soundwire/cadence_master.h
+> > > +++ b/drivers/soundwire/cadence_master.h
+> > > @@ -133,6 +133,7 @@ struct sdw_cdns {
+> > >   	bool link_up;
+> > >   	unsigned int msg_count;
+> > > +	bool interrupt_enabled;
+> > >   	struct work_struct work;
+> > > -- 
+> > > 2.17.1
+> > 
+
+-- 
+~Vinod
