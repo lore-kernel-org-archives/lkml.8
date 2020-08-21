@@ -2,157 +2,134 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955D7C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006B0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9BE22B4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3906207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:27:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q1l9IeVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHUP1h (ORCPT
+        id S1728140AbgHUP1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:27:37 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:42145 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbgHUP1S (ORCPT
+        Fri, 21 Aug 2020 11:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53438 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727973AbgHUP1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:27:18 -0400
-Received: by mail-il1-f199.google.com with SMTP id z1so1664143ilz.9
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:27:17 -0700 (PDT)
+        Fri, 21 Aug 2020 11:27:45 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBA6BC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:27:44 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id p20so2343450wrf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 08:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=A2ib5YeLmICUMl8rksAwSuoFVXHYJ4y/hwVWZYHuMbY=;
+        b=q1l9IeVSjBMpvx9pappt54xWWzVHKZAIjcy2grhmETrscRqtkMd92gelvCAxF9/YxC
+         df2utnw/GutYtLaWTyxshKq81bXGskLk4qcfcSscEKDCL886LGJEwbC1r96+vnepfNBv
+         jkjHnEbfuoDp1u2zzg9/wRQMYc1+nwHjwzSo5R54G3vmWIpoag3D8Nw+ooApVOW1lPIL
+         2sySVBcDBsREymUfLDG/3d/biHjObMIHhwnvYhhvHCc+2n9XpU8cgcNkZzk/MNTvt1Kj
+         Z68WE74zqAh5LRtvnrlfIyn4mnRWfq7JDcngcwi2y3FeCEqGNlMqQpe1/NrbzwXGCJjD
+         9J8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=oRlhEl9y3UG47TJfhMloMYOjluaCt1sb2BEiuCSJ7NI=;
-        b=c4NroooKj8Gzb2xyGUw98Fkig/TzKmydyCg4wy7IVthpH38eL+2E/t7ACqNAyyRU6c
-         MsXiOy0Gl/ynKvWPSAbvb8frRbnsrLUkTPG4VP6iqToskcasqVUu6b9q17/igTFXXZ6l
-         j6Zmtdt5hGRFP75m6/OaFMvMzCVx+zxz30vWnYSzF6K/y95gctL9L7pzHbZDVXyQ+EPB
-         M198JPlGHN6gdAJG5Eh9frMuphrXakFpO1uOBimZpNfNnRF/0jF1Nfvcy1/NqePJjRPI
-         F+/9ADmjVHKMMCyf4k5cXexukaOIBOHcONRclRKAN/WOJYAPK5IUp1QpjFsPpP0onnJx
-         Px1A==
-X-Gm-Message-State: AOAM5332F6Owg++4YbTHyP820DDxQj4coRc/BpXM17NBo9fvYsrZEbH0
-        RQ62bjJMLFwfGanPKLhEX562nSf53z1mSbSKEAjyzhiZzNt1
-X-Google-Smtp-Source: ABdhPJz/7pnITgCgm8CtpXFil5SbjNTzEkS1E7GV2CPChtipYAvzWzyO9rn84WSXLWWTkyV5zrjF1034OfDD4Cg4WMmCOrnMw1i/
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A2ib5YeLmICUMl8rksAwSuoFVXHYJ4y/hwVWZYHuMbY=;
+        b=QlAFdqc8BBxy0mMRjXGNFDWsm+Vd0Q4bDq/WtrFotk/dHgq9jjoh5f2aIpF96vmB20
+         5nK9Yv5jJ64wEwAeCHTLdotwnafgNVeYmuiisNthpXefXRPJslMOW4AkVR6JLmuQVR5m
+         +Jd4FHseVsq5XfoqFraRVrbdnA035kxN2AH+UhlOrJWL2UqTlte6fGhA76O+Ak1ysGVd
+         m20GvRJNMXg/wT92oPRgx2g29qxNZydTQhNNySOVvIAUsVLoQ7VhUevv1gH2ndKuXPHO
+         5n/4X9r3mNA8ixYsmQBQA3GCssUrdK/d2NQHkZm7F8f+lsnyvvcx5Mux2EAmGsVJYM3b
+         iGBw==
+X-Gm-Message-State: AOAM533hmanmrPtDwAeiKUVV02yqYjgmkcris8zNGSAzOCcL1q0d0KUi
+        +3bSKKOgL6Q3a3bBE7Ty/5s=
+X-Google-Smtp-Source: ABdhPJwnHUuth1Lgg+jMpWeo2o0KMQOm5Qu+a71/U7ael4vzzcfepC1XxXX3R/e7IfVXP9rCUNyY7Q==
+X-Received: by 2002:a5d:4701:: with SMTP id y1mr3322387wrq.416.1598023663658;
+        Fri, 21 Aug 2020 08:27:43 -0700 (PDT)
+Received: from tsnow (IGLD-83-130-85-196.inter.net.il. [83.130.85.196])
+        by smtp.gmail.com with ESMTPSA id i4sm4575674wrw.26.2020.08.21.08.27.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 08:27:43 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 18:27:37 +0300
+From:   Tomer Samara <tomersamara98@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Riley Andrews <riandrews@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/2] staging: android: Remove BUG_ON from ion_page_pool.c
+Message-ID: <32ea3b6d840cb56ea927400e1875d9d4db38e926.1598023524.git.tomersamara98@gmail.com>
+References: <cover.1598023523.git.tomersamara98@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:95ab:: with SMTP id b40mr3017406jai.14.1598023636980;
- Fri, 21 Aug 2020 08:27:16 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 08:27:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000039b10005ad64df20@google.com>
-Subject: general protection fault in fib_dump_info (2)
-From:   syzbot <syzbot+a61aa19b0c14c8770bd9@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@gmail.com, kuba@kernel.org,
-        kuznet@ms2.inr.ac.ru, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, nikolay@cumulusnetworks.com,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1598023523.git.tomersamara98@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+BUG_ON() is removed at ion_page_pool.c
 
-syzbot found the following issue on:
+Fixes the following issue:
+Avoid crashing the kernel - try using WARN_ON & recovery code ratherthan BUG() or BUG_ON().
 
-HEAD commit:    da2968ff Merge tag 'pci-v5.9-fixes-1' of git://git.kernel...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=137316ca900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a0437fdd630bee11
-dashboard link: https://syzkaller.appspot.com/bug?extid=a61aa19b0c14c8770bd9
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-userspace arch: i386
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12707051900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1150a046900000
-
-The issue was bisected to:
-
-commit 0b5e2e39739e861fa5fc84ab27a35dbe62a15330
-Author: David Ahern <dsahern@gmail.com>
-Date:   Tue May 26 18:56:16 2020 +0000
-
-    nexthop: Expand nexthop_is_multipath in a few places
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=139cec66900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=105cec66900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=179cec66900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a61aa19b0c14c8770bd9@syzkaller.appspotmail.com
-Fixes: 0b5e2e39739e ("nexthop: Expand nexthop_is_multipath in a few places")
-
-general protection fault, probably for non-canonical address 0xdffffc0000000010: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000080-0x0000000000000087]
-CPU: 0 PID: 6830 Comm: syz-executor644 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:nexthop_is_blackhole include/net/nexthop.h:240 [inline]
-RIP: 0010:fib_dump_info+0x893/0x1f00 net/ipv4/fib_semantics.c:1781
-Code: 3c 02 00 0f 85 83 15 00 00 4d 8b 6d 10 e8 85 f1 ab fa 49 8d bd 80 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 62 15 00 00 4d 8b ad 80 00 00 00 e8 37 e2 2a 01
-RSP: 0018:ffffc90001d37248 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff888093b02000 RCX: ffffffff86c84d53
-RDX: 0000000000000010 RSI: ffffffff86c84d8b RDI: 0000000000000080
-RBP: ffff88809f95a017 R08: 0000000000000001 R09: ffff88809f95a02b
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff88809f95a000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a7164a40
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:0000000009af2840
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000020000300 CR3: 0000000099698000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- rtmsg_fib+0x318/0xdf0 net/ipv4/fib_semantics.c:524
- fib_table_insert+0x1383/0x1af0 net/ipv4/fib_trie.c:1284
- inet_rtm_newroute+0x109/0x1e0 net/ipv4/fib_frontend.c:883
- rtnetlink_rcv_msg+0x44e/0xad0 net/core/rtnetlink.c:5563
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2353
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2407
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2440
- do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
- __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
- do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
- entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
-RIP: 0023:0xf7f66549
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000ffba6bdc EFLAGS: 00000282 ORIG_RAX: 0000000000000172
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 0000000020000580
-RDX: 0000000000000000 RSI: 00000000080ea00c RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace ca6d5d9f281019b7 ]---
-RIP: 0010:nexthop_is_blackhole include/net/nexthop.h:240 [inline]
-RIP: 0010:fib_dump_info+0x893/0x1f00 net/ipv4/fib_semantics.c:1781
-Code: 3c 02 00 0f 85 83 15 00 00 4d 8b 6d 10 e8 85 f1 ab fa 49 8d bd 80 00 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 62 15 00 00 4d 8b ad 80 00 00 00 e8 37 e2 2a 01
-RSP: 0018:ffffc90001d37248 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff888093b02000 RCX: ffffffff86c84d53
-RDX: 0000000000000010 RSI: ffffffff86c84d8b RDI: 0000000000000080
-RBP: ffff88809f95a017 R08: 0000000000000001 R09: ffff88809f95a02b
-R10: 0000000000000001 R11: 0000000000000000 R12: ffff88809f95a000
-R13: 0000000000000000 R14: 0000000000000000 R15: ffff8880a7164a40
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0063) knlGS:0000000009af2840
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 00007f3f0e891000 CR3: 0000000099698000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
+Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/staging/android/ion/ion_page_pool.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
+index 0198b886d906..a3ed3bfd47ee 100644
+--- a/drivers/staging/android/ion/ion_page_pool.c
++++ b/drivers/staging/android/ion/ion_page_pool.c
+@@ -46,11 +46,9 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
+ 	struct page *page;
+ 
+ 	if (high) {
+-		BUG_ON(!pool->high_count);
+ 		page = list_first_entry(&pool->high_items, struct page, lru);
+ 		pool->high_count--;
+ 	} else {
+-		BUG_ON(!pool->low_count);
+ 		page = list_first_entry(&pool->low_items, struct page, lru);
+ 		pool->low_count--;
+ 	}
+@@ -65,8 +63,6 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
+ {
+ 	struct page *page = NULL;
+ 
+-	BUG_ON(!pool);
+-
+ 	mutex_lock(&pool->mutex);
+ 	if (pool->high_count)
+ 		page = ion_page_pool_remove(pool, true);
+@@ -82,7 +78,7 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
+ 
+ void ion_page_pool_free(struct ion_page_pool *pool, struct page *page)
+ {
+-	BUG_ON(pool->order != compound_order(page));
++	WARN_ON(pool->order != compound_order(page))
+ 
+ 	ion_page_pool_add(pool, page);
+ }
+-- 
+2.25.1
+
