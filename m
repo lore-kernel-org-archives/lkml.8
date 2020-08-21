@@ -2,101 +2,147 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41F0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4460C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 901AE2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:25:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598009143;
-	bh=wIHnziovTq/GuaiND/z2I5281pOd4DVCK+dCOSRCHIw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UXWTHF5e4qQQ2NTbCJRpnZTnU+UVu1KdGMk7rUh/7PBb/M86C0zqyQevQ8m8wjrrx
-	 nQHNBK0M0nBUn7uaXcOKHKTwS5P1SHxpvUFYgPsGLx9V4yaq4IS+vK9rviPSSv8GlQ
-	 cEHOVRwYLm1E7cJbu1bv8zqGsz46RTItrq6qpJdM=
+	by mail.kernel.org (Postfix) with ESMTP id C3F362078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgHULZf (ORCPT
+        id S1727912AbgHULcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38242 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbgHULVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:21:38 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 378C82054F;
-        Fri, 21 Aug 2020 11:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598008870;
-        bh=wIHnziovTq/GuaiND/z2I5281pOd4DVCK+dCOSRCHIw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PcSliOZS3tcBKMbeSR3XaPv/ZGWUPKX9YSogRdLwuTDjMmwiNY1SM9y9mjy2LbVWM
-         wKT4WDDJ2FNx3Q+MP+JARGf1KkeqXgSrn7eg/Jy+KF+jND2xTGLw8aIgdeT9yMGj1J
-         bYzBg/iQgpr4e5t9XIW2GjR+m2AG0ELB7MEXiOvM=
-Date:   Fri, 21 Aug 2020 13:21:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 83/92] mfd: dln2: Run event handler loop under
- spinlock
-Message-ID: <20200821112129.GA2284907@kroah.com>
-References: <20200820091537.490965042@linuxfoundation.org>
- <20200820091541.964627271@linuxfoundation.org>
- <20200821072123.GC23823@amd>
- <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
- <20200821091416.GA1894114@kroah.com>
- <20200821091510.GA1894407@kroah.com>
- <20200821105449.GN1891694@smile.fi.intel.com>
+        Fri, 21 Aug 2020 07:32:42 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:21137 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726803AbgHULch (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:32:37 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-11-1J3ZoqrQOEmS6aQC-7Fa_Q-1; Fri, 21 Aug 2020 12:32:30 +0100
+X-MC-Unique: 1J3ZoqrQOEmS6aQC-7Fa_Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 21 Aug 2020 12:32:29 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 21 Aug 2020 12:32:29 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Nicolas Boichat' <drinkcat@chromium.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Linux Media Mailing List" <linux-media@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: RE: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Thread-Topic: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
+Thread-Index: AQHWd1MRQFeXK2GIIEihfK8khxWsrqlCP3rwgAAMdQCAACDnQA==
+Date:   Fri, 21 Aug 2020 11:32:29 +0000
+Message-ID: <898c56e4b7ef4c3da1d634fdef5a8898@AcuMS.aculab.com>
+References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
+ <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
+ <20200820102347.15d2f610@oasis.local.home>
+ <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
+ <20200820203601.4f70bf98@oasis.local.home>
+ <21fae92da07c4566ba4eed3b5e1bce2d@AcuMS.aculab.com>
+ <CANMq1KBvNqcdCsuDGGygYqS5+ZBw+qSVXTC+WWNycypG2=BRMQ@mail.gmail.com>
+In-Reply-To: <CANMq1KBvNqcdCsuDGGygYqS5+ZBw+qSVXTC+WWNycypG2=BRMQ@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821105449.GN1891694@smile.fi.intel.com>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 01:54:49PM +0300, Andy Shevchenko wrote:
-> On Fri, Aug 21, 2020 at 11:15:10AM +0200, Greg Kroah-Hartman wrote:
-> > On Fri, Aug 21, 2020 at 11:14:16AM +0200, Greg Kroah-Hartman wrote:
-> > > On Fri, Aug 21, 2020 at 12:06:45PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Aug 21, 2020 at 10:26 AM Pavel Machek <pavel@denx.de> wrote:
-> > > > > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > >
-> > > > > > [ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
-> > > > > >
-> > > > > > The event handler loop must be run with interrupts disabled.
-> > > > > > Otherwise we will have a warning:
-> > > > > ...
-> > > > > > Recently xHCI driver switched to tasklets in the commit 36dc01657b49
-> > > > > > ("usb: host: xhci: Support running urb giveback in tasklet
-> > > > > > context").
-> > > > >
-> > > > > AFAICT, 36dc01657b49 is not included in 4.19.141, so this commit
-> > > > > should not be needed, either.
-> > > > 
-> > > > I'm wondering if there are any other USB host controller drivers that
-> > > > use URB giveback in interrupt enabled context.
-> > > 
-> > > Almost all do.
-> > 
-> > Sorry, read that the wrong way, most have interrupts disabled, so this
-> > change should be fine.
-> 
-> The change is harmless in these cases. I was wondering if it actually *helps*
-> in some cases besides xHCI.
+RnJvbTogTmljb2xhcyBCb2ljaGF0DQo+IFNlbnQ6IDIxIEF1Z3VzdCAyMDIwIDExOjI4DQo+IA0K
+PiBPbiBGcmksIEF1ZyAyMSwgMjAyMCBhdCA0OjQ4IFBNIERhdmlkIExhaWdodCA8RGF2aWQuTGFp
+Z2h0QGFjdWxhYi5jb20+IHdyb3RlOg0KPiA+DQo+ID4gRnJvbTogU3RldmVuIFJvc3RlZHQNCj4g
+PiA+IFNlbnQ6IDIxIEF1Z3VzdCAyMDIwIDAxOjM2DQo+ID4gPiBPbiBGcmksIDIxIEF1ZyAyMDIw
+IDA4OjEzOjAwICswODAwDQo+ID4gPiBOaWNvbGFzIEJvaWNoYXQgPGRyaW5rY2F0QGNocm9taXVt
+Lm9yZz4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gPiBPbiBUaHUsIEF1ZyAyMCwgMjAyMCBhdCAxMDoy
+MyBQTSBTdGV2ZW4gUm9zdGVkdCA8cm9zdGVkdEBnb29kbWlzLm9yZz4gd3JvdGU6DQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiBPbiBUaHUsIDIwIEF1ZyAyMDIwIDE3OjE0OjEyICswODAwDQo+ID4gPiA+
+ID4gTmljb2xhcyBCb2ljaGF0IDxkcmlua2NhdEBjaHJvbWl1bS5vcmc+IHdyb3RlOg0KPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiBUZWNobmljYWxseSwgd2UgY291bGQgb25seSBpbml0aWFsaXplIHRo
+ZSB0cmFjZV9wcmludGsgYnVmZmVycw0KPiA+ID4gPiA+ID4gd2hlbiB0aGUgcHJpbnQgZW52IGlz
+IHN3aXRjaGVkLCB0byBhdm9pZCB0aGUgYnVpbGQgZXJyb3IgYW5kDQo+ID4gPiA+ID4gPiB1bmNv
+bmRpdGlvbmFsIGJvb3QtdGltZSB3YXJuaW5nLCBidXQgSSBhc3N1bWUgdGhpcyBwcmludGluZw0K
+PiA+ID4gPiA+ID4gZnJhbWV3b3JrIHdpbGwgZXZlbnR1YWxseSBnZXQgcmVtb3ZlZCB3aGVuIHRo
+ZSBkcml2ZXIgbW92ZXMgb3V0DQo+ID4gPiA+ID4gPiBvZiBzdGFnaW5nPw0KPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gUGVyaGFwcyB0aGlzIHNob3VsZCBiZSBjb252ZXJ0aW5nIGludG8gYSB0cmFjZSBl
+dmVudC4gTG9vayBhdCB3aGF0IGJwZg0KPiA+ID4gPiA+IGRpZCBmb3IgdGhlaXIgYnBmX3RyYWNl
+X3ByaW50aygpLg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhlIG1vcmUgSSB0aGluayBhYm91dCBp
+dCwgdGhlIGxlc3MgSSBsaWtlIHRoaXMgc2VyaWVzLg0KPiA+ID4gPg0KPiA+ID4gPiBUbyBtYWtl
+IGl0IGNsZWFyLCB0aGUgcHJpbWFyeSBnb2FsIG9mIHRoaXMgc2VyaWVzIGlzIHRvIGdldCByaWQg
+b2YNCj4gPiA+ID4gdHJhY2VfcHJpbnRrIHNwcmlua2xlZCBpbiB0aGUga2VybmVsIGJ5IG1ha2lu
+ZyBzdXJlIHNvbWUgcmFuZGNvbmZpZw0KPiA+ID4gPiBidWlsZHMgZmFpbC4gU2luY2UgbXkgdjIs
+IHRoZXJlIGFscmVhZHkgaGFzIGJlZW4gb25lIG1vcmUgYWRkZWQgKHRoZQ0KPiA+ID4gPiBvbmUg
+dGhhdCB0aGlzIHBhdGNoIHJlbW92ZXMpLCBzbyBJJ2QgbGlrZSB0byBsYW5kIDIvMyBBU0FQIHRv
+IHByZXZlbnQNCj4gPiA+ID4gZXZlbiBtb3JlIGZyb20gYmVpbmcgYWRkZWQuDQo+ID4gPiA+DQo+
+ID4gPiA+IExvb2tpbmcgYXQgeW91ciByZXBseSBvbiAxLzMsIEkgdGhpbmsgd2UgYXJlIGFsaWdu
+ZWQgb24gdGhhdCBnb2FsPyBJcw0KPiA+ID4gPiB0aGVyZSBzb21lIG90aGVyIGFwcHJvYWNoIHlv
+dSdkIHJlY29tbWVuZD8NCj4gPiA+ID4NCj4gPiA+ID4gTm93LCBJJ20gbm90IHByZXRlbmRpbmcg
+bXkgZml4ZXMgYXJlIHRoZSBiZXN0IHBvc3NpYmxlIG9uZXMsIGJ1dCBJDQo+ID4gPiA+IHdvdWxk
+IG11Y2ggcmF0aGVyIGhhdmUgdGhlIGJ1cmRlbiBvZiBjb252ZXJ0aW5nIHRvIHRyYWNlIGV2ZW50
+cyBvbiB0aGUNCj4gPiA+ID4gcmVzcGVjdGl2ZSBkcml2ZXIgbWFpbnRhaW5lcnMuIChidHcgaXMg
+dGhlcmUgYSBzaG9ydA0KPiA+ID4gPiBkb2N1bWVudGF0aW9uL3R1dG9yaWFsIHRoYXQgSSBjb3Vs
+ZCBsaW5rIHRvIGluIHRoZXNlIHBhdGNoZXMsIHRvIGhlbHANCj4gPiA+ID4gZGV2ZWxvcGVycyB1
+bmRlcnN0YW5kIHdoYXQgaXMgdGhlIHJlY29tbWVuZGVkIHdheSBub3c/KQ0KPiA+ID4gPg0KPiA+
+ID4NCj4gPiA+IEkgbGlrZSB0aGUgZ29hbCwgYnV0IEkgZ3Vlc3MgSSBuZXZlciBhcnRpY3VsYXRl
+ZCB0aGUgcHJvYmxlbSBJIGhhdmUNCj4gPiA+IHdpdGggdGhlIG1ldGhvZG9sb2d5Lg0KPiA+ID4N
+Cj4gPiA+IHRyYWNlX3ByaW50aygpIGlzIG1lYW50IHRvIGJlIGEgZGVidWdnaW5nIHRvb2wuIFNv
+bWV0aGluZyB0aGF0IHBlb3BsZQ0KPiA+ID4gY2FuIGFuZCBkbyBzcHJpbmtsZSBhbGwgb3ZlciB0
+aGUga2VybmVsIHRvIGhlbHAgdGhlbSBmaW5kIGEgYnVnIGluDQo+ID4gPiBhcmVhcyB0aGF0IGFy
+ZSBjYWxsZWQgcXVpdGUgb2Z0ZW4gKHdoZXJlIHByaW50aygpIGlzIHdheSB0b28gc2xvdykuDQo+
+ID4gPg0KPiA+ID4gVGhlIGxhc3QgdGhpbmcgSSB3YW50IHRoZW0gdG8gZGVhbCB3aXRoIGlzIGFk
+ZGluZyBhIHRyYWNlX3ByaW50aygpIHdpdGgNCj4gPiA+IHRoZWlyIGRpc3RybydzIGNvbmZpZyAo
+b3IgYSBjb25maWcgZnJvbSBzb21lb25lIHRoYXQgdHJpZ2dlcmVkIHRoZSBidWcpDQo+ID4gPiBv
+bmx5IHRvIGhhdmUgdGhlIGJ1aWxkIHRvIGZhaWwsIGJlY2F1c2UgdGhleSBhbHNvIG5lZWQgdG8g
+YWRkIGEgY29uZmlnDQo+ID4gPiB2YWx1ZS4NCj4gPiA+DQo+ID4gPiBJIGFkZCB0byB0aGUgQ2Mg
+YSBmZXcgZGV2ZWxvcGVycyBJIGtub3cgdGhhdCB1c2UgdHJhY2VfcHJpbnRrKCkgaW4gdGhpcw0K
+PiA+ID4gZmFzaGlvbi4gSSdkIGxpa2UgdG8gaGVhciB0aGVpciB2aWV3IG9uIGhhdmluZyB0byBh
+ZGQgYSBjb25maWcgb3B0aW9uDQo+ID4gPiB0byBtYWtlIHRyYWNlX3ByaW50ayB3b3JrIGJlZm9y
+ZSB0aGV5IHRlc3QgYSBjb25maWcgdGhhdCBpcyBzZW50IHRvDQo+ID4gPiB0aGVtLg0KPiA+DQo+
+ID4gSXMgaXQgd29ydGggaGF2aW5nIHRocmVlIGNvbXBpbGUtdGltZSBvcHRpb25zOg0KPiA+IDEp
+IHRyYWNlX3ByaW50aygpIGlnbm9yZWQuDQo+IA0KPiBDT05GSUdfVFJBQ0U9biAobm93KQ0KPiAN
+Cj4gPiAyKSB0cmFjZV9wcmludGsoKSBlbmFibGVkLg0KPiANCj4gQ09ORklHX1RSQUNFPXkgKG5v
+dykNCj4gDQo+ID4gMykgdHJhY2VfcHJpbnRrKCkgZ2VuZXJhdGVzIGEgY29tcGlsZSB0aW1lIGVy
+cm9yLg0KPiANCj4gQ09ORklHX1RSQUNFPXkgYW5kIENPTkZJR19UUkFDSU5HX0FMTE9XX1BSSU5U
+Sz1uIChteSBwYXRjaCkNCj4gDQo+ID4NCj4gPiBOb3JtYWwga2VybmVsIGJ1aWxkcyB3b3VsZCBp
+Z25vcmUgY2FsbHMuDQo+ID4gRWl0aGVyIGEgY29uZmlnIG9wdGlvbiBvciBhIG1vZHVsZSBvcHRp
+b24gKGV0Yykgd291bGQgZW5hYmxlIGl0Lg0KPiA+IEEgY29uZmlnIG9wdGlvbiB0aGF0ICdyYW5k
+LWNvbmZpZycgYnVpbGRzIHdvdWxkIHR1cm4gb24gd291bGQNCj4gPiBnZW5lcmF0ZSBjb21waWxl
+LXRpbWUgZXJyb3JzLg0KPiANCj4gWWVzLCBhIGNvbmZpZyBvcHRpb24gaXMgZXhhY3RseSB3aGF0
+IG15IHBhdGNoIDIvMiBkb2VzLiBBbmQgc2VlDQo+IFN0ZXZlbidzIGFyZ3VtZW50Lg0KDQpCdXQg
+eW91IHdlcmUgYWRkaW5nICNpZnMgdG8geW91IGNvZGUgdG8gZW5hYmxlIHRoZSB0cmFjZXMuDQpU
+aGF0IGlzIGp1c3QgaG9ycmlkLg0KDQpXaGF0IHlvdSB3YW50IGlzIENPTkZJR19ISkhKVkxLSENW
+S0lZVktJSVlWWUtJWVZMVUNMVUNMPXkgKGRlZmF1bHQgbikNCnRoYXQgd291bGQgb25seSBldmVy
+IGdldCBzZXQgYnkgYSAncmFuZC1jb25maWcnIGJ1aWxkIGFuZCB3b3VsZA0KbmV2ZXIgYmUgdGVz
+dGVkIGluIGFueSBzb3VyY2UgY29kZS4NCg0KWW91IG1pZ2h0IGFsc28gd2FudCBhICNkZWZpbmUg
+dGhhdCBjYW4gc2V0IHRlbXBvcmFyaWx5DQp0byBlbmFibGUgdHJhY2VzIGluIGEgc3BlY2lmaWMg
+ZmlsZS9tb2R1bGUgZXZlbiB0aG91Z2gNCkNPTkZJR19UUkFDRT1uLg0KKEJ1dCByYW5kLWNvbmZp
+ZyBidWlsZHMgd291bGQgc3RpbGwgZmFpbCBpZiB0aGV5IGVuYWJsZWQgdGhlDQonc3BlY2lhbCcg
+b3B0aW9uLikNCg0KCURhdmlkLg0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJy
+YW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lz
+dHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
-It might, I forgot about usbip, which probably runs in this mode.
-
-thanks,
-
-greg k-h
