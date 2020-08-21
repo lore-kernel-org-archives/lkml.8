@@ -2,95 +2,84 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24854C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED3AC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F3A6A20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029893;
-	bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xKpu82VaAOqoN+O3xEsD5S11Lm2Tjlpqe8zhM4dQz/f6Nef7QHTcHUHl2cC88PDHn
-	 gCe58U34J0CkOjstJnVb8lOQ3p13FaF32hqARkKq5mIIHHkMGAoRGVqqe2oBB8jlVN
-	 BdrQO0lX1sAvhBea4hQVEMu1Pibo+tkcCSLCn6Nk=
+	by mail.kernel.org (Postfix) with ESMTP id 75AC420656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbgHURLb (ORCPT
+        id S1729005AbgHURLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:11:33 -0400
+Received: from mga09.intel.com ([134.134.136.24]:52337 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728169AbgHUQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:17:13 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8759022B4B;
-        Fri, 21 Aug 2020 16:17:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026632;
-        bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1mdwuIRMkVgETb0eextYFGtt7NCh7LodlfucpqonofdDnaGfRFdxmsrUuqIP/MN+p
-         MpVCCjEeN8YXvtn/UcE4QCC8jXEol74nKG17vfnwkNMDW5VSyPCBlf/yin2mvMA9Ju
-         D9DIJuhCvn++16AHGQli/Hs2DRBGgxA3hFVO/+mk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 06/48] ASoC: img-parallel-out: Fix a reference count leak
-Date:   Fri, 21 Aug 2020 12:16:22 -0400
-Message-Id: <20200821161704.348164-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
-References: <20200821161704.348164-1-sashal@kernel.org>
+        id S1726767AbgHURLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:11:06 -0400
+IronPort-SDR: htkML8yGL21V2AYUjRalkwViV/dEW592mpf6yrtewWBjMnRY6L8F5myZk77uoivKXr6pYhdBVY
+ kcpu0N6H5Uxg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="156644348"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="156644348"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:11:05 -0700
+IronPort-SDR: I2mZkfr9xcMQIMP3kfbfldOKn4lii7Hzzr/Gi2BjSAbq3aMpijSBnuzGSdvAMmyB1ynYeQlPGP
+ rA54NwF0FaEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="330096839"
+Received: from otcwcpicx6.sc.intel.com ([172.25.55.29])
+  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2020 10:11:05 -0700
+Date:   Fri, 21 Aug 2020 17:11:05 +0000
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Babu Moger <babu.moger@amd.com>, H Peter Anvin <hpa@zytor.com>,
+        x86 <x86@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] x86/resctrl: Enable user to view thread or core
+ throttling mode
+Message-ID: <20200821171105.GA362575@otcwcpicx6.sc.intel.com>
+References: <1594921994-66192-1-git-send-email-fenghua.yu@intel.com>
+ <1594921994-66192-3-git-send-email-fenghua.yu@intel.com>
+ <20200821131306.GH12181@zn.tnic>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821131306.GH12181@zn.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Fri, Aug 21, 2020 at 03:13:17PM +0200, Borislav Petkov wrote:
+> On Thu, Jul 16, 2020 at 10:53:14AM -0700, Fenghua Yu wrote:
+> >  struct rdt_membw {
+> > +	enum membw_throttle_mode	arch_throttle_mode;
+> 
+> I guess "arch" is implicit so you can
+> 
+> s/arch_throttle_mode/throttle_mode/g
+Ok. Will fix this.
+> 
+> ...
+> 
+> > +static struct rftype *rdtgroup_rftype_by_name(const char *name)
+> 
+> That function name needs a verb.
 
-[ Upstream commit 6b9fbb073636906eee9fe4d4c05a4f445b9e2a23 ]
+I will change it to rdtgroup_rftype_get_by_name().
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+Thank you very much for your review!
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033344.1814-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/img/img-parallel-out.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/img/img-parallel-out.c b/sound/soc/img/img-parallel-out.c
-index 5ddbe3a31c2e9..4da49a42e8547 100644
---- a/sound/soc/img/img-parallel-out.c
-+++ b/sound/soc/img/img-parallel-out.c
-@@ -163,8 +163,10 @@ static int img_prl_out_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	}
- 
- 	ret = pm_runtime_get_sync(prl->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(prl->dev);
- 		return ret;
-+	}
- 
- 	reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
- 	reg = (reg & ~IMG_PRL_OUT_CTL_EDGE_MASK) | control_set;
--- 
-2.25.1
-
+-Fenghua
+> https://people.kernel.org/tglx/notes-about-netiquette
