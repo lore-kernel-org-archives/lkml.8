@@ -2,135 +2,154 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B626C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECAA120656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:09:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3/MFuya"
+	by mail.kernel.org (Postfix) with ESMTP id A3F5320656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:09:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598029767;
+	bh=wljQwHlpf9bp/QI7uHx7YkLy4gyPMzPnNX2OUYwUAy8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CrCoVi/iRVQYqf9zFWkWQagVxBVRGjds0ZTpnQ6hDfFCC7Zq6HfmiUf4o67B1PeLt
+	 qDTvmT4vo176V7nDluqL9MiSJnyKipZSHnCsW+7GgNFqjg6PBSXjBcsUkxyBZzyu0r
+	 1IkBNez+smmMqfRdLmSzeLP+884pedWaPZFLcHfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgHURIi (ORCPT
+        id S1728754AbgHURJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:08:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32890 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726181AbgHUQRo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:17:44 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090C0C061573;
-        Fri, 21 Aug 2020 09:17:44 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id i19so1183100lfj.8;
-        Fri, 21 Aug 2020 09:17:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ciQpCZNqlUAY76HFlpjGJHUNDAs9xwtRbJI1yNtcuhM=;
-        b=V3/MFuyaaic5NHAkMdBvSSzRXUx1HZnX7/7tVB5SKdqFl4sCYkXTJLsJGDC8JzAEBz
-         QQHAWx1G5tLg68B/f+jO/GTnmuGXHhqqsBY99hXSUagyg+/ese3ijTQFcPm59tc/Om0j
-         93zEOpjIPKN+nJsVkX97YNxBsJZ8beku0FZSKz1vyd0ww1TeaPiS8O9rAmi4VkXJ0jVM
-         YJVQVXWk6cpCcjykvdwRko4eFY+lYyAh9hfbpflaqRK7YwSgbZddXWy4G4blNIg5Dmc4
-         RU7t62cdxvy05TJm67EQ7n0CS3ldhL2OQ1YZfsFLOzNquURORpOUln5VqamVCzY6TsIZ
-         zDuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ciQpCZNqlUAY76HFlpjGJHUNDAs9xwtRbJI1yNtcuhM=;
-        b=tTOBuY/c8XDoyb9OQOZjTkvb+LM+j2P3XHryuaV8pLuY8mwy3uf1dfWt7yL40xs/MY
-         NOFVabsq4HRMUWHy+eFu/QYZnsHGbL3HNeBW00h4Lc2LARFk/E+6P0uvDwSUphPK9SKl
-         ROJAYgGE+aq2H0MHB7rZE4ERfpftWbUm9zBRP5mayKqXvmUgth3AAJc4hOZF/37lauun
-         /v9nH3KK9T+HcbMIjkLEoIa6ROJD4FIo4tNDSNsk9lEQDgBto/EVMqjZuWyGjiwI1Mwg
-         EJnh0L9mdgU5XN5X9SHEZdRKMHk7gn1yP851v8h6iKYSTnKes8JlNu5cXEomw00S7HkW
-         UrXg==
-X-Gm-Message-State: AOAM5320FRkl99HPk8tjWY4w//0hstpZPuZJgW5dZYb8oJErJxwaDUi+
-        zjiVAdBor+RY5ojxpJdP3r3vCfu/yDlUpg6jqL8=
-X-Google-Smtp-Source: ABdhPJwm4JQ0bHBpLTQfTKEIlpZDWvTsAm23urM4zWdMRprV3Ar817MgJFfm1txpjI+CAqlIEnxa8dYFBlvOP4wMeaM=
-X-Received: by 2002:ac2:59c5:: with SMTP id x5mr1766672lfn.174.1598026662334;
- Fri, 21 Aug 2020 09:17:42 -0700 (PDT)
+        Fri, 21 Aug 2020 13:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728175AbgHUQRi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:17:38 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADC4722C9F;
+        Fri, 21 Aug 2020 16:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026654;
+        bh=wljQwHlpf9bp/QI7uHx7YkLy4gyPMzPnNX2OUYwUAy8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mA4kdGxh9d7kkSPUrTme4sK21FJsGkX9CI1qS0DIsBBc32WhJghxgPleZDXZLSGfN
+         CLkFO8XB18JGzLQGgNPwAMEOvS7N1MTq2BHYUxEnj8PR4X+D+QlQCjPJ9uDzhTE9Mg
+         s/meq0HzGVllADpwklARU1fBMj3NytZYz/MNrrRU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mike Christie <michael.christie@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 24/48] scsi: target: Fix xcopy sess release leak
+Date:   Fri, 21 Aug 2020 12:16:40 -0400
+Message-Id: <20200821161704.348164-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
+References: <20200821161704.348164-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <87ft8l6ic3.fsf@x220.int.ebiederm.org> <20200817220425.9389-9-ebiederm@xmission.com>
- <CAHk-=whCU_psWXHod0-WqXXKB4gKzgW9q=d_ZEFPNATr3kG=QQ@mail.gmail.com>
- <875z9g7oln.fsf@x220.int.ebiederm.org> <CAHk-=wjk_CnGHt4LBi2WsOeYOxE5j79R8xHzZytCy8t-_9orQw@mail.gmail.com>
- <20200818110556.q5i5quflrcljv4wa@wittgenstein> <87pn7m22kn.fsf@x220.int.ebiederm.org>
- <CAADnVQKpDaaogmbZPD0bv3SrTXo9i5eSBMz1dd=3wOn9pxDOWA@mail.gmail.com> <871rk0t45v.fsf@x220.int.ebiederm.org>
-In-Reply-To: <871rk0t45v.fsf@x220.int.ebiederm.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 21 Aug 2020 09:17:30 -0700
-Message-ID: <CAADnVQL2ugp+t39kXnd_iQMM8RGM=O2nD7OBL7XvB1GBHcyoxA@mail.gmail.com>
-Subject: Re: [PATCH 09/17] file: Implement fnext_task
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "<linux-fsdevel@vger.kernel.org>" <linux-fsdevel@vger.kernel.org>,
-        criu@openvz.org, bpf <bpf@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Jann Horn <jann@thejh.net>, Kees Cook <keescook@chromium.org>,
-        =?UTF-8?Q?Daniel_P=2E_Berrang=C3=A9?= <berrange@redhat.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Matthew Wilcox <willy@debian.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Matthew Wilcox <matthew@wil.cx>,
-        Trond Myklebust <trond.myklebust@fys.uio.no>,
-        Chris Wright <chrisw@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 8:26 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
->
-> > On Wed, Aug 19, 2020 at 6:25 AM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> >>
-> >> The bug in the existing code is that bpf_iter does get_file instead
-> >> of get_file_rcu.  Does anyone have any sense of how to add debugging
-> >> to get_file to notice when it is being called in the wrong context?
-> >
-> > That bug is already fixed in bpf tree.
-> > See commit cf28f3bbfca0 ("bpf: Use get_file_rcu() instead of
-> > get_file() for task_file iterator")
->
-> I wished you had based that change on -rc1 instead of some random
-> looking place in David's Millers net tree.
+From: Mike Christie <michael.christie@oracle.com>
 
-random?
-It's a well documented process. Please see:
-Documentation/bpf/bpf_devel_QA.rst
+[ Upstream commit 3c006c7d23aac928279f7cbe83bbac4361255d53 ]
 
-> I am glad to see that our existing debug checks can catch that
-> kind of problem when the code is exercised enough.
+transport_init_session can allocate memory via percpu_ref_init, and
+target_xcopy_release_pt never frees it. This adds a
+transport_uninit_session function to handle cleanup of resources allocated
+in the init function.
 
-They did not. Please see the commit log of the fix.
-It was a NULL pointer dereference.
+Link: https://lore.kernel.org/r/1593654203-12442-3-git-send-email-michael.christie@oracle.com
+Signed-off-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_internal.h  |  1 +
+ drivers/target/target_core_transport.c |  7 ++++++-
+ drivers/target/target_core_xcopy.c     | 11 +++++++++--
+ 3 files changed, 16 insertions(+), 3 deletions(-)
 
-> I am going to pull this change into my tree on top of -rc1 so we won't
-> have unnecessary conflicts.  Hopefully this will show up in -rc2 so the
-> final version of this patchset can use an easily describable base.
+diff --git a/drivers/target/target_core_internal.h b/drivers/target/target_core_internal.h
+index 8533444159635..e7b3c6e5d5744 100644
+--- a/drivers/target/target_core_internal.h
++++ b/drivers/target/target_core_internal.h
+@@ -138,6 +138,7 @@ int	init_se_kmem_caches(void);
+ void	release_se_kmem_caches(void);
+ u32	scsi_get_new_index(scsi_index_t);
+ void	transport_subsystem_check_init(void);
++void	transport_uninit_session(struct se_session *);
+ unsigned char *transport_dump_cmd_direction(struct se_cmd *);
+ void	transport_dump_dev_state(struct se_device *, char *, int *);
+ void	transport_dump_dev_info(struct se_device *, struct se_lun *,
+diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
+index 7c78a5d02c083..b1f4be055f838 100644
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -236,6 +236,11 @@ int transport_init_session(struct se_session *se_sess)
+ }
+ EXPORT_SYMBOL(transport_init_session);
+ 
++void transport_uninit_session(struct se_session *se_sess)
++{
++	percpu_ref_exit(&se_sess->cmd_count);
++}
++
+ /**
+  * transport_alloc_session - allocate a session object and initialize it
+  * @sup_prot_ops: bitmask that defines which T10-PI modes are supported.
+@@ -579,7 +584,7 @@ void transport_free_session(struct se_session *se_sess)
+ 		sbitmap_queue_free(&se_sess->sess_tag_pool);
+ 		kvfree(se_sess->sess_cmd_map);
+ 	}
+-	percpu_ref_exit(&se_sess->cmd_count);
++	transport_uninit_session(se_sess);
+ 	kmem_cache_free(se_sess_cache, se_sess);
+ }
+ EXPORT_SYMBOL(transport_free_session);
+diff --git a/drivers/target/target_core_xcopy.c b/drivers/target/target_core_xcopy.c
+index b9b1e92c6f8db..9d24e85b08631 100644
+--- a/drivers/target/target_core_xcopy.c
++++ b/drivers/target/target_core_xcopy.c
+@@ -479,7 +479,7 @@ int target_xcopy_setup_pt(void)
+ 	memset(&xcopy_pt_sess, 0, sizeof(struct se_session));
+ 	ret = transport_init_session(&xcopy_pt_sess);
+ 	if (ret < 0)
+-		return ret;
++		goto destroy_wq;
+ 
+ 	xcopy_pt_nacl.se_tpg = &xcopy_pt_tpg;
+ 	xcopy_pt_nacl.nacl_sess = &xcopy_pt_sess;
+@@ -488,12 +488,19 @@ int target_xcopy_setup_pt(void)
+ 	xcopy_pt_sess.se_node_acl = &xcopy_pt_nacl;
+ 
+ 	return 0;
++
++destroy_wq:
++	destroy_workqueue(xcopy_wq);
++	xcopy_wq = NULL;
++	return ret;
+ }
+ 
+ void target_xcopy_release_pt(void)
+ {
+-	if (xcopy_wq)
++	if (xcopy_wq) {
+ 		destroy_workqueue(xcopy_wq);
++		transport_uninit_session(&xcopy_pt_sess);
++	}
+ }
+ 
+ /*
+-- 
+2.25.1
 
-Please do not cherry pick fixes from other trees. You need to wait
-until the bpf tree gets merged into net tree and net into Linus's tree.
-It's only a couple days away. Hopefully it's there by -rc2,
-but I cannot speak for Dave's schedule.
-We'll send bpf tree pull-req to Dave today.
