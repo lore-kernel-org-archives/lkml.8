@@ -2,187 +2,389 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54097C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F8FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 362442072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF04B20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:59:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pAWD3kVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726963AbgHUT7W (ORCPT
+        id S1727066AbgHUT4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:59:22 -0400
-Received: from mga03.intel.com ([134.134.136.65]:3372 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbgHUT7I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:59:08 -0400
-IronPort-SDR: t1X6C1YG89zdUDz2yWyo85E5CIhojqnHChcevDuSxnmSun+RDn9aTbZwEG7QDUs38/aMwsvcMj
- axXnQ1WuD6Mg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="155604697"
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="155604697"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 12:59:07 -0700
-IronPort-SDR: inzqbO0QA4Zl+zgpSh/70TY2Cq5BdNCVpJk0L6HVtq0q2j5hYxkEQRD6SSqyifQalJfCO4VGkd
- j+epq2KLE1Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
-   d="scan'208";a="330137755"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.65])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Aug 2020 12:59:06 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, mark.rutland@arm.com, luto@amacapital.net,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 1/3] perf/core: Pull pmu::sched_task() into perf_event_context_sched_in()
-Date:   Fri, 21 Aug 2020 12:57:52 -0700
-Message-Id: <20200821195754.20159-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Aug 2020 15:56:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33268 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726846AbgHUT4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 15:56:37 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJW0AJ086100;
+        Fri, 21 Aug 2020 15:56:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=Q83ZffGYATxIZXUMd+md0kXm5JAcARVD+UGuULz5O7U=;
+ b=pAWD3kVdZuY8j4g33+wlgcqqlNRFQrrzYi98Msr4jq67aV6gX5HWnnaexo4VhI8j2DYi
+ 8cZlDFC6oXUm9Z+fZ1Oyxf2c83qezoQ8uz7Dl2rfrStFJyGaBpLstSXd0pCvSu3slCPI
+ HRFKEN2Rl0rc24sHGrAPxGvlSPERMtSoCootMaM7g8ZGzFTS7lae2Pmb4hOu0saEv1Dz
+ YljHFHi6qp7kspZQJBlfaZoCbRI35EfdrRSkttaInB3cvDtH+x8MiodwIQE14gDaIuJV
+ J7RB78NrnDsgIQy0+J+CZyBIcZWj1jc+nCJDXGS69r3KUI8OuK9bH1XJjaZ5sK4YvfwV Xw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 332jhakdm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:34 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJXj86090839;
+        Fri, 21 Aug 2020 15:56:33 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 332jhakdkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:33 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJsqXM013481;
+        Fri, 21 Aug 2020 19:56:32 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01wdc.us.ibm.com with ESMTP id 3304tm6m7u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 19:56:32 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJuTQH60096978
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 19:56:29 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D0F07805F;
+        Fri, 21 Aug 2020 19:56:29 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C96857805C;
+        Fri, 21 Aug 2020 19:56:27 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.191.76])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 19:56:27 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v10 03/16] s390/vfio-ap: manage link between queue struct and matrix mdev
+Date:   Fri, 21 Aug 2020 15:56:03 -0400
+Message-Id: <20200821195616.13554-4-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 impostorscore=0 suspectscore=11 bulkscore=0
+ clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008210178
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Let's create links between each queue device bound to the vfio_ap device
+driver and the matrix mdev to which the queue is assigned. The idea is to
+facilitate efficient retrieval of the objects representing the queue
+devices and matrix mdevs as well as to verify that a queue assigned to
+a matrix mdev is bound to the driver.
 
-The pmu::sched_task() is a context switch callback. It passes the
-cpuctx->task_ctx as a parameter to the lower code. To find the
-cpuctx->task_ctx, the current code iterates a cpuctx list.
+The links will be created as follows:
 
-The same context was just iterated in perf_event_context_sched_in(),
-which is invoked right before the pmu::sched_task().
+   * When the queue device is probed, if its APQN is assigned to a matrix
+     mdev, the structures representing the queue device and the matrix mdev
+     will be linked.
 
-Reuse the cpuctx->task_ctx from perf_event_context_sched_in() can avoid
-the unnecessary iteration of the cpuctx list.
+   * When an adapter or domain is assigned to a matrix mdev, for each new
+     APQN assigned that references a queue device bound to the vfio_ap
+     device driver, the structures representing the queue device and the
+     matrix mdev will be linked.
 
-Both pmu::sched_task and perf_event_context_sched_in() have to disable
-PMU. Pull the pmu::sched_task into perf_event_context_sched_in() can
-also save the overhead from the PMU disable and reenable.
+The links will be removed as follows:
 
-The new and old tasks may have equivalent contexts. The current code
-optimize this case by swapping the context, which avoids the scheduling.
-For this case, pmu::sched_task() is still required, e.g., restore the
-LBR content.
+   * When the queue device is removed, if its APQN is assigned to a matrix
+     mdev, the structures representing the queue device and the matrix mdev
+     will be unlinked.
 
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+   * When an adapter or domain is unassigned from a matrix mdev, for each
+     APQN unassigned that references a queue device bound to the vfio_ap
+     device driver, the structures representing the queue device and the
+     matrix mdev will be unlinked.
+
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 ---
+ drivers/s390/crypto/vfio_ap_ops.c     | 132 +++++++++++++++++++++++++-
+ drivers/s390/crypto/vfio_ap_private.h |   2 +
+ 2 files changed, 129 insertions(+), 5 deletions(-)
 
-New patch for V2
-
- kernel/events/core.c | 51 +++++++++++++++++++++++++++-----------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 0fbf17ff7cc5..c785cbadbdb8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3491,30 +3491,36 @@ void perf_sched_cb_inc(struct pmu *pmu)
-  * PEBS requires this to provide PID/TID information. This requires we flush
-  * all queued PEBS records before we context switch to a new task.
-  */
-+static void __perf_pmu_sched_task(struct perf_cpu_context *cpuctx, bool sched_in)
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index ad3925f04f61..2e37ee82e422 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -50,6 +50,19 @@ static struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
+ 	return q;
+ }
+ 
++static struct vfio_ap_queue *vfio_ap_get_mdev_queue(struct ap_matrix_mdev *matrix_mdev,
++						    unsigned long apqn)
 +{
-+	struct pmu *pmu;
++	struct vfio_ap_queue *q;
 +
-+	pmu = cpuctx->ctx.pmu; /* software PMUs will not have sched_task */
++	hash_for_each_possible(matrix_mdev->qtable, q, mdev_qnode, apqn) {
++		if (q && (q->apqn == apqn))
++			return q;
++	}
 +
-+	if (WARN_ON_ONCE(!pmu->sched_task))
-+		return;
-+
-+	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-+	perf_pmu_disable(pmu);
-+
-+	pmu->sched_task(cpuctx->task_ctx, sched_in);
-+
-+	perf_pmu_enable(pmu);
-+	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
++	return NULL;
 +}
 +
- static void perf_pmu_sched_task(struct task_struct *prev,
- 				struct task_struct *next,
- 				bool sched_in)
- {
- 	struct perf_cpu_context *cpuctx;
--	struct pmu *pmu;
- 
- 	if (prev == next)
- 		return;
- 
--	list_for_each_entry(cpuctx, this_cpu_ptr(&sched_cb_list), sched_cb_entry) {
--		pmu = cpuctx->ctx.pmu; /* software PMUs will not have sched_task */
--
--		if (WARN_ON_ONCE(!pmu->sched_task))
--			continue;
--
--		perf_ctx_lock(cpuctx, cpuctx->task_ctx);
--		perf_pmu_disable(pmu);
--
--		pmu->sched_task(cpuctx->task_ctx, sched_in);
-+	list_for_each_entry(cpuctx, this_cpu_ptr(&sched_cb_list), sched_cb_entry)
-+		__perf_pmu_sched_task(cpuctx, sched_in);
- 
--		perf_pmu_enable(pmu);
--		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
--	}
+ /**
+  * vfio_ap_wait_for_irqclear
+  * @apqn: The AP Queue number
+@@ -160,7 +173,6 @@ static struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+ 		  status.response_code);
+ end_free:
+ 	vfio_ap_free_aqic_resources(q);
+-	q->matrix_mdev = NULL;
+ 	return status;
  }
  
- static void perf_event_switch(struct task_struct *task,
-@@ -3773,10 +3779,14 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
- 					struct task_struct *task)
- {
- 	struct perf_cpu_context *cpuctx;
-+	struct pmu *pmu = ctx->pmu;
+@@ -262,7 +274,6 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+ 	struct vfio_ap_queue *q;
+ 	struct ap_queue_status qstatus = {
+ 			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
+-	struct ap_matrix_mdev *matrix_mdev;
  
- 	cpuctx = __get_cpu_context(ctx);
--	if (cpuctx->task_ctx == ctx)
-+	if (cpuctx->task_ctx == ctx) {
-+		if (cpuctx->sched_cb_usage)
-+			__perf_pmu_sched_task(cpuctx, true);
- 		return;
+ 	/* If we do not use the AIV facility just go to userland */
+ 	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
+@@ -273,14 +284,11 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+ 
+ 	if (!vcpu->kvm->arch.crypto.pqap_hook)
+ 		goto out_unlock;
+-	matrix_mdev = container_of(vcpu->kvm->arch.crypto.pqap_hook,
+-				   struct ap_matrix_mdev, pqap_hook);
+ 
+ 	q = vfio_ap_get_queue(apqn);
+ 	if (!q)
+ 		goto out_unlock;
+ 
+-	q->matrix_mdev = matrix_mdev;
+ 	status = vcpu->run->s.regs.gprs[1];
+ 
+ 	/* If IR bit(16) is set we enable the interrupt */
+@@ -320,6 +328,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+ 
+ 	matrix_mdev->mdev = mdev;
+ 	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
++	hash_init(matrix_mdev->qtable);
+ 	mdev_set_drvdata(mdev, matrix_mdev);
+ 	matrix_mdev->pqap_hook.hook = handle_pqap;
+ 	matrix_mdev->pqap_hook.owner = THIS_MODULE;
+@@ -548,6 +557,87 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+ 	return 0;
+ }
+ 
++enum qlink_type {
++	LINK_APID,
++	LINK_APQI,
++	UNLINK_APID,
++	UNLINK_APQI,
++};
++
++static void vfio_ap_mdev_link_queue(struct ap_matrix_mdev *matrix_mdev,
++				    unsigned long apid, unsigned long apqi)
++{
++	struct vfio_ap_queue *q;
++
++	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
++	if (q) {
++		q->matrix_mdev = matrix_mdev;
++		hash_add(matrix_mdev->qtable,
++			 &q->mdev_qnode, q->apqn);
 +	}
- 
- 	perf_ctx_lock(cpuctx, ctx);
- 	/*
-@@ -3786,7 +3796,7 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
- 	if (!ctx->nr_events)
- 		goto unlock;
- 
--	perf_pmu_disable(ctx->pmu);
-+	perf_pmu_disable(pmu);
- 	/*
- 	 * We want to keep the following priority order:
- 	 * cpu pinned (that don't need to move), task pinned,
-@@ -3798,7 +3808,11 @@ static void perf_event_context_sched_in(struct perf_event_context *ctx,
- 	if (!RB_EMPTY_ROOT(&ctx->pinned_groups.tree))
- 		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
- 	perf_event_sched_in(cpuctx, ctx, task);
--	perf_pmu_enable(ctx->pmu);
++}
 +
-+	if (cpuctx->sched_cb_usage && pmu->sched_task)
-+		pmu->sched_task(cpuctx->task_ctx, true);
++static void vfio_ap_mdev_unlink_queue(unsigned long apid, unsigned long apqi)
++{
++	struct vfio_ap_queue *q;
 +
-+	perf_pmu_enable(pmu);
++	q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
++	if (q) {
++		q->matrix_mdev = NULL;
++		hash_del(&q->mdev_qnode);
++	}
++}
++
++/**
++ * vfio_ap_mdev_link_queues
++ *
++ * @matrix_mdev: The matrix mdev to link.
++ * @type:	 The type of @qlink_id.
++ * @qlink_id:	 The APID or APQI of the queues to link.
++ *
++ * Sets or clears the links between the queues with the specified @qlink_id
++ * and the @matrix_mdev:
++ *     @type == LINK_APID: Set the links between the @matrix_mdev and the
++ *                         queues with the specified @qlink_id (APID)
++ *     @type == LINK_APQI: Set the links between the @matrix_mdev and the
++ *                         queues with the specified @qlink_id (APQI)
++ *     @type == UNLINK_APID: Clear the links between the @matrix_mdev and the
++ *                           queues with the specified @qlink_id (APID)
++ *     @type == UNLINK_APQI: Clear the links between the @matrix_mdev and the
++ *                           queues with the specified @qlink_id (APQI)
++ */
++static void vfio_ap_mdev_link_queues(struct ap_matrix_mdev *matrix_mdev,
++				     enum qlink_type type,
++				     unsigned long qlink_id)
++{
++	unsigned long id;
++
++	switch (type) {
++	case LINK_APID:
++		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
++				     matrix_mdev->matrix.aqm_max + 1)
++			vfio_ap_mdev_link_queue(matrix_mdev, qlink_id, id);
++		break;
++	case UNLINK_APID:
++		for_each_set_bit_inv(id, matrix_mdev->matrix.aqm,
++				     matrix_mdev->matrix.aqm_max + 1)
++			vfio_ap_mdev_unlink_queue(qlink_id, id);
++		break;
++	case LINK_APQI:
++		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
++				     matrix_mdev->matrix.apm_max + 1)
++			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
++		break;
++	case UNLINK_APQI:
++		for_each_set_bit_inv(id, matrix_mdev->matrix.apm,
++				     matrix_mdev->matrix.apm_max + 1)
++			vfio_ap_mdev_link_queue(matrix_mdev, id, qlink_id);
++		break;
++	default:
++		WARN_ON_ONCE(1);
++	}
++}
++
+ /**
+  * assign_adapter_store
+  *
+@@ -617,6 +707,7 @@ static ssize_t assign_adapter_store(struct device *dev,
+ 	if (ret)
+ 		goto share_err;
  
- unlock:
- 	perf_ctx_unlock(cpuctx, ctx);
-@@ -3841,9 +3855,6 @@ void __perf_event_task_sched_in(struct task_struct *prev,
++	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APID, apid);
+ 	ret = count;
+ 	goto done;
  
- 	if (atomic_read(&nr_switch_events))
- 		perf_event_switch(task, prev, true);
--
--	if (__this_cpu_read(perf_sched_cb_usages))
--		perf_pmu_sched_task(prev, task, true);
+@@ -668,6 +759,7 @@ static ssize_t unassign_adapter_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
++	vfio_ap_mdev_link_queues(matrix_mdev, UNLINK_APID, apid);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -758,6 +850,7 @@ static ssize_t assign_domain_store(struct device *dev,
+ 	if (ret)
+ 		goto share_err;
+ 
++	vfio_ap_mdev_link_queues(matrix_mdev, LINK_APQI, apqi);
+ 	ret = count;
+ 	goto done;
+ 
+@@ -810,6 +903,7 @@ static ssize_t unassign_domain_store(struct device *dev,
+ 
+ 	mutex_lock(&matrix_dev->lock);
+ 	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
++	vfio_ap_mdev_link_queues(matrix_mdev, UNLINK_APQI, apqi);
+ 	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return count;
+@@ -1282,6 +1376,29 @@ void vfio_ap_mdev_unregister(void)
+ 	mdev_unregister_device(&matrix_dev->device);
  }
  
- static u64 perf_calculate_period(struct perf_event *event, u64 nsec, u64 count)
++/**
++ * vfio_ap_queue_link_mdev
++ *
++ * @q: The queue to link with the matrix mdev.
++ *
++ * Links @q with the matrix mdev to which the queue's APQN is assigned.
++ */
++static void vfio_ap_queue_link_mdev(struct vfio_ap_queue *q)
++{
++	unsigned long apid = AP_QID_CARD(q->apqn);
++	unsigned long apqi = AP_QID_QUEUE(q->apqn);
++	struct ap_matrix_mdev *matrix_mdev;
++
++	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
++		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
++		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
++			q->matrix_mdev = matrix_mdev;
++			hash_add(matrix_mdev->qtable, &q->mdev_qnode, q->apqn);
++			break;
++		}
++	}
++}
++
+ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+ {
+ 	struct vfio_ap_queue *q;
+@@ -1290,9 +1407,12 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+ 	if (!q)
+ 		return -ENOMEM;
+ 
++	mutex_lock(&matrix_dev->lock);
+ 	dev_set_drvdata(&queue->ap_dev.device, q);
+ 	q->apqn = queue->qid;
+ 	q->saved_isc = VFIO_AP_ISC_INVALID;
++	vfio_ap_queue_link_mdev(q);
++	mutex_unlock(&matrix_dev->lock);
+ 
+ 	return 0;
+ }
+@@ -1309,6 +1429,8 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
+ 	apqi = AP_QID_QUEUE(q->apqn);
+ 	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+ 	vfio_ap_irq_disable(q);
++	if (q->matrix_mdev)
++		hash_del(&q->mdev_qnode);
+ 	kfree(q);
+ 	mutex_unlock(&matrix_dev->lock);
+ }
+diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+index a2aa05bec718..57da703b549a 100644
+--- a/drivers/s390/crypto/vfio_ap_private.h
++++ b/drivers/s390/crypto/vfio_ap_private.h
+@@ -87,6 +87,7 @@ struct ap_matrix_mdev {
+ 	struct kvm *kvm;
+ 	struct kvm_s390_module_hook pqap_hook;
+ 	struct mdev_device *mdev;
++	DECLARE_HASHTABLE(qtable, 8);
+ };
+ 
+ extern int vfio_ap_mdev_register(void);
+@@ -98,6 +99,7 @@ struct vfio_ap_queue {
+ 	int	apqn;
+ #define VFIO_AP_ISC_INVALID 0xff
+ 	unsigned char saved_isc;
++	struct hlist_node mdev_qnode;
+ };
+ 
+ int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
 -- 
-2.17.1
+2.21.1
 
