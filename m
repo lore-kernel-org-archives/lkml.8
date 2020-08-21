@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41F8C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C22C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B448B20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBA120738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027856;
-	bh=ngB6DdBiJuvmnLavUkZSbxNw6b3Hq4QduT3Hww3mo2E=;
+	s=default; t=1598027863;
+	bh=NCCYA7XQpOw6FN4ph4PoCowNIPY7z9H4bCxnvQuB82E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LDTL5egZq9TvFuQcAtOKCq/WXxk0Lt4bB6fzzfu34yP7RgGF6pwgWpHWQz6WRLu8r
-	 Y579qgwOgq0R55DVYQvrsuVXzftoUq8+d2xqOaz4um+TPg9Tvr/qrUf+am5vvFXRaj
-	 uRGBBOw8gQ1H851jAeXEyRqmKkyRwpJ2YxVnmETA=
+	b=yrjadHZhEnYcN+Akp81I3VuuAFehUgMYzT873qa+4VhMUk2hc1llQVdn8pl3IscxJ
+	 hB71qTzI4LpG2mGNsry8ykavjq8Uyo8wd1Fs38G9g3p8DcDm+LLU6zNrklkIL/ZBpY
+	 ykrmdLWIRz9ftDX70tC9gJVeqTiiGOLiJ2n8F4CY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbgHUQhX (ORCPT
+        id S1728553AbgHUQhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:37:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51510 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:37:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728439AbgHUQVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:21:09 -0400
+        id S1728427AbgHUQVH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:21:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D3D22D0B;
-        Fri, 21 Aug 2020 16:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE18622D6F;
+        Fri, 21 Aug 2020 16:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026817;
-        bh=ngB6DdBiJuvmnLavUkZSbxNw6b3Hq4QduT3Hww3mo2E=;
+        s=default; t=1598026811;
+        bh=NCCYA7XQpOw6FN4ph4PoCowNIPY7z9H4bCxnvQuB82E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eg72yDFgwmWnY4Zp9s7alwKqO7JyIeVZF1tAm64j/1igICfQHg4tiT0Xasv5ZShY/
-         505Te5gJS99DCsRJxwCj8y4RXyRtDkMd4Km38wwsFWYOAJkh0QapTmMaZjeC7qd4aG
-         uBFgHYl08Udx13B5sY+TBPPvH9WP6GD3XfVbiMq8=
+        b=NRI5RI8+qGpWPoJzc4IxraVRld4p7Il20Uz0XolNjESCC4SmJ0arodOAVsLIwFreU
+         eFRyM2LxmM4zXkquXkEFJMtHUbb4CJ7UDhWthJNDpkdDvFeDRt7PQvowoiMsJy3d6i
+         rQNWqUs8O7axTGM4phx5KRCgjvIeZeW1Fpu/q6DY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org,
-        linux-tegra@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 02/22] ASoC: tegra: Fix reference count leaks.
-Date:   Fri, 21 Aug 2020 12:19:54 -0400
-Message-Id: <20200821162014.349506-2-sashal@kernel.org>
+Cc:     Javed Hasan <jhasan@marvell.com>,
+        Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 25/26] scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
+Date:   Fri, 21 Aug 2020 12:19:36 -0400
+Message-Id: <20200821161938.349246-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821162014.349506-1-sashal@kernel.org>
-References: <20200821162014.349506-1-sashal@kernel.org>
+In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
+References: <20200821161938.349246-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,56 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
+[ Upstream commit e95b4789ff4380733006836d28e554dc296b2298 ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+In fcoe_sysfs_fcf_del(), we first deleted the fcf from the list and then
+freed it if ctlr_dev was not NULL. This was causing a memory leak.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Free the fcf even if ctlr_dev is NULL.
+
+Link: https://lore.kernel.org/r/20200729081824.30996-3-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra30_ahub.c | 4 +++-
- sound/soc/tegra/tegra30_i2s.c  | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-index fef3b9a21a667..e441e23a37e4f 100644
---- a/sound/soc/tegra/tegra30_ahub.c
-+++ b/sound/soc/tegra/tegra30_ahub.c
-@@ -656,8 +656,10 @@ static int tegra30_ahub_resume(struct device *dev)
- 	int ret;
+diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+index 3c2f34db937b6..f5f3a8113bc55 100644
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -267,9 +267,9 @@ static void fcoe_sysfs_fcf_del(struct fcoe_fcf *new)
+ 		WARN_ON(!fcf_dev);
+ 		new->fcf_dev = NULL;
+ 		fcoe_fcf_device_delete(fcf_dev);
+-		kfree(new);
+ 		mutex_unlock(&cdev->lock);
+ 	}
++	kfree(new);
+ }
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(ahub->regmap_ahub);
- 	ret |= regcache_sync(ahub->regmap_apbif);
- 	pm_runtime_put(dev);
-diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-index 8e55583aa104e..516f37896092c 100644
---- a/sound/soc/tegra/tegra30_i2s.c
-+++ b/sound/soc/tegra/tegra30_i2s.c
-@@ -552,8 +552,10 @@ static int tegra30_i2s_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(i2s->regmap);
- 	pm_runtime_put(dev);
- 
+ /**
 -- 
 2.25.1
 
