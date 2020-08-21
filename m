@@ -2,141 +2,109 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5810C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A582C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94ABB20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="aScxBX/H"
+	by mail.kernel.org (Postfix) with ESMTP id 503E320658
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728427AbgHURam (ORCPT
+        id S1727907AbgHURfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:30:42 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:37180 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbgHUQOI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:08 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200821161406euoutp01664fad75bc1ef2c335ae075fe7f515b7~tVJYyBmgR2042020420euoutp01O
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 16:14:06 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200821161406euoutp01664fad75bc1ef2c335ae075fe7f515b7~tVJYyBmgR2042020420euoutp01O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598026446;
-        bh=KeqMlAnQDioCCu8vW3lN/TARMJriFxWP6OI28/BAWlA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aScxBX/H9Dp1x6jyam5vwzJDJJr3efXztBr2k+/4S3luCx/mVnzSN2iZ0mbxKpwnf
-         2wFtk4lJkrvg+2kWZYhlNi6DnGECYvV1Ws8OCVyx2fdkC6aR18A/ITSzkd/bmsPy2E
-         p+g1vfFFRKzVt7yFLdAYcVkFxGX5iL3WVM7XeU6I=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200821161406eucas1p2111ed4bdeb3a760d71a878cfd0798d39~tVJYJCXCm1870518705eucas1p2l;
-        Fri, 21 Aug 2020 16:14:06 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id A1.B2.06318.EC2FF3F5; Fri, 21
-        Aug 2020 17:14:06 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0~tVJXtZ90P1823418234eucas1p2h;
-        Fri, 21 Aug 2020 16:14:05 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200821161405eusmtrp1c7883aee9cc58d774fe9cd425768a4ca~tVJXsxwz-1179011790eusmtrp13;
-        Fri, 21 Aug 2020 16:14:05 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-d0-5f3ff2ce3dbb
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id ED.A9.06017.DC2FF3F5; Fri, 21
-        Aug 2020 17:14:05 +0100 (BST)
-Received: from localhost (unknown [106.120.51.46]) by eusmtip1.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200821161405eusmtip1fbfb185c6d98c1845c601bf4c1ed7cdd~tVJXevJ1R1633816338eusmtip1J;
-        Fri, 21 Aug 2020 16:14:05 +0000 (GMT)
-From:   =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Andi Shyti <andi@etezian.org>, Mark Brown <broonie@kernel.org>,
-        linux-spi@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     m.szyprowski@samsung.com, b.zolnierkie@samsung.com,
-        =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH v2 2/9] spi: spi-s3s64xx: Add S3C64XX_SPI_QUIRK_CS_AUTO for
- Exynos3250
-Date:   Fri, 21 Aug 2020 18:13:54 +0200
-Message-Id: <20200821161401.11307-3-l.stelmach@samsung.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200821161401.11307-1-l.stelmach@samsung.com>
+        Fri, 21 Aug 2020 13:35:44 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20504 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgHURfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:35:43 -0400
+IronPort-SDR: Kkic0r1b5R9DXC2Mk/tZEdyOGlR+SXYbjWoW4O6+OuX0bpFORn37NHlm/z/3r/VwGMqPniiIPC
+ MCbDrTttlWCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="154864475"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="154864475"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:35:43 -0700
+IronPort-SDR: klasee6OdksvB3oQshH7S42SYdgGJyZOZcnid5EhxrrFgpCjxmu6F3r4chrX0urt4OvFm5yp7Y
+ +TFHumC6YiSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="498598235"
+Received: from jjakacki-mobl.ger.corp.intel.com (HELO localhost) ([10.252.52.112])
+  by fmsmga005.fm.intel.com with ESMTP; 21 Aug 2020 10:35:37 -0700
+Date:   Fri, 21 Aug 2020 20:35:36 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v36 03/24] x86/mm: x86/sgx: Signal SIGSEGV with PF_SGX
+Message-ID: <20200821173536.GA3559@linux.intel.com>
+References: <20200716135303.276442-1-jarkko.sakkinen@linux.intel.com>
+ <20200716135303.276442-4-jarkko.sakkinen@linux.intel.com>
+ <20200820153114.GA17271@zn.tnic>
 MIME-Version: 1.0
-Organization: Samsung R&D Institute Poland
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29nZOS5nZ5vh2wqFlUGCWihyItEMf4xIMPoTYdnSg5o6ZcdZ
-        U8oblBNvaJJNMfGCyy6rpdPMVJZlJk3zkkkpeEFLDUwzTEvTnUn+e97vubzvAx+JSUy4jIxR
-        JTFqlTJOLhDyzW9+93paFwPDj+inCLp6ZYZHPy014nTJ+JSALpicw+je3icEPWIxINo0+RGn
-        B1rKBXRpbxuPzvgxQtCPOkeJE7sUwzWLmMJUrxMontWkKfIb6pFiyeQaip8X+kcycTHJjNo7
-        4JIwuml1EE+sFFyrHXtApCM9noMcSKB8YcCgQzlISEooA4LMyhqMG34iaF/L5nHDEoKNETN/
-        29L+edpO1CEYmqrFuWEGQb9undhSCaggKKh9ayOcqUIejFvnBVsERmkg97nFhqXUOTD+XbPF
-        8il3aH71Gm1hEXUcvnRsENw6N7hV12TTO1D+0NWfiXMaMXTfnbJ5d1Me8DBzmM/lu0FWY5mt
-        BFBWAj505iMuKBh+9c3ZQ6Uw29Vgx/uhpzh300xu4jQoLvLjvLkIzOUr9s6bB1lXBVsajDoM
-        xhZv7jkIht7peJzVCT59F3MnOEGR+Q7GPYsg+6aEUx+ExwWt9kAZ5M0aUCGS63eU0e8ooP+/
-        qxJh9ciF0bDxUQzro2KuerHKeFajivKKSIg3oc2f1LPetdyM2v5ctiCKRHJH0YolMFyCK5NZ
-        bbwFAYnJnUUn3/dclIgildoURp0QrtbEMawF7SP5cheRT9W3CxIqSpnExDJMIqPeZnmkgywd
-        NYhjB5eMEyWpGcslCdUT189aKcm9G2Ed6f7mtqyxUBkbqu8T+0j9qiYP0RGu9HJYdEkepq06
-        FYDRsoX0kAqiJrl7tHbxyoS7WRWysKY95ojvmZ5Wo/nZF5638/LDvlpOS6GCeOlrQGfClQf2
-        lrUuNN5XpBxISI0NbtKM9cn5bLTyqAemZpX/AEFpOvtFAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsVy+t/xu7pnP9nHG6xcqmyx+MdzJouNM9az
-        Wkx9+ITNov/xa2aL8+c3sFvcPLSC0WLT42usFpd3zWGzmHF+H5NF48eb7BZrj9xld+D2uL7k
-        E7PHplWdbB6bl9R79G1ZxejxeZNcAGuUnk1RfmlJqkJGfnGJrVK0oYWRnqGlhZ6RiaWeobF5
-        rJWRqZK+nU1Kak5mWWqRvl2CXsb2X1dYCxawVSy9t5q9gXEWaxcjJ4eEgInE/tvPmEBsIYGl
-        jBK934HiHEBxKYmVc9MhSoQl/lzrYuti5AIqecoosXPCdnaQBJuAo0T/0hOsIAkRgRlMEk9u
-        TAYbyixQLnFp1nN2kEHCAmESjxbWg4RZBFQldhw+yghi8wpYS9w58J8dYoG8RPvy7WwgNqeA
-        jcTxS02sEPdYS2xbfJkFol5Q4uTMJywgI5kF1CXWzxMCCfMLaEmsabrOArFVXqJ562zmCYxC
-        s5B0zELomIWkagEj8ypGkdTS4tz03GIjveLE3OLSvHS95PzcTYzA2Nt27OeWHYxd74IPMQpw
-        MCrx8P44ZB8vxJpYVlyZe4hRgoNZSYTX6ezpOCHelMTKqtSi/Pii0pzU4kOMpkBvTmSWEk3O
-        B6aFvJJ4Q1NDcwtLQ3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjDp+/Ku9ypme
-        Ch8/lPeWI3bKgYNC3yM2CahPjOw3Ntl54LyBsl//1eX96c6niprOd1/u4W67NP23psz7Bs+A
-        GmXWB53af7mWbKq93b53506rJCluzk2ez/efaTU44vs1+6y0j3J5+/RvWZ83nSoRlXDzesCv
-        eP5p8D6DuDT2jl9B13wb439cUGIpzkg01GIuKk4EAIuL3bjTAgAA
-X-CMS-MailID: 20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0
-References: <20200821161401.11307-1-l.stelmach@samsung.com>
-        <CGME20200821161405eucas1p20aad659cd41bc4f56d5123d3c63394f0@eucas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200820153114.GA17271@zn.tnic>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This and the previous patch fix issues with DMA transfers bigger than
-512 bytes on Exynos3250. Without the patches such transfers fail.
+On Thu, Aug 20, 2020 at 05:31:14PM +0200, Borislav Petkov wrote:
+> On Thu, Jul 16, 2020 at 04:52:42PM +0300, Jarkko Sakkinen wrote:
+> > From: Sean Christopherson <sean.j.christopherson@intel.com>
+> > 
+> > Include SGX bit to the PF error codes and throw SIGSEGV with PF_SGX when
+> > a #PF with SGX set happens.
+> > 
+> > CPU throws a #PF with the SGX set in the event of Enclave Page Cache Map
+> > (EPCM) conflict. The EPCM is a CPU-internal table, which describes the
+> > properties for a enclave page. Enclaves are measured and signed software
+> > entities, which SGX hosts. [1]
+> > 
+> > Although the primary purpose of the EPCM conflict checks  is to prevent
+> > malicious accesses to an enclave, an illegit access can happen also for
+> > legit reasons.
+> > 
+> > All SGX reserved memory, including EPCM is encrypted with a transient key
+> > that does not survive from the power transition. Throwing a SIGSEGV allows
+> > user space software to react when this happens (e.g. recreate the enclave,
+> > which was invalidated).
+> > 
+> > [1] Intel SDM: 36.5.1 Enclave Page Cache Map (EPCM)
+> > 
+> > Acked-by: Jethro Beekman <jethro@fortanix.com>
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/traps.h | 14 ++++++++------
+> >  arch/x86/mm/fault.c          | 13 +++++++++++++
+> >  2 files changed, 21 insertions(+), 6 deletions(-)
+> 
+> Reviewed-by: Borislav Petkov <bp@suse.de>
 
-The vendor kernel for ARTIK5 handles CS in a simmilar way.
+Thank you. Appended to the commit.
 
-Signed-off-by: Łukasz Stelmach <l.stelmach@samsung.com>
----
- drivers/spi/spi-s3c64xx.c | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
 
-diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
-index 26c7cb79cd78..22bf8c75580a 100644
---- a/drivers/spi/spi-s3c64xx.c
-+++ b/drivers/spi/spi-s3c64xx.c
-@@ -1379,6 +1379,7 @@ static struct s3c64xx_spi_port_config exynos4_spi_port_config = {
- 	.tx_st_done	= 25,
- 	.high_speed	= true,
- 	.clk_from_cmu	= true,
-+	.quirks		=  S3C64XX_SPI_QUIRK_CS_AUTO,
- };
- 
- static struct s3c64xx_spi_port_config exynos7_spi_port_config = {
--- 
-2.26.2
-
+/Jarkko
