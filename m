@@ -2,84 +2,129 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6949AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E18C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F084208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598001239;
-	bh=BstpKq0K+UB9fK7IvcmMudc9rC7PhRprOeU+BJfrk8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E2YqEGI+thdM8W7AAlI9Nj2LcGGuPnJsXuGXLvyTHuLuz1cW3xHLc2zYAgcU91T3E
-	 02IUZkUGHtLOVDXDaNUlrYMihQBm5SxTMQUfEcZaJ1BL1J3Qh7QaD9T3QAlzT9GkC6
-	 nTkIR8EqdT+7vVd2NUAVipg3I/H5GCTmMCrHnAR0=
+	by mail.kernel.org (Postfix) with ESMTP id D3EEF20732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:14:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbgHUJN6 (ORCPT
+        id S1728301AbgHUJOF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 05:13:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45740 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 05:14:05 -0400
+Received: from mx.socionext.com ([202.248.49.38]:43523 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725855AbgHUJN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 05:13:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD892087D;
-        Fri, 21 Aug 2020 09:13:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598001237;
-        bh=BstpKq0K+UB9fK7IvcmMudc9rC7PhRprOeU+BJfrk8A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JmD2/2ktTLm+Jp/JqAGW03t9itqYnmFBJuri36WegciTaTnFnn/kSwy5cus76iNDz
-         U7DU7REMGheXUWUiQ+zCg8xd0oNGwwYwEIG1+6FsHsf5Z8LE77B68VivWx1XNzgGC4
-         yOLsulfO8OzhH4hWYyzFKcKx2VL2bIQQqZUn71kE=
-Date:   Fri, 21 Aug 2020 11:14:16 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stable <stable@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 83/92] mfd: dln2: Run event handler loop under
- spinlock
-Message-ID: <20200821091416.GA1894114@kroah.com>
-References: <20200820091537.490965042@linuxfoundation.org>
- <20200820091541.964627271@linuxfoundation.org>
- <20200821072123.GC23823@amd>
- <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
+        id S1725855AbgHUJOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:14:04 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 21 Aug 2020 18:14:02 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 0634C18006E;
+        Fri, 21 Aug 2020 18:14:03 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 21 Aug 2020 18:14:03 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id BBB8B1A0508;
+        Fri, 21 Aug 2020 18:14:02 +0900 (JST)
+Received: from [10.212.1.43] (unknown [10.212.1.43])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 30198120137;
+        Fri, 21 Aug 2020 18:14:02 +0900 (JST)
+Subject: Re: [PATCH] dma-buf: heaps: Introduce dma_heap_add_cma() for
+ non-default CMA heap
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        linux-media@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <1594948208-4739-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <CALAqxLXuJQOCXcpyWwyBFZGFK_dEgG0edEEf2=vOpAw6Ng8mBQ@mail.gmail.com>
+ <eacfc713-e98a-78fa-b316-3943600813d0@socionext.com>
+ <CALAqxLVzUnc5CH_pA7h3ygXFPRz05KtNZx+_M3eAXXrm7hhGBQ@mail.gmail.com>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <377e6e65-0b44-ecd0-cfc5-6fbc82be35d5@socionext.com>
+Date:   Fri, 21 Aug 2020 18:14:01 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vcbmc-PV-gQxuj9i8sAcFCzhJKe_qzEfrkUTZbnf3Vupg@mail.gmail.com>
+In-Reply-To: <CALAqxLVzUnc5CH_pA7h3ygXFPRz05KtNZx+_M3eAXXrm7hhGBQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 12:06:45PM +0300, Andy Shevchenko wrote:
-> On Fri, Aug 21, 2020 at 10:26 AM Pavel Machek <pavel@denx.de> wrote:
-> > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > >
-> > > [ Upstream commit 3d858942250820b9adc35f963a257481d6d4c81d ]
-> > >
-> > > The event handler loop must be run with interrupts disabled.
-> > > Otherwise we will have a warning:
-> > ...
-> > > Recently xHCI driver switched to tasklets in the commit 36dc01657b49
-> > > ("usb: host: xhci: Support running urb giveback in tasklet
-> > > context").
-> >
-> > AFAICT, 36dc01657b49 is not included in 4.19.141, so this commit
-> > should not be needed, either.
+On 2020/08/01 4:38, John Stultz wrote:
+> On Fri, Jul 31, 2020 at 2:32 AM Kunihiko Hayashi
+> <hayashi.kunihiko@socionext.com> wrote:
+>> On 2020/07/29 4:17, John Stultz wrote:
+>>> Do you have a upstream driver that you plan to make use this new call?
+>>
+>> Unfortunately I don't have an upstream driver using this call.
+>>
+>> This call is called from dma-buf heaps "importer" or "customer",
+>> and I only made an example (do nothing) importer driver
+>> to test the call.
+>>
+>>> We want to have in-tree users of code added.
+>>
+>> I think this is a generic way to use non-default CMA heaps, however,
+>> we need in-tree "importer" drivers to want to use non-default CMA heaps.
+>> I don't find it from now.
+>>
 > 
-> I'm wondering if there are any other USB host controller drivers that
-> use URB giveback in interrupt enabled context.
+> Yea, I and again, I do agree this is functionality that will be
+> needed. But we'll need to wait for a user (camera driver, etc which
+> would utilize the reserved cma region) before we can merge it
+> upstream. :(  Do let me know if you have an out of tree driver that
+> would make use of it, and we can see what can be done to help upstream
+> things.
 
-Almost all do.
+Sorry for late.
+Before I prepare or find a user driver as "importer",
+I think something is different in this patch.
+
+This patch makes it possible to treat non-default CMA connected to
+"importer" device with memory-region as dma-buf heaps.
+
+However, the allocated memory from this dma-buf heaps can be used
+for "any" devices, and the "importer" can treat memories from other
+dma-buf heaps.
+
+So, the "importer" and the non-default CMA aren't directly related,
+and I think an "exporter" for the non-default CMA should be enabled.
+
+In paticular, the kernel initializer (as an "exporter") calls
+dma_heap_add_cma() for all CMAs defined in Devicetree, and
+the device files associated with each CMA appear under "/dev/dma_heap/".
+For example:
+
+    /dev/dma_heap/linux,cma@10000000
+    /dev/dma_heap/linux,cma@11000000
+    /dev/dma_heap/linux,cma@12000000
+    ...
+
+All of these device files can be fairly allocated to any "importer" device.
+
+Actually I think that the kernel should executes dma_heap_add_cma()
+for ALL defined reserved-memory nodes.
+
+If this idea hasn't been discussed yet and this is reasonable,
+I'll prepare RFC patches.
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
