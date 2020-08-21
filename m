@@ -2,100 +2,138 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B5C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF0AE207DE
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73E4D207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:06:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLiNQhzz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQeLM2ab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgHUQFl (ORCPT
+        id S1726504AbgHUQGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:05:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59272 "EHLO
+        Fri, 21 Aug 2020 12:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbgHUQFh (ORCPT
+        with ESMTP id S1726548AbgHUQFn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:05:37 -0400
-Received: from mail-oi1-x243.google.com (mail-oi1-x243.google.com [IPv6:2607:f8b0:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F69C061573;
-        Fri, 21 Aug 2020 09:05:37 -0700 (PDT)
-Received: by mail-oi1-x243.google.com with SMTP id o21so1909308oie.12;
-        Fri, 21 Aug 2020 09:05:37 -0700 (PDT)
+        Fri, 21 Aug 2020 12:05:43 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 048E3C061573;
+        Fri, 21 Aug 2020 09:05:43 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so1298576pfn.0;
+        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=BcOLS+QuONeHD3ULxAD7chhfzxFLcz1amouLJKxi+4E=;
-        b=CLiNQhzzfkl8UaGxUU332gsocXd65bcriw/vgAe+SQvAOTIvOkdx/DGINT/3KQ6l4N
-         UE4E8YfqEVIbBoMpZGeo7ZOvqBaB9pLGk7CqMotD8E/Ss1ypE1fcy4MehY5zzxSnDqkC
-         gx58nceVEBx4K+pdI2iTotzuMpQWUvNaRQxFhLyVVRyOrFkL4yuZroV4dhghrNC2Awy8
-         wf2zPHOTnP9RYilhVHYYVnUzZbNrHhPuyrM8+S4qafxNUIzwcWVS59n7XrnVtXFOHDB8
-         SEeniXIZvPbiD9fiBRl5bBbTs76WkX4zfKD7JEmDB7TNtMTjuWA8WeWJ9Ro8J35XHzu/
-         S5QA==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=wapcx/5Vbh5G639AQDnOiyGrJZXaNQ8MTw86eBzSth4=;
+        b=TQeLM2abya+0luxj7HKY8kjrGpvsQOQb7hLsKu7wcSQ53pUVeHHBqDWbwhLpWqyCQo
+         2Hcyhj+QSe126y2yZWjYu2bxy+OXc6TG6xZd4dPFlk2d06V05bkGqBXUjQz1zcyJk/DP
+         651R54ipy9IstrkDRDpsqxm6PXlTD+1LxtS4CCEqaBQ4XR3ePQUtfIaDtR9UIJr8Do3A
+         exbBJDmjDT4lfc5HjXehWx2SApo9psgKlC78TsTh7KBv81soMzOKrKf3ikGKmc6msDAl
+         h+gYub/StWGMQSLC4a0Gdg+P6AW3PZrBA9uOaFSLhFSL/QEEZvclEg4V3SZiTawYiy2B
+         AC2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BcOLS+QuONeHD3ULxAD7chhfzxFLcz1amouLJKxi+4E=;
-        b=XYchesj05xtkDB4IJnjsuDozeFyLSt7DWVg8jI1V9PnDbRAubn2+b84ZH48KjwR+ri
-         Wbyv2ngSCUzk/N8lmxNMqrwOjLGYwANxoKmI65WVBr2AJxura4NBSydNtqUz4Q2IaoDd
-         iwBfoF5yakbuz5m+34FyeMnNU+im6v/7FL2vJGSHIRhdnAbG//ZvGevGsdTDmEThJZoR
-         DTj86RqgYgFNUwbU1N4RIAHLGOvp46CaUvqxvvD/9tBwE91hhXAJ3powM00ZHfIS4Fse
-         nMSzfwzASVOTNowXIHxtWcv5cDmB6Bnbz2b1NxlAKrFvM5HGVo/aH9H/n92ByTB4YQKA
-         2gEQ==
-X-Gm-Message-State: AOAM531VcQt5BSirqF894s7nB38EUglnyBaUCOWygmq5SS/GiXNVcy7g
-        XX6FgbXJQwdhFdatkXndR78=
-X-Google-Smtp-Source: ABdhPJzSkgdfxS9dyh3gPvKo0mml6TPmUNJQAExx4dRCzuO1vCfiWKeQ2N+xAcTWp7uzCJ50SkL7/A==
-X-Received: by 2002:aca:2304:: with SMTP id e4mr2225683oie.1.1598025935729;
-        Fri, 21 Aug 2020 09:05:35 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:284:8202:10b0:a888:bc35:d7d6:9aca])
-        by smtp.googlemail.com with ESMTPSA id t1sm494307ooi.27.2020.08.21.09.05.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 09:05:35 -0700 (PDT)
-Subject: Re: general protection fault in fib_dump_info (2)
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        syzbot <syzbot+a61aa19b0c14c8770bd9@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuba@kernel.org, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-References: <00000000000039b10005ad64df20@google.com>
- <47e92c2b-c9c5-4c74-70c4-103e70e91630@cumulusnetworks.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <6184a09e-04ee-f7f0-81b0-de405b6188ae@gmail.com>
-Date:   Fri, 21 Aug 2020 10:05:16 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=wapcx/5Vbh5G639AQDnOiyGrJZXaNQ8MTw86eBzSth4=;
+        b=cboC4WAqR5fNzDib+4WFue9QkX+9bnjC9PI1HuJq7nigd+eu2CARPxv/rxxlgjO0kO
+         eVQ7FSYOkDre0BbRr3jiLijCYwxwX15Mlz8s5EseCuXrsck8825pizL92HiLmzG9fKg4
+         zxCv/I6yVsza9eskSmAhQjpqfouI4Sy8XgksBoanI4ezAWT2jWyxttWs6twsm4RpxLmn
+         S5KWfdok0EzBAKe5N9L3Wo9kCqyGHZ2iNAQ3aC7SJyJVcqyrAx2/tOzk+ck6/bSluzXs
+         Pa06WhhRxk4K7MBiZ8J3mNS5QEAh2fgpFdq5l4ITnefWLNDzmhQSTe9JLlwi1ns08/8l
+         pV5Q==
+X-Gm-Message-State: AOAM530lJDHMxAX8a1Yu2RxVLoJ99vCS1DPXd300FJmsI1QIgYDoQwBn
+        G1/y8F5Jwn1cZQ3RGUdXOgY=
+X-Google-Smtp-Source: ABdhPJx/NdttpYzCAL4MKwJ9Rj5q/al1KK3HvjwJptRJw92UrEyk3IkxiX8LfzHQNcRQgmFKRKonmw==
+X-Received: by 2002:a63:5c8:: with SMTP id 191mr2708428pgf.244.1598025942564;
+        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
+Received: from localhost (61-68-212-105.tpgi.com.au. [61.68.212.105])
+        by smtp.gmail.com with ESMTPSA id e26sm2920498pfj.197.2020.08.21.09.05.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 09:05:42 -0700 (PDT)
+Date:   Sat, 22 Aug 2020 02:05:35 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v6 11/12] mm/vmalloc: Hugepage vmalloc mappings
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Eric Dumazet <eric.dumazet@gmail.com>, linux-mm@kvack.org
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>
+References: <20200821151216.1005117-1-npiggin@gmail.com>
+        <20200821151216.1005117-12-npiggin@gmail.com>
+        <1e001c2c-6c47-21a9-e920-caf78933b713@gmail.com>
+In-Reply-To: <1e001c2c-6c47-21a9-e920-caf78933b713@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <47e92c2b-c9c5-4c74-70c4-103e70e91630@cumulusnetworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Message-Id: <1598025275.jd6s9py77x.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/21/20 10:00 AM, Nikolay Aleksandrov wrote:
-> 
-> This seems like a much older bug to me, the code allows to pass 0 groups
-> and
-> thus we end up without any nh_grp_entry pointers. I reproduced it with a
-> modified iproute2 that sends an empty NHA_GROUP and then just uses the new
-> nexthop in any way (e.g. add a route with it). This is the same bug as the
-> earlier report for: "general protection fault in fib_check_nexthop"
+Excerpts from Eric Dumazet's message of August 22, 2020 1:38 am:
+>=20
+> On 8/21/20 8:12 AM, Nicholas Piggin wrote:
+>> Support huge page vmalloc mappings. Config option HAVE_ARCH_HUGE_VMALLOC
+>> enables support on architectures that define HAVE_ARCH_HUGE_VMAP and
+>> supports PMD sized vmap mappings.
+>>=20
+>> vmalloc will attempt to allocate PMD-sized pages if allocating PMD size =
+or
+>> larger, and fall back to small pages if that was unsuccessful.
+>>=20
+>> Allocations that do not use PAGE_KERNEL prot are not permitted to use hu=
+ge
+>> pages, because not all callers expect this (e.g., module allocations vs
+>> strict module rwx).
+>>=20
+>> This reduces TLB misses by nearly 30x on a `git diff` workload on a 2-no=
+de
+>> POWER9 (59,800 -> 2,100) and reduces CPU cycles by 0.54%.
+>>=20
+>> This can result in more internal fragmentation and memory overhead for a
+>> given allocation, an option nohugevmalloc is added to disable at boot.
+>>=20
+>>
+>=20
+> Thanks for working on this stuff, I tried something similar in the past,
+> but could not really do more than a hack.
+> ( https://lkml.org/lkml/2016/12/21/285 )
 
-hmmm.... empty NHA_GROUP should not be allowed.
+Oh nice. It might be possible to do some ideas from your patch
+still. Higher order pages smaller than PMD size, or the memory
+policy stuff, perhaps.
 
-> 
-> I have a patch but I'll be able to send it tomorrow.
-> 
+> Note that __init alloc_large_system_hash() is used at boot time,
+> when NUMA policy is spreading allocations over all NUMA nodes.
+>=20
+> This means that on a dual node system, a hash table should be 50/50 sprea=
+d.
+>=20
+> With your patch, if a hashtable is exactly the size of one huge page,
+> the location of this hashtable will be not balanced, this might have some
+> unwanted impact.
 
-thanks.
+In that case it shouldn't because it divides by the number of nodes,
+but it will in general have a bit larger granularity in balancing than
+smaller pages of course.
+
+There's probably a better way to size these important hashes on NUMA. I
+suspect most of the time you have a NUMA machine you actually would
+prefer to use large pages now, even if it means taking up to 2MB more
+memory per node per hash. It's not a great amount and the allocation=20
+size is rather arbitrary anyway.
+
+Thanks,
+Nick
