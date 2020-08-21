@@ -2,119 +2,212 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21B6C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B54C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A132520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598027095;
-	bh=fjmDARNuO3p8EyzzMXvS56Vf8PfN9ySp3dmgUpJE0JM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ryl2aOAPm0sKC+ahraCWLCbI4h4fBOYmE+v6bU+x0wGYu2mjLZ6sCJ0TJua/KbQhO
-	 R7KGyk76F69PAj8scXRexR2UAN9h4vtsB0gu5/zABHOKkgpQMHaR5AjRZViO48no7c
-	 1smKoPeMMuA9ZpzlkjfhyhZ9YqqQ1MSIWrJV9jME=
+	by mail.kernel.org (Postfix) with ESMTP id 878BE20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:25:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ji/pjQgi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgHUQYx (ORCPT
+        id S1728629AbgHUQZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:24:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728464AbgHUQVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:25:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728461AbgHUQVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:21:35 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8514C22CB2;
-        Fri, 21 Aug 2020 16:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026840;
-        bh=fjmDARNuO3p8EyzzMXvS56Vf8PfN9ySp3dmgUpJE0JM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFjBd3vP1hSL0XaIqJ6HR5/8frFgrZQTXmpIWz7Pmc57EpOFsEEHR7hY0KcdP++L2
-         iZSkCqOO8t0Db5fiQxgAuMfevg0uMOrMfMZHx4pMgGQ7NZt4EDt+VIjnUJd4H1VSZJ
-         ylrOm0B6hZd/q7o5yiCAIzVp+ha5Z++fyAOaTxlQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 20/22] ceph: fix potential mdsc use-after-free crash
-Date:   Fri, 21 Aug 2020 12:20:12 -0400
-Message-Id: <20200821162014.349506-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821162014.349506-1-sashal@kernel.org>
-References: <20200821162014.349506-1-sashal@kernel.org>
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C5BC061575
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:21:34 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id i20so538720vkk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iGVeXcDNIvRh8qe1/2584zUekwk8kU52P/kL+vHcf2k=;
+        b=ji/pjQgi0VxnFeZYwxWaAiU3Vrdf06GkDeZC3JB6loVzhqamPN5JMsYieQFYBj+3Hs
+         RRMOMqC+TMGPyGgOCEATA58h94MWiPeiQ9FnjYMnyoQUWXUYZPf695EN+xYx3AByv4VK
+         FbbkbmdO6zYhfUZA/5SYL+2bQZsgrKE4dMatvE5VFheBFxOflx+OiHVhpv+3/vD9FM5d
+         lz6M9HKQF2YAr5n36Fpm8ms16IEdEad2ElYT/2l9s1tqeLOLwdRl92zVYYaRl+nuXuSV
+         nneuRiGvNTnJeyahLdH3sk2yW+WvyrX/bwp/cV6cPZPjf4cqujMn2b3IYW44kLPCnFsl
+         61uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iGVeXcDNIvRh8qe1/2584zUekwk8kU52P/kL+vHcf2k=;
+        b=FYHsvRolPJe8sgVDo4beREpDXjDQkAxjUwA5nR/p4qZ3mX4/YW7rtFjTB+RtKpw6VY
+         Mz51v0hX1ZRfcLXw4YzmRhnzVttJ5p29filfs00aUrGMA6PBmOt3nfApKnmoqe+tpE7X
+         6GfSZn2KmaOxCMYhjBOLwB82OtQ8WWGJHHUE2vCL9pO3eHafK3eMIpSWy3CtIvRzHUZo
+         mxt/twFsm6Hkk+Kuv6w+W2D2brPQHG4tSwNuaeB1aZ7n+q1/R3UykWNO5Vp9Z+fCBC8M
+         UIoOPIoc5/CXFov0D2DVt909cIB35wk/WdPCcekMMeIOSkdXmssgwxCE4jxLLhhGa3oO
+         nQXA==
+X-Gm-Message-State: AOAM5337tc8iJ6iMxpPqsM7ycLdNVGNbvAOk3gmTfmQ7vk0xhhURocJq
+        OkIpyK1tStwmiC9nsMBkoXsBZLlqRwZm+5QQP8RIVQ==
+X-Google-Smtp-Source: ABdhPJxiNdxtxxUKYT6rb+L9FRF6H2nEkJ4ZpJqNK6OBdBlc8q4YCCspNRYmFOTVAEB0DjVNW5ZROnJK1ZJOdt8kd9k=
+X-Received: by 2002:a1f:2fc1:: with SMTP id v184mr2425414vkv.42.1598026893599;
+ Fri, 21 Aug 2020 09:21:33 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200820091612.692383444@linuxfoundation.org> <CA+G9fYtebf78TH-XpqArunHc1L6s9mHdLEbpY1EY9tSyDjp=sg@mail.gmail.com>
+ <20200821111535.GC2222852@kroah.com>
+In-Reply-To: <20200821111535.GC2222852@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 21 Aug 2020 21:51:22 +0530
+Message-ID: <CA+G9fYvc2tqXf7ownJ=HMsVz+uuigqZJXJmjMSWCzO_-ODk1fQ@mail.gmail.com>
+Subject: Re: [PATCH 5.8 000/232] 5.8.3-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        LTP List <ltp@lists.linux.it>,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        Eric Biggers <ebiggers@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+On Fri, 21 Aug 2020 at 16:45, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Aug 20, 2020 at 08:57:57PM +0530, Naresh Kamboju wrote:
+> > On Thu, 20 Aug 2020 at 14:55, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > This is the start of the stable review cycle for the 5.8.3 release.
+> > > There are 232 patches in this series, all will be posted as a respons=
+e
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >
+> > > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> > > Anything received after that time might be too late.
+> > >
+> > > The whole patch series can be found in one patch at:
+> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/pa=
+tch-5.8.3-rc1.gz
+> > > or in the git tree and branch at:
+> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
+able-rc.git linux-5.8.y
+> > > and the diffstat can be found below.
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> >
+> > > Herbert Xu <herbert@gondor.apana.org.au>
+> > >     crypto: af_alg - Fix regression on empty requests
+> >
+> > Results from Linaro=E2=80=99s test farm.
+> > Regressions detected.
+> >
+> >   ltp-crypto-tests:
+> >     * af_alg02
+> >   ltp-cve-tests:
+> >     * cve-2017-17805
+> >
+> > af_alg02.c:52: BROK: Timed out while reading from request socket.
+> > We are running the LTP 20200515 tag released test suite.
+> >  https://github.com/linux-test-project/ltp/blob/master/testcases/kernel=
+/crypto/af_alg02.c
+>
+> Looks like the crypto tests are now fixed :)
+>
+> Anyway, thanks for testing all of these and letting me know.
 
-[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
+Apart from the reported LTP crypto test case problem all other results
+look good to me.
 
-Make sure the delayed work stopped before releasing the resources.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-cancel_delayed_work_sync() will only guarantee that the work finishes
-executing if the work is already in the ->worklist.  That means after
-the cancel_delayed_work_sync() returns, it will leave the work requeued
-if it was rearmed at the end. That can lead to a use after free once the
-work struct is freed.
+Summary
+------------------------------------------------------------------------
 
-Fix it by flushing the delayed work instead of trying to cancel it, and
-ensure that the work doesn't rearm if the mdsc is stopping.
+kernel: 5.8.3
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.8.y
+git commit: a1101e94767e2d5da5bcbee12573d96a1c8be5bb
+git describe: v5.8.3
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.8-oe/bui=
+ld/v5.8.3
 
-URL: https://tracker.ceph.com/issues/46293
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ceph/mds_client.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+No regressions (compared to build v5.8.2)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index a5de8e22629ba..b7fd7d69be075 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3428,6 +3428,9 @@ static void delayed_work(struct work_struct *work)
- 	dout("mdsc delayed_work\n");
- 	ceph_check_delayed_caps(mdsc);
- 
-+	if (mdsc->stopping)
-+		return;
-+
- 	mutex_lock(&mdsc->mutex);
- 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
- 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
-@@ -3752,7 +3755,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
- static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
- {
- 	dout("stop\n");
--	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
-+	/*
-+	 * Make sure the delayed work stopped before releasing
-+	 * the resources.
-+	 *
-+	 * Because the cancel_delayed_work_sync() will only
-+	 * guarantee that the work finishes executing. But the
-+	 * delayed work will re-arm itself again after that.
-+	 */
-+	flush_delayed_work(&mdsc->delayed_work);
-+
- 	if (mdsc->mdsmap)
- 		ceph_mdsmap_destroy(mdsc->mdsmap);
- 	kfree(mdsc->sessions);
--- 
-2.25.1
+No fixes (compared to build v5.8.2)
 
+Ran 30256 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* linux-log-parser
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-io-tests
+* ltp-math-tests
+* ltp-tracing-tests
+* ltp-cve-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* v4l2-compliance
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-hugetlb-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-open-posix-tests
+* ltp-sched-tests
+* network-basic-tests
+* igt-gpu-tools
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
