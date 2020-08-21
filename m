@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9F0C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDFDC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00D302075E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E5742075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030141;
-	bh=GWXXzB5dOe5LzjCmmQyVZuCFOLpd7KoXrQkTgZPh64Q=;
+	s=default; t=1598030142;
+	bh=kUUMVdgT45uJdGw+zhIXwUip0kwyWnX0AKsICuuCKk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GLIuZnbl50rUstpXE6HdoA4Hp3GIiOIAIuo446tgv8foB8AHR1Dmh4Yl8XBmkE+j+
-	 K+aDSoj3Z/smnLXwSXin9n55kdI77E6jc2TUkoB+mYnarNwyS84ntqTrw27OklQzEb
-	 iA8jYm0mvPa2/evGGmwLBy1Xc7rz5/rQwKn7zRIQ=
+	b=FV5GW0/Am0X53JukIGI4ZcM5wLV91mE55h2j+jllTWBTf4Z7nL3GW9LBuntgIo2fn
+	 lqEyc7TMuCb2pVgK9107JHr4iMIobUoGjJDl2E2qDd+kqMATCKmztu+2E3Q5yAdsNn
+	 Y3z1QiCKi6oXyRpD2gu12yI72BhcvNiOEKPqTkJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728886AbgHURPj (ORCPT
+        id S1728828AbgHURPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50170 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727880AbgHUQQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:42 -0400
+        id S1728107AbgHUQQk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A90122BEF;
-        Fri, 21 Aug 2020 16:16:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BDF22B4D;
+        Fri, 21 Aug 2020 16:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026601;
-        bh=GWXXzB5dOe5LzjCmmQyVZuCFOLpd7KoXrQkTgZPh64Q=;
+        s=default; t=1598026600;
+        bh=kUUMVdgT45uJdGw+zhIXwUip0kwyWnX0AKsICuuCKk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ucZlJ+N8x0LMUZADAdk6ZCQAVRe4Ak95nnAfMBkY9cG8t8RCF1T+Dhbp+JM4nuonm
-         xnED7VJUxGCTf5jUnZ7xerZLJffdgZBh5uIQ49EH42HcbBoE+8f0gx9llSd2dQiI6l
-         7c/FvH5R7PhDNWKx//leHe8rEwCJZKhv0br4kv7w=
+        b=UapiBpLZFQHbJ3Y4zcGRc1xFQfeG+s/RUQUo2gcr+e+hWS5LzEg4bOcDPRIkfEnvm
+         lspOlB3blV/lrZr2QHUZ5Lv7rmL4r17I+9MSiZJj2Q0PEqV+fyIUkUgu389BDZXGgr
+         FZ2iBlHsUKwydfzricSzKtAgkUNJTihv/8QIZN50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.7 44/61] ASoC: Intel: sof_sdw_rt711: remove properties in card remove
-Date:   Fri, 21 Aug 2020 12:15:28 -0400
-Message-Id: <20200821161545.347622-44-sashal@kernel.org>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 43/61] cec-api: prevent leaking memory through hole in structure
+Date:   Fri, 21 Aug 2020 12:15:27 -0400
+Message-Id: <20200821161545.347622-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -61,87 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit cf0418cd06ce42fcf35beb33e315b5a77e596926 ]
+[ Upstream commit 6c42227c3467549ddc65efe99c869021d2f4a570 ]
 
-The rt711 jack detection properties are set from the machine drivers
-during the card probe, as done in other ASoC examples.
+Fix this smatch warning:
 
-KASAN reports a use-after-free error when unbinding drivers due to a
-confusing sequence between the ACPI core, the device core and the
-SoundWire device cleanups.
+drivers/media/cec/core/cec-api.c:156 cec_adap_g_log_addrs() warn: check that 'log_addrs' doesn't leak information (struct has a hole after
+'features')
 
-Rather than fixing this sequence, follow the recommendation to have
-the same caller add and remove properties, add an explicit
-device_remove_properties() in the card .remove() callback.
-
-In future patches the use of device_add/remove_properties will be
-replaced by a direct handling of a swnode, but the sequence will
-remain the same.
-
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Link: https://lore.kernel.org/r/20200717211337.31956-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/sof_sdw.c        |  1 +
- sound/soc/intel/boards/sof_sdw_common.h |  1 +
- sound/soc/intel/boards/sof_sdw_rt711.c  | 15 +++++++++++++++
- 3 files changed, 17 insertions(+)
+ drivers/media/cec/cec-api.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/intel/boards/sof_sdw.c b/sound/soc/intel/boards/sof_sdw.c
-index 61b5bced29b7e..9f01eb224d615 100644
---- a/sound/soc/intel/boards/sof_sdw.c
-+++ b/sound/soc/intel/boards/sof_sdw.c
-@@ -184,6 +184,7 @@ static struct sof_sdw_codec_info codec_info_list[] = {
- 		.direction = {true, true},
- 		.dai_name = "rt711-aif1",
- 		.init = sof_sdw_rt711_init,
-+		.exit = sof_sdw_rt711_exit,
- 	},
- 	{
- 		.id = 0x1308,
-diff --git a/sound/soc/intel/boards/sof_sdw_common.h b/sound/soc/intel/boards/sof_sdw_common.h
-index dd593ff3575b5..b9c9c974b6142 100644
---- a/sound/soc/intel/boards/sof_sdw_common.h
-+++ b/sound/soc/intel/boards/sof_sdw_common.h
-@@ -84,6 +84,7 @@ int sof_sdw_rt711_init(const struct snd_soc_acpi_link_adr *link,
- 		       struct snd_soc_dai_link *dai_links,
- 		       struct sof_sdw_codec_info *info,
- 		       bool playback);
-+int sof_sdw_rt711_exit(struct device *dev, struct snd_soc_dai_link *dai_link);
+diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
+index 17d1cb2e5f976..f922a2196b2b7 100644
+--- a/drivers/media/cec/cec-api.c
++++ b/drivers/media/cec/cec-api.c
+@@ -147,7 +147,13 @@ static long cec_adap_g_log_addrs(struct cec_adapter *adap,
+ 	struct cec_log_addrs log_addrs;
  
- /* RT700 support */
- int sof_sdw_rt700_init(const struct snd_soc_acpi_link_adr *link,
-diff --git a/sound/soc/intel/boards/sof_sdw_rt711.c b/sound/soc/intel/boards/sof_sdw_rt711.c
-index 2a4917e3d5614..35be804479caf 100644
---- a/sound/soc/intel/boards/sof_sdw_rt711.c
-+++ b/sound/soc/intel/boards/sof_sdw_rt711.c
-@@ -132,6 +132,21 @@ static int rt711_rtd_init(struct snd_soc_pcm_runtime *rtd)
- 	return ret;
- }
- 
-+int sof_sdw_rt711_exit(struct device *dev, struct snd_soc_dai_link *dai_link)
-+{
-+	struct device *sdw_dev;
-+
-+	sdw_dev = bus_find_device_by_name(&sdw_bus_type, NULL,
-+					  dai_link->codecs[0].name);
-+	if (!sdw_dev)
-+		return -EINVAL;
-+
-+	device_remove_properties(sdw_dev);
-+	put_device(sdw_dev);
-+
-+	return 0;
-+}
-+
- int sof_sdw_rt711_init(const struct snd_soc_acpi_link_adr *link,
- 		       struct snd_soc_dai_link *dai_links,
- 		       struct sof_sdw_codec_info *info,
+ 	mutex_lock(&adap->lock);
+-	log_addrs = adap->log_addrs;
++	/*
++	 * We use memcpy here instead of assignment since there is a
++	 * hole at the end of struct cec_log_addrs that an assignment
++	 * might ignore. So when we do copy_to_user() we could leak
++	 * one byte of memory.
++	 */
++	memcpy(&log_addrs, &adap->log_addrs, sizeof(log_addrs));
+ 	if (!adap->is_configured)
+ 		memset(log_addrs.log_addr, CEC_LOG_ADDR_INVALID,
+ 		       sizeof(log_addrs.log_addr));
 -- 
 2.25.1
 
