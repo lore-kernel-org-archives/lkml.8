@@ -5,60 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D245C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A85C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ADDC20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8388022BEB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lFDRLu/z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kpv2Q00u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgHUHSA (ORCPT
+        id S1728257AbgHUHSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        Fri, 21 Aug 2020 03:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbgHUHRf (ORCPT
+        with ESMTP id S1728110AbgHUHRV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:17:35 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA50EC061363
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:09 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id t14so825254wmi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:09 -0700 (PDT)
+        Fri, 21 Aug 2020 03:17:21 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E080CC061345
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:04 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id u18so829390wmc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=R1IXIaJwBVwWNcurZZnrk/N/PocscpFlNi1T2hgjOyE=;
-        b=lFDRLu/zcyf4hbmckt7lqVi6V3P0yLBvPW+LRjvyXB3Ko0P2bH6UYA5+veGuOE/tgN
-         lIyuTYTUuTwIEvFv+qtX/eTLAioT4CNre54eXgrh13hckcWrJSjVJeBtK6OdMLtCbhgc
-         Hq+S3wgc0FAN94y6W+z8bFEFdAhtc70B+3+lOSD3JyWJ0jjq6jTTbLJzRPDkhqxEvHiC
-         6JWbPGefBcniOGWMCcZN0Xwg0M8jRBRFqakFrmQe1RS14P72SqqOP8N5mfCWIbzztYAf
-         gLEPk2DpnbH8caK1gNSC7Hj4Ex9XjLxZRGVaI7AUf1u5mrWq/lBx1kkVhAVkG+ERS2ON
-         DyLg==
+        bh=JbF/Bt72HU4m6OYVeSeKpZw8pWXT/9Iw9CWWcKFsT/g=;
+        b=kpv2Q00uO7NGh/BvYU2qonjtQ/aePbdc1Hykhk6pb1/zUo0Bj8FwG708OXpgzr9lVx
+         GuLxkUWDbeYF9wbSAT5mW9gbgb60Y45u3VU108r11X+vl4X4ejmI4scPI1k2gADQAjJz
+         6vhdT3+s19sDSUpDu6Q1NuaJO4RCpzAAh6wbK/PZZvlDsiChDNUhQq0N1W77DlvQIPYG
+         NWF3RV8c6BnW+zmLcstXRHP5zNQY74YxLj+xNCI7WZ6+2me9OMPRQsUDQ4W6GwwbIXRX
+         229s8nZlKysmHfOmwe0AYd3+qRrOgP9zhfy2dzlbvFkd0tQEp/6QSaNUNPKPMjBfou1T
+         pgpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=R1IXIaJwBVwWNcurZZnrk/N/PocscpFlNi1T2hgjOyE=;
-        b=KccLu1eqNBdkv6oEoo1USHN9jidMAn+7+JXw+ub51wh+WYVAcKTakcCPd0WCv2CDjH
-         mGmyOgaReaQYtnAFL3N3a1fbS9j9zXpAKbr/CiLFwk1AaUPKdsX9yoiVlVcIkt+gqvVB
-         uUYE8BRpO+zMNRZGL2EzxhKQwPjHZzu6Pi07EMN/bIrrhccZzNBJDbK8XEAvH2PrGMP6
-         DZkBP7qwXN6xn0G2FGZ965kRgcMZATwpoCM1d/phisDAH08Rqa6u9QE7G3oZT3obgzxr
-         o/PspEJUGe4tIj+LiELIcpQaV18ZrjUe6yGaD+trDfot9YCdNks37aunjQNbV6AUu2Q2
-         Xc2Q==
-X-Gm-Message-State: AOAM533Pq4w9gGItENOdi0Ol5gyjEYCQtfx0mQuzlZLQ8zwDthSs8WNZ
-        iIogHgPLOPDu4Nv+fTpPIE52NA==
-X-Google-Smtp-Source: ABdhPJzc1nH9oB//UN5dXOr4zo/2EzEx9absn1q4olNZEN+A+7zl3CEgptWmTPAbHiwqfGU7ghvzjw==
-X-Received: by 2002:a7b:c219:: with SMTP id x25mr2293147wmi.101.1597994228439;
-        Fri, 21 Aug 2020 00:17:08 -0700 (PDT)
+        bh=JbF/Bt72HU4m6OYVeSeKpZw8pWXT/9Iw9CWWcKFsT/g=;
+        b=uJt+X7eCJqvjafGg038ewS4191Lm2DlZYkspWMZD4203JLa9LXlJKoiml0lUM5iyga
+         t6JvdzQ6CBV+NeNHsfKCmKH9mzyZIdtK4pI95k2hyK7lgWsO31l7GLKmJRUMwiQITiqu
+         wULr0RWdyLIW/z/uhV8RRYbmlatgSmrjvE8er+ZRqst/lfy63vdPiuXgbexs2rmQ4eXX
+         Z8csKgXASPHbVodqi+hg8O5aYyq+THchGtOi0TzDeZNrwVuXg/un2oMURqYMrsstc2Bc
+         I5aUW3q+BYs80UgkT98IqnXQjNGKEThsKHic1RyWfQUeLuAbAISPZ86nJLKZNQDNdHMw
+         xLEg==
+X-Gm-Message-State: AOAM532NRDPFnh0dLvObkZy6nlH5bd01b8wuX6x/0mU2jUGvLL+llkmf
+        D3i8NysKAspWz0XjIBwyl0Itfw==
+X-Google-Smtp-Source: ABdhPJxg+W/uQNUPSAkt5RBaljjYtUlUgjDVZG+DCn3518FFq/ahY90cKO7VD3uyfol7mCnyX+199g==
+X-Received: by 2002:a1c:f709:: with SMTP id v9mr2378123wmh.165.1597994223600;
+        Fri, 21 Aug 2020 00:17:03 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.07
+        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:17:07 -0700 (PDT)
+        Fri, 21 Aug 2020 00:17:03 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
@@ -69,9 +69,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
         Wright Feng <wright.feng@cypress.com>,
         brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
-Subject: [PATCH 16/32] wireless: brcm80211: btcoex: Update 'brcmf_btcoex_state' and demote others
-Date:   Fri, 21 Aug 2020 08:16:28 +0100
-Message-Id: <20200821071644.109970-17-lee.jones@linaro.org>
+Subject: [PATCH 12/32] wireless: brcm80211: brcmfmac: firmware: Demote seemingly unintentional kernel-doc header
+Date:   Fri, 21 Aug 2020 08:16:24 +0100
+Message-Id: <20200821071644.109970-13-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
 References: <20200821071644.109970-1-lee.jones@linaro.org>
@@ -82,18 +82,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function headers are either very weakly documented or not at all.
+The function parameter is not documented and either are any of the
+other functions in this source file.
 
 Fixes the following W=1 kernel build warning(s):
 
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:94: warning: Function parameter or member 'reg50' not described in 'brcmf_btcoex_info'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:94: warning: Function parameter or member 'saved_regs_part2' not described in 'brcmf_btcoex_info'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:233: warning: Function parameter or member 'btci' not described in 'btcmf_btcoex_save_part1'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:253: warning: Function parameter or member 'btci' not described in 'brcmf_btcoex_restore_part1'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:273: warning: Function parameter or member 't' not described in 'brcmf_btcoex_timerfunc'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Function parameter or member 'vif' not described in 'brcmf_btcoex_set_mode'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Function parameter or member 'duration' not described in 'brcmf_btcoex_set_mode'
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Excess function parameter 'cfg' description in 'brcmf_btcoex_set_mode'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c:69: warning: Function parameter or member 'c' not described in 'is_nvram_char'
 
 Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
 Cc: Franky Lin <franky.lin@broadcom.com>
@@ -109,65 +103,22 @@ Cc: brcm80211-dev-list@cypress.com
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../wireless/broadcom/brcm80211/brcmfmac/btcoex.c    | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c
-index ec2bec0999d1b..f9f18ff451ea7 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c
-@@ -65,11 +65,12 @@ enum brcmf_btcoex_state {
-  * @reg68: saved value of btc_params 68
-  * @saved_regs_part1: flag indicating regs 66,41,68
-  *	have been saved
-+ * @reg50: saved value of btc_params 50
-  * @reg51: saved value of btc_params 51
-  * @reg64: saved value of btc_params 64
-  * @reg65: saved value of btc_params 65
-  * @reg71: saved value of btc_params 71
-- * @saved_regs_part1: flag indicating regs 50,51,64,65,71
-+ * @saved_regs_part2: flag indicating regs 50,51,64,65,71
-  *	have been saved
-  */
- struct brcmf_btcoex_info {
-@@ -226,7 +227,7 @@ static bool brcmf_btcoex_is_sco_active(struct brcmf_if *ifp)
- 	return res;
- }
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c
+index 3aed4c4b887aa..d821a4758f8cf 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/firmware.c
+@@ -59,7 +59,7 @@ struct nvram_parser {
+ 	bool boardrev_found;
+ };
  
 -/**
 +/*
-  * btcmf_btcoex_save_part1() - save first step parameters.
-  */
- static void btcmf_btcoex_save_part1(struct brcmf_btcoex_info *btci)
-@@ -246,7 +247,7 @@ static void btcmf_btcoex_save_part1(struct brcmf_btcoex_info *btci)
- 	}
- }
- 
--/**
-+/*
-  * brcmf_btcoex_restore_part1() - restore first step parameters.
-  */
- static void brcmf_btcoex_restore_part1(struct brcmf_btcoex_info *btci)
-@@ -266,7 +267,7 @@ static void brcmf_btcoex_restore_part1(struct brcmf_btcoex_info *btci)
- 	}
- }
- 
--/**
-+/*
-  * brcmf_btcoex_timerfunc() - BT coex timer callback
-  */
- static void brcmf_btcoex_timerfunc(struct timer_list *t)
-@@ -441,9 +442,8 @@ static void brcmf_btcoex_dhcp_end(struct brcmf_btcoex_info *btci)
- 	}
- }
- 
--/**
-+/*
-  * brcmf_btcoex_set_mode - set BT coex mode
-- * @cfg: driver private cfg80211 data
-  * @mode: Wifi-Bluetooth coexistence mode
+  * is_nvram_char() - check if char is a valid one for NVRAM entry
   *
-  * return: 0 on success
+  * It accepts all printable ASCII chars except for '#' which opens a comment.
 -- 
 2.25.1
 
