@@ -2,157 +2,132 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63287C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045D0C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38B88208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:03:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4DE207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598025808;
-	bh=EV/GR+9VB23wO4HYAr+8yBHz5vSm7Ev/KRXR37JYI2g=;
+	s=default; t=1598025820;
+	bh=s7k7WVoMuW3YOq62B9s+ZiSRUJCQ9bWnTQTRHx+L47U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JwpH9lfwRoqTDqBjfyUpix/i7h1l8IC1twz0BCY4/WfRH66VAYepHPZwtTxbWP9HS
-	 3OBeWF0W9x6BNIGaEEUfq2CJ7TT2BSi3KzU7Bc+GKlbhPCR0/dzrezS0XqfqrrcwjI
-	 +gL6Zru0x15xZdY4iYb5Tw6hF9zM9dirQ+Jae0Eg=
+	b=CO2ML6teap1He10+ZZT28BO5025wTUT7g1ZlNSUaC4/1dSk9Iy78+UxcLgQ+MmyuG
+	 1m7kgLPn7/REuqUbI5xGXdcQaSMb9rt/xytb0TVAl36mEbSIpI6ZgFxC4qadcJVUqZ
+	 IQAoMYj04R/zbAkr3toD9T61B2ltvN05Qq0uRgqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725820AbgHUQDV (ORCPT
+        id S1726876AbgHUQDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:03:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35600 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgHUQC6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:02:58 -0400
+        id S1726867AbgHUQD1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:03:27 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 363A7207BB;
-        Fri, 21 Aug 2020 16:02:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 925FE207BB;
+        Fri, 21 Aug 2020 16:03:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598025777;
-        bh=EV/GR+9VB23wO4HYAr+8yBHz5vSm7Ev/KRXR37JYI2g=;
+        s=default; t=1598025802;
+        bh=s7k7WVoMuW3YOq62B9s+ZiSRUJCQ9bWnTQTRHx+L47U=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ImovsCZrJ/tdgS2ncCQiTS/L8yCwYE9ohFeJBAvirJKdRqeaxw8/m9aRr5h2sGaHC
-         XgEWMfxB3M1PQKRQRdjLE03otqTFiLJPx5bVVQi35AAXT1D6p1YlIv8iZWEuFzqiAP
-         FPJxlahOObcq2GKrNbYshgjpdDJ/xEuoFZEgWaJk=
-Date:   Fri, 21 Aug 2020 17:02:53 +0100
+        b=rUqMkCwqrjDQLVFDCML+UPPcErgSGgrMWu/c98cem9NQGN6T+mOGaXb0ioOHagXdG
+         5y0iD5+V2N72brnN7NCXB43WQZhiDtmc9Me9xJT3z6dHpaKZXFDH8Y0r3F3qw/daXe
+         xtT46gOoAtOT09c9Q1JHr9geLPFmMtNd8KKu0lt0=
+Date:   Fri, 21 Aug 2020 17:03:16 +0100
 From:   Will Deacon <will@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Yuqi Jin <jinyuqi@huawei.com>
-Subject: Re: [PATCH RESEND] fs: Move @f_count to different cacheline with
- @f_mode
-Message-ID: <20200821160252.GC21517@willie-the-truck>
-References: <1592987548-8653-1-git-send-email-zhangshaokun@hisilicon.com>
+        Mark Brown <broonie@kernel.org>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL VIRTUAL MACHINE FOR ARM64 (KVM/arm64)" 
+        <kvmarm@lists.cs.columbia.edu>
+Subject: Re: [PATCH stable v4.9 v2] arm64: entry: Place an SB sequence
+ following an ERET instruction
+Message-ID: <20200821160316.GE21517@willie-the-truck>
+References: <20200709195034.15185-1-f.fainelli@gmail.com>
+ <20200720130411.GB494210@kroah.com>
+ <df1de420-ac59-3647-3b81-a0c163783225@gmail.com>
+ <9c29080e-8b3a-571c-3296-e0487fa473fa@gmail.com>
+ <20200807131429.GB664450@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1592987548-8653-1-git-send-email-zhangshaokun@hisilicon.com>
+In-Reply-To: <20200807131429.GB664450@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 04:32:28PM +0800, Shaokun Zhang wrote:
-> get_file_rcu_many, which is called by __fget_files, has used
-> atomic_try_cmpxchg now and it can reduce the access number of the global
-> variable to improve the performance of atomic instruction compared with
-> atomic_cmpxchg. 
+On Fri, Aug 07, 2020 at 03:14:29PM +0200, Greg KH wrote:
+> On Thu, Aug 06, 2020 at 01:00:54PM -0700, Florian Fainelli wrote:
+> > 
+> > 
+> > On 7/20/2020 11:26 AM, Florian Fainelli wrote:
+> > > On 7/20/20 6:04 AM, Greg KH wrote:
+> > >> On Thu, Jul 09, 2020 at 12:50:23PM -0700, Florian Fainelli wrote:
+> > >>> From: Will Deacon <will.deacon@arm.com>
+> > >>>
+> > >>> commit 679db70801da9fda91d26caf13bf5b5ccc74e8e8 upstream
+> > >>>
+> > >>> Some CPUs can speculate past an ERET instruction and potentially perform
+> > >>> speculative accesses to memory before processing the exception return.
+> > >>> Since the register state is often controlled by a lower privilege level
+> > >>> at the point of an ERET, this could potentially be used as part of a
+> > >>> side-channel attack.
+> > >>>
+> > >>> This patch emits an SB sequence after each ERET so that speculation is
+> > >>> held up on exception return.
+> > >>>
+> > >>> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> > >>> [florian: Adjust hyp-entry.S to account for the label
+> > >>>  added change to hyp/entry.S]
+> > >>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> > >>> ---
+> > >>> Changes in v2:
+> > >>>
+> > >>> - added missing hunk in hyp/entry.S per Will's feedback
+> > >>
+> > >> What about 4.19.y and 4.14.y trees?  I can't take something for 4.9.y
+> > >> and then have a regression if someone moves to a newer release, right?
+> > > 
+> > > Sure, send you candidates for 4.14 and 4.19.
+> > 
+> > Greg, did you have a chance to queue those changes for 4.9, 4.14 and 4.19?
+> > 
+> > https://lore.kernel.org/linux-arm-kernel/20200720182538.13304-1-f.fainelli@gmail.com/
+> > https://lore.kernel.org/linux-arm-kernel/20200720182937.14099-1-f.fainelli@gmail.com/
+> > https://lore.kernel.org/linux-arm-kernel/20200709195034.15185-1-f.fainelli@gmail.com/
 > 
-> __fget_files does check the @f_mode with mask variable and will do some
-> atomic operations on @f_count, but both are on the same cacheline.
-> Many CPU cores do file access and it will cause much conflicts on @f_count. 
-> If we could make the two members into different cachelines, it shall relax
-> the siutations.
-> 
-> We have tested this on ARM64 and X86, the result is as follows:
-> Syscall of unixbench has been run on Huawei Kunpeng920 with this patch:
-> 24 x System Call Overhead  1
-> 
-> System Call Overhead                    3160841.4 lps   (10.0 s, 1 samples)
-> 
-> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-> System Call Overhead                          15000.0    3160841.4   2107.2
->                                                                    ========
-> System Benchmarks Index Score (Partial Only)                         2107.2
-> 
-> Without this patch:
-> 24 x System Call Overhead  1
-> 
-> System Call Overhead                    2222456.0 lps   (10.0 s, 1 samples)
-> 
-> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-> System Call Overhead                          15000.0    2222456.0   1481.6
->                                                                    ========
-> System Benchmarks Index Score (Partial Only)                         1481.6
-> 
-> And on Intel 6248 platform with this patch:
-> 40 CPUs in system; running 24 parallel copies of tests
-> 
-> System Call Overhead                        4288509.1 lps   (10.0 s, 1 samples)
-> 
-> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-> System Call Overhead                          15000.0    4288509.1   2859.0
->                                                                    ========
-> System Benchmarks Index Score (Partial Only)                         2859.0
-> 
-> Without this patch:
-> 40 CPUs in system; running 24 parallel copies of tests
-> 
-> System Call Overhead                        3666313.0 lps   (10.0 s, 1 samples)
-> 
-> System Benchmarks Partial Index              BASELINE       RESULT    INDEX
-> System Call Overhead                          15000.0    3666313.0   2444.2
->                                                                    ========
-> System Benchmarks Index Score (Partial Only)                         2444.2
-> 
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: Yuqi Jin <jinyuqi@huawei.com>
-> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-> ---
->  include/linux/fs.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 3f881a892ea7..0faeab5622fb 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -955,7 +955,6 @@ struct file {
->  	 */
->  	spinlock_t		f_lock;
->  	enum rw_hint		f_write_hint;
-> -	atomic_long_t		f_count;
->  	unsigned int 		f_flags;
->  	fmode_t			f_mode;
->  	struct mutex		f_pos_lock;
-> @@ -979,6 +978,7 @@ struct file {
->  	struct address_space	*f_mapping;
->  	errseq_t		f_wb_err;
->  	errseq_t		f_sb_err; /* for syncfs */
-> +	atomic_long_t		f_count;
->  } __randomize_layout
->    __attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+> Nope, I was waiting for Will's "ack" for these.
 
-Hmm. So the microbenchmark numbers look lovely, but:
+This patch doesn't even build for me (the 'sb' macro is not defined in 4.9),
+and I really wonder why we bother backporting it at all. Nobody's ever shown
+it to be a problem in practice, and it's clear that this is just being
+submitted to tick a box rather than anything else (otherwise it would build,
+right?).
 
-  - What impact does it actually have for real workloads?
-  - How do we avoid regressing performance by innocently changing the struct
-    again later on?
-  - This thing is tagged with __randomize_layout, so it doesn't help anybody
-    using that crazy plugin
-  - What about all the other atomics and locks that share cachelines?
+So I'm not going to Ack any of them. As with a lot of this side-channel
+stuff the cure is far worse than the disease.
 
 Will
