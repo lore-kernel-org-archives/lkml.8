@@ -2,174 +2,142 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.2 required=3.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C935C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F63C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1231320724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9rfFkng"
+	by mail.kernel.org (Postfix) with ESMTP id 659B820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726630AbgHUUqv (ORCPT
+        id S1726693AbgHUUrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:46:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725831AbgHUUqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:46:50 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48209C061573;
-        Fri, 21 Aug 2020 13:46:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t11so1411058plr.5;
-        Fri, 21 Aug 2020 13:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DE5SPmJa0Jtc878oOnDyAAxuHxQ/uszHB5NDDF1X0Zw=;
-        b=s9rfFkng/tXyb5bH4GYYZOvYrX1sZCUN2+X6sQu91WRnAJ1IUNVt6vg9A/amvnv069
-         /UDPE8sB15nJ3Xt+SG1CIhTbW6DTphdJbnIfBbrcqGN2sw35dvWGRGfW7bglE2htcnzC
-         8lrHKsu2rrIEVHv/XwqJjPZU0Wev8hCT0rGT3zL2T0pufmtuHnGa/8eSpkQVI+3YRT7x
-         dDbpIzV3pVR4RJ9ZCzW0IE92NRfVdU4hphXbv8dxhiCCjUcqNAaxTEzkdVaX8ClqVQjH
-         wfELQBxz6bd1FkZLrK68Au1qReXrT4y/fujpIhXfz44sMslex67Ia4JwqMUy2aChObst
-         sUEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DE5SPmJa0Jtc878oOnDyAAxuHxQ/uszHB5NDDF1X0Zw=;
-        b=h0wIyr6SXK1/KX2dGGHykjvowHYORgqAB1ae4zJwJ6sf4zVStUD55Kt5Py6hoaGEaI
-         RB3TPGTDg4WHJfHWzpM5+m2bN2yA5GpFZ3MrbSKqQmCsxMqIbiHQXpWASuj8yV5Sc+NO
-         v0x2Fh2DK6RVgdDoj9l/pExapE9q+3LoAJEmE2sSDQN8m4ow3SjSyD7j7/8KqJumuK+3
-         anscuyr0Uatuopv/5IIn1Q5dBJahZTcNEeoBkBlWLauVuBf3Fwz5z+ujP9TWpcZlgMrq
-         TFFMntTaR+lJoGgk6/rcgYQM+Jp+/ck8f873CEWM8qPYzE/K4BMm7CE0FWyuAn4Od9v9
-         Hsog==
-X-Gm-Message-State: AOAM533tM4YKfV+8/ONbUM+5RV9sHHwHaLWOnYvR7URpaOODq/XO+cff
-        r5/ybTa6+gJfzQoDQ1jWMuU=
-X-Google-Smtp-Source: ABdhPJxRYstwLNpWOZ5J3DjR1qCaSj/+573CyfsBmhuLjw9gbA8bjW7jyR5d7x1cxoscjEjYLSC4Sg==
-X-Received: by 2002:a17:902:ff0c:: with SMTP id f12mr3793627plj.326.1598042809822;
-        Fri, 21 Aug 2020 13:46:49 -0700 (PDT)
-Received: from localhost.localdomain (c-107-3-138-210.hsd1.ca.comcast.net. [107.3.138.210])
-        by smtp.gmail.com with ESMTPSA id g4sm2795816pjh.32.2020.08.21.13.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 13:46:48 -0700 (PDT)
-From:   Yang Shi <shy828301@gmail.com>
-To:     jack@suse.cz, akpm@linux-foundation.org
-Cc:     shy828301@gmail.com, stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] mm: madvise: fix vma user-after-free
-Date:   Sun, 16 Aug 2020 07:12:04 -0700
-Message-Id: <20200816141204.162624-1-shy828301@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Fri, 21 Aug 2020 16:47:47 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3141 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725831AbgHUUrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 16:47:45 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 0B449708F77DCF66FDA3;
+        Sat, 22 Aug 2020 04:47:43 +0800 (CST)
+Received: from dggema773-chm.china.huawei.com (10.1.198.217) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Sat, 22 Aug 2020 04:47:42 +0800
+Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
+ dggema773-chm.china.huawei.com (10.1.198.217) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Sat, 22 Aug 2020 04:47:42 +0800
+Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
+ dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
+ Sat, 22 Aug 2020 04:47:42 +0800
+From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        huangdaode <huangdaode@huawei.com>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
+Thread-Topic: [PATCH v7 0/3] make dma_alloc_coherent NUMA-aware by per-NUMA
+ CMA
+Thread-Index: AQHWd+P3Cxxhv5+npUG1WD6UP12kNalC7yyQgAAUM8A=
+Date:   Fri, 21 Aug 2020 20:47:42 +0000
+Message-ID: <0a1636c9a3cc4bafb64ef43bed19f2fe@hisilicon.com>
+References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+ <e47f4bfd-3af7-f682-23a1-51800f992d35@oracle.com> 
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.126.201.113]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The syzbot reported the below use-after-free:
-
-BUG: KASAN: use-after-free in madvise_willneed mm/madvise.c:293 [inline]
-BUG: KASAN: use-after-free in madvise_vma mm/madvise.c:942 [inline]
-BUG: KASAN: use-after-free in do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
-Read of size 8 at addr ffff8880a6163eb0 by task syz-executor.0/9996
-
-CPU: 0 PID: 9996 Comm: syz-executor.0 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- madvise_willneed mm/madvise.c:293 [inline]
- madvise_vma mm/madvise.c:942 [inline]
- do_madvise.part.0+0x1c8b/0x1cf0 mm/madvise.c:1145
- do_madvise mm/madvise.c:1169 [inline]
- __do_sys_madvise mm/madvise.c:1171 [inline]
- __se_sys_madvise mm/madvise.c:1169 [inline]
- __x64_sys_madvise+0xd9/0x110 mm/madvise.c:1169
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d4d9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f04f7464c78 EFLAGS: 00000246 ORIG_RAX: 000000000000001c
-RAX: ffffffffffffffda RBX: 0000000000020800 RCX: 000000000045d4d9
-RDX: 0000000000000003 RSI: 0000000000600003 RDI: 0000000020000000
-RBP: 000000000118d020 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cfec
-R13: 00007ffc579cce7f R14: 00007f04f74659c0 R15: 000000000118cfec
-
-Allocated by task 9992:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
- slab_post_alloc_hook mm/slab.h:518 [inline]
- slab_alloc mm/slab.c:3312 [inline]
- kmem_cache_alloc+0x138/0x3a0 mm/slab.c:3482
- vm_area_alloc+0x1c/0x110 kernel/fork.c:347
- mmap_region+0x8e5/0x1780 mm/mmap.c:1743
- do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
- vm_mmap_pgoff+0x195/0x200 mm/util.c:506
- ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 9992:
- kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
- kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
- kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kmem_cache_free.part.0+0x67/0x1f0 mm/slab.c:3693
- remove_vma+0x132/0x170 mm/mmap.c:184
- remove_vma_list mm/mmap.c:2613 [inline]
- __do_munmap+0x743/0x1170 mm/mmap.c:2869
- do_munmap mm/mmap.c:2877 [inline]
- mmap_region+0x257/0x1780 mm/mmap.c:1716
- do_mmap+0xcf9/0x11d0 mm/mmap.c:1545
- vm_mmap_pgoff+0x195/0x200 mm/util.c:506
- ksys_mmap_pgoff+0x43a/0x560 mm/mmap.c:1596
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-It is because vma is accessed after releasing mmap_sem, but someone else
-acquired the mmap_sem and the vma is gone.
-
-Releasing mmap_sem after accessing vma should fix the problem.
-
-Fixes: 692fe62433d4c ("mm: Handle MADV_WILLNEED through vfs_fadvise()")
-Reported-by: syzbot+b90df26038d1d5d85c97@syzkaller.appspotmail.com
-Cc: Jan Kara <jack@suse.cz>
-Cc: <stable@vger.kernel.org> v5.4+
-Signed-off-by: Yang Shi <shy828301@gmail.com>
----
- mm/madvise.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index dd1d43cf026d..d4aa5f776543 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -289,9 +289,9 @@ static long madvise_willneed(struct vm_area_struct *vma,
- 	 */
- 	*prev = NULL;	/* tell sys_madvise we drop mmap_lock */
- 	get_file(file);
--	mmap_read_unlock(current->mm);
- 	offset = (loff_t)(start - vma->vm_start)
- 			+ ((loff_t)vma->vm_pgoff << PAGE_SHIFT);
-+	mmap_read_unlock(current->mm);
- 	vfs_fadvise(file, offset, end - start, POSIX_FADV_WILLNEED);
- 	fput(file);
- 	mmap_read_lock(current->mm);
--- 
-2.26.2
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU29uZyBCYW8gSHVhIChC
+YXJyeSBTb25nKQ0KPiBTZW50OiBTYXR1cmRheSwgQXVndXN0IDIyLCAyMDIwIDc6MjcgQU0NCj4g
+VG86ICdNaWtlIEtyYXZldHonIDxtaWtlLmtyYXZldHpAb3JhY2xlLmNvbT47IGhjaEBsc3QuZGU7
+DQo+IG0uc3p5cHJvd3NraUBzYW1zdW5nLmNvbTsgcm9iaW4ubXVycGh5QGFybS5jb207IHdpbGxA
+a2VybmVsLm9yZzsNCj4gZ2FuYXBhdHJhby5rdWxrYXJuaUBjYXZpdW0uY29tOyBjYXRhbGluLm1h
+cmluYXNAYXJtLmNvbTsNCj4gYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZw0KPiBDYzogaW9tbXVA
+bGlzdHMubGludXgtZm91bmRhdGlvbi5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgWmVuZ3RhbyAoQikgPHBy
+aW1lLnplbmdAaGlzaWxpY29uLmNvbT47DQo+IGh1YW5nZGFvZGUgPGh1YW5nZGFvZGVAaHVhd2Vp
+LmNvbT47IExpbnV4YXJtIDxsaW51eGFybUBodWF3ZWkuY29tPg0KPiBTdWJqZWN0OiBSRTogW1BB
+VENIIHY3IDAvM10gbWFrZSBkbWFfYWxsb2NfY29oZXJlbnQgTlVNQS1hd2FyZSBieQ0KPiBwZXIt
+TlVNQSBDTUENCj4gDQo+IA0KPiANCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
+IEZyb206IE1pa2UgS3JhdmV0eiBbbWFpbHRvOm1pa2Uua3JhdmV0ekBvcmFjbGUuY29tXQ0KPiA+
+IFNlbnQ6IFNhdHVyZGF5LCBBdWd1c3QgMjIsIDIwMjAgNTo1MyBBTQ0KPiA+IFRvOiBTb25nIEJh
+byBIdWEgKEJhcnJ5IFNvbmcpIDxzb25nLmJhby5odWFAaGlzaWxpY29uLmNvbT47IGhjaEBsc3Qu
+ZGU7DQo+ID4gbS5zenlwcm93c2tpQHNhbXN1bmcuY29tOyByb2Jpbi5tdXJwaHlAYXJtLmNvbTsg
+d2lsbEBrZXJuZWwub3JnOw0KPiA+IGdhbmFwYXRyYW8ua3Vsa2FybmlAY2F2aXVtLmNvbTsgY2F0
+YWxpbi5tYXJpbmFzQGFybS5jb207DQo+ID4gYWtwbUBsaW51eC1mb3VuZGF0aW9uLm9yZw0KPiA+
+IENjOiBpb21tdUBsaXN0cy5saW51eC1mb3VuZGF0aW9uLm9yZzsgbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFpl
+bmd0YW8gKEIpIDxwcmltZS56ZW5nQGhpc2lsaWNvbi5jb20+Ow0KPiA+IGh1YW5nZGFvZGUgPGh1
+YW5nZGFvZGVAaHVhd2VpLmNvbT47IExpbnV4YXJtDQo+IDxsaW51eGFybUBodWF3ZWkuY29tPg0K
+PiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMC8zXSBtYWtlIGRtYV9hbGxvY19jb2hlcmVudCBO
+VU1BLWF3YXJlIGJ5DQo+ID4gcGVyLU5VTUEgQ01BDQo+ID4NCj4gPiBIaSBCYXJyeSwNCj4gPiBT
+b3JyeSBmb3IganVtcGluZyBpbiBzbyBsYXRlLg0KPiA+DQo+ID4gT24gOC8yMS8yMCA0OjMzIEFN
+LCBCYXJyeSBTb25nIHdyb3RlOg0KPiA+ID4NCj4gPiA+IHdpdGggcGVyLW51bWEgQ01BLCBzbW11
+IHdpbGwgZ2V0IG1lbW9yeSBmcm9tIGxvY2FsIG51bWEgbm9kZSB0byBzYXZlDQo+ID4gY29tbWFu
+ZA0KPiA+ID4gcXVldWVzIGFuZCBwYWdlIHRhYmxlcy4gdGhhdCBtZWFucyBkbWFfdW5tYXAgbGF0
+ZW5jeSB3aWxsIGJlIHNocnVuaw0KPiA+IG11Y2guDQo+ID4NCj4gPiBTaW5jZSBwZXItbm9kZSBD
+TUEgYXJlYXMgZm9yIGh1Z2V0bGIgd2FzIGludHJvZHVjZWQsIEkgaGF2ZSBiZWVuIHRoaW5raW5n
+DQo+ID4gYWJvdXQgdGhlIGxpbWl0ZWQgbnVtYmVyIG9mIENNQSBhcmVhcy4gIEluIG1vc3QgY29u
+ZmlndXJhdGlvbnMsIEkgYmVsaWV2ZQ0KPiA+IGl0IGlzIGxpbWl0ZWQgdG8gNy4gIEFuZCwgSUlS
+QyBpdCBpcyBub3Qgc29tZXRoaW5nIHRoYXQgY2FuIGJlIGNoYW5nZWQgYXQNCj4gPiBydW50aW1l
+LCB5b3UgbmVlZCB0byByZWNvbmZpZyBhbmQgcmVidWlsZCB0byBpbmNyZWFzZSB0aGUgbnVtYmVy
+LiAgSW4NCj4gY29udHJhc3QNCj4gPiBzb21lIGNvbmZpZ3MgaGF2ZSBOT0RFU19TSElGVCBzZXQg
+dG8gMTAuICBJIHdhc24ndCB0b28gd29ycmllZCBiZWNhdXNlIG9mDQo+ID4gdGhlIGxpbWl0ZWQg
+aHVnZXRsYiB1c2UgY2FzZS4gIEhvd2V2ZXIsIHRoaXMgc2VyaWVzIGlzIGFkZGluZyBhbm90aGVy
+IHVzZXINCj4gPiBvZiBwZXItbm9kZSBDTUEgYXJlYXMuDQo+ID4NCj4gPiBXaXRoIG1vcmUgdXNl
+cnMsIHNob3VsZCB0cnkgdG8gc3luYyB1cCBudW1iZXIgb2YgQ01BIGFyZWFzIGFuZCBudW1iZXIg
+b2YNCj4gPiBub2Rlcz8gIE9yLCBwZXJoYXBzIEkgYW0gd29ycnlpbmcgYWJvdXQgbm90aGluZz8N
+Cj4gDQo+IEhpIE1pa2UsDQo+IFRoZSBjdXJyZW50IGxpbWl0YXRpb24gaXMgOC4gSWYgdGhlIHNl
+cnZlciBoYXMgNCBub2RlcyBhbmQgd2UgZW5hYmxlIGJvdGgNCj4gcGVybnVtYQ0KPiBDTUEgYW5k
+IGh1Z2V0bGIsIHRoZSBsYXN0IG5vZGUgd2lsbCBmYWlsIHRvIGdldCBvbmUgY21hIGFyZWEgYXMg
+dGhlIGRlZmF1bHQNCj4gZ2xvYmFsIGNtYSBhcmVhIHdpbGwgdGFrZSAxIG9mIDguIFNvIHVzZXJz
+IG5lZWQgdG8gY2hhbmdlIG1lbnVjb25maWcuDQo+IElmIHRoZSBzZXJ2ZXIgaGFzIDggbm9kZXMs
+IHdlIGVuYWJsZSBvbmUgb2YgcGVybnVtYSBjbWEgYW5kIGh1Z2V0bGIsIG9uZQ0KPiBub2RlDQo+
+IHdpbGwgZmFpbCB0byBnZXQgY21hLg0KPiANCj4gV2UgbWF5IHNldCB0aGUgZGVmYXVsdCBudW1i
+ZXIgb2YgQ01BIGFyZWFzIGFzIDgrTUFYX05PREVTKGlmIGh1Z2V0bGINCj4gZW5hYmxlZCkgKw0K
+PiBNQVhfTk9ERVMoaWYgcGVybnVtYSBjbWEgZW5hYmxlZCkgaWYgd2UgZG9uJ3QgZXhwZWN0IHVz
+ZXJzIHRvIGNoYW5nZQ0KPiBjb25maWcsIGJ1dA0KPiByaWdodCBub3cgaHVnZXRsYiBoYXMgbm90
+IGFuIG9wdGlvbiBpbiBLY29uZmlnIHRvIGVuYWJsZSBvciBkaXNhYmxlIGxpa2UNCj4gcGVybnVt
+YSBjbWENCj4gaGFzIERNQV9QRVJOVU1BX0NNQS4NCg0KSSB3b3VsZCBwcmVmZXIgd2UgbWFrZSBz
+b21lIGNoYW5nZXMgbGlrZToNCg0KY29uZmlnIENNQV9BUkVBUw0KCWludCAiTWF4aW11bSBjb3Vu
+dCBvZiB0aGUgQ01BIGFyZWFzIg0KCWRlcGVuZHMgb24gQ01BDQorCWRlZmF1bHQgMTkgaWYgTlVN
+QQ0KCWRlZmF1bHQgNw0KCWhlbHANCgkgIENNQSBhbGxvd3MgdG8gY3JlYXRlIENNQSBhcmVhcyBm
+b3IgcGFydGljdWxhciBwdXJwb3NlLCBtYWlubHksDQoJICB1c2VkIGFzIGRldmljZSBwcml2YXRl
+IGFyZWEuIFRoaXMgcGFyYW1ldGVyIHNldHMgdGhlIG1heGltdW0NCgkgIG51bWJlciBvZiBDTUEg
+YXJlYSBpbiB0aGUgc3lzdGVtLg0KDQotCSAgSWYgdW5zdXJlLCBsZWF2ZSB0aGUgZGVmYXVsdCB2
+YWx1ZSAiNyIuDQorCSAgSWYgdW5zdXJlLCBsZWF2ZSB0aGUgZGVmYXVsdCB2YWx1ZSAiNyIgb3Ig
+IjE5IiBpZiBOVU1BIGlzIHVzZWQuDQoNCjErIENPTkZJR19DTUFfQVJFQVMgc2hvdWxkIGJlIHF1
+aXRlIGVub3VnaCBmb3IgYWxtb3N0IGFsbCBzZXJ2ZXJzIGluIHRoZSBtYXJrZXRzLg0KDQpJZiAy
+IG51bWEgbm9kZXMsIGFuZCBib3RoIGh1Z2V0bGIgY21hIGFuZCBwZXJudW1hIGNtYSBpcyBlbmFi
+bGVkLCB3ZSBuZWVkIDIqMiArIDEgPSA1DQpJZiA0IG51bWEgbm9kZXMsIGFuZCBib3RoIGh1Z2V0
+bGIgY21hIGFuZCBwZXJudW1hIGNtYSBpcyBlbmFibGVkLCB3ZSBuZWVkIDIqNCArIDEgPSA5ICAg
+IC0+IGRlZmF1bHQgQVJNNjQgY29uZmlnLg0KSWYgOCBudW1hIG5vZGVzLCBhbmQgYm90aCBodWdl
+dGxiIGNtYSBhbmQgcGVybnVtYSBjbWEgaXMgZW5hYmxlZCwgd2UgbmVlZCAyKjggKyAxID0gMTcN
+Cg0KVGhlIGRlZmF1bHQgdmFsdWUgaXMgc3VwcG9ydGluZyB0aGUgbW9zdCBjb21tb24gY2FzZSBh
+bmQgaXMgbm90IGdvaW5nIHRvIHN1cHBvcnQgdGhvc2Ugc2VydmVycw0Kd2l0aCBOT0RFU19TSElG
+VD0xMCwgdGhleSBjYW4gbWFrZSB0aGVpciBvd24gY29uZmlnIGp1c3QgbGlrZSB1c2VycyBuZWVk
+IHRvIGluY3JlYXNlIENNQV9BUkVBUw0KaWYgdGhleSBhZGQgbWFueSBjbWEgYXJlYXMgaW4gZGV2
+aWNlIHRyZWUgaW4gYSBzeXN0ZW0gZXZlbiB3aXRob3V0IE5VTUEuDQoNCkhvdyBkbyB5b3UgdGhp
+bmssIG1pa2U/DQoNClRoYW5rcw0KQmFycnkNCg==
