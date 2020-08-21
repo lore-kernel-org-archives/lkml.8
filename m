@@ -2,227 +2,195 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39187C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD9C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09273207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F097C207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:50:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lwozd2AP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8qkn1gP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgHUVq7 (ORCPT
+        id S1726851AbgHUVuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:46:59 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24723 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726867AbgHUVq4 (ORCPT
+        Fri, 21 Aug 2020 17:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbgHUVuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:46:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598046413;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=1WdXRvG4bCNhwZSZkTWr9Rx/+hCL+T87J2kS4FEJuzY=;
-        b=Lwozd2APRza5SRfRvW0MISGY0Lb3Ey6GW0WP9xnKgnrLZ9kphdIVuiONDm6NMTAwv/0glm
-        9aI74GukoayvdkI8q4u03B1CPN4SySK6U7+as3jSwoyRiPIYn4svpWAuLp+Uph4F3Wa60o
-        og4JxcYNEf6wiweoH1+bCvTyGvaSa5g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-SAp0EwLqMC6y5pmLPLYV_Q-1; Fri, 21 Aug 2020 17:46:49 -0400
-X-MC-Unique: SAp0EwLqMC6y5pmLPLYV_Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 34F87801AB9;
-        Fri, 21 Aug 2020 21:46:44 +0000 (UTC)
-Received: from [10.36.112.5] (ovpn-112-5.ams2.redhat.com [10.36.112.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE76410013D0;
-        Fri, 21 Aug 2020 21:46:34 +0000 (UTC)
-Subject: Re: [PATCH v4 00/23] device-dax: Support sub-dividing soft-reserved
- ranges
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        David Airlie <airlied@linux.ie>, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Jason Gunthorpe <jgg@mellanox.com>, Jia He <justin.he@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>
-References: <CAPcyv4gTJgZ0jM3oRM8Exs7MKwyNHF5yWNceAFrX7k8KfFcBig@mail.gmail.com>
- <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <6cee1e57-7b7e-f8b6-2c53-f913b18926c0@redhat.com>
-Date:   Fri, 21 Aug 2020 23:46:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 17:50:16 -0400
+Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A3CC061573;
+        Fri, 21 Aug 2020 14:50:16 -0700 (PDT)
+Received: by mail-yb1-xb41.google.com with SMTP id i10so1781223ybt.11;
+        Fri, 21 Aug 2020 14:50:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LCtDZbEXzC+Kn+f0fxyMM1jOnFnep3y18ErpLmPyWt4=;
+        b=T8qkn1gP+Rp85/WBW+E10QZI55mtY/lvclpr3P7fxqBrHSA7suC3XiloMsmuuWf/+m
+         HmDmMB04s32ENwcls/J6AbATRIcvsmO+7lr+2ePM9UbcWDZC0tR1yvN1ch++35SfNpqN
+         qV1Wx+XrikqB2RucXlQQro36UTEy8/13alnvL09oSLB1mp1Bnei89N9W7DWiwD6SQF5z
+         NKD0AA5Cb/2D2oaZ1K7mIIiGD4z4kPLKHMzWUxBdW9+vr+buKs1ySwQVfukV11vWRVv5
+         RrukKViMe3OkIWkbygbUP4X3ffqQBygwF0bZYkYHYoYESW/pmE0sAnHnnnaAXM0nHfNF
+         8t/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LCtDZbEXzC+Kn+f0fxyMM1jOnFnep3y18ErpLmPyWt4=;
+        b=VEmldfgKf4tdpxUyOhCwrQGBSmSX+sQ6g20MczEUldZci+vSlXQ6SNJshd61IFjyif
+         6YiaSTyX8wH9+Kd4SsnOtjfUpbETXtT61Hn5bDwtjB7amNQFb/G/BxFdBJtF0R/ssC/2
+         KNVJin++sohPxuwZBWTWwj8EdKzAIzzFypVCaf+UyjAZddQqItvN96xfXFfmpZg3emqk
+         1Thu0yDpc0h/MG9QaofCnXNt19dPdiYFFCy7GzoHaO7F4evSAQiuZi8n4iq3PTLTx87k
+         ykTItNkTuIWwKkvZxxEUBtBHljY4/7tAAWohUZRTwkNs4/PiMgGRs8ad0rdLpjJPf3y0
+         lP3Q==
+X-Gm-Message-State: AOAM531klb6ZjzL00vPj5jPubAIXYcnqPKcGmtT8aYm7bumghWBNiTek
+        HVCESD8WuE/vAV4sd73Tu9i4pL22bSYlSqenAr8=
+X-Google-Smtp-Source: ABdhPJxfazP3ESG4tMzcWn+ppdV1i2aqc1DNrqYNaLzJ3GbVy/tyCs1m/FpQa0NbRO17DXJ0YwXfaY18lWUIeijSrZs=
+X-Received: by 2002:a25:2ad3:: with SMTP id q202mr6235577ybq.27.1598046615439;
+ Fri, 21 Aug 2020 14:50:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <646DDE9B-90C2-493A-958C-90EFA1CCA475@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-4-haoluo@google.com>
+ <d50a1530-9a9f-45b2-5aba-05fe4b895fbc@fb.com>
+In-Reply-To: <d50a1530-9a9f-45b2-5aba-05fe4b895fbc@fb.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Fri, 21 Aug 2020 14:50:04 -0700
+Message-ID: <CAEf4BzZmLUcw4M16U6w-s2Zd6KbsuY4dzzkeEBx9CejetT5BwQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 3/8] bpf: Introduce help function to validate
+ ksym's type.
+To:     Yonghong Song <yhs@fb.com>
+Cc:     Hao Luo <haoluo@google.com>, Networking <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.08.20 23:33, David Hildenbrand wrote:
-> 
-> 
->> Am 21.08.2020 um 23:17 schrieb Dan Williams <dan.j.williams@intel.com>:
->>
->> ﻿On Fri, Aug 21, 2020 at 11:30 AM David Hildenbrand <david@redhat.com> wrote:
->>>
->>>> On 21.08.20 20:27, Dan Williams wrote:
->>>> On Fri, Aug 21, 2020 at 3:15 AM David Hildenbrand <david@redhat.com> wrote:
->>>>>
->>>>>>>
->>>>>>> 1. On x86-64, e820 indicates "soft-reserved" memory. This memory is not
->>>>>>> automatically used in the buddy during boot, but remains untouched
->>>>>>> (similar to pmem). But as it involves ACPI as well, it could also be
->>>>>>> used on arm64 (-e820), correct?
->>>>>>
->>>>>> Correct, arm64 also gets the EFI support for enumerating memory this
->>>>>> way. However, I would clarify that whether soft-reserved is given to
->>>>>> the buddy allocator by default or not is the kernel's policy choice,
->>>>>> "buddy-by-default" is ok and is what will happen anyways with older
->>>>>> kernels on platforms that enumerate a memory range this way.
->>>>>
->>>>> Is "soft-reserved" then the right terminology for that? It sounds very
->>>>> x86-64/e820 specific. Maybe a compressed for of "performance
->>>>> differentiated memory" might be a better fit to expose to user space, no?
->>>>
->>>> No. The EFI "Specific Purpose" bit is an attribute independent of
->>>> e820, it's x86-Linux that entangles those together. There is no
->>>> requirement for platform firmware to use that designation even for
->>>> drastic performance differentiation between ranges, and conversely
->>>> there is no requirement that memory *with* that designation has any
->>>> performance difference compared to the default memory pool. So it
->>>> really is a reservation policy about a memory range to keep out of the
->>>> buddy allocator by default.
->>>
->>> Okay, still "soft-reserved" is x86-64 specific, no?
->>
->> There's nothing preventing other EFI archs, or a similar designation
->> in another firmware spec, picking up this policy.
->>
->>>  (AFAIK,
->>> "soft-reserved" will be visible in /proc/iomem, or am I confusing
->>> stuff?)
->>
->> No, you're correct.
->>
->>> IOW, it "performance differentiated" is not universally
->>> applicable, maybe  "specific purpose memory" is ?
->>
->> Those bikeshed colors don't seem an improvement to me.
->>
->> "Soft-reserved" actually tells you something about the kernel policy
->> for the memory. The criticism of "specific purpose" that led to
->> calling it "soft-reserved" in Linux is the fact that "specific" is
->> undefined as far as the firmware knows, and "specific" may have
->> different applications based on the platform user. "Soft-reserved"
->> like "Reserved" tells you that a driver policy might be in play for
->> that memory.
->>
->> Also note that the current color of the bikeshed has already shipped since v5.5:
->>
->>   262b45ae3ab4 x86/efi: EFI soft reservation to E820 enumeration
->>
-> 
-> I was asking because I was struggling to even understand what „soft-reserved“ is and I could bet most people have no clue what that is supposed to be.
-> 
-> In contrast „persistent memory“ or „special purpose memory“ in /proc/iomem is something normal (Linux using) human beings can understand.
+On Thu, Aug 20, 2020 at 10:22 AM Yonghong Song <yhs@fb.com> wrote:
+>
+>
+>
+> On 8/19/20 3:40 PM, Hao Luo wrote:
+> > For a ksym to be safely dereferenced and accessed, its type defined in
+> > bpf program should basically match its type defined in kernel. Implement
+> > a help function for a quick matching, which is used by libbpf when
+> > resolving the kernel btf_id of a ksym.
+> >
+> > Signed-off-by: Hao Luo <haoluo@google.com>
+> > ---
+> >   tools/lib/bpf/btf.c | 171 ++++++++++++++++++++++++++++++++++++++++++++
+> >   tools/lib/bpf/btf.h |   2 +
+> >   2 files changed, 173 insertions(+)
+> >
+> > diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
+> > index a3d259e614b0..2ff31f244d7a 100644
+> > --- a/tools/lib/bpf/btf.c
+> > +++ b/tools/lib/bpf/btf.c
+> > @@ -1005,6 +1005,177 @@ int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
+> >       return 0;
+> >   }
+> >
+> > +/*
+> > + * Basic type check for ksym support. Only checks type kind and resolved size.
+> > + */
+> > +static inline
+> > +bool btf_ksym_equal_type(const struct btf *ba, __u32 type_a,
+> > +                      const struct btf *bb, __u32 type_b)
+>
+> "ba" and "bb" is not descriptive. Maybe "btf_a" or "btf_b"?
+> or even "btf1" or "btf2" since the number does not carry
+> extra meaning compared to letters.
+>
+> The same for below, may be t1, t2?
+>
+> > +{
+> > +     const struct btf_type *ta, *tb;
+> > +
+> > +     ta = btf__type_by_id(ba, type_a);
+> > +     tb = btf__type_by_id(bb, type_b);
+> > +
+> > +     /* compare type kind */
+> > +     if (btf_kind(ta) != btf_kind(tb))
+> > +             return false;
+> > +
+> > +     /* compare resolved type size */
+> > +     return btf__resolve_size(ba, type_a) == btf__resolve_size(bb, type_b);
+> > +}
+> > +
+> > +/*
+> > + * Match a ksym's type defined in bpf programs against its type encoded in
+> > + * kernel btf.
+> > + */
+> > +bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
+> > +                      const struct btf *bb, __u32 id_b)
+> > +{
 
-s/normal/most/ , shouldn't be writing emails from my smartphone. Cheers!
+[...]
 
+> > +                     }
+> > +             }
+>
+> I am wondering whether this is too strict and how this can co-work with
+> CO-RE. Forcing users to write almost identical structure definition to
+> the underlying kernel will not be user friendly and may not work cross
+> kernel versions even if the field user cares have not changed.
+>
+> Maybe we can relax the constraint here. You can look at existing
+> libbpf CO-RE code.
 
--- 
-Thanks,
+Right. Hao, can you just re-use bpf_core_types_are_compat() instead?
+See if semantics makes sense, but I think it should. BPF CO-RE has
+been permissive in terms of struct size and few other type aspects,
+because it handles relocations so well. This approach allows to not
+have to exactly match all possible variations of some struct
+definition, which is a big problem with ever-changing kernel data
+structures.
 
-David / dhildenb
+>
+> > +             break;
+> > +     }
 
+[...]
+
+> > +
+> >   struct btf_ext_sec_setup_param {
+> >       __u32 off;
+> >       __u32 len;
+> > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
+> > index 91f0ad0e0325..5ef220e52485 100644
+> > --- a/tools/lib/bpf/btf.h
+> > +++ b/tools/lib/bpf/btf.h
+> > @@ -52,6 +52,8 @@ LIBBPF_API int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
+> >                                   __u32 expected_key_size,
+> >                                   __u32 expected_value_size,
+> >                                   __u32 *key_type_id, __u32 *value_type_id);
+> > +LIBBPF_API bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
+> > +                                 const struct btf *bb, __u32 id_b);
+> >
+> >   LIBBPF_API struct btf_ext *btf_ext__new(__u8 *data, __u32 size);
+> >   LIBBPF_API void btf_ext__free(struct btf_ext *btf_ext);
+>
+> The new API function should be added to libbpf.map.
+
+My question is why does this even have to be a public API?
