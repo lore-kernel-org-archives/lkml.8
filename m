@@ -2,92 +2,178 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BE4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9403C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAC6B214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93090214F1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="IYw1w3cH"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kC1IqvAM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgHUFis (ORCPT
+        id S1726809AbgHUFkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:38:48 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:37738 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725908AbgHUFis (ORCPT
+        Fri, 21 Aug 2020 01:40:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44582 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726002AbgHUFkV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:38:48 -0400
-X-UUID: 0618d1d1f11b45cf98e9d0dbab0534b4-20200821
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=plhV+IOc33r8xOeQyemErFzpqgMxm8+GRbRdLCyz3ks=;
-        b=IYw1w3cHBysJPBszx3dvF2/yJxCYQdmpJFKN1dWkojOl1xoSyQRDsVqX2GtXBJUumI8TIaYL7OGb8Q538W3wUFWubFrf32uFHlYylX1J2XM0aFk+fkcxr9ZdiTpwaNKL+FgxXzk8yJq728ENE/fPa1uDbehJASrm+zzh5P5kwNo=;
-X-UUID: 0618d1d1f11b45cf98e9d0dbab0534b4-20200821
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1114795160; Fri, 21 Aug 2020 13:38:45 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Fri, 21 Aug 2020 13:38:38 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Fri, 21 Aug 2020 13:38:38 +0800
-From:   <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>,
-        <kuohong.wang@mediatek.com>, Light Hsieh <light.hsieh@mediatek.com>
-Subject: [PATCH v1 1/1] pinctrl: mediatek: remove log message in mtk_hw_pin_field_lookup
-Date:   Fri, 21 Aug 2020 13:38:38 +0800
-Message-ID: <1597988318-24944-1-git-send-email-light.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
+        Fri, 21 Aug 2020 01:40:21 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07L5XCl5090697;
+        Fri, 21 Aug 2020 01:40:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : in-reply-to : references : date : message-id : mime-version :
+ content-type; s=pp1; bh=Ndo/wsx4DSB4NS1qTcy70CYie2hiXo+pQWCA3AYcodM=;
+ b=kC1IqvAM5r4XXMf/s2qI10NTJ4ckElK6fMNK9TX++qH4j9PgLCEPAQ+iOW0oPdOJ+1xV
+ 72Oq457P/uvGmSgJNBd/qa3CCGl1mwTDbbJidAnaK6Ifv5e0aPlYj8Qe2Dr4wFUbJpM+
+ Ie5xprReXIBaX30t0arLIdoBP4qJszqgvV64YVtiZsWLmS3VF+PASzYt0QOhzXyo5hfY
+ iNK9JrfxOiANpZJFSK8dBS3czrE9SMMrVb6Gxq787Z/NU/YL1Vh2ltjYEtavwKNFnX5c
+ v1faFNkDsEmfBgJSTwYX38gQ7B/v+B7ocUv0PjaBJpsOdG2hjpS2dEFk+a0YRwnJsSv1 vg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33273psd6a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 01:40:01 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07L5Y4w4095720;
+        Fri, 21 Aug 2020 01:40:01 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33273psd5t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 01:40:01 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07L5YqaP029166;
+        Fri, 21 Aug 2020 05:39:59 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma01wdc.us.ibm.com with ESMTP id 3304tm1ns2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 05:39:59 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07L5dwv61639074
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 05:39:58 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD5766A04F;
+        Fri, 21 Aug 2020 05:39:58 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 46F1A6A04D;
+        Fri, 21 Aug 2020 05:39:54 +0000 (GMT)
+Received: from skywalker.linux.ibm.com (unknown [9.102.2.201])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 05:39:53 +0000 (GMT)
+X-Mailer: emacs 27.1 (via feedmail 11-beta-1 I)
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
+        keescook@chromium.org, torvalds@linux-foundation.org,
+        jannh@google.com, will@kernel.org, hch@lst.de, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v3] mm: Fix kthread_use_mm() vs TLB invalidate
+In-Reply-To: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
+References: <20200721154106.GE10769@hirez.programming.kicks-ass.net>
+Date:   Fri, 21 Aug 2020 11:09:51 +0530
+Message-ID: <87y2m8muag.fsf@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 888BF03EA216EF90D2412ABF7D47198C0C2C8BF5E24ACCF6310F5085B41C0D122000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_05:2020-08-19,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
+ malwarescore=0 suspectscore=0 mlxlogscore=687 impostorscore=0 mlxscore=0
+ lowpriorityscore=0 phishscore=0 spamscore=0 priorityscore=1501 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGlnaHQgSHNpZWggPGxpZ2h0LmhzaWVoQG1lZGlhdGVrLmNvbT4NCg0KT3JpZ2luYWxs
-eSwgbXRrX2h3X3Bpbl9maWVsZF9sb29rdXAoKSBwcmludCBsb2cgbWVzc2FnZSBpbiAyDQpjb25k
-aXRpb25zOg0KMS4gd2hlbiBzb2MgZG9lcyBub3Qgc3VwcG9ydCB0YXJnZXQgcHJvcGVydHkNCjIu
-IHdoZW4gdGFyZ2V0IHBpbiBkb2VzIG5vdCBzdXBwb3J0IHRhcmdldCBwcm9wZXJ0eQ0KDQpOb3cs
-IG10a19od19waW5fZmllbGRfbG9va3VwKCkgZG9lcyBub3QgcHJpbnQgbG9nIG1lc3NhZ2UgYWNj
-b3JkaW5nDQp0byB0aGUgZm9sbG93aW5nIHJhdGlvbmFsZToNCjEuIFVzZXJzIG9mIHBpbmN0cmwg
-aGF2ZSB0aGUgZHV0eSB0byBwYXNzIGNvcnJlY3QgcGFyYW1ldGVycyBhbmQNCiAgIGNoZWNrIHJl
-dHVybiB2YWxlLiBBZnRlciBjaGVja2luZyByZXR1cm4gdmFsdWUsIHRoZSB1c2VycyBjYW4NCiAg
-IGRldGVybWluZSBpZiBsb2cgbWVzc2FnZSBzaGFsbCBiZSBwcmludGVkIGFjY29yZGluZyB0byB1
-c2VycycNCiAgIHNjZW5hcmlvLg0KMi4gUHJldmVudCBtZXNzYWdlIGZsb29kaW5nIHdoZW4gYSBi
-YWQgdXNlciBjb250aW5vdXNseSBwYXNzIGJhZA0KICAgcGFyYW1ldGVycyB0byBwaW5jdHJsLg0K
-DQpTaWduZWQtb2ZmLWJ5OiBMaWdodCBIc2llaCA8bGlnaHQuaHNpZWhAbWVkaWF0ZWsuY29tPg0K
-LS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jIHwg
-MTIgKysrLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgOSBkZWxl
-dGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJs
-LW10ay1jb21tb24tdjIuYyBiL2RyaXZlcnMvcGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1j
-b21tb24tdjIuYw0KaW5kZXggMmYzZGZiNS4uMTYxZDRlYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-cGluY3RybC9tZWRpYXRlay9waW5jdHJsLW10ay1jb21tb24tdjIuYw0KKysrIGIvZHJpdmVycy9w
-aW5jdHJsL21lZGlhdGVrL3BpbmN0cmwtbXRrLWNvbW1vbi12Mi5jDQpAQCAtNzQsMTMgKzc0LDEw
-IEBAIHN0YXRpYyBpbnQgbXRrX2h3X3Bpbl9maWVsZF9sb29rdXAoc3RydWN0IG10a19waW5jdHJs
-ICpodywNCiAJYm9vbCBmb3VuZCA9IGZhbHNlOw0KIAl1MzIgYml0czsNCiANCi0JaWYgKGh3LT5z
-b2MtPnJlZ19jYWwgJiYgaHctPnNvYy0+cmVnX2NhbFtmaWVsZF0ucmFuZ2UpIHsNCisJaWYgKGh3
-LT5zb2MtPnJlZ19jYWwgJiYgaHctPnNvYy0+cmVnX2NhbFtmaWVsZF0ucmFuZ2UpDQogCQlyYyA9
-ICZody0+c29jLT5yZWdfY2FsW2ZpZWxkXTsNCi0JfSBlbHNlIHsNCi0JCWRldl9kYmcoaHctPmRl
-diwNCi0JCQkiTm90IHN1cHBvcnQgZmllbGQgJWQgZm9yIHRoaXMgc29jXG4iLCBmaWVsZCk7DQor
-CWVsc2UNCiAJCXJldHVybiAtRU5PVFNVUFA7DQotCX0NCiANCiAJZW5kID0gcmMtPm5yYW5nZXMg
-LSAxOw0KIA0KQEAgLTk4LDExICs5NSw4IEBAIHN0YXRpYyBpbnQgbXRrX2h3X3Bpbl9maWVsZF9s
-b29rdXAoc3RydWN0IG10a19waW5jdHJsICpodywNCiAJCQlzdGFydCA9IGNoZWNrICsgMTsNCiAJ
-fQ0KIA0KLQlpZiAoIWZvdW5kKSB7DQotCQlkZXZfZGJnKGh3LT5kZXYsICJOb3Qgc3VwcG9ydCBm
-aWVsZCAlZCBmb3IgcGluID0gJWQgKCVzKVxuIiwNCi0JCQlmaWVsZCwgZGVzYy0+bnVtYmVyLCBk
-ZXNjLT5uYW1lKTsNCisJaWYgKCFmb3VuZCkNCiAJCXJldHVybiAtRU5PVFNVUFA7DQotCX0NCiAN
-CiAJYyA9IHJjLT5yYW5nZSArIGNoZWNrOw0KIA0KLS0gDQoxLjguMS4xLmRpcnR5DQo=
+Peter Zijlstra <peterz@infradead.org> writes:
 
+> For SMP systems using IPI based TLB invalidation, looking at
+> current->active_mm is entirely reasonable. This then presents the
+> following race condition:
+>
+>
+>   CPU0			CPU1
+>
+>   flush_tlb_mm(mm)	use_mm(mm)
+>     <send-IPI>
+> 			  tsk->active_mm = mm;
+> 			  <IPI>
+> 			    if (tsk->active_mm == mm)
+> 			      // flush TLBs
+> 			  </IPI>
+> 			  switch_mm(old_mm,mm,tsk);
+>
+>
+> Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+> because the IPI lands before we actually switched.
+>
+> Avoid this by disabling IRQs across changing ->active_mm and
+> switch_mm().
+>
+> [ There are all sorts of reasons this might be harmless for various
+> architecture specific reasons, but best not leave the door open at
+> all. ]
+
+
+Do we have similar race with exec_mmap()? I am looking at exec_mmap()
+runnning parallel to do_exit_flush_lazy_tlb(). We can get
+
+	if (current->active_mm == mm) {
+
+true and if we don't disable irq around updating tsk->mm/active_mm we
+can end up doing mmdrop on wrong mm?
+
+>
+> Cc: stable@kernel.org
+> Reported-by: Andy Lutomirski <luto@amacapital.net>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>
+> Sorry, I dropped the ball on this and only found it because I was
+> looking at the whole membarrier things vs use_mm().
+>
+>
+>  kernel/kthread.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/kthread.c b/kernel/kthread.c
+> index 1d9e2fdfd67a..7221dcbffef3 100644
+> --- a/kernel/kthread.c
+> +++ b/kernel/kthread.c
+> @@ -1241,13 +1241,15 @@ void kthread_use_mm(struct mm_struct *mm)
+>  	WARN_ON_ONCE(tsk->mm);
+>  
+>  	task_lock(tsk);
+> +	local_irq_disable();
+>  	active_mm = tsk->active_mm;
+>  	if (active_mm != mm) {
+>  		mmgrab(mm);
+>  		tsk->active_mm = mm;
+>  	}
+>  	tsk->mm = mm;
+> -	switch_mm(active_mm, mm, tsk);
+> +	switch_mm_irqs_off(active_mm, mm, tsk);
+> +	local_irq_enable();
+>  	task_unlock(tsk);
+>  #ifdef finish_arch_post_lock_switch
+>  	finish_arch_post_lock_switch();
+> @@ -1276,9 +1278,11 @@ void kthread_unuse_mm(struct mm_struct *mm)
+>  
+>  	task_lock(tsk);
+>  	sync_mm_rss(mm);
+> +	local_irq_disable();
+>  	tsk->mm = NULL;
+>  	/* active_mm is still 'mm' */
+>  	enter_lazy_tlb(mm, tsk);
+> +	local_irq_enable();
+>  	task_unlock(tsk);
+>  }
+>  EXPORT_SYMBOL_GPL(kthread_unuse_mm);
