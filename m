@@ -5,1018 +5,219 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3BDC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C40FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:17:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE19214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9B8207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:17:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dOF9eX+c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zp0UNxq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgHUHRA (ORCPT
+        id S1728073AbgHUHRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:17:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
+        Fri, 21 Aug 2020 03:17:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727914AbgHUHQv (ORCPT
+        with ESMTP id S1728019AbgHUHQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:16:51 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D9FC06138B
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:50 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id c19so685470wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:50 -0700 (PDT)
+        Fri, 21 Aug 2020 03:16:57 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC173C061346
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:55 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id c15so980745wrs.11
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:16:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=N1bhLDUXvtdeSm6PSIZz1clgOfaqp/a7uehQHo3mKwQ=;
-        b=dOF9eX+cnBkt+vblkLaKLQ/ySdyNM/hFjTCSdfr/3tqGDHs4c/zOLLc8vSEu3tTJUs
-         AoKyTdkdnlSI/xbG5tn43nOiBPISP3JJYLpsk91k/VXVc92S/q/qQYUJBcWlgJY+55QD
-         JGsieiDnJidmB+ZgJMm91qIiYZbRJ5JB0VQNP+KG5iIDhQw0czDMEZbYZAVoGGAqr/+4
-         HfBc3mzl0WE/BRZAMG0KY3ER7la1IwXnNa8ZCXXpi3unBeXUxLDuxzwcxxvj8B+zTwfx
-         zIznuYZGCKOTBopg/JGNVr0SjfTt0GDTOjaO4sX+9gcWKRRfNRyRvMVnRvzp/Q6/zj5g
-         cyjg==
+        bh=ua8TlHsoK9E4ad2qRqbugqtvcliFNwbmlPPlMKuGe5M=;
+        b=Zp0UNxq8bzN0TCpNf+2yzWBPUJaZth7Q4B6tm7kHDiiHZMmlDYi4brfMXWONZZf4Oj
+         EIes62+PECtkNTG/YkhChcvPJrE+8zAgB1CV81KrqiGLujeUfFDBXY02QhM/pYoptGX/
+         45NahC8b2uZ0p+jXA0a6f0P8moyaK0Yz7NkFqnFupo8Wg+Cp2t+ejgT369iOmTHmqwzA
+         TbWIK0nXNC7ussEnIdJNsn20hMN631Ss+iOpi1Hwpi8+ZTNQPCr2Vz9/mL2BNt2asVw8
+         iB4VNsz11Q3dEUgMxJXAJdCZSGGYDr4xaIGU+yrwUaDxG2WWfhGJhyezHTX5x47uV9NC
+         YDSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=N1bhLDUXvtdeSm6PSIZz1clgOfaqp/a7uehQHo3mKwQ=;
-        b=XEKPjghAPNOmIPBGTHdTsZrQRodGS+Je+gw4QJwWvBE8LGudDEETms5Cz4A2mCpqm6
-         2vWn+VqqyFjNA2FXCNBtAEnofT5uLU3idKhy+B+p+QDKFzgkPoLPrNkd3/BiyoPnVpkp
-         rV1ypk9nMs+TSnT+8kJGRTAMqIEcGSQtlxoWdkVQbhFvjlIUeJ6UNGNwRIs3/a+o57P7
-         Sy3xgA305N8qxzeePBhSdzP2dwtknoilW7x9tLDYJTGMIBjRpCtkP33vaZIHJ26GTRHa
-         IUHEQiO58KjpcmuHHrgg6kpo+VCUUNWicZ5KSP+q/Lkf/bqjMwkrf8mo+y6zQuY0rqgN
-         lv7A==
-X-Gm-Message-State: AOAM5328AF2vMBo+d7fD6xwH7kbC6nvuQ18YnyPZ2f3NzCT+Tvj9v7qq
-        Puf2wkdXoKeOlTJj8BKCfd+1jQ==
-X-Google-Smtp-Source: ABdhPJxZYaC1ZRNMbmuMi7BrebhQsaNHHC4tTiAhACOZQr79nCv1VpFqCqQI+FCvkQQ0bxFs/4O4Nw==
-X-Received: by 2002:a7b:c765:: with SMTP id x5mr1633608wmk.14.1597994209007;
-        Fri, 21 Aug 2020 00:16:49 -0700 (PDT)
+        bh=ua8TlHsoK9E4ad2qRqbugqtvcliFNwbmlPPlMKuGe5M=;
+        b=XAWvVfKPSUd+4kGmU8XZGCXqIkwwXAIUt8tPSXKWPIR0ciSUHMpH9vhC0X4qnaP0KT
+         C7+PVRhwuBMq4EDXnwMTgu5DK/Oe32t72uAZJ2W5DOwhPQ6nLBqyHMDchLoOx+/oCWoQ
+         IC2HvYBnVA0tUQGcz6udBE9SuuEEpZH3tKuIWfN0h1T5mEhWzbtusUfMimLCVVM0dSJq
+         I3fuVfc/9MVXl1+zSOgPcwXxbqa69AblGhquD6Gk4vZmh6ULoTIZytTppFubIHF9qGUD
+         Rn/88CYV+qKigXfPLS93+kfhVT/aaZ7csAn8Mu/FMRCZNN8Kxhm6UxmuXspbBlRndbtY
+         zEIQ==
+X-Gm-Message-State: AOAM5328cDJUWCgofD3iijqiqFMoOnlUezc7zgbn+zq3f80ILSb5eQUU
+        ejOSzaxKxSE92GTJjtRnwiOfgQ==
+X-Google-Smtp-Source: ABdhPJyIuWCDl/5PRU/Zc5TRVNouD2OGGFAivVyaM36GjXZfxEDBQaEOEfVyUeG09dcntKKvBF+Obw==
+X-Received: by 2002:adf:ea4f:: with SMTP id j15mr1386024wrn.253.1597994214612;
+        Fri, 21 Aug 2020 00:16:54 -0700 (PDT)
 Received: from dell.default ([95.149.164.62])
-        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.16.47
+        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.16.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 00:16:48 -0700 (PDT)
+        Fri, 21 Aug 2020 00:16:54 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-Subject: [PATCH 01/32] wireless: marvell: mwifiex: sdio: Move 'static const struct's into their own header file
-Date:   Fri, 21 Aug 2020 08:16:13 +0100
-Message-Id: <20200821071644.109970-2-lee.jones@linaro.org>
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
+Subject: [PATCH 05/32] wireless: broadcom: brcm80211: brcmfmac: p2p: Fix a bunch of function docs
+Date:   Fri, 21 Aug 2020 08:16:17 +0100
+Message-Id: <20200821071644.109970-6-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
 References: <20200821071644.109970-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Only include these tables in the 1 source file they are used.
-
-Fixes hundreds of W=1 warnings!
+Some formatting issues, some missing and some extra descriptions.
 
 Fixes the following W=1 kernel build warning(s):
 
- In file included from drivers/net/wireless/marvell/mwifiex/main.h:59,
- from drivers/net/wireless/marvell/mwifiex/main.c:22:
- drivers/net/wireless/marvell/mwifiex/sdio.h:705:41: warning: ‘mwifiex_sdio_sd8801’ defined but not used [-Wunused-const-variable=]
- 705 | static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
- | ^~~~~~~~~~~~~~~~~~~
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:162: warning: Function parameter or member 'oui' not described in 'brcmf_p2p_pub_act_frame'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:162: warning: Function parameter or member 'elts' not described in 'brcmf_p2p_pub_act_frame'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:181: warning: Function parameter or member 'oui' not described in 'brcmf_p2p_action_frame'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:181: warning: Function parameter or member 'elts' not described in 'brcmf_p2p_action_frame'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:196: warning: Function parameter or member 'query_data' not described in 'brcmf_p2psd_gas_pub_act_frame'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:210: warning: Function parameter or member 'extra_listen' not described in 'brcmf_config_af_params'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:776: warning: Function parameter or member 'ifp' not described in 'brcmf_p2p_run_escan'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:776: warning: Excess function parameter 'ndev' description in 'brcmf_p2p_run_escan'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:776: warning: Excess function parameter 'action' description in 'brcmf_p2p_run_escan'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:977: warning: Function parameter or member 'wdev' not described in 'brcmf_p2p_remain_on_channel'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:977: warning: Function parameter or member 'cookie' not described in 'brcmf_p2p_remain_on_channel'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1063: warning: Function parameter or member 'channel' not described in 'brcmf_p2p_act_frm_search'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:1337: warning: Function parameter or member 'mac' not described in 'brcmf_p2p_gon_req_collision'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:2046: warning: Function parameter or member 'cfg' not described in 'brcmf_p2p_ifchange'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:2046: warning: Function parameter or member 'if_type' not described in 'brcmf_p2p_ifchange'
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c:2046: warning: Excess function parameter 'mac' description in 'brcmf_p2p_ifchange'
 
- NB: There were 100's of these - snipped for brevity.
-
-Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-Cc: Xinming Hu <huxinming820@gmail.com>
+Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc: Franky Lin <franky.lin@broadcom.com>
+Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+Cc: Wright Feng <wright.feng@cypress.com>
 Cc: Kalle Valo <kvalo@codeaurora.org>
 Cc: "David S. Miller" <davem@davemloft.net>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: linux-wireless@vger.kernel.org
+Cc: brcm80211-dev-list.pdl@broadcom.com
+Cc: brcm80211-dev-list@cypress.com
 Cc: netdev@vger.kernel.org
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- .../wireless/marvell/mwifiex/sdio-tables.h    | 451 ++++++++++++++++++
- drivers/net/wireless/marvell/mwifiex/sdio.c   |   1 +
- drivers/net/wireless/marvell/mwifiex/sdio.h   | 427 -----------------
- 3 files changed, 452 insertions(+), 427 deletions(-)
- create mode 100644 drivers/net/wireless/marvell/mwifiex/sdio-tables.h
+ .../broadcom/brcm80211/brcmfmac/p2p.c         | 22 ++++++++++---------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sdio-tables.h b/drivers/net/wireless/marvell/mwifiex/sdio-tables.h
-new file mode 100644
-index 0000000000000..e40425965a84b
---- /dev/null
-+++ b/drivers/net/wireless/marvell/mwifiex/sdio-tables.h
-@@ -0,0 +1,451 @@
-+/*
-+ * NXP Wireless LAN device driver: SDIO specific definitions
-+ *
-+ * Copyright 2011-2020 NXP
-+ *
-+ * This software file (the "File") is distributed by NXP
-+ * under the terms of the GNU General Public License Version 2, June 1991
-+ * (the "License").  You may use, redistribute and/or modify this File in
-+ * accordance with the terms and conditions of the License, a copy of which
-+ * is available by writing to the Free Software Foundation, Inc.,
-+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA or on the
-+ * worldwide web at http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt.
-+ *
-+ * THE FILE IS DISTRIBUTED AS-IS, WITHOUT WARRANTY OF ANY KIND, AND THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE
-+ * ARE EXPRESSLY DISCLAIMED.  The License provides additional details about
-+ * this warranty disclaimer.
-+ */
-+
-+#ifndef	_MWIFIEX_SDIO_TABLES_H
-+#define	_MWIFIEX_SDIO_TABLES_H
-+
-+#include "sdio.h"
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd87xx = {
-+	.start_rd_port = 1,
-+	.start_wr_port = 1,
-+	.base_0_reg = 0x0040,
-+	.base_1_reg = 0x0041,
-+	.poll_reg = 0x30,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK,
-+	.host_int_rsr_reg = 0x1,
-+	.host_int_mask_reg = 0x02,
-+	.host_int_status_reg = 0x03,
-+	.status_reg_0 = 0x60,
-+	.status_reg_1 = 0x61,
-+	.sdio_int_mask = 0x3f,
-+	.data_port_mask = 0x0000fffe,
-+	.io_port_0_reg = 0x78,
-+	.io_port_1_reg = 0x79,
-+	.io_port_2_reg = 0x7A,
-+	.max_mp_regs = 64,
-+	.rd_bitmap_l = 0x04,
-+	.rd_bitmap_u = 0x05,
-+	.wr_bitmap_l = 0x06,
-+	.wr_bitmap_u = 0x07,
-+	.rd_len_p0_l = 0x08,
-+	.rd_len_p0_u = 0x09,
-+	.card_misc_cfg_reg = 0x6c,
-+	.func1_dump_reg_start = 0x0,
-+	.func1_dump_reg_end = 0x9,
-+	.func1_scratch_reg = 0x60,
-+	.func1_spec_reg_num = 5,
-+	.func1_spec_reg_table = {0x28, 0x30, 0x34, 0x38, 0x3c},
-+};
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8897 = {
-+	.start_rd_port = 0,
-+	.start_wr_port = 0,
-+	.base_0_reg = 0x60,
-+	.base_1_reg = 0x61,
-+	.poll_reg = 0x50,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
-+			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
-+	.host_int_rsr_reg = 0x1,
-+	.host_int_status_reg = 0x03,
-+	.host_int_mask_reg = 0x02,
-+	.status_reg_0 = 0xc0,
-+	.status_reg_1 = 0xc1,
-+	.sdio_int_mask = 0xff,
-+	.data_port_mask = 0xffffffff,
-+	.io_port_0_reg = 0xD8,
-+	.io_port_1_reg = 0xD9,
-+	.io_port_2_reg = 0xDA,
-+	.max_mp_regs = 184,
-+	.rd_bitmap_l = 0x04,
-+	.rd_bitmap_u = 0x05,
-+	.rd_bitmap_1l = 0x06,
-+	.rd_bitmap_1u = 0x07,
-+	.wr_bitmap_l = 0x08,
-+	.wr_bitmap_u = 0x09,
-+	.wr_bitmap_1l = 0x0a,
-+	.wr_bitmap_1u = 0x0b,
-+	.rd_len_p0_l = 0x0c,
-+	.rd_len_p0_u = 0x0d,
-+	.card_misc_cfg_reg = 0xcc,
-+	.card_cfg_2_1_reg = 0xcd,
-+	.cmd_rd_len_0 = 0xb4,
-+	.cmd_rd_len_1 = 0xb5,
-+	.cmd_rd_len_2 = 0xb6,
-+	.cmd_rd_len_3 = 0xb7,
-+	.cmd_cfg_0 = 0xb8,
-+	.cmd_cfg_1 = 0xb9,
-+	.cmd_cfg_2 = 0xba,
-+	.cmd_cfg_3 = 0xbb,
-+	.fw_dump_host_ready = 0xee,
-+	.fw_dump_ctrl = 0xe2,
-+	.fw_dump_start = 0xe3,
-+	.fw_dump_end = 0xea,
-+	.func1_dump_reg_start = 0x0,
-+	.func1_dump_reg_end = 0xb,
-+	.func1_scratch_reg = 0xc0,
-+	.func1_spec_reg_num = 8,
-+	.func1_spec_reg_table = {0x4C, 0x50, 0x54, 0x55, 0x58,
-+				 0x59, 0x5c, 0x5d},
-+};
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8977 = {
-+	.start_rd_port = 0,
-+	.start_wr_port = 0,
-+	.base_0_reg = 0xF8,
-+	.base_1_reg = 0xF9,
-+	.poll_reg = 0x5C,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
-+		CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
-+	.host_int_rsr_reg = 0x4,
-+	.host_int_status_reg = 0x0C,
-+	.host_int_mask_reg = 0x08,
-+	.status_reg_0 = 0xE8,
-+	.status_reg_1 = 0xE9,
-+	.sdio_int_mask = 0xff,
-+	.data_port_mask = 0xffffffff,
-+	.io_port_0_reg = 0xE4,
-+	.io_port_1_reg = 0xE5,
-+	.io_port_2_reg = 0xE6,
-+	.max_mp_regs = 196,
-+	.rd_bitmap_l = 0x10,
-+	.rd_bitmap_u = 0x11,
-+	.rd_bitmap_1l = 0x12,
-+	.rd_bitmap_1u = 0x13,
-+	.wr_bitmap_l = 0x14,
-+	.wr_bitmap_u = 0x15,
-+	.wr_bitmap_1l = 0x16,
-+	.wr_bitmap_1u = 0x17,
-+	.rd_len_p0_l = 0x18,
-+	.rd_len_p0_u = 0x19,
-+	.card_misc_cfg_reg = 0xd8,
-+	.card_cfg_2_1_reg = 0xd9,
-+	.cmd_rd_len_0 = 0xc0,
-+	.cmd_rd_len_1 = 0xc1,
-+	.cmd_rd_len_2 = 0xc2,
-+	.cmd_rd_len_3 = 0xc3,
-+	.cmd_cfg_0 = 0xc4,
-+	.cmd_cfg_1 = 0xc5,
-+	.cmd_cfg_2 = 0xc6,
-+	.cmd_cfg_3 = 0xc7,
-+	.fw_dump_host_ready = 0xcc,
-+	.fw_dump_ctrl = 0xf0,
-+	.fw_dump_start = 0xf1,
-+	.fw_dump_end = 0xf8,
-+	.func1_dump_reg_start = 0x10,
-+	.func1_dump_reg_end = 0x17,
-+	.func1_scratch_reg = 0xe8,
-+	.func1_spec_reg_num = 13,
-+	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D,
-+				 0x60, 0x61, 0x62, 0x64,
-+				 0x65, 0x66, 0x68, 0x69,
-+				 0x6a},
-+};
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8997 = {
-+	.start_rd_port = 0,
-+	.start_wr_port = 0,
-+	.base_0_reg = 0xF8,
-+	.base_1_reg = 0xF9,
-+	.poll_reg = 0x5C,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
-+			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
-+	.host_int_rsr_reg = 0x4,
-+	.host_int_status_reg = 0x0C,
-+	.host_int_mask_reg = 0x08,
-+	.status_reg_0 = 0xE8,
-+	.status_reg_1 = 0xE9,
-+	.sdio_int_mask = 0xff,
-+	.data_port_mask = 0xffffffff,
-+	.io_port_0_reg = 0xE4,
-+	.io_port_1_reg = 0xE5,
-+	.io_port_2_reg = 0xE6,
-+	.max_mp_regs = 196,
-+	.rd_bitmap_l = 0x10,
-+	.rd_bitmap_u = 0x11,
-+	.rd_bitmap_1l = 0x12,
-+	.rd_bitmap_1u = 0x13,
-+	.wr_bitmap_l = 0x14,
-+	.wr_bitmap_u = 0x15,
-+	.wr_bitmap_1l = 0x16,
-+	.wr_bitmap_1u = 0x17,
-+	.rd_len_p0_l = 0x18,
-+	.rd_len_p0_u = 0x19,
-+	.card_misc_cfg_reg = 0xd8,
-+	.card_cfg_2_1_reg = 0xd9,
-+	.cmd_rd_len_0 = 0xc0,
-+	.cmd_rd_len_1 = 0xc1,
-+	.cmd_rd_len_2 = 0xc2,
-+	.cmd_rd_len_3 = 0xc3,
-+	.cmd_cfg_0 = 0xc4,
-+	.cmd_cfg_1 = 0xc5,
-+	.cmd_cfg_2 = 0xc6,
-+	.cmd_cfg_3 = 0xc7,
-+	.fw_dump_host_ready = 0xcc,
-+	.fw_dump_ctrl = 0xf0,
-+	.fw_dump_start = 0xf1,
-+	.fw_dump_end = 0xf8,
-+	.func1_dump_reg_start = 0x10,
-+	.func1_dump_reg_end = 0x17,
-+	.func1_scratch_reg = 0xe8,
-+	.func1_spec_reg_num = 13,
-+	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D,
-+				 0x60, 0x61, 0x62, 0x64,
-+				 0x65, 0x66, 0x68, 0x69,
-+				 0x6a},
-+};
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8887 = {
-+	.start_rd_port = 0,
-+	.start_wr_port = 0,
-+	.base_0_reg = 0x6C,
-+	.base_1_reg = 0x6D,
-+	.poll_reg = 0x5C,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
-+			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
-+	.host_int_rsr_reg = 0x4,
-+	.host_int_status_reg = 0x0C,
-+	.host_int_mask_reg = 0x08,
-+	.status_reg_0 = 0x90,
-+	.status_reg_1 = 0x91,
-+	.sdio_int_mask = 0xff,
-+	.data_port_mask = 0xffffffff,
-+	.io_port_0_reg = 0xE4,
-+	.io_port_1_reg = 0xE5,
-+	.io_port_2_reg = 0xE6,
-+	.max_mp_regs = 196,
-+	.rd_bitmap_l = 0x10,
-+	.rd_bitmap_u = 0x11,
-+	.rd_bitmap_1l = 0x12,
-+	.rd_bitmap_1u = 0x13,
-+	.wr_bitmap_l = 0x14,
-+	.wr_bitmap_u = 0x15,
-+	.wr_bitmap_1l = 0x16,
-+	.wr_bitmap_1u = 0x17,
-+	.rd_len_p0_l = 0x18,
-+	.rd_len_p0_u = 0x19,
-+	.card_misc_cfg_reg = 0xd8,
-+	.card_cfg_2_1_reg = 0xd9,
-+	.cmd_rd_len_0 = 0xc0,
-+	.cmd_rd_len_1 = 0xc1,
-+	.cmd_rd_len_2 = 0xc2,
-+	.cmd_rd_len_3 = 0xc3,
-+	.cmd_cfg_0 = 0xc4,
-+	.cmd_cfg_1 = 0xc5,
-+	.cmd_cfg_2 = 0xc6,
-+	.cmd_cfg_3 = 0xc7,
-+	.func1_dump_reg_start = 0x10,
-+	.func1_dump_reg_end = 0x17,
-+	.func1_scratch_reg = 0x90,
-+	.func1_spec_reg_num = 13,
-+	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D, 0x60,
-+				 0x61, 0x62, 0x64, 0x65, 0x66,
-+				 0x68, 0x69, 0x6a},
-+};
-+
-+static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8987 = {
-+	.start_rd_port = 0,
-+	.start_wr_port = 0,
-+	.base_0_reg = 0xF8,
-+	.base_1_reg = 0xF9,
-+	.poll_reg = 0x5C,
-+	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
-+			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
-+	.host_int_rsr_reg = 0x4,
-+	.host_int_status_reg = 0x0C,
-+	.host_int_mask_reg = 0x08,
-+	.status_reg_0 = 0xE8,
-+	.status_reg_1 = 0xE9,
-+	.sdio_int_mask = 0xff,
-+	.data_port_mask = 0xffffffff,
-+	.io_port_0_reg = 0xE4,
-+	.io_port_1_reg = 0xE5,
-+	.io_port_2_reg = 0xE6,
-+	.max_mp_regs = 196,
-+	.rd_bitmap_l = 0x10,
-+	.rd_bitmap_u = 0x11,
-+	.rd_bitmap_1l = 0x12,
-+	.rd_bitmap_1u = 0x13,
-+	.wr_bitmap_l = 0x14,
-+	.wr_bitmap_u = 0x15,
-+	.wr_bitmap_1l = 0x16,
-+	.wr_bitmap_1u = 0x17,
-+	.rd_len_p0_l = 0x18,
-+	.rd_len_p0_u = 0x19,
-+	.card_misc_cfg_reg = 0xd8,
-+	.card_cfg_2_1_reg = 0xd9,
-+	.cmd_rd_len_0 = 0xc0,
-+	.cmd_rd_len_1 = 0xc1,
-+	.cmd_rd_len_2 = 0xc2,
-+	.cmd_rd_len_3 = 0xc3,
-+	.cmd_cfg_0 = 0xc4,
-+	.cmd_cfg_1 = 0xc5,
-+	.cmd_cfg_2 = 0xc6,
-+	.cmd_cfg_3 = 0xc7,
-+	.fw_dump_host_ready = 0xcc,
-+	.fw_dump_ctrl = 0xf9,
-+	.fw_dump_start = 0xf1,
-+	.fw_dump_end = 0xf8,
-+	.func1_dump_reg_start = 0x10,
-+	.func1_dump_reg_end = 0x17,
-+	.func1_scratch_reg = 0xE8,
-+	.func1_spec_reg_num = 13,
-+	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D, 0x60,
-+				 0x61, 0x62, 0x64, 0x65, 0x66,
-+				 0x68, 0x69, 0x6a},
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8786 = {
-+	.firmware = SD8786_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd87xx,
-+	.max_ports = 16,
-+	.mp_agg_pkt_limit = 8,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.supports_sdio_new_mode = false,
-+	.has_control_mask = true,
-+	.can_dump_fw = false,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = false,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8787 = {
-+	.firmware = SD8787_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd87xx,
-+	.max_ports = 16,
-+	.mp_agg_pkt_limit = 8,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.supports_sdio_new_mode = false,
-+	.has_control_mask = true,
-+	.can_dump_fw = false,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8797 = {
-+	.firmware = SD8797_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd87xx,
-+	.max_ports = 16,
-+	.mp_agg_pkt_limit = 8,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.supports_sdio_new_mode = false,
-+	.has_control_mask = true,
-+	.can_dump_fw = false,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8897 = {
-+	.firmware = SD8897_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd8897,
-+	.max_ports = 32,
-+	.mp_agg_pkt_limit = 16,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.supports_sdio_new_mode = true,
-+	.has_control_mask = false,
-+	.can_dump_fw = true,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8977 = {
-+	.firmware = SD8977_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd8977,
-+	.max_ports = 32,
-+	.mp_agg_pkt_limit = 16,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.supports_sdio_new_mode = true,
-+	.has_control_mask = false,
-+	.can_dump_fw = true,
-+	.fw_dump_enh = true,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8997 = {
-+	.firmware = SD8997_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd8997,
-+	.max_ports = 32,
-+	.mp_agg_pkt_limit = 16,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.supports_sdio_new_mode = true,
-+	.has_control_mask = false,
-+	.can_dump_fw = true,
-+	.fw_dump_enh = true,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8887 = {
-+	.firmware = SD8887_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd8887,
-+	.max_ports = 32,
-+	.mp_agg_pkt_limit = 16,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_32K,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_32K,
-+	.supports_sdio_new_mode = true,
-+	.has_control_mask = false,
-+	.can_dump_fw = false,
-+	.can_auto_tdls = true,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8987 = {
-+	.firmware = SD8987_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd8987,
-+	.max_ports = 32,
-+	.mp_agg_pkt_limit = 16,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
-+	.supports_sdio_new_mode = true,
-+	.has_control_mask = false,
-+	.can_dump_fw = true,
-+	.fw_dump_enh = true,
-+	.can_auto_tdls = true,
-+	.can_ext_scan = true,
-+};
-+
-+static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
-+	.firmware = SD8801_DEFAULT_FW_NAME,
-+	.reg = &mwifiex_reg_sd87xx,
-+	.max_ports = 16,
-+	.mp_agg_pkt_limit = 8,
-+	.supports_sdio_new_mode = false,
-+	.has_control_mask = true,
-+	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
-+	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
-+	.can_dump_fw = false,
-+	.can_auto_tdls = false,
-+	.can_ext_scan = true,
-+};
-+#endif /* _MWIFIEX_SDIO_TABLES_H */
-diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/net/wireless/marvell/mwifiex/sdio.c
-index a042965962a2d..112903076b715 100644
---- a/drivers/net/wireless/marvell/mwifiex/sdio.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
-@@ -27,6 +27,7 @@
- #include "wmm.h"
- #include "11n.h"
- #include "sdio.h"
-+#include "sdio-tables.h"
- 
- 
- #define SDIO_VERSION	"1.0"
-diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.h b/drivers/net/wireless/marvell/mwifiex/sdio.h
-index 8b476b007c5e2..dec534a6ddb17 100644
---- a/drivers/net/wireless/marvell/mwifiex/sdio.h
-+++ b/drivers/net/wireless/marvell/mwifiex/sdio.h
-@@ -290,433 +290,6 @@ struct mwifiex_sdio_device {
- 	bool can_ext_scan;
- };
- 
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd87xx = {
--	.start_rd_port = 1,
--	.start_wr_port = 1,
--	.base_0_reg = 0x0040,
--	.base_1_reg = 0x0041,
--	.poll_reg = 0x30,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK,
--	.host_int_rsr_reg = 0x1,
--	.host_int_mask_reg = 0x02,
--	.host_int_status_reg = 0x03,
--	.status_reg_0 = 0x60,
--	.status_reg_1 = 0x61,
--	.sdio_int_mask = 0x3f,
--	.data_port_mask = 0x0000fffe,
--	.io_port_0_reg = 0x78,
--	.io_port_1_reg = 0x79,
--	.io_port_2_reg = 0x7A,
--	.max_mp_regs = 64,
--	.rd_bitmap_l = 0x04,
--	.rd_bitmap_u = 0x05,
--	.wr_bitmap_l = 0x06,
--	.wr_bitmap_u = 0x07,
--	.rd_len_p0_l = 0x08,
--	.rd_len_p0_u = 0x09,
--	.card_misc_cfg_reg = 0x6c,
--	.func1_dump_reg_start = 0x0,
--	.func1_dump_reg_end = 0x9,
--	.func1_scratch_reg = 0x60,
--	.func1_spec_reg_num = 5,
--	.func1_spec_reg_table = {0x28, 0x30, 0x34, 0x38, 0x3c},
--};
--
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8897 = {
--	.start_rd_port = 0,
--	.start_wr_port = 0,
--	.base_0_reg = 0x60,
--	.base_1_reg = 0x61,
--	.poll_reg = 0x50,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
--			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
--	.host_int_rsr_reg = 0x1,
--	.host_int_status_reg = 0x03,
--	.host_int_mask_reg = 0x02,
--	.status_reg_0 = 0xc0,
--	.status_reg_1 = 0xc1,
--	.sdio_int_mask = 0xff,
--	.data_port_mask = 0xffffffff,
--	.io_port_0_reg = 0xD8,
--	.io_port_1_reg = 0xD9,
--	.io_port_2_reg = 0xDA,
--	.max_mp_regs = 184,
--	.rd_bitmap_l = 0x04,
--	.rd_bitmap_u = 0x05,
--	.rd_bitmap_1l = 0x06,
--	.rd_bitmap_1u = 0x07,
--	.wr_bitmap_l = 0x08,
--	.wr_bitmap_u = 0x09,
--	.wr_bitmap_1l = 0x0a,
--	.wr_bitmap_1u = 0x0b,
--	.rd_len_p0_l = 0x0c,
--	.rd_len_p0_u = 0x0d,
--	.card_misc_cfg_reg = 0xcc,
--	.card_cfg_2_1_reg = 0xcd,
--	.cmd_rd_len_0 = 0xb4,
--	.cmd_rd_len_1 = 0xb5,
--	.cmd_rd_len_2 = 0xb6,
--	.cmd_rd_len_3 = 0xb7,
--	.cmd_cfg_0 = 0xb8,
--	.cmd_cfg_1 = 0xb9,
--	.cmd_cfg_2 = 0xba,
--	.cmd_cfg_3 = 0xbb,
--	.fw_dump_host_ready = 0xee,
--	.fw_dump_ctrl = 0xe2,
--	.fw_dump_start = 0xe3,
--	.fw_dump_end = 0xea,
--	.func1_dump_reg_start = 0x0,
--	.func1_dump_reg_end = 0xb,
--	.func1_scratch_reg = 0xc0,
--	.func1_spec_reg_num = 8,
--	.func1_spec_reg_table = {0x4C, 0x50, 0x54, 0x55, 0x58,
--				 0x59, 0x5c, 0x5d},
--};
--
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8977 = {
--	.start_rd_port = 0,
--	.start_wr_port = 0,
--	.base_0_reg = 0xF8,
--	.base_1_reg = 0xF9,
--	.poll_reg = 0x5C,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
--		CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
--	.host_int_rsr_reg = 0x4,
--	.host_int_status_reg = 0x0C,
--	.host_int_mask_reg = 0x08,
--	.status_reg_0 = 0xE8,
--	.status_reg_1 = 0xE9,
--	.sdio_int_mask = 0xff,
--	.data_port_mask = 0xffffffff,
--	.io_port_0_reg = 0xE4,
--	.io_port_1_reg = 0xE5,
--	.io_port_2_reg = 0xE6,
--	.max_mp_regs = 196,
--	.rd_bitmap_l = 0x10,
--	.rd_bitmap_u = 0x11,
--	.rd_bitmap_1l = 0x12,
--	.rd_bitmap_1u = 0x13,
--	.wr_bitmap_l = 0x14,
--	.wr_bitmap_u = 0x15,
--	.wr_bitmap_1l = 0x16,
--	.wr_bitmap_1u = 0x17,
--	.rd_len_p0_l = 0x18,
--	.rd_len_p0_u = 0x19,
--	.card_misc_cfg_reg = 0xd8,
--	.card_cfg_2_1_reg = 0xd9,
--	.cmd_rd_len_0 = 0xc0,
--	.cmd_rd_len_1 = 0xc1,
--	.cmd_rd_len_2 = 0xc2,
--	.cmd_rd_len_3 = 0xc3,
--	.cmd_cfg_0 = 0xc4,
--	.cmd_cfg_1 = 0xc5,
--	.cmd_cfg_2 = 0xc6,
--	.cmd_cfg_3 = 0xc7,
--	.fw_dump_host_ready = 0xcc,
--	.fw_dump_ctrl = 0xf0,
--	.fw_dump_start = 0xf1,
--	.fw_dump_end = 0xf8,
--	.func1_dump_reg_start = 0x10,
--	.func1_dump_reg_end = 0x17,
--	.func1_scratch_reg = 0xe8,
--	.func1_spec_reg_num = 13,
--	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D,
--				 0x60, 0x61, 0x62, 0x64,
--				 0x65, 0x66, 0x68, 0x69,
--				 0x6a},
--};
--
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8997 = {
--	.start_rd_port = 0,
--	.start_wr_port = 0,
--	.base_0_reg = 0xF8,
--	.base_1_reg = 0xF9,
--	.poll_reg = 0x5C,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
--			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
--	.host_int_rsr_reg = 0x4,
--	.host_int_status_reg = 0x0C,
--	.host_int_mask_reg = 0x08,
--	.status_reg_0 = 0xE8,
--	.status_reg_1 = 0xE9,
--	.sdio_int_mask = 0xff,
--	.data_port_mask = 0xffffffff,
--	.io_port_0_reg = 0xE4,
--	.io_port_1_reg = 0xE5,
--	.io_port_2_reg = 0xE6,
--	.max_mp_regs = 196,
--	.rd_bitmap_l = 0x10,
--	.rd_bitmap_u = 0x11,
--	.rd_bitmap_1l = 0x12,
--	.rd_bitmap_1u = 0x13,
--	.wr_bitmap_l = 0x14,
--	.wr_bitmap_u = 0x15,
--	.wr_bitmap_1l = 0x16,
--	.wr_bitmap_1u = 0x17,
--	.rd_len_p0_l = 0x18,
--	.rd_len_p0_u = 0x19,
--	.card_misc_cfg_reg = 0xd8,
--	.card_cfg_2_1_reg = 0xd9,
--	.cmd_rd_len_0 = 0xc0,
--	.cmd_rd_len_1 = 0xc1,
--	.cmd_rd_len_2 = 0xc2,
--	.cmd_rd_len_3 = 0xc3,
--	.cmd_cfg_0 = 0xc4,
--	.cmd_cfg_1 = 0xc5,
--	.cmd_cfg_2 = 0xc6,
--	.cmd_cfg_3 = 0xc7,
--	.fw_dump_host_ready = 0xcc,
--	.fw_dump_ctrl = 0xf0,
--	.fw_dump_start = 0xf1,
--	.fw_dump_end = 0xf8,
--	.func1_dump_reg_start = 0x10,
--	.func1_dump_reg_end = 0x17,
--	.func1_scratch_reg = 0xe8,
--	.func1_spec_reg_num = 13,
--	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D,
--				 0x60, 0x61, 0x62, 0x64,
--				 0x65, 0x66, 0x68, 0x69,
--				 0x6a},
--};
--
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8887 = {
--	.start_rd_port = 0,
--	.start_wr_port = 0,
--	.base_0_reg = 0x6C,
--	.base_1_reg = 0x6D,
--	.poll_reg = 0x5C,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
--			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
--	.host_int_rsr_reg = 0x4,
--	.host_int_status_reg = 0x0C,
--	.host_int_mask_reg = 0x08,
--	.status_reg_0 = 0x90,
--	.status_reg_1 = 0x91,
--	.sdio_int_mask = 0xff,
--	.data_port_mask = 0xffffffff,
--	.io_port_0_reg = 0xE4,
--	.io_port_1_reg = 0xE5,
--	.io_port_2_reg = 0xE6,
--	.max_mp_regs = 196,
--	.rd_bitmap_l = 0x10,
--	.rd_bitmap_u = 0x11,
--	.rd_bitmap_1l = 0x12,
--	.rd_bitmap_1u = 0x13,
--	.wr_bitmap_l = 0x14,
--	.wr_bitmap_u = 0x15,
--	.wr_bitmap_1l = 0x16,
--	.wr_bitmap_1u = 0x17,
--	.rd_len_p0_l = 0x18,
--	.rd_len_p0_u = 0x19,
--	.card_misc_cfg_reg = 0xd8,
--	.card_cfg_2_1_reg = 0xd9,
--	.cmd_rd_len_0 = 0xc0,
--	.cmd_rd_len_1 = 0xc1,
--	.cmd_rd_len_2 = 0xc2,
--	.cmd_rd_len_3 = 0xc3,
--	.cmd_cfg_0 = 0xc4,
--	.cmd_cfg_1 = 0xc5,
--	.cmd_cfg_2 = 0xc6,
--	.cmd_cfg_3 = 0xc7,
--	.func1_dump_reg_start = 0x10,
--	.func1_dump_reg_end = 0x17,
--	.func1_scratch_reg = 0x90,
--	.func1_spec_reg_num = 13,
--	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D, 0x60,
--				 0x61, 0x62, 0x64, 0x65, 0x66,
--				 0x68, 0x69, 0x6a},
--};
--
--static const struct mwifiex_sdio_card_reg mwifiex_reg_sd8987 = {
--	.start_rd_port = 0,
--	.start_wr_port = 0,
--	.base_0_reg = 0xF8,
--	.base_1_reg = 0xF9,
--	.poll_reg = 0x5C,
--	.host_int_enable = UP_LD_HOST_INT_MASK | DN_LD_HOST_INT_MASK |
--			CMD_PORT_UPLD_INT_MASK | CMD_PORT_DNLD_INT_MASK,
--	.host_int_rsr_reg = 0x4,
--	.host_int_status_reg = 0x0C,
--	.host_int_mask_reg = 0x08,
--	.status_reg_0 = 0xE8,
--	.status_reg_1 = 0xE9,
--	.sdio_int_mask = 0xff,
--	.data_port_mask = 0xffffffff,
--	.io_port_0_reg = 0xE4,
--	.io_port_1_reg = 0xE5,
--	.io_port_2_reg = 0xE6,
--	.max_mp_regs = 196,
--	.rd_bitmap_l = 0x10,
--	.rd_bitmap_u = 0x11,
--	.rd_bitmap_1l = 0x12,
--	.rd_bitmap_1u = 0x13,
--	.wr_bitmap_l = 0x14,
--	.wr_bitmap_u = 0x15,
--	.wr_bitmap_1l = 0x16,
--	.wr_bitmap_1u = 0x17,
--	.rd_len_p0_l = 0x18,
--	.rd_len_p0_u = 0x19,
--	.card_misc_cfg_reg = 0xd8,
--	.card_cfg_2_1_reg = 0xd9,
--	.cmd_rd_len_0 = 0xc0,
--	.cmd_rd_len_1 = 0xc1,
--	.cmd_rd_len_2 = 0xc2,
--	.cmd_rd_len_3 = 0xc3,
--	.cmd_cfg_0 = 0xc4,
--	.cmd_cfg_1 = 0xc5,
--	.cmd_cfg_2 = 0xc6,
--	.cmd_cfg_3 = 0xc7,
--	.fw_dump_host_ready = 0xcc,
--	.fw_dump_ctrl = 0xf9,
--	.fw_dump_start = 0xf1,
--	.fw_dump_end = 0xf8,
--	.func1_dump_reg_start = 0x10,
--	.func1_dump_reg_end = 0x17,
--	.func1_scratch_reg = 0xE8,
--	.func1_spec_reg_num = 13,
--	.func1_spec_reg_table = {0x08, 0x58, 0x5C, 0x5D, 0x60,
--				 0x61, 0x62, 0x64, 0x65, 0x66,
--				 0x68, 0x69, 0x6a},
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8786 = {
--	.firmware = SD8786_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd87xx,
--	.max_ports = 16,
--	.mp_agg_pkt_limit = 8,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.supports_sdio_new_mode = false,
--	.has_control_mask = true,
--	.can_dump_fw = false,
--	.can_auto_tdls = false,
--	.can_ext_scan = false,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8787 = {
--	.firmware = SD8787_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd87xx,
--	.max_ports = 16,
--	.mp_agg_pkt_limit = 8,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.supports_sdio_new_mode = false,
--	.has_control_mask = true,
--	.can_dump_fw = false,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8797 = {
--	.firmware = SD8797_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd87xx,
--	.max_ports = 16,
--	.mp_agg_pkt_limit = 8,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.supports_sdio_new_mode = false,
--	.has_control_mask = true,
--	.can_dump_fw = false,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8897 = {
--	.firmware = SD8897_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd8897,
--	.max_ports = 32,
--	.mp_agg_pkt_limit = 16,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.supports_sdio_new_mode = true,
--	.has_control_mask = false,
--	.can_dump_fw = true,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8977 = {
--	.firmware = SD8977_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd8977,
--	.max_ports = 32,
--	.mp_agg_pkt_limit = 16,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.supports_sdio_new_mode = true,
--	.has_control_mask = false,
--	.can_dump_fw = true,
--	.fw_dump_enh = true,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8997 = {
--	.firmware = SD8997_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd8997,
--	.max_ports = 32,
--	.mp_agg_pkt_limit = 16,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_4K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.supports_sdio_new_mode = true,
--	.has_control_mask = false,
--	.can_dump_fw = true,
--	.fw_dump_enh = true,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8887 = {
--	.firmware = SD8887_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd8887,
--	.max_ports = 32,
--	.mp_agg_pkt_limit = 16,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_32K,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_32K,
--	.supports_sdio_new_mode = true,
--	.has_control_mask = false,
--	.can_dump_fw = false,
--	.can_auto_tdls = true,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8987 = {
--	.firmware = SD8987_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd8987,
--	.max_ports = 32,
--	.mp_agg_pkt_limit = 16,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_MAX,
--	.supports_sdio_new_mode = true,
--	.has_control_mask = false,
--	.can_dump_fw = true,
--	.fw_dump_enh = true,
--	.can_auto_tdls = true,
--	.can_ext_scan = true,
--};
--
--static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
--	.firmware = SD8801_DEFAULT_FW_NAME,
--	.reg = &mwifiex_reg_sd87xx,
--	.max_ports = 16,
--	.mp_agg_pkt_limit = 8,
--	.supports_sdio_new_mode = false,
--	.has_control_mask = true,
--	.tx_buf_size = MWIFIEX_TX_DATA_BUF_SIZE_2K,
--	.mp_tx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.mp_rx_agg_buf_size = MWIFIEX_MP_AGGR_BUF_SIZE_16K,
--	.can_dump_fw = false,
--	.can_auto_tdls = false,
--	.can_ext_scan = true,
--};
--
- /*
-  * .cmdrsp_complete handler
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+index 7f681a25ab525..dc0bc1f6c8023 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/p2p.c
+@@ -145,11 +145,11 @@ struct brcmf_p2p_scan_le {
+  *
+  * @category: P2P_PUB_AF_CATEGORY
+  * @action: P2P_PUB_AF_ACTION
+- * @oui[3]: P2P_OUI
++ * @oui: P2P_OUI
+  * @oui_type: OUI type - P2P_VER
+  * @subtype: OUI subtype - P2P_TYPE_*
+  * @dialog_token: nonzero, identifies req/rsp transaction
+- * @elts[1]: Variable length information elements.
++ * @elts: Variable length information elements.
   */
+ struct brcmf_p2p_pub_act_frame {
+ 	u8	category;
+@@ -165,11 +165,11 @@ struct brcmf_p2p_pub_act_frame {
+  * struct brcmf_p2p_action_frame - WiFi P2P Action Frame
+  *
+  * @category: P2P_AF_CATEGORY
+- * @OUI[3]: OUI - P2P_OUI
++ * @oui: OUI - P2P_OUI
+  * @type: OUI Type - P2P_VER
+  * @subtype: OUI Subtype - P2P_AF_*
+  * @dialog_token: nonzero, identifies req/resp tranaction
+- * @elts[1]: Variable length information elements.
++ * @elts: Variable length information elements.
+  */
+ struct brcmf_p2p_action_frame {
+ 	u8	category;
+@@ -186,7 +186,7 @@ struct brcmf_p2p_action_frame {
+  * @category: 0x04 Public Action Frame
+  * @action: 0x6c Advertisement Protocol
+  * @dialog_token: nonzero, identifies req/rsp transaction
+- * @query_data[1]: Query Data. SD gas ireq SD gas iresp
++ * @query_data: Query Data. SD gas ireq SD gas iresp
+  */
+ struct brcmf_p2psd_gas_pub_act_frame {
+ 	u8	category;
+@@ -201,7 +201,7 @@ struct brcmf_p2psd_gas_pub_act_frame {
+  * @mpc_onoff: To make sure to send successfully action frame, we have to
+  *             turn off mpc  0: off, 1: on,  (-1): do nothing
+  * @search_channel: 1: search peer's channel to send af
+- * extra_listen: keep the dwell time to get af response frame.
++ * @extra_listen: keep the dwell time to get af response frame.
+  */
+ struct brcmf_config_af_params {
+ 	s32 mpc_onoff;
+@@ -763,9 +763,8 @@ static s32 brcmf_p2p_escan(struct brcmf_p2p_info *p2p, u32 num_chans,
+  * brcmf_p2p_run_escan() - escan callback for peer-to-peer.
+  *
+  * @cfg: driver private data for cfg80211 interface.
+- * @ndev: net device for which scan is requested.
++ * @ifp: interface control.
+  * @request: scan request from cfg80211.
+- * @action: scan action.
+  *
+  * Determines the P2P discovery state based to scan request parameters and
+  * validates the channels in the request.
+@@ -967,9 +966,10 @@ brcmf_p2p_discover_listen(struct brcmf_p2p_info *p2p, u16 channel, u32 duration)
+  * brcmf_p2p_remain_on_channel() - put device on channel and stay there.
+  *
+  * @wiphy: wiphy device.
++ * @wiphy: wireless device.
+  * @channel: channel to stay on.
+  * @duration: time in ms to remain on channel.
+- *
++ * @cookie: cookie.
+  */
+ int brcmf_p2p_remain_on_channel(struct wiphy *wiphy, struct wireless_dev *wdev,
+ 				struct ieee80211_channel *channel,
+@@ -1054,7 +1054,7 @@ void brcmf_p2p_cancel_remain_on_channel(struct brcmf_if *ifp)
+  * brcmf_p2p_act_frm_search() - search function for action frame.
+  *
+  * @p2p: p2p device.
+- * channel: channel on which action frame is to be trasmitted.
++ * @channel: channel on which action frame is to be trasmitted.
+  *
+  * search function to reach at common channel to send action frame. When
+  * channel is 0 then all social channels will be used to send af
+@@ -1329,6 +1329,7 @@ brcmf_p2p_stop_wait_next_action_frame(struct brcmf_cfg80211_info *cfg)
+  * brcmf_p2p_gon_req_collision() - Check if go negotiaton collission
+  *
+  * @p2p: p2p device info struct.
++ * @mac: MAC address.
+  *
+  * return true if recevied action frame is to be dropped.
+  */
+@@ -2039,6 +2040,7 @@ static void brcmf_p2p_get_current_chanspec(struct brcmf_p2p_info *p2p,
+  * Change a P2P Role.
+  * Parameters:
+  * @mac: MAC address of the BSS to change a role
++ * @if_type: interface type.
+  * Returns 0 if success.
+  */
+ int brcmf_p2p_ifchange(struct brcmf_cfg80211_info *cfg,
 -- 
 2.25.1
 
