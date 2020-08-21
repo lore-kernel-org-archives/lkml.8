@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7F3C433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72F0F20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4AD20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030680;
-	bh=gC0I3atQoVFadbAYQYFUOd5iW3TlEEIDDZlrvw3lZbU=;
+	s=default; t=1598030684;
+	bh=v9gQOf2yho3wnn66sqsWT+5Vz7QPb2gaJkVZZU4Booc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=be5dzK8wFf1HQhN9UXUDrh+TGk+Jlsg8/6E1NHnHZ0mmi/qAmWj+qG9O51/E4I+oU
-	 z3mE+UfHYrFhGSJkcAjjtIYoe8nqCqTeYYK3N1/y/h8JJTIBOd6W3mxfKdszHz7YPJ
-	 QJKkZ1oJCjceqa0InijNXrt1GZ7pJ7aHodqf8LWg=
+	b=2ffkpwGHX/lcW3dWzIDD6WRqJIDU0oanx7gDlzWUgBfeIEIsvd47wVW2LcejlQHHR
+	 RPWhXNZBk9kCNwXn9H2Rr/1ZYGFudbA0dtPzXjz5L+Zj1ouh+pFqhFb1pG5NmpMQUY
+	 xedjjNasCMK8i9VpQUzlnBsZZagITGmNvaxzCzVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgHURYj (ORCPT
+        id S1729112AbgHURYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48196 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:24:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbgHUQPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:15:30 -0400
+        id S1727936AbgHUQP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:15:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 855A122BEB;
-        Fri, 21 Aug 2020 16:15:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5ACB72224D;
+        Fri, 21 Aug 2020 16:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026530;
-        bh=gC0I3atQoVFadbAYQYFUOd5iW3TlEEIDDZlrvw3lZbU=;
+        s=default; t=1598026529;
+        bh=v9gQOf2yho3wnn66sqsWT+5Vz7QPb2gaJkVZZU4Booc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qGlowEbRHBSrCXXxAEOKOYSa0k+Ku6x0+/GM0XU0MtvHXGrhwlMBggjaioJV+USIU
-         68+wsuxCO3FdJy2B8UD4Aj7PoGqtCUuEFazcC2eb8HDlte4GdqvwpZM37BRw7hZUQb
-         RGNAqhF8OFnXM/v9B99jPzbYPZq3qt7F8W0ZrANY=
+        b=R6YoUlsHdyCMkuvPsyweMoB+4W7nujsh/lNxCFfUrjwVlqd11F5Sby/v5VEB95H5Q
+         7xcVXWHxuwgXewVPF5Aqjv3Hk1jpf+rXhNwbLbPx/c0xL/0UhtuuC+xalP+PIEZ6sX
+         GzIodVZgV0EivefPtgC8qDi6tcsbaYRcgjuLxNVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qu Wenruo <wqu@suse.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 52/62] btrfs: file: reserve qgroup space after the hole punch range is locked
-Date:   Fri, 21 Aug 2020 12:14:13 -0400
-Message-Id: <20200821161423.347071-52-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 51/62] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Fri, 21 Aug 2020 12:14:12 -0400
+Message-Id: <20200821161423.347071-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -59,58 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
 
-The incoming qgroup reserved space timing will move the data reservation
-to ordered extent completely.
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
 
-However in btrfs_punch_hole_lock_range() will call
-btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
-range.
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
 
-In current stage it's OK, but if we're making ordered extents handle the
-reserved space, then btrfs_punch_hole_lock_range() can clear the
-QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
-reserved space leakage.
-
-So here change the timing to make reserve data space after
-btrfs_punch_hole_lock_range().
-The new timing is fine for either current code or the new code.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/locking/lockdep_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 1523aa4eaff07..9e8f6c66788d0 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3176,14 +3176,14 @@ static int btrfs_zero_range(struct inode *inode,
- 		if (ret < 0)
- 			goto out;
- 		space_reserved = true;
--		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
--						alloc_start, bytes_to_reserve);
--		if (ret)
--			goto out;
- 		ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
- 						  &cached_state);
- 		if (ret)
- 			goto out;
-+		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
-+						alloc_start, bytes_to_reserve);
-+		if (ret)
-+			goto out;
- 		ret = btrfs_prealloc_file_range(inode, mode, alloc_start,
- 						alloc_end - alloc_start,
- 						i_blocksize(inode),
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 5525cd3ba0c83..02ef87f50df29 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -423,7 +423,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+ }
+ 
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
 2.25.1
 
