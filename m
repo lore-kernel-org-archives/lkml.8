@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7218C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2903DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A43C20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE5820578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598026982;
-	bh=7E3ARa3gGjKsJ3XyQWjqb1t8KY5M1C2PdcSqkYpDFG0=;
+	s=default; t=1598026991;
+	bh=70t5adgBvf44/5oNg7PVocR68bEeQ479Hja1iNE5dd8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQpNLd+qtR3OXjBcYTJ2sv+ArF1s7y4ivh1W8IELuxoNJdnOEkB7BNXqX1rDJrbcN
-	 /hClkuYxthvtiHgVMvl2fcp9q15HhEa/ZEB4poOaqoL5mT83BjHWmhFfZrqg6+Ubzw
-	 9OMC2mk+2U8FV/kjX4XZy74TyzLAfHiETeV408Nk=
+	b=GNw9Fk+iaZ51uAggG+Z1VqYTnrE9xbJq1MifBAxCmsAU9wYElZh2Ld/jhRafADmie
+	 W72qCOBLe2Oeut6R+OmbwbAhlsplqO+iKquNbgZ1aEfo8ICMcr0JFB30mw0SqDZLNC
+	 yqFnXukAtPXEq3X2q9FtVQmTIS0na6KKv0e37Q7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgHUQXA (ORCPT
+        id S1728551AbgHUQXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:23:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:23:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgHUQTQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:19:16 -0400
+        id S1726809AbgHUQT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFDA22B4E;
-        Fri, 21 Aug 2020 16:18:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6210822D37;
+        Fri, 21 Aug 2020 16:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026701;
-        bh=7E3ARa3gGjKsJ3XyQWjqb1t8KY5M1C2PdcSqkYpDFG0=;
+        s=default; t=1598026719;
+        bh=70t5adgBvf44/5oNg7PVocR68bEeQ479Hja1iNE5dd8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dcnYdR+5w3YSy/D3PcGWrrPmk1med6fCZJGirB860MVh3X5CZhL7RtnLPjbVzaZ3D
-         MLrNlRryI2paqWnGNqGbA9+G7W4ReMcVbZX4rNSZrjCMLNXnFC23t0p/br88dzpkMt
-         QJMvaOLa0c6jpq4GC8/zbqxszPjY2755AlH3usqY=
+        b=ih7ut0ecoMmi3ZCJp1vqmKbQ+2g8vqjyvlZZGZxWosmgUT+qNaoT653vTptIPlHb1
+         xGKUecDwddshg1V0Gv1xH13GVT1ku4yby36MHicpa4x3EnQrtHxuj2VF565sxUBw92
+         EucJTwPyWbBtMWbXrUc3O5Fm8j4IcNKhMDJ9MIIU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Prakash Gupta <guptap@codeaurora.org>,
-        Joerg Roedel <jroedel@suse.de>,
+Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        iommu@lists.linux-foundation.org
-Subject: [PATCH AUTOSEL 4.19 11/38] iommu/iova: Don't BUG on invalid PFNs
-Date:   Fri, 21 Aug 2020 12:17:40 -0400
-Message-Id: <20200821161807.348600-11-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 24/38] ARM: dts: ls1021a: output PPS signal on FIPER2
+Date:   Fri, 21 Aug 2020 12:17:53 -0400
+Message-Id: <20200821161807.348600-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -61,47 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
+[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
 
-Unlike the other instances which represent a complete loss of
-consistency within the rcache mechanism itself, or a fundamental
-and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
-iova_magazine_free_pfns() can be provoked at more or less any time
-in a "spooky action-at-a-distance" manner by any old device driver
-passing nonsense to dma_unmap_*() which then propagates through to
-queue_iova().
+The timer fixed interval period pulse generator register
+is used to generate periodic pulses. The down count
+register loads the value programmed in the fixed period
+interval (FIPER). At every tick of the timer accumulator
+overflow, the counter decrements by the value of
+TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
+counter value reaches zero. It reloads the down counter
+in the cycle following a pulse.
 
-Not only is this well outside the IOVA layer's control, it's also
-nowhere near fatal enough to justify panicking anyway - all that
-really achieves is to make debugging the offending driver more
-difficult. Let's simply WARN and otherwise ignore bogus PFNs.
+To use the TMR_FIPER register to generate desired periodic
+pulses. The value should programmed is,
+desired_period - tclk_period
 
-Reported-by: Prakash Gupta <guptap@codeaurora.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
-Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Current tmr-fiper2 value is to generate 100us periodic pulses.
+(But the value should have been 99995, not 99990. The tclk_period is 5.)
+This patch is to generate 1 second periodic pulses with value
+999999995 programmed which is more desired by user.
+
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 34c058c24b9d2..ce5cd05253db9 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -814,7 +814,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
- 	for (i = 0 ; i < mag->size; ++i) {
- 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
- 
--		BUG_ON(!iova);
-+		if (WARN_ON(!iova))
-+			continue;
-+
- 		private_free_iova(iovad, iova);
- 	}
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 074b4ec520c63..d18c043264440 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -609,7 +609,7 @@ ptp_clock@2d10e00 {
+ 			fsl,tmr-prsc    = <2>;
+ 			fsl,tmr-add     = <0xaaaaaaab>;
+ 			fsl,tmr-fiper1  = <999999995>;
+-			fsl,tmr-fiper2  = <99990>;
++			fsl,tmr-fiper2  = <999999995>;
+ 			fsl,max-adj     = <499999999>;
+ 		};
  
 -- 
 2.25.1
