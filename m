@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA0AC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3282FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77D6A206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A282086A
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028561;
-	bh=i0Lq5eSHyAtWx6NrNz0vxD9buMUBKlcRxwhAILT0zEw=;
+	s=default; t=1598028569;
+	bh=DJoz7hEuLH4KSUPlB0Pz1whDMhaU6YO7qiXnioDukxE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dHBiMXIr3/2wKbmk63BdMKZ5hezExAM3iQWmmODl5Xgfw7L2qNlqox7kyNNEc4ypr
-	 bCcD108V6ZaSRbg/WNv0GFt0qWI/t/ZNlgTyCGXuue6HTVPmD2YVc/W1QFGJ1yPP/C
-	 r+B/6bBN5fA9zNCfhVoBGEL2AoQJev5bb0bHOvik=
+	b=J/7nx3cNto2gO7XfJhd/FroHyOF4af59e0X1pWSgLWcO5QxqVToEvxzlcj8LKB6q2
+	 4vulf0KjidH2IeMJ85ZzmlfojB/3nKzAZq01hsWTw7TGIHDdueaEjR0D+qTQT7VMGg
+	 XQv+TtYl2XO45f1qgdXKxQXFzcxWJgpaWd/18OAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbgHUQtP (ORCPT
+        id S1728255AbgHUQt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:49:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50060 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:49:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbgHUQUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:12 -0400
+        id S1728365AbgHUQUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE06122CE3;
-        Fri, 21 Aug 2020 16:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BECE22CB3;
+        Fri, 21 Aug 2020 16:19:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026764;
-        bh=i0Lq5eSHyAtWx6NrNz0vxD9buMUBKlcRxwhAILT0zEw=;
+        s=default; t=1598026758;
+        bh=DJoz7hEuLH4KSUPlB0Pz1whDMhaU6YO7qiXnioDukxE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=toJDWZhh1eYaBYNq+2YA2y3RU4Bj/QTU2FizB7fCCKGrKpEW7vZGCwueWDVUuMpgI
-         EWCO8yof9UO4/mGK48c38LFO3IMjZ461QptuSZmX2Ze8E/HC4hNQkwAFT1+YX6cuRA
-         sluSk1XiQbVAmPAoxygGmFDJh6vTPWBOjW9cMaZA=
+        b=AcRrcouCrQPR46iX9swwql/ZLOnA1uiEdeN41Wdx6Hx7Clgv3oulUu/RYjFhlaG9+
+         K3ze6Xc02QxrQgbMQRat6ljkdJv5cDv14k9/R7fLSgdASnGkuUPA2Imj91nqWVz4yK
+         EeYUx6ts488UUTDXruJFKITDXfp61CkHzQ6OUBZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reto Schneider <code@reto-schneider.ch>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 20/30] rtlwifi: rtl8192cu: Prevent leaking urb
-Date:   Fri, 21 Aug 2020 12:18:47 -0400
-Message-Id: <20200821161857.348955-20-sashal@kernel.org>
+Cc:     Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 16/30] scsi: lpfc: Fix shost refcount mismatch when deleting vport
+Date:   Fri, 21 Aug 2020 12:18:43 -0400
+Message-Id: <20200821161857.348955-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
 References: <20200821161857.348955-1-sashal@kernel.org>
@@ -60,38 +60,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <code@reto-schneider.ch>
+From: Dick Kennedy <dick.kennedy@broadcom.com>
 
-[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+[ Upstream commit 03dbfe0668e6692917ac278883e0586cd7f7d753 ]
 
-If usb_submit_urb fails the allocated urb should be unanchored and
-released.
+When vports are deleted, it is observed that there is memory/kthread
+leakage as the vport isn't fully being released.
 
-Signed-off-by: Reto Schneider <code@reto-schneider.ch>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+There is a shost reference taken in scsi_add_host_dma that is not released
+during scsi_remove_host. It was noticed that other drivers resolve this by
+doing a scsi_host_put after calling scsi_remove_host.
+
+The vport_delete routine is taking two references one that corresponds to
+an access to the scsi_host in the vport_delete routine and another that is
+released after the adapter mailbox command completes that destroys the VPI
+that corresponds to the vport.
+
+Remove one of the references taken such that the second reference that is
+put will complete the missing scsi_add_host_dma reference and the shost
+will be terminated.
+
+Link: https://lore.kernel.org/r/20200630215001.70793-8-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/lpfc/lpfc_vport.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 7a050a75bdcbb..4fa4d877f913b 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -739,8 +739,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
- 
- 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
- 		err = usb_submit_urb(urb, GFP_KERNEL);
--		if (err)
-+		if (err) {
-+			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			goto err_out;
-+		}
- 		usb_free_urb(urb);
+diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
+index c714482bf4c55..9c738e201f462 100644
+--- a/drivers/scsi/lpfc/lpfc_vport.c
++++ b/drivers/scsi/lpfc/lpfc_vport.c
+@@ -644,27 +644,16 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		    vport->port_state < LPFC_VPORT_READY)
+ 			return -EAGAIN;
  	}
- 	return 0;
++
+ 	/*
+-	 * This is a bit of a mess.  We want to ensure the shost doesn't get
+-	 * torn down until we're done with the embedded lpfc_vport structure.
+-	 *
+-	 * Beyond holding a reference for this function, we also need a
+-	 * reference for outstanding I/O requests we schedule during delete
+-	 * processing.  But once we scsi_remove_host() we can no longer obtain
+-	 * a reference through scsi_host_get().
+-	 *
+-	 * So we take two references here.  We release one reference at the
+-	 * bottom of the function -- after delinking the vport.  And we
+-	 * release the other at the completion of the unreg_vpi that get's
+-	 * initiated after we've disposed of all other resources associated
+-	 * with the port.
++	 * Take early refcount for outstanding I/O requests we schedule during
++	 * delete processing for unreg_vpi.  Always keep this before
++	 * scsi_remove_host() as we can no longer obtain a reference through
++	 * scsi_host_get() after scsi_host_remove as shost is set to SHOST_DEL.
+ 	 */
+ 	if (!scsi_host_get(shost))
+ 		return VPORT_INVAL;
+-	if (!scsi_host_get(shost)) {
+-		scsi_host_put(shost);
+-		return VPORT_INVAL;
+-	}
++
+ 	lpfc_free_sysfs_attr(vport);
+ 
+ 	lpfc_debugfs_terminate(vport);
+@@ -811,8 +800,9 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		if (!(vport->vpi_state & LPFC_VPI_REGISTERED) ||
+ 				lpfc_mbx_unreg_vpi(vport))
+ 			scsi_host_put(shost);
+-	} else
++	} else {
+ 		scsi_host_put(shost);
++	}
+ 
+ 	lpfc_free_vpi(phba, vport->vpi);
+ 	vport->work_port_events = 0;
 -- 
 2.25.1
 
