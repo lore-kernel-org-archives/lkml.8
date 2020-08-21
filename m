@@ -2,201 +2,149 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 711EDC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2F420702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598032522;
-	bh=q8e3Np+yjKnNHDOucad5mHhdvyPAWTHMr9WIxaxpXC8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=knQ3/Unw/o075vOj2Ws+5Xp41rfrAWZBCsiRRml7UI6BouxIgQRtrdL6Vb2W1uQlf
-	 dRmU11RCkqp5XZ9EDW74+Sct+dTJg2V2GjqDF5U3+eaDXQ9Y8DRD6h145pPgiqYsmF
-	 WNS9tZdTW2ROvrMZArOk5nICYp3XcbzmANkTZ2dU=
+	by mail.kernel.org (Postfix) with ESMTP id 2700920720
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 18:00:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D3uxg38C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgHURzV (ORCPT
+        id S1727005AbgHUSAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:55:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgHURzS (ORCPT
+        Fri, 21 Aug 2020 14:00:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:32815 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725958AbgHUSAE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:55:18 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BB7C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:17 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c15so1329328lfi.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m4V8fZt1LIyKWUpK//pHmx+UE2cyQI+1k+0DpARcdKs=;
-        b=UCXANsHTDuglcuMoaPQrO2SPcgEY6vG1EKV1rTav9qeDhjuPUXwzOzAWO97GPtjQDH
-         vnro5pnl96FGhRTeEBpt/OEZjQu48BweLMmP5gUzvXiHcfKKCnzSqCp8rihnevc6AQ5B
-         Ceo5/n8nq9tRTr1tnI08EiIZY6bxL404FbH6M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m4V8fZt1LIyKWUpK//pHmx+UE2cyQI+1k+0DpARcdKs=;
-        b=nPmsr5/N2kmO+NzJpmJ/bvNwLWYidC20EYWLv4kNNgC9Akg43XDCm5bBJc2LFW1/eu
-         Mz8HGaAkaoyBNYh3SDi88iZqtZde6RRr/eCCMBLxxDWmG50IVK9VKO3ykF8FABGnYzCh
-         acLykC52mgDginik79N4lpflF4WuRMpnUtLzKwgD8JEnBMkKdk5qft5m2ZQ9y89AAjGb
-         FGuUNrKJM/bPtmIpUa/UiRBgsN+G0PYPzHH0cdHFm1T1QJHMzzldChlq6kLNwsa+nTng
-         uccNcx9uk92B174MjmI75xCwcff/VcQOVB2+Wy9NEwWp77hNlbtf7lZr0VlM4IdbSUoC
-         GKbQ==
-X-Gm-Message-State: AOAM531Ls99Ps18oRmLtzR89xxATJ33jFEn5nclAhT3I3eKTTHY99Cj6
-        b99WRH2Rbaz/qTc18oqTjjLv8SNFN33vzA==
-X-Google-Smtp-Source: ABdhPJy3mDGyARiSV3L9V/mBjZOA9cHGHgZUa0hNIyPy9sZuzUjIDP8+PE7hr+AyaECV9UNt369kcg==
-X-Received: by 2002:ac2:5e2c:: with SMTP id o12mr1894921lfg.71.1598032515439;
-        Fri, 21 Aug 2020 10:55:15 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id y26sm508804ljm.132.2020.08.21.10.55.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 10:55:14 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id w14so2786166ljj.4
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:55:13 -0700 (PDT)
-X-Received: by 2002:a05:651c:503:: with SMTP id o3mr2203972ljp.312.1598032513384;
- Fri, 21 Aug 2020 10:55:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKwvOdk6A4AqTtOsD34WNwxRjyTvXP8KCNj2xfNWYdPT+sLHwQ@mail.gmail.com>
- <76071c24-ec6f-7f7a-4172-082bd574d581@zytor.com> <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan> <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan> <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
- <20200820175617.GA604994@rani.riverdale.lan> <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
- <20200821172935.GA1411923@rani.riverdale.lan>
-In-Reply-To: <20200821172935.GA1411923@rani.riverdale.lan>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 21 Aug 2020 10:54:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
-Message-ID: <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?UTF-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Fri, 21 Aug 2020 14:00:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598032802;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hfd87vPX7imdizr5awfMVB6fuuvJvnhJKohnbOuYDr0=;
+        b=D3uxg38C2MqAha5lY7SMIPtp0O9ObVjoTkWLwO0ItcHo98GWVM3zwt3bonp5qeIEHyqzAR
+        Qt83bRVU0dYzgnquSN/yqN9UFERjN4nUFQeK7CsNq3OzZJTtH+mJCsidC5xuKgn3Q4a98E
+        277fx1HANmUPIAjsUjuyVwFlSbqMJGg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-tl_K1AAsMAWrM8DCAs5e7Q-1; Fri, 21 Aug 2020 13:59:58 -0400
+X-MC-Unique: tl_K1AAsMAWrM8DCAs5e7Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 77D781006706;
+        Fri, 21 Aug 2020 17:59:54 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.15])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D451F7E318;
+        Fri, 21 Aug 2020 17:59:44 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Fri, 21 Aug 2020 19:59:54 +0200 (CEST)
+Date:   Fri, 21 Aug 2020 19:59:43 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        adobriyan@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200821175943.GD19445@redhat.com>
+References: <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+ <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+ <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz>
+ <87r1s0txxe.fsf@x220.int.ebiederm.org>
+ <20200821111558.GG4546@redhat.com>
+ <CAJuCfpF_GhTy5SCjxqyqTFUrJNaw3UGJzCi=WSCXfqPAcbThYg@mail.gmail.com>
+ <20200821163300.GB19445@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821163300.GB19445@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:29 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On 08/21, Oleg Nesterov wrote:
 >
-> The no-builtin- options _don't_ disable
-> __builtin_ functions. They remove the default definition of foo() as
-> __builtin_foo().
-
-Oh, ok, then it's fine.
-
-> Take the problem that instigated this thread. __builtin_stpcpy() doesn't
-> work in the kernel because the fallback, stpcpy(), isn't implemented.
-
-Right.
-
-The only problem is the - bogus - recognition of (or rewriting of)
-code patterns that the compiler recohnmizes.
-
-__builtin_stpcpy() itself is fine if somebody wants to use it - and
-has the fallback.
-
-But implicitly recognizing some code sequence and turning it into
-something else is the problem.
-
-> This is why I'm saying clang's no-builtin-foo option is useful for
-> embedded: it doesn't prevent the programmer using __builtin_foo(), it
-> prevents the _compiler_ using __builtin_foo() on its own.
-
-And that's fine. But it's apparently not what gcc does.
-
-> > So this is things like the compiler silently seeing "oh, you called
-> > your function 'free()', so we know that the stores you did to it are
-> > dead and we'll remove them".
+> On 08/21, Suren Baghdasaryan wrote:
 > >
-> > Or this is the compiler doing "Oh, you did four stores of zero in a
-> > row, and and you asked for size optimizations, so we'll turn those
-> > into a 'bzero()' call".
+> > On Fri, Aug 21, 2020 at 4:16 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> > >
+> > >         bool probably_has_other_mm_users(tsk)
+> > >         {
+> > >                 return  atomic_read_acquire(&tsk->mm->mm_users) >
+> > >                         atomic_read(&tsk->signal->live);
+> > >         }
+> > >
+> > > The barrier implied by _acquire ensures that if we race with the exiting
+> > > task and see the result of exit_mm()->mmput(mm), then we must also see
+> > > the result of atomic_dec_and_test(signal->live).
+> > >
+> > > Either way, if we want to fix the race with clone(CLONE_VM) we need other
+> > > changes.
+> >
+> > The way I understand this condition in __set_oom_adj() sync logic is
+> > that we would be ok with false positives (when we loop unnecessarily)
+> > but we can't tolerate false negatives (when oom_score_adj gets out of
+> > sync).
 >
-> This one is slightly different from the previous one. The first case is
-> really a call to __builtin_free().
+> Yes,
+>
+> > With the clone(CLONE_VM) race not addressed we are allowing
+> > false negatives and IMHO that's not acceptable because it creates a
+> > possibility for userspace to get an inconsistent picture. When
+> > developing the patch I did think about using (p->mm->mm_users >
+> > p->signal->nr_threads) condition and had to reject it due to that
+> > reason.
+>
+> Not sure I understand... I mean, the test_bit(MMF_PROC_SHARED) you propose
+> is equally racy and we need copy_oom_score() at the end of copy_process()
+> either way?
 
-No, the first case is a disgrace and a compiler bug.
+On a second thought I agree that probably_has_other_mm_users() above can't
+work ;) Compared to the test_bit(MMF_PROC_SHARED) check it is not _equally_
+racy, it adds _another_ race with clone(CLONE_VM).
 
-We've had a situation where gcc complained about a static function
-called "free()", without any header file inclusion, and then
-complained about it not matching its idea of what "free()" is.
+Suppose a single-threaded process P does
 
-Which is pure and utter garbage.
+	clone(CLONE_VM); // creates the child C
 
-It's like you have a local variable "int free", and the compiler says
-"hey, this doesn't match the prototype that I know this name should
-have". It's BS. You just saw the user not just *use* that name, but
-*define* it, and do it in a scope where the complaint is irrelevant
-and stupid, and when we hadn't even included the header that would
-have resulted in conflicts.
+	// mm_users == 2; P->signal->live == 1;
 
-IOW, it's an example of a compiler that thinks "it knows better".
+	clone(CLONE_THREAD | CLONE_VM);
 
-It's a broken compiler. And it's an example of the kind of breakage
-that compilers absolutely shouldn't do.
+	// mm_users == 3; P->signal->live == 2;
 
-The second example is from clang doesn't something horribly horribly stupid.
+the problem is that in theory clone(CLONE_THREAD | CLONE_VM) can increment
+_both_ counters between atomic_read_acquire(mm_users) and atomic_read(live)
+in probably_has_other_mm_users() so it can observe mm_users == live == 2.
 
-> This one is turning something that wasn't a function call into
-> __builtin_bzero(), and I would hope that no-builtin-bzero would stop it
-> as well. OTOH, the compiler is free to turn it into memset(), just like
-> it could for structure/array initializers.
+Oleg.
 
-The whole "the compiler is free to do X" argument is pure BS. Stop
-repeating that bogus argument.
-
-Of COURSE a compiler can do whatever the hell it wants.
-
-That doesn't change the fact that certain things are broken beyond
-words and utterly stupid, and a compiler that does them is a *BAD*
-compiler.
-
-Turning four stores into a memset() is garbage. Just admit it, instead
-of trying to say that it's allowed.
-
-Technically a compiler can decode to simply not compile the kernel at
-all, because we do things that are outside a lot of standards.
-
-So the "technically allowed" is not an argument.
-
-             Linus
