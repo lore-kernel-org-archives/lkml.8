@@ -2,80 +2,447 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C109C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27640C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:57:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD842078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:57:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D292078D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgHUM5l (ORCPT
+        id S1728600AbgHUM5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:57:41 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40869 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725935AbgHUM5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:57:40 -0400
+Received: from mga18.intel.com ([134.134.136.126]:13164 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727106AbgHUM5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 08:57:34 -0400
-Received: by mail-ot1-f65.google.com with SMTP id h16so1472398oti.7;
-        Fri, 21 Aug 2020 05:57:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oRAzEfIgQrSeDg+xvF8A8FPFPbG3VhPyO/5fKQRhXVk=;
-        b=TnowRt26h6VLVoD3hHkX8SVtOvlAhr1Bnw2eTVVapir0y0Up+BNTuJZOil5cICe50r
-         hzsQL4R5nPpAfIXCZQULnpQ3GcwrNPpbAt9nxZtb7L2Ve77SQgq23b7E0mVTG2cJzRHn
-         +ONJMdg6QFAsgOfBzTiViHX+dskkrlmIL7d2Xt0EZDE1tU9HeM6VZMZ8bPtcrsi5swfY
-         +wiQ2KXcbNK662d/IZqgsJKUMv5blhHpELH40ToseJ77eBn0Y32162MkNQL78Eo35tQm
-         8rFDUjJOrq2JN0Kd0Ug0CVKWwAQ6fKdR9/MdeJxfsLLbCPlatYVA1MxHljfULzzjIPFb
-         QwCw==
-X-Gm-Message-State: AOAM533Oi5BY1x4y0Fh1vYwpeUSH2QOQdc+YE8TXFjO8RsjXWb/JgL9X
-        FnzkfAUs581fDQ8TB6xogn1gSbAwYGL/j1c/WfMJ98ug
-X-Google-Smtp-Source: ABdhPJyrowlAUZuOruZSLQeU4SRabkyazL1Z2LCpmYviVLirFX8NPUVc6XdQ0mDp4OLxKHW7VNyvC90YKK/DAUHIV+w=
-X-Received: by 2002:a9d:7d8c:: with SMTP id j12mr1864132otn.250.1598014653879;
- Fri, 21 Aug 2020 05:57:33 -0700 (PDT)
+IronPort-SDR: p9bu+DvqmfqExoV2g+LklVdM5ku14stUiLtvxPZCxwdVDiWrAl4UqRUfeC8Bu4sE8b7v4YNAEf
+ FRjMWPtNXOOA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="143161175"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="143161175"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 05:56:31 -0700
+IronPort-SDR: 9N6E7ifNqQjvbWfx2gyJ6h9Vdk0h1e7mBZ0DkSS9JCQkpYxq6OWAdxs2insfbBYo1K1sEEKtYV
+ R6FnifZlVPkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="327754375"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 21 Aug 2020 05:56:28 -0700
+Received: from andy by smile with local (Exim 4.94)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1k96ap-00ALds-4W; Fri, 21 Aug 2020 15:56:27 +0300
+Date:   Fri, 21 Aug 2020 15:56:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
+        eswara.kota@linux.intel.com,
+        vadivel.muruganx.ramuthevar@linux.intel.com,
+        lakshmi.bai.raja.subramanian@intel.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v7 3/3] phy: intel: Add Keem Bay eMMC PHY support
+Message-ID: <20200821125627.GT1891694@smile.fi.intel.com>
+References: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200821113747.2912-4-wan.ahmad.zainie.wan.mohamad@intel.com>
 MIME-Version: 1.0
-References: <20200816193316.7641-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20200816193316.7641-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20200816193316.7641-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 21 Aug 2020 14:57:22 +0200
-Message-ID: <CAMuHMdW9bd0fFqELaR14tzUFiydRPBS3ytNRE7UURo6bwsMqAQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] ARM: dts: r8a7742-iwg21m: Sort the nodes alphabetically
-To:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Cc:     Magnus Damm <magnus.damm@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821113747.2912-4-wan.ahmad.zainie.wan.mohamad@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 16, 2020 at 9:33 PM Lad Prabhakar
-<prabhakar.mahadev-lad.rj@bp.renesas.com> wrote:
-> Sort the DT nodes alphabetically so that its easier to maintain.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+On Fri, Aug 21, 2020 at 07:37:47PM +0800, Wan Ahmad Zainie wrote:
+> Add support for eMMC PHY on Intel Keem Bay SoC.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v5.10.
+Thanks for an update. I have couple of nit-picks below, otherwise, FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-Gr{oetje,eeting}s,
+> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+> ---
+>  drivers/phy/intel/Kconfig                  |  12 +
+>  drivers/phy/intel/Makefile                 |   1 +
+>  drivers/phy/intel/phy-intel-keembay-emmc.c | 310 +++++++++++++++++++++
+>  3 files changed, 323 insertions(+)
+>  create mode 100644 drivers/phy/intel/phy-intel-keembay-emmc.c
+> 
+> diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
+> index db8586c3eed8..dad72fc64871 100644
+> --- a/drivers/phy/intel/Kconfig
+> +++ b/drivers/phy/intel/Kconfig
+> @@ -2,6 +2,18 @@
+>  #
+>  # Phy drivers for Intel platforms
+>  #
+> +config PHY_INTEL_KEEMBAY_EMMC
+> +	tristate "Intel Keem Bay EMMC PHY driver"
 
-                        Geert
+> +	depends on ARM64 || COMPILE_TEST
+> +	depends on OF && HAS_IOMEM
+
+It might be better from testing coverage perspective to have it like
+
+	depends on HAS_IOMEM
+	depends on (OF && ARM64) || COMPILE_TEST
+
+> +	select GENERIC_PHY
+> +	select REGMAP_MMIO
+> +	help
+> +	  Choose this option if you have an Intel Keem Bay SoC.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called phy-keembay-emmc.ko.
+> +
+>  config PHY_INTEL_LGM_COMBO
+>  	bool "Intel Lightning Mountain ComboPHY driver"
+>  	depends on X86 || COMPILE_TEST
+> diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
+> index 662385d0a366..a5e0af5ccd75 100644
+> --- a/drivers/phy/intel/Makefile
+> +++ b/drivers/phy/intel/Makefile
+> @@ -1,3 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_PHY_INTEL_KEEMBAY_EMMC)	+= phy-intel-keembay-emmc.o
+>  obj-$(CONFIG_PHY_INTEL_LGM_COMBO)	+= phy-intel-lgm-combo.o
+>  obj-$(CONFIG_PHY_INTEL_LGM_EMMC)	+= phy-intel-lgm-emmc.o
+> diff --git a/drivers/phy/intel/phy-intel-keembay-emmc.c b/drivers/phy/intel/phy-intel-keembay-emmc.c
+> new file mode 100644
+> index 000000000000..c1a095c17165
+> --- /dev/null
+> +++ b/drivers/phy/intel/phy-intel-keembay-emmc.c
+> @@ -0,0 +1,310 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Intel Keem Bay eMMC PHY driver
+> + * Copyright (C) 2020 Intel Corporation
+> + */
+
+Missed bitops.h
+
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +/* eMMC/SD/SDIO core/phy configuration registers */
+> +#define PHY_CFG_0		0x24
+> +#define  SEL_DLY_TXCLK_MASK	BIT(29)
+> +#define  OTAP_DLY_ENA_MASK	BIT(27)
+> +#define  OTAP_DLY_SEL_MASK	GENMASK(26, 23)
+> +#define  DLL_EN_MASK		BIT(10)
+> +#define  PWR_DOWN_MASK		BIT(0)
+> +
+> +#define PHY_CFG_2		0x2c
+> +#define  SEL_FREQ_MASK		GENMASK(12, 10)
+> +
+> +#define PHY_STAT		0x40
+> +#define  CAL_DONE_MASK		BIT(6)
+> +#define  IS_CALDONE(x)		((x) & CAL_DONE_MASK)
+> +#define  DLL_RDY_MASK		BIT(5)
+> +#define  IS_DLLRDY(x)		((x) & DLL_RDY_MASK)
+> +
+> +/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
+> +#define FREQSEL_200M_170M	0x0
+> +#define FREQSEL_170M_140M	0x1
+> +#define FREQSEL_140M_110M	0x2
+> +#define FREQSEL_110M_80M	0x3
+> +#define FREQSEL_80M_50M		0x4
+> +
+> +#define maskval(mask, val)	(((val) << (ffs(mask) - 1)) & mask)
+> +
+> +struct keembay_emmc_phy {
+> +	struct regmap *syscfg;
+> +	struct clk *emmcclk;
+> +};
+> +
+> +static const struct regmap_config keembay_regmap_config = {
+> +	.reg_bits = 32,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +};
+> +
+> +static int keembay_emmc_phy_power(struct phy *phy, bool on_off)
+> +{
+> +	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
+> +	unsigned int caldone;
+> +	unsigned int dllrdy;
+> +	unsigned int freqsel;
+> +	unsigned int mhz;
+> +	int ret;
+> +
+> +	/*
+> +	 * Keep phyctrl_pdb and phyctrl_endll low to allow
+> +	 * initialization of CALIO state M/C DFFs
+> +	 */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
+> +				 maskval(PWR_DOWN_MASK, 0));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
+> +				 maskval(DLL_EN_MASK, 0));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "turn off the dll failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Already finish power off above */
+> +	if (!on_off)
+> +		return 0;
+> +
+> +	mhz = DIV_ROUND_CLOSEST(clk_get_rate(priv->emmcclk), 1000000);
+> +	if (mhz <= 200 && mhz >= 170)
+> +		freqsel = FREQSEL_200M_170M;
+> +	else if (mhz <= 170 && mhz >= 140)
+> +		freqsel = FREQSEL_170M_140M;
+> +	else if (mhz <= 140 && mhz >= 110)
+> +		freqsel = FREQSEL_140M_110M;
+> +	else if (mhz <= 110 && mhz >= 80)
+> +		freqsel = FREQSEL_110M_80M;
+> +	else if (mhz <= 80 && mhz >= 50)
+> +		freqsel = FREQSEL_80M_50M;
+> +	else
+> +		freqsel = 0x0;
+> +
+> +	if (mhz < 50 || mhz > 200)
+> +		dev_warn(&phy->dev, "Unsupported rate: %d MHz\n", mhz);
+> +
+> +	/*
+> +	 * According to the user manual, calpad calibration
+> +	 * cycle takes more than 2us without the minimal recommended
+> +	 * value, so we may need a little margin here
+> +	 */
+> +	udelay(5);
+> +
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
+> +				 maskval(PWR_DOWN_MASK, 1));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * According to the user manual, it asks driver to wait 5us for
+> +	 * calpad busy trimming. However it is documented that this value is
+> +	 * PVT(A.K.A. process, voltage and temperature) relevant, so some
+> +	 * failure cases are found which indicates we should be more tolerant
+> +	 * to calpad busy trimming.
+> +	 */
+> +	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
+> +				       caldone, IS_CALDONE(caldone),
+> +				       0, 50);
+> +	if (ret) {
+> +		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Set the frequency of the DLL operation */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_2, SEL_FREQ_MASK,
+> +				 maskval(SEL_FREQ_MASK, freqsel));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Turn on the DLL */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
+> +				 maskval(DLL_EN_MASK, 1));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * We turned on the DLL even though the rate was 0 because we the
+> +	 * clock might be turned on later.  ...but we can't wait for the DLL
+> +	 * to lock when the rate is 0 because it will never lock with no
+> +	 * input clock.
+> +	 *
+> +	 * Technically we should be checking the lock later when the clock
+> +	 * is turned on, but for now we won't.
+> +	 */
+> +	if (mhz == 0)
+> +		return 0;
+> +
+> +	/*
+> +	 * After enabling analog DLL circuits docs say that we need 10.2 us if
+> +	 * our source clock is at 50 MHz and that lock time scales linearly
+> +	 * with clock speed. If we are powering on the PHY and the card clock
+> +	 * is super slow (like 100kHz) this could take as long as 5.1 ms as
+> +	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
+> +	 * hopefully we won't be running at 100 kHz, but we should still make
+> +	 * sure we wait long enough.
+> +	 *
+> +	 * NOTE: There appear to be corner cases where the DLL seems to take
+> +	 * extra long to lock for reasons that aren't understood. In some
+> +	 * extreme cases we've seen it take up to over 10ms (!). We'll be
+> +	 * generous and give it 50ms.
+> +	 */
+> +	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
+> +				       dllrdy, IS_DLLRDY(dllrdy),
+> +				       0, 50 * USEC_PER_MSEC);
+> +	if (ret)
+> +		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int keembay_emmc_phy_init(struct phy *phy)
+> +{
+> +	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
+> +
+> +	/*
+> +	 * We purposely get the clock here and not in probe to avoid the
+> +	 * circular dependency problem. We expect:
+> +	 * - PHY driver to probe
+> +	 * - SDHCI driver to start probe
+> +	 * - SDHCI driver to register it's clock
+> +	 * - SDHCI driver to get the PHY
+> +	 * - SDHCI driver to init the PHY
+> +	 *
+> +	 * The clock is optional, so upon any error just return it like
+> +	 * any other error to user.
+> +	 */
+> +	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
+> +
+> +	return PTR_ERR_OR_ZERO(priv->emmcclk);
+> +}
+> +
+> +static int keembay_emmc_phy_exit(struct phy *phy)
+> +{
+> +	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
+> +
+> +	clk_put(priv->emmcclk);
+> +
+> +	return 0;
+> +};
+> +
+> +static int keembay_emmc_phy_power_on(struct phy *phy)
+> +{
+> +	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	/* Delay chain based txclk: enable */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, SEL_DLY_TXCLK_MASK,
+> +				 maskval(SEL_DLY_TXCLK_MASK, 1));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "ERROR: delay chain txclk set: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Output tap delay: enable */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_ENA_MASK,
+> +				 maskval(OTAP_DLY_ENA_MASK, 1));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "ERROR: output tap delay set: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Output tap delay */
+> +	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_SEL_MASK,
+> +				 maskval(OTAP_DLY_SEL_MASK, 2));
+> +	if (ret) {
+> +		dev_err(&phy->dev, "ERROR: output tap delay select: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Power up eMMC phy analog blocks */
+> +	return keembay_emmc_phy_power(phy, true);
+> +}
+> +
+> +static int keembay_emmc_phy_power_off(struct phy *phy)
+> +{
+> +	/* Power down eMMC phy analog blocks */
+> +	return keembay_emmc_phy_power(phy, false);
+> +}
+> +
+> +static const struct phy_ops ops = {
+> +	.init		= keembay_emmc_phy_init,
+> +	.exit		= keembay_emmc_phy_exit,
+> +	.power_on	= keembay_emmc_phy_power_on,
+> +	.power_off	= keembay_emmc_phy_power_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int keembay_emmc_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	struct keembay_emmc_phy *priv;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +	void __iomem *base;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	priv->syscfg = devm_regmap_init_mmio(dev, base, &keembay_regmap_config);
+> +	if (IS_ERR(priv->syscfg))
+> +		return PTR_ERR(priv->syscfg);
+> +
+> +	generic_phy = devm_phy_create(dev, np, &ops);
+> +	if (IS_ERR(generic_phy)) {
+
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(generic_phy);
+
+I guess now you may use
+
+	return dev_err_probe(...);
+
+> +	}
+> +
+> +	phy_set_drvdata(generic_phy, priv);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static const struct of_device_id keembay_emmc_phy_dt_ids[] = {
+> +	{ .compatible = "intel,keembay-emmc-phy" },
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, keembay_emmc_phy_dt_ids);
+> +
+> +static struct platform_driver keembay_emmc_phy_driver = {
+> +	.probe		= keembay_emmc_phy_probe,
+> +	.driver		= {
+> +		.name	= "keembay-emmc-phy",
+> +		.of_match_table = keembay_emmc_phy_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(keembay_emmc_phy_driver);
+> +
+> +MODULE_AUTHOR("Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>");
+> +MODULE_DESCRIPTION("Intel Keem Bay eMMC PHY driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.1
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
