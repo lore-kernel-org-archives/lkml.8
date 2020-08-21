@@ -2,130 +2,125 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:11:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26877C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CA387214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F140B21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 05:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1597986785;
+	bh=JQU9mXlGQHqxpkXNmcu6IbDvpZpRpleWG+SpVgI46EU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LKXVjLBSouOfY22bfGwaCtCkq8PZVqIEBB9b9e2O6xnWvANUK4ixgWbXC7FG5yoRr
+	 MxntLwC/e/LbjOSJb4gp8CJRVoVrHTg4YBVLE6bdIrYSyLX4C78WmuS4vWSx0jkQ6A
+	 VfFPQoCj/yXdnpYStc8lPqQzj6DEEPI6Bcg/5Sv0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbgHUFLs (ORCPT
+        id S1726879AbgHUFND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 01:11:48 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39698 "EHLO pegase1.c-s.fr"
+        Fri, 21 Aug 2020 01:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725908AbgHUFLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 01:11:47 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BXqPX0Cgfz9vCxp;
-        Fri, 21 Aug 2020 07:11:44 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id zLQZtjGtEvxd; Fri, 21 Aug 2020 07:11:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BXqPW6Lh9z9vCxn;
-        Fri, 21 Aug 2020 07:11:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 048398B86E;
-        Fri, 21 Aug 2020 07:11:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id eSJQic3OinEk; Fri, 21 Aug 2020 07:11:43 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DF61E8B75F;
-        Fri, 21 Aug 2020 07:11:40 +0200 (CEST)
-Subject: Re: [PATCH v2 3/6] powerpc/32s: Only leave NX unset on segments used
- for modules
-To:     Andreas Schwab <schwab@linux-m68k.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1593428200.git.christophe.leroy@csgroup.eu>
- <7172c0f5253419315e434a1816ee3d6ed6505bc0.1593428200.git.christophe.leroy@csgroup.eu>
- <87eeo1kmet.fsf@igel.home>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <6c480b23-297a-4f3d-daff-962a01b0b54c@csgroup.eu>
-Date:   Fri, 21 Aug 2020 07:11:37 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        id S1725908AbgHUFND (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 01:13:03 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF910208E4;
+        Fri, 21 Aug 2020 05:13:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1597986782;
+        bh=JQU9mXlGQHqxpkXNmcu6IbDvpZpRpleWG+SpVgI46EU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=r3go8lojTbEr7ggmy34F0+6ntC9It3xWedK5ixdQJNd69UfcoBhfw1ZVVES0UBx1C
+         53+Qcl+WCvJloPT1DqSyzYFXyohCwPrcIDdDKAgyjRWVO2VirAC4SQGw2n4ZQPJi+Q
+         b1EBU3mrpoDTXRzBpebubmxnxIuZYz+en4iTmEZY=
+Date:   Fri, 21 Aug 2020 10:42:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH v2] soundwire: SDCA: add helper macro to access controls
+Message-ID: <20200821051258.GJ2639@vkoul-mobl>
+References: <20200816201058.9687-1-yung-chuan.liao@linux.intel.com>
+ <20200817121411.GR2639@vkoul-mobl>
+ <2ab412c5-bf96-5ba3-c193-5a8ad9071bbb@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <87eeo1kmet.fsf@igel.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2ab412c5-bf96-5ba3-c193-5a8ad9071bbb@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 21/08/2020 à 00:00, Andreas Schwab a écrit :
-> On Jun 29 2020, Christophe Leroy wrote:
+On 17-08-20, 10:14, Pierre-Louis Bossart wrote:
 > 
->> Instead of leaving NX unset on all segments above the start
->> of vmalloc space, only leave NX unset on segments used for
->> modules.
+> > > The upcoming SDCA (SoundWire Device Class Audio) specification defines
+> > > a hiearchical encoding to interface with Class-defined capabilities,
+> > 
+> > typo hiearchical
 > 
-> I'm getting this crash:
+> ok
 > 
-> kernel tried to execute exec-protected page (f294b000) - exploit attempt (uid: 0)
-> BUG: Unable to handle kernel instruction fetch
-> Faulting instruction address: 0xf294b000
-> Oops: Kernel access of bad area, sig: 11 [#1]
-> BE PAGE_SIZE=4K MMU=Hash PowerMac
-> Modules linked in: pata_macio(+)
-> CPU: 0 PID: 87 Comm: udevd Not tainted 5.8.0-rc2-test #49
-> NIP:  f294b000 LR: 0005c60 CTR: f294b000
-> REGS: f18d9cc0 TRAP: 0400  Not tainted  (5.8.0-rc2-test)
-> MSR:  10009032 <E,ME,IR,DR,RI>  CR: 84222422  XER: 20000000
-> GPR00: c0005c14 f18d9d78 ef30ca20 00000000 ef0000e0 c00993d0 ef6da038 0000005e
-> GPR08: c09050b8 c08b0000 00000000 f18d9d78 44222422 10072070 00000000 0fefaca4
-> GPR16: 1006a00c f294d50b 00000120 00000124 c0096ea8 0000000e ef2776c0 ef2776e4
-> GPR24: f18fd6e8 00000001 c086fe64 c086fe04 00000000 c08b0000 f294b000 ffffffff
-> NIP [f294b000] pata_macio_init+0x0/0xc0 [pata_macio]
-> LR [c0005c60] do_one_initcall+0x6c/0x160
-> Call Trace:
-> [f18d9d78] [c0005c14] do_one_initcall+0x20/0x160 (unreliable)
-> [f18d9dd8] [c009a22c] do_init_module+0x60/0x1c0
-> [f18d9df8] [c00993d8] load_module+0x16a8/0x1c14
-> [f18d9ea8] [c0099aa4] sys_finit_module+0x8c/0x94
-> [f18d9f38] [c0012174] ret_from_syscall+0x0/0x34
-> --- interrupt: c01 at 0xfdb4318
->     LR = 0xfeee9c0
-> Instruction dump:
-> XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX
-> XXXXXXXX XXXXXXXX XXXXXXXX XXXXXXXX <3d20c08b> 3d40c086 9421ffe0 8129106c
-> ---[ end trace 85a98cc836109871 ]---
+> > > based on which audio function, entity, control and channel being used.
+> > 
+> > Can you please elaborate on what do these terms refer to?
+> > 
+> > Also can we have some documentation for this and how Linux is going to
+> > use it..
 > 
+> These are concepts in the SDCA draft spec, and that should be the reference.
+> We worked with MIPI so that this spec will be available with a click-through
+> agreement when ratified, for now it's only available to contributors per
+> MIPI bylaws.
+> 
+> If you do not have access to this specification, then that's a real problem.
+> Maybe you need to let Bard take care of this part as a co-maintainer?
+> 
+> The goal with this macro is to enable a first set of codecs drivers using
+> these concepts to be released upstream. All you need to know at this point
+> is that controls are defined in a hierarchical way and accessed with a
+> read/write transaction from/to the address created with the following macro.
 
-Please try the patch at 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/07884ed033c31e074747b7eb8eaa329d15db07ec.1596641219.git.christophe.leroy@csgroup.eu/
+Hmmm, if we cannot get some kind of Documentation of what it means and
+review the code, then I do not see a point in getting this into kernel.
 
-And if you are using KAsan, also take 
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/6eddca2d5611fd57312a88eae31278c87a8fc99d.1596641224.git.christophe.leroy@csgroup.eu/
+As kernel community we would like to see some form of Documentation
+associated with the patches on what this means.
 
-Allthough I have some doubt that it will fix it, because the faulting 
-instruction address is at 0xf294b000 which is within the vmalloc area. 
-In the likely case the patch doesn't fix the issue, can you provide your 
-.config and a dump of /sys/kernel/debug/powerpc/segment_registers (You 
-have to have CONFIG_PPC_PTDUMP enabled for that) and also the below part 
-from boot log.
-
-[    0.000000] Memory: 509556K/524288K available (7088K kernel code, 
-592K rwdata, 1304K rodata, 356K init, 803K bss, 14732K reserved, 0K 
-cma-reserved)
-[    0.000000] Kernel virtual memory layout:
-[    0.000000]   * 0xff7ff000..0xfffff000  : fixmap
-[    0.000000]   * 0xff7fd000..0xff7ff000  : early ioremap
-[    0.000000]   * 0xe1000000..0xff7fd000  : vmalloc & ioremap
-
+If that is not possible due to MIPI regulations, maybe deferring
+this would make sense
 
 Thanks
-Christophe
+> 
+> > > +/* v1.2 device - SDCA address mapping */
+> > > +#define SDW_SDCA_CTL(fun, ent, ctl, ch)		(BIT(30) |			\
+> > > +						 (((fun) & 0x7) << 22) |	\
+> > > +						 (((ent) & 0x40) << 15) |	\
+> > > +						 (((ent) & 0x3f) << 7) |	\
+> > > +						 (((ctl) & 0x30) << 15) |	\
+> > > +						 (((ctl) & 0x0f) << 3) |	\
+> > > +						 (((ch) & 0x38) << 12) |	\
+> > > +						 ((ch) & 0x07))
+> > > +
+> > 
+> > how about adding an underscore to the arguments here:
+> > 
+> > #define SDW_SDCA_CTL(_fun, _ent, _ctl, _ch)
+> > and so on..
+> 
+> I checked the SoundWire defines and the vast majority of the macros don't
+> use underscores, and when they do there's no consistency between 1 or 2
+> underscores.
+
+-- 
+~Vinod
