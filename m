@@ -2,107 +2,196 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1287BC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E0A7C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E570E20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27FB720738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K4Ojel12"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KPQmdM6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgHUHF7 (ORCPT
+        id S1727836AbgHUHJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59952 "EHLO
+        Fri, 21 Aug 2020 03:09:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbgHUHF6 (ORCPT
+        with ESMTP id S1726693AbgHUHJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:05:58 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCE08C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:05:58 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id a65so850838otc.8
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:05:58 -0700 (PDT)
+        Fri, 21 Aug 2020 03:09:20 -0400
+Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39335C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:09:18 -0700 (PDT)
+Received: by mail-ua1-x941.google.com with SMTP id v20so272687ual.4
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:09:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fpCnqjLumk9/Y3NhZ+CrjOKofnQIK37Yvqj+XWx5hQ8=;
-        b=K4Ojel12gKh4nwoGJBD0es7Rh5fcPjf9aBtCccLxZkO66z7ddyWFrZ3gRbura0McD4
-         giZzgtkm2+lzNSSQrarb+nNSGnpm5WIXpS26JEhH/MWeJeODi8tm8GsRS8mx4GhQcQAj
-         /4ngQoaf90SpesDpwIchvRzoCpHN7ZZ5zR/bUCMbpn81kReKrsGlgajML/jgs65msvrQ
-         E7vVtTmBQqcpvuvfu03TxALJB1SouwD8PVYpLHqaPNY0gO7DwKQwXiKlUO4ofqDgbAe3
-         ngx2YX7/s/yzmFIvYmWXraBLihiPhgcw6teaOSpKlPiuyfAx3MJbZGftTDCuiS6CPv4x
-         7uDg==
+         :cc:content-transfer-encoding;
+        bh=qsRUqzEHz2hvX10s1CFevWBJNZnWuTdz/MNYc/0zA9s=;
+        b=KPQmdM6tkMN6Ep1FZeotANOOLSci5NOOGxEkF1HcuGUCH0aTX0g43BteJ055woCYUp
+         lQuOBR77BnqN+Orh6DR7DcDg+ybOSpeMvHc+suyh0d/AttAJipgnR1FjjZ9CEJKHeBLP
+         gJWKNkfye8KTdYMlYgPv03VBCim1VXDYtx0OkvHjMEuAWbhtA29AqbT/BZD1kXRroe05
+         MfsYg/yS32ZISAC1psotBFbEpooPAhDJpOjRxMMkY07fUFU23xzs+hacDIfi0qCEuk6e
+         6mG4gdkpbnqCETlJUzME9PzGa0sM9endCgHZs/eDL/AegTzzSlS3D32+N3wh/vcjGP0l
+         4kSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fpCnqjLumk9/Y3NhZ+CrjOKofnQIK37Yvqj+XWx5hQ8=;
-        b=ahfJCSRl4eGloVaH2cw+GLsoXXxDsCh/DVnT/dM33e3cUEEUAHL8kcv0lYtueQxjyZ
-         hvzEPpFvTllzT/idhrkMcXqYyHAjXKCwHBGEd9zmSOehOrYVTF1k/L1KXVGmeXIVN9MB
-         k3h/sggpb03cUZstmMRiC4nuZ6Igx9bJD5Pxo2ySdA/ANuuH4J0SfKwWaHlskWs36FBi
-         5pZnEaJHhUlyrXP2iLBB/ta30hD/9HTvVPHAu8UjcJt6qJzmouv2Ne1n35JvwrSQUu2a
-         bVJEMsFYkFP4YW1+8pVdpKnt9xfQITVnTe9pkiVT5DUIiYiRFj1JoK5mtREDvgseFXqm
-         3ZYw==
-X-Gm-Message-State: AOAM532lUVhI85vbxjstfL3IvDHjIniGn6PqwjNV5lVwezppDbZ+kFzR
-        +2WiAd6BJiKVVf7QwMlzNLQOkno+IJUkVaOlZ2963/KyBVg=
-X-Google-Smtp-Source: ABdhPJwLVxJTFWfmDvZN/HlMbn33X5V3EVbXrdeO2UK5IFLGRPyN89v0w8Ne7rN5bjP24u9EwVOtx1CZwcTa5gIQPDU=
-X-Received: by 2002:a9d:739a:: with SMTP id j26mr1100354otk.17.1597993557707;
- Fri, 21 Aug 2020 00:05:57 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qsRUqzEHz2hvX10s1CFevWBJNZnWuTdz/MNYc/0zA9s=;
+        b=Bmk/XtGnwnEUVX9b/PjTtvctmLfRK+QcQA6pCrCFDvrNvWKlFDJ20ykZYX6AWrijSe
+         pPOU5mejQcvXUGM9lMExB4r/8b0yo1jZdIoRzEkb3dtKI8HaUDC8FTNPhILOcM/L9bbh
+         U2M+XF6cQYmJDFELrIWhhmUjFim200M30tf/XS/6S2OBXI/kqj3GlFHRQ7gdatZIwPY8
+         jf5w2sALwJ7PolpVFOE1ZtYQnYcxIjr8pJ2hYluYCKm507X79mkoa7xXFxTIrLvGs7gr
+         ZDhl7u0FDfwdy3HwKY6pxIfG7VmypW5dYfUVzRz80Jpx4IvbhcJvGB5Fne+NYILa8zG6
+         4Qzg==
+X-Gm-Message-State: AOAM5325lD3pEDn7KhW3NCeOVvU6OQ4IUT+7+HzBwBR0sPJGzsHJ4QJL
+        dSEuid4P+fRih2jQBjp7Ftw4q6Lasm8PQa/es8julw==
+X-Google-Smtp-Source: ABdhPJy7wu4Heg7705JtopAoAZHR1JI5IOZ9cyV+WUE9pxsUnoGhAkufrn8eY9LnpBDejLBXPLe8/Ac+q3xznWFvHs0=
+X-Received: by 2002:ab0:462:: with SMTP id 89mr771846uav.34.1597993756959;
+ Fri, 21 Aug 2020 00:09:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820073031.886217423@infradead.org> <20200820103643.1b9abe88@oasis.local.home>
- <20200820145821.GA1362448@hirez.programming.kicks-ass.net>
- <20200820172046.GA177701@elver.google.com> <20200821065413.GG1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200821065413.GG1362448@hirez.programming.kicks-ass.net>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 21 Aug 2020 09:05:46 +0200
-Message-ID: <CANpmjNOnopd8usQJk0Y1mxSNrQ15e0GboNfwop4qUDCwMnQQZQ@mail.gmail.com>
-Subject: Re: [PATCH 0/9] TRACE_IRQFLAGS wreckage
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, rjw@rjwysocki.net,
-        Joel Fernandes <joel@joelfernandes.org>, svens@linux.ibm.com,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <20200820091537.490965042@linuxfoundation.org>
+In-Reply-To: <20200820091537.490965042@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 21 Aug 2020 12:39:05 +0530
+Message-ID: <CA+G9fYt5xa1LT3NCoW7JW2Zz5mx_84Z_XTDzChiRL63apkquMg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/92] 4.19.141-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 at 08:54, <peterz@infradead.org> wrote:
+On Thu, 20 Aug 2020 at 15:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Thu, Aug 20, 2020 at 07:20:46PM +0200, Marco Elver wrote:
-> > From 4ec9dd472c978e1eba622fb22bc04e4357f10421 Mon Sep 17 00:00:00 2001
-> > From: Marco Elver <elver@google.com>
-> > Date: Thu, 20 Aug 2020 19:06:09 +0200
-> > Subject: [PATCH] sched: Turn inline into __always_inline due to noinstr use
-> >
-> > is_idle_task() may be used from noinstr functions such as
-> > irqentry_enter(). Since the compiler is free to not inline regular
-> > inline functions, switch to using __always_inline.
-> >
-> > Signed-off-by: Marco Elver <elver@google.com>
+> This is the start of the stable review cycle for the 4.19.141 release.
+> There are 92 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Fair enough I suppose; didn't that generate an objtool warning on your
-> build? (of course that requires PARAVIRT=n, I should get back to fixing
-> that)
+> Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.141-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-It does now after turning on VMLINUX_VALIDATION.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Although note that this patch (and the other, which I'll send
-separately) wasn't required after the rcuidle fix. I suppose there is
-still a small chance things can go wrong though, but syzkaller wasn't
-able to find such a case (yet).
+Summary
+------------------------------------------------------------------------
 
-Thanks,
--- Marco
+kernel: 4.19.141-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 294e46de3a1d3cb90ac476ac92ffc835a7a1e716
+git describe: v4.19.140-93-g294e46de3a1d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.140-93-g294e46de3a1d
+
+No regressions (compared to build v4.19.140)
+
+No fixes (compared to build v4.19.140)
+
+
+Ran 34142 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* kvm-unit-tests
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-sched-tests
+* ltp-tracing-tests
+* perf
+* libhugetlbfs
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-open-posix-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
