@@ -2,51 +2,50 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43957C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F83FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8F4206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AAE3206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028529;
-	bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
+	s=default; t=1598028543;
+	bh=Lj8KoI+teNo/4KtB8pvPKE4MgbiKSTb6IqPldKFfLw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v2v3Ln4fjUdiyTwjGCgyKjJ1zbqe5V72cH8V7ZYDK9Rjkd5Gl65G+8BKo11bVpRN5
-	 YrkPe97yXCPMNi4VuHoOZYcm1Kprbap/GsDp9QVYoFUJZUmb3qu5s0ES+9iGRJI14b
-	 finWJe4/Bb3ubwAinUcxHpLGUJoH0FhjgQANmToc=
+	b=uM3PdTwQ6eOM7bPt+GHEXzBl49Z6rTvPIsLuMzZraqE5Z+JV+aIFqSmC/zTi3Cn7q
+	 L9WQVg7TapExR7JEocftHU5tUByo3ryYP9TaN8PbOmsAm0FHp7S2hA/ho7Ex9QAt2R
+	 14+S8QcdnXj5jXBz23nfffH8GBFM77c8L6pTWH6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgHUQsm (ORCPT
+        id S1728355AbgHUQs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:48:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:48:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbgHUQUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:17 -0400
+        id S1728366AbgHUQUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2695622BEF;
-        Fri, 21 Aug 2020 16:19:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF84A22CAE;
+        Fri, 21 Aug 2020 16:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026765;
-        bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
+        s=default; t=1598026763;
+        bh=Lj8KoI+teNo/4KtB8pvPKE4MgbiKSTb6IqPldKFfLw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARo5ITiCKWMaihyQIAzNaZFyPjo3LdUfUf1E4urzIK6JErymnGYefe9rV8ocjUL1W
-         2V8Qzra5hH7hNVFWHye14VOnj+181ZU8LAoIDVQkxiodW8FiTe9gI3lBmJ5D16Db3V
-         JAkjUJXwgKUH16p/qvwIE8aXFEGyK/3+RBkxl1+o=
+        b=kgts40B1l5Rw/hQkKcxxmiXETPgOB+r+68Lu9U2VZubKIQ8W7ZP1BdVemJvNmCDtF
+         9jdR5UCSPI0FHw+wVEUl23Ah3M5mPYERdahuvqrSQQJvM264HYBAXYGMjJcQW8dpgI
+         LgamFq2BLrgTmk6v1ffgw2vVFnQ/i8dKDHTHUKvw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peng Fan <fanpeng@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 21/30] mips/vdso: Fix resource leaks in genvdso.c
-Date:   Fri, 21 Aug 2020 12:18:48 -0400
-Message-Id: <20200821161857.348955-21-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 19/30] PCI: Fix pci_create_slot() reference count leak
+Date:   Fri, 21 Aug 2020 12:18:46 -0400
+Message-Id: <20200821161857.348955-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161857.348955-1-sashal@kernel.org>
 References: <20200821161857.348955-1-sashal@kernel.org>
@@ -59,95 +58,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <fanpeng@loongson.cn>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit a859647b4e6bfeb192284d27d24b6a0c914cae1d ]
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-Close "fd" before the return of map_vdso() and close "out_file"
-in main().
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-Signed-off-by: Peng Fan <fanpeng@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
+
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/vdso/genvdso.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
-index 530a36f465ced..afcc86726448e 100644
---- a/arch/mips/vdso/genvdso.c
-+++ b/arch/mips/vdso/genvdso.c
-@@ -126,6 +126,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (fstat(fd, &stat) != 0) {
- 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
- 			path, strerror(errno));
-+		close(fd);
- 		return NULL;
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index e42909524deed..379925fc49d4e 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -303,13 +303,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
  	}
  
-@@ -134,6 +135,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (addr == MAP_FAILED) {
- 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
- 			path, strerror(errno));
-+		close(fd);
- 		return NULL;
- 	}
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
  
-@@ -143,6 +145,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
- 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
- 			path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -154,6 +157,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	default:
- 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -165,6 +169,7 @@ static void *map_vdso(const char *path, size_t *_size)
- 	default:
- 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
-@@ -172,15 +177,18 @@ static void *map_vdso(const char *path, size_t *_size)
- 		fprintf(stderr,
- 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
- 		fprintf(stderr,
- 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
- 			program_name, path);
-+		close(fd);
- 		return NULL;
- 	}
- 
- 	*_size = stat.st_size;
-+	close(fd);
- 	return addr;
- }
- 
-@@ -284,10 +292,12 @@ int main(int argc, char **argv)
- 	/* Calculate and write symbol offsets to <output file> */
- 	if (!get_symbols(dbg_vdso_path, dbg_vdso)) {
- 		unlink(out_path);
-+		fclose(out_file);
- 		return EXIT_FAILURE;
- 	}
- 
- 	fprintf(out_file, "};\n");
-+	fclose(out_file);
- 
- 	return EXIT_SUCCESS;
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -328,7 +331,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
  }
 -- 
 2.25.1
