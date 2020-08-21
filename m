@@ -2,156 +2,115 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D5EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C640FC433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B98820724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:49:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uUPFDmFN"
+	by mail.kernel.org (Postfix) with ESMTP id A2DB02054F
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 20:50:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726747AbgHUUtv (ORCPT
+        id S1726750AbgHUUu2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 16:49:51 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:62187 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbgHUUto (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 16:49:44 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598042983; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=ALqZgq9ZtnQonj8cTUH/j06ZhhOBH6qr1BwztPuJkc4=; b=uUPFDmFNOXtQW5DAyxeq7eVnaTwJ7DSybxqe/GrAApy+4UYgMcjApQfRA1wjpZQlbKIxSiUe
- IX8GKwmT3VBFqEE7IHeHoC6O6O77/6QoGU+5otQwTLdtd8FMEfrHYmjvFz2OwNB+PqDiMeFb
- 6utHoKWWWkDz+fDoC1IsFy9qQxk=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f40336291f122588b1f576f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 20:49:38
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C85EC433AF; Fri, 21 Aug 2020 20:49:36 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1AF42C433CA;
-        Fri, 21 Aug 2020 20:49:30 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1AF42C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, ulf.hansson@linaro.org,
-        khilman@kernel.org, swboyd@chromium.org
-Cc:     rjw@rjwysocki.net, agross@kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        gregkh@linuxfoundation.org, pavel@ucw.cz, len.brown@intel.com,
-        rnayak@codeaurora.org, dianders@chromium.org, mka@chromium.org,
-        Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 1/2] PM / Domains: Add GENPD_FLAG_NO_SUSPEND/RESUME flags
-Date:   Sat, 22 Aug 2020 02:19:20 +0530
-Message-Id: <20200821204921.32536-1-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
+        Fri, 21 Aug 2020 16:50:28 -0400
+Received: from mail.fireflyinternet.com ([77.68.26.236]:56961 "EHLO
+        fireflyinternet.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725767AbgHUUu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 16:50:26 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 22203271-1500050 
+        for multiple; Fri, 21 Aug 2020 21:50:19 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
+References: <20200821123746.16904-1-joro@8bytes.org> <20200821133548.be58a3b0881b41a32759fa04@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: Track page table modifications in __apply_to_page_range()
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Airlie <airlied@redhat.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Vrabel <david.vrabel@citrix.com>,
+        Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <joro@8bytes.org>
+Date:   Fri, 21 Aug 2020 21:50:18 +0100
+Message-ID: <159804301810.32652.14249776487575415877@build.alporthouse.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add GENPD_FLAG_NO_SUSPEND/RESUME flags to instruct genpd to keep the
-status of the PM domain unaltered during suspend/resume respectively.
-The flags are aimed at power domains coupled to co-processors which
-enter low-power modes independent to that of the application processor.
+Quoting Andrew Morton (2020-08-21 21:35:48)
+> On Fri, 21 Aug 2020 14:37:46 +0200 Joerg Roedel <joro@8bytes.org> wrote:
+> 
+> > The __apply_to_page_range() function is also used to change and/or
+> > allocate page-table pages in the vmalloc area of the address space.
+> > Make sure these changes get synchronized to other page-tables in the
+> > system by calling arch_sync_kernel_mappings() when necessary.
+> 
+> There's no description here of the user-visible effects of the bug. 
+> Please always provide this, especially when proposing a -stable
+> backport.  Take pity upon all the downstream kernel maintainers who are
+> staring at this wondering whether they should risk adding it to their
+> kernels.
 
-Specifically the flags are to be used by the power domains exposed
-by the AOSS QMP driver linked to modem, adsp, cdsp remoteprocs. These
-power domains are used to notify the Always on Subsystem (AOSS) that
-a particular co-processor is up. AOSS uses this information to wait
-for the co-processors to suspend before starting its sleep sequence.
-The application processor powers off these power domains only if the
-co-processor has crashed or powered off and remains unaltered during
-system suspend/resume.
+The impact appears limited to x86-32, where apply_to_page_range may miss
+updating the PMD. That leads to explosions in drivers like
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+[   24.227844] BUG: unable to handle page fault for address: fe036000
+[   24.228076] #PF: supervisor write access in kernel mode
+[   24.228294] #PF: error_code(0x0002) - not-present page
+[   24.228494] *pde = 00000000
+[   24.228640] Oops: 0002 [#1] SMP
+[   24.228788] CPU: 3 PID: 1300 Comm: gem_concurrent_ Not tainted 5.9.0-rc1+ #16
+[   24.228957] Hardware name:  /NUC6i3SYB, BIOS SYSKLi35.86A.0024.2015.1027.2142 10/27/2015
+[   24.229297] EIP: __execlists_context_alloc+0x132/0x2d0 [i915]
+[   24.229462] Code: 31 d2 89 f0 e8 2f 55 02 00 89 45 e8 3d 00 f0 ff ff 0f 87 11 01 00 00 8b 4d e8 03 4b 30 b8 5a 5a 5a 5a ba 01 00 00 00 8d 79 04 <c7> 01 5a 5a 5a 5a c7 81 fc 0f 00 00 5a 5a 5a 5a 83 e7 fc 29 f9 81
+[   24.229759] EAX: 5a5a5a5a EBX: f60ca000 ECX: fe036000 EDX: 00000001
+[   24.229915] ESI: f43b7340 EDI: fe036004 EBP: f6389cb8 ESP: f6389c9c
+[   24.230072] DS: 007b ES: 007b FS: 00d8 GS: 00e0 SS: 0068 EFLAGS: 00010286
+[   24.230229] CR0: 80050033 CR2: fe036000 CR3: 2d361000 CR4: 001506d0
+[   24.230385] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
+[   24.230539] DR6: fffe0ff0 DR7: 00000400
+[   24.230675] Call Trace:
+[   24.230957]  execlists_context_alloc+0x10/0x20 [i915]
+[   24.231266]  intel_context_alloc_state+0x3f/0x70 [i915]
+[   24.231547]  __intel_context_do_pin+0x117/0x170 [i915]
+[   24.231850]  i915_gem_do_execbuffer+0xcc7/0x2500 [i915]
+[   24.232024]  ? __kmalloc_track_caller+0x54/0x230
+[   24.232181]  ? ktime_get+0x3e/0x120
+[   24.232333]  ? dma_fence_signal+0x34/0x50
+[   24.232617]  i915_gem_execbuffer2_ioctl+0xcd/0x1f0 [i915]
+[   24.232912]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
+[   24.233084]  drm_ioctl_kernel+0x8f/0xd0
+[   24.233236]  drm_ioctl+0x223/0x3d0
+[   24.233505]  ? i915_gem_execbuffer_ioctl+0x2e0/0x2e0 [i915]
+[   24.233684]  ? pick_next_task_fair+0x1b5/0x3d0
+[   24.233873]  ? __switch_to_asm+0x36/0x50
+[   24.234021]  ? drm_ioctl_kernel+0xd0/0xd0
+[   24.234167]  __ia32_sys_ioctl+0x1ab/0x760
+[   24.234313]  ? exit_to_user_mode_prepare+0xe5/0x110
+[   24.234453]  ? syscall_exit_to_user_mode+0x23/0x130
+[   24.234601]  __do_fast_syscall_32+0x3f/0x70
+[   24.234744]  do_fast_syscall_32+0x29/0x60
+[   24.234885]  do_SYSENTER_32+0x15/0x20
+[   24.235021]  entry_SYSENTER_32+0x9f/0xf2
+[   24.235157] EIP: 0xb7f28559
+[   24.235288] Code: 03 74 c0 01 10 05 03 74 b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d 76 00 58 b8 77 00 00 00 cd 80 90 8d 76
+[   24.235576] EAX: ffffffda EBX: 00000005 ECX: c0406469 EDX: bf95556c
+[   24.235722] ESI: b7e68000 EDI: c0406469 EBP: 00000005 ESP: bf9554d8
+[   24.235869] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
+[   24.236018] Modules linked in: i915 x86_pkg_temp_thermal intel_powerclamp crc32_pclmul crc32c_intel intel_cstate intel_uncore intel_gtt drm_kms_helper intel_pch_thermal video button autofs4 i2c_i801 i2c_smbus fan
+[   24.236336] CR2: 00000000fe036000
 
-V2:
- * Add more info in commit msg and description [Uffe/Kevin/Stephen]
- * Rename and split functionality into two flags [Uffe]
- * Drop R-b/T-b
-
- drivers/base/power/domain.c |  6 ++++--
- include/linux/pm_domain.h   | 10 ++++++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 2cb5e04cf86cd..a5df5916f30f8 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -129,6 +129,8 @@ static const struct genpd_lock_ops genpd_spin_ops = {
- #define genpd_is_active_wakeup(genpd)	(genpd->flags & GENPD_FLAG_ACTIVE_WAKEUP)
- #define genpd_is_cpu_domain(genpd)	(genpd->flags & GENPD_FLAG_CPU_DOMAIN)
- #define genpd_is_rpm_always_on(genpd)	(genpd->flags & GENPD_FLAG_RPM_ALWAYS_ON)
-+#define genpd_is_no_suspend(genpd)	(genpd->flags & GENPD_FLAG_NO_SUSPEND)
-+#define genpd_is_no_resume(genpd)	(genpd->flags & GENPD_FLAG_NO_RESUME)
- 
- static inline bool irq_safe_dev_in_no_sleep_domain(struct device *dev,
- 		const struct generic_pm_domain *genpd)
-@@ -949,7 +951,7 @@ static void genpd_sync_power_off(struct generic_pm_domain *genpd, bool use_lock,
- {
- 	struct gpd_link *link;
- 
--	if (!genpd_status_on(genpd) || genpd_is_always_on(genpd))
-+	if (!genpd_status_on(genpd) || genpd_is_always_on(genpd) || genpd_is_no_suspend(genpd))
- 		return;
- 
- 	if (genpd->suspended_count != genpd->device_count
-@@ -991,7 +993,7 @@ static void genpd_sync_power_on(struct generic_pm_domain *genpd, bool use_lock,
- {
- 	struct gpd_link *link;
- 
--	if (genpd_status_on(genpd))
-+	if (genpd_status_on(genpd) || genpd_is_no_resume(genpd))
- 		return;
- 
- 	list_for_each_entry(link, &genpd->child_links, child_node) {
-diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-index ee11502a575b0..568abdf2e89cf 100644
---- a/include/linux/pm_domain.h
-+++ b/include/linux/pm_domain.h
-@@ -55,6 +55,14 @@
-  *
-  * GENPD_FLAG_RPM_ALWAYS_ON:	Instructs genpd to always keep the PM domain
-  *				powered on except for system suspend.
-+ *
-+ * GENPD_FLAG_NO_SUSPEND:	Instructs genpd to keep the PM domain powered
-+ *				on during suspend (if it's already powered on)
-+ *				and runtime PM controlled otherwise.
-+ *
-+ * GENPD_FLAG_NO_RESUME:	Instructs genpd to keep the PM domain powered
-+ *				off during resume (if it's already powered off)
-+ *				and runtime PM controlled otherwise.
-  */
- #define GENPD_FLAG_PM_CLK	 (1U << 0)
- #define GENPD_FLAG_IRQ_SAFE	 (1U << 1)
-@@ -62,6 +70,8 @@
- #define GENPD_FLAG_ACTIVE_WAKEUP (1U << 3)
- #define GENPD_FLAG_CPU_DOMAIN	 (1U << 4)
- #define GENPD_FLAG_RPM_ALWAYS_ON (1U << 5)
-+#define GENPD_FLAG_NO_SUSPEND	 (1U << 6)
-+#define GENPD_FLAG_NO_RESUME	 (1U << 7)
- 
- enum gpd_status {
- 	GPD_STATE_ACTIVE = 0,	/* PM domain is active */
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+It looks like kasan, xen and i915 are vulnerable.
+-Chris
