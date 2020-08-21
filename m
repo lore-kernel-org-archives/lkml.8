@@ -2,132 +2,133 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592CEC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A643C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB08207DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9746207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:32:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NW9FpbfG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCloECpY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgHUIbt (ORCPT
+        id S1728020AbgHUIcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:31:49 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47144 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726332AbgHUIbp (ORCPT
+        Fri, 21 Aug 2020 04:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45250 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbgHUIcG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:31:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597998703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=esbX7PdKAbuddtKs/9gDIHB6C/pucBLHjnZqmU7xJSc=;
-        b=NW9FpbfGQkLUBMpwe5Tb3UtyORrX1BuZW+M8B20wLnpLk2PeMrmnU2LL8yQb4WxdI2Rd2j
-        fJnrZ7t9wSW7vZoBFTdtCg3+o4RSWfL4/mJDyNIUQmHYcIY9IGHMI4Ju0C82pcEPpXqWR6
-        jFT+wPWzSKXPujE4wmO875mdVfjcsgw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-141-vPyJFbKVPjyKNN3IyLbCgg-1; Fri, 21 Aug 2020 04:31:39 -0400
-X-MC-Unique: vPyJFbKVPjyKNN3IyLbCgg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2574D1074649;
-        Fri, 21 Aug 2020 08:31:37 +0000 (UTC)
-Received: from [10.36.114.87] (ovpn-114-87.ams2.redhat.com [10.36.114.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CB3D100AE53;
-        Fri, 21 Aug 2020 08:31:28 +0000 (UTC)
-Subject: Re: [PATCH v5 0/6] mm / virtio-mem: support ZONE_MOVABLE
-To:     linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Baoquan He <bhe@redhat.com>, Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-        Qian Cai <cai@lca.pw>
-References: <20200816125333.7434-1-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat GmbH
-Message-ID: <552a2a55-6082-d286-1cd4-7f7e368eebb4@redhat.com>
-Date:   Fri, 21 Aug 2020 10:31:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Fri, 21 Aug 2020 04:32:06 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB9A2C061385;
+        Fri, 21 Aug 2020 01:32:05 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t11so570638plr.5;
+        Fri, 21 Aug 2020 01:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KMEAgxnLavJYQ3i7i0cZ9PJqwCosdeDVQ11vARt76rw=;
+        b=rCloECpYonB62tNgFfIMULBA2l11JvstqurZvSoGX36qItHs8DIN1qsnEfoVaTaES+
+         IGdSc4WgHoKYgJbeYmtL6DxV3M7Ifjnbt23iDuSa3BA7Szy2838CCveQQs/XElpWznN8
+         alcOACr6VrPT9+DmM8ROYMm5EqY+Lno+QZ6omVbihWH1N0SwX+qjrNAPiHoNOly44DkK
+         Hub0pOmgLfn+T62btisPy5NXMhDEqtt9ATNtdjQsfZ6fpnLyLnPZTenRV9yWkHRoATjJ
+         Uewm1JxRSh83BjAYUUJVCrs396P6orRjfC0nh/pkBFgMKUplbZFsnmJw1vRLI2KXNHCf
+         SFPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KMEAgxnLavJYQ3i7i0cZ9PJqwCosdeDVQ11vARt76rw=;
+        b=YRizbMu+ZimRXzIbPpDAmwsf27GStFf+CwWdYFRggjKAwl8ukBxnSixS/FOsYtAcF4
+         CdGH0WbqK7NugCJTbDv3+gbD7wq7G4gEOvx1n7EtQAy5ESWPVR4C8yvVXnAJvYKjx5uK
+         P73Aw8zpPC6rLnA7owRZoM0Ci71hHgeRdEh6kJPj2cjOTosgt3iEI/UDZkxw5rfuH/7N
+         aAX+Qdtu0X4rsaNqnFIkWgm0+sJsFZf64QehfyaMYU+gZFQwoPj16ZLWS7jdWTyh99Ez
+         woPBz4S+bglTG0eJ3PrZcdVzKIvfZYREwqGv9Cu3wjE+yoOowj/Z07jberuda/DG3IIS
+         JjgA==
+X-Gm-Message-State: AOAM533qSzuzfqKak3n5RJPYzS6N3Txw5sQk0o5eiYiVrvZmldKzjKR9
+        OMGp9vq+1rJEJQu090oyj08=
+X-Google-Smtp-Source: ABdhPJx3Io9I5JNxZKonQPoNMYC4/SzjvqW41agp76wDFbPJkY6smg0PkhIQ/Qjnk3DdOkmyGNYFGw==
+X-Received: by 2002:a17:90a:1a42:: with SMTP id 2mr1569913pjl.16.1597998725448;
+        Fri, 21 Aug 2020 01:32:05 -0700 (PDT)
+Received: from f3 (ae055068.dynamic.ppp.asahi-net.or.jp. [14.3.55.68])
+        by smtp.gmail.com with ESMTPSA id x23sm1617741pfi.60.2020.08.21.01.32.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 01:32:04 -0700 (PDT)
+Date:   Fri, 21 Aug 2020 17:31:59 +0900
+From:   Benjamin Poirier <benjamin.poirier@gmail.com>
+To:     Coiby Xu <coiby.xu@gmail.com>
+Cc:     devel@driverdev.osuosl.org, Manish Chopra <manishc@marvell.com>,
+        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
+        <GR-Linux-NIC-Dev@marvell.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: qlge: fix build breakage with dumping enabled
+Message-ID: <20200821083159.GA16579@f3>
+References: <20200821070334.738358-1-coiby.xu@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200816125333.7434-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821070334.738358-1-coiby.xu@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.08.20 14:53, David Hildenbrand wrote:
-> For 5.10. Patch #1-#4,#6 have RBs or ACKs, patch #5 is virtio-mem stuff
-> maintained by me. This should go via the -mm tree.
+On 2020-08-21 15:03 +0800, Coiby Xu wrote:
+> This fixes commit 0107635e15ac
+> ("staging: qlge: replace pr_err with netdev_err") which introduced an
+> build breakage with dumping enabled, i.e.,
 > 
+>     $ QL_ALL_DUMP=1 QL_OB_DUMP=1 QL_CB_DUMP=1 QL_REG_DUMP=1 \
+>       QL_IB_DUMP=1 QL_DEV_DUMP=1 make M=drivers/staging/qlge
+> 
+> Fixes: 0107635e15ac ("taging: qlge: replace pr_err with netdev_err")
+			^ staging
+> Reported-by: Benjamin Poirier <benjamin.poirier@gmail.com>
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
+>  drivers/staging/qlge/qlge.h      | 42 ++++++++++++++++----------------
+>  drivers/staging/qlge/qlge_dbg.c  | 36 +++++++++++++--------------
+>  drivers/staging/qlge/qlge_main.c |  4 +--
+>  3 files changed, 41 insertions(+), 41 deletions(-)
+> 
+[...]
+> @@ -1615,7 +1615,7 @@ void ql_dump_qdev(struct ql_adapter *qdev)
+>  #endif
+>  
+>  #ifdef QL_CB_DUMP
+> -void ql_dump_wqicb(struct wqicb *wqicb)
+> +void ql_dump_wqicb(struct ql_adapter *qdev, struct wqicb *wqicb)
+>  {
 
-@Andrew, can we give this a churn if there are no further comments? Thanks!
+This can be fixed without adding another argument:
 
--- 
-Thanks,
+	struct tx_ring *tx_ring = container_of(wqicb, struct tx_ring, wqicb);
+	struct ql_adapter *qdev = tx_ring->qdev;
 
-David / dhildenb
+>  	netdev_err(qdev->ndev, "Dumping wqicb stuff...\n");
+>  	netdev_err(qdev->ndev, "wqicb->len = 0x%x\n", le16_to_cpu(wqicb->len));
+> @@ -1630,7 +1630,7 @@ void ql_dump_wqicb(struct wqicb *wqicb)
+>  		   (unsigned long long)le64_to_cpu(wqicb->cnsmr_idx_addr));
+>  }
+>  
+> -void ql_dump_tx_ring(struct tx_ring *tx_ring)
+> +void ql_dump_tx_ring(struct ql_adapter *qdev, struct tx_ring *tx_ring)
+>  {
 
+This can be fixed without adding another argument:
+	struct ql_adapter *qdev;
+
+	if (!tx_ring)
+		return;
+
+	qdev = tx_ring->qdev;
+
+... similar comment for the other instances.
