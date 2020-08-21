@@ -2,180 +2,135 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A3EC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63723C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8102120724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BDDB207DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XNkgb7Rs"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="NU0Mcks7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgHUNPn (ORCPT
+        id S1728746AbgHUNSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:15:43 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:41828 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgHUNP1 (ORCPT
+        Fri, 21 Aug 2020 09:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727879AbgHUNSQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:15:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LDCKZ7044099;
-        Fri, 21 Aug 2020 13:15:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=48t+JyaxUG+IiwX0HOyopf5UdpGg/IM7foZd1KSrLCc=;
- b=XNkgb7RsDkvwpB4+y6cZIRRx1y+ShUsmuWUFDjAoTG+r8zo1FnIKquCAyRPHq251tMTK
- +Gh63ZtewoUojaiLKo7Jmrf4vCk7BQRowhV3TdN/3rPP1K3tYufIb59cOjhOclSzLflO
- 3x9ra3ckgTtvCFRJYFPfGdg1tubbye8gqrYi4OUtleA++Go36mVGAuU/9fsaj9DWPlgY
- cYjosORm9WIdR8R6HvipPtrh5FGnODGrqbj6s1VWYyF7IkklVeoYHvSCukQ8IX2WGFUs
- Hp3Pzh2xNSxfhh0MpD6RJlGM7R+tI5Y2xJZt1JjqtxJ5C0S5PCM7LZBHukS2xLnGImo5 jw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32x74rnyxx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 13:15:15 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LD95Ow116592;
-        Fri, 21 Aug 2020 13:15:15 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 32xsn2jbak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 13:15:15 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07LDFBMK029772;
-        Fri, 21 Aug 2020 13:15:12 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 13:15:11 +0000
-Date:   Fri, 21 Aug 2020 16:15:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Tomer Samara <tomersamara98@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, Todd Kjos <tkjos@android.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Riley Andrews <riandrews@android.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Hridya Valsaraju <hridya@google.com>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Martijn Coenen <maco@android.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Christian Brauner <christian@brauner.io>
-Subject: Re: [PATCH v3 1/2] staging: android: Remove BUG_ON from
- ion_page_pool.c
-Message-ID: <20200821131502.GU1793@kadam>
-References: <cover.1597865771.git.tomersamara98@gmail.com>
- <2e6c71ad168f92170ef856922b9a0c8dd0f85e11.1597865771.git.tomersamara98@gmail.com>
+        Fri, 21 Aug 2020 09:18:16 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE47C061388
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:18:14 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id g19so2219658ejc.9
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:18:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9Ewq1eqi128tS/YtHe1Hdp0zK/pkzPgQy1G+gIZ86vk=;
+        b=NU0Mcks72tdUBoRxTtGff5uEDLvy5q+04uOXS/JLA0SJHrmqdiP6jaEKtTvuhKsMgU
+         lDfci7M0dnl3iqCTEKGFvbcUksW7F5hk3a91SmK7L3wWBKVmDsI9uP/rUVnGbwAsuDli
+         PjLRD2P5KK/Uqcps5LzpvzKRXm9f6EQs1OMtc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Ewq1eqi128tS/YtHe1Hdp0zK/pkzPgQy1G+gIZ86vk=;
+        b=ZT5sZYBeFW8ACBOHj3EF7GwjjC+k3oWwYPPGcmsrWkcapL0InQ9yRJQItTYxMbkjex
+         6imoGVcDbukhC7WqKkoYET69n6Xcr3U89TaCJlV0ixeL3CVCkYq9NdOBh4mYek61n5aQ
+         oYWVCnbX9UydOSJmky7hez5y8dllxKK5jXLQf/cZiW4nZxkLL09oG675kfHgj0Rge8Sz
+         NaFPcB6QUlCpHsPysQiNZyeB9DoeWsqmLsTybN8XmX3nxT2gq/TXXRNmx4lmLGT34m7h
+         VVzrHpUEzkz37ObuAFlPGqLYAzG3gdK81I9FEslqwr6xITPjM8sU8ubjXqeEPdcHqXmZ
+         fAkg==
+X-Gm-Message-State: AOAM532hh6WoYIfDHjNw1QmlPLgO3cVxQUEYIA5BM1Ikzi2Eq25eM1VT
+        wE+AMAJUSFgggzZeDvnXzyE2xWPwXESKGlPXJA+OVA==
+X-Google-Smtp-Source: ABdhPJx3TSW7MukTCaIid5gIoeUYGZLVJD0O+yZ7UPk2PTQBJG9g/hYdPVKEFV4KdfwhkvYvNtwBHnp0gKnoaXGmvjM=
+X-Received: by 2002:a17:906:b2d7:: with SMTP id cf23mr2811015ejb.113.1598015890534;
+ Fri, 21 Aug 2020 06:18:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e6c71ad168f92170ef856922b9a0c8dd0f85e11.1597865771.git.tomersamara98@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=2 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210121
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=2 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210121
+References: <1842689.1596468469@warthog.procyon.org.uk> <1845353.1596469795@warthog.procyon.org.uk>
+ <CAJfpegunY3fuxh486x9ysKtXbhTE0745ZCVHcaqs9Gww9RV2CQ@mail.gmail.com>
+ <ac1f5e3406abc0af4cd08d818fe920a202a67586.camel@themaw.net>
+ <CAJfpegu8omNZ613tLgUY7ukLV131tt7owR+JJ346Kombt79N0A@mail.gmail.com>
+ <CAJfpegtNP8rQSS4Z14Ja4x-TOnejdhDRTsmmDD-Cccy2pkfVVw@mail.gmail.com>
+ <20200811135419.GA1263716@miu.piliscsaba.redhat.com> <CAHk-=wjzLmMRf=QG-n+1HnxWCx4KTQn9+OhVvUSJ=ZCQd6Y1WA@mail.gmail.com>
+ <52483.1597190733@warthog.procyon.org.uk> <CAHk-=wiPx0UJ6Q1X=azwz32xrSeKnTJcH8enySwuuwnGKkHoPA@mail.gmail.com>
+ <066f9aaf-ee97-46db-022f-5d007f9e6edb@redhat.com> <CAHk-=wgz5H-xYG4bOrHaEtY7rvFA1_6+mTSpjrgK8OsNbfF+Pw@mail.gmail.com>
+ <94f907f0-996e-0456-db8a-7823e2ef3d3f@redhat.com> <CAHk-=wig0ZqWxgWtD9F1xZzE7jEmgLmXRWABhss0+er3ZRtb9g@mail.gmail.com>
+ <CAHk-=wh4qaj6iFTrbHy8TPfmM3fj+msYC5X_KE0rCdStJKH2NA@mail.gmail.com>
+ <CAJfpegsr8URJHoFunnGShB-=jqypvtrmLV-BcWajkHux2H4x2w@mail.gmail.com>
+ <CAHk-=wh5YifP7hzKSbwJj94+DZ2czjrZsczy6GBimiogZws=rg@mail.gmail.com>
+ <CAJfpegt9yEHX3C-sF9UyOXJcRa1cfDnf450OEJ47Xk=FmyEs8A@mail.gmail.com> <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
+In-Reply-To: <CAHk-=wiUcfgC1PdbS_4mfAj2+VTacOwD_uUu6krSxjpvh42T7A@mail.gmail.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 21 Aug 2020 15:17:59 +0200
+Message-ID: <CAJfpegsBSsMkSXReN6Sheye1cksCO2pcqcx_3VwY4C1J9kDhaw@mail.gmail.com>
+Subject: Re: file metadata via fs API
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Whitehouse <swhiteho@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Karel Zak <kzak@redhat.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        Christian Brauner <christian@brauner.io>,
+        Lennart Poettering <lennart@poettering.net>,
+        Linux API <linux-api@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>,
+        LSM <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 10:38:47PM +0300, Tomer Samara wrote:
-> BUG_ON() is removed at ion_page_pool.c and add error handleing to
-> ion_page_pool_shrink
-> 
-> Fixes the following issue:
-> Avoid crashing the kernel - try using WARN_ON & recovery code ratherthan BUG() or BUG_ON().
-> 
-> Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
-> ---
->  drivers/staging/android/ion/ion_page_pool.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/android/ion/ion_page_pool.c b/drivers/staging/android/ion/ion_page_pool.c
-> index 0198b886d906..ae2bc57bcbe8 100644
-> --- a/drivers/staging/android/ion/ion_page_pool.c
-> +++ b/drivers/staging/android/ion/ion_page_pool.c
-> @@ -46,11 +46,13 @@ static struct page *ion_page_pool_remove(struct ion_page_pool *pool, bool high)
->  	struct page *page;
->  
->  	if (high) {
-> -		BUG_ON(!pool->high_count);
-> +		if (!pool->high_count)
-> +			return NULL;
+On Tue, Aug 18, 2020 at 10:53 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 
-I looked at the callers and it's trivial to verify that these conditions
-are impossible.  Just delete the BUG_ON() checks.
+> Basically, I think a rough rule of thumb can and should be:
+>
+>  - stuff that the VFS knows about natively and fully is clearly pretty
+> mount-agnostic and generic, and can be represented in whatever
+> extended "struct statfs_x" directly.
+>
+>  - anything that is variable-format and per-fs should be expressed in
+> the ASCII buffer
+>
+> Look at our fancy new fs_context - that's pretty much what it does
+> even inside the kernel. Sure, we have "binary" fields there for core
+> basic information ("struct dentry *root", but also things like flags
+> with MNT_NOSUID), but the configuration stuff is ASCII that the
+> filesystem can parse itself.
+>
+> Exactly because some things are very much specific to some
+> filesystems, not generic things.
+>
+> So we fundamentally already have a mix of "standard FS data" and
+> "filesystem-specific options", and it's already basically split that
+> way: binary flag fields for the generic stuff, and ASCII text for the
+> odd options.
 
->  		page = list_first_entry(&pool->high_items, struct page, lru);
->  		pool->high_count--;
->  	} else {
-> -		BUG_ON(!pool->low_count);
-> +		if (!pool->low_count)
-> +			return NULL;
->  		page = list_first_entry(&pool->low_items, struct page, lru);
->  		pool->low_count--;
->  	}
-> @@ -65,7 +67,8 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
->  {
->  	struct page *page = NULL;
->  
-> -	BUG_ON(!pool);
-> +	if (!pool)
-> +		return NULL;
+Okay.
 
-This one is slightly harder to verify...  But really I would prefer that
-we just deleted it as well.  If we had a NULL dereference here then that
-would give a pretty straight forward stack trace to debug.
+Something else:  do we want a separate statmount(2) or is it okay to
+mix per-mount and per-sb attributes in the same syscall?
 
->  
->  	mutex_lock(&pool->mutex);
->  	if (pool->high_count)
-> @@ -82,7 +85,8 @@ struct page *ion_page_pool_alloc(struct ion_page_pool *pool)
->  
->  void ion_page_pool_free(struct ion_page_pool *pool, struct page *page)
->  {
-> -	BUG_ON(pool->order != compound_order(page));
-> +	if (pool->order != compound_order(page))
-> +		return;
+/proc/mounts concatenates mount and sb options (since it copies the
+/etc/mtab format)
 
-Is returning really the correct way to handle this bug?  I suggest,
-just change BUG_ON() to a WARN_ON().
+/proc/self/mountinfo separates per-mount and per-sb data into
+different fields at least, but the fields themselves are mixed
 
->  
->  	ion_page_pool_add(pool, page);
->  }
-> @@ -124,6 +128,8 @@ int ion_page_pool_shrink(struct ion_page_pool *pool, gfp_t gfp_mask,
->  			break;
->  		}
->  		mutex_unlock(&pool->mutex);
-> +		if (!page)
-> +			break;
+If we are introducing completely new interfaces, I think it would make
+sense to separate per-mount and per-sb attributes somehow.  Atomicity
+arguments don't apply since they have separate locking.  And we
+already have separate interfaces for configuring them...
 
-This change is no longer required if we delete the changes earlier as
-I suggest.  This change illustrates how when we start handling
-impossible conditions then we just have to keep on imagining more and
-more impossible conditions.  When we start trying to write code for
-situations which we know are impossible that is an unending task.
-
->  		ion_page_pool_free_pages(pool, page);
->  		freed += (1 << pool->order);
->  	}
-
-regards,
-dan carpenter
-
+Thanks,
+Miklos
