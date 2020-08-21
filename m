@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9D9C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2ECC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AC31214F1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEDA420702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029060;
-	bh=Kz9asUNNlYXaYco+9LvQRlhSA4VTfF6ouDL4z9QMWmc=;
+	s=default; t=1598029067;
+	bh=hjSLHOk9En24IWr7lnaZfvbXRkIh81r1QCgTQ8IJhrA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sgRy2JHQz81gYptxQVudRokUh0o/tG+3GIEekGwhrJhNjc0HHcZrHy4dw/66ndz6E
-	 CtjXFNNZSRPrv8G2/l8xZE2xhcMdxxRIHzSIoFh8uB7DFFGyQ8GJbgJiY2nvMiH2im
-	 V/C6aZbyOIZKP6Y9UCzKZVmJLnfJ9BsqO4CRZQKw=
+	b=KTk1+23gc1jyz09O6CsYQnNhOLpgBlY5D1w9vT/s3nStrs2x5p2ZvpZuc47lr4rhy
+	 Tj24jMoWeh95YBjBdVrQMji8TVc/PKzpPQLmsJb1wexbhcHgdGCqOBCR9OVbaxI6yf
+	 jGwEbs1dtD+jh60gJVURrbrx3cQHMYE+KVvOD5fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgHUQ5M (ORCPT
+        id S1728382AbgHUQ5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:57:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgHUQTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727113AbgHUQTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:19:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C58922D74;
-        Fri, 21 Aug 2020 16:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F374A22D6F;
+        Fri, 21 Aug 2020 16:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026729;
-        bh=Kz9asUNNlYXaYco+9LvQRlhSA4VTfF6ouDL4z9QMWmc=;
+        s=default; t=1598026728;
+        bh=hjSLHOk9En24IWr7lnaZfvbXRkIh81r1QCgTQ8IJhrA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BTdwlaxABuhXMNrTC8NPvDMu8ecft0xFSnNuQNbifYjtg8sPUcMKLYvlG7Xq/LWqE
-         YEyp02j+P01M5oLLlMyFLfeDTt10GFEZ3m1parBycULgu69kNPKJm06CKOWRmPfa/7
-         FUl3LvCUQZYttlC+BjlfATlCE659dOtqC5zF9x2A=
+        b=AUXPfdvB4QWyCZN4oJ8F+fUqIUqwixwPm3NvNNLiOBOd4ozjONXnQT3bKRez6j3Ph
+         xAZ5CRyp6BaCMlcp95Co2GIfwSwN79sR0w9cPYEaaUjjqeBNDEGUrCam4izpRviyPv
+         WXPqzypqZ+b6GmJ0cwGeuYSZDoXTfMZRSjNXvv0o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 33/38] locking/lockdep: Fix overflow in presentation of average lock-time
-Date:   Fri, 21 Aug 2020 12:18:02 -0400
-Message-Id: <20200821161807.348600-33-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>, Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.19 32/38] drm/nouveau: Fix reference count leak in nouveau_connector_detect
+Date:   Fri, 21 Aug 2020 12:18:01 -0400
+Message-Id: <20200821161807.348600-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
 References: <20200821161807.348600-1-sashal@kernel.org>
@@ -60,40 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
 
-Though the number of lock-acquisitions is tracked as unsigned long, this
-is passed as the divisor to div_s64() which interprets it as a s32,
-giving nonsense values with more than 2 billion acquisitons. E.g.
+nouveau_connector_detect() calls pm_runtime_get_sync and in turn
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-  -------------------------------------------------------------------------
-    2350439395           0.07         353.38   649647067.36          0.-32
-
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 6fcc4650f0c48..53cc3bb7025a5 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -394,7 +394,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
- 	seq_time(m, lt->min);
- 	seq_time(m, lt->max);
- 	seq_time(m, lt->total);
--	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
-+	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
- }
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index fb0094fc55834..b71afde8f115a 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -551,8 +551,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 		pm_runtime_get_noresume(dev->dev);
+ 	} else {
+ 		ret = pm_runtime_get_sync(dev->dev);
+-		if (ret < 0 && ret != -EACCES)
++		if (ret < 0 && ret != -EACCES) {
++			pm_runtime_put_autosuspend(dev->dev);
+ 			return conn_status;
++		}
+ 	}
  
- static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
+ 	nv_encoder = nouveau_connector_ddc_detect(connector);
 -- 
 2.25.1
 
