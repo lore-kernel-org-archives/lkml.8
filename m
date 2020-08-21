@@ -2,129 +2,123 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A637C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDC5C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7767320732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Du1CQaH4"
+	by mail.kernel.org (Postfix) with ESMTP id 4363120732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgHUHVm (ORCPT
+        id S1728583AbgHUHVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:21:42 -0400
-Received: from mout.gmx.net ([212.227.17.20]:60369 "EHLO mout.gmx.net"
+        Fri, 21 Aug 2020 03:21:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36466 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbgHUHRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:17:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1597994235;
-        bh=RKUSb1KT1trkVNW36+e3JD1DffRwh/W1OBUG1JuN6uA=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=Du1CQaH46NlFDLMN9jR6t/blbrxAsycfJD7PVFmhiAvbD7PkD+ALRoHx41tSGfSMP
-         LDOAmyzW3owGagiMj5tUoF3S/V+iDjQfgVtIO7eA1o5pQmDFFELCeoLyRmm32PiSJB
-         zxvsgnbJCtv1TPT94r1HEf2CoqMwVs2NqnbKCVK0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [185.76.97.101] ([185.76.97.101]) by web-mail.gmx.net
- (3c-app-gmx-bs37.server.lan [172.19.170.89]) (via HTTP); Fri, 21 Aug 2020
- 09:17:15 +0200
+        id S1728119AbgHUHRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:17:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 96A57AAC7;
+        Fri, 21 Aug 2020 07:17:59 +0000 (UTC)
+Date:   Fri, 21 Aug 2020 09:17:30 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Suren Baghdasaryan <surenb@google.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tim Murray <timmurray@google.com>, mingo@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
+        christian@kellner.me, areber@redhat.com,
+        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
+        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
+        daniel.m.jordan@oracle.com, avagin@gmail.com,
+        bernd.edlinger@hotmail.de,
+        John Johansen <john.johansen@canonical.com>,
+        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
+ __set_oom_adj when not necessary
+Message-ID: <20200821071730.GA32537@dhcp22.suse.cz>
+References: <87d03lxysr.fsf@x220.int.ebiederm.org>
+ <20200820132631.GK5033@dhcp22.suse.cz>
+ <20200820133454.ch24kewh42ax4ebl@wittgenstein>
+ <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
+ <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
+ <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
+ <87k0xtv0d4.fsf@x220.int.ebiederm.org>
+ <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
+ <20200820162645.GP5033@dhcp22.suse.cz>
+ <87r1s0txxe.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Message-ID: <trinity-14a1b182-38ab-4f84-bb72-94d448b05fd5-1597994235320@3c-app-gmx-bs37>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Frank Wunderlich <linux@fw-web.de>,
-        chunkuang Hu <chunkuang.hu@kernel.org>
-Cc:     linux-mediatek@lists.infradead.org,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Aw: [PATCH v5 3/7] drm/mediatek: disable tmds on mt2701
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 21 Aug 2020 09:17:15 +0200
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <20200819081752.4805-4-linux@fw-web.de>
-References: <20200819081752.4805-1-linux@fw-web.de>
- <20200819081752.4805-4-linux@fw-web.de>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:G4xmr717AcDMw6ju9c+MTAh1ENstXifUuqwYk2JTQndtKaX+h68KJhQwkJXqNtEhaI343
- d6puxE4NpPUj+poBeraf/qvlP8/zlGCK6Ny4BEOvyctzZ6JW5GK5gYOA2ouK05E3eS6AHof6QCyR
- HijgcCsdNhWCwFIt+hfPGBLFffWcDTSIulRfvsWGY+CqWp0ly5ETHWIjQTDnzwrGYlwUfeRHfoMe
- f2h68lhCDY3XrUEzaxP1W7UIznEzCAiQbhQklhh1HMZwjtEfuIwnkveAyPmmdHcUXfhatuW1pNPz
- ko=
-X-UI-Out-Filterresults: notjunk:1;V03:K0:a4waYzz4wCU=:gsH0HcXlOmeTEMQJH6qFnw
- 2B5Agpzwt2lMiyybMkfwqV60xc/z77OmHqLxf+eBzcynq9L3eql47J6pq1EvIkdJnQK/2JuOv
- JP8cFeofPY8CRuZK8IU4IrUlm9QdK1niSER2o2FYBf0JK7cnawKqthp8iC08AgRWYin1d0BA+
- GvbScPsMLd0k1cYNzTo/nDYPS6hljc8kA8ZjBiTJbHdzazxc54z/fze5nY44sac6q2rCPhQ7A
- FLWFJ0RGu5BhNjN9tKeB1sMK9sIAOG6T+nVyab+yR2og0c2rFaZbcfNQ+R2u6ns4c6JXfzxwx
- SOe/3Qx1VWxdb8GamJlzfYDwqP4KrGDrLataQsoqE0npBQif1xcumugDVcWbXNx21ofIfT2VJ
- oXn2hTLUokeEH0bcEMAi+9UsJ9G/KcREV1mldENwtZ4fgfzdseceAj992+7YTs99ZfV4Sp/mw
- 31XugyOCcadzqiK1hF9Wi/9CqcC7T67VOqAJ2zsHV2BxJb86wropyHWptiaaOUtKAN5KVbgZs
- gdlADlYiySR2HATQ8k00EyBF9I4azYOzL+tlP9/7+S8tqcAXpHTFUEJp/XlNT8x8A9A3rAPkN
- 0CQeo/MUasS9iQTL/HxxT4Un7N0wgdTsCs5MiNEfiSgPww02psJp4buhymvc4yUG4QYXeylgG
- 3x5df/W92rMCR40vACtcG+y2oRRcyVD/KVb47hgka2aMQt560E4/FkF+9KocyBUJ8AoQ=
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r1s0txxe.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/m=
-ediatek/mtk_hdmi_phy.c
-> index 5223498502c4..edadb7a700f1 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> @@ -184,6 +184,9 @@ static int mtk_hdmi_phy_probe(struct platform_device=
- *pdev)
->  		return PTR_ERR(phy_provider);
->  	}
->
-> +	if (hdmi_phy->conf->pll_default_off)
-> +		hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
-> +
->  	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
->  				   hdmi_phy->pll);
->  }
+On Thu 20-08-20 23:39:25, Eric W. Biederman wrote:
+> Michal Hocko <mhocko@suse.com> writes:
+> 
+> > On Thu 20-08-20 08:56:53, Suren Baghdasaryan wrote:
+> > [...]
+> >> Catching up on the discussion which was going on while I was asleep...
+> >> So it sounds like there is a consensus that oom_adj should be moved to
+> >> mm_struct rather than trying to synchronize it among tasks sharing mm.
+> >> That sounds reasonable to me too. Michal answered all the earlier
+> >> questions about this patch, so I won't be reiterating them, thanks
+> >> Michal. If any questions are still lingering about the original patch
+> >> I'll be glad to answer them.
+> >
+> > I think it still makes some sense to go with a simpler (aka less tricky)
+> > solution which would be your original patch with an incremental fix for
+> > vfork and the proper ordering (http://lkml.kernel.org/r/20200820124109.GI5033@dhcp22.suse.cz)
+> > and then make a more complex shift to mm struct on top of that. The
+> > former will be less tricky to backport to stable IMHO.
+> 
+> So I am confused.
+> 
+> I don't know how a subtle dependency on something in clone
+> is better than something flat footed in exec.
 
-tried modifying mtk_hdmi_phy_power_on using the new flag to not enable tmd=
-s instead of enabling and later disabling it, but this does not work...
+Well, I think that setting a flag is an easier approach than handle all
+the special cases for the mm thing. But this is likely because this is
+not my domain so my judgment call might be misled. Anyway if there is a
+general consensus that doing the middle step is not worth it I am not
+going to object.
 
-=2D-- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-+++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-@@ -62,7 +62,8 @@ static int mtk_hdmi_phy_power_on(struct phy *phy)
-        if (ret < 0)
-                return ret;
+> That said if we are going for a small change why not:
+> 
+> 	/*
+> 	 * Make sure we will check other processes sharing the mm if this is
+> 	 * not vfrok which wants its own oom_score_adj.
+> 	 * pin the mm so it doesn't go away and get reused after task_unlock
+> 	 */
+> 	if (!task->vfork_done) {
+> 		struct task_struct *p = find_lock_task_mm(task);
+> 
+> 		if (p) {
+> -			if (atomic_read(&p->mm->mm_users) > 1) {
+> +			if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
+> 				mm = p->mm;
+> 				mmgrab(mm);
+> 			}
+> 			task_unlock(p);
+> 		}
+> 	}
 
--       hdmi_phy->conf->hdmi_phy_enable_tmds(hdmi_phy);
-+       if (!hdmi_phy->conf->pll_default_off)
-+               hdmi_phy->conf->hdmi_phy_enable_tmds(hdmi_phy);
-        return 0;
- }
+I remember playing with something like that but it had problems too. I
+do not remember details. Oleg would know better.
 
-@@ -184,8 +185,8 @@ static int mtk_hdmi_phy_probe(struct platform_device *=
-pdev)
-                return PTR_ERR(phy_provider);
-        }
-
--       if (hdmi_phy->conf->pll_default_off)
--               hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
-+       //if (hdmi_phy->conf->pll_default_off)
-+       //      hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
-
-        return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
-                                   hdmi_phy->pll);
-
-
-same problem as without this Patch (horizontally distorted image flickerin=
-g on 1280x1024)
-
-any idea CK Hu?
-
-regards Frank
+-- 
+Michal Hocko
+SUSE Labs
