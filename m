@@ -2,97 +2,68 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC917C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26253C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A550F20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCEF20724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 12:44:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KC6s2PS1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbgHUMoV (ORCPT
+        id S1728594AbgHUMod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 08:44:21 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:31050 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725935AbgHUMoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 08:44:17 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4BY1Rd0Sbbz9v0RG;
-        Fri, 21 Aug 2020 14:44:13 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Q_TLAb2lp2QD; Fri, 21 Aug 2020 14:44:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4BY1Rc5GVgz9v0RF;
-        Fri, 21 Aug 2020 14:44:12 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 260E78B8E1;
-        Fri, 21 Aug 2020 14:44:14 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id isIM-AjxvK5w; Fri, 21 Aug 2020 14:44:14 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 238988B8C5;
-        Fri, 21 Aug 2020 14:44:13 +0200 (CEST)
-Subject: Re: [PATCH v5 5/8] mm: HUGE_VMAP arch support cleanup
-To:     Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Zefan Li <lizefan@huawei.com>
-References: <20200821044427.736424-1-npiggin@gmail.com>
- <20200821044427.736424-6-npiggin@gmail.com>
- <9b67b892-9482-15dc-0c1e-c5d5a93a3c91@csgroup.eu>
- <1598006254.vcbwyiiw9l.astroid@bobo.none>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <2bd2e0a4-37bc-680d-1e11-f6f44204c317@csgroup.eu>
-Date:   Fri, 21 Aug 2020 14:43:58 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 08:44:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725935AbgHUMoa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 08:44:30 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7DCCC061385;
+        Fri, 21 Aug 2020 05:44:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XCvj4UvtI8iBMYfCEtiYykY+vZaMey49dX7k5fdz2Jg=; b=KC6s2PS1ionfOA78d78PGDMnaB
+        FDAIx5puFcJZXfcSERkREBH32q+nIbrgXoHUzQQEgU1mBAbPrkfGAJlvSAlsHMLfsGLxHKbXbFmEP
+        gQXHWs+AmSm4PDeKFmIKpshtm6F/h43HCmxteQyPaOBa5/+HCYjwoyOrQM+mIuNN//3M0F/OUqakg
+        D5ehuGs8JM6e9288weor4jAwKwv6dpmTsN8ydizOAXMOTD99eJ4lrt8PUN7Nfzhbcx0Nsietjmgrm
+        YC8qNAgchLRkivAdnJFy3zUaMJg3/HTdoRrTkJEj6SdTlU0D5n8ZNl9qAW6mEDPoh5077C8BmCfk1
+        48nuulxg==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k96PA-0002Yc-2R; Fri, 21 Aug 2020 12:44:24 +0000
+Date:   Fri, 21 Aug 2020 13:44:24 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Yu Kuai <yukuai3@huawei.com>
+Cc:     hch@infradead.org, darrick.wong@oracle.com, david@fromorbit.com,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com
+Subject: Re: [RFC PATCH V4] iomap: add support to track dirty state of sub
+ pages
+Message-ID: <20200821124424.GQ17456@casper.infradead.org>
+References: <20200821123306.1658495-1-yukuai3@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <1598006254.vcbwyiiw9l.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821123306.1658495-1-yukuai3@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 08:33:06PM +0800, Yu Kuai wrote:
+> changes from v3:
+>  - add IOMAP_STATE_ARRAY_SIZE
+>  - replace set_bit / clear_bit with bitmap_set / bitmap_clear
+>  - move iomap_set_page_dirty() out of 'iop->state_lock'
+>  - merge iomap_set/clear_range_dirty() and iomap_iop_clear/clear_range_dirty()
 
+I'm still working on the iomap parts of the THP series (fixing up
+invalidatepage right now), but here are some of the relevant bits (patch
+series to follow)
 
-Le 21/08/2020 à 12:39, Nicholas Piggin a écrit :
-> Excerpts from Christophe Leroy's message of August 21, 2020 3:40 pm:
->>
->>
->> Le 21/08/2020 à 06:44, Nicholas Piggin a écrit :
->>> This changes the awkward approach where architectures provide init
->>> functions to determine which levels they can provide large mappings for,
->>> to one where the arch is queried for each call.
->>>
->>> This removes code and indirection, and allows constant-folding of dead
->>> code for unsupported levels.
->>
->> I think that in order to allow constant-folding of dead code for
->> unsupported levels, you must define arch_vmap_xxx_supported() as static
->> inline in a .h
->>
->> If you have them in .c files, you'll get calls to tiny functions that
->> will always return false, but will still be called and dead code won't
->> be eliminated. And performance wise, that's probably not optimal either.
-> 
-> Yeah that's true actually, I think I didn't find a good place to add
-> the prototypes in the arch code but I'll have another look and either
-> rewrite the changelog or remove it. Although this does get a step closer
-> at least.
-> 
-
-linux/vmalloc.h includes asm/vmalloc.h
-Should it go there ?
-
-Christophe
