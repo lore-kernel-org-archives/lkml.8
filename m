@@ -2,150 +2,303 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86746C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B297C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D7B20732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40EB52078B
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 11:38:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgHULiX (ORCPT
+        id S1728504AbgHULil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 07:38:23 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38010 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgHULhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 07:37:23 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7F617B800;
-        Fri, 21 Aug 2020 11:37:39 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 13:37:10 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Arpitha Raghunandan <98.arpi@gmail.com>, brendanhiggins@google.com,
-        skhan@linuxfoundation.org, andriy.shevchenko@linux.intel.com,
-        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
-        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] lib: Convert test_printf.c to KUnit
-Message-ID: <20200821113710.GA26290@alley>
-References: <20200817043028.76502-1-98.arpi@gmail.com>
- <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
+        Fri, 21 Aug 2020 07:38:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727859AbgHULhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 07:37:01 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 912516290934BADF42B8;
+        Fri, 21 Aug 2020 19:36:59 +0800 (CST)
+Received: from SWX921481.china.huawei.com (10.126.200.129) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Fri, 21 Aug 2020 19:36:50 +0800
+From:   Barry Song <song.bao.hua@hisilicon.com>
+To:     <hch@lst.de>, <m.szyprowski@samsung.com>, <robin.murphy@arm.com>,
+        <will@kernel.org>, <ganapatrao.kulkarni@cavium.com>,
+        <catalin.marinas@arm.com>, <akpm@linux-foundation.org>
+CC:     <iommu@lists.linux-foundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <prime.zeng@hisilicon.com>,
+        <huangdaode@huawei.com>, <linuxarm@huawei.com>,
+        Barry Song <song.bao.hua@hisilicon.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Steve Capper <steve.capper@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v7 1/3] dma-contiguous: provide the ability to reserve per-numa CMA
+Date:   Fri, 21 Aug 2020 23:33:53 +1200
+Message-ID: <20200821113355.6140-2-song.bao.hua@hisilicon.com>
+X-Mailer: git-send-email 2.21.0.windows.1
+In-Reply-To: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
+References: <20200821113355.6140-1-song.bao.hua@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f408efbd-10f7-f1dd-9baa-0f1233cafffc@rasmusvillemoes.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.126.200.129]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-08-17 09:06:32, Rasmus Villemoes wrote:
-> On 17/08/2020 06.30, Arpitha Raghunandan wrote:
-> > Converts test lib/test_printf.c to KUnit.
-> > More information about KUnit can be found at
-> > https://www.kernel.org/doc/html/latest/dev-tools/kunit/index.html.
-> > KUnit provides a common framework for unit tests in the kernel.
-> 
-> So I can continue to build a kernel with some appropriate CONFIG set to
-> y, boot it under virt-me, run dmesg and see if I broke printf? That's
-> what I do now, and I don't want to have to start using some enterprisy
-> framework.
+Right now, drivers like ARM SMMU are using dma_alloc_coherent() to get
+coherent DMA buffers to save their command queues and page tables. As
+there is only one default CMA in the whole system, SMMUs on nodes other
+than node0 will get remote memory. This leads to significant latency.
 
-I had the same concern. I have tried it. It compiled a module called
-printf_kunit.c.
+This patch provides per-numa CMA so that drivers like SMMU can get local
+memory. Tests show localizing CMA can decrease dma_unmap latency much.
+For instance, before this patch, SMMU on node2  has to wait for more than
+560ns for the completion of CMD_SYNC in an empty command queue; with this
+patch, it needs 240ns only.
 
-    #> modprobe printf_kunit
+A positive side effect of this patch would be improving performance even
+further for those users who are worried about performance more than DMA
+security and use iommu.passthrough=1 to skip IOMMU. With local CMA, all
+drivers can get local coherent DMA buffers.
 
-produced the following in dmesg:
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Barry Song <song.bao.hua@hisilicon.com>
+---
+ -v7: with respect to Will's comments
+ * move to use for_each_online_node
+ * add description if users don't specify pernuma_cma
+ * provide default value for CONFIG_DMA_PERNUMA_CMA
 
-[   60.931175] printf_kunit: module verification failed: signature and/or required key missing - tainting kernel
-[   60.942209] TAP version 14
-[   60.945197]     # Subtest: printf-kunit-test
-[   60.945200]     1..1
-[   60.951092]     ok 1 - selftest
-[   60.953414] ok 1 - printf-kunit-test
+ .../admin-guide/kernel-parameters.txt         |  11 ++
+ include/linux/dma-contiguous.h                |   6 ++
+ kernel/dma/Kconfig                            |  11 ++
+ kernel/dma/contiguous.c                       | 100 ++++++++++++++++--
+ 4 files changed, 118 insertions(+), 10 deletions(-)
 
-I could live with the above. Then I tried to break a test by the following change:
-
-
-diff --git a/lib/printf_kunit.c b/lib/printf_kunit.c
-index 68ac5f9b8d28..1689dadd70a3 100644
---- a/lib/printf_kunit.c
-+++ b/lib/printf_kunit.c
-@@ -395,7 +395,7 @@ ip4(struct kunit *kunittest)
-        sa.sin_port = cpu_to_be16(12345);
-        sa.sin_addr.s_addr = cpu_to_be32(0x7f000001);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index bdc1f33fd3d1..c609527fc35a 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -599,6 +599,17 @@
+ 			altogether. For more information, see
+ 			include/linux/dma-contiguous.h
  
--       test(kunittest, "127.000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
-+       test(kunittest, "127-000.000.001|127.0.0.1", "%pi4|%pI4", &sa.sin_addr, &sa.sin_addr);
-        test(kunittest, "127.000.000.001|127.0.0.1", "%piS|%pIS", &sa, &sa);
-        sa.sin_addr.s_addr = cpu_to_be32(0x01020304);
-        test(kunittest, "001.002.003.004:12345|1.2.3.4:12345", "%piSp|%pISp", &sa, &sa);
++	pernuma_cma=nn[MG]
++			[ARM64,KNL]
++			Sets the size of kernel per-numa memory area for
++			contiguous memory allocations. A value of 0 disables
++			per-numa CMA altogether. And If this option is not
++			specificed, the default value is 0.
++			With per-numa CMA enabled, DMA users on node nid will
++			first try to allocate buffer from the pernuma area
++			which is located in node nid, if the allocation fails,
++			they will fallback to the global default memory area.
++
+ 	cmo_free_hint=	[PPC] Format: { yes | no }
+ 			Specify whether pages are marked as being inactive
+ 			when they are freed.  This is used in CMO environments
+diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+index 03f8e98e3bcc..fe55e004f1f4 100644
+--- a/include/linux/dma-contiguous.h
++++ b/include/linux/dma-contiguous.h
+@@ -171,6 +171,12 @@ static inline void dma_free_contiguous(struct device *dev, struct page *page,
+ 
+ #endif
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++void dma_pernuma_cma_reserve(void);
++#else
++static inline void dma_pernuma_cma_reserve(void) { }
++#endif
++
+ #endif
+ 
+ #endif
+diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
+index 847a9d1fa634..c38979d45b13 100644
+--- a/kernel/dma/Kconfig
++++ b/kernel/dma/Kconfig
+@@ -118,6 +118,17 @@ config DMA_CMA
+ 	  If unsure, say "n".
+ 
+ if  DMA_CMA
++
++config DMA_PERNUMA_CMA
++	bool "Enable separate DMA Contiguous Memory Area for each NUMA Node"
++	default NUMA && ARM64
++	help
++	  Enable this option to get pernuma CMA areas so that devices like
++	  ARM64 SMMU can get local memory by DMA coherent APIs.
++
++	  You can set the size of pernuma CMA by specifying "pernuma_cma=size"
++	  on the kernel's command line.
++
+ comment "Default contiguous memory area size:"
+ 
+ config CMA_SIZE_MBYTES
+diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
+index cff7e60968b9..0383c9b86715 100644
+--- a/kernel/dma/contiguous.c
++++ b/kernel/dma/contiguous.c
+@@ -69,6 +69,19 @@ static int __init early_cma(char *p)
+ }
+ early_param("cma", early_cma);
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++
++static struct cma *dma_contiguous_pernuma_area[MAX_NUMNODES];
++static phys_addr_t pernuma_size_bytes __initdata;
++
++static int __init early_pernuma_cma(char *p)
++{
++	pernuma_size_bytes = memparse(p, &p);
++	return 0;
++}
++early_param("pernuma_cma", early_pernuma_cma);
++#endif
++
+ #ifdef CONFIG_CMA_SIZE_PERCENTAGE
+ 
+ static phys_addr_t __init __maybe_unused cma_early_percent_memory(void)
+@@ -96,6 +109,34 @@ static inline __maybe_unused phys_addr_t cma_early_percent_memory(void)
+ 
+ #endif
+ 
++#ifdef CONFIG_DMA_PERNUMA_CMA
++void __init dma_pernuma_cma_reserve(void)
++{
++	int nid;
++
++	if (!pernuma_size_bytes)
++		return;
++
++	for_each_online_node(nid) {
++		int ret;
++		char name[20];
++		struct cma **cma = &dma_contiguous_pernuma_area[nid];
++
++		snprintf(name, sizeof(name), "pernuma%d", nid);
++		ret = cma_declare_contiguous_nid(0, pernuma_size_bytes, 0, 0,
++						 0, false, name, cma, nid);
++		if (ret) {
++			pr_warn("%s: reservation failed: err %d, node %d", __func__,
++				ret, nid);
++			continue;
++		}
++
++		pr_debug("%s: reserved %llu MiB on node %d\n", __func__,
++			(unsigned long long)pernuma_size_bytes / SZ_1M, nid);
++	}
++}
++#endif
++
+ /**
+  * dma_contiguous_reserve() - reserve area(s) for contiguous memory handling
+  * @limit: End address of the reserved memory (optional, 0 for any).
+@@ -228,23 +269,44 @@ static struct page *cma_alloc_aligned(struct cma *cma, size_t size, gfp_t gfp)
+  * @size:  Requested allocation size.
+  * @gfp:   Allocation flags.
+  *
+- * This function allocates contiguous memory buffer for specified device. It
+- * tries to use device specific contiguous memory area if available, or the
+- * default global one.
++ * tries to use device specific contiguous memory area if available, or it
++ * tries to use per-numa cma, if the allocation fails, it will fallback to
++ * try default global one.
+  *
+- * Note that it byapss one-page size of allocations from the global area as
+- * the addresses within one page are always contiguous, so there is no need
+- * to waste CMA pages for that kind; it also helps reduce fragmentations.
++ * Note that it bypass one-page size of allocations from the per-numa and
++ * global area as the addresses within one page are always contiguous, so
++ * there is no need to waste CMA pages for that kind; it also helps reduce
++ * fragmentations.
+  */
+ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+ {
++#ifdef CONFIG_DMA_PERNUMA_CMA
++	int nid = dev_to_node(dev);
++#endif
++
+ 	/* CMA can be used only in the context which permits sleeping */
+ 	if (!gfpflags_allow_blocking(gfp))
+ 		return NULL;
+ 	if (dev->cma_area)
+ 		return cma_alloc_aligned(dev->cma_area, size, gfp);
+-	if (size <= PAGE_SIZE || !dma_contiguous_default_area)
++	if (size <= PAGE_SIZE)
++		return NULL;
++
++#ifdef CONFIG_DMA_PERNUMA_CMA
++	if (nid != NUMA_NO_NODE && !(gfp & (GFP_DMA | GFP_DMA32))) {
++		struct cma *cma = dma_contiguous_pernuma_area[nid];
++		struct page *page;
++
++		if (cma) {
++			page = cma_alloc_aligned(cma, size, gfp);
++			if (page)
++				return page;
++		}
++	}
++#endif
++	if (!dma_contiguous_default_area)
+ 		return NULL;
++
+ 	return cma_alloc_aligned(dma_contiguous_default_area, size, gfp);
+ }
+ 
+@@ -261,9 +323,27 @@ struct page *dma_alloc_contiguous(struct device *dev, size_t size, gfp_t gfp)
+  */
+ void dma_free_contiguous(struct device *dev, struct page *page, size_t size)
+ {
+-	if (!cma_release(dev_get_cma_area(dev), page,
+-			 PAGE_ALIGN(size) >> PAGE_SHIFT))
+-		__free_pages(page, get_order(size));
++	unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
++
++	/* if dev has its own cma, free page from there */
++	if (dev->cma_area) {
++		if (cma_release(dev->cma_area, page, count))
++			return;
++	} else {
++		/*
++		 * otherwise, page is from either per-numa cma or default cma
++		 */
++#ifdef CONFIG_DMA_PERNUMA_CMA
++		if (cma_release(dma_contiguous_pernuma_area[page_to_nid(page)],
++					page, count))
++			return;
++#endif
++		if (cma_release(dma_contiguous_default_area, page, count))
++			return;
++	}
++
++	/* not in any cma, free from buddy */
++	__free_pages(page, get_order(size));
+ }
+ 
+ /*
+-- 
+2.27.0
 
 
-It produced::
-
-[   56.786858] TAP version 14
-[   56.787493]     # Subtest: printf-kunit-test
-[   56.787494]     1..1
-[   56.788612]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
-                   Expected memcmp(test_buffer, expect, written) == 0, but
-                       memcmp(test_buffer, expect, written) == 1
-                       0 == 0
-               vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-[   56.795433]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:76
-                   Expected memcmp(test_buffer, expect, written) == 0, but
-                       memcmp(test_buffer, expect, written) == 1
-                       0 == 0
-               vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'
-[   56.800909]     # selftest: EXPECTATION FAILED at lib/printf_kunit.c:108
-                   Expected memcmp(p, expect, elen+1) == 0, but
-                       memcmp(p, expect, elen+1) == 1
-                       0 == 0
-               kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-[   56.806497]     not ok 1 - selftest
-[   56.806497] not ok 1 - printf-kunit-test
-
-while the original code would have written the following error messages:
-
-[   95.859225] test_printf: loaded.
-[   95.860031] test_printf: vsnprintf(buf, 256, "%pi4|%pI4", ...) wrote '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-[   95.862630] test_printf: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
-[   95.864118] test_printf: kvasprintf(..., "%pi4|%pI4", ...) returned '127.000.000.001|127.0.0.1', expected '127-000.000.001|127.0.0.1'
-[   95.866589] test_printf: failed 3 out of 388 tests
-
-
-Even the error output is acceptable for me. I am just curious why
-the 2nd failure is different:
-
-   + original code: vsnprintf(buf, 6, "%pi4|%pI4", ...) wrote '127.0', expected '127-0'
-   + kunit code: vsnprintf(buf, 20, "%pi4|%pI4", ...) wrote '127.000.000.001|127', expected '127-000.000.001|127'   
-
-
-I am also a bit scared by the following note at
-https://www.kernel.org/doc/html/latest/dev-tools/kunit/start.html#running-tests-without-the-kunit-wrapper
-
-   "KUnit is not designed for use in a production system, and it’s
-   possible that tests may reduce the stability or security of the
-   system."
-
-What does it mean thay it might reduce stability or security?
-Is it because the tests might cause problems?
-Or because the kunit framework modifies functionality of the running
-system all the time?
-
-
-Best Regards,
-Petr
-
-PS: I still have to look at the code. Anwyay, the comments from Rasmus make
-sense.
