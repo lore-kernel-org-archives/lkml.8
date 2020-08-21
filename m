@@ -2,102 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D1DC433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A491C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:49:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD1FB2078B
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598021316;
-	bh=gqn0a5FadwlmVTfYD5SVnqq3kTHuanE7sCpllKh1y04=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cgaO5SSbEhIyYfIFuWqZWlADApYytclB+YEBbcrfxKPSN+s92Htd8Y75qZwgrGngt
-	 219vgztP0LPOKLRo+01qzJcmdz4rmLLfL0/N78m6fRtx7JG3uCfcmBi4iDJC/rFCo2
-	 Ve01QwXWkfdizR08A7ByrAZEZsu445QhHbG93VUY=
+	by mail.kernel.org (Postfix) with ESMTP id 4D8EC2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 14:49:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Tnzci+Hs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbgHUOsf (ORCPT
+        id S1726542AbgHUOty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 10:48:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725828AbgHUOse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 10:48:34 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B5A2075E;
-        Fri, 21 Aug 2020 14:48:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598021314;
-        bh=gqn0a5FadwlmVTfYD5SVnqq3kTHuanE7sCpllKh1y04=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UaRTJzIItCbdtA3NCNdHcm+iLwJGTS5ZVC8tg6LxJzASbonnnw5Pvk7Xowa0eJJ8L
-         WE7Qy0EhKcHh0g3whhKOycPke41mBQgK2ZoeM12ZDA2yx1F7X2dDxGlh7TzqVtYmpc
-         vxDUxV+6RTDvtgvY/4R5w645MIDaF4Grq4gLBaMg=
-Date:   Fri, 21 Aug 2020 15:48:01 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bard liao <yung-chuan.liao@linux.intel.com>
-Subject: Re: linux-next: build warnings after merge of the sound-asoc-fixes
- tree
-Message-ID: <20200821144801.GI4870@sirena.org.uk>
-References: <20200821093901.4257afdc@canb.auug.org.au>
- <a8b47ba9-7b45-bef1-08a2-820fe48c4cc4@linux.intel.com>
- <20200821110117.GC4870@sirena.org.uk>
- <a982589b-9bc1-6439-99de-3ce6efdab469@linux.intel.com>
+        Fri, 21 Aug 2020 10:49:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726176AbgHUOtu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 10:49:50 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A100C061574
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:49:50 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id k4so1585929ilr.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 07:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cxwNFKr8C4GxHwwirPDVBn5gDOlxq9kCMJ9FIhV/7GY=;
+        b=Tnzci+Hswj7hMTc7vA1mGeQReoVIr0yEMvnV9YEI5ZNO8EHi/EbODtgB9IZ8O9e0r4
+         5331vH21P4cphP7O8x7DdidRe968kxztCR0wbRdQ90uXkHhFT2ZRndHIEd3zEwpOlUxf
+         QZQ9oFO/A1IF8zu3FRLvxEqDaK6oW4Et07rabfta86yhpF5RHI90s1nuNQn1o6aGpgZV
+         6dfBuucnLTzNOK1OgSpfAA8AdxMGWMlPlaxsE5B9zKCqy6CSOjIU10aRS80g9IFdlWOM
+         o76/Fvv/zvyzxhhP5bsQ97og1Fcl2CciSIwyYBzZvEg5saoRAbQ8DXZ/L4UxgVmzZQTm
+         SvfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cxwNFKr8C4GxHwwirPDVBn5gDOlxq9kCMJ9FIhV/7GY=;
+        b=J0d+PyIn9iY87ziI+P3acupUBf0Wu7gp2/zCX+HhmeYIvMep9sp2DfVEZLQR4hPZYh
+         60bqBCSjx549BVuYiLYy7+rDYPn19rof4oNnv59A1SwV7BRoQdCab1D7wt0E4FY3a35y
+         nKz7VpMRp0yIrG60lJIag1qAT0X5bC7Jmp7ODy9I1KVN9WSeuMaPegKE5rFLjR5uZwNJ
+         JZNbKINz26mAAmI90aDja7mM626aeYMZRszjVugDL5TQFPtDxDv4zE7T5E16ib+O1HqY
+         5b+FP9eZEhJrVSA9MUFB+3VCJndhyjrXcDpMlGpCZXe4e/xGsX6k37vBcxeWEr8OAhor
+         Eo0w==
+X-Gm-Message-State: AOAM532XFuD9hOUZSclhNIDfKvh2dhdQkxq0OS133rSj6lLUEXK2nH+y
+        nQ/8FrOvdmTLi07/Fz7kt2oNlg==
+X-Google-Smtp-Source: ABdhPJxsuZGimz71cVC5o58/Sc9i/i1CQIN3kGd8VVPNvdqeDBYWjghwtjziXi83vGSc+UxIgacbpA==
+X-Received: by 2002:a92:660e:: with SMTP id a14mr2868783ilc.290.1598021389768;
+        Fri, 21 Aug 2020 07:49:49 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id p20sm1331088iod.27.2020.08.21.07.49.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 07:49:49 -0700 (PDT)
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+To:     Christoph Hellwig <hch@infradead.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Cc:     darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org, riteshh@linux.ibm.com,
+        linux-block@vger.kernel.org
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+ <20200821060710.GC31091@infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9bf274cb-15ec-f389-42b3-b8469402af3d@kernel.dk>
+Date:   Fri, 21 Aug 2020 08:49:48 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="y96v7rNg6HAoELs5"
-Content-Disposition: inline
-In-Reply-To: <a982589b-9bc1-6439-99de-3ce6efdab469@linux.intel.com>
-X-Cookie: divorce, n:
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200821060710.GC31091@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 8/21/20 12:07 AM, Christoph Hellwig wrote:
+> On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
+>> From: Ritesh Harjani <riteshh@linux.ibm.com>
+>>
+>> __bio_try_merge_page() may return same_page = 1 and merged = 0. 
+>> This could happen when bio->bi_iter.bi_size + len > UINT_MAX. 
+>> Handle this case in iomap_add_to_ioend() by incrementing write_count.
+>> This scenario mostly happens where we have too much dirty data accumulated. 
+>>
+>> w/o the patch we hit below kernel warning,
+> 
+> I think this is better fixed in the block layer rather than working
+> around the problem in the callers.  Something like this:
+> 
+> diff --git a/block/bio.c b/block/bio.c
+> index c63ba04bd62967..ef321cd1072e4e 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -879,8 +879,10 @@ bool __bio_try_merge_page(struct bio *bio, struct page *page,
+>  		struct bio_vec *bv = &bio->bi_io_vec[bio->bi_vcnt - 1];
+>  
+>  		if (page_is_mergeable(bv, page, len, off, same_page)) {
+> -			if (bio->bi_iter.bi_size > UINT_MAX - len)
+> +			if (bio->bi_iter.bi_size > UINT_MAX - len) {
+> +				*same_page = false;
+>  				return false;
+> +			}
+>  			bv->bv_len += len;
+>  			bio->bi_iter.bi_size += len;
+>  			return true;
+> 
 
---y96v7rNg6HAoELs5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This looks good to me.
 
-On Fri, Aug 21, 2020 at 09:25:53AM -0500, Pierre-Louis Bossart wrote:
-> On 8/21/20 6:01 AM, Mark Brown wrote:
+-- 
+Jens Axboe
 
-> > A patch which was not sent as part of the same series and where no
-> > dependency was mentioned :(
-
-> yes, sorry about that, i just noticed the two patches were sent one after
-> the other but without the dependency.
-> Do you have a means to fix this on your side or do you need Bard/I to resend
-> it?
-
-I've just moved the patch to for-5.10, it seemed like the functionality
-is only half there in Linus' tree anyway and it's a bit late to be
-enabling new stuff for 5.9.
-
---y96v7rNg6HAoELs5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl8/3qAACgkQJNaLcl1U
-h9Bfowf/W1Lia5rSjdpO32gXqslT0F3WHgrMMOEC+8TrFhTTSjILwYOU+PWxqD73
-qIxlDai++3w+ItphVqoYe2cJ2h8U1M0TmkRUA1XqAemCvjbDG7YaVsLIcnNHuns2
-ilACW7w3UreuXjmr69ZzF8QKkGMTZDEiEzULwnFsnghXEkqYoTBEo9ks36EkZxvN
-cozp6l7J68EPh+OxbEyoYEHttfY0gy2Uaue2ZQgIdFjEK8VDqUaw4xxjzqTWc6uO
-vFplWdRAkbkGgQz1Pbr3ATh1DC5pZPC7FRL0GbRQHSycCEhgKjiKor2Gtaesk02H
-5SW0p96QicQlS1FUnPR84MrqUsYGCQ==
-=0XjW
------END PGP SIGNATURE-----
-
---y96v7rNg6HAoELs5--
