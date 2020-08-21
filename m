@@ -2,79 +2,113 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1544FC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B093BC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD93320738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ja6lYmQl"
+	by mail.kernel.org (Postfix) with ESMTP id 7BCA02076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598028042;
+	bh=lhPzxAMtGiGwqFgokTYuR2htwCTnKmFaZukK5H3J0RU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TXdVVIlt2KaKpaTVEsa1gmZQWiK7wgARbSBLpb+Jmv0TSQs1JG2QuVjQkBNm1IQyj
+	 yoxsc4HtUXWQxB7neRTfBQ6iVkfoLIWDGNZPzMyq7lAXucEbv4wq6ioMGN2HiPjp/m
+	 2FGSoVgxK75oskSGzbOXfj2jgZBD2nY51VRLtjqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgHUQjs (ORCPT
+        id S1728543AbgHUQkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:39:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33360 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbgHUQUs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:48 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C592C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:20:48 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u126so2244566iod.12
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=BFgLAsnF1li7m4vAoiXUX3v+I+43ELkCHNO8Uii8l/k=;
-        b=ja6lYmQl/5PQscWBTLB+PYAGkw5+2xzqpgIRY610wXwfTZ9RIxqSq7uH3lT9CNeexC
-         XOvNEXdzGK5o2huUVL5GFqyOrYwitnpkFRVKjsvhVVzdXVr0vT/cmHk+YJaHrn/JaQNM
-         1U+Bxj7Ozdqk00R4+cZQ3UWA3pPgvTGQ6RXrJGSUBxqEmAW+Cg/PPYGT6ywvRPjjVOc3
-         zrU26+GfybdSVZncXtwBrzp3OspcGa9Xp5FLfsZNuFtAnv/sPTIIz3llQSgevglJTQqK
-         F3l7MrqqfY2WKWerkaML37hOux9znLi3jYOBHZODzo3aR/lVASXZ0UjawQBzkEbQPuPI
-         75oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=BFgLAsnF1li7m4vAoiXUX3v+I+43ELkCHNO8Uii8l/k=;
-        b=QDxCIqrduVKGv3z9frRWKSgOCaiPpYNz+F5LscMOAOt2qTwLaKpIu/vcBpLLxHpaXG
-         tWxXcjZKgG7NtWepKWWJ87w89219gL+xwafyeJ91eqgOQXNH2v24ZCxFILh9YRXurXO5
-         urM67dcvnRWTDt8lGCE1Z9xuy34NICchq4ujCpE5hTmQaLptS+usdHVqpH328Ep8+cWR
-         85fnO3tJKDiMbl3j3A6MNh9s+3pYwWZuROnPe0wWVRkdW/FIPRG6TGvB94X07UPl6S2W
-         XNYKZGX9mxe95S3uEw5Pyqe/+Zk/5Gh8fa5e9Gs4xaEWbt5wyfVbuwwrNU7h8kMcOGWP
-         DwoQ==
-X-Gm-Message-State: AOAM531UgKug7oZY6yBRVihjeTegg8McKVIaEnwVkhK9zRjMQKAGO6yR
-        aGn75v/DCJkQz45Nb8yfluZIXhco7XQ296ur5jY=
-X-Google-Smtp-Source: ABdhPJyaagi0KJNoXQ64i12AWRJuDpWm+R14x8+y2wUYlY/BIzaKPc90psn3E8eZlGAJJw/KexQQpLhIrogPYLDuZpI=
-X-Received: by 2002:a02:e4a:: with SMTP id 71mr3144580jae.133.1598026847596;
- Fri, 21 Aug 2020 09:20:47 -0700 (PDT)
+        Fri, 21 Aug 2020 12:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728405AbgHUQUq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:20:46 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04EFE22D07;
+        Fri, 21 Aug 2020 16:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598026800;
+        bh=lhPzxAMtGiGwqFgokTYuR2htwCTnKmFaZukK5H3J0RU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sjZQYaZ1KFYB3uWJn2dgBO80YCTexlN/9BSx8spR6mF4p5wD9mCOv15OavckjKX4Q
+         EkW35XHRqJrbR9ARRTeRZPsK1RZ/f0WeF8fxCEKBySUhgBLWQPKnVPakztMgGur8Hb
+         EtQe5KN59BJhtUvnVTYhGj3ZBnIltYpTY9chjIXA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Qiushi Wu <wu000273@umn.edu>, Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 16/26] PCI: Fix pci_create_slot() reference count leak
+Date:   Fri, 21 Aug 2020 12:19:27 -0400
+Message-Id: <20200821161938.349246-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
+References: <20200821161938.349246-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <b360242d-f488-da51-9d47-36b2abdf90cd@kernel.org>
- <20200818160401.4736-1-ztong0001@gmail.com> <20200821092844.GB2026@suse.cz>
-In-Reply-To: <20200821092844.GB2026@suse.cz>
-From:   Tong Zhang <ztong0001@gmail.com>
-Date:   Fri, 21 Aug 2020 12:20:36 -0400
-Message-ID: <CAA5qM4BOn2Kie6chjC4e6A2Sc6Pe61hP8=JKiW7ohYNMnLaC8Q@mail.gmail.com>
-Subject: Re: [PATCH v2] tty: ipwireless: fix error handling
-To:     dsterba@suse.cz, Tong Zhang <ztong0001@gmail.com>,
-        jikos@kernel.org, dsterba@suse.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 5:29 AM David Sterba <dsterba@suse.cz> wrote:
-> This paragraph should not be in the changelog. The patches to ipwireless
-> go via Greg's tree, please send an updated v3 so he can just apply that
-> without further edits.  Thanks.
+From: Qiushi Wu <wu000273@umn.edu>
 
-Thanks David! I've made another patch - hope this one works.
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
+
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
+
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
+
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index 429d34c348b9f..01a343ad7155c 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -303,13 +303,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
+ 	}
+ 
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -328,7 +331,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
+ }
+-- 
+2.25.1
+
