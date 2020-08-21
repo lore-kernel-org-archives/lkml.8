@@ -4,64 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D4C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29756C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1705E2072D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6702072D
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028155;
-	bh=eeD33E/GM5/WtGmv+bjQ9EqZZdzjh3+IGMJzdajAfKk=;
+	s=default; t=1598028171;
+	bh=pRIfmNaiNOw1L35y4l06tL/wHSPMxVTsjUkGjVve9oA=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=AVG2GC85cr+CRnOxDbqJsaPirAD/DYJcEzqgxtd9f0jMR1CyPTU+HYOOBu+oQA/c9
-	 Ht00kdR3evLN86BNbw1nYbfpP2eHlf9dIdwpB3zsM2ibYRiR/HltUuSmBAtVLqru6n
-	 GWtzoaeKJvjxK/pWkQn99Wghv64y+a9q1Jg7aJKY=
+	b=sE1S26OwklUnnXvK3KTc7Z3bqFpb3ivb2/pn39Dg69s1xK74ivyY35Y1n2YmuxsFs
+	 vaXB/PXK62KKMHTcwighgPHu2yiro3hao9aDhAMeMJ3CZCDo323O2s0RBFnnIdvA8r
+	 2OjytRbT8VvVzQbBb/tiFuz93avIA8E9lQmPYsEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbgHUQm2 (ORCPT
+        id S1728515AbgHUQmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:42:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726956AbgHUQka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:40:30 -0400
+        id S1728139AbgHUQkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:40:20 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED4820738;
-        Fri, 21 Aug 2020 16:40:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF0C207BB;
+        Fri, 21 Aug 2020 16:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598028030;
-        bh=eeD33E/GM5/WtGmv+bjQ9EqZZdzjh3+IGMJzdajAfKk=;
+        s=default; t=1598028019;
+        bh=pRIfmNaiNOw1L35y4l06tL/wHSPMxVTsjUkGjVve9oA=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=So0tK9r4QCjDNUgTZ/eg3qedxTbwmYbxb50oP3TgYxxRoEvV38q69vk0rsrwy/RBl
-         sWtJzrkOI5yoyFlO37/Txe2OY/aQJz/54m/eJUqQla0YcV5WE0cNJBOMZ1ntjRM2On
-         nVyCOpqof/gih7HGjjkqfAFg243X3YaGIr4UXFiM=
-Date:   Fri, 21 Aug 2020 17:39:57 +0100
+        b=qTTDKWveXPeCEbKj/21q8Q3uNVUNe1ETGOUcRV3IABy7DtksxhPMSWk2CCZPezbFa
+         PvTZHgcJxYEOfb4IJbTUJT/c5AaQVUpPwW+aueWZHQngGv2B3Lpa4its2rHT8VHFXU
+         0UAwBVCBnScmbmCIAxsvWbHiqjVTihrgLydy/GJg=
+Date:   Fri, 21 Aug 2020 17:39:46 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200821142259.C2ECE3FB96@swsrvapps-01.diasemi.com>
-References: <20200821142259.C2ECE3FB96@swsrvapps-01.diasemi.com>
-Subject: Re: [PATCH] ASoC: da7219: Fix I/O voltage range configuration during probe
-Message-Id: <159802798182.25503.9768924803803430146.b4-ty@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Xiubo Li <Xiubo.Lee@gmail.com>,
+        Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
+        Timur Tabi <timur@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+References: <20200821071153.7317-1-matthias.schiffer@ew.tq-group.com>
+Subject: Re: [PATCH 1/2] ASoC: bindings: fsl-asoc-card: add compatible string for TLV320AIC32x4 codec
+Message-Id: <159802798182.25503.6288597388971978944.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 21 Aug 2020 15:22:59 +0100, Adam Thomson wrote:
-> Previous improvements around handling device and codec level
-> probe functionality added the possibility of the voltage level
-> being undefined for the scenario where the IO voltage retrieved
-> from the regulator supply was below 1.2V, whereas previously the
-> code defaulted to the 2.5V to 3.6V range in that case. This
-> commit restores the default value to avoid this happening.
+On Fri, 21 Aug 2020 09:11:52 +0200, Matthias Schiffer wrote:
+> The TLV320AIC32x4 is commonly used on TQ-Systems starterkit mainboards
+> for i.MX-based SoMs (i.MX6Q/DL, i.MX6UL, i.MX7) and LS1021A.
 
 Applied to
 
@@ -69,8 +71,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: da7219: Fix I/O voltage range configuration during probe
-      commit: fcea8b023a5f06ea0180ae65b01520b0414ee325
+[1/2] ASoC: bindings: fsl-asoc-card: add compatible string for TLV320AIC32x4 codec
+      commit: 6d3029e92f320531805e6aed33c74185e5e3f8fa
+[2/2] ASoC: fsl-asoc-card: add support for TLV320AIC32x4 codec
+      commit: b50747558855ff94523dbb7f08a8c9fadfdd9110
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
