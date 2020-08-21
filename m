@@ -2,100 +2,122 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAB0C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E256206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598028384;
-	bh=pDMlCIGigtvjPBnrQ+gOr38jLHvRUKHp6JnBbsR7Vlw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQ6pnwBHLXWXl1CvBS6uSsKy8se5sXpR5oe38Tozj7EeMcbDEW7nc5tUEjH9ImUk5
-	 nGCSjEAlnWfGFkHVxkhOxtBz9lsVGvt+ztlmoxGqAozrXGTJoC9BDUNMTkOrm5Nqnu
-	 tr9QMa219pO7Kuwa9DM8U15cZLuV0hE5ZK46eZ/o=
+	by mail.kernel.org (Postfix) with ESMTP id 8D7C2206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:46:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ckkFxN4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728599AbgHUQol (ORCPT
+        id S1728655AbgHUQqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51510 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbgHUQUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:20:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A401D22CF8;
-        Fri, 21 Aug 2020 16:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026790;
-        bh=pDMlCIGigtvjPBnrQ+gOr38jLHvRUKHp6JnBbsR7Vlw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9mvZgEdo6/XVrJ+tLR4w1eJHn1swI9UmCBVnW9xnLlaa/3NroUEuyMt5eCwxvhDf
-         HxQDpoT7zRV2l3KfMT87TrEryAn6AHvlPvUASQqoKiBbXwzo3kj0h222ZvcXzv6mv6
-         cQa1T4RXFreasBuqHgfzPo9FB5796hSQ9kE/iSIM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 09/26] drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
-Date:   Fri, 21 Aug 2020 12:19:20 -0400
-Message-Id: <20200821161938.349246-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161938.349246-1-sashal@kernel.org>
-References: <20200821161938.349246-1-sashal@kernel.org>
+        Fri, 21 Aug 2020 12:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37366 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbgHUQqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:46:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979CFC061573;
+        Fri, 21 Aug 2020 09:46:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=nuDpRInBJQyR0NCAf/lyEPb52W6JlB8Y7J9fyZqXXdc=; b=ckkFxN4BN5xFpVQbmFA2HJVarn
+        ZwiYvjR8K6W7mmMI7Fg8KwVuoXk5K+6CrNQsPFlts1atmB1Ed0E3VPaV+C5FRkT+ZyALQxAPcvZgS
+        GXZfZ0D5X3CaMUrIlHbB9rsIhm6nM8VXVZq2GvP3Y4ahluuPSGDdgwNMD4dpcsS1+LINyHo2SmKy5
+        r4LsZ6/0jvI+0k6B743TQO9+DYMBjHtZQ1CK20ToDEvNomhBkAPo3noRH3X8wYAgZSmcrt2v9IZW2
+        QtZl7U+PG8FkHcSi0liV9MBLMwuOiGhcZS+oZlT3QpRr8QTX1xGA94zMW9PSYXB78JMruWy0C6y+r
+        SkXFm7Yw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9ABJ-0001rq-JI; Fri, 21 Aug 2020 16:46:21 +0000
+Subject: Re: [PATCH v2 06/10] fs/ntfs3: Add compression
+To:     Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Cc:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>
+References: <ecaa5cd692294178a38a9a2310d9856f@paragon-software.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <e12ee6c4-5064-709a-0d4b-751b23bc5ccb@infradead.org>
+Date:   Fri, 21 Aug 2020 09:46:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <ecaa5cd692294178a38a9a2310d9856f@paragon-software.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+On 8/21/20 9:25 AM, Konstantin Komarov wrote:
+> This adds compression
+> 
+> Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+> ---
+>  fs/ntfs3/lznt.c | 449 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 449 insertions(+)
+>  create mode 100644 fs/ntfs3/lznt.c
+> 
+> diff --git a/fs/ntfs3/lznt.c b/fs/ntfs3/lznt.c
+> new file mode 100644
+> index 000000000000..db3256c08387
+> --- /dev/null
+> +++ b/fs/ntfs3/lznt.c
+> @@ -0,0 +1,449 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + *  linux/fs/ntfs3/lznt.c
+> + *
+> + * Copyright (C) 2019-2020 Paragon Software GmbH, All rights reserved.
+> + *
+> + */
 
-[ Upstream commit 9ba8923cbbe11564dd1bf9f3602add9a9cfbb5c6 ]
+Hi,
 
-in amdgpu_driver_open_kms the call to pm_runtime_get_sync increments the
-counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+> +// 0x3FFF
+> +#define HeaderOfNonCompressedChunk ((LZNT_CHUNK_SIZE + 2 - 3) | 0x3000)
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Do we need something in coding-style.rst that says:
+	Avoid CamelCase in Linux kernel source code.
+?
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-index 24941a7b659f4..f62b59f5f3bdb 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
-@@ -542,7 +542,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 
- 	r = pm_runtime_get_sync(dev->dev);
- 	if (r < 0)
--		return r;
-+		goto pm_put;
- 
- 	fpriv = kzalloc(sizeof(*fpriv), GFP_KERNEL);
- 	if (unlikely(!fpriv)) {
-@@ -565,6 +565,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
- 
- out_suspend:
- 	pm_runtime_mark_last_busy(dev->dev);
-+pm_put:
- 	pm_runtime_put_autosuspend(dev->dev);
- 
- 	return r;
+> +
+> +/*
+> + * compess_chunk
+
+Just curious: what is this compess name?
+
+> + *
+> + * returns one of the tree values:
+
+s/tree/three/
+
+
+> + * 0 - ok, 'cmpr' contains 'cmpr_chunk_size' bytes of compressed data
+> + * 1 == LZNT_ERROR_ALL_ZEROS - input buffer is full zero
+> + * -2 == LZNT_ERROR_TOOSMALL
+> + */
+> +static inline int compess_chunk(size_t (*match)(const u8 *, struct lznt *),
+> +				const u8 *unc, const u8 *unc_end, u8 *cmpr,
+> +				u8 *cmpr_end, size_t *cmpr_chunk_size,
+> +				struct lznt *ctx)
+> +{
+
+...
+
+
 -- 
-2.25.1
+~Randy
 
