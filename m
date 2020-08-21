@@ -2,314 +2,126 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7409C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AFEC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E5E82078D
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D60F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 10:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/J5P1iL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZlV/bMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbgHUKvZ (ORCPT
+        id S1728559AbgHUKvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 06:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        Fri, 21 Aug 2020 06:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbgHUKuv (ORCPT
+        with ESMTP id S1728479AbgHUKvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 06:50:51 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A29C061387;
-        Fri, 21 Aug 2020 03:50:50 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id p20so1543412wrf.0;
-        Fri, 21 Aug 2020 03:50:50 -0700 (PDT)
+        Fri, 21 Aug 2020 06:51:15 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C26C061386
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:51:14 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id r2so1509493wrs.8
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 03:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=c83q5vqNKGOYTEaYuNPD3RF5llns44+uvOpRPNGbhr8=;
-        b=Y/J5P1iLE3jv3mivXZyMaUhUyYYIHQvqKkRQ3h0ZL2R0FijUSSSlVSo2r0Dwse6CSA
-         hICztQUtXcS6OzQFrk0Y4tQSD22V/JNtwHGCc+Bq/63DS5DntTh/c45WX/vRzpap8seE
-         1JQy/6vNfO1NCUvuEq+czrKCJ+5FrYl2k69fq3Q0Rp8A3HTZYzeasqRwyQnGQ+ZHOIa0
-         aBoLtIYkHdD9yx8CpuW+MCuerXhwGCc3eGwlRO4UBCOIKw0qNdZta0oLXcW3KQrLQf6X
-         kRgugGv69XTtbTSrAhrjR9BfVYEf7BID7V7oqKlz66TuPRWJ//BIoQkXaP41/8lznAEh
-         uE4Q==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zHmahM4WlAU5TkrnZ9qUadrG7WkBXC8LyNKGjyFPPtA=;
+        b=JZlV/bMFi3bja47qPW846zX9+5ZcUjXqZEUqi6aDKdZcnXdbDYLeAeEQt/MAPXm/ye
+         /t8CTNSmIJdEkA1GQEHfXVdG1AvitZZtz7yp9N2WRiYFeQV365HDFCP+G4UT+rfOiVLo
+         kJpE3L0T1OH8XvXmMrBPc/6NOlO4N0ENRAbC3FLerLvK6q5J5V/yBYxc/SdK36MeeeYn
+         C0Z7tuEzIcpSZmeIerWrbvrZrzFn9zvHOFEFKUXQCC83mjFLLpILW+/Qe50m+GsrJr5a
+         +8kv4f+wz5/uf3rMTnBOSG2l2+MVT4P5qJ9nM29Ti2uLcVcywA1ZHEjx8SZ24Mso1S7M
+         654A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=c83q5vqNKGOYTEaYuNPD3RF5llns44+uvOpRPNGbhr8=;
-        b=NRYUIUikcFIqxHxCvsjYDfGNUAUrvOmX7QZ+jLj7Ql2dnLMv1IiNq2ShcjQ8ZWI5s5
-         7CCvFZF8chtnQpYTSO5dMRyRlU5qEiuByTwE7J/o5Sc1TtSBP6L5f6DPjrbr6KQDWj0z
-         SWV8O34m6qYJwTm/xWv1pOs2TZfvFtr/o/AZrXgmXEGOZPDUNFu0Nul9m83VRaTCONQs
-         mu4/YFM9Q+PguZC0YpdBiNBgQH3U8aTwmLxkgPJBZ7PNZ7faTjA9s3e8XzshpwwdLgi6
-         M0Yc8b+hfYrgO0+ifddF8qa/naX/fr3Fx12TN9ACEkIYUvs9wMJ1ayY9RW7kGeoSoq8s
-         Va0w==
-X-Gm-Message-State: AOAM531RnBiXyqnCOGnaj7aWyyC1+u/iDiy8KZZ/I6AACUWlehhuXGGB
-        VaLUfbNNlkXefbJtlYwoFMI=
-X-Google-Smtp-Source: ABdhPJwde2bx/W7qHqB9zj1bQDGXTqsFNKULBzBmK3e7+KQxDtyIzW20mwPUs6MDGII5g2PJJn+Ijw==
-X-Received: by 2002:adf:82a6:: with SMTP id 35mr668351wrc.141.1598007048944;
-        Fri, 21 Aug 2020 03:50:48 -0700 (PDT)
-Received: from alinde.c.googlers.com.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id 8sm3784911wrl.7.2020.08.21.03.50.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 03:50:48 -0700 (PDT)
-From:   albert.linde@gmail.com
-X-Google-Original-From: alinde@google.com
-To:     akpm@linux-foundation.org, bp@alien8.de, mingo@redhat.com,
-        corbet@lwn.net, tglx@linutronix.de, arnd@arndb.de
-Cc:     akinobu.mita@gmail.com, hpa@zytor.com, viro@zeniv.linux.org.uk,
-        glider@google.com, andreyknvl@google.com, dvyukov@google.com,
-        elver@google.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, Albert van der Linde <alinde@google.com>
-Subject: [PATCH 2/3] lib, uaccess: add failure injection to usercopy functions
-Date:   Fri, 21 Aug 2020 10:49:24 +0000
-Message-Id: <20200821104926.828511-3-alinde@google.com>
-X-Mailer: git-send-email 2.28.0.297.g1956fa8f8d-goog
-In-Reply-To: <20200821104926.828511-1-alinde@google.com>
-References: <20200821104926.828511-1-alinde@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zHmahM4WlAU5TkrnZ9qUadrG7WkBXC8LyNKGjyFPPtA=;
+        b=Gdy31xRzIzYDzdUyOPCRqbvmfX7qB9RBXbhLfxBh0A3HQOAfRE1Uu37wGYCXtcscYx
+         /U+QhJhjjcgaJskII0NdBXlTXbRhkoWSzWvR4++TwgEbAxzvKLKbOHELN8DWJytSiv2e
+         F4wEhXeGK9RkzX0ZsaDX1IVOjoYM3vfqhkwIvnoV7MsNLkgH4oDIc3bzDrUeA8oYCtag
+         50Z0YJrE/5Da0oyFwxeSkkMA3dc0ptoBrozhslleJ9pihVCLCeqqGDF5Yuho8aCf+mcL
+         wHzO0GOS9u0/fyyLjUhNTKrCVLP81E6wi6HMRwamNRd/AXhXkf9QmyK5+PCUS6FyIuB2
+         OVwg==
+X-Gm-Message-State: AOAM531m5uYiCjbbKHii2f18Xr6r/avPPmP1bbhbk2UYOliphOBat/HJ
+        1RwHPH9YO6U16ChkokeKDPPySQ==
+X-Google-Smtp-Source: ABdhPJzmKaDTcZfXCKyhcewuR1bQYiG2AundNu1zlG5E8k4jdRUOni8PGM5/AKGLL6Ql07oNTh7RJg==
+X-Received: by 2002:a5d:688d:: with SMTP id h13mr472373wru.176.1598007073221;
+        Fri, 21 Aug 2020 03:51:13 -0700 (PDT)
+Received: from [192.168.1.14] ([195.24.90.54])
+        by smtp.googlemail.com with ESMTPSA id d11sm3363460wrw.77.2020.08.21.03.51.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Aug 2020 03:51:12 -0700 (PDT)
+Subject: Re: [PATCH v5 0/3] Venus dynamic debug
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     jim.cromie@gmail.com, Joe Perches <joe@perches.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <eb96ce39-4a2e-aa94-be69-6018f4c7da33@linaro.org>
+Date:   Fri, 21 Aug 2020 13:51:08 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200730095350.13925-1-stanimir.varbanov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Albert van der Linde <alinde@google.com>
+Hi all,
 
-To test fault-tolerance of usercopy accesses, introduce fault injection
-in usercopy functions.
+If no objections I'm going to queue 1/3 and 3/3 for v5.10. 2/3 will be
+postponed because of Stephen's comment.
 
-Adds failure injection to usercopy functions. If a failure is expected
-we return either the failure or the total amount of bytes. As many
-usercopy functions can fail partially, permit also partial failures:
-e.g., copy_from_user can fail copying between 0 and n.
+On 7/30/20 12:53 PM, Stanimir Varbanov wrote:
+> Hello,
+> 
+> Changes in v5:
+>  * 1/3 - dropped dev_warn when set FW debug level - Greg KH
+>  * 3/3 - dropped pr_debug, and now group levels by prefix in dev_dbg
+> 
+> v4 can be fount at [1].
+> 
+> regards,
+> Stan
+> 
+> [1] https://www.spinics.net/lists/kernel/msg3550106.html
+> 
+> Stanimir Varbanov (3):
+>   venus: Add debugfs interface to set firmware log level
+>   venus: Add a debugfs file for SSR trigger
+>   venus: Make debug infrastructure more flexible
+> 
+>  drivers/media/platform/qcom/venus/Makefile    |  2 +-
+>  drivers/media/platform/qcom/venus/core.c      |  3 ++
+>  drivers/media/platform/qcom/venus/core.h      |  8 +++
+>  drivers/media/platform/qcom/venus/dbgfs.c     | 51 +++++++++++++++++++
+>  drivers/media/platform/qcom/venus/dbgfs.h     | 12 +++++
+>  drivers/media/platform/qcom/venus/helpers.c   |  2 +-
+>  drivers/media/platform/qcom/venus/hfi_msgs.c  | 18 +++----
+>  drivers/media/platform/qcom/venus/hfi_venus.c | 10 ++--
+>  .../media/platform/qcom/venus/pm_helpers.c    |  2 +-
+>  drivers/media/platform/qcom/venus/vdec.c      |  6 +--
+>  10 files changed, 96 insertions(+), 18 deletions(-)
+>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.c
+>  create mode 100644 drivers/media/platform/qcom/venus/dbgfs.h
+> 
 
-Signed-off-by: Albert van der Linde <alinde@google.com>
----
- include/linux/uaccess.h | 31 ++++++++++++++++++++++++++-----
- lib/iov_iter.c          | 20 +++++++++++++++++---
- lib/strncpy_from_user.c |  3 +++
- lib/usercopy.c          | 13 +++++++++++--
- 4 files changed, 57 insertions(+), 10 deletions(-)
-
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 94b285411659..79e736077ef4 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -2,6 +2,7 @@
- #ifndef __LINUX_UACCESS_H__
- #define __LINUX_UACCESS_H__
- 
-+#include <linux/fault-inject-usercopy.h>
- #include <linux/instrumented.h>
- #include <linux/sched.h>
- #include <linux/thread_info.h>
-@@ -82,10 +83,14 @@ __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
- static __always_inline __must_check unsigned long
- __copy_from_user(void *to, const void __user *from, unsigned long n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	instrument_copy_from_user(to, from, n);
- 	check_object_size(to, n, false);
--	return raw_copy_from_user(to, from, n);
-+	return not_copied + raw_copy_from_user(to, from, n - not_copied);
- }
- 
- /**
-@@ -104,18 +109,26 @@ __copy_from_user(void *to, const void __user *from, unsigned long n)
- static __always_inline __must_check unsigned long
- __copy_to_user_inatomic(void __user *to, const void *from, unsigned long n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
--	return raw_copy_to_user(to, from, n);
-+	return not_copied + raw_copy_to_user(to, from, n - not_copied);
- }
- 
- static __always_inline __must_check unsigned long
- __copy_to_user(void __user *to, const void *from, unsigned long n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	instrument_copy_to_user(to, from, n);
- 	check_object_size(from, n, true);
--	return raw_copy_to_user(to, from, n);
-+	return not_copied + raw_copy_to_user(to, from, n - not_copied);
- }
- 
- #ifdef INLINE_COPY_FROM_USER
-@@ -123,10 +136,14 @@ static inline __must_check unsigned long
- _copy_from_user(void *to, const void __user *from, unsigned long n)
- {
- 	unsigned long res = n;
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
- 		instrument_copy_from_user(to, from, n);
--		res = raw_copy_from_user(to, from, n);
-+		res = not_copied + raw_copy_from_user(to, from, n - not_copied);
- 	}
- 	if (unlikely(res))
- 		memset(to + (n - res), 0, res);
-@@ -141,10 +158,14 @@ _copy_from_user(void *, const void __user *, unsigned long);
- static inline __must_check unsigned long
- _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	if (access_ok(to, n)) {
- 		instrument_copy_to_user(to, from, n);
--		n = raw_copy_to_user(to, from, n);
-+		n = not_copied + raw_copy_to_user(to, from, n - not_copied);
- 	}
- 	return n;
- }
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 5e40786c8f12..c55c9bff9b0c 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -2,6 +2,7 @@
- #include <crypto/hash.h>
- #include <linux/export.h>
- #include <linux/bvec.h>
-+#include <linux/fault-inject-usercopy.h>
- #include <linux/uio.h>
- #include <linux/pagemap.h>
- #include <linux/slab.h>
-@@ -139,18 +140,26 @@
- 
- static int copyout(void __user *to, const void *from, size_t n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		return not_copied;
- 	if (access_ok(to, n)) {
- 		instrument_copy_to_user(to, from, n);
--		n = raw_copy_to_user(to, from, n);
-+		n = not_copied + raw_copy_to_user(to, from, n - not_copied);
- 	}
- 	return n;
- }
- 
- static int copyin(void *to, const void __user *from, size_t n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		return not_copied;
- 	if (access_ok(from, n)) {
- 		instrument_copy_from_user(to, from, n);
--		n = raw_copy_from_user(to, from, n);
-+		n = not_copied + raw_copy_from_user(to, from, n - not_copied);
- 	}
- 	return n;
- }
-@@ -640,9 +649,14 @@ EXPORT_SYMBOL(_copy_to_iter);
- #ifdef CONFIG_ARCH_HAS_UACCESS_MCSAFE
- static int copyout_mcsafe(void __user *to, const void *from, size_t n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		return not_copied;
- 	if (access_ok(to, n)) {
- 		instrument_copy_to_user(to, from, n);
--		n = copy_to_user_mcsafe((__force void *) to, from, n);
-+		n = not_copied + copy_to_user_mcsafe((__force void *) to,
-+			       from, n - not_copied);
- 	}
- 	return n;
- }
-diff --git a/lib/strncpy_from_user.c b/lib/strncpy_from_user.c
-index 34696a348864..f65973007931 100644
---- a/lib/strncpy_from_user.c
-+++ b/lib/strncpy_from_user.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/compiler.h>
- #include <linux/export.h>
-+#include <linux/fault-inject-usercopy.h>
- #include <linux/kasan-checks.h>
- #include <linux/thread_info.h>
- #include <linux/uaccess.h>
-@@ -101,6 +102,8 @@ long strncpy_from_user(char *dst, const char __user *src, long count)
- 	might_fault();
- 	if (unlikely(count <= 0))
- 		return 0;
-+	if (should_fail_usercopy(count))
-+		return -EFAULT;
- 
- 	max_addr = user_addr_max();
- 	src_addr = (unsigned long)untagged_addr(src);
-diff --git a/lib/usercopy.c b/lib/usercopy.c
-index b26509f112f9..e79716b4634b 100644
---- a/lib/usercopy.c
-+++ b/lib/usercopy.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/bitops.h>
-+#include <linux/fault-inject-usercopy.h>
- #include <linux/instrumented.h>
- #include <linux/uaccess.h>
- 
-@@ -9,10 +10,14 @@
- unsigned long _copy_from_user(void *to, const void __user *from, unsigned long n)
- {
- 	unsigned long res = n;
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	if (likely(access_ok(from, n))) {
- 		instrument_copy_from_user(to, from, n);
--		res = raw_copy_from_user(to, from, n);
-+		res = not_copied + raw_copy_from_user(to, from, n - not_copied);
- 	}
- 	if (unlikely(res))
- 		memset(to + (n - res), 0, res);
-@@ -24,10 +29,14 @@ EXPORT_SYMBOL(_copy_from_user);
- #ifndef INLINE_COPY_TO_USER
- unsigned long _copy_to_user(void __user *to, const void *from, unsigned long n)
- {
-+	long not_copied = should_fail_usercopy(n);
-+
-+	if (not_copied < 0)
-+		not_copied = n;
- 	might_fault();
- 	if (likely(access_ok(to, n))) {
- 		instrument_copy_to_user(to, from, n);
--		n = raw_copy_to_user(to, from, n);
-+		n = not_copied + raw_copy_to_user(to, from, n - not_copied);
- 	}
- 	return n;
- }
 -- 
-2.28.0.297.g1956fa8f8d-goog
-
+regards,
+Stan
