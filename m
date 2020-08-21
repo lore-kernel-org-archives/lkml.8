@@ -2,133 +2,141 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4473C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9277DC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82502207DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="b0Bt5iII"
+	by mail.kernel.org (Postfix) with ESMTP id 76EC020578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 09:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgHUI7e (ORCPT
+        id S1728077AbgHUJAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:59:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbgHUI7c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:59:32 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64441C061385
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:59:31 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id z17so1018469ioi.6
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 01:59:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/0dxk+YAxU8AGUSVq8I4mdsBmmP3C22pS73+np6hl8U=;
-        b=b0Bt5iIIABnBan/+FeypOshmjGN854M+FsnCjPSB93/mARJJbae1tfhKhTDKAlf2BR
-         Y7V/EMRRZM3S46/1jcqWMfs0rPEgDZtGqEh73v8jpk7FtOQPS1dFWBmqVSOX80ViseRC
-         SiCFTiG51XfWRxXOtBQJsbYTiFR+9F1f9Jqtvplv70dGOLyeV8/dhXJzKE+NGg1HLIeA
-         LTT3UyGc7NsCj4q9UJZQ06pEqgUB/U7MFLwRem15MZWKMDsD9fEoWQ/tLJ5oOMug6h9a
-         5lWN55kd3V3bhFSEpm1JtDWp06QM+D4jagJI4NesOy8gYfIBy+LZkJ1oWuKJ1TAF6DLF
-         k7QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0dxk+YAxU8AGUSVq8I4mdsBmmP3C22pS73+np6hl8U=;
-        b=UWq9BCLLeCRzyNhso7sKlRHwopZk+oI+dBfbwLw5GYvR47kwiwkh/5bjVvBNk4c5WD
-         4e76LNYH847ngAqWjnhqT5vg7ymra3KPAI8V4ui4Ayjgn4lMFskTVFp7myiAeH2CkPje
-         6fYe71BU4bC244CtUkZsq08XBaJ0TeiBnfpFn4PwFbDMYnpE2e7hzJi1jv/q6DfHpxil
-         2cI1TXvgIy199mB/kT3BTU4CPoxVbsr+JvwpfmGbukOQYQdR6vr3/WUEcDVH9uQ6OTit
-         1UbrCctt2Z6zKLfoet7Nt24m07lXoh5X54ZhZcwreXGqnCewCrxA+KRULI1606zqvEJ4
-         dF0Q==
-X-Gm-Message-State: AOAM533Qp9gC2WPmURoRi3hcwmfwXYlSVxuywxfPO9No1GLnGy6SEGEJ
-        FKv/jRtiT2dNWahxTvn4rAvqosmoKzO4U2Ysd2JvGF2CzPdXxQ==
-X-Google-Smtp-Source: ABdhPJxZMDfLVTuLtK0UKeNOHbpwzyh/MLQSbRYHKv4AYJ0os+C4fhkoB2hzOWyUFbN60IpBxRqSGZ3GGupzW5LQIWA=
-X-Received: by 2002:a5e:8f06:: with SMTP id c6mr1548343iok.119.1598000370739;
- Fri, 21 Aug 2020 01:59:30 -0700 (PDT)
+        Fri, 21 Aug 2020 05:00:44 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42489 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbgHUJAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 05:00:42 -0400
+IronPort-SDR: X7i5B1F5kth8kLTafAZKU4AMJNU1FDL+BYL0Pq9GSh5zgA1MTOFppvJjP9UId+SdqLnV4cP9Bs
+ jsRfChBLjYzw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9719"; a="240313902"
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="240313902"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 02:00:42 -0700
+IronPort-SDR: W3tTJU2grbZGjw6lHAv5X8g7tCGl+UQUh58WVppNovXd/q7srQJZKeNfjSOLsb/cUGcp09mw3M
+ ekJCd/Cm/s3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,335,1592895600"; 
+   d="scan'208";a="442282432"
+Received: from lkp-server01.sh.intel.com (HELO 91ed66e1ca04) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 21 Aug 2020 02:00:41 -0700
+Received: from kbuild by 91ed66e1ca04 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1k92ue-0000qS-DZ; Fri, 21 Aug 2020 09:00:40 +0000
+Date:   Fri, 21 Aug 2020 17:00:12 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ b91e7089ae70d2f7c81a4456e5b78fef498663d9
+Message-ID: <5f3f8d1c.kl8RDmfp+6E+rnMx%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20200820185110.17828-1-brgl@bgdev.pl> <20200820185110.17828-2-brgl@bgdev.pl>
- <20200821081555.GG1891694@smile.fi.intel.com>
-In-Reply-To: <20200821081555.GG1891694@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 21 Aug 2020 10:59:19 +0200
-Message-ID: <CAMRc=Me=D1cOsaRqK-BwHT7f-_=3=eciduA=G95FfE2e_XUWfg@mail.gmail.com>
-Subject: Re: [PATCH v8 1/3] devres: provide devm_krealloc()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:35 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Aug 20, 2020 at 08:51:08PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Implement the managed variant of krealloc(). This function works with
-> > all memory allocated by devm_kmalloc() (or devres functions using it
-> > implicitly like devm_kmemdup(), devm_kstrdup() etc.).
-> >
-> > Managed realloc'ed chunks can be manually released with devm_kfree().
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> ...
->
-> > +static struct devres *to_devres(void *data)
-> > +{
-> > +     return data - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > +}
-> > +
-> > +static size_t devres_data_size(size_t total_size)
-> > +{
-> > +     return total_size - ALIGN(sizeof(struct devres), ARCH_KMALLOC_MINALIGN);
-> > +}
->
-> I'm fine with above, but here is a side note, perhaps
->
->         offsetof(struct devres, data)
->
-> will be more practical (no duplication of alignment and hence slightly better
-> maintenance)? (Note, I didn't check if it provides the correct result)
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: b91e7089ae70d2f7c81a4456e5b78fef498663d9  x86/umip: Add emulation/spoofing for SLDT and STR instructions
 
-Hi Andy,
+elapsed time: 721m
 
-The data pointer in struct devres is defined as:
+configs tested: 71
+configs skipped: 43
 
-    u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-And this value (assigned the value of ARCH_DMA_MINALIGN) varies from
-one arch to another. I wasn't really sure if offsetof() would work for
-every case so I went with something very explicit.
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+mips                           ip28_defconfig
+x86_64                           allyesconfig
+arm                            mmp2_defconfig
+h8300                    h8300h-sim_defconfig
+riscv                               defconfig
+m68k                       m5275evb_defconfig
+arm                        keystone_defconfig
+s390                             alldefconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+nios2                               defconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+csky                                defconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+arc                                 defconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+parisc                           allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                          allyesconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+i386                 randconfig-a002-20200820
+i386                 randconfig-a004-20200820
+i386                 randconfig-a005-20200820
+i386                 randconfig-a003-20200820
+i386                 randconfig-a006-20200820
+i386                 randconfig-a001-20200820
+x86_64               randconfig-a015-20200820
+x86_64               randconfig-a012-20200820
+x86_64               randconfig-a016-20200820
+x86_64               randconfig-a014-20200820
+x86_64               randconfig-a011-20200820
+x86_64               randconfig-a013-20200820
+i386                 randconfig-a013-20200820
+i386                 randconfig-a012-20200820
+i386                 randconfig-a011-20200820
+i386                 randconfig-a016-20200820
+i386                 randconfig-a014-20200820
+i386                 randconfig-a015-20200820
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-> Another side note: do we have existing users of these helpers?
->
-
-Which ones? Because I assume you're not referring to the ones I'm
-adding in this patch. :)
-
-Bart
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
