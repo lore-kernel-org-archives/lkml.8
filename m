@@ -2,233 +2,156 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,
-	DATE_IN_FUTURE_06_12,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71755C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36258C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52695207BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 037E5207BB
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 15:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="P/axgW8N";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="C5OdQn0i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgHUPqP (ORCPT
+        id S1728015AbgHUPqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 11:46:15 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10253 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbgHUPqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 11:46:11 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 54A0117A4900C0881F6B;
-        Fri, 21 Aug 2020 23:46:07 +0800 (CST)
-Received: from huawei.com (10.151.151.249) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.487.0; Fri, 21 Aug 2020
- 23:45:57 +0800
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <dietmar.eggemann@arm.com>, <rostedt@goodmis.org>,
-        <bsegall@google.com>, <mgorman@suse.de>,
-        <thara.gopinath@linaro.org>, <pauld@redhat.com>,
-        <vincent.donnefort@arm.com>, <rdunlap@infradead.org>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH v2] sched: Add trace for task wake up latency and leave running time
-Date:   Sat, 22 Aug 2020 00:08:14 +0000
-Message-ID: <20200822000814.33189-1-gengdongjiu@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 21 Aug 2020 11:46:31 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:3996 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725828AbgHUPq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 11:46:26 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LFjXdk009503;
+        Fri, 21 Aug 2020 08:46:12 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
+ b=P/axgW8NDTo8xQJ71UYaeHUaf/PNBRPzeYuWzL+gAXaaTB/iKCfjY5P4v9PHMuXQ7GC5
+ qeE6tGCboUaUEoYQNDuWWxmOPF6B1ViYHJrj8u16HsMUgByrmS3RRefBasKSdph/w2oN
+ 0SrBWuUOAB0O4Ii8HouCLw+suv601Qmumqw= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 331d50t96d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 21 Aug 2020 08:46:12 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 08:46:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G6TKONwRGLKNr1dP/N4GcW15chJu+reBhPpD3t+1zymCl9mzEJ8GYKTYMEc0HW4slbIi+zapaiOAtsAofa1JoIXpEk2SGDsCG4YbVUoLEcyRzpmdz4xnX40zBFegRPfQgxARIfNdHUhTiyZc4Wdzjpq0FilBJSjbZDtYL7Qtxnroybqb3glJzIT5Gy4wFOn8nKJi7EjfarWreaFi3g092YeayfqwT80jEkh6+Ujv0Yn8uWduXV5PlOR4FCRlrhYS3wbA6vXZLzmB1aqwWWs8bvvu/g355bAAj28Q3wbj3cBpJVAWkrH4mA1aiH2tRR0IIgevWa+qnnG4yFuX3CXJEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
+ b=Hdy87Sdp8vfAZ2EPIOrUN5z/linRNRc1dNdsZ6AhhmbOmEr6Xh3ORbY6ewR8g2T008YavR8mrVaqo4vt6/sKcEd5PKQScuFLKvmw8752JxYUiqJav8qW8/5IgvGRnYXjnTQRxRbjbGRFN8ZJPUFZ95mRUrFFPNwnX1xEzoJ1+RjHcH825op7FufUleY0D4PNpeWKfJQPsCHw+eqatSrlsDCy/JJc9+uMsluibgNra98a+FC8PK2C6Yt+WC4oN0n/FSiEGCL5SeT6yDaXHdo7uG+IrgYHfRUzlnMcQEv5sg2CwvafaOsQjPvzLVV+Oi06nfUyIKREWMvqt5zVw7ztbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qy8eyuKSDqRkkp6Siw8XdjEsivmY+/4nPZZ4JrzUznI=;
+ b=C5OdQn0irLIiP4Pby+cUNriTsn3yo+JFpoYYtyVlNEU4shz/mfCGCYLWsJKBlWWKkeisTG1JG5jww7vMW7jHoHenskYkwT3+dnOSY5A53yt4QwmKmM94YNqdVaasI68W3EyZ1h8JOm6vFoMxaKKMox7R4CT5YIT6wekiMCVklXk=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=fb.com;
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
+ by BYAPR15MB3046.namprd15.prod.outlook.com (2603:10b6:a03:fa::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Fri, 21 Aug
+ 2020 15:46:09 +0000
+Received: from BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80]) by BYAPR15MB4088.namprd15.prod.outlook.com
+ ([fe80::56b:2925:8762:2d80%7]) with mapi id 15.20.3305.026; Fri, 21 Aug 2020
+ 15:46:09 +0000
+Subject: Re: [PATCH bpf-next v3 4/6] bpf: override the meaning of
+ ARG_PTR_TO_MAP_VALUE for sockmap and sockhash
+To:     Lorenz Bauer <lmb@cloudflare.com>, <jakub@cloudflare.com>,
+        <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+CC:     <kernel-team@cloudflare.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200821102948.21918-1-lmb@cloudflare.com>
+ <20200821102948.21918-5-lmb@cloudflare.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <f140db9b-ed23-7e56-e5b9-d90caf6493cb@fb.com>
+Date:   Fri, 21 Aug 2020 08:46:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
+In-Reply-To: <20200821102948.21918-5-lmb@cloudflare.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL1PR13CA0036.namprd13.prod.outlook.com
+ (2603:10b6:208:257::11) To BYAPR15MB4088.namprd15.prod.outlook.com
+ (2603:10b6:a02:c3::18)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.151.151.249]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BL1PR13CA0036.namprd13.prod.outlook.com (2603:10b6:208:257::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Fri, 21 Aug 2020 15:46:07 +0000
+X-Originating-IP: [2620:10d:c091:480::1:8c09]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9afca455-4227-40ca-021a-08d845e952f5
+X-MS-TrafficTypeDiagnostic: BYAPR15MB3046:
+X-Microsoft-Antispam-PRVS: <BYAPR15MB3046E096E62B2AE9A9EE014ED35B0@BYAPR15MB3046.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7rTlbuhdhUxNjZWC43ECzLb1dOs2Fo9822q/hCODA2JkohEMrT7m/JYIO/GIXZZkjsrKDTeblVGTNwrUyKjOrMO+n47e+pDeTj/sQ6mI129vvdWalm/DEZ3Fe3KdMyoYj+44UVLkLkWP0075paSGdVz7c0GBYFUUXWMPcpjlzTJDVvMu8zmXvEPs3Qe9CJBRA7HirlIc6C84ci5SxFCguacY8bl4awjXycheipqeuS+UOCgB66rP4kwlTf7TU8/Ib/JB8nUuR0POCMGFWS/a7ZZflELjIZAE1fLon94rz1mipK1I9JQd8M6RnL0gGmPKS5PMKexGJPqI6p0xKWsbGSodcpMFgN+A1PYemXrYWsVBO59PAiwvkryD/FwnmkgZ9E51ii3/5Tz3k3j12W7uvU6fRffDa1FlPIh6h62MOWg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(39860400002)(376002)(366004)(396003)(136003)(346002)(478600001)(66476007)(4326008)(186003)(36756003)(8936002)(16576012)(5660300002)(110136005)(8676002)(52116002)(2616005)(31686004)(956004)(110011004)(316002)(83380400001)(66946007)(31696002)(6486002)(2906002)(66556008)(86362001)(53546011)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: X8leT9dd/Ep/X7grllCxKIMKBJ6fRDDO1szTKhlXW6TbSJrXrPzWoyVUL+uP2AOirMO38C+QXveUMxPLGC4cDIp6k9Jw/BWpKghNEEu+i33Zlo+Oy5dXP6749iivyb08xBIbkSwGPT896RdpBw47A6xyLrhLSfv2M+k5MEkm0PvyVHxH5BvHUg8N3fU7tzwBtRcvV8TyE2tdqgN40UrrWd5qv+lApCmomVvMjJWINvGOAwM+JGmSP/nlMOIiENGulo+E5WrrkyK7h+USq/isLuc3IfQ6CrRoxyKcLNgWa4ZMJsDAFlZ8d50yXRvj+bzOkCw32SN4fmvG37q6AGXZRB1X7s3Y4uYdXCdVgc5TRGMmM7iQM9s6h368JP/aHvGG7L8TXtNSZc09K72O5cWU/k+IVURmmVJ834Zr0IfGPhYVkVA2pMgA47v2LlvDNT/h9cIAWP/DzoNFXR01VRhP5ueEndDJUCmRK8rpeSJ1G9WjpSDMWGwtMjTFhINq/NbWkYNr/C04TfgBis9xcimzjC4nq0O2V4xHRc4FvQVvKeH7LOfN/5b0LpNpuB9QmhboZfh00OOm50QfTGqVLLlp+KmlId3RLwMiUhX1IsPQxk9nAt/ZDvDwzM1D5y2TjJu6nOGuOCozDLXlXPPzlVOjGATHNTFpnYPsEqlaFstwfQRie9ESvS0UrcETA4Cfmr40
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9afca455-4227-40ca-021a-08d845e952f5
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2020 15:46:09.6978
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IS+mQUTi+bi7CVLndCtFptqOB8fnqDsCd7EQYyjLzZiTNkGRPyUDBhW/Y9E0a0Lq
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3046
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_08:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
+ malwarescore=0 mlxlogscore=545 priorityscore=1501 impostorscore=0
+ clxscore=1015 phishscore=0 suspectscore=0 adultscore=0 bulkscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2006250000 definitions=main-2008210147
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1) The perf event sched_switch is used to record scheduling tracks,
-   which consumes a large amount of CPU resources and disk space.
-   Therefore, a mechanism is required to record only the scheduling
-   delay greater than a certain threshold. This patch supports this
-   feature. For example, if the threshold is 10 ms, you can run the
-   following command to only record the scheduling track with the
-   scheduling delay greater than 10 ms.
 
-   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/filter
-   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_latency/enable
 
-2) Similarly, when tune performance, we usually want to know which
-   tasks are not running for a long time that is greater than a
-   certain threshold, Use the following commands can easily implement
-   it.
+On 8/21/20 3:29 AM, Lorenz Bauer wrote:
+> The verifier assumes that map values are simple blobs of memory, and
+> therefore treats ARG_PTR_TO_MAP_VALUE, etc. as such. However, there are
+> map types where this isn't true. For example, sockmap and sockhash store
+> sockets. In general this isn't a big problem: we can just
+> write helpers that explicitly requests PTR_TO_SOCKET instead of
+> ARG_PTR_TO_MAP_VALUE.
+> 
+> The one exception are the standard map helpers like map_update_elem,
+> map_lookup_elem, etc. Here it would be nice we could overload the
+> function prototype for different kinds of maps. Unfortunately, this
+> isn't entirely straight forward:
+> We only know the type of the map once we have resolved meta->map_ptr
+> in check_func_arg. This means we can't swap out the prototype
+> in check_helper_call until we're half way through the function.
+> 
+> Instead, modify check_func_arg to treat ARG_PTR_TO_MAP_VALUE to
+> mean "the native type for the map" instead of "pointer to memory"
+> for sockmap and sockhash. This means we don't have to modify the
+> function prototype at all
+> 
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 
-   echo 'time > 10000000' > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/filter
-   echo 1 > /sys/kernel/debug/tracing/events/sched/sched_leave_running_time/enable
-
-Signed-off-by: Dongjiu Geng <gengdongjiu@huawei.com>
----
- include/linux/sched.h        |  7 ++++
- include/trace/events/sched.h | 66 ++++++++++++++++++++++++++++++++++++
- kernel/sched/core.c          | 20 +++++++++++
- 3 files changed, 93 insertions(+)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 93ecd930efd3..edb622c40a90 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1324,6 +1324,13 @@ struct task_struct {
- 	/* CPU-specific state of this task: */
- 	struct thread_struct		thread;
- 
-+	/* Task wake up time stamp */
-+	u64				ts_wakeup;
-+	/* Previous task switch out time stamp */
-+	u64				pre_ts_end;
-+	/* Next task switch in time stamp */
-+	u64				next_ts_start;
-+	bool				wakeup_state;
- 	/*
- 	 * WARNING: on x86, 'thread_struct' contains a variable-sized
- 	 * structure.  It *MUST* be at the end of 'task_struct'.
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index fec25b9cfbaf..e99c6d573a42 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -183,6 +183,72 @@ TRACE_EVENT(sched_switch,
- 		__entry->next_comm, __entry->next_pid, __entry->next_prio)
- );
- 
-+DECLARE_EVENT_CLASS(sched_latency_template,
-+
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+
-+	TP_ARGS(preempt, prev, next, time),
-+
-+	TP_STRUCT__entry(
-+		__array(	char,	prev_comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	prev_pid			)
-+		__field(	int,	prev_prio			)
-+		__field(	long,	prev_state			)
-+		__array(	char,	next_comm,	TASK_COMM_LEN	)
-+		__field(	pid_t,	next_pid			)
-+		__field(	int,	next_prio			)
-+		__field(	u64,	time				)
-+	),
-+
-+	TP_fast_assign(
-+		memcpy(__entry->next_comm, next->comm, TASK_COMM_LEN);
-+		__entry->prev_pid	= prev->pid;
-+		__entry->prev_prio	= prev->prio;
-+		__entry->prev_state	= __trace_sched_switch_state(preempt, prev);
-+		memcpy(__entry->prev_comm, prev->comm, TASK_COMM_LEN);
-+		__entry->next_pid	= next->pid;
-+		__entry->next_prio	= next->prio;
-+		__entry->time		= time;
-+		/* XXX SCHED_DEADLINE */
-+	),
-+
-+	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d passed time=%llu (ns)",
-+		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
-+
-+		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
-+		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
-+				{ TASK_INTERRUPTIBLE, "S" },
-+				{ TASK_UNINTERRUPTIBLE, "D" },
-+				{ __TASK_STOPPED, "T" },
-+				{ __TASK_TRACED, "t" },
-+				{ EXIT_DEAD, "X" },
-+				{ EXIT_ZOMBIE, "Z" },
-+				{ TASK_PARKED, "P" },
-+				{ TASK_DEAD, "I" }) :
-+		  "R",
-+
-+		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
-+		__entry->next_comm, __entry->next_pid, __entry->next_prio,
-+		__entry->time)
-+);
-+
-+DEFINE_EVENT(sched_latency_template, sched_wakeup_latency,
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+	TP_ARGS(preempt, prev, next, time));
-+
-+DEFINE_EVENT(sched_latency_template, sched_leave_running_time,
-+	TP_PROTO(bool preempt,
-+		 struct task_struct *prev,
-+		 struct task_struct *next,
-+		 u64 time),
-+	TP_ARGS(preempt, prev, next, time));
-+
- /*
-  * Tracepoint for a task being migrated:
-  */
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8471a0f7eb32..b5a1928dc948 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -2464,6 +2464,8 @@ static void ttwu_do_wakeup(struct rq *rq, struct task_struct *p, int wake_flags,
- {
- 	check_preempt_curr(rq, p, wake_flags);
- 	p->state = TASK_RUNNING;
-+	p->ts_wakeup = local_clock();
-+	p->wakeup_state = true;
- 	trace_sched_wakeup(p);
- 
- #ifdef CONFIG_SMP
-@@ -2846,6 +2848,8 @@ try_to_wake_up(struct task_struct *p, unsigned int state, int wake_flags)
- 		success = 1;
- 		trace_sched_waking(p);
- 		p->state = TASK_RUNNING;
-+		p->ts_wakeup = local_clock();
-+		p->wakeup_state = true;
- 		trace_sched_wakeup(p);
- 		goto out;
- 	}
-@@ -3299,6 +3303,9 @@ int sched_fork(unsigned long clone_flags, struct task_struct *p)
- 	plist_node_init(&p->pushable_tasks, MAX_PRIO);
- 	RB_CLEAR_NODE(&p->pushable_dl_tasks);
- #endif
-+	p->ts_wakeup = 0;
-+	p->wakeup_state = false;
-+	p->pre_ts_end = p->next_ts_start = 0;
- 	return 0;
- }
- 
-@@ -3355,6 +3362,8 @@ void wake_up_new_task(struct task_struct *p)
- 	post_init_entity_util_avg(p);
- 
- 	activate_task(rq, p, ENQUEUE_NOCLOCK);
-+	p->ts_wakeup = local_clock();
-+	p->wakeup_state = true;
- 	trace_sched_wakeup_new(p);
- 	check_preempt_curr(rq, p, WF_FORK);
- #ifdef CONFIG_SMP
-@@ -4521,8 +4530,19 @@ static void __sched notrace __schedule(bool preempt)
- 
- 		psi_sched_switch(prev, next, !task_on_rq_queued(prev));
- 
-+		next->next_ts_start = prev->pre_ts_end = local_clock();
-+
- 		trace_sched_switch(preempt, prev, next);
- 
-+		if (next->ts_wakeup && next->wakeup_state) {
-+			trace_sched_wakeup_latency(preempt, prev, next,
-+				next->next_ts_start - next->ts_wakeup);
-+			next->wakeup_state = false;
-+		}
-+
-+		trace_sched_leave_running_time(preempt, prev,
-+			next, next->next_ts_start - next->pre_ts_end);
-+
- 		/* Also unlocks the rq: */
- 		rq = context_switch(rq, prev, next, &rf);
- 	} else {
--- 
-2.17.1
-
+Acked-by: Yonghong Song <yhs@fb.com>
