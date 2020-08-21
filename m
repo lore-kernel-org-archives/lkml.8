@@ -2,137 +2,100 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96FB3C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B9BC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7792620578
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F7920578
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 13:47:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Rtq/FY2b"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="BDf9azaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbgHUNrI (ORCPT
+        id S1729025AbgHUNrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 09:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37270 "EHLO
+        Fri, 21 Aug 2020 09:47:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728782AbgHUNoH (ORCPT
+        with ESMTP id S1729008AbgHUNrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 09:44:07 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38628C0617A5
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:43:56 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f7so2013122wrw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:43:56 -0700 (PDT)
+        Fri, 21 Aug 2020 09:47:03 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD39C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:47:02 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id si26so2311874ejb.12
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 06:47:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gSXaIPMXv2p2JdvokUaT0GeoWLMWWGeoBVt/sDwVK3w=;
-        b=Rtq/FY2b1l/uTm1zqNRGcMOki4Nhr90y8dw36UY9OBKk1wt7vX9yWf/ZMj8F+6xtXq
-         YTDbvFOBtAQxU0LR/qyk8fPz3GIwtOZ1BwetfUi54GgTFgw0LXoscAtctxcy/NbeVmSs
-         jL1O0aWDIjWryXP/AC6K36dEYxdJROGpH6SJumsBWX43dt7wuubHClbboH8u2l0Pulp4
-         ByImav3DVG+N+1lu6hF2URdYdoJwFU/fbyRYjDz2WQ2v9jXCoP8yXCjn1sIIdxc/m7dx
-         w6Kq+OPApVJFC+Uv4qarFCiViA0ogUwrEp3N00AGK4BjWl4epMnx14/4RpgghfJoHAS3
-         9RvQ==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OCNzDue0d+9gLeuNDZrCDBO7b3B7dWV+FryyxTem/wM=;
+        b=BDf9azafY0usvDzD6SWESmOB5PViNnJj/9/rufIn6pIb+SY+E3IMtw8WgrrAe16c4D
+         4N8dFgKM6uDJ5zMAeHRHVh2MspW7Vyqt4+RMuWrtXCAaCTzuLDaaynS6Xh7n16Druirz
+         jcpfkpFlm4VZpqGAv6FeR4sQcbKFoxcUoI9PiSQp2IX8EAvR6ej9RtSNHVACLazukIfV
+         nmyeHO03NRVFJEKHpywQOu/goM180NbO31Wc3qb2ZZwR3x3+nzZBtDf2svECy09qT82G
+         mwkkIc7GZ9nPEBr821KMJE0RuuapIE4o0Co9wpwdrldJBb6eTDutPhyuviqb3sI1SyIC
+         7SaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=gSXaIPMXv2p2JdvokUaT0GeoWLMWWGeoBVt/sDwVK3w=;
-        b=b+aIrwcGgMvu4WzI+RttUwzrweToAnRd/z1ilykx05xz0o06dP7UUnJHOMrhyIeVGu
-         YTU38L9OzPKHf2TleYvvzc1jYdL8oWl5I4MqF7LkZUdagJsigrStxcGg1JvJGDM8zDHR
-         Tp7G+1sEh1WR2upZsHcudkLICqDeWYUeWeggYuP/s/+F9UzQOlTdsFWuWlUdzKt3SdFe
-         eCnxRK0luLaKwNe9AV9g98SykB8GKWgQLgasSMY1c4BEQsl99dJXcgpy7rJdkQcMT+2J
-         b4vYxGDEHYMGG4gHd7d/XL1oU6lhK1JZehXu82QK8c9+yY3sG1YUopmO3DlQb8ZabHrD
-         ph/w==
-X-Gm-Message-State: AOAM533RNZLg3/nS/9IvO2LyDEH8VA2OXoWqL7QSS7PyvVWK0EDHA0tF
-        xPUyca1CkkIzNV97uXOLQAoUCQ==
-X-Google-Smtp-Source: ABdhPJz3B6InTIkOYqEFv4i/KcOzpg+W9FPTs9aKP7I5q6ENyn3219x88CEP/HrtsXh7inepIEQzFA==
-X-Received: by 2002:a5d:4281:: with SMTP id k1mr2763001wrq.30.1598017434935;
-        Fri, 21 Aug 2020 06:43:54 -0700 (PDT)
-Received: from localhost.localdomain ([51.15.160.169])
-        by smtp.googlemail.com with ESMTPSA id 202sm5971179wmb.10.2020.08.21.06.43.53
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 21 Aug 2020 06:43:54 -0700 (PDT)
-From:   Corentin Labbe <clabbe@baylibre.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH v5 11/18] crypto: sun8i-ce: rename has_t_dlen_in_bytes to cipher_t_dlen_in_bytes
-Date:   Fri, 21 Aug 2020 13:43:28 +0000
-Message-Id: <1598017415-39059-12-git-send-email-clabbe@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598017415-39059-1-git-send-email-clabbe@baylibre.com>
-References: <1598017415-39059-1-git-send-email-clabbe@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OCNzDue0d+9gLeuNDZrCDBO7b3B7dWV+FryyxTem/wM=;
+        b=W5FLqPsyWQAD5ILgAQ7LSD2wcY9lSXu3HJmeYZcE/Nhvs7HDLEM9mQqYiz2706PDZd
+         6G5AkLX6jcC0p/SFMx4GIf0SbxDYAIuq/n0Qc3SaQ+VZc7ysmxa3syraon4pY+/mnput
+         r3Wvyo1wk4Ay4EdAXmt+x8TyW+El9VlkWClyqXTaDwqWPBrfu4e1jKmbSS40WXwemlk/
+         EVZKuu9fIFaAl13h4HcE4nlkMu60xaIV5gxBQSqkT8ffRUOFW0IkKtCS9bpzVj3PbLCS
+         HKqDxW50qW70MuD34vrJW0VZsOd2wy3nDFD/eISgzCm3gnws9sPDtIeEXHF0pynhcqvP
+         I1LA==
+X-Gm-Message-State: AOAM530sbacbztMnYTeCCDpjGgTEEaK+EqoLgbj1/lv3HR4kJ3xZp4Nh
+        shf73SryvhNue8vaQRxJJQVuX+TZaQ2N6H0XKVes
+X-Google-Smtp-Source: ABdhPJy6zIIVIwF1GHspiGxBu6rQjz/cqHvYRzEm2Z4xJYFQGvRzpYb/UmjUqCMgmnE906lKpJCPOKo+BUF7LdsX8Lo=
+X-Received: by 2002:a17:906:e0e:: with SMTP id l14mr2792528eji.398.1598017621287;
+ Fri, 21 Aug 2020 06:47:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200817170729.2605279-1-tweek@google.com> <20200817170729.2605279-4-tweek@google.com>
+ <0bb62de9-1020-a7c4-3a7f-48ae2f78e3b7@gmail.com> <20200817162933.79f69c66@oasis.local.home>
+ <20200818120948.1a428da9@oasis.local.home> <66e6d84e-20b5-1bd3-e107-322f42ce35d3@gmail.com>
+ <20200820223136.162850ce@oasis.local.home> <CAEjxPJ7-6PaHjPzB7vN=nh+VMNV-T2bnKM-YrXdQwOzNtG+9zg@mail.gmail.com>
+ <CAHC9VhTLOWsD9LbVGBj=o3N3SPe-uJDvrdQAySy6MmE4uyuzng@mail.gmail.com> <CA+zpnLfNjDwxgoG2p3W8YfXxYVQDum4Eh_MJQvKP4rGLqsqACA@mail.gmail.com>
+In-Reply-To: <CA+zpnLfNjDwxgoG2p3W8YfXxYVQDum4Eh_MJQvKP4rGLqsqACA@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Fri, 21 Aug 2020 09:46:50 -0400
+Message-ID: <CAHC9VhRXZXiYFX20wtMt9bTv-6sAer91gY1x5ueJv4fa-i5jPA@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] selinux: add permission names to trace event
+To:     =?UTF-8?Q?Thi=C3=A9baud_Weksteen?= <tweek@google.com>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Nick Kralevich <nnk@google.com>,
+        Peter Enderborg <peter.enderborg@sony.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hash algorithms will need also a spetial t_dlen handling, but since the
-meaning will be different, rename the current flag to specify it apply
-only on ciphers algorithms.
+On Fri, Aug 21, 2020 at 9:21 AM Thi=C3=A9baud Weksteen <tweek@google.com> w=
+rote:
+>>
+>> I'm okay with merging patches 1/3 and 2/3 wth the changes Stephen
+>> suggested, but I think we will need to leave patch 3/3 out of this for
+>> now.
+>
+> That works for me.
 
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c | 2 +-
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c   | 2 +-
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h        | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Can you respin patches 1 and two with those changes and repost?  I try
+to refrain from making non-merge-fuzz changes when merging patches.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-index fa12c966c45f..2dcf508b0f18 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-@@ -119,7 +119,7 @@ static int sun8i_ce_cipher_prepare(struct crypto_engine *engine, void *async_req
- 	common |= rctx->op_dir | CE_COMM_INT;
- 	cet->t_common_ctl = cpu_to_le32(common);
- 	/* CTS and recent CE (H6) need length in bytes, in word otherwise */
--	if (ce->variant->has_t_dlen_in_bytes)
-+	if (ce->variant->cipher_t_dlen_in_bytes)
- 		cet->t_dlen = cpu_to_le32(areq->cryptlen);
- 	else
- 		cet->t_dlen = cpu_to_le32(areq->cryptlen / 4);
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-index 65748dfa7a48..688976011f07 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-core.c
-@@ -61,7 +61,7 @@ static const struct ce_variant ce_h6_variant = {
- 	},
- 	.op_mode = { CE_OP_ECB, CE_OP_CBC
- 	},
--	.has_t_dlen_in_bytes = true,
-+	.cipher_t_dlen_in_bytes = true,
- 	.ce_clks = {
- 		{ "bus", 0, 200000000 },
- 		{ "mod", 300000000, 0 },
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-index eea0847dc1e8..3dbf8ca47b7c 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce.h
-@@ -97,7 +97,7 @@ struct ce_clock {
-  * @alg_cipher:	list of supported ciphers. for each CE_ID_ this will give the
-  *              coresponding CE_ALG_XXX value
-  * @op_mode:	list of supported block modes
-- * @has_t_dlen_in_bytes:	Does the request size for cipher is in
-+ * @cipher_t_dlen_in_bytes:	Does the request size for cipher is in
-  *				bytes or words
-  * @ce_clks:	list of clocks needed by this variant
-  * @esr:	The type of error register
-@@ -105,7 +105,7 @@ struct ce_clock {
- struct ce_variant {
- 	char alg_cipher[CE_ID_CIPHER_MAX];
- 	u32 op_mode[CE_ID_OP_MAX];
--	bool has_t_dlen_in_bytes;
-+	bool cipher_t_dlen_in_bytes;
- 	struct ce_clock ce_clks[CE_MAX_CLOCKS];
- 	int esr;
- };
--- 
-2.26.2
-
+--=20
+paul moore
+www.paul-moore.com
