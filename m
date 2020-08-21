@@ -2,141 +2,82 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EE3BC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E20C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DAF8820738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pOXTBKj9"
+	by mail.kernel.org (Postfix) with ESMTP id B2B8E20639
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727084AbgHUIPP (ORCPT
+        id S1727866AbgHUIPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:15:15 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:51976 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725965AbgHUIPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:15:14 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L8CJTG114576;
-        Fri, 21 Aug 2020 08:15:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=virkOKZ2n5oKm9Yasu1MHN0bo07T4qM9mrntv5iiZx8=;
- b=pOXTBKj94ywtNURN/e/oKgSyZNdwfTIoXUWns83Bmhn2ASYO9gl+pi3Or4OMJAvyJwjp
- 9v4vfu8lftUOfjpSXI+pdRZNkGL94hrOdvdHZDSIeJuZyygktkPBVWwqXFDxwV9XH00V
- B4vipGG6OGBDTwWawplPx67wSrjnm6z1DMj+7V0CDO1GO4U2vPVWqxlsk4pWVN0MQw+b
- KJNeimuIaWEY0pbnUHzeGx1j7YVnvvn96Aq3O0nBnNiUndG1MZ/SVs6m0jcYCc1ux4qQ
- /omtNNxVvsHBulptxh2sUuDF4N4KdLihB3abcYMEcQt4WAEJQ43NusbTGGxzjt7sroJb bQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 32x74rmuvr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 08:15:04 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07L8D4K7041903;
-        Fri, 21 Aug 2020 08:15:03 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 32xsn2b0bh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 08:15:03 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07L8EvD0019439;
-        Fri, 21 Aug 2020 08:14:57 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 08:14:56 +0000
-Date:   Fri, 21 Aug 2020 11:14:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     George Acosta <acostag.ubuntu@gmail.com>
-Cc:     Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rapidio: fix get device imbalance on error
-Message-ID: <20200821081449.GI5493@kadam>
-References: <20200821034458.22472-1-acostag.ubuntu@gmail.com>
+        Fri, 21 Aug 2020 04:15:39 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:17530 "EHLO zju.edu.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725965AbgHUIPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 04:15:38 -0400
+Received: by ajax-webmail-mail-app3 (Coremail) ; Fri, 21 Aug 2020 16:15:13
+ +0800 (GMT+08:00)
+X-Originating-IP: [10.192.85.18]
+Date:   Fri, 21 Aug 2020 16:15:13 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From:   dinghao.liu@zju.edu.cn
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     "Gilad Ben-Yossef" <gilad@benyossef.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Geert Uytterhoeven" <geert+renesas@glider.be>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: ccree - fix runtime PM imbalance on error
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.12 build 20200616(0f5d8152)
+ Copyright (c) 2002-2020 www.mailtech.cn zju.edu.cn
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821034458.22472-1-acostag.ubuntu@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=2 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210076
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9719 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=2 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210076
+Message-ID: <5fe48e8a.e845.1741016074a.Coremail.dinghao.liu@zju.edu.cn>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: cC_KCgBH_96Rgj9fyzj9Ag--.45498W
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgoSBlZdtPnBhAAns4
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJTRUUUbAIS07vEb7Iv0x
+        C_Cr1lV2xY67kC6x804xWlV2xY67CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DMIAI
+        bVAFxVCF77xC64kEw24lV2xY67C26IkvcIIF6IxKo4kEV4ylV2xY628lY4IE4IxF12IF4w
+        CS07vE84x0c7CEj48ve4kI8wCS07vE84ACjcxK6xIIjxv20xvE14v26w1j6s0DMIAIbVA2
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UMIAIbVA2z4x0Y4vEx4A2jsIE14v26r
+        xl6s0DMIAIbVA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1lV2xY62AIxVAIcxkEcVAq
+        07x20xvEncxIr21lV2xY6c02F40EFcxC0VAKzVAqx4xG6I80ewCS07vEYx0E2Ix0cI8IcV
+        AFwI0_JrI_JrylV2xY6cIj6I8E87Iv67AKxVWUJVW8JwCS07vEOx8S6xCaFVCjc4AY6r1j
+        6r4UMIAIbVACjI8F5VA0II8E6IAqYI8I648v4I1lV2xY6x02cVAKzwCS07vEc2IjII80xc
+        xEwVAKI48JMIAIbVCF04k20xvE74AGY7Cv6cx26r4fKr1UJr1lV2xY6xCjnVCjjxCrMIAI
+        bVCFx2IqxVCFs4IE7xkEbVWUJVW8JwCS07vEx2IqxVAqx4xG67AKxVWUJVWUGwCS07vEx2
+        IqxVCjr7xvwVAFwI0_JrI_JrWlV2xY6I8E67AF67kF1VAFwI0_Jw0_GFylV2xY6IIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lV2xY6IIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCS07
+        vEIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCS07vEIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+        V2xY6IIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:44:57PM -0500, George Acosta wrote:
-> Fix the imbalance in mport_cdev_open.
-> Call put_device in error path to balance the
-> refcount that increased by the get_device.
-> 
-> Fixes: e8de370188d0 ("rapidio: add mport char device driver")
-> Signed-off-by: George Acosta <acostag.ubuntu@gmail.com>
-> ---
->  drivers/rapidio/devices/rio_mport_cdev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-> index c07ceec3c6d4..3b68e00eb40f 100644
-> --- a/drivers/rapidio/devices/rio_mport_cdev.c
-> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
-> @@ -1908,6 +1908,7 @@ static int mport_cdev_open(struct inode *inode, struct file *filp)
->  			  sizeof(struct rio_event) * MPORT_EVENT_DEPTH,
->  			  GFP_KERNEL);
->  	if (ret < 0) {
-> +		put_device(&chdev->dev);
->  		dev_err(&chdev->dev, DRV_NAME ": kfifo_alloc failed\n");
->  		ret = -ENOMEM;
->  		goto err_fifo;
-> -- 
-
-If we ever hit this error path then the:
-
-	list_add_tail(&priv->list, &chdev->file_list);
-
-needs to be removed from the list as well or it lead to a use after
-free.  Probably just move the list_add_tail() after the kfifo_alloc()
-has succeeded. We need to remove it from the list in mport_cdev_release()
-as well...
-
-The error handling in this function is kind of rubbish.
-1) Get rid of the out label and return directly (more readable).
-1b) Use "return 0;" instead of "retur ret;" for the success path.
-2) Name the labels after what they do not where they "come from".  In
-other words do.
-
-err_priv:
-	kfree(priv);
-
-3) Create a label to call put_device:
-
-err_device:
-	put_device(&chdev->dev);
-
-Change all the error paths to use the goto instead of calling
-put_device() before the goto.
-
-regards,
-dan carpenter
+cG1fcnVudGltZV9nZXRfc3luYygpIGluY3JlbWVudHMgdGhlIHJ1bnRpbWUgUE0gdXNhZ2UgY291
+bnRlcgpldmVuIHdoZW4gaXQgcmV0dXJucyBhbiBlcnJvciBjb2RlLiBIb3dldmVyLCB1c2VycyBv
+ZiBjY19wbV9nZXQoKSwKYSBkaXJlY3Qgd3JhcHBlciBvZiBwbV9ydW50aW1lX2dldF9zeW5jKCks
+IGFzc3VtZSB0aGF0IFBNIHVzYWdlCmNvdW50ZXIgd2lsbCBub3QgY2hhbmdlIG9uIGVycm9yLiBU
+aHVzIGEgcGFpcmluZyBkZWNyZW1lbnQgaXMgbmVlZGVkCm9uIHRoZSBlcnJvciBoYW5kbGluZyBw
+YXRoIHRvIGtlZXAgdGhlIGNvdW50ZXIgYmFsYW5jZWQuCgpGaXhlczogOGM3ODQ5YTMwMjU1YyAo
+ImNyeXB0bzogY2NyZWUgLSBzaW1wbGlmeSBSdW50aW1lIFBNIGhhbmRsaW5nIikKU2lnbmVkLW9m
+Zi1ieTogRGluZ2hhbyBMaXUgPGRpbmdoYW8ubGl1QHpqdS5lZHUuY24+Ci0tLQogZHJpdmVycy9j
+cnlwdG8vY2NyZWUvY2NfcG0uYyB8IDYgKysrKystCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRp
+b25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jcnlwdG8vY2NyZWUv
+Y2NfcG0uYyBiL2RyaXZlcnMvY3J5cHRvL2NjcmVlL2NjX3BtLmMKaW5kZXggZDM5ZTE2NjRmYzdl
+Li4zYzY1YmYwNzBjOTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY3J5cHRvL2NjcmVlL2NjX3BtLmMK
+KysrIGIvZHJpdmVycy9jcnlwdG8vY2NyZWUvY2NfcG0uYwpAQCAtNjUsOCArNjUsMTIgQEAgY29u
+c3Qgc3RydWN0IGRldl9wbV9vcHMgY2NyZWVfcG0gPSB7CiBpbnQgY2NfcG1fZ2V0KHN0cnVjdCBk
+ZXZpY2UgKmRldikKIHsKIAlpbnQgcmMgPSBwbV9ydW50aW1lX2dldF9zeW5jKGRldik7CisJaWYg
+KHJjIDwgMCkgeworCQlwbV9ydW50aW1lX3B1dF9ub2lkbGUoZGV2KTsKKwkJcmV0dXJuIHJjOwor
+CX0KIAotCXJldHVybiAocmMgPT0gMSA/IDAgOiByYyk7CisJcmV0dXJuIDA7CiB9CiAKIHZvaWQg
+Y2NfcG1fcHV0X3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQotLSAKMi4xNy4xCg==
