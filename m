@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43AF1C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CCFC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C4AD20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FEA20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030684;
-	bh=v9gQOf2yho3wnn66sqsWT+5Vz7QPb2gaJkVZZU4Booc=;
+	s=default; t=1598030692;
+	bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ffkpwGHX/lcW3dWzIDD6WRqJIDU0oanx7gDlzWUgBfeIEIsvd47wVW2LcejlQHHR
-	 RPWhXNZBk9kCNwXn9H2Rr/1ZYGFudbA0dtPzXjz5L+Zj1ouh+pFqhFb1pG5NmpMQUY
-	 xedjjNasCMK8i9VpQUzlnBsZZagITGmNvaxzCzVQ=
+	b=EXHV5dANZUxy3XkvzF9xtfdB7cOVAhy3zWthxBAcQwBGjJGCjKSu+JskTQgjt2FAm
+	 IF6WI3qmhRVPwwx5mXvPMyxh+mCCbtXpXiuLfEgp2lg4/mvF0nlr8mH4j+Q1DSzg11
+	 pl/WhKBu2pCGJjmJtAi1TWUjOIN/WMYle3tGfcZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729112AbgHURYm (ORCPT
+        id S1727931AbgHUQP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48180 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbgHUQP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46228 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726985AbgHUQO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:14:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5ACB72224D;
-        Fri, 21 Aug 2020 16:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0BFE2086A;
+        Fri, 21 Aug 2020 16:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026529;
-        bh=v9gQOf2yho3wnn66sqsWT+5Vz7QPb2gaJkVZZU4Booc=;
+        s=default; t=1598026469;
+        bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R6YoUlsHdyCMkuvPsyweMoB+4W7nujsh/lNxCFfUrjwVlqd11F5Sby/v5VEB95H5Q
-         7xcVXWHxuwgXewVPF5Aqjv3Hk1jpf+rXhNwbLbPx/c0xL/0UhtuuC+xalP+PIEZ6sX
-         GzIodVZgV0EivefPtgC8qDi6tcsbaYRcgjuLxNVc=
+        b=1OdEnpGv6LInxCRFr0Cjvu7FBf8bEMIBf1i1nHGq9zJ1BT+bsw/cVUW7pXR33gl/N
+         OVVP33Akwz3Xm6sysb0W/QRiTm97H2h3fSSH4YRrsa7F4vP8c3Coi6Gxiqb+mE2xmd
+         nnlSdNn85wREb3hh9RFWmrqssfvlx3kTnPPb2G4w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.8 51/62] locking/lockdep: Fix overflow in presentation of average lock-time
-Date:   Fri, 21 Aug 2020 12:14:12 -0400
-Message-Id: <20200821161423.347071-51-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.8 04/62] ALSA: hda/hdmi: Use force connectivity quirk on another HP desktop
+Date:   Fri, 21 Aug 2020 12:13:25 -0400
+Message-Id: <20200821161423.347071-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
 References: <20200821161423.347071-1-sashal@kernel.org>
@@ -60,40 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+[ Upstream commit d96f27c80b65437a7b572647ecb4717ec9a50c98 ]
 
-Though the number of lock-acquisitions is tracked as unsigned long, this
-is passed as the divisor to div_s64() which interprets it as a s32,
-giving nonsense values with more than 2 billion acquisitons. E.g.
+There's another HP desktop has buggy BIOS which flags the Port
+Connectivity bit as no connection.
 
-  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-  -------------------------------------------------------------------------
-    2350439395           0.07         353.38   649647067.36          0.-32
+Apply force connectivity quirk to enable DP/HDMI audio.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200811095336.32396-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 5525cd3ba0c83..02ef87f50df29 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -423,7 +423,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
- 	seq_time(m, lt->min);
- 	seq_time(m, lt->max);
- 	seq_time(m, lt->total);
--	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
-+	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index b62cd3abb8273..f0c6d2907e396 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1806,6 +1806,7 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
  }
  
- static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
+ static const struct snd_pci_quirk force_connect_list[] = {
++	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
+ 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
+ 	{}
+ };
 -- 
 2.25.1
 
