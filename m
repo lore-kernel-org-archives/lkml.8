@@ -2,127 +2,247 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD4AC433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CB1C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7C120855
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1597981880;
-	bh=P/+5Iuw27xx7rvW/RiUtG3rRebK71DLY9gVtxYSoVmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=lRQzkrhhD1+6x9qZAqMAnK64+7/cnJorgq6fA/lNWsTwjGcmkH68YiZJ8RtpaBwR8
-	 z/LMng6b2XNOxKcUnZ3wK81kexY5t71oyOvTZGNbHsrJIxvjXlNM4RnzgoX2HvGMGc
-	 nsFHX2GowmlLuZGp0FWF3Gw5B9+/TSNNEil8SfM4=
+	by mail.kernel.org (Postfix) with ESMTP id 1096B20714
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 03:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vsLQNTte"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHUDvS (ORCPT
+        id S1727941AbgHUDvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 23:51:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgHUDvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 23:51:18 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Aug 2020 23:51:25 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:35828 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727090AbgHUDvY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Aug 2020 23:51:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1597981883; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=8rbtmpEouJenSJA2EpxoBAY5IfGcZIzNBKVktZgupcg=; b=vsLQNTtehjYWoGiiGRB/05RkjYGNm03XjvkKRiIS7BoiOytsk4w8TeaBBuCUaI1pdcgKNHqc
+ av6cARX77EZLmBtuQitAWUn5dmfb3tGZm9Q2vsiCqDiH5cPhU/wlVtNyRbZgfCFSjxE6rz5V
+ pduGA3Xpm3gT9f+TmkGPGDu+new=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f3f445c1384cb499a59e042 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 21 Aug 2020 03:49:48
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6F475C433CB; Fri, 21 Aug 2020 03:49:47 +0000 (UTC)
+Received: from tingweiz-gv.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB25F2076E;
-        Fri, 21 Aug 2020 03:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1597981877;
-        bh=P/+5Iuw27xx7rvW/RiUtG3rRebK71DLY9gVtxYSoVmk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tvzMiECk3m9ZrFgL9jWU3YPIwWqO83e0eOBZI8fT7UYKgOTTR5tOcQrywMwXnaGtR
-         nDISKx6Es41eovSWj2Y0XN+e+eoPyOdfpwZ8ullZrFDFb1avY/rQTke0Ei0HkLDdw3
-         6hMahyJROMnAZr9c5fAW4e80s2tqTFEbOhlyxuyM=
-Date:   Thu, 20 Aug 2020 20:51:16 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Chris Kennelly <ckennelly@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Song Liu <songliubraving@fb.com>,
-        David Rientjes <rientjes@google.com>,
-        Ian Rogers <irogers@google.com>,
-        Hugh Dickens <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux@googlegroups.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] fs/binfmt_elf: Use PT_LOAD p_align values for
- suitable start address.
-Message-Id: <20200820205116.3467a186cb4ac20342f0ee4b@linux-foundation.org>
-In-Reply-To: <20200820170541.1132271-2-ckennelly@google.com>
-References: <20200820170541.1132271-1-ckennelly@google.com>
-        <20200820170541.1132271-2-ckennelly@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: tingwei)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BB4C0C433CA;
+        Fri, 21 Aug 2020 03:49:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BB4C0C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingwei@codeaurora.org
+From:   Tingwei Zhang <tingwei@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mike Leach <mike.leach@linaro.org>
+Cc:     Tingwei Zhang <tingwei@codeaurora.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Kim Phillips <kim.phillips@arm.com>,
+        Mian Yousaf Kaukab <ykaukab@suse.de>, tsoni@codeaurora.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Mao Jinlong <jinlmao@codeaurora.org>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: [PATCH v10 24/24] coresight: allow the coresight core driver to be built as a module
+Date:   Fri, 21 Aug 2020 11:44:45 +0800
+Message-Id: <20200821034445.967-25-tingwei@codeaurora.org>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20200821034445.967-1-tingwei@codeaurora.org>
+References: <20200821034445.967-1-tingwei@codeaurora.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 13:05:40 -0400 Chris Kennelly <ckennelly@google.com> wrote:
+Enhance coresight developer's efficiency to debug coresight drivers.
+- Kconfig becomes a tristate, to allow =m
+- append -core to source file name to allow module to
+  be called coresight by the Makefile
+- modules can have only one init/exit, so we add the etm_perf
+  register/unregister function calls to the core init/exit
+  functions.
+- add a MODULE_DEVICE_TABLE for autoloading on boot
 
-> The current ELF loading mechancism provides page-aligned mappings.  This
-> can lead to the program being loaded in a way unsuitable for
-> file-backed, transparent huge pages when handling PIE executables.
-> 
-> For binaries built with increased alignment, this limits the number of
-> bits usable for ASLR, but provides some randomization over using fixed
-> load addresses/non-PIE binaries.
-> 
-> @@ -421,6 +422,24 @@ static int elf_read(struct file *file, void *buf, size_t len, loff_t pos)
->  	return 0;
->  }
->  
-> +static unsigned long maximum_alignment(struct elf_phdr *cmds, int nr)
-> +{
-> +	unsigned long alignment = 0;
-> +	int i;
-> +
-> +	for (i = 0; i < nr; i++) {
-> +		if (cmds[i].p_type == PT_LOAD) {
-> +			/* skip non-power of two alignments */
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Kim Phillips <kim.phillips@arm.com>
+Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
+Tested-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+---
+ drivers/hwtracing/coresight/Kconfig           |  5 ++-
+ drivers/hwtracing/coresight/Makefile          |  5 ++-
+ .../{coresight.c => coresight-core.c}         | 42 ++++++++++++++-----
+ .../hwtracing/coresight/coresight-etm-perf.c  |  8 +++-
+ .../hwtracing/coresight/coresight-etm-perf.h  |  3 ++
+ 5 files changed, 48 insertions(+), 15 deletions(-)
+ rename drivers/hwtracing/coresight/{coresight.c => coresight-core.c} (98%)
 
-Comment isn't terribly helpful.  It explains "what" (which is utterly
-obvious from the code anyway) but it fails to explain "why".
-
-> +			if (!is_power_of_2(cmds[i].p_align))
-> +				continue;
-> +			alignment = max(alignment, cmds[i].p_align);
-
-generates a max() warning:
-
-fs/binfmt_elf.c:435:16: note: in expansion of macro `max'
-    alignment = max(alignment, cmds[i].p_align);
-
-p_align may be Elf64_Xword, may be Elf32_Word, may be something else. 
-That's quite unwieldy and I don't like max_t.  How about this?
-
---- a/fs/binfmt_elf.c~fs-binfmt_elf-use-pt_load-p_align-values-for-suitable-start-address-fix
-+++ a/fs/binfmt_elf.c
-@@ -429,10 +429,12 @@ static unsigned long maximum_alignment(s
+diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+index dfe407cde262..c1198245461d 100644
+--- a/drivers/hwtracing/coresight/Kconfig
++++ b/drivers/hwtracing/coresight/Kconfig
+@@ -3,7 +3,7 @@
+ # Coresight configuration
+ #
+ menuconfig CORESIGHT
+-	bool "CoreSight Tracing Support"
++	tristate "CoreSight Tracing Support"
+ 	depends on ARM || ARM64
+ 	depends on OF || ACPI
+ 	select ARM_AMBA
+@@ -15,6 +15,9 @@ menuconfig CORESIGHT
+ 	  specification and configure the right series of components when a
+ 	  trace source gets enabled.
  
- 	for (i = 0; i < nr; i++) {
- 		if (cmds[i].p_type == PT_LOAD) {
-+			unsigned long p_align = cmds[i].p_align;
++	  To compile this driver as a module, choose M here: the
++	  module will be called coresight.
 +
- 			/* skip non-power of two alignments */
--			if (!is_power_of_2(cmds[i].p_align))
-+			if (!is_power_of_2(p_align))
- 				continue;
--			alignment = max(alignment, cmds[i].p_align);
-+			alignment = max(alignment, p_align);
- 		}
- 	}
+ if CORESIGHT
+ config CORESIGHT_LINKS_AND_SINKS
+ 	tristate "CoreSight Link and Sink drivers"
+diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+index 0359d5a1588f..1b35b55bd420 100644
+--- a/drivers/hwtracing/coresight/Makefile
++++ b/drivers/hwtracing/coresight/Makefile
+@@ -2,8 +2,9 @@
+ #
+ # Makefile for CoreSight drivers.
+ #
+-obj-$(CONFIG_CORESIGHT) += coresight.o coresight-etm-perf.o \
+-			   coresight-platform.o coresight-sysfs.o
++obj-$(CONFIG_CORESIGHT) += coresight.o
++coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
++		coresight-sysfs.o
+ obj-$(CONFIG_CORESIGHT_LINK_AND_SINK_TMC) += coresight-tmc.o
+ coresight-tmc-y := coresight-tmc-core.o coresight-tmc-etf.o \
+ 		      coresight-tmc-etr.o
+diff --git a/drivers/hwtracing/coresight/coresight.c b/drivers/hwtracing/coresight/coresight-core.c
+similarity index 98%
+rename from drivers/hwtracing/coresight/coresight.c
+rename to drivers/hwtracing/coresight/coresight-core.c
+index 668963b4b7d4..bf6edf468963 100644
+--- a/drivers/hwtracing/coresight/coresight.c
++++ b/drivers/hwtracing/coresight/coresight-core.c
+@@ -1460,16 +1460,6 @@ int coresight_timeout(void __iomem *addr, u32 offset, int position, int value)
+ }
+ EXPORT_SYMBOL_GPL(coresight_timeout);
  
-_
+-struct bus_type coresight_bustype = {
+-	.name	= "coresight",
+-};
+-
+-static int __init coresight_init(void)
+-{
+-	return bus_register(&coresight_bustype);
+-}
+-postcore_initcall(coresight_init);
+-
+ /*
+  * coresight_release_platform_data: Release references to the devices connected
+  * to the output port of this device.
+@@ -1678,3 +1668,35 @@ char *coresight_alloc_device_name(struct coresight_dev_list *dict,
+ 	return name;
+ }
+ EXPORT_SYMBOL_GPL(coresight_alloc_device_name);
++
++struct bus_type coresight_bustype = {
++	.name	= "coresight",
++};
++
++static int __init coresight_init(void)
++{
++	int ret;
++
++	ret = bus_register(&coresight_bustype);
++	if (ret)
++		return ret;
++
++	ret = etm_perf_init();
++	if (ret)
++		bus_unregister(&coresight_bustype);
++
++	return ret;
++}
++
++static void __exit coresight_exit(void)
++{
++	etm_perf_exit();
++	bus_unregister(&coresight_bustype);
++}
++
++module_init(coresight_init);
++module_exit(coresight_exit);
++
++MODULE_AUTHOR("Pratik Patel <pratikp@codeaurora.org>");
++MODULE_AUTHOR("Mathieu Poirier <mathieu.poirier@linaro.org>");
++MODULE_DESCRIPTION("Arm CoreSight tracer driver");
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index 3728c44e5763..668b3ff11576 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -591,7 +591,7 @@ void etm_perf_del_symlink_sink(struct coresight_device *csdev)
+ 	csdev->ea = NULL;
+ }
+ 
+-static int __init etm_perf_init(void)
++int __init etm_perf_init(void)
+ {
+ 	int ret;
+ 
+@@ -618,4 +618,8 @@ static int __init etm_perf_init(void)
+ 
+ 	return ret;
+ }
+-device_initcall(etm_perf_init);
++
++void __exit etm_perf_exit(void)
++{
++	perf_pmu_unregister(&etm_pmu);
++}
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
+index 05f89723e282..3e4f2ad5e193 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.h
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+@@ -82,4 +82,7 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
+ 
+ #endif /* CONFIG_CORESIGHT */
+ 
++int __init etm_perf_init(void);
++void __exit etm_perf_exit(void);
++
+ #endif
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
