@@ -2,180 +2,297 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72200C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F66C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F7AF20724
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC1820724
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 19:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4B9tAPg"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sYA0symB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgHUT51 (ORCPT
+        id S1727827AbgHUT5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 15:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbgHUT5U (ORCPT
+        Fri, 21 Aug 2020 15:57:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726828AbgHUT4t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 15:57:20 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248A4C061573;
-        Fri, 21 Aug 2020 12:57:16 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id x6so1165831qvr.8;
-        Fri, 21 Aug 2020 12:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k+4XZNh46tQodzmg/xUy/8GIixmIB+1d/WsBtrZ1Ubg=;
-        b=Z4B9tAPgW5SvcHiOzgbxc/F4zHF/I+bki4RLmgcHk+0onqv9UteNNJ3rSul7lzVfEl
-         kSJvvr/Vev023ltyYllnmUlFPc12nWDrRxWTfIhhrP2gHFZ+m9fw6oULpKjCM0kvQKyG
-         Bm8h561pW/Kfo1p+wuo5A2GmbZn3mG3yZRGwFbs4t6sxLlejz9rGHNuKRnI3y5Qn2jLZ
-         KMi7jLZxaXg1Fs9tOhQOJL8z/3RDv/frISZrV0YuaboGBe4fGsft2qKWOhcQLK1+LBUp
-         C3yjcc00TgL++Y7AOxnRmZihHcb/XUjNuZbw9JSDpbEziiY7TWgUurLvoG01ekfQtMMv
-         9erg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=k+4XZNh46tQodzmg/xUy/8GIixmIB+1d/WsBtrZ1Ubg=;
-        b=dGMnp5t/iMgaNhPTQDGav+VWacoBhV6Fh5NT/TBYHerz16+gsEe0vuqDEFI+3F9Czh
-         /rBhDM/LdEbqJeHZbKh2q0Y9JcknH05xV/SzZWaNhXuxEntCJIp2fbR+1OPasBFG34As
-         WObXGQY+51GEtZlnMIgllALGEo9IAVPf5WPFyD4MVEqCC1kR8yda3bFSXTCAjhbhuJPO
-         5q83+/smE7Wr0kM+k9UcK6nXwG2OjZ7PEyP/gtNfPlgBEY63m82R1E9gpjOV4D2yW9Cj
-         kdhfXUUJl9iEZyjJcxLE57lFGF2hgSMYVBZVx5IMVkkWZq6132O+7V1/w58CpTnNEMNs
-         FcJA==
-X-Gm-Message-State: AOAM532YyeEJ05l3mKri5X+H/0KCbMw/MPjsCMvQQZMPK99v6UcgHVJg
-        9Bdv36sYarsVfLPgHoKGfTE=
-X-Google-Smtp-Source: ABdhPJwPhTsTYDyqXS8gWAoUUBdvx2Y91gJoiZM3uyZwFSX4luTmMYsb1GBGDxNiRNSlmjmD3L7t+A==
-X-Received: by 2002:a0c:ea45:: with SMTP id u5mr3736023qvp.191.1598039835149;
-        Fri, 21 Aug 2020 12:57:15 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id m17sm2973705qkn.45.2020.08.21.12.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2020 12:57:14 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 21 Aug 2020 15:57:12 -0400
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        =?utf-8?B?RMOhdmlkIEJvbHZhbnNrw70=?= <david.bolvansky@gmail.com>,
-        Eli Friedman <efriedma@quicinc.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joe Perches <joe@perches.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Axtens <dja@axtens.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Bruce Ashfield <bruce.ashfield@gmail.com>,
-        Marco Elver <elver@google.com>,
-        Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-Subject: Re: [PATCH 0/4] -ffreestanding/-fno-builtin-* patches
-Message-ID: <20200821195712.GB1475504@rani.riverdale.lan>
-References: <CAHk-=wiPeRQU_5JXCN0TLoW-xHZHp7dmrhx0wyXUSKxiCxE02Q@mail.gmail.com>
- <20200818202407.GA3143683@rani.riverdale.lan>
- <CAKwvOdnfh9nWwu1xV=WDbETGiabwDxXxQDRCAfpa-+kSZijb9w@mail.gmail.com>
- <CAKwvOdkA4SC==vGZ4e7xqFG3Zo=fnhU=FgnSazmWkkVWhkaSYw@mail.gmail.com>
- <20200818214146.GA3196105@rani.riverdale.lan>
- <df6c1da4-b910-ecb8-0de2-6156dd651be6@rasmusvillemoes.dk>
- <20200820175617.GA604994@rani.riverdale.lan>
- <CAHk-=whn91ar+EbcBXQb9UXad00Q5WjU-TCB6UBzVba682a4ew@mail.gmail.com>
- <20200821172935.GA1411923@rani.riverdale.lan>
- <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+        Fri, 21 Aug 2020 15:56:49 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LJX7if154616;
+        Fri, 21 Aug 2020 15:56:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=swpEaVYxiwQ1DDluF6gAxR7mvE6r5gDPnjm29zDFU7U=;
+ b=sYA0symBOnCCD53ZAbzjfUmLiu9QX42c7XIqqXfjkEDbR+A9vBfUrzgued6lNL3O9JrH
+ vFGp/UvzFvAQXNXvMmFGd0DziyOUOsd5R0HWMPZQdf+Px5aIFfI7V5OMY0EC8CGzMxZs
+ xoWRIL2rmOFXRBOKD7usAJPvwzOMhc97FKALfXY/M/KSmnSZDk+qqDzm3+qIMR49SLe7
+ ouECgSrU4y1bEZrkEKOq3GgADgD+FI+a+Oj48wGp6ubkNJoRkCywLELmincFhouqtz4B
+ BP/c0G4yvaJCpH0WX5YO0JJ4zc7hNq87NWbantFrDOFGinyGszDhkDGmCiX5lWut+RmH Zw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9n49d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:48 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07LJsjwj010652;
+        Fri, 21 Aug 2020 15:56:48 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3328e9n48v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 15:56:48 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07LJscD8010508;
+        Fri, 21 Aug 2020 19:56:47 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma05wdc.us.ibm.com with ESMTP id 3304themha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 21 Aug 2020 19:56:47 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07LJufvS14745966
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Aug 2020 19:56:41 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31A8278068;
+        Fri, 21 Aug 2020 19:56:44 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B560678066;
+        Fri, 21 Aug 2020 19:56:42 +0000 (GMT)
+Received: from cpe-172-100-175-116.stny.res.rr.com.com (unknown [9.85.191.76])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Aug 2020 19:56:42 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        fiuczy@linux.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        imbrenda@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v10 12/16] s390/zcrypt: Notify driver on config changed and scan complete callbacks
+Date:   Fri, 21 Aug 2020 15:56:12 -0400
+Message-Id: <20200821195616.13554-13-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200821195616.13554-1-akrowiak@linux.ibm.com>
+References: <20200821195616.13554-1-akrowiak@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wi8vdb+wo-DACDpSijYfAbCs135YcnnAbRhGJcU+A=-+Q@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_09:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 suspectscore=3 adultscore=0
+ priorityscore=1501 impostorscore=0 phishscore=0 clxscore=1015 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008210183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 10:54:57AM -0700, Linus Torvalds wrote:
-> On Fri, Aug 21, 2020 at 10:29 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > This one is slightly different from the previous one. The first case is
-> > really a call to __builtin_free().
-> 
-> No, the first case is a disgrace and a compiler bug.
-> 
-> We've had a situation where gcc complained about a static function
-> called "free()", without any header file inclusion, and then
-> complained about it not matching its idea of what "free()" is.
-> 
-> Which is pure and utter garbage.
-> 
-> It's like you have a local variable "int free", and the compiler says
-> "hey, this doesn't match the prototype that I know this name should
-> have". It's BS. You just saw the user not just *use* that name, but
-> *define* it, and do it in a scope where the complaint is irrelevant
-> and stupid, and when we hadn't even included the header that would
-> have resulted in conflicts.
-> 
-> IOW, it's an example of a compiler that thinks "it knows better".
-> 
-> It's a broken compiler. And it's an example of the kind of breakage
-> that compilers absolutely shouldn't do.
+This patch intruduces an extension to the ap bus to notify drivers
+on crypto config changed and bus scan complete events.
+Two new callbacks are introduced for ap_drivers:
 
-That's -Wbuiltin-declaration-mismatch, and can be turned off, and it
-won't warn if you have -fno-builtin-free. I don't completely agree with
-you, though warning for static functions is a bit overzealous. For an
-external function, especially something more obscure like stpcpy(), I
-appreciate the warning.
+  void (*on_config_changed)(struct ap_config_info *new_config_info,
+                             struct ap_config_info *old_config_info);
+  void (*on_scan_complete)(struct ap_config_info *new_config_info,
+                             struct ap_config_info *old_config_info);
 
-> 
-> The second example is from clang doesn't something horribly horribly stupid.
+Both callbacks are optional. Both callbacks are only triggered
+when QCI information is available (facility bit 12):
 
-Calm down man :)
+* The on_config_changed callback is invoked at the start of the AP bus scan
+  function when it determines that the host AP configuration information
+  has changed since the previous scan. This is done by storing
+  an old and current QCI info struct and comparing them. If there is any
+  difference, the callback is invoked.
 
-> 
-> > This one is turning something that wasn't a function call into
-> > __builtin_bzero(), and I would hope that no-builtin-bzero would stop it
-> > as well. OTOH, the compiler is free to turn it into memset(), just like
-> > it could for structure/array initializers.
-> 
-> The whole "the compiler is free to do X" argument is pure BS. Stop
-> repeating that bogus argument.
-> 
-> Of COURSE a compiler can do whatever the hell it wants.
-> 
-> That doesn't change the fact that certain things are broken beyond
-> words and utterly stupid, and a compiler that does them is a *BAD*
-> compiler.
-> 
-> Turning four stores into a memset() is garbage. Just admit it, instead
-> of trying to say that it's allowed.
-> 
+  Note that when the AP bus scan detects that AP adapters or domains have
+  been removed from the host's AP configuration, it will remove the
+  associated devices from the AP bus subsystem's device model. This
+  callback gives the device driver a chance to respond to the removal
+  of the AP devices in bulk rather than one at a time as its remove
+  callback is invoked. It will also allow the device driver to do any
+  any cleanup prior to giving control back to the bus piecemeal. This is
+  particularly important for the vfio_ap driver because there may be
+  guests using the queues at the time.
 
-Look, four stores into memset(), yeah that's a bit weird. I didn't think
-you meant "four" literally. But in any case, that has nothing to do with
-the topic at hand. It would be just as bad if it was a 16-byte structure
-being initialized with an out-of-line memset() call.
+* The on_scan_complete callback is invoked after the ap bus scan is
+  complete if the host AP configuration data has changed.
 
-But coming back to the actual topic: it is fine if the compiler turns
-four stores into __builtin_memset(). A size-16 or -32 __builtin_memset()
-will get inlined anyway. There's a lot of garbage here if you look
-closely: check out what gcc does to initialize a 7-character array with
-zeros at -Os.
+  Note that when the AP bus scan detects that adapters or domains have
+  been added to the host's configuration, it will create new devices in
+  the AP bus subsystem's device model. This callback also allows the driver
+  to process all of the new devices in bulk.
+
+Please note that changes to the apmask and aqmask do not trigger
+these two callbacks since the bus scan function is not invoked by changes
+to those masks.
+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+---
+ drivers/s390/crypto/ap_bus.c | 85 +++++++++++++++++++++++++++++++++++-
+ drivers/s390/crypto/ap_bus.h | 12 +++++
+ 2 files changed, 96 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index db27bd931308..cbf4c4d2e573 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -73,8 +73,10 @@ struct ap_perms ap_perms;
+ EXPORT_SYMBOL(ap_perms);
+ DEFINE_MUTEX(ap_perms_mutex);
+ EXPORT_SYMBOL(ap_perms_mutex);
++DEFINE_MUTEX(ap_config_lock);
+ 
+ static struct ap_config_info *ap_qci_info;
++static struct ap_config_info *ap_qci_info_old;
+ 
+ /*
+  * AP bus related debug feature things.
+@@ -1412,6 +1414,52 @@ static int __match_queue_device_with_queue_id(struct device *dev, const void *da
+ 		&& AP_QID_QUEUE(to_ap_queue(dev)->qid) == (int)(long) data;
+ }
+ 
++/* Helper function for notify_config_changed */
++static int __drv_notify_config_changed(struct device_driver *drv, void *data)
++{
++	struct ap_driver *ap_drv = to_ap_drv(drv);
++
++	if (try_module_get(drv->owner)) {
++		if (ap_drv->on_config_changed)
++			ap_drv->on_config_changed(ap_qci_info,
++						  ap_qci_info_old);
++		module_put(drv->owner);
++	}
++
++	return 0;
++}
++
++/* Notify all drivers about an qci config change */
++static inline void notify_config_changed(void)
++{
++	bus_for_each_drv(&ap_bus_type, NULL, NULL,
++			 __drv_notify_config_changed);
++}
++
++/* Helper function for notify_scan_complete */
++static int __drv_notify_scan_complete(struct device_driver *drv, void *data)
++{
++	struct ap_driver *ap_drv = to_ap_drv(drv);
++
++	if (try_module_get(drv->owner)) {
++		if (ap_drv->on_scan_complete)
++			ap_drv->on_scan_complete(ap_qci_info,
++						 ap_qci_info_old);
++		module_put(drv->owner);
++	}
++
++	return 0;
++}
++
++/* Notify all drivers about bus scan complete */
++static inline void notify_scan_complete(void)
++{
++	bus_for_each_drv(&ap_bus_type, NULL, NULL,
++			 __drv_notify_scan_complete);
++}
++
++
++
+ /*
+  * Helper function for ap_scan_bus().
+  * Does the scan bus job for the given adapter id.
+@@ -1565,15 +1613,44 @@ static void _ap_scan_bus_adapter(int id)
+ 		put_device(&ac->ap_dev.device);
+ }
+ 
++static int ap_config_changed(void)
++{
++	int cfg_chg = 0;
++
++	if (ap_qci_info) {
++		if (!ap_qci_info_old) {
++			ap_qci_info_old = kzalloc(sizeof(*ap_qci_info_old),
++						  GFP_KERNEL);
++			if (!ap_qci_info_old)
++				return 0;
++		} else {
++			memcpy(ap_qci_info_old, ap_qci_info,
++			       sizeof(struct ap_config_info));
++		}
++		ap_fetch_qci_info(ap_qci_info);
++		cfg_chg = memcmp(ap_qci_info,
++				 ap_qci_info_old,
++				 sizeof(struct ap_config_info)) != 0;
++	}
++
++	return cfg_chg;
++}
++
+ /**
+  * ap_scan_bus(): Scan the AP bus for new devices
+  * Runs periodically, workqueue timer (ap_config_time)
+  */
+ static void ap_scan_bus(struct work_struct *unused)
+ {
+-	int id;
++	int id, config_changed = 0;
+ 
+ 	ap_fetch_qci_info(ap_qci_info);
++	mutex_lock(&ap_config_lock);
++
++	/* config change notify */
++	config_changed = ap_config_changed();
++	if (config_changed)
++		notify_config_changed();
+ 	ap_select_domain();
+ 
+ 	AP_DBF(DBF_DEBUG, "%s running\n", __func__);
+@@ -1582,6 +1659,12 @@ static void ap_scan_bus(struct work_struct *unused)
+ 	for (id = 0; id < AP_DEVICES; id++)
+ 		_ap_scan_bus_adapter(id);
+ 
++	/* scan complete notify */
++	if (config_changed)
++		notify_scan_complete();
++
++	mutex_unlock(&ap_config_lock);
++
+ 	/* check if there is at least one queue available with default domain */
+ 	if (ap_domain_index >= 0) {
+ 		struct device *dev =
+diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+index 48c57b3d53a0..3fc743ac549c 100644
+--- a/drivers/s390/crypto/ap_bus.h
++++ b/drivers/s390/crypto/ap_bus.h
+@@ -137,6 +137,18 @@ struct ap_driver {
+ 	int (*probe)(struct ap_device *);
+ 	void (*remove)(struct ap_device *);
+ 	bool (*in_use)(unsigned long *apm, unsigned long *aqm);
++	/*
++	 * Called at the start of the ap bus scan function when
++	 * the crypto config information (qci) has changed.
++	 */
++	void (*on_config_changed)(struct ap_config_info *new_config_info,
++				  struct ap_config_info *old_config_info);
++	/*
++	 * Called at the end of the ap bus scan function when
++	 * the crypto config information (qci) has changed.
++	 */
++	void (*on_scan_complete)(struct ap_config_info *new_config_info,
++				 struct ap_config_info *old_config_info);
+ };
+ 
+ #define to_ap_drv(x) container_of((x), struct ap_driver, driver)
+-- 
+2.21.1
+
