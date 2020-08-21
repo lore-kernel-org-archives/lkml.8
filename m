@@ -2,192 +2,98 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7868C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5CDAC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B304F20702
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A741920702
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:59:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029147;
-	bh=zgdYKWhIWdTaV8L2k+Z7Jg6RQXaZxDZgYbEDHMVmddk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YLRYRLWrL/haGwyRTLdtBM4WGRQ1ZpwnQuCfkecAolWE+cI/fZ+6IIlzA4h/wNCK0
-	 +cKHhhaDPWLlxHwVTAFdxoXgpO+ChTYyHOcDzf1Tc73tmCp2/cEXcTL/kt8zcZpNL/
-	 kn5CsiqXKRv7wI7sXCnuXX2GNGoZLbKk7XJ4QFCc=
+	s=default; t=1598029162;
+	bh=CuavRm0CKBzQlhflULSq+Uof+b5mUZFbdVDsHUwhgfE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zLuG1E3kX8OtaL2ygZdlCY/oYY4vn6Le6FjYa5sqT/Vm49tbE4Rk0oHSAzepO0KTi
+	 nmccVMqRNbPYPK58s3zPaeVGsZB8hx8PV4R4+BTct3p4UxdQeBV/D7iIOmVymjSObU
+	 VUWmPUTRHCVEd+XgjEwAOwOsPpp7bvo4JXIsVhfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbgHUQ7F (ORCPT
+        id S1728661AbgHUQ7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:59:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38320 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 12:59:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgHUQyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:54:43 -0400
-Received: from localhost (104.sub-72-107-126.myvzw.com [72.107.126.104])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728286AbgHUQTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:19:30 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C7BA220732;
-        Fri, 21 Aug 2020 16:54:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FAC421741;
+        Fri, 21 Aug 2020 16:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598028882;
-        bh=zgdYKWhIWdTaV8L2k+Z7Jg6RQXaZxDZgYbEDHMVmddk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=0xPx/ylaJtMLaSx/oyCf273U5CvhJTeknl7jktEViwsKMlH781NH4huzDlKzzS6ti
-         0lBJya/8xlZ/TzPhZIbboV3eWyRdbhef748FRWdKYduhfgrDI3MyPk1ltqDmqP9OkY
-         2zsGJj7U5AU5qwrKpIfwCNqDTgPFOtDGNTkTXofM=
-Date:   Fri, 21 Aug 2020 11:54:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     linux-mm@kvack.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, rafael@kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, linuxarm@huawei.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Sean V Kelley <sean.v.kelley@linux.intel.com>,
-        linux-api@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCH v9 4/6] ACPI: HMAT: Fix handling of changes from ACPI 6.2
- to ACPI 6.3
-Message-ID: <20200821165440.GA1683523@bjorn-Precision-5520>
+        s=default; t=1598026722;
+        bh=CuavRm0CKBzQlhflULSq+Uof+b5mUZFbdVDsHUwhgfE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YOY/r5pqQ7VRx/Km6e/pqZKqCes4HvMT1tOJBnkAhf6pysE/CTcBIlB2bk/4aJYJm
+         PsZmsp7dYqc98fRoO17PArGUftFLiUAgP0KFN1tXFkTcHnp2q8OEmRA+Rd1YjQJ7l3
+         KVmhjSuaJ5mqT1CGN/mMcu436bT8aLQr0jnl7ldk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-media@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 27/38] cec-api: prevent leaking memory through hole in structure
+Date:   Fri, 21 Aug 2020 12:17:56 -0400
+Message-Id: <20200821161807.348600-27-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
+References: <20200821161807.348600-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821173718.000028fc@Huawei.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 05:37:18PM +0100, Jonathan Cameron wrote:
-> On Fri, 21 Aug 2020 08:46:22 -0500
-> Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Fri, Aug 21, 2020 at 01:59:01PM +0100, Jonathan Cameron wrote:
-> > > On Fri, 21 Aug 2020 07:13:56 -0500
-> > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >   
-> > > > [+cc Keith, author of 3accf7ae37a9 ("acpi/hmat: Parse and report
-> > > > heterogeneous memory")]
-> > > > 
-> > > > On Fri, Aug 21, 2020 at 09:42:58AM +0100, Jonathan Cameron wrote:  
-> > > > > On Thu, 20 Aug 2020 17:21:29 -0500
-> > > > > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > >     
-> > > > > > On Wed, Aug 19, 2020 at 10:51:09PM +0800, Jonathan Cameron wrote:    
-> > > > > > > In ACPI 6.3, the Memory Proximity Domain Attributes Structure
-> > > > > > > changed substantially.  One of those changes was that the flag
-> > > > > > > for "Memory Proximity Domain field is valid" was deprecated.
-> > > > > > > 
-> > > > > > > This was because the field "Proximity Domain for the Memory"
-> > > > > > > became a required field and hence having a validity flag makes
-> > > > > > > no sense.
-> > > > > > > 
-> > > > > > > So the correct logic is to always assume the field is there.
-> > > > > > > Current code assumes it never is.
-> > > > > > > 
-> > > > > > > Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > > > > > > ---
-> > > > > > >  drivers/acpi/numa/hmat.c | 2 +-
-> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/drivers/acpi/numa/hmat.c b/drivers/acpi/numa/hmat.c
-> > > > > > > index 2c32cfb72370..07cfe50136e0 100644
-> > > > > > > --- a/drivers/acpi/numa/hmat.c
-> > > > > > > +++ b/drivers/acpi/numa/hmat.c
-> > > > > > > @@ -424,7 +424,7 @@ static int __init hmat_parse_proximity_domain(union acpi_subtable_headers *heade
-> > > > > > >  		pr_info("HMAT: Memory Flags:%04x Processor Domain:%u Memory Domain:%u\n",
-> > > > > > >  			p->flags, p->processor_PD, p->memory_PD);
-> > > > > > >  
-> > > > > > > -	if (p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) {
-> > > > > > > +	if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) || hmat_revision == 2) {      
-> > > > > > 
-> > > > > > I hope/assume the spec is written in such a way that p->memory_PD is
-> > > > > > required for any revision > 1?  So maybe this should be:
-> > > > > > 
-> > > > > >   if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID && hmat_revision == 1) ||
-> > > > > >       hmat_revision > 1) {    
-> > > > 
-> > > > I should have said simply:
-> > > > 
-> > > >   if (hmat_revision == 1 && p->flags & ACPI_HMAT_MEMORY_PD_VALID)
-> > > > 
-> > > > We shouldn't even test p->flags for ACPI_HMAT_MEMORY_PD_VALID unless
-> > > > we already know it's revision 1.
-> > > > 
-> > > > And unless there was a revision 0 of HMAT, there's no need to look for
-> > > > hmat_revison > 1.  
-> > > 
-> > > It needs to stay as an or statement as you had the first time.
-> > > The field is always valid for hmat_revision > 1, and valid for
-> > > hmat_revision == 1 with the flag set.  You could express it as
-> > > 
-> > > if ((p->flags & ACPI_HMAT_MEMORY_PD_VALID) || (hmat_revision != 1))
-> > > 
-> > > but that seems more confusing to me.  
-> > 
-> > Oh, you're right, sorry!  There are two questions here:
-> > 
-> > 1) In what order should we test "p->flags & ACPI_HMAT_MEMORY_PD_VALID"
-> >    and "hmat_revision == 1"?  ACPI_HMAT_MEMORY_PD_VALID is defined
-> >    only when "hmat_revision == 1", so I think we should test the
-> >    revision first.
-> > 
-> >    When "hmat_revision == 2", ACPI_HMAT_MEMORY_PD_VALID is reserved,
-> >    so we shouldn't test it, even if we later check the revision and
-> >    discard the result of the flag test.  This is a tiny thing,
-> >    admittedly, but I think it follows the spec more clearly.
-> 
-> Agreed.
-> 
-> > 
-> > 2) Do we need to test hmat_revision for anything other than 1?  Yes,
-> >    you're right, see below.
-> > 
-> > > > > Good point.  We have existing protections elsewhere against
-> > > > > hmat_revision being anything other than 1 or 2, so we should aim to
-> > > > > keep that in only one place.    
-> > > > 
-> > > > I think the "Ignoring HMAT: Unknown revision" test in hmat_init(),
-> > > > added by 3accf7ae37a9 ("acpi/hmat: Parse and report heterogeneous
-> > > > memory"), is a mistake.
-> > > > 
-> > > > And I think hmat_normalize() has a similar mistake in that it tests
-> > > > explicitly for hmat_revision == 2 when it should accept 2 AND anything
-> > > > later.
-> > > > 
-> > > > We should assume that future spec revisions will be backwards
-> > > > compatible.  Otherwise we're forced to make kernel changes when we
-> > > > otherwise would not have to.  
-> > > 
-> > > I disagree with this. There is no rule in ACPI about maintaining
-> > > backwards compatibility. The assumption is that the version number
-> > > will always be checked.  The meaning of fields changed between
-> > > version 1 and version 2 so it would be bold to assume that won't
-> > > happen in the future!  
-> > 
-> > There *is* a rule about maintaining backwards compatibility.  ACPI
-> > v6.3, sec 5.2.2, says:
-> > 
-> >   All versions of the ACPI tables must maintain backward
-> >   compatibility. To accomplish this, modifications of the tables
-> >   consist of redefinition of previously reserved fields and values
-> >   plus appending data to the 1.0 tables. Modifications of the ACPI
-> >   tables require that the version numbers of the modified tables be
-> >   incremented.
-> 
-> Fair point.  Unfortunately it's not true here...  The field we
-> are talking about here is probably fine, but the latency units
-> changed between v1 and v2.  
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-Oops.  Sounds like this should have been done in a way that didn't
-break old kernels reading new tables.  It's OK if old kernels can't
-use new features, but not OK if things that used to work are broken
-by new tables.
+[ Upstream commit 6c42227c3467549ddc65efe99c869021d2f4a570 ]
 
-Bjorn
+Fix this smatch warning:
+
+drivers/media/cec/core/cec-api.c:156 cec_adap_g_log_addrs() warn: check that 'log_addrs' doesn't leak information (struct has a hole after
+'features')
+
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/cec/cec-api.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
+index 4961573850d54..b2b3f779592fd 100644
+--- a/drivers/media/cec/cec-api.c
++++ b/drivers/media/cec/cec-api.c
+@@ -147,7 +147,13 @@ static long cec_adap_g_log_addrs(struct cec_adapter *adap,
+ 	struct cec_log_addrs log_addrs;
+ 
+ 	mutex_lock(&adap->lock);
+-	log_addrs = adap->log_addrs;
++	/*
++	 * We use memcpy here instead of assignment since there is a
++	 * hole at the end of struct cec_log_addrs that an assignment
++	 * might ignore. So when we do copy_to_user() we could leak
++	 * one byte of memory.
++	 */
++	memcpy(&log_addrs, &adap->log_addrs, sizeof(log_addrs));
+ 	if (!adap->is_configured)
+ 		memset(log_addrs.log_addr, CEC_LOG_ADDR_INVALID,
+ 		       sizeof(log_addrs.log_addr));
+-- 
+2.25.1
+
