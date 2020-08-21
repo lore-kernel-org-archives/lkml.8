@@ -2,536 +2,106 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47580C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8DDC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 122B620656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0123F20656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=paragon-software.com header.i=@paragon-software.com header.b="DeNmvMBo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rapGkxmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbgHUQ0Y (ORCPT
+        id S1728298AbgHUQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:26:24 -0400
-Received: from relaydlg-01.paragon-software.com ([81.5.88.159]:59064 "EHLO
-        relaydlg-01.paragon-software.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727913AbgHUQZk (ORCPT
+        Fri, 21 Aug 2020 12:26:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34110 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728624AbgHUQZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:25:40 -0400
-Received: from dlg2.mail.paragon-software.com (vdlg-exch-02.paragon-software.com [172.30.1.105])
-        by relaydlg-01.paragon-software.com (Postfix) with ESMTPS id A5EBE821D1;
-        Fri, 21 Aug 2020 19:25:27 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paragon-software.com; s=mail; t=1598027127;
-        bh=q3Ici6spO7j6AC6ovvmNlqYqXDOsp1CFMrkmDulHLhM=;
-        h=From:To:CC:Subject:Date;
-        b=DeNmvMBo85k04lw9LCEzSKyyEpDkQMYVqzY2BLMw4hrz2NaLtoOZYFQ+tujHRAh8o
-         CZdRCLShvebHDJefct5HZ4u39MRpDpNl+cDiARV/OoadSTLdDjmmuouBuaCQu/uDcb
-         8CAkrpCtsfWj8jU8Nt+O7NBIMrGjJK6+lq5Jbvwc=
-Received: from vdlg-exch-02.paragon-software.com (172.30.1.105) by
- vdlg-exch-02.paragon-software.com (172.30.1.105) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Fri, 21 Aug 2020 19:25:27 +0300
-Received: from vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b])
- by vdlg-exch-02.paragon-software.com ([fe80::586:6d72:3fe5:bd9b%6]) with mapi
- id 15.01.1847.003; Fri, 21 Aug 2020 19:25:27 +0300
-From:   Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-To:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-CC:     =?iso-8859-1?Q?Pali_Roh=E1r?= <pali@kernel.org>
-Subject: [PATCH v2 06/10] fs/ntfs3: Add compression
-Thread-Topic: [PATCH v2 06/10] fs/ntfs3: Add compression
-Thread-Index: AdZ30z3rsB9DvpW3SXSScNijIm+BLQ==
-Date:   Fri, 21 Aug 2020 16:25:27 +0000
-Message-ID: <ecaa5cd692294178a38a9a2310d9856f@paragon-software.com>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.30.8.36]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 21 Aug 2020 12:25:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAE0C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:25:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=xuVadeWdbw5hMLtCCGfwXhTOKmF3zlYv1VDPzgpU+Gk=; b=rapGkxmx+afo18V0kOITIcUfAH
+        suMc3xn/2axABqhmj29cOZIM1M1N78j0ZD7upvgrvPDhQ7QaI21WMYvfADAar+N4y5uwrxaxpYO/U
+        25eSELHH+HL5SG6j4YSXQyzFAkRf6ytxpiWOSxdgnCsE8d1G93XO4qWdD7iUQVK+UgkK261mv+wyz
+        6aq4nxIfo1b17Rf9iCp/AzAj+O0CB7B/GZSGgdNQ7iPaZtGLHh78seaj1H9IkFroE0YPHQ6oRUdCq
+        lKo1XX2ZQsG6pqdOnLIQ6w3H6KGuJTLhEFbZ4jx++CRZPXssvvkC8JRVfotgrQktIsNI0HbbVRi/m
+        WUdkexqA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k99r9-0000HT-2k; Fri, 21 Aug 2020 16:25:31 +0000
+Subject: Re: [PATCH v4 2/2] staging: android: Remove BUG from
+ ion_system_heap.c
+To:     Tomer Samara <tomersamara98@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?Q?Arve_Hj=c3=b8nnev=c3=a5g?= <arve@android.com>,
+        Riley Andrews <riandrews@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <christian@brauner.io>,
+        Hridya Valsaraju <hridya@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        devel@driverdev.osuosl.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1598023523.git.tomersamara98@gmail.com>
+ <a39407f84031eaeed5e65a7aab515a079edf5fcc.1598023524.git.tomersamara98@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3eba90dc-128f-49da-41a6-81494653d535@infradead.org>
+Date:   Fri, 21 Aug 2020 09:25:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <a39407f84031eaeed5e65a7aab515a079edf5fcc.1598023524.git.tomersamara98@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds compression
+On 8/21/20 8:28 AM, Tomer Samara wrote:
+> Remove BUG() from ion_sytem_heap.c
+> 
+> this fix the following checkpatch issue:
+> Avoid crashing the kernel - try using WARN_ON &
+> recovery code ratherthan BUG() or BUG_ON().
+> 
+> Signed-off-by: Tomer Samara <tomersamara98@gmail.com>
+> ---
+>  drivers/staging/android/ion/ion_system_heap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/android/ion/ion_system_heap.c b/drivers/staging/android/ion/ion_system_heap.c
+> index eac0632ab4e8..00d6154aec34 100644
+> --- a/drivers/staging/android/ion/ion_system_heap.c
+> +++ b/drivers/staging/android/ion/ion_system_heap.c
+> @@ -30,7 +30,7 @@ static int order_to_index(unsigned int order)
+>  	for (i = 0; i < NUM_ORDERS; i++)
+>  		if (order == orders[i])
+>  			return i;
+> -	BUG();
+> +	/* This is impossible. */
+>  	return -1;
+>  }
 
-Signed-off-by: Konstantin Komarov <almaz.alexandrovich@paragon-software.com=
->
----
- fs/ntfs3/lznt.c | 449 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 449 insertions(+)
- create mode 100644 fs/ntfs3/lznt.c
+Hi,
+Please explain why this is impossible.
 
-diff --git a/fs/ntfs3/lznt.c b/fs/ntfs3/lznt.c
-new file mode 100644
-index 000000000000..db3256c08387
---- /dev/null
-+++ b/fs/ntfs3/lznt.c
-@@ -0,0 +1,449 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  linux/fs/ntfs3/lznt.c
-+ *
-+ * Copyright (C) 2019-2020 Paragon Software GmbH, All rights reserved.
-+ *
-+ */
-+#include <linux/blkdev.h>
-+#include <linux/buffer_head.h>
-+#include <linux/fs.h>
-+#include <linux/nls.h>
-+#include <linux/sched/signal.h>
-+
-+#include "debug.h"
-+#include "ntfs.h"
-+#include "ntfs_fs.h"
-+
-+/* Dst buffer is too small */
-+#define LZNT_ERROR_TOOSMALL -2
-+/* src buffer is zero */
-+#define LZNT_ERROR_ALL_ZEROS 1
-+#define LZNT_CHUNK_SIZE 0x1000
-+
-+struct lznt_hash {
-+	const u8 *p1;
-+	const u8 *p2;
-+};
-+
-+struct lznt {
-+	const u8 *unc;
-+	const u8 *unc_end;
-+	const u8 *best_match;
-+	size_t max_len;
-+	bool std;
-+
-+	struct lznt_hash hash[LZNT_CHUNK_SIZE];
-+};
-+
-+static inline size_t get_match_len(const u8 *ptr, const u8 *end, const u8 =
-*prev,
-+				   size_t max_len)
-+{
-+	size_t len =3D 0;
-+
-+	while (ptr + len < end && ptr[len] =3D=3D prev[len] && ++len < max_len)
-+		;
-+	return len;
-+}
-+
-+static size_t longest_match_std(const u8 *src, struct lznt *ctx)
-+{
-+	size_t hash_index;
-+	size_t len1 =3D 0, len2 =3D 0;
-+	const u8 **hash;
-+
-+	hash_index =3D
-+		((40543U * ((((src[0] << 4) ^ src[1]) << 4) ^ src[2])) >> 4) &
-+		(LZNT_CHUNK_SIZE - 1);
-+
-+	hash =3D &(ctx->hash[hash_index].p1);
-+
-+	if (hash[0] >=3D ctx->unc && hash[0] < src && hash[0][0] =3D=3D src[0] &&
-+	    hash[0][1] =3D=3D src[1] && hash[0][2] =3D=3D src[2]) {
-+		len1 =3D 3;
-+		if (ctx->max_len > 3)
-+			len1 +=3D get_match_len(src + 3, ctx->unc_end,
-+					      hash[0] + 3, ctx->max_len - 3);
-+	}
-+
-+	if (hash[1] >=3D ctx->unc && hash[1] < src && hash[1][0] =3D=3D src[0] &&
-+	    hash[1][1] =3D=3D src[1] && hash[1][2] =3D=3D src[2]) {
-+		len2 =3D 3;
-+		if (ctx->max_len > 3)
-+			len2 +=3D get_match_len(src + 3, ctx->unc_end,
-+					      hash[1] + 3, ctx->max_len - 3);
-+	}
-+
-+	/* Compare two matches and select the best one */
-+	if (len1 < len2) {
-+		ctx->best_match =3D hash[1];
-+		len1 =3D len2;
-+	} else
-+		ctx->best_match =3D hash[0];
-+
-+	hash[1] =3D hash[0];
-+	hash[0] =3D src;
-+	return len1;
-+}
-+
-+static size_t longest_match_best(const u8 *src, struct lznt *ctx)
-+{
-+	size_t max_len;
-+	const u8 *ptr;
-+
-+	if (ctx->unc >=3D src || !ctx->max_len)
-+		return 0;
-+
-+	max_len =3D 0;
-+	for (ptr =3D ctx->unc; ptr < src; ++ptr) {
-+		size_t len =3D
-+			get_match_len(src, ctx->unc_end, ptr, ctx->max_len);
-+		if (len >=3D max_len) {
-+			max_len =3D len;
-+			ctx->best_match =3D ptr;
-+		}
-+	}
-+
-+	return max_len >=3D 3 ? max_len : 0;
-+}
-+
-+static const size_t s_max_len[] =3D {
-+	0x1002, 0x802, 0x402, 0x202, 0x102, 0x82, 0x42, 0x22, 0x12,
-+};
-+
-+static const size_t s_max_off[] =3D {
-+	0x10, 0x20, 0x40, 0x80, 0x100, 0x200, 0x400, 0x800, 0x1000,
-+};
-+
-+static inline u16 make_pair(size_t offset, size_t len, size_t index)
-+{
-+	return ((offset - 1) << (12 - index)) |
-+	       ((len - 3) & (((1 << (12 - index)) - 1)));
-+}
-+
-+static inline size_t parse_pair(u16 pair, size_t *offset, size_t index)
-+{
-+	*offset =3D 1 + (pair >> (12 - index));
-+	return 3 + (pair & ((1 << (12 - index)) - 1));
-+}
-+
-+// 0x3FFF
-+#define HeaderOfNonCompressedChunk ((LZNT_CHUNK_SIZE + 2 - 3) | 0x3000)
-+
-+/*
-+ * compess_chunk
-+ *
-+ * returns one of the tree values:
-+ * 0 - ok, 'cmpr' contains 'cmpr_chunk_size' bytes of compressed data
-+ * 1 =3D=3D LZNT_ERROR_ALL_ZEROS - input buffer is full zero
-+ * -2 =3D=3D LZNT_ERROR_TOOSMALL
-+ */
-+static inline int compess_chunk(size_t (*match)(const u8 *, struct lznt *)=
-,
-+				const u8 *unc, const u8 *unc_end, u8 *cmpr,
-+				u8 *cmpr_end, size_t *cmpr_chunk_size,
-+				struct lznt *ctx)
-+{
-+	size_t cnt =3D 0;
-+	size_t idx =3D 0;
-+	const u8 *up =3D unc;
-+	u8 *cp =3D cmpr + 3;
-+	u8 *cp2 =3D cmpr + 2;
-+	u8 not_zero =3D 0;
-+	/* Control byte of 8-bit values: ( 0 - means byte as is, 1 - short pair )=
- */
-+	u8 ohdr =3D 0;
-+	u8 *last;
-+	u16 t16;
-+
-+	if (unc + LZNT_CHUNK_SIZE < unc_end)
-+		unc_end =3D unc + LZNT_CHUNK_SIZE;
-+
-+	last =3D min(cmpr + LZNT_CHUNK_SIZE + sizeof(short), cmpr_end);
-+
-+	ctx->unc =3D unc;
-+	ctx->unc_end =3D unc_end;
-+	ctx->max_len =3D s_max_len[0];
-+
-+	while (up < unc_end) {
-+		size_t max_len;
-+
-+		while (unc + s_max_off[idx] < up)
-+			ctx->max_len =3D s_max_len[++idx];
-+
-+		// Find match
-+		max_len =3D up + 3 <=3D unc_end ? (*match)(up, ctx) : 0;
-+
-+		if (!max_len) {
-+			if (cp >=3D last)
-+				goto NotCompressed;
-+			not_zero |=3D *cp++ =3D *up++;
-+		} else if (cp + 1 >=3D last) {
-+			goto NotCompressed;
-+		} else {
-+			t16 =3D make_pair(up - ctx->best_match, max_len, idx);
-+			*cp++ =3D t16;
-+			*cp++ =3D t16 >> 8;
-+
-+			ohdr |=3D 1 << cnt;
-+			up +=3D max_len;
-+		}
-+
-+		cnt =3D (cnt + 1) & 7;
-+		if (!cnt) {
-+			*cp2 =3D ohdr;
-+			ohdr =3D 0;
-+			cp2 =3D cp;
-+			cp +=3D 1;
-+		}
-+	}
-+
-+	if (cp2 < last)
-+		*cp2 =3D ohdr;
-+	else
-+		cp -=3D 1;
-+
-+	*cmpr_chunk_size =3D cp - cmpr;
-+
-+	t16 =3D (*cmpr_chunk_size - 3) | 0xB000;
-+	cmpr[0] =3D t16;
-+	cmpr[1] =3D t16 >> 8;
-+
-+	return not_zero ? 0 : LZNT_ERROR_ALL_ZEROS;
-+
-+NotCompressed:
-+
-+	if ((cmpr + LZNT_CHUNK_SIZE + sizeof(short)) > last)
-+		return LZNT_ERROR_TOOSMALL;
-+
-+	/* Copy non cmpr data */
-+	cmpr[0] =3D 0xff;
-+	cmpr[1] =3D 0x3f;
-+
-+	memcpy(cmpr + sizeof(short), unc, LZNT_CHUNK_SIZE);
-+	*cmpr_chunk_size =3D LZNT_CHUNK_SIZE + sizeof(short);
-+
-+	return 0;
-+}
-+
-+static inline ssize_t decompress_chunk(u8 *unc, u8 *unc_end, const u8 *cmp=
-r,
-+				       const u8 *cmpr_end)
-+{
-+	u8 *up =3D unc;
-+	u8 ch =3D *cmpr++;
-+	size_t bit =3D 0;
-+	size_t index =3D 0;
-+	u16 pair;
-+	size_t offset, length;
-+
-+	/* Do decompression until pointers are inside range */
-+	while (up < unc_end && cmpr < cmpr_end) {
-+		/* Correct index */
-+		while (unc + s_max_off[index] < up)
-+			index +=3D 1;
-+
-+		/* Check the current flag for zero */
-+		if (!(ch & (1 << bit))) {
-+			/* Just copy byte */
-+			*up++ =3D *cmpr++;
-+			goto next;
-+		}
-+
-+		/* Check for boundary */
-+		if (cmpr + 1 >=3D cmpr_end)
-+			return -EINVAL;
-+
-+		/* Read a short from little endian stream */
-+		pair =3D cmpr[1];
-+		pair <<=3D 8;
-+		pair |=3D cmpr[0];
-+
-+		cmpr +=3D 2;
-+
-+		/* Translate packed information into offset and length */
-+		length =3D parse_pair(pair, &offset, index);
-+
-+		/* Check offset for boundary */
-+		if (unc + offset > up)
-+			return -EINVAL;
-+
-+		/* Truncate the length if necessary */
-+		if (up + length >=3D unc_end)
-+			length =3D unc_end - up;
-+
-+		/* Now we copy bytes. This is the heart of LZ algorithm. */
-+		for (; length > 0; length--, up++)
-+			*up =3D *(up - offset);
-+
-+next:
-+		/* Advance flag bit value */
-+		bit =3D (bit + 1) & 7;
-+
-+		if (!bit) {
-+			if (cmpr >=3D cmpr_end)
-+				break;
-+
-+			ch =3D *cmpr++;
-+		}
-+	}
-+
-+	/* return the size of uncompressed data */
-+	return up - unc;
-+}
-+
-+struct lznt *get_compression_ctx(bool std)
-+{
-+	struct lznt *r =3D ntfs_alloc(
-+		std ? sizeof(struct lznt) : offsetof(struct lznt, hash), 1);
-+
-+	if (r)
-+		r->std =3D std;
-+	return r;
-+}
-+
-+/*
-+ * compress_lznt
-+ *
-+ * Compresses "unc" into "cmpr"
-+ * +x - ok, 'cmpr' contains 'final_compressed_size' bytes of compressed da=
-ta
-+ * 0 - input buffer is full zero
-+ */
-+size_t compress_lznt(const void *unc, size_t unc_size, void *cmpr,
-+		     size_t cmpr_size, struct lznt *ctx)
-+{
-+	int err;
-+	size_t (*match)(const u8 *src, struct lznt *ctx);
-+	u8 *p =3D cmpr;
-+	u8 *end =3D p + cmpr_size;
-+	const u8 *unc_chunk =3D unc;
-+	const u8 *unc_end =3D unc_chunk + unc_size;
-+	bool is_zero =3D true;
-+
-+	if (ctx->std) {
-+		match =3D &longest_match_std;
-+		memset(ctx->hash, 0, sizeof(ctx->hash));
-+	} else {
-+		match =3D &longest_match_best;
-+	}
-+
-+	/* compression cycle */
-+	for (; unc_chunk < unc_end; unc_chunk +=3D LZNT_CHUNK_SIZE) {
-+		cmpr_size =3D 0;
-+		err =3D compess_chunk(match, unc_chunk, unc_end, p, end,
-+				    &cmpr_size, ctx);
-+		if (err < 0)
-+			return unc_size;
-+
-+		if (is_zero && err !=3D LZNT_ERROR_ALL_ZEROS)
-+			is_zero =3D false;
-+
-+		p +=3D cmpr_size;
-+	}
-+
-+	if (p <=3D end - 2)
-+		p[0] =3D p[1] =3D 0;
-+
-+	return is_zero ? 0 : PtrOffset(cmpr, p);
-+}
-+
-+/*
-+ * decompress_lznt
-+ *
-+ * decompresses "cmpr" into "unc"
-+ */
-+ssize_t decompress_lznt(const void *cmpr, size_t cmpr_size, void *unc,
-+			size_t unc_size)
-+{
-+	const u8 *cmpr_chunk =3D cmpr;
-+	const u8 *cmpr_end =3D cmpr_chunk + cmpr_size;
-+	u8 *unc_chunk =3D unc;
-+	u8 *unc_end =3D unc_chunk + unc_size;
-+	u16 chunk_hdr;
-+
-+	if (cmpr_size < sizeof(short))
-+		return -EINVAL;
-+
-+	/* read chunk header */
-+	chunk_hdr =3D cmpr_chunk[1];
-+	chunk_hdr <<=3D 8;
-+	chunk_hdr |=3D cmpr_chunk[0];
-+
-+	/* loop through decompressing chunks */
-+	for (;;) {
-+		size_t chunk_size_saved;
-+		size_t unc_use;
-+		size_t cmpr_use =3D 3 + (chunk_hdr & (LZNT_CHUNK_SIZE - 1));
-+
-+		/* Check that the chunk actually fits the supplied buffer */
-+		if (cmpr_chunk + cmpr_use > cmpr_end)
-+			return -EINVAL;
-+
-+		/* First make sure the chunk contains compressed data */
-+		if (chunk_hdr & 0x8000) {
-+			/* Decompress a chunk and return if we get an error */
-+			ssize_t err =3D
-+				decompress_chunk(unc_chunk, unc_end,
-+						 cmpr_chunk + sizeof(chunk_hdr),
-+						 cmpr_chunk + cmpr_use);
-+			if (err < 0)
-+				return err;
-+			unc_use =3D err;
-+		} else {
-+			/* This chunk does not contain compressed data */
-+			unc_use =3D unc_chunk + LZNT_CHUNK_SIZE > unc_end ?
-+					  unc_end - unc_chunk :
-+					  LZNT_CHUNK_SIZE;
-+
-+			if (cmpr_chunk + sizeof(chunk_hdr) + unc_use >
-+			    cmpr_end) {
-+				return -EINVAL;
-+			}
-+
-+			memcpy(unc_chunk, cmpr_chunk + sizeof(chunk_hdr),
-+			       unc_use);
-+		}
-+
-+		/* Advance pointers */
-+		cmpr_chunk +=3D cmpr_use;
-+		unc_chunk +=3D unc_use;
-+
-+		/* Check for the end of unc buffer */
-+		if (unc_chunk >=3D unc_end)
-+			break;
-+
-+		/* Proceed the next chunk */
-+		if (cmpr_chunk > cmpr_end - 2)
-+			break;
-+
-+		chunk_size_saved =3D LZNT_CHUNK_SIZE;
-+
-+		/* read chunk header */
-+		chunk_hdr =3D cmpr_chunk[1];
-+		chunk_hdr <<=3D 8;
-+		chunk_hdr |=3D cmpr_chunk[0];
-+
-+		if (!chunk_hdr)
-+			break;
-+
-+		/* Check the size of unc buffer */
-+		if (unc_use < chunk_size_saved) {
-+			size_t t1 =3D chunk_size_saved - unc_use;
-+			u8 *t2 =3D unc_chunk + t1;
-+
-+			/* 'Zero' memory */
-+			if (t2 >=3D unc_end)
-+				break;
-+
-+			memset(unc_chunk, 0, t1);
-+			unc_chunk =3D t2;
-+		}
-+	}
-+
-+	/* Check compression boundary */
-+	if (cmpr_chunk > cmpr_end)
-+		return -EINVAL;
-+
-+	/*
-+	 * The unc size is just a difference between current
-+	 * pointer and original one
-+	 */
-+	return PtrOffset(unc, unc_chunk);
-+}
---=20
-2.25.2
+If some caller calls order_to_index(5), it will return -1, yes?
+
+-- 
+~Randy
 
