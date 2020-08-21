@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC6CC433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D3FC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7946120656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ED9420656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598029562;
-	bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+	s=default; t=1598029568;
+	bh=Oh+eKfR3U4LuRebEoR+T/B6hTLQDtrBFPHh3vQ+mFwc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VRI4PK58Y2EIoZgZhkRMjgyX+dVfVc4gAeDnbmD9kiFhDskdxXK6mPn9mIefDDt3h
-	 zr31A8brKPyeq3ZpxNPoCR/Cjwc0LNNE45isBWrGcYFGbJdXI0yrn+Ft4K1qFzMh7X
-	 etSDoL1Q0utNriXusq04O9Pr97Zy1KicZMVORtIA=
+	b=XzT0YDidLPHCLCm7jjiTrvTRAC0YYRpYxPRRMkBcGIWVh9oagCs44SUxefmtduAwV
+	 SxW1aRNAqxkVWLKQ9IgZTDaYcpOBmEfwOwj2JHlC2XPOsRAbFuu7hOUrakakNWakye
+	 NUihkkPPZc8Wv7I3NpKwcZv7c2Sgp9ByZFaT63+Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgHURGB (ORCPT
+        id S1728834AbgHURGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:06:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51618 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:06:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbgHUQS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:18:29 -0400
+        id S1725834AbgHUQS0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:18:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D070422BF3;
-        Fri, 21 Aug 2020 16:18:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D0DE20FC3;
+        Fri, 21 Aug 2020 16:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026690;
-        bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+        s=default; t=1598026684;
+        bh=Oh+eKfR3U4LuRebEoR+T/B6hTLQDtrBFPHh3vQ+mFwc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=raC5drJaEkeATdmMdczeWbWijmgfADtdK/OiYiWtTzIKpPJamjvR0ml931XcGLx+T
-         4TqTuhgDD3KvfLZw3/WBaH9py/BQWkRP6oImXFbBy42EmZB6OvPL7JWsHtdTK5yzqb
-         nMyFIZfhlOsbmCIojLmNo4x836KrNNsB+JIrNrnM=
+        b=YtO0YBWq+gBgK9UTA718aXHYAo8e/mb6E5K77nBZtpSeVUpfwsI+EDYvkM//VlQNo
+         P1rR25emUjJv1i1M26P3XedP90ApzugHUTFK8pjCjc9tszOSBWEeW7ixWAV5xRyTfv
+         uBGpd4020JP7OcJbO1Ck4rvtH6egsI6BWRzAtPXc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 02/38] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
-Date:   Fri, 21 Aug 2020 12:17:31 -0400
-Message-Id: <20200821161807.348600-2-sashal@kernel.org>
+Cc:     Jason Baron <jbaron@akamai.com>, Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 47/48] EDAC/ie31200: Fallback if host bridge device is already initialized
+Date:   Fri, 21 Aug 2020 12:17:03 -0400
+Message-Id: <20200821161704.348164-47-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161807.348600-1-sashal@kernel.org>
-References: <20200821161807.348600-1-sashal@kernel.org>
+In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
+References: <20200821161704.348164-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,39 +61,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
+[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+The Intel uncore driver may claim some of the pci ids from ie31200 which
+means that the ie31200 edac driver will not initialize them as part of
+pci_register_driver().
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Let's add a fallback for this case to 'pci_get_device()' to get a
+reference on the device such that it can still be configured. This is
+similar in approach to other edac drivers.
+
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/img/img-i2s-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index c22880aea82a2..7e48c740bf550 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -346,8 +346,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index d26300f9cb07d..9be43b4f9c506 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -170,6 +170,8 @@
+ 	(n << (28 + (2 * skl) - PAGE_SHIFT))
  
- 	ret = pm_runtime_get_sync(i2s->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2s->dev);
- 		return ret;
+ static int nr_channels;
++static struct pci_dev *mci_pdev;
++static int ie31200_registered = 1;
+ 
+ struct ie31200_priv {
+ 	void __iomem *window;
+@@ -541,12 +543,16 @@ static int ie31200_probe1(struct pci_dev *pdev, int dev_idx)
+ static int ie31200_init_one(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+-	edac_dbg(0, "MC:\n");
++	int rc;
+ 
++	edac_dbg(0, "MC:\n");
+ 	if (pci_enable_device(pdev) < 0)
+ 		return -EIO;
++	rc = ie31200_probe1(pdev, ent->driver_data);
++	if (rc == 0 && !mci_pdev)
++		mci_pdev = pci_dev_get(pdev);
+ 
+-	return ie31200_probe1(pdev, ent->driver_data);
++	return rc;
+ }
+ 
+ static void ie31200_remove_one(struct pci_dev *pdev)
+@@ -555,6 +561,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+ 	struct ie31200_priv *priv;
+ 
+ 	edac_dbg(0, "\n");
++	pci_dev_put(mci_pdev);
++	mci_pdev = NULL;
+ 	mci = edac_mc_del_mc(&pdev->dev);
+ 	if (!mci)
+ 		return;
+@@ -596,17 +604,53 @@ static struct pci_driver ie31200_driver = {
+ 
+ static int __init ie31200_init(void)
+ {
++	int pci_rc, i;
++
+ 	edac_dbg(3, "MC:\n");
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
+ 
+-	return pci_register_driver(&ie31200_driver);
++	pci_rc = pci_register_driver(&ie31200_driver);
++	if (pci_rc < 0)
++		goto fail0;
++
++	if (!mci_pdev) {
++		ie31200_registered = 0;
++		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
++			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
++						  ie31200_pci_tbl[i].device,
++						  NULL);
++			if (mci_pdev)
++				break;
++		}
++		if (!mci_pdev) {
++			edac_dbg(0, "ie31200 pci_get_device fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
++		if (pci_rc < 0) {
++			edac_dbg(0, "ie31200 init fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
 +	}
++	return 0;
++
++fail1:
++	pci_unregister_driver(&ie31200_driver);
++fail0:
++	pci_dev_put(mci_pdev);
++
++	return pci_rc;
+ }
  
- 	for (i = 0; i < i2s->active_channels; i++)
- 		img_i2s_in_ch_disable(i2s, i);
+ static void __exit ie31200_exit(void)
+ {
+ 	edac_dbg(3, "MC:\n");
+ 	pci_unregister_driver(&ie31200_driver);
++	if (!ie31200_registered)
++		ie31200_remove_one(mci_pdev);
+ }
+ 
+ module_init(ie31200_init);
 -- 
 2.25.1
 
