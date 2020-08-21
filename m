@@ -2,206 +2,129 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3CCC433E4
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4119AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97EE20656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C59020656
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 16:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qtoR1Xj5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mvQsNqxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgHUQ26 (ORCPT
+        id S1726793AbgHUQ3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 12:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34472 "EHLO
+        Fri, 21 Aug 2020 12:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728414AbgHUQ1y (ORCPT
+        with ESMTP id S1728271AbgHUQ2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:27:54 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1A7C061574
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:27:50 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id n4so1103469vsl.10
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:27:49 -0700 (PDT)
+        Fri, 21 Aug 2020 12:28:16 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 871A7C061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:28:10 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id m22so2497471ljj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 09:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/GcDocfNWlsHOofca1lhYyAuuxEgmTJVpd3FlNUUBGs=;
-        b=qtoR1Xj5G0WZ8QL4GewEzAeautrks1sglx9h0y1XD/U/sV1H14gPJOVob+hAVyzuWi
-         vmSZLuposmeZGaqsYSXnbCZZysqUqiz05bYTPi0leLztW/ALZvnR9Ro6vlgoClc6uLfk
-         vTQIBihBwOXenWsbvw6wbQ3MSpzfut41VRbZGYr8KAaTdvWvz+dSeqlpC1y1ykWz4hyV
-         5O8hg0p2KUFKKpfbugL5hqI/cLnYE88sTQOBduVEYi3nkDS0jrg35dRaT3NbqaImX6yL
-         S5jQCU4gaoJJkLlye13gINEWui5oxga6Pfdg6Vaw13bKnF3SBn5Ap6sH95bOCC2MMFph
-         FDjA==
+         :cc;
+        bh=ASBotJZ8EZpsI/eCx5HlBKysI3NgkGBSfRhPo944ZDA=;
+        b=mvQsNqxvDRfKY9x4pIZgEPhlpB930QAuNErYXzNPLu7IhTBgokTUR97DSKDApKmNfS
+         cibjePU5QCWO42UFsCRWQwMu/X9Q9pISUETSOyLv8GDQ7qwMEl4Ib/H3WWqJjSRry3xl
+         9TU6msunmhJlIGiYjWcVH7a2M3X4BhkWw0G2xvXyrrXNTBchQ9LtnRpmS8/pffU/upUX
+         /kFJp8461OeN+P7fP/3Y2HmjrCgDZQYrsQfpcRdb/+ho08gxWAK1CegzesM559po/s7S
+         QS3/ic98qpHNV6+NY5HcH0fd2uQX7y1u6cKBRJq2fY9JRNDQP1Z7JMuCbauUj7xPMwgM
+         dTgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/GcDocfNWlsHOofca1lhYyAuuxEgmTJVpd3FlNUUBGs=;
-        b=B9Q7/QmjDc9obslMMZxdhE85ISARf415t+maAJPRzrOZiLfEwY3Aw0tFjuMh22mPKp
-         j8Z/8N58aXKivcTJfSxemb2+wsEoE5SJiwJPd5XNHh1/PSQviwDYE8o/D8VMRwP3aMYz
-         6O0IicZRE4Z52c4VjM26NUMirN6mKONLa/8kjGAX7hJxNYv9h1wJLJjfw3vf+jbeabRt
-         0HxO6aO/kF1ZEnLmquaeq+IhLP2XVOXCyIxDZAFJFGGei2LGPmfMte5V69SyJMh/mieS
-         btmrMvQLDNBm6jAwwj9xZOR4RWhh8zkni8sAg9W2hVutCcFODj8/0b6sABtzz1vr82hh
-         r3vg==
-X-Gm-Message-State: AOAM533Xj+Uyk61LVXOxXDUjKOfNnOZqLGmt8NL1SSSKNA6J9OdjUncP
-        aWYf4OJO75BUWraQ/7LuHa2quP0xzgg+d/pazFE/6w==
-X-Google-Smtp-Source: ABdhPJxfZTzNeoUJqcWkiwBAUzjPgoHL9IdOu6JvriTmuJqzvXBgTdaCMrHdKieuP6epggVQamjMxhTGw9Dnd6+U8cw=
-X-Received: by 2002:a67:d84:: with SMTP id 126mr2497327vsn.69.1598027269072;
- Fri, 21 Aug 2020 09:27:49 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ASBotJZ8EZpsI/eCx5HlBKysI3NgkGBSfRhPo944ZDA=;
+        b=isUBKKKOMtFxoE2POdUZeJ+8zZCvFbqAFHHYkpot1NsGl+qBAIkpxO8bXIpPPoMiRn
+         iThrsTWhl/cx6uzunKuAR7ovHJcoEyz5ejQS9EA1jc0vNwag48KuPwU1ncKIR4GizhGw
+         /pZSXe9elp1MV5dWrRRzFb0JvCJs/LrUQ38JfHdAS7fDf56AA4Uk/8IruNRG8eiaIMyy
+         5vla98X6E3SF05buQBOKFGp8KkmOTnVzcC9HU2dwmsmTGlobD1MEspa6UyjCneUOERPM
+         kQ9CUnym+vm0SlnurzN8Atf0CRKdS/h3uOKR/bul6byeqphqn5ei1izcVItVzoSMxI7O
+         Wipw==
+X-Gm-Message-State: AOAM532SsyDxAQ1l5TwjgBJmNHvEscmoV/TA1nU+CMRBp9UTJZ29nMJT
+        VY/zifjmNlu+il12879PCGAQnDNl+GVdAOo/3j140g==
+X-Google-Smtp-Source: ABdhPJxBJx48eP7IauIXH6HjOknwmi0SBAJ//UG77vmKK+pXc4hy+ku162ReCSBX43dsu2Kih9HINa4PcVbhBog5/lU=
+X-Received: by 2002:a2e:96c3:: with SMTP id d3mr1932135ljj.270.1598027287929;
+ Fri, 21 Aug 2020 09:28:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200820091606.194320503@linuxfoundation.org> <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
-In-Reply-To: <CA+G9fYuCgzAOZw6iM6sLwJP9=0wrO0WcTHLCQtEHWQB9=WCuSw@mail.gmail.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 21 Aug 2020 21:57:37 +0530
-Message-ID: <CA+G9fYtQcFnyKMF2uE5WP5Fhk1E1MjymrsM1ZpChk0OJP+56vA@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/204] 5.7.17-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
+References: <20200528135444.11508-1-schatzberg.dan@gmail.com>
+ <CALvZod655MqFxmzwCf4ZLSh9QU+oLb0HL-Q_yKomh3fb-_W0Vg@mail.gmail.com>
+ <20200821150405.GA4137@dschatzberg-fedora-PC0Y6AEN.dhcp.thefacebook.com> <20200821160128.GA2233370@carbon.dhcp.thefacebook.com>
+In-Reply-To: <20200821160128.GA2233370@carbon.dhcp.thefacebook.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Fri, 21 Aug 2020 09:27:56 -0700
+Message-ID: <CALvZod69w5UoCjfWcqVAejpKWzRAUxX7dEPzqDUknHhUFV_XEA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/4] Charge loop device i/o to issuing cgroup
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Dan Schatzberg <schatzberg.dan@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>
+        Hugh Dickins <hughd@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 22:34, Naresh Kamboju <naresh.kamboju@linaro.org> wr=
-ote:
+On Fri, Aug 21, 2020 at 9:02 AM Roman Gushchin <guro@fb.com> wrote:
 >
-> On Thu, 20 Aug 2020 at 15:06, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
+> On Fri, Aug 21, 2020 at 11:04:05AM -0400, Dan Schatzberg wrote:
+> > On Thu, Aug 20, 2020 at 10:06:44AM -0700, Shakeel Butt wrote:
+> > > On Thu, May 28, 2020 at 6:55 AM Dan Schatzberg <schatzberg.dan@gmail.com> wrote:
+> > > >
+> > > > Much of the discussion about this has died down. There's been a
+> > > > concern raised that we could generalize infrastructure across loop,
+> > > > md, etc. This may be possible, in the future, but it isn't clear to me
+> > > > how this would look like. I'm inclined to fix the existing issue with
+> > > > loop devices now (this is a problem we hit at FB) and address
+> > > > consolidation with other cases if and when those need to be addressed.
+> > > >
+> > >
+> > > What's the status of this series?
 > >
-> > This is the start of the stable review cycle for the 5.7.17 release.
-> > There are 204 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Sat, 22 Aug 2020 09:15:09 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patc=
-h-5.7.17-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+> > Thanks for reminding me about this. I haven't got any further
+> > feedback. I'll bug Jens to take a look and see if he has any concerns
+> > and if not send a rebased version.
 >
-> > Herbert Xu <herbert@gondor.apana.org.au>
-> >     crypto: af_alg - Fix regression on empty requests
+> Just as a note, I stole a patch from this series called
+> "mm: support nesting memalloc_use_memcg()" to use for the bpf memory accounting.
+> I rewrote the commit log and rebased to the tot with some trivial changes.
 >
-> Results from Linaro=E2=80=99s test farm.
-> Regressions detected.
+> I just sent it upstream:
+> https://lore.kernel.org/bpf/20200821150134.2581465-1-guro@fb.com/T/#md7edb6b5b940cee1c4d15e3cef17aa8b07328c2e
 >
-> LTP crypto af_alg02 and cve-2017-17805 failed on stable-rc 5.7 and 5.8
-> branches on arm, arm64, i386 and x86_64.
+> It looks like we need it for two independent sub-systems, so I wonder
+> if we want to route it first through the mm tree as a standalone patch?
+>
 
-Apart from the reported LTP crypto test case problem all other results
-look good to me.
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.7.17
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: 3f45898cffc4e386952f3e4821810500adccea1f
-git describe: v5.7.17
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.17
-
-No regressions (compared to build v5.7.16)
-
-No fixes (compared to build v5.7.16)
-
-Ran 32841 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* perf
-* ltp-containers-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* v4l2-compliance
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-controllers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-io-tests
-* ltp-math-tests
-* ltp-open-posix-tests
-* ltp-syscalls-tests
-* ltp-tracing-tests
-* network-basic-tests
-* igt-gpu-tools
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+Another way is to push that patch to 5.9-rc2 linus tree, so both block
+and mm branches for 5.10 will have it. (Not sure if that's ok.)
