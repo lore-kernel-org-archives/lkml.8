@@ -2,195 +2,167 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD9C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D79C433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F097C207CD
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8qkn1gP"
+	by mail.kernel.org (Postfix) with ESMTP id BE626207CD
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:54:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHUVuR (ORCPT
+        id S1726832AbgHUVyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56356 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbgHUVuQ (ORCPT
+        Fri, 21 Aug 2020 17:54:14 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:35825 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726672AbgHUVyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:50:16 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47A3CC061573;
-        Fri, 21 Aug 2020 14:50:16 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id i10so1781223ybt.11;
-        Fri, 21 Aug 2020 14:50:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LCtDZbEXzC+Kn+f0fxyMM1jOnFnep3y18ErpLmPyWt4=;
-        b=T8qkn1gP+Rp85/WBW+E10QZI55mtY/lvclpr3P7fxqBrHSA7suC3XiloMsmuuWf/+m
-         HmDmMB04s32ENwcls/J6AbATRIcvsmO+7lr+2ePM9UbcWDZC0tR1yvN1ch++35SfNpqN
-         qV1Wx+XrikqB2RucXlQQro36UTEy8/13alnvL09oSLB1mp1Bnei89N9W7DWiwD6SQF5z
-         NKD0AA5Cb/2D2oaZ1K7mIIiGD4z4kPLKHMzWUxBdW9+vr+buKs1ySwQVfukV11vWRVv5
-         RrukKViMe3OkIWkbygbUP4X3ffqQBygwF0bZYkYHYoYESW/pmE0sAnHnnnaAXM0nHfNF
-         8t/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LCtDZbEXzC+Kn+f0fxyMM1jOnFnep3y18ErpLmPyWt4=;
-        b=VEmldfgKf4tdpxUyOhCwrQGBSmSX+sQ6g20MczEUldZci+vSlXQ6SNJshd61IFjyif
-         6YiaSTyX8wH9+Kd4SsnOtjfUpbETXtT61Hn5bDwtjB7amNQFb/G/BxFdBJtF0R/ssC/2
-         KNVJin++sohPxuwZBWTWwj8EdKzAIzzFypVCaf+UyjAZddQqItvN96xfXFfmpZg3emqk
-         1Thu0yDpc0h/MG9QaofCnXNt19dPdiYFFCy7GzoHaO7F4evSAQiuZi8n4iq3PTLTx87k
-         ykTItNkTuIWwKkvZxxEUBtBHljY4/7tAAWohUZRTwkNs4/PiMgGRs8ad0rdLpjJPf3y0
-         lP3Q==
-X-Gm-Message-State: AOAM531klb6ZjzL00vPj5jPubAIXYcnqPKcGmtT8aYm7bumghWBNiTek
-        HVCESD8WuE/vAV4sd73Tu9i4pL22bSYlSqenAr8=
-X-Google-Smtp-Source: ABdhPJxfazP3ESG4tMzcWn+ppdV1i2aqc1DNrqYNaLzJ3GbVy/tyCs1m/FpQa0NbRO17DXJ0YwXfaY18lWUIeijSrZs=
-X-Received: by 2002:a25:2ad3:: with SMTP id q202mr6235577ybq.27.1598046615439;
- Fri, 21 Aug 2020 14:50:15 -0700 (PDT)
+        Fri, 21 Aug 2020 17:54:12 -0400
+Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id DC7B6108A69;
+        Sat, 22 Aug 2020 07:53:59 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1k9Ez0-0002OM-F0; Sat, 22 Aug 2020 07:53:58 +1000
+Date:   Sat, 22 Aug 2020 07:53:58 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Ritesh Harjani <riteshh@linux.ibm.com>
+Cc:     Anju T Sudhakar <anju@linux.vnet.ibm.com>, hch@infradead.org,
+        darrick.wong@oracle.com, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        willy@infradead.org
+Subject: Re: [PATCH] iomap: Fix the write_count in iomap_add_to_ioend().
+Message-ID: <20200821215358.GG7941@dread.disaster.area>
+References: <20200819102841.481461-1-anju@linux.vnet.ibm.com>
+ <20200820231140.GE7941@dread.disaster.area>
+ <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-4-haoluo@google.com>
- <d50a1530-9a9f-45b2-5aba-05fe4b895fbc@fb.com>
-In-Reply-To: <d50a1530-9a9f-45b2-5aba-05fe4b895fbc@fb.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 21 Aug 2020 14:50:04 -0700
-Message-ID: <CAEf4BzZmLUcw4M16U6w-s2Zd6KbsuY4dzzkeEBx9CejetT5BwQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 3/8] bpf: Introduce help function to validate
- ksym's type.
-To:     Yonghong Song <yhs@fb.com>
-Cc:     Hao Luo <haoluo@google.com>, Networking <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821044533.BBFD1A405F@d06av23.portsmouth.uk.ibm.com>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=QKgWuTDL c=1 sm=1 tr=0 cx=a_idp_d
+        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
+        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=VnNF1IyMAAAA:8 a=7-415B0cAAAA:8
+        a=Qh6IE-2GF9-oy0DaVTgA:9 a=RXxoB3lGECdc3DDF:21 a=r0DmFvm1JCai0nq2:21
+        a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 20, 2020 at 10:22 AM Yonghong Song <yhs@fb.com> wrote:
->
->
->
-> On 8/19/20 3:40 PM, Hao Luo wrote:
-> > For a ksym to be safely dereferenced and accessed, its type defined in
-> > bpf program should basically match its type defined in kernel. Implement
-> > a help function for a quick matching, which is used by libbpf when
-> > resolving the kernel btf_id of a ksym.
-> >
-> > Signed-off-by: Hao Luo <haoluo@google.com>
-> > ---
-> >   tools/lib/bpf/btf.c | 171 ++++++++++++++++++++++++++++++++++++++++++++
-> >   tools/lib/bpf/btf.h |   2 +
-> >   2 files changed, 173 insertions(+)
-> >
-> > diff --git a/tools/lib/bpf/btf.c b/tools/lib/bpf/btf.c
-> > index a3d259e614b0..2ff31f244d7a 100644
-> > --- a/tools/lib/bpf/btf.c
-> > +++ b/tools/lib/bpf/btf.c
-> > @@ -1005,6 +1005,177 @@ int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
-> >       return 0;
-> >   }
-> >
-> > +/*
-> > + * Basic type check for ksym support. Only checks type kind and resolved size.
-> > + */
-> > +static inline
-> > +bool btf_ksym_equal_type(const struct btf *ba, __u32 type_a,
-> > +                      const struct btf *bb, __u32 type_b)
->
-> "ba" and "bb" is not descriptive. Maybe "btf_a" or "btf_b"?
-> or even "btf1" or "btf2" since the number does not carry
-> extra meaning compared to letters.
->
-> The same for below, may be t1, t2?
->
-> > +{
-> > +     const struct btf_type *ta, *tb;
-> > +
-> > +     ta = btf__type_by_id(ba, type_a);
-> > +     tb = btf__type_by_id(bb, type_b);
-> > +
-> > +     /* compare type kind */
-> > +     if (btf_kind(ta) != btf_kind(tb))
-> > +             return false;
-> > +
-> > +     /* compare resolved type size */
-> > +     return btf__resolve_size(ba, type_a) == btf__resolve_size(bb, type_b);
-> > +}
-> > +
-> > +/*
-> > + * Match a ksym's type defined in bpf programs against its type encoded in
-> > + * kernel btf.
-> > + */
-> > +bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
-> > +                      const struct btf *bb, __u32 id_b)
-> > +{
+On Fri, Aug 21, 2020 at 10:15:33AM +0530, Ritesh Harjani wrote:
+> Hello Dave,
+> 
+> Thanks for reviewing this.
+> 
+> On 8/21/20 4:41 AM, Dave Chinner wrote:
+> > On Wed, Aug 19, 2020 at 03:58:41PM +0530, Anju T Sudhakar wrote:
+> > > From: Ritesh Harjani <riteshh@linux.ibm.com>
+> > > 
+> > > __bio_try_merge_page() may return same_page = 1 and merged = 0.
+> > > This could happen when bio->bi_iter.bi_size + len > UINT_MAX.
+> > 
+> > Ummm, silly question, but exactly how are we getting a bio that
+> > large in ->writepages getting built? Even with 64kB pages, that's a
+> > bio with 2^16 pages attached to it. We shouldn't be building single
+> > bios in writeback that large - what storage hardware is allowing
+> > such huge bios to be built? (i.e. can you dump all the values in
+> > /sys/block/<dev>/queue/* for that device for us?)
+> 
+> Please correct me here, but as I see, bio has only these two limits
+> which it checks for adding page to bio. It doesn't check for limits
+> of /sys/block/<dev>/queue/* no? I guess then it could be checked
+> by block layer below b4 submitting the bio?
+> 
+> 113 static inline bool bio_full(struct bio *bio, unsigned len)
+> 114 {
+> 115         if (bio->bi_vcnt >= bio->bi_max_vecs)
+> 116                 return true;
+> 117
+> 118         if (bio->bi_iter.bi_size > UINT_MAX - len)
+> 119                 return true;
+> 120
+> 121         return false;
+> 122 }
 
-[...]
+but iomap only allows BIO_MAX_PAGES when creating the bio. And:
 
-> > +                     }
-> > +             }
->
-> I am wondering whether this is too strict and how this can co-work with
-> CO-RE. Forcing users to write almost identical structure definition to
-> the underlying kernel will not be user friendly and may not work cross
-> kernel versions even if the field user cares have not changed.
->
-> Maybe we can relax the constraint here. You can look at existing
-> libbpf CO-RE code.
+#define BIO_MAX_PAGES 256
 
-Right. Hao, can you just re-use bpf_core_types_are_compat() instead?
-See if semantics makes sense, but I think it should. BPF CO-RE has
-been permissive in terms of struct size and few other type aspects,
-because it handles relocations so well. This approach allows to not
-have to exactly match all possible variations of some struct
-definition, which is a big problem with ever-changing kernel data
-structures.
+So even on a 64k page machine, we should not be building a bio with
+more than 16MB of data in it. So how are we getting 4GB of data into
+it?
 
->
-> > +             break;
-> > +     }
+Further, the writeback code is designed around the bios having a
+bound size that is relatively small to keep IO submission occurring
+as we pack pages into bios. This keeps IO latency down and minimises
+the individual IO completion overhead of each IO. This is especially
+important as the writeback path is critical for memory relcaim to
+make progress because we do not want to trap gigabytes of dirty
+memory in the writeback IO path.
 
-[...]
+IOWs, seeing huge bios being built by writeback is indicative of
+design assumptions and contraints being violated - huge bios on the
+buffered writeback path like this are not a good thing to see.
 
-> > +
-> >   struct btf_ext_sec_setup_param {
-> >       __u32 off;
-> >       __u32 len;
-> > diff --git a/tools/lib/bpf/btf.h b/tools/lib/bpf/btf.h
-> > index 91f0ad0e0325..5ef220e52485 100644
-> > --- a/tools/lib/bpf/btf.h
-> > +++ b/tools/lib/bpf/btf.h
-> > @@ -52,6 +52,8 @@ LIBBPF_API int btf__get_map_kv_tids(const struct btf *btf, const char *map_name,
-> >                                   __u32 expected_key_size,
-> >                                   __u32 expected_value_size,
-> >                                   __u32 *key_type_id, __u32 *value_type_id);
-> > +LIBBPF_API bool btf_ksym_type_match(const struct btf *ba, __u32 id_a,
-> > +                                 const struct btf *bb, __u32 id_b);
-> >
-> >   LIBBPF_API struct btf_ext *btf_ext__new(__u8 *data, __u32 size);
-> >   LIBBPF_API void btf_ext__free(struct btf_ext *btf_ext);
->
-> The new API function should be added to libbpf.map.
+FWIW, We've also recently got reports of hard lockups in IO
+completion of overwrites because our ioend bio chains have grown to
+almost 3 million pages and all the writeback pages get processed as
+a single completion. This is a similar situation to this bug report
+in that the bio chains are unbound in length, and I'm betting the
+cause is the same: overwrite a 10GB file in memory (with dirty
+limits turned up), then run fsync so we do a single writepages call
+that tries to write 10GB of dirty pages....
 
-My question is why does this even have to be a public API?
+The only reason we don't normally see this is that background
+writeback caps the number of pages written per writepages call to
+1024. i.e.  it caps writeback IO sizes to a small amount so that IO
+latency, writeback fairness across dirty inodes, etc can be
+maintained for background writeback - no one dirty file can
+monopolise the available writeback bandwidth and starve writeback
+to other dirty inodes.
+
+So combine the two, and we've got a problem that the writeback IO
+sizes are not being bound to sane IO sizes. I have no problems with
+building individual bios that are 4MB or even 16MB in size - that
+allows the block layer to work efficiently. Problems at a system
+start to occur, however, when individual bios or bio chains built
+by writeback end up being orders of magnitude larger than this....
+
+i.e. I'm not looking at this as a "bio overflow bug" - I'm
+commenting on what this overflow implies from an architectural point
+of view. i.e. that uncapped bio sizes and bio chain lengths in
+writeback are actually a bad thing and something we've always
+tried to avoid doing....
+
+.....
+
+> /sys/block/<dev>/queue/*
+> ========================
+> 
+> setup:/run/perf$ cat /sys/block/loop1/queue/max_segments
+> 128
+> setup:/run/perf$ cat /sys/block/loop1/queue/max_segment_size
+> 65536
+
+A maximumally size bio (16MB) will get split into two bios for this
+hardware based on this (8MB max size).
+
+> setup:/run/perf$ cat /sys/block/loop1/queue/max_hw_sectors_kb
+> 1280
+
+Except this says 1280kB is the max size, so it will actually get
+split into 14 bios.
+
+So a stream of 16MB bios from writeback will be more than large
+enough to keep this hardware's pipeline full....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
