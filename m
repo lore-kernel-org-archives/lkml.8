@@ -2,137 +2,111 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84401C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A399FC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610EE20738
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="v1eeqSoF"
+	by mail.kernel.org (Postfix) with ESMTP id 8827D20738
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:40:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727793AbgHURkd (ORCPT
+        id S1726854AbgHURks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:40:33 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:57002 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726864AbgHURk1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 13:40:27 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LHaowd144287;
-        Fri, 21 Aug 2020 17:39:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=JUslshiDaN2dhP+XGrtZjY0EQXD83w9PlaWLQ1ae6vI=;
- b=v1eeqSoFZHVgpxgBCn7rPBUUsxTUxa4ls50fuAPwe9ZXg1ke5BYPwqZntCNgqvG3F55k
- OCUTr+/mXf3F6gdjCbHtO05iTUAAHid/DTL4UdDcVZcHw87g3AM0X/yrhKr2zSQnlGBL
- YpCwFOMY23P9LcP84/hCOoSqG1Xcy0j5d7NoppYcsVerTPajz2PR1V0FedP8sT03ZOdG
- oJYqKuRpeTP3TX/vRHcypi9Bo1ISI5tAbKK1hyBN7DgPjq9Pa15PrwJ1n/G1YMSz1Srx
- oB91CuqryjpyaITXDlUnTEZlsFeI66zSGMi0UWa9SerzCdbwrMgnuppWdeTBTlPArg0f aw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 32x74rq8rp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 21 Aug 2020 17:39:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07LHbtpn178487;
-        Fri, 21 Aug 2020 17:37:57 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 330pvs96qh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Aug 2020 17:37:57 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07LHbpkQ015754;
-        Fri, 21 Aug 2020 17:37:51 GMT
-Received: from localhost.localdomain (/73.243.10.6)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 21 Aug 2020 17:37:50 +0000
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.0.3\))
-Subject: Re: [PATCH 0/8] Return head pages from find_get_entry and
- find_lock_entry
-From:   William Kucharski <william.kucharski@oracle.com>
-In-Reply-To: <20200819184850.24779-1-willy@infradead.org>
-Date:   Fri, 21 Aug 2020 11:37:49 -0600
-Cc:     linux-mm <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Hugh Dickins <hughd@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Matthew Auld <matthew.auld@intel.com>,
-        Huang Ying <ying.huang@intel.com>,
-        intel-gfx@lists.freedesktop.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <4AEE52BC-76F0-4DB4-BBB1-7E367C12338B@oracle.com>
-References: <20200819184850.24779-1-willy@infradead.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-X-Mailer: Apple Mail (2.3654.0.3)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
- malwarescore=0 adultscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210166
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9720 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 mlxlogscore=999
- priorityscore=1501 phishscore=0 spamscore=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 bulkscore=0 malwarescore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008210166
+        Fri, 21 Aug 2020 13:40:48 -0400
+Received: from mga03.intel.com ([134.134.136.65]:59643 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726864AbgHURko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:40:44 -0400
+IronPort-SDR: vKsYkXIRI/Msm3XfA1lpSSFhJpf+SvU2HF95vsK1G57tK80c1gcMkMhUHI+rdS3OqeGkGrN7Jn
+ P5tvpLB4nCrQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9720"; a="155578918"
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="155578918"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:40:41 -0700
+IronPort-SDR: BfK+1av7mzeYf3wx3u4NXslDuTo1SpMAF+P1dA7jFE9gU5U9v79MCdvXhyl7In84C1bc3R1SyV
+ m5esAyFO0A5g==
+X-IronPort-AV: E=Sophos;i="5.76,338,1592895600"; 
+   d="scan'208";a="321333466"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2020 10:40:41 -0700
+Date:   Fri, 21 Aug 2020 10:40:41 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, y-goto@fujitsu.com
+Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
+ DCACHE_REFERENCED is set
+Message-ID: <20200821174040.GG3142014@iweiny-DESK2.sc.intel.com>
+References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
+> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
+> set from being killed, so the corresponding inode can't be evicted. If
+> the DAX policy of an inode is changed, we can't make policy changing
+> take effects unless dropping caches manually.
+> 
+> This patch fixes this problem and flushes the inode to disk to prepare
+> for evicting it.
 
+This looks intriguing and I really hope this helps but I don't think this will
+guarantee that the state changes immediately will it?
 
-> On Aug 19, 2020, at 12:48 PM, Matthew Wilcox (Oracle) =
-<willy@infradead.org> wrote:
->=20
-> This patch seris started out as part of the THP patch set, but it has
-> some nice effects along the way and it seems worth splitting it out =
-and
-> submitting separately.
->=20
-> Currently find_get_entry() and find_lock_entry() return the page
-> corresponding to the requested index, but the first thing most callers =
-do
-> is find the head page, which we just threw away.  As part of auditing
-> all the callers, I found some misuses of the APIs and some plain
-> inefficiencies that I've fixed.
->=20
-> The diffstat is unflattering, but I added more kernel-doc.
->=20
-> Matthew Wilcox (Oracle) (8):
->  mm: Factor find_get_swap_page out of mincore_page
->  mm: Use find_get_swap_page in memcontrol
->  mm: Optimise madvise WILLNEED
->  proc: Optimise smaps for shmem entries
->  i915: Use find_lock_page instead of find_lock_entry
->  mm: Convert find_get_entry to return the head page
->  mm: Return head page from find_lock_entry
->  mm: Hoist find_subpage call further up in pagecache_get_page
->=20
-> drivers/gpu/drm/i915/gem/i915_gem_shmem.c |  4 +--
-> fs/proc/task_mmu.c                        |  8 +----
-> include/linux/pagemap.h                   | 16 +++++++--
-> include/linux/swap.h                      |  7 ++++
-> mm/filemap.c                              | 41 +++++++++++------------
-> mm/madvise.c                              | 21 +++++++-----
-> mm/memcontrol.c                           | 25 ++------------
-> mm/mincore.c                              | 28 ++--------------
-> mm/shmem.c                                | 15 +++++----
-> mm/swap_state.c                           | 31 +++++++++++++++++
-> 10 files changed, 98 insertions(+), 98 deletions(-)
+Do you have a test case which fails before and passes after?  Perhaps one of
+the new xfstests submitted by Xiao?
 
-For the series:
+Ira
 
-Reviewed-by: William Kucharski <william.kucharski@oracle.com>=
+> 
+> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> ---
+>  fs/dcache.c | 3 ++-
+>  fs/inode.c  | 2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index ea0485861d93..486c7409dc82 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
+>  	 */
+>  	smp_rmb();
+>  	d_flags = READ_ONCE(dentry->d_flags);
+> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
+> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
+> +			| DCACHE_DONTCACHE;
+>  
+>  	/* Nothing to do? Dropping the reference was all we needed? */
+>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 72c4c347afb7..5218a8aebd7f 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
+>  	}
+>  
+>  	state = inode->i_state;
+> -	if (!drop) {
+> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
+>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+>  		spin_unlock(&inode->i_lock);
+>  
+> -- 
+> 2.28.0
+> 
+> 
+> 
