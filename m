@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA44C433E3
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2396C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D008208DB
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A45C20748
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:16:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030181;
-	bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
+	s=default; t=1598030185;
+	bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EF6MDAaNhBjZpUiQO8isfL3ziF1p8f4zLEWq1AtiN0GMY3Jxhur5pWik4qX41i6P1
-	 6V3K6okAepj49W9olJxSu19i1PFzmb/lR2oZp5xKCI1wyd74YNv6/gRix3dX/ugxXp
-	 fTsIoqMq6IpUbzScoAfuit28/Tgc7MMGMExYw3IQ=
+	b=ZhiLLWmqHrTdLnbgLlfLP64qgW0I2FbcKumrwJIpS9hOZ0XgrQ9PTbFWcnViJ7npL
+	 7IvATJmQMcI7Inr1feg8Li1V22lC4KuR09xrpJLm8QxepNREefKvSe6koPTnzFJOYz
+	 nIwvQaqoYixQ+9dVm67cxgdblznKtWur09ik28AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgHURQS (ORCPT
+        id S1729043AbgHURQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:16:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728092AbgHUQQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:16:35 -0400
+        id S1728090AbgHUQQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 12:16:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B528122BED;
-        Fri, 21 Aug 2020 16:16:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 722E222BEB;
+        Fri, 21 Aug 2020 16:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026595;
-        bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
+        s=default; t=1598026594;
+        bh=NZ1zbKrwo5IZCErTAktS1k3LZeAW/QGyONeoRh3BaGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nd1BM8BnK7kWXdVlzFNFgVoQYt0SF3uB8z7HZh0IqUFx9ypJB2UnaFwGFuZOFT8dM
-         DzyqZ5qHBTmS7qJel1IaE87DxRz4g6THsbfQ2tkCrg5vEdbFxJOeABSj5fQUPkVIu7
-         XNn9yV+edNwGa/O0yJGE4Yeys8E1abybRo+ONKxg=
+        b=T0AolvIssbvG74Ggc0PO63MYwlCtD2QjBmJTrIGPgwz7DAwvKUCs7QCW+kaUroLPB
+         zJr/klGu6px2mldQwHY4G2dmmXb/zBlNekscWFH8aCprUVw5Q0br6EKVW+4F0AXmCR
+         py2+QWbXahfBV7K1CqI6alU9/621IyOS5WaCj8oc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reto Schneider <code@reto-schneider.ch>,
-        Kalle Valo <kvalo@codeaurora.org>,
+Cc:     Yangbo Lu <yangbo.lu@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.7 39/61] rtlwifi: rtl8192cu: Prevent leaking urb
-Date:   Fri, 21 Aug 2020 12:15:23 -0400
-Message-Id: <20200821161545.347622-39-sashal@kernel.org>
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.7 38/61] ARM: dts: ls1021a: output PPS signal on FIPER2
+Date:   Fri, 21 Aug 2020 12:15:22 -0400
+Message-Id: <20200821161545.347622-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161545.347622-1-sashal@kernel.org>
 References: <20200821161545.347622-1-sashal@kernel.org>
@@ -60,38 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <code@reto-schneider.ch>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
 
-If usb_submit_urb fails the allocated urb should be unanchored and
-released.
+The timer fixed interval period pulse generator register
+is used to generate periodic pulses. The down count
+register loads the value programmed in the fixed period
+interval (FIPER). At every tick of the timer accumulator
+overflow, the counter decrements by the value of
+TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
+counter value reaches zero. It reloads the down counter
+in the cycle following a pulse.
 
-Signed-off-by: Reto Schneider <code@reto-schneider.ch>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+To use the TMR_FIPER register to generate desired periodic
+pulses. The value should programmed is,
+desired_period - tclk_period
+
+Current tmr-fiper2 value is to generate 100us periodic pulses.
+(But the value should have been 99995, not 99990. The tclk_period is 5.)
+This patch is to generate 1 second periodic pulses with value
+999999995 programmed which is more desired by user.
+
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index c66c6dc003783..bad06939a247c 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -718,8 +718,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
- 
- 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
- 		err = usb_submit_urb(urb, GFP_KERNEL);
--		if (err)
-+		if (err) {
-+			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			goto err_out;
-+		}
- 		usb_free_urb(urb);
- 	}
- 	return 0;
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 760a68c163c83..b2ff27af090ec 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -772,7 +772,7 @@ ptp_clock@2d10e00 {
+ 			fsl,tmr-prsc    = <2>;
+ 			fsl,tmr-add     = <0xaaaaaaab>;
+ 			fsl,tmr-fiper1  = <999999995>;
+-			fsl,tmr-fiper2  = <99990>;
++			fsl,tmr-fiper2  = <999999995>;
+ 			fsl,max-adj     = <499999999>;
+ 			fsl,extts-fifo;
+ 		};
 -- 
 2.25.1
 
