@@ -2,150 +2,298 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD511C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B535C433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B27C120791
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1AE20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 21:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K4kuDA23"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="quax3u38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726761AbgHUVVa (ORCPT
+        id S1726792AbgHUVVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 17:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51908 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726457AbgHUVV3 (ORCPT
+        Fri, 21 Aug 2020 17:21:36 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:7274 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726457AbgHUVVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 17:21:29 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07381C061573;
-        Fri, 21 Aug 2020 14:21:29 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id f24so394751edw.10;
-        Fri, 21 Aug 2020 14:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FsSHEkxuTyYKBr+RaPBvNnmq19cuPmIHZizROaUDX+g=;
-        b=K4kuDA232grAmwo2sAq8iTB5jsLokPktZ/nMcqEO/7PrGBBspH1i2W9rLOzU0JYL7i
-         D14lVcQtQ0SoUWVJ8zQh6K1fqBT17oJ6wSz5mjGOLL/rdJSrvhiyowchckMg/lYp8f/i
-         6udNeBQph1xBiTy6QdXH/4RWosEw3BojmDcxUuz+aq0L+fWnawcHorpCiZ9/+pSnRO5O
-         xLEkO35D1ZO97U1rHChvdY51/H/U7MG9V8EvW3I1S8Ixtk2USfsBDhHQnn0EcIsN7xGc
-         xxAMpMbuOTxMw6H6CMghsZfWBzl/C9//KyJ+zfdS9L9VmtdGtTJCEwo92zha/1O2i6WM
-         Chog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FsSHEkxuTyYKBr+RaPBvNnmq19cuPmIHZizROaUDX+g=;
-        b=EiGNpUPVyEkgK+dcVsPyJeY6QMaJH1kuEz5flbUBUPlwcWq+4gpvpbs66c5PqRdxY9
-         mPjdObTrtpXRyEyP4wiRuux1Lc+xErQg+icKpFfracmA0YbL7HtJYbkkbbX2mk9qV1wh
-         HE/Vl7/Xl2SuWp9imIWGwIjfkbnZoM29rbNe0SP04bBVgarafZDhx+tY82o3PX6Q7P0c
-         Xoa3FGU8piuu/vGxAvQl+RzctxXMNE9WU2OT+ByS4IhbEhIBc/bGaIxDQODN5yE4PtOM
-         Ngpub/lKmzXQmd1fJ32DoT87Ob01c93+hXL3xlPU+uVIpVUn0ii51e5ctmfRzAgk1KSg
-         tz9g==
-X-Gm-Message-State: AOAM531ApUUFqA/OQ6BeO6Oka81E2sC4r32IA3Gp4ObcE8pOXX/0UR6B
-        tno+xgAoYtbvt9eSxnrqF9Y95GJkDMKyjQ==
-X-Google-Smtp-Source: ABdhPJxdpixX0Vn75qgMUReBJYW4RhCAvJYy6dVGGHvbKdvo8mmbtSPxxIL3xj+ifrEeNisYTa8TrQ==
-X-Received: by 2002:a05:6402:22c8:: with SMTP id dm8mr5001024edb.41.1598044887418;
-        Fri, 21 Aug 2020 14:21:27 -0700 (PDT)
-Received: from [192.168.1.106] (abab36.neoplus.adsl.tpnet.pl. [83.6.165.36])
-        by smtp.gmail.com with ESMTPSA id p12sm1741093edt.27.2020.08.21.14.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Aug 2020 14:21:27 -0700 (PDT)
-Subject: Re: [PATCH v5] arm64: dts: qcom: Add support for Xiaomi Poco F1
- (Beryllium)
-To:     Amit Pundir <amit.pundir@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Message-ID: <23c4191e-4d64-80d8-e688-27d004729ea1@gmail.com>
-Date:   Fri, 21 Aug 2020 23:21:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Fri, 21 Aug 2020 17:21:34 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07LLDwq8016961
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:21:30 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=facebook; bh=D55i0VrjpMlrOb2OUAwT58YrxQDIA+sSmCrKN0Zevgc=;
+ b=quax3u387BGmcNVtc7EwsMtu09ga+J/wX8TIo13DP2Rv+tz2guPwcePJ6p6HZAN2WTXc
+ GtcLvqph7jaLzZZ40UEg8kPlfWcV6McDN/bB0ICqpu3hSSBuRpXowQbNFEtZoHXZmbTw
+ ohXSj3xNPKALEi2R2F4bLCWcSBVTFt1v05k= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 332gp81y83-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 14:21:30 -0700
+Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Fri, 21 Aug 2020 14:21:29 -0700
+Received: by devvm1096.prn0.facebook.com (Postfix, from userid 111017)
+        id C3781347CCB3; Fri, 21 Aug 2020 14:21:17 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm1096.prn0.facebook.com
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
+        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Dan Schatzberg <dschatzberg@fb.com>
+Smtp-Origin-Cluster: prn0c01
+Subject: [PATCH] mm: rework remote memcg charging API to support nesting
+Date:   Fri, 21 Aug 2020 14:20:56 -0700
+Message-ID: <20200821212056.3769116-1-guro@fb.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <1598029961-2474-1-git-send-email-amit.pundir@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-21_10:2020-08-21,2020-08-21 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxlogscore=999
+ priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015
+ bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008210197
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+Currently the remote memcg charging API consists of two functions:
+memalloc_use_memcg() and memalloc_unuse_memcg(), which set and clear
+the memcg value, which overwrites the memcg of the current task.
 
-First of all, sorry if anybody sees this twice. I've been messing with Thunderbird lately.
+  memalloc_use_memcg(target_memcg);
+  <...>
+  memalloc_unuse_memcg();
 
+It works perfectly for allocations performed from a normal context,
+however an attempt to call it from an interrupt context or just nest
+two remote charging blocks will lead to an incorrect accounting.
+On exit from the inner block the active memcg will be cleared
+instead of being restored.
 
+  memalloc_use_memcg(target_memcg);
 
-> dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
-> dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-beryllium.dtb
+  memalloc_use_memcg(target_memcg_2);
+    <...>
+    memalloc_unuse_memcg();
 
-[B]eryllium should come before [C]heza, no? Also, aren't the non-development boards supposed to include the vendor name? i.e. sdm845-(xiaomi/poco)-beryllium.dtb
+    Error: allocation here are charged to the memcg of the current
+    process instead of target_memcg.
 
+  memalloc_unuse_memcg();
 
-> +	model = "Xiaomi Technologies Inc. Beryllium";
+This patch extends the remote charging API by switching to a single
+function: struct mem_cgroup *set_active_memcg(struct mem_cgroup *memcg),
+which sets the new value and returns the old one. So a remote charging
+block will look like:
 
-At least with Xperias, we settled on setting the model property to the "pretty" name, in this case Poco F1
+  old_memcg =3D set_active_memcg(target_memcg);
+  <...>
+  set_active_memcg(old_memcg);
 
+This patch is heavily based on the patch by Johannes Weiner,
+which can be found here: https://lkml.org/lkml/2020/5/28/806 .
 
-> +	pm8998-rpmh-regulators {
-> +		compatible = "qcom,pm8998-rpmh-regulators";
-> +		qcom,pmic-id = "a";
-> +
-> +		vreg_l1a_0p875: ldo1 {
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Shakeel Butt <shakeelb@google.com>
+Cc: Dan Schatzberg <dschatzberg@fb.com>
+---
+ fs/buffer.c                          |  6 +++---
+ fs/notify/fanotify/fanotify.c        |  5 +++--
+ fs/notify/inotify/inotify_fsnotify.c |  5 +++--
+ include/linux/sched/mm.h             | 30 ++++++++++------------------
+ mm/memcontrol.c                      |  6 +++---
+ 5 files changed, 22 insertions(+), 30 deletions(-)
 
-I think you forgot to include (regulatorname)-supply properties which should cause havoc with all things regulators..
+diff --git a/fs/buffer.c b/fs/buffer.c
+index ac0310d24657..f1f2fb1b2432 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -842,13 +842,13 @@ struct buffer_head *alloc_page_buffers(struct page =
+*page, unsigned long size,
+ 	struct buffer_head *bh, *head;
+ 	gfp_t gfp =3D GFP_NOFS | __GFP_ACCOUNT;
+ 	long offset;
+-	struct mem_cgroup *memcg;
++	struct mem_cgroup *memcg, *old_memcg;
+=20
+ 	if (retry)
+ 		gfp |=3D __GFP_NOFAIL;
+=20
+ 	memcg =3D get_mem_cgroup_from_page(page);
+-	memalloc_use_memcg(memcg);
++	old_memcg =3D set_active_memcg(memcg);
+=20
+ 	head =3D NULL;
+ 	offset =3D PAGE_SIZE;
+@@ -867,7 +867,7 @@ struct buffer_head *alloc_page_buffers(struct page *p=
+age, unsigned long size,
+ 		set_bh_page(bh, page, offset);
+ 	}
+ out:
+-	memalloc_unuse_memcg();
++	set_active_memcg(old_memcg);
+ 	mem_cgroup_put(memcg);
+ 	return head;
+ /*
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.=
+c
+index c942910a8649..9167884a61ec 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -531,6 +531,7 @@ static struct fanotify_event *fanotify_alloc_event(st=
+ruct fsnotify_group *group,
+ 	struct inode *dirid =3D fanotify_dfid_inode(mask, data, data_type, dir)=
+;
+ 	const struct path *path =3D fsnotify_data_path(data, data_type);
+ 	unsigned int fid_mode =3D FAN_GROUP_FLAG(group, FANOTIFY_FID_BITS);
++	struct mem_cgroup *old_memcg;
+ 	struct inode *child =3D NULL;
+ 	bool name_event =3D false;
+=20
+@@ -580,7 +581,7 @@ static struct fanotify_event *fanotify_alloc_event(st=
+ruct fsnotify_group *group,
+ 		gfp |=3D __GFP_RETRY_MAYFAIL;
+=20
+ 	/* Whoever is interested in the event, pays for the allocation. */
+-	memalloc_use_memcg(group->memcg);
++	old_memcg =3D set_active_memcg(group->memcg);
+=20
+ 	if (fanotify_is_perm_event(mask)) {
+ 		event =3D fanotify_alloc_perm_event(path, gfp);
+@@ -608,7 +609,7 @@ static struct fanotify_event *fanotify_alloc_event(st=
+ruct fsnotify_group *group,
+ 		event->pid =3D get_pid(task_tgid(current));
+=20
+ out:
+-	memalloc_unuse_memcg();
++	set_active_memcg(old_memcg);
+ 	return event;
+ }
+=20
+diff --git a/fs/notify/inotify/inotify_fsnotify.c b/fs/notify/inotify/ino=
+tify_fsnotify.c
+index a65cf8c9f600..9ddcbadc98e2 100644
+--- a/fs/notify/inotify/inotify_fsnotify.c
++++ b/fs/notify/inotify/inotify_fsnotify.c
+@@ -66,6 +66,7 @@ static int inotify_one_event(struct fsnotify_group *gro=
+up, u32 mask,
+ 	int ret;
+ 	int len =3D 0;
+ 	int alloc_len =3D sizeof(struct inotify_event_info);
++	struct mem_cgroup *old_memcg;
+=20
+ 	if ((inode_mark->mask & FS_EXCL_UNLINK) &&
+ 	    path && d_unlinked(path->dentry))
+@@ -87,9 +88,9 @@ static int inotify_one_event(struct fsnotify_group *gro=
+up, u32 mask,
+ 	 * trigger OOM killer in the target monitoring memcg as it may have
+ 	 * security repercussion.
+ 	 */
+-	memalloc_use_memcg(group->memcg);
++	old_memcg =3D set_active_memcg(group->memcg);
+ 	event =3D kmalloc(alloc_len, GFP_KERNEL_ACCOUNT | __GFP_RETRY_MAYFAIL);
+-	memalloc_unuse_memcg();
++	set_active_memcg(old_memcg);
+=20
+ 	if (unlikely(!event)) {
+ 		/*
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index f889e332912f..4c69a4349ac1 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -305,38 +305,28 @@ static inline void memalloc_nocma_restore(unsigned =
+int flags)
+=20
+ #ifdef CONFIG_MEMCG
+ /**
+- * memalloc_use_memcg - Starts the remote memcg charging scope.
++ * set_active_memcg - Starts the remote memcg charging scope.
+  * @memcg: memcg to charge.
+  *
+  * This function marks the beginning of the remote memcg charging scope.=
+ All the
+  * __GFP_ACCOUNT allocations till the end of the scope will be charged t=
+o the
+  * given memcg.
+  *
+- * NOTE: This function is not nesting safe.
++ * NOTE: This function can nest. Users must save the return value and
++ * reset the previous value after their own charging scope is over.
+  */
+-static inline void memalloc_use_memcg(struct mem_cgroup *memcg)
++static inline struct mem_cgroup *
++set_active_memcg(struct mem_cgroup *memcg)
+ {
+-	WARN_ON_ONCE(current->active_memcg);
++	struct mem_cgroup *old =3D current->active_memcg;
+ 	current->active_memcg =3D memcg;
+-}
+-
+-/**
+- * memalloc_unuse_memcg - Ends the remote memcg charging scope.
+- *
+- * This function marks the end of the remote memcg charging scope starte=
+d by
+- * memalloc_use_memcg().
+- */
+-static inline void memalloc_unuse_memcg(void)
+-{
+-	current->active_memcg =3D NULL;
++	return old;
+ }
+ #else
+-static inline void memalloc_use_memcg(struct mem_cgroup *memcg)
+-{
+-}
+-
+-static inline void memalloc_unuse_memcg(void)
++static inline struct mem_cgroup *
++set_active_memcg(struct mem_cgroup *memcg)
+ {
++	return NULL;
+ }
+ #endif
+=20
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 130093bdf74b..ac5290a3f3f1 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5271,12 +5271,12 @@ static struct cgroup_subsys_state * __ref
+ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+ {
+ 	struct mem_cgroup *parent =3D mem_cgroup_from_css(parent_css);
+-	struct mem_cgroup *memcg;
++	struct mem_cgroup *memcg, *old_memcg;
+ 	long error =3D -ENOMEM;
+=20
+-	memalloc_use_memcg(parent);
++	old_memcg =3D set_active_memcg(parent);
+ 	memcg =3D mem_cgroup_alloc();
+-	memalloc_unuse_memcg();
++	set_active_memcg(old_memcg);
+ 	if (IS_ERR(memcg))
+ 		return ERR_CAST(memcg);
+=20
+--=20
+2.26.2
 
-
-> +		vreg_l1a_0p875: ldo1 {
-> +			regulator-min-microvolt = <880000>;
-> +			regulator-max-microvolt = <880000>;
-0p88? Unless it's a PMIC limitation.. Please also confirm names for the rest of the regulators.
-
-Also why are there so few regulators? And none from pmi8998? Are the rest WIP/coming in a followup commit, or are they disabled on this board? AFAICS you only include SoC/PMIC DTs which would suggest they should be there.
-
-
-> +/* Reserved memory changes from downstream */
-
-Wouldn't it look better if you included that in the main {} node instead of reopening it in the middle of the file? I mean, it works, but let's hear what others have to say.
-
-
-> +			 * It seems that mmc_test reports errors if drive
-> +			 * strength is not 16 on clk, cmd, and data pins.
-
-You say that, but then you set "drive-strength = <10>;" for cmd and data, please confirm it's intentional.
-
-
-> +&ufs_mem_hc {
-
-UFS comes before USB alphabetically.
-
-
-> +&ufs_mem_phy
-
-Ditto
-
-
-> +&qup_uart6_default
-
-Ditto
-
-
-Konrad
