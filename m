@@ -2,143 +2,101 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B72C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 115ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A81A722BEA
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598030849;
-	bh=SZsiREGE4KJceeQbEtHOnO+GBKVXcEKF/BC7sEucQvI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di7RPCnrn5REU1KG544LwSBLOUrXN9jg9p6bd0d+tQfRkrJ0n2+lHAAPmCyazDsWM
-	 Q0/5/eHSSgN928q6fNBr7i5hqxqIx+CsenOuImdIgWg3eCjxhmy3R6DwBalQVc5qSG
-	 xyxKT3XD1aXjpiCvCiHY8SGlg1KB8x1IREiE+Ds0=
+	by mail.kernel.org (Postfix) with ESMTP id E61AF2075E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vVEMCikI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbgHUR12 (ORCPT
+        id S1727972AbgHUR1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46630 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgHUQOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 12:14:51 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CCA622B43;
-        Fri, 21 Aug 2020 16:14:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026491;
-        bh=SZsiREGE4KJceeQbEtHOnO+GBKVXcEKF/BC7sEucQvI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bknph+4rERMgskheMWGV8NHhtO8xWLucaY2dnLi62MLI2FEU28tmybp1WTuKs/MV+
-         d9UflDwv8WOgfIHUYBBFU5TtfVfqNyw9cMA020Oov3kNahHr7Vl8ETHA11oQwUcEfj
-         0imZl27YoUEGtQ22NADh8wTO1KzkEuvmLPY61TeA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 22/62] drm/radeon: fix multiple reference count leak
-Date:   Fri, 21 Aug 2020 12:13:43 -0400
-Message-Id: <20200821161423.347071-22-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200821161423.347071-1-sashal@kernel.org>
-References: <20200821161423.347071-1-sashal@kernel.org>
+        Fri, 21 Aug 2020 13:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727929AbgHUR1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 13:27:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1764FC061573
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 10:27:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=Ul+gFaNtlJOoBCsfhqEauq0nuZHw8rqKz8hEMkaSUTk=; b=vVEMCikIdu3Oo709RpqpXJN25W
+        JStqkEtsWWYGUgy63+1r1+NYbMGeDuPRT2vmR+W6piIUO0xQpJlBENv63uGMJQdtYCAMk5pOMlz7N
+        Pd0C7dCE30Bf5lcfwhns6N75K3xlSLnrc932JkOZDvM3F6B4YbKN8Fu5XC+ftLbkbKRrTEIQcZD7E
+        J6GCsFPX61KkD9QE6St5l7V5nhRHw6EWZIErTxt4nvSvTpGomzx1+OsMBMaTZJgsZ8Mt7XGDX3/ni
+        Ry7SzDr2CpZIDdBsnRNdyUaYS7VMn8dLuCdQGgio690WbC3w8SzVSacLcQeZg1JeKAbaJcS4vR0gM
+        3j7035Iw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1k9Ap0-000578-G1; Fri, 21 Aug 2020 17:27:22 +0000
+Subject: Re: make defconfig (Re: +
+ x86-defconfigs-explicitly-unset-config_64bit-in-i386_defconfig.patch added to
+ -mm tree)
+To:     Alexey Dobriyan <adobriyan@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     daniel.diaz@linaro.org, sedat.dilek@gmail.com
+References: <20200820212940.Kq1ky-JHH%akpm@linux-foundation.org>
+ <20200821172231.GA1444408@localhost.localdomain>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dc2fbc95-8c8a-5613-f4bd-f29328bb695c@infradead.org>
+Date:   Fri, 21 Aug 2020 10:27:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200821172231.GA1444408@localhost.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+On 8/21/20 10:22 AM, Alexey Dobriyan wrote:
+> On Thu, Aug 20, 2020 at 02:29:40PM -0700, akpm@linux-foundation.org wrote:
+>> Subject: x86/defconfigs: Explicitly unset CONFIG_64BIT in i386_defconfig
+>>
+>> A recent refresh of the defconfigs got rid of the following (unset)
+>> config:
+>>
+>>   # CONFIG_64BIT is not set
+>>
+>> Innocuous as it seems, when the config file is saved again the
+>> behavior is changed so that CONFIG_64BIT=y.
+>>
+>> Currently,
+>>
+>>   $ make i386_defconfig
+>>   $ grep CONFIG_64BIT .config
+>>   CONFIG_64BIT=y
+>>
+>> whereas previously (and with this patch):
+>>
+>>   $ make i386_defconfig
+>>   $ grep CONFIG_64BIT .config
+>>   # CONFIG_64BIT is not set
+> 
+> It is highly, highly, highly advisable to always pass ARCH when dealing
+> with 32/64-bit archs:
+> 
+> 	+---------------------------------------+
+> 	|	make ARCH=x86_64 defconfig	|
+> 	|	make ARCH=i386 defconfig	|
+> 	+---------------------------------------+
 
-[ Upstream commit 6f2e8acdb48ed166b65d47837c31b177460491ec ]
+I certainly always do that and I also avoid
+ARCH=x86
+although it is supported/allowed.
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/radeon/radeon_connectors.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index fe12d9d91d7a5..e308344344425 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -879,8 +879,10 @@ radeon_lvds_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (encoder) {
-@@ -1025,8 +1027,10 @@ radeon_vga_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	encoder = radeon_best_single_encoder(connector);
-@@ -1163,8 +1167,10 @@ radeon_tv_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	encoder = radeon_best_single_encoder(connector);
-@@ -1247,8 +1253,10 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (radeon_connector->detected_hpd_without_ddc) {
-@@ -1657,8 +1665,10 @@ radeon_dp_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && radeon_check_hpd_status_unchanged(connector)) {
 -- 
-2.25.1
+~Randy
 
