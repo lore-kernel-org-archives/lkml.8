@@ -2,143 +2,141 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58002C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11230C433E3
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB4320720
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E003B207DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 08:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YiFrJjwj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgHUIsN convert rfc822-to-8bit (ORCPT
+        id S1728127AbgHUIsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 04:48:13 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:50365 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726433AbgHUIsK (ORCPT
+        Fri, 21 Aug 2020 04:48:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:45684 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727074AbgHUIsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 04:48:10 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-223-9puSzk3tPJqiaeE2oL8ASg-1; Fri, 21 Aug 2020 09:48:07 +0100
-X-MC-Unique: 9puSzk3tPJqiaeE2oL8ASg-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Fri, 21 Aug 2020 09:48:06 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 21 Aug 2020 09:48:06 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>,
-        Nicolas Boichat <drinkcat@chromium.org>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Linux Media Mailing List" <linux-media@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: RE: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
-Thread-Topic: [PATCH v4 3/3] media: atomisp: Only use trace_printk if allowed
-Thread-Index: AQHWd1MRQFeXK2GIIEihfK8khxWsrqlCP3rw
-Date:   Fri, 21 Aug 2020 08:48:05 +0000
-Message-ID: <21fae92da07c4566ba4eed3b5e1bce2d@AcuMS.aculab.com>
-References: <20200820170951.v4.1.Ia54fe801f246a0b0aee36fb1f3bfb0922a8842b0@changeid>
-        <20200820170951.v4.3.I066d89f39023956c47fb0a42edf196b3950ffbf7@changeid>
-        <20200820102347.15d2f610@oasis.local.home>
-        <CANMq1KCoEZVj=sjxCqBhqLZKBab57+82=Rk_LN7fc3aCuNHMUw@mail.gmail.com>
- <20200820203601.4f70bf98@oasis.local.home>
-In-Reply-To: <20200820203601.4f70bf98@oasis.local.home>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 21 Aug 2020 04:48:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1597999732;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=GXzl5egpJaoVvFDQIADLlbFUzyei3+2kPPTfeDBFLu8=;
+        b=YiFrJjwj6b7Ki3MqyfQc5fZFujpBJW8PbBLhOmcDj0AimGjCc58NzmC5I+/TxC+Obqfm0P
+        ZB5LiCc+H3vFI8zNw7eDCjRtzqrxSAzJQsQMr6AWq+s7lEs5vyONJNrss9miXx4gaZl28N
+        WDldKGi7KoPWmqkBEeVc3c4bfPlPs54=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-545-Ve6wBMDEP3-a05eRv0vu9g-1; Fri, 21 Aug 2020 04:48:48 -0400
+X-MC-Unique: Ve6wBMDEP3-a05eRv0vu9g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C50A434914;
+        Fri, 21 Aug 2020 08:48:46 +0000 (UTC)
+Received: from [10.36.114.87] (ovpn-114-87.ams2.redhat.com [10.36.114.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02B1A7C0B6;
+        Fri, 21 Aug 2020 08:48:40 +0000 (UTC)
+Subject: Re: [PATCH v5 0/6] mm / virtio-mem: support ZONE_MOVABLE
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        Qian Cai <cai@lca.pw>
+References: <20200816125333.7434-1-david@redhat.com>
+ <552a2a55-6082-d286-1cd4-7f7e368eebb4@redhat.com>
+ <20200821084610.GH10792@MiWiFi-R3L-srv>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat GmbH
+Message-ID: <4ceb9aa5-2a6b-b788-8467-f9820d2c094f@redhat.com>
+Date:   Fri, 21 Aug 2020 10:48:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200821084610.GH10792@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 21 August 2020 01:36
-> On Fri, 21 Aug 2020 08:13:00 +0800
-> Nicolas Boichat <drinkcat@chromium.org> wrote:
+On 21.08.20 10:46, Baoquan He wrote:
+> On 08/21/20 at 10:31am, David Hildenbrand wrote:
+>> On 16.08.20 14:53, David Hildenbrand wrote:
+>>> For 5.10. Patch #1-#4,#6 have RBs or ACKs, patch #5 is virtio-mem stuff
+>>> maintained by me. This should go via the -mm tree.
+>>>
+>>
+>> @Andrew, can we give this a churn if there are no further comments? Thanks!
 > 
-> > On Thu, Aug 20, 2020 at 10:23 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > >
-> > > On Thu, 20 Aug 2020 17:14:12 +0800
-> > > Nicolas Boichat <drinkcat@chromium.org> wrote:
-> > >
-> > > > Technically, we could only initialize the trace_printk buffers
-> > > > when the print env is switched, to avoid the build error and
-> > > > unconditional boot-time warning, but I assume this printing
-> > > > framework will eventually get removed when the driver moves out
-> > > > of staging?
-> > >
-> > > Perhaps this should be converting into a trace event. Look at what bpf
-> > > did for their bpf_trace_printk().
-> > >
-> > > The more I think about it, the less I like this series.
-> >
-> > To make it clear, the primary goal of this series is to get rid of
-> > trace_printk sprinkled in the kernel by making sure some randconfig
-> > builds fail. Since my v2, there already has been one more added (the
-> > one that this patch removes), so I'd like to land 2/3 ASAP to prevent
-> > even more from being added.
-> >
-> > Looking at your reply on 1/3, I think we are aligned on that goal? Is
-> > there some other approach you'd recommend?
-> >
-> > Now, I'm not pretending my fixes are the best possible ones, but I
-> > would much rather have the burden of converting to trace events on the
-> > respective driver maintainers. (btw is there a short
-> > documentation/tutorial that I could link to in these patches, to help
-> > developers understand what is the recommended way now?)
-> >
-> 
-> I like the goal, but I guess I never articulated the problem I have
-> with the methodology.
-> 
-> trace_printk() is meant to be a debugging tool. Something that people
-> can and do sprinkle all over the kernel to help them find a bug in
-> areas that are called quite often (where printk() is way too slow).
-> 
-> The last thing I want them to deal with is adding a trace_printk() with
-> their distro's config (or a config from someone that triggered the bug)
-> only to have the build to fail, because they also need to add a config
-> value.
-> 
-> I add to the Cc a few developers I know that use trace_printk() in this
-> fashion. I'd like to hear their view on having to add a config option
-> to make trace_printk work before they test a config that is sent to
-> them.
+> Saw this series in next already.
 
-Is it worth having three compile-time options:
-1) trace_printk() ignored.
-2) trace_printk() enabled.
-3) trace_printk() generates a compile time error.
+Hehe, yeah I also just stumbled over them while rebasing :)
 
-Normal kernel builds would ignore calls.
-Either a config option or a module option (etc) would enable it.
-A config option that 'rand-config' builds would turn on would
-generate compile-time errors.
+-- 
+Thanks,
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+David / dhildenb
 
