@@ -2,123 +2,388 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDC5C433DF
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F3BFC433E1
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4363120732
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9E420732
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 07:22:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kzs9Iqnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbgHUHVj (ORCPT
+        id S1728300AbgHUHWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 03:21:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36466 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728119AbgHUHRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 21 Aug 2020 03:17:36 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 96A57AAC7;
-        Fri, 21 Aug 2020 07:17:59 +0000 (UTC)
-Date:   Fri, 21 Aug 2020 09:17:30 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Suren Baghdasaryan <surenb@google.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tim Murray <timmurray@google.com>, mingo@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, esyr@redhat.com,
-        christian@kellner.me, areber@redhat.com,
-        Shakeel Butt <shakeelb@google.com>, cyphar@cyphar.com,
-        Oleg Nesterov <oleg@redhat.com>, adobriyan@gmail.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        gladkov.alexey@gmail.com, Michel Lespinasse <walken@google.com>,
-        daniel.m.jordan@oracle.com, avagin@gmail.com,
-        bernd.edlinger@hotmail.de,
-        John Johansen <john.johansen@canonical.com>,
-        laoar.shao@gmail.com, Minchan Kim <minchan@kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] mm, oom_adj: don't loop through tasks in
- __set_oom_adj when not necessary
-Message-ID: <20200821071730.GA32537@dhcp22.suse.cz>
-References: <87d03lxysr.fsf@x220.int.ebiederm.org>
- <20200820132631.GK5033@dhcp22.suse.cz>
- <20200820133454.ch24kewh42ax4ebl@wittgenstein>
- <dcb62b67-5ad6-f63a-a909-e2fa70b240fc@i-love.sakura.ne.jp>
- <20200820140054.fdkbotd4tgfrqpe6@wittgenstein>
- <637ab0e7-e686-0c94-753b-b97d24bb8232@i-love.sakura.ne.jp>
- <87k0xtv0d4.fsf@x220.int.ebiederm.org>
- <CAJuCfpHsjisBnNiDNQbm8Yi92cznaptiXYPdc-aVa+_zkuaPhA@mail.gmail.com>
- <20200820162645.GP5033@dhcp22.suse.cz>
- <87r1s0txxe.fsf@x220.int.ebiederm.org>
+        Fri, 21 Aug 2020 03:22:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728123AbgHUHRf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 21 Aug 2020 03:17:35 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296D9C061361
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:08 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id k8so830764wma.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Aug 2020 00:17:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nUeR3h5fpkkkgtzuHZU6uLu4l8vXnBzF6MzU8rQsmVo=;
+        b=kzs9Iqnhk7K0pKVjWTMQ8amIGDjG6psa1dj9EXg+wK/XP7MioULapiYQsHC/f4nH2A
+         o/QGgB/X4tn79qMn+UcC19cRdQ6eT882muCibeVxu1t7bsEMF+KTu6+85XJ4Ls6wElMF
+         EXOMnuZz8+va2wzm3ZrG4HrrJsSTC6S1LXApb7vgjEDFFF/k5CJAqTXIe5Kh4fv/qyUp
+         M2ydEtXLP7rhNUEDc8DzY+OOiJLeaohdSgG9VILvpsyRpiD5tfpaEo3cKWatxhF080/I
+         GTbWHz1TIqx1GBEB4QJ6DtJX8F/ShW5oEMlgRMPybVG3GrR7zJ9bnJXSuoYDzgy79GpK
+         tjfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nUeR3h5fpkkkgtzuHZU6uLu4l8vXnBzF6MzU8rQsmVo=;
+        b=IaeYjImyGrpgD8V9UYDCln/MVYa41jWwC/oGxDumtC9j5CJ0egMKQGvvH2IMNx/slC
+         pVX56CC02YYPCF8j6Ymbl3fb0R750NdyBwSwBve/HmSRE8gHMDe3wurgFFM7j1GU9hwH
+         QeJZAss1CNvk07F5ZnoqBnKXeJCbfRP3vNy++IEmSzmqP/9bhUOzkBMnCDfhlcf54DmD
+         GknHEuydvQkiEqnixvfWs5IfQQDah37l9fxkrTLUIOTA2K5dkIkyVu5+rDRpI5ZXI/8D
+         ADx4MidenG19WjWaFYGPw90XpsHYzO0PjcuEMHaDYb5xeBSDkkOg1O0TYXdgPtahA/Ga
+         MBLg==
+X-Gm-Message-State: AOAM532ulY2WzLWCGHVEPHtWuOnz5M7e/BpuF/tU6Hnr+VzWLY2Pd0hB
+        hswAXaipOv/EVu4cnqdw9zhsrQ==
+X-Google-Smtp-Source: ABdhPJyuA8hOE8z3NNpDMkOxrsTwtO1T93WHRkDkLAP4dFVb1frwHZzzoQyYto8Ty6j6MA2kfrecEw==
+X-Received: by 2002:a1c:f70a:: with SMTP id v10mr1650726wmh.39.1597994227176;
+        Fri, 21 Aug 2020 00:17:07 -0700 (PDT)
+Received: from dell.default ([95.149.164.62])
+        by smtp.gmail.com with ESMTPSA id y24sm2667957wmi.17.2020.08.21.00.17.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2020 00:17:06 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Stanislaw Gruszka <stf_xl@wp.pl>,
+        Linux Wireless <ilw@linux.intel.com>
+Subject: [PATCH 15/32] wireless: intel: iwlegacy: 4965-mac: Convert function headers to standard comment blocks
+Date:   Fri, 21 Aug 2020 08:16:27 +0100
+Message-Id: <20200821071644.109970-16-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org>
+References: <20200821071644.109970-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1s0txxe.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-08-20 23:39:25, Eric W. Biederman wrote:
-> Michal Hocko <mhocko@suse.com> writes:
-> 
-> > On Thu 20-08-20 08:56:53, Suren Baghdasaryan wrote:
-> > [...]
-> >> Catching up on the discussion which was going on while I was asleep...
-> >> So it sounds like there is a consensus that oom_adj should be moved to
-> >> mm_struct rather than trying to synchronize it among tasks sharing mm.
-> >> That sounds reasonable to me too. Michal answered all the earlier
-> >> questions about this patch, so I won't be reiterating them, thanks
-> >> Michal. If any questions are still lingering about the original patch
-> >> I'll be glad to answer them.
-> >
-> > I think it still makes some sense to go with a simpler (aka less tricky)
-> > solution which would be your original patch with an incremental fix for
-> > vfork and the proper ordering (http://lkml.kernel.org/r/20200820124109.GI5033@dhcp22.suse.cz)
-> > and then make a more complex shift to mm struct on top of that. The
-> > former will be less tricky to backport to stable IMHO.
-> 
-> So I am confused.
-> 
-> I don't know how a subtle dependency on something in clone
-> is better than something flat footed in exec.
+These are clearly not suitable for kernel-doc.
 
-Well, I think that setting a flag is an easier approach than handle all
-the special cases for the mm thing. But this is likely because this is
-not my domain so my judgment call might be misled. Anyway if there is a
-general consensus that doing the middle step is not worth it I am not
-going to object.
+Fixes the following W=1 kernel build warning(s):
 
-> That said if we are going for a small change why not:
-> 
-> 	/*
-> 	 * Make sure we will check other processes sharing the mm if this is
-> 	 * not vfrok which wants its own oom_score_adj.
-> 	 * pin the mm so it doesn't go away and get reused after task_unlock
-> 	 */
-> 	if (!task->vfork_done) {
-> 		struct task_struct *p = find_lock_task_mm(task);
-> 
-> 		if (p) {
-> -			if (atomic_read(&p->mm->mm_users) > 1) {
-> +			if (atomic_read(&p->mm->mm_users) > p->signal->nr_threads) {
-> 				mm = p->mm;
-> 				mmgrab(mm);
-> 			}
-> 			task_unlock(p);
-> 		}
-> 	}
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:234: warning: Function parameter or member 'il' not described in 'il4965_dma_addr2rbd_ptr'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:234: warning: Function parameter or member 'dma_addr' not described in 'il4965_dma_addr2rbd_ptr'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:251: warning: Function parameter or member 'il' not described in 'il4965_rx_queue_restock'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:301: warning: Function parameter or member 'il' not described in 'il4965_rx_allocate'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:301: warning: Function parameter or member 'priority' not described in 'il4965_rx_allocate'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:1138: warning: Function parameter or member 'il' not described in 'il4965_set_rxon_chain'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:1943: warning: Function parameter or member 'il' not described in 'il4965_hw_txq_ctx_free'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:1971: warning: Function parameter or member 'il' not described in 'il4965_txq_ctx_alloc'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2068: warning: Function parameter or member 'il' not described in 'il4965_txq_ctx_stop'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2109: warning: Function parameter or member 'il' not described in 'il4965_tx_queue_stop_scheduler'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2109: warning: Function parameter or member 'txq_id' not described in 'il4965_tx_queue_stop_scheduler'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2122: warning: Function parameter or member 'il' not described in 'il4965_tx_queue_set_q2ratid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2122: warning: Function parameter or member 'ra_tid' not described in 'il4965_tx_queue_set_q2ratid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2122: warning: Function parameter or member 'txq_id' not described in 'il4965_tx_queue_set_q2ratid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'il' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'txq_id' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'tx_fifo' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'sta_id' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'tid' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2153: warning: Function parameter or member 'ssn_idx' not described in 'il4965_txq_agg_enable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2285: warning: Function parameter or member 'il' not described in 'il4965_txq_agg_disable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2285: warning: Function parameter or member 'txq_id' not described in 'il4965_txq_agg_disable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2285: warning: Function parameter or member 'ssn_idx' not described in 'il4965_txq_agg_disable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2285: warning: Function parameter or member 'tx_fifo' not described in 'il4965_txq_agg_disable'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2500: warning: Function parameter or member 'il' not described in 'il4965_tx_status_reply_compressed_ba'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2500: warning: Function parameter or member 'agg' not described in 'il4965_tx_status_reply_compressed_ba'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2500: warning: Function parameter or member 'ba_resp' not described in 'il4965_tx_status_reply_compressed_ba'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2651: warning: Function parameter or member 'il' not described in 'il4965_tx_status_reply_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2651: warning: Function parameter or member 'agg' not described in 'il4965_tx_status_reply_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2651: warning: Function parameter or member 'tx_resp' not described in 'il4965_tx_status_reply_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2651: warning: Function parameter or member 'txq_id' not described in 'il4965_tx_status_reply_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2651: warning: Function parameter or member 'start_idx' not described in 'il4965_tx_status_reply_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2761: warning: Function parameter or member 'il' not described in 'il4965_hdl_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2761: warning: Function parameter or member 'rxb' not described in 'il4965_hdl_tx'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2882: warning: Function parameter or member 'il' not described in 'il4965_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2882: warning: Function parameter or member 'rate_n_flags' not described in 'il4965_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2882: warning: Function parameter or member 'info' not described in 'il4965_hwrate_to_tx_control'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2908: warning: Function parameter or member 'il' not described in 'il4965_hdl_compressed_ba'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:2908: warning: Function parameter or member 'rxb' not described in 'il4965_hdl_compressed_ba'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3514: warning: Function parameter or member 'il' not described in 'il4965_alloc_bcast_station'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3554: warning: Function parameter or member 'il' not described in 'il4965_update_bcast_station'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3587: warning: Function parameter or member 'il' not described in 'il4965_sta_tx_modify_enable_tid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3587: warning: Function parameter or member 'sta_id' not described in 'il4965_sta_tx_modify_enable_tid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3587: warning: Function parameter or member 'tid' not described in 'il4965_sta_tx_modify_enable_tid'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3916: warning: Function parameter or member 'il' not described in 'il4965_hw_txq_free_tfd'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:3916: warning: Function parameter or member 'txq' not described in 'il4965_hw_txq_free_tfd'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:4059: warning: Function parameter or member 't' not described in 'il4965_bg_stats_periodic'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:4169: warning: Function parameter or member 'il' not described in 'il4965_setup_handlers'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:4211: warning: Function parameter or member 'il' not described in 'il4965_rx_handle'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:4767: warning: Function parameter or member 'ucode_raw' not described in 'il4965_ucode_callback'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:4767: warning: Function parameter or member 'context' not described in 'il4965_ucode_callback'
+ drivers/net/wireless/intel/iwlegacy/4965-mac.c:5269: warning: Function parameter or member 'il' not described in 'il4965_alive_start'
 
-I remember playing with something like that but it had problems too. I
-do not remember details. Oleg would know better.
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Linux Wireless <ilw@linux.intel.com>
+Cc: linux-wireless@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ .../net/wireless/intel/iwlegacy/4965-mac.c    | 55 +++++++++----------
+ 1 file changed, 25 insertions(+), 30 deletions(-)
 
+diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+index e73c223a7d288..8df2ea82b97d8 100644
+--- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
++++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+@@ -226,7 +226,7 @@ il4965_hw_nic_init(struct il_priv *il)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_dma_addr2rbd_ptr - convert a DMA address to a uCode read buffer ptr
+  */
+ static inline __le32
+@@ -235,7 +235,7 @@ il4965_dma_addr2rbd_ptr(struct il_priv *il, dma_addr_t dma_addr)
+ 	return cpu_to_le32((u32) (dma_addr >> 8));
+ }
+ 
+-/**
++/*
+  * il4965_rx_queue_restock - refill RX queue from pre-allocated pool
+  *
+  * If there are slots in the RX queue that need to be restocked,
+@@ -288,7 +288,7 @@ il4965_rx_queue_restock(struct il_priv *il)
+ 	}
+ }
+ 
+-/**
++/*
+  * il4965_rx_replenish - Move all used packet from rx_used to rx_free
+  *
+  * When moving to rx_free an SKB is allocated for the slot.
+@@ -1127,7 +1127,7 @@ il4965_count_chain_bitmap(u32 chain_bitmap)
+ 	return res;
+ }
+ 
+-/**
++/*
+  * il4965_set_rxon_chain - Set up Rx chain usage in "staging" RXON image
+  *
+  * Selects how many and which Rx receivers/antennas/chains to use.
+@@ -1933,7 +1933,7 @@ il4965_free_dma_ptr(struct il_priv *il, struct il_dma_ptr *ptr)
+ 	memset(ptr, 0, sizeof(*ptr));
+ }
+ 
+-/**
++/*
+  * il4965_hw_txq_ctx_free - Free TXQ Context
+  *
+  * Destroy all TX DMA queues and structures
+@@ -1959,12 +1959,9 @@ il4965_hw_txq_ctx_free(struct il_priv *il)
+ 	il_free_txq_mem(il);
+ }
+ 
+-/**
++/*
+  * il4965_txq_ctx_alloc - allocate TX queue context
+  * Allocate all Tx DMA structures and initialize them
+- *
+- * @param il
+- * @return error code
+  */
+ int
+ il4965_txq_ctx_alloc(struct il_priv *il)
+@@ -2060,7 +2057,7 @@ il4965_txq_ctx_unmap(struct il_priv *il)
+ 			il_tx_queue_unmap(il, txq_id);
+ }
+ 
+-/**
++/*
+  * il4965_txq_ctx_stop - Stop all Tx DMA channels
+  */
+ void
+@@ -2101,7 +2098,7 @@ il4965_txq_ctx_activate_free(struct il_priv *il)
+ 	return -1;
+ }
+ 
+-/**
++/*
+  * il4965_tx_queue_stop_scheduler - Stop queue, but keep configuration
+  */
+ static void
+@@ -2114,7 +2111,7 @@ il4965_tx_queue_stop_scheduler(struct il_priv *il, u16 txq_id)
+ 		   (1 << IL49_SCD_QUEUE_STTS_REG_POS_SCD_ACT_EN));
+ }
+ 
+-/**
++/*
+  * il4965_tx_queue_set_q2ratid - Map unique receiver/tid combination to a queue
+  */
+ static int
+@@ -2141,7 +2138,7 @@ il4965_tx_queue_set_q2ratid(struct il_priv *il, u16 ra_tid, u16 txq_id)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_tx_queue_agg_enable - Set up & enable aggregation for selected queue
+  *
+  * NOTE:  txq_id must be greater than IL49_FIRST_AMPDU_QUEUE,
+@@ -2276,7 +2273,7 @@ il4965_tx_agg_start(struct il_priv *il, struct ieee80211_vif *vif,
+ 	return ret;
+ }
+ 
+-/**
++/*
+  * txq_id must be greater than IL49_FIRST_AMPDU_QUEUE
+  * il->lock must be held by the caller
+  */
+@@ -2488,7 +2485,7 @@ il4965_tx_queue_reclaim(struct il_priv *il, int txq_id, int idx)
+ 	return nfreed;
+ }
+ 
+-/**
++/*
+  * il4965_tx_status_reply_compressed_ba - Update tx status from block-ack
+  *
+  * Go through block-ack's bitmap of ACK'd frames, update driver's record of
+@@ -2641,7 +2638,7 @@ il4965_tx_status_to_mac80211(u32 status)
+ 	}
+ }
+ 
+-/**
++/*
+  * il4965_tx_status_reply_tx - Handle Tx response for frames in aggregation queue
+  */
+ static int
+@@ -2753,7 +2750,7 @@ il4965_tx_status_reply_tx(struct il_priv *il, struct il_ht_agg *agg,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_hdl_tx - Handle standard (non-aggregation) Tx response
+  */
+ static void
+@@ -2873,7 +2870,7 @@ il4965_hdl_tx(struct il_priv *il, struct il_rx_buf *rxb)
+ 	spin_unlock_irqrestore(&il->sta_lock, flags);
+ }
+ 
+-/**
++/*
+  * translate ucode response to mac80211 tx status control values
+  */
+ void
+@@ -2897,7 +2894,7 @@ il4965_hwrate_to_tx_control(struct il_priv *il, u32 rate_n_flags,
+ 	r->idx = il4965_hwrate_to_mac80211_idx(rate_n_flags, info->band);
+ }
+ 
+-/**
++/*
+  * il4965_hdl_compressed_ba - Handler for N_COMPRESSED_BA
+  *
+  * Handles block-acknowledge notification from device, which reports success
+@@ -3502,7 +3499,7 @@ il4965_set_dynamic_key(struct il_priv *il, struct ieee80211_key_conf *keyconf,
+ 	return ret;
+ }
+ 
+-/**
++/*
+  * il4965_alloc_bcast_station - add broadcast station into driver's station table.
+  *
+  * This adds the broadcast station into the driver's station table
+@@ -3543,7 +3540,7 @@ il4965_alloc_bcast_station(struct il_priv *il)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_update_bcast_station - update broadcast station's LQ command
+  *
+  * Only used by iwl4965. Placed here to have all bcast station management
+@@ -3579,7 +3576,7 @@ il4965_update_bcast_stations(struct il_priv *il)
+ 	return il4965_update_bcast_station(il);
+ }
+ 
+-/**
++/*
+  * il4965_sta_tx_modify_enable_tid - Enable Tx for this TID in station table
+  */
+ int
+@@ -3903,10 +3900,8 @@ il4965_tfd_get_num_tbs(struct il_tfd *tfd)
+ 	return tfd->num_tbs & 0x1f;
+ }
+ 
+-/**
++/*
+  * il4965_hw_txq_free_tfd - Free all chunks referenced by TFD [txq->q.read_ptr]
+- * @il - driver ilate data
+- * @txq - tx queue
+  *
+  * Does NOT advance any TFD circular buffer read/write idxes
+  * Does NOT free the TFD itself (which is within circular buffer)
+@@ -4044,7 +4039,7 @@ il4965_hdl_alive(struct il_priv *il, struct il_rx_buf *rxb)
+ 		IL_WARN("uCode did not respond OK.\n");
+ }
+ 
+-/**
++/*
+  * il4965_bg_stats_periodic - Timer callback to queue stats
+  *
+  * This callback is provided in order to send a stats request.
+@@ -4155,7 +4150,7 @@ il4965_hdl_card_state(struct il_priv *il, struct il_rx_buf *rxb)
+ 		wake_up(&il->wait_command_queue);
+ }
+ 
+-/**
++/*
+  * il4965_setup_handlers - Initialize Rx handler callbacks
+  *
+  * Setup the RX handlers for each of the reply types sent from the uCode
+@@ -4199,7 +4194,7 @@ il4965_setup_handlers(struct il_priv *il)
+ 	il->handlers[C_TX] = il4965_hdl_tx;
+ }
+ 
+-/**
++/*
+  * il4965_rx_handle - Main entry function for receiving responses from uCode
+  *
+  * Uses the il->handlers callback function array to invoke
+@@ -4756,7 +4751,7 @@ il4965_load_firmware(struct il_priv *il, const struct firmware *ucode_raw,
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_ucode_callback - callback when firmware was loaded
+  *
+  * If loaded successfully, copies the firmware into buffers
+@@ -5259,7 +5254,7 @@ il4965_alive_notify(struct il_priv *il)
+ 	return 0;
+ }
+ 
+-/**
++/*
+  * il4965_alive_start - called after N_ALIVE notification received
+  *                   from protocol/runtime uCode (initialization uCode's
+  *                   Alive gets handled by il_init_alive_start()).
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
