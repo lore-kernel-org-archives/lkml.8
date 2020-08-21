@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 352DBC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8D5C433E1
 	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7B520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93B46207DE
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 17:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1598029888;
-	bh=fbGa6hXFYDUx0qQvVLBElXseSMxRIENuGCkKMVoNJdE=;
+	bh=HQ3md0RIA/yHuVIgQtgT4oWdCbWQZSa70lk4eCjzNEg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDjokSYD+TOLnDsFLO9t2EHvNRXRozN7XwNYnt+cJ8SYxfPVd16dAF40M1/xytl7A
-	 cuX2PeZt3+VrxPQdmarCI77pgWZHX7G9CZD3WfZenAsGkavUCx2fGeaaB4+ZVgzN/Y
-	 sNUKyUMRktIipzH3tvB+KJeqna+XUXPkfxTnMxDw=
+	b=dkKERuuhfVUoLRyyVMl93HdMvgA7i2rvdnZKNfyAv5jIk69PL8BOeVG1PeDSBqOsq
+	 w8o2DUFCqqOu1IEGzVWKQKnQCuTBfiu6+516cc0KTdpXC5Clh1Wus/P27vTxG75dpg
+	 UWKG6B79SzpxSABOOAonAgel4c4A5UvzdCroYN3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbgHURL0 (ORCPT
+        id S1728998AbgHURL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 21 Aug 2020 13:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50258 "EHLO mail.kernel.org"
+        Fri, 21 Aug 2020 13:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgHUQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728160AbgHUQRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 21 Aug 2020 12:17:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620BB21741;
-        Fri, 21 Aug 2020 16:17:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 235F522CB2;
+        Fri, 21 Aug 2020 16:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598026631;
-        bh=fbGa6hXFYDUx0qQvVLBElXseSMxRIENuGCkKMVoNJdE=;
+        s=default; t=1598026628;
+        bh=HQ3md0RIA/yHuVIgQtgT4oWdCbWQZSa70lk4eCjzNEg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kFT9zhTHU5nRFNWPk3Vb9WZ8TO1gF3GvyhXI7XNSQrDDhjM7++kDzxbiwmNbE7DX7
-         CkAXZnxf/6yBJlLklzH6zrcS1aOAiYC44BhKv50FhuXDCyiVrDFvoWZRjIZ7T6MZoP
-         /Ckv8FItRxlQwazjM+J2LNit4o3Q1BjNP6F3AKNM=
+        b=OcIhyYlNInzovL6sBl/MvQaVM6zZ53lcuweuthmphyjzrZWyIHEGy20bGQzsIm7g8
+         h5Mmp4yJRAQCH9SRnOTrdv68w3WEhXToZ8Bkvy4LBuJR0qrQMiFJ9+PzWsuz8BwmOe
+         pWDTi3/kj7qOtuJQljrU0AZYZnD7NFQxoJfP0PZw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.4 05/48] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
-Date:   Fri, 21 Aug 2020 12:16:21 -0400
-Message-Id: <20200821161704.348164-5-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>,
+        alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 5.4 03/48] ALSA: hda/realtek: Fix pin default on Intel NUC 8 Rugged
+Date:   Fri, 21 Aug 2020 12:16:19 -0400
+Message-Id: <20200821161704.348164-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200821161704.348164-1-sashal@kernel.org>
 References: <20200821161704.348164-1-sashal@kernel.org>
@@ -58,39 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
+[ Upstream commit e2d2fded6bdf3f7bb40718a208140dba8b4ec574 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+The jack on Intel NUC 8 Rugged rear panel doesn't work.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+The spec [1] states that the jack supports both headphone and
+microphone, so override a Pin Complex which has both Amp-In and Amp-Out
+to make the jack work.
+
+Node 0x1b fits the requirement, and user confirmed the jack now works
+with new pin config.
+
+[1] https://www.intel.com/content/dam/support/us/en/documents/mini-pcs/NUC8CCH_TechProdSpec.pdf
+BugLink: https://bugs.launchpad.net/bugs/1875199
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200807080514.15293-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/img/img-i2s-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index 869fe0068cbd3..bb668551dd4b2 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 88629906f314c..d046c97f29e81 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6137,6 +6137,7 @@ enum {
+ 	ALC269_FIXUP_CZC_L101,
+ 	ALC269_FIXUP_LEMOTE_A1802,
+ 	ALC269_FIXUP_LEMOTE_A190X,
++	ALC256_FIXUP_INTEL_NUC8_RUGGED,
+ };
  
- 	ret = pm_runtime_get_sync(i2s->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2s->dev);
- 		return ret;
-+	}
+ static const struct hda_fixup alc269_fixups[] = {
+@@ -7458,6 +7459,15 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		},
+ 		.chain_id = ALC269_FIXUP_DMIC,
+ 	},
++	[ALC256_FIXUP_INTEL_NUC8_RUGGED] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x1b, 0x01a1913c }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC269_FIXUP_HEADSET_MODE
++	},
+ };
  
- 	for (i = 0; i < i2s->active_channels; i++)
- 		img_i2s_in_ch_disable(i2s, i);
+ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+@@ -7755,6 +7765,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x10ec, 0x118c, "Medion EE4254 MD62100", ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1c06, 0x2013, "Lemote A1802", ALC269_FIXUP_LEMOTE_A1802),
+ 	SND_PCI_QUIRK(0x1c06, 0x2015, "Lemote A190X", ALC269_FIXUP_LEMOTE_A190X),
++	SND_PCI_QUIRK(0x8086, 0x2080, "Intel NUC 8 Rugged", ALC256_FIXUP_INTEL_NUC8_RUGGED),
+ 
+ #if 0
+ 	/* Below is a quirk table taken from the old code.
 -- 
 2.25.1
 
