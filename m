@@ -2,179 +2,179 @@ Return-Path: <SRS0=Oudi=B7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF05C433E1
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F117AC433DF
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABE112076E
-	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BC12076E
+	for <linux-kernel@archiver.kernel.org>; Fri, 21 Aug 2020 00:22:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K/iwexCs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BZjKFFxJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726840AbgHUAWD (ORCPT
+        id S1726956AbgHUAWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Aug 2020 20:22:03 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20163 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725859AbgHUAWB (ORCPT
+        Thu, 20 Aug 2020 20:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726718AbgHUAWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Aug 2020 20:22:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1597969319;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=3aBHsIrR7D1rmQusl3vZJUEll0MhNbsTlUTcbOAur3g=;
-        b=K/iwexCse09iSj0Ii0nnBpPgYOsmb+c14NbJ6D986HBd3hdPFYQ9Xm27cqc9my1OBBE5WZ
-        6Bi1rnoy570BT1fQIIx5lwdA+ZfHrsQykzgWFHniQ79fqMaKEaxyxoOabzffAxWlpJIn4Z
-        NcRwBlHh3b6+bKa7nw1vwzJWFshYHyg=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-555-ePbOEGk_OG6cTP2tOEWJsg-1; Thu, 20 Aug 2020 20:21:57 -0400
-X-MC-Unique: ePbOEGk_OG6cTP2tOEWJsg-1
-Received: by mail-pf1-f198.google.com with SMTP id a73so232185pfa.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:21:57 -0700 (PDT)
+        Thu, 20 Aug 2020 20:22:42 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CF7C061386
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:22:42 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id m8so199436pfh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Aug 2020 17:22:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=JaBnFv8JsCcvYIQ4zapld4yeibcuyrja8X9nWizMp1c=;
+        b=BZjKFFxJrYWLpgWAWQWZDBKLRAci51Q0Su8FjO3iUEFzlyOhqLFNPsvuxixamwrRLs
+         lKZGGf7rLwn47tLUO42ClFCzMBDXdfLXL78W50n+2ZlXdKXDTdRlU5lXHXAw4nbEdKSF
+         UHZOlE43W/n9/caF6jnniuToGVFUgwElEfn7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3aBHsIrR7D1rmQusl3vZJUEll0MhNbsTlUTcbOAur3g=;
-        b=nfiPjvkEbPscuV9A0m/Vd15Cwosy4ZoRdpU9tLs+Dx9eZnZ2dHVjv6f5JGy9H8rCeM
-         a9E2J/SLk3cP3nDFhlAHXnFsjHQlgyaCJwYMDd0Sf7mHNNwEJGI4CLcYXFesJh/8l0wv
-         9QfibYZBjAi6b083L8JRyPKLUE6SzFcbz/Moq9Fvtdy0tj8KLPPY4ci/mCBuKfK7mBmM
-         FbuBsknlcXBEtKGLyw3PVvCtKSDcNbwHvQuaGh3yCODL1AbCIdAUwcAM3Y2Guet41Dzy
-         CkDV8/jUEA200oymRAtqhuwY7Lkr1lhySnRIZherw5NbvPG3fjtJAzMs/F2amAlFTgff
-         lg1Q==
-X-Gm-Message-State: AOAM5323aUuc+6xHNWufZs9YVYb3dPzwt/Zu+ICHUTZQHu2QPcB/lZKH
-        xnOyvTan8BX4if77scnQ9Errf4CxvUpAZBxfzNCZov7gOTpPBq4yoCTh0OlG30VXWMcSV13mgLo
-        zKr4sNPaVPNe2mBvQwiG+FrxY
-X-Received: by 2002:a62:20e:: with SMTP id 14mr305543pfc.207.1597969316729;
-        Thu, 20 Aug 2020 17:21:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwKnJ5d5JB7dEtC9MO6PnJWSvjC7EM//ku1FdHc84FzCEHPg33i7BQaa39t+IuifAAfBOurJg==
-X-Received: by 2002:a62:20e:: with SMTP id 14mr305520pfc.207.1597969316393;
-        Thu, 20 Aug 2020 17:21:56 -0700 (PDT)
-Received: from xiangao.remote.csb ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id y135sm248586pfg.148.2020.08.20.17.21.52
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=JaBnFv8JsCcvYIQ4zapld4yeibcuyrja8X9nWizMp1c=;
+        b=PrVG50qVPCVcK1RIfPZF3cZ/iKiug6NgUnEtWkJ5I+P3//mNGYZM4c92mZD7Mx5zHp
+         PYlGRmnv3Rc5YR/U4PBi4pXm+wenHaLwCKSs9E4pItzIVRNP2dAHT9sJnYyeY7scaQoa
+         nKW8470kGC7NXbLMThFufIQW6gu5BFf2k7piVcYEg7SvcncMlLEMYpA/MzezUWniyMLV
+         IjUVZ9KqYjGAdofasU65hB1LazcbNh89yOsRujMKqGIAF1Y0csEHzNUYptCs/ajfbBm/
+         z9yxfxhVZpZyKyqxObxX8TM+dF52JucIEg648+bjKCQ5ep0OSon0b2Cpvcvnjwbx/k25
+         6ibg==
+X-Gm-Message-State: AOAM533M05P2kSx8LmvyS/OkE4j5JV8jOixDYyU5fS88bySoey++TUNT
+        6AcSQk0H72TucbHqFOjTcSmcuA==
+X-Google-Smtp-Source: ABdhPJzVcoX75PGXe53amp5g/BCyz0Rr5NOS371Xm2m4glOupRHFGrjG7hJOP7n5c9L/t/5QY67Ssg==
+X-Received: by 2002:a63:925d:: with SMTP id s29mr449060pgn.423.1597969361170;
+        Thu, 20 Aug 2020 17:22:41 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id x127sm249376pfd.86.2020.08.20.17.22.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2020 17:21:55 -0700 (PDT)
-Date:   Fri, 21 Aug 2020 08:21:45 +0800
-From:   Gao Xiang <hsiangkao@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Carlos Maiolino <cmaiolino@redhat.com>,
-        Eric Sandeen <esandeen@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v2] mm, THP, swap: fix allocating cluster for swapfile by
- mistake
-Message-ID: <20200821002145.GA28298@xiangao.remote.csb>
-References: <20200820045323.7809-1-hsiangkao@redhat.com>
- <20200820233446.GB7728@dread.disaster.area>
+        Thu, 20 Aug 2020 17:22:40 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200820233446.GB7728@dread.disaster.area>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200820103522.26242-3-rojay@codeaurora.org>
+References: <20200820103522.26242-1-rojay@codeaurora.org> <20200820103522.26242-3-rojay@codeaurora.org>
+Subject: Re: [PATCH V2 2/2] i2c: i2c-qcom-geni: Add shutdown callback for i2c
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     dianders@chromium.org, saiprakash.ranjan@codeaurora.org,
+        gregkh@linuxfoundation.org, mka@chromium.org,
+        akashast@codeaurora.org, msavaliy@qti.qualcomm.com,
+        skakit@codeaurora.org, rnayak@codeaurora.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        Roja Rani Yarubandi <rojay@codeaurora.org>
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>, wsa@kernel.org
+Date:   Thu, 20 Aug 2020 17:22:39 -0700
+Message-ID: <159796935923.334488.7479152222902825306@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+Quoting Roja Rani Yarubandi (2020-08-20 03:35:22)
+> If the hardware is still accessing memory after SMMU translation
+> is disabled (as part of smmu shutdown callback), then the
+> IOVAs (I/O virtual address) which it was using will go on the bus
+> as the physical addresses which will result in unknown crashes
+> like NoC/interconnect errors.
+>=20
+> So, implement shutdown callback to i2c driver to unmap DMA mappings
+> during system "reboot" or "shutdown".
+>=20
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+> ---
 
-On Fri, Aug 21, 2020 at 09:34:46AM +1000, Dave Chinner wrote:
-> On Thu, Aug 20, 2020 at 12:53:23PM +0800, Gao Xiang wrote:
-> > SWP_FS is used to make swap_{read,write}page() go through
-> > the filesystem, and it's only used for swap files over
-> > NFS. So, !SWP_FS means non NFS for now, it could be either
-> > file backed or device backed. Something similar goes with
-> > legacy SWP_FILE.
-> > 
-> > So in order to achieve the goal of the original patch,
-> > SWP_BLKDEV should be used instead.
-> > 
-> > FS corruption can be observed with SSD device + XFS +
-> > fragmented swapfile due to CONFIG_THP_SWAP=y.
-> > 
-> > I reproduced the issue with the following details:
-> > 
-> > Environment:
-> > QEMU + upstream kernel + buildroot + NVMe (2 GB)
-> > 
-> > Kernel config:
-> > CONFIG_BLK_DEV_NVME=y
-> > CONFIG_THP_SWAP=y
-> 
-> Ok, so at it's core this is a swap file extent versus THP swap
-> cluster alignment issue?
+I'd still put a Fixes tag because it's fixing the driver when someone
+runs shutdown.
 
-I think yes.
+> Changes in V2:
+>  - As per Stephen's comments added seperate function for stop transfer,
+>    fixed minor nitpicks.
+>=20
+>  drivers/i2c/busses/i2c-qcom-geni.c | 43 ++++++++++++++++++++++++++++++
+>  include/linux/qcom-geni-se.h       |  5 ++++
+>  2 files changed, 48 insertions(+)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-qcom-geni.c b/drivers/i2c/busses/i2c-=
+qcom-geni.c
+> index 1fda5c7c2cfc..d07f2f33bb75 100644
+> --- a/drivers/i2c/busses/i2c-qcom-geni.c
+> +++ b/drivers/i2c/busses/i2c-qcom-geni.c
+> @@ -486,6 +486,28 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
+>         return ret;
+>  }
+> =20
+> +static void geni_i2c_stop_xfer(struct geni_i2c_dev *gi2c)
+> +{
+> +       u32 val;
+> +       struct geni_se *se =3D &gi2c->se;
+> +
+> +       val =3D readl_relaxed(gi2c->se.base + SE_DMA_DEBUG_REG0);
+> +       if (val & DMA_TX_ACTIVE) {
+> +               geni_i2c_abort_xfer(gi2c);
+> +               gi2c->cur_wr =3D 0;
+> +               if (gi2c->err)
+> +                       geni_i2c_tx_fsm_rst(gi2c);
+> +               geni_se_tx_dma_unprep(se, gi2c->tx_dma, gi2c->xfer_len);
+> +       }
+> +       if (val & DMA_RX_ACTIVE) {
+> +               geni_i2c_abort_xfer(gi2c);
+> +               gi2c->cur_rd =3D 0;
+> +               if (gi2c->err)
+> +                       geni_i2c_rx_fsm_rst(gi2c);
+> +               geni_se_rx_dma_unprep(se, gi2c->rx_dma, gi2c->xfer_len);
+> +       }
+> +}
+> +
+>  static u32 geni_i2c_func(struct i2c_adapter *adap)
+>  {
+>         return I2C_FUNC_I2C | (I2C_FUNC_SMBUS_EMUL & ~I2C_FUNC_SMBUS_QUIC=
+K);
+> @@ -617,6 +639,26 @@ static int geni_i2c_remove(struct platform_device *p=
+dev)
+>         return 0;
+>  }
+> =20
+> +static void geni_i2c_shutdown(struct platform_device *pdev)
+> +{
+> +       int ret;
+> +       u32 dma;
+> +       struct geni_i2c_dev *gi2c =3D platform_get_drvdata(pdev);
+> +       struct geni_se *se =3D &gi2c->se;
+> +
+> +       ret =3D pm_runtime_get_sync(gi2c->se.dev);
+> +       if (ret < 0) {
+> +               dev_err(gi2c->se.dev, "Failed to resume device: %d\n", re=
+t);
+> +               return;
+> +       }
+> +
+> +       dma =3D readl_relaxed(se->base + SE_GENI_DMA_MODE_EN);
+> +       if (dma)
+> +               geni_i2c_stop_xfer(gi2c);
 
-> 
-> > diff --git a/mm/swapfile.c b/mm/swapfile.c
-> > index 6c26916e95fd..2937daf3ca02 100644
-> > --- a/mm/swapfile.c
-> > +++ b/mm/swapfile.c
-> > @@ -1074,7 +1074,7 @@ int get_swap_pages(int n_goal, swp_entry_t swp_entries[], int entry_size)
-> >  			goto nextsi;
-> >  		}
-> >  		if (size == SWAPFILE_CLUSTER) {
-> > -			if (!(si->flags & SWP_FS))
-> > +			if (si->flags & SWP_BLKDEV)
-> >  				n_ret = swap_alloc_cluster(si, swp_entries);
-> >  		} else
-> >  			n_ret = scan_swap_map_slots(si, SWAP_HAS_CACHE,
-> 
-> IOWs, if you don't make this change, does the corruption problem go
-> away if you align swap extents in iomap_swapfile_add_extent() to
-> (SWAPFILE_CLUSTER * PAGE_SIZE) instead of just PAGE_SIZE?
-> 
-> I.e. if the swapfile extents are aligned correctly to huge page swap
-> cluster size and alignment, does the swap clustering optimisations
-> for swapping THP pages work correctly? And, if so, is there any
-> performance benefit we get from enabling proper THP swap clustering
-> on swapfiles?
-> 
+Any reason the if (dma) check isn't inside geni_i2c_stop_xfer()?
+Checking for dma and then bailing out early should work and keep the
+logic in one function. Then the pm_runtime_sync() call could go in there
+too and if (!dma) goto out. This assumes that we're going to call
+geni_i2c_stop_xfer() from somewhere else, like if a transfer times out
+or something?
 
-Yeah, I once think about some similiar thing as well. My thought for now is
-
- - First, SWAP THP doesn't claim to support such swapfile for now.
-   And the original author tried to explicitly avoid the whole thing in
-
-   f0eea189e8e9 ("mm, THP, swap: Don't allocate huge cluster for file backed swap device")
-
-   So such thing would be considered as some new feature and need
-   more testing at least. But for now I think we just need a quick
-   fix to fix the commit f0eea189e8e9 to avoid regression and for
-   backport use.
-
- - It is hard for users to control swapfile in
-   SWAPFILE_CLUSTER * PAGE_SIZE extents, especially users'
-   disk are fragmented or have some on-disk metadata limitation or
-   something. It's very hard for users to utilize this and arrange
-   their swapfile physical addr alignment and fragments for now.
-
-So my point is, if it's considered in the future (supporting SWAP
-THP swapfile), it needs more carefully consideration and decision
-(e.g. stability, performance, simplicity, etc). For now, it's just
-a exist regression which fixes the original fix, and finish
-the original author claim.
-
-Thanks,
-Gao Xiang
-
-> Cheers,
-> 
-> Dave.
-> -- 
-> Dave Chinner
-> david@fromorbit.com
-> 
-
+> +
+> +       pm_runtime_put_sync_suspend(gi2c->se.dev);
+> +}
+> +
+>  static int __maybe_unused geni_i2c_runtime_suspend(struct device *dev)
+>  {
+>         int ret;
